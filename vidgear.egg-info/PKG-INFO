@@ -1,0 +1,15 @@
+Metadata-Version: 1.1
+Name: vidgear
+Version: 0.1.0
+Summary: A OpenCV Python Multi-Threaded Video Streaming Wrapper Library
+Home-page: https://github.com/abhiTronix/vidgear
+Author: abhiTronix
+Author-email: abhi.una12@gmail.com
+License: UNKNOWN
+Download-URL: https://github.com/abhiTronix/vidgear/tarball/0.1.0
+Description: UNKNOWN
+Keywords: computer vision,multi-thread,opencv,opencv2,opencv4,picamera
+Platform: UNKNOWN
+Classifier: Programming Language :: Python
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent

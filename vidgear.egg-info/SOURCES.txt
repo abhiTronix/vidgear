@@ -1,0 +1,10 @@
+README.md
+setup.py
+vidgear.egg-info/PKG-INFO
+vidgear.egg-info/SOURCES.txt
+vidgear.egg-info/dependency_links.txt
+vidgear.egg-info/top_level.txt
+vidgear/gears/__init__.py
+vidgear/gears/camgear.py
+vidgear/gears/pigear.py
+vidgear/gears/videogear.py
