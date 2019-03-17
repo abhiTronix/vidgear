@@ -30,7 +30,7 @@ while True:
 
 	# check if frame is None
 	if frame is None:
-		if True break the infinite loop
+		#if True break the infinite loop
 		break
 	
 	# do something with frame here
