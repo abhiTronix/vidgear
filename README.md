@@ -24,12 +24,12 @@ sudo pip install .
 ### Basic example:
 
 ```
-# import libraries
-f# import libraries
+# import required libraries
 from vidgear.gears import VideoGear
 import cv2
 
-stream = VideoGear(enablePiCamera = False, source=0).start() # define various attributes and start the stream
+stream = VideoGear(enablePiCamera = False, source=0).start() 
+# define various attributes and start the stream
 
 # infinite loop
 while True:
