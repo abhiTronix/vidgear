@@ -9,19 +9,18 @@ except ImportError as error:
 	# Output expected ImportErrors.
 	raise ImportError('Failed to detect OpenCV executables, install it with "pip install opencv-python" command.')
 
-
-try:
-	import picamera
-	from picamera import PiRGBArray
-	from picamera import PiCamera
-	#print(cv2.__version__)
-except ImportError as error:
-	# Output expected ImportErrors.
-	raise ImportError('Failed to detect Picamera executables, install it with "pip install picamera" command.')
-
-
 class PiGear:
+
 	def __init__(self, resolution=(640, 480), framerate=25, logging = False, time_delay = 0, **options):
+
+		try:
+			import picamera
+			from picamera import PiRGBArray
+			from picamera import PiCamera
+			#print(cv2.__version__)
+		except ImportError as error:
+			# Output expected ImportErrors.
+			raise ImportError('Failed to detect Picamera executables, install it with "pip install picamera" command.')
 
 		# initialize the picamera stream
 		self.camera = PiCamera()
