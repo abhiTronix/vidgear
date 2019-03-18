@@ -6,12 +6,12 @@ VidGear is a small python wrapper around OpenCV [Video I/O module](https://docs.
 ## Installation
 ***VidGear requires [OpenCV](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) and [Picamera](https://picamera.readthedocs.io/en/release-1.13/install.html) library installation prior to its installation(*Latest versions recommended*). Must install them.***
 
-# Download from Release Page(Stable):
+### Download from Release Page(Stable):
 vidgear could be easily be downloaded from [release page](https://github.com/abhiTronix/vidgear/releases)(*not available on pip yet*) and then can be installed as follows:
 ```
 sudo pip install vidgear-0.1.0-py2.py3-none-any.whl
 ```
-# Clone This Repo(Latest but experimental):
+### Clone This Repo(Latest but experimental):
 Or you can clone this repository and install using pip as follows:
 ```
 git clone https://github.com/abhiTronix/vidgear.git
@@ -21,7 +21,7 @@ sudo pip install .
 
 ## Usage
 
-### Simple example:
+### Basic example:
 
 ```
 # import libraries
