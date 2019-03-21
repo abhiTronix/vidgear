@@ -1,6 +1,6 @@
 # VidGear
 
-VidGear is a small python wrapper around OpenCV [Video I/O module](https://docs.opencv.org/master/d0/da7/videoio_overview.html) that contains powerful multi-thread modules(gears) to enable high-speed video frames read functionality across various devices and platforms. It is a reworked implementation of [imutils](https://github.com/jrosebr1/imutils) library's video modules with all major bugs fixed and comes with addition features like direct network streaming(*GStreamer Pipeline supported*) and flexible source parameters/attributes manipulation of `OpenCV` and `picamera` libraries on the go. This library is very well compatible with Raspberry Pi Camera module's [Picamera library](http://picamera.readthedocs.io/) and provides us the ability exploit its various features like `brightness, saturation, sensor_mode` etc. easily. This library is supports *Python 2.7 and all above versions.*
+VidGear is a lightweight python wrapper around OpenCV [Video I/O module](https://docs.opencv.org/master/d0/da7/videoio_overview.html) that contains powerful multi-thread modules(gears) to enable high-speed video frames read functionality across various devices and platforms. It is a reworked implementation of [imutils](https://github.com/jrosebr1/imutils) library's video modules with all major bugs fixed and comes with addition features like direct network streaming(*GStreamer Pipeline supported*) and flexible source parameters/attributes manipulation of `OpenCV` and `picamera` libraries on the go. This library is very well compatible with Raspberry Pi Camera module's [Picamera library](http://picamera.readthedocs.io/) and provides us the ability exploit its various features like `brightness, saturation, sensor_mode` etc. easily. This library supports *Python 2.7 and all above versions.*
 
 
 ## Installation
@@ -16,7 +16,7 @@ VidGear is a small python wrapper around OpenCV [Video I/O module](https://docs.
   cd vidgear
   sudo pip install .
   ```
-- **Conda Install:**  Anaconda prefers to use its own ‘conda‘ package manager, but it’s also possible to install packages using pip – the PyPA recommended tool for installing Python packages. After you’ve downloaded the `vidgear` wheel file from [release page](https://github.com/abhiTronix/vidgear/releases), open up the ‘Anaconda Command Prompt‘ and navigate to the folder containing the downloaded wheel and install as follows:
+- **Conda Install:**  Anaconda prefers to use its own `conda package manager`, but it’s also possible to install packages using `pip`. After you’ve downloaded the `vidgear` wheel file from [release page](https://github.com/abhiTronix/vidgear/releases), open up the ‘Anaconda Command Prompt‘ and navigate to the folder containing the downloaded wheel and install as follows:
    ```
    pip install vidgear-0.1.0-py2.py3-none-any.whl
    ```
@@ -68,11 +68,11 @@ stream.stop()
 
 ## Salient Features:
 - Multi-Threaded high-speed OpenCV video-frame capturing(resulting in High FPS)
+- Lightweight
 - Built-in Robust Error and frame synchronization Handling
 - Multi-Platform compatibility
 - Flexible control over the output stream
-- Full Support for Network Video Streams(*Including Gstreamer Raw Video Capture Pipeline*)
-- Small Size 
+- Full Support for Network Video Streams(*Including Gstreamer Raw Video Capture Pipeline*) 
 
 ## Contributing and licenses:
 This Project is licensed under the MIT license. You are welcome to contribute with suggestions, feature requests and [pull requests](https://github.com/abhiTronix/vidgear/pulls).
