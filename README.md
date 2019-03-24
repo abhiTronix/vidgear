@@ -6,7 +6,7 @@ VidGear is a lightweight python wrapper around OpenCV [Video I/O module](https:/
 ## Installation
 **VidGear requires [OpenCV](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) and [Picamera](https://picamera.readthedocs.io/en/release-1.13/install.html) (*Only if you want to use Raspberry Pi Camera Module*) libraries installation prior to its installation (*Latest versions recommended*).**
 
-- **Download from Release Page(Stable):** `vidgear` wheel file could be easily be downloaded and can be installed as follows(**Now available on [Python Package Index (PyPI)](https://pypi.org/project/vidgear/)**):
+- **Download from PIP:** `vidgear` wheel file could be easily be downloaded and can be installed as follows(**Now available on [Python Package Index (PyPI)](https://pypi.org/project/vidgear/)**):
   ```bash
   sudo pip install vidgear
   ```
