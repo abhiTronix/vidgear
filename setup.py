@@ -1,21 +1,25 @@
 import setuptools
 from setuptools import setup
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name='vidgear',
     packages=['vidgear','vidgear.gears'],
-    version='0.1.0',
+    version='0.1.1',
     description='A OpenCV Python Multi-Threaded Video Streaming Wrapper Library',
     license='MIT License',
     author='abhiTronix',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     author_email='abhi.una12@gmail.com',
     url='https://github.com/abhiTronix/vidgear',
-    download_url='https://github.com/abhiTronix/vidgear/tarball/0.1.0',
+    download_url='https://github.com/abhiTronix/vidgear/tarball/0.1.1',
     keywords=['computer vision', 'multi-thread', 'opencv', 'opencv2', 'opencv4', 'picamera'],
     classifiers=[
     'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Developers',
-    'Topic :: Computer Vision :: Video Processing',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python :: 2',
     'Programming Language :: Python :: 2.7',
