@@ -5,7 +5,7 @@
 ## Features:
 Key features which differentiates from the other existing multi-threaded open source solutions:
 - [x]  Multi-Threaded high-speed OpenCV video-frame capturing(resulting in High FPS)
-- [x]  Flexible Direct control over the output stream
+- [x]  Flexible Direct control over the video stream
 - [x]  Lightweight
 - [x]  Built-in Robust Error and frame synchronization Handling
 - [x]  Multi-Platform compatibility
@@ -32,11 +32,11 @@ Key features which differentiates from the other existing multi-threaded open so
 
 ## Documentation and Usage
 
-<h3 align="center">You can checkout <b>vidgear</b> <a href = https://github.com/abhiTronix/vidgear/wiki/VidGear-Gears(Classes)>Wiki-Section</a> for detailed documentation with examples for each Class(Gear).</h3>
+<h3 align="center">You can checkout vidgear <a href = https://github.com/abhiTronix/vidgear/wiki>Wiki-Section</a> for detailed documentation with examples for each Class(Gear).</h3>
 
 ### Basic example: 
 
-The basic example of VideoGear Class for webcam stream is as follows:
+The basic example of VideoGear Class for webcam stream is as follows :
 
 ```python
 # import required libraries
