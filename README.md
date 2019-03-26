@@ -10,17 +10,10 @@ VidGear is a lightweight python wrapper around OpenCV [Video I/O module](https:/
   ```bash
   sudo pip install vidgear
   ```
-- **Clone This Repo(Latest but experimental):** Or you can clone this repository and install using pip as follows:
-  ```bash
-  git clone https://github.com/abhiTronix/vidgear.git
-  cd vidgear
-  sudo pip install .
-  ```
 - **Conda Install:**  Anaconda prefers to use its own `conda package manager`, but it’s also possible to install packages using `pip`. You can install as follows:
    ```bash
    pip install vidgear
    ```
-
 
 ## Usage
 
@@ -65,14 +58,29 @@ stream.stop()
 ### Important: Checkout [wiki](https://github.com/abhiTronix/vidgear/wiki/VidGear-Gears(Classes)) for extensive usage documentation and examples.
 
 ---
+## Development
+You are welcome to contribute with suggestions, feature requests and [pull requests](https://github.com/abhiTronix/vidgear/pulls).
 
+  ```bash
+  git clone https://github.com/abhiTronix/vidgear.git
+  cd vidgear
+  sudo pip install .
+  ```
+  
 ## Salient Features:
-- Multi-Threaded high-speed OpenCV video-frame capturing(resulting in High FPS)
-- Lightweight
-- Built-in Robust Error and frame synchronization Handling
-- Multi-Platform compatibility
-- Flexible control over the output stream
-- Full Support for Network Video Streams(*Including Gstreamer Raw Video Capture Pipeline*) 
+- [x]  Multi-Threaded high-speed OpenCV video-frame capturing(resulting in High FPS)
+- [x]  Lightweight
+- [x]  Built-in Robust Error and frame synchronization Handling
+- [x]  Multi-Platform compatibility
+- [x]  Flexible control over the output stream
+- [x]  Full Support for Network Video Streams(*Including Gstreamer Raw Video Capture Pipeline*) 
 
-## Contributing and licenses:
-This Project is licensed under the MIT license. You are welcome to contribute with suggestions, feature requests and [pull requests](https://github.com/abhiTronix/vidgear/pulls).
+## Author
+
+@AbhiTronix
+
+## License
+
+Copyright © 2019 Abhitronix
+
+This project is under the MIT License. See the LICENSE file for the full license text.
