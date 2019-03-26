@@ -1,15 +1,27 @@
 # import the packages
 from threading import Thread
+from pkg_resources import parse_version
 import logging
 
 try:
+	# import OpenCV Binaries
 	import cv2
-	#print(cv2.__version__)
+
+	# check whether OpenCV Binaries are 3.x+
+	if parse_version(cv2.__version__) >= parse_version('3'):
+		pass
+	else:
+		raise ImportError('OpenCV library version >= 3.0 is only supported by this library')
+
 except ImportError as error:
-	# Output expected ImportErrors.
 	raise ImportError('Failed to detect OpenCV executables, install it with "pip install opencv-python" command.')
 
 class PiGear:
+	"""
+	This class exclusively targets the Raspberry Pi Camera Modules such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module, 
+	to obtain high FPS video by utilizing OpenCV and Picamera libraries with a bit of multithreading. But make sure to enable Raspberry Pi 
+	hardware specific settings prior using this class.
+	"""
 
 	def __init__(self, resolution=(640, 480), framerate=25, logging = False, time_delay = 0, **options):
 
@@ -27,9 +39,14 @@ class PiGear:
 		self.camera.resolution = resolution
 		self.camera.framerate = framerate
 
-		# apply attributes to picamera if specified
-		for key, value in options.items():
-			setattr(self.camera, key, value)
+		try: 
+			# apply attributes to source if specified
+			for key, value in options.items():
+				setattr(self.camera, key.strip(), value)
+		except Exception as e:
+			# Catch if any error occurred
+			if logging:
+				print(e)
 
 		# enable rgb capture array thread and capture stream
 		self.rawCapture = PiRGBArray(self.camera, size=resolution)
