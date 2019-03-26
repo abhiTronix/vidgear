@@ -32,7 +32,7 @@ Key features which differentiates from the other existing multi-threaded open so
 
 ## Documentation and Usage
 
-<h3 align="center">You can checkout `vidgear` <a href = https://github.com/abhiTronix/vidgear/wiki/VidGear-Gears(Classes)>Wiki-Section</a> for detailed documentation with examples for each Class(`Gear`).</h3>
+<h3 align="center">You can checkout <b>vidgear</b> <a href = https://github.com/abhiTronix/vidgear/wiki/VidGear-Gears(Classes)>Wiki-Section</a> for detailed documentation with examples for each Class(Gear).</h3>
 
 ### Basic example: 
 
