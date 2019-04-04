@@ -56,7 +56,7 @@ The basic example of VideoGear Class for webcam stream is as follows :
 from vidgear.gears import VideoGear
 import cv2
 
-stream = VideoGear(enablePiCamera = False, source=0).start() 
+stream = VideoGear(source=0).start() 
 # define various attributes and start the stream
 
 # infinite loop
