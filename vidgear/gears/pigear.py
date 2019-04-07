@@ -84,13 +84,10 @@ class PiGear:
 			for stream in self.stream:
 			# grab the frame from the stream and clear the stream in
 			# preparation for the next frame
-				if stream is None:
-					self.terminate =True
 				if self.terminate:
 					break
 				self.frame = stream.array
-				self.rawCapture.seek(0)
-				self.rawCapture.truncate()
+				self.rawCapture.truncate(0)
 		except Exception as e:
 			if self.logging:
 				logging.error(traceback.format_exc())
