@@ -38,6 +38,7 @@ class PiGear:
 		self.camera = PiCamera()
 		self.camera.resolution = resolution
 		self.camera.framerate = framerate
+		self.frame = None
 
 		try: 
 			# apply attributes to source if specified
@@ -65,9 +66,6 @@ class PiGear:
 
 		# intialize termination flag
 		self.terminate = False
-		
-		#intialize frame variable
-		self.frame = None
 
 
 	def start(self):
@@ -84,13 +82,19 @@ class PiGear:
 			for stream in self.stream:
 			# grab the frame from the stream and clear the stream in
 			# preparation for the next frame
+				if stream is None:
+					if self.logging:
+						print('The Camera Module is not working Properly!')
+					self.terminate =True
 				if self.terminate:
 					break
 				self.frame = stream.array
-				self.rawCapture.truncate(0)
+				self.rawCapture.seek(0)
+				self.rawCapture.truncate()
 		except Exception as e:
 			if self.logging:
 				logging.error(traceback.format_exc())
+			self.terminate =True
 			pass
 
 		# release resource camera resources
