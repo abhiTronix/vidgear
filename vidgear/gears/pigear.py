@@ -38,7 +38,6 @@ class PiGear:
 		self.camera = PiCamera()
 		self.camera.resolution = resolution
 		self.camera.framerate = framerate
-		self.frame = None
 
 		try: 
 			# apply attributes to source if specified
@@ -58,8 +57,11 @@ class PiGear:
 			import time
 			time.sleep(time_delay)
 
-		#thread intialization
+		#thread initialization
 		self.thread = None
+		
+		#frame initialization
+		self.frame = None
 
 		# enable logging if specified
 		self.logging = logging
