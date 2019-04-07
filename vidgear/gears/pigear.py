@@ -27,7 +27,7 @@ class PiGear:
 
 		try:
 			import picamera
-			from picamera import PiRGBArray
+			from picamera.array import PiRGBArray
 			from picamera import PiCamera
 			#print(cv2.__version__)
 		except ImportError as error:
@@ -57,8 +57,11 @@ class PiGear:
 			import time
 			time.sleep(time_delay)
 
-		#thread intialization
+		#thread initialization
 		self.thread = None
+		
+		#frame initialization
+		self.frame = None
 
 		# enable logging if specified
 		self.logging = logging
@@ -82,6 +85,8 @@ class PiGear:
 			# grab the frame from the stream and clear the stream in
 			# preparation for the next frame
 				if stream is None:
+					if self.logging:
+						print('The Camera Module is not working Properly!')
 					self.terminate =True
 				if self.terminate:
 					break
@@ -91,6 +96,7 @@ class PiGear:
 		except Exception as e:
 			if self.logging:
 				logging.error(traceback.format_exc())
+			self.terminate =True
 			pass
 
 		# release resource camera resources
