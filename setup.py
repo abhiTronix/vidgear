@@ -8,7 +8,7 @@ setup(
     name='vidgear',
     packages=['vidgear','vidgear.gears'],
     version='0.1.2',
-    description='A OpenCV Python Multi-Threaded Video Streaming Wrapper Library',
+    description='A Lightweight Multi-Threaded OpenCV Video Processing Python Wrapper Library',
     license='MIT License',
     author='abhiTronix',
     long_description=long_description,
