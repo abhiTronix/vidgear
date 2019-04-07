@@ -7,7 +7,7 @@
 **VidGear** is a lightweight python wrapper around OpenCV [Video I/O module](https://docs.opencv.org/master/d0/da7/videoio_overview.html) that contains powerful multi-thread modules(gears) to enable high-speed video frames read functionality across various devices and platforms. It is a reworked implementation of [imutils](https://github.com/jrosebr1/imutils) library's video modules with all major bugs fixed and comes with addition features like direct network streaming(*GStreamer Pipeline supported*) and flexible direct source parameters/attributes manipulation of OpenCV's [VideoCapture Class properties](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d) on the go. This library is also very well compatible with Raspberry Pi Camera module's [Picamera library](http://picamera.readthedocs.io/) and provides us the ability exploit its various features like `brightness, saturation, sensor_mode` etc. easily. This library supports *Python 2.7 and all above versions.*
 
 ## Features:
-Key features which differentiates from the other existing multi-threaded open source solutions:
+Key features which differentiates it from the other existing multi-threaded open source solutions:
 - [x]  Multi-Threaded high-speed OpenCV video-frame capturing(resulting in High FPS)
 - [x]  Flexible Direct control over the video stream
 - [x]  Lightweight
@@ -16,7 +16,7 @@ Key features which differentiates from the other existing multi-threaded open so
 - [x]  Full Support for Network Video Streams(*Including Gstreamer Raw Video Capture Pipeline*) 
 
 ## Prerequisites
-* **Critical:** VidGear must require `OpenCV`(*with contrib*) library to be installed on your machine which is critical for its core algorithms functioning. You can build it from from [scratch](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) or install it from PyPi as follows(*Latest versions recommended*):
+* **Critical:** VidGear must require `OpenCV`(*with contrib*) library to be installed on your machine which is critical for its core algorithm functioning. You can build it from from [scratch](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) ([Raspberry Pi](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/)) or install it from PyPi as follows(*Latest versions recommended*):
   ```
   pip install opencv-python
   pip install opencv-contrib-python
