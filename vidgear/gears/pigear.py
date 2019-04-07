@@ -65,6 +65,9 @@ class PiGear:
 
 		# intialize termination flag
 		self.terminate = False
+		
+		#intialize frame variable
+		self.frame = None
 
 
 	def start(self):
