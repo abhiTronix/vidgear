@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 setup(
     name='vidgear',
     packages=['vidgear','vidgear.gears'],
-    version='0.1.2',
+    version='0.1.3',
     description='A Lightweight Multi-Threaded OpenCV Video Processing Python Wrapper Library',
     license='MIT License',
     author='abhiTronix',
@@ -26,7 +26,8 @@ setup(
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.4',
     'Programming Language :: Python :: 3.5',
-    'Programming Language :: Python :: 3.6',],
+    'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7'],
     python_requires='>=2.7',
     scripts=[],
     project_urls={  # Optional
