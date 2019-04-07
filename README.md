@@ -19,7 +19,7 @@ Key features which differentiates from the other existing multi-threaded open so
 * **Critical:** VidGear must require `OpenCV`(*with contrib*) library to be installed on your machine which is critical for its core algorithms functioning. You can build it from from [scratch](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) or install it from PyPi as follows(*Latest versions recommended*):
   ```
   pip install opencv-python
-  pip install opencv-python-contrib
+  pip install opencv-contrib-python
   ```
 * **Additional:** If you are using Raspberry Pi Camera Modules such as *OmniVision OV5647 Camera Module* and *Sony IMX219 Camera Module*. It requires additional [Picamera](https://picamera.readthedocs.io/en/release-1.13/install.html) library installation on your Raspberry Pi machine prior to its installation (*Latest versions recommended*). You can install it from PyPi easily as follows:
   ```
