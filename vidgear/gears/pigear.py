@@ -27,7 +27,7 @@ class PiGear:
 
 		try:
 			import picamera
-			from picamera import PiRGBArray
+			from picamera.array import PiRGBArray
 			from picamera import PiCamera
 			#print(cv2.__version__)
 		except ImportError as error:
