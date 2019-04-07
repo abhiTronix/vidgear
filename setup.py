@@ -15,7 +15,7 @@ setup(
     long_description_content_type="text/markdown",
     author_email='abhi.una12@gmail.com',
     url='https://github.com/abhiTronix/vidgear',
-    download_url='https://github.com/abhiTronix/vidgear/tarball/0.1.1',
+    download_url='https://github.com/abhiTronix/vidgear/tarball/0.1.3',
     keywords=['computer vision', 'multi-thread', 'opencv', 'opencv2', 'opencv4', 'picamera'],
     classifiers=[
     'Development Status :: 5 - Production/Stable',
