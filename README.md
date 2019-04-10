@@ -6,6 +6,8 @@
 
 **VidGear** is a lightweight python wrapper around OpenCV [Video I/O module](https://docs.opencv.org/master/d0/da7/videoio_overview.html) that contains powerful multi-thread modules(*gears*) to enable high-speed video frames read functionality  (**FPS**) across various devices and platforms. It is a reworked implementation of [imutils](https://github.com/jrosebr1/imutils) library's video modules with all major bugs fixed and comes with addition features like direct network streaming(*GStreamer Pipeline supported*) and flexible direct source parameters/attributes manipulation of OpenCV's [VideoCapture Class properties](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d) on the go. This library is also very well compatible with Raspberry Pi Camera module's [Picamera library](http://picamera.readthedocs.io/) and provides us the ability exploit its various features like `brightness, saturation, sensor_mode` etc. easily. This library supports *Python 2.7 and all above versions.*
 
+&nbsp; 
+
 ## Gears: 
 
 Vidgear contains separate powerful gears (*multi-threaded classes*) to handle/control different device-specific videoCapture streams. It currently includes following gears:
@@ -21,6 +23,8 @@ Vidgear contains separate powerful gears (*multi-threaded classes*) to handle/co
 
 </a>
 
+&nbsp; 
+
 ## Features:
 Key features which differentiates it from the other existing multi-threaded open source solutions:
 - [x]  Multi-Threaded high-speed OpenCV video-frame capturing(**resulting in High FPS**)
@@ -29,6 +33,8 @@ Key features which differentiates it from the other existing multi-threaded open
 - [x]  Built-in Robust Error and frame synchronization Handling
 - [x]  Multi-Platform compatibility
 - [x]  Full Support for Network Video Streams(*Including Gstreamer Raw Video Capture Pipeline*) 
+
+&nbsp; 
 
 ## Prerequisites
 * **Critical:** VidGear must require `OpenCV`(*with contrib*) library to be installed on your machine which is critical for its core algorithm functioning. You can build it from from [scratch](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) ([Raspberry Pi](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/)) or install it from PyPi as follows(*Latest versions recommended*):
@@ -41,6 +47,8 @@ Key features which differentiates it from the other existing multi-threaded open
   pip install picamera
   ```
   ***Also, make sure to [enable Raspberry Pi hardware specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this library.***
+
+&nbsp; 
 
 ## Installation
 - **From PyPI(Stable Only):** `VidGear` can be easily installed as follows(*available on [Python Package Index (PyPI)](https://pypi.org/project/vidgear/)*):
@@ -57,6 +65,8 @@ Key features which differentiates it from the other existing multi-threaded open
    ```bash
    pip install vidgear
    ```
+   
+&nbsp; 
 
 ## Documentation and Usage
 
@@ -102,7 +112,7 @@ cv2.destroyAllWindows()
 stream.stop()
 # safely close video stream.
 ```
-
+&nbsp; 
 
 ## Contribution and Development
 You are welcome to contribute with suggestions, feature requests and [pull requests](https://github.com/abhiTronix/vidgear/pulls).
