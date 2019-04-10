@@ -15,7 +15,7 @@
 Vidgear contains separate powerful gears (*multi-threaded classes*) to handle/control different device-specific videoCapture streams. It currently includes following gears:
 
 
-<a align="center">
+<a align="center"> 
 	
 | Gear | Function |
 |------|---------|
