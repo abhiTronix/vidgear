@@ -1,5 +1,7 @@
 <table align="center"><tr><td align="center" width="9999">
 <img alt="vidgear Logo" src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/vidgear.png" width="50%" height="50%">
+	
+&nbsp; 
 
 [![PyPi version](https://pypip.in/v/vidgear/badge.png)](https://pypi.org/project/vidgear/)
 [![Last Commit](https://img.shields.io/github/last-commit/abhiTronix/vidgear.svg)](https://github.com/abhiTronix/vidgear/commits/master)
