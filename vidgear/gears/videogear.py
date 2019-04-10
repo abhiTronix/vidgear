@@ -1,6 +1,5 @@
 # import the necessary packages
 from .camgear import CamGear
-import time
 
 class VideoGear:
 	"""
