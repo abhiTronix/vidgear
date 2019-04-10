@@ -17,9 +17,9 @@ Vidgear contains separate powerful gears (*multi-threaded classes*) to handle/co
 	
 | Gear | Function |
 |------|---------|
-| CamGear | *Targets any IP-Camera/USB-Camera/Network-Stream* |
-| PiGear | *Targets any Raspberry Pi Camera Modules* |
-| VideoGear | *Common Gear to access any of the above gear* |
+| [**CamGear**](https://github.com/abhiTronix/vidgear/wiki/CamGear-Class) | *Targets any IP-Camera/USB-Camera/Network-Stream* |
+| [**PiGear**](https://github.com/abhiTronix/vidgear/wiki/PiGear-Class) | *Targets any Raspberry Pi Camera Modules* |
+| [**VideoGear**](https://github.com/abhiTronix/vidgear/wiki/VideoGear-Class) | *Common Gear to access any of the above gear* |
 
 </a>
 
