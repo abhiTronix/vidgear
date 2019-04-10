@@ -18,15 +18,15 @@
 Vidgear contains separate powerful gears (*multi-threaded classes*) to handle/control different device-specific videoCapture streams. It currently includes following gears:
 
 
-<a align="center"> 
+<p align="center">
 	
-| Gear | Function |
-|------|---------|
-| [**CamGear**](https://github.com/abhiTronix/vidgear/wiki/CamGear-Class) | *Targets any IP-Camera/USB-Camera/Network-Stream* |
-| [**PiGear**](https://github.com/abhiTronix/vidgear/wiki/PiGear-Class) | *Targets any Raspberry Pi Camera Modules* |
-| [**VideoGear**](https://github.com/abhiTronix/vidgear/wiki/VideoGear-Class) | *Common Gear to access any of the above gear* |
+|Gear|Function|
+|:------:|---------|
+|[**CamGear**](https://github.com/abhiTronix/vidgear/wiki/CamGear-Class)|*Targets any IP-Camera/USB-Camera/Network-Stream*|
+|[**PiGear**](https://github.com/abhiTronix/vidgear/wiki/PiGear-Class)|*Targets any Raspberry Pi Camera Modules*|
+|[**VideoGear**](https://github.com/abhiTronix/vidgear/wiki/VideoGear-Class)|*Common Gear to access any of the above gear*|
 
-</a>
+</p>
 
 &nbsp; 
 
