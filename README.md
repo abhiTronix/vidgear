@@ -6,6 +6,17 @@
 
 **VidGear** is a lightweight python wrapper around OpenCV [Video I/O module](https://docs.opencv.org/master/d0/da7/videoio_overview.html) that contains powerful multi-thread modules(gears) to enable high-speed video frames read functionality across various devices and platforms. It is a reworked implementation of [imutils](https://github.com/jrosebr1/imutils) library's video modules with all major bugs fixed and comes with addition features like direct network streaming(*GStreamer Pipeline supported*) and flexible direct source parameters/attributes manipulation of OpenCV's [VideoCapture Class properties](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d) on the go. This library is also very well compatible with Raspberry Pi Camera module's [Picamera library](http://picamera.readthedocs.io/) and provides us the ability exploit its various features like `brightness, saturation, sensor_mode` etc. easily. This library supports *Python 2.7 and all above versions.*
 
+## Gears: 
+
+Vidgear contains separate powerful gears(*classes*) to handle/control different device-specific VideoCapture Streams. It currently includes following gears:
+
+| Gear | Function |
+|------|---------|
+| CamGear | *Targets any IP-Camera/USB-Camera/Network-Stream* |
+| PiGear | *Targets any Raspberry Pi Camera Modules* |
+| VideoGear | *Common Gear to access any of the above gear* |
+
+
 ## Features:
 Key features which differentiates it from the other existing multi-threaded open source solutions:
 - [x]  Multi-Threaded high-speed OpenCV video-frame capturing(resulting in High FPS)
