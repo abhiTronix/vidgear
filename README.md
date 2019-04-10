@@ -11,7 +11,7 @@
 
 &nbsp; 
 
-## Gears: 
+## Gears
 
 Vidgear contains separate powerful gears (*multi-threaded classes*) to handle/control different device-specific videoCapture streams. It currently includes following gears:
 
@@ -28,7 +28,7 @@ Vidgear contains separate powerful gears (*multi-threaded classes*) to handle/co
 
 &nbsp; 
 
-## Features:
+## Features
 Key features which differentiates it from the other existing multi-threaded open source solutions:
 - [x]  Multi-Threaded high-speed OpenCV video-frame capturing(**resulting in High FPS**)
 - [x]  Flexible Direct control over the video stream
