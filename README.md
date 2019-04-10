@@ -1,5 +1,6 @@
-<table align="center"><tr><td align="center" width="9999">
-<img alt="vidgear Logo" src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/vidgear.png" width="50%" height="50%">
+<table align="center"><tr><td align="center" width="100%">
+	
+<img alt="vidgear Logo" src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/vidgear.png" width="50%">
 	
 &nbsp; 
 
