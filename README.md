@@ -11,7 +11,7 @@
 Vidgear contains separate powerful gears (*multi-threaded classes*) to handle/control different device-specific videoCapture streams. It currently includes following gears:
 
 
-<center>
+<a align="center">
 	
 | Gear | Function |
 |------|---------|
@@ -19,7 +19,7 @@ Vidgear contains separate powerful gears (*multi-threaded classes*) to handle/co
 | PiGear | *Targets any Raspberry Pi Camera Modules* |
 | VideoGear | *Common Gear to access any of the above gear* |
 
-</center>
+</a>
 
 ## Features:
 Key features which differentiates it from the other existing multi-threaded open source solutions:
