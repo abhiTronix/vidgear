@@ -27,14 +27,77 @@ try:
 except ImportError as error:
 	raise ImportError('Failed to detect OpenCV executables, install it with "pip install opencv-python" command.')
 
+
+def youtube_url_validation(url):
+	#convert youtube video url and checks its validity
+    youtube_regex = (
+        r'(https?://)?(www\.)?'
+        '(youtube|youtu|youtube-nocookie)\.(com|be)/'
+        '(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})')
+
+    youtube_regex_match = re.match(youtube_regex, url)
+
+    if youtube_regex_match:
+        return youtube_regex_match.group(6)
+
+    return youtube_regex_match
+
+
 class CamGear:
-	"""This class targets any common IP or USB Cameras(including Raspberry Pi Compatible), 
+
+	"""
+	This class targets any common IP or USB Cameras(including Raspberry Pi Compatible), 
 	Various Video Files Formats and Network Video Streams(Including Gstreamer Raw Video Capture Pipeline) 
-	for obtaining high-speed real-time frames by utilizing OpenCV and multi-threading."""
+	for obtaining high-speed real-time frames by utilizing OpenCV and multi-threading. It also supports direct Youtube Stream.
 
-	def __init__(self, source = 0, logging = False, time_delay = 0, **options):
+	:param source : take the source value. Its default value is 0. Valid Inputs are:
+
+	    - Index(integer): Valid index of the video device.
+
+	    - YouTube Url(string): Youtube URL as input.
+
+	    - Network_Stream_Address(string): Incoming Stream Valid Network address. 
+
+	    - GStreamer (string) videostream Support
+
+
+	:param (boolean) y_tube: enables YouTube Mode, i.e If enabled class will interpret the given source string as YouTube URL. Its default value is False.
+
+    :param (dict) **options: sets all properties supported by OpenCV's VideoCapture Class properties to the input video stream in CamGear Class. 
+                      / These attribute provides the flexibility to manipulate input webcam video stream directly. 
+                      / Parameters can be passed using this **option, allows you to pass keyworded variable length of arguments to CamGear Class.
+
+    :param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
+
+    :param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
+    					/ This delay is essentially required for camera to warm-up. 
+    					/Its default value is 0.
+
+    """
+
+	def __init__(self, source = 0, y_tube = False, logging = False, time_delay = 0, **options):
+
+
+		# check if Youtube Mode is ON (True)
+		if y_tube:
+			#import pafy and parse youtube stream url
+			import pafy
+
+			# validate
+			url = youtube_url_validation(source)
+
+			if url:
+				source_object = pafy.new(url)
+
+				print(source_object.title)
+				_source = source_object.getbestvideo("any", ftypestrict=False)
+				source = _source.url
+
+			else:
+				raise ValueError('Input YouTube Url is invalid!')
+
+
 		# initialize the camera stream and read the first frame
-
 		self.stream = cv2.VideoCapture(source)
 
 		try: 

@@ -21,6 +21,21 @@ class PiGear:
 	This class exclusively targets the Raspberry Pi Camera Modules such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module, 
 	to obtain high FPS video by utilizing OpenCV and Picamera libraries with a bit of multithreading. But make sure to enable Raspberry Pi 
 	hardware specific settings prior using this class.
+	
+	:param (tuple) resolution: sets the resolution (width,height). Its default value is (640,480).
+
+	:param (integer) framerate: sets the framerate. Its default value is 25.
+
+    :param (dict) **options: sets parameter supported by PiCamera Class to the input video stream. 
+    						/ These attribute provides the flexibity to manuplate input raspicam video stream directly. 
+    						/ Parameters can be passed using this **option, allows you to pass keyworded variable length of arguments to PiGear Class.
+
+    :param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
+
+    :param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
+    					/ This delay is essentially required for camera to warm-up. 
+    					/ Its default value is 0.
+
 	"""
 
 	def __init__(self, resolution=(640, 480), framerate=25, logging = False, time_delay = 0, **options):
