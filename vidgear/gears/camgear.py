@@ -63,13 +63,15 @@ class CamGear:
 
 	:param (boolean) y_tube: enables YouTube Mode, i.e If enabled class will interpret the given source string as YouTube URL. Its default value is False.
 
-    	:param (dict) **options: sets all properties supported by OpenCV's VideoCapture Class properties to the input video stream in CamGear Class. 
+	:param (string) colorspace: set colorspace of the video stream. Its default value is None.
+
+    :param (dict) **options: sets all properties supported by OpenCV's VideoCapture Class properties to the input video stream in CamGear Class. 
                       / These attribute provides the flexibility to manipulate input webcam video stream directly. 
                       / Parameters can be passed using this **option, allows you to pass keyworded variable length of arguments to CamGear Class.
 
-    	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
+    :param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 
-    	:param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
+    :param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
     					/ This delay is essentially required for camera to warm-up. 
     					/Its default value is 0.
     """

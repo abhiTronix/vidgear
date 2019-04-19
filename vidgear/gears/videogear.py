@@ -24,18 +24,20 @@ class VideoGear:
 
 	:param (boolean) y_tube: enables YouTube Mode in CamGear Class, i.e If enabled the class will interpret the given source string as YouTube URL. 
 							/ Its default value is False.
+
+	:param (string) colorspace: set colorspace of the video stream. Its default value is None.
 	
 	:param (tuple) resolution: sets the resolution (width,height) in Picamera class. Its default value is (640,480).
 
 	:param (integer) framerate: sets the framerate in Picamera class. Its default value is 25.
 
-    	:param (dict) **options: sets parameter supported by PiCamera or Camgear(whichever being accessed) Class to the input video stream. 
+    :param (dict) **options: sets parameter supported by PiCamera or Camgear(whichever being accessed) Class to the input video stream. 
     						/ These attribute provides the flexibity to manuplate input raspicam video stream directly. 
     						/ Parameters can be passed using this **option, allows you to pass keyworded variable length of arguments to given Class.
 
-    	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
+    :param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 
-    	:param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
+    :param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
     					/ This delay is essentially required for camera to warm-up. 
     					/ Its default value is 0.
 
