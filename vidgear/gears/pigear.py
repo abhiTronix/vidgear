@@ -38,7 +38,7 @@ class PiGear:
 
 	"""
 
-	def __init__(self, resolution=(640, 480), framerate=25, logging = False, time_delay = 0, **options):
+	def __init__(self, resolution=(640, 480), framerate=25, colorspace = None, logging = False, time_delay = 0, **options):
 
 		try:
 			import picamera
@@ -54,10 +54,17 @@ class PiGear:
 		self.camera.resolution = resolution
 		self.camera.framerate = framerate
 
+		self.color_space = None
+
 		try: 
 			# apply attributes to source if specified
 			for key, value in options.items():
 				setattr(self.camera, key.strip(), value)
+
+			# seperately handle colorspace value to int conversion
+			if not(colorspace is None):
+				self.color_space = self.capPropId(colorspace.strip())
+
 		except Exception as e:
 			# Catch if any error occurred
 			if logging:
@@ -93,6 +100,10 @@ class PiGear:
 		self.thread.start()
 		return self
 
+	def capPropId(self, property):
+		#Retrieves the Property's Integer(Actual) value. 
+		return getattr(cv2, property)
+
 	def update(self):
 		# keep looping infinitely until the thread is terminated
 		try:
@@ -108,6 +119,24 @@ class PiGear:
 				self.frame = stream.array
 				self.rawCapture.seek(0)
 				self.rawCapture.truncate()
+
+				if not(self.color_space is None):
+					# apply colorspace to frames
+					try:
+						if isinstance(self.color_space, int):
+							self.frame = cv2.cvtColor(self.frame, self.color_space)
+						else:
+							self.color_space = None
+							if logging:
+								print('Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
+								
+					except Exception as e:
+						# Catch if any error occurred
+						self.color_space = None
+						if logging:
+							print(e)
+							print('Input Colorspace is not a valid Colorspace!')
+
 		except Exception as e:
 			if self.logging:
 				logging.error(traceback.format_exc())

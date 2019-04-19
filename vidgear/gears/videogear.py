@@ -41,19 +41,19 @@ class VideoGear:
 
 	"""
 
-	def __init__(self, source=0, enablePiCamera = False, y_tube = False, resolution=(640, 480), framerate=25, logging = False, time_delay = 0, **options):
+	def __init__(self, source=0, enablePiCamera = False, y_tube = False, colorspace = None, resolution=(640, 480), framerate=25, logging = False, time_delay = 0, **options):
 		
 		if enablePiCamera:
 			# only import the pigear module only if required
 			from .pigear import PiGear
 
 			# initialize the picamera stream by enabling PiGear Class
-			self.stream = PiGear(resolution=resolution, framerate=framerate, logging = logging, time_delay = time_delay, **options)
+			self.stream = PiGear(resolution=resolution, framerate=framerate, colorspace = colorspace, logging = logging, time_delay = time_delay, **options)
 
 		else:
 			# otherwise, we are using OpenCV so initialize the webcam
 			# stream by activating CamGear Class
-			self.stream = CamGear(source=source, y_tube = y_tube, logging = logging, time_delay = time_delay, **options)
+			self.stream = CamGear(source=source, y_tube = y_tube, colorspace = colorspace, logging = logging, time_delay = time_delay, **options)
 
 	def start(self):
 		# start the threaded video stream
