@@ -26,13 +26,13 @@ class PiGear:
 
 	:param (integer) framerate: sets the framerate. Its default value is 25.
 
-    :param (dict) **options: sets parameter supported by PiCamera Class to the input video stream. 
+    	:param (dict) **options: sets parameter supported by PiCamera Class to the input video stream. 
     						/ These attribute provides the flexibity to manuplate input raspicam video stream directly. 
     						/ Parameters can be passed using this **option, allows you to pass keyworded variable length of arguments to PiGear Class.
 
-    :param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
+    	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 
-    :param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
+    	:param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
     					/ This delay is essentially required for camera to warm-up. 
     					/ Its default value is 0.
 

@@ -3,7 +3,7 @@ from .camgear import CamGear
 
 class VideoGear:
 	"""
-	This a common secondary class to access any of the vidgear primary classes(i.e. PiGear and CamGear), separated by ```enablePiCamera``` flag. 
+	This a common secondary class to access any of the vidgear's primary classes(i.e. PiGear and CamGear), separated by ```enablePiCamera``` flag. 
 	This Class accepts different attributes and parameters based on the class that is being accessed currently. Kindly read `Vidgear Wiki` for more detailed information.
 
 
@@ -29,13 +29,13 @@ class VideoGear:
 
 	:param (integer) framerate: sets the framerate in Picamera class. Its default value is 25.
 
-    :param (dict) **options: sets parameter supported by PiCamera or Camgear(whichever being accessed) Class to the input video stream. 
+    	:param (dict) **options: sets parameter supported by PiCamera or Camgear(whichever being accessed) Class to the input video stream. 
     						/ These attribute provides the flexibity to manuplate input raspicam video stream directly. 
     						/ Parameters can be passed using this **option, allows you to pass keyworded variable length of arguments to given Class.
 
-    :param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
+    	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 
-    :param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
+    	:param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
     					/ This delay is essentially required for camera to warm-up. 
     					/ Its default value is 0.
 
