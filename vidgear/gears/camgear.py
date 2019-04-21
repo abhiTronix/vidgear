@@ -63,7 +63,9 @@ class CamGear:
 
 	:param (boolean) y_tube: enables YouTube Mode, i.e If enabled class will interpret the given source string as YouTube URL. Its default value is False.
 
-	:param (string) colorspace: set colorspace of the video stream. Its default value is None.
+	:param (int) backend: set the backend of the video stream (if specified). Its default value is 0.
+
+	:param (string) colorspace: set the colorspace of the video stream. Its default value is None.
 
     :param (dict) **options: sets all properties supported by OpenCV's VideoCapture Class properties to the input video stream in CamGear Class. 
                       / These attribute provides the flexibility to manipulate input webcam video stream directly. 
@@ -76,7 +78,7 @@ class CamGear:
     					/Its default value is 0.
     """
 
-	def __init__(self, source = 0, y_tube = False, colorspace = None, logging = False, time_delay = 0, **options):
+	def __init__(self, source = 0, y_tube = False, backend = 0, colorspace = None, logging = False, time_delay = 0, **options):
 
 
 		# check if Youtube Mode is ON (True)
@@ -100,9 +102,21 @@ class CamGear:
 					print(e)
 				raise ValueError('YouTube Mode is enabled and the input YouTube Url is invalid!')
 
+		# stream variable initialization
+		self.stream = None
 
-		# initialize the camera stream and read the first frame
-		self.stream = cv2.VideoCapture(source)
+		if backend and isinstance(backend, int):
+			# add backend if scpecified and initialize the camera stream
+			if self.getCV_version() == 3:
+				# Different OpenCV 3.4.x statement
+				self.stream = cv2.VideoCapture(source + backend)
+			else:
+				# Two parameters are available since OpenCV 4+ (master branch)
+				self.stream = cv2.VideoCapture(source, backend)
+		else:
+			# initialize the camera stream
+			self.stream = cv2.VideoCapture(source)
+
 
 		self.color_space = None
 
@@ -143,6 +157,12 @@ class CamGear:
 	def capPropId(self, property):
 		#Retrieves the Property's Integer(Actual) value. 
 		return getattr(cv2, property)
+
+	def getCV_version(self):
+		if parse_version(cv2.__version__) >= parse_version('4'):
+			return 4
+		else:
+			return 3
 
 	def update(self):
 		# keep looping infinitely until the thread is terminated
