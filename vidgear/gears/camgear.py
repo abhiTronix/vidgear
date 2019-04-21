@@ -27,20 +27,108 @@ try:
 except ImportError as error:
 	raise ImportError('Failed to detect OpenCV executables, install it with "pip install opencv-python" command.')
 
+
+def youtube_url_validation(url):
+	#convert youtube video url and checks its validity
+    youtube_regex = (
+        r'(https?://)?(www\.)?'
+        '(youtube|youtu|youtube-nocookie)\.(com|be)/'
+        '(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})')
+
+    youtube_regex_match = re.match(youtube_regex, url)
+
+    if youtube_regex_match:
+        return youtube_regex_match.group(6)
+
+    return youtube_regex_match
+
+
 class CamGear:
-	"""This class targets any common IP or USB Cameras(including Raspberry Pi Compatible), 
+
+	"""
+	This class targets any common IP or USB Cameras(including Raspberry Pi Compatible), 
 	Various Video Files Formats and Network Video Streams(Including Gstreamer Raw Video Capture Pipeline) 
-	for obtaining high-speed real-time frames by utilizing OpenCV and multi-threading."""
+	for obtaining high-speed real-time frames by utilizing OpenCV and multi-threading. It also supports direct Youtube Stream.
 
-	def __init__(self, source = 0, logging = False, time_delay = 0, **options):
-		# initialize the camera stream and read the first frame
+	:param source : take the source value. Its default value is 0. Valid Inputs are:
 
-		self.stream = cv2.VideoCapture(source)
+	    - Index(integer): Valid index of the video device.
+
+	    - YouTube Url(string): Youtube URL as input.
+
+	    - Network_Stream_Address(string): Incoming Stream Valid Network address. 
+
+	    - GStreamer (string) videostream Support
+
+
+	:param (boolean) y_tube: enables YouTube Mode, i.e If enabled class will interpret the given source string as YouTube URL. Its default value is False.
+
+	:param (int) backend: set the backend of the video stream (if specified). Its default value is 0.
+
+	:param (string) colorspace: set the colorspace of the video stream. Its default value is None.
+
+    :param (dict) **options: sets all properties supported by OpenCV's VideoCapture Class properties to the input video stream in CamGear Class. 
+                      / These attribute provides the flexibility to manipulate input webcam video stream directly. 
+                      / Parameters can be passed using this **option, allows you to pass keyworded variable length of arguments to CamGear Class.
+
+    :param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
+
+    :param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
+    					/ This delay is essentially required for camera to warm-up. 
+    					/Its default value is 0.
+    """
+
+	def __init__(self, source = 0, y_tube = False, backend = 0, colorspace = None, logging = False, time_delay = 0, **options):
+
+
+		# check if Youtube Mode is ON (True)
+		if y_tube:
+			try:
+				#import pafy and parse youtube stream url
+				import pafy
+
+				# validate
+				url = youtube_url_validation(source)
+
+				if url:
+					source_object = pafy.new(url)
+
+					print(source_object.title)
+					_source = source_object.getbestvideo("any", ftypestrict=False)
+					source = _source.url
+
+			except Exception as e:
+				if logging:
+					print(e)
+				raise ValueError('YouTube Mode is enabled and the input YouTube Url is invalid!')
+
+		# stream variable initialization
+		self.stream = None
+
+		if backend and isinstance(backend, int):
+			# add backend if scpecified and initialize the camera stream
+			if self.getCV_version() == 3:
+				# Different OpenCV 3.4.x statement
+				self.stream = cv2.VideoCapture(source + backend)
+			else:
+				# Two parameters are available since OpenCV 4+ (master branch)
+				self.stream = cv2.VideoCapture(source, backend)
+		else:
+			# initialize the camera stream
+			self.stream = cv2.VideoCapture(source)
+
+
+		self.color_space = None
 
 		try: 
 			# try to apply attributes to source if specified
 			for key, value in options.items():
 				self.stream.set(self.capPropId(key.strip()),value)
+
+			# seperately handle colorspace value to int conversion
+			if not(colorspace is None):
+				self.color_space = self.capPropId(colorspace.strip())
+
 		except Exception as e:
 			# Catch if any error occurred
 			if logging:
@@ -70,6 +158,12 @@ class CamGear:
 		#Retrieves the Property's Integer(Actual) value. 
 		return getattr(cv2, property)
 
+	def getCV_version(self):
+		if parse_version(cv2.__version__) >= parse_version('4'):
+			return 4
+		else:
+			return 3
+
 	def update(self):
 		# keep looping infinitely until the thread is terminated
 		while True:
@@ -79,6 +173,22 @@ class CamGear:
 
 			# otherwise, read the next frame from the stream
 			(self.grabbed, self.frame) = self.stream.read()
+
+			if not(self.color_space is None):
+				# apply colorspace to frames
+				try:
+					if isinstance(self.color_space, int):
+						self.frame = cv2.cvtColor(self.frame, self.color_space)
+					else:
+						self.color_space = None
+						if logging:
+							print('Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
+				except Exception as e:
+					# Catch if any error occurred
+					self.color_space = None
+					if logging:
+						print(e)
+						print('Input Colorspace is not a valid Colorspace!')
 
 			#check for valid frames
 			if not self.grabbed:

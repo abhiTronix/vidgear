@@ -1,55 +1,93 @@
-<h1 align="center"><img alt="vidgear Logo" src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/vidgear.png" width="50%" height="50%"></h1>
+<table align="center"><tr><td align="center" width="100%">
+	
+<img alt="vidgear Logo" src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/vidgear.png" width="50%">
+	
+&nbsp; 
 
-[![PyPi version](https://pypip.in/v/vidgear/badge.png)](https://pypi.org/project/vidgear/)
-[![Last Commit](https://img.shields.io/github/last-commit/abhiTronix/vidgear.svg)](https://github.com/abhiTronix/vidgear/commits/master)
-[![Downloads](https://pepy.tech/badge/vidgear)](https://pepy.tech/project/vidgear)
+[![PyPi version](https://img.shields.io/pypi/v/vidgear.svg?style=popout-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABC0lEQVRYhdWVPQoCMRCFX6HY2ghaiZUXsLW0EDyBrbWtN/EUHsHTWFnYyCL4gxibVZZlZzKTnWz0QZpk5r0vIdkF/kBPAMOKeddE+CQPKoc5Yt5cTjBMdQSwDQToWgBJAn3jmhqgltapAV6E6b5U17MGGAUaUj07TficMfIBZDV6vxowBm1BP9WbSQE4o5h9IjPJmy73TEPDDxVmoZdQrQ5jRhly9Q8tgMUXkIIWn0oG4GYQfAXQzz1PGoCiQndM7b4RgJay/h7zBLT3hASgoKjamQJMreKf0gfuAGyYtXEIAKcL/Dss15iq6ohXghozLYiAMxPuACwtIT4yeQUxAaLrZwAoqGRKGk7qDSYTfYQ8LuYnAAAAAElFTkSuQmCC)](https://pypi.org/project/vidgear/)
+[![Last Commit](https://img.shields.io/github/last-commit/abhiTronix/vidgear.svg?style=popout-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABC0lEQVRYhdWVPQoCMRCFX6HY2ghaiZUXsLW0EDyBrbWtN/EUHsHTWFnYyCL4gxibVZZlZzKTnWz0QZpk5r0vIdkF/kBPAMOKeddE+CQPKoc5Yt5cTjBMdQSwDQToWgBJAn3jmhqgltapAV6E6b5U17MGGAUaUj07TficMfIBZDV6vxowBm1BP9WbSQE4o5h9IjPJmy73TEPDDxVmoZdQrQ5jRhly9Q8tgMUXkIIWn0oG4GYQfAXQzz1PGoCiQndM7b4RgJay/h7zBLT3hASgoKjamQJMreKf0gfuAGyYtXEIAKcL/Dss15iq6ohXghozLYiAMxPuACwtIT4yeQUxAaLrZwAoqGRKGk7qDSYTfYQ8LuYnAAAAAElFTkSuQmCC)](https://github.com/abhiTronix/vidgear/commits/master)
+[![License](https://img.shields.io/github/license/abhiTronix/vidgear.svg?style=popout-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABC0lEQVRYhdWVPQoCMRCFX6HY2ghaiZUXsLW0EDyBrbWtN/EUHsHTWFnYyCL4gxibVZZlZzKTnWz0QZpk5r0vIdkF/kBPAMOKeddE+CQPKoc5Yt5cTjBMdQSwDQToWgBJAn3jmhqgltapAV6E6b5U17MGGAUaUj07TficMfIBZDV6vxowBm1BP9WbSQE4o5h9IjPJmy73TEPDDxVmoZdQrQ5jRhly9Q8tgMUXkIIWn0oG4GYQfAXQzz1PGoCiQndM7b4RgJay/h7zBLT3hASgoKjamQJMreKf0gfuAGyYtXEIAKcL/Dss15iq6ohXghozLYiAMxPuACwtIT4yeQUxAaLrZwAoqGRKGk7qDSYTfYQ8LuYnAAAAAElFTkSuQmCC)](https://github.com/abhiTronix/vidgear/blob/master/LICENSE)
+</td></tr></table>
 
-**VidGear** is a lightweight python wrapper around OpenCV [Video I/O module](https://docs.opencv.org/master/d0/da7/videoio_overview.html) that contains powerful multi-thread modules(gears) to enable high-speed video frames read functionality across various devices and platforms. It is a reworked implementation of [imutils](https://github.com/jrosebr1/imutils) library's video modules with all major bugs fixed and comes with addition features like direct network streaming(*GStreamer Pipeline supported*) and flexible direct source parameters/attributes manipulation of OpenCV's [VideoCapture Class properties](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d) on the go. This library is also very well compatible with Raspberry Pi Camera module's [Picamera library](http://picamera.readthedocs.io/) and provides us the ability exploit its various features like `brightness, saturation, sensor_mode` etc. easily. This library supports *Python 2.7 and all above versions.*
+<a text-align="justify"> **VidGear** is a Python module for video processing - built on top of OpenCV, Picamera - contains powerful **Multi-thread Video Processing Gears** (*classes*) to enable ***High-Speed video frames capture functionality(FPS)*** across various devices and platforms. It comes with various inherent features like flexible and direct Source (like `resolution, framerate colorspace`, etc.) Transforms in OpenCV and supports express Network Stream (including `GStreamer and YouTube video streams`) pipelining on-the-fly. This library is also very well compatible with the Raspberry Pi Camera module's provides us the ability to exploit its various features like `brightness, saturation, sensor_mode`, etc. easily.</a>
 
-## Features:
-Key features which differentiates it from the other existing multi-threaded open source solutions:
-- [x]  Multi-Threaded high-speed OpenCV video-frame capturing(resulting in High FPS)
-- [x]  Flexible Direct control over the video stream
-- [x]  Lightweight
-- [x]  Built-in Robust Error and frame synchronization Handling
-- [x]  Multi-Platform compatibility
-- [x]  Full Support for Network Video Streams(*Including Gstreamer Raw Video Capture Pipeline*) 
+## Key Features 
+
+<h3 align="center"><img src="https://media.giphy.com/media/1qfKW7QIbLaYYXpTJX/giphy.gif" width="40%" height="40%"/></h3>
+
+Key features that differentiates VidGear from the other existing OpenCV based video processing solutions are:
+- [x]  *Multi-Threaded high-speed OpenCV video-frame capturing **(resulting in significantly High FPS)***
+- [x]  *Flexible & **Direct control** over the video source*
+- [x]  ***Direct YouTube Video pipelining** into OpenCV by using its URL* <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/>
+- [x]  *On-the-fly **Video Stream ColorSpace Conversion** Capabilities* <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/>
+- [x]  ***Automated prerequisites installation*** <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif" />
+- [x]  *Built-in Robust Error and frame synchronization Handling*
+- [x]  *Multi-Platform compatibility*
+- [x]  *Full Support for Network Video Streams(including Gstreamer Raw Video Capture Pipeline)* 
+
+&nbsp; 
+
+## Gears 
+
+Vidgear contains three ***powerful gears (multi-threaded classes)*** to handle/control different device-specific Video Streams:
+
+	
+|Gear|Function|
+|:------:|---------|
+|[**CamGear**](https://github.com/abhiTronix/vidgear/wiki/CamGear-Class)|*Targets any IP-Camera/USB-Camera/Network-Stream/YouTube-Video*|
+|[**PiGear**](https://github.com/abhiTronix/vidgear/wiki/PiGear-Class)|*Targets any Raspberry Pi Camera Modules*|
+|[**VideoGear**](https://github.com/abhiTronix/vidgear/wiki/VideoGear-Class)|*Common Gear to access any of the above gear*|
+
+&nbsp; 
 
 ## Prerequisites
-* **Critical:** VidGear must require `OpenCV`(*with contrib*) library to be installed on your machine which is critical for its core algorithm functioning. You can build it from from [scratch](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) ([Raspberry Pi](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/)) or install it from PyPi as follows(*Latest versions recommended*):
-  ```
-  pip install opencv-python
-  pip install opencv-contrib-python
-  ```
-* **Additional:** If you are using Raspberry Pi Camera Modules such as *OmniVision OV5647 Camera Module* and *Sony IMX219 Camera Module*. It requires additional [Picamera](https://picamera.readthedocs.io/en/release-1.13/install.html) library installation on your Raspberry Pi machine prior to its installation (*Latest versions recommended*). You can install it from PyPi easily as follows:
-  ```
-  pip install picamera
-  ```
-  ***Also, make sure to [enable Raspberry Pi hardware specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this library.***
+
+<h3><img src="http://www.animatedimages.org/data/media/81/animated-hand-image-0021.gif" width="25" height="20"/> Note: Vidgear automatically handles required prerequisites installation according to your system requirements. <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/></h3>
+
+* **Critical:** VidGear must require `OpenCV`(*with contrib*) python library to be installed on your machine which is critical for its core algorithm functioning. You can build it from from [scratch](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) ([Raspberry Pi](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/)) or Vidgear automatically installs `OpenCV`(*with contrib*) python library for you based on your system from [PyPi](https://pypi.org/project/opencv-python/).
+
+* **Additional:** 
+
+   * **PiCamera:** If you are using Raspberry Pi Camera Modules such as *OmniVision OV5647 Camera Module* and *Sony IMX219 Camera Module*. It requires additional [Picamera](https://picamera.readthedocs.io/en/release-1.13/install.html) library installation on your Raspberry Pi machine prior to its installation (*Latest versions recommended*).
+
+     <img src="http://www.animatedimages.org/data/media/81/animated-hand-image-0021.gif" width="25" height="20"/> ***Also, make sure to [enable Raspberry Pi hardware specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this library.***
+
+   * **pafy**: For direct YouTube Video Pipelining into OpenCV, Vidgear requires [Pafy](https://pypi.org/project/pafy/) python library.
+
+
+&nbsp; 
 
 ## Installation
 - **From PyPI(Stable Only):** `VidGear` can be easily installed as follows(*available on [Python Package Index (PyPI)](https://pypi.org/project/vidgear/)*):
-  ```bash
+
+
+  ```sh
   sudo pip install vidgear
   ```
-- **Clone this repository(Latest But experimental):** You can also directly clone this repo. for latest patches(*maybe experimental*) and development purposes and thereby can install as follows:
-  ```bash
+- **Clone this repository(devlopment/experimental):** You can also directly clone this repository for latest patches(*maybe experimental*) and development purposes and thereby can install as follows:
+
+
+  ```sh
   git clone https://github.com/abhiTronix/vidgear.git
   cd vidgear
   sudo pip install .
   ```
 - **Conda Install:**  Anaconda prefers to use its own `conda package manager`, but it’s also possible to install packages using `pip` as follows:
-   ```bash
+
+
+   ```sh
    pip install vidgear
    ```
+   
+&nbsp; 
 
 ## Documentation and Usage
 
-<h3 align="center">You can checkout VidGear detailed <a href = https://github.com/abhiTronix/vidgear/wiki>Wiki-Section</a> for detailed documentation with examples for each Class(Gear).</h3>
+<h3><img src="http://www.animatedimages.org/data/media/81/animated-hand-image-0021.gif" width="25" height="20"/> You can checkout VidGear's <a href = https://github.com/abhiTronix/vidgear/wiki>WIKI-SECTION</a> for detailed documentation with examples for each Multi-Threaded Class(Gear).</h3>
 
-### Basic example: 
+#### Basic example: 
 
-The basic example of VideoGear Class for webcam stream is as follows :
+The bare minimum basic example of `VideoGear` Class for Webcamera stream is as follows :
 
 ```python
 # import required libraries
@@ -87,17 +125,33 @@ cv2.destroyAllWindows()
 stream.stop()
 # safely close video stream.
 ```
+&nbsp; 
 
+## Supported Python versions
+
+* Python 2.7 is the only supported version in 2.x series. ***Python 2.7 support will be dropped in the end of 2019.***
+
+* Python 3.x releases follow Numpy releases.
+
+* Currently the following Python versions are supported:
+
+	* 2.7
+	* 3.4
+	* 3.5
+	* 3.6
+	* 3.7
+
+&nbsp; 
 
 ## Contribution and Development
-You are welcome to contribute with suggestions, feature requests and [pull requests](https://github.com/abhiTronix/vidgear/pulls).
+You are welcome to contribute with [suggestions, feature requests and pull requests](https://github.com/abhiTronix/vidgear/pulls).
 
 ## Author
 
-- Abhishek Thakur [@abhiTronix](https://github.com/abhiTronix)
+- **Abhishek Thakur** [@abhiTronix](https://github.com/abhiTronix)
 
 ## License
 
-Copyright © 2019 Abhitronix
+Copyright © 2019 AbhiTronix
 
 This project is under the MIT License. See the LICENSE file for the full license text.
