@@ -35,8 +35,8 @@ except ImportError as error:
 
 class WriteGear:
 	"""
-	This class contains advanced tools that enable High-Speed Lossless Video Writing with Compression capabilities within Vidgear. 
-	This library basically pipelines, processes and finally writes video frames into a valid Video File.
+	WriteGear class contains advanced tools that enable High-Speed Lossless Video Writing with Compression capabilities within Vidgear. 
+	This class basically pipelines, processes and finally writes video frames into a valid Video File.
 
 	In Compression Mode, this class utilizes FFmpeg(a powerful tool that can do almost anything you can imagine with multimedia files) 
 	 powerful encoders to encode and reduce the output to a smaller size, without sacrificing the video quality. This class give us silent 
