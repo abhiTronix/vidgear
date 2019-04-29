@@ -1,7 +1,22 @@
+"""
+Copyright (c) 2019 Abhishek Thakur
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+"""
+
 # import the packages
 from threading import Thread
 from pkg_resources import parse_version
 import logging
+from helper import capPropId
 
 try:
 	# import OpenCV Binaries
@@ -14,7 +29,7 @@ try:
 		raise ImportError('OpenCV library version >= 3.0 is only supported by this library')
 
 except ImportError as error:
-	raise ImportError('Failed to detect OpenCV executables, install it with "pip install opencv-python" command.')
+	raise ImportError('Failed to detect OpenCV executables, install it with `pip install opencv-contrib-python` command.')
 
 class PiGear:
 	"""
@@ -39,7 +54,6 @@ class PiGear:
     				/ Its default value is 0.
 
 	"""
-
 	def __init__(self, resolution=(640, 480), framerate=25, colorspace = None, logging = False, time_delay = 0, **options):
 
 		try:
@@ -56,16 +70,20 @@ class PiGear:
 		self.camera.resolution = resolution
 		self.camera.framerate = framerate
 
+		#initialisation colorspace variable
 		self.color_space = None
+
+		#reformat dict
+		options = {k.strip(): v.strip() for k,v in options.items()}
 
 		try: 
 			# apply attributes to source if specified
 			for key, value in options.items():
-				setattr(self.camera, key.strip(), value)
+				setattr(self.camera, key, value)
 
 			# seperately handle colorspace value to int conversion
 			if not(colorspace is None):
-				self.color_space = self.capPropId(colorspace.strip())
+				self.color_space = capPropId(colorspace.strip())
 
 		except Exception as e:
 			# Catch if any error occurred
@@ -95,18 +113,18 @@ class PiGear:
 
 
 	def start(self):
-
-		# start the thread to read frames from the video stream
+		"""
+		start the thread to read frames from the video stream
+		"""
 		self.thread = Thread(target=self.update, args=())
 		self.thread.daemon = True
 		self.thread.start()
 		return self
 
-	def capPropId(self, property):
-		#Retrieves the Property's Integer(Actual) value. 
-		return getattr(cv2, property)
-
 	def update(self):
+		"""
+		Update frames from stream
+		"""
 		# keep looping infinitely until the thread is terminated
 		try:
 			for stream in self.stream:
@@ -151,10 +169,15 @@ class PiGear:
 		self.camera.close()
 
 	def read(self):
-		# return the frame most recently read
+		"""
+		return the frame
+		"""
 		return self.frame
 
 	def stop(self):
+		"""
+		Terminates the Read process
+		"""
 		# indicate that the thread should be terminated
 		self.terminate = True
 		# wait until stream resources are released (producer thread might be still grabbing frame)

@@ -1,6 +1,22 @@
+"""
+Copyright (c) 2019 Abhishek Thakur
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+"""
+
 # import the necessary packages
 from threading import Thread
 from pkg_resources import parse_version
+from helper import capPropId
+from helper import check_CV_version
 import re
 
 #Note: Remember, Not all parameters are supported by all cameras which is 
@@ -25,30 +41,28 @@ try:
 		raise ImportError('OpenCV library version >= 3.0 is only supported by this library')
 
 except ImportError as error:
-	raise ImportError('Failed to detect OpenCV executables, install it with "pip install opencv-python" command.')
+	raise ImportError('Failed to detect OpenCV executables, install it with `pip install opencv-contrib-python` command.')
 
 
 def youtube_url_validation(url):
-	#convert youtube video url and checks its validity
+	"""
+	convert youtube video url and checks its validity
+    """
     youtube_regex = (
         r'(https?://)?(www\.)?'
         '(youtube|youtu|youtube-nocookie)\.(com|be)/'
         '(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})')
-
     youtube_regex_match = re.match(youtube_regex, url)
-
     if youtube_regex_match:
         return youtube_regex_match.group(6)
-
     return youtube_regex_match
 
 
 class CamGear:
-
 	"""
 	This class targets any common IP or USB Cameras(including Raspberry Pi Compatible), 
 	Various Video Files Formats and Network Video Streams(Including Gstreamer Raw Video Capture Pipeline) 
-	for obtaining high-speed real-time frames by utilizing OpenCV and multi-threading. It also supports direct Youtube Stream.
+	for obtaining high-speed real-time frames by utilizing OpenCV and multi-threading. Now, it also supports Youtube Streaming.
 
 	:param source : take the source value. Its default value is 0. Valid Inputs are:
 
@@ -77,7 +91,6 @@ class CamGear:
     					/ This delay is essentially required for camera to warm-up. 
     					/Its default value is 0.
     """
-
 	def __init__(self, source = 0, y_tube = False, backend = 0, colorspace = None, logging = False, time_delay = 0, **options):
 
 
@@ -107,7 +120,7 @@ class CamGear:
 
 		if backend and isinstance(backend, int):
 			# add backend if scpecified and initialize the camera stream
-			if self.getCV_version() == 3:
+			if check_CV_version() == 3:
 				# Different OpenCV 3.4.x statement
 				self.stream = cv2.VideoCapture(source + backend)
 			else:
@@ -118,16 +131,21 @@ class CamGear:
 			self.stream = cv2.VideoCapture(source)
 
 
+		#initialisation colorspace variable
 		self.color_space = None
+
+		#reformat dict
+		options = {k.strip(): v.strip() for k,v in options.items()}
+
 
 		try: 
 			# try to apply attributes to source if specified
 			for key, value in options.items():
-				self.stream.set(self.capPropId(key.strip()),value)
+				self.stream.set(capPropId(key),value)
 
 			# seperately handle colorspace value to int conversion
 			if not(colorspace is None):
-				self.color_space = self.capPropId(colorspace.strip())
+				self.color_space = capPropId(colorspace.strip())
 
 		except Exception as e:
 			# Catch if any error occurred
@@ -148,23 +166,18 @@ class CamGear:
 		self.terminate = False
 
 	def start(self):
-		# start the thread to read frames from the video stream
+		"""
+		start the thread to read frames from the video stream
+		"""
 		self.thread = Thread(target=self.update, args=())
 		self.thread.daemon = True
 		self.thread.start()
 		return self
 
-	def capPropId(self, property):
-		#Retrieves the Property's Integer(Actual) value. 
-		return getattr(cv2, property)
-
-	def getCV_version(self):
-		if parse_version(cv2.__version__) >= parse_version('4'):
-			return 4
-		else:
-			return 3
-
 	def update(self):
+		"""
+		Update frames from stream
+		"""
 		# keep looping infinitely until the thread is terminated
 		while True:
 			# if the thread indicator variable is set, stop the thread
@@ -199,13 +212,18 @@ class CamGear:
 		self.stream.release()
 
 	def read(self):
-		# return the frame most recently read
+		"""
+		return the frame
+		"""
 		return self.frame
 
 	def stop(self):
+		stop(self):
+		"""
+		Terminates the Read process
+		"""
 		# indicate that the thread should be terminate
 		self.terminate = True
-
 		# wait until stream resources are released (producer thread might be still grabbing frame)
 		if self.thread is not None: 
 			self.thread.join()
