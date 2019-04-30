@@ -68,7 +68,7 @@ class CamGear:
 
 	    - Index(integer): Valid index of the video device.
 
-	    - YouTube Url(string): Youtube URL as input.
+	    - YouTube Url(string): Valid Youtube URL as input.
 
 	    - Network_Stream_Address(string): Incoming Stream Valid Network address. 
 

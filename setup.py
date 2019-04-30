@@ -44,7 +44,7 @@ setup(
     name='vidgear',
     packages=['vidgear','vidgear.gears'],
     version='0.1.4',
-    description='Powerful Multi-Threaded OpenCV based Turbo Video Processing Python Library with unique State-of-the-Art Features',
+    description='Powerful Multi-Threaded OpenCV and FFmpeg based Turbo Video Processing Python Library with unique State-of-the-Art Features.',
     license='MIT License',
     author='abhiTronix',
     install_requires = ["pafy, requests"] 

@@ -35,8 +35,8 @@ except ImportError as error:
 
 class WriteGear:
 	"""
-	WriteGear class contains advanced tools that enable High-Speed Lossless Video Writing with Compression capabilities within Vidgear. 
-	This class basically pipelines, processes and finally writes video frames into a valid Video File.
+	WriteGear class contains advanced tools that enables High-Speed Lossless Video Encoding with Compression capabilities within Vidgear. 
+	This class basically pipelines, processes, encodes and finally writes video frames into a valid Video File.
 
 	In Compression Mode, this class utilizes FFmpeg(a powerful tool that can do almost anything you can imagine with multimedia files) 
 	 powerful encoders to encode and reduce the output to a smaller size, without sacrificing the video quality. This class give us silent 
@@ -89,13 +89,13 @@ class WriteGear:
 		self.DEVNULL = None #handles silent execution of FFmpeg (if logging is disabled)
 		self.cmd = ''     #handle FFmpeg Pipe command
 		self.ffmpeg = ''  #handle valid FFmpeg binaries location
-		self.initiate = True #initiate one time process
+		self.initiate = True #initiate one time process for valid process initialization
 
 
 		# handles output file name (if not given)
 		if not output_filename:
-			output_filename += 'VidGear-{}.mp4'.format(time.strftime("%Y%m%d-%H%M%S")) # auto-assign valid name
-		elif os.path.isdir(output_filename): # check if directory path is given instead
+			raise ValueError('Kindly provide a valid `output_filename` value, Refer VidGear Docs for more information!')
+		elif output_filename and os.path.isdir(output_filename): # check if directory path is given instead
 			output_filename += os.path.join(output_filename, 'VidGear-{}.mp4'.format(time.strftime("%Y%m%d-%H%M%S"))) # auto-assign valid name and adds it to path
 		else:
 			pass
@@ -218,7 +218,7 @@ class WriteGear:
 		:param rgb_mode (boolean): set this flag to enable rgb_mode, Its default value is False.
 		"""
 
-		#turn of initiate flag
+		#turn off initiate flag
 		self.initiate = False
 		#initialize input parameters
 		input_parameters = {}
@@ -289,7 +289,7 @@ class WriteGear:
 		Start OpenCV VideoWriter Class process
 		"""
 
-		#turn of initiate flag
+		#turn off initiate flag
 		self.initiate = False
 
 		#initialize essential parameter variables
