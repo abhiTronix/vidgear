@@ -136,15 +136,16 @@ class PiGear:
 					self.terminate =True
 				if self.terminate:
 					break
-				self.frame = stream.array
+				frame = stream.array
 				self.rawCapture.seek(0)
 				self.rawCapture.truncate()
 
 				if not(self.color_space is None):
 					# apply colorspace to frames
+					color_frame = None
 					try:
 						if isinstance(self.color_space, int):
-							self.frame = cv2.cvtColor(self.frame, self.color_space)
+							color_frame = cv2.cvtColor(frame, self.color_space)
 						else:
 							self.color_space = None
 							if logging:
@@ -156,6 +157,13 @@ class PiGear:
 						if logging:
 							print(e)
 							print('Input Colorspace is not a valid Colorspace!')
+
+					if not(color_frame is None):
+						self.frame = color_frame
+					else:
+						self.frame = frame
+				else:
+					self.frame = frame
 
 		except Exception as e:
 			if self.logging:

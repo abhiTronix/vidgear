@@ -135,7 +135,7 @@ class CamGear:
 		self.color_space = None
 
 		#reformat dict
-		options = {k.strip(): v.strip() for k,v in options.items()}
+		options = {k.strip(): v for k,v in options.items()}
 
 
 		try: 
@@ -185,13 +185,14 @@ class CamGear:
 				break
 
 			# otherwise, read the next frame from the stream
-			(self.grabbed, self.frame) = self.stream.read()
+			(self.grabbed, frame) = self.stream.read()
 
 			if not(self.color_space is None):
 				# apply colorspace to frames
+				color_frame = None
 				try:
 					if isinstance(self.color_space, int):
-						self.frame = cv2.cvtColor(self.frame, self.color_space)
+						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
 						self.color_space = None
 						if logging:
@@ -202,6 +203,13 @@ class CamGear:
 					if logging:
 						print(e)
 						print('Input Colorspace is not a valid Colorspace!')
+
+				if not(color_frame is None):
+					self.frame = color_frame
+				else:
+					self.frame = frame
+			else:
+				self.frame = frame
 
 			#check for valid frames
 			if not self.grabbed:
