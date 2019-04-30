@@ -152,7 +152,7 @@ class CamGear:
 			if logging:
 				print(e)
 
-		(self.grabbed, self.frame) = self.stream.read()
+		(grabbed, self.frame) = self.stream.read()
 
 		# applying time delay to warm-up webcam only if specified
 		if time_delay:
@@ -185,7 +185,12 @@ class CamGear:
 				break
 
 			# otherwise, read the next frame from the stream
-			(self.grabbed, frame) = self.stream.read()
+			(grabbed, frame) = self.stream.read()
+
+			#check for valid frames
+			if not grabbed:
+				#no frames received, then safely exit
+				self.terminate = True
 
 			if not(self.color_space is None):
 				# apply colorspace to frames
@@ -210,11 +215,6 @@ class CamGear:
 					self.frame = frame
 			else:
 				self.frame = frame
-
-			#check for valid frames
-			if not self.grabbed:
-				#no frames received, then safely exit
-				self.terminate = True
 				
 		#release resources
 		self.stream.release()

@@ -74,7 +74,7 @@ class PiGear:
 		self.color_space = None
 
 		#reformat dict
-		options = {k.strip(): v.strip() for k,v in options.items()}
+		options = {k.strip(): v for k,v in options.items()}
 
 		try: 
 			# apply attributes to source if specified
@@ -133,7 +133,7 @@ class PiGear:
 				if stream is None:
 					if self.logging:
 						print('The Camera Module is not working Properly!')
-					self.terminate =True
+					self.terminate = True
 				if self.terminate:
 					break
 				frame = stream.array
