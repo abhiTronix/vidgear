@@ -16,7 +16,7 @@ copies or substantial portions of the Software.
 from threading import Thread
 from pkg_resources import parse_version
 import logging
-from helper import capPropId
+from .helper import capPropId
 
 try:
 	# import OpenCV Binaries
@@ -43,15 +43,15 @@ class PiGear:
 
 	:param (string) colorspace: set colorspace of the video stream. Its default value is None.
 
-    :param (dict) **options: sets parameter supported by PiCamera Class to the input video stream. 
-    						/ These attribute provides the flexibity to manuplate input raspicam video stream directly. 
-    						/ Parameters can be passed using this **option, allows you to pass keyworded variable length of arguments to PiGear Class.
+	:param (dict) **options: sets parameter supported by PiCamera Class to the input video stream. 
+							/ These attribute provides the flexibity to manuplate input raspicam video stream directly. 
+							/ Parameters can be passed using this **option, allows you to pass keyworded variable length of arguments to PiGear Class.
 
-    :param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
+	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 
-    :param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
-    				/ This delay is essentially required for camera to warm-up. 
-    				/ Its default value is 0.
+	:param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
+					/ This delay is essentially required for camera to warm-up. 
+					/ Its default value is 0.
 
 	"""
 	def __init__(self, resolution=(640, 480), framerate=25, colorspace = None, logging = False, time_delay = 0, **options):

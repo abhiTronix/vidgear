@@ -15,8 +15,8 @@ copies or substantial portions of the Software.
 # import the necessary packages
 from threading import Thread
 from pkg_resources import parse_version
-from helper import capPropId
-from helper import check_CV_version
+from .helper import capPropId
+from .helper import check_CV_version
 import re
 
 #Note: Remember, Not all parameters are supported by all cameras which is 
@@ -47,15 +47,15 @@ except ImportError as error:
 def youtube_url_validation(url):
 	"""
 	convert youtube video url and checks its validity
-    """
-    youtube_regex = (
-        r'(https?://)?(www\.)?'
-        '(youtube|youtu|youtube-nocookie)\.(com|be)/'
-        '(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})')
-    youtube_regex_match = re.match(youtube_regex, url)
-    if youtube_regex_match:
-        return youtube_regex_match.group(6)
-    return youtube_regex_match
+	"""
+	youtube_regex = (
+		r'(https?://)?(www\.)?'
+		'(youtube|youtu|youtube-nocookie)\.(com|be)/'
+		'(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})')
+	youtube_regex_match = re.match(youtube_regex, url)
+	if youtube_regex_match:
+		return youtube_regex_match.group(6)
+	return youtube_regex_match
 
 
 class CamGear:
@@ -66,13 +66,13 @@ class CamGear:
 
 	:param source : take the source value. Its default value is 0. Valid Inputs are:
 
-	    - Index(integer): Valid index of the video device.
+		- Index(integer): Valid index of the video device.
 
-	    - YouTube Url(string): Valid Youtube URL as input.
+		- YouTube Url(string): Valid Youtube URL as input.
 
-	    - Network_Stream_Address(string): Incoming Stream Valid Network address. 
+		- Network_Stream_Address(string): Incoming Stream Valid Network address. 
 
-	    - GStreamer (string) videostream Support
+		- GStreamer (string) videostream Support
 
 
 	:param (boolean) y_tube: enables YouTube Mode, i.e If enabled class will interpret the given source string as YouTube URL. Its default value is False.
@@ -81,16 +81,16 @@ class CamGear:
 
 	:param (string) colorspace: set the colorspace of the video stream. Its default value is None.
 
-    :param (dict) **options: sets all properties supported by OpenCV's VideoCapture Class properties to the input video stream in CamGear Class. 
-                      / These attribute provides the flexibility to manipulate input webcam video stream directly. 
-                      / Parameters can be passed using this **option, allows you to pass keyworded variable length of arguments to CamGear Class.
+	:param (dict) **options: sets all properties supported by OpenCV's VideoCapture Class properties to the input video stream in CamGear Class. 
+					  / These attribute provides the flexibility to manipulate input webcam video stream directly. 
+					  / Parameters can be passed using this **option, allows you to pass keyworded variable length of arguments to CamGear Class.
 
-    :param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
+	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 
-    :param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
-    					/ This delay is essentially required for camera to warm-up. 
-    					/Its default value is 0.
-    """
+	:param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
+						/ This delay is essentially required for camera to warm-up. 
+						/Its default value is 0.
+	"""
 	def __init__(self, source = 0, y_tube = False, backend = 0, colorspace = None, logging = False, time_delay = 0, **options):
 
 
@@ -218,7 +218,6 @@ class CamGear:
 		return self.frame
 
 	def stop(self):
-		stop(self):
 		"""
 		Terminates the Read process
 		"""

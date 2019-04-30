@@ -132,7 +132,7 @@ def download_ffmpeg_binaries(path, os_windows):
 		windows_bit = 'win64' if platform.machine().endswith('64') else 'win32' #checks current Windows Bit Mode
 		#inialize varibles
 		file_url = 'https://ffmpeg.zeranoe.com/builds/{}/static/ffmpeg-latest-{}-static.zip'.format(windows_bit, windows_bit)
-    	file_name = os.path.join(os.path.abspath(path),'ffmpeg-latest-{}-static.zip'.format(windows_bit))
+		file_name = os.path.join(os.path.abspath(path),'ffmpeg-latest-{}-static.zip'.format(windows_bit))
 		file_path = os.path.join(os.path.abspath(path), 'ffmpeg-latest-{}-static/bin/ffmpeg.exe'.format(windows_bit))
 		#check if file already exists
 		if os.path.isfile(file_path):
@@ -200,6 +200,7 @@ def check_output(*args, **kwargs):
 	"""
 	#silent subprocess execution
 	closeNULL = 0
+	import subprocess as sp
 	try:
 		from subprocess import DEVNULL
 		closeNULL = 0

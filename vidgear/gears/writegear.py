@@ -17,9 +17,9 @@ from pkg_resources import parse_version
 import os, sys, time
 import subprocess as sp
 
-from helper import get_valid_ffmpeg_path
-from helper import capPropId
-from helper import dict2Args
+from .helper import get_valid_ffmpeg_path
+from .helper import capPropId
+from .helper import dict2Args
 
 try:
 	# import OpenCV Binaries
@@ -244,7 +244,7 @@ class WriteGear:
 
 
 
-	def startFFmpeg_Process(self, input_params, output_param):
+	def startFFmpeg_Process(self, input_params, output_params):
 
 		"""
 		Start FFmpeg process
@@ -257,19 +257,19 @@ class WriteGear:
 		input_parameters = dict2Args(input_params)
 
 		#pre-assign default encoder parameters (if not assigned by user).
-		if "-vcodec" not in output_param:
-			output_param["-vcodec"] = "libx264"
-		if output_param["-vcodec"] in ["libx264", "libx265"]:
-			if "-crf" in output_param: 
+		if "-vcodec" not in output_params:
+			output_params["-vcodec"] = "libx264"
+		if output_params["-vcodec"] in ["libx264", "libx265"]:
+			if "-crf" in output_params: 
 				pass
 			else:
-				output_param["-crf"] = "18"
-			if "-preset" in output_param: 
+				output_params["-crf"] = "18"
+			if "-preset" in output_params: 
 				pass
 			else:
-				output_param["-preset"] = "fast"
+				output_params["-preset"] = "fast"
 		#convert output parameters to list
-		output_parameters = self.dict2Args(output_param)
+		output_parameters = dict2Args(output_params)
 		#format command
 		cmd = [self.ffmpeg , "-y"] + ["-f", "rawvideo", "-vcodec", "rawvideo"] + input_parameters + ["-i", "-"] + output_parameters + [self.out_file]
 		#assign value to class variable
