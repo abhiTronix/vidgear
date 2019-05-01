@@ -23,7 +23,7 @@ Key features that differentiates VidGear from the other existing OpenCV based vi
 - [x]  ***In-Built Lossless Video Encoding with FFmpeg & OpenCV*** <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/>
 - [x]  ***Flexible output Video Compression control capabilities*** <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/>
 - [x]  ***Direct YouTube Video pipelining** into OpenCV by using its URL address* <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/>
-- [x]  *On-the-fly **Video Stream ColorSpace Conversion** Capabilities* <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/>
+- [x]  ***On-the-fly Video Source ColorSpace Conversion*** <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/>
 - [x]  ***Automated prerequisites installation*** <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif" />
 - [x]  *Built-in Robust Error and frame synchronization Handling*
 - [x]  *Multi-Platform compatibility*
@@ -58,7 +58,7 @@ Vidgear contains following  ***powerful gears (multi-threaded Video Processing c
 
    	* **pafy**: For direct YouTube Video Pipelining into OpenCV, Vidgear requires [Pafy](https://pypi.org/project/pafy/) python library.
 
-	* **FFmpeg:** VidGear requires FFmpeg installation for Compression capabilities. ***Follow this [WIKI Page](https://github.com/abhiTronix/vidgear/wiki/FFmpeg-Installation) for latest FFmpeg installation.*** 
+	* **FFmpeg:** VidGear requires FFmpeg installation for Compression capabilities. ***Follow this [WIKI Page](https://github.com/abhiTronix/vidgear/wiki/FFmpeg-Installation) for latest FFmpeg installation.*** :warning:
 
 
 &nbsp; 

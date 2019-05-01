@@ -163,20 +163,26 @@ class WriteGear:
 		"""
 		if frame is None: #NoneType frames will be skipped 
 			return
+
 		#get height, width and number of channels of current frame
 		height, width = frame.shape[:2]
 		channels = frame.shape[-1] if frame.ndim == 3 else 1
+
 		# assign values to class variables on first run 
 		if self.initiate:
 			self.inputheight = height
 			self.inputwidth = width
 			self.inputchannels = channels
+			if self.logging:
+				print('InputFrame => Height:{} Width:{} Channels:{}'.format(self.inputheight, self.inputwidth, self.inputchannels))
+
 		#validate size of frame
 		if height != self.inputheight or width != self.inputwidth:
-			raise ValueError('All images in a video should have same size')
+			raise ValueError('All frames in a video should have same size')
 		#validate number of channels
 		if channels != self.inputchannels:
-			raise ValueError('All images in a video should have same number of channels')
+			raise ValueError('All frames in a video should have same number of channels')
+
 		if self.compression:
 			# checks if compression mode is enabled
 
@@ -185,7 +191,8 @@ class WriteGear:
 				#start pre-processing and initiate process 
 				self.Preprocess(channels, rgb = rgb_mode)
 				# Check status of the process
-				assert self.process is not None  
+				assert self.process is not None
+
 			#write the frame
 			try:
 				self.process.stdin.write(frame.tostring())
@@ -342,14 +349,6 @@ class WriteGear:
 			self.process = cv2.VideoWriter(self.out_file, apiPreference = BACKEND, fourcc = FOURCC, fps = FPS, frameSize = (WIDTH, HEIGHT), isColor = COLOR)
 		else:
 			self.process = cv2.VideoWriter(self.out_file, fourcc = FOURCC, fps = FPS, frameSize = (WIDTH, HEIGHT), isColor = COLOR)
-
-
-	def reset(self):
-		"""
-		Reset the initiate flag to handle modified new frames at any instant  
-		"""
-		self.initiate = True
-
 
 
 	def close(self):
