@@ -105,17 +105,19 @@ writer.close()
 
 <h3><img src="http://www.animatedimages.org/data/media/81/animated-hand-image-0021.gif" width="25" height="20"/> Note: Vidgear automatically handles all required prerequisites(except FFmpeg) installation according to your system requirements<img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/></h3>
 
-* **Critical:** VidGear must require *`OpenCV with contrib`* (3.0+) python library to be installed on your machine which is critical for its core algorithm functioning. You can build it from from [scratch](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) ([Raspberry Pi](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/)) or Vidgear automatically installs *`OpenCV with contrib`* python library for you based on your system from [PyPi](https://pypi.org/project/opencv-contrib-python/).
+### Critical: 
+
+* **OpenCV(with contrib):** VidGear must require *`OpenCV with contrib`* (3.0+) python library to be installed on your machine which is critical for its core algorithm functioning. You can build it from from [scratch](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) ([Raspberry Pi](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/)) or Vidgear automatically installs *`OpenCV with contrib`* python library for you based on your system from [PyPi](https://pypi.org/project/opencv-contrib-python/).
 
 * **FFmpeg:** VidGear requires FFmpeg installation for Compression capabilities. ***Follow this [WIKI Page](https://github.com/abhiTronix/vidgear/wiki/FFmpeg-Installation) for latest FFmpeg installation.*** :warning:
 
-* **Additional:** 
+### Additional:
 
-   	* **PiCamera:** If you are using Raspberry Pi Camera Modules such as *OmniVision OV5647 Camera Module* and *Sony IMX219 Camera Module*. It requires additional [Picamera](https://picamera.readthedocs.io/en/release-1.13/install.html) library installation on your Raspberry Pi machine prior to its installation (*Latest versions recommended*).
+* **PiCamera:** If you are using Raspberry Pi Camera Modules such as *OmniVision OV5647 Camera Module* and *Sony IMX219 Camera Module*. It requires additional [Picamera](https://picamera.readthedocs.io/en/release-1.13/install.html) library installation on your Raspberry Pi machine prior to its installation (*Latest versions recommended*).
 
-         <img src="http://www.animatedimages.org/data/media/81/animated-hand-image-0021.gif" width="25" height="20"/> ***Also, make sure to [enable Raspberry Pi hardware specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this library.***
+<img src="http://www.animatedimages.org/data/media/81/animated-hand-image-0021.gif" width="25" height="20"/> ***Also, make sure to [enable Raspberry Pi hardware specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this library.***
 
-   	* **pafy**: For direct YouTube Video Pipelining into OpenCV, Vidgear requires [Pafy](https://pypi.org/project/pafy/) python library.
+* **pafy**: For direct YouTube Video Pipelining into OpenCV, Vidgear requires [Pafy](https://pypi.org/project/pafy/) python library.
 
 
 &nbsp; 
@@ -123,9 +125,9 @@ writer.close()
 ## Installation
 - **From PyPI(Stable Only):** `VidGear` can be easily installed as follows(*available on [Python Package Index (PyPI)](https://pypi.org/project/vidgear/)*):
 
-
+ 
   ```sh
-  sudo pip install vidgear
+  $ pip install vidgear
   ```
 
 &nbsp; 
@@ -135,13 +137,13 @@ writer.close()
 
 You are welcome to contribute with [suggestions, feature requests and pull requests](https://github.com/abhiTronix/vidgear/pulls).
 
-**Clone this repository(development):** You can clone this repository for latest releases(*maybe experimental*) and development purposes and thereby can install as follows:
+**Clone this repository(development):** You can clone this repository for latest releases (*maybe experimental*) for development purposes and thereby can install as follows:
 
 
   ```sh
-  git clone https://github.com/abhiTronix/vidgear.git
-  cd vidgear
-  sudo pip install .
+  $ git clone https://github.com/abhiTronix/vidgear.git
+  $ cd vidgear
+  $ pip install .
   ```
    
 &nbsp; 
