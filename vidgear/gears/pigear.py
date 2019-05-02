@@ -70,6 +70,9 @@ class PiGear:
 		self.camera.resolution = resolution
 		self.camera.framerate = framerate
 
+		#initialise framerate variable
+		self.framerate = framerate
+
 		#initialisation colorspace variable
 		self.color_space = None
 

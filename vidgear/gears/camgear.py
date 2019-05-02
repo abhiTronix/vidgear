@@ -152,6 +152,19 @@ class CamGear:
 			if logging:
 				print(e)
 
+		#initialize framerate variable
+		self.framerate = 0
+
+		#save framerate
+		try:
+			_fps = self.stream.get(cv2.CAP_PROP_FPS)
+			if _fps>1:
+				self.framerate = _fps
+		except Exception as e:
+			if self.logging:
+				print(e)
+			self.framerate = 0
+
 		(grabbed, self.frame) = self.stream.read()
 
 		# applying time delay to warm-up webcam only if specified
