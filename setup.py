@@ -12,7 +12,7 @@ The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 """
 
-import os
+import platform
 import setuptools
 from pkg_resources import parse_version
 from setuptools import setup
@@ -49,7 +49,7 @@ setup(
     author='abhiTronix',
     install_requires = ["pafy", "requests"] 
     + (["opencv-contrib-python"] if test_opencv() else []) 
-    + (["picamera"] if ("arm" in os.uname()[4][:3]) else []),
+    + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
     long_description=long_description,
     long_description_content_type="text/markdown",
     author_email='abhi.una12@gmail.com',
