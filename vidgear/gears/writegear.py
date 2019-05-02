@@ -85,6 +85,7 @@ class WriteGear:
 		self.inputheight = None
 		self.inputwidth = None
 		self.inputchannels = None
+		self.inputframerate = 0
 		self.process = None #handle process to be frames written
 		self.DEVNULL = None #handles silent execution of FFmpeg (if logging is disabled)
 		self.cmd = ''     #handle FFmpeg Pipe command
@@ -106,7 +107,7 @@ class WriteGear:
 		basepath, _ = os.path.split(_filename) #extract file base path for debugging ahead
 
 		#cleans and reformat output parameters and does assigning
-		if self.output_parameters:
+		if output_params:
 			self.output_parameters = {str(k).strip().lower(): str(v).strip().lower() for k,v in output_params.items()}
 
 
@@ -115,15 +116,21 @@ class WriteGear:
 
 			if self.logging:
 				print('Compression Mode is enabled therefore checking for valid FFmpeg executables!')
+				print(self.output_parameters)
 
 			# handles where to save the downloaded FFmpeg Static Binaries on Windows(if specified)
-			ffmpeg_download_path = ''
+			ffmpeg_download_path_ = ''
 			if self.output_parameters and "-ffmpeg_download_path" in self.output_parameters:
-				ffmpeg_download_path += self.output_parameters["-ffmpeg_download_path"]
+				ffmpeg_download_path_ += self.output_parameters["-ffmpeg_download_path"]
 				del self.output_parameters["-ffmpeg_download_path"] #clean
 
+			#handle input framerate if specified
+			if self.output_parameters and "-input_framerate" in self.output_parameters:
+				self.inputframerate += float(self.output_parameters["-input_framerate"])
+				del self.output_parameters["-input_framerate"] #clean
+
 			#validate the FFmpeg path/binaries and returns valid FFmpeg file executable location(also downloads static binaries on windows) 
-			actual_command = get_valid_ffmpeg_path(custom_ffmpeg, self.os_windows, ffmpeg_download_path, self.logging)
+			actual_command = get_valid_ffmpeg_path(custom_ffmpeg, self.os_windows, ffmpeg_download_path = ffmpeg_download_path_, logging = self.logging)
 
 			#check if valid path returned
 			if actual_command:
@@ -244,7 +251,12 @@ class WriteGear:
 			input_parameters["-pix_fmt"] = "rgba" if rgb else "bgra"
 		else:
 			raise ValueError("Handling Frames with (1 > Channels > 4) is not implemented!")
-		pass
+
+		if self.inputframerate > 4:
+			#set input framerate - minimum threshold is 5.0
+			if self.logging:
+				print("Setting Input FrameRate = {}".format(self.inputframerate))
+			input_parameters["-framerate"] = str(self.inputframerate)
 
 		#initiate FFmpeg process
 		self.startFFmpeg_Process(input_params = input_parameters, output_params = self.output_parameters)
@@ -334,6 +346,7 @@ class WriteGear:
 					COLOR = bool(int(value))
 				else:
 					pass
+
 		except Exception as e:
 			# log if something is wrong
 			if self.logging:

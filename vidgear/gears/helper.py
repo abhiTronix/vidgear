@@ -55,7 +55,7 @@ def dict2Args(param_dict):
 	return args
 
 
-def get_valid_ffmpeg_path(custom_ffmpeg, is_windows, ffmpeg_download_path, logging):
+def get_valid_ffmpeg_path(custom_ffmpeg, is_windows, ffmpeg_download_path = '', logging = False):
 	"""
 	Validate the FFmpeg path/binaries and returns valid FFmpeg file executable location(also downloads static binaries on windows) 
 	"""
@@ -75,10 +75,15 @@ def get_valid_ffmpeg_path(custom_ffmpeg, is_windows, ffmpeg_download_path, loggi
 					#otherwise save to Temp Directory
 					import tempfile
 					ffmpeg_download_path = tempfile.gettempdir()
+
+				if logging:
+					print('FFmpeg Windows Download Path: {}'.format(ffmpeg_download_path))
+
 				#download Binaries
 				_path = download_ffmpeg_binaries(path = ffmpeg_download_path, os_windows = is_windows)
 				#assign to local variable
 				final_path += _path
+
 			except Exception as e:
 				#log if any error occured
 				if logging:
@@ -115,7 +120,11 @@ def get_valid_ffmpeg_path(custom_ffmpeg, is_windows, ffmpeg_download_path, loggi
 		else:
 			#otherwise assign ffmpeg binaries from system
 			final_path += "ffmpeg"
-	# Validate FFmeg Binaries. returns final path if tests passed
+
+	if logging:
+		print('Final FFmpeg Path: {}'.format(final_path))
+
+	# Final Auto-Validation for FFmeg Binaries. returns final path if test is passed
 	if validate_ffmpeg(final_path, logging = logging):
 		return final_path
 	else:
@@ -134,6 +143,7 @@ def download_ffmpeg_binaries(path, os_windows):
 		file_url = 'https://ffmpeg.zeranoe.com/builds/{}/static/ffmpeg-latest-{}-static.zip'.format(windows_bit, windows_bit)
 		file_name = os.path.join(os.path.abspath(path),'ffmpeg-latest-{}-static.zip'.format(windows_bit))
 		file_path = os.path.join(os.path.abspath(path), 'ffmpeg-latest-{}-static/bin/ffmpeg.exe'.format(windows_bit))
+		base_path, _ = os.path.split(file_name) #extract file base path
 		#check if file already exists
 		if os.path.isfile(file_path):
 			final_path += file_path #skip download if does 
@@ -163,7 +173,7 @@ def download_ffmpeg_binaries(path, os_windows):
 						sys.stdout.flush()
 			print("\nExtracting executables, Please Wait...")
 			with zipfile.ZipFile(file_name, "r") as zip_ref:
-				zip_ref.extractall(".")
+				zip_ref.extractall(base_path)
 			#perform cleaning
 			os.remove(file_name)
 			print("FFmpeg binaries for Windows Configured Successfully!")

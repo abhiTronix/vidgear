@@ -47,7 +47,7 @@ setup(
     description='Powerful Multi-Threaded OpenCV and FFmpeg based Turbo Video Processing Python Library with unique State-of-the-Art Features.',
     license='MIT License',
     author='abhiTronix',
-    install_requires = ["pafy", "requests"] 
+    install_requires = ["pafy", "youtube-dl", "requests"] 
     + (["opencv-contrib-python"] if test_opencv() else []) 
     + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
     long_description=long_description,
