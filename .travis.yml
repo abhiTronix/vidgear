@@ -13,14 +13,12 @@ install:
   - "pip install ."
   - "pip install --upgrade pytest"
   - "pip install --upgrade youtube-dl"
-
-matrix:
-    - python: 3.7
-      dist: xenial
+dist: xenial
 python: 
   - "2.7"
   - "3.4"
   - "3.5"
   - "3.6"
+  - "3.7"
 script: 
   - pytest -sv
