@@ -51,9 +51,9 @@ matrix:
 install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
-  - "pip install --upgrade pip wheel"
-  - "pip install ."
-  - "pip install --upgrade pytest"
-  - "pip install --upgrade youtube-dl"
+  - "python - m pip install --upgrade --user pip wheel"
+  - "python - m pip install --user ."
+  - "python - m pip install --upgrade --user pytest"
+  - "python - m pip install --upgrade --user youtube-dl"
 test_script:
-- pytest -sv
+- python - m pytest -sv
