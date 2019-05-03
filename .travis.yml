@@ -1,0 +1,32 @@
+language: python
+branches:
+  only:
+    - travis
+os:
+  - windows
+  - linux
+    dist: xenial
+    addons:
+      apt:
+        sources:
+          - ppa:jonathonf/ffmpeg-4
+        packages:
+        - ffmpeg
+
+python:
+  - "2.7"
+  - "3"
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "3.7"
+cache: pip
+install:
+  - pip install .
+  - pip install --upgrade pytest, youtube-dl
+  - pip install pytest-cov
+  - pip install codecov
+script:
+  - pytest --cov=vidgear --cov-report term-missing tests/
+after_success:
+  - codecov
