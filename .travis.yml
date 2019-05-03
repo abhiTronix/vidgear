@@ -5,13 +5,13 @@ branches:
 os:
   - windows
   - linux
-    dist: xenial
-    addons:
-      apt:
-        sources:
-          - ppa:jonathonf/ffmpeg-4
-        packages:
-        - ffmpeg
+dist: xenial
+addons:
+  apt:
+    sources:
+      - ppa:jonathonf/ffmpeg-4
+    packages:
+      - ffmpeg
 
 python:
   - "2.7"
