@@ -56,4 +56,4 @@ install:
   - "python -m pip install --upgrade pytest"
   - "python -m pip install --upgrade youtube-dl"
 test_script:
-- python - m pytest -sv
+- python -m pytest -sv
