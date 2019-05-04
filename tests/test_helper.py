@@ -81,7 +81,7 @@ def test_download_ffmpeg_linux(path = tempfile.gettempdir()):
 				#perform cleaning
 				os.remove(file_name)
 				print("FFmpeg binaries for Linux Configured Successfully at {}!".format(file_path))
-		except:
+		except Exception as e:
 			pytest.fail(str(e))
 
 

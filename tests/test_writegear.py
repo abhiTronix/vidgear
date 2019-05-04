@@ -1,5 +1,6 @@
 import os, pytest, platform, tempfile, shutil, sys
 from vidgear.gears import WriteGear
+from vidgear.gears.helper import check_python_version
 
 def getBitmode(_os_windows=True):
 	"""
