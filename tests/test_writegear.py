@@ -17,6 +17,11 @@ Auxliary test for FFmpeg Static binaries installation on linux:
 def test_download_ffmpeg_linux(path = os.path.join(tempfile.gettempdir(),'ffmpeg')):
 	if os.name != 'nt':
 		try:
+			try: 
+				os.makedirs(path)
+			except OSError:
+				if not os.path.isdir(path):
+					raise
 			#inialize varibles
 			file_url = 'https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-{}-static.tar.xz'.format(getBitmode(False))
 			file_name = os.path.join(os.path.abspath(path),'ffmpeg-release-{}-static.tar.xz'.format(getBitmode(False)))
@@ -79,7 +84,7 @@ def test_download_ffmpeg_linux(path = os.path.join(tempfile.gettempdir(),'ffmpeg
 				#perform cleaning
 				os.remove(file_name)
 				print("FFmpeg binaries for Linux Configured Successfully at {}!".format(file_path))
-		except:
+		except Exception as e:
 			pytest.fail(str(e))
 
 """
@@ -94,7 +99,7 @@ test_data_class = [
 	('Output.mp4',True,'', {" -vcodec  ":" libx264", "   -crf": 0, "-preset    ": " fast "}, True),
 	('Output.mp4',False,'', {"   -fourcc   ":"  MJPG ", "   -fps  ": 30}, True),
 	('Output.mp4',False,'', {"-fourcc":"MJPG", "-fps": 30}, True),
-	('Output.mp4',True,os.path.join(tempfile.gettempdir(), 'ffmpeg-latest-{}-static/bin/ffmpeg.exe'.format(getBitmode()) if os.name == 'nt' else 'ffmpeg-4.1.3-{}-static'.format(getBitmode(False))), {"-vcodec":"libx264", "-crf": 0, "-preset": "fast"}, True),
+	('Output.mp4',True,os.path.join(tempfile.gettempdir(), 'ffmpeg-latest-{}-static/bin/ffmpeg.exe'.format(getBitmode()) if os.name == 'nt' else 'ffmpeg/ffmpeg-4.1.3-{}-static'.format(getBitmode(False))), {"-vcodec":"libx264", "-crf": 0, "-preset": "fast"}, True),
 	('Output.mp4',True,'wrong_test_path', {" -vcodec  ":" libx264", "   -crf": 0, "-preset    ": " fast "}, False)]
 @pytest.mark.parametrize('f_name, compression, c_ffmpeg, output_params, result', test_data_class)
 def test_writegear_class(f_name, compression, c_ffmpeg, output_params, result):
