@@ -4,9 +4,10 @@
 	
 &nbsp; 
 
+[![Build Status](https://img.shields.io/travis/abhiTronix/vidgear.svg?style=popout-square&logo=travis)](https://travis-ci.org/abhiTronix/vidgear)
 [![PyPi version](https://img.shields.io/pypi/v/vidgear.svg?style=popout-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABC0lEQVRYhdWVPQoCMRCFX6HY2ghaiZUXsLW0EDyBrbWtN/EUHsHTWFnYyCL4gxibVZZlZzKTnWz0QZpk5r0vIdkF/kBPAMOKeddE+CQPKoc5Yt5cTjBMdQSwDQToWgBJAn3jmhqgltapAV6E6b5U17MGGAUaUj07TficMfIBZDV6vxowBm1BP9WbSQE4o5h9IjPJmy73TEPDDxVmoZdQrQ5jRhly9Q8tgMUXkIIWn0oG4GYQfAXQzz1PGoCiQndM7b4RgJay/h7zBLT3hASgoKjamQJMreKf0gfuAGyYtXEIAKcL/Dss15iq6ohXghozLYiAMxPuACwtIT4yeQUxAaLrZwAoqGRKGk7qDSYTfYQ8LuYnAAAAAElFTkSuQmCC)](https://pypi.org/project/vidgear/)
-[![Last Commit](https://img.shields.io/github/last-commit/abhiTronix/vidgear.svg?style=popout-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABC0lEQVRYhdWVPQoCMRCFX6HY2ghaiZUXsLW0EDyBrbWtN/EUHsHTWFnYyCL4gxibVZZlZzKTnWz0QZpk5r0vIdkF/kBPAMOKeddE+CQPKoc5Yt5cTjBMdQSwDQToWgBJAn3jmhqgltapAV6E6b5U17MGGAUaUj07TficMfIBZDV6vxowBm1BP9WbSQE4o5h9IjPJmy73TEPDDxVmoZdQrQ5jRhly9Q8tgMUXkIIWn0oG4GYQfAXQzz1PGoCiQndM7b4RgJay/h7zBLT3hASgoKjamQJMreKf0gfuAGyYtXEIAKcL/Dss15iq6ohXghozLYiAMxPuACwtIT4yeQUxAaLrZwAoqGRKGk7qDSYTfYQ8LuYnAAAAAElFTkSuQmCC)](https://github.com/abhiTronix/vidgear/commits/master)
 [![License](https://img.shields.io/github/license/abhiTronix/vidgear.svg?style=popout-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABC0lEQVRYhdWVPQoCMRCFX6HY2ghaiZUXsLW0EDyBrbWtN/EUHsHTWFnYyCL4gxibVZZlZzKTnWz0QZpk5r0vIdkF/kBPAMOKeddE+CQPKoc5Yt5cTjBMdQSwDQToWgBJAn3jmhqgltapAV6E6b5U17MGGAUaUj07TficMfIBZDV6vxowBm1BP9WbSQE4o5h9IjPJmy73TEPDDxVmoZdQrQ5jRhly9Q8tgMUXkIIWn0oG4GYQfAXQzz1PGoCiQndM7b4RgJay/h7zBLT3hASgoKjamQJMreKf0gfuAGyYtXEIAKcL/Dss15iq6ohXghozLYiAMxPuACwtIT4yeQUxAaLrZwAoqGRKGk7qDSYTfYQ8LuYnAAAAAElFTkSuQmCC)](https://github.com/abhiTronix/vidgear/blob/master/LICENSE)
+[![Build status](https://img.shields.io/appveyor/ci/abhitronix/vidgear.svg?style=popout-square&logo=appveyor)](https://ci.appveyor.com/project/abhiTronix/vidgear)
 
 <a align="center"> **VidGear is a Python library for Turbo Multi-Threaded Video Processing**</a>
 </td></tr></table>
@@ -24,9 +25,9 @@
 
 * It comes with various in-built features like **Flexible Control over Video Source properties** `like resolution, framerate, colorspace, etc.` manipulation and supports easy direct Network stream pipelining (*support for GStreamer, YouTube and other network streams like `http(s), rtp, rstp, mms, etc.`*).
 
-* This library is also very well compatible with the Raspberry-Pi Camera modules (RPiCam) and provides us the ability to exploit its various features like `brightness, saturation, sensor_mode,` etc. easily.
+* This library is also very well **compatible with the Raspberry-Pi Camera modules (RPiCam)** and provides us the ability to exploit its various features like `brightness, saturation, sensor_mode,` etc. easily.
 
-* Furthermore, VidGear utilizes **FFmpeg**'s powerful encoders to encode and reduce the output to a smaller size, without sacrificing the video quality. It provide us full-control over FFmpeg output parameters.
+* Furthermore, VidGear **utilizes FFmpeg's powerful encoders** to encode and reduce the output to a smaller size, without sacrificing the video quality. It provide us full-control over FFmpeg output parameters.
 
 &nbsp; 
 
@@ -54,7 +55,7 @@
 
 #### Basic example: 
 
-The bare minimum basic example of `WriteGear`(*Compression Mode*) with `VideoGear` class for a common *Live WebCamera stream* is as follows :
+The bare minimum python example of `WriteGear`([*Compression Mode: FFmpeg*](https://github.com/abhiTronix/vidgear/wiki/Compression-Mode:-FFmpeg#compression-mode-built-upon-ffmpeg)) with `VideoGear` video-capture class for a common *Live WebCamera stream*:
 
 ```python
 from vidgear.gears import VideoGear
@@ -103,31 +104,30 @@ writer.close()
 
 ## Prerequisites
 
-<h3><img src="http://www.animatedimages.org/data/media/81/animated-hand-image-0021.gif" width="25" height="20"/> Note: Vidgear automatically handles all required prerequisites(except FFmpeg) installation according to your system requirements<img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/></h3>
+<h3><img src="http://www.animatedimages.org/data/media/81/animated-hand-image-0021.gif" width="25" height="20"/> Note: Vidgear automatically handles all(except FFmpeg) prerequisites installation required according to your system specifications<img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/></h3>
 
 ### Critical: 
 
-* **OpenCV(with contrib):** VidGear must require *`OpenCV with contrib`* (3.0+) python library to be installed on your machine which is critical for its core algorithm functioning. You can build it from from [scratch](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) ([Raspberry Pi](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/)) or Vidgear automatically installs *`OpenCV with contrib`* python library for you based on your system from [PyPi](https://pypi.org/project/opencv-contrib-python/).
+* **OpenCV(with contrib):** VidGear must require **OpenCV**(3.0+) *python enabled* library to be installed on your machine which is critical for its core algorithm functioning. You can build it from [scratch](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) ([for Raspberry Pi](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/)), otherwise, Vidgear automatically installs latest [*`OpenCV with contrib`*](https://pypi.org/project/opencv-contrib-python/) python library for you based on your system requirements.
 
-* **FFmpeg:** VidGear requires FFmpeg installation for Compression capabilities. ***Follow this [WIKI Page](https://github.com/abhiTronix/vidgear/wiki/FFmpeg-Installation) for latest FFmpeg installation.*** :warning:
+* **FFmpeg:** VidGear must requires FFmpeg installation for Compression capabilities. ***Follow this [WIKI Page](https://github.com/abhiTronix/vidgear/wiki/FFmpeg-Installation) for latest FFmpeg installation.*** :warning:
 
 ### Additional:
 
-* **PiCamera:** If you are using Raspberry Pi Camera Modules such as *OmniVision OV5647 Camera Module* and *Sony IMX219 Camera Module*. It requires additional [Picamera](https://picamera.readthedocs.io/en/release-1.13/install.html) library installation on your Raspberry Pi machine prior to its installation (*Latest versions recommended*).
+* **PiCamera:** If you are using Raspberry Pi Camera Modules such as *OmniVision OV5647 Camera Module* and *Sony IMX219 Camera Module*. Vidgear requires additional [`Picamera`](https://picamera.readthedocs.io/en/release-1.13/install.html) library installation on your Raspberry Pi machine.
 
 <img src="http://www.animatedimages.org/data/media/81/animated-hand-image-0021.gif" width="25" height="20"/> ***Also, make sure to [enable Raspberry Pi hardware specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this library.***
 
-* **pafy**: For direct YouTube Video Pipelining into OpenCV, Vidgear requires [Pafy](https://pypi.org/project/pafy/) python library.
-
+* **pafy**: For direct YouTube Video Pipelining, Vidgear additionally requires [`Pafy`](https://pypi.org/project/pafy/) python library. Additionally for `pafy`'s backend, [`youtube-dl`](https://pypi.org/project/youtube_dl/) latest release is required.
 
 &nbsp; 
 
 ## Installation
-- **From PyPI(Stable Only):** `VidGear` can be easily installed as follows(*available on [Python Package Index (PyPI)](https://pypi.org/project/vidgear/)*):
+- **PyPI(*Stable releases Only*):** `VidGear` stable releases can be easily installed as follows(*available on [Python Package Index (PyPI)](https://pypi.org/project/vidgear/)*):
 
  
   ```sh
-  $ pip install vidgear
+    $ pip install vidgear
   ```
 
 &nbsp; 
@@ -137,14 +137,13 @@ writer.close()
 
 You are welcome to contribute with [suggestions, feature requests and pull requests](https://github.com/abhiTronix/vidgear/pulls).
 
-**Clone this repository(development):** You can clone this repository for latest releases (*maybe experimental*) for development purposes and thereby can install as follows:
+**Clone this repository(*Development*):** You can clone this repository for latest patches (*maybe experimental*) or development purposes, and thereby can install as follows:
 
-
-  ```sh
+```sh
   $ git clone https://github.com/abhiTronix/vidgear.git
   $ cd vidgear
   $ pip install .
-  ```
+```
    
 &nbsp; 
 
@@ -160,6 +159,6 @@ You are welcome to contribute with [suggestions, feature requests and pull reque
 
 ## License
 
-Copyright © 2019 AbhiTronix
+*Copyright © 2019 AbhiTronix*
 
 This project is under the MIT License. See the LICENSE file for the full license text.
