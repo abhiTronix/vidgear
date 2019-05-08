@@ -1,6 +1,7 @@
 import os
 import pytest
 from vidgear.gears import WriteGear
+from vidgear.gears import VideoGear
 from .fps import FPS
 
 def return_testvideo_path():

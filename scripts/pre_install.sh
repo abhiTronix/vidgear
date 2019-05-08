@@ -1,16 +1,16 @@
-mkdir $HOME/download || echo "Already exists.";
-mkdir $HOME/download/FFmpeg_static || echo "Already exists.";
-mkdir $HOME/download/Test_videos || echo "Already exists.";
-mkdir $HOME/download/Test_images || echo "Already exists.";
+#!/bin/bash
 
-cd $HOME/download/FFmpeg_static
+mkdir -p $HOME/Downloads
+mkdir -p $HOME/Downloads/{FFmpeg_static,Test_videos,Test_images}
 
-MACHINE_TYPE = `uname -m`
-OS_TYPE = `uname`
+cd $HOME/Downloads/FFmpeg_static
 
-if [[ "${OS_TYPE}" == "Linux" ]]; then 
+OS_TYPE=$(uname)
+MACHINE_BIT=$(uname -m)
 
-	if [ ${MACHINE_TYPE} == 'x86_64' ]; then
+if [ $OS_TYPE = "Linux" ]; then 
+
+	if [ $MACHINE_BIT = "x86_64" ]; then
 	  curl https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o ffmpeg-release-amd64-static.tar.xz
 	  tar -xJf ffmpeg-release-amd64-static.tar.xz
 	  rm ffmpeg-release-amd64-static.tar.xz
@@ -24,7 +24,7 @@ if [[ "${OS_TYPE}" == "Linux" ]]; then
 
 else
 
-    if [ ${MACHINE_TYPE} == 'x86_64' ]; then
+	if [ $MACHINE_BIT = "x86_64" ]; then
 	  curl https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-latest-win64-static.zip -o ffmpeg-latest-win64-static.zip
 	  unzip ffmpeg-latest-win64-static.zip
 	  rm ffmpeg-latest-win64-static.zip
@@ -37,7 +37,7 @@ else
 	fi
 fi
 
-cd $HOME/download/Test_videos
+cd $HOME/Downloads/Test_videos
 
 curl http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 -o BigBuckBunny.mp4
 curl https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4 -o BigBuckBunny_4sec.mp4

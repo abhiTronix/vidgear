@@ -4,8 +4,10 @@ before_install:
   - "sudo add-apt-repository ppa:jonathonf/ffmpeg-4 -y"
   - "sudo apt-get update -q"
   - "sudo apt-get install ffmpeg unzip wget -y"
+  - "sudo apt-get install dos2unix -y"
   - chmod +x scripts/pre_install.sh
-  - sh scripts/pre_install.sh
+  - dos2unix ./scripts/pre_install.sh
+  - ./scripts/pre_install.sh
 branches: 
   only: 
     - testing
