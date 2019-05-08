@@ -23,7 +23,7 @@ def return_testvideo_path():
 	path = '{}/download/Test_videos/BigBuckBunny_4sec.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
 	return os.path.abspath(path)
 
-def  (conversion = ''):
+def prepare_testframes(conversion = ''):
 	stream = cv2.VideoCapture(return_testvideo_path())
 	j=0
 	while True:
