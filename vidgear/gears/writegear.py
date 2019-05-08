@@ -86,6 +86,7 @@ class WriteGear:
 		self.inputwidth = None
 		self.inputchannels = None
 		self.inputframerate = 0
+		self.output_dimensions = None
 		self.process = None #handle process to be frames written
 		self.DEVNULL = None #handles silent execution of FFmpeg (if logging is disabled)
 		self.cmd = ''     #handle FFmpeg Pipe command
@@ -106,10 +107,19 @@ class WriteGear:
 		self.out_file = _filename
 		basepath, _ = os.path.split(_filename) #extract file base path for debugging ahead
 
-		#cleans and reformat output parameters and does assigning
-		if output_params:
-			self.output_parameters = {str(k).strip().lower(): str(v).strip().lower() for k,v in output_params.items()}
 
+		if output_params:
+			#handle user defined output dimensions(must be a tuple or list)
+			if self.output_parameters and "-output_dimensions" in self.output_parameters:
+				self.output_dimensions += self.output_parameters["-output_dimensions"] #assign special parameter to global variable
+				del self.output_parameters["-output_dimensions"] #clean
+			#cleans and reformat output parameters
+			try:
+				self.output_parameters = {str(k).strip().lower(): str(v).strip().lower() for k,v in output_params.items()}
+			except Exception as e:
+				if self.logging:
+					print(e)
+				raise ValueError('Wrong output_params parameters passed to WriteGear class!')
 
 		#handles FFmpeg binaries validity tests 
 		if self.compression:
@@ -205,10 +215,9 @@ class WriteGear:
 				self.process.stdin.write(frame.tostring())
 			except (BrokenPipeError, IOError):
 				# log something is wrong!
-				print ('BrokenPipeError caught: [Errno 32] Broken pipe')
-				print ('Wrong Values passed to FFmpeg Pipe, Kindly Refer Docs!')
+				print ('BrokenPipeError caught: Wrong Values passed to FFmpeg Pipe, Kindly Refer Docs!')
 				sys.stderr.close()
-				self.close()
+				raise ValueError #for testing purpose only
 		else:
 			# otherwise initiate OpenCV's VideoWriter Class
 			if self.initiate:
@@ -236,8 +245,13 @@ class WriteGear:
 		self.initiate = False
 		#initialize input parameters
 		input_parameters = {}
-		#set dimensions
-		dimension = '{}x{}'.format(self.inputwidth, self.inputheight)
+
+		#handle dimensions
+		dimensions = ''
+		if self.dimensions is None: #check if dimensions are given
+			dimension = '{}x{}'.format(self.inputwidth, self.inputheight) #auto derive from frame
+		else:
+			dimension = '{}x{}'.format(self.output_dimensions[0],self.output_dimensions[1]) #apply if defined
 		input_parameters["-s"] = str(dimension)
 
 		#handles pix_fmt based on channels(HACK)
@@ -252,7 +266,7 @@ class WriteGear:
 		else:
 			raise ValueError("Handling Frames with (1 > Channels > 4) is not implemented!")
 
-		if self.inputframerate > 4:
+		if self.inputframerate > 5:
 			#set input framerate - minimum threshold is 5.0
 			if self.logging:
 				print("Setting Input FrameRate = {}".format(self.inputframerate))
@@ -313,8 +327,6 @@ class WriteGear:
 
 		#initialize essential parameter variables
 		FPS = 0
-		WIDTH = 0
-		HEIGHT = 0
 		BACKEND = ''
 		FOURCC = 0
 		COLOR = True
@@ -324,10 +336,10 @@ class WriteGear:
 			FOURCC = cv2.VideoWriter_fourcc(*"MJPG")
 		if "-fps" not in self.output_parameters:
 			FPS = 25
-		if "-height" not in self.output_parameters:
-			HEIGHT = self.inputheight
-		if "-width" not in self.output_parameters:
-			WIDTH = self.inputwidth
+
+		#auto assign dimensions	
+		HEIGHT = self.inputheight
+		WIDTH = self.inputwidth
 
 		#assign parameter dict values to variables
 		try:
@@ -336,10 +348,6 @@ class WriteGear:
 					FOURCC = cv2.VideoWriter_fourcc(*(value.upper()))
 				elif key == '-fps':
 					FPS = float(value)
-				elif key == '-height':
-					HEIGHT = int(value)
-				elif key == '-width':
-					WIDTH = int(width)
 				elif key =='-backend' and value.upper() in ['CAP_FFMPEG','CAP_GSTREAMER']:
 					BACKEND = capPropId(value.upper())
 				elif key == '-color':

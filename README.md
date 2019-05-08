@@ -12,7 +12,7 @@
 <a align="center"> **VidGear is a Python library for Turbo Multi-Threaded Video Processing**</a>
 </td></tr></table>
 
-* VidGear is a **high-level All-in-One Video Processing framework build on top of OpenCV, PiCamera and FFmpeg**. It's compact, simple to use and easy to extend. 
+* VidGear provides a **high-level All-in-One Video Processing framework build on top of OpenCV, PiCamera and FFmpeg**. It's compact, simple to use and easy to extend. 
 
 * It contains following **Powerful Gears (Multi-Threaded Video Processing classes)** to handle/control different device-specific video streams and writer:
 	

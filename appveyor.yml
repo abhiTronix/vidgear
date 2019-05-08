@@ -40,6 +40,7 @@ branches:
     - testing
 matrix:
     fast_finish: true
+
 install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
@@ -47,5 +48,7 @@ install:
   - "python -m pip install ."
   - "python -m pip install --upgrade pytest"
   - "python -m pip install --upgrade youtube-dl"
+  - ps: chmod +x scripts/pre_install.sh
+  - ps: sh scripts/pre_install.sh
 test_script:
-- python -m pytest -sv
+- python -m pytest -vv
