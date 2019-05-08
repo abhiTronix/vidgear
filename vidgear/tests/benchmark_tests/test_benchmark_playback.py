@@ -1,7 +1,7 @@
 import os
 import pytest
 from vidgear.gears import CamGear
-from fps import FPS
+from .fps import FPS
 
 def return_testvideo(level=0):
 	Levels = ['BigBuckBunny.mp4','20_mbps_hd_hevc_10bit.mkv','50_mbps_hd_h264.mkv','90_mbps_hd_hevc_10bit.mkv','120_mbps_4k_uhd_h264.mkv']

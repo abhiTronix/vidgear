@@ -1,7 +1,7 @@
 import os
 import pytest
 from vidgear.gears import WriteGear
-from fps import FPS
+from .fps import FPS
 
 def return_testvideo_path():
 	path = '{}/download/Test_videos/BigBuckBunny.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])

@@ -161,7 +161,7 @@ class CamGear:
 			if _fps>1:
 				self.framerate = _fps
 		except Exception as e:
-			if self.logging:
+			if logging:
 				print(e)
 			self.framerate = 0
 
@@ -171,6 +171,9 @@ class CamGear:
 		if time_delay:
 			import time
 			time.sleep(time_delay)
+
+		# enable logging if specified
+		self.logging = logging
 
 		# thread initialization
 		self.thread=None
@@ -213,12 +216,12 @@ class CamGear:
 						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
 						self.color_space = None
-						if logging:
+						if self.logging:
 							print('Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None
-					if logging:
+					if self.logging:
 						print(e)
 						print('Input Colorspace is not a valid Colorspace!')
 

@@ -2,7 +2,7 @@ import os
 import cv2
 import pytest
 from vidgear.gears import CamGear
-from fps import FPS
+from .fps import FPS
 
 def return_testvideo_path():
 	path = '{}/download/Test_videos/BigBuckBunny.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])

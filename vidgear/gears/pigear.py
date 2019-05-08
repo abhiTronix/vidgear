@@ -151,13 +151,13 @@ class PiGear:
 							color_frame = cv2.cvtColor(frame, self.color_space)
 						else:
 							self.color_space = None
-							if logging:
+							if self.logging:
 								print('Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
 								
 					except Exception as e:
 						# Catch if any error occurred
 						self.color_space = None
-						if logging:
+						if self.logging:
 							print(e)
 							print('Input Colorspace is not a valid Colorspace!')
 
