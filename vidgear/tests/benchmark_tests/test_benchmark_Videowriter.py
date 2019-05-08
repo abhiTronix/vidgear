@@ -31,6 +31,7 @@ def Videowriter_non_compression_mode(path):
 	print("OpenCV Writer")
 	print("[LOG] total elasped time: {:.2f}".format(fps_CV.total_time_elapsed()))
 	print("[LOG] approx. FPS: {:.2f}".format(fps_CV.fps()))
+	os.remove(os.path.abspath('Output.mp4'))
 
 def Videowriter_compression_mode(path):
 	stream = VideoGear(source=path).start()
@@ -48,12 +49,12 @@ def Videowriter_compression_mode(path):
 	print("VidGear Writer")
 	print("[LOG] total elasped time: {:.2f}".format(fps_Vid.total_time_elapsed()))
 	print("[LOG] approx. FPS: {:.2f}".format(fps_Vid.fps()))
+	os.remove(os.path.abspath('Output.mp4'))
 
 
-def test_benchmark_videowriter(benchmark):
+def test_benchmark_videowriter():
 	try:
-		benchmark(Videowriter_non_compression_mode, return_testvideo_path())
-		benchmark(Videowriter_compression_mode, return_testvideo_path())
-		os.remove(os.path.abspath('Output.mp4'))
+		Videowriter_non_compression_mode(return_testvideo_path())
+		Videowriter_compression_mode(return_testvideo_path())
 	except Exception as e:
 		print(e)

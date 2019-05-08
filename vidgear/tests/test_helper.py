@@ -44,7 +44,7 @@ def test_validate_ffmpeg(paths):
 	try:
 		output = validate_ffmpeg(paths, logging = True)
 		if paths != 'wrong_test_path':
-			assert bool(output), "Validation Test failed at path: {}".format(FFmpeg_path)
+			assert bool(output), "Validation Test failed at path: {}".format(paths)
 	except Exception as e:
 		if paths == 'wrong_test_path':
 			pass

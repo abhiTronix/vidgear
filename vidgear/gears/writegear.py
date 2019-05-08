@@ -248,11 +248,11 @@ class WriteGear:
 
 		#handle dimensions
 		dimensions = ''
-		if self.dimensions is None: #check if dimensions are given
-			dimension = '{}x{}'.format(self.inputwidth, self.inputheight) #auto derive from frame
+		if self.output_dimensions is None: #check if dimensions are given
+			dimensions = '{}x{}'.format(self.inputwidth, self.inputheight) #auto derive from frame
 		else:
-			dimension = '{}x{}'.format(self.output_dimensions[0],self.output_dimensions[1]) #apply if defined
-		input_parameters["-s"] = str(dimension)
+			dimensions = '{}x{}'.format(self.output_dimensions[0],self.output_dimensions[1]) #apply if defined
+		input_parameters["-s"] = dimensions
 
 		#handles pix_fmt based on channels(HACK)
 		if channels == 1:

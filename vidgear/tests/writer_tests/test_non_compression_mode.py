@@ -7,6 +7,7 @@ from vidgear.gears.helper import capPropId
 from vidgear.gears.helper import check_output
 import pytest
 import cv2
+import tempfile
 
 def return_static_ffmpeg():
 	path = ''
@@ -48,18 +49,20 @@ def test_write(conversion):
 test_data_class = [
 	('', {}, False),
 	('Output.avi', {}, True),
-	(os.path.abspath('../'), {}, True),
-	('Output.mp4', {"-fourcc":"H264", "-fps": 25}, True)]
+	(tempfile.gettempdir(), {}, True),
+	('Output.mp4', {"-fourcc":"DIVX"}, True)]
 @pytest.mark.parametrize('f_name, output_params, result', test_data_class)
 def test_WriteGear_compression(f_name, output_params, result):
 	try:
+		stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
 		writer = WriteGear(output_filename = f_name, compression_mode = False , logging = True, **output_params)
-		test_data = np.random.random(size=(10, 1280, 720, 3)) * 255
-		test_data = test_data.astype(np.uint8)
-		for i in range(10):
-			writer.write(test_data[i])
+		while True:
+			(grabbed, frame) = stream.read()
+			if not grabbed:
+				break
+			writer.write(frame)
+		stream.release()
 		writer.close()
-		os.remove(os.path.abspath(f_name))
 	except Exception as e:
 		if result:
 			pytest.fail(str(e))

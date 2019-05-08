@@ -60,7 +60,7 @@ def test_video_playback():
 		if frame is None:
 			break
 		test_img = cv2.imread(test_images[i], cv2.IMREAD_UNCHANGED)
-		assert_equal(frame == test_img)
+		assert_equal(frame, test_img, err_msg='Test Failed!')
 		os.remove(test_images[i])
 		i+=1
 	output_stream.stop()
@@ -77,7 +77,7 @@ def test_color_manuplation(conversion):
 		if frame is None:
 			break
 		test_img = cv2.imread(test_images[i], cv2.IMREAD_UNCHANGED)
-		assert_equal(frame == test_img)
+		assert_equal(frame, test_img, err_msg='Test Failed!')
 		os.remove(test_images[i])
 		i+=1
 	output_stream.stop()

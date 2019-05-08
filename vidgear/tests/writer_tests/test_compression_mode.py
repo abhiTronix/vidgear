@@ -7,6 +7,7 @@ from vidgear.gears.helper import capPropId
 from vidgear.gears.helper import check_output
 import pytest
 import cv2
+import tempfile
 
 def return_static_ffmpeg():
 	path = ''
@@ -27,6 +28,16 @@ def getFrameRate(path):
 	output =  stdout.decode()
 	match_dict = re.search(r"\s(?P<fps>[\d\.]+?)\stbr", output).groupdict()
 	return float(match_dict["fps"])
+
+def test_ffmpeg_static_installation():
+	startpath = os.path.abspath(os.path.join(os.environ['HOME'],'download/FFmpeg_static'))
+	for root, dirs, files in os.walk(startpath):
+		level = root.replace(startpath, '').count(os.sep)
+		indent = ' ' * 4 * (level)
+		print('{}{}/'.format(indent, os.path.basename(root)))
+		subindent = ' ' * 4 * (level + 1)
+		for f in files:
+			print('{}{}'.format(subindent, f))
 
 @pytest.mark.xfail(raises=AssertionError)
 def test_input_framerate():
@@ -72,10 +83,10 @@ def test_write(conversion):
 	stream.release()
 	writer.close()
 	basepath, _ = os.path.split(return_static_ffmpeg()) #extract file base path for debugging aheadget
-	ffprobe_path  = os.path.join(basepath,{}.format('ffprobe.exe' if os.name == 'nt' else 'ffprobe'))
-	version = check_output([ffprobe_path, "-v", "error", "-count_frames", "-i", os.path.abspath('Output.mp4')])
+	ffprobe_path  = os.path.join(basepath,'ffprobe.exe' if os.name == 'nt' else 'ffprobe')
+	result = check_output([ffprobe_path, "-v", "error", "-count_frames", "-i", os.path.abspath('Output.mp4')])
 	for i in ["Error", "Invalid", "error", "invalid"]:
-		assert not(i in version)
+		assert not(i in result)
 	os.remove(os.path.abspath('Output.mp4'))
 
 @pytest.mark.xfail(raises=AssertionError)
@@ -104,7 +115,7 @@ def test_output_dimensions():
 test_data_class = [
 	('','', {}, False),
 	('Output.mp4','', {}, True),
-	(os.path.abspath('../'),'', {}, True),
+	(tempfile.gettempdir(),'', {}, True),
 	('Output.mp4','', {"-vcodec":"libx264", "-crf": 0, "-preset": "fast"}, True),
 	('Output.mp4', return_static_ffmpeg(), {"-vcodec":"libx264", "-crf": 0, "-preset": "fast"}, True),
 	('Output.mp4','wrong_test_path', {" -vcodec  ":" libx264", "   -crf": 0, "-preset    ": " fast "}, False)]
