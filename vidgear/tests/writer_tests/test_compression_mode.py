@@ -30,7 +30,7 @@ def getFrameRate(path):
 	return float(match_dict["fps"])
 
 def test_ffmpeg_static_installation():
-	startpath = os.path.abspath(os.path.join(os.environ['HOME'],'download/FFmpeg_static'))
+	startpath = os.path.abspath(os.path.join( os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'],'download/FFmpeg_static'))
 	for root, dirs, files in os.walk(startpath):
 		level = root.replace(startpath, '').count(os.sep)
 		indent = ' ' * 4 * (level)
@@ -44,7 +44,7 @@ def test_input_framerate():
 	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
 	test_video_framerate = stream.get(cv2.CAP_PROP_FPS)
 	output_params = {"-input_framerate":test_video_framerate}
-	writer = WriteGear(output_filename = 'Output.mp4', **output_params) #Define writer 
+	writer = WriteGear(output_filename = 'Output.mp4', custom_ffmpeg = return_static_ffmpeg(), **output_params) #Define writer 
 	# infinite loop
 	while True:
 		(grabbed, frame) = stream.read()
@@ -65,7 +65,7 @@ def test_input_framerate():
 @pytest.mark.parametrize('conversion', ['COLOR_BGR2GRAY', '', 'COLOR_BGR2YUV', 'COLOR_BGR2BGRA', 'COLOR_BGR2RGB', 'COLOR_BGR2RGBA'])
 def test_write(conversion):
 	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
-	writer = WriteGear(output_filename = 'Output.mp4') #Define writer
+	writer = WriteGear(output_filename = 'Output.mp4',  custom_ffmpeg = return_static_ffmpeg()) #Define writer
 	while True:
 		(grabbed, frame) = stream.read()
 		# read frames
@@ -94,7 +94,7 @@ def test_output_dimensions():
 	dimensions = (640,480)
 	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
 	output_params = {"-output_dimensions":dimensions}
-	writer = WriteGear(output_filename = 'Output.mp4') #Define writer
+	writer = WriteGear(output_filename = 'Output.mp4',  custom_ffmpeg = return_static_ffmpeg()) #Define writer
 	while True:
 		(grabbed, frame) = stream.read()
 		# read frames

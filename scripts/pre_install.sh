@@ -7,8 +7,7 @@ cd $HOME/download/FFmpeg_static
 
 MACHINE_TYPE=`uname -m`
 
-if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 
-
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
 	if [ ${MACHINE_TYPE} == 'x86_64' ]; then
 	  curl https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o ffmpeg-release-amd64-static.tar.xz
 	  tar -xJf ffmpeg-release-amd64-static.tar.xz
