@@ -48,7 +48,7 @@ install:
   - "python -m pip install ."
   - "python -m pip install --upgrade pytest"
   - "python -m pip install --upgrade youtube-dl"
-  - ps: chmod +x scripts/pre_install.sh
-  - ps: sh scripts/pre_install.sh
+  - cmd: chmod +x scripts/pre_install.sh
+  - cmd: sh scripts/pre_install.sh
 test_script:
 - python -m pytest -vv
