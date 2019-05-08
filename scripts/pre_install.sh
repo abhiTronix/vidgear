@@ -5,9 +5,11 @@ mkdir $HOME/download/Test_images || echo "Already exists.";
 
 cd $HOME/download/FFmpeg_static
 
-MACHINE_TYPE=`uname -m`
+MACHINE_TYPE = `uname -m`
+OS_TYPE = `uname`
 
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
+if [[ "${OS_TYPE}" == "Linux" ]]; then 
+
 	if [ ${MACHINE_TYPE} == 'x86_64' ]; then
 	  curl https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o ffmpeg-release-amd64-static.tar.xz
 	  tar -xJf ffmpeg-release-amd64-static.tar.xz

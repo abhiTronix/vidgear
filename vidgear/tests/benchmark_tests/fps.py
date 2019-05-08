@@ -14,7 +14,7 @@ class FPS:
 	def stop(self):
 		self._end = time.time()
 
-	def frame_update(self):
+	def update(self):
 		self._numFrames += 1
 
 	def total_time_elapsed(self):
