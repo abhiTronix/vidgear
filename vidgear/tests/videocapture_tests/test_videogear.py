@@ -42,7 +42,7 @@ def prepare_testframes(conversion = ''):
 	stream.release()
 
 
-def_test_PiGear_import():
+def test_PiGear_import():
 	with pytest.raises(ImportError):
 		stream = VideoGear(enablePiCamera = True, logging = True).start() # define various attributes and start the stream
 

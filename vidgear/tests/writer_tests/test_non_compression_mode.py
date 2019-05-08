@@ -48,7 +48,7 @@ def test_write(conversion):
 test_data_class = [
 	('', {}, False),
 	('Output.avi', {}, True),
-	('os.path.abspath('../')', {}, True),
+	(os.path.abspath('../'), {}, True),
 	('Output.mp4', {"-fourcc":"H264", "-fps": 25}, True),
 @pytest.mark.parametrize('f_name, output_params, result', test_data_class)
 def test_WriteGear_compression(f_name, output_params, result):

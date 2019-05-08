@@ -80,7 +80,7 @@ def test_write(conversion):
 
 @pytest.mark.xfail(raises=AssertionError)
 def test_output_dimensions():
-	dimensions = (640x480)
+	dimensions = (640,480)
 	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
 	output_params = {"-output_dimensions":dimensions}
 	writer = WriteGear(output_filename = 'Output.mp4') #Define writer
@@ -104,7 +104,7 @@ def test_output_dimensions():
 test_data_class = [
 	('','', {}, False),
 	('Output.mp4','', {}, True),
-	('os.path.abspath('../')','', {}, True),
+	(os.path.abspath('../'),'', {}, True),
 	('Output.mp4','', {"-vcodec":"libx264", "-crf": 0, "-preset": "fast"}, True),
 	('Output.mp4', return_static_ffmpeg(), {"-vcodec":"libx264", "-crf": 0, "-preset": "fast"}, True),
 	('Output.mp4','wrong_test_path', {" -vcodec  ":" libx264", "   -crf": 0, "-preset    ": " fast "}, False)]
