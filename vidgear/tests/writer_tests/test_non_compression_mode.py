@@ -34,7 +34,7 @@ def test_write(conversion):
 			break
 		if conversion:
 			frame = cv2.cvtColor(frame, capPropId(conversion))
-	    writer.write(frame)
+		writer.write(frame)
 	stream.release()
 	writer.close()
 	basepath, _ = os.path.split(return_static_ffmpeg()) #extract file base path for debugging aheadget
@@ -55,11 +55,11 @@ def test_WriteGear_compression(f_name, output_params, result):
 	try:
 		writer = WriteGear(output_filename = f_name, compression_mode = False , logging = True, **output_params)
 		test_data = np.random.random(size=(10, 1280, 720, 3)) * 255
-	    test_data = test_data.astype(np.uint8)
-	    for i in range(10):
-	        writer.write(test_data[i])
-	    writer.close()
-	    os.remove(os.path.abspath(f_name))
+		test_data = test_data.astype(np.uint8)
+		for i in range(10):
+			writer.write(test_data[i])
+		writer.close()
+		os.remove(os.path.abspath(f_name))
 	except Exception as e:
 		if result:
 			pytest.fail(str(e))

@@ -22,11 +22,11 @@ def return_testvideo_path():
 
 
 def getFrameRate(path):
-    process = subprocess.Popen([return_static_ffmpeg(), "-i", path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    stdout, _ = process.communicate()
-    output =  stdout.decode()
-    match_dict = re.search(r"\s(?P<fps>[\d\.]+?)\stbr", output).groupdict()
-    return float(match_dict["fps"])
+	process = subprocess.Popen([return_static_ffmpeg(), "-i", path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+	stdout, _ = process.communicate()
+	output =  stdout.decode()
+	match_dict = re.search(r"\s(?P<fps>[\d\.]+?)\stbr", output).groupdict()
+	return float(match_dict["fps"])
 
 @pytest.mark.xfail(raises=AssertionError)
 def test_input_framerate():
@@ -43,7 +43,7 @@ def test_input_framerate():
 		if not grabbed:
 			#if True break the infinite loop
 			break
-	    writer.write(frame) 
+		writer.write(frame) 
 	stream.release()
 	writer.close()
 	output_video_framerate = getFrameRate(os.path.abspath('Output.mp4'))
@@ -66,9 +66,9 @@ def test_write(conversion):
 			frame = cv2.cvtColor(frame, capPropId(conversion))
 		
 		if conversion in ['COLOR_BGR2RGB', 'COLOR_BGR2RGBA']:
-	    	writer.write(frame, rgb_mode = True)
-	    else:
-	    	writer.write(frame)
+			writer.write(frame, rgb_mode = True)
+		else:
+			writer.write(frame)
 	stream.release()
 	writer.close()
 	basepath, _ = os.path.split(return_static_ffmpeg()) #extract file base path for debugging aheadget
@@ -91,7 +91,7 @@ def test_output_dimensions():
 		if not grabbed:
 			#if True break the infinite loop
 			break
-	    writer.write(frame)
+		writer.write(frame)
 	stream.release()
 	writer.close()
 	
@@ -114,11 +114,11 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
 		writer = WriteGear(output_filename = f_name, compression_mode = True , custom_ffmpeg = c_ffmpeg, logging = True, **output_params)
 		np.random.seed(0)
 		test_data = np.random.random(size=(10, 480, 640, 3)) * 255
-	    test_data = test_data.astype(np.uint8)
-	    for i in range(10):
-	        writer.write(test_data[i])
-	    writer.close()
-	    os.remove(os.path.abspath(f_name))
+		test_data = test_data.astype(np.uint8)
+		for i in range(10):
+			writer.write(test_data[i])
+		writer.close()
+		os.remove(os.path.abspath(f_name))
 	except Exception as e:
 		if result:
 			pytest.fail(str(e))

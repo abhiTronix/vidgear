@@ -42,7 +42,7 @@ def prepare_testframes(conversion = ''):
 @pytest.mark.xfail(raises=AssertionError)
 def test_youtube_playback():
 	Url = 'https://youtu.be/dQw4w9WgXcQ'
-	true_video_param = return(Url)
+	true_video_param = return_youtubevideo_params(Url)
 	stream = CamGear(source=Url, y_tube = True,  time_delay=1, logging=True).start() # YouTube Video URL as input
 	fps = stream.framerate
 	width = stream.get(cv2.CAP_PROP_FRAME_WIDTH)
