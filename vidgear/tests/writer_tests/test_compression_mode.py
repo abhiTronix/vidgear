@@ -105,6 +105,7 @@ def test_output_dimensions():
 	output = cv2.VideoCapture(os.path.abspath('Output_tod.mp4'))
 	output_dim = (output.get(cv2.CAP_PROP_FRAME_WIDTH), output.get(cv2.CAP_PROP_FRAME_HEIGHT))
 	assert output_dim[0] == 640 and output_dim[1] == 480
+	output.release()
 	
 	os.remove(os.path.abspath('Output_tod.mp4'))
 
