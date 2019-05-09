@@ -18,7 +18,7 @@ def return_static_ffmpeg():
 
 def Videowriter_non_compression_mode(path):
 	stream = VideoGear(source=path).start() 
-	writer = WriteGear(output_filename = 'Output122.mp4', compression_mode = False ) #Define writer with output filename 'Output.mp4'
+	writer = WriteGear(output_filename = 'Output_vnc.mp4', compression_mode = False )
 	fps_CV = FPS().start()
 	while True:
 		frame = stream.read()
@@ -32,11 +32,11 @@ def Videowriter_non_compression_mode(path):
 	print("OpenCV Writer")
 	print("[LOG] total elasped time: {:.2f}".format(fps_CV.total_time_elapsed()))
 	print("[LOG] approx. FPS: {:.2f}".format(fps_CV.fps()))
-	os.remove(os.path.abspath('Output.mp4'))
+	os.remove(os.path.abspath('Output_vnc.mp4'))
 
 def Videowriter_compression_mode(path):
 	stream = VideoGear(source=path).start()
-	writer = WriteGear(output_filename = 'Output123.mp4', custom_ffmpeg = return_static_ffmpeg()) #Define writer with output filename 'Output.mp4'
+	writer = WriteGear(output_filename = 'Output_vc.mp4', custom_ffmpeg = return_static_ffmpeg())
 	fps_Vid = FPS().start()
 	while True:
 		frame = stream.read()
@@ -50,7 +50,7 @@ def Videowriter_compression_mode(path):
 	print("FFmpeg Writer")
 	print("[LOG] total elasped time: {:.2f}".format(fps_Vid.total_time_elapsed()))
 	print("[LOG] approx. FPS: {:.2f}".format(fps_Vid.fps()))
-	os.remove(os.path.abspath('Output.mp4'))
+	os.remove(os.path.abspath('Output_vc.mp4'))
 
 
 def test_benchmark_videowriter():

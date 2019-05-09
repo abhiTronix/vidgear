@@ -25,7 +25,7 @@ def return_testvideo_path():
 @pytest.mark.parametrize('conversion', ['COLOR_BGR2GRAY', '', 'COLOR_BGR2YUV', 'COLOR_BGR2BGRA', 'COLOR_BGR2RGB', 'COLOR_BGR2RGBA'])
 def test_write(conversion):
 	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
-	writer = WriteGear(output_filename = 'Output013.avi', compression_mode = False) #Define writer
+	writer = WriteGear(output_filename = 'Output_twc.avi', compression_mode = False) #Define writer
 	while True:
 		(grabbed, frame) = stream.read()
 		# read frames
@@ -40,17 +40,17 @@ def test_write(conversion):
 	writer.close()
 	basepath, _ = os.path.split(return_static_ffmpeg()) #extract file base path for debugging aheadget
 	ffprobe_path  = os.path.join(basepath,'ffprobe.exe' if os.name == 'nt' else 'ffprobe')
-	version = check_output([ffprobe_path, "-v", "error", "-count_frames", "-i", os.path.abspath('Output.avi')])
+	version = check_output([ffprobe_path, "-v", "error", "-count_frames", "-i", os.path.abspath('Output_twc.avi')])
 	for i in ["Error", "Invalid", "error", "invalid"]:
 		assert not(i in version)
-	os.remove(os.path.abspath('Output.avi'))
+	os.remove(os.path.abspath('Output_twc.avi'))
 	
 
 test_data_class = [
 	('', {}, False),
-	('Output012.avi', {}, True),
+	('Output_twc.avi', {}, True),
 	(tempfile.gettempdir(), {}, True),
-	('Output011.mp4', {"-fourcc":"DIVX"}, True)]
+	('Output_twc.mp4', {"-fourcc":"DIVX"}, True)]
 @pytest.mark.parametrize('f_name, output_params, result', test_data_class)
 def test_WriteGear_compression(f_name, output_params, result):
 	try:
@@ -63,6 +63,8 @@ def test_WriteGear_compression(f_name, output_params, result):
 			writer.write(frame)
 		stream.release()
 		writer.close()
+		if f_name and f_name != tempfile.gettempdir():
+			os.remove(os.path.abspath(f_name))
 	except Exception as e:
 		if result:
 			pytest.fail(str(e))

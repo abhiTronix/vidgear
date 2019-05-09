@@ -35,7 +35,7 @@ def test_input_framerate():
 	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
 	test_video_framerate = stream.get(cv2.CAP_PROP_FPS)
 	output_params = {"-input_framerate":test_video_framerate}
-	writer = WriteGear(output_filename = 'Output01.mp4', custom_ffmpeg = return_static_ffmpeg(), **output_params) #Define writer 
+	writer = WriteGear(output_filename = 'Output_tif.mp4', custom_ffmpeg = return_static_ffmpeg(), **output_params) #Define writer 
 	# infinite loop
 	while True:
 		(grabbed, frame) = stream.read()
@@ -48,15 +48,15 @@ def test_input_framerate():
 		writer.write(frame) 
 	stream.release()
 	writer.close()
-	output_video_framerate = getFrameRate(os.path.abspath('Output.mp4'))
+	output_video_framerate = getFrameRate(os.path.abspath('Output_tif.mp4'))
 	assert test_video_framerate == output_video_framerate
-	os.remove(os.path.abspath('Output.mp4'))
+	os.remove(os.path.abspath('Output_tif.mp4'))
 
 @pytest.mark.xfail(raises=AssertionError)
 @pytest.mark.parametrize('conversion', ['COLOR_BGR2GRAY', '', 'COLOR_BGR2YUV', 'COLOR_BGR2BGRA', 'COLOR_BGR2RGB', 'COLOR_BGR2RGBA'])
 def test_write(conversion):
 	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
-	writer = WriteGear(output_filename = 'Output00.mp4',  custom_ffmpeg = return_static_ffmpeg()) #Define writer
+	writer = WriteGear(output_filename = 'Output_tw.mp4',  custom_ffmpeg = return_static_ffmpeg()) #Define writer
 	while True:
 		(grabbed, frame) = stream.read()
 		# read frames
@@ -75,17 +75,17 @@ def test_write(conversion):
 	writer.close()
 	basepath, _ = os.path.split(return_static_ffmpeg()) #extract file base path for debugging aheadget
 	ffprobe_path  = os.path.join(basepath,'ffprobe.exe' if os.name == 'nt' else 'ffprobe')
-	result = check_output([ffprobe_path, "-v", "error", "-count_frames", "-i", os.path.abspath('Output.mp4')])
+	result = check_output([ffprobe_path, "-v", "error", "-count_frames", "-i", os.path.abspath('Output_tw.mp4')])
 	for i in ["Error", "Invalid", "error", "invalid"]:
 		assert not(i in result)
-	os.remove(os.path.abspath('Output.mp4'))
+	os.remove(os.path.abspath('Output_tw.mp4'))
 
 @pytest.mark.xfail(raises=AssertionError)
 def test_output_dimensions():
 	dimensions = (640,480)
 	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
 	output_params = {"-output_dimensions":dimensions}
-	writer = WriteGear(output_filename = 'Output0.mp4',  custom_ffmpeg = return_static_ffmpeg()) #Define writer
+	writer = WriteGear(output_filename = 'Output_tod.mp4',  custom_ffmpeg = return_static_ffmpeg()) #Define writer
 	while True:
 		(grabbed, frame) = stream.read()
 		# read frames
@@ -97,11 +97,11 @@ def test_output_dimensions():
 	stream.release()
 	writer.close()
 	
-	output = cv2.VideoCapture(os.path.abspath('Output.mp4'))
+	output = cv2.VideoCapture(os.path.abspath('Output_tod.mp4'))
 	output_dim = (output.get(cv2.CAP_PROP_FRAME_WIDTH), output.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 	assert output_dim[0] == 640 and output_dim[1] == 480
-	os.remove(os.path.abspath('Output.mp4'))
+	os.remove(os.path.abspath('Output_tod.mp4'))
 
 test_data_class = [
 	('','', {}, False),
@@ -122,7 +122,8 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
 			writer.write(frame)
 		stream.release()
 		writer.close()
-		os.remove(os.path.abspath(f_name))
+		if f_name and f_name != tempfile.gettempdir():
+			os.remove(os.path.abspath(f_name))
 	except Exception as e:
 		if result:
 			pytest.fail(str(e))

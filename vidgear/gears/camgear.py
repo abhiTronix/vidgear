@@ -99,17 +99,15 @@ class CamGear:
 			try:
 				#import pafy and parse youtube stream url
 				import pafy
-
 				# validate
 				url = youtube_url_validation(source)
-
 				if url:
 					source_object = pafy.new(url)
-
-					print(source_object.title)
+					if logging:
+						print('Title: {}'.format(source_object.title))
+						print('Extension: {}'.format(source_object.extension))
 					_source = source_object.getbestvideo("any", ftypestrict=False)
 					source = _source.url
-
 			except Exception as e:
 				if logging:
 					print(e)
