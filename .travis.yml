@@ -14,6 +14,7 @@ cache: pip
 install: 
   - "pip install --upgrade pip wheel"
   - "pip install ."
+  - "pip install six"
   - "pip install backports.lzma"
   - "pip install --upgrade pytest"
   - "pip install --upgrade youtube-dl"

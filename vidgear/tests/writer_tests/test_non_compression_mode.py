@@ -5,6 +5,7 @@ import os
 from numpy.testing import assert_equal
 from vidgear.gears.helper import capPropId
 from vidgear.gears.helper import check_output
+from six import string_types
 import pytest
 import cv2
 import tempfile
@@ -40,9 +41,13 @@ def test_write(conversion):
 	writer.close()
 	basepath, _ = os.path.split(return_static_ffmpeg()) #extract file base path for debugging aheadget
 	ffprobe_path  = os.path.join(basepath,'ffprobe.exe' if os.name == 'nt' else 'ffprobe')
-	version = check_output([ffprobe_path, "-v", "error", "-count_frames", "-i", os.path.abspath('Output_twc.avi')])
-	for i in ["Error", "Invalid", "error", "invalid"]:
-		assert not(i in version)
+	result = check_output([ffprobe_path, "-v", "error", "-count_frames", "-i", os.path.abspath('Output_twc.avi')])
+	if result:
+		if not isinstance(result, string_types)
+		    result = result.decode()
+		print('Result: {}'.format(result))
+		for i in ["Error", "Invalid", "error", "invalid"]:
+			assert not(i in result)
 	os.remove(os.path.abspath('Output_twc.avi'))
 	
 

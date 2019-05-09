@@ -6,6 +6,7 @@ import subprocess, re
 from numpy.testing import assert_equal
 from vidgear.gears.helper import capPropId
 from vidgear.gears.helper import check_output
+from six import string_types
 import pytest
 import cv2
 import tempfile
@@ -76,8 +77,12 @@ def test_write(conversion):
 	basepath, _ = os.path.split(return_static_ffmpeg()) #extract file base path for debugging aheadget
 	ffprobe_path  = os.path.join(basepath,'ffprobe.exe' if os.name == 'nt' else 'ffprobe')
 	result = check_output([ffprobe_path, "-v", "error", "-count_frames", "-i", os.path.abspath('Output_tw.mp4')])
-	for i in ["Error", "Invalid", "error", "invalid"]:
-		assert not(i in result)
+	if result:
+		if not isinstance(result, string_types)
+			result = result.decode()
+		print('Result: {}'.format(result))
+		for i in ["Error", "Invalid", "error", "invalid"]:
+			assert not(i in result)
 	os.remove(os.path.abspath('Output_tw.mp4'))
 
 @pytest.mark.xfail(raises=AssertionError)
@@ -85,7 +90,7 @@ def test_output_dimensions():
 	dimensions = (640,480)
 	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
 	output_params = {"-output_dimensions":dimensions}
-	writer = WriteGear(output_filename = 'Output_tod.mp4',  custom_ffmpeg = return_static_ffmpeg()) #Define writer
+	writer = WriteGear(output_filename = 'Output_tod.mp4',  custom_ffmpeg = return_static_ffmpeg(), **output_params) #Define writer
 	while True:
 		(grabbed, frame) = stream.read()
 		# read frames
@@ -99,7 +104,6 @@ def test_output_dimensions():
 	
 	output = cv2.VideoCapture(os.path.abspath('Output_tod.mp4'))
 	output_dim = (output.get(cv2.CAP_PROP_FRAME_WIDTH), output.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
 	assert output_dim[0] == 640 and output_dim[1] == 480
 	os.remove(os.path.abspath('Output_tod.mp4'))
 
