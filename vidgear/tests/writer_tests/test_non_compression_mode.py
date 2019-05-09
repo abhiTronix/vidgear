@@ -39,7 +39,7 @@ def test_write(conversion):
 	stream.release()
 	writer.close()
 	basepath, _ = os.path.split(return_static_ffmpeg()) #extract file base path for debugging aheadget
-	ffprobe_path  = os.path.join(basepath,{}.format('ffprobe.exe' if os.name == 'nt' else 'ffprobe'))
+	ffprobe_path  = os.path.join(basepath,'ffprobe.exe' if os.name == 'nt' else 'ffprobe')
 	version = check_output([ffprobe_path, "-v", "error", "-count_frames", "-i", os.path.abspath('Output.avi')])
 	for i in ["Error", "Invalid", "error", "invalid"]:
 		assert not(i in version)

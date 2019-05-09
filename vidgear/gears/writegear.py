@@ -98,7 +98,7 @@ class WriteGear:
 		if not output_filename:
 			raise ValueError('Kindly provide a valid `output_filename` value, Refer VidGear Docs for more information!')
 		elif output_filename and os.path.isdir(output_filename): # check if directory path is given instead
-			output_filename += os.path.join(output_filename, 'VidGear-{}.mp4'.format(time.strftime("%Y%m%d-%H%M%S"))) # auto-assign valid name and adds it to path
+			output_filename = os.path.join(output_filename, 'VidGear-{}.mp4'.format(time.strftime("%Y%m%d-%H%M%S"))) # auto-assign valid name and adds it to path
 		else:
 			pass
 
