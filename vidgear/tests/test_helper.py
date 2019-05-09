@@ -28,7 +28,7 @@ def test_ffmpeg_static_installation():
 Testing FFmpeg Static binaries installation on Windows:
 Parametrized Values => userdefined_path_empty, userdefined_path_exist, wrong_test_path, temporary_path 
 """
-@pytest.mark.parametrize('paths', ['..', return_static_ffmpeg(),'wrong_test_path', tempfile.gettempdir()])
+@pytest.mark.parametrize('paths', ['..','wrong_test_path', tempfile.gettempdir()])
 def test_ffmpeg_binaries_download(paths):
 	_windows  = True if os.name == 'nt' else False
 	file_path = ''

@@ -18,14 +18,14 @@ def return_static_ffmpeg():
 	return os.path.abspath(path)
 
 def return_testvideo_path():
-	path = '{}/Downloads/Test_videos/BigBuckBunny.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
+	path = '{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
 	return os.path.abspath(path)
 
 @pytest.mark.xfail(raises=AssertionError)
 @pytest.mark.parametrize('conversion', ['COLOR_BGR2GRAY', '', 'COLOR_BGR2YUV', 'COLOR_BGR2BGRA', 'COLOR_BGR2RGB', 'COLOR_BGR2RGBA'])
 def test_write(conversion):
 	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
-	writer = WriteGear(output_filename = 'Output.avi', compression_mode = False) #Define writer
+	writer = WriteGear(output_filename = 'Output013.avi', compression_mode = False) #Define writer
 	while True:
 		(grabbed, frame) = stream.read()
 		# read frames
@@ -48,9 +48,9 @@ def test_write(conversion):
 
 test_data_class = [
 	('', {}, False),
-	('Output.avi', {}, True),
+	('Output012.avi', {}, True),
 	(tempfile.gettempdir(), {}, True),
-	('Output.mp4', {"-fourcc":"DIVX"}, True)]
+	('Output011.mp4', {"-fourcc":"DIVX"}, True)]
 @pytest.mark.parametrize('f_name, output_params, result', test_data_class)
 def test_WriteGear_compression(f_name, output_params, result):
 	try:

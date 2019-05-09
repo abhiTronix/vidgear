@@ -35,7 +35,7 @@ def test_input_framerate():
 	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
 	test_video_framerate = stream.get(cv2.CAP_PROP_FPS)
 	output_params = {"-input_framerate":test_video_framerate}
-	writer = WriteGear(output_filename = 'Output.mp4', custom_ffmpeg = return_static_ffmpeg(), **output_params) #Define writer 
+	writer = WriteGear(output_filename = 'Output01.mp4', custom_ffmpeg = return_static_ffmpeg(), **output_params) #Define writer 
 	# infinite loop
 	while True:
 		(grabbed, frame) = stream.read()
@@ -56,7 +56,7 @@ def test_input_framerate():
 @pytest.mark.parametrize('conversion', ['COLOR_BGR2GRAY', '', 'COLOR_BGR2YUV', 'COLOR_BGR2BGRA', 'COLOR_BGR2RGB', 'COLOR_BGR2RGBA'])
 def test_write(conversion):
 	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
-	writer = WriteGear(output_filename = 'Output.mp4',  custom_ffmpeg = return_static_ffmpeg()) #Define writer
+	writer = WriteGear(output_filename = 'Output00.mp4',  custom_ffmpeg = return_static_ffmpeg()) #Define writer
 	while True:
 		(grabbed, frame) = stream.read()
 		# read frames
@@ -85,7 +85,7 @@ def test_output_dimensions():
 	dimensions = (640,480)
 	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
 	output_params = {"-output_dimensions":dimensions}
-	writer = WriteGear(output_filename = 'Output.mp4',  custom_ffmpeg = return_static_ffmpeg()) #Define writer
+	writer = WriteGear(output_filename = 'Output0.mp4',  custom_ffmpeg = return_static_ffmpeg()) #Define writer
 	while True:
 		(grabbed, frame) = stream.read()
 		# read frames
@@ -105,20 +105,22 @@ def test_output_dimensions():
 
 test_data_class = [
 	('','', {}, False),
-	('Output.mp4','', {}, True),
+	('Output1.mp4','', {}, True),
 	(tempfile.gettempdir(),'', {}, True),
-	('Output.mp4','', {"-vcodec":"libx264", "-crf": 0, "-preset": "fast"}, True),
-	('Output.mp4', return_static_ffmpeg(), {"-vcodec":"libx264", "-crf": 0, "-preset": "fast"}, True),
-	('Output.mp4','wrong_test_path', {" -vcodec  ":" libx264", "   -crf": 0, "-preset    ": " fast "}, False)]
+	('Output2.mp4','', {"-vcodec":"libx264", "-crf": 0, "-preset": "fast"}, True),
+	('Output3.mp4', return_static_ffmpeg(), {"-vcodec":"libx264", "-crf": 0, "-preset": "fast"}, True),
+	('Output4.mp4','wrong_test_path', {" -vcodec  ":" libx264", "   -crf": 0, "-preset    ": " fast "}, False)]
 @pytest.mark.parametrize('f_name, c_ffmpeg, output_params, result', test_data_class)
 def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
 	try:
-		writer = WriteGear(output_filename = f_name, compression_mode = True , custom_ffmpeg = c_ffmpeg, logging = True, **output_params)
-		np.random.seed(0)
-		test_data = np.random.random(size=(10, 480, 640, 3)) * 255
-		test_data = test_data.astype(np.uint8)
-		for i in range(10):
-			writer.write(test_data[i])
+		stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
+		writer = WriteGear(output_filename = f_name, compression_mode = True, **output_params)
+		while True:
+			(grabbed, frame) = stream.read()
+			if not grabbed:
+				break
+			writer.write(frame)
+		stream.release()
 		writer.close()
 		os.remove(os.path.abspath(f_name))
 	except Exception as e:

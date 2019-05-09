@@ -18,7 +18,7 @@ def return_static_ffmpeg():
 
 def Videowriter_non_compression_mode(path):
 	stream = VideoGear(source=path).start() 
-	writer = WriteGear(output_filename = 'Output.mp4', compression_mode = False ) #Define writer with output filename 'Output.mp4'
+	writer = WriteGear(output_filename = 'Output122.mp4', compression_mode = False ) #Define writer with output filename 'Output.mp4'
 	fps_CV = FPS().start()
 	while True:
 		frame = stream.read()
@@ -36,7 +36,7 @@ def Videowriter_non_compression_mode(path):
 
 def Videowriter_compression_mode(path):
 	stream = VideoGear(source=path).start()
-	writer = WriteGear(output_filename = 'Output.mp4', custom_ffmpeg = return_static_ffmpeg()) #Define writer with output filename 'Output.mp4'
+	writer = WriteGear(output_filename = 'Output123.mp4', custom_ffmpeg = return_static_ffmpeg()) #Define writer with output filename 'Output.mp4'
 	fps_Vid = FPS().start()
 	while True:
 		frame = stream.read()
@@ -47,7 +47,7 @@ def Videowriter_compression_mode(path):
 	fps_Vid.stop()
 	stream.stop()
 	writer.close()
-	print("VidGear Writer")
+	print("FFmpeg Writer")
 	print("[LOG] total elasped time: {:.2f}".format(fps_Vid.total_time_elapsed()))
 	print("[LOG] approx. FPS: {:.2f}".format(fps_Vid.fps()))
 	os.remove(os.path.abspath('Output.mp4'))

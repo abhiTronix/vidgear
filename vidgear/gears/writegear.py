@@ -213,7 +213,7 @@ class WriteGear:
 			#write the frame
 			try:
 				self.process.stdin.write(frame.tostring())
-			except (BrokenPipeError, IOError):
+			except (OSError, IOError):
 				# log something is wrong!
 				print ('BrokenPipeError caught: Wrong Values passed to FFmpeg Pipe, Kindly Refer Docs!')
 				sys.stderr.close()
