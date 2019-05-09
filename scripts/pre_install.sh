@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#mkdir -p $HOME/Downloads
+mkdir -p $HOME/Downloads
 mkdir -p $HOME/Downloads/{FFmpeg_static,Test_videos,Test_images}
 
 cd $HOME/Downloads/FFmpeg_static

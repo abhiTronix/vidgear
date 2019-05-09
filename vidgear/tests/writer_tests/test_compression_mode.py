@@ -2,6 +2,7 @@ from vidgear.gears import WriteGear
 import sys
 import numpy as np
 import os
+import subprocess, re
 from numpy.testing import assert_equal
 from vidgear.gears.helper import capPropId
 from vidgear.gears.helper import check_output
@@ -12,13 +13,13 @@ import tempfile
 def return_static_ffmpeg():
 	path = ''
 	if os.name == 'nt':
-		path += os.path.join(os.environ['USERPROFILE'],'download/FFmpeg_static/ffmpeg/bin/ffmpeg.exe')
+		path += os.path.join(os.environ['USERPROFILE'],'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe')
 	else:
-		path += os.path.join(os.environ['HOME'],'download/FFmpeg_static/ffmpeg/ffmpeg')
+		path += os.path.join(os.environ['HOME'],'Downloads/FFmpeg_static/ffmpeg/ffmpeg')
 	return os.path.abspath(path)
 
 def return_testvideo_path():
-	path = '{}/download/Test_videos/BigBuckBunny.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
+	path = '{}/Downloads/Test_videos/BigBuckBunny.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
 	return os.path.abspath(path)
 
 
@@ -28,16 +29,6 @@ def getFrameRate(path):
 	output =  stdout.decode()
 	match_dict = re.search(r"\s(?P<fps>[\d\.]+?)\stbr", output).groupdict()
 	return float(match_dict["fps"])
-
-def test_ffmpeg_static_installation():
-	startpath = os.path.abspath(os.path.join( os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'],'download/FFmpeg_static'))
-	for root, dirs, files in os.walk(startpath):
-		level = root.replace(startpath, '').count(os.sep)
-		indent = ' ' * 4 * (level)
-		print('{}{}/'.format(indent, os.path.basename(root)))
-		subindent = ' ' * 4 * (level + 1)
-		for f in files:
-			print('{}{}'.format(subindent, f))
 
 @pytest.mark.xfail(raises=AssertionError)
 def test_input_framerate():

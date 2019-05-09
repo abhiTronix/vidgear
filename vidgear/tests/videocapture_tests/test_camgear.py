@@ -8,7 +8,7 @@ from numpy.testing import assert_equal
 from vidgear.gears.helper import capPropId
 
 def return_testimage_dir():
-	path = '{}/download/Test_images'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
+	path = '{}/Downloads/Test_images'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
 	return os.path.abspath(path)
 
 
@@ -20,7 +20,7 @@ def return_youtubevideo_params(url):
 
 
 def return_testvideo_path():
-	path = '{}/download/Test_videos/BigBuckBunny_4sec.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
+	path = '{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
 	return os.path.abspath(path)
 
 def prepare_testframes(conversion = ''):

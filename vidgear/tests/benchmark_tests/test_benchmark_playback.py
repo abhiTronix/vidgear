@@ -5,7 +5,7 @@ from .fps import FPS
 
 def return_testvideo(level=0):
 	Levels = ['BigBuckBunny.mp4','20_mbps_hd_hevc_10bit.mkv','50_mbps_hd_h264.mkv','90_mbps_hd_hevc_10bit.mkv','120_mbps_4k_uhd_h264.mkv']
-	path = '{}/download/Test_videos/{}'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'], Levels[level])
+	path = '{}/Downloads/Test_videos/{}'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'], Levels[level])
 	return os.path.abspath(path)
 
 def playback(level):

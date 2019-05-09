@@ -8,11 +8,21 @@ from vidgear.gears.helper import check_python_version
 def return_static_ffmpeg():
 	path = ''
 	if os.name == 'nt':
-		path += os.path.join(os.environ['USERPROFILE'],'download/FFmpeg_static/ffmpeg/bin/ffmpeg.exe')
+		path += os.path.join(os.environ['USERPROFILE'],'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe')
 	else:
-		path += os.path.join(os.environ['HOME'],'download/FFmpeg_static/ffmpeg/ffmpeg')
+		path += os.path.join(os.environ['HOME'],'Downloads/FFmpeg_static/ffmpeg/ffmpeg')
 	return os.path.abspath(path)
 
+
+def test_ffmpeg_static_installation():
+	startpath = os.path.abspath(os.path.join( os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'],'Downloads/FFmpeg_static'))
+	for root, dirs, files in os.walk(startpath):
+		level = root.replace(startpath, '').count(os.sep)
+		indent = ' ' * 4 * (level)
+		print('{}{}/'.format(indent, os.path.basename(root)))
+		subindent = ' ' * 4 * (level + 1)
+		for f in files:
+			print('{}{}'.format(subindent, f))
 
 """
 Testing FFmpeg Static binaries installation on Windows:

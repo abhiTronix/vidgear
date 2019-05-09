@@ -5,7 +5,7 @@ from vidgear.gears import CamGear
 from .fps import FPS
 
 def return_testvideo_path():
-	path = '{}/download/Test_videos/BigBuckBunny.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
+	path = '{}/Downloads/Test_videos/BigBuckBunny.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
 	return os.path.abspath(path)
 
 def Videocapture_withCV(path):
