@@ -78,7 +78,7 @@ def test_write(conversion):
 	ffprobe_path  = os.path.join(basepath,'ffprobe.exe' if os.name == 'nt' else 'ffprobe')
 	result = check_output([ffprobe_path, "-v", "error", "-count_frames", "-i", os.path.abspath('Output_tw.mp4')])
 	if result:
-		if not isinstance(result, string_types)
+		if not isinstance(result, string_types):
 			result = result.decode()
 		print('Result: {}'.format(result))
 		for i in ["Error", "Invalid", "error", "invalid"]:
