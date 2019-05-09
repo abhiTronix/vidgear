@@ -103,10 +103,10 @@ class CamGear:
 				url = youtube_url_validation(source)
 				if url:
 					source_object = pafy.new(url)
+					_source = source_object.getbestvideo("any", ftypestrict=False)
 					if logging:
 						print('Title: {}'.format(source_object.title))
-						print('Extension: {}'.format(source_object.extension))
-					_source = source_object.getbestvideo("any", ftypestrict=False)
+						print('Extension: {}'.format(_source.extension))
 					source = _source.url
 			except Exception as e:
 				if logging:
