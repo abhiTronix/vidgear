@@ -110,9 +110,9 @@ class WriteGear:
 
 		if output_params:
 			#handle user defined output dimensions(must be a tuple or list)
-			if self.output_parameters and "-output_dimensions" in self.output_parameters:
-				self.output_dimensions += self.output_parameters["-output_dimensions"] #assign special parameter to global variable
-				del self.output_parameters["-output_dimensions"] #clean
+			if output_params and "-output_dimensions" in output_params:
+				self.output_dimensions = output_params["-output_dimensions"] #assign special parameter to global variable
+				del output_params["-output_dimensions"] #clean
 			#cleans and reformat output parameters
 			try:
 				self.output_parameters = {str(k).strip().lower(): str(v).strip().lower() for k,v in output_params.items()}
@@ -249,10 +249,10 @@ class WriteGear:
 		#handle dimensions
 		dimensions = ''
 		if self.output_dimensions is None: #check if dimensions are given
-			dimensions = '{}x{}'.format(self.inputwidth, self.inputheight) #auto derive from frame
+			dimensions += '{}x{}'.format(self.inputwidth, self.inputheight) #auto derive from frame
 		else:
-			dimensions = '{}x{}'.format(self.output_dimensions[0],self.output_dimensions[1]) #apply if defined
-		input_parameters["-s"] = dimensions
+			dimensions += '{}x{}'.format(self.output_dimensions[0],self.output_dimensions[1]) #apply if defined
+		input_parameters["-s"] = str(dimensions)
 
 		#handles pix_fmt based on channels(HACK)
 		if channels == 1:

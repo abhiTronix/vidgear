@@ -16,7 +16,7 @@ def return_youtubevideo_params(url):
 	ydl = youtube_dl.YoutubeDL({'outtmpl': '%(id)s%(ext)s','noplaylist': True,'quiet': True,'format': 'bestvideo'})
 	with ydl:
 		result = ydl.extract_info(url,download=False) # We just want to extract the info
-	return (int(result['width']),int(result['height']),result['fps'])
+	return (int(result['width']),int(result['height']),float(result['fps']))
 
 
 def return_testvideo_path():
@@ -42,14 +42,24 @@ def prepare_testframes(conversion = ''):
 @pytest.mark.xfail(raises=AssertionError)
 def test_youtube_playback():
 	Url = 'https://youtu.be/dQw4w9WgXcQ'
+	result = True
 	true_video_param = return_youtubevideo_params(Url)
 	stream = CamGear(source=Url, y_tube = True,  time_delay=2, logging=True).start() # YouTube Video URL as input
 	fps = stream.framerate
-	frame = stream.read()
-	height,width = frame.shape[:2]
-	print(true_video_param)
-	print('{}, {} and {}'.format(width,height,fps))
-	assert true_video_param[0] == width and true_video_param[1] == height and int(true_video_param[2]) == int(fps)
+	height = 0
+	width = 0 
+	while True:
+		frame = stream.read()
+		if frame is None:
+			result = False
+			break
+		if height == 0 or width == 0:
+			height,width = frame.shape[:2]
+			break
+	print('WIDTH: {} HEIGHT: {} FPS: {}'.format(true_video_param[0],true_video_param[1],true_video_param[2]))
+	print('WIDTH: {} HEIGHT: {} FPS: {}'.format(width,height,fps))
+	if result:
+		assert true_video_param[0] == width and true_video_param[1] == height and true_video_param[2] == fps
 """
 @pytest.mark.xfail(raises=AssertionError)
 def test_video_playback():
