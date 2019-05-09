@@ -1,14 +1,40 @@
+"""
+Copyright (c) 2019 Abhishek Thakur
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+"""
+
+
+
 import os
 import pytest
 from vidgear.gears import WriteGear
 from vidgear.gears import VideoGear
 from .fps import FPS
 
+
+
 def return_testvideo_path():
+	"""
+	return Test Video Data path
+	"""
 	path = '{}/Downloads/Test_videos/BigBuckBunny.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
 	return os.path.abspath(path)
 
+
+
 def return_static_ffmpeg():
+	"""
+	return FFmpeg static path
+	"""
 	path = ''
 	if os.name == 'nt':
 		path += os.path.join(os.environ['USERPROFILE'],'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe')
@@ -16,7 +42,12 @@ def return_static_ffmpeg():
 		path += os.path.join(os.environ['HOME'],'Downloads/FFmpeg_static/ffmpeg/ffmpeg')
 	return os.path.abspath(path)
 
+
+
 def Videowriter_non_compression_mode(path):
+	"""
+	Function to Benchmark VidGearwriter - (Non-Compression Mode: OpenCV)
+	"""
 	stream = VideoGear(source=path).start() 
 	writer = WriteGear(output_filename = 'Output_vnc.mp4', compression_mode = False )
 	fps_CV = FPS().start()
@@ -34,7 +65,12 @@ def Videowriter_non_compression_mode(path):
 	print("[LOG] approx. FPS: {:.2f}".format(fps_CV.fps()))
 	os.remove(os.path.abspath('Output_vnc.mp4'))
 
+
+
 def Videowriter_compression_mode(path):
+	"""
+	Function to Benchmark VidGearwriter - (Compression Mode: FFmpeg)
+	"""
 	stream = VideoGear(source=path).start()
 	writer = WriteGear(output_filename = 'Output_vc.mp4', custom_ffmpeg = return_static_ffmpeg())
 	fps_Vid = FPS().start()
@@ -53,7 +89,11 @@ def Videowriter_compression_mode(path):
 	os.remove(os.path.abspath('Output_vc.mp4'))
 
 
+
 def test_benchmark_videowriter():
+	"""
+	Benchmarking VidGearwriter - (Compression Mode: FFmpeg) against (Non-Compression Mode: OpenCV)
+	"""
 	try:
 		Videowriter_non_compression_mode(return_testvideo_path())
 		Videowriter_compression_mode(return_testvideo_path())

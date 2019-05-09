@@ -1,15 +1,27 @@
 #!/bin/sh
 
+#Copyright (c) 2019 Abhishek Thakur
+
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+
 mkdir -p $HOME/Downloads
-mkdir -p $HOME/Downloads/{FFmpeg_static,Test_videos,Test_images}
+mkdir -p $HOME/Downloads/{FFmpeg_static,Test_videos}
 
 cd $HOME/Downloads/FFmpeg_static
 
 OS_TYPE=$(uname)
 MACHINE_BIT=$(uname -m)
 
+#Download and Configure FFmpeg Static
 if [ $OS_TYPE = "Linux" ]; then 
-
 	if [ $MACHINE_BIT = "x86_64" ]; then
 	  curl https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o ffmpeg-release-amd64-static.tar.xz
 	  tar -xJf ffmpeg-release-amd64-static.tar.xz
@@ -38,7 +50,7 @@ else
 fi
 
 cd $HOME/Downloads/Test_videos
-
+# Download Test-Data
 curl http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 -o BigBuckBunny.mp4
 curl https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4 -o BigBuckBunny_4sec.mp4
 curl http://jell.yfish.us/media/jellyfish-20-mbps-hd-hevc-10bit.mkv -o 20_mbps_hd_hevc_10bit.mkv

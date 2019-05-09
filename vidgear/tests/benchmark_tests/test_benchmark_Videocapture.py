@@ -1,14 +1,40 @@
+"""
+Copyright (c) 2019 Abhishek Thakur
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+"""
+
+
+
 import os
 import cv2
 import pytest
 from vidgear.gears import CamGear
 from .fps import FPS
 
+
+
 def return_testvideo_path():
+	"""
+	return Test Video Data path
+	"""
 	path = '{}/Downloads/Test_videos/BigBuckBunny.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
 	return os.path.abspath(path)
 
+
+
 def Videocapture_withCV(path):
+	"""
+	Function to benchmark OpenCV video playback 
+	"""
 	stream = cv2.VideoCapture(path)
 	fps_CV = FPS().start()
 	while True:
@@ -22,7 +48,12 @@ def Videocapture_withCV(path):
 	print("[LOG] total elasped time: {:.2f}".format(fps_CV.total_time_elapsed()))
 	print("[LOG] approx. FPS: {:.2f}".format(fps_CV.fps()))
 
+
+
 def Videocapture_withVidGear(path):
+	"""
+	Function to benchmark VidGear multi-threaded video playback 
+	"""
 	stream = CamGear(source=path).start()
 	fps_Vid = FPS().start()
 	while True:
@@ -37,7 +68,11 @@ def Videocapture_withVidGear(path):
 	print("[LOG] approx. FPS: {:.2f}".format(fps_Vid.fps()))
 
 
+
 def test_benchmark_videocapture():
+	"""
+	Benchmarking OpenCV playback against VidGear playback (in FPS)
+	"""
 	try:
 		Videocapture_withCV(return_testvideo_path())
 		Videocapture_withVidGear(return_testvideo_path())

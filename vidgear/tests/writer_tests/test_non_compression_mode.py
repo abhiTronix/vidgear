@@ -1,3 +1,17 @@
+"""
+Copyright (c) 2019 Abhishek Thakur
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+"""
+
 from vidgear.gears import WriteGear
 import sys
 import numpy as np
@@ -11,6 +25,9 @@ import cv2
 import tempfile
 
 def return_static_ffmpeg():
+	"""
+	return FFmpeg static path
+	"""
 	path = ''
 	if os.name == 'nt':
 		path += os.path.join(os.environ['USERPROFILE'],'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe')
@@ -18,14 +35,25 @@ def return_static_ffmpeg():
 		path += os.path.join(os.environ['HOME'],'Downloads/FFmpeg_static/ffmpeg/ffmpeg')
 	return os.path.abspath(path)
 
+
+
 def return_testvideo_path():
+	"""
+	return Test Video Data path
+	"""
 	path = '{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
 	return os.path.abspath(path)
+
+
+
 
 @pytest.mark.xfail(raises=AssertionError)
 @pytest.mark.parametrize('conversion', ['COLOR_BGR2GRAY', '', 'COLOR_BGR2YUV', 'COLOR_BGR2BGRA', 'COLOR_BGR2RGB', 'COLOR_BGR2RGBA'])
 def test_write(conversion):
-	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
+	"""
+	Testing VidGear Non-Compression(OpenCV) Mode Writer
+	"""
+	stream = cv2.VideoCapture(return_testvideo_path())
 	writer = WriteGear(output_filename = 'Output_twc.avi', compression_mode = False) #Define writer
 	while True:
 		(grabbed, frame) = stream.read()
@@ -39,27 +67,32 @@ def test_write(conversion):
 		writer.write(frame)
 	stream.release()
 	writer.close()
-	basepath, _ = os.path.split(return_static_ffmpeg()) #extract file base path for debugging aheadget
+	basepath, _ = os.path.split(return_static_ffmpeg())
 	ffprobe_path  = os.path.join(basepath,'ffprobe.exe' if os.name == 'nt' else 'ffprobe')
 	result = check_output([ffprobe_path, "-v", "error", "-count_frames", "-i", os.path.abspath('Output_twc.avi')])
 	if result:
 		if not isinstance(result, string_types):
-		    result = result.decode()
+			result = result.decode()
 		print('Result: {}'.format(result))
 		for i in ["Error", "Invalid", "error", "invalid"]:
 			assert not(i in result)
 	os.remove(os.path.abspath('Output_twc.avi'))
 	
 
+
 test_data_class = [
 	('', {}, False),
 	('Output_twc.avi', {}, True),
 	(tempfile.gettempdir(), {}, True),
 	('Output_twc.mp4', {"-fourcc":"DIVX"}, True)]
+	
 @pytest.mark.parametrize('f_name, output_params, result', test_data_class)
 def test_WriteGear_compression(f_name, output_params, result):
+	"""
+	Testing VidGear Non-Compression(OpenCV) Mode with different parameters
+	"""
 	try:
-		stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
+		stream = cv2.VideoCapture(return_testvideo_path())
 		writer = WriteGear(output_filename = f_name, compression_mode = False , logging = True, **output_params)
 		while True:
 			(grabbed, frame) = stream.read()
