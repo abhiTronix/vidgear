@@ -19,7 +19,7 @@ def return_static_ffmpeg():
 	return os.path.abspath(path)
 
 def return_testvideo_path():
-	path = '{}/Downloads/Test_videos/BigBuckBunny.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
+	path = '{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
 	return os.path.abspath(path)
 
 

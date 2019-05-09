@@ -43,10 +43,10 @@ def prepare_testframes(conversion = ''):
 def test_youtube_playback():
 	Url = 'https://youtu.be/dQw4w9WgXcQ'
 	true_video_param = return_youtubevideo_params(Url)
-	stream = CamGear(source=Url, y_tube = True,  time_delay=1, logging=True).start() # YouTube Video URL as input
+	stream = CamGear(source=Url, y_tube = True,  time_delay=2, logging=True).start() # YouTube Video URL as input
 	fps = stream.framerate
-	width = stream.get(cv2.CAP_PROP_FRAME_WIDTH)
-	height = stream.get(cv2.CAP_PROP_FRAME_HEIGHT)
+	frame = stream.read()
+	height,width = frame.shape[:2]
 	print(true_video_param)
 	print('{}, {} and {}'.format(width,height,fps))
 	assert true_video_param[0] == width and true_video_param[1] == height and int(true_video_param[2]) == int(fps)
