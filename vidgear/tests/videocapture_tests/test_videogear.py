@@ -20,7 +20,21 @@ from vidgear.gears import VideoGear
 
 def test_PiGear_import():
 	"""
-	Testing VideoGear Import - made to fail with PiGear Class
+	Testing VideoGear Import - made to fail when PiGear class is imported
 	"""
 	with pytest.raises(ImportError):
-		stream = VideoGear(enablePiCamera = True, logging = True).start() 
+		stream = VideoGear(enablePiCamera = True, logging = True).start()
+		stream.stop()
+
+
+
+def test_CamGear_import():
+	"""
+	Testing VideoGear Import - Passed if CamGear Class is Imported sucessfully
+	"""
+	try:
+		Url = 'rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov'
+		output_stream = CamGear(source = Url).start()
+		output_stream.stop()
+	except Exception as e:
+		pytest.fail(str(e))

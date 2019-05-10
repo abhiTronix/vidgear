@@ -52,4 +52,4 @@ install:
   - cmd: chmod +x scripts/pre_install.sh
   - cmd: bash scripts/pre_install.sh
 test_script:
-- python -m pytest -sv
+- cmd: python -m pytest -sv

@@ -106,13 +106,13 @@ writer.close()
 
 <h3><img src="http://www.animatedimages.org/data/media/81/animated-hand-image-0021.gif" width="25" height="20"/> Note: Vidgear automatically handles all(except FFmpeg) prerequisites installation required according to your system specifications<img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/></h3>
 
-### Critical: 
+#### Critical: 
 
 * **OpenCV(with contrib):** VidGear must require **OpenCV**(3.0+) *python enabled* library to be installed on your machine which is critical for its core algorithm functioning. You can build it from [scratch](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) ([for Raspberry Pi](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/)), otherwise, Vidgear automatically installs latest [*`OpenCV with contrib`*](https://pypi.org/project/opencv-contrib-python/) python library for you based on your system requirements.
 
 * **FFmpeg:** VidGear must requires FFmpeg installation for Compression capabilities. ***Follow this [WIKI Page](https://github.com/abhiTronix/vidgear/wiki/FFmpeg-Installation) for latest FFmpeg installation.*** :warning:
 
-### Additional:
+#### Additional:
 
 * **PiCamera:** If you are using Raspberry Pi Camera Modules such as *OmniVision OV5647 Camera Module* and *Sony IMX219 Camera Module*. Vidgear requires additional [`Picamera`](https://picamera.readthedocs.io/en/release-1.13/install.html) library installation on your Raspberry Pi machine.
 
@@ -123,37 +123,40 @@ writer.close()
 &nbsp; 
 
 ## Installation
-- **PyPI(*Stable releases Only*):** `VidGear` stable releases can be easily installed as follows(*available on [Python Package Index (PyPI)](https://pypi.org/project/vidgear/)*):
+
+* **PyPI:** `VidGear` stable only releases can be easily installed as follows(*available on [Python Package Index (PyPI)](https://pypi.org/project/vidgear/)*):
 
  
   ```sh
   $ pip install vidgear
   ```
 
+* **Release Tab:** All latest Alpha(*experimental- may contains bugs*) & Stable `VidGear` release build wheels can be downloaded from [Release Tab](https://github.com/abhiTronix/vidgear/releases) and thereby installed as follows:
+  
+  ```sh
+  $ pip install vidgear-0.x.x-py2.py3-none-any.whl
+  ```  
+
 &nbsp; 
 
 
-## Contribution and Development
+## Development and Testing
 
-* You are welcome to contribute with *[suggestions, feature requests and pull requests](https://github.com/abhiTronix/vidgear/pulls).*
 
-* **Clone this repository(*Development*):** You can clone this repository for latest patches (*maybe experimental*) or development purposes, and thereby can install as follows:
+* **Clone & Install:** You can clone this repository for **latest patches (*maybe experimental*) or development & testing purposes**, and thereby can install as follows:
 
   ```sh
   $ git clone https://github.com/abhiTronix/vidgear.git
   $ cd vidgear
   $ pip install .
   ``` 
-&nbsp; 
-
-## Testing
 
 * **Prerequisites:** Testing VidGear require some **additional python libraries** which can be installed manually as follows:
 
 
   ```sh
   $ pip install six
-  $ pip install backports.lzma
+  $ pip install backports.lzma # required by python 2.7 only
   $ pip install pytest
   ```
 
@@ -164,7 +167,7 @@ writer.close()
   $ ./scripts/pre_install.sh # use `sh scripts/pre_install.sh` on windows
   ```
 
-* Then various **VidGear tests** can be run using [`pytest`](https://docs.pytest.org/en/latest/) as follows (*in root VidGear folder*):
+* Then various **VidGear tests** can be run using **[`pytest`](https://docs.pytest.org/en/latest/)** as follows (*in root VidGear folder*):
 
   ```sh
   $ pytest -sv #-sv for verbose output.
@@ -184,13 +187,15 @@ writer.close()
 
 ## Say Thanks :heart:
 
-- If you like this project, [say thanks](https://saythanks.io/to/abhiTronix)!
+If you like this project, [say thanks](https://saythanks.io/to/abhiTronix)!
 
 ## Author
 
-- **Abhishek Thakur** [@abhiTronix](https://github.com/abhiTronix)
+**Abhishek Thakur** [@abhiTronix](https://github.com/abhiTronix)
 
-## License
+## Contribution and License
+
+ You are welcome to contribute with *[suggestions, feature requests and pull requests](https://github.com/abhiTronix/vidgear/pulls).*
 
 *Copyright © 2019 AbhiTronix*
 
