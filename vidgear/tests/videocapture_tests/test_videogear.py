@@ -34,7 +34,7 @@ def test_CamGear_import():
 	"""
 	try:
 		Url = 'rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov'
-		output_stream = CamGear(source = Url).start()
+		output_stream = VideoGear(source = Url).start()
 		output_stream.stop()
 	except Exception as e:
 		pytest.fail(str(e))
