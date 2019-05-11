@@ -1,4 +1,6 @@
 """
+============================================
+vidgear library code is placed under the MIT license
 Copyright (c) 2019 Abhishek Thakur
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -8,8 +10,17 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+===============================================
 """
 
 # import the necessary packages
@@ -99,17 +110,15 @@ class CamGear:
 			try:
 				#import pafy and parse youtube stream url
 				import pafy
-
 				# validate
 				url = youtube_url_validation(source)
-
 				if url:
 					source_object = pafy.new(url)
-
-					print(source_object.title)
 					_source = source_object.getbestvideo("any", ftypestrict=False)
+					if logging:
+						print('Title: {}'.format(source_object.title))
+						print('Extension: {}'.format(_source.extension))
 					source = _source.url
-
 			except Exception as e:
 				if logging:
 					print(e)
@@ -161,7 +170,7 @@ class CamGear:
 			if _fps>1:
 				self.framerate = _fps
 		except Exception as e:
-			if self.logging:
+			if logging:
 				print(e)
 			self.framerate = 0
 
@@ -171,6 +180,9 @@ class CamGear:
 		if time_delay:
 			import time
 			time.sleep(time_delay)
+
+		# enable logging if specified
+		self.logging = logging
 
 		# thread initialization
 		self.thread=None
@@ -213,12 +225,12 @@ class CamGear:
 						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
 						self.color_space = None
-						if logging:
+						if self.logging:
 							print('Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None
-					if logging:
+					if self.logging:
 						print(e)
 						print('Input Colorspace is not a valid Colorspace!')
 

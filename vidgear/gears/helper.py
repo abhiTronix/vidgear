@@ -1,4 +1,6 @@
 """
+============================================
+vidgear library code is placed under the MIT license
 Copyright (c) 2019 Abhishek Thakur
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -8,8 +10,17 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+===============================================
 """
 
 # Contains all the support functions/modules required by Vidgear 
@@ -55,7 +66,7 @@ def dict2Args(param_dict):
 	return args
 
 
-def get_valid_ffmpeg_path(custom_ffmpeg, is_windows, ffmpeg_download_path = '', logging = False):
+def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_download_path = '', logging = False):
 	"""
 	Validate the FFmpeg path/binaries and returns valid FFmpeg file executable location(also downloads static binaries on windows) 
 	"""
@@ -105,13 +116,12 @@ def get_valid_ffmpeg_path(custom_ffmpeg, is_windows, ffmpeg_download_path = '', 
 		#otherwise perform test for Unix
 		if custom_ffmpeg:
 			#if custom FFmpeg path is given assign to local variable
-			final_path += custom_ffmpeg
-			if os.path.isfile(final_path):
+			if os.path.isfile(custom_ffmpeg):
 				#check if valid FFmpeg file exist
-				pass
-			elif os.path.isfile(os.path.join(command_or_path, 'ffmpeg')):
+				final_path += custom_ffmpeg
+			elif os.path.isfile(os.path.join(custom_ffmpeg, 'ffmpeg')):
 				#check if FFmpeg directory exists, if does, then check for valid file 
-				final_path = os.path.join(command_or_path, 'ffmpeg')
+				final_path = os.path.join(custom_ffmpeg, 'ffmpeg')
 			else:
 				#else return False
 				if logging:
@@ -131,7 +141,7 @@ def get_valid_ffmpeg_path(custom_ffmpeg, is_windows, ffmpeg_download_path = '', 
 		return False
 
 
-def download_ffmpeg_binaries(path, os_windows):
+def download_ffmpeg_binaries(path, os_windows = False):
 	"""
 	Download and Extract FFmpeg Static Binaries for windows(if not available)
 	"""
@@ -182,7 +192,7 @@ def download_ffmpeg_binaries(path, os_windows):
 	return final_path
 
 
-def validate_ffmpeg(path, logging):
+def validate_ffmpeg(path, logging = False):
 	"""
 	Validate FFmeg Binaries. returns True if tests passed
 	"""

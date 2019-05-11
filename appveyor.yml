@@ -8,14 +8,6 @@ environment:
       PYTHON_VERSION: "2.7.x"
       PYTHON_ARCH: "64"
 
-    - PYTHON: "C:\\Python34"
-      PYTHON_VERSION: "3.4.x"
-      PYTHON_ARCH: "32"
-
-    - PYTHON: "C:\\Python34-x64"
-      PYTHON_VERSION: "3.4.x"
-      PYTHON_ARCH: "64"
-
     - PYTHON: "C:\\Python35"
       PYTHON_VERSION: "3.5.x"
       PYTHON_ARCH: "32"
@@ -48,12 +40,16 @@ branches:
     - testing
 matrix:
     fast_finish: true
+
 install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
-  - "pip install --upgrade pip wheel"
-  - "pip install ."
-  - "pip install --upgrade pytest"
-  - "pip install --upgrade youtube-dl"
+  - "python -m pip install --upgrade pip wheel"
+  - "python -m pip install ."
+  - "python -m pip install six"
+  - "python -m pip install --upgrade pytest"
+  - "python -m pip install --upgrade youtube-dl"
+  - cmd: chmod +x scripts/pre_install.sh
+  - cmd: bash scripts/pre_install.sh
 test_script:
-- pytest -sv
+- cmd: python -m pytest -sv

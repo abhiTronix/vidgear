@@ -1,4 +1,6 @@
 """
+============================================
+vidgear library code is placed under the MIT license
 Copyright (c) 2019 Abhishek Thakur
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -8,8 +10,17 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+===============================================
 """
 
 # import the necessary packages/libraries
@@ -86,6 +97,7 @@ class WriteGear:
 		self.inputwidth = None
 		self.inputchannels = None
 		self.inputframerate = 0
+		self.output_dimensions = None
 		self.process = None #handle process to be frames written
 		self.DEVNULL = None #handles silent execution of FFmpeg (if logging is disabled)
 		self.cmd = ''     #handle FFmpeg Pipe command
@@ -97,7 +109,7 @@ class WriteGear:
 		if not output_filename:
 			raise ValueError('Kindly provide a valid `output_filename` value, Refer VidGear Docs for more information!')
 		elif output_filename and os.path.isdir(output_filename): # check if directory path is given instead
-			output_filename += os.path.join(output_filename, 'VidGear-{}.mp4'.format(time.strftime("%Y%m%d-%H%M%S"))) # auto-assign valid name and adds it to path
+			output_filename = os.path.join(output_filename, 'VidGear-{}.mp4'.format(time.strftime("%Y%m%d-%H%M%S"))) # auto-assign valid name and adds it to path
 		else:
 			pass
 
@@ -106,10 +118,19 @@ class WriteGear:
 		self.out_file = _filename
 		basepath, _ = os.path.split(_filename) #extract file base path for debugging ahead
 
-		#cleans and reformat output parameters and does assigning
-		if output_params:
-			self.output_parameters = {str(k).strip().lower(): str(v).strip().lower() for k,v in output_params.items()}
 
+		if output_params:
+			#handle user defined output dimensions(must be a tuple or list)
+			if output_params and "-output_dimensions" in output_params:
+				self.output_dimensions = output_params["-output_dimensions"] #assign special parameter to global variable
+				del output_params["-output_dimensions"] #clean
+			#cleans and reformat output parameters
+			try:
+				self.output_parameters = {str(k).strip().lower(): str(v).strip().lower() for k,v in output_params.items()}
+			except Exception as e:
+				if self.logging:
+					print(e)
+				raise ValueError('Wrong output_params parameters passed to WriteGear class!')
 
 		#handles FFmpeg binaries validity tests 
 		if self.compression:
@@ -203,12 +224,11 @@ class WriteGear:
 			#write the frame
 			try:
 				self.process.stdin.write(frame.tostring())
-			except (BrokenPipeError, IOError):
+			except (OSError, IOError):
 				# log something is wrong!
-				print ('BrokenPipeError caught: [Errno 32] Broken pipe')
-				print ('Wrong Values passed to FFmpeg Pipe, Kindly Refer Docs!')
+				print ('BrokenPipeError caught: Wrong Values passed to FFmpeg Pipe, Kindly Refer Docs!')
 				sys.stderr.close()
-				self.close()
+				raise ValueError #for testing purpose only
 		else:
 			# otherwise initiate OpenCV's VideoWriter Class
 			if self.initiate:
@@ -236,9 +256,14 @@ class WriteGear:
 		self.initiate = False
 		#initialize input parameters
 		input_parameters = {}
-		#set dimensions
-		dimension = '{}x{}'.format(self.inputwidth, self.inputheight)
-		input_parameters["-s"] = str(dimension)
+
+		#handle dimensions
+		dimensions = ''
+		if self.output_dimensions is None: #check if dimensions are given
+			dimensions += '{}x{}'.format(self.inputwidth, self.inputheight) #auto derive from frame
+		else:
+			dimensions += '{}x{}'.format(self.output_dimensions[0],self.output_dimensions[1]) #apply if defined
+		input_parameters["-s"] = str(dimensions)
 
 		#handles pix_fmt based on channels(HACK)
 		if channels == 1:
@@ -252,7 +277,7 @@ class WriteGear:
 		else:
 			raise ValueError("Handling Frames with (1 > Channels > 4) is not implemented!")
 
-		if self.inputframerate > 4:
+		if self.inputframerate > 5:
 			#set input framerate - minimum threshold is 5.0
 			if self.logging:
 				print("Setting Input FrameRate = {}".format(self.inputframerate))
@@ -313,8 +338,6 @@ class WriteGear:
 
 		#initialize essential parameter variables
 		FPS = 0
-		WIDTH = 0
-		HEIGHT = 0
 		BACKEND = ''
 		FOURCC = 0
 		COLOR = True
@@ -324,10 +347,10 @@ class WriteGear:
 			FOURCC = cv2.VideoWriter_fourcc(*"MJPG")
 		if "-fps" not in self.output_parameters:
 			FPS = 25
-		if "-height" not in self.output_parameters:
-			HEIGHT = self.inputheight
-		if "-width" not in self.output_parameters:
-			WIDTH = self.inputwidth
+
+		#auto assign dimensions	
+		HEIGHT = self.inputheight
+		WIDTH = self.inputwidth
 
 		#assign parameter dict values to variables
 		try:
@@ -336,10 +359,6 @@ class WriteGear:
 					FOURCC = cv2.VideoWriter_fourcc(*(value.upper()))
 				elif key == '-fps':
 					FPS = float(value)
-				elif key == '-height':
-					HEIGHT = int(value)
-				elif key == '-width':
-					WIDTH = int(width)
 				elif key =='-backend' and value.upper() in ['CAP_FFMPEG','CAP_GSTREAMER']:
 					BACKEND = capPropId(value.upper())
 				elif key == '-color':
