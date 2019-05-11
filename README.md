@@ -50,19 +50,19 @@
 
 ## Documentation and Usage
 
-<h3><img src="http://www.animatedimages.org/data/media/81/animated-hand-image-0021.gif" width="25" height="20"/> You can checkout VidGear <a href = https://github.com/abhiTronix/vidgear/wiki>WIKI-SECTION</a> for in-depth documentation with examples for each VidGear Class<img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif" /></h3>
+<h3><img src="http://www.animatedimages.org/data/media/81/animated-hand-image-0021.gif" width="25" height="20"/> You can checkout VidGear <a href = https://github.com/abhiTronix/vidgear/wiki>WIKI-SECTION</a> for in-depth documentation with examples for each class<img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif" /></h3>
 
 
 ### Basic example: 
 
-The bare minimum python example of `WriteGear`([*in Compression Mode: FFmpeg*](https://github.com/abhiTronix/vidgear/wiki/Compression-Mode:-FFmpeg#compression-mode-built-upon-ffmpeg)) with `VideoGear` video-capture class for a common *Live WebCamera stream* is as follows:
+A bare minimum **VidGear** example to write a Video file in `WriteGear`class-[*Compression Mode(i.e using powerful FFmpeg encoders)*](https://github.com/abhiTronix/vidgear/wiki/Compression-Mode:-FFmpeg#compression-mode-built-upon-ffmpeg) with real-time frames captured from a common *WebCamera stream* by `VideoGear` video-capture class is as follows:
 
 ```python
 from vidgear.gears import VideoGear
 from vidgear.gears import WriteGear
 import cv2
 
-stream = VideoGear(source=0).start() #Open live webcam video stream on first index(i.e. 0) device
+stream = VideoGear(source=0).start() #Open live webcam video stream on first index(i.e. 0) USB device
 
 writer = WriteGear(output_filename = 'Output.mp4') #Define writer with output filename 'Output.mp4'
 
@@ -76,7 +76,6 @@ while True:
 	if frame is None:
 		#if True break the infinite loop
 		break
-	
 
 	# do something with frame here
 
@@ -124,14 +123,14 @@ writer.close()
 
 ## Installation
 
-* **PyPI:** `VidGear` stable only releases can be easily installed as follows(*available on [Python Package Index (PyPI)](https://pypi.org/project/vidgear/)*):
+* **PyPI:** `VidGear` stable only releases can be easily installed as follows(*available on [**Python Package Index (PyPI)**](https://pypi.org/project/vidgear/)*):
 
  
   ```sh
   $ pip install vidgear
   ```
 
-* **Release Tab:** All latest Alpha(*experimental- may contains bugs*) & Stable `VidGear` release build wheels can be downloaded from [Release Tab](https://github.com/abhiTronix/vidgear/releases) and thereby installed as follows:
+* **Release Tab:** All latest Alpha(*experimental- may contains bugs*) & Stable `VidGear` release build wheels can be downloaded from [**Release Tab**](https://github.com/abhiTronix/vidgear/releases) and thereby installed as follows: 
   
   ```sh
   $ pip install vidgear-0.x.x-py2.py3-none-any.whl
@@ -177,15 +176,15 @@ writer.close()
 
 ## Supported Python versions
 
-* Python 2.7 is the only supported version in 2.x series. ***Python 2.7 support will be dropped in the end of 2019.***
+* **Python 2.7** is the only supported version in 2.x series. ***Python 2.7 support will be dropped in the end of 2019.***
 
-* Python 3.x releases follow `OpenCV` releases.
+* **Python 3.x** releases follow `OpenCV` releases.
 
 
 &nbsp; 
 
 
-## Say Thanks :heart:
+## Say Thanks!
 
 If you like this project, [say thanks](https://saythanks.io/to/abhiTronix)!
 
