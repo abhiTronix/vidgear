@@ -399,6 +399,9 @@ class WriteGear:
 				self.process.stdin.close() #close `stdin` output
 			if self.output_parameters and "-i" in self.output_parameters:
 				self.process.terminate()
+				self.process.wait() #wait if still process is still processing some information
+				self.process = None 
+				self.DEVNULL.close() #close it
 			else:
 				self.process.wait() #wait if still process is still processing some information
 				self.process = None 
