@@ -32,7 +32,7 @@ def test_opencv():
     """
     This function is workaround to 
     test if correct OpenCV Library version has already been installed
-    on the machine or not. Returns True if previously installed.
+    on the machine or not. Returns True if previously not installed.
     """
     try:
         # import OpenCV Binaries
@@ -54,7 +54,7 @@ with open("README.md", "r") as fh:
 setup(
     name='vidgear',
     packages=['vidgear','vidgear.gears'],
-    version='0.1.4',
+    version='0.1.5-dev',
     description='Powerful Multi-Threaded OpenCV and FFmpeg based Turbo Video Processing Python Library with unique State-of-the-Art Features.',
     license='MIT License',
     author='abhiTronix',
@@ -65,7 +65,7 @@ setup(
     long_description_content_type="text/markdown",
     author_email='abhi.una12@gmail.com',
     url='https://github.com/abhiTronix/vidgear',
-    download_url='https://github.com/abhiTronix/vidgear/tarball/0.1.4',
+    download_url='https://github.com/abhiTronix/vidgear/tarball/0.1.5-dev',
     keywords=['computer vision', 'multi-thread', 'python', 'opencv', 'cv2', 'opencv4', 'Video Processing'],
     classifiers=[
     'Development Status :: 5 - Production/Stable',

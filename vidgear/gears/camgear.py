@@ -129,7 +129,7 @@ class CamGear:
 
 		if backend and isinstance(backend, int):
 			# add backend if scpecified and initialize the camera stream
-			if check_CV_version() == 3:
+			if check_CV_version == 3:
 				# Different OpenCV 3.4.x statement
 				self.stream = cv2.VideoCapture(source + backend)
 			else:

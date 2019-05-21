@@ -126,7 +126,7 @@ class WriteGear:
 				del output_params["-output_dimensions"] #clean
 			#cleans and reformat output parameters
 			try:
-				self.output_parameters = {str(k).strip().lower(): str(v).strip().lower() for k,v in output_params.items()}
+				self.output_parameters = {str(k).strip().lower(): str(v).strip() for k,v in output_params.items()}
 			except Exception as e:
 				if self.logging:
 					print(e)
@@ -342,6 +342,8 @@ class WriteGear:
 		FOURCC = 0
 		COLOR = True
 
+
+
 		#pre-assign default encoder parameters (if not assigned by user).
 		if "-fourcc" not in self.output_parameters:
 			FOURCC = cv2.VideoWriter_fourcc(*"MJPG")
@@ -395,9 +397,12 @@ class WriteGear:
 				return  # process was already dead
 			if self.process.stdin:
 				self.process.stdin.close() #close `stdin` output
-			self.process.wait() #wait if still process is still processing some information
-			self.process = None 
-			self.DEVNULL.close() #close it
+			if self.output_parameters and "-i" in self.output_parameters:
+				self.process.terminate()
+			else:
+				self.process.wait() #wait if still process is still processing some information
+				self.process = None 
+				self.DEVNULL.close() #close it
 		else:
 			#if Compression Mode is disabled
 			if self.process is None: 
