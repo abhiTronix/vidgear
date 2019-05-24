@@ -115,7 +115,10 @@ class CamGear:
 				if url:
 					source_object = pafy.new(url)
 					_source = source_object.getbestvideo("any", ftypestrict=False)
+					if _source is None:
+						_source = source_object.getbest("any", ftypestrict=False)
 					if logging:
+						print('URL: {}'.format(url))
 						print('Title: {}'.format(source_object.title))
 						print('Extension: {}'.format(_source.extension))
 					source = _source.url
@@ -123,6 +126,9 @@ class CamGear:
 				if logging:
 					print(e)
 				raise ValueError('YouTube Mode is enabled and the input YouTube Url is invalid!')
+
+		# youtube mode variable initialization
+		self.youtube_mode = y_tube
 
 		# stream variable initialization
 		self.stream = None
@@ -257,6 +263,9 @@ class CamGear:
 		# indicate that the thread should be terminate
 		self.terminate = True
 		# wait until stream resources are released (producer thread might be still grabbing frame)
-		if self.thread is not None: 
+		if self.thread is not None:
 			self.thread.join()
 			#properly handle thread exit
+			if self.youtube_mode:
+				# kill thread-lock in youtube mode
+				self.thread = None
