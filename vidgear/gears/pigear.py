@@ -45,7 +45,7 @@ except ImportError as error:
 class PiGear:
 	"""
 	This class exclusively targets the Raspberry Pi Camera Modules such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module, 
-	to obtain high FPS video by utilizing OpenCV and Picamera libraries with a bit of multithreading. But make sure to enable Raspberry Pi 
+	to obtain high FPS video by utilizing OpenCV and Picamera libraries with a bit of multi-threading. But make sure to enable Raspberry Pi 
 	hardware specific settings prior using this class.
 	
 	:param (tuple) resolution: sets the resolution (width,height). Its default value is (640,480).
@@ -55,8 +55,8 @@ class PiGear:
 	:param (string) colorspace: set colorspace of the video stream. Its default value is None.
 
 	:param (dict) **options: sets parameter supported by PiCamera Class to the input video stream. 
-							/ These attribute provides the flexibity to manuplate input raspicam video stream directly. 
-							/ Parameters can be passed using this **option, allows you to pass keyworded variable length of arguments to PiGear Class.
+							/ These attribute provides the flexibility to manipulate input raspicam video stream directly. 
+							/ Parameters can be passed using this **option, allows you to pass key worded variable length of arguments to PiGear Class.
 
 	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 
@@ -81,10 +81,10 @@ class PiGear:
 		self.camera.resolution = resolution
 		self.camera.framerate = framerate
 
-		#initialise framerate variable
+		#initialize framerate variable
 		self.framerate = framerate
 
-		#initialisation colorspace variable
+		#initializing colorspace variable
 		self.color_space = None
 
 		#reformat dict
@@ -95,7 +95,7 @@ class PiGear:
 			for key, value in options.items():
 				setattr(self.camera, key, value)
 
-			# seperately handle colorspace value to int conversion
+			# separately handle colorspace value to int conversion
 			if not(colorspace is None):
 				self.color_space = capPropId(colorspace.strip())
 
@@ -108,21 +108,25 @@ class PiGear:
 		self.rawCapture = PiRGBArray(self.camera, size=resolution)
 		self.stream = self.camera.capture_continuous(self.rawCapture,format="bgr", use_video_port=True)
 
-		# applying time delay to warmup picamera only if specified
+		#frame variable initialization		
+		for stream in self.stream:
+			self.frame = stream.array
+			self.rawCapture.seek(0)
+			self.rawCapture.truncate()
+			break
+
+		# applying time delay to warm-up picamera only if specified
 		if time_delay:
 			import time
 			time.sleep(time_delay)
 
 		#thread initialization
 		self.thread = None
-		
-		#frame initialization
-		self.frame = None
 
 		# enable logging if specified
 		self.logging = logging
 
-		# intialize termination flag
+		# initialize termination flag
 		self.terminate = False
 
 

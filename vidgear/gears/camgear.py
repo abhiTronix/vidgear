@@ -134,7 +134,7 @@ class CamGear:
 		self.stream = None
 
 		if backend and isinstance(backend, int):
-			# add backend if scpecified and initialize the camera stream
+			# add backend if specified and initialize the camera stream
 			if check_CV_version == 3:
 				# Different OpenCV 3.4.x statement
 				self.stream = cv2.VideoCapture(source + backend)
@@ -146,7 +146,7 @@ class CamGear:
 			self.stream = cv2.VideoCapture(source)
 
 
-		#initialisation colorspace variable
+		#initializing colorspace variable
 		self.color_space = None
 
 		#reformat dict
@@ -158,7 +158,7 @@ class CamGear:
 			for key, value in options.items():
 				self.stream.set(capPropId(key),value)
 
-			# seperately handle colorspace value to int conversion
+			# separately handle colorspace value to int conversion
 			if not(colorspace is None):
 				self.color_space = capPropId(colorspace.strip())
 
@@ -167,10 +167,8 @@ class CamGear:
 			if logging:
 				print(e)
 
-		#initialize framerate variable
+		#initialize and assign framerate variable
 		self.framerate = 0
-
-		#save framerate
 		try:
 			_fps = self.stream.get(cv2.CAP_PROP_FPS)
 			if _fps>1:
@@ -180,6 +178,7 @@ class CamGear:
 				print(e)
 			self.framerate = 0
 
+		#frame variable initialization
 		(grabbed, self.frame) = self.stream.read()
 
 		# applying time delay to warm-up webcam only if specified
