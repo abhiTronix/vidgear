@@ -25,6 +25,8 @@ sudo apt-get install -y libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev gst
 
 echo "Installing OpenCV Library..."
 
+cd $HOME
+
 wget -O opencv.zip https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip
 wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip
 
@@ -37,7 +39,7 @@ mv opencv_contrib-${OPENCV_VERSION} opencv_contrib
 rm opencv.zip
 rm opencv_contrib.zip
 
-cd ~/opencv
+cd $HOME/opencv
 mkdir build
 cd build
 
@@ -47,3 +49,5 @@ sudo make install
 sudo ldconfig
 
 echo "Done Installing OpenCV...!!!"
+
+cd $HOME
