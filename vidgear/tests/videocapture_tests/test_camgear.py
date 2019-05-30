@@ -91,27 +91,22 @@ def test_youtube_playback():
 		try:
 			true_video_param = return_youtubevideo_params(Url)
 			stream = CamGear(source=Url, y_tube = True,  time_delay=2, logging=True).start() # YouTube Video URL as input
-			fps = stream.framerate
 			height = 0
-			width = 0 
+			width = 0
+			fps = 0
 			while True:
 				frame = stream.read()
 				if frame is None:
-					result = False
 					break
 				if height == 0 or width == 0:
+					fps = stream.framerate
 					height,width = frame.shape[:2]
-					break
 			print('WIDTH: {} HEIGHT: {} FPS: {}'.format(true_video_param[0],true_video_param[1],true_video_param[2]))
 			print('WIDTH: {} HEIGHT: {} FPS: {}'.format(width,height,fps))
 		except Exception as error:
 			print(error)
-			result = False
-		print('Result: {}'.format('Skipped' if not result else 'Displaying...'))	
-		if result:
-			assert true_video_param[0] == width and true_video_param[1] == height and true_video_param[2] == fps
-		else:
-			print('YouTube playback Test is skipped, since valid frames are not returned!')
+		assert true_video_param[0] == width and true_video_param[1] == height and true_video_param[2] == fps
+
 	else:
 		print('YouTube playback Test is skipped due to bug with Appveyor on Windows builds!')
 

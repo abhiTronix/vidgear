@@ -41,7 +41,7 @@
 - [x]  *Flexible Output Video Encoder, Compression & Quality Control* <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/>
 - [x]  *Direct YouTube Video pipelining using its URL address* <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/>
 - [x]  *Easy Video Source ColorSpace Conversion* <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/>
-- [x]  *Automated prerequisites installation* <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif" />
+- [x]  *Automated prerequisites installation support*
 - [x]  *Built-in robust Error and Frame Synchronization handling*
 - [x]  *Multi-Devices Compatibility (including RpiCamera)*
 - [x]  *Support for Live Network Video Streams (including Gstreamer Raw Pipeline)* 
@@ -103,11 +103,9 @@ writer.close()
 
 ## Prerequisites
 
-<h3><img src="http://www.animatedimages.org/data/media/81/animated-hand-image-0021.gif" width="25" height="20"/> Note: Vidgear automatically handles all(except FFmpeg) prerequisites installation required according to your system specifications<img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/></h3>
-
 #### Critical: 
 
-* **OpenCV(with contrib):** VidGear must require **OpenCV**(3.0+) *python enabled* library to be installed on your machine which is critical for its core algorithm functioning. You can build it from [scratch](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) ([for Raspberry Pi](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/)), otherwise, Vidgear automatically installs latest [*`OpenCV with contrib`*](https://pypi.org/project/opencv-contrib-python/) python library for you based on your system requirements.
+* **OpenCV(with contrib):** VidGear must require **OpenCV**(3.0+) *python enabled* library to be installed on your machine which is critical for its core algorithm functioning. You can build it from [scratch](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) ([for Raspberry Pi](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/)), otherwise, you'll require to install latest [*`OpenCV with contrib`*](https://pypi.org/project/opencv-contrib-python/) python library for you based on your system requirements.
 
 * **FFmpeg:** VidGear must requires FFmpeg installation for Compression capabilities. ***Follow this [WIKI Page](https://github.com/abhiTronix/vidgear/wiki/FFmpeg-Installation) for latest FFmpeg installation.*** :warning:
 
@@ -159,11 +157,11 @@ writer.close()
   $ pip install pytest
   ```
 
-* **Download Test-Data:** Vidgear also requires **test data** to test its algorithms which can be downloaded by running this [*bash script*](https://github.com/abhiTronix/vidgear/blob/master/scripts/pre_install.sh) as follows:
+* **Download Test-Data:** Vidgear also requires **test data** to test its algorithms which can be downloaded by running these [*bash script*](https://github.com/abhiTronix/vidgear/blob/testing/scripts/bash/prepare_dataset.sh) as follows:
 
   ```sh
-  $ chmod +x scripts/pre_install.sh
-  $ ./scripts/pre_install.sh # use `sh scripts/pre_install.sh` on windows
+  $ chmod +x scripts/prepare_dataset.sh
+  $ ./scripts/prepare_dataset.sh # use `sh scripts/prepare_dataset.sh` on windows
   ```
 
 * Then various **VidGear tests** can be run using **[`pytest`](https://docs.pytest.org/en/latest/)** as follows (*in root VidGear folder*):
