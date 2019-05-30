@@ -24,13 +24,11 @@ install:
   - "pip install --upgrade youtube-dl"
 dist: xenial
 python: 
-  - "2.7"
+  - "2.7_with_system_site_packages"
   - "3.4"
-  - "3.5"
+  - "3.5_with_system_site_packages"
   - "3.6"
   - "3.7"
-virtualenv:
-  system_site_packages: true
 script:
   - bash scripts/bash/prepare_dataset.sh
   - bash scripts/bash/install_opencv.sh

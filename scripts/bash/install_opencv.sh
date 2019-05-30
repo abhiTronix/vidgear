@@ -43,8 +43,11 @@ cd $HOME/opencv
 mkdir build
 cd build
 
-cmake -DCMAKE_BUILD_TYPE=RELEASE -DOPENCV_EXTRA_MODULES_PATH=$HOME/opencv_contrib/modules -DCMAKE_INSTALL_PREFIX=/usr/local -DINSTALL_PYTHON_EXAMPLES=OFF -DBUILD_DOCS=OFF -DBUILD_EXAMPLES=OFF  -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_opencv_java=OFF -DWITH_LIBV4L=0N  -DWITH_V4L=ON -DOPENCV_SKIP_PYTHON_LOADER=ON ..
-make -j6
+PYTHON2_LIB=$(python2 -c "import distutils.sysconfig as sysconfig; import os; print(os.path.join('/usr/lib/x86_64-linux-gnu/', sysconfig.get_config_var('LDLIBRARY')))")
+PYTHON3_LIB=$(python3 -c "import distutils.sysconfig as sysconfig; import os; print(os.path.join('/usr/lib/x86_64-linux-gnu/', sysconfig.get_config_var('LDLIBRARY')))")
+
+cmake -DCMAKE_BUILD_TYPE=RELEASE -DOPENCV_EXTRA_MODULES_PATH=$HOME/opencv_contrib/modules -DCMAKE_INSTALL_PREFIX=/usr/local -DINSTALL_PYTHON_EXAMPLES=OFF -DBUILD_DOCS=OFF -DBUILD_EXAMPLES=OFF  -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_opencv_java=OFF -DWITH_LIBV4L=0N  -DWITH_V4L=ON -DOPENCV_SKIP_PYTHON_LOADER=ON -DPYTHON2_LIBRARY=$PYTHON2_LIB -DPYTHON3_LIBRARY=$PYTHON3_LIB ..
+make -j10
 sudo make install
 sudo ldconfig
 
