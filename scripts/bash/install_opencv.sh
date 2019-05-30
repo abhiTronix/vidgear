@@ -3,7 +3,7 @@
 ######################################
 
 # VERSION TO BE INSTALLED
-OPENCV_VERSION='4.0.1'
+OPENCV_VERSION='3.4.5'
 
 
 echo "Installing OpenCV..."
