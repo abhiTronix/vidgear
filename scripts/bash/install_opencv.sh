@@ -32,7 +32,7 @@ unzip opencv.zip
 unzip opencv_contrib.zip
 
 mv opencv-${OPENCV_VERSION} opencv
-mv opencv_contrib-${OPENCV_VERSION} opencv
+mv opencv_contrib-${OPENCV_VERSION} opencv_contrib
 
 rm opencv.zip
 rm opencv_contrib.zip

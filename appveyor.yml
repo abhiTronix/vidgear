@@ -49,7 +49,7 @@ install:
   - "python -m pip install six"
   - "python -m pip install --upgrade pytest"
   - "python -m pip install --upgrade youtube-dl"
-  - cmd: chmod +x scripts/pre_install.sh
-  - cmd: bash scripts/pre_install.sh
+  - cmd: chmod +x scripts/bash/prepare_dataset.sh
+  - cmd: bash scripts/bash/prepare_dataset.sh
 test_script:
 - cmd: python -m pytest -sv
