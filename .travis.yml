@@ -29,6 +29,8 @@ python:
   - "3.5"
   - "3.6"
   - "3.7"
+virtualenv:
+  system_site_packages: true
 script:
   - bash scripts/bash/prepare_dataset.sh
   - bash scripts/bash/install_opencv.sh
