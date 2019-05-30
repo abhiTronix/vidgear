@@ -27,8 +27,8 @@ echo "Installing OpenCV Library..."
 
 cd $HOME
 
-wget -O opencv.zip https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip
-wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip
+wget -qq -O opencv.zip https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip
+wget -qq -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip
 
 unzip opencv.zip
 unzip opencv_contrib.zip

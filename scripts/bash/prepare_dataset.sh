@@ -38,12 +38,12 @@ else
 
 	if [ $MACHINE_BIT = "x86_64" ]; then
 	  curl https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-latest-win64-static.zip -o ffmpeg-latest-win64-static.zip
-	  unzip ffmpeg-latest-win64-static.zip
+	  unzip -qq ffmpeg-latest-win64-static.zip
 	  rm ffmpeg-latest-win64-static.zip
 	  mv ffmpeg-latest-win64-static ffmpeg
 	else
 	  curl https://ffmpeg.zeranoe.com/builds/win32/static/ffmpeg-latest-win32-static.zip -o ffmpeg-latest-win32-static.zip
-	  unzip ffmpeg-latest-win32-static.zip
+	  unzip -qq ffmpeg-latest-win32-static.zip
 	  rm ffmpeg-latest-win32-static.zip
 	  mv ffmpeg-latest-win32-static ffmpeg
 	fi
