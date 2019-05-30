@@ -6,10 +6,10 @@
 OPENCV_VERSION='4.0.1'
 
 
-echo("Installing OpenCV...")
+echo "Installing OpenCV..."
 
 
-echo("Installing OpenCV Dependencies...")
+echo "Installing OpenCV Dependencies..."
 
 sudo apt-get install -y build-essential cmake unzip wget pkg-config gfortran
 
@@ -23,7 +23,7 @@ sudo apt-get install -y zlib1g-dev libjpeg-dev libwebp-dev libpng-dev libopenbla
 
 sudo apt-get install -y libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools
 
-echo("Installing OpenCV Library...")
+echo "Installing OpenCV Library..."
 
 wget -O opencv.zip https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip
 wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip
@@ -46,4 +46,4 @@ make -j6
 sudo make install
 sudo ldconfig
 
-echo("Done Installing OpenCV...!!!")
+echo "Done Installing OpenCV...!!!"
