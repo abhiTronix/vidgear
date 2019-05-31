@@ -5,7 +5,7 @@
 
 OPENCV_VERSION='4.1.0'
 
-PYTHONSUFFIX=$(python3 -c 'import platform; a = platform.python_version(); print(".".join(a.split(".")[:2]))')
+PYTHONSUFFIX=$(python -c 'import platform; a = platform.python_version(); print(".".join(a.split(".")[:2]))')
 PYTHONVERSION=$(python -c 'import platform; print(platform.python_version())')
 
 echo "Installing OpenCV..."
@@ -34,7 +34,7 @@ sudo dpkg -i OpenCV-$OPENCV_VERSION-$(python -c 'import platform; print(platform
 
 sudo ldconfig
 
-sudo ln -s /usr/local/lib/python$PYTHONSUFFIX/site-packages/*.so $HOME/virtualenv/python$PYTHONVERSION/lib/python$PYTHONSUFFIX/site-packages
+sudo ln -s /usr/local/lib/python$PYTHONSUFFIX/site-packages/*.so $.+93-HOME/virtualenv/python$PYTHONVERSION/lib/python$PYTHONSUFFIX/site-packages
 
 sudo ldconfig
 
