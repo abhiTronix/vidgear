@@ -9,27 +9,26 @@ before_install:
   - "chmod +x scripts/bash/prepare_dataset.sh"
   - "dos2unix scripts/bash/install_opencv.sh"
   - "chmod +x scripts/bash/install_opencv.sh"
-  - export PYTHONPATH=$PYTHONPATH:$(pwd)
+  - "export PYTHONPATH=$PYTHONPATH:$(pwd)"
+  - "bash scripts/bash/install_opencv.sh"
 branches: 
   only: 
     - testing
 cache: pip
 install: 
   - "pip install --upgrade pip wheel"
-  - "pip install numpy"
+  - "pip install --upgrade numpy"
   - "pip install ."
   - "pip install six"
-  - "pip install backports.lzma"
   - "pip install --upgrade pytest"
   - "pip install --upgrade youtube-dl"
 dist: xenial
 python: 
-  - "2.7_with_system_site_packages"
+  - "2.7"
   - "3.4"
-  - "3.5_with_system_site_packages"
+  - "3.5"
   - "3.6"
   - "3.7"
 script:
   - bash scripts/bash/prepare_dataset.sh
-  - bash scripts/bash/install_opencv.sh
   - pytest -sv
