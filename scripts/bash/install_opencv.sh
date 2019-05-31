@@ -33,7 +33,9 @@ wget https://github.com/abhiTronix/OpenCV-Travis-Builds/releases/download/latest
 
 sudo dpkg -i OpenCV-$OPENCV_VERSION-$(python -c 'import platform; print(platform.python_version())').deb
 
-sudo ldconfig 
+sudo ldconfig
+
+echo "OpenCV working version is $(python -c 'import cv2; print(cv2.__version__)')"
 
 echo "Done Installing OpenCV...!!!"
 
