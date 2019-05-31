@@ -35,6 +35,12 @@ sudo dpkg -i OpenCV-$OPENCV_VERSION-$(python -c 'import platform; print(platform
 
 sudo ldconfig
 
+# export PYTHONPATH=$(python -c "import site; print(site.getsitepackages())"[0]):$PYTHONPATH
+
+sudo ln -s $(python -c "import site, os; print(os.path.abspath(os.path.join(site.getsitepackages()[0],'..')))")/site-packages/*.so $(python -c "import site; print(site.getsitepackages()[0])")
+
+sudo ldconfig
+
 echo "OpenCV working version is $(python -c 'import cv2; print(cv2.__version__)')"
 
 echo "Done Installing OpenCV...!!!"

@@ -9,7 +9,6 @@ before_install:
   - "chmod +x scripts/bash/prepare_dataset.sh"
   - "dos2unix scripts/bash/install_opencv.sh"
   - "chmod +x scripts/bash/install_opencv.sh"
-  - "export PYTHONPATH=$PYTHONPATH:$(pwd)"
   - "bash scripts/bash/install_opencv.sh"
 branches: 
   only: 
