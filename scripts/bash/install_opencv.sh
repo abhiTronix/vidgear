@@ -5,9 +5,10 @@
 
 OPENCV_VERSION='4.1.0'
 
+PYTHONSUFFIX=$(python3 -c 'import platform; a = platform.python_version(); print(".".join(a.split(".")[:2]))')
+PYTHONVERSION=$(python -c 'import platform; print(platform.python_version())')
 
 echo "Installing OpenCV..."
-
 
 echo "Installing OpenCV Dependencies..."
 
@@ -23,21 +24,17 @@ sudo apt-get install -y zlib1g-dev libjpeg-dev checkinstall libwebp-dev libpng-d
 
 sudo apt-get install -y libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools
 
-sudo pip install numpy
-
 echo "Installing OpenCV Library"
 
 cd $HOME
 
-wget https://github.com/abhiTronix/OpenCV-Travis-Builds/releases/download/latest/OpenCV-$OPENCV_VERSION-$(python -c 'import platform; print(platform.python_version())').deb
+wget https://github.com/abhiTronix/OpenCV-Travis-Builds/releases/download/latest/OpenCV-$OPENCV_VERSION-$PYTHONVERSION.deb
 
 sudo dpkg -i OpenCV-$OPENCV_VERSION-$(python -c 'import platform; print(platform.python_version())').deb
 
 sudo ldconfig
 
-# export PYTHONPATH=$(python -c "import site; print(site.getsitepackages())"[0]):$PYTHONPATH
-
-sudo ln -s $(python -c "import site, os; print(os.path.abspath(os.path.join(site.getsitepackages()[0],'..')))")/site-packages/*.so $(python -c "import site; print(site.getsitepackages()[0])")
+sudo ln -s /usr/local/lib/python$PYTHONSUFFIX/site-packages/*.so SHOME/virtualenv/python$PYTHONVERSION/lib/python$PYTHONSUFFIX/site-packages
 
 sudo ldconfig
 
