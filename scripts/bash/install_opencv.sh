@@ -34,7 +34,7 @@ sudo dpkg -i OpenCV-$OPENCV_VERSION-$(python -c 'import platform; print(platform
 
 sudo ldconfig
 
-sudo ln -s /usr/local/lib/python$PYTHONSUFFIX/site-packages/*.so SHOME/virtualenv/python$PYTHONVERSION/lib/python$PYTHONSUFFIX/site-packages
+sudo ln -s /usr/local/lib/python$PYTHONSUFFIX/site-packages/*.so $HOME/virtualenv/python$PYTHONVERSION/lib/python$PYTHONSUFFIX/site-packages
 
 sudo ldconfig
 
