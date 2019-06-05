@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 import youtube_dl
 import cv2
-import os, sys
+import os, sys, time
 import numpy as np
 import pytest
 from vidgear.gears import CamGear
@@ -55,28 +55,43 @@ def return_testvideo_path():
 
 
 
-"""
-def return_testimage_dir():
-
-	path = '{}/Downloads/Test_images'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
-	return os.path.abspath(path)
-
-def prepare_testframes(conversion = ''):
+def return_total_frame_count():
+	"""
+	simply counts the total frames in a given video
+	"""
 	stream = cv2.VideoCapture(return_testvideo_path())
-	j=0
+	num_cv=0
 	while True:
 		(grabbed, frame) = stream.read()
-		# read frames
-		# check if frame empty
 		if not grabbed:
-			#if True break the infinite loop
+			print(num_cv)
 			break
-		if conversion:
-			frame = cv2.cvtColor(frame, capPropId(conversion))
-		cv2.imwrite('{}.png'.format(return_testimage_dir()+'/'+str(j)),frame)
-		j+=1
+		num_cv += 1
 	stream.release()
-"""
+	return num_cv
+
+
+
+@pytest.mark.xfail(raises=AssertionError)
+def test_threaded_queue_mode():
+	"""
+	Test for New Thread Queue Mode in CamGear Class
+	"""
+	actual_frame_num = return_total_frame_count()
+	stream_camgear = CamGear(source=return_testvideo_path(), logging=True).start() #start stream on CamGear
+	camgear_frames_num = 0
+	while True:
+		frame = stream_camgear.read()
+		if frame is None:
+			print(camgear_frames_num)
+			break
+		
+		time.sleep(1) #dummy computational task cycling at 1 loop/sec
+
+		camgear_frames_num += 1
+	stream_camgear.stop()
+
+	assert camgear_frames_num == actual_frame_num
 
 
 
