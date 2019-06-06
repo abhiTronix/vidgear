@@ -78,6 +78,7 @@ def test_threaded_queue_mode():
 	Test for New Thread Queue Mode in CamGear Class
 	"""
 	actual_frame_num = return_total_frame_count()
+
 	stream_camgear = CamGear(source=return_testvideo_path(), logging=True).start() #start stream on CamGear
 	camgear_frames_num = 0
 	while True:
@@ -105,7 +106,8 @@ def test_youtube_playback():
 		result = True
 		try:
 			true_video_param = return_youtubevideo_params(Url)
-			stream = CamGear(source=Url, y_tube = True, logging=True).start() # YouTube Video URL as input
+			options = {'THREADED_QUEUE_MODE':False}
+			stream = CamGear(source=Url, y_tube = True, logging=True, **options).start() # YouTube Video URL as input
 			height = 0
 			width = 0
 			fps = 0
@@ -133,7 +135,8 @@ def test_network_playback():
 	"""	
 	Url = 'rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov'
 	try:
-		output_stream = CamGear(source = Url).start()
+		options = {'THREADED_QUEUE_MODE':False}
+		output_stream = CamGear(source = Url, **options).start()
 		i = 0
 		Output_data = []
 		while i<10:

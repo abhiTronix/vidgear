@@ -59,7 +59,8 @@ def Videowriter_non_compression_mode(path):
 	"""
 	Function to Benchmark VidGearwriter - (Non-Compression Mode: OpenCV)
 	"""
-	stream = VideoGear(source=path).start() 
+	options = {'THREADED_QUEUE_MODE':False}
+	stream = VideoGear(source=path, **options).start() 
 	writer = WriteGear(output_filename = 'Output_vnc.mp4', compression_mode = False )
 	fps_CV = FPS().start()
 	while True:
@@ -82,7 +83,8 @@ def Videowriter_compression_mode(path):
 	"""
 	Function to Benchmark VidGearwriter - (Compression Mode: FFmpeg)
 	"""
-	stream = VideoGear(source=path).start()
+	options = {'THREADED_QUEUE_MODE':False}
+	stream = VideoGear(source=path, **options).start()
 	writer = WriteGear(output_filename = 'Output_vc.mp4', custom_ffmpeg = return_static_ffmpeg())
 	fps_Vid = FPS().start()
 	while True:

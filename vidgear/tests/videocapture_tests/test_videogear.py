@@ -45,7 +45,8 @@ def test_CamGear_import():
 	"""
 	try:
 		Url = 'rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov'
-		output_stream = VideoGear(source = Url).start()
+		options = {'THREADED_QUEUE_MODE':False}
+		output_stream = VideoGear(source = Url, **options).start()
 		output_stream.stop()
 	except Exception as e:
 		pytest.fail(str(e))
