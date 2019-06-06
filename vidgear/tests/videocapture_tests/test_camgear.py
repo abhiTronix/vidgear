@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 import youtube_dl
 import cv2
-import os, sys
+import os, sys, time
 import numpy as np
 import pytest
 from vidgear.gears import CamGear
@@ -55,28 +55,44 @@ def return_testvideo_path():
 
 
 
-"""
-def return_testimage_dir():
-
-	path = '{}/Downloads/Test_images'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
-	return os.path.abspath(path)
-
-def prepare_testframes(conversion = ''):
+def return_total_frame_count():
+	"""
+	simply counts the total frames in a given video
+	"""
 	stream = cv2.VideoCapture(return_testvideo_path())
-	j=0
+	num_cv=0
 	while True:
 		(grabbed, frame) = stream.read()
-		# read frames
-		# check if frame empty
 		if not grabbed:
-			#if True break the infinite loop
+			print(num_cv)
 			break
-		if conversion:
-			frame = cv2.cvtColor(frame, capPropId(conversion))
-		cv2.imwrite('{}.png'.format(return_testimage_dir()+'/'+str(j)),frame)
-		j+=1
+		num_cv += 1
 	stream.release()
-"""
+	return num_cv
+
+
+
+@pytest.mark.xfail(raises=AssertionError)
+def test_threaded_queue_mode():
+	"""
+	Test for New Thread Queue Mode in CamGear Class
+	"""
+	actual_frame_num = return_total_frame_count()
+
+	stream_camgear = CamGear(source=return_testvideo_path(), logging=True).start() #start stream on CamGear
+	camgear_frames_num = 0
+	while True:
+		frame = stream_camgear.read()
+		if frame is None:
+			print(camgear_frames_num)
+			break
+		
+		time.sleep(0.2) #dummy computational task
+
+		camgear_frames_num += 1
+	stream_camgear.stop()
+
+	assert camgear_frames_num == actual_frame_num
 
 
 
@@ -90,7 +106,8 @@ def test_youtube_playback():
 		result = True
 		try:
 			true_video_param = return_youtubevideo_params(Url)
-			stream = CamGear(source=Url, y_tube = True,  time_delay=2, logging=True).start() # YouTube Video URL as input
+			options = {'THREADED_QUEUE_MODE':False}
+			stream = CamGear(source=Url, y_tube = True, logging=True, **options).start() # YouTube Video URL as input
 			height = 0
 			width = 0
 			fps = 0
@@ -118,7 +135,8 @@ def test_network_playback():
 	"""	
 	Url = 'rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov'
 	try:
-		output_stream = CamGear(source = Url).start()
+		options = {'THREADED_QUEUE_MODE':False}
+		output_stream = CamGear(source = Url, **options).start()
 		i = 0
 		Output_data = []
 		while i<10:

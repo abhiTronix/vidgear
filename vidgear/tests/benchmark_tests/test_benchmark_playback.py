@@ -46,7 +46,8 @@ def playback(level):
 	"""
 	Function to test VidGear playback capabilities
 	"""
-	stream = CamGear(source=level).start()
+	options = {'THREADED_QUEUE_MODE':False}
+	stream = CamGear(source=level, **options).start()
 	fps = FPS().start()
 	while True:
 		frame = stream.read()

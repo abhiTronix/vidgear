@@ -28,7 +28,7 @@ from threading import Thread
 from pkg_resources import parse_version
 from .helper import capPropId
 from .helper import check_CV_version
-import re
+import re, time
 
 #Note: Remember, Not all parameters are supported by all cameras which is 
 #one of the most troublesome part of the OpenCV library. Each camera type, 
@@ -73,7 +73,12 @@ class CamGear:
 	"""
 	This class targets any common IP or USB Cameras(including Raspberry Pi Compatible), 
 	Various Video Files Formats and Network Video Streams(Including Gstreamer Raw Video Capture Pipeline) 
-	for obtaining high-speed real-time frames by utilizing OpenCV and multi-threading. Now, it also supports Youtube Streaming.
+	for obtaining high-speed real-time frames by utilizing OpenCV and multi-threading. It also supports Youtube Streaming.
+	It operates in `Threaded Queue Mode` by default.
+
+	Threaded Queue Mode => Sequentially adds and releases frames to/from deque and handles overflow of this queue. It utilizes 
+	Deques that support thread-safe, memory efficient appends and pops from either side of the deque with approximately the 
+	same O(1) performance in either direction.  
 
 	:param source : take the source value. Its default value is 0. Valid Inputs are:
 
@@ -102,8 +107,11 @@ class CamGear:
 						/ This delay is essentially required for camera to warm-up. 
 						/Its default value is 0.
 	"""
+
 	def __init__(self, source = 0, y_tube = False, backend = 0, colorspace = None, logging = False, time_delay = 0, **options):
 
+		#intialize threaded queue mode
+		self.threaded_queue_mode = True
 
 		# check if Youtube Mode is ON (True)
 		if y_tube:
@@ -130,6 +138,28 @@ class CamGear:
 		# youtube mode variable initialization
 		self.youtube_mode = y_tube
 
+		#User-Defined Threaded Queue Mode
+		if options:
+			if "THREADED_QUEUE_MODE" in options:
+				if isinstance(options["THREADED_QUEUE_MODE"],bool):
+					self.threaded_queue_mode = options["THREADED_QUEUE_MODE"] #assigsn special parameter to global variable
+				del options["THREADED_QUEUE_MODE"] #clean
+				#reformat option dict
+
+		self.queue = None
+		#intialize deque for video files only 
+		if self.threaded_queue_mode and isinstance(source,str):
+			#import deque
+			from collections import deque
+			#define deque and assign it to global var
+			self.queue = deque(maxlen=64) #max len 64 to check overflow
+			#log it
+			if logging:
+				print('Enabling Threaded Queue Mode for the current video source!') 
+		else:
+			#otherwise disable it
+			self.threaded_queue_mode = False
+
 		# stream variable initialization
 		self.stream = None
 
@@ -149,12 +179,10 @@ class CamGear:
 		#initializing colorspace variable
 		self.color_space = None
 
-		#reformat dict
-		options = {k.strip(): v for k,v in options.items()}
-
-
 		try: 
 			# try to apply attributes to source if specified
+			#reformat dict
+			options = {k.strip(): v for k,v in options.items()}
 			for key, value in options.items():
 				self.stream.set(capPropId(key),value)
 
@@ -181,9 +209,12 @@ class CamGear:
 		#frame variable initialization
 		(grabbed, self.frame) = self.stream.read()
 
+		if self.threaded_queue_mode:
+			#intitialize and append to queue
+			self.queue.append(self.frame)
+
 		# applying time delay to warm-up webcam only if specified
 		if time_delay:
-			import time
 			time.sleep(time_delay)
 
 		# enable logging if specified
@@ -195,6 +226,8 @@ class CamGear:
 		# initialize termination flag
 		self.terminate = False
 
+
+
 	def start(self):
 		"""
 		start the thread to read frames from the video stream
@@ -204,15 +237,26 @@ class CamGear:
 		self.thread.start()
 		return self
 
+
+
 	def update(self):
 		"""
 		Update frames from stream
 		"""
-		# keep looping infinitely until the thread is terminated
+
+		# keep iterating infinitely until the thread is terminated or frames runs out
 		while True:
 			# if the thread indicator variable is set, stop the thread
 			if self.terminate:
 				break
+
+			if self.threaded_queue_mode:
+				#check queue buffer for overflow
+				if len(self.queue) < 64:
+					pass
+				else:
+					#stop iterating if overflowing occurs
+					continue
 
 			# otherwise, read the next frame from the stream
 			(grabbed, frame) = self.stream.read()
@@ -220,7 +264,13 @@ class CamGear:
 			#check for valid frames
 			if not grabbed:
 				#no frames received, then safely exit
-				self.terminate = True
+				if self.threaded_queue_mode:
+					if len(self.queue)>0:
+						pass
+					else:
+						self.terminate = True
+				else:
+					self.terminate = True
 
 			if not(self.color_space is None):
 				# apply colorspace to frames
@@ -245,20 +295,38 @@ class CamGear:
 					self.frame = frame
 			else:
 				self.frame = frame
-				
+
+			#append to queue
+			if self.threaded_queue_mode:
+				self.queue.append(frame)
+
 		#release resources
 		self.stream.release()
+
+
 
 	def read(self):
 		"""
 		return the frame
 		"""
+		if self.threaded_queue_mode:
+			if len(self.queue)>0:
+				return self.queue.popleft()
 		return self.frame
+
+
 
 	def stop(self):
 		"""
 		Terminates the Read process
 		"""
+
+		#terminate Threaded queue mode seperately
+		if self.threaded_queue_mode and not(self.queue is None):
+			self.queue.clear()
+			self.threaded_queue_mode = False
+			self.frame = None
+
 		# indicate that the thread should be terminate
 		self.terminate = True
 		# wait until stream resources are released (producer thread might be still grabbing frame)

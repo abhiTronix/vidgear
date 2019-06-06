@@ -64,7 +64,8 @@ def Videocapture_withVidGear(path):
 	"""
 	Function to benchmark VidGear multi-threaded video playback 
 	"""
-	stream = CamGear(source=path).start()
+	options = {'THREADED_QUEUE_MODE':False}
+	stream = CamGear(source=path, **options).start()
 	fps_Vid = FPS().start()
 	while True:
 		frame = stream.read()
