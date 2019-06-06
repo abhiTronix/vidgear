@@ -28,7 +28,7 @@ from threading import Thread
 from pkg_resources import parse_version
 from .helper import capPropId
 from .helper import check_CV_version
-import re, time, os
+import re, time
 
 #Note: Remember, Not all parameters are supported by all cameras which is 
 #one of the most troublesome part of the OpenCV library. Each camera type, 

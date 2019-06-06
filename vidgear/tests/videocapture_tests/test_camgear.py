@@ -86,7 +86,7 @@ def test_threaded_queue_mode():
 			print(camgear_frames_num)
 			break
 		
-		time.sleep(1) #dummy computational task cycling at 1 loop/sec
+		time.sleep(0.2) #dummy computational task
 
 		camgear_frames_num += 1
 	stream_camgear.stop()
@@ -105,7 +105,7 @@ def test_youtube_playback():
 		result = True
 		try:
 			true_video_param = return_youtubevideo_params(Url)
-			stream = CamGear(source=Url, y_tube = True,  time_delay=2, logging=True).start() # YouTube Video URL as input
+			stream = CamGear(source=Url, y_tube = True, logging=True).start() # YouTube Video URL as input
 			height = 0
 			width = 0
 			fps = 0
