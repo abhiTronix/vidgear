@@ -152,7 +152,7 @@ class CamGear:
 			#import deque
 			from collections import deque
 			#define deque and assign it to global var
-			self.queue = deque(maxlen=64) #max len 64 to check overflow
+			self.queue = deque(maxlen=96) #max len 64 to check overflow
 			#log it
 			if logging:
 				print('Enabling Threaded Queue Mode for the current video source!') 
@@ -252,10 +252,11 @@ class CamGear:
 
 			if self.threaded_queue_mode:
 				#check queue buffer for overflow
-				if len(self.queue) < 64:
+				if len(self.queue) < 96:
 					pass
 				else:
 					#stop iterating if overflowing occurs
+					time.sleep(0.000001)
 					continue
 
 			# otherwise, read the next frame from the stream
@@ -309,7 +310,7 @@ class CamGear:
 		"""
 		return the frame
 		"""
-		if self.threaded_queue_mode:
+		while self.threaded_queue_mode:
 			if len(self.queue)>0:
 				return self.queue.popleft()
 		return self.frame
