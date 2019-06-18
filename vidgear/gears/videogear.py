@@ -98,7 +98,7 @@ class VideoGear:
 				if "BORDER_TYPE" in options:
 					if isinstance(options["BORDER_TYPE"],str):
 						border_type = options["BORDER_TYPE"] #assigsn special parameter
-			self.stabilizer = Stabilizer(smoothing_factor = self.s_factor, border_type = border_type, border_size = border_size, logging = logging)
+			self.stabilizer_obj = Stabilizer(smoothing_factor = self.s_factor, border_type = border_type, border_size = border_size, logging = logging)
 			#log info
 			if logging:
 				print('Enabling Stablization Mode for the current video source!')
@@ -130,7 +130,7 @@ class VideoGear:
 			frame = self.stream.read()
 			if frame is None:
 				break
-			frame_stab = self.stabilizer.stabilize(frame)
+			frame_stab = self.stabilizer_obj.stabilize(frame)
 			if not(frame_stab is None):
 				return frame_stab
 		return self.stream.read()
@@ -138,4 +138,4 @@ class VideoGear:
 	def stop(self):
 		# stop the thread and release any resources
 		self.stream.stop()
-		self.stabilizer.clean()
+		self.stabilizer_obj.clean()
