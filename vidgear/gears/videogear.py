@@ -138,4 +138,5 @@ class VideoGear:
 	def stop(self):
 		# stop the thread and release any resources
 		self.stream.stop()
-		self.stabilizer_obj.clean()
+		if self.stablization_mode:
+			self.stabilizer_obj.clean()
