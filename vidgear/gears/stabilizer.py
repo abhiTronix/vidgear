@@ -36,14 +36,21 @@ us
 
 class Stabilizer:
 	"""
-	This class enables real-time video stabilization for vidgear which can provide a good balance between stabilization and latency at expense of 
-	little to no computational power requirement. It tracks the salient feature array of frames and uses this as an anchor point to cancel out all
+	This class enables real-time video stabilization for vidgear which can provide powerful video stabilization with latency and at expense of 
+	little to no additional computational power requirement. It tracks the salient feature array of frames and uses this as an anchor point to cancel out all
 	 perturbations relative to it.
-	
-	:param smoothing_radius (int): (smoothing factor(large) ~ stability(more) ~ latency per frame(more))
+
+	:param smoothing_radius` (int) : to alter averaging window size. It handles the quality of stabilization at expense of latency and sudden panning. 
+									/ Larger its value, less will be panning, more will be latency and vice-versa. It's default value is 25.
+	:param border_size (int) : to alter output border cropping. It's will crops the border to reduce the black borders from stabilization being too noticeable. 
+								/ Larger its value, more will be cropping. It's default value is 0 (i.e. no cropping).			
+	:param border_type (string) : to change the border mode. Valid border types are 'black', 'reflect', 'reflect_101', 'replicate' and 'wrap'. It's default value is 'black'
+
+	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
+
 	"""
 	
-	def __init__(self, smoothing_radius = 25, border_type = 'black', border_crop_size = 0 , logging = False):
+	def __init__(self, smoothing_radius = 25, border_type = 'black', border_size = 0 , logging = False):
 
 		# initialize deques for handling input frames and its indexes
 		self.frame_queue = deque(maxlen=smoothing_radius)
@@ -78,7 +85,7 @@ class Stabilizer:
 		self.box_filter = np.ones(smoothing_radius)/smoothing_radius
 
 		# define cropping factor, Crops the border to reduce the black borders from stabilization being too noticeable.
-		self.border_crop_size = border_crop_size
+		self.border_crop_size = border_size
 
 		#decide whether to log
 		self.logging = logging

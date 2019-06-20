@@ -45,10 +45,13 @@ class VideoGear:
 										video stabilization in VidGear. Its default value is False.
 
 		:param (dict) **options: can be used in addition, to pass parameter supported by VidGear's stabilizer class.
-						/ Supported dict keys are: 
-								`SMOOTHING_FACTOR` (int) : to alter averaging window size
-								`BORDER_SIZE` (int) : to alter output border cropping				
-								`BORDER_TYPE` (string) : to change the border mode
+								/ Supported dict keys are: 
+									- `SMOOTHING_RADIUS` (int) : to alter averaging window size. It handles the quality of stabilization at expense of latency and sudden panning. 
+															/ Larger its value, less will be panning, more will be latency and vice-versa. It's default value is 25.
+									- `BORDER_SIZE` (int) : to alter output border cropping. It's will crops the border to reduce the black borders from stabilization being too noticeable. 
+															/ Larger its value, more will be cropping. It's default value is 0 (i.e. no cropping).			
+									- `BORDER_TYPE` (string) : to change the border mode. Valid border types are 'black', 'reflect', 'reflect_101', 'replicate' and 'wrap'. It's default value is 'black'
+		
 		:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 	
 	CamGear Specific supported parameters for VideoGear:
@@ -85,12 +88,12 @@ class VideoGear:
 
 		if self.stablization_mode:
 			from .stabilizer import Stabilizer
-			self.s_factor, border_size, border_type = (25, 0, 'black')
+			s_radius, border_size, border_type = (25, 0, 'black')
 			if options:
-				if "SMOOTHING_FACTOR" in options:
-					if isinstance(options["SMOOTHING_FACTOR"],int):
-						self.s_factor = options["SMOOTHING_FACTOR"] #assigsn special parameter to global variable
-					del options["SMOOTHING_FACTOR"] #clean
+				if "SMOOTHING_RADIUS" in options:
+					if isinstance(options["SMOOTHING_RADIUS"],int):
+						s_radius = options["SMOOTHING_RADIUS"] #assigsn special parameter to global variable
+					del options["SMOOTHING_RADIUS"] #clean
 				if "BORDER_SIZE" in options:
 					if isinstance(options["BORDER_SIZE"],int):
 						border_size = options["BORDER_SIZE"] #assigsn special parameter
@@ -98,7 +101,7 @@ class VideoGear:
 				if "BORDER_TYPE" in options:
 					if isinstance(options["BORDER_TYPE"],str):
 						border_type = options["BORDER_TYPE"] #assigsn special parameter
-			self.stabilizer_obj = Stabilizer(smoothing_factor = self.s_factor, border_type = border_type, border_size = border_size, logging = logging)
+			self.stabilizer_obj = Stabilizer(smoothing_radius = s_radius, border_type = border_type, border_size = border_size, logging = logging)
 			#log info
 			if logging:
 				print('Enabling Stablization Mode for the current video source!')
