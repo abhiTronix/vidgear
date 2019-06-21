@@ -23,6 +23,8 @@ THE SOFTWARE.
 ===============================================
 """
 
+#Video credit: http://www.liushuaicheng.org/CVPR2014/index.html
+
 
 import pytest
 from vidgear.gears import VideoGear
@@ -48,5 +50,23 @@ def test_CamGear_import():
 		options = {'THREADED_QUEUE_MODE':False}
 		output_stream = VideoGear(source = Url, **options).start()
 		output_stream.stop()
+	except Exception as e:
+		pytest.fail(str(e))
+
+
+
+def test_video_stablization():
+	"""
+	Testing VideoGear Video Stablization Feature - Passed if ran sucessfully
+	"""
+	try:
+		Url = 'http://www.liushuaicheng.org/CVPR2014/data/example4_train_input.avi'
+		options = {'SMOOTHING_RADIUS': 5, 'BORDER_SIZE': 0, 'BORDER_TYPE': 'replicate'}
+		stab_stream = VideoGear(source = Url, , stabilize = True, logging = True, **options).start()
+		while True:
+			frame = stab_stream.read() #read stablized frames
+			if frame is None:
+				break
+		stab_stream.stop()
 	except Exception as e:
 		pytest.fail(str(e))
