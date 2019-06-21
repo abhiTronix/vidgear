@@ -32,8 +32,6 @@ from .helper import check_CV_version
 import numpy as np
 import cv2
 
-us
-
 class Stabilizer:
 	"""
 	This class enables real-time video stabilization for vidgear which can provide powerful video stabilization with latency and at expense of 
@@ -153,9 +151,9 @@ class Stabilizer:
 		frame_gray = cv2.cvtColor(self.frame_queue[-1], cv2.COLOR_BGR2GRAY) #retrieve current frame and convert to gray
 		frame_gray = self.clahe.apply(frame_gray) #optimize it
 
-		#calculate optical flow using Lucas–Kanade differential method
+		#calculate optical flow using Lucas-Kanade differential method
 		curr_kps, status, error = cv2.calcOpticalFlowPyrLK(self.previous_gray, frame_gray, self.previous_keypoints, None)
-
+		
 		#select only valid keypoints
 		valid_curr_kps = curr_kps[status==1] #current
 		valid_previous_keypoints = self.previous_keypoints[status==1] #previous

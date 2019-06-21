@@ -95,11 +95,13 @@ def test_threaded_queue_mode():
 	assert camgear_frames_num == actual_frame_num
 
 
+"""
+# This test is temporarily removed due to bug in YouTube-DL Library: https://github.com/ytdl-org/youtube-dl/pull/21476
 
 @pytest.mark.xfail(raises=AssertionError)
 def test_youtube_playback():
 	"""
-	Testing Youtube Video Playback capabilities of VidGear
+	#Testing Youtube Video Playback capabilities of VidGear
 	"""
 	if os.name != 'nt':
 		Url = 'https://youtu.be/dQw4w9WgXcQ'
@@ -126,7 +128,7 @@ def test_youtube_playback():
 
 	else:
 		print('YouTube playback Test is skipped due to bug with Appveyor on Windows builds!')
-
+"""
 
 
 def test_network_playback():
