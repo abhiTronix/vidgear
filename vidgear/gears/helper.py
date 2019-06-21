@@ -29,6 +29,7 @@ THE SOFTWARE.
 # import the neccesary packages
 import os, sys
 import cv2
+from pkg_resources import parse_version
 	
 
 def check_python_version():
