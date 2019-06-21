@@ -38,7 +38,7 @@ def check_python_version():
 	return sys.version_info[0]
 
 
-def check_CV_version(self):
+def check_CV_version():
 	"""
 	returns current OpenCV binary version's - first bit 
 	"""

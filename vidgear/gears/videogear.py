@@ -101,6 +101,7 @@ class VideoGear:
 				if "BORDER_TYPE" in options:
 					if isinstance(options["BORDER_TYPE"],str):
 						border_type = options["BORDER_TYPE"] #assigsn special parameter
+					del options["BORDER_TYPE"] #clean
 			self.stabilizer_obj = Stabilizer(smoothing_radius = s_radius, border_type = border_type, border_size = border_size, logging = logging)
 			#log info
 			if logging:
