@@ -36,12 +36,12 @@
 #### What makes **VidGear** stand out from other Video Processing tools?
 
 - [x]  *Multi-Threaded high-speed Frame capturing **(High FPS)***
+- [x]  *Powerful Real-Time inbuilt Video Stablization*  <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/>
 - [x]  *Flexible & Direct control over Video Source properties*
 - [x]  *Lossless Video Encoding and Writing* <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/>
 - [x]  *Flexible Output Video Encoder, Compression & Quality Control* <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/>
 - [x]  *Direct YouTube Video pipelining using its URL address* <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/>
-- [x]  *Easy Video Source ColorSpace Conversion* <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/>
-- [x]  *Automated prerequisites installation support*
+- [x]  *On-the-Fly Video Source ColorSpace Conversion* <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif"/>
 - [x]  *Built-in robust Error and Frame Synchronization handling*
 - [x]  *Multi-Devices Compatibility (including RpiCamera)*
 - [x]  *Support for Live Network Video Streams (including Gstreamer Raw Pipeline)* 

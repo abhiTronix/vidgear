@@ -29,6 +29,7 @@ THE SOFTWARE.
 # import the neccesary packages
 import os, sys
 import cv2
+from pkg_resources import parse_version
 	
 
 def check_python_version():
@@ -38,7 +39,7 @@ def check_python_version():
 	return sys.version_info[0]
 
 
-def check_CV_version(self):
+def check_CV_version():
 	"""
 	returns current OpenCV binary version's - first bit 
 	"""
