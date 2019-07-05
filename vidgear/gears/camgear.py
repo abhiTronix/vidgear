@@ -152,7 +152,7 @@ class CamGear:
 			#import deque
 			from collections import deque
 			#define deque and assign it to global var
-			self.queue = deque(maxlen=96) #max len 64 to check overflow
+			self.queue = deque(maxlen=96) #max len 96 to check overflow
 			#log it
 			if logging:
 				print('Enabling Threaded Queue Mode for the current video source!') 

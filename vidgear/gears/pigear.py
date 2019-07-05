@@ -26,8 +26,10 @@ THE SOFTWARE.
 # import the packages
 from threading import Thread
 from pkg_resources import parse_version
-import logging
+import traceback
 from .helper import capPropId
+
+
 
 try:
 	# import OpenCV Binaries
@@ -41,6 +43,8 @@ try:
 
 except ImportError as error:
 	raise ImportError('Failed to detect OpenCV executables, install it with `pip install opencv-contrib-python` command.')
+
+
 
 class PiGear:
 	"""
@@ -130,6 +134,7 @@ class PiGear:
 		self.terminate = False
 
 
+
 	def start(self):
 		"""
 		start the thread to read frames from the video stream
@@ -138,6 +143,8 @@ class PiGear:
 		self.thread.daemon = True
 		self.thread.start()
 		return self
+
+
 
 	def update(self):
 		"""
@@ -185,20 +192,24 @@ class PiGear:
 
 		except Exception as e:
 			if self.logging:
-				logging.error(traceback.format_exc())
+				print(traceback.format_exc())
 			self.terminate =True
 			pass
 
-		# release resource camera resources
+		# release picamera resources
 		self.stream.close()
 		self.rawCapture.close()
 		self.camera.close()
+
+
 
 	def read(self):
 		"""
 		return the frame
 		"""
 		return self.frame
+
+
 
 	def stop(self):
 		"""
