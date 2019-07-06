@@ -31,4 +31,4 @@ before_script:
   - bash scripts/bash/install_opencv.sh
   - bash scripts/bash/prepare_dataset.sh
 script:
-  - pytest -s -vvv
+  - python -m pytest -sv
