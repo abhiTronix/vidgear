@@ -24,11 +24,11 @@ install:
 dist: xenial
 python: 
   - "2.7"
-  - "3.4"
   - "3.5"
   - "3.6"
   - "3.7"
-script:
+before_script:
   - bash scripts/bash/install_opencv.sh
   - bash scripts/bash/prepare_dataset.sh
-  - pytest -sv
+script:
+  - pytest -s -vvv
