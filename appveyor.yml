@@ -47,7 +47,7 @@ install:
   - "python -m pip install --upgrade pip wheel"
   - "python -m pip install ."
   - "python -m pip install six"
-  - "python -m pip install pytest==5.0.0"
+  - "python -m pip install pytest==4.6.4"
   - "python -m pip install --upgrade youtube-dl"
   - cmd: chmod +x scripts/bash/prepare_dataset.sh
   - cmd: bash scripts/bash/prepare_dataset.sh
