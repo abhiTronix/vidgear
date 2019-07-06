@@ -28,6 +28,8 @@ echo "Installing OpenCV Library"
 
 cd $HOME
 
+sudo python -m pip install -U numpy
+
 wget https://github.com/abhiTronix/OpenCV-Travis-Builds/releases/download/latest/OpenCV-$OPENCV_VERSION-$PYTHONVERSION.deb
 
 sudo dpkg -i OpenCV-$OPENCV_VERSION-$(python -c 'import platform; print(platform.python_version())').deb
