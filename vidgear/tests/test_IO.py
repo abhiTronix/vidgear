@@ -23,50 +23,39 @@ THE SOFTWARE.
 ===============================================
 """
 
-#Video credit: http://www.liushuaicheng.org/CVPR2014/index.html
 
-
+from vidgear.gears import WriteGear
+import numpy as np
 import pytest
-from vidgear.gears import VideoGear
 
-
-
-def test_PiGear_import():
+def test_assertfailedwrite():
 	"""
-	Testing VideoGear Import - made to fail when PiGear class is imported
+	IO Test - made to fail with Wrong Output file path
 	"""
-	with pytest.raises(ImportError):
-		stream = VideoGear(enablePiCamera = True, logging = True).start()
-		stream.stop()
+	np.random.seed(0)
+	# generate random data for 10 frames
+	random_data = np.random.random(size=(10, 1080, 1920, 3)) * 255
+	input_data = random_data.astype(np.uint8)
+
+	with pytest.raises(AssertionError):
+		# wrong folder path does not exist
+		writer = WriteGear("wrong_path/output.mp4")
+		writer.write(input_data)
+		writer.close()
 
 
 
-def test_CamGear_import():
+def test_failedextension():
 	"""
-	Testing VideoGear Import - Passed if CamGear Class is Imported sucessfully
+	IO Test - made to fail with filename with wrong extention
 	"""
-	try:
-		Url = 'rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov'
-		options = {'THREADED_QUEUE_MODE':False}
-		output_stream = VideoGear(source = Url, **options).start()
-		output_stream.stop()
-	except Exception as e:
-		pytest.fail(str(e))
-
-
-
-def test_video_stablization():
-	"""
-	Testing VideoGear Video Stablization Feature - Passed if ran sucessfully
-	"""
-	try:
-		Url = 'http://www.liushuaicheng.org/CVPR2014/data/example4_train_input.avi'
-		options = {'SMOOTHING_RADIUS': 5, 'BORDER_SIZE': 0, 'BORDER_TYPE': 'replicate'}
-		stab_stream = VideoGear(source = Url, stabilize = True, logging = True, **options).start()
-		while True:
-			frame = stab_stream.read() #read stablized frames
-			if frame is None:
-				break
-		stab_stream.stop()
-	except Exception as e:
-		pytest.fail(str(e))
+	np.random.seed(0)
+	# generate random data for 10 frames
+	random_data = np.random.random(size=(10, 1080, 1920, 3)) * 255
+	input_data = random_data.astype(np.uint8)
+	
+	# 'garbage' extension does not exist
+	with pytest.raises(ValueError):
+		writer = WriteGear("garbage.garbage")
+		writer.write(input_data)
+		writer.close()
