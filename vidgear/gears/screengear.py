@@ -47,10 +47,32 @@ except ImportError as error:
 
 class ScreenGear:
 	"""
-	Captures screen duh!
-	"""
+	This Class provides a high-level multi-threaded wrapper around Python-mss library which enables us to easily 
+	define an area on the computer screen or an open window to record the live screen high-speed frames and thereby 
+	pipeline those frames to any application at expense merely any latency all in a single framework. 
+	This Class also supports direct mss parameter manipulations given us flexible control over the input.
 
-	def __init__(self, monitor = 1, colorspace = None, logging = False, time_delay = 0, **options):
+	It operates in `Threaded Queue Mode` by default.
+
+	Threaded Queue Mode => Sequentially adds and releases frames to/from deque and handles overflow of this queue. It utilizes 
+	Deques that support thread-safe, memory efficient appends and pops from either side of the deque with approximately the 
+	same O(1) performance in either direction.  
+
+
+	:param monitor(int): sets the Positions/Location of monitor where to grab frame from. More information can be found here. 
+						/ It default value is 1 (means current monitor will be used).
+
+	:param **options(dict): can be used to pass parameters to ScreenGear Class. 
+							/This attribute provides the flexibility to manipulate mss input parameters 
+							/directly like the dimensions of the region of the given monitor from where the 
+							frames to be grabbed. Checkout VidGear docs for usage details.
+
+	:param (string) colorspace: set the colorspace of the video stream. Its default value is None.
+
+	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
+
+	"""
+	def __init__(self, monitor = 1, colorspace = None, logging = False, **options):
 
 		#intialize threaded queue mode
 		self.threaded_queue_mode = True
