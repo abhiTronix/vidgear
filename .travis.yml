@@ -19,7 +19,7 @@ install:
   - "pip install ."
   - "pip uninstall opencv-contrib-python -y"
   - "pip install six"
-  - "pip install pytest==4.6.4"
+  - "pip install --upgrade pytest"
   - "pip install --upgrade youtube-dl"
 dist: xenial
 python: 
