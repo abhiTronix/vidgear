@@ -25,10 +25,7 @@ THE SOFTWARE.
 
 
 from vidgear.gears import WriteGear
-import sys
 import numpy as np
-import os
-from numpy.testing import assert_equal
 import pytest
 
 def test_assertfailedwrite():

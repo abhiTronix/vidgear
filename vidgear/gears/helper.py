@@ -41,7 +41,7 @@ def check_python_version():
 
 def check_CV_version():
 	"""
-	returns current OpenCV binary version's - first bit 
+	returns current OpenCV binary version's first bit 
 	"""
 	if parse_version(cv2.__version__) >= parse_version('4'):
 		return 4

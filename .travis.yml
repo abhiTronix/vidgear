@@ -9,7 +9,6 @@ before_install:
   - "chmod +x scripts/bash/prepare_dataset.sh"
   - "dos2unix scripts/bash/install_opencv.sh"
   - "chmod +x scripts/bash/install_opencv.sh"
-  - "bash scripts/bash/install_opencv.sh"
 branches: 
   only: 
     - testing
@@ -18,16 +17,18 @@ install:
   - "pip install --upgrade pip wheel"
   - "pip install --upgrade numpy"
   - "pip install ."
+  - "pip uninstall opencv-contrib-python -y"
   - "pip install six"
   - "pip install --upgrade pytest"
   - "pip install --upgrade youtube-dl"
 dist: xenial
 python: 
   - "2.7"
-  - "3.4"
   - "3.5"
   - "3.6"
   - "3.7"
-script:
+before_script:
+  - bash scripts/bash/install_opencv.sh
   - bash scripts/bash/prepare_dataset.sh
-  - pytest -sv
+script:
+  - python -m pytest -sv

@@ -55,10 +55,10 @@ setup(
     name='vidgear',
     packages=['vidgear','vidgear.gears'],
     version='0.1.5-dev',
-    description='Powerful Multi-Threaded OpenCV and FFmpeg based Turbo Video Processing Python Library with unique State-of-the-Art Features.',
+    description='Powerful multi-threaded OpenCV and FFmpeg build Turbo Video Processing Python library powerpacked with unique trailblazing features.',
     license='MIT License',
     author='abhiTronix',
-    install_requires = ["pafy", "youtube-dl", "requests"] 
+    install_requires = ["pafy", "mss", "youtube-dl", "requests","numpy"] 
     + (["opencv-contrib-python"] if test_opencv() else []) 
     + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
     long_description=long_description,
@@ -66,7 +66,7 @@ setup(
     author_email='abhi.una12@gmail.com',
     url='https://github.com/abhiTronix/vidgear',
     download_url='https://github.com/abhiTronix/vidgear/tarball/0.1.5-dev',
-    keywords=['computer vision', 'multi-thread', 'python', 'opencv', 'cv2', 'opencv4', 'Video Processing'],
+    keywords=['opencv', 'multithreading', 'python', 'FFmpeg', 'picamera', 'mss', 'Video-Processing', 'Video-Stablization', 'Computer Vision'],
     classifiers=[
     'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Developers',
