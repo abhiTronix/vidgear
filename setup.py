@@ -66,7 +66,7 @@ setup(
     author_email='abhi.una12@gmail.com',
     url='https://github.com/abhiTronix/vidgear',
     download_url='https://github.com/abhiTronix/vidgear/tarball/0.1.5-dev',
-    keywords=['computer vision', 'multi-thread', 'python', 'opencv', 'cv2', 'opencv4', 'Video Processing'],
+    keywords=['opencv', 'multithreading', 'python', 'FFmpeg', 'picamera', 'mss', 'Video-Processing', 'Video-Stablization', 'Computer Vision'],
     classifiers=[
     'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Developers',

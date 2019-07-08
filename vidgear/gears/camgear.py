@@ -299,7 +299,7 @@ class CamGear:
 
 			#append to queue
 			if self.threaded_queue_mode:
-				self.queue.append(frame)
+				self.queue.append(self.frame)
 
 		#release resources
 		self.stream.release()

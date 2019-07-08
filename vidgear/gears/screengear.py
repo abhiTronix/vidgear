@@ -25,8 +25,9 @@ THE SOFTWARE.
 
 # import the necessary packages
 from threading import Thread
-import numpy as np
 from pkg_resources import parse_version
+from .helper import capPropId
+import numpy as np
 import time
 
 
@@ -245,7 +246,7 @@ class ScreenGear:
 
 			#append to queue
 			if self.threaded_queue_mode:
-				self.queue.append(frame)
+				self.queue.append(self.frame)
 
 
 		# release mss resources
