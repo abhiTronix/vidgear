@@ -60,7 +60,7 @@ class ScreenGear:
 	same O(1) performance in either direction.  
 
 
-	:param monitor(int): sets the Positions/Location of monitor where to grab frame from. More information can be found here. 
+	:param monitor(int): sets the Positions/Location of monitor where to grab frame from. More information can be found in the docs. 
 						/ It default value is 1 (means current monitor will be used).
 
 	:param **options(dict): can be used to pass parameters to ScreenGear Class. 
@@ -74,13 +74,11 @@ class ScreenGear:
 
 	"""
 	def __init__(self, monitor = 1, colorspace = None, logging = False, **options):
-
 		#intialize threaded queue mode
 		self.threaded_queue_mode = True
-
 		try:
-			import platform
-
+			# try import necessary system specific mss library
+			import platform			
 			if platform.system() == 'Linux':
 				from mss.linux import MSS as mss
 			elif platform.system() == 'Windows':
@@ -89,27 +87,24 @@ class ScreenGear:
 				from mss.darwin import MSS as mss
 			else:
 				from mss import mss
-
+			#import mss error handler
 			from mss.exception import ScreenShotError
-
 		except ImportError as error:
+			# otherwise raise import error
 			raise ImportError('python-mss library not found, install it with `pip install mss` command.')
-
-
+		# create mss object
 		self.mss_object = mss() 
-
+		# create monitor instance for the user-defined monitor
 		monitor_instance = self.mss_object.monitors[monitor]
-
-		#User-Defined Threaded Queue Mode
+		# Initiate User-Defined Threaded Queue Mode
 		if options:
 			if "THREADED_QUEUE_MODE" in options:
 				if isinstance(options["THREADED_QUEUE_MODE"],bool):
 					self.threaded_queue_mode = options["THREADED_QUEUE_MODE"] #assigsn special parameter to global variable
 				del options["THREADED_QUEUE_MODE"] #clean
 				#reformat option dict
-
 		self.queue = None
-		#intialize deque for video files only 
+		#intialize deque
 		if self.threaded_queue_mode:
 			#import deque
 			from collections import deque
@@ -121,50 +116,42 @@ class ScreenGear:
 		else:
 			#otherwise disable it
 			self.threaded_queue_mode = False
-
+		#intiate screen dimension handler
 		screen_dims = {}
-
 		#initializing colorspace variable
 		self.color_space = None
-
 		try: 
-			#reformat proper mss dict
+			#reformat proper mss dict and assign to screen dimension handler
 			screen_dims = {k.strip(): v for k,v in options.items() if k.strip() in ["top", "left", "width", "height"]}
-
 			# separately handle colorspace value to int conversion
 			if not(colorspace is None):
 				self.color_space = capPropId(colorspace.strip())
-
 		except Exception as e:
 			# Catch if any error occurred
 			if logging:
 				print(e)
-
+		# intialize mss capture instance
 		self.mss_capture_instance = None
-
 		try:
+			# check whether user-defined dimensions are provided
 			if screen_dims and len(screen_dims) == 4:
-				self.mss_capture_instance = screen_dims
+				self.mss_capture_instance = screen_dims #create instance from dimensions
 			else:
-				self.mss_capture_instance = monitor_instance
-
+				self.mss_capture_instance = monitor_instance #otherwise create instance from monitor
+			# extract global frame from instance
 			self.frame = np.asanyarray(self.mss_object.grab(self.mss_capture_instance))
-
 			if self.threaded_queue_mode:
 				#intitialize and append to queue
 				self.queue.append(self.frame)
-
 		except ScreenShotError:
+			#otherwise catch and log errors
 			raise ValueError("ScreenShotError caught: Wrong dimensions passed to python-mss, Kindly Refer Docs!")
 			if logging:
 				print(self.mss_object.get_error_details())
-
 		# enable logging if specified
 		self.logging = logging
-
 		# thread initialization
 		self.thread=None
-
 		# initialize termination flag
 		self.terminate = False
 
@@ -184,16 +171,13 @@ class ScreenGear:
 		"""
 		Update frames from stream
 		"""
-
+		#intialize frame variable
 		frame = None
-
 		# keep looping infinitely until the thread is terminated
 		while True:
-
 			# if the thread terminate is set, stop the thread
 			if self.terminate:
 				break
-
 			if self.threaded_queue_mode:
 				#check queue buffer for overflow
 				if len(self.queue) < 96:
@@ -208,7 +192,6 @@ class ScreenGear:
 				raise RuntimeError(self.mss_object.get_error_details())
 				self.terminate = True
 				continue
-
 			if frame is None or frame.size == 0:
 				#no frames received, then safely exit
 				if self.threaded_queue_mode:
@@ -218,7 +201,6 @@ class ScreenGear:
 						self.terminate = True
 				else:
 					self.terminate = True
-
 			if not(self.color_space is None):
 				# apply colorspace to frames
 				color_frame = None
@@ -229,27 +211,22 @@ class ScreenGear:
 						self.color_space = None
 						if self.logging:
 							print('Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
-							
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None
 					if self.logging:
 						print(e)
 						print('Input Colorspace is not a valid Colorspace!')
-
 				if not(color_frame is None):
 					self.frame = color_frame
 				else:
 					self.frame = frame
 			else:
 				self.frame = frame
-
 			#append to queue
 			if self.threaded_queue_mode:
 				self.queue.append(self.frame)
-
-
-		# release mss resources
+		# finally release mss resources
 		self.mss_object.close()
 
 
@@ -274,7 +251,6 @@ class ScreenGear:
 			self.queue.clear()
 			self.threaded_queue_mode = False
 			self.frame = None
-
 		# indicate that the thread should be terminated
 		self.terminate = True
 		# wait until stream resources are released (producer thread might be still grabbing frame)

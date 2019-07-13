@@ -4,7 +4,8 @@ from .camgear import CamGear
 from .videogear import VideoGear
 from .screengear import ScreenGear
 from .writegear import WriteGear
+from .netgear import NetGear
 
-__all__ = ["PiGear", "CamGear", "VideoGear", "ScreenGear", "WriteGear"]
+__all__ = ["PiGear", "CamGear", "VideoGear", "ScreenGear", "WriteGear", "NetGear"]
 
 __author__ = "Abhishek Thakur <abhi.una12@gmail.com>"
