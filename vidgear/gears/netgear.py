@@ -71,9 +71,10 @@ class NetGear:
 							of a connection between two devices on network. It is used determine to which process or application 
 							a message should be delivered. Its default value is `5555` .
 
-	:param protocol(string): sets the valid network port of the server/client. A network port is a number that identifies one side 
-							of a connection between two devices on network. It is used determine to which process or application 
-							a message should be delivered. Its default value is `5555` .
+	:param protocol(string): sets the valid messaging protocol between server and client. A network protocol is a set of established rules
+							 that dictates how to format, transmit and receive data so computer network devices - from servers and 
+							 routers to endpoints - can communicate regardless of the differences in their underlying infrastructures, 
+							 designs or standards. Supported protocol are: 'tcp', 'upd', 'pgm', 'inproc', 'ipc'. Its default value is `tcp`.
 
 	:param pattern(int): sets the supported messaging pattern(flow of communication) between server and client. Messaging patterns are network 
 							oriented architectural pattern that describes the flow of communication between interconnecting systems.
