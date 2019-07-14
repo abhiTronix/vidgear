@@ -21,17 +21,18 @@ OS_TYPE=$(uname)
 MACHINE_BIT=$(uname -m)
 
 #Download and Configure FFmpeg Static
-if [ $OS_TYPE = "Linux" ]; then 
+if [ $OS_TYPE = "Linux" ]; then
+	
 	if [ $MACHINE_BIT = "x86_64" ]; then
 	  curl https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o ffmpeg-release-amd64-static.tar.xz
 	  tar -xJf ffmpeg-release-amd64-static.tar.xz
-	  rm ffmpeg-release-amd64-static.tar.xz
-	  mv ffmpeg-4.1.3-amd64-static ffmpeg
+	  rm *.tar.*
+	  mv ffmpeg* ffmpeg
 	else
 	  curl https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-i686-static.tar.xz -o ffmpeg-release-i686-static.tar.xz
 	  tar -xJf ffmpeg-release-i686-static.tar.xz
-	  rm ffmpeg-release-i686-static.tar.xz
-	  mv ffmpeg-4.1.3-i686-static ffmpeg
+	  rm *.tar.*
+	  mv ffmpeg* ffmpeg
 	fi
 
 else
