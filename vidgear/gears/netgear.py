@@ -55,10 +55,9 @@ class NetGear:
 	over the ZMQ messaging protocol. Either(not both) of these mode can be activated at initialization of netgear class
 	by using its `receive_mode` boolean parameter.
 
-	Furthermore, the recv() function is a multi-threaded wrapper which operates in `Threaded Queue Mode` by default
-	for high-speed frame capturing with minimum latency and memory constraints. 
-	The Server end's send() function has termination control over client end's recv() function which it can terminate it 
-	at any instance if required. 
+	Furthermore, the recv() function uses a multi-threaded wrapper which operates in `Threaded Queue Mode` by default
+	for high-speed frame capturing with minimum latency and memory constraints. Moreover, The Server can remotely terminate
+	 all client(s) streams at once.
 
 	Threaded Queue Mode => Sequentially adds and releases frames to/from deque and handles overflow of this queue. It utilizes 
 	deques that support thread-safe, memory efficient appends and pops from either side of the deque with approximately the 
@@ -95,7 +94,7 @@ class NetGear:
 
 	:param **options(dict): can be used to pass parameters to NetGear Class. 
 							/This attribute provides the flexibility to manipulate ZeroMQ input parameters 
-							/directly. Checkout VidGear docs for usage details.
+							/directly. Checkout vidgear docs for usage details.
 
 	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 
@@ -404,4 +403,3 @@ class NetGear:
 			self.msg_socket.send_json(term_dict)
 			# properly close the socket
 			self.msg_socket.close()
-			

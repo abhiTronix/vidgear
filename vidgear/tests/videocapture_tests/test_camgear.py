@@ -102,7 +102,7 @@ def test_youtube_playback():
 	Testing Youtube Video Playback capabilities of VidGear
 	"""
 	if os.name != 'nt':
-		Url = 'https://youtu.be/dQw4w9WgXcQ'
+		Url = 'https://youtu.be/YqeW9_5kURI'
 		result = True
 		try:
 			true_video_param = return_youtubevideo_params(Url)
