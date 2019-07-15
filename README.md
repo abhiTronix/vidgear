@@ -11,7 +11,7 @@
 
 [![PyPi version][pypi-badge]][pypi] [![Build Status][travis-cli]][travis] [![Build Status][appveyor]][app] [![Say Thank you][Thank-you]][thanks] [![PRs Welcome][prs-badge]][prs] [![Twitter][twitter-badge]][twitter-intent] 
 
-[![Buy Me A Coffee](https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png)](https://www.buymeacoffee.com/2twOXFvlA)
+[![Buy Me A Coffee][Coffee-badge]][coffee]
 
 </div>
 
@@ -25,6 +25,7 @@
 [twitter-badge]:https://img.shields.io/twitter/url/http/shields.io.svg?style=popout-square&logo=twitter
 [pypi-badge]:https://img.shields.io/pypi/v/vidgear.svg?style=popout-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABC0lEQVRYhdWVPQoCMRCFX6HY2ghaiZUXsLW0EDyBrbWtN/EUHsHTWFnYyCL4gxibVZZlZzKTnWz0QZpk5r0vIdkF/kBPAMOKeddE+CQPKoc5Yt5cTjBMdQSwDQToWgBJAn3jmhqgltapAV6E6b5U17MGGAUaUj07TficMfIBZDV6vxowBm1BP9WbSQE4o5h9IjPJmy73TEPDDxVmoZdQrQ5jRhly9Q8tgMUXkIIWn0oG4GYQfAXQzz1PGoCiQndM7b4RgJay/h7zBLT3hASgoKjamQJMreKf0gfuAGyYtXEIAKcL/Dss15iq6ohXghozLYiAMxPuACwtIT4yeQUxAaLrZwAoqGRKGk7qDSYTfYQ8LuYnAAAAAElFTkSuQmCC
 [Thank-you]:https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg?style=popout-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABC0lEQVRYhdWVPQoCMRCFX6HY2ghaiZUXsLW0EDyBrbWtN/EUHsHTWFnYyCL4gxibVZZlZzKTnWz0QZpk5r0vIdkF/kBPAMOKeddE+CQPKoc5Yt5cTjBMdQSwDQToWgBJAn3jmhqgltapAV6E6b5U17MGGAUaUj07TficMfIBZDV6vxowBm1BP9WbSQE4o5h9IjPJmy73TEPDDxVmoZdQrQ5jRhly9Q8tgMUXkIIWn0oG4GYQfAXQzz1PGoCiQndM7b4RgJay/h7zBLT3hASgoKjamQJMreKf0gfuAGyYtXEIAKcL/Dss15iq6ohXghozLYiAMxPuACwtIT4yeQUxAaLrZwAoqGRKGk7qDSYTfYQ8LuYnAAAAAElFTkSuQmCC
+[Coffee-badge]:https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png
 
 
 [release]:https://github.com/abhiTronix/vidgear/releases
@@ -34,3 +35,4 @@
 [app]:https://ci.appveyor.com/project/abhiTronix/vidgear
 [pypi]:https://pypi.org/project/vidgear/
 [thanks]:https://saythanks.io/to/abhiTronix
+[coffee]:https://www.buymeacoffee.com/2twOXFvlA
