@@ -1,3 +1,3 @@
 <h1 align="center">
-  <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/logo/vidgear-a.svg?raw=true&sanitize=true" alt="VidGear Logo" />
+  <img src="https://abhitronix.github.io/img/vidgear/vidgear-a.svg" alt="VidGear Logo" width="55%"/>
 </h1>
