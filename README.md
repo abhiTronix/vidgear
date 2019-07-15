@@ -9,9 +9,9 @@
 
 [Releases][release]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Gears](#gears)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Wiki Documentation][wiki]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Installation](#installation)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[License](#license)
 
-[![PyPi version][pypi-badge]][pypi] [![Build Status][travis-cli]][travis] [![Build Status][travis]][app] [![Say Thank you][Thank-you]][thanks] [![PRs Welcome][prs-badge]][prs] [![Twitter][twitter-badge]][twitter-intent] 
+[![PyPi version][pypi-badge]][pypi] [![Build Status][travis-cli]][travis] [![Build Status][appveyor]][app] [![Say Thank you][Thank-you]][thanks] [![PRs Welcome][prs-badge]][prs] [![Twitter][twitter-badge]][twitter-intent] 
 
-<a href="https://www.buymeacoffee.com/2twOXFvlA" target="_blank"><img src="https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
+[![Buy Me A Coffee](https://bmc-cdn.nyc3.digitaloceanspaces.com/BMC-button-images/custom_images/orange_img.png)](https://www.buymeacoffee.com/2twOXFvlA)
 
 </div>
 
