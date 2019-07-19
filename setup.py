@@ -49,7 +49,6 @@ def test_opencv():
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
-    long_description = long_description.replace(" [x]", "") #Readme Hack
 
 setup(
     name='vidgear',
