@@ -46,7 +46,7 @@ labels: "issue: bug"
 ### Actual Behavior
 <!--- Tell us what happens instead -->
 
-## Possible Fix
+### Possible Fix
 <!--- Not obligatory, but suggest a fix or reason for the bug -->
 
 ### Steps to reproduce

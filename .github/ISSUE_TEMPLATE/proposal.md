@@ -17,7 +17,7 @@ labels: "issue: proposal"
 <!--- How can it benefit other users? -->
 
 
-## Your Environment
+### Your Environment
 <!--- Include as many relevant details about the environment you worked in -->
 * VidGear version:
 * Branch: <!--- Master/Testing/Development/PyPi -->
