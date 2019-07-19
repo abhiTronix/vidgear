@@ -108,7 +108,7 @@ The following **functional block diagram** clearly depicts the functioning of Vi
   * Added New dependencies: `mss`, `pyzmq` and rejected redundant ones.
   * Added Travis CLI bug workaround, Replaced `opencv-contrib-python` with OpenCV built from scratch as dependency.
   * Several performance enhancements and bugs exterminated.
-  * Revamped Docs and [many more...]()
+  * Revamped Docs and [many more...](#changelog)
 
 &nbsp;
 
@@ -402,9 +402,9 @@ NetGear is exclusively designed to transfer video frames synchronously between i
   <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/NetGear.png" alt="NetGear Functional Block Diagram" width=80%/>
 </p>
 
-**NetGear API Usage:**
+**NetGear API Guide:**
 
-[>>> Usage Guide](https://github.com/abhiTronix/vidgear/wiki/NetGear-Class#usage-hammer)
+[>>> Usage Guide](https://github.com/abhiTronix/vidgear/wiki/NetGear#netgear-api)
 
 &nbsp;
 

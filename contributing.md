@@ -16,10 +16,10 @@
 ## Report Bug or Feature Request
 
 If you've found a new  bug or you've come up with some new feature which can make VidGear API even better: 
-* Raise a [**New Issue**](https://github.com/abhiTronix/vidgear/issues/new), where you can describe in details what the problem is, or what would you like to improve. 
-* Remember to go comprehensively through [**Wiki Documentation**](#wiki). 
+* Remember first to go comprehensively through [**Wiki Documentation**](#wiki). 
 * Just keep the it simple, in context, give it a nice title and follow the template
 * Screenshots recommended 
+* Finally, raise the [**Issue**](https://github.com/abhiTronix/vidgear/issues/new), where you can describe in details what the problem is, or what would you like to improve. 
 
 &nbsp; 
 
