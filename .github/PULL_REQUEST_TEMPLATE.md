@@ -13,7 +13,6 @@ _Kindly explain the changes you made here._
 - [ ] Read the [Contributing Guidelines](https://github.com/abhiTronix/vidgear/blob/master/contributing.md)
 - [ ] Read the [FAQ](https://github.com/abhiTronix/vidgear/wiki/FAQ-&-Troubleshooting)
 - [ ] Read the [Wiki](https://github.com/abhiTronix/vidgear/wiki#vidgear)
-- [ ] My code follows the code style of this project.
 - [ ] Updated the documentation accordingly.
 
 

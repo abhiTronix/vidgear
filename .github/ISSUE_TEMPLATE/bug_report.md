@@ -63,7 +63,7 @@ labels: "issue: bug"
 3. 
 
 
-#### ★ Optional
+### Optional
 
 <!--- Provide screenshots where appropriate -->
 
