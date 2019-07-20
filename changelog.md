@@ -16,7 +16,7 @@
   * Added `collections.deque` import in Threaded Queue Mode for performance consideration
   * Added new `install_opencv.sh` bash scripts for Travis cli, to handle OpenCV installation.
   * Added new Project Issue & PR Templates
-  * Added new sponser button
+  * Added new Sponsor Button(`FUNDING.yml`)
 
 ### Updates/Improvements:
   * Updated New dependencies: `mss`, `pyzmq` and rejected redundant ones.
@@ -60,6 +60,7 @@
   * PR #31
   * PR #32
   * PR #33
+  * PR #34
 
 :warning: PyPi Release does NOT contain Tests and Scripts!
 
@@ -68,8 +69,8 @@
 ## VidGear v0.1.4
 
 ### New Features:
-  * Added WriteGear API: for enabling lossless video encoding and compression(built around FFmpeg and OpenCV Video Writer)
-  * Added YouTube direct Video Pipelining to OpenCV(_YouTube Mode_) in CamGear API
+  * Added new WriteGear API: for enabling lossless video encoding and compression(built around FFmpeg and OpenCV Video Writer)
+  * Added YouTube Mode for direct Video Pipelining from YouTube in CamGear API
   * Added new `y_tube` to access _YouTube Mode_ in CamGear API.
   * Added flexible Output file Compression control capabilities in compression-mode(WriteGear).
   * Added `-output_dimensions` special parameter to WriteGear API.

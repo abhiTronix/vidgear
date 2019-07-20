@@ -61,7 +61,7 @@ The following **functional block diagram** clearly depicts the functioning of Vi
 [**New Release : VidGear 0.1.5**](#new-release-vidgear-015)
 
 [**Installation Options**](#installation)
-  * [**Prerequisites**](#dependencies)
+  * [**Prerequisites**](#prerequisites)
   * [**1 - PyPI Install**](#option-1-pypi-install)
   * [**2 - Release Archive Download**](#option-2-release-archive-download)
   * [**3 - Clone Repo**](#option-3-clone-the-repo)
@@ -74,7 +74,7 @@ The following **functional block diagram** clearly depicts the functioning of Vi
   * [**WriteGear**](#writegear)
   * [**NetGear**](#netgear)
 
-[**For Developers/Contributors**]()
+**For Developers/Contributors**
   * [**Testing**](#testing)
   * [**Contributing**](#contibuting)
 
@@ -452,7 +452,7 @@ See [contributing.md](contributing.md)
 
 ## Project Motivation
 
-See [Wiki: Project Purpose][wiki-vidgear-purpose]
+See [Wiki: Project Motivation][wiki-vidgear-purpose]
 
 &nbsp;
 
