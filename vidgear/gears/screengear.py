@@ -95,7 +95,11 @@ class ScreenGear:
 		# create mss object
 		self.mss_object = mss() 
 		# create monitor instance for the user-defined monitor
-		monitor_instance = self.mss_object.monitors[monitor]
+		monitor_instance = None
+		if (monitor > 0):
+			monitor_instance = self.mss_object.monitors[monitor]
+		else:
+			raise ValueError("`monitor` value cannot be negative, Read Docs!")
 		# Initiate User-Defined Threaded Queue Mode
 		if options:
 			if "THREADED_QUEUE_MODE" in options:

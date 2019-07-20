@@ -501,7 +501,7 @@ Internal URLs
 [pypi]:https://pypi.org/project/vidgear/
 [thanks]:https://saythanks.io/to/abhiTronix
 [coffee]:https://www.buymeacoffee.com/2twOXFvlA
-[twitter-intent]:https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2FabhiTronix%2Fvidgear&via%20%40abhi_una12&text=Vidgear%20-%20simple%2C%20powerful%2C%20flexible%20%26%20threaded%20Python%20Video%20Processing%20Library&hashtags=vidgear%20multithreaded%20python%20video-processing
+[twitter-intent]:https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2FabhiTronix%2Fvidgear&via%20%40abhi_una12&text=VidGear%20-%20A%20simple%2C%20powerful%2C%20flexible%20%26%20threaded%20Python%20Video%20Processing%20Library&hashtags=vidgear%20%23multithreaded%20%23python%20%23video-processing%20%23github
 [license]:https://github.com/abhiTronix/vidgear/blob/master/LICENSE
 
 <!--
