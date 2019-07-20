@@ -90,7 +90,7 @@ The following **functional block diagram** clearly depicts the functioning of Vi
 &nbsp;
 
 ## TL;DR
-   *VidGear is an ultrafast[➶](https://github.com/abhiTronix/vidgear/wiki/FAQ-&-Troubleshooting#2-vidgear-is-ultrafast-how-does-that-work), compact, flexible and easy-to-adapt complete Video Processing Python Library.*
+   *VidGear is an [ultrafast➶](https://github.com/abhiTronix/vidgear/wiki/FAQ-&-Troubleshooting#2-vidgear-is-ultrafast-but-how), compact, flexible and easy-to-adapt complete Video Processing Python Library.*
 
    Built with simplicity in mind, VidGear lets programmers and software developers to easily integrate and perform complex Video Processing tasks in their existing or new applications, without going through various underlying python library's documentation and using just a few lines of code. Beneficial for both, if you're new to Programming with Python language or pro at it. 
 
