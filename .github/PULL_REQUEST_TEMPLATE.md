@@ -6,14 +6,15 @@
 _Kindly explain the changes you made here._
 
 
+
 ### Requirements / Checklist
 
-<!--- Put an `x` in all the boxes that apply: -->
+<!--- Put an `x` in all the boxes that apply(important): -->
 
 - [ ] Read the [Contributing Guidelines](https://github.com/abhiTronix/vidgear/blob/master/contributing.md)
 - [ ] Read the [FAQ](https://github.com/abhiTronix/vidgear/wiki/FAQ-&-Troubleshooting)
-- [ ] Read the [Wiki](https://github.com/abhiTronix/vidgear/wiki#vidgear)
-- [ ] Updated the documentation accordingly.
+- [ ] Comprehended the [Wiki Documentation](https://github.com/abhiTronix/vidgear/wiki#vidgear)
+- [ ] Updated the source-code documentation accordingly(if required).
 
 
 ### Related Issue
@@ -26,7 +27,7 @@ _Kindly explain the changes you made here._
 <!--- Why is this change required? What problem does it solve? -->
 
 ### Types of changes
-<!--- What types of changes does your code introduce? Put an `x` in all the boxes that apply: -->
+<!--- What types of changes does your code introduce? Put an `x` in all the boxes that apply(important): -->
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
 - [ ] Breaking change (fix or feature that would cause existing functionality to change)

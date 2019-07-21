@@ -23,12 +23,11 @@ labels: "issue: bug"
 
 <!--- By posting an issue you acknowledge the following: -->
 
-
 - [ ] A brief but descriptive Title of your issue
-- [ ] I have searched the [issues](https://github.com/abhiTronix/vidgear/issues) for my issue and found nothing related or helpful
-- [ ] I have read the [FAQ](https://github.com/abhiTronix/vidgear/wiki/FAQ-&-Troubleshooting)
-- [ ] I have read the [Wiki](https://github.com/abhiTronix/vidgear/wiki#vidgear)
-- [ ] I have read the [Contributing Guidelines](https://github.com/abhiTronix/vidgear/blob/master/contributing.md)
+- [ ] I have searched the [issues](https://github.com/abhiTronix/vidgear/issues) for my issue and found nothing related or helpful.
+- [ ] I have read the [FAQ](https://github.com/abhiTronix/vidgear/wiki/FAQ-&-Troubleshooting).
+- [ ] I have read the [Wiki](https://github.com/abhiTronix/vidgear/wiki#vidgear).
+- [ ] I have read the [Contributing Guidelines](https://github.com/abhiTronix/vidgear/blob/master/contributing.md).
 
 
 ### Environment

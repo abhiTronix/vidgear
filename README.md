@@ -106,7 +106,7 @@ The following **functional block diagram** clearly depicts the functioning of Vi
   * Implemented exclusive Threaded Queue Mode for blazingly fast, synchronized and error-free multi-threading APIs.
   * Added Option to use VidGear API's standalone.
   * Several Performance enhancements and Bugs exterminated.
-  * Revamped Docs and [many more...](#changelog)
+  * Revamped Docs and [many more...](changelog.md)
 
 &nbsp;
 
@@ -116,7 +116,7 @@ The following **functional block diagram** clearly depicts the functioning of Vi
 
 To use VidGear in your python application, you must have check the following dependencies before you install VidGear :
 
-* Must support [these Python legacies](#python) and [pip](https://pip.pypa.io/en/stable/installing/) already installed.
+* Must support [these Python legacies](#supported-python-legacies) and [pip](https://pip.pypa.io/en/stable/installing/) already installed.
 
 
 * **`OpenCV:`** VidGear must require OpenCV(3.0+) python enabled binaries to be installed on your machine for its core functions. For its installation, you can follow these online tutorials for [linux][OpenCV-linux] and [raspberry pi][OpenCV-pi], otherwise, install it via pip:
