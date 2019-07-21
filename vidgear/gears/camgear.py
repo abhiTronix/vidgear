@@ -30,6 +30,8 @@ from .helper import capPropId
 from .helper import check_CV_version
 import re, time
 
+
+
 #Note: Remember, Not all parameters are supported by all cameras which is 
 #one of the most troublesome part of the OpenCV library. Each camera type, 
 #from android cameras to USB cameras to professional
@@ -42,6 +44,8 @@ import re, time
 #to your Linux machine and use command `v4l2-ctl -d 0 --list-formats-ext` (where 0 is index of given camera)
 #to list the supported video parameters and their values.
 
+
+
 try:
 	# import OpenCV Binaries
 	import cv2
@@ -53,6 +57,7 @@ try:
 
 except ImportError as error:
 	raise ImportError('Failed to detect OpenCV executables, install it with `pip install opencv-contrib-python` command.')
+
 
 
 def youtube_url_validation(url):
@@ -69,12 +74,15 @@ def youtube_url_validation(url):
 	return youtube_regex_match
 
 
+
 class CamGear:
+
 	"""
-	This class targets any common IP or USB Cameras(including Raspberry Pi Compatible), 
-	Various Video Files Formats and Network Video Streams(Including Gstreamer Raw Video Capture Pipeline) 
-	for obtaining high-speed real-time frames by utilizing OpenCV and multi-threading. It also supports Youtube Streaming.
-	It operates in `Threaded Queue Mode` by default.
+	CamGear API supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia 
+	video file format (upto 4k tested), network stream URL such as http(s), rtp, rstp, mms, etc. In addition to this, it also supports 
+	live Gstreamer's RAW pipelines and YouTube video/livestreams URLs. CamGear provides a flexible, high-level multi-threaded wrapper 
+	around OpenCV's VideoCapture API with access almost all of its available parameters and also employs pafy's APIs for YouTube streaming. 
+	Furthermore, CamGear relies exclusively on Threaded Queue mode for ultra-fast, error-free and synchronized frame handling.  
 
 	Threaded Queue Mode => Sequentially adds and releases frames to/from deque and handles overflow of this queue. It utilizes 
 	Deques that support thread-safe, memory efficient appends and pops from either side of the deque with approximately the 
@@ -88,8 +96,7 @@ class CamGear:
 
 		- Network_Stream_Address(string): Incoming Stream Valid Network address. 
 
-		- GStreamer (string) videostream Support
-
+		- GStreamer (string) pipeline
 
 	:param (boolean) y_tube: enables YouTube Mode, i.e If enabled class will interpret the given source string as YouTube URL. Its default value is False.
 
@@ -97,9 +104,9 @@ class CamGear:
 
 	:param (string) colorspace: set the colorspace of the video stream. Its default value is None.
 
-	:param (dict) **options: sets all properties supported by OpenCV's VideoCapture Class properties to the input video stream in CamGear Class. 
-					  / These attribute provides the flexibility to manipulate input webcam video stream directly. 
-					  / Parameters can be passed using this **option, allows you to pass keyworded variable length of arguments to CamGear Class.
+	:param (dict) **options: provides the ability to tweak properties supported by OpenCV's VideoCapture 
+							API properties for any given input video stream directly. All the supported 
+							parameters can be passed to CamGear API using this dict as follows:
 
 	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 

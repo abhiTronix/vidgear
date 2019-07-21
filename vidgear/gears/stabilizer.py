@@ -32,11 +32,15 @@ from .helper import check_CV_version
 import numpy as np
 import cv2
 
+
+
 class Stabilizer:
+	
 	"""
-	This class enables real-time video stabilization for vidgear which can provide powerful video stabilization with latency and at expense of 
-	little to no additional computational power requirement. It tracks the salient feature array of frames and uses this as an anchor point to cancel out all
-	 perturbations relative to it.
+	This is an auxiliary class that enables Real-time Video Stabilization for vidgear with minimalistic latency and at the expense of little to no 
+	additional computational power requirement. The basic idea behind it is to tracks and save the salient feature array for the given number of frames 
+	and then uses these anchor point to cancel out all perturbations relative to it for the incoming frames in the queue. This class relies heavily on 
+	Threaded Queue mode for error-free, ultrafast frame handling and it is enabled by default.
 
 	:param smoothing_radius` (int) : to alter averaging window size. It handles the quality of stabilization at expense of latency and sudden panning. 
 									/ Larger its value, less will be panning, more will be latency and vice-versa. It's default value is 25.

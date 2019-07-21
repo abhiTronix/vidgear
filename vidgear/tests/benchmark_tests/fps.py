@@ -2,8 +2,6 @@
 
 import time
 
-
-
 class FPS:
 	"""
 	Class to calculate FPS based on time.time python module

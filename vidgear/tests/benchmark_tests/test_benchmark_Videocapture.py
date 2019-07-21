@@ -23,7 +23,6 @@ THE SOFTWARE.
 ===============================================
 """
 
-
 import os
 import cv2
 import pytest
@@ -79,7 +78,7 @@ def Videocapture_withVidGear(path):
 	print("[LOG] approx. FPS: {:.2f}".format(fps_Vid.fps()))
 
 
-
+@pytest.mark.xfail(raises=RuntimeError)
 def test_benchmark_videocapture():
 	"""
 	Benchmarking OpenCV playback against VidGear playback (in FPS)
@@ -88,4 +87,4 @@ def test_benchmark_videocapture():
 		Videocapture_withCV(return_testvideo_path())
 		Videocapture_withVidGear(return_testvideo_path())
 	except Exception as e:
-		print(e)
+		raise RuntimeError(e)

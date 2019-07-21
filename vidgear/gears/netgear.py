@@ -30,6 +30,7 @@ import numpy as np
 import time
 
 
+
 try:
 	# import OpenCV Binaries
 	import cv2
@@ -44,20 +45,14 @@ except ImportError as error:
 
 
 class NetGear:
-	"""
-	This Class enables real-time synchronous video frames transferring between interconnecting systems over the network 
-	in vidgear by implementing a high-level wrapper around PyZmQ that contains python bindings for ZeroMQ - a high-performance 
-	asynchronous broker-less messaging library, aimed at use in distributed or concurrent applications.
-	
-	This class two mode of operations:
-	1) Server End a.k.a `Send Mode` which uses `send()` function to send data to the client(s).
-	2) Client End a.k.a `Receive Mode` which uses `recv()` function to receive data sent by server.
-	over the ZMQ messaging protocol. Either(not both) of these mode can be activated at initialization of netgear class
-	by using its `receive_mode` boolean parameter.
 
-	Furthermore, the recv() function uses a multi-threaded wrapper which operates in `Threaded Queue Mode` by default
-	for high-speed frame capturing with minimum latency and memory constraints. Moreover, The Server can remotely terminate
-	 all client(s) streams at once.
+	"""
+	NetGear is exclusively designed to transfer video frames synchronously between interconnecting systems over the network in real-time. 
+	This is achieved by implementing a high-level wrapper around PyZmQ python library that contains python bindings for ZeroMQ - a 
+	high-performance asynchronous distributed messaging library that aim to be used in distributed or concurrent applications. 
+	It provides a message queue, but unlike message-oriented middleware, a ZeroMQ system can run without a dedicated message broker. 
+	Furthermore, NetGear currently supports two ZeroMQ messaging patterns: i.e zmq.PAIR and zmq.REQ and zmq.REP and the supported 
+	protocol are: 'tcp', 'upd', 'pgm', 'inproc', 'ipc'.
 
 	Threaded Queue Mode => Sequentially adds and releases frames to/from deque and handles overflow of this queue. It utilizes 
 	deques that support thread-safe, memory efficient appends and pops from either side of the deque with approximately the 
@@ -100,6 +95,7 @@ class NetGear:
 	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 
 	"""
+	
 	def __init__(self, address = None, port = None, protocol = None,  pattern = 0, receive_mode = False, logging = False, **options):
 
 		try:
