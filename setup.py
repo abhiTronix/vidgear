@@ -53,8 +53,8 @@ with open("README.md", "r") as fh:
 setup(
     name='vidgear',
     packages=['vidgear','vidgear.gears'],
-    version='0.1.5-dev',
-    description='Powerful multi-threaded OpenCV and FFmpeg build Turbo Video Processing Python library powerpacked with unique trailblazing features.',
+    version='0.1.5',
+    description='Powerful python Video Processing library built with Multi-Threaded Gears(a.k.a APIs) each with a unique set of trailblazing features.',
     license='MIT License',
     author='abhiTronix',
     install_requires = ["pafy", "mss", "youtube-dl", "requests","pyzmq"] 
@@ -64,8 +64,8 @@ setup(
     long_description_content_type="text/markdown",
     author_email='abhi.una12@gmail.com',
     url='https://github.com/abhiTronix/vidgear',
-    download_url='https://github.com/abhiTronix/vidgear/tarball/0.1.5-dev',
-    keywords=['opencv', 'multithreading', 'python', 'FFmpeg', 'picamera', 'mss', 'Video-Processing', 'Video-Stablization', 'Computer Vision'],
+    download_url='https://github.com/abhiTronix/vidgear/tarball/0.1.5',
+    keywords=['opencv', 'multithreading', 'FFmpeg', 'picamera', 'mss', 'pyzmq', 'pafy', 'Video Processing', 'Video Stablization', 'Computer Vision'],
     classifiers=[
     'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Developers',
@@ -80,6 +80,6 @@ setup(
     scripts=[],
     project_urls={  # Optional
         'Bug Reports': 'https://github.com/abhiTronix/vidgear/issues',
-        'Funding': 'https://paypal.me/AbhiTronix?locale.x=en_GB',
+        'Funding': 'https://www.buymeacoffee.com/2twOXFvlA',
         'Source': 'https://github.com/abhiTronix/vidgear',},
 )

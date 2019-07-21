@@ -148,7 +148,7 @@ To use VidGear in your python application, you must have check the following dep
       pip install pyzmq
     ```
 
-* **`pafy:`** For direct YouTube Video streaming, Vidgear needs [`pafy`][pafy] and latest `youtube-dl`(as pafy's backend) python libraries installed. Install it via pip:
+* **`pafy:`** For direct YouTube Video streaming, Vidgear needs [`pafy`][pafy] and latest [`youtube-dl`][[yt-dl](as pafy's backend) python libraries installed. Install it via pip:
 
     ```sh
       pip install pafy
@@ -546,4 +546,5 @@ External URLs
 [OV5647-picam]:https://github.com/techyian/MMALSharp/wiki/OmniVision-OV5647-Camera-Module
 [IMX219-picam]:https://github.com/techyian/MMALSharp/wiki/Sony-IMX219-Camera-Module
 [opencv-vw]:https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html
+[yt-dl]:https://github.com/ytdl-org/youtube-dl/
 [numpy]:https://github.com/numpy/numpy
