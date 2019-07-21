@@ -5,11 +5,13 @@
 ## How to contribute with Pull Request (PR)
 
 * Fork the project from the `testing` branch and submit a Pull Request (PR)
-  * Explain what the PR fixes or improves
-  * Screenshots recommended
-* Use sensible commit messages
-  * If your PR fixes a separate issue number, include it in the commit message
-* Use a sensible number of commit messages as well(_don't overdo!_)
+  * PR must be a fork from `testing` branch only.
+  * Explain what the PR fixes or improves.
+  * Screenshots recommended.
+* Use sensible commit messages and follow the template.
+  * If your PR fixes a separate issue number, include it in the commit message.
+  * Also, always remember to fill the PR template.
+* Use a sensible number of commit messages as well(_don't overdo_)
 
 &nbsp; 
 
@@ -17,9 +19,9 @@
 
 If you've found a new  bug or you've come up with some new feature which can make VidGear API even better: 
 * Remember first to go comprehensively through [**Wiki Documentation**][wiki]. 
-* Just keep the it simple, in context, give it a nice title and follow the template
-* Screenshots recommended 
-* Finally, raise the [**Issue**](https://github.com/abhiTronix/vidgear/issues/new), where you can describe in details what the problem is, or what would you like to improve. 
+* Just keep the it simple, in context, give it a nice title and follow the issue templates.
+* Screenshots recommended.
+* Finally, raise your [**Issue**](https://github.com/abhiTronix/vidgear/issues/new) where you can describe in details what the problem is, or what would you like to improve. 
 
 &nbsp; 
 
