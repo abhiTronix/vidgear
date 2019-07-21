@@ -9,14 +9,14 @@
   * Screenshots recommended
 * Use sensible commit messages
   * If your PR fixes a separate issue number, include it in the commit message
-* Use a sensible number of commit messages as well(_don't overdo_)
+* Use a sensible number of commit messages as well(_don't overdo!_)
 
 &nbsp; 
 
 ## Report Bug or Feature Request
 
 If you've found a new  bug or you've come up with some new feature which can make VidGear API even better: 
-* Remember first to go comprehensively through [**Wiki Documentation**](#wiki). 
+* Remember first to go comprehensively through [**Wiki Documentation**][wiki]. 
 * Just keep the it simple, in context, give it a nice title and follow the template
 * Screenshots recommended 
 * Finally, raise the [**Issue**](https://github.com/abhiTronix/vidgear/issues/new), where you can describe in details what the problem is, or what would you like to improve. 
@@ -25,7 +25,7 @@ If you've found a new  bug or you've come up with some new feature which can mak
 
 ## Become Stargazer :star:
 
-If you think this library is helpful and would like to help - **then you can be a :star2:stargazer:star2:**. _By starring this project, you're making the project easier to find & trust for others._
+If you think VidGear library is helpful and would like to help in return - **then you can be a :star2:[stargazer](https://github.com/abhiTronix/vidgear/stargazers):star2:**. _By starring this project, you're making it easier for others to find & trust this library._
 
 &nbsp;
 
