@@ -54,4 +54,3 @@ sudo ldconfig
 echo "OpenCV working version is $(python -c 'import cv2; print(cv2.__version__)')"
 
 echo "Done Installing OpenCV...!!!"
-
