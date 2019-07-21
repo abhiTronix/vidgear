@@ -58,7 +58,7 @@ The following **functional block diagram** clearly depicts the functioning of Vi
 
 [**TL;DR**](#tldr)
 
-[**New Release : VidGear 0.1.5**](#new-release-vidgear-015)
+[**New Release : VidGear 0.1.5**](#new-release-sneekpeak--vidgear-015)
 
 [**Installation Options**](#installation)
   * [**Prerequisites**](#prerequisites)
@@ -98,16 +98,14 @@ The following **functional block diagram** clearly depicts the functioning of Vi
 
 &nbsp;
 
-## New Release : VidGear 0.1.5
+## New Release SneekPeak : VidGear 0.1.5
   * Released new ScreenGear API, supports Live ScreenCasting.
   * Released new NetGear API, aids real-time frame transfer through messaging(ZmQ) over network.
   * Released new Stabilizer Class, for minimum latency Video Stabilization with OpenCV.
+  * Updated VideoGear API to be used as internal wrapper around Stabilizer Class.
+  * Implemented exclusive Threaded Queue Mode for blazingly fast, synchronized and error-free multi-threading APIs.
   * Added Option to use VidGear API's standalone.
-  * Added Option to use VideoGear API as internal wrapper around Stabilizer Class.
-  * Implemented exclusive Threaded Queue Mode(_a.k.a Blocking Mode_) for fast, synchronized, error-free multi-threading.
-  * Added New dependencies: `mss`, `pyzmq` and rejected redundant ones.
-  * Added Travis CLI bug workaround, Replaced `opencv-contrib-python` with OpenCV built from scratch as dependency.
-  * Several performance enhancements and bugs exterminated.
+  * Several Performance enhancements and Bugs exterminated.
   * Revamped Docs and [many more...](#changelog)
 
 &nbsp;
@@ -433,13 +431,13 @@ The full documentation for all VidGear classes and functions can be find in link
 
     ```sh
      chmod +x scripts/prepare_dataset.sh
-     ./scripts/prepare_dataset.sh              #for windows, use `sh scripts/pre_install.sh`
+     ./scripts/prepare_dataset.sh               #for windows, use `sh scripts/pre_install.sh`
     ```
 
 * **Run Tests:** Then various VidGear tests can be run with `pytest`(*in VidGear's root folder*) as below:
 
   ```sh
-   pytest -sv                                  #-sv for verbose output.
+   pytest -sv                                   #-sv for verbose output.
   ```
 
 &nbsp; 
