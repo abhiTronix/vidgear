@@ -23,8 +23,6 @@ THE SOFTWARE.
 ===============================================
 """
 
-
-
 import os
 import pytest
 from vidgear.gears import WriteGear
@@ -102,7 +100,7 @@ def Videowriter_compression_mode(path):
 	os.remove(os.path.abspath('Output_vc.mp4'))
 
 
-
+@pytest.mark.xfail(raises=RuntimeError)
 def test_benchmark_videowriter():
 	"""
 	Benchmarking VidGearwriter - (Compression Mode: FFmpeg) against (Non-Compression Mode: OpenCV)
@@ -111,4 +109,4 @@ def test_benchmark_videowriter():
 		Videowriter_non_compression_mode(return_testvideo_path())
 		Videowriter_compression_mode(return_testvideo_path())
 	except Exception as e:
-		print(e)
+		raise RuntimeError(e)

@@ -31,13 +31,18 @@ environment:
     - PYTHON: "C:\\Python36-x64"
       PYTHON_VERSION: "3.7.x"
       PYTHON_ARCH: "64"
+
 build: off
+
 version: '{branch}-{build}'
+
 cache:
   - '%LOCALAPPDATA%\pip\Cache'
+
 branches:
   only:
     - testing
+
 matrix:
     fast_finish: true
 
@@ -51,5 +56,6 @@ install:
   - "python -m pip install --upgrade youtube-dl"
   - cmd: chmod +x scripts/bash/prepare_dataset.sh
   - cmd: bash scripts/bash/prepare_dataset.sh
+
 test_script:
 - cmd: python -m pytest -sv

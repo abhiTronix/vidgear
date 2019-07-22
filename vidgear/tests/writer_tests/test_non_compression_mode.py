@@ -24,16 +24,16 @@ THE SOFTWARE.
 """
 
 from vidgear.gears import WriteGear
-import sys
-import numpy as np
-import os
-from numpy.testing import assert_equal
 from vidgear.gears.helper import capPropId
 from vidgear.gears.helper import check_output
 from six import string_types
+
+import os
 import pytest
 import cv2
 import tempfile
+
+
 
 def return_static_ffmpeg():
 	"""

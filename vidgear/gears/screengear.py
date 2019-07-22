@@ -47,13 +47,12 @@ except ImportError as error:
 
 
 class ScreenGear:
-	"""
-	This Class provides a high-level multi-threaded wrapper around Python-mss library which enables us to easily 
-	define an area on the computer screen or an open window to record the live screen high-speed frames and thereby 
-	pipeline those frames to any application at expense merely any latency all in a single framework. 
-	This Class also supports direct mss parameter manipulations given us flexible control over the input.
 
-	It operates in `Threaded Queue Mode` by default.
+	"""
+	With ScreenGear, we can easily define an area on the computer screen or an open window to record the live screen frames in 
+	real-time at the expense of insignificant latency. To achieve this, ScreenGear provides a high-level multi-threaded wrapper 
+	around mss python library API and also supports the flexible direct parameter manipulation. Furthermore, ScreenGear relies on 
+	Threaded Queue mode for ultra-fast live frame handling and which is enabled by default.
 
 	Threaded Queue Mode => Sequentially adds and releases frames to/from deque and handles overflow of this queue. It utilizes 
 	Deques that support thread-safe, memory efficient appends and pops from either side of the deque with approximately the 
@@ -73,6 +72,7 @@ class ScreenGear:
 	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 
 	"""
+	
 	def __init__(self, monitor = 1, colorspace = None, logging = False, **options):
 		#intialize threaded queue mode
 		self.threaded_queue_mode = True

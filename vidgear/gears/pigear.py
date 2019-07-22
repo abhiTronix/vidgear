@@ -47,10 +47,12 @@ except ImportError as error:
 
 
 class PiGear:
+
 	"""
-	This class exclusively targets the Raspberry Pi Camera Modules such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module, 
-	to obtain high FPS video by utilizing OpenCV and Picamera libraries with a bit of multi-threading. But make sure to enable Raspberry Pi 
-	hardware specific settings prior using this class.
+	PiGear is similar to CamGear but exclusively made to support various Raspberry Pi Camera Modules 
+	(such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module). To interface with these 
+	modules correctly, PiGear provides a flexible multi-threaded wrapper around complete picamera 
+	python library and provides us the ability to exploit its various features like brightness, saturation, sensor_mode, etc. effortlessly.
 	
 	:param (tuple) resolution: sets the resolution (width,height). Its default value is (640,480).
 
@@ -69,6 +71,7 @@ class PiGear:
 					/ Its default value is 0.
 
 	"""
+	
 	def __init__(self, resolution=(640, 480), framerate=25, colorspace = None, logging = False, time_delay = 0, **options):
 
 		try:

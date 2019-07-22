@@ -23,8 +23,6 @@ THE SOFTWARE.
 ===============================================
 """
 
-
-
 import os
 import pytest
 from vidgear.gears import CamGear

@@ -23,15 +23,13 @@ THE SOFTWARE.
 ===============================================
 """
 
-
 import youtube_dl
 import cv2
-import os, sys, time
-import numpy as np
+import os, time
 import pytest
+import numpy as np
+
 from vidgear.gears import CamGear
-from numpy.testing import assert_equal
-from vidgear.gears.helper import capPropId
 
 
 
