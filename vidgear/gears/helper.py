@@ -25,11 +25,12 @@ THE SOFTWARE.
 
 # Contains all the support functions/modules required by Vidgear 
 
-
 # import the neccesary packages
 import os, sys
 import cv2
-	
+from pkg_resources import parse_version
+
+
 
 def check_python_version():
 	"""
@@ -38,9 +39,10 @@ def check_python_version():
 	return sys.version_info[0]
 
 
-def check_CV_version(self):
+
+def check_CV_version():
 	"""
-	returns current OpenCV binary version's - first bit 
+	returns current OpenCV binary version's first bit 
 	"""
 	if parse_version(cv2.__version__) >= parse_version('4'):
 		return 4
@@ -48,11 +50,13 @@ def check_CV_version(self):
 		return 3
 
 
+
 def capPropId(property):
 	"""
 	Retrieves the Property's Integer(Actual) value. 
 	"""
 	return getattr(cv2, property)
+
 
 
 def dict2Args(param_dict):
@@ -64,6 +68,7 @@ def dict2Args(param_dict):
 		args.append(key)
 		args.append(param_dict[key])
 	return args
+
 
 
 def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_download_path = '', logging = False):
@@ -141,6 +146,7 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 		return False
 
 
+
 def download_ffmpeg_binaries(path, os_windows = False):
 	"""
 	Download and Extract FFmpeg Static Binaries for windows(if not available)
@@ -192,6 +198,7 @@ def download_ffmpeg_binaries(path, os_windows = False):
 	return final_path
 
 
+
 def validate_ffmpeg(path, logging = False):
 	"""
 	Validate FFmeg Binaries. returns True if tests passed
@@ -212,6 +219,7 @@ def validate_ffmpeg(path, logging = False):
 			print('FFmpeg validity Test Failed!')
 		return False
 	return True
+
 
 
 def check_output(*args, **kwargs):

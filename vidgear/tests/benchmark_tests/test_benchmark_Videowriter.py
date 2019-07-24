@@ -23,8 +23,6 @@ THE SOFTWARE.
 ===============================================
 """
 
-
-
 import os
 import pytest
 from vidgear.gears import WriteGear
@@ -59,7 +57,8 @@ def Videowriter_non_compression_mode(path):
 	"""
 	Function to Benchmark VidGearwriter - (Non-Compression Mode: OpenCV)
 	"""
-	stream = VideoGear(source=path).start() 
+	options = {'THREADED_QUEUE_MODE':False}
+	stream = VideoGear(source=path, **options).start() 
 	writer = WriteGear(output_filename = 'Output_vnc.mp4', compression_mode = False )
 	fps_CV = FPS().start()
 	while True:
@@ -82,7 +81,8 @@ def Videowriter_compression_mode(path):
 	"""
 	Function to Benchmark VidGearwriter - (Compression Mode: FFmpeg)
 	"""
-	stream = VideoGear(source=path).start()
+	options = {'THREADED_QUEUE_MODE':False}
+	stream = VideoGear(source=path, **options).start()
 	writer = WriteGear(output_filename = 'Output_vc.mp4', custom_ffmpeg = return_static_ffmpeg())
 	fps_Vid = FPS().start()
 	while True:
@@ -100,7 +100,7 @@ def Videowriter_compression_mode(path):
 	os.remove(os.path.abspath('Output_vc.mp4'))
 
 
-
+@pytest.mark.xfail(raises=RuntimeError)
 def test_benchmark_videowriter():
 	"""
 	Benchmarking VidGearwriter - (Compression Mode: FFmpeg) against (Non-Compression Mode: OpenCV)
@@ -109,4 +109,4 @@ def test_benchmark_videowriter():
 		Videowriter_non_compression_mode(return_testvideo_path())
 		Videowriter_compression_mode(return_testvideo_path())
 	except Exception as e:
-		print(e)
+		raise RuntimeError(e)

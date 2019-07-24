@@ -26,8 +26,10 @@ THE SOFTWARE.
 # import the packages
 from threading import Thread
 from pkg_resources import parse_version
-import logging
+import traceback
 from .helper import capPropId
+
+
 
 try:
 	# import OpenCV Binaries
@@ -42,11 +44,15 @@ try:
 except ImportError as error:
 	raise ImportError('Failed to detect OpenCV executables, install it with `pip install opencv-contrib-python` command.')
 
+
+
 class PiGear:
+
 	"""
-	This class exclusively targets the Raspberry Pi Camera Modules such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module, 
-	to obtain high FPS video by utilizing OpenCV and Picamera libraries with a bit of multithreading. But make sure to enable Raspberry Pi 
-	hardware specific settings prior using this class.
+	PiGear is similar to CamGear but exclusively made to support various Raspberry Pi Camera Modules 
+	(such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module). To interface with these 
+	modules correctly, PiGear provides a flexible multi-threaded wrapper around complete picamera 
+	python library and provides us the ability to exploit its various features like brightness, saturation, sensor_mode, etc. effortlessly.
 	
 	:param (tuple) resolution: sets the resolution (width,height). Its default value is (640,480).
 
@@ -55,8 +61,8 @@ class PiGear:
 	:param (string) colorspace: set colorspace of the video stream. Its default value is None.
 
 	:param (dict) **options: sets parameter supported by PiCamera Class to the input video stream. 
-							/ These attribute provides the flexibity to manuplate input raspicam video stream directly. 
-							/ Parameters can be passed using this **option, allows you to pass keyworded variable length of arguments to PiGear Class.
+							/ These attribute provides the flexibility to manipulate input raspicam video stream directly. 
+							/ Parameters can be passed using this **option, allows you to pass key worded variable length of arguments to PiGear Class.
 
 	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 
@@ -65,6 +71,7 @@ class PiGear:
 					/ Its default value is 0.
 
 	"""
+	
 	def __init__(self, resolution=(640, 480), framerate=25, colorspace = None, logging = False, time_delay = 0, **options):
 
 		try:
@@ -81,10 +88,10 @@ class PiGear:
 		self.camera.resolution = resolution
 		self.camera.framerate = framerate
 
-		#initialise framerate variable
+		#initialize framerate variable
 		self.framerate = framerate
 
-		#initialisation colorspace variable
+		#initializing colorspace variable
 		self.color_space = None
 
 		#reformat dict
@@ -95,7 +102,7 @@ class PiGear:
 			for key, value in options.items():
 				setattr(self.camera, key, value)
 
-			# seperately handle colorspace value to int conversion
+			# separately handle colorspace value to int conversion
 			if not(colorspace is None):
 				self.color_space = capPropId(colorspace.strip())
 
@@ -108,22 +115,27 @@ class PiGear:
 		self.rawCapture = PiRGBArray(self.camera, size=resolution)
 		self.stream = self.camera.capture_continuous(self.rawCapture,format="bgr", use_video_port=True)
 
-		# applying time delay to warmup picamera only if specified
+		#frame variable initialization		
+		for stream in self.stream:
+			self.frame = stream.array
+			self.rawCapture.seek(0)
+			self.rawCapture.truncate()
+			break
+
+		# applying time delay to warm-up picamera only if specified
 		if time_delay:
 			import time
 			time.sleep(time_delay)
 
 		#thread initialization
 		self.thread = None
-		
-		#frame initialization
-		self.frame = None
 
 		# enable logging if specified
 		self.logging = logging
 
-		# intialize termination flag
+		# initialize termination flag
 		self.terminate = False
+
 
 
 	def start(self):
@@ -134,6 +146,8 @@ class PiGear:
 		self.thread.daemon = True
 		self.thread.start()
 		return self
+
+
 
 	def update(self):
 		"""
@@ -181,20 +195,24 @@ class PiGear:
 
 		except Exception as e:
 			if self.logging:
-				logging.error(traceback.format_exc())
+				print(traceback.format_exc())
 			self.terminate =True
 			pass
 
-		# release resource camera resources
+		# release picamera resources
 		self.stream.close()
 		self.rawCapture.close()
 		self.camera.close()
+
+
 
 	def read(self):
 		"""
 		return the frame
 		"""
 		return self.frame
+
+
 
 	def stop(self):
 		"""

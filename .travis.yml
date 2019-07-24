@@ -1,30 +1,41 @@
---- 
 language: python
+
 before_install: 
   - "sudo add-apt-repository ppa:jonathonf/ffmpeg-4 -y"
   - "sudo apt-get update -q"
   - "sudo apt-get install ffmpeg unzip wget -y"
   - "sudo apt-get install dos2unix -y"
-  - "dos2unix scripts/pre_install.sh"
-  - "chmod +x scripts/pre_install.sh"
+  - "dos2unix scripts/bash/prepare_dataset.sh"
+  - "chmod +x scripts/bash/prepare_dataset.sh"
+  - "dos2unix scripts/bash/install_opencv.sh"
+  - "chmod +x scripts/bash/install_opencv.sh"
+
 branches: 
   only: 
     - testing
+
 cache: pip
+
 install: 
   - "pip install --upgrade pip wheel"
+  - "pip install --upgrade numpy"
   - "pip install ."
+  - "pip uninstall opencv-contrib-python -y"
   - "pip install six"
-  - "pip install backports.lzma"
   - "pip install --upgrade pytest"
   - "pip install --upgrade youtube-dl"
+
 dist: xenial
+
 python: 
   - "2.7"
-  - "3.4"
   - "3.5"
   - "3.6"
   - "3.7"
+
+before_script:
+  - bash scripts/bash/install_opencv.sh
+  - bash scripts/bash/prepare_dataset.sh
+
 script:
-  - bash scripts/pre_install.sh
-  - pytest -sv
+  - python -m pytest -sv

@@ -32,7 +32,7 @@ def test_opencv():
     """
     This function is workaround to 
     test if correct OpenCV Library version has already been installed
-    on the machine or not. Returns True if previously installed.
+    on the machine or not. Returns True if previously not installed.
     """
     try:
         # import OpenCV Binaries
@@ -49,24 +49,23 @@ def test_opencv():
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
-    long_description = long_description.replace(" [x]", "") #Readme Hack
 
 setup(
     name='vidgear',
     packages=['vidgear','vidgear.gears'],
-    version='0.1.4',
-    description='Powerful Multi-Threaded OpenCV and FFmpeg based Turbo Video Processing Python Library with unique State-of-the-Art Features.',
+    version='0.1.5',
+    description='Powerful python Video Processing library built with Multi-Threaded Gears(a.k.a APIs) each with a unique set of trailblazing features.',
     license='MIT License',
     author='abhiTronix',
-    install_requires = ["pafy", "youtube-dl", "requests"] 
+    install_requires = ["pafy", "mss", "youtube-dl", "requests","pyzmq"] 
     + (["opencv-contrib-python"] if test_opencv() else []) 
     + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
     long_description=long_description,
     long_description_content_type="text/markdown",
     author_email='abhi.una12@gmail.com',
     url='https://github.com/abhiTronix/vidgear',
-    download_url='https://github.com/abhiTronix/vidgear/tarball/0.1.4',
-    keywords=['computer vision', 'multi-thread', 'python', 'opencv', 'cv2', 'opencv4', 'Video Processing'],
+    download_url='https://github.com/abhiTronix/vidgear/tarball/0.1.5',
+    keywords=['opencv', 'multithreading', 'FFmpeg', 'picamera', 'mss', 'pyzmq', 'pafy', 'Video Processing', 'Video Stablization', 'Computer Vision'],
     classifiers=[
     'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Developers',
@@ -81,6 +80,6 @@ setup(
     scripts=[],
     project_urls={  # Optional
         'Bug Reports': 'https://github.com/abhiTronix/vidgear/issues',
-        'Funding': 'https://paypal.me/AbhiTronix?locale.x=en_GB',
+        'Funding': 'https://www.buymeacoffee.com/2twOXFvlA',
         'Source': 'https://github.com/abhiTronix/vidgear',},
 )
