@@ -77,17 +77,9 @@ class ScreenGear:
 		#intialize threaded queue mode
 		self.threaded_queue_mode = True
 		try:
-			# try import necessary system specific mss library
-			import platform			
-			if platform.system() == 'Linux':
-				from mss.linux import MSS as mss
-			elif platform.system() == 'Windows':
-				from mss.windows import MSS as mss
-			elif platform.system() == 'Darwin':
-				from mss.darwin import MSS as mss
-			else:
-				from mss import mss
-			#import mss error handler
+			# import mss factory
+			from mss import mss
+			# import mss error handler
 			from mss.exception import ScreenShotError
 		except ImportError as error:
 			# otherwise raise import error
