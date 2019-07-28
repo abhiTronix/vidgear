@@ -35,7 +35,7 @@ if [ $OS_TYPE = "Linux" ]; then
 	  mv ffmpeg* ffmpeg
 	fi
 
-else
+elif [ $OS_TYPE = "Windows" ]; then
 
 	if [ $MACHINE_BIT = "x86_64" ]; then
 	  curl https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-latest-win64-static.zip -o ffmpeg-latest-win64-static.zip
@@ -48,6 +48,16 @@ else
 	  rm ffmpeg-latest-win32-static.zip
 	  mv ffmpeg-latest-win32-static ffmpeg
 	fi
+
+else 
+
+	if [ $MACHINE_BIT = "x86_64" ]; then
+	  curl https://ffmpeg.zeranoe.com/builds/macos64/static/ffmpeg-latest-macos64-static.zip -o ffmpeg-latest-win64-static.zip
+	  unzip -qq ffmpeg-latest-macos64-static.zip
+	  rm ffmpeg-latest-macos64-static.zip
+	  mv ffmpeg-latest-macos64-static ffmpeg
+	fi
+
 fi
 
 cd $HOME/Downloads/Test_videos
