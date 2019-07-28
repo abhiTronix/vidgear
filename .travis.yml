@@ -73,7 +73,7 @@ install:
     pip install --upgrade pytest;
     pip install --upgrade youtube-dl;
     fi
- - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
     pip install --upgrade --user pip wheel;
     pip install --upgrade --user numpy;
     pip install --user .;
