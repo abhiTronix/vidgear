@@ -54,7 +54,7 @@ else
 	unzip -qq ffmpeg-latest-macos64-static.zip
 	rm ffmpeg-latest-macos64-static.zip
 	mv ffmpeg-latest-macos64-static ffmpeg
-
+	ls
 fi
 
 cd $HOME/Downloads/Test_videos
@@ -66,3 +66,4 @@ curl http://jell.yfish.us/media/jellyfish-50-mbps-hd-h264.mkv -o 50_mbps_hd_h264
 curl http://jell.yfish.us/media/jellyfish-90-mbps-hd-hevc-10bit.mkv -o 90_mbps_hd_hevc_10bit.mkv
 curl http://jell.yfish.us/media/jellyfish-120-mbps-4k-uhd-h264.mkv -o 120_mbps_4k_uhd_h264.mkv
 
+ls
