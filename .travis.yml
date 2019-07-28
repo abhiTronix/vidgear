@@ -64,13 +64,24 @@ branches:
     - testing
 
 install: 
-  - "pip install --upgrade pip wheel"
-  - "pip install --upgrade numpy"
-  - "pip install ."
-  - "pip uninstall opencv-contrib-python -y"
-  - "pip install six"
-  - "pip install --upgrade pytest"
-  - "pip install --upgrade youtube-dl"
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+    pip install --upgrade pip wheel;
+    pip install --upgrade numpy;
+    pip install .;
+    pip uninstall opencv-contrib-python -y;
+    pip install six;
+    pip install --upgrade pytest;
+    pip install --upgrade youtube-dl;
+    fi
+ - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    pip install --upgrade --user pip wheel;
+    pip install --upgrade --user numpy;
+    pip install --user .;
+    pip uninstall opencv-contrib-python -y;
+    pip install  --user six;
+    pip install --upgrade  --user pytest;
+    pip install --upgrade  --user youtube-dl;
+    fi
 
 before_script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
