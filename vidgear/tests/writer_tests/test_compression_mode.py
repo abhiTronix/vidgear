@@ -31,7 +31,7 @@ from six import string_types
 import pytest
 import cv2
 import tempfile
-import os
+import os, platform
 import subprocess, re
 
 
@@ -41,8 +41,10 @@ def return_static_ffmpeg():
 	return FFmpeg static path
 	"""
 	path = ''
-	if os.name == 'nt':
+	if platform.system() == 'Windows':
 		path += os.path.join(os.environ['USERPROFILE'],'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe')
+	elif platform.system() == 'Darwin':
+		path += os.path.join(os.environ['HOME'],'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg')
 	else:
 		path += os.path.join(os.environ['HOME'],'Downloads/FFmpeg_static/ffmpeg/ffmpeg')
 	return os.path.abspath(path)
