@@ -49,12 +49,14 @@ elif [ $OS_TYPE = "Windows" ]; then
 	  mv ffmpeg-latest-win32-static ffmpeg
 	fi
 
-else 
+else
+
 	curl -LO https://ffmpeg.zeranoe.com/builds/macos64/static/ffmpeg-latest-macos64-static.zip
 	unzip -qq ffmpeg-latest-macos64-static.zip
 	rm ffmpeg-latest-macos64-static.zip
 	mv ffmpeg-latest-macos64-static ffmpeg
 	ls
+	
 fi
 
 cd $HOME/Downloads/Test_videos
