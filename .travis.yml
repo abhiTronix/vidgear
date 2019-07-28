@@ -78,7 +78,6 @@ install:
     pip install --upgrade --user pip wheel;
     pip install --upgrade --user numpy;
     pip install --user .;
-    pip uninstall opencv-contrib-python -y;
     pip install  --user six;
     pip install --upgrade  --user pytest;
     pip install --upgrade  --user youtube-dl;
