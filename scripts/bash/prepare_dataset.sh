@@ -50,13 +50,10 @@ elif [ $OS_TYPE = "Windows" ]; then
 	fi
 
 else 
-
-	if [ $MACHINE_BIT = "x86_64" ]; then
-	  curl https://ffmpeg.zeranoe.com/builds/macos64/static/ffmpeg-latest-macos64-static.zip -o ffmpeg-latest-win64-static.zip
-	  unzip -qq ffmpeg-latest-macos64-static.zip
-	  rm ffmpeg-latest-macos64-static.zip
-	  mv ffmpeg-latest-macos64-static ffmpeg
-	fi
+	curl -LO https://ffmpeg.zeranoe.com/builds/macos64/static/ffmpeg-latest-macos64-static.zip
+	unzip -qq ffmpeg-latest-macos64-static.zip
+	rm ffmpeg-latest-macos64-static.zip
+	mv ffmpeg-latest-macos64-static ffmpeg
 
 fi
 

@@ -47,6 +47,7 @@ before_install:
     python3 --version;
     pip --version;
     export PATH=$PATH:$(python3 -c "import site; print(site.USER_BASE)")/bin;
+    chmod +x scripts/bash/prepare_dataset.sh;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     sudo add-apt-repository ppa:jonathonf/ffmpeg-4 -y;
@@ -85,7 +86,7 @@ install:
 
 before_script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    source ./scripts/bash/prepare_dataset.sh;
+    bash scripts/bash/prepare_dataset.sh;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     bash scripts/bash/install_opencv.sh;
