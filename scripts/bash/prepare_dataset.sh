@@ -17,12 +17,13 @@ mkdir -p $HOME/Downloads/{FFmpeg_static,Test_videos}
 
 cd $HOME/Downloads/FFmpeg_static
 
-OS_TYPE=$(uname)
+OS_TYPE=$(uname | tr '[:upper:]' '[:lower:]')
 MACHINE_BIT=$(uname -m)
 
 #Download and Configure FFmpeg Static
-if [ $OS_TYPE = "Linux" ]; then
-	
+if [ $OS_TYPE in linux* ]; then
+
+	echo "Downloading Linux Static FFmpeg Binaries..."
 	if [ $MACHINE_BIT = "x86_64" ]; then
 	  curl https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o ffmpeg-release-amd64-static.tar.xz
 	  tar -xJf ffmpeg-release-amd64-static.tar.xz
@@ -35,8 +36,9 @@ if [ $OS_TYPE = "Linux" ]; then
 	  mv ffmpeg* ffmpeg
 	fi
 
-elif [ $OS_TYPE = "WindowsNT" ]; then
+elif [ $OS_TYPE in msys* ]; then
 
+	echo "Downloading Windows Static FFmpeg Binaries..."
 	if [ $MACHINE_BIT = "x86_64" ]; then
 	  curl https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-latest-win64-static.zip -o ffmpeg-latest-win64-static.zip
 	  unzip -qq ffmpeg-latest-win64-static.zip
@@ -50,22 +52,23 @@ elif [ $OS_TYPE = "WindowsNT" ]; then
 	fi
 
 else
-
+	
+	echo "Downloading MacOS Static FFmpeg Binaries..."
 	curl -LO https://ffmpeg.zeranoe.com/builds/macos64/static/ffmpeg-latest-macos64-static.zip
 	unzip -qq ffmpeg-latest-macos64-static.zip
 	rm ffmpeg-latest-macos64-static.zip
 	mv ffmpeg-latest-macos64-static ffmpeg
-	ls
-	
+
 fi
 
+
 cd $HOME/Downloads/Test_videos
-# Download Test-Data
+
+echo "Downloading Download Test-Data..."
 curl http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 -o BigBuckBunny.mp4
 curl https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4 -o BigBuckBunny_4sec.mp4
 curl http://jell.yfish.us/media/jellyfish-20-mbps-hd-hevc-10bit.mkv -o 20_mbps_hd_hevc_10bit.mkv
 curl http://jell.yfish.us/media/jellyfish-50-mbps-hd-h264.mkv -o 50_mbps_hd_h264.mkv
 curl http://jell.yfish.us/media/jellyfish-90-mbps-hd-hevc-10bit.mkv -o 90_mbps_hd_hevc_10bit.mkv
 curl http://jell.yfish.us/media/jellyfish-120-mbps-4k-uhd-h264.mkv -o 120_mbps_4k_uhd_h264.mkv
-
-ls
+echo "Test Data Downloaded!"

@@ -94,7 +94,7 @@ before_script:
 
 script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    travis_wait pytest
+    travis_wait pytest;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     python -m pytest -sv;
