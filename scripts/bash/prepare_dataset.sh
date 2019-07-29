@@ -35,7 +35,7 @@ if [ $OS_TYPE = "Linux" ]; then
 	  mv ffmpeg* ffmpeg
 	fi
 
-elif [ $OS_TYPE = "Windows" ]; then
+elif [ $OS_TYPE = "WindowsNT" ]; then
 
 	if [ $MACHINE_BIT = "x86_64" ]; then
 	  curl https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-latest-win64-static.zip -o ffmpeg-latest-win64-static.zip
