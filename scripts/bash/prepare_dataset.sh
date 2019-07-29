@@ -12,16 +12,35 @@
 #The above copyright notice and this permission notice shall be included in all
 #copies or substantial portions of the Software.
 
+
+
 mkdir -p $HOME/Downloads
 mkdir -p $HOME/Downloads/{FFmpeg_static,Test_videos}
 
-cd $HOME/Downloads/FFmpeg_static
+MACHINE_BIT=$(uname -m)
 
 OS_TYPE=$(uname | tr '[:upper:]' '[:lower:]')
 MACHINE_BIT=$(uname -m)
 
+case $(uname | tr '[:upper:]' '[:lower:]') in
+linux*)
+  OS_NAME=linux
+  ;;
+darwin*)
+  OS_NAME=osx
+  ;;
+msys*)
+  OS_NAME=windows
+  ;;
+*)
+  OS_NAME=notset
+  ;;
+esac
+
+
+cd $HOME/Downloads/FFmpeg_static
 #Download and Configure FFmpeg Static
-if [ $OS_TYPE in linux* ]; then
+if [ $OS_NAME = "linux" ]; then
 
 	echo "Downloading Linux Static FFmpeg Binaries..."
 	if [ $MACHINE_BIT = "x86_64" ]; then
@@ -36,7 +55,7 @@ if [ $OS_TYPE in linux* ]; then
 	  mv ffmpeg* ffmpeg
 	fi
 
-elif [ $OS_TYPE in msys* ]; then
+elif [ $OS_NAME = "windows" ]; then
 
 	echo "Downloading Windows Static FFmpeg Binaries..."
 	if [ $MACHINE_BIT = "x86_64" ]; then
@@ -52,23 +71,22 @@ elif [ $OS_TYPE in msys* ]; then
 	fi
 
 else
-	
+
 	echo "Downloading MacOS Static FFmpeg Binaries..."
 	curl -LO https://ffmpeg.zeranoe.com/builds/macos64/static/ffmpeg-latest-macos64-static.zip
 	unzip -qq ffmpeg-latest-macos64-static.zip
 	rm ffmpeg-latest-macos64-static.zip
 	mv ffmpeg-latest-macos64-static ffmpeg
-
+	ls
 fi
 
 
 cd $HOME/Downloads/Test_videos
-
-echo "Downloading Download Test-Data..."
+echo "Downloading Test-Data..."
 curl http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 -o BigBuckBunny.mp4
 curl https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4 -o BigBuckBunny_4sec.mp4
 curl http://jell.yfish.us/media/jellyfish-20-mbps-hd-hevc-10bit.mkv -o 20_mbps_hd_hevc_10bit.mkv
 curl http://jell.yfish.us/media/jellyfish-50-mbps-hd-h264.mkv -o 50_mbps_hd_h264.mkv
 curl http://jell.yfish.us/media/jellyfish-90-mbps-hd-hevc-10bit.mkv -o 90_mbps_hd_hevc_10bit.mkv
 curl http://jell.yfish.us/media/jellyfish-120-mbps-4k-uhd-h264.mkv -o 120_mbps_4k_uhd_h264.mkv
-echo "Test Data Downloaded!"
+echo "Done Downloading Test-Data!"
