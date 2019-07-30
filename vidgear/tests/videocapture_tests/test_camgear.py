@@ -25,6 +25,7 @@ THE SOFTWARE.
 
 import youtube_dl
 import cv2
+import platform
 import os, time
 import pytest
 import numpy as np
@@ -99,7 +100,7 @@ def test_youtube_playback():
 	"""
 	Testing Youtube Video Playback capabilities of VidGear
 	"""
-	if os.name != 'nt':
+	if not platform.system() in ['Windows', 'Darwin']:
 		Url = 'https://youtu.be/YqeW9_5kURI'
 		result = True
 		errored = False #keep watch if youtube streaming not successful
@@ -129,7 +130,7 @@ def test_youtube_playback():
 			print('YouTube playback Test is skipped due to above error!')
 
 	else:
-		print('YouTube playback Test is skipped due to bug with Appveyor on Windows builds!')
+		print('YouTube playback Test is skipped due to bug with opencv-python library builds on windows and macOS!')
 
 
 

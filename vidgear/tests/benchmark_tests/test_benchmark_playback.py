@@ -23,7 +23,7 @@ THE SOFTWARE.
 ===============================================
 """
 
-import os
+import os, platform
 import pytest
 from vidgear.gears import CamGear
 from .fps import FPS
@@ -64,7 +64,10 @@ def test_benchmark(level):
 	"""
 	Benchmarking low to extreme 4k video playback capabilities of VidGear
 	"""
-	try:
-		playback(level)
-	except Exception as e:
-		print(e)
+	if platform.system() != 'Darwin':
+		try:
+			playback(level)
+		except Exception as e:
+			print(e)
+	else:
+		print("Skipping this test for macOS!")

@@ -1,41 +1,101 @@
 language: python
 
-before_install: 
-  - "sudo add-apt-repository ppa:jonathonf/ffmpeg-4 -y"
-  - "sudo apt-get update -q"
-  - "sudo apt-get install ffmpeg unzip wget -y"
-  - "sudo apt-get install dos2unix -y"
-  - "dos2unix scripts/bash/prepare_dataset.sh"
-  - "chmod +x scripts/bash/prepare_dataset.sh"
-  - "dos2unix scripts/bash/install_opencv.sh"
-  - "chmod +x scripts/bash/install_opencv.sh"
+matrix:
+    include:
+        - os: osx
+          python: "3.5"
+          language: generic
+          osx_image: xcode11
+          env: PYTHON=35
+        - os: osx
+          python: "3.6"
+          language: generic
+          osx_image: xcode11
+          env: PYTHON=36
+        - os: osx
+          python: "3.7"
+          language: generic
+          osx_image: xcode11
+          env: PYTHON=37
+        - os: linux
+          python: "3.5"
+          language: python
+          cache: pip
+        - os: linux
+          python: "3.6"
+          language: python
+          cache: pip
+        - os: linux
+          dist: xenial
+          python: "3.7"
+          language: python
+          cache: pip   
+
+
+
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    brew install swig;
+    brew install ffmpeg;
+    brew install unzip;
+    curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci;
+    source ./macports-ci install;
+    yes | sudo port install python$PYTHON;
+    yes | sudo port install py$PYTHON-pip;
+    sudo port select --set python3 python$PYTHON;
+    sudo port select --set pip pip$PYTHON;
+    python3 --version;
+    pip --version;
+    export PATH=$PATH:$(python3 -c "import site; print(site.USER_BASE)")/bin;
+    chmod +x scripts/bash/prepare_dataset.sh;
+    fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+    sudo add-apt-repository ppa:jonathonf/ffmpeg-4 -y;
+    sudo apt-get update -q;
+    sudo apt-get install ffmpeg unzip wget -y;
+    sudo apt-get install dos2unix -y;
+    dos2unix scripts/bash/prepare_dataset.sh;
+    chmod +x scripts/bash/prepare_dataset.sh;
+    dos2unix scripts/bash/install_opencv.sh;
+    chmod +x scripts/bash/install_opencv.sh;
+    fi
 
 branches: 
   only: 
     - testing
 
-cache: pip
-
 install: 
-  - "pip install --upgrade pip wheel"
-  - "pip install --upgrade numpy"
-  - "pip install ."
-  - "pip uninstall opencv-contrib-python -y"
-  - "pip install six"
-  - "pip install --upgrade pytest"
-  - "pip install --upgrade youtube-dl"
-
-dist: xenial
-
-python: 
-  - "2.7"
-  - "3.5"
-  - "3.6"
-  - "3.7"
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+    pip install --upgrade pip wheel;
+    pip install --upgrade numpy;
+    pip install .;
+    pip uninstall opencv-contrib-python -y;
+    pip install six;
+    pip install --upgrade pytest;
+    pip install --upgrade youtube-dl;
+    fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    pip install --upgrade --user pip wheel;
+    pip install --upgrade --user numpy;
+    pip install --user .;
+    pip install  --user six;
+    pip install --upgrade  --user pytest;
+    pip install --upgrade  --user youtube-dl;
+    fi
 
 before_script:
-  - bash scripts/bash/install_opencv.sh
-  - bash scripts/bash/prepare_dataset.sh
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    bash scripts/bash/prepare_dataset.sh;
+    fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+    bash scripts/bash/install_opencv.sh;
+    bash scripts/bash/prepare_dataset.sh;
+    fi
 
 script:
-  - python -m pytest -sv
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    travis_wait pytest -sv;
+    fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+    python -m pytest -sv;
+    fi
