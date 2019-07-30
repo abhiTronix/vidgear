@@ -77,7 +77,7 @@ else
 	unzip -qq ffmpeg-latest-macos64-static.zip
 	rm ffmpeg-latest-macos64-static.zip
 	mv ffmpeg-latest-macos64-static ffmpeg
-	ls
+	
 fi
 
 
