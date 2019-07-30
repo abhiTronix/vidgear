@@ -13,15 +13,14 @@
 #copies or substantial portions of the Software.
 
 
-
+# Creating necessary directories 
 mkdir -p $HOME/Downloads
 mkdir -p $HOME/Downloads/{FFmpeg_static,Test_videos}
 
+# Acknowledging machine architecture
 MACHINE_BIT=$(uname -m)
 
-OS_TYPE=$(uname | tr '[:upper:]' '[:lower:]')
-MACHINE_BIT=$(uname -m)
-
+# Acknowledging machine OS type
 case $(uname | tr '[:upper:]' '[:lower:]') in
 linux*)
   OS_NAME=linux
@@ -38,8 +37,9 @@ msys*)
 esac
 
 
-cd $HOME/Downloads/FFmpeg_static
 #Download and Configure FFmpeg Static
+cd $HOME/Downloads/FFmpeg_static
+
 if [ $OS_NAME = "linux" ]; then
 
 	echo "Downloading Linux Static FFmpeg Binaries..."
@@ -72,19 +72,20 @@ elif [ $OS_NAME = "windows" ]; then
 
 else
 
-	echo "Downloading MacOS Static FFmpeg Binaries..."
+	echo "Downloading MacOS64 Static FFmpeg Binary..."
 	curl -LO https://ffmpeg.zeranoe.com/builds/macos64/static/ffmpeg-latest-macos64-static.zip
 	unzip -qq ffmpeg-latest-macos64-static.zip
 	rm ffmpeg-latest-macos64-static.zip
 	mv ffmpeg-latest-macos64-static ffmpeg
-	
+
 fi
 
-
+# Downloading Test Data
 cd $HOME/Downloads/Test_videos
+
 echo "Downloading Test-Data..."
 curl http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 -o BigBuckBunny.mp4
-curl https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4 -o BigBuckBunny_4sec.mp4
+curl https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/big_buck_bunny_720p_1mb.mp4 -o BigBuckBunny_4sec.mp4
 curl http://jell.yfish.us/media/jellyfish-20-mbps-hd-hevc-10bit.mkv -o 20_mbps_hd_hevc_10bit.mkv
 curl http://jell.yfish.us/media/jellyfish-50-mbps-hd-h264.mkv -o 50_mbps_hd_h264.mkv
 curl http://jell.yfish.us/media/jellyfish-90-mbps-hd-hevc-10bit.mkv -o 90_mbps_hd_hevc_10bit.mkv
