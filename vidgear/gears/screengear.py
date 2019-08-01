@@ -74,8 +74,10 @@ class ScreenGear:
 	"""
 	
 	def __init__(self, monitor = 1, colorspace = None, logging = False, **options):
-		#intialize threaded queue mode
+
+		#intialize threaded queue mode by default
 		self.threaded_queue_mode = True
+
 		try:
 			# import mss factory
 			from mss import mss
@@ -92,26 +94,18 @@ class ScreenGear:
 			monitor_instance = self.mss_object.monitors[monitor]
 		else:
 			raise ValueError("`monitor` value cannot be negative, Read Docs!")
-		# Initiate User-Defined Threaded Queue Mode
-		if options:
-			if "THREADED_QUEUE_MODE" in options:
-				if isinstance(options["THREADED_QUEUE_MODE"],bool):
-					self.threaded_queue_mode = options["THREADED_QUEUE_MODE"] #assigsn special parameter to global variable
-				del options["THREADED_QUEUE_MODE"] #clean
-				#reformat option dict
+
+		# Initialize Queue
 		self.queue = None
-		#intialize deque
-		if self.threaded_queue_mode:
-			#import deque
-			from collections import deque
-			#define deque and assign it to global var
-			self.queue = deque(maxlen=96) #max len 96 to check overflow
-			#log it
-			if logging:
-				print('Enabling Threaded Queue Mode!') 
-		else:
-			#otherwise disable it
-			self.threaded_queue_mode = False
+
+		#import deque
+		from collections import deque
+		#define deque and assign it to global var
+		self.queue = deque(maxlen=96) #max len 96 to check overflow
+		#log it
+		if logging:
+			print('Enabling Threaded Queue Mode by default for ScreenGear!') 
+
 		#intiate screen dimension handler
 		screen_dims = {}
 		#initializing colorspace variable
@@ -126,6 +120,7 @@ class ScreenGear:
 			# Catch if any error occurred
 			if logging:
 				print(e)
+
 		# intialize mss capture instance
 		self.mss_capture_instance = None
 		try:
@@ -144,6 +139,7 @@ class ScreenGear:
 			raise ValueError("ScreenShotError caught: Wrong dimensions passed to python-mss, Kindly Refer Docs!")
 			if logging:
 				print(self.mss_object.get_error_details())
+				
 		# enable logging if specified
 		self.logging = logging
 		# thread initialization

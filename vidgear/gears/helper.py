@@ -28,6 +28,7 @@ THE SOFTWARE.
 # import the neccesary packages
 import os, sys
 import cv2
+import numpy as np
 from pkg_resources import parse_version
 
 
@@ -68,7 +69,6 @@ def dict2Args(param_dict):
 		args.append(key)
 		args.append(param_dict[key])
 	return args
-
 
 
 def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_download_path = '', logging = False):

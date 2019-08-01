@@ -1,5 +1,30 @@
 # CHANGELOG
 
+## VidGear 0.1.6-dev
+
+### New Features:
+  * Added VidGear's official native support for MacOS environment.
+
+### Updates/Improvements:
+  * Updated Travis CLI Tests with support for macOS environment
+  * Reformatted & implemented necessary changes and dependencies in `travis.yml`.
+
+### Breaking Updates / Improvements / Changes
+  * `Python 2.7` legacy support removed from CLI tests.
+
+### Fixes
+  * Fixed unreliable dataset video file URL(rehosted file on github.com)
+  * Remove duplicate code to import MSS(@BoboTiG) from NetGear
+  * Fixed various macOS environment bugs
+
+### Pull requests(PR) involved:
+  * PR #39
+  * PR #42
+
+:warning: PyPi Release does NOT contain Tests and Scripts!
+
+&nbsp; 
+
 ## VidGear v0.1.5
 
 ### New Features:
