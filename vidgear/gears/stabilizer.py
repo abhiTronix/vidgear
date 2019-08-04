@@ -80,7 +80,7 @@ class Stabilizer:
 		else:
 			#otherwise log if not
 			if logging:
-				print('Invalid input border type!')
+				print('[LOG]: Invalid input border type!')
 			self.border_mode = border_modes['black'] #reset to default mode
 			
 		# define normalized box filter

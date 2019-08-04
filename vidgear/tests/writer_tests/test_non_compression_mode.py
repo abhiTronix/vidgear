@@ -86,7 +86,7 @@ def test_write(conversion):
 	if result:
 		if not isinstance(result, string_types):
 			result = result.decode()
-		print('Result: {}'.format(result))
+		print('[LOG]: Result: {}'.format(result))
 		for i in ["Error", "Invalid", "error", "invalid"]:
 			assert not(i in result)
 	os.remove(os.path.abspath('Output_twc.avi'))

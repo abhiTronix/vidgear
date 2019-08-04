@@ -104,7 +104,7 @@ class ScreenGear:
 		self.queue = deque(maxlen=96) #max len 96 to check overflow
 		#log it
 		if logging:
-			print('Enabling Threaded Queue Mode by default for ScreenGear!') 
+			print('[LOG]: Enabling Threaded Queue Mode by default for ScreenGear!') 
 
 		#intiate screen dimension handler
 		screen_dims = {}
@@ -202,13 +202,13 @@ class ScreenGear:
 					else:
 						self.color_space = None
 						if self.logging:
-							print('Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
+							print('[LOG]: Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None
 					if self.logging:
 						print(e)
-						print('Input Colorspace is not a valid Colorspace!')
+						print('[LOG]: Input Colorspace is not a valid Colorspace!')
 				if not(color_frame is None):
 					self.frame = color_frame
 				else:
