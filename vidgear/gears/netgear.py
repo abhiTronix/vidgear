@@ -171,8 +171,8 @@ class NetGear:
 					self.multiserver_mode = value
 				elif key == 'filter' and isinstance(value, str):
 					recv_filter = value
-				elif key == 'flag' and isinstance(value, str):
-					self.msg_flag = getattr(zmq, value)
+				elif key == 'flag' and isinstance(value, int):
+					self.msg_flag = value
 				elif key == 'copy' and isinstance(value, bool):
 					self.msg_copy = value
 				elif key == 'track' and isinstance(value, bool):
@@ -374,18 +374,24 @@ class NetGear:
 			frame_buffer = np.frombuffer(msg_data, dtype=msg_json['dtype'])
 			# reshape frame
 			frame = frame_buffer.reshape(msg_json['shape'])
-			#extract if any message from server and display it
-			if msg_json['message']:
-				print(msg_json['message'])
 
-			if self.multiserver_mode: 
+			if self.multiserver_mode:
+				# check if multiserver_mode
+
+				#save the unique port addresses
 				if not msg_json['port'] in self.port_buffer:
 					self.port_buffer.append(msg_json['port'])
-				# append recovered unique port and frame to queue
-				self.queue.append((msg_json['port'],frame))
+			
+				#extract if any message from server and display it
+				if msg_json['message']:
+					self.queue.append((msg_json['port'], msg_json['message'], frame))
+				else:
+					# append recovered unique port and frame to queue
+					self.queue.append((msg_json['port'],frame))
 			else:
 				# append recovered frame to queue
 				self.queue.append(frame)
+
 		# finally properly close the socket
 		self.msg_socket.close()
 
@@ -453,7 +459,7 @@ class NetGear:
 			# otherwise prepare normal json dict and assign values
 			msg_dict = dict(terminate_flag = exit_flag,
 							message = message if not(message is None) else '',
-							pattern = self.pattern,
+							pattern = str(self.pattern),
 							dtype = str(frame.dtype),
 							shape = frame.shape)
 
