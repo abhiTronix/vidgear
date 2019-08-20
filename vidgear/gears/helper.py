@@ -28,6 +28,7 @@ THE SOFTWARE.
 # import the neccesary packages
 import os, sys
 import cv2
+import numpy as np
 from pkg_resources import parse_version
 
 
@@ -70,7 +71,6 @@ def dict2Args(param_dict):
 	return args
 
 
-
 def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_download_path = '', logging = False):
 	"""
 	Validate the FFmpeg path/binaries and returns valid FFmpeg file executable location(also downloads static binaries on windows) 
@@ -93,7 +93,7 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 					ffmpeg_download_path = tempfile.gettempdir()
 
 				if logging:
-					print('FFmpeg Windows Download Path: {}'.format(ffmpeg_download_path))
+					print('[LOG]: FFmpeg Windows Download Path: {}'.format(ffmpeg_download_path))
 
 				#download Binaries
 				_path = download_ffmpeg_binaries(path = ffmpeg_download_path, os_windows = is_windows)
@@ -104,7 +104,7 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 				#log if any error occured
 				if logging:
 					print(e)
-					print('Error downloading FFmpeg binaries, Check your network and Try again!')
+					print('[LOG]: Error downloading FFmpeg binaries, Check your network and Try again!')
 				return False
 		if os.path.isfile(final_path):
 			#check if valid FFmpeg file exist
@@ -115,7 +115,7 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 		else:
 			#else return False
 			if logging:
-				print('No valid FFmpeg executables found at Custom FFmpeg path!')
+				print('[LOG]: No valid FFmpeg executables found at Custom FFmpeg path!')
 			return False
 	else:
 		#otherwise perform test for Unix
@@ -130,14 +130,14 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 			else:
 				#else return False
 				if logging:
-					print('No valid FFmpeg executables found at Custom FFmpeg path!')
+					print('[LOG]: No valid FFmpeg executables found at Custom FFmpeg path!')
 				return False
 		else:
 			#otherwise assign ffmpeg binaries from system
 			final_path += "ffmpeg"
 
 	if logging:
-		print('Final FFmpeg Path: {}'.format(final_path))
+		print('[LOG]: Final FFmpeg Path: {}'.format(final_path))
 
 	# Final Auto-Validation for FFmeg Binaries. returns final path if test is passed
 	if validate_ffmpeg(final_path, logging = logging):
@@ -210,13 +210,13 @@ def validate_ffmpeg(path, logging = False):
 		version = firstline.split(b' ')[2].strip()
 		if logging:
 			#log if test are passed 
-			print('FFmpeg validity Test Passed!')
-			print('Found valid FFmpeg Version: `{}` installed on this system'.format(version))
+			print('[LOG]: FFmpeg validity Test Passed!')
+			print('[LOG]: Found valid FFmpeg Version: `{}` installed on this system'.format(version))
 	except Exception as e:
 		#log if test are failed
 		if logging:
 			print(e)
-			print('FFmpeg validity Test Failed!')
+			print('[LOG]: FFmpeg validity Test Failed!')
 		return False
 	return True
 

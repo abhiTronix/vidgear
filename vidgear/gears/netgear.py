@@ -28,7 +28,7 @@ from threading import Thread
 from pkg_resources import parse_version
 import numpy as np
 import time
-
+import random
 
 
 try:
@@ -51,20 +51,23 @@ class NetGear:
 	This is achieved by implementing a high-level wrapper around PyZmQ python library that contains python bindings for ZeroMQ - a 
 	high-performance asynchronous distributed messaging library that aim to be used in distributed or concurrent applications. 
 	It provides a message queue, but unlike message-oriented middleware, a ZeroMQ system can run without a dedicated message broker. 
-	Furthermore, NetGear currently supports two ZeroMQ messaging patterns: i.e zmq.PAIR and zmq.REQ and zmq.REP and the supported 
-	protocol are: 'tcp', 'upd', 'pgm', 'inproc', 'ipc'.
+	Furthermore, NetGear currently supports three ZeroMQ messaging patterns: i.e zmq.PAIR, zmq.REQ and zmq.REP,and zmq.PUB,zmq.SUB whereas
+	supported protocol are: 'tcp', 'upd', 'pgm', 'inproc', 'ipc'.
 
-	Threaded Queue Mode => Sequentially adds and releases frames to/from deque and handles overflow of this queue. It utilizes 
-	deques that support thread-safe, memory efficient appends and pops from either side of the deque with approximately the 
-	same O(1) performance in either direction.  
+	Multi-Server Mode:  This mode in NetGear API can robustly handle multiple servers at once through exclusive Publish/Subscribe (zmq.PUB/zmq.SUB) 
+						messaging pattern for seamless Live Streaming across various device at the same time. Each device new server on network is 
+						identied using its unique port address. Also, when all the connected servers on the network get disconnected, the client 
+						itself automatically exits too. This mode can be activated through`multiserver_mode` option boolean attribute during 
+						netgear initialization easily.
 
 	:param address(string): sets the valid network address of the server/client. Network addresses unique identifiers across the 
 							network. Its default value of this parameter is based on mode it is working, 'localhost' for Send Mode
 							and `*` for Receive Mode.
 
-	:param port(string): sets the valid network port of the server/client. A network port is a number that identifies one side 
+	:param port(string/dict/list): sets the valid network port of the server/client. A network port is a number that identifies one side 
 							of a connection between two devices on network. It is used determine to which process or application 
-							a message should be delivered. Its default value is `5555` .
+							a message should be delivered. In Multi-Server Mode a unique port number must required at each server, and a
+							list/tuple of port addresses of each connected server is required at clients end.
 
 	:param protocol(string): sets the valid messaging protocol between server and client. A network protocol is a set of established rules
 							 that dictates how to format, transmit and receive data so computer network devices - from servers and 
@@ -81,6 +84,9 @@ class NetGear:
 														interleaved or distributed to both the servers. socket zmq.REQ will block 
 														on send unless it has successfully received a reply back and socket zmq.REP 
 														will block on recv unless it has received a request.
+								2. zmq.PUB,zmq.SUB -> Publish/Subscribe is another classic pattern where senders of messages, called publishers, 
+														do not program the messages to be sent directly to specific receivers, called subscribers. 
+														Messages are published without the knowledge of what or if any subscriber of that knowledge exists.
 							Its default value is `0`(i.e zmq.PAIR).
 
 	:param (boolean) receive_mode: set this flag to select the Netgear's Mode of operation. This basically activates `Receive Mode`(if True) and `Send Mode`(if False). 
@@ -112,14 +118,14 @@ class NetGear:
 
 		#log and enable threaded queue mode
 		if logging:
-			print('Threaded Mode is enabled by default for NetGear.')
+			print('[LOG]:Threaded Mode is enabled by default for NetGear.')
 		#import deque
 		from collections import deque
 		#define deque and assign it to global var
 		self.queue = deque(maxlen=96) #max len 96 to check overflow
 
-		#define valid messaging pattern `0`: zmq.PAIR and `1`:(zmq.REQ,zmq.REP)
-		valid_messaging_patterns = {0:(zmq.PAIR,zmq.PAIR), 1:(zmq.REQ,zmq.REP)}
+		#define valid messaging pattern `0`: zmq.PAIR, `1`:(zmq.REQ,zmq.REP), and `1`:(zmq.SUB,zmq.PUB)
+		valid_messaging_patterns = {0:(zmq.PAIR,zmq.PAIR), 1:(zmq.REQ,zmq.REP), 2:(zmq.PUB,zmq.SUB)}
 
 		# initialize messaging pattern
 		msg_pattern = None
@@ -134,29 +140,39 @@ class NetGear:
 			msg_pattern = valid_messaging_patterns[self.pattern]
 			if logging:
 				#log it
-				print('Wrong pattern, Defaulting to `zmq.PAIR`! Kindly refer Docs for more Information.')
+				print('[LOG]: Wrong pattern value, Defaulting to `zmq.PAIR`! Kindly refer Docs for more Information.')
 		
 		#check  whether user-defined messaging protocol is valid
-		if not (protocol is None) and protocol in ['tcp', 'upd', 'pgm', 'inproc', 'ipc']:
+		if protocol in ['tcp', 'upd', 'pgm', 'inproc', 'ipc']:
 			pass
 		else:
 			# else default to `tcp` protocol
 			protocol = 'tcp'
 			if logging:
 				#log it
-				print('Protocol is not valid or provided. Defaulting to `tcp` protocol! Kindly refer Docs for more Information.')
+				print('[LOG]:protocol is not valid or provided. Defaulting to `tcp` protocol!')
 
+		#generate random device id
+		self.id = ''.join(random.choice('0123456789ABCDEF') for i in range(5))
 
 		self.msg_flag = 0 #handles connection flags
 		self.msg_copy = False #handles whether to copy data
 		self.msg_track = False #handles whether to track packets
+
+		self.multiserver_mode = False #handles multiserver_mode state
+		recv_filter = '' #user-defined filter to allow specific port/servers only in multiserver_mode
+		
 		try: 
 			#reformat dict
-			options = {k.strip(): v for k,v in options.items()}
-			# apply attributes to source if specified and valid
+			options = {k.lower().strip(): v for k,v in options.items()}
+			# assign values to global variables if specified and valid
 			for key, value in options.items():
-				if key == 'flag' and isinstance(value, str):
-					self.msg_flag = getattr(zmq, value)
+				if key == 'multiserver_mode' and isinstance(value, bool) and self.pattern == 2:
+					self.multiserver_mode = value
+				elif key == 'filter' and isinstance(value, str):
+					recv_filter = value
+				elif key == 'flag' and isinstance(value, int):
+					self.msg_flag = value
 				elif key == 'copy' and isinstance(value, bool):
 					self.msg_copy = value
 				elif key == 'track' and isinstance(value, bool):
@@ -166,9 +182,8 @@ class NetGear:
 		except Exception as e:
 			# Catch if any error occurred
 			if logging:
-				print(e)
-
-
+				print('[Exception]: '+ e)
+			
 		# enable logging if specified
 		self.logging = logging
 
@@ -186,69 +201,111 @@ class NetGear:
 
 		#check whether `receive_mode` is enabled by user
 		if receive_mode:
-			# if does than define connection address and port
-			if address is None: #define address
-				address = '*'
-			if port is None: #define port
-				port = '5555'
 
-			if logging:
-				import random
-				#generate and log random device id for server-side debugging
-				self.id = ''.join(random.choice('0123456789ABCDEF') for i in range(5))
-				print('This device ID is {}.'.format(self.id))
+			# if does than define connection address
+			if address is None: #define address
+				address = 'localhost' if self.multiserver_mode else '*' 
+			
+			#check if multiserver_mode is enabled
+			if self.multiserver_mode:
+				# check if unique server port address list/tuple is assigned or not in multiserver_mode
+				if port is None or not isinstance(port, (tuple, list)):
+					# raise error if not
+					raise ValueError('Incorrect port value! Kindly provide a list/tuple of ports at Receiver-end while Multi-Server mode is enabled. For more information refer VidGear docs.')
+				else:
+					#otherwise log it
+					print('[LOG]: Enabling Multi-Server Mode at PORTS: {}!'.format(port))
+				#create port address buffer for keeping track of incoming server's port
+				self.port_buffer = []
+			else:
+				# otherwise assign local port address
+				port = '5555'
 
 			try:
 				# initialize and define thread-safe messaging socket
 				self.msg_socket = self.msg_context.socket(msg_pattern[1])
-				# bind socket to given protocol, address and port
-				self.msg_socket.bind(protocol+'://' + str(address) + ':' + str(port))
-				# define socket receive timeout
-				self.msg_socket.setsockopt(zmq.LINGER, 0)
-				if logging:
-					#log it on success
-					print('Successfully Binded to address: {}.'.format(protocol+'://' + str(address) + ':' + str(port)))
+
+				if self.multiserver_mode:
+					#if multiserver_mode is enabled assign port addresses to zmq socket
+					for pt in port:
+						# connect socket to given server protocol, address and ports
+						self.msg_socket.connect(protocol+'://' + str(address) + ':' + str(pt))
+						self.msg_socket.setsockopt(zmq.LINGER, 0)
+					# define socket options
+					self.msg_socket.setsockopt_string(zmq.SUBSCRIBE, recv_filter)
+				else:
+					# otherwise bind socket to given protocol, address and port normally
+					self.msg_socket.bind(protocol+'://' + str(address) + ':' + str(port))
+					# define exclusive socket options for patterns
+					if self.pattern == 2:
+						self.msg_socket.setsockopt_string(zmq.SUBSCRIBE,'')
+					else:
+						self.msg_socket.setsockopt(zmq.LINGER, 0)					
+
 			except Exception as e:
-				# otherwise raise value error
+				# otherwise raise value error if errored
 				raise ValueError('Failed to bind address: {} and pattern: {}! Kindly recheck all parameters.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
 			
 			# initialize and start threading instance
 			self.thread = Thread(target=self.update, args=())
 			self.thread.daemon = True
 			self.thread.start()
-			if logging:
-				#log it 
-				print('Multi-threaded Receive Mode is enabled Successfully!')
-		else:
-			#otherwise default to `Send Mode
 
-			# if does than define connection address and port`
+			if logging:
+				#log progress
+				print('[LOG]: Successfully Binded to address: {}.'.format(protocol+'://' + str(address) + ':' + str(port)))
+				print('[LOG]: Multi-threaded Receive Mode is enabled Successfully!')
+				print('[LOG]: This device Unique ID is {}.'.format(self.id))
+				print('[LOG]: Receive Mode is activated successfully!')
+		else:
+
+			#otherwise default to `Send Mode`
+
 			if address is None: #define address
-				address = 'localhost'
-			if port is None: #define port
-				port = '5555'
+				address = '*' if self.multiserver_mode else 'localhost'
+
+			#check if multiserver_mode is enabled
+			if self.multiserver_mode:
+				# check if unique server port address is assigned or not in multiserver_mode
+				if port is None:
+					#raise error is not
+					raise ValueError('Incorrect port value! Kindly provide a unique & valid port value at Server-end while Multi-Server mode is enabled. For more information refer VidGear docs.')
+				else:
+					#otherwise log it
+					print('[LOG]: Enabling Multi-Server Mode at PORT: {} on this device!'.format(port))
+					#assign value to global variable
+					self.port = port
+			else:
+				port = 5555  #define port normally
+				
 			try:
 				# initialize and define thread-safe messaging socket
 				self.msg_socket = self.msg_context.socket(msg_pattern[0])
-				if self.pattern == 1:
-					# if pattern is 1, define additional flags
-					self.msg_socket.REQ_RELAXED = True
-					self.msg_socket.REQ_CORRELATE = True
-				# bind socket to given protocol, address and port
-				self.msg_socket.connect(protocol+'://' + str(address) + ':' + str(port))
-				# define socket receive timeout
-				self.msg_socket.setsockopt(zmq.LINGER, 0)
-				if logging:
-					#log it
-					print('Successfully connected to address: {}.'.format(protocol+'://' + str(address) + ':' + str(port)))
+
+				if self.multiserver_mode:
+					# connect socket to protocol, address and a unique port if multiserver_mode is activated
+					self.msg_socket.bind(protocol+'://' + str(address) + ':' + str(port))
+				else:
+					if self.pattern == 1:
+						# if pattern is 1, define additional flags
+						self.msg_socket.REQ_RELAXED = True
+						self.msg_socket.REQ_CORRELATE = True
+
+					# connect socket to given protocol, address and port
+					self.msg_socket.connect(protocol+'://' + str(address) + ':' + str(port))
+
+					# define socket options
+					self.msg_socket.setsockopt(zmq.LINGER, 0)
+
 			except Exception as e:
 				# otherwise raise value error
 				raise ValueError('Failed to connect address: {} and pattern: {}! Kindly recheck all parameters.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
 
 			if logging:
-				#log it
-				print('Send Mode is successfully activated and ready to send data!')
-
+				#log progress
+				print('[LOG]: Successfully connected to address: {}.'.format(protocol+'://' + str(address) + ':' + str(port)))
+				print('[LOG]: This device Unique ID is {}.'.format(self.id))
+				print('[LOG]: Send Mode is successfully activated and ready to send data!')
 
 
 	def update(self):
@@ -259,6 +316,7 @@ class NetGear:
 		frame = None
 		# keep looping infinitely until the thread is terminated
 		while not self.exit_loop:
+
 			# check if global termination_flag is enabled  
 			if self.terminate:
 				# check whether there is still frames in queue before breaking out
@@ -274,31 +332,65 @@ class NetGear:
 				#stop iterating if overflowing occurs
 				time.sleep(0.000001)
 				continue
-
 			# extract json data out of socket
 			msg_json = self.msg_socket.recv_json(flags=self.msg_flag)
-			# check if terminate_flag` is enabled in json
+
+			# check if terminate_flag` received
 			if msg_json['terminate_flag']:
-				if self.pattern == 1:
-					# if pattern is 1, then send back server the info about termination
-					self.msg_socket.send_string('Termination received on port: {} !'.format(self.id))
-				#assign values to global termination flag
-				self.terminate = msg_json['terminate_flag']
+				#if multiserver_mode is enabled 
+				if self.multiserver_mode:
+					# check from which ports signal is received
+					self.port_buffer.remove(msg_json['port'])
+					#if termination signal received from all servers then exit client.
+					if not self.port_buffer:
+						print('Termination signal received from all Servers!!!')
+						self.terminate = True #termination
+					continue
+				else:
+					if self.pattern == 1:
+						# if pattern is 1, then send back server the info about termination
+						self.msg_socket.send_string('Termination signal received from server!')
+					#termination
+					self.terminate = msg_json['terminate_flag']
+					continue
+
+			try:
+				#check if pattern is same at both server's and client's end.
+				assert int(msg_json['pattern']) == self.pattern
+			except AssertionError as e:
+				#otherwise raise error and exit 
+				raise ValueError("Messaging pattern on the Server-end & Client-end must a valid pairs! Kindly refer VidGear docs.")
+				self.terminate = True
 				continue
+
 			# extract array from socket
 			msg_data = self.msg_socket.recv(flags=self.msg_flag, copy=self.msg_copy, track=self.msg_track)
-			# send confirmation message to server for debugging
-			self.msg_socket.send_string('Data received on port: {} !'.format(self.id))
+
+			if self.pattern != 2:
+				# send confirmation message to server for debugging
+				self.msg_socket.send_string('Data received on device: {} !'.format(self.id))
+
 			# recover frame from array buffer
 			frame_buffer = np.frombuffer(msg_data, dtype=msg_json['dtype'])
 			# reshape frame
 			frame = frame_buffer.reshape(msg_json['shape'])
-			#extract if any message from server and display it
-			if msg_json['message']:
-				print(msg_json['message'])
 
-			# append recovered frame to queue
-			self.queue.append(frame)
+			if self.multiserver_mode:
+				# check if multiserver_mode
+
+				#save the unique port addresses
+				if not msg_json['port'] in self.port_buffer:
+					self.port_buffer.append(msg_json['port'])
+			
+				#extract if any message from server and display it
+				if msg_json['message']:
+					self.queue.append((msg_json['port'], msg_json['message'], frame))
+				else:
+					# append recovered unique port and frame to queue
+					self.queue.append((msg_json['port'],frame))
+			else:
+				# append recovered frame to queue
+				self.queue.append(frame)
 
 		# finally properly close the socket
 		self.msg_socket.close()
@@ -353,22 +445,37 @@ class NetGear:
 			else:
 				#otherwise make it contiguous
 				frame = np.ascontiguousarray(frame, dtype=frame.dtype)
-		# prepare the json dict and assign values
-		msg_dict = dict(terminate_flag = exit_flag,
-						message = message if not(message is None) else '',
-						dtype = str(frame.dtype),
-						shape = frame.shape)
+
+		#check if multiserver_mode is activated
+		if self.multiserver_mode:
+			# prepare the exclusive json dict and assign values with unique port
+			msg_dict = dict(terminate_flag = exit_flag,
+							port = self.port,
+							pattern = str(self.pattern),
+							message = message if not(message is None) else '',
+							dtype = str(frame.dtype),
+							shape = frame.shape)
+		else:
+			# otherwise prepare normal json dict and assign values
+			msg_dict = dict(terminate_flag = exit_flag,
+							message = message if not(message is None) else '',
+							pattern = str(self.pattern),
+							dtype = str(frame.dtype),
+							shape = frame.shape)
+
 		# send the json dict
 		self.msg_socket.send_json(msg_dict, self.msg_flag|self.zmq.SNDMORE)
 		# send the frame array with correct flags
 		self.msg_socket.send(frame, flags = self.msg_flag, copy=self.msg_copy, track=self.msg_track)
 		# wait for confirmation
-		if self.logging:
-			# log confirmation 
-			print(self.msg_socket.recv())
-		else:
-			# otherwise be quiet
-			self.msg_socket.recv()
+
+		if self.pattern != 2:
+			if self.logging:
+				# log confirmation 
+				print(self.msg_socket.recv())
+			else:
+				# otherwise be quiet
+				self.msg_socket.recv()
 
 
 
@@ -378,7 +485,7 @@ class NetGear:
 		"""
 		if self.logging:
 			#log it
-			print('\n Terminating various {} Processes \n'.format('Receive Mode' if self.receive_mode else 'Send Mode'))
+			print(' \n[LOG]: Terminating various {} Processes \n'.format('Receive Mode' if self.receive_mode else 'Send Mode'))
 		#  whether `receive_mode` is enabled or not
 		if self.receive_mode:
 			# indicate that process should be terminated
@@ -391,12 +498,18 @@ class NetGear:
 			# wait until stream resources are released (producer thread might be still grabbing frame)
 			if self.thread is not None: 
 				self.thread.join()
+				self.thread = None
 				#properly handle thread exit
 		else:
-			# otherwise indicate that the thread should be terminated
+			# otherwise in `send_mode`, inform client(s) that the termination is reached
 			self.terminate = True
-			# send termination flag to client
-			term_dict = dict(terminate_flag = True)
+			#check if multiserver_mode
+			if self.multiserver_mode:
+				# send termination flag to client with its unique port
+				term_dict = dict(terminate_flag = True, port = self.port)
+			else:
+				# otherwise send termination flag to client
+				term_dict = dict(terminate_flag = True)
 			self.msg_socket.send_json(term_dict)
 			# properly close the socket
 			self.msg_socket.close()

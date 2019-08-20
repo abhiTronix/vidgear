@@ -133,9 +133,9 @@ class CamGear:
 					if _source is None:
 						_source = source_object.getbest("any", ftypestrict=False)
 					if logging:
-						print('URL: {}'.format(url))
-						print('Title: {}'.format(source_object.title))
-						print('Extension: {}'.format(_source.extension))
+						print('[LOG]: URL: {}'.format(url))
+						print('[LOG]: Title: {}'.format(source_object.title))
+						print('[LOG]: Extension: {}'.format(_source.extension))
 					source = _source.url
 			except Exception as e:
 				if logging:
@@ -162,7 +162,7 @@ class CamGear:
 			self.queue = deque(maxlen=96) #max len 96 to check overflow
 			#log it
 			if logging:
-				print('Enabling Threaded Queue Mode for the current video source!') 
+				print('[LOG]: Enabling Threaded Queue Mode for the current video source!') 
 		else:
 			#otherwise disable it
 			self.threaded_queue_mode = False
@@ -289,13 +289,13 @@ class CamGear:
 					else:
 						self.color_space = None
 						if self.logging:
-							print('Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
+							print('[LOG]: Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None
 					if self.logging:
 						print(e)
-						print('Input Colorspace is not a valid Colorspace!')
+						print('[LOG]: Input Colorspace is not a valid Colorspace!')
 
 				if not(color_frame is None):
 					self.frame = color_frame

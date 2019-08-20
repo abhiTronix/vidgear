@@ -53,7 +53,7 @@ with open("README.md", "r") as fh:
 setup(
     name='vidgear',
     packages=['vidgear','vidgear.gears'],
-    version='0.1.5',
+    version='0.1.6-dev',
     description='Powerful python Video Processing library built with Multi-Threaded Gears(a.k.a APIs) each with a unique set of trailblazing features.',
     license='MIT License',
     author='abhiTronix',
@@ -64,7 +64,7 @@ setup(
     long_description_content_type="text/markdown",
     author_email='abhi.una12@gmail.com',
     url='https://github.com/abhiTronix/vidgear',
-    download_url='https://github.com/abhiTronix/vidgear/tarball/0.1.5',
+    download_url='https://github.com/abhiTronix/vidgear/tarball/0.1.6-dev',
     keywords=['opencv', 'multithreading', 'FFmpeg', 'picamera', 'mss', 'pyzmq', 'pafy', 'Video Processing', 'Video Stablization', 'Computer Vision'],
     classifiers=[
     'Development Status :: 5 - Production/Stable',

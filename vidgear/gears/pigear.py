@@ -160,7 +160,7 @@ class PiGear:
 			# preparation for the next frame
 				if stream is None:
 					if self.logging:
-						print('The Camera Module is not working Properly!')
+						print('[LOG]: The Camera Module is not working Properly!')
 					self.terminate = True
 				if self.terminate:
 					break
@@ -177,14 +177,14 @@ class PiGear:
 						else:
 							self.color_space = None
 							if self.logging:
-								print('Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
+								print('[LOG]: Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
 								
 					except Exception as e:
 						# Catch if any error occurred
 						self.color_space = None
 						if self.logging:
 							print(e)
-							print('Input Colorspace is not a valid Colorspace!')
+							print('[LOG]: Input Colorspace is not a valid Colorspace!')
 
 					if not(color_frame is None):
 						self.frame = color_frame

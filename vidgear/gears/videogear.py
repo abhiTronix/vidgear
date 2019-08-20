@@ -105,7 +105,7 @@ class VideoGear:
 			self.stabilizer_obj = Stabilizer(smoothing_radius = s_radius, border_type = border_type, border_size = border_size, logging = logging)
 			#log info
 			if logging:
-				print('Enabling Stablization Mode for the current video source!')
+				print('[LOG]: Enabling Stablization Mode for the current video source!')
 
 		if enablePiCamera:
 			# only import the pigear module only if required

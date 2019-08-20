@@ -118,8 +118,8 @@ def test_youtube_playback():
 				if height == 0 or width == 0:
 					fps = stream.framerate
 					height,width = frame.shape[:2]
-			print('WIDTH: {} HEIGHT: {} FPS: {}'.format(true_video_param[0],true_video_param[1],true_video_param[2]))
-			print('WIDTH: {} HEIGHT: {} FPS: {}'.format(width,height,fps))
+			print('[LOG]: WIDTH: {} HEIGHT: {} FPS: {}'.format(true_video_param[0],true_video_param[1],true_video_param[2]))
+			print('[LOG]: WIDTH: {} HEIGHT: {} FPS: {}'.format(width,height,fps))
 		except Exception as error:
 			print(error)
 			errored = True
@@ -127,10 +127,10 @@ def test_youtube_playback():
 		if not errored:
 			assert true_video_param[0] == width and true_video_param[1] == height and true_video_param[2] == fps
 		else:
-			print('YouTube playback Test is skipped due to above error!')
+			print('[LOG]: YouTube playback Test is skipped due to above error!')
 
 	else:
-		print('YouTube playback Test is skipped due to bug with opencv-python library builds on windows and macOS!')
+		print('[LOG]: YouTube playback Test is skipped due to bug with opencv-python library builds on windows and macOS!')
 
 
 
@@ -151,7 +151,7 @@ def test_network_playback():
 			Output_data.append(frame)
 			i+=1
 		output_stream.stop()
-		print('Output data shape:', np.array(Output_data).shape)
+		print('[LOG]: Output data shape:', np.array(Output_data).shape)
 	except Exception as e:
 		pytest.fail(str(e))
 

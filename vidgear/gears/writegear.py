@@ -148,7 +148,7 @@ class WriteGear:
 		if self.compression:
 
 			if self.logging:
-				print('Compression Mode is enabled therefore checking for valid FFmpeg executables!')
+				print('[LOG]: Compression Mode is enabled therefore checking for valid FFmpeg executables!')
 				print(self.output_parameters)
 
 			# handles where to save the downloaded FFmpeg Static Binaries on Windows(if specified)
@@ -169,12 +169,12 @@ class WriteGear:
 			if actual_command:
 				self.ffmpeg += actual_command #assign it to class variable
 				if self.logging:
-					print('Found valid FFmpeg executables: `{}`'.format(self.ffmpeg))
+					print('[LOG]: Found valid FFmpeg executables: `{}`'.format(self.ffmpeg))
 			else:
 				#otherwise disable Compression Mode
 				if self.logging and not self.os_windows:
-					print('Kindly install working FFmpeg or provide a valid custom FFmpeg Path')
-				print('Caution: Disabling Video Compression Mode since no valid FFmpeg executables found on this machine!')
+					print('[LOG]: Kindly install working FFmpeg or provide a valid custom FFmpeg Path')
+				print('[LOG]: Caution: Disabling Video Compression Mode since no valid FFmpeg executables found on this machine!')
 				self.compression = False # compression mode disabled
 
 		#validate this class has the access rights to specified directory or not
@@ -184,10 +184,10 @@ class WriteGear:
 		if self.compression and self.ffmpeg:
 			self.DEVNULL = open(os.devnull, 'wb') 
 			if self.logging:
-				print('Compression Mode is configured properly!')
+				print('[LOG]: Compression Mode is configured properly!')
 		else:
 			if self.logging:
-				print('Compression Mode is disabled, Activating OpenCV In-built Writer!')
+				print('[LOG]: Compression Mode is disabled, Activating OpenCV In-built Writer!')
 
 
 
@@ -214,7 +214,7 @@ class WriteGear:
 			self.inputwidth = width
 			self.inputchannels = channels
 			if self.logging:
-				print('InputFrame => Height:{} Width:{} Channels:{}'.format(self.inputheight, self.inputwidth, self.inputchannels))
+				print('[LOG]: InputFrame => Height:{} Width:{} Channels:{}'.format(self.inputheight, self.inputwidth, self.inputchannels))
 
 		#validate size of frame
 		if height != self.inputheight or width != self.inputwidth:
@@ -250,7 +250,7 @@ class WriteGear:
 				assert self.process is not None
 				if self.logging:
 					# log OpenCV warning
-					print('Warning: RGBA and 16-bit grayscale video frames are not supported by OpenCV yet, switch to `compression_mode` to use them!')
+					print('[WARNING]: RGBA and 16-bit grayscale video frames are not supported by OpenCV yet, switch to `compression_mode` to use them!')
 			#write the frame
 			self.process.write(frame)
 
@@ -388,7 +388,7 @@ class WriteGear:
 
 		if self.logging:
 			#log values for debugging
-			print('FILE_PATH: {}, FOURCC = {}, FPS = {}, WIDTH = {}, HEIGHT = {}, BACKEND = {}'.format(self.out_file,FOURCC, FPS, WIDTH, HEIGHT, BACKEND))
+			print('[LOG]: FILE_PATH: {}, FOURCC = {}, FPS = {}, WIDTH = {}, HEIGHT = {}, BACKEND = {}'.format(self.out_file,FOURCC, FPS, WIDTH, HEIGHT, BACKEND))
 
 		#start different process for with/without Backend.
 		if BACKEND: 
