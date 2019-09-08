@@ -26,8 +26,11 @@ THE SOFTWARE.
 # import the necessary packages
 from threading import Thread
 from pkg_resources import parse_version
+from .helper import check_python_version
+from .helper import generate_auth_certificates
 import numpy as np
 import time
+import os
 import random
 
 
@@ -118,7 +121,7 @@ class NetGear:
 
 		#log and enable threaded queue mode
 		if logging:
-			print('[LOG]:Threaded Mode is enabled by default for NetGear.')
+			print('[LOG]: Threaded Mode is enabled by default for NetGear.')
 		#import deque
 		from collections import deque
 		#define deque and assign it to global var
@@ -150,7 +153,7 @@ class NetGear:
 			protocol = 'tcp'
 			if logging:
 				#log it
-				print('[LOG]:protocol is not valid or provided. Defaulting to `tcp` protocol!')
+				print('[LOG]: protocol is not valid or provided. Defaulting to `tcp` protocol!')
 
 		#generate random device id
 		self.id = ''.join(random.choice('0123456789ABCDEF') for i in range(5))
@@ -161,16 +164,41 @@ class NetGear:
 
 		self.multiserver_mode = False #handles multiserver_mode state
 		recv_filter = '' #user-defined filter to allow specific port/servers only in multiserver_mode
+
+		valid_security_mech = {0:'Grasslands', 1:'Stonehouse', 2:'Ironhouse'}
+		self.secure_mode = 0
+		self.auth_cert_location = ''
+		overwrite_cert = False
+		custom_cert_location = ''
 		
 		try: 
 			#reformat dict
 			options = {k.lower().strip(): v for k,v in options.items()}
 			# assign values to global variables if specified and valid
 			for key, value in options.items():
+
 				if key == 'multiserver_mode' and isinstance(value, bool) and self.pattern == 2:
 					self.multiserver_mode = value
 				elif key == 'filter' and isinstance(value, str):
 					recv_filter = value
+
+				elif key == 'secure_mode' and isinstance(value,int) and (value in valid_security_mech):
+					try:
+						assert check_python_version() >= 3,"[ERROR]: ZMQ Security feature is not available with python version < 3.0."
+						assert zmq.zmq_version_info() >= (4,0), "[ERROR]: ZMQ Security feature is not supported in libzmq version < 4.0."
+						self.secure_mode = value
+					except AssertionError as e:
+						print(e)
+				elif key == 'custom_cert_location' and isinstance(value,str):
+					try:
+						assert os.access(value, os.W_OK), "[ERROR]: Permission Denied!, cannot write ZMQ authentication certificates to '{}' directory!".format(value)
+						assert not(os.path.isfile(value)), "[ERROR]: `custom_cert_location` value must be the path to a directory and not to a file!"
+						custom_cert_location = os.path.abspath(value)
+					except AssertionError as e:
+						print(e)
+				elif key == 'overwrite_cert' and isinstance(value,bool):
+					overwrite_cert = value
+
 				elif key == 'flag' and isinstance(value, int):
 					self.msg_flag = value
 				elif key == 'copy' and isinstance(value, bool):
@@ -182,7 +210,35 @@ class NetGear:
 		except Exception as e:
 			# Catch if any error occurred
 			if logging:
-				print('[Exception]: '+ e)
+				print(e)
+
+
+		if self.secure_mode:
+
+			if logging and overwrite_cert: print('[WARNING]: Overwriting ZMQ Authentication certificates over previous ones!')
+
+			try:
+				if custom_cert_location:
+					if os.path.isdir(custom_cert_location):
+						self.auth_cert_location = generate_auth_certificates(custom_cert_location, overwrite = overwrite_cert)
+					else:
+						raise ValueError("[ERROR]: Invalid `custom_cert_location` value!")
+				else:
+					from os.path import expanduser
+					self.auth_cert_location = generate_auth_certificates(os.path.join(expanduser("~"),".vidgear"), overwrite = overwrite_cert)
+
+				if logging:
+					print('[LOG]: Successfully enabled ZMQ Security Mechanism: `{}` for this connection.'.format(valid_security_mech[self.secure_mode]))
+					print('[LOG]: `{}` is the default location for storing ZMQ authentication certificates/keys.'.format(self.auth_cert_location))
+
+			except Exception as e:
+				# Catch if any error occurred
+				print(e)
+				self.secure_mode = 0
+				print('[WARNING]: ZMQ Security Mechanism is disabled for this connection!')
+		else:
+			if logging: print('[LOG]: ZMQ Security Mechanism is disabled for this connection!')
+
 			
 		# enable logging if specified
 		self.logging = logging
