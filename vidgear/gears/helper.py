@@ -288,17 +288,18 @@ def generate_auth_certificates(path, overwrite = False):
 			if key_file.endswith(".key"):
 				shutil.move(os.path.join(keys_dir, key_file), public_keys_dir)
 			elif key_file.endswith(".key_secret"):
-				shutil.move(os.path.join(keys_dir, key_file), public_keys_dir)
+				shutil.move(os.path.join(keys_dir, key_file), secret_keys_dir)
 			else:
-				os.remove(key_file)
-
+				redundant_key = os.path.join(keys_dir,key_file)
+				if os.path.isfile(redundant_key):
+					os.remove(redundant_key)
 	else:
 
 		status_public_keys = validate_auth_keys(public_keys_dir, '.key')
 		status_private_keys = validate_auth_keys(secret_keys_dir, '.key_secret')
 
 		if status_private_keys and status_public_keys:
-			return keys_dir
+			return (keys_dir, secret_keys_dir, public_keys_dir)
 
 		if not(status_public_keys):
 			try:
@@ -336,7 +337,7 @@ def generate_auth_certificates(path, overwrite = False):
 	if not(status_private_keys) or not(status_public_keys):
 		raise RuntimeError('[Error]: Unable to create ZMQ all authentication certificates at `{}`!'.format(keys_dir))
 
-	return keys_dir
+	return (keys_dir, secret_keys_dir, public_keys_dir)
 
 
 def validate_auth_keys(path, extension):
