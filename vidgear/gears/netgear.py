@@ -284,13 +284,17 @@ class NetGear:
 				port = '5555'
 
 			try:
-				if self.secure_mode == 2 and not(self.multiserver_mode):
+				if self.secure_mode > 0 and not(self.multiserver_mode):
 					# Start an authenticator for this context.
 					auth = ThreadAuthenticator(self.msg_context)
 					auth.start()
 					auth.allow(str(address))
 					# Tell authenticator to use the certificate in a directory
-					auth.configure_curve(domain='*', location=self.auth_publickeys_dir)
+					if self.secure_mode == 2:
+						auth.configure_curve(domain='*', location=self.auth_publickeys_dir)
+					else:
+						# Tell the authenticator how to handle CURVE requests
+						auth.configure_curve(domain='*', location=zmq.auth.CURVE_ALLOW_ANY)
 
 				# initialize and define thread-safe messaging socket
 				self.msg_socket = self.msg_context.socket(msg_pattern[1])
@@ -298,7 +302,7 @@ class NetGear:
 				if self.multiserver_mode:
 					#if multiserver_mode is enabled assign port addresses to zmq socket
 					for pt in port:
-						if self.secure_mode == 2: #IronHouse security mechanism
+						if self.secure_mode > 0: 
 							client_secret_file = os.path.join(self.auth_secretkeys_dir, "client.key_secret")
 							client_public, client_secret = zmq.auth.load_certificate(client_secret_file)
 							self.msg_socket.curve_secretkey = client_secret
@@ -316,7 +320,7 @@ class NetGear:
 				else:
 					# otherwise bind socket to given protocol, address and port normally
 
-					if self.secure_mode == 2: #IronHouse security mechanism
+					if self.secure_mode > 0:
 						server_secret_file = os.path.join(self.auth_secretkeys_dir, "server.key_secret")
 						server_public, server_secret = zmq.auth.load_certificate(server_secret_file)
 						self.msg_socket.curve_secretkey = server_secret
@@ -371,19 +375,23 @@ class NetGear:
 				port = 5555  #define port normally
 				
 			try:
-				if self.secure_mode == 2 and self.multiserver_mode:
+				if self.secure_mode > 0 and self.multiserver_mode:
 					# Start an authenticator for this context.
 					auth = ThreadAuthenticator(self.msg_context)
 					auth.start()
 					auth.allow(str(address))
 					# Tell authenticator to use the certificate in a directory
-					auth.configure_curve(domain='*', location=self.auth_publickeys_dir)
+					if self.secure_mode == 2:
+						auth.configure_curve(domain='*', location=self.auth_publickeys_dir)
+					else:
+						# Tell the authenticator how to handle CURVE requests
+						auth.configure_curve(domain='*', location=zmq.auth.CURVE_ALLOW_ANY)
 
 				# initialize and define thread-safe messaging socket
 				self.msg_socket = self.msg_context.socket(msg_pattern[0])
 
 				if self.multiserver_mode:
-					if self.secure_mode == 2: #IronHouse security mechanism
+					if self.secure_mode > 0: 
 						server_secret_file = os.path.join(self.auth_secretkeys_dir, "server.key_secret")
 						server_public, server_secret = zmq.auth.load_certificate(server_secret_file)
 						self.msg_socket.curve_secretkey = server_secret
@@ -397,7 +405,7 @@ class NetGear:
 						self.msg_socket.REQ_RELAXED = True
 						self.msg_socket.REQ_CORRELATE = True
 
-					if self.secure_mode == 2: #IronHouse security mechanism
+					if self.secure_mode > 0: 
 						client_secret_file = os.path.join(self.auth_secretkeys_dir, "client.key_secret")
 						client_public, client_secret = zmq.auth.load_certificate(client_secret_file)
 						self.msg_socket.curve_secretkey = client_secret
