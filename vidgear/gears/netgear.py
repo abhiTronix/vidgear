@@ -57,11 +57,27 @@ class NetGear:
 	Furthermore, NetGear currently supports three ZeroMQ messaging patterns: i.e zmq.PAIR, zmq.REQ and zmq.REP,and zmq.PUB,zmq.SUB whereas
 	supported protocol are: 'tcp', 'upd', 'pgm', 'inproc', 'ipc'.
 
-	Multi-Server Mode:  This mode in NetGear API can robustly handle multiple servers at once through exclusive Publish/Subscribe (zmq.PUB/zmq.SUB) 
+	Multi-Server Mode:  This mode enables NetGear API to robustly handle multiple servers at once through exclusive Publish/Subscribe (zmq.PUB/zmq.SUB) 
 						messaging pattern for seamless Live Streaming across various device at the same time. Each device new server on network is 
-						identied using its unique port address. Also, when all the connected servers on the network get disconnected, the client 
+						identified using its unique port address. Also, when all the connected servers on the network get disconnected, the client 
 						itself automatically exits too. This mode can be activated through`multiserver_mode` option boolean attribute during 
-						netgear initialization easily.
+						NetGear API initialization easily.
+
+	Secure Mode: This mode provides secure ZeroMQ's Security Layers for NetGear API that enables strong encryption on data, and (as far as we know) unbreakable 
+				 authentication between the Server and the Client with the help of custom auth certificates/keys. It's default value is `Grassland`:0 => which means no
+				 security at all. 
+
+				 This mode supports the two most powerful ZMQ security mechanisms:
+
+				 * `StoneHouse`: 1 => which switches to the "CURVE" security mechanism, giving us strong encryption on data, and unbreakable authentication. 
+									  Stonehouse is the minimum you would use over public networks and assures clients that they are speaking to an authentic server while allowing any client 
+									  to connect. It is less secure but at the same time faster than IronHouse security mechanism.
+
+				 * 	`IronHouse`: 2 => which extends Stonehouse with client public key authentication. This is the strongest security model ZMQ have today, 
+										protecting against every attack we know about, except end-point attacks (where an attacker plants spyware on a machine 
+										to capture data before it's encrypted, or after it's decrypted). IronHouse enhanced security comes at a price of additional latency.
+
+
 
 	:param address(string): sets the valid network address of the server/client. Network addresses unique identifiers across the 
 							network. Its default value of this parameter is based on mode it is working, 'localhost' for Send Mode
@@ -97,9 +113,9 @@ class NetGear:
 									when this flag is disabled(i.e.`Send Mode`). Checkout VidGear docs for usage details.
 									Its default value is False(i.e. Send Mode is activated by default).
 
-	:param **options(dict): can be used to pass parameters to NetGear Class. 
-							/This attribute provides the flexibility to manipulate ZeroMQ input parameters 
-							/directly. Checkout vidgear docs for usage details.
+	:param **options(dict): can be used to pass flexible parameters to NetGear API. 
+							This attribute provides the flexibility to manipulate ZeroMQ internal parameters 
+							directly. Checkout vidgear docs for usage details.
 
 	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 
@@ -112,7 +128,7 @@ class NetGear:
 			import zmq
 			#import ZMQError
 			from zmq.error import ZMQError
-			#assign values to global variable
+			#assign values to global variable for further use
 			self.zmq = zmq
 			self.ZMQError = ZMQError
 		except ImportError as error:
@@ -127,7 +143,7 @@ class NetGear:
 		#define deque and assign it to global var
 		self.queue = deque(maxlen=96) #max len 96 to check overflow
 
-		#define valid messaging pattern `0`: zmq.PAIR, `1`:(zmq.REQ,zmq.REP), and `1`:(zmq.SUB,zmq.PUB)
+		#define valid messaging patterns => `0`: zmq.PAIR, `1`:(zmq.REQ,zmq.REP), and `1`:(zmq.SUB,zmq.PUB)
 		valid_messaging_patterns = {0:(zmq.PAIR,zmq.PAIR), 1:(zmq.REQ,zmq.REP), 2:(zmq.PUB,zmq.SUB)}
 
 		# initialize messaging pattern
@@ -165,33 +181,38 @@ class NetGear:
 		self.multiserver_mode = False #handles multiserver_mode state
 		recv_filter = '' #user-defined filter to allow specific port/servers only in multiserver_mode
 
+		#define valid  ZMQ security mechanisms => `0`: Grasslands, `1`:StoneHouse, and `1`:IronHouse
 		valid_security_mech = {0:'Grasslands', 1:'StoneHouse', 2:'IronHouse'}
-		self.secure_mode = 0
-		auth_cert_dir = ''
-		self.auth_publickeys_dir = ''
-		self.auth_secretkeys_dir = ''
-		overwrite_cert = False
-		custom_cert_location = ''
+		self.secure_mode = 0 #handles ZMQ security layer status
+		auth_cert_dir = '' #handles valid ZMQ certificates dir 
+		self.auth_publickeys_dir = '' #handles valid ZMQ public certificates dir
+		self.auth_secretkeys_dir = '' #handles valid ZMQ private certificates dir
+		overwrite_cert = False #checks if certificates overwriting allowed
+		custom_cert_location = '' #handles custom ZMQ certificates path
 		
 		try: 
 			#reformat dict
 			options = {k.lower().strip(): v for k,v in options.items()}
+
 			# assign values to global variables if specified and valid
 			for key, value in options.items():
-
 				if key == 'multiserver_mode' and isinstance(value, bool) and self.pattern == 2:
+					# multi-server mode
 					self.multiserver_mode = value
 				elif key == 'filter' and isinstance(value, str):
+					#custom filter in multi-server mode
 					recv_filter = value
 
 				elif key == 'secure_mode' and isinstance(value,int) and (value in valid_security_mech):
+					#secure mode 
 					try:
-						assert check_python_version() >= 3,"[ERROR]: ZMQ Security feature is not available with python version < 3.0."
+						assert check_python_version() >= 3, "[ERROR]: ZMQ Security feature is not available with python version < 3.0."
 						assert zmq.zmq_version_info() >= (4,0), "[ERROR]: ZMQ Security feature is not supported in libzmq version < 4.0."
 						self.secure_mode = value
 					except AssertionError as e:
 						print(e)
 				elif key == 'custom_cert_location' and isinstance(value,str):
+					# custom auth certificates path
 					try:
 						assert os.access(value, os.W_OK), "[ERROR]: Permission Denied!, cannot write ZMQ authentication certificates to '{}' directory!".format(value)
 						assert not(os.path.isfile(value)), "[ERROR]: `custom_cert_location` value must be the path to a directory and not to a file!"
@@ -199,8 +220,10 @@ class NetGear:
 					except AssertionError as e:
 						print(e)
 				elif key == 'overwrite_cert' and isinstance(value,bool):
+					# enable/disable auth certificate overwriting
 					overwrite_cert = value
 
+				# various ZMQ flags 
 				elif key == 'flag' and isinstance(value, int):
 					self.msg_flag = value
 				elif key == 'copy' and isinstance(value, bool):
@@ -214,34 +237,38 @@ class NetGear:
 			if logging:
 				print(e)
 
-
+		#handle secure mode 
 		if self.secure_mode:
-
-			#import libraries
+			#import important libs
 			import zmq.auth
 			from zmq.auth.thread import ThreadAuthenticator
 
+			# log if overwriting is enabled 
 			if logging and overwrite_cert: print('[WARNING]: Overwriting ZMQ Authentication certificates over previous ones!')
 
+			#generate and validate certificates path
 			try:
+				#check if custom certificates path is specified
 				if custom_cert_location:
-					if os.path.isdir(custom_cert_location):
+					if os.path.isdir(custom_cert_location): #custom certificate location must be a directory
 						(auth_cert_dir, self.auth_secretkeys_dir, self.auth_publickeys_dir) = generate_auth_certificates(custom_cert_location, overwrite = overwrite_cert)
 					else:
 						raise ValueError("[ERROR]: Invalid `custom_cert_location` value!")
 				else:
+					# otherwise auto-generate suitable path
 					from os.path import expanduser
 					(auth_cert_dir, self.auth_secretkeys_dir, self.auth_publickeys_dir) = generate_auth_certificates(os.path.join(expanduser("~"),".vidgear"), overwrite = overwrite_cert)
-
-				if logging:
-					print('[LOG]: `{}` is the default location for storing ZMQ authentication certificates/keys.'.format(auth_cert_dir))
-
+				
+				#log it
+				if logging: print('[LOG]: `{}` is the default location for storing ZMQ authentication certificates/keys.'.format(auth_cert_dir))
 			except Exception as e:
-				# Catch if any error occurred
+				# catch if any error occurred
 				print(e)
+				# also disable secure mode
 				self.secure_mode = 0
 				print('[WARNING]: ZMQ Security Mechanism is disabled for this connection!')
 		else:
+			#log if disabled
 			if logging: print('[LOG]: ZMQ Security Mechanism is disabled for this connection!')
 
 			
@@ -258,8 +285,7 @@ class NetGear:
 		self.receive_mode = receive_mode
 
 		# define messaging context instance
-		self.msg_context = zmq.Context.instance() # TODO changed
-
+		self.msg_context = zmq.Context.instance()
 
 		#check whether `receive_mode` is enabled by user
 		if receive_mode:
@@ -284,49 +310,60 @@ class NetGear:
 				port = '5555'
 
 			try:
+				# initiate and handle secure mode
 				if self.secure_mode > 0 and not(self.multiserver_mode):
-					# Start an authenticator for this context.
+					# start an authenticator for this context
 					auth = ThreadAuthenticator(self.msg_context)
 					auth.start()
-					auth.allow(str(address))
-					# Tell authenticator to use the certificate in a directory
+					auth.allow(str(address)) #allow current address
+
+					#check if `IronHouse` is activated
 					if self.secure_mode == 2:
+						# tell authenticator to use the certificate from given valid dir
 						auth.configure_curve(domain='*', location=self.auth_publickeys_dir)
 					else:
-						# Tell the authenticator how to handle CURVE requests
+						#otherwise tell the authenticator how to handle the CURVE requests, if `StoneHouse` is activated
 						auth.configure_curve(domain='*', location=zmq.auth.CURVE_ALLOW_ANY)
 
 				# initialize and define thread-safe messaging socket
 				self.msg_socket = self.msg_context.socket(msg_pattern[1])
 
 				if self.multiserver_mode:
-					#if multiserver_mode is enabled assign port addresses to zmq socket
+					# if multiserver_mode is enabled, then assign port addresses to zmq socket
 					for pt in port:
-						if self.secure_mode > 0: 
+						# enable specified secure mode for the zmq socket
+						if self.secure_mode > 0:
+							# load client key
 							client_secret_file = os.path.join(self.auth_secretkeys_dir, "client.key_secret")
-							client_public, client_secret = zmq.auth.load_certificate(client_secret_file)
+							client_public, client_secret = zmq.auth.load_certificate(client_secret_file) 
+							# load  all CURVE keys
 							self.msg_socket.curve_secretkey = client_secret
 							self.msg_socket.curve_publickey = client_public
-
+							# load server key
 							server_public_file = os.path.join(self.auth_publickeys_dir, "server.key")
 							server_public, _ = zmq.auth.load_certificate(server_public_file)
-							# The client must know the server's public key to make a CURVE connection.
+							# inject public key to make a CURVE connection.
 							self.msg_socket.curve_serverkey = server_public
+
 						# connect socket to given server protocol, address and ports
 						self.msg_socket.connect(protocol+'://' + str(address) + ':' + str(pt))
 						self.msg_socket.setsockopt(zmq.LINGER, 0)
 					# define socket options
 					self.msg_socket.setsockopt_string(zmq.SUBSCRIBE, recv_filter)
-				else:
-					# otherwise bind socket to given protocol, address and port normally
 
+				else:
+					# enable specified secure mode for the zmq socket
 					if self.secure_mode > 0:
+						# load server key
 						server_secret_file = os.path.join(self.auth_secretkeys_dir, "server.key_secret")
 						server_public, server_secret = zmq.auth.load_certificate(server_secret_file)
+						# load  all CURVE keys
 						self.msg_socket.curve_secretkey = server_secret
 						self.msg_socket.curve_publickey = server_public
-						self.msg_socket.curve_server = True  # must come before bind
+						# enable CURVE connection for this socket
+						self.msg_socket.curve_server = True
 
+					# bind socket to given protocol, address and port normally
 					self.msg_socket.bind(protocol+'://' + str(address) + ':' + str(port))
 					# define exclusive socket options for patterns
 					if self.pattern == 2:
@@ -336,6 +373,7 @@ class NetGear:
 
 			except Exception as e:
 				# otherwise raise value error if errored
+				if self.secure_mode: print('Failed to activate ZMQ Security Mechanism: `{}` for this address!'.format(valid_security_mech[self.secure_mode]))
 				if self.multiserver_mode:
 					raise ValueError('[ERROR]: Multi-Server Mode, failed to connect to ports: {} with pattern: {}! Kindly recheck all parameters.'.format( str(port), pattern))
 				else:
@@ -347,14 +385,13 @@ class NetGear:
 			self.thread.start()
 
 			if logging:
-				#log progress
+				#finally log progress
 				print('[LOG]: Successfully Binded to address: {}.'.format(protocol+'://' + str(address) + ':' + str(port)))
+				if self.secure_mode: print('[LOG]: Enabled ZMQ Security Mechanism: `{}` for this address, Successfully!'.format(valid_security_mech[self.secure_mode]))
 				print('[LOG]: Multi-threaded Receive Mode is enabled Successfully!')
-				print('[LOG]: This device Unique ID is {}.'.format(self.id))
+				print('[LOG]: Device Unique ID is {}.'.format(self.id))
 				print('[LOG]: Receive Mode is activated successfully!')
-				if self.secure_mode: print('[LOG]: Successfully enabled ZMQ Security Mechanism: `{}` for this connection.'.format(valid_security_mech[self.secure_mode]))
 		else:
-
 			#otherwise default to `Send Mode`
 
 			if address is None: #define address
@@ -375,46 +412,56 @@ class NetGear:
 				port = 5555  #define port normally
 				
 			try:
+				# initiate and handle secure mode
 				if self.secure_mode > 0 and self.multiserver_mode:
-					# Start an authenticator for this context.
+					# start an authenticator for this context
 					auth = ThreadAuthenticator(self.msg_context)
 					auth.start()
-					auth.allow(str(address))
-					# Tell authenticator to use the certificate in a directory
+					auth.allow(str(address)) #allow current address
+
+					#check if `IronHouse` is activated
 					if self.secure_mode == 2:
+						# tell authenticator to use the certificate/key from given valid dir
 						auth.configure_curve(domain='*', location=self.auth_publickeys_dir)
 					else:
-						# Tell the authenticator how to handle CURVE requests
+						#otherwise tell the authenticator how to handle the CURVE requests, if `StoneHouse` is activated
 						auth.configure_curve(domain='*', location=zmq.auth.CURVE_ALLOW_ANY)
 
 				# initialize and define thread-safe messaging socket
 				self.msg_socket = self.msg_context.socket(msg_pattern[0])
 
 				if self.multiserver_mode:
-					if self.secure_mode > 0: 
+					# enable specified secure mode for the zmq socket
+					if self.secure_mode > 0:
+						# load server key
 						server_secret_file = os.path.join(self.auth_secretkeys_dir, "server.key_secret")
 						server_public, server_secret = zmq.auth.load_certificate(server_secret_file)
+						# load  all CURVE keys
 						self.msg_socket.curve_secretkey = server_secret
 						self.msg_socket.curve_publickey = server_public
-						self.msg_socket.curve_server = True  # must come before bind
+						# enable CURVE connection for this socket
+						self.msg_socket.curve_server = True
 					# connect socket to protocol, address and a unique port if multiserver_mode is activated
 					self.msg_socket.bind(protocol+'://' + str(address) + ':' + str(port))
 				else:
+
 					if self.pattern == 1:
 						# if pattern is 1, define additional flags
 						self.msg_socket.REQ_RELAXED = True
 						self.msg_socket.REQ_CORRELATE = True
 
-					if self.secure_mode > 0: 
+					# enable specified secure mode for the zmq socket
+					if self.secure_mode > 0:
+						# load client key
 						client_secret_file = os.path.join(self.auth_secretkeys_dir, "client.key_secret")
-						client_public, client_secret = zmq.auth.load_certificate(client_secret_file)
+						client_public, client_secret = zmq.auth.load_certificate(client_secret_file) 
+						# load  all CURVE keys
 						self.msg_socket.curve_secretkey = client_secret
 						self.msg_socket.curve_publickey = client_public
-
+						# load server key
 						server_public_file = os.path.join(self.auth_publickeys_dir, "server.key")
 						server_public, _ = zmq.auth.load_certificate(server_public_file)
-
-						# The client must know the server's public key to make a CURVE connection.
+						# inject public key to make a CURVE connection.
 						self.msg_socket.curve_serverkey = server_public
 
 					# connect socket to given protocol, address and port
@@ -422,17 +469,20 @@ class NetGear:
 
 					# define socket options
 					self.msg_socket.setsockopt(zmq.LINGER, 0)
-
 			except Exception as e:
-				# otherwise raise value error
+				#log if errored
+				if self.secure_mode: print('Failed to activate ZMQ Security Mechanism: `{}` for this address!'.format(valid_security_mech[self.secure_mode]))
+				# raise value error
 				raise ValueError('Failed to connect address: {} and pattern: {}! Kindly recheck all parameters.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
 
 			if logging:
-				#log progress
+				#finally log progress
 				print('[LOG]: Successfully connected to address: {}.'.format(protocol+'://' + str(address) + ':' + str(port)))
+				if self.secure_mode: print('[LOG]: Enabled ZMQ Security Mechanism: `{}` for this address, Successfully!'.format(valid_security_mech[self.secure_mode]))
 				print('[LOG]: This device Unique ID is {}.'.format(self.id))
 				print('[LOG]: Send Mode is successfully activated and ready to send data!')
-				if self.secure_mode: print('[LOG]: Successfully enabled ZMQ Security Mechanism: `{}` for this connection.'.format(valid_security_mech[self.secure_mode]))
+
+
 
 	def update(self):
 		"""
@@ -469,13 +519,13 @@ class NetGear:
 					self.port_buffer.remove(msg_json['port'])
 					#if termination signal received from all servers then exit client.
 					if not self.port_buffer:
-						print('Termination signal received from all Servers!!!')
+						print('[WARNING]: Termination signal received from all Servers!!!')
 						self.terminate = True #termination
 					continue
 				else:
 					if self.pattern == 1:
 						# if pattern is 1, then send back server the info about termination
-						self.msg_socket.send_string('Termination signal received from server!')
+						self.msg_socket.send_string('[INFO]: Termination signal received from server!')
 					#termination
 					self.terminate = msg_json['terminate_flag']
 					continue
@@ -485,7 +535,7 @@ class NetGear:
 				assert int(msg_json['pattern']) == self.pattern
 			except AssertionError as e:
 				#otherwise raise error and exit 
-				raise ValueError("Messaging pattern on the Server-end & Client-end must a valid pairs! Kindly refer VidGear docs.")
+				raise ValueError("[ERROR]: Messaging patterns on both Server-end & Client-end must a valid pairs! Kindly refer VidGear docs.")
 				self.terminate = True
 				continue
 
@@ -494,7 +544,7 @@ class NetGear:
 
 			if self.pattern != 2:
 				# send confirmation message to server for debugging
-				self.msg_socket.send_string('Data received on device: {} !'.format(self.id))
+				self.msg_socket.send_string('[LOG]: Data received on device: {} !'.format(self.id))
 
 			# recover frame from array buffer
 			frame_buffer = np.frombuffer(msg_data, dtype=msg_json['dtype'])
@@ -532,7 +582,7 @@ class NetGear:
 			pass
 		else:
 			#otherwise raise value error and exit
-			raise ValueError('recv() function cannot be used while receive_mode is disabled. Kindly refer vidgear docs!')
+			raise ValueError('[ERROR]: `recv()` function cannot be used while receive_mode is disabled. Kindly refer vidgear docs!')
 			self.terminate = True
 		# check whether or not termination flag is enabled
 		while not self.terminate:
@@ -558,7 +608,7 @@ class NetGear:
 			pass
 		else:
 			#otherwise raise value error and exit
-			raise ValueError('send() function cannot be used while receive_mode is enabled. Kindly refer vidgear docs!')
+			raise ValueError('[ERROR]: `send()` function cannot be used while receive_mode is enabled. Kindly refer vidgear docs!')
 			self.terminate = True
 
 		# define exit_flag and assign value
