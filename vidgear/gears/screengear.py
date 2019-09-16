@@ -90,7 +90,7 @@ class ScreenGear:
 		self.mss_object = mss() 
 		# create monitor instance for the user-defined monitor
 		monitor_instance = None
-		if (monitor > 0):
+		if (monitor >= 0):
 			monitor_instance = self.mss_object.monitors[monitor]
 		else:
 			raise ValueError("`monitor` value cannot be negative, Read Docs!")
