@@ -306,8 +306,8 @@ class NetGear:
 				#create port address buffer for keeping track of incoming server's port
 				self.port_buffer = []
 			else:
-				# otherwise assign local port address
-				port = '5555'
+				# otherwise assign local port address if None
+				if port is None: port = '5555'
 
 			try:
 				# initiate and handle secure mode
@@ -409,7 +409,8 @@ class NetGear:
 					#assign value to global variable
 					self.port = port
 			else:
-				port = 5555  #define port normally
+				# otherwise assign local port address if None
+				if port is None: port = '5555'
 				
 			try:
 				# initiate and handle secure mode
