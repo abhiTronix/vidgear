@@ -7,11 +7,11 @@
     * Added exclusive `secure_mode` param for enabling it.
     * Added support for two most powerful `Stonehouse` & `Ironhouse` ZMQ security mechanisms.
     * Added smart auth-certificates/key generation and validation features.
-  * Implemented Robust Multi-Server support for NetGear API.
+  * Implemented Robust Multi-Server support for NetGear API:
     * Enables Multiple Servers messaging support with a single client.
     * Added exclusive `multiserver_mode` param for enabling it.
     * Added ability to send additional data of any datatype along with the frame in realtime in this mode.
-  * Implemented new *Publish/Subscribe(`zmq.PUB/zmq.SUB`)* pattern for seamless Live Streaming.
+  * Implemented new *Publish/Subscribe(`zmq.PUB/zmq.SUB`)* pattern for seamless Live Streaming in NetGear API.
   * Added VidGear's official native support for MacOS environment.
 
 ### Updates/Improvements:
@@ -39,6 +39,7 @@
   * PR #42
   * PR #44
   * PR #52
+  * PR #55
 
 :warning: PyPi Release does NOT contain Tests and Scripts!
 

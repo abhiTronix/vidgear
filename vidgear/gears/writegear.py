@@ -43,7 +43,7 @@ try:
 	else:
 		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
 except ImportError as error:
-	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip install opencv-contrib-python` command.')
+	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
 
 
 

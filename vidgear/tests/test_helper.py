@@ -23,7 +23,7 @@ THE SOFTWARE.
 ===============================================
 """
 
-import os, pytest, tempfile, shutil, platform, tempfile
+import os, pytest, tempfile, shutil, platform
 
 from vidgear.gears.helper import download_ffmpeg_binaries
 from vidgear.gears.helper import validate_ffmpeg
