@@ -23,7 +23,7 @@ THE SOFTWARE.
 ===============================================
 """
 
-import os, pytest, tempfile, shutil, platform
+import os, pytest, tempfile, shutil, platform, tempfile
 
 from vidgear.gears.helper import download_ffmpeg_binaries
 from vidgear.gears.helper import validate_ffmpeg
@@ -49,7 +49,7 @@ def test_ffmpeg_static_installation():
 	"""
 	Auxilary Tests to ensure successful Static FFmpeg Installation on Windows through script
 	"""
-	startpath = os.path.abspath(tempfile.gettempdir(),'Downloads/FFmpeg_static')
+	startpath = os.path.abspath(os.path.join(tempfile.gettempdir(),'Downloads/FFmpeg_static'))
 	for root, dirs, files in os.walk(startpath):
 		level = root.replace(startpath, '').count(os.sep)
 		indent = ' ' * 4 * (level)
