@@ -13,7 +13,7 @@
 #copies or substantial portions of the Software.
 
 #determining system specific temp directory
-TMPDIR=$(dirname "$(mktemp tmp.XXXXXXXXXX -ut)")
+TMPDIR=$(dirname "$(mktemp tmp.XXXXXXXXXX -dt)")
 
 # Creating necessary directories 
 mkdir -p $TMPDIR/Downloads
