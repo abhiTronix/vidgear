@@ -20,6 +20,10 @@
 
 OPENCV_VERSION='4.1.0'
 
+#determining system specific temp directory
+TMPFOLDER=$(python -c 'import tempfile; print(tempfile.gettempdir())')
+
+#determining system Python suffix and  version
 PYTHONSUFFIX=$(python -c 'import platform; a = platform.python_version(); print(".".join(a.split(".")[:2]))')
 PYTHONVERSION=$(python -c 'import platform; print(platform.python_version())')
 
@@ -41,7 +45,7 @@ sudo apt-get install -y libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev gst
 
 echo "Installing OpenCV Library"
 
-cd $HOME
+cd $TMPFOLDER
 
 wget https://github.com/abhiTronix/OpenCV-Travis-Builds/releases/download/latest/OpenCV-$OPENCV_VERSION-$PYTHONVERSION.deb
 

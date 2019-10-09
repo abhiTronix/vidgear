@@ -54,7 +54,7 @@ def check_CV_version():
 
 def capPropId(property):
 	"""
-	Retrieves the Property's Integer(Actual) value. 
+	Retrieves the OpenCV property Integer(Actual) value. 
 	"""
 	return getattr(cv2, property)
 

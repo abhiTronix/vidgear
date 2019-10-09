@@ -26,6 +26,7 @@ THE SOFTWARE.
 import os
 import cv2
 import pytest
+import tempfile
 from vidgear.gears import CamGear
 from .fps import FPS
 
@@ -35,7 +36,7 @@ def return_testvideo_path():
 	"""
 	return Test Video Data path
 	"""
-	path = '{}/Downloads/Test_videos/BigBuckBunny.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
+	path = '{}/Downloads/Test_videos/BigBuckBunny.mp4'.format(tempfile.gettempdir())
 	return os.path.abspath(path)
 
 

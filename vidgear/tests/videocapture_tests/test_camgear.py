@@ -28,6 +28,7 @@ import cv2
 import platform
 import os, time
 import pytest
+import tempfile
 import numpy as np
 
 from vidgear.gears import CamGear
@@ -49,7 +50,7 @@ def return_testvideo_path():
 	"""
 	return Test Video Data path
 	"""
-	path = '{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
+	path = '{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4'.format(tempfile.gettempdir())
 	return os.path.abspath(path)
 
 

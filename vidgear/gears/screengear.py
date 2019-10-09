@@ -39,10 +39,10 @@ try:
 	if parse_version(cv2.__version__) >= parse_version('3'):
 		pass
 	else:
-		raise ImportError('OpenCV library version >= 3.0 is only supported by this library')
+		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
 
 except ImportError as error:
-	raise ImportError('Failed to detect OpenCV executables, install it with `pip install opencv-contrib-python` command.')
+	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
 
 
 
@@ -85,7 +85,7 @@ class ScreenGear:
 			from mss.exception import ScreenShotError
 		except ImportError as error:
 			# otherwise raise import error
-			raise ImportError('python-mss library not found, install it with `pip install mss` command.')
+			raise ImportError('[ERROR]: python-mss library not found, install it with `pip install mss` command.')
 		# create mss object
 		self.mss_object = mss() 
 		# create monitor instance for the user-defined monitor
@@ -93,7 +93,7 @@ class ScreenGear:
 		if (monitor >= 0):
 			monitor_instance = self.mss_object.monitors[monitor]
 		else:
-			raise ValueError("`monitor` value cannot be negative, Read Docs!")
+			raise ValueError("[ERROR]: `monitor` value cannot be negative, Read Docs!")
 
 		# Initialize Queue
 		self.queue = None
@@ -136,7 +136,7 @@ class ScreenGear:
 				self.queue.append(self.frame)
 		except ScreenShotError:
 			#otherwise catch and log errors
-			raise ValueError("ScreenShotError caught: Wrong dimensions passed to python-mss, Kindly Refer Docs!")
+			raise ValueError("[ERROR]: ScreenShotError caught: Wrong dimensions passed to python-mss, Kindly Refer Docs!")
 			if logging:
 				print(self.mss_object.get_error_details())
 				

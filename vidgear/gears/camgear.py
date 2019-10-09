@@ -53,10 +53,10 @@ try:
 	if parse_version(cv2.__version__) >= parse_version('3'):
 		pass
 	else:
-		raise ImportError('OpenCV library version >= 3.0 is only supported by this library')
+		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
 
 except ImportError as error:
-	raise ImportError('Failed to detect OpenCV executables, install it with `pip install opencv-contrib-python` command.')
+	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
 
 
 
@@ -140,7 +140,7 @@ class CamGear:
 			except Exception as e:
 				if logging:
 					print(e)
-				raise ValueError('YouTube Mode is enabled and the input YouTube Url is invalid!')
+				raise ValueError('[ERROR]: YouTube Mode is enabled and the input YouTube Url is invalid!')
 
 		# youtube mode variable initialization
 		self.youtube_mode = y_tube

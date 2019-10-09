@@ -37,11 +37,11 @@ def return_static_ffmpeg():
 	"""
 	path = ''
 	if platform.system() == 'Windows':
-		path += os.path.join(os.environ['USERPROFILE'],'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe')
+		path += os.path.join(tempfile.gettempdir(),'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe')
 	elif platform.system() == 'Darwin':
-		path += os.path.join(os.environ['HOME'],'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg')
+		path += os.path.join(tempfile.gettempdir(),'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg')
 	else:
-		path += os.path.join(os.environ['HOME'],'Downloads/FFmpeg_static/ffmpeg/ffmpeg')
+		path += os.path.join(tempfile.gettempdir(),'Downloads/FFmpeg_static/ffmpeg/ffmpeg')
 	return os.path.abspath(path)
 
 
@@ -49,7 +49,7 @@ def test_ffmpeg_static_installation():
 	"""
 	Auxilary Tests to ensure successful Static FFmpeg Installation on Windows through script
 	"""
-	startpath = os.path.abspath(os.path.join( os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'],'Downloads/FFmpeg_static'))
+	startpath = os.path.abspath(os.path.join(tempfile.gettempdir(),'Downloads/FFmpeg_static'))
 	for root, dirs, files in os.walk(startpath):
 		level = root.replace(startpath, '').count(os.sep)
 		indent = ' ' * 4 * (level)

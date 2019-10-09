@@ -25,6 +25,7 @@ THE SOFTWARE.
 
 import os, platform
 import pytest
+import tempfile
 from vidgear.gears import WriteGear
 from vidgear.gears import VideoGear
 from .fps import FPS
@@ -35,7 +36,7 @@ def return_testvideo_path():
 	"""
 	return Test Video Data path
 	"""
-	path = '{}/Downloads/Test_videos/BigBuckBunny.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
+	path = '{}/Downloads/Test_videos/BigBuckBunny.mp4'.format(tempfile.gettempdir())
 	return os.path.abspath(path)
 
 
@@ -46,11 +47,11 @@ def return_static_ffmpeg():
 	"""
 	path = ''
 	if platform.system() == 'Windows':
-		path += os.path.join(os.environ['USERPROFILE'],'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe')
+		path += os.path.join(tempfile.gettempdir(),'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe')
 	elif platform.system() == 'Darwin':
-		path += os.path.join(os.environ['HOME'],'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg')
+		path += os.path.join(tempfile.gettempdir(),'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg')
 	else:
-		path += os.path.join(os.environ['HOME'],'Downloads/FFmpeg_static/ffmpeg/ffmpeg')
+		path += os.path.join(tempfile.gettempdir(),'Downloads/FFmpeg_static/ffmpeg/ffmpeg')
 	return os.path.abspath(path)
 
 
