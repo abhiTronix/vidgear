@@ -52,7 +52,7 @@ class PiGear:
 	PiGear is similar to CamGear but exclusively made to support various Raspberry Pi Camera Modules 
 	(such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module). To interface with these 
 	modules correctly, PiGear provides a flexible multi-threaded wrapper around complete picamera 
-	python library and provides us the ability to exploit its various features like brightness, saturation, sensor_mode, etc. effortlessly.
+	python library and provides us the ability to exploit its various features like `brightness, saturation, sensor_mode`, etc. effortlessly.
 	
 	:param (tuple) resolution: sets the resolution (width,height). Its default value is (640,480).
 
@@ -81,7 +81,7 @@ class PiGear:
 			#print(cv2.__version__)
 		except ImportError as error:
 			# Output expected ImportErrors.
-			raise ImportError('Failed to detect Picamera executables, install it with "pip install picamera" command.')
+			raise ImportError('[ERROR]: Failed to detect Picamera executables, install it with "pip install picamera" command.')
 
 		# initialize the picamera stream
 		self.camera = PiCamera()

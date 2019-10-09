@@ -41,9 +41,9 @@ try:
 	if parse_version(cv2.__version__) >= parse_version('3'):
 		pass
 	else:
-		raise ImportError('OpenCV library version >= 3.0 is only supported by this library')
+		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
 except ImportError as error:
-	raise ImportError('Failed to detect OpenCV executables, install it with `pip install opencv-contrib-python` command.')
+	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
 
 
 
@@ -133,7 +133,7 @@ class NetGear:
 			self.ZMQError = ZMQError
 		except ImportError as error:
 			#raise error
-			raise ImportError('pyzmq python library not installed. Kindly install it with `pip install pyzmq` command.')
+			raise ImportError('[ERROR]: pyzmq python library not installed. Kindly install it with `pip install pyzmq` command.')
 
 		#log and enable threaded queue mode
 		if logging:
@@ -299,7 +299,7 @@ class NetGear:
 				# check if unique server port address list/tuple is assigned or not in multiserver_mode
 				if port is None or not isinstance(port, (tuple, list)):
 					# raise error if not
-					raise ValueError('Incorrect port value! Kindly provide a list/tuple of ports at Receiver-end while Multi-Server mode is enabled. For more information refer VidGear docs.')
+					raise ValueError('[ERROR]: Incorrect port value! Kindly provide a list/tuple of ports at Receiver-end while Multi-Server mode is enabled. For more information refer VidGear docs.')
 				else:
 					#otherwise log it
 					print('[LOG]: Enabling Multi-Server Mode at PORTS: {}!'.format(port))
@@ -474,7 +474,7 @@ class NetGear:
 				#log if errored
 				if self.secure_mode: print('Failed to activate ZMQ Security Mechanism: `{}` for this address!'.format(valid_security_mech[self.secure_mode]))
 				# raise value error
-				raise ValueError('Failed to connect address: {} and pattern: {}! Kindly recheck all parameters.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
+				raise ValueError('[ERROR]: Failed to connect address: {} and pattern: {}! Kindly recheck all parameters.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
 
 			if logging:
 				#finally log progress

@@ -41,19 +41,18 @@ try:
 	if parse_version(cv2.__version__) >= parse_version('3'):
 		pass
 	else:
-		raise ImportError('OpenCV library version >= 3.0 is only supported by this library')
+		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
 except ImportError as error:
-	raise ImportError('Failed to detect OpenCV executables, install it with `pip install opencv-contrib-python` command.')
+	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip install opencv-contrib-python` command.')
 
 
 
 class WriteGear:
 
 	"""
-	WriteGear solely handles various powerful FFmpeg tools that allow us to do almost anything you can imagine with multimedia files. 
-	With WriteGear API, you can process real-time video frames into a lossless format and specification suitable for our playback in 
-	just a few lines of codes. These specifications include setting bitrate, codec, framerate, resolution, subtitles, compression, etc. 
-	Furthermore, we can multiplex extracted audio at the output with compression and all that in real-time(see this example). 
+	solely handles various powerful FFmpeg tools that allow us to do almost anything you can imagine with multimedia files. 
+	With WriteGear API, you can process real-time video frames into a lossless format and specification suitable for our playback 
+	in just a few lines of codes. These specifications include setting bitrate, codec, framerate, resolution, subtitles, compression, etc.  
 	In addition to this, WriteGear also provides flexible access to OpenCV's VideoWriter API which provide some basic tools 
 	for video frames encoding but without compression.
 
@@ -61,11 +60,11 @@ class WriteGear:
 
 		Compression Mode: In this mode, WriteGear utilizes FFmpeg's inbuilt encoders to encode lossless multimedia files. 
 							It provides us the ability to exploit almost any available parameters available within FFmpeg, with so much ease 
-							and flexibility and while doing that it robustly handles all errors/warnings quietly. You can find more about this mode here.
+							and flexibility and while doing that it robustly handles all errors/warnings quietly. 
 
 		Non-Compression Mode: In this mode, WriteGear utilizes basic OpenCV's inbuilt VideoWriter API. Similar to compression mode, WriteGear also supports 
 							all parameters manipulation available within OpenCV's VideoWriter API. But this mode lacks the ability to manipulate encoding parameters 
-							and other important features like video compression, audio encoding, etc. You can learn about this mode here.
+							and other important features like video compression, audio encoding, etc. 
 
 
 	```Warning: In case, This class fails to detect valid FFmpeg executables on your system, It can automatically fallbacks to Non-Compression Mode.```
@@ -119,7 +118,7 @@ class WriteGear:
 
 		# handles output file name (if not given)
 		if not output_filename:
-			raise ValueError('Kindly provide a valid `output_filename` value, Refer VidGear Docs for more information!')
+			raise ValueError('[ERROR]: Kindly provide a valid `output_filename` value, Refer VidGear Docs for more information!')
 		elif output_filename and os.path.isdir(output_filename): # check if directory path is given instead
 			output_filename = os.path.join(output_filename, 'VidGear-{}.mp4'.format(time.strftime("%Y%m%d-%H%M%S"))) # auto-assign valid name and adds it to path
 		else:
@@ -142,7 +141,7 @@ class WriteGear:
 			except Exception as e:
 				if self.logging:
 					print(e)
-				raise ValueError('Wrong output_params parameters passed to WriteGear class!')
+				raise ValueError('[ERROR]: Wrong output_params parameters passed to WriteGear class!')
 
 		#handles FFmpeg binaries validity tests 
 		if self.compression:
@@ -218,10 +217,10 @@ class WriteGear:
 
 		#validate size of frame
 		if height != self.inputheight or width != self.inputwidth:
-			raise ValueError('All frames in a video should have same size')
+			raise ValueError('[ERROR]: All frames in a video should have same size')
 		#validate number of channels
 		if channels != self.inputchannels:
-			raise ValueError('All frames in a video should have same number of channels')
+			raise ValueError('[ERROR]: All frames in a video should have same number of channels')
 
 		if self.compression:
 			# checks if compression mode is enabled
@@ -238,7 +237,7 @@ class WriteGear:
 				self.process.stdin.write(frame.tostring())
 			except (OSError, IOError):
 				# log something is wrong!
-				print ('BrokenPipeError caught: Wrong Values passed to FFmpeg Pipe, Kindly Refer Docs!')
+				print ('[ERROR]: BrokenPipeError caught: Wrong Values passed to FFmpeg Pipe, Kindly Refer Docs!')
 				self.DEVNULL.close()
 				raise ValueError #for testing purpose only
 		else:
@@ -373,7 +372,7 @@ class WriteGear:
 					FOURCC = cv2.VideoWriter_fourcc(*(value.upper()))
 				elif key == '-fps':
 					FPS = float(value)
-				elif key =='-backend' and value.upper() in ['CAP_FFMPEG','CAP_GSTREAMER']:
+				elif key =='-backend':
 					BACKEND = capPropId(value.upper())
 				elif key == '-color':
 					COLOR = bool(int(value))
@@ -384,7 +383,7 @@ class WriteGear:
 			# log if something is wrong
 			if self.logging:
 				print(e)
-			raise ValueError('Wrong Values passed to OpenCV Writer, Kindly Refer Docs!')
+			raise ValueError('[ERROR]: Wrong Values passed to OpenCV Writer, Kindly Refer Docs!')
 
 		if self.logging:
 			#log values for debugging

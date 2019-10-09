@@ -12,10 +12,12 @@
 #The above copyright notice and this permission notice shall be included in all
 #copies or substantial portions of the Software.
 
+#determining system specific temp directory
+TMPDIR=$(dirname "$(mktemp tmp.XXXXXXXXXX -ut)")
 
 # Creating necessary directories 
-mkdir -p $HOME/Downloads
-mkdir -p $HOME/Downloads/{FFmpeg_static,Test_videos}
+mkdir -p $TMPDIR/Downloads
+mkdir -p $TMPDIR/Downloads/{FFmpeg_static,Test_videos}
 
 # Acknowledging machine architecture
 MACHINE_BIT=$(uname -m)
@@ -38,7 +40,7 @@ esac
 
 
 #Download and Configure FFmpeg Static
-cd $HOME/Downloads/FFmpeg_static
+cd $TMPDIR/Downloads/FFmpeg_static
 
 if [ $OS_NAME = "linux" ]; then
 
@@ -81,7 +83,7 @@ else
 fi
 
 # Downloading Test Data
-cd $HOME/Downloads/Test_videos
+cd $TMPDIR/Downloads/Test_videos
 
 echo "Downloading Test-Data..."
 curl http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 -o BigBuckBunny.mp4

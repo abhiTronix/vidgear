@@ -3,23 +3,42 @@
 ## VidGear 0.1.6-dev
 
 ### New Features:
+  * Added powerful ZMQ Authentication & Data Encryption features for NetGear API:
+    * Added exclusive `secure_mode` param for enabling it.
+    * Added support for two most powerful `Stonehouse` & `Ironhouse` ZMQ security mechanisms.
+    * Added smart auth-certificates/key generation and validation features.
+  * Implemented Robust Multi-Server support for NetGear API.
+    * Enables Multiple Servers messaging support with a single client.
+    * Added exclusive `multiserver_mode` param for enabling it.
+    * Added ability to send additional data of any datatype along with the frame in realtime in this mode.
+  * Implemented new *Publish/Subscribe(`zmq.PUB/zmq.SUB`)* pattern for seamless Live Streaming.
   * Added VidGear's official native support for MacOS environment.
 
 ### Updates/Improvements:
+  * Updated support for screen casting from all monitors in ScreenGear API.
+  * Updated ScreenGear API to use *Threaded Queue Mode* by default, thereby removed redundant `THREADED_QUEUE_MODE` param.
+  * Updated Tests bash scripts to use system-specific **Temp** directory instead of **Home** for downloading content.
+  * Updated Wiki-Documentation with latest examples and Information.
   * Updated Travis CLI Tests with support for macOS environment
-  * Reformatted & implemented necessary changes and dependencies in `travis.yml`.
+  * Reformatted & implemented necessary MacOS related changes and dependencies in `travis.yml`.
 
 ### Breaking Updates / Improvements / Changes
   * `Python 2.7` legacy support removed from CLI tests.
+  * Newly implemented `secure_mode` will only support Python 3 and above legacies.
 
 ### Fixes
-  * Fixed unreliable dataset video file URL(rehosted file on github.com)
-  * Remove duplicate code to import MSS(@BoboTiG) from NetGear
+  * Fixed assigned Port address ignored bug (commit 073bca1)
+  * Fixed several wrong definition bugs from NetGear API(commit 8f7153c).
+  * Fixed unreliable dataset video URL(rehosted file on `github.com`)
+  * Removed duplicate code to import MSS(@BoboTiG) from ScreenGear API.
+  * Fixed Several bugs related to new `secure_mode` & `multiserver_mode` Modes.
   * Fixed various macOS environment bugs
 
 ### Pull requests(PR) involved:
   * PR #39
   * PR #42
+  * PR #44
+  * PR #52
 
 :warning: PyPi Release does NOT contain Tests and Scripts!
 
