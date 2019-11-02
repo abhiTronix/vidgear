@@ -72,7 +72,7 @@ class PiGear:
 
 	"""
 	
-	def __init__(self, resolution=(640, 480), framerate=25, colorspace = None, logging = False, time_delay = 0, **options):
+	def __init__(self, resolution=(640, 480), framerate=30, colorspace = None, logging = False, time_delay = 0, **options):
 
 		try:
 			import picamera
@@ -115,12 +115,15 @@ class PiGear:
 		self.rawCapture = PiRGBArray(self.camera, size=resolution)
 		self.stream = self.camera.capture_continuous(self.rawCapture,format="bgr", use_video_port=True)
 
-		#frame variable initialization		
-		for stream in self.stream:
+		#frame variable initialization
+		try:
+			stream = next(self.stream)
 			self.frame = stream.array
 			self.rawCapture.seek(0)
 			self.rawCapture.truncate()
-			break
+		except Exception as e:
+			print(e)
+			raise RuntimeError('[ERROR]: Camera Module failed to initialize!')
 
 		# applying time delay to warm-up picamera only if specified
 		if time_delay:
@@ -154,50 +157,53 @@ class PiGear:
 		Update frames from stream
 		"""
 		# keep looping infinitely until the thread is terminated
-		try:
-			for stream in self.stream:
+		while True:
+
+			#check for termination flag
+			if self.terminate: break
+
+			try:
+				#Try to iterate next frame from generator
+				stream = next(self.stream)
+			except Exception as e:
+				#Handle if Something is wrong
+				if isinstance(e, (StopIteration, ValueError)):
+					#raise picamera API's failures
+					raise RuntimeError('[ERROR]: Camera Module API failure occured!')
+				if self.logging: print(traceback.format_exc()) #log traceback for debugging errors
+				break
+
 			# grab the frame from the stream and clear the stream in
 			# preparation for the next frame
-				if stream is None:
-					if self.logging:
-						print('[LOG]: The Camera Module is not working Properly!')
-					self.terminate = True
-				if self.terminate:
-					break
-				frame = stream.array
-				self.rawCapture.seek(0)
-				self.rawCapture.truncate()
+			frame = stream.array
+			self.rawCapture.seek(0)
+			self.rawCapture.truncate()
 
-				if not(self.color_space is None):
-					# apply colorspace to frames
-					color_frame = None
-					try:
-						if isinstance(self.color_space, int):
-							color_frame = cv2.cvtColor(frame, self.color_space)
-						else:
-							self.color_space = None
-							if self.logging:
-								print('[LOG]: Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
-								
-					except Exception as e:
-						# Catch if any error occurred
+			#apply colorspace if specified
+			if not(self.color_space is None):
+				# apply colorspace to frames
+				color_frame = None
+				try:
+					if isinstance(self.color_space, int):
+						color_frame = cv2.cvtColor(frame, self.color_space)
+					else:
 						self.color_space = None
 						if self.logging:
-							print(e)
-							print('[LOG]: Input Colorspace is not a valid Colorspace!')
+							print('[LOG]: Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
+							
+				except Exception as e:
+					# Catch if any error occurred
+					self.color_space = None
+					if self.logging:
+						print(e)
+						print('[LOG]: Input Colorspace is not a valid Colorspace!')
 
-					if not(color_frame is None):
-						self.frame = color_frame
-					else:
-						self.frame = frame
+				if not(color_frame is None):
+					self.frame = color_frame
 				else:
 					self.frame = frame
-
-		except Exception as e:
-			if self.logging:
-				print(traceback.format_exc())
-			self.terminate =True
-			pass
+			else:
+				self.frame = frame
 
 		# release picamera resources
 		self.stream.close()
