@@ -26,7 +26,7 @@ THE SOFTWARE.
 # import the packages
 from threading import Thread
 from pkg_resources import parse_version
-import traceback
+import sys, time, platform
 from .helper import capPropId
 
 
@@ -36,9 +36,7 @@ try:
 	import cv2
 
 	# check whether OpenCV Binaries are 3.x+
-	if parse_version(cv2.__version__) >= parse_version('3'):
-		pass
-	else:
+	if parse_version(cv2.__version__) < parse_version('3'):
 		raise ImportError('OpenCV library version >= 3.0 is only supported by this library')
 
 except ImportError as error:
@@ -72,21 +70,29 @@ class PiGear:
 
 	"""
 	
-	def __init__(self, resolution=(640, 480), framerate=30, colorspace = None, logging = False, time_delay = 0, **options):
+	def __init__(self, camera_num = 0, resolution=(640, 480), framerate=30, colorspace = None, logging = False, time_delay = 0, **options):
 
 		try:
 			import picamera
 			from picamera.array import PiRGBArray
 			from picamera import PiCamera
-			#print(cv2.__version__)
-		except ImportError as error:
-			# Output expected ImportErrors.
-			raise ImportError('[ERROR]: Failed to detect Picamera executables, install it with "pip install picamera" command.')
+		except Exception as error:
+			if isinstance(error, ImportError):
+				# Output expected ImportErrors.
+				raise ImportError('[ERROR]: Failed to detect Picamera executables, install it with "pip install picamera" command.')
+			else:
+				#Handle any API errors
+				raise RuntimeError('[ERROR]: Picamera API failure: {}'.format(error))
 
-		# initialize the picamera stream
-		self.camera = PiCamera()
-		self.camera.resolution = resolution
-		self.camera.framerate = framerate
+		# initialize the picamera stream at given index
+		self.camera = None
+		if isinstance(camera_num, int) and camera_num >= 0:
+			self.camera = PiCamera(camera_num = camera_num)
+			self.camera.resolution = resolution
+			self.camera.framerate = framerate
+			if logging: print("[LOG]: Activating Pi camera at index: {}".format(camera_num))
+		else:
+			raise ValueError("[ERROR]: `camera_num` value is invalid, Kindly read docs!")
 
 		#initialize framerate variable
 		self.framerate = framerate
@@ -97,7 +103,18 @@ class PiGear:
 		#reformat dict
 		options = {k.strip(): v for k,v in options.items()}
 
-		try: 
+		#intialize timeout variable(handles hardware failures)
+		self.failure_timeout = 2.0
+
+		#User-Defined parameter
+		if options and "HWFAILURE_TIMEOUT" in options:
+			#for altering timeout variable manually
+			if isinstance(options["HWFAILURE_TIMEOUT"],(int, float)):
+				if not(10.0 > options["HWFAILURE_TIMEOUT"] > 1.0): raise ValueError('[ERROR]: `HWFAILURE_TIMEOUT` value can only be between 1.0 ~ 10.0')
+				self.failure_timeout = options["HWFAILURE_TIMEOUT"] #assign special parameter
+			del options["HWFAILURE_TIMEOUT"] #clean
+
+		try:
 			# apply attributes to source if specified
 			for key, value in options.items():
 				setattr(self.camera, key, value)
@@ -108,11 +125,10 @@ class PiGear:
 
 		except Exception as e:
 			# Catch if any error occurred
-			if logging:
-				print(e)
+			if logging: print(e)
 
 		# enable rgb capture array thread and capture stream
-		self.rawCapture = PiRGBArray(self.camera, size=resolution)
+		self.rawCapture = PiRGBArray(self.camera, size = resolution)
 		self.stream = self.camera.capture_continuous(self.rawCapture,format="bgr", use_video_port=True)
 
 		#frame variable initialization
@@ -127,14 +143,20 @@ class PiGear:
 
 		# applying time delay to warm-up picamera only if specified
 		if time_delay:
-			import time
 			time.sleep(time_delay)
 
 		#thread initialization
 		self.thread = None
 
+		#timer thread initialization(Keeps check on frozen thread)
+		self._timer = None
+		self.t_elasped = 0.0 #records time taken by thread
+
 		# enable logging if specified
 		self.logging = logging
+
+		# catching thread exceptions
+		self.exceptions = None
 
 		# initialize termination flag
 		self.terminate = False
@@ -145,10 +167,37 @@ class PiGear:
 		"""
 		start the thread to read frames from the video stream
 		"""
+		#Start frame producer thread
 		self.thread = Thread(target=self.update, args=())
 		self.thread.daemon = True
 		self.thread.start()
+
+		#Start internal timer thread
+		self._timer = Thread(target=self._timeit, args=())
+		self._timer.daemon = True
+		self._timer.start()
+
 		return self
+
+
+
+	def _timeit(self):
+		"""
+		Keep checks on Thread excecution timing
+		"""
+		#assign current time
+		self.t_elasped = time.time()
+
+		#loop until termainated
+		while not(self.terminate):
+			#check for frozen thread
+			if time.time() - self.t_elasped > self.failure_timeout:
+				#log failure
+				if self.logging: print("[WARNING]: Camera Module Disconnected!")
+
+				#prepare for clean exit
+				self.exceptions = True
+				self.terminate = True #self-terminate
 
 
 
@@ -156,7 +205,7 @@ class PiGear:
 		"""
 		Update frames from stream
 		"""
-		# keep looping infinitely until the thread is terminated
+		#keep looping infinitely until the thread is terminated
 		while True:
 
 			#check for termination flag
@@ -165,13 +214,13 @@ class PiGear:
 			try:
 				#Try to iterate next frame from generator
 				stream = next(self.stream)
-			except Exception as e:
-				#Handle if Something is wrong
-				if isinstance(e, (StopIteration, ValueError)):
-					#raise picamera API's failures
-					raise RuntimeError('[ERROR]: Camera Module API failure occured!')
-				if self.logging: print(traceback.format_exc()) #log traceback for debugging errors
-				break
+			except Exception:
+				#catch and save any exceptions
+				self.exceptions =  sys.exc_info()
+				break #exit
+
+			#update timer
+			self.t_elasped = time.time()
 
 			# grab the frame from the stream and clear the stream in
 			# preparation for the next frame
@@ -205,6 +254,9 @@ class PiGear:
 			else:
 				self.frame = frame
 
+		# terminate processes
+		if not(self.terminate): self.terminate = True
+
 		# release picamera resources
 		self.stream.close()
 		self.rawCapture.close()
@@ -216,6 +268,21 @@ class PiGear:
 		"""
 		return the frame
 		"""
+		#check if there are any thread exceptions
+		if not(self.exceptions is None):
+			if isinstance(self.exceptions, bool):
+				#clear frame
+				self.frame = None
+				#notify user about hardware failure 
+				raise SystemError('[ERROR]: Hardware failure occurred, Kindly reconnect Camera Module and restart your Pi!')
+			else:
+				#clear frame
+				self.frame = None
+				# re-raise error for debugging
+				error_msg = "[ERROR]: Camera Module API failure occured: {}".format(self.exceptions[1])
+				raise RuntimeError(error_msg).with_traceback(self.exceptions[2])
+
+		# return the frame
 		return self.frame
 
 
@@ -224,10 +291,27 @@ class PiGear:
 		"""
 		Terminates the Read process
 		"""
-		# indicate that the thread should be terminated
+		if self.logging: print("[LOG]: Terminating PiGear Process.")
+
+		# make sure that the threads should be terminated
 		self.terminate = True
-		# wait until stream resources are released (producer thread might be still grabbing frame)
-		if self.thread is not None: 
-			self.thread.join()
-			#properly handle thread exit
+
+		#stop timer thread
+		self._timer.join()
+
+		if self.thread is not None:
+			#check if hardware failure occured
+			if not(self.exceptions is None) and isinstance(self.exceptions, bool):
+				# force release picamera resources
+				self.stream.close()
+				self.rawCapture.close()
+				self.camera.close()
+
+				#properly handle thread exit
+				self.thread.terminate()
+				self.thread.wait() #wait if still process is still processing some information
+				self.thread = None
+			else:
+				#properly handle thread exit
+				self.thread.join()
 
