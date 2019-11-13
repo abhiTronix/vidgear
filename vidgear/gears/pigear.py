@@ -26,7 +26,7 @@ THE SOFTWARE.
 # import the packages
 from threading import Thread
 from pkg_resources import parse_version
-import sys, time, platform
+import sys, time
 from .helper import capPropId
 
 
