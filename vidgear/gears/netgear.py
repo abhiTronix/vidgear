@@ -189,6 +189,10 @@ class NetGear:
 		self.auth_secretkeys_dir = '' #handles valid ZMQ private certificates dir
 		overwrite_cert = False #checks if certificates overwriting allowed
 		custom_cert_location = '' #handles custom ZMQ certificates path
+
+		#define stream compression handlers
+		self.compression = '' #disabled by default
+		self.compression_params = None
 		
 		try: 
 			#reformat dict
@@ -222,6 +226,22 @@ class NetGear:
 				elif key == 'overwrite_cert' and isinstance(value,bool):
 					# enable/disable auth certificate overwriting
 					overwrite_cert = value
+
+				# handle encoding and decoding if specified
+				elif key == 'compression_format' and isinstance(value,str) and value.lower().strip() in ['.jpg', '.jpeg', '.bmp', '.png']: #few are supported
+					# enable encoding
+					if not(receive_mode): self.compression = value.lower().strip()
+				elif key == 'compression_param':
+					# specifiy encoding/decoding params
+					if receive_mode and isinstance(value, int):
+						self.compression_params = value
+						if logging: print("[LOG]: Decoding flag: {}.".format(value))
+					elif not(receive_mode) and isinstance(value, (list,tuple)):
+						if logging: print("[LOG]: Encoding parameters: {}.".format(value))
+						self.compression_params = list(value)
+					else:	
+						if logging: print("[WARNING]: Invalid compression parameters: {} skipped!".format(value))
+						self.compression_params = cv2.IMREAD_COLOR if receive_mode else [] # skip to defaults
 
 				# various ZMQ flags 
 				elif key == 'flag' and isinstance(value, int):
@@ -552,6 +572,16 @@ class NetGear:
 			# reshape frame
 			frame = frame_buffer.reshape(msg_json['shape'])
 
+			#check if encoding was enabled
+			if msg_json['compression']: 
+				frame = cv2.imdecode(frame, self.compression_params)
+				#check if valid frame returned
+				if frame is None:
+					#otherwise raise error and exit
+					raise ValueError("[ERROR]: `{}` Frame Decoding failed with Parameter: {}".format(msg_json['compression'], self.compression_params))
+					self.terminate = True
+					continue
+
 			if self.multiserver_mode:
 				# check if multiserver_mode
 
@@ -579,10 +609,8 @@ class NetGear:
 		return the recovered frame
 		"""
 		# check whether `receive mode` is activated
-		if self.receive_mode:
-			pass
-		else:
-			#otherwise raise value error and exit
+		if not(self.receive_mode):
+			#raise value error and exit
 			raise ValueError('[ERROR]: `recv()` function cannot be used while receive_mode is disabled. Kindly refer vidgear docs!')
 			self.terminate = True
 		# check whether or not termination flag is enabled
@@ -605,10 +633,8 @@ class NetGear:
 		:param message(string/int): additional message for the client(s)  
 		"""
 		# check whether `receive_mode` is disabled
-		if not self.receive_mode:
-			pass
-		else:
-			#otherwise raise value error and exit
+		if self.receive_mode:
+			#raise value error and exit
 			raise ValueError('[ERROR]: `send()` function cannot be used while receive_mode is enabled. Kindly refer vidgear docs!')
 			self.terminate = True
 
@@ -623,10 +649,21 @@ class NetGear:
 				#otherwise make it contiguous
 				frame = np.ascontiguousarray(frame, dtype=frame.dtype)
 
+		#handle encoding
+		if self.compression:
+			retval, frame = cv2.imencode(self.compression, frame, self.compression_params)
+			#check if it works
+			if not(retval): 
+				#otherwise raise error and exit
+				raise ValueError("[ERROR]: Frame Encoding failed with format: {} and Parameters: {}".format(self.compression, self.compression_params))
+				self.terminate = True
+
+
 		#check if multiserver_mode is activated
 		if self.multiserver_mode:
 			# prepare the exclusive json dict and assign values with unique port
 			msg_dict = dict(terminate_flag = exit_flag,
+							compression=str(self.compression),
 							port = self.port,
 							pattern = str(self.pattern),
 							message = message if not(message is None) else '',
@@ -635,6 +672,7 @@ class NetGear:
 		else:
 			# otherwise prepare normal json dict and assign values
 			msg_dict = dict(terminate_flag = exit_flag,
+							compression=str(self.compression),
 							message = message if not(message is None) else '',
 							pattern = str(self.pattern),
 							dtype = str(frame.dtype),
