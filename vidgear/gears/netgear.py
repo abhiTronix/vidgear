@@ -28,6 +28,7 @@ from threading import Thread
 from pkg_resources import parse_version
 from .helper import check_python_version
 from .helper import generate_auth_certificates
+from collections import deque
 import numpy as np
 import time
 import os
@@ -135,14 +136,6 @@ class NetGear:
 			#raise error
 			raise ImportError('[ERROR]: pyzmq python library not installed. Kindly install it with `pip install pyzmq` command.')
 
-		#log and enable threaded queue mode
-		if logging:
-			print('[LOG]: Threaded Queue Mode is enabled by default for NetGear.')
-		#import deque
-		from collections import deque
-		#define deque and assign it to global var
-		self.queue = deque(maxlen=96) #max len 96 to check overflow
-
 		#define valid messaging patterns => `0`: zmq.PAIR, `1`:(zmq.REQ,zmq.REP), and `1`:(zmq.SUB,zmq.PUB)
 		valid_messaging_patterns = {0:(zmq.PAIR,zmq.PAIR), 1:(zmq.REQ,zmq.REP), 2:(zmq.PUB,zmq.SUB)}
 
@@ -157,9 +150,8 @@ class NetGear:
 			#otherwise default to 0:`zmq.PAIR`
 			self.pattern = 0
 			msg_pattern = valid_messaging_patterns[self.pattern]
-			if logging:
-				#log it
-				print('[LOG]: Wrong pattern value, Defaulting to `zmq.PAIR`! Kindly refer Docs for more Information.')
+			#log it
+			if logging: print('[LOG]: Wrong pattern value, Defaulting to `zmq.PAIR`! Kindly refer Docs for more Information.')
 		
 		#check  whether user-defined messaging protocol is valid
 		if protocol in ['tcp', 'upd', 'pgm', 'inproc', 'ipc']:
@@ -167,19 +159,22 @@ class NetGear:
 		else:
 			# else default to `tcp` protocol
 			protocol = 'tcp'
-			if logging:
-				#log it
-				print('[LOG]: protocol is not valid or provided. Defaulting to `tcp` protocol!')
+			#log it
+			if logging: print('[LOG]: protocol is not valid or provided. Defaulting to `tcp` protocol!')
 
 		#generate random device id
 		self.id = ''.join(random.choice('0123456789ABCDEF') for i in range(5))
 
 		self.msg_flag = 0 #handles connection flags
-		self.msg_copy = False #handles whether to copy data
+		self.msg_copy = True #handles whether to copy data
 		self.msg_track = False #handles whether to track packets
 
 		self.multiserver_mode = False #handles multiserver_mode state
 		recv_filter = '' #user-defined filter to allow specific port/servers only in multiserver_mode
+
+		#define bi-directional data transmission mode
+		self.bi_mode = False #handles bi_mode state
+		self.bi_data = None #handles return data
 
 		#define valid  ZMQ security mechanisms => `0`: Grasslands, `1`:StoneHouse, and `1`:IronHouse
 		valid_security_mech = {0:'Grasslands', 1:'StoneHouse', 2:'IronHouse'}
@@ -194,68 +189,78 @@ class NetGear:
 		self.compression = '' #disabled by default
 		self.compression_params = None
 		
-		try: 
-			#reformat dict
-			options = {k.lower().strip(): v for k,v in options.items()}
+		#reformat dict
+		options = {k.lower().strip(): v for k,v in options.items()}
 
-			# assign values to global variables if specified and valid
-			for key, value in options.items():
-				if key == 'multiserver_mode' and isinstance(value, bool) and self.pattern == 2:
+		# assign values to global variables if specified and valid
+		for key, value in options.items():
+			if key == 'multiserver_mode' and isinstance(value, bool):
+				if pattern > 0:
 					# multi-server mode
 					self.multiserver_mode = value
-				elif key == 'filter' and isinstance(value, str):
-					#custom filter in multi-server mode
-					recv_filter = value
-
-				elif key == 'secure_mode' and isinstance(value,int) and (value in valid_security_mech):
-					#secure mode 
-					try:
-						assert check_python_version() >= 3, "[ERROR]: ZMQ Security feature is not available with python version < 3.0."
-						assert zmq.zmq_version_info() >= (4,0), "[ERROR]: ZMQ Security feature is not supported in libzmq version < 4.0."
-						self.secure_mode = value
-					except AssertionError as e:
-						print(e)
-				elif key == 'custom_cert_location' and isinstance(value,str):
-					# custom auth certificates path
-					try:
-						assert os.access(value, os.W_OK), "[ERROR]: Permission Denied!, cannot write ZMQ authentication certificates to '{}' directory!".format(value)
-						assert not(os.path.isfile(value)), "[ERROR]: `custom_cert_location` value must be the path to a directory and not to a file!"
-						custom_cert_location = os.path.abspath(value)
-					except AssertionError as e:
-						print(e)
-				elif key == 'overwrite_cert' and isinstance(value,bool):
-					# enable/disable auth certificate overwriting
-					overwrite_cert = value
-
-				# handle encoding and decoding if specified
-				elif key == 'compression_format' and isinstance(value,str) and value.lower().strip() in ['.jpg', '.jpeg', '.bmp', '.png']: #few are supported
-					# enable encoding
-					if not(receive_mode): self.compression = value.lower().strip()
-				elif key == 'compression_param':
-					# specifiy encoding/decoding params
-					if receive_mode and isinstance(value, int):
-						self.compression_params = value
-						if logging: print("[LOG]: Decoding flag: {}.".format(value))
-					elif not(receive_mode) and isinstance(value, (list,tuple)):
-						if logging: print("[LOG]: Encoding parameters: {}.".format(value))
-						self.compression_params = list(value)
-					else:	
-						if logging: print("[WARNING]: Invalid compression parameters: {} skipped!".format(value))
-						self.compression_params = cv2.IMREAD_COLOR if receive_mode else [] # skip to defaults
-
-				# various ZMQ flags 
-				elif key == 'flag' and isinstance(value, int):
-					self.msg_flag = value
-				elif key == 'copy' and isinstance(value, bool):
-					self.msg_copy = value
-				elif key == 'track' and isinstance(value, bool):
-					self.msg_track = value
 				else:
-					pass
-		except Exception as e:
-			# Catch if any error occurred
-			if logging:
-				print(e)
+					self.multiserver_mode = False
+					print('[ALERT]: Multi-Server is disabled!')
+					raise ValueError('[ERROR]: `{}` pattern is not valid when Multi-Server Mode is enabled. Kindly refer Docs for more Information.'.format(pattern))
+			elif key == 'filter' and isinstance(value, str):
+				#custom filter in multi-server mode
+				recv_filter = value
+
+			elif key == 'secure_mode' and isinstance(value,int) and (value in valid_security_mech):
+				#secure mode 
+				try:
+					assert check_python_version() >= 3, "[ERROR]: ZMQ Security feature is not available with python version < 3.0."
+					assert zmq.zmq_version_info() >= (4,0), "[ERROR]: ZMQ Security feature is not supported in libzmq version < 4.0."
+					self.secure_mode = value
+				except Exception as e:
+					print(e)
+			elif key == 'custom_cert_location' and isinstance(value,str):
+				# custom auth certificates path
+				try:
+					assert os.access(value, os.W_OK), "[ERROR]: Permission Denied!, cannot write ZMQ authentication certificates to '{}' directory!".format(value)
+					assert not(os.path.isfile(value)), "[ERROR]: `custom_cert_location` value must be the path to a directory and not to a file!"
+					custom_cert_location = os.path.abspath(value)
+				except Exception as e:
+					print(e)
+			elif key == 'overwrite_cert' and isinstance(value,bool):
+				# enable/disable auth certificate overwriting
+				overwrite_cert = value
+
+			# handle encoding and decoding if specified
+			elif key == 'compression_format' and isinstance(value,str) and value.lower().strip() in ['.jpg', '.jpeg', '.bmp', '.png']: #few are supported
+				# enable encoding
+				if not(receive_mode): self.compression = value.lower().strip()
+			elif key == 'compression_param':
+				# specify encoding/decoding params
+				if receive_mode and isinstance(value, int):
+					self.compression_params = value
+					if logging: print("[LOG]: Decoding flag: {}.".format(value))
+				elif not(receive_mode) and isinstance(value, (list,tuple)):
+					if logging: print("[LOG]: Encoding parameters: {}.".format(value))
+					self.compression_params = list(value)
+				else:	
+					if logging: print("[WARNING]: Invalid compression parameters: {} skipped!".format(value))
+					self.compression_params = cv2.IMREAD_COLOR if receive_mode else [] # skip to defaults
+
+			# enable bi-directional data transmission if specified
+			elif key == 'bidirectional_mode' and isinstance(value, bool):
+				# check if pattern is valid
+				if pattern < 2:
+					self.bi_mode = True
+				else:
+					self.bi_mode = False
+					print('[ALERT]: Bi-Directional data transmission is disabled!')
+					raise ValueError('[ERROR]: `{}` pattern is not valid when Bi-Directional Mode is enabled. Kindly refer Docs for more Information.'.format(pattern))
+
+			# various ZMQ flags 
+			elif key == 'flag' and isinstance(value, int):
+				self.msg_flag = value
+			elif key == 'copy' and isinstance(value, bool):
+				self.msg_copy = value
+			elif key == 'track' and isinstance(value, bool):
+				self.msg_track = value
+			else:
+				pass
 
 		#handle secure mode 
 		if self.secure_mode:
@@ -291,7 +296,14 @@ class NetGear:
 			#log if disabled
 			if logging: print('[LOG]: ZMQ Security Mechanism is disabled for this connection!')
 
-			
+		#disable bi_mode if multi-server is enabled
+		if self.bi_mode:
+			if self.multiserver_mode:
+				self.bi_mode = False
+				print('[ALERT]: Bi-Directional Data Transmission is disabled when Multi-Server Mode is Enabled due to incompatibility!')
+			else:
+				if logging: print('[LOG]: Bi-Directional Data Transmission is enabled for this connection!')
+
 		# enable logging if specified
 		self.logging = logging
 
@@ -319,7 +331,7 @@ class NetGear:
 				# check if unique server port address list/tuple is assigned or not in multiserver_mode
 				if port is None or not isinstance(port, (tuple, list)):
 					# raise error if not
-					raise ValueError('[ERROR]: Incorrect port value! Kindly provide a list/tuple of ports at Receiver-end while Multi-Server mode is enabled. For more information refer VidGear docs.')
+					raise ValueError('[ERROR]: Incorrect port value! Kindly provide a list/tuple of ports while Multi-Server mode is enabled. For more information refer VidGear docs.')
 				else:
 					#otherwise log it
 					print('[LOG]: Enabling Multi-Server Mode at PORTS: {}!'.format(port))
@@ -347,29 +359,30 @@ class NetGear:
 
 				# initialize and define thread-safe messaging socket
 				self.msg_socket = self.msg_context.socket(msg_pattern[1])
+				if self.pattern == 2: self.msg_socket.set_hwm(1)
 
 				if self.multiserver_mode:
 					# if multiserver_mode is enabled, then assign port addresses to zmq socket
 					for pt in port:
 						# enable specified secure mode for the zmq socket
 						if self.secure_mode > 0:
-							# load client key
-							client_secret_file = os.path.join(self.auth_secretkeys_dir, "client.key_secret")
-							client_public, client_secret = zmq.auth.load_certificate(client_secret_file) 
-							# load  all CURVE keys
-							self.msg_socket.curve_secretkey = client_secret
-							self.msg_socket.curve_publickey = client_public
 							# load server key
-							server_public_file = os.path.join(self.auth_publickeys_dir, "server.key")
-							server_public, _ = zmq.auth.load_certificate(server_public_file)
-							# inject public key to make a CURVE connection.
-							self.msg_socket.curve_serverkey = server_public
+							server_secret_file = os.path.join(self.auth_secretkeys_dir, "server.key_secret")
+							server_public, server_secret = zmq.auth.load_certificate(server_secret_file)
+							# load  all CURVE keys
+							self.msg_socket.curve_secretkey = server_secret
+							self.msg_socket.curve_publickey = server_public
+							# enable CURVE connection for this socket
+							self.msg_socket.curve_server = True
 
-						# connect socket to given server protocol, address and ports
-						self.msg_socket.connect(protocol+'://' + str(address) + ':' + str(pt))
-						self.msg_socket.setsockopt(zmq.LINGER, 0)
-					# define socket options
-					self.msg_socket.setsockopt_string(zmq.SUBSCRIBE, recv_filter)
+						# define socket options
+						if self.pattern == 2: self.msg_socket.setsockopt_string(zmq.SUBSCRIBE, recv_filter)
+
+						# bind socket to given server protocol, address and ports
+						self.msg_socket.bind(protocol+'://' + str(address) + ':' + str(pt))
+
+					# define socket optimizer
+					self.msg_socket.setsockopt(zmq.LINGER, 0)
 
 				else:
 					# enable specified secure mode for the zmq socket
@@ -383,14 +396,15 @@ class NetGear:
 						# enable CURVE connection for this socket
 						self.msg_socket.curve_server = True
 
+					# define exclusive socket options for patterns
+					if self.pattern == 2: self.msg_socket.setsockopt_string(zmq.SUBSCRIBE,'')
+
 					# bind socket to given protocol, address and port normally
 					self.msg_socket.bind(protocol+'://' + str(address) + ':' + str(port))
-					# define exclusive socket options for patterns
-					if self.pattern == 2:
-						self.msg_socket.setsockopt_string(zmq.SUBSCRIBE,'')
-					else:
-						self.msg_socket.setsockopt(zmq.LINGER, 0)					
 
+					# define socket optimizer
+					self.msg_socket.setsockopt(zmq.LINGER, 0)
+											
 			except Exception as e:
 				# otherwise raise value error if errored
 				if self.secure_mode: print('Failed to activate ZMQ Security Mechanism: `{}` for this address!'.format(valid_security_mech[self.secure_mode]))
@@ -399,6 +413,11 @@ class NetGear:
 				else:
 					raise ValueError('[ERROR]: Failed to bind address: {} and pattern: {}! Kindly recheck all parameters.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
 			
+			#log and enable threaded queue mode
+			if logging: print('[LOG]: Threaded Queue Mode is enabled by default for NetGear.')
+			#define deque and assign it to global var
+			self.queue = deque(maxlen=96) #max len 96 to check overflow
+
 			# initialize and start threading instance
 			self.thread = Thread(target=self.update, args=())
 			self.thread.daemon = True
@@ -413,7 +432,6 @@ class NetGear:
 				print('[LOG]: Receive Mode is activated successfully!')
 		else:
 			#otherwise default to `Send Mode`
-
 			if address is None: #define address
 				address = '*' if self.multiserver_mode else 'localhost'
 
@@ -422,7 +440,7 @@ class NetGear:
 				# check if unique server port address is assigned or not in multiserver_mode
 				if port is None:
 					#raise error is not
-					raise ValueError('Incorrect port value! Kindly provide a unique & valid port value at Server-end while Multi-Server mode is enabled. For more information refer VidGear docs.')
+					raise ValueError('[ERROR]: Kindly provide a unique & valid port value at Server-end. For more information refer VidGear docs.')
 				else:
 					#otherwise log it
 					print('[LOG]: Enabling Multi-Server Mode at PORT: {} on this device!'.format(port))
@@ -451,45 +469,32 @@ class NetGear:
 				# initialize and define thread-safe messaging socket
 				self.msg_socket = self.msg_context.socket(msg_pattern[0])
 
-				if self.multiserver_mode:
-					# enable specified secure mode for the zmq socket
-					if self.secure_mode > 0:
-						# load server key
-						server_secret_file = os.path.join(self.auth_secretkeys_dir, "server.key_secret")
-						server_public, server_secret = zmq.auth.load_certificate(server_secret_file)
-						# load  all CURVE keys
-						self.msg_socket.curve_secretkey = server_secret
-						self.msg_socket.curve_publickey = server_public
-						# enable CURVE connection for this socket
-						self.msg_socket.curve_server = True
-					# connect socket to protocol, address and a unique port if multiserver_mode is activated
-					self.msg_socket.bind(protocol+'://' + str(address) + ':' + str(port))
-				else:
+				if self.pattern == 1:
+					# if pattern is 1, define additional flags
+					self.msg_socket.REQ_RELAXED = True
+					self.msg_socket.REQ_CORRELATE = True
+				if self.pattern == 2: self.msg_socket.set_hwm(1) # if pattern is 2, define additional optimizer
 
-					if self.pattern == 1:
-						# if pattern is 1, define additional flags
-						self.msg_socket.REQ_RELAXED = True
-						self.msg_socket.REQ_CORRELATE = True
+				# enable specified secure mode for the zmq socket
+				if self.secure_mode > 0:
+					# load client key
+					client_secret_file = os.path.join(self.auth_secretkeys_dir, "client.key_secret")
+					client_public, client_secret = zmq.auth.load_certificate(client_secret_file) 
+					# load  all CURVE keys
+					self.msg_socket.curve_secretkey = client_secret
+					self.msg_socket.curve_publickey = client_public
+					# load server key
+					server_public_file = os.path.join(self.auth_publickeys_dir, "server.key")
+					server_public, _ = zmq.auth.load_certificate(server_public_file)
+					# inject public key to make a CURVE connection.
+					self.msg_socket.curve_serverkey = server_public
 
-					# enable specified secure mode for the zmq socket
-					if self.secure_mode > 0:
-						# load client key
-						client_secret_file = os.path.join(self.auth_secretkeys_dir, "client.key_secret")
-						client_public, client_secret = zmq.auth.load_certificate(client_secret_file) 
-						# load  all CURVE keys
-						self.msg_socket.curve_secretkey = client_secret
-						self.msg_socket.curve_publickey = client_public
-						# load server key
-						server_public_file = os.path.join(self.auth_publickeys_dir, "server.key")
-						server_public, _ = zmq.auth.load_certificate(server_public_file)
-						# inject public key to make a CURVE connection.
-						self.msg_socket.curve_serverkey = server_public
+				# connect socket to given protocol, address and port
+				self.msg_socket.connect(protocol+'://' + str(address) + ':' + str(port))
 
-					# connect socket to given protocol, address and port
-					self.msg_socket.connect(protocol+'://' + str(address) + ':' + str(port))
+				# define socket options
+				self.msg_socket.setsockopt(zmq.LINGER, 0)
 
-					# define socket options
-					self.msg_socket.setsockopt(zmq.LINGER, 0)
 			except Exception as e:
 				#log if errored
 				if self.secure_mode: print('Failed to activate ZMQ Security Mechanism: `{}` for this address!'.format(valid_security_mech[self.secure_mode]))
@@ -511,6 +516,7 @@ class NetGear:
 		"""
 		# initialize frame variable
 		frame = None
+
 		# keep looping infinitely until the thread is terminated
 		while not self.exit_loop:
 
@@ -529,6 +535,7 @@ class NetGear:
 				#stop iterating if overflowing occurs
 				time.sleep(0.000001)
 				continue
+
 			# extract json data out of socket
 			msg_json = self.msg_socket.recv_json(flags=self.msg_flag)
 
@@ -542,6 +549,7 @@ class NetGear:
 					if not self.port_buffer:
 						print('[WARNING]: Termination signal received from all Servers!!!')
 						self.terminate = True #termination
+					if self.logging: print('[ALERT]: Termination signal received from server at port: {}!'.format(msg_json['port']))
 					continue
 				else:
 					if self.pattern == 1:
@@ -549,13 +557,11 @@ class NetGear:
 						self.msg_socket.send_string('[INFO]: Termination signal received from server!')
 					#termination
 					self.terminate = msg_json['terminate_flag']
+					if self.logging: print('[ALERT]: Termination signal received from server!')
 					continue
 
-			try:
-				#check if pattern is same at both server's and client's end.
-				assert int(msg_json['pattern']) == self.pattern
-			except AssertionError as e:
-				#otherwise raise error and exit 
+			#check if pattern is same at both server's and client's end.
+			if int(msg_json['pattern']) != self.pattern:
 				raise ValueError("[ERROR]: Messaging patterns on both Server-end & Client-end must a valid pairs! Kindly refer VidGear docs.")
 				self.terminate = True
 				continue
@@ -564,8 +570,14 @@ class NetGear:
 			msg_data = self.msg_socket.recv(flags=self.msg_flag, copy=self.msg_copy, track=self.msg_track)
 
 			if self.pattern != 2:
-				# send confirmation message to server for debugging
-				self.msg_socket.send_string('[LOG]: Data received on device: {} !'.format(self.id))
+				# check if bi-directional mode is enabled
+				if self.bi_mode:
+					# handle return data
+					bi_dict = dict(data = self.bi_data)
+					self.msg_socket.send_json(bi_dict, self.msg_flag)
+				else:
+					# send confirmation message to server
+					self.msg_socket.send_string('[LOG]: Data received on device: {} !'.format(self.id))
 
 			# recover frame from array buffer
 			frame_buffer = np.frombuffer(msg_data, dtype=msg_json['dtype'])
@@ -604,15 +616,21 @@ class NetGear:
 
 
 
-	def recv(self):
+	def recv(self, return_data = None):
 		"""
 		return the recovered frame
+
+		:param return_data: handles return data for bi-directional mode 
 		"""
 		# check whether `receive mode` is activated
 		if not(self.receive_mode):
 			#raise value error and exit
 			raise ValueError('[ERROR]: `recv()` function cannot be used while receive_mode is disabled. Kindly refer vidgear docs!')
 			self.terminate = True
+		
+		#handle bi-directional return data
+		if (self.bi_mode and not(return_data is None)): self.bi_data = return_data
+
 		# check whether or not termination flag is enabled
 		while not self.terminate:
 			# check if queue is empty
@@ -630,7 +648,7 @@ class NetGear:
 		send the frames over the messaging network
 
 		:param frame(ndarray): frame array to send
-		:param message(string/int): additional message for the client(s)  
+		:param message(string/int): additional message for the client(s) 
 		"""
 		# check whether `receive_mode` is disabled
 		if self.receive_mode:
@@ -640,14 +658,11 @@ class NetGear:
 
 		# define exit_flag and assign value
 		exit_flag = True if (frame is None or self.terminate) else False
+
 		#check whether exit_flag is False
-		if not exit_flag:
+		if not(exit_flag) and not(frame.flags['C_CONTIGUOUS']):
 			#check whether the incoming frame is contiguous
-			if frame.flags['C_CONTIGUOUS']:
-				pass
-			else:
-				#otherwise make it contiguous
-				frame = np.ascontiguousarray(frame, dtype=frame.dtype)
+			frame = np.ascontiguousarray(frame, dtype=frame.dtype)
 
 		#handle encoding
 		if self.compression:
@@ -685,12 +700,17 @@ class NetGear:
 		# wait for confirmation
 
 		if self.pattern != 2:
-			if self.logging:
-				# log confirmation 
-				print(self.msg_socket.recv())
+			#check if bi-directional data transmission is enabled
+			if self.bi_mode:
+				#handle return data
+				return_dict = self.msg_socket.recv_json(flags=self.msg_flag)
+				return return_dict['data'] if return_dict else None
 			else:
-				# otherwise be quiet
-				self.msg_socket.recv()
+				#otherwise log normally
+				recv_confirmation = self.msg_socket.recv()
+				# log confirmation 
+				if self.logging : print(recv_confirmation)
+			
 
 
 
@@ -716,15 +736,19 @@ class NetGear:
 				self.thread = None
 				#properly handle thread exit
 		else:
-			# otherwise in `send_mode`, inform client(s) that the termination is reached
+			# indicate that process should be terminated
 			self.terminate = True
-			#check if multiserver_mode
 			if self.multiserver_mode:
+				#check if multiserver_mode
 				# send termination flag to client with its unique port
 				term_dict = dict(terminate_flag = True, port = self.port)
 			else:
 				# otherwise send termination flag to client
 				term_dict = dict(terminate_flag = True)
-			self.msg_socket.send_json(term_dict)
+			# otherwise inform client(s) that the termination has been reached
+			if self.pattern == 2 or self.bi_mode:
+				for _ in range(500): self.msg_socket.send_json(term_dict)
+			else:
+				self.msg_socket.send_json(term_dict)
 			# properly close the socket
 			self.msg_socket.close()
