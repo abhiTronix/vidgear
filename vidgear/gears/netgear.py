@@ -608,8 +608,12 @@ class NetGear:
 					# append recovered unique port and frame to queue
 					self.queue.append((msg_json['port'],frame))
 			else:
-				# append recovered frame to queue
-				self.queue.append(frame)
+				#extract if any message from server and display it
+				if msg_json['message']:
+					self.queue.append((msg_json['message'], frame))
+				else:
+					# append recovered frame to queue
+					self.queue.append(frame)
 
 		# finally properly close the socket
 		self.msg_socket.close()
