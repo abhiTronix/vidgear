@@ -608,11 +608,12 @@ class NetGear:
 					# append recovered unique port and frame to queue
 					self.queue.append((msg_json['port'],frame))
 			else:
-				#extract if any message from server and display it
-				if msg_json['message']:
+				#extract if any message from server if Bi-Directional Mode is enabled
+				if self.bi_mode and msg_json['message']:
+					# append grouped frame and data to queue
 					self.queue.append((msg_json['message'], frame))
 				else:
-					# append recovered frame to queue
+					# otherwise append recovered frame to queue
 					self.queue.append(frame)
 
 		# finally properly close the socket
