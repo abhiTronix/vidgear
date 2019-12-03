@@ -686,14 +686,14 @@ class NetGear:
 							compression=str(self.compression),
 							port = self.port,
 							pattern = str(self.pattern),
-							message = message if not(message is None) else '',
+							message = message,
 							dtype = str(frame.dtype),
 							shape = frame.shape)
 		else:
 			# otherwise prepare normal json dict and assign values
 			msg_dict = dict(terminate_flag = exit_flag,
 							compression=str(self.compression),
-							message = message if not(message is None) else '',
+							message = message,
 							pattern = str(self.pattern),
 							dtype = str(frame.dtype),
 							shape = frame.shape)
