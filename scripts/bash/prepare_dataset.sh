@@ -16,11 +16,14 @@
 TMPFOLDER=$(python -c 'import tempfile; print(tempfile.gettempdir())')
 
 # Creating necessary directories 
-mkdir -p $TMPFOLDER/Downloads
-mkdir -p $TMPFOLDER/Downloads/{FFmpeg_static,Test_videos}
+mkdir -p "$TMPFOLDER"/Downloads
+mkdir -p "$TMPFOLDER"/Downloads/{FFmpeg_static,Test_videos}
 
 # Acknowledging machine architecture
 MACHINE_BIT=$(uname -m)
+
+#Defining alternate ffmpeg static binaries date/version
+ALTBINARIES_DATE=02-12-19
 
 # Acknowledging machine OS type
 case $(uname | tr '[:upper:]' '[:lower:]') in
@@ -40,18 +43,18 @@ esac
 
 
 #Download and Configure FFmpeg Static
-cd $TMPFOLDER/Downloads/FFmpeg_static
+cd "$TMPFOLDER"/Downloads/FFmpeg_static
 
 if [ $OS_NAME = "linux" ]; then
 
 	echo "Downloading Linux Static FFmpeg Binaries..."
-	if [ $MACHINE_BIT = "x86_64" ]; then
-	  curl https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o ffmpeg-release-amd64-static.tar.xz
+	if [ "$MACHINE_BIT" = "x86_64" ]; then
+	  curl -L https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/ffmpeg-release-amd64-static.tar.xz -o ffmpeg-release-amd64-static.tar.xz
 	  tar -xJf ffmpeg-release-amd64-static.tar.xz
 	  rm *.tar.*
 	  mv ffmpeg* ffmpeg
 	else
-	  curl https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-i686-static.tar.xz -o ffmpeg-release-i686-static.tar.xz
+	  curl -L https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/ffmpeg-release-i686-static.tar.xz -o ffmpeg-release-i686-static.tar.xz
 	  tar -xJf ffmpeg-release-i686-static.tar.xz
 	  rm *.tar.*
 	  mv ffmpeg* ffmpeg
@@ -60,13 +63,13 @@ if [ $OS_NAME = "linux" ]; then
 elif [ $OS_NAME = "windows" ]; then
 
 	echo "Downloading Windows Static FFmpeg Binaries..."
-	if [ $MACHINE_BIT = "x86_64" ]; then
-	  curl https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-latest-win64-static.zip -o ffmpeg-latest-win64-static.zip
+	if [ "$MACHINE_BIT" = "x86_64" ]; then
+	  curl -L https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/ffmpeg-latest-win64-static.zip -o ffmpeg-latest-win64-static.zip
 	  unzip -qq ffmpeg-latest-win64-static.zip
 	  rm ffmpeg-latest-win64-static.zip
 	  mv ffmpeg-latest-win64-static ffmpeg
 	else
-	  curl https://ffmpeg.zeranoe.com/builds/win32/static/ffmpeg-latest-win32-static.zip -o ffmpeg-latest-win32-static.zip
+	  curl -L https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/ffmpeg-latest-win32-static.zip -o ffmpeg-latest-win32-static.zip
 	  unzip -qq ffmpeg-latest-win32-static.zip
 	  rm ffmpeg-latest-win32-static.zip
 	  mv ffmpeg-latest-win32-static ffmpeg
@@ -75,7 +78,7 @@ elif [ $OS_NAME = "windows" ]; then
 else
 
 	echo "Downloading MacOS64 Static FFmpeg Binary..."
-	curl -LO https://ffmpeg.zeranoe.com/builds/macos64/static/ffmpeg-latest-macos64-static.zip
+	curl -LO https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/ffmpeg-latest-macos64-static.zip
 	unzip -qq ffmpeg-latest-macos64-static.zip
 	rm ffmpeg-latest-macos64-static.zip
 	mv ffmpeg-latest-macos64-static ffmpeg
@@ -83,7 +86,7 @@ else
 fi
 
 # Downloading Test Data
-cd $TMPFOLDER/Downloads/Test_videos
+cd "$TMPFOLDER"/Downloads/Test_videos
 
 echo "Downloading Test-Data..."
 curl http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 -o BigBuckBunny.mp4

@@ -31,17 +31,17 @@ echo "Installing OpenCV..."
 
 echo "Installing OpenCV Dependencies..."
 
-sudo apt-get install -y build-essential cmake pkg-config gfortran
+sudo apt-get install -y --allow-unauthenticated build-essential cmake pkg-config gfortran
 
-sudo apt-get install -y yasm libv4l-dev libgtk-3-dev libtbb-dev
+sudo apt-get install -y --allow-unauthenticated yasm libv4l-dev libgtk-3-dev libtbb-dev
 
-sudo apt-get install -y libavcodec-dev libavformat-dev libswscale-dev libjasper-dev libopenexr-dev
+sudo apt-get install -y --allow-unauthenticated libavcodec-dev libavformat-dev libswscale-dev libjasper-dev libopenexr-dev
 
-sudo apt-get install -y libxvidcore-dev libx264-dev libatlas-base-dev libtiff5-dev python3-dev
+sudo apt-get install -y --allow-unauthenticated libxvidcore-dev libx264-dev libatlas-base-dev libtiff5-dev python3-dev
 
-sudo apt-get install -y zlib1g-dev libjpeg-dev checkinstall libwebp-dev libpng-dev libopenblas-base
+sudo apt-get install -y --allow-unauthenticated zlib1g-dev libjpeg-dev checkinstall libwebp-dev libpng-dev libopenblas-base
 
-sudo apt-get install -y libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools
+sudo apt-get install -y --allow-unauthenticated libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools
 
 echo "Installing OpenCV Library"
 
