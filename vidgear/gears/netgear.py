@@ -185,6 +185,9 @@ class NetGear:
 		overwrite_cert = False #checks if certificates overwriting allowed
 		custom_cert_location = '' #handles custom ZMQ certificates path
 
+		#handle force socket termination if there's latency in network
+		self.force_close = False
+
 		#define stream compression handlers
 		self.compression = '' #disabled by default
 		self.compression_params = None
@@ -252,6 +255,16 @@ class NetGear:
 					print('[ALERT]: Bi-Directional data transmission is disabled!')
 					raise ValueError('[ERROR]: `{}` pattern is not valid when Bi-Directional Mode is enabled. Kindly refer Docs for more Information.'.format(pattern))
 
+			# enable force socket closing if specified
+			elif key == 'force_terminate' and isinstance(value, bool):
+				# check if pattern is valid
+				if address is None and not(receive_mode):
+					self.force_close = False
+					print('[ALERT]: Force termination is disabled for local servers!')
+				else:
+					self.force_close = True
+					if logging: print("[LOG]: Force termination is enabled for this connection!")
+
 			# various ZMQ flags 
 			elif key == 'flag' and isinstance(value, int):
 				self.msg_flag = value
@@ -296,12 +309,16 @@ class NetGear:
 			#log if disabled
 			if logging: print('[LOG]: ZMQ Security Mechanism is disabled for this connection!')
 
-		#disable bi_mode if multi-server is enabled
+		#handle bi_mode
 		if self.bi_mode:
+			#disable bi_mode if multi-server is enabled
 			if self.multiserver_mode:
 				self.bi_mode = False
 				print('[ALERT]: Bi-Directional Data Transmission is disabled when Multi-Server Mode is Enabled due to incompatibility!')
 			else:
+				#enable force termination by default
+				self.force_close = True
+				if logging: print("[LOG]: Force termination is enabled for this connection by default!")
 				if logging: print('[LOG]: Bi-Directional Data Transmission is enabled for this connection!')
 
 		# enable logging if specified
@@ -323,8 +340,7 @@ class NetGear:
 		if receive_mode:
 
 			# if does than define connection address
-			if address is None: #define address
-				address = 'localhost' if self.multiserver_mode else '*' 
+			if address is None: address = '*' #define address
 			
 			#check if multiserver_mode is enabled
 			if self.multiserver_mode:
@@ -425,15 +441,14 @@ class NetGear:
 
 			if logging:
 				#finally log progress
-				print('[LOG]: Successfully Binded to address: {}.'.format(protocol+'://' + str(address) + ':' + str(port)))
+				print('[LOG]: Successfully Binded to address: {} with pattern: {}.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
 				if self.secure_mode: print('[LOG]: Enabled ZMQ Security Mechanism: `{}` for this address, Successfully!'.format(valid_security_mech[self.secure_mode]))
 				print('[LOG]: Multi-threaded Receive Mode is enabled Successfully!')
 				print('[LOG]: Device Unique ID is {}.'.format(self.id))
 				print('[LOG]: Receive Mode is activated successfully!')
 		else:
 			#otherwise default to `Send Mode`
-			if address is None: #define address
-				address = '*' if self.multiserver_mode else 'localhost'
+			if address is None: address = 'localhost' #define address
 
 			#check if multiserver_mode is enabled
 			if self.multiserver_mode:
@@ -503,7 +518,7 @@ class NetGear:
 
 			if logging:
 				#finally log progress
-				print('[LOG]: Successfully connected to address: {}.'.format(protocol+'://' + str(address) + ':' + str(port)))
+				print('[LOG]: Successfully connected to address: {} with pattern: {}.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
 				if self.secure_mode: print('[LOG]: Enabled ZMQ Security Mechanism: `{}` for this address, Successfully!'.format(valid_security_mech[self.secure_mode]))
 				print('[LOG]: This device Unique ID is {}.'.format(self.id))
 				print('[LOG]: Send Mode is successfully activated and ready to send data!')
@@ -543,20 +558,23 @@ class NetGear:
 			if msg_json['terminate_flag']:
 				#if multiserver_mode is enabled 
 				if self.multiserver_mode:
-					# check from which ports signal is received
-					self.port_buffer.remove(msg_json['port'])
+					# check and remove from which ports signal is received
+					if msg_json['port'] in self.port_buffer:
+						# if pattern is 1, then send back server the info about termination
+						if self.pattern == 1: self.msg_socket.send_string('[INFO]: Termination signal received at client!')
+						self.port_buffer.remove(msg_json['port'])
+						if self.logging: print('[ALERT]: Termination signal received from server at port: {}!'.format(msg_json['port']))
 					#if termination signal received from all servers then exit client.
 					if not self.port_buffer:
 						print('[WARNING]: Termination signal received from all Servers!!!')
 						self.terminate = True #termination
-					if self.logging: print('[ALERT]: Termination signal received from server at port: {}!'.format(msg_json['port']))
 					continue
 				else:
-					if self.pattern == 1:
-						# if pattern is 1, then send back server the info about termination
-						self.msg_socket.send_string('[INFO]: Termination signal received from server!')
+					# if pattern is 1, then send back server the info about termination
+					if self.pattern == 1: self.msg_socket.send_string('[INFO]: Termination signal received at client!')
 					#termination
-					self.terminate = msg_json['terminate_flag']
+					self.terminate = True
+					#notify client
 					if self.logging: print('[ALERT]: Termination signal received from server!')
 					continue
 
@@ -751,7 +769,7 @@ class NetGear:
 				# otherwise send termination flag to client
 				term_dict = dict(terminate_flag = True)
 			# otherwise inform client(s) that the termination has been reached
-			if self.pattern == 2 or self.bi_mode:
+			if self.force_close:
 				for _ in range(500): self.msg_socket.send_json(term_dict)
 			else:
 				self.msg_socket.send_json(term_dict)
