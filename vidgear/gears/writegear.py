@@ -158,7 +158,7 @@ class WriteGear:
 
 			#handle input framerate if specified
 			if self.output_parameters and "-input_framerate" in self.output_parameters:
-				self.inputframerate += float(self.output_parameters["-input_framerate"])
+				self.inputframerate = float(self.output_parameters["-input_framerate"])
 				del self.output_parameters["-input_framerate"] #clean
 
 			#validate the FFmpeg path/binaries and returns valid FFmpeg file executable location(also downloads static binaries on windows) 
@@ -331,12 +331,49 @@ class WriteGear:
 		self.cmd += " ".join(cmd)
 		# Launch the FFmpeg process
 		if self.logging:
-			print(self.cmd)
+			print('[LOG]: Executing FFmpeg command: `{}`'.format(self.cmd))
 			# In debugging mode
 			self.process = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
 		else:
 			# In silent mode
 			self.process = sp.Popen(cmd, stdin=sp.PIPE, stdout=self.DEVNULL, stderr=sp.STDOUT)
+
+
+
+	def execute_ffmpeg_cmd(self, cmd = None):
+		"""
+		Executes custom FFmpeg process
+
+		:param cmd(list): custom command with parameters as list  
+		"""
+		#check if valid command
+		if cmd is None:
+			print('[Alert]: Input FFmpeg command is empty, Nothing to execute!')
+			return
+		else:
+			if not(isinstance(cmd, list)): 
+				raise ValueError("[ERROR]: Invalid input FFmpeg command! Kindly read docs.")
+
+		#check if Compression Mode is enabled
+		if not(self.compression): raise RuntimeError("[ERROR]: Compression Mode is disabled, Kindly enable it to access this function!")
+
+		#add configured FFmpeg path
+		cmd = [self.ffmpeg] + cmd
+
+		try:
+			if self.logging:
+				print('[LOG]: Executing FFmpeg command: `{}`'.format(' '.join(cmd)))
+				# In debugging mode
+				sp.call(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
+			else:
+
+				sp.call(cmd, stdin=sp.PIPE, stdout=self.DEVNULL, stderr=sp.STDOUT)
+		except (OSError, IOError):
+			# log something is wrong!
+			print ('[ERROR]: BrokenPipeError caught: Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!')
+			self.DEVNULL.close()
+			raise ValueError #for testing purpose only
+
 
 
 	def startCV_Process(self):
