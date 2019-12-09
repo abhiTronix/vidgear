@@ -39,12 +39,10 @@ try:
 	# import OpenCV Binaries
 	import cv2
 	# check whether OpenCV Binaries are 3.x+
-	if parse_version(cv2.__version__) >= parse_version('3'):
-		pass
-	else:
+	if parse_version(cv2.__version__) < parse_version('3'):
 		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
 except ImportError as error:
-	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
+	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip3 install opencv-python` command.')
 
 
 
@@ -154,9 +152,7 @@ class NetGear:
 			if logging: print('[LOG]: Wrong pattern value, Defaulting to `zmq.PAIR`! Kindly refer Docs for more Information.')
 		
 		#check  whether user-defined messaging protocol is valid
-		if protocol in ['tcp', 'upd', 'pgm', 'inproc', 'ipc']:
-			pass
-		else:
+		if not(protocol in ['tcp', 'upd', 'pgm', 'inproc', 'ipc']):
 			# else default to `tcp` protocol
 			protocol = 'tcp'
 			#log it
@@ -359,7 +355,7 @@ class NetGear:
 
 			try:
 				# initiate and handle secure mode
-				if self.secure_mode > 0 and not(self.multiserver_mode):
+				if self.secure_mode > 0:
 					# start an authenticator for this context
 					auth = ThreadAuthenticator(self.msg_context)
 					auth.start()
@@ -375,7 +371,7 @@ class NetGear:
 
 				# initialize and define thread-safe messaging socket
 				self.msg_socket = self.msg_context.socket(msg_pattern[1])
-				if self.pattern == 2: self.msg_socket.set_hwm(1)
+				if self.pattern == 2 and not(self.secure_mode): self.msg_socket.set_hwm(1)
 
 				if self.multiserver_mode:
 					# if multiserver_mode is enabled, then assign port addresses to zmq socket
@@ -443,12 +439,12 @@ class NetGear:
 				#finally log progress
 				print('[LOG]: Successfully Binded to address: {} with pattern: {}.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
 				if self.secure_mode: print('[LOG]: Enabled ZMQ Security Mechanism: `{}` for this address, Successfully!'.format(valid_security_mech[self.secure_mode]))
-				print('[LOG]: Multi-threaded Receive Mode is enabled Successfully!')
+				print('[LOG]: Multi-threaded Receive Mod e is enabled Successfully!')
 				print('[LOG]: Device Unique ID is {}.'.format(self.id))
 				print('[LOG]: Receive Mode is activated successfully!')
 		else:
 			#otherwise default to `Send Mode`
-			if address is None: address = 'localhost' #define address
+			if address is None: address = 'localhost'#define address
 
 			#check if multiserver_mode is enabled
 			if self.multiserver_mode:
@@ -466,20 +462,6 @@ class NetGear:
 				if port is None: port = '5555'
 				
 			try:
-				# initiate and handle secure mode
-				if self.secure_mode > 0 and self.multiserver_mode:
-					# start an authenticator for this context
-					auth = ThreadAuthenticator(self.msg_context)
-					auth.start()
-					auth.allow(str(address)) #allow current address
-
-					#check if `IronHouse` is activated
-					if self.secure_mode == 2:
-						# tell authenticator to use the certificate/key from given valid dir
-						auth.configure_curve(domain='*', location=self.auth_publickeys_dir)
-					else:
-						#otherwise tell the authenticator how to handle the CURVE requests, if `StoneHouse` is activated
-						auth.configure_curve(domain='*', location=zmq.auth.CURVE_ALLOW_ANY)
 
 				# initialize and define thread-safe messaging socket
 				self.msg_socket = self.msg_context.socket(msg_pattern[0])
@@ -488,7 +470,7 @@ class NetGear:
 					# if pattern is 1, define additional flags
 					self.msg_socket.REQ_RELAXED = True
 					self.msg_socket.REQ_CORRELATE = True
-				if self.pattern == 2: self.msg_socket.set_hwm(1) # if pattern is 2, define additional optimizer
+				if self.pattern == 2 and not(self.secure_mode): self.msg_socket.set_hwm(1) # if pattern is 2, define additional optimizer
 
 				# enable specified secure mode for the zmq socket
 				if self.secure_mode > 0:
@@ -544,9 +526,7 @@ class NetGear:
 					break
 
 			#check queue buffer for overflow
-			if len(self.queue) < 96:
-				pass
-			else:
+			if len(self.queue) >= 96:
 				#stop iterating if overflowing occurs
 				time.sleep(0.000001)
 				continue
@@ -770,8 +750,12 @@ class NetGear:
 				term_dict = dict(terminate_flag = True)
 			# otherwise inform client(s) that the termination has been reached
 			if self.force_close:
+				#overflow socket with termination signal
 				for _ in range(500): self.msg_socket.send_json(term_dict)
 			else:
 				self.msg_socket.send_json(term_dict)
+				#check for confirmation if available
+				if self.pattern != 2: self.msg_socket.recv()
+
 			# properly close the socket
 			self.msg_socket.close()

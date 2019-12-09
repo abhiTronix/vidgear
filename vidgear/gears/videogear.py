@@ -82,7 +82,7 @@ class VideoGear:
 							/ Its default value is 0.
 	"""
 
-	def __init__(self, enablePiCamera = False, stabilize = False, source=0, y_tube = False, backend = 0, colorspace = None, resolution=(640, 480), framerate=25, logging = False, time_delay = 0, **options):
+	def __init__(self, enablePiCamera = False, stabilize = False, source = 0, y_tube = False, backend = 0, colorspace = None, resolution = (640, 480), framerate = 25, logging = False, time_delay = 0, **options):
 		
 		self.stablization_mode = stabilize
 

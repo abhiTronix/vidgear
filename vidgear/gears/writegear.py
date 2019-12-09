@@ -38,9 +38,7 @@ try:
 	# import OpenCV Binaries
 	import cv2
 	# check whether OpenCV Binaries are 3.x+
-	if parse_version(cv2.__version__) >= parse_version('3'):
-		pass
-	else:
+	if parse_version(cv2.__version__) < parse_version('3'):
 		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
 except ImportError as error:
 	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
@@ -95,12 +93,12 @@ class WriteGear:
 
 	"""
 	
-	def __init__(self, output_filename = '', compression_mode = True , custom_ffmpeg = '', logging = False, **output_params):
+	def __init__(self, output_filename = '', compression_mode = True, custom_ffmpeg = '', logging = False, **output_params):
 
 		# assign parameter values to class variables
 		self.compression = compression_mode
-		self.os_windows  = True if os.name == 'nt' else False #checks if machine in-use is running windows or not
-		self.logging = logging
+		self.os_windows  = True if os.name == 'nt' else False #checks if machine in-use is running windows os or not
+		self.logging = logging #enable logging
 
 		# initialize various important class variables
 		self.output_parameters = {}
@@ -139,8 +137,7 @@ class WriteGear:
 			try:
 				self.output_parameters = {str(k).strip().lower(): str(v).strip() for k,v in output_params.items()}
 			except Exception as e:
-				if self.logging:
-					print(e)
+				if self.logging: print(e)
 				raise ValueError('[ERROR]: Wrong output_params parameters passed to WriteGear class!')
 
 		#handles FFmpeg binaries validity tests 
@@ -182,12 +179,9 @@ class WriteGear:
 		#display confirmation if logging is enabled/disabled
 		if self.compression and self.ffmpeg:
 			self.DEVNULL = open(os.devnull, 'wb') 
-			if self.logging:
-				print('[LOG]: Compression Mode is configured properly!')
+			if self.logging: print('[LOG]: Compression Mode is configured properly!')
 		else:
-			if self.logging:
-				print('[LOG]: Compression Mode is disabled, Activating OpenCV In-built Writer!')
-
+			if self.logging: print('[LOG]: Compression Mode is disabled, Activating OpenCV In-built Writer!')
 
 
 
@@ -262,7 +256,6 @@ class WriteGear:
 		:param channels (int): Number of channels
 		:param rgb_mode (boolean): set this flag to enable rgb_mode, Its default value is False.
 		"""
-
 		#turn off initiate flag
 		self.initiate = False
 		#initialize input parameters
@@ -344,7 +337,7 @@ class WriteGear:
 		"""
 		Executes custom FFmpeg process
 
-		:param cmd(list): custom command with parameters as list  
+		:param cmd(list): custom command with input as list  
 		"""
 		#check if valid command
 		if cmd is None:
@@ -390,8 +383,6 @@ class WriteGear:
 		FOURCC = 0
 		COLOR = True
 
-
-
 		#pre-assign default encoder parameters (if not assigned by user).
 		if "-fourcc" not in self.output_parameters:
 			FOURCC = cv2.VideoWriter_fourcc(*"MJPG")
@@ -424,13 +415,14 @@ class WriteGear:
 
 		if self.logging:
 			#log values for debugging
-			print('[LOG]: FILE_PATH: {}, FOURCC = {}, FPS = {}, WIDTH = {}, HEIGHT = {}, BACKEND = {}'.format(self.out_file,FOURCC, FPS, WIDTH, HEIGHT, BACKEND))
+			print('[LOG]: FILE_PATH: {}, FOURCC = {}, FPS = {}, WIDTH = {}, HEIGHT = {}, BACKEND = {}'.format(self.out_file, FOURCC, FPS, WIDTH, HEIGHT, BACKEND))
 
 		#start different process for with/without Backend.
 		if BACKEND: 
 			self.process = cv2.VideoWriter(self.out_file, apiPreference = BACKEND, fourcc = FOURCC, fps = FPS, frameSize = (WIDTH, HEIGHT), isColor = COLOR)
 		else:
 			self.process = cv2.VideoWriter(self.out_file, fourcc = FOURCC, fps = FPS, frameSize = (WIDTH, HEIGHT), isColor = COLOR)
+
 
 
 	def close(self):
