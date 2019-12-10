@@ -25,7 +25,7 @@ THE SOFTWARE.
 
 #Video credit: http://www.liushuaicheng.org/CVPR2014/index.html
 
-import pytest, os
+import pytest, os, tempfile
 from vidgear.gears import VideoGear
 
 
