@@ -32,7 +32,7 @@ from vidgear.gears import VideoGear
 
 def test_PiGear_import():
 	"""
-	Testing VideoGear Import - made to fail when PiGear class is imported
+	Testing VideoGear Import -> assign to fail when PiGear class is imported
 	"""
 	with pytest.raises(ImportError):
 		stream = VideoGear(enablePiCamera = True, logging = True).start()
@@ -42,13 +42,16 @@ def test_PiGear_import():
 
 def test_CamGear_import():
 	"""
-	Testing VideoGear Import - Passed if CamGear Class is Imported sucessfully
+	Testing VideoGear Import -> passed if CamGear Class is Imported sucessfully 
+	and returns a valid framerate
 	"""
 	try:
 		Url = 'rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov'
 		options = {'THREADED_QUEUE_MODE':False}
-		output_stream = VideoGear(source = Url, **options).start()
+		output_stream = VideoGear(source = Url, logging=True, **options).start()
+		framerate = output_stream.framerate
 		output_stream.stop()
+		assert framerate>0
 	except Exception as e:
 		pytest.fail(str(e))
 
@@ -56,16 +59,20 @@ def test_CamGear_import():
 
 def test_video_stablization():
 	"""
-	Testing VideoGear Video Stablization Feature - Passed if ran sucessfully
+	Testing VideoGear's Video Stablization playback capabilities 
 	"""
 	try:
 		Url = 'http://www.liushuaicheng.org/CVPR2014/data/example4_train_input.avi'
+		#define params
 		options = {'SMOOTHING_RADIUS': 5, 'BORDER_SIZE': 0, 'BORDER_TYPE': 'replicate'}
+		#open stream
 		stab_stream = VideoGear(source = Url, stabilize = True, logging = True, **options).start()
+		#playback
 		while True:
 			frame = stab_stream.read() #read stablized frames
 			if frame is None:
 				break
+		#clean resources
 		stab_stream.stop()
 	except Exception as e:
 		pytest.fail(str(e))

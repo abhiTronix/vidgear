@@ -37,7 +37,7 @@ from vidgear.gears import CamGear
 
 def return_youtubevideo_params(url):
 	"""
-	return Youtube Video parameters(FPS, dimensions) directly using Youtube-dl
+	returns Youtube Video parameters(FPS, dimensions) directly using Youtube-dl
 	"""
 	ydl = youtube_dl.YoutubeDL({'outtmpl': '%(id)s%(ext)s','noplaylist': True,'quiet': True,'format': 'bestvideo'})
 	with ydl:
@@ -48,7 +48,7 @@ def return_youtubevideo_params(url):
 
 def return_testvideo_path():
 	"""
-	return Test Video Data path
+	returns Test Video path
 	"""
 	path = '{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4'.format(tempfile.gettempdir())
 	return os.path.abspath(path)

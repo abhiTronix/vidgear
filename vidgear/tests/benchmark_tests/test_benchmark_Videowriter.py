@@ -34,7 +34,7 @@ from .fps import FPS
 
 def return_testvideo_path():
 	"""
-	return Test Video Data path
+	returns Test Video path
 	"""
 	path = '{}/Downloads/Test_videos/BigBuckBunny.mp4'.format(tempfile.gettempdir())
 	return os.path.abspath(path)
@@ -43,7 +43,7 @@ def return_testvideo_path():
 
 def return_static_ffmpeg():
 	"""
-	return FFmpeg static path
+	returns system specific FFmpeg static path
 	"""
 	path = ''
 	if platform.system() == 'Windows':
@@ -56,9 +56,9 @@ def return_static_ffmpeg():
 
 
 
-def Videowriter_non_compression_mode(path):
+def WriteGear_non_compression_mode(path):
 	"""
-	Function to Benchmark VidGearwriter - (Non-Compression Mode: OpenCV)
+	Function to Benchmark WriteGear's Non-Compression Mode(OpenCV)
 	"""
 	options = {'THREADED_QUEUE_MODE':False}
 	stream = VideoGear(source=path, **options).start() 
@@ -80,9 +80,9 @@ def Videowriter_non_compression_mode(path):
 
 
 
-def Videowriter_compression_mode(path):
+def WriteGear_compression_mode(path):
 	"""
-	Function to Benchmark VidGearwriter - (Compression Mode: FFmpeg)
+	Function to Benchmark WriteGear's Compression Mode(FFmpeg)
 	"""
 	options = {'THREADED_QUEUE_MODE':False}
 	stream = VideoGear(source=path, **options).start()
@@ -106,7 +106,7 @@ def Videowriter_compression_mode(path):
 @pytest.mark.xfail(raises=RuntimeError)
 def test_benchmark_videowriter():
 	"""
-	Benchmarking VidGearwriter - (Compression Mode: FFmpeg) against (Non-Compression Mode: OpenCV)
+	Benchmarking WriteGear's optimized Compression Mode(FFmpeg) against Non-Compression Mode(OpenCV)
 	"""
 	try:
 		Videowriter_non_compression_mode(return_testvideo_path())

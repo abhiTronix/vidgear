@@ -254,7 +254,7 @@ def check_output(*args, **kwargs):
 def generate_auth_certificates(path, overwrite = False):
 
 	""" 
-	Auto-Generates and handles valid client and server CURVE ZMQ keys/certificates 
+	auto-Generates and auto-validates CURVE ZMQ keys/certificates for Netgear 
 	"""
 
 	#import necessary libs

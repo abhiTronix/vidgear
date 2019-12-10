@@ -34,7 +34,7 @@ from .fps import FPS
 
 def return_testvideo_path():
 	"""
-	return Test Video Data path
+	returns Test Video path
 	"""
 	path = '{}/Downloads/Test_videos/BigBuckBunny.mp4'.format(tempfile.gettempdir())
 	return os.path.abspath(path)

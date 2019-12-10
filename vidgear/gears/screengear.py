@@ -123,6 +123,7 @@ class ScreenGear:
 		try:
 			# check whether user-defined dimensions are provided
 			if screen_dims and len(screen_dims) == 4:
+				if logging: print('[LOG]: Setting capture dimensions: {}!'.format(screen_dims)) 
 				self.mss_capture_instance = screen_dims #create instance from dimensions
 			else:
 				self.mss_capture_instance = monitor_instance #otherwise create instance from monitor

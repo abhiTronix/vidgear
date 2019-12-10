@@ -165,7 +165,7 @@ class PiGear:
 
 	def start(self):
 		"""
-		start the thread to read frames from the video stream
+		start the thread to read frames from the video stream and initiate internal timer
 		"""
 		#Start frame producer thread
 		self.thread = Thread(target=self.update, args=())
@@ -295,9 +295,10 @@ class PiGear:
 		self.terminate = True
 
 		#stop timer thread
-		self._timer.join()
+		if not(self._timer is None): self._timer.join()
 
-		if self.thread is not None:
+		#handle camera thread
+		if not(self.thread is None):
 			#check if hardware failure occured
 			if not(self.exceptions is None) and isinstance(self.exceptions, bool):
 				# force release picamera resources

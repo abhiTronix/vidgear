@@ -38,7 +38,7 @@ import subprocess, re
 
 def return_static_ffmpeg():
 	"""
-	return FFmpeg static path
+	returns system specific FFmpeg static path
 	"""
 	path = ''
 	if platform.system() == 'Windows':
@@ -53,7 +53,7 @@ def return_static_ffmpeg():
 
 def return_testvideo_path():
 	"""
-	return Test Video Data path
+	returns Test video path
 	"""
 	path = '{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4'.format(tempfile.gettempdir())
 	return os.path.abspath(path)
@@ -75,9 +75,9 @@ def getFrameRate(path):
 @pytest.mark.xfail(raises=AssertionError)
 def test_input_framerate():
 	"""
-	Testing "-input_framerate" special parameter provided by WriteGear(in Compression Mode) 
+	Testing "-input_framerate" parameter provided by WriteGear(in Compression Mode) 
 	"""
-	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
+	stream = cv2.VideoCapture(return_testvideo_path()) #Open stream
 	test_video_framerate = stream.get(cv2.CAP_PROP_FPS)
 	output_params = {"-input_framerate":test_video_framerate}
 	writer = WriteGear(output_filename = 'Output_tif.mp4', custom_ffmpeg = return_static_ffmpeg(), **output_params) #Define writer 
@@ -98,9 +98,9 @@ def test_input_framerate():
 @pytest.mark.parametrize('conversion', ['COLOR_BGR2GRAY', '', 'COLOR_BGR2YUV', 'COLOR_BGR2BGRA', 'COLOR_BGR2RGB', 'COLOR_BGR2RGBA'])
 def test_write(conversion):
 	"""
-	Testing Compression Mode(FFmpeg) Writer capabilties in different colorspace
+	Testing WriteGear Compression-Mode(FFmpeg) Writer capabilties in different colorspace
 	"""
-	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
+	stream = cv2.VideoCapture(return_testvideo_path()) #Open stream
 	writer = WriteGear(output_filename = 'Output_tw.mp4',  custom_ffmpeg = return_static_ffmpeg()) #Define writer
 	while True:
 		(grabbed, frame) = stream.read()
@@ -164,10 +164,10 @@ test_data_class = [
 @pytest.mark.parametrize('f_name, c_ffmpeg, output_params, result', test_data_class)
 def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
 	"""
-	Testing VidGear Compression(FFmpeg) Mode with different parameters
+	Testing WriteGear Compression-Mode(FFmpeg) with different parameters
 	"""
 	try:
-		stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
+		stream = cv2.VideoCapture(return_testvideo_path()) #Open stream
 		writer = WriteGear(output_filename = f_name, compression_mode = True, **output_params)
 		while True:
 			(grabbed, frame) = stream.read()
@@ -181,3 +181,25 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
 	except Exception as e:
 		if result:
 			pytest.fail(str(e))
+
+
+
+@pytest.mark.xfail(raises=AssertionError)
+def test_WriteGear_customFFmpeg():
+	"""
+	Testing WriteGear Compression-Mode(FFmpeg) custom FFmpeg Pipeline by seperating audio from video
+	"""
+	output_audio_filename = 'input_audio.aac'
+
+	#define writer
+	writer = WriteGear(output_filename = 'Output.mp4', logging = True) #Define writer 
+
+	#save stream audio as 'input_audio.aac'
+	ffmpeg_command_to_save_audio = ['-y', '-i', return_testvideo_path(), '-vn', '-acodec', 'copy', output_audio_filename]
+	# `-y` parameter is to overwrite outputfile if exists
+
+	#execute FFmpeg command
+	writer.execute_ffmpeg_cmd(ffmpeg_command_to_save_audio)
+
+	#assert audio file is created successfully
+	assert os.path.isfile(output_audio_filename) 

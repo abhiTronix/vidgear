@@ -1,0 +1,5 @@
+codecov:
+  require_ci_to_pass: yes
+  ci:
+    - "travis.org"
+  strict_yaml_branch: "testing"

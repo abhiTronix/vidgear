@@ -37,7 +37,7 @@ import tempfile
 
 def return_static_ffmpeg():
 	"""
-	return FFmpeg static path
+	returns system specific FFmpeg static path
 	"""
 	path = ''
 	if platform.system() == 'Windows':
@@ -52,7 +52,7 @@ def return_static_ffmpeg():
 
 def return_testvideo_path():
 	"""
-	return Test Video Data path
+	returns Test Video path
 	"""
 	path = '{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4'.format(tempfile.gettempdir())
 	return os.path.abspath(path)
