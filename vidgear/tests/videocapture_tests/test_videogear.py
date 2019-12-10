@@ -25,8 +25,17 @@ THE SOFTWARE.
 
 #Video credit: http://www.liushuaicheng.org/CVPR2014/index.html
 
-import pytest
+import pytest, os
 from vidgear.gears import VideoGear
+
+
+
+def return_testvideo_path():
+	"""
+	returns Test video path
+	"""
+	path = '{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4'.format(tempfile.gettempdir())
+	return os.path.abspath(path)
 
 
 
@@ -46,11 +55,11 @@ def test_CamGear_import():
 	and returns a valid framerate
 	"""
 	try:
-		Url = 'rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov'
 		options = {'THREADED_QUEUE_MODE':False}
-		output_stream = VideoGear(source = Url, logging=True, **options).start()
+		output_stream = VideoGear(source = return_testvideo_path(), logging=True, **options).start()
 		framerate = output_stream.framerate
 		output_stream.stop()
+		print('[LOG] Input Framerate: {}'.format(framerate))
 		assert framerate>0
 	except Exception as e:
 		pytest.fail(str(e))

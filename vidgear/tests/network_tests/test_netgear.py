@@ -169,7 +169,7 @@ def test_bidirectional_mode(target_data):
 	"""
 	Testing NetGear's Bidirectional Mode with different datatypes
 	"""
-	print('[LOG] Given Input Data: {}'.format(data))
+	print('[LOG] Given Input Data: {}'.format(target_data))
 
 	#open strem
 	stream = VideoGear(source=return_testvideo_path()).start()

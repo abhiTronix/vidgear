@@ -24,13 +24,14 @@ THE SOFTWARE.
 """
 
 from vidgear.gears import ScreenGear
-
+from mss.exception import ScreenShotError
+import pytest
 
 def test_screengear():
 	"""
-	Tests ScreenGear's playback capabilities with custom defined dimensions
+	Tests ScreenGear's playback capabilities with custom defined dimensions -> passes if fails with ScreenShotError
 	"""
-	try:
+	with pytest.raises(ScreenShotError):
 		# define dimensions of screen w.r.t to given monitor to be captured
 		options = {'top': 40, 'left': 0, 'width': 100, 'height': 100} 
 		#Open Live Screencast on current monitor 
@@ -43,5 +44,3 @@ def test_screengear():
 			i+=1
 		#clean resources
 		stream.stop()
-	except Exception as e:
-		pytest.fail(str(e))
