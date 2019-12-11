@@ -74,6 +74,7 @@ install:
     pip install six;
     pip install codecov;
     pip install --upgrade pytest;
+    pip install --upgrade pytest-cov;
     pip install --upgrade youtube-dl;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
@@ -99,7 +100,7 @@ script:
     travis_wait pytest -sv;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-    python -m pytest -sv;
+    python -m pytest --cov-report term --cov=vidgear vidgear/tests/;
     fi
 
 after_success:

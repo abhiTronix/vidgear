@@ -3,3 +3,6 @@ codecov:
   ci:
     - "travis.org"
   strict_yaml_branch: "testing"
+
+ignore:
+  "vidgear/tests"
