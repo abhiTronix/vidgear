@@ -47,7 +47,7 @@ echo "Installing OpenCV Library"
 
 cd $TMPFOLDER
 
-wget https://github.com/abhiTronix/OpenCV-Travis-Builds/releases/download/latest/OpenCV-$OPENCV_VERSION-$PYTHONVERSION.deb
+wget https://github.com/abhiTronix/OpenCV-Travis-Builds/releases/download/opencv-$OPENCV_VERSION/OpenCV-$OPENCV_VERSION-$PYTHONVERSION.deb
 
 sudo dpkg -i OpenCV-$OPENCV_VERSION-$(python -c 'import platform; print(platform.python_version())').deb
 

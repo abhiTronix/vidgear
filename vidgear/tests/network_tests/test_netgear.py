@@ -133,7 +133,7 @@ def test_compression():
 
 
 @pytest.mark.xfail(raises=AssertionError)
-@pytest.mark.parametrize('security_mech', [1, 2]) #1:'StoneHouse', 2:'IronHouse'
+@pytest.mark.parametrize('security_mech', [1]) #1:'StoneHouse', 2:'IronHouse'
 def test_secure_mode(security_mech):
 	"""
 	Testing NetGear's Secure Mode
