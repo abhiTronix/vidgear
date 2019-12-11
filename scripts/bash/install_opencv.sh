@@ -18,7 +18,7 @@
 #  Installing OpenCV 4.1.0 Binaries  #
 ######################################
 
-OPENCV_VERSION='4.1.0'
+OPENCV_VERSION='4.1.2'
 
 #determining system specific temp directory
 TMPFOLDER=$(python -c 'import tempfile; print(tempfile.gettempdir())')
@@ -39,7 +39,7 @@ sudo apt-get install -y --allow-unauthenticated libavcodec-dev libavformat-dev l
 
 sudo apt-get install -y --allow-unauthenticated libxvidcore-dev libx264-dev libatlas-base-dev libtiff5-dev python3-dev
 
-sudo apt-get install -y --allow-unauthenticated zlib1g-dev libjpeg-dev checkinstall libwebp-dev libpng-dev libopenblas-base
+sudo apt-get install -y --allow-unauthenticated zlib1g-dev libjpeg-dev checkinstall libwebp-dev libpng-dev libopenblas-base ffmpeg
 
 sudo apt-get install -y --allow-unauthenticated libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools
 
