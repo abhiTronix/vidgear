@@ -53,7 +53,7 @@ before_install:
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     sudo apt-get update -q;
-    sudo apt-get install ffmpeg unzip wget -y;
+    sudo apt-get install unzip wget -y;
     sudo apt-get install dos2unix -y;
     dos2unix scripts/bash/prepare_dataset.sh;
     chmod +x scripts/bash/prepare_dataset.sh;
