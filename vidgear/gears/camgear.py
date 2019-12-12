@@ -158,6 +158,8 @@ class CamGear:
 		else:
 			#otherwise disable it
 			self.threaded_queue_mode = False
+			#log it
+			if logging: print('[LOG]: Threaded Queue Mode is disabled for the current video source!') 
 
 		# stream variable initialization
 		self.stream = None
@@ -279,7 +281,7 @@ class CamGear:
 				# apply colorspace to frames
 				color_frame = None
 				try:
-					if isinstance(self.color_space, int) and not (frame is None):
+					if isinstance(self.color_space, int):
 						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
 						self.color_space = None
@@ -301,6 +303,8 @@ class CamGear:
 			#append to queue
 			if self.threaded_queue_mode: self.queue.append(self.frame)
 
+		self.threaded_queue_mode = False
+		self.frame = None
 		#release resources
 		self.stream.release()
 
@@ -311,14 +315,8 @@ class CamGear:
 		return the frame
 		"""
 		while self.threaded_queue_mode:
-			if len(self.queue)>0: 
+			if len(self.queue) > 0: 
 				return self.queue.popleft()
-			elif len(self.queue) == 1:
-				self.frame = None
-				self.terminate = True
-				return self.queue.popleft()
-			else:
-				return None
 		return self.frame
 
 
