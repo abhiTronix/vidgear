@@ -101,7 +101,7 @@ script:
     travis_wait pytest -sv;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-    python -m pytest --cov-report term-missing --cov=vidgear vidgear/tests/;
+    python -m pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/;
     fi
 
 after_success:
