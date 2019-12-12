@@ -104,7 +104,7 @@ def test_patterns(pattern):
 
 
 
-def test_compression():tempfile.gettempdir()
+def test_compression():
 	"""
 	Testing NetGear's real-time frame compression capabilities
 	"""
