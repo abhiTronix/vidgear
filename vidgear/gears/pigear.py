@@ -138,6 +138,8 @@ class PiGear:
 			self.frame = stream.array
 			self.rawCapture.seek(0)
 			self.rawCapture.truncate()
+			#render colorspace if defined
+			if not(self.color_space is None): self.frame = cv2.cvtColor(self.frame, self.color_space)
 		except Exception as e:
 			print(e)
 			raise RuntimeError('[ERROR]: Camera Module failed to initialize!')

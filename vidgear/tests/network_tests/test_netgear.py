@@ -179,8 +179,7 @@ def test_secure_mode(tests, security_mech, custom_cert_location, overwrite_cert)
 		#check if recieved frame exactly matches input frame
 		assert np.array_equal(frame_server, frame_client)
 	except Exception as e:
-		if result:
-			pytest.fail(str(e))
+		pytest.fail(str(e))
 
 
 @pytest.mark.xfail(raises=AssertionError)

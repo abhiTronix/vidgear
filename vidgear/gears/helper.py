@@ -56,7 +56,13 @@ def capPropId(property):
 	"""
 	Retrieves the OpenCV property Integer(Actual) value. 
 	"""
-	return getattr(cv2, property)
+	integer_value = 0 
+	try:
+		integer_value = getattr(cv2, property)
+	except Exception:
+		print('[ALERT]: {} is not a valid OpenCV property!'.format(property))
+		return None
+	return integer_value
 
 
 

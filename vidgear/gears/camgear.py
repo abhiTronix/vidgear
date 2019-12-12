@@ -205,6 +205,9 @@ class CamGear:
 		#frame variable initialization
 		(grabbed, self.frame) = self.stream.read()
 
+		#render colorspace if defined
+		if not(self.color_space is None): self.frame = cv2.cvtColor(self.frame, self.color_space)
+
 		if self.threaded_queue_mode:
 			#intitialize and append to queue
 			self.queue.append(self.frame)
