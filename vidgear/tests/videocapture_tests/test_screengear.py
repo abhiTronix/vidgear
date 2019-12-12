@@ -25,22 +25,23 @@ THE SOFTWARE.
 
 from vidgear.gears import ScreenGear
 from mss.exception import ScreenShotError
-import pytest
+import pytest, platform
 
 def test_screengear():
 	"""
 	Tests ScreenGear's playback capabilities with custom defined dimensions -> passes if fails with ScreenShotError
 	"""
-	with pytest.raises(ScreenShotError):
-		# define dimensions of screen w.r.t to given monitor to be captured
-		options = {'top': 40, 'left': 0, 'width': 100, 'height': 100} 
-		#Open Live Screencast on current monitor 
-		stream = ScreenGear(monitor=1, logging=True, **options).start() 
-		#playback
-		i = 0
-		while (i>50):
-			frame = stream.read()
-			if frame is None: break
-			i+=1
-		#clean resources
-		stream.stop()
+	if platform.system() == 'Linux':
+		with pytest.raises(ScreenShotError):
+			# define dimensions of screen w.r.t to given monitor to be captured
+			options = {'top': 40, 'left': 0, 'width': 100, 'height': 100} 
+			#Open Live Screencast on current monitor 
+			stream = ScreenGear(monitor=1, logging=True, **options).start() 
+			#playback
+			i = 0
+			while (i>50):
+				frame = stream.read()
+				if frame is None: break
+				i+=1
+			#clean resources
+			stream.stop()
