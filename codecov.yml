@@ -2,7 +2,9 @@ codecov:
   require_ci_to_pass: yes
   ci:
     - "travis.org"
-  strict_yaml_branch: "testing"
+  branch: testing
+  strict_yaml_branch: testing
 
 ignore:
-  "vidgear/tests"
+  - "vidgear/tests"
+  - "setup.py"
