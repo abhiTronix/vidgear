@@ -277,8 +277,13 @@ class NetGear:
 			import zmq.auth
 			from zmq.auth.thread import ThreadAuthenticator
 
-			# log if overwriting is enabled 
-			if logging and overwrite_cert: print('[WARNING]: Overwriting ZMQ Authentication certificates over previous ones!')
+			# log if overwriting is enabled
+			if overwrite_cert: 
+				if not receive_mode:
+					if logging: print('[WARNING]: Overwriting ZMQ Authentication certificates over previous ones!')
+				else:
+					overwrite_cert = False
+					if logging: print('[ALERT]: Overwriting ZMQ Authentication certificates is disabled for Client-end!')
 
 			#generate and validate certificates path
 			try:
@@ -773,6 +778,6 @@ class NetGear:
 				self.msg_socket.send_json(term_dict)
 				#check for confirmation if available
 				if self.pattern < 2: 
-					if self.secure_mode or self.pattern == 1: self.msg_socket.recv()
+					if self.pattern == 1: self.msg_socket.recv()
 			# properly close the socket
 			self.msg_socket.close(linger=0)

@@ -132,11 +132,10 @@ def test_compression():
 
 
 test_data_class = [
-	(0,1, '', False),
-	(1,1, tempfile.gettempdir(), False),
-	(2,1, tempfile.gettempdir(), True)]
-@pytest.mark.parametrize('tests, security_mech, custom_cert_location, overwrite_cert', test_data_class)
-def test_secure_mode(tests, security_mech, custom_cert_location, overwrite_cert):
+	(0,1, tempfile.gettempdir(), True),
+	(1,1, tempfile.gettempdir(), False)]
+@pytest.mark.parametrize('pattern, security_mech, custom_cert_location, overwrite_cert', test_data_class)
+def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cert):
 	"""
 	Testing NetGear's Secure Mode
 	"""
@@ -144,22 +143,12 @@ def test_secure_mode(tests, security_mech, custom_cert_location, overwrite_cert)
 		#open stream
 		stream = VideoGear(source=return_testvideo_path()).start()
 
-		options = None
-		if tests:
-			if tests == 1:
-				#define security mechanism
-				options = {'secure_mode': security_mech, 'custom_cert_location': custom_cert_location}
-			else:
-				#define security mechanism
-				options = {'secure_mode': security_mech, 'custom_cert_location': custom_cert_location, 'overwrite_cert': overwrite_cert}
-		else:
-			#define security mechanism
-			options = {'secure_mode': security_mech}
-		assert not(options is None)
-
+		#define security mechanism
+		options = {'secure_mode': security_mech, 'custom_cert_location': custom_cert_location, 'overwrite_cert': overwrite_cert}
+			
 		#define params
-		client = NetGear(pattern = 1, receive_mode = True, logging = True, **options)
-		server = NetGear(pattern = 1, logging = True, **options)
+		server = NetGear(pattern = pattern, logging = True, **options)
+		client = NetGear(pattern = pattern, receive_mode = True, logging = True, **options)
 		#initialize
 		frame_server = None
 		#select random input frame from stream
