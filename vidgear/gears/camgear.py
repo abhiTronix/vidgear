@@ -186,7 +186,9 @@ class CamGear:
 				self.stream.set(capPropId(key),value)
 
 			# separately handle colorspace value to int conversion
-			if not(colorspace is None): self.color_space = capPropId(colorspace.strip())
+			if not(colorspace is None): 
+				self.color_space = capPropId(colorspace.strip())
+				if logging: print('[LOG]: Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
 
 		except Exception as e:
 			# Catch if any error occurred
@@ -202,18 +204,22 @@ class CamGear:
 			if logging: print(e)
 			self.framerate = 0.0
 
+		# applying time delay to warm-up webcam only if specified
+		if time_delay: time.sleep(time_delay)
+
 		#frame variable initialization
 		(grabbed, self.frame) = self.stream.read()
 
-		#render colorspace if defined
-		if not(self.color_space is None): self.frame = cv2.cvtColor(self.frame, self.color_space)
+		#check if vaild stream
+		if grabbed:
+			#render colorspace if defined
+			if not(self.color_space is None): self.frame = cv2.cvtColor(self.frame, self.color_space)
 
-		if self.threaded_queue_mode:
-			#intitialize and append to queue
-			self.queue.append(self.frame)
-
-		# applying time delay to warm-up webcam only if specified
-		if time_delay: time.sleep(time_delay)
+			if self.threaded_queue_mode:
+				#intitialize and append to queue
+				self.queue.append(self.frame)
+		else:
+			raise RuntimeError('[ERROR]: Source is invalid, CamGear failed to intitialize stream on this source!')
 
 		# enable logging if specified
 		self.logging = logging
@@ -262,15 +268,18 @@ class CamGear:
 			if not grabbed:
 				#no frames received, then safely exit
 				if self.threaded_queue_mode:
-					if len(self.queue) == 0: self.terminate = True
+					if len(self.queue) == 0: 
+						break
+					else:
+						continue
 				else:
-					self.terminate = True
+					break
 
 			if not(self.color_space is None):
 				# apply colorspace to frames
 				color_frame = None
 				try:
-					if isinstance(self.color_space, int):
+					if isinstance(self.color_space, int) and not (frame is None):
 						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
 						self.color_space = None
@@ -302,7 +311,14 @@ class CamGear:
 		return the frame
 		"""
 		while self.threaded_queue_mode:
-			if len(self.queue)>0: return self.queue.popleft()
+			if len(self.queue)>0: 
+				return self.queue.popleft()
+			elif len(self.queue) == 1:
+				self.frame = None
+				self.terminate = True
+				return self.queue.popleft()
+			else:
+				return None
 		return self.frame
 
 
@@ -311,15 +327,16 @@ class CamGear:
 		"""
 		Terminates the Read process
 		"""
-
+		if self.logging: print('[LOG]: Terminating processes')
 		#terminate Threaded queue mode seperately
 		if self.threaded_queue_mode and not(self.queue is None):
-			self.queue.clear()
+			if len(self.queue)>0: self.queue.clear()
 			self.threaded_queue_mode = False
 			self.frame = None
 
 		# indicate that the thread should be terminate
 		self.terminate = True
+
 		# wait until stream resources are released (producer thread might be still grabbing frame)
 		if self.thread is not None:
 			self.thread.join()

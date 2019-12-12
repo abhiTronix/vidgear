@@ -112,8 +112,9 @@ class ScreenGear:
 			#reformat proper mss dict and assign to screen dimension handler
 			screen_dims = {k.strip(): v for k,v in options.items() if k.strip() in ["top", "left", "width", "height"]}
 			# separately handle colorspace value to int conversion
-			if not(colorspace is None):
+			if not(colorspace is None): 
 				self.color_space = capPropId(colorspace.strip())
+				if logging: print('[LOG]: Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
 		except Exception as e:
 			# Catch if any error occurred
 			if logging: print(e)
