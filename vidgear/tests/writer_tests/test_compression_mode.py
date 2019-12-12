@@ -24,6 +24,7 @@ THE SOFTWARE.
 """
 
 from vidgear.gears import WriteGear
+from vidgear.gears import CamGear
 from vidgear.gears.helper import capPropId
 from vidgear.gears.helper import check_output
 from six import string_types
@@ -100,19 +101,21 @@ def test_write(conversion):
 	"""
 	Testing WriteGear Compression-Mode(FFmpeg) Writer capabilties in different colorspace
 	"""
-	stream = cv2.VideoCapture(return_testvideo_path()) #Open stream
+	#Open stream
+	stream = CamGear(source=return_testvideo_path(), colorspace = conversion, logging=True).start()
 	writer = WriteGear(output_filename = 'Output_tw.mp4',  custom_ffmpeg = return_static_ffmpeg()) #Define writer
 	while True:
-		(grabbed, frame) = stream.read()
-		if not grabbed:
+		frame = stream.read()
+		# check if frame is None
+		if frame is None:
+			#if True break the infinite loop
 			break
-		if conversion:
-			frame = cv2.cvtColor(frame, capPropId(conversion))
+
 		if conversion in ['COLOR_BGR2RGB', 'COLOR_BGR2RGBA']:
 			writer.write(frame, rgb_mode = True)
 		else:
 			writer.write(frame)
-	stream.release()
+	stream.stop()
 	writer.close()
 	basepath, _ = os.path.split(return_static_ffmpeg()) 
 	ffprobe_path  = os.path.join(basepath,'ffprobe.exe' if os.name == 'nt' else 'ffprobe')

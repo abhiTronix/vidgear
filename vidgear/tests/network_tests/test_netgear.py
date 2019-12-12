@@ -51,8 +51,8 @@ def test_playback():
 		#open stream
 		stream = VideoGear(source=return_testvideo_path()).start()
 		#open server and client with default params
-		server = NetGear()
 		client = NetGear(receive_mode = True)
+		server = NetGear()
 		#playback
 		while True:
 			frame_server = stream.read()
@@ -69,7 +69,7 @@ def test_playback():
 
 
 @pytest.mark.xfail(raises=AssertionError)
-@pytest.mark.parametrize('pattern', [0, 1, 2]) #0:(zmq.PAIR,zmq.PAIR), 1:(zmq.REQ,zmq.REP), 2:(zmq.PUB,zmq.SUB)
+@pytest.mark.parametrize('pattern', [1, 2, 3]) #0:(zmq.PAIR,zmq.PAIR), 1:(zmq.REQ,zmq.REP), 2:(zmq.PUB,zmq.SUB) (#3 is incorrect value)
 def test_patterns(pattern):
 	"""
 	Testing NetGear different messaging patterns
@@ -81,8 +81,8 @@ def test_patterns(pattern):
 		stream = VideoGear(source=return_testvideo_path()).start()
 		
 		#define parameters
-		server = NetGear(pattern = pattern, logging = True)
 		client = NetGear(pattern = pattern, receive_mode = True, logging = True)
+		server = NetGear(pattern = pattern, logging = True)
 		#initialize 
 		frame_server = None
 		#select random input frame from stream
@@ -104,19 +104,19 @@ def test_patterns(pattern):
 
 
 
-def test_compression():
+def test_compression():tempfile.gettempdir()
 	"""
 	Testing NetGear's real-time frame compression capabilities
 	"""
 	try:
 		#open streams
 		stream = VideoGear(source=return_testvideo_path()).start()
-		#define server parameters
-		options = {'compression_format': '.jpg', 'compression_param':[cv2.IMWRITE_JPEG_OPTIMIZE, 20]} #JPEG compression
-		server = NetGear(pattern = 1, logging = True, **options)
 		#define client parameters
 		options = {'compression_param':cv2.IMREAD_COLOR} #read color image 
 		client = NetGear(pattern = 1, receive_mode = True, logging = True, **options)
+		#define server parameters
+		options = {'compression_format': '.jpg', 'compression_param':[cv2.IMWRITE_JPEG_OPTIMIZE, 20]} #JPEG compression
+		server = NetGear(pattern = 1, logging = True, **options)
 		#send over network
 		while True:
 			frame_server = stream.read()
@@ -133,18 +133,34 @@ def test_compression():
 
 
 @pytest.mark.xfail(raises=AssertionError)
-@pytest.mark.parametrize('security_mech', [1]) #1:'StoneHouse', 2:'IronHouse'
-def test_secure_mode(security_mech):
+test_data_class = [
+	(0,1, '', False),
+	(1,1, tempfile.gettempdir(), False),
+	(2,1, tempfile.gettempdir(), True)]
+@pytest.mark.parametrize('tests, security_mech, custom_cert_location, overwrite_cert', test_data_class)
+def test_secure_mode(tests, security_mech, custom_cert_location, overwrite_cert):
 	"""
 	Testing NetGear's Secure Mode
 	"""
 	#open stream
 	stream = VideoGear(source=return_testvideo_path()).start()
-	#define security mechanism
-	options = {'secure_mode': security_mech}
+
+	options = None
+	if tests:
+		if tests == 1:
+			#define security mechanism
+			options = {'secure_mode': security_mech, 'custom_cert_location': custom_cert_location}
+		else:
+			#define security mechanism
+			options = {'secure_mode': security_mech, 'custom_cert_location': custom_cert_location, 'overwrite_cert': overwrite_cert}
+	else:
+		#define security mechanism
+		options = {'secure_mode': security_mech}
+	assert not(options is None)
+
 	#define params
-	server = NetGear(pattern = 1, logging = True, **options)
 	client = NetGear(pattern = 1, receive_mode = True, logging = True, **options)
+	server = NetGear(pattern = 1, logging = True, **options)
 	#initialize
 	frame_server = None
 	#select random input frame from stream
@@ -179,8 +195,8 @@ def test_bidirectional_mode(target_data):
 	#activate bidirectional_mode
 	options = {'bidirectional_mode': True}
 	#define params
-	server = NetGear(logging = True, **options)
 	client = NetGear(receive_mode = True, logging = True, **options)
+	server = NetGear(logging = True, **options)
 	#get frame from stream
 	frame_server = stream.read()
 	assert not(frame_server is None)
@@ -219,15 +235,15 @@ def test_multiserver_mode():
 	#define and activate Multi-Server Mode
 	options = {'multiserver_mode': True}
 
-	#define three unique server
-	server_1 = NetGear(pattern = 1, port = '5556', logging = True, **options) #at port `5556`
-	server_2 = NetGear(pattern = 1, port = '5557', logging = True, **options) #at port `5557`
-	server_3 = NetGear(pattern = 1, port = '5558', logging = True, **options) #at port `5558`
-
 	#define a single client
 	client = NetGear(port = ['5556', '5557', '5558'], pattern = 1, receive_mode = True, logging = True, **options)
 	#define client-end dict to save frames inaccordance with unique port 
 	client_frame_dict = {}
+
+	#define three unique server
+	server_1 = NetGear(pattern = 1, port = '5556', logging = True, **options) #at port `5556`
+	server_2 = NetGear(pattern = 1, port = '5557', logging = True, **options) #at port `5557`
+	server_3 = NetGear(pattern = 1, port = '5558', logging = True, **options) #at port `5558`
 
 	#generate a random input frame
 	frame_server = None

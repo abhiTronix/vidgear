@@ -752,6 +752,9 @@ class NetGear:
 				self.thread.join()
 				self.thread = None
 				#properly handle thread exit
+
+			# properly close the socket
+			self.msg_socket.close(linger=0)
 		else:
 			# indicate that process should be terminated
 			self.terminate = True
@@ -771,6 +774,5 @@ class NetGear:
 				#check for confirmation if available
 				if self.pattern < 2: 
 					if self.secure_mode or self.pattern == 1: self.msg_socket.recv()
-
 			# properly close the socket
-			self.msg_socket.close()
+			self.msg_socket.close(linger=0)
