@@ -131,8 +131,6 @@ def test_compression():
 		pytest.fail(str(e))
 
 
-
-@pytest.mark.xfail(raises=AssertionError)
 test_data_class = [
 	(0,1, '', False),
 	(1,1, tempfile.gettempdir(), False),
@@ -142,44 +140,47 @@ def test_secure_mode(tests, security_mech, custom_cert_location, overwrite_cert)
 	"""
 	Testing NetGear's Secure Mode
 	"""
-	#open stream
-	stream = VideoGear(source=return_testvideo_path()).start()
+	try:
+		#open stream
+		stream = VideoGear(source=return_testvideo_path()).start()
 
-	options = None
-	if tests:
-		if tests == 1:
-			#define security mechanism
-			options = {'secure_mode': security_mech, 'custom_cert_location': custom_cert_location}
+		options = None
+		if tests:
+			if tests == 1:
+				#define security mechanism
+				options = {'secure_mode': security_mech, 'custom_cert_location': custom_cert_location}
+			else:
+				#define security mechanism
+				options = {'secure_mode': security_mech, 'custom_cert_location': custom_cert_location, 'overwrite_cert': overwrite_cert}
 		else:
 			#define security mechanism
-			options = {'secure_mode': security_mech, 'custom_cert_location': custom_cert_location, 'overwrite_cert': overwrite_cert}
-	else:
-		#define security mechanism
-		options = {'secure_mode': security_mech}
-	assert not(options is None)
+			options = {'secure_mode': security_mech}
+		assert not(options is None)
 
-	#define params
-	client = NetGear(pattern = 1, receive_mode = True, logging = True, **options)
-	server = NetGear(pattern = 1, logging = True, **options)
-	#initialize
-	frame_server = None
-	#select random input frame from stream
-	i = 0
-	while (i < random.randint(10, 100)):
-		frame_server = stream.read()
-		i+=1
-	#check input frame is valid
-	assert not(frame_server is None)
-	#send and recv input frame
-	server.send(frame_server)
-	frame_client = client.recv()
-	#clean resources
-	stream.stop()
-	server.close()
-	client.close()
-	#check if recieved frame exactly matches input frame
-	assert np.array_equal(frame_server, frame_client)
-
+		#define params
+		client = NetGear(pattern = 1, receive_mode = True, logging = True, **options)
+		server = NetGear(pattern = 1, logging = True, **options)
+		#initialize
+		frame_server = None
+		#select random input frame from stream
+		i = 0
+		while (i < random.randint(10, 100)):
+			frame_server = stream.read()
+			i+=1
+		#check input frame is valid
+		assert not(frame_server is None)
+		#send and recv input frame
+		server.send(frame_server)
+		frame_client = client.recv()
+		#clean resources
+		stream.stop()
+		server.close()
+		client.close()
+		#check if recieved frame exactly matches input frame
+		assert np.array_equal(frame_server, frame_client)
+	except Exception as e:
+		if result:
+			pytest.fail(str(e))
 
 
 @pytest.mark.xfail(raises=AssertionError)
