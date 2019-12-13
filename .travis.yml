@@ -83,9 +83,9 @@ install:
     pip install --upgrade --user numpy;
     pip install --user .;
     pip install  --user six;
-    pip install codecov;
-    pip install --upgrade pytest;
-    pip install --upgrade pytest-cov;
+    pip install --user codecov;
+    pip install --upgrade --user pytest;
+    pip install --upgrade --user pytest-cov;
     pip install --upgrade  --user youtube-dl;
     fi
 
