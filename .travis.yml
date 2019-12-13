@@ -100,8 +100,8 @@ before_script:
 
 script:
   - function keep_alive() { while true; do echo -en "\a"; sleep 60; done }
+  - keep_alive &
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    keep_alive &;
     pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
