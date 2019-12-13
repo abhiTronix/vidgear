@@ -32,16 +32,21 @@ def test_screengear():
 	Tests ScreenGear's playback capabilities with custom defined dimensions -> passes if fails with ScreenShotError
 	"""
 	if platform.system() == 'Linux':
-		with pytest.raises(ScreenShotError):
+		try:
 			# define dimensions of screen w.r.t to given monitor to be captured
 			options = {'top': 40, 'left': 0, 'width': 100, 'height': 100} 
 			#Open Live Screencast on current monitor 
 			stream = ScreenGear(monitor=1, logging=True, **options).start() 
 			#playback
 			i = 0
-			while (i>50):
+			while (i>10):
 				frame = stream.read()
 				if frame is None: break
 				i+=1
 			#clean resources
 			stream.stop()
+		except Exception as e:
+			if isinstance(e, ScreenShotError):
+				print(e)
+			else:
+				pytest.fail(str(e))
