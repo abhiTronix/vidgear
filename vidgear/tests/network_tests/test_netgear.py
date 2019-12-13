@@ -83,8 +83,9 @@ def test_patterns(pattern):
 		stream = VideoGear(source=return_testvideo_path()).start()
 		
 		#define parameters
-		client = NetGear(pattern = pattern, receive_mode = True, logging = True)
-		server = NetGear(pattern = pattern, logging = True)
+		options = {'flag' : 0, 'copy' : True, 'track' : False}
+		client = NetGear(pattern = pattern, receive_mode = True, logging = True, **options)
+		server = NetGear(pattern = pattern, logging = True, **options)
 		#initialize 
 		frame_server = None
 		#select random input frame from stream
