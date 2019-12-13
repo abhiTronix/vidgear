@@ -35,7 +35,7 @@ def test_screengear():
 		# define dimensions of screen w.r.t to given monitor to be captured
 		options = {'top': 40, 'left': 0, 'width': 100, 'height': 100} 
 		#Open Live Screencast on current monitor 
-		stream = ScreenGear(monitor=1, logging=True, **options).start() 
+		stream = ScreenGear(monitor=1, logging=True, colorspace = 'COLOR_BGR2GRAY', **options).start() 
 		#playback
 		i = 0
 		while (i>10):
