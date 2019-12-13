@@ -69,9 +69,6 @@ def test_ffmpeg_binaries_download(paths):
 	Testing Static FFmpeg auto-download on Windows OS
 	"""
 	_windows  = True if os.name == 'nt' else False
-	if os.name == 'posix' and paths == tempfile.gettempdir():
-		#for incrementing codecov only
-		_windows  = True
 	file_path = ''
 	try: 
 		file_path = download_ffmpeg_binaries(path = paths, os_windows = _windows)
