@@ -100,7 +100,7 @@ before_script:
 
 script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    travis_wait pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/;
+    pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     python -m pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/;
