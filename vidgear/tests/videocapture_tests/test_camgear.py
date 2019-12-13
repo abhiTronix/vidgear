@@ -139,22 +139,39 @@ def test_network_playback():
 	"""
 	Testing Direct Network Video Playback capabilities of VidGear(with rtsp streaming)
 	"""	
-	Url = 'rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov'
-	try:
-		options = {'THREADED_QUEUE_MODE':False}
-		output_stream = CamGear(source = Url, **options).start()
-		i = 0
-		Output_data = []
-		while i<10:
-			frame = output_stream.read()
-			if frame is None:
-				break
-			Output_data.append(frame)
-			i+=1
-		output_stream.stop()
-		print('[LOG]: Output data shape:', np.array(Output_data).shape)
-	except Exception as e:
-		pytest.fail(str(e))
+	Publictest_rstp_urls = [
+	'rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov',
+	'rtsp://freja.hiof.no:1935/rtplive/definst/hessdalen03.stream',
+	'rtsp://170.93.143.139/rtplive/470011e600ef003a004ee33696235daa',
+	'rtmp://semerkandglb.mediatriple.net:1935/semerkandliveedge/semerkand2'
+	]
+
+	index = 0
+
+	while (index < len(Publictest_rstp_urls)):
+		try:
+			options = {'THREADED_QUEUE_MODE':False}
+			output_stream = CamGear(source = Publictest_rstp_urls[index], logging = True, **options).start()
+			i = 0
+			Output_data = []
+			while i<10:
+				frame = output_stream.read()
+				if frame is None:
+					break
+				Output_data.append(frame)
+				i+=1
+			output_stream.stop()
+			print('[LOG]: Output data shape:', np.array(Output_data).shape)
+			if Output_data[-1].shape[:2] > (50,50): break
+		except Exception as e:
+			if isinstance(e, RuntimeError):
+				print("[LOG] `{}` URL is not working".format(Publictest_rstp_urls[index]))
+				index+=1
+				continue
+			else:
+				pytest.fail(str(e))
+
+	if (index == len(Publictest_rstp_urls)): pytest.fail(str(e))
 
 
 
