@@ -83,7 +83,9 @@ install:
     pip install --upgrade --user numpy;
     pip install --user .;
     pip install  --user six;
-    pip install --upgrade  --user pytest;
+    pip install codecov;
+    pip install --upgrade pytest;
+    pip install --upgrade pytest-cov;
     pip install --upgrade  --user youtube-dl;
     fi
 
@@ -98,7 +100,7 @@ before_script:
 
 script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    travis_wait pytest -sv;
+    travis_wait pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     python -m pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/;
