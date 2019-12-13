@@ -31,10 +31,9 @@ import random
 import tempfile
 import os
 import numpy as np
-import logging
+import traceback
 from zmq.error import ZMQError
 
-logger = logging.Logger('catch_all')
 
 
 def return_testvideo_path():
@@ -67,10 +66,11 @@ def test_playback():
 		server.close()
 		client.close()
 	except Exception as e:
-		if not isinstance(e, ZMQError):
-			pytest.fail(str(e))
+		if isinstance(e, (ZMQError, ValueError)):
+			print(traceback.print_tb(e.__traceback__))
 		else:
-			logger.error('[Error]: '+ str(e))
+			pytest.fail(str(e))
+
 
 
 @pytest.mark.parametrize('pattern', [1, 2, 3]) #0:(zmq.PAIR,zmq.PAIR), 1:(zmq.REQ,zmq.REP), 2:(zmq.PUB,zmq.SUB) (#3 is incorrect value)
@@ -105,10 +105,10 @@ def test_patterns(pattern):
 		#check if recieved frame exactly matches input frame
 		assert np.array_equal(frame_server, frame_client)
 	except Exception as e:
-		if not isinstance(e, ZMQError):
-			pytest.fail(str(e))
+		if isinstance(e, (ZMQError, ValueError)):
+			print(traceback.print_tb(e.__traceback__))
 		else:
-			logger.error('[Error]: '+ str(e)) 
+			pytest.fail(str(e))
 
 
 def test_compression():
@@ -135,10 +135,11 @@ def test_compression():
 		server.close()
 		client.close()
 	except Exception as e:
-		if not isinstance(e, ZMQError):
-			pytest.fail(str(e))
+		if isinstance(e, (ZMQError, ValueError)):
+			print(traceback.print_tb(e.__traceback__))
 		else:
-			logger.error('[Error]: '+ str(e)) 
+			pytest.fail(str(e))
+ 
 
 
 test_data_class = [
@@ -178,10 +179,10 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
 		#check if recieved frame exactly matches input frame
 		assert np.array_equal(frame_server, frame_client)
 	except Exception as e:
-		if not isinstance(e, ZMQError):
-			pytest.fail(str(e))
+		if isinstance(e, (ZMQError, ValueError)):
+			print(traceback.print_tb(e.__traceback__))
 		else:
-			logger.error('[Error]: '+ str(e))
+			pytest.fail(str(e))
 
 
 
@@ -226,10 +227,10 @@ def test_bidirectional_mode(target_data):
 		#check if client-end data exactly matches server-end data
 		assert client_data == server_data
 	except Exception as e:
-		if not isinstance(e, ZMQError):
-			pytest.fail(str(e))
+		if isinstance(e, (ZMQError, ValueError)):
+			print(traceback.print_tb(e.__traceback__))
 		else:
-			logger.error('[Error]: '+ str(e))
+			pytest.fail(str(e))
 
 
 
@@ -289,7 +290,7 @@ def test_multiserver_mode():
 			assert np.array_equal(frame_server, client_frame_dict[key])
 
 	except Exception as e:
-		if not isinstance(e, ZMQError):
-			pytest.fail(str(e))
+		if isinstance(e, (ZMQError, ValueError)):
+			print(traceback.print_tb(e.__traceback__))
 		else:
-			logger.error('[Error]: '+ str(e)) 
+			pytest.fail(str(e)) 
