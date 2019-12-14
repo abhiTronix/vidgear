@@ -34,7 +34,9 @@ THE SOFTWARE.
 
 [Releases][release]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Gears](#gears)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Wiki Documentation][wiki]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Installation](#installation)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[License](#license)
 
-[![PyPi version][pypi-badge]][pypi] [![Build Status][travis-cli]][travis] [![Build Status][appveyor]][app] [![Say Thank you][Thank-you]][thanks] [![Twitter][twitter-badge]][twitter-intent] 
+[![Build Status][travis-cli]][travis] [![Codecov branch][codecov]][code] [![Build Status][appveyor]][app]
+
+[![PyPi version][pypi-badge]][pypi] [![Say Thank you][Thank-you]][thanks] [![Twitter][twitter-badge]][twitter-intent] 
 
 [![Buy Me A Coffee][Coffee-badge]][coffee]
 
@@ -102,16 +104,34 @@ The following **functional block diagram** clearly depicts the functioning of Vi
 &nbsp;
 
 ## New Release SneekPeak : VidGear 0.1.6
+**NetGear API:**
   * Added powerful ZMQ Authentication & Data Encryption features for NetGear API:
     * Added exclusive `secure_mode` param for enabling it.
     * Added support for two most powerful `Stonehouse` & `Ironhouse` ZMQ security mechanisms.
-    * Added auto auth-certificates/key generation and validation feature.
-  * Implemented Robust Multi-Server support for NetGear API:
+    * Added smart auth-certificates/key generation and validation like features
+  * Introducing robust Multi-Server support for NetGear API:
     * Enables Multiple Servers messaging support with a single client.
     * Added exclusive `multiserver_mode` param for enabling it.
     * Added ability to send additional data of any datatype along with the frame in realtime in this mode.
+  * Introducing exclusive Bi-Directional Mode for bidirectional data transmission:
+    * Added new `return_data` parameter to `recv()` function.
+    * Added new `bidirectional_mode` attribute for enabling this mode.
+    * Added support for `PAIR` & `REQ/REP` patterns for this mode
+    * Added support for sending data of any python datatype.
+    * Added support for `message` parameter for non-exclusive primary modes for this mode
+  * Introducing frame-compression support with on-the-fly flexible encoding/decoding:
+    * Added initial support for `JPEG`, `PNG` & `BMP` encoding formats 
+    * Added exclusive options attribute `compression_format` & `compression_param` to tweak this feature
+    * Client-end will now decode frame automatically based on the encoding as well as support decoding flags
+  * Added `force_terminate` attribute flag for handling force socket termination at the Server-end if there's latency in the network. 
   * Implemented new *Publish/Subscribe(`zmq.PUB/zmq.SUB`)* pattern for seamless Live Streaming in NetGear API.
-  * Added VidGear's official native support for MacOS environment and [many more...](changelog.md)
+
+**PiGear API:**
+  * Added new threaded internal timing function for PiGear to handle any hardware failures/frozen threads
+  * PiGear will not exit safely with `SystemError` if Picamera ribbon cable is pulled out to save resources.
+  * Added support for new user-defined `HWFAILURE_TIMEOUT` options attribute to alter timeout.
+
+***Added VidGear's official native support for MacOS environment and [many more...](changelog.md)***
 
 &nbsp;
 
@@ -179,7 +199,7 @@ VidGear releases are available for download as packages in the [latest release][
 
 ### Option 3: Clone the Repository
 
-> Best option for **latest patches**(_maybe experimental_), or **contributing** to development.
+> Best option for **latest patches & updates**(_but experimental_), or **contributing** to development.
 
 You can clone this repository's `testing` branch for development and thereby can install as follows:
 ```sh
@@ -216,7 +236,7 @@ VidGear is built with multi-threaded **Gears** each with some unique function/me
 
 ### CamGear
 
-CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format ([_upto 4k tested_][test-4k]), network stream URL such as `http(s), rtp, rstp, mms, etc.` In addition to this, it also supports live Gstreamer's RAW pipelines and YouTube video/livestreams URLs. CamGear provides a flexible, high-level multi-threaded wrapper around `OpenCV's` [VideoCapture class][opencv-vc] with access almost all of its available parameters and also employs `pafy` python APIs for live [YouTube streaming][youtube-wiki]. Furthermore, CamGear relies exclusively on [**Threaded Queue mode**][TQM-wiki] for ultra-fast, error-free and synchronized frame handling.
+CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format ([_upto 4k tested_][test-4k]), network stream URL such as `http(s), rtp, rstp, rtmp, mms, etc.` In addition to this, it also supports live Gstreamer's RAW pipelines and YouTube video/livestreams URLs. CamGear provides a flexible, high-level multi-threaded wrapper around `OpenCV's` [VideoCapture class][opencv-vc] with access almost all of its available parameters and also employs `pafy` python APIs for live [YouTube streaming][youtube-wiki]. Furthermore, CamGear relies exclusively on [**Threaded Queue mode**][TQM-wiki] for ultra-fast, error-free and synchronized frame handling.
 
 
 **Following simplified functional block diagram depicts CamGear API's generalized working:**
@@ -233,7 +253,7 @@ CamGear supports a diverse range of video streams which can handle/control video
 
 ### VideoGear
 
-VideoGear API provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**][stablizer-wiki] class. Furthermore, VideoGear API can provide internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs separated by a special flag. Thereby, _this API holds the exclusive power for any incoming VideoStream from any source, whether it is live or not, to stabilize it directly with minimum latency and memory requirements._
+VideoGear API provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**][stablizer-wiki] class. Furthermore, VideoGear API can provide internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs separated by a special flag. Thereby, _this API holds the exclusive power for any incoming VideoStream from any source, whether it is live or not, to access and stabilize it directly with minimum latency and memory requirements._
 
 **Below is a snapshot of a VideoGear Stabilizer in action:**
 
@@ -300,7 +320,7 @@ stream_stab.stop()
 
 ### PiGear
 
-PiGear is similar to CamGear but made to support various Raspberry Pi Camera Modules (such as [OmniVision OV5647 Camera Module][OV5647-picam] and [Sony IMX219 Camera Module][IMX219-picam]). To interface with these modules correctly, PiGear provides a flexible multi-threaded wrapper around complete [picamera][picamera] python library, and provides us the ability to exploit its various features like `brightness, saturation, sensor_mode, etc.` effortlessly. 
+PiGear is similar to CamGear but made to support various Raspberry Pi Camera Modules (such as [OmniVision OV5647 Camera Module][OV5647-picam] and [Sony IMX219 Camera Module][IMX219-picam]). To interface with these modules correctly, PiGear provides a flexible multi-threaded wrapper around complete [picamera][picamera] python library, and provides us the ability to exploit its various features like `brightness, saturation, sensor_mode, etc.` effortlessly. In addition to this, PiGear API provides excellent Error-Handling with features like a threaded internal timer that keeps active track of any frozen threads and handles hardware failures/frozen threads robustly thereby will exit safely if any failure occurs. So if you accidently pulled your camera cable out when running PiGear API in your script, instead of going into possible kernel panic due to IO error it will exit safely to save resources. 
 
 **Following simplified functional block diagram depicts PiGear API:**
 
@@ -392,7 +412,9 @@ WriteGear is undoubtedly the most powerful Video Processing Gear of them all. It
 
 ### NetGear
 
-NetGear is exclusively designed to transfer video frames synchronously between interconnecting systems over the network in real-time. This is achieved by implementing a high-level wrapper around [PyZmQ][pyzmq] python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance asynchronous distributed messaging library that aim to be used in distributed or concurrent applications.  It provides a message queue, but unlike message-oriented middleware, a ZeroMQ system can run without a dedicated message broker. Furthermore, It also provides easy access to powerful, smart & secure ZeroMQ's Security Layers in NetGear API that enables strong encryption on data, and unbreakable authentication between the Server and the Client with the help of custom certificates/keys and brings cheap, standardized privacy and authentication for distributed systems over the network.  On top of that, this API can robustly handle Multiple Servers at once, thereby providing access to seamless Live Streams of the various device in a network at the same time.
+NetGear is exclusively designed to transfer video frames synchronously and asynchronously between interconnecting systems over the network in real-time. This is achieved by implementing a high-level wrapper around [PyZmQ][pyzmq] python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance asynchronous distributed messaging library that aim to be used in distributed or concurrent applications.  It provides a message queue, but unlike message-oriented middleware, a ZeroMQ system can run without a dedicated message broker. It provides seamless support for bidirectional data transmission between receiver(client) and sender(server) through bi-directional synchronous messaging patterns such as zmq.PAIR (ZMQ Pair Pattern) & zmq.REQ/zmq.REP (ZMQ Request/Reply Pattern). Plus also introduces real-time frame Encoding/Decoding compression capabilities for optimizing performance while sending the frames of large size directly over the network by encoding the frame before sending it and decoding it on the client's end automatically all in real-time. 
+
+For security, NetGear also supports easy access to ZeroMQ's powerful, smart & secure Security Layers in that enables strong encryption on data, and unbreakable authentication between the Server and the Client with the help of custom certificates/keys and brings cheap, standardized privacy and authentication for distributed systems over the network. On top of that, this API can robustly handle Multiple Servers at once, thereby providing access to seamless Live Streams of the various device in a network at the same time.
 
 
 **NetGear as of now seamlessly supports three ZeroMQ messaging patterns:**
@@ -492,6 +514,7 @@ Badges
 -->
 
 [appveyor]:https://img.shields.io/appveyor/ci/abhitronix/vidgear.svg?style=for-the-badge&logo=appveyor
+[codecov]:https://img.shields.io/codecov/c/github/abhiTronix/vidgear/testing?style=for-the-badge&logo=codecov
 [travis-cli]:https://img.shields.io/travis/abhiTronix/vidgear.svg?style=for-the-badge&logo=travis
 [prs-badge]:https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABC0lEQVRYhdWVPQoCMRCFX6HY2ghaiZUXsLW0EDyBrbWtN/EUHsHTWFnYyCL4gxibVZZlZzKTnWz0QZpk5r0vIdkF/kBPAMOKeddE+CQPKoc5Yt5cTjBMdQSwDQToWgBJAn3jmhqgltapAV6E6b5U17MGGAUaUj07TficMfIBZDV6vxowBm1BP9WbSQE4o5h9IjPJmy73TEPDDxVmoZdQrQ5jRhly9Q8tgMUXkIIWn0oG4GYQfAXQzz1PGoCiQndM7b4RgJay/h7zBLT3hASgoKjamQJMreKf0gfuAGyYtXEIAKcL/Dss15iq6ohXghozLYiAMxPuACwtIT4yeQUxAaLrZwAoqGRKGk7qDSYTfYQ8LuYnAAAAAElFTkSuQmCC
 [twitter-badge]:https://img.shields.io/twitter/url/http/shields.io.svg?style=for-the-badge&logo=twitter
@@ -511,6 +534,7 @@ Internal URLs
 [license]:https://github.com/abhiTronix/vidgear/blob/master/LICENSE
 [travis]:https://travis-ci.org/abhiTronix/vidgear
 [app]:https://ci.appveyor.com/project/abhiTronix/vidgear
+[code]:https://codecov.io/gh/abhiTronix/vidgear
 
 [test-4k]:https://github.com/abhiTronix/vidgear/blob/e0843720202b0921d1c26e2ce5b11fadefbec892/vidgear/tests/benchmark_tests/test_benchmark_playback.py#L65
 [bs_script_dataset]:https://github.com/abhiTronix/vidgear/blob/testing/scripts/bash/prepare_dataset.sh

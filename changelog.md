@@ -3,23 +3,47 @@
 ## VidGear 0.1.6-dev
 
 ### New Features:
-  * Added powerful ZMQ Authentication & Data Encryption features for NetGear API:
-    * Added exclusive `secure_mode` param for enabling it.
-    * Added support for two most powerful `Stonehouse` & `Ironhouse` ZMQ security mechanisms.
-    * Added smart auth-certificates/key generation and validation features.
-  * Implemented Robust Multi-Server support for NetGear API:
-    * Enables Multiple Servers messaging support with a single client.
-    * Added exclusive `multiserver_mode` param for enabling it.
-    * Added ability to send additional data of any datatype along with the frame in realtime in this mode.
-  * Implemented new *Publish/Subscribe(`zmq.PUB/zmq.SUB`)* pattern for seamless Live Streaming in NetGear API.
-  * Added VidGear's official native support for MacOS environment.
+  * **NetGear API:**
+    * Added powerful ZMQ Authentication & Data Encryption features for NetGear API:
+      * Added exclusive `secure_mode` param for enabling it.
+      * Added support for two most powerful `Stonehouse` & `Ironhouse` ZMQ security mechanisms.
+      * Added smart auth-certificates/key generation and validation features
+    * Implemented Robust Multi-Server support for NetGear API:
+      * Enables Multiple Servers messaging support with a single client.
+      * Added exclusive `multiserver_mode` param for enabling it.
+      * Added ability to send additional data of any datatype along with the frame in realtime in this mode.
+    * Introducing exclusive Bi-Directional Mode for bidirectional data transmission:
+      * Added new `return_data` parameter to `recv()` function.
+      * Added new `bidirectional_mode` attribute for enabling this mode.
+      * Added support for `PAIR` & `REQ/REP` patterns for this mode
+      * Added support for sending data of any python datatype.
+      * Added support for `message` parameter for non-exclusive primary modes for this mode
+    * Implemented compression support with on-the-fly flexible frame encoding for the Server-end:
+      * Added initial support for `JPEG`, `PNG` & `BMP` encoding formats 
+      * Added exclusive options attribute `compression_format` & `compression_param` to tweak this feature
+      * Client-end will now decode frame automatically based on the encoding as well as support decoding flags
+    * Added `force_terminate` attribute flag for handling force socket termination at the Server-end if there's latency in the network. 
+    * Implemented new *Publish/Subscribe(`zmq.PUB/zmq.SUB`)* pattern for seamless Live Streaming in NetGear API.
+
+  * **PiGear API:**
+    * Added new threaded internal timing function for PiGear to handle any hardware failures/frozen threads
+    * PiGear will not exit safely with `SystemError` if Picamera ribbon cable is pulled out to save resources.
+    * Added support for new user-defined `HWFAILURE_TIMEOUT` options attribute to alter timeout.
+
+  * Added VidGear's official native support for MacOS environments.
+    
 
 ### Updates/Improvements:
   * Updated support for screen casting from all monitors in ScreenGear API.
   * Updated ScreenGear API to use *Threaded Queue Mode* by default, thereby removed redundant `THREADED_QUEUE_MODE` param.
-  * Updated Tests bash scripts to use system-specific **Temp** directory instead of **Home** for downloading content.
-  * Updated Wiki-Documentation with latest examples and Information.
-  * Updated Travis CLI Tests with support for macOS environment
+  * Updated bash script path to download test dataset in `$TMPDIR` rather than `$HOME` directory for downloading testdata.
+  * Added support for `REQ/REP` pattern in Multi-Server Mode
+  * Added new `camera_num` to support multiple Picameras
+  * Moved thread exceptions to the main thread and then re-raised
+  * Replaced `traceback` with `sys.exc_info`. 
+  * Updated Code Readability and Wiki Docs.
+  * Updated ReadMe & Changelog with the latest changes.
+  * Updated Travis CLI Tests with support for macOS environment.
   * Reformatted & implemented necessary MacOS related changes and dependencies in `travis.yml`.
 
 ### Breaking Updates / Improvements / Changes
@@ -27,10 +51,13 @@
   * Newly implemented `secure_mode` will only support Python 3 and above legacies.
 
 ### Fixes
+  * Reimplemented `Pub/Sub` pattern for smoother performance(#70)
+  * Fixed `multiserver_mode` not working properly over some networks
   * Fixed assigned Port address ignored bug (commit 073bca1)
   * Fixed several wrong definition bugs from NetGear API(commit 8f7153c).
   * Fixed unreliable dataset video URL(rehosted file on `github.com`)
   * Removed duplicate code to import MSS(@BoboTiG) from ScreenGear API.
+  * Fixed code definitions & Typos.
   * Fixed Several bugs related to new `secure_mode` & `multiserver_mode` Modes.
   * Fixed various macOS environment bugs
 
@@ -40,6 +67,10 @@
   * PR #44
   * PR #52
   * PR #55
+  * PR #62
+  * PR #67
+  * PR #72
+  * PR #77
 
 :warning: PyPi Release does NOT contain Tests and Scripts!
 
