@@ -44,10 +44,10 @@ class Stabilizer:
 
 	:param smoothing_radius` (int) : to alter averaging window size. It handles the quality of stabilization at expense of latency and sudden panning. 
 									/ Larger its value, less will be panning, more will be latency and vice-versa. It's default value is 25.
-	:param border_size (int) : to alter output border cropping. It's will crops the border to reduce the black borders from stabilization being too noticeable. 
-								/ Larger its value, more will be cropping. It's default value is 0 (i.e. no cropping).			
+	:param border_size (int) : to alter output border size. It's default value is 0.			
 	:param border_type (string) : to change the border mode. Valid border types are 'black', 'reflect', 'reflect_101', 'replicate' and 'wrap'. It's default value is 'black'
-
+	:param (boolean) crop_n_zoom : to enable cropping and zooms frames to reduce the black borders from stabilization being too noticeable. 
+									/Larger its value, more will be cropping. Its default value is False.
 	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 
 	"""

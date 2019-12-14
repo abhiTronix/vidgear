@@ -71,9 +71,9 @@ def test_video_stablization():
 	Testing VideoGear's Video Stablization playback capabilities 
 	"""
 	try:
-		Url = 'http://www.liushuaicheng.org/CVPR2014/data/example4_train_input.avi'
+		Url = 'https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/example4_train_input.mp4'
 		#define params
-		options = {'SMOOTHING_RADIUS': 5, 'BORDER_SIZE': 0, 'BORDER_TYPE': 'replicate'}
+		options = {'SMOOTHING_RADIUS': 5, 'BORDER_SIZE': 10, 'BORDER_TYPE': 'replicate', 'CROP_N_ZOOM': True}
 		#open stream
 		stab_stream = VideoGear(source = Url, stabilize = True, logging = True, **options).start()
 		#playback
