@@ -88,7 +88,7 @@ class VideoGear:
 
 		if self.stablization_mode:
 			from .stabilizer import Stabilizer
-			s_radius, border_size, border_type = (25, 0, 'black') #defaults
+			s_radius, border_size, border_type, crop_n_zoom = (25, 0, 'black', False) #defaults
 			if options:
 				if "SMOOTHING_RADIUS" in options:
 					if isinstance(options["SMOOTHING_RADIUS"],int):
@@ -102,7 +102,11 @@ class VideoGear:
 					if isinstance(options["BORDER_TYPE"],str):
 						border_type = options["BORDER_TYPE"] #assigsn special parameter
 					del options["BORDER_TYPE"] #clean
-			self.stabilizer_obj = Stabilizer(smoothing_radius = s_radius, border_type = border_type, border_size = border_size, logging = logging)
+				if "CROP_N_ZOOM" in options:
+					if isinstance(options["CROP_N_ZOOM"],bool):
+						crop_n_zoom = options["CROP_N_ZOOM"] #assigsn special parameter
+					del options["CROP_N_ZOOM"] #clean
+			self.stabilizer_obj = Stabilizer(smoothing_radius = s_radius, border_type = border_type, border_size = border_size, crop_n_zoom = crop_n_zoom, logging = logging)
 			if logging: print('[LOG]: Enabling Stablization Mode for the current video source!') #log info
 
 		if enablePiCamera:

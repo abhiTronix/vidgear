@@ -26,7 +26,6 @@ THE SOFTWARE.
 # import the necessary packages
 from threading import Thread
 from pkg_resources import parse_version
-from .helper import check_python_version
 from .helper import generate_auth_certificates
 from collections import deque
 import numpy as np
@@ -208,7 +207,6 @@ class NetGear:
 			elif key == 'secure_mode' and isinstance(value,int) and (value in valid_security_mech):
 				#secure mode 
 				try:
-					assert check_python_version() >= 3, "[ERROR]: ZMQ Security feature is not available with python version < 3.0."
 					assert zmq.zmq_version_info() >= (4,0), "[ERROR]: ZMQ Security feature is not supported in libzmq version < 4.0."
 					self.secure_mode = value
 				except Exception as e:

@@ -104,6 +104,9 @@ The following **functional block diagram** clearly depicts the functioning of Vi
 &nbsp;
 
 ## New Release SneekPeak : VidGear 0.1.6
+
+***:warning: Python 2.7 legacy support [dropped in v0.1.6][drop27]!***
+
 **NetGear API:**
   * Added powerful ZMQ Authentication & Data Encryption features for NetGear API:
     * Added exclusive `secure_mode` param for enabling it.
@@ -147,7 +150,7 @@ Before installing VidGear, you must verify that the following dependencies are m
 * **`OpenCV:`** VidGear must require OpenCV(3.0+) python enabled binaries to be installed on your machine for its core functions. For its installation, you can follow these online tutorials for [linux][OpenCV-linux] and [raspberry pi][OpenCV-pi], otherwise, install it via pip:
 
     ```sh
-      pip install -U opencv-python       #or install opencv-contrib-python similarly
+      pip3 install -U opencv-python       #or install opencv-contrib-python similarly
     ```
 
 * **`FFmpeg:`** VidGear must require FFmpeg for its powerful video compression and encoding capabilities. :star2: Follow this [**FFmpeg wiki page**][ffmpeg-wiki] for its installation. :star2:
@@ -155,26 +158,26 @@ Before installing VidGear, you must verify that the following dependencies are m
 * **`picamera:`** Required if using Raspberry Pi Camera Modules(_such as OmniVision OV5647 Camera Module_) with your Raspberry Pi machine. You can easily install it via pip:
 
     ```sh
-      pip install picamera
+      pip3 install picamera
     ``` 
   Also, make sure to enable Raspberry Pi hardware-specific settings prior to using this library.
 
 * **`mss:`** Required for using Screen Casting. Install it via pip:
 
     ```sh
-      pip install mss
+      pip3 install mss
     ```
 * **`pyzmq:`** Required for transferring live video frames through _ZeroMQ messaging system_ over the network. Install it via pip:
 
     ```sh
-      pip install pyzmq
+      pip3 install pyzmq
     ```
 
 * **`pafy:`** Required for direct YouTube Video streaming capabilities. Both [`pafy`][pafy] and latest only [`youtube-dl`][yt-dl](_as pafy's backend_) libraries must be installed via pip as follows:
 
     ```sh
-      pip install pafy
-      pip install -U youtube-dl
+      pip3 install pafy
+      pip3 install -U youtube-dl
     ```
 
 
@@ -185,7 +188,7 @@ Before installing VidGear, you must verify that the following dependencies are m
 > Best option for **quickly** getting VidGear installed.
 
 ```sh
-  pip install vidgear
+  pip3 install vidgear
 ```
 &nbsp;
 
@@ -206,7 +209,7 @@ You can clone this repository's `testing` branch for development and thereby can
  git clone https://github.com/abhiTronix/vidgear.git
  cd vidgear
  git checkout testing
- pip install .
+ sudo pip3 install .
 ```
 
 &nbsp;
@@ -455,8 +458,8 @@ The full documentation for all VidGear classes and functions can be found in the
 
   * **Download few additional python libraries:**
     ```sh
-     pip install six
-     pip install pytest
+     pip3 install six
+     pip3 install pytest
     ```
   
   * **Download Test Dataset:** To perform tests, additional *test dataset* is required, which can be downloaded by running [*bash script*][bs_script_dataset] as follows:
@@ -488,9 +491,8 @@ See [Wiki: Project Motivation][wiki-vidgear-purpose]
 
 ## Supported Python legacies
 
-  * **Python 2.7 legacies:** *VidGear v0.1.5 is officially the last Python 2.7 legacies supporting version.* Kindly migrate your source code to Python 3 as soon as possible.
-
-  * **Python 3.x legacies:** follows the [numpy][numpy] releases.
+  * **Python 3+ are only supported legacies for installing vidgear v0.1.6 and above.**
+  * **:warning: Python 2.7 legacy support [dropped in v0.1.6][drop27].**
 
 &nbsp;
 
@@ -557,6 +559,7 @@ Internal URLs
 [screengear-wiki]:https://github.com/abhiTronix/vidgear/wiki/ScreenGear#screengear-api
 [writegear-wiki]:https://github.com/abhiTronix/vidgear/wiki/WriteGear#writegear-api
 [netgear-wiki]:https://github.com/abhiTronix/vidgear/wiki/NetGear#netgear-api
+[drop27]:https://github.com/abhiTronix/vidgear/issues/29
 
 
 <!--
