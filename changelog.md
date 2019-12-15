@@ -26,9 +26,30 @@
     * Implemented new *Publish/Subscribe(`zmq.PUB/zmq.SUB`)* pattern for seamless Live Streaming in NetGear API.
 
   * **PiGear API:**
-    * Added new threaded internal timing function for PiGear to handle any hardware failures/frozen threads
+    * Added new threaded internal timing function for PiGear to handle any hardware failures/frozen threads.
     * PiGear will not exit safely with `SystemError` if Picamera ribbon cable is pulled out to save resources.
     * Added support for new user-defined `HWFAILURE_TIMEOUT` options attribute to alter timeout.
+
+  * **VideoGear API:** 
+    * Added `framerate` global variable and removed redundant function.
+    * Added `CROP_N_ZOOM` attribute in Videogear API for supporting Crop and Zoom stabilizer feature.
+
+  * **WriteGear API:** Added new `execute_ffmpeg_cmd` function to pass a custom command to its FFmpeg pipeline.
+
+  * **Stabilizer class:** 
+    * Added new Crop and Zoom feature.
+      * Added `crop_n_zoom` param for enabling this feature.
+    * Updated docs.
+
+  * **CLI & Tests updates:**
+    * Replaced python 3.5 matrices with latest python 3.8 matrices in Linux environment.
+    * Added full support for **Codecov** in all CLI environments.
+    * Updated OpenCV to v4.2.0-pre(master branch). 
+    * Added various Netgear API tests.
+    * Added initial Screengear API test.
+    * More test RTSP feeds added with better error handling in CamGear network test.
+    * Added tests for ZMQ authentication certificate generation.
+    * Added badge and Minor doc updates.
 
   * Added VidGear's official native support for MacOS environments.
     
@@ -40,15 +61,16 @@
   * Added support for `REQ/REP` pattern in Multi-Server Mode
   * Added new `camera_num` to support multiple Picameras
   * Moved thread exceptions to the main thread and then re-raised
-  * Replaced `traceback` with `sys.exc_info`. 
+  * Replaced `traceback` with `sys.exc_info`.
+  * Overall APIs Code and Docs optimizations.
   * Updated Code Readability and Wiki Docs.
   * Updated ReadMe & Changelog with the latest changes.
   * Updated Travis CLI Tests with support for macOS environment.
   * Reformatted & implemented necessary MacOS related changes and dependencies in `travis.yml`.
 
 ### Breaking Updates / Improvements / Changes
-  * `Python 2.7` legacy support removed from CLI tests.
-  * Newly implemented `secure_mode` will only support Python 3 and above legacies.
+  * :warning: Python 2.7 legacy support dropped completely.
+  * Python 3+ are only supported legacies for installing Vidgear v0.1.6 and above. 
 
 ### Fixes
   * Reimplemented `Pub/Sub` pattern for smoother performance(#70)
@@ -71,6 +93,7 @@
   * PR #67
   * PR #72
   * PR #77
+  * PR #78
 
 :warning: PyPi Release does NOT contain Tests and Scripts!
 

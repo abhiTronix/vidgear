@@ -108,31 +108,19 @@ The following **functional block diagram** clearly depicts the functioning of Vi
 ***:warning: Python 2.7 legacy support [dropped in v0.1.6][drop27]!***
 
 **NetGear API:**
-  * Added powerful ZMQ Authentication & Data Encryption features for NetGear API:
-    * Added exclusive `secure_mode` param for enabling it.
-    * Added support for two most powerful `Stonehouse` & `Ironhouse` ZMQ security mechanisms.
-    * Added smart auth-certificates/key generation and validation like features
-  * Introducing robust Multi-Server support for NetGear API:
-    * Enables Multiple Servers messaging support with a single client.
-    * Added exclusive `multiserver_mode` param for enabling it.
-    * Added ability to send additional data of any datatype along with the frame in realtime in this mode.
-  * Introducing exclusive Bi-Directional Mode for bidirectional data transmission:
-    * Added new `return_data` parameter to `recv()` function.
-    * Added new `bidirectional_mode` attribute for enabling this mode.
-    * Added support for `PAIR` & `REQ/REP` patterns for this mode
-    * Added support for sending data of any python datatype.
-    * Added support for `message` parameter for non-exclusive primary modes for this mode
-  * Introducing frame-compression support with on-the-fly flexible encoding/decoding:
-    * Added initial support for `JPEG`, `PNG` & `BMP` encoding formats 
-    * Added exclusive options attribute `compression_format` & `compression_param` to tweak this feature
-    * Client-end will now decode frame automatically based on the encoding as well as support decoding flags
-  * Added `force_terminate` attribute flag for handling force socket termination at the Server-end if there's latency in the network. 
+  * Added powerful ZMQ Authentication & Data Encryption features for NetGear API
+  * Added robust Multi-Server support for NetGear API.
+  * Added exclusive Bi-Directional Mode for bidirectional data transmission.
+  * Added frame-compression support with on-the-fly flexible encoding/decoding.
   * Implemented new *Publish/Subscribe(`zmq.PUB/zmq.SUB`)* pattern for seamless Live Streaming in NetGear API.
 
 **PiGear API:**
   * Added new threaded internal timing function for PiGear to handle any hardware failures/frozen threads
   * PiGear will not exit safely with `SystemError` if Picamera ribbon cable is pulled out to save resources.
-  * Added support for new user-defined `HWFAILURE_TIMEOUT` options attribute to alter timeout.
+
+**WriteGear API:** Added new `execute_ffmpeg_cmd` function to pass a custom command to its internal FFmpeg pipeline.
+
+**Stabilizer class:** Added new _Crop and Zoom_ feature.
 
 ***Added VidGear's official native support for MacOS environment and [many more...](changelog.md)***
 
@@ -491,7 +479,7 @@ See [Wiki: Project Motivation][wiki-vidgear-purpose]
 
 ## Supported Python legacies
 
-  * **Python 3+ are only supported legacies for installing vidgear v0.1.6 and above.**
+  * **Python 3+ are only supported legacies for installing Vidgear v0.1.6 and above.**
   * **:warning: Python 2.7 legacy support [dropped in v0.1.6][drop27].**
 
 &nbsp;
