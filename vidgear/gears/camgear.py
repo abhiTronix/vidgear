@@ -50,9 +50,7 @@ try:
 	# import OpenCV Binaries
 	import cv2
 	# check whether OpenCV Binaries are 3.x+
-	if parse_version(cv2.__version__) >= parse_version('3'):
-		pass
-	else:
+	if parse_version(cv2.__version__) < parse_version('3'):
 		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
 
 except ImportError as error:
@@ -130,16 +128,11 @@ class CamGear:
 				if url:
 					source_object = pafy.new(url)
 					_source = source_object.getbestvideo("any", ftypestrict=False)
-					if _source is None:
-						_source = source_object.getbest("any", ftypestrict=False)
-					if logging:
-						print('[LOG]: URL: {}'.format(url))
-						print('[LOG]: Title: {}'.format(source_object.title))
-						print('[LOG]: Extension: {}'.format(_source.extension))
+					if _source is None: _source = source_object.getbest("any", ftypestrict=False)
+					if logging: print('[LOG]: YouTube source ID: `{}`, Title: `{}` & Video_Extension: `{}`'.format(url, source_object.title, _source.extension))
 					source = _source.url
 			except Exception as e:
-				if logging:
-					print(e)
+				if logging: print(e)
 				raise ValueError('[ERROR]: YouTube Mode is enabled and the input YouTube Url is invalid!')
 
 		# youtube mode variable initialization
@@ -161,11 +154,12 @@ class CamGear:
 			#define deque and assign it to global var
 			self.queue = deque(maxlen=96) #max len 96 to check overflow
 			#log it
-			if logging:
-				print('[LOG]: Enabling Threaded Queue Mode for the current video source!') 
+			if logging: print('[LOG]: Enabling Threaded Queue Mode for the current video source!') 
 		else:
 			#otherwise disable it
 			self.threaded_queue_mode = False
+			#log it
+			if logging: print('[LOG]: Threaded Queue Mode is disabled for the current video source!') 
 
 		# stream variable initialization
 		self.stream = None
@@ -194,8 +188,9 @@ class CamGear:
 				self.stream.set(capPropId(key),value)
 
 			# separately handle colorspace value to int conversion
-			if not(colorspace is None):
+			if not(colorspace is None): 
 				self.color_space = capPropId(colorspace.strip())
+				if logging: print('[LOG]: Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
 
 		except Exception as e:
 			# Catch if any error occurred
@@ -203,26 +198,30 @@ class CamGear:
 				print(e)
 
 		#initialize and assign framerate variable
-		self.framerate = 0
+		self.framerate = 0.0
 		try:
 			_fps = self.stream.get(cv2.CAP_PROP_FPS)
-			if _fps>1:
-				self.framerate = _fps
+			if _fps>1: self.framerate = _fps
 		except Exception as e:
-			if logging:
-				print(e)
-			self.framerate = 0
+			if logging: print(e)
+			self.framerate = 0.0
+
+		# applying time delay to warm-up webcam only if specified
+		if time_delay: time.sleep(time_delay)
 
 		#frame variable initialization
 		(grabbed, self.frame) = self.stream.read()
 
-		if self.threaded_queue_mode:
-			#intitialize and append to queue
-			self.queue.append(self.frame)
+		#check if vaild stream
+		if grabbed:
+			#render colorspace if defined
+			if not(self.color_space is None): self.frame = cv2.cvtColor(self.frame, self.color_space)
 
-		# applying time delay to warm-up webcam only if specified
-		if time_delay:
-			time.sleep(time_delay)
+			if self.threaded_queue_mode:
+				#intitialize and append to queue
+				self.queue.append(self.frame)
+		else:
+			raise RuntimeError('[ERROR]: Source is invalid, CamGear failed to intitialize stream on this source!')
 
 		# enable logging if specified
 		self.logging = logging
@@ -259,9 +258,7 @@ class CamGear:
 
 			if self.threaded_queue_mode:
 				#check queue buffer for overflow
-				if len(self.queue) < 96:
-					pass
-				else:
+				if len(self.queue) >= 96:
 					#stop iterating if overflowing occurs
 					time.sleep(0.000001)
 					continue
@@ -273,12 +270,12 @@ class CamGear:
 			if not grabbed:
 				#no frames received, then safely exit
 				if self.threaded_queue_mode:
-					if len(self.queue)>0:
-						pass
+					if len(self.queue) == 0: 
+						break
 					else:
-						self.terminate = True
+						continue
 				else:
-					self.terminate = True
+					break
 
 			if not(self.color_space is None):
 				# apply colorspace to frames
@@ -288,8 +285,7 @@ class CamGear:
 						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
 						self.color_space = None
-						if self.logging:
-							print('[LOG]: Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
+						if self.logging: print('[LOG]: Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None
@@ -305,9 +301,10 @@ class CamGear:
 				self.frame = frame
 
 			#append to queue
-			if self.threaded_queue_mode:
-				self.queue.append(self.frame)
+			if self.threaded_queue_mode: self.queue.append(self.frame)
 
+		self.threaded_queue_mode = False
+		self.frame = None
 		#release resources
 		self.stream.release()
 
@@ -318,7 +315,7 @@ class CamGear:
 		return the frame
 		"""
 		while self.threaded_queue_mode:
-			if len(self.queue)>0:
+			if len(self.queue) > 0: 
 				return self.queue.popleft()
 		return self.frame
 
@@ -328,15 +325,16 @@ class CamGear:
 		"""
 		Terminates the Read process
 		"""
-
+		if self.logging: print('[LOG]: Terminating processes')
 		#terminate Threaded queue mode seperately
 		if self.threaded_queue_mode and not(self.queue is None):
-			self.queue.clear()
+			if len(self.queue)>0: self.queue.clear()
 			self.threaded_queue_mode = False
 			self.frame = None
 
 		# indicate that the thread should be terminate
 		self.terminate = True
+
 		# wait until stream resources are released (producer thread might be still grabbing frame)
 		if self.thread is not None:
 			self.thread.join()

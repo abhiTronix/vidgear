@@ -24,16 +24,18 @@ THE SOFTWARE.
 """
 
 import os, pytest, tempfile, shutil, platform
+from os.path import expanduser
 
 from vidgear.gears.helper import download_ffmpeg_binaries
 from vidgear.gears.helper import validate_ffmpeg
 from vidgear.gears.helper import get_valid_ffmpeg_path
+from vidgear.gears.helper import generate_auth_certificates
 
 
 
 def return_static_ffmpeg():
 	"""
-	return FFmpeg static path
+	returns system specific FFmpeg static path
 	"""
 	path = ''
 	if platform.system() == 'Windows':
@@ -45,9 +47,10 @@ def return_static_ffmpeg():
 	return os.path.abspath(path)
 
 
+
 def test_ffmpeg_static_installation():
 	"""
-	Auxilary Tests to ensure successful Static FFmpeg Installation on Windows through script
+	Test to ensure successful FFmpeg static Installation on Windows
 	"""
 	startpath = os.path.abspath(os.path.join(tempfile.gettempdir(),'Downloads/FFmpeg_static'))
 	for root, dirs, files in os.walk(startpath):
@@ -63,7 +66,7 @@ def test_ffmpeg_static_installation():
 @pytest.mark.parametrize('paths', ['..','wrong_test_path', tempfile.gettempdir()])
 def test_ffmpeg_binaries_download(paths):
 	"""
-	Testing Static FFmpeg Auto Binaries Download on Windows
+	Testing Static FFmpeg auto-download on Windows OS
 	"""
 	_windows  = True if os.name == 'nt' else False
 	file_path = ''
@@ -84,7 +87,7 @@ def test_ffmpeg_binaries_download(paths):
 @pytest.mark.parametrize('paths', ['wrong_test_path', return_static_ffmpeg()])
 def test_validate_ffmpeg(paths):
 	"""
-	Testing FFmpeg Static binaries validation on Windows:
+	Testing downloaded FFmpeg Static binaries validation on Windows OS
 	"""
 	try:
 		output = validate_ffmpeg(paths, logging = True)
@@ -117,6 +120,30 @@ def test_get_valid_ffmpeg_path(paths, ffmpeg_download_paths, results):
 			assert bool(output) == results, "FFmpeg excutables validation and correction Test failed at path: {} and FFmpeg ffmpeg_download_paths: {}".format(paths, ffmpeg_download_paths)
 	except Exception as e:
 		if paths == 'wrong_test_path' or ffmpeg_download_paths == 'wrong_test_path':
+			pass
+		else:
+			pytest.fail(str(e))
+
+
+
+test_data = [(os.path.join(expanduser("~"),".vidgear"), False, True), 
+(os.path.join(expanduser("~"),".vidgear"), True, True),
+('test_folder', False, True), 
+(tempfile.gettempdir(), False, True), 
+(tempfile.gettempdir(), True, True)]
+
+@pytest.mark.parametrize('paths, overwrite_cert, results', test_data)
+def test_generate_auth_certificates(paths, overwrite_cert, results):
+	"""
+	Testing auto-Generation and auto-validation of CURVE ZMQ keys/certificates 
+	"""
+	try:
+		if overwrite_cert: print('[WARNING]: Overwriting ZMQ Authentication certificates over previous ones!')
+		output = generate_auth_certificates(paths, overwrite = overwrite_cert)
+		if paths != 'wrong_test_path':
+			assert bool(output) == results
+	except Exception as e:
+		if paths == 'wrong_test_path':
 			pass
 		else:
 			pytest.fail(str(e))

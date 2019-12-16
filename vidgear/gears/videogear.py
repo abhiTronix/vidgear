@@ -82,13 +82,13 @@ class VideoGear:
 							/ Its default value is 0.
 	"""
 
-	def __init__(self, enablePiCamera = False, stabilize = False, source=0, y_tube = False, backend = 0, colorspace = None, resolution=(640, 480), framerate=25, logging = False, time_delay = 0, **options):
+	def __init__(self, enablePiCamera = False, stabilize = False, source = 0, y_tube = False, backend = 0, colorspace = None, resolution = (640, 480), framerate = 25, logging = False, time_delay = 0, **options):
 		
 		self.stablization_mode = stabilize
 
 		if self.stablization_mode:
 			from .stabilizer import Stabilizer
-			s_radius, border_size, border_type = (25, 0, 'black')
+			s_radius, border_size, border_type, crop_n_zoom = (25, 0, 'black', False) #defaults
 			if options:
 				if "SMOOTHING_RADIUS" in options:
 					if isinstance(options["SMOOTHING_RADIUS"],int):
@@ -102,31 +102,33 @@ class VideoGear:
 					if isinstance(options["BORDER_TYPE"],str):
 						border_type = options["BORDER_TYPE"] #assigsn special parameter
 					del options["BORDER_TYPE"] #clean
-			self.stabilizer_obj = Stabilizer(smoothing_radius = s_radius, border_type = border_type, border_size = border_size, logging = logging)
-			#log info
-			if logging:
-				print('[LOG]: Enabling Stablization Mode for the current video source!')
+				if "CROP_N_ZOOM" in options:
+					if isinstance(options["CROP_N_ZOOM"],bool):
+						crop_n_zoom = options["CROP_N_ZOOM"] #assigsn special parameter
+					del options["CROP_N_ZOOM"] #clean
+			self.stabilizer_obj = Stabilizer(smoothing_radius = s_radius, border_type = border_type, border_size = border_size, crop_n_zoom = crop_n_zoom, logging = logging)
+			if logging: print('[LOG]: Enabling Stablization Mode for the current video source!') #log info
 
 		if enablePiCamera:
 			# only import the pigear module only if required
 			from .pigear import PiGear
 
 			# initialize the picamera stream by enabling PiGear Class
-			self.stream = PiGear(resolution=resolution, framerate=framerate, colorspace = colorspace, logging = logging, time_delay = time_delay, **options)
-
+			self.stream = PiGear(resolution = resolution, framerate = framerate, colorspace = colorspace, logging = logging, time_delay = time_delay, **options)
 		else:
 			# otherwise, we are using OpenCV so initialize the webcam
 			# stream by activating CamGear Class
-			self.stream = CamGear(source=source, y_tube = y_tube, backend = backend, colorspace = colorspace, logging = logging, time_delay = time_delay, **options)
+			self.stream = CamGear(source = source, y_tube = y_tube, backend = backend, colorspace = colorspace, logging = logging, time_delay = time_delay, **options)
+
+		#initialize framerate variable
+		self.framerate = self.stream.framerate
+
 
 	def start(self):
 		# start the threaded video stream
 		self.stream.start()
 		return self
 
-	def update(self):
-		# grab the next frame from the stream
-		self.stream.update()
 
 	def read(self):
 		# return the current frame
@@ -139,8 +141,9 @@ class VideoGear:
 				return frame_stab
 		return self.stream.read()
 
+
 	def stop(self):
 		# stop the thread and release any resources
 		self.stream.stop()
-		if self.stablization_mode:
-			self.stabilizer_obj.clean()
+		#clean queue
+		if self.stablization_mode: self.stabilizer_obj.clean()

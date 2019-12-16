@@ -44,15 +44,16 @@ class Stabilizer:
 
 	:param smoothing_radius` (int) : to alter averaging window size. It handles the quality of stabilization at expense of latency and sudden panning. 
 									/ Larger its value, less will be panning, more will be latency and vice-versa. It's default value is 25.
-	:param border_size (int) : to alter output border cropping. It's will crops the border to reduce the black borders from stabilization being too noticeable. 
-								/ Larger its value, more will be cropping. It's default value is 0 (i.e. no cropping).			
+	:param border_size (int) :  to create extended output border size. It's default value is `0`(no borders).			
 	:param border_type (string) : to change the border mode. Valid border types are 'black', 'reflect', 'reflect_101', 'replicate' and 'wrap'. It's default value is 'black'
-
+	:param (boolean) crop_n_zoom : to enable cropping and zooms frames to reduce the black borders from stabilization being too noticeable. 
+									/It works in conjunction with the `border_size` parameter, i.e. when this parameter is enabled `border_size` 
+									/ will be used for cropping border instead of making them. Its default value is False.
 	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 
 	"""
 	
-	def __init__(self, smoothing_radius = 25, border_type = 'black', border_size = 0 , logging = False):
+	def __init__(self, smoothing_radius = 25, border_type = 'black', border_size = 0, crop_n_zoom = False, logging = False):
 
 		# initialize deques for handling input frames and its indexes
 		self.frame_queue = deque(maxlen=smoothing_radius)
@@ -70,26 +71,40 @@ class Stabilizer:
 		self.previous_gray = None #handles previous gray frame
 		self.previous_keypoints = None #handles previous detect_GFTTed keypoints w.r.t previous gray frame
 		self.frame_height, self.frame_width = (0, 0) #handles width and height of input frames
+		self.crop_n_zoom = 0 # handles cropping and zooms frames to reduce the black borders from stabilization being too noticeable.
+
+		# if check if crop_n_zoom defined
+		if crop_n_zoom and border_size:
+			self.crop_n_zoom = border_size #crops and zoom frame to original size
+			self.border_size = 0 #zero out border size
+			self.frame_size = None #handles frame size for zooming
+			if logging: print('[LOG]: Setting Cropping margin {} pixels'.format(border_size))
+		else:
+			# Add output borders to frame 
+			self.border_size = border_size
+			if logging and border_size: print('[LOG]: Setting Border size {} pixels'.format(border_size))
 
 		# define valid border modes
 		border_modes = {'black': cv2.BORDER_CONSTANT,'reflect': cv2.BORDER_REFLECT, 'reflect_101': cv2.BORDER_REFLECT_101, 'replicate': cv2.BORDER_REPLICATE, 'wrap': cv2.BORDER_WRAP}
 		# choose valid border_mode from border_type
 		if border_type in ['black', 'reflect', 'reflect_101', 'replicate', 'wrap']:
-			#initialize global border mode variable 
-			self.border_mode = border_modes[border_type]
+			if not crop_n_zoom:
+				#initialize global border mode variable 
+				self.border_mode = border_modes[border_type]
+				if logging and border_type != 'black': print('[LOG]: Setting Border type: {}'.format(border_type))
+			else:
+				#log and reset to default
+				if logging and border_type != 'black': print('[LOG]: Setting border type is disabled if cropping is enabled!')
+				self.border_mode = border_modes['black']
 		else:
 			#otherwise log if not
-			if logging:
-				print('[LOG]: Invalid input border type!')
+			if logging: print('[LOG]: Invalid input border type!')
 			self.border_mode = border_modes['black'] #reset to default mode
 			
 		# define normalized box filter
 		self.box_filter = np.ones(smoothing_radius)/smoothing_radius
 
-		# define cropping factor, Crops the border to reduce the black borders from stabilization being too noticeable.
-		self.border_crop_size = border_size
-
-		#decide whether to log
+		# decide whether to log
 		self.logging = logging
 
 
@@ -104,6 +119,10 @@ class Stabilizer:
 		if frame is None:
 			#return if it does
 			return
+
+		#save frame size for zooming
+		if self.crop_n_zoom and self.frame_size == None:
+			self.frame_size = frame.shape[:2]
 		
 		# initiate transformations capturing
 		if not self.frame_queue:
@@ -228,11 +247,11 @@ class Stabilizer:
 		queue_frame_index = self.frame_queue_indexes.popleft()
 
 		#create border around extracted frame w.r.t border_size
-		bordered_frame = cv2.copyMakeBorder(queue_frame, top=self.border_crop_size, bottom=self.border_crop_size, left=self.border_crop_size, right=self.border_crop_size, borderType=self.border_mode, value=[0, 0, 0])
+		bordered_frame = cv2.copyMakeBorder(queue_frame, top=self.border_size, bottom=self.border_size, left=self.border_size, right=self.border_size, borderType=self.border_mode, value=[0, 0, 0])
 		alpha_bordered_frame = cv2.cvtColor(bordered_frame, cv2.COLOR_BGR2BGRA) #create alpha channel
 		#extract alpha channel
 		alpha_bordered_frame[:, :, 3] = 0 
-		alpha_bordered_frame[self.border_crop_size:self.border_crop_size + self.frame_height, self.border_crop_size:self.border_crop_size + self.frame_width, 3] = 255
+		alpha_bordered_frame[self.border_size:self.border_size + self.frame_height, self.border_size:self.border_size + self.frame_width, 3] = 255
 
 		#extracting Transformations w.r.t frame index
 		dx = self.frame_transforms_smoothed[queue_frame_index,0] #x-axis
@@ -253,6 +272,14 @@ class Stabilizer:
 
 		#drop alpha channel
 		frame_stabilized = frame_wrapped[:, :, :3]
+
+		#crop and zoom
+		if self.crop_n_zoom:
+			#crop
+			frame_cropped = frame_stabilized[self.crop_n_zoom:-self.crop_n_zoom, self.crop_n_zoom:-self.crop_n_zoom]
+			#zoom
+			interpolation = cv2.INTER_CUBIC if (check_CV_version() == 3) else cv2.INTER_LINEAR_EXACT
+			frame_stabilized = cv2.resize(frame_cropped, self.frame_size[::-1], interpolation = interpolation)
 
 		#finally return stabilized frame
 		return frame_stabilized

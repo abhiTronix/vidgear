@@ -26,7 +26,6 @@ THE SOFTWARE.
 # import the necessary packages
 from threading import Thread
 from pkg_resources import parse_version
-from .helper import check_python_version
 from .helper import generate_auth_certificates
 from collections import deque
 import numpy as np
@@ -39,12 +38,10 @@ try:
 	# import OpenCV Binaries
 	import cv2
 	# check whether OpenCV Binaries are 3.x+
-	if parse_version(cv2.__version__) >= parse_version('3'):
-		pass
-	else:
+	if parse_version(cv2.__version__) < parse_version('3'):
 		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
 except ImportError as error:
-	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
+	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip3 install opencv-python` command.')
 
 
 
@@ -154,9 +151,7 @@ class NetGear:
 			if logging: print('[LOG]: Wrong pattern value, Defaulting to `zmq.PAIR`! Kindly refer Docs for more Information.')
 		
 		#check  whether user-defined messaging protocol is valid
-		if protocol in ['tcp', 'upd', 'pgm', 'inproc', 'ipc']:
-			pass
-		else:
+		if not(protocol in ['tcp', 'udp',  'pgm', 'epgm', 'inproc', 'ipc']):
 			# else default to `tcp` protocol
 			protocol = 'tcp'
 			#log it
@@ -212,7 +207,6 @@ class NetGear:
 			elif key == 'secure_mode' and isinstance(value,int) and (value in valid_security_mech):
 				#secure mode 
 				try:
-					assert check_python_version() >= 3, "[ERROR]: ZMQ Security feature is not available with python version < 3.0."
 					assert zmq.zmq_version_info() >= (4,0), "[ERROR]: ZMQ Security feature is not supported in libzmq version < 4.0."
 					self.secure_mode = value
 				except Exception as e:
@@ -281,8 +275,13 @@ class NetGear:
 			import zmq.auth
 			from zmq.auth.thread import ThreadAuthenticator
 
-			# log if overwriting is enabled 
-			if logging and overwrite_cert: print('[WARNING]: Overwriting ZMQ Authentication certificates over previous ones!')
+			# log if overwriting is enabled
+			if overwrite_cert: 
+				if not receive_mode:
+					if logging: print('[WARNING]: Overwriting ZMQ Authentication certificates over previous ones!')
+				else:
+					overwrite_cert = False
+					if logging: print('[ALERT]: Overwriting ZMQ Authentication certificates is disabled for Client-end!')
 
 			#generate and validate certificates path
 			try:
@@ -359,7 +358,7 @@ class NetGear:
 
 			try:
 				# initiate and handle secure mode
-				if self.secure_mode > 0 and not(self.multiserver_mode):
+				if self.secure_mode > 0:
 					# start an authenticator for this context
 					auth = ThreadAuthenticator(self.msg_context)
 					auth.start()
@@ -375,7 +374,7 @@ class NetGear:
 
 				# initialize and define thread-safe messaging socket
 				self.msg_socket = self.msg_context.socket(msg_pattern[1])
-				if self.pattern == 2: self.msg_socket.set_hwm(1)
+				if self.pattern == 2 and not(self.secure_mode): self.msg_socket.set_hwm(1)
 
 				if self.multiserver_mode:
 					# if multiserver_mode is enabled, then assign port addresses to zmq socket
@@ -448,7 +447,7 @@ class NetGear:
 				print('[LOG]: Receive Mode is activated successfully!')
 		else:
 			#otherwise default to `Send Mode`
-			if address is None: address = 'localhost' #define address
+			if address is None: address = 'localhost'#define address
 
 			#check if multiserver_mode is enabled
 			if self.multiserver_mode:
@@ -467,7 +466,7 @@ class NetGear:
 				
 			try:
 				# initiate and handle secure mode
-				if self.secure_mode > 0 and self.multiserver_mode:
+				if self.secure_mode > 0:
 					# start an authenticator for this context
 					auth = ThreadAuthenticator(self.msg_context)
 					auth.start()
@@ -475,7 +474,7 @@ class NetGear:
 
 					#check if `IronHouse` is activated
 					if self.secure_mode == 2:
-						# tell authenticator to use the certificate/key from given valid dir
+						# tell authenticator to use the certificate from given valid dir
 						auth.configure_curve(domain='*', location=self.auth_publickeys_dir)
 					else:
 						#otherwise tell the authenticator how to handle the CURVE requests, if `StoneHouse` is activated
@@ -488,7 +487,7 @@ class NetGear:
 					# if pattern is 1, define additional flags
 					self.msg_socket.REQ_RELAXED = True
 					self.msg_socket.REQ_CORRELATE = True
-				if self.pattern == 2: self.msg_socket.set_hwm(1) # if pattern is 2, define additional optimizer
+				if self.pattern == 2 and not(self.secure_mode): self.msg_socket.set_hwm(1) # if pattern is 2, define additional optimizer
 
 				# enable specified secure mode for the zmq socket
 				if self.secure_mode > 0:
@@ -544,9 +543,7 @@ class NetGear:
 					break
 
 			#check queue buffer for overflow
-			if len(self.queue) < 96:
-				pass
-			else:
+			if len(self.queue) >= 96:
 				#stop iterating if overflowing occurs
 				time.sleep(0.000001)
 				continue
@@ -758,6 +755,9 @@ class NetGear:
 				self.thread.join()
 				self.thread = None
 				#properly handle thread exit
+
+			# properly close the socket
+			self.msg_socket.close(linger=0)
 		else:
 			# indicate that process should be terminated
 			self.terminate = True
@@ -770,8 +770,12 @@ class NetGear:
 				term_dict = dict(terminate_flag = True)
 			# otherwise inform client(s) that the termination has been reached
 			if self.force_close:
+				#overflow socket with termination signal
 				for _ in range(500): self.msg_socket.send_json(term_dict)
 			else:
 				self.msg_socket.send_json(term_dict)
+				#check for confirmation if available
+				if self.pattern < 2: 
+					if self.pattern == 1: self.msg_socket.recv()
 			# properly close the socket
-			self.msg_socket.close()
+			self.msg_socket.close(linger=0)

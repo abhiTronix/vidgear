@@ -37,10 +37,10 @@ try:
 
 	# check whether OpenCV Binaries are 3.x+
 	if parse_version(cv2.__version__) < parse_version('3'):
-		raise ImportError('OpenCV library version >= 3.0 is only supported by this library')
+		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
 
 except ImportError as error:
-	raise ImportError('Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
+	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip3 install opencv-python` command.')
 
 
 
@@ -70,7 +70,7 @@ class PiGear:
 
 	"""
 	
-	def __init__(self, camera_num = 0, resolution=(640, 480), framerate=30, colorspace = None, logging = False, time_delay = 0, **options):
+	def __init__(self, camera_num = 0, resolution = (640, 480), framerate = 30, colorspace = None, logging = False, time_delay = 0, **options):
 
 		try:
 			import picamera
@@ -79,20 +79,20 @@ class PiGear:
 		except Exception as error:
 			if isinstance(error, ImportError):
 				# Output expected ImportErrors.
-				raise ImportError('[ERROR]: Failed to detect Picamera executables, install it with "pip install picamera" command.')
+				raise ImportError('[ERROR]: Failed to detect Picamera executables, install it with "pip3 install picamera" command.')
 			else:
 				#Handle any API errors
 				raise RuntimeError('[ERROR]: Picamera API failure: {}'.format(error))
 
+		assert (isinstance(framerate, (int, float)) and framerate > 5.0), "[ERROR]: Input framerate value `{}` is a Invalid! Kindly read docs.".format(framerate)
+		assert (isinstance(resolution, (tuple, list)) and len(resolution) == 2), "[ERROR]: Input resolution value `{}` is a Invalid! Kindly read docs.".format(resolution)
+		if not(isinstance(camera_num, int) and camera_num >= 0): print("[ERROR]: `camera_num` value is invalid, Kindly read docs!")
+
 		# initialize the picamera stream at given index
-		self.camera = None
-		if isinstance(camera_num, int) and camera_num >= 0:
-			self.camera = PiCamera(camera_num = camera_num)
-			self.camera.resolution = resolution
-			self.camera.framerate = framerate
-			if logging: print("[LOG]: Activating Pi camera at index: {}".format(camera_num))
-		else:
-			raise ValueError("[ERROR]: `camera_num` value is invalid, Kindly read docs!")
+		self.camera = PiCamera(camera_num = camera_num)
+		self.camera.resolution = tuple(resolution)
+		self.camera.framerate = framerate
+		if logging: print("[LOG]: Activating Pi camera at index: {} with resolution: {} & framerate: {}".format(camera_num, resolution, framerate))
 
 		#initialize framerate variable
 		self.framerate = framerate
@@ -103,7 +103,7 @@ class PiGear:
 		#reformat dict
 		options = {k.strip(): v for k,v in options.items()}
 
-		#intialize timeout variable(handles hardware failures)
+		#define timeout variable default value(handles hardware failures)
 		self.failure_timeout = 2.0
 
 		#User-Defined parameter
@@ -112,6 +112,7 @@ class PiGear:
 			if isinstance(options["HWFAILURE_TIMEOUT"],(int, float)):
 				if not(10.0 > options["HWFAILURE_TIMEOUT"] > 1.0): raise ValueError('[ERROR]: `HWFAILURE_TIMEOUT` value can only be between 1.0 ~ 10.0')
 				self.failure_timeout = options["HWFAILURE_TIMEOUT"] #assign special parameter
+				if logging: print("[LOG]: Setting HW Failure Timeout: {} seconds".format(self.failure_timeout))
 			del options["HWFAILURE_TIMEOUT"] #clean
 
 		try:
@@ -120,8 +121,9 @@ class PiGear:
 				setattr(self.camera, key, value)
 
 			# separately handle colorspace value to int conversion
-			if not(colorspace is None):
+			if not(colorspace is None): 
 				self.color_space = capPropId(colorspace.strip())
+				if logging: print('[LOG]: Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
 
 		except Exception as e:
 			# Catch if any error occurred
@@ -132,18 +134,20 @@ class PiGear:
 		self.stream = self.camera.capture_continuous(self.rawCapture,format="bgr", use_video_port=True)
 
 		#frame variable initialization
+		self.frame = None
 		try:
 			stream = next(self.stream)
 			self.frame = stream.array
 			self.rawCapture.seek(0)
 			self.rawCapture.truncate()
+			#render colorspace if defined
+			if not(self.frame is None and self.color_space is None): self.frame = cv2.cvtColor(self.frame, self.color_space)
 		except Exception as e:
 			print(e)
 			raise RuntimeError('[ERROR]: Camera Module failed to initialize!')
 
 		# applying time delay to warm-up picamera only if specified
-		if time_delay:
-			time.sleep(time_delay)
+		if time_delay: time.sleep(time_delay)
 
 		#thread initialization
 		self.thread = None
@@ -165,7 +169,7 @@ class PiGear:
 
 	def start(self):
 		"""
-		start the thread to read frames from the video stream
+		start the thread to read frames from the video stream and initiate internal timer
 		"""
 		#Start frame producer thread
 		self.thread = Thread(target=self.update, args=())
@@ -194,7 +198,6 @@ class PiGear:
 			if time.time() - self.t_elasped > self.failure_timeout:
 				#log failure
 				if self.logging: print("[WARNING]: Camera Module Disconnected!")
-
 				#prepare for clean exit
 				self.exceptions = True
 				self.terminate = True #self-terminate
@@ -237,15 +240,14 @@ class PiGear:
 						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
 						self.color_space = None
-						if self.logging:
-							print('[LOG]: Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
+						if self.logging: print('[LOG]: Colorspace value `{}` is not a valid colorspace!'.format(self.color_space))
 							
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None
 					if self.logging:
 						print(e)
-						print('[LOG]: Input Colorspace is not a valid Colorspace!')
+						print('[WARNING]: Input colorspace is not a valid Colorspace!')
 
 				if not(color_frame is None):
 					self.frame = color_frame
@@ -297,9 +299,10 @@ class PiGear:
 		self.terminate = True
 
 		#stop timer thread
-		self._timer.join()
+		if not(self._timer is None): self._timer.join()
 
-		if self.thread is not None:
+		#handle camera thread
+		if not(self.thread is None):
 			#check if hardware failure occured
 			if not(self.exceptions is None) and isinstance(self.exceptions, bool):
 				# force release picamera resources

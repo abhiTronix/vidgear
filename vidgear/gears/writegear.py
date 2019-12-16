@@ -38,9 +38,7 @@ try:
 	# import OpenCV Binaries
 	import cv2
 	# check whether OpenCV Binaries are 3.x+
-	if parse_version(cv2.__version__) >= parse_version('3'):
-		pass
-	else:
+	if parse_version(cv2.__version__) < parse_version('3'):
 		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
 except ImportError as error:
 	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
@@ -95,12 +93,12 @@ class WriteGear:
 
 	"""
 	
-	def __init__(self, output_filename = '', compression_mode = True , custom_ffmpeg = '', logging = False, **output_params):
+	def __init__(self, output_filename = '', compression_mode = True, custom_ffmpeg = '', logging = False, **output_params):
 
 		# assign parameter values to class variables
 		self.compression = compression_mode
-		self.os_windows  = True if os.name == 'nt' else False #checks if machine in-use is running windows or not
-		self.logging = logging
+		self.os_windows  = True if os.name == 'nt' else False #checks if machine in-use is running windows os or not
+		self.logging = logging #enable logging
 
 		# initialize various important class variables
 		self.output_parameters = {}
@@ -139,8 +137,7 @@ class WriteGear:
 			try:
 				self.output_parameters = {str(k).strip().lower(): str(v).strip() for k,v in output_params.items()}
 			except Exception as e:
-				if self.logging:
-					print(e)
+				if self.logging: print(e)
 				raise ValueError('[ERROR]: Wrong output_params parameters passed to WriteGear class!')
 
 		#handles FFmpeg binaries validity tests 
@@ -158,7 +155,7 @@ class WriteGear:
 
 			#handle input framerate if specified
 			if self.output_parameters and "-input_framerate" in self.output_parameters:
-				self.inputframerate += float(self.output_parameters["-input_framerate"])
+				self.inputframerate = float(self.output_parameters["-input_framerate"])
 				del self.output_parameters["-input_framerate"] #clean
 
 			#validate the FFmpeg path/binaries and returns valid FFmpeg file executable location(also downloads static binaries on windows) 
@@ -182,12 +179,9 @@ class WriteGear:
 		#display confirmation if logging is enabled/disabled
 		if self.compression and self.ffmpeg:
 			self.DEVNULL = open(os.devnull, 'wb') 
-			if self.logging:
-				print('[LOG]: Compression Mode is configured properly!')
+			if self.logging: print('[LOG]: Compression Mode is configured properly!')
 		else:
-			if self.logging:
-				print('[LOG]: Compression Mode is disabled, Activating OpenCV In-built Writer!')
-
+			if self.logging: print('[LOG]: Compression Mode is disabled, Activating OpenCV In-built Writer!')
 
 
 
@@ -262,7 +256,6 @@ class WriteGear:
 		:param channels (int): Number of channels
 		:param rgb_mode (boolean): set this flag to enable rgb_mode, Its default value is False.
 		"""
-
 		#turn off initiate flag
 		self.initiate = False
 		#initialize input parameters
@@ -331,12 +324,49 @@ class WriteGear:
 		self.cmd += " ".join(cmd)
 		# Launch the FFmpeg process
 		if self.logging:
-			print(self.cmd)
+			print('[LOG]: Executing FFmpeg command: `{}`'.format(self.cmd))
 			# In debugging mode
 			self.process = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
 		else:
 			# In silent mode
 			self.process = sp.Popen(cmd, stdin=sp.PIPE, stdout=self.DEVNULL, stderr=sp.STDOUT)
+
+
+
+	def execute_ffmpeg_cmd(self, cmd = None):
+		"""
+		Executes custom FFmpeg process
+
+		:param cmd(list): custom command with input as list  
+		"""
+		#check if valid command
+		if cmd is None:
+			print('[Alert]: Input FFmpeg command is empty, Nothing to execute!')
+			return
+		else:
+			if not(isinstance(cmd, list)): 
+				raise ValueError("[ERROR]: Invalid input FFmpeg command! Kindly read docs.")
+
+		#check if Compression Mode is enabled
+		if not(self.compression): raise RuntimeError("[ERROR]: Compression Mode is disabled, Kindly enable it to access this function!")
+
+		#add configured FFmpeg path
+		cmd = [self.ffmpeg] + cmd
+
+		try:
+			if self.logging:
+				print('[LOG]: Executing FFmpeg command: `{}`'.format(' '.join(cmd)))
+				# In debugging mode
+				sp.call(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
+			else:
+
+				sp.call(cmd, stdin=sp.PIPE, stdout=self.DEVNULL, stderr=sp.STDOUT)
+		except (OSError, IOError):
+			# log something is wrong!
+			print ('[ERROR]: BrokenPipeError caught: Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!')
+			self.DEVNULL.close()
+			raise ValueError #for testing purpose only
+
 
 
 	def startCV_Process(self):
@@ -352,8 +382,6 @@ class WriteGear:
 		BACKEND = ''
 		FOURCC = 0
 		COLOR = True
-
-
 
 		#pre-assign default encoder parameters (if not assigned by user).
 		if "-fourcc" not in self.output_parameters:
@@ -387,13 +415,14 @@ class WriteGear:
 
 		if self.logging:
 			#log values for debugging
-			print('[LOG]: FILE_PATH: {}, FOURCC = {}, FPS = {}, WIDTH = {}, HEIGHT = {}, BACKEND = {}'.format(self.out_file,FOURCC, FPS, WIDTH, HEIGHT, BACKEND))
+			print('[LOG]: FILE_PATH: {}, FOURCC = {}, FPS = {}, WIDTH = {}, HEIGHT = {}, BACKEND = {}'.format(self.out_file, FOURCC, FPS, WIDTH, HEIGHT, BACKEND))
 
 		#start different process for with/without Backend.
 		if BACKEND: 
 			self.process = cv2.VideoWriter(self.out_file, apiPreference = BACKEND, fourcc = FOURCC, fps = FPS, frameSize = (WIDTH, HEIGHT), isColor = COLOR)
 		else:
 			self.process = cv2.VideoWriter(self.out_file, fourcc = FOURCC, fps = FPS, frameSize = (WIDTH, HEIGHT), isColor = COLOR)
+
 
 
 	def close(self):

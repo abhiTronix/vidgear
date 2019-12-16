@@ -18,18 +18,20 @@ matrix:
           osx_image: xcode11
           env: PYTHON=37
         - os: linux
-          python: "3.5"
-          language: python
-          cache: pip
-        - os: linux
+          dist: bionic
           python: "3.6"
           language: python
           cache: pip
         - os: linux
-          dist: xenial
+          dist: bionic
           python: "3.7"
           language: python
-          cache: pip   
+          cache: pip
+        - os: linux
+          dist: bionic
+          python: "3.8"
+          language: python
+          cache: pip  
 
 
 
@@ -37,6 +39,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
     brew install swig;
     brew install ffmpeg;
+    brew link ffmpeg;
     brew install unzip;
     curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci;
     source ./macports-ci install;
@@ -50,9 +53,8 @@ before_install:
     chmod +x scripts/bash/prepare_dataset.sh;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-    sudo add-apt-repository ppa:jonathonf/ffmpeg-4 -y;
     sudo apt-get update -q;
-    sudo apt-get install ffmpeg unzip wget -y;
+    sudo apt-get install unzip wget -y;
     sudo apt-get install dos2unix -y;
     dos2unix scripts/bash/prepare_dataset.sh;
     chmod +x scripts/bash/prepare_dataset.sh;
@@ -71,7 +73,9 @@ install:
     pip install .;
     pip uninstall opencv-contrib-python -y;
     pip install six;
+    pip install codecov;
     pip install --upgrade pytest;
+    pip install --upgrade pytest-cov;
     pip install --upgrade youtube-dl;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
@@ -79,7 +83,9 @@ install:
     pip install --upgrade --user numpy;
     pip install --user .;
     pip install  --user six;
-    pip install --upgrade  --user pytest;
+    pip install --user codecov;
+    pip install --upgrade --user pytest;
+    pip install --upgrade --user pytest-cov;
     pip install --upgrade  --user youtube-dl;
     fi
 
@@ -93,9 +99,14 @@ before_script:
     fi
 
 script:
+  - function keep_alive() { while true; do echo -en "\a"; sleep 60; done }
+  - keep_alive &
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    travis_wait pytest -sv;
+    pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-    python -m pytest -sv;
+    python -m pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/;
     fi
+
+after_success:
+  - codecov

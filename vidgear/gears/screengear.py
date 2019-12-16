@@ -36,9 +36,7 @@ try:
 	# import OpenCV Binaries
 	import cv2
 	# check whether OpenCV Binaries are 3.x+
-	if parse_version(cv2.__version__) >= parse_version('3'):
-		pass
-	else:
+	if parse_version(cv2.__version__) < parse_version('3'):
 		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
 
 except ImportError as error:
@@ -86,6 +84,7 @@ class ScreenGear:
 		except ImportError as error:
 			# otherwise raise import error
 			raise ImportError('[ERROR]: python-mss library not found, install it with `pip install mss` command.')
+
 		# create mss object
 		self.mss_object = mss() 
 		# create monitor instance for the user-defined monitor
@@ -103,8 +102,7 @@ class ScreenGear:
 		#define deque and assign it to global var
 		self.queue = deque(maxlen=96) #max len 96 to check overflow
 		#log it
-		if logging:
-			print('[LOG]: Enabling Threaded Queue Mode by default for ScreenGear!') 
+		if logging: print('[LOG]: Enabling Threaded Queue Mode by default for ScreenGear!') 
 
 		#intiate screen dimension handler
 		screen_dims = {}
@@ -114,18 +112,19 @@ class ScreenGear:
 			#reformat proper mss dict and assign to screen dimension handler
 			screen_dims = {k.strip(): v for k,v in options.items() if k.strip() in ["top", "left", "width", "height"]}
 			# separately handle colorspace value to int conversion
-			if not(colorspace is None):
+			if not(colorspace is None): 
 				self.color_space = capPropId(colorspace.strip())
+				if logging: print('[LOG]: Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
 		except Exception as e:
 			# Catch if any error occurred
-			if logging:
-				print(e)
+			if logging: print(e)
 
 		# intialize mss capture instance
 		self.mss_capture_instance = None
 		try:
 			# check whether user-defined dimensions are provided
 			if screen_dims and len(screen_dims) == 4:
+				if logging: print('[LOG]: Setting capture dimensions: {}!'.format(screen_dims)) 
 				self.mss_capture_instance = screen_dims #create instance from dimensions
 			else:
 				self.mss_capture_instance = monitor_instance #otherwise create instance from monitor
@@ -137,8 +136,7 @@ class ScreenGear:
 		except ScreenShotError:
 			#otherwise catch and log errors
 			raise ValueError("[ERROR]: ScreenShotError caught: Wrong dimensions passed to python-mss, Kindly Refer Docs!")
-			if logging:
-				print(self.mss_object.get_error_details())
+			if logging: print(self.mss_object.get_error_details())
 				
 		# enable logging if specified
 		self.logging = logging
@@ -170,11 +168,10 @@ class ScreenGear:
 			# if the thread terminate is set, stop the thread
 			if self.terminate:
 				break
+
 			if self.threaded_queue_mode:
 				#check queue buffer for overflow
-				if len(self.queue) < 96:
-					pass
-				else:
+				if len(self.queue) >= 96:
 					#stop iterating if overflowing occurs
 					time.sleep(0.000001)
 					continue
@@ -187,12 +184,10 @@ class ScreenGear:
 			if frame is None or frame.size == 0:
 				#no frames received, then safely exit
 				if self.threaded_queue_mode:
-					if len(self.queue)>0:
-						pass
-					else:
-						self.terminate = True
+					if len(self.queue) == 0: self.terminate = True
 				else:
 					self.terminate = True
+
 			if not(self.color_space is None):
 				# apply colorspace to frames
 				color_frame = None
@@ -201,8 +196,7 @@ class ScreenGear:
 						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
 						self.color_space = None
-						if self.logging:
-							print('[LOG]: Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
+						if self.logging: print('[LOG]: Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None
@@ -216,8 +210,7 @@ class ScreenGear:
 			else:
 				self.frame = frame
 			#append to queue
-			if self.threaded_queue_mode:
-				self.queue.append(self.frame)
+			if self.threaded_queue_mode: self.queue.append(self.frame)
 		# finally release mss resources
 		self.mss_object.close()
 

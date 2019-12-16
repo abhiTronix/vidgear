@@ -43,12 +43,17 @@ install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
   - "python -m pip install --upgrade pip wheel"
-  - "python -m pip install ."
+  - "python -m pip install --upgrade ."
   - "python -m pip install six"
+  - "python -m pip install codecov"
   - "python -m pip install --upgrade pytest"
+  - "python -m pip install --upgrade pytest-cov"
   - "python -m pip install --upgrade youtube-dl"
   - cmd: chmod +x scripts/bash/prepare_dataset.sh
   - cmd: bash scripts/bash/prepare_dataset.sh
 
 test_script:
-- cmd: python -m pytest -sv
+  - cmd: python -m pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/
+
+after_test:
+  - cmd: python -m codecov 

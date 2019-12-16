@@ -56,7 +56,13 @@ def capPropId(property):
 	"""
 	Retrieves the OpenCV property Integer(Actual) value. 
 	"""
-	return getattr(cv2, property)
+	integer_value = 0 
+	try:
+		integer_value = getattr(cv2, property)
+	except Exception:
+		print('[ALERT]: {} is not a valid OpenCV property!'.format(property))
+		return None
+	return integer_value
 
 
 
@@ -69,6 +75,7 @@ def dict2Args(param_dict):
 		args.append(key)
 		args.append(param_dict[key])
 	return args
+
 
 
 def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_download_path = '', logging = False):
@@ -84,10 +91,7 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 		else:
 			#otherwise auto-download them
 			try:
-				if ffmpeg_download_path:
-					#checks if FFmpeg download path specified
-					pass
-				else:
+				if not(ffmpeg_download_path):
 					#otherwise save to Temp Directory
 					import tempfile
 					ffmpeg_download_path = tempfile.gettempdir()
@@ -106,6 +110,7 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 					print(e)
 					print('[LOG]: Error downloading FFmpeg binaries, Check your network and Try again!')
 				return False
+
 		if os.path.isfile(final_path):
 			#check if valid FFmpeg file exist
 			pass
@@ -114,8 +119,7 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 			final_path = os.path.join(final_path, 'ffmpeg.exe')
 		else:
 			#else return False
-			if logging:
-				print('[LOG]: No valid FFmpeg executables found at Custom FFmpeg path!')
+			if logging: print('[LOG]: No valid FFmpeg executables found at Custom FFmpeg path!')
 			return False
 	else:
 		#otherwise perform test for Unix
@@ -245,8 +249,7 @@ def check_output(*args, **kwargs):
 	#if error occurred raise error
 	if retcode:
 		cmd = kwargs.get("args")
-		if cmd is None:
-			cmd = args[0]
+		if cmd is None: cmd = args[0]
 		error = sp.CalledProcessError(retcode, cmd)
 		error.output = output
 		raise error
@@ -257,7 +260,7 @@ def check_output(*args, **kwargs):
 def generate_auth_certificates(path, overwrite = False):
 
 	""" 
-	Auto-Generates and handles valid client and server CURVE ZMQ keys/certificates 
+	auto-Generates and auto-validates CURVE ZMQ keys/certificates for Netgear 
 	"""
 
 	#import necessary libs
@@ -265,16 +268,14 @@ def generate_auth_certificates(path, overwrite = False):
 	import zmq.auth
 
 	#check if path corresponds to vidgear only
-	if (os.path.basename(path) != ".vidgear"):
-		path = os.path.join(path,".vidgear")
+	if (os.path.basename(path) != ".vidgear"): path = os.path.join(path,".vidgear")
 
 	#generate keys dir
 	keys_dir = os.path.join(path, 'keys')
 	try:
 		os.makedirs(keys_dir)
 	except OSError as e:
-		if e.errno != errno.EEXIST:
-			raise
+		if e.errno != errno.EEXIST: raise
 
 	#generate separate public and private key dirs
 	public_keys_dir = os.path.join(keys_dir, 'public_keys')
@@ -284,8 +285,7 @@ def generate_auth_certificates(path, overwrite = False):
 	if overwrite:
 		#delete previous certificates
 		for d in [public_keys_dir, secret_keys_dir]:
-			if os.path.exists(d):
-				shutil.rmtree(d)
+			if os.path.exists(d): shutil.rmtree(d)
 			os.mkdir(d)
 
 		# generate new keys
@@ -309,24 +309,21 @@ def generate_auth_certificates(path, overwrite = False):
 		status_private_keys = validate_auth_keys(secret_keys_dir, '.key_secret')
 
 		# check if all valid keys are found
-		if status_private_keys and status_public_keys:
-			return (keys_dir, secret_keys_dir, public_keys_dir)
+		if status_private_keys and status_public_keys: return (keys_dir, secret_keys_dir, public_keys_dir)
 
 		# check if valid public keys are found
 		if not(status_public_keys):
 			try:
 				os.makedirs(public_keys_dir)
 			except OSError as e:
-				if e.errno != errno.EEXIST:
-					raise
+				if e.errno != errno.EEXIST: raise
 
 		# check if valid private keys are found
 		if not(status_private_keys): 
 			try:
 				os.makedirs(secret_keys_dir)
 			except OSError as e:
-				if e.errno != errno.EEXIST:
-					raise
+				if e.errno != errno.EEXIST: raise
 
 		# generate new keys
 		server_public_file, server_secret_file = zmq.auth.create_certificates(keys_dir, "server")
@@ -341,16 +338,14 @@ def generate_auth_certificates(path, overwrite = False):
 			else:
 				# clean redundant keys if present
 				redundant_key = os.path.join(keys_dir,key_file)
-				if os.path.isfile(redundant_key):
-					os.remove(redundant_key)
+				if os.path.isfile(redundant_key): os.remove(redundant_key)
 
 	# validate newly generated keys 
 	status_public_keys = validate_auth_keys(public_keys_dir, '.key')
 	status_private_keys = validate_auth_keys(secret_keys_dir, '.key_secret')
 
 	# raise error is validation test fails
-	if not(status_private_keys) or not(status_public_keys):
-		raise RuntimeError('[Error]: Unable to generate valid ZMQ authentication certificates at `{}`!'.format(keys_dir))
+	if not(status_private_keys) or not(status_public_keys): raise RuntimeError('[Error]: Unable to generate valid ZMQ authentication certificates at `{}`!'.format(keys_dir))
 
 	# finally return valid key paths
 	return (keys_dir, secret_keys_dir, public_keys_dir)
@@ -374,8 +369,7 @@ def validate_auth_keys(path, extension):
 	for key_file in os.listdir(path):
 		key = os.path.splitext(key_file)
 		#check if valid key is generated
-		if key and (key[0] in ['server','client']) and (key[1] == extension):
-			keys_buffer.append(key_file) #store it
+		if key and (key[0] in ['server','client']) and (key[1] == extension): keys_buffer.append(key_file) #store it
 
 	#remove invalid keys if found
 	if(len(keys_buffer) == 1): os.remove(os.path.join(path,keys_buffer[0])) 

@@ -1,0 +1,11 @@
+codecov:
+  require_ci_to_pass: yes
+  ci:
+    - "travis.org"
+    - appveyor
+  branch: testing
+  strict_yaml_branch: testing
+
+ignore:
+  - "vidgear/tests"
+  - "setup.py"
