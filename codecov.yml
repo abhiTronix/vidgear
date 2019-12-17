@@ -20,6 +20,10 @@ codecov:
   branch: testing
   strict_yaml_branch: testing
 
+coverage:
+  status:
+    patch: no
+
 ignore:
   - "vidgear/tests"
   - "setup.py"

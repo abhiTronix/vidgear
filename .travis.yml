@@ -96,7 +96,7 @@ install:
     pip install --upgrade --user pip wheel;
     pip install --upgrade --user numpy;
     pip install --user .;
-    pip install  --user six;
+    pip install --user six;
     pip install --user codecov;
     pip install --upgrade --user pytest;
     pip install --upgrade --user pytest-cov;
