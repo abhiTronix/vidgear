@@ -70,6 +70,7 @@
 
 ### Breaking Updates / Improvements / Changes
   * :warning: Python 2.7 legacy support dropped completely.
+  * :warning: Source-code Relicensed to Apache 2.0 License
   * Python 3+ are only supported legacies for installing Vidgear v0.1.6 and above. 
 
 ### Fixes
@@ -94,6 +95,7 @@
   * PR #72
   * PR #77
   * PR #78
+  * PR #82
 
 :warning: PyPi Release does NOT contain Tests and Scripts!
 
