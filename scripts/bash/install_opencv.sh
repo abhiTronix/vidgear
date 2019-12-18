@@ -27,6 +27,7 @@ TMPFOLDER=$(python -c 'import tempfile; print(tempfile.gettempdir())')
 #determining system Python suffix and  version
 PYTHONSUFFIX=$(python -c 'import platform; a = platform.python_version(); print(".".join(a.split(".")[:2]))')
 PYTHONVERSION=$(python -c 'import platform; print(platform.python_version())')
+PYTHONVERSIONMIN=$(python3 -c 'import platform; print(platform.python_version()[:3])')
 
 echo "Installing OpenCV..."
 
@@ -50,7 +51,11 @@ cd $TMPFOLDER
 
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 
-wget https://github.com/abhiTronix/OpenCV-Travis-Builds/releases/download/opencv-$OPENCV_VERSION/OpenCV-$OPENCV_VERSION-$PYTHONVERSION.deb
+curl -s https://api.github.com/repos/abhiTronix/OpenCV-Travis-Builds/releases/latest \
+| grep "OpenCV-$OPENCV_VERSION-$PYTHONVERSIONMIN.*.deb" \
+| cut -d : -f 2,3 \
+| tr -d \" \
+| wget -qi -
 
 sudo dpkg -i OpenCV-$OPENCV_VERSION-$(python -c 'import platform; print(platform.python_version())').deb
 
