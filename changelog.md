@@ -123,6 +123,7 @@
   * Updated New dependencies: `mss`, `pyzmq` and rejected redundant ones.
   * Revamped and refreshed look for `readme.md` and added new badges.
   * Updated Releases Documentation completely.
+  * Replace `print` commands with python's logging module completely
   * Updated CLI tests for new changes
   * Updated Code Documentation.
   * Updated bash scripts and removed redundant information

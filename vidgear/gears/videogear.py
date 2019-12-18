@@ -145,6 +145,7 @@ class VideoGear:
 
 
 	def stop(self):
+		if self.logging: self.logger.debug("Terminating VideoGear.")
 		# stop the thread and release any resources
 		self.stream.stop()
 		#clean queue

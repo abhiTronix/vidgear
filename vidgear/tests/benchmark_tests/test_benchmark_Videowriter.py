@@ -53,12 +53,12 @@ def return_static_ffmpeg():
 
 
 
-def WriteGear_non_compression_mode(path):
+def WriteGear_non_compression_mode():
 	"""
 	Function to Benchmark WriteGear's Non-Compression Mode(OpenCV)
 	"""
 	options = {'THREADED_QUEUE_MODE':False}
-	stream = VideoGear(source=path, **options).start() 
+	stream = VideoGear(source=return_testvideo_path(), **options).start() 
 	writer = WriteGear(output_filename = 'Output_vnc.mp4', compression_mode = False )
 	fps_CV = FPS().start()
 	while True:
@@ -77,12 +77,12 @@ def WriteGear_non_compression_mode(path):
 
 
 
-def WriteGear_compression_mode(path):
+def WriteGear_compression_mode():
 	"""
 	Function to Benchmark WriteGear's Compression Mode(FFmpeg)
 	"""
 	options = {'THREADED_QUEUE_MODE':False}
-	stream = VideoGear(source=path, **options).start()
+	stream = VideoGear(source=return_testvideo_path(), **options).start()
 	writer = WriteGear(output_filename = 'Output_vc.mp4', custom_ffmpeg = return_static_ffmpeg())
 	fps_Vid = FPS().start()
 	while True:
