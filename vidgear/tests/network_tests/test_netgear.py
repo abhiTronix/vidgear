@@ -29,7 +29,9 @@ import os
 import numpy as np
 import traceback
 from zmq.error import ZMQError
+import logging as log
 
+logger = log.getLogger('Test_netgear')
 
 
 def return_testvideo_path():
@@ -63,7 +65,7 @@ def test_playback():
 		client.close()
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			print(traceback.print_tb(e.__traceback__))
+			logger.debug(traceback.print_tb(e.__traceback__))
 		else:
 			pytest.fail(str(e))
 
@@ -102,7 +104,7 @@ def test_patterns(pattern):
 		assert np.array_equal(frame_server, frame_client)
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			print(traceback.print_tb(e.__traceback__))
+			logger.error(traceback.print_tb(e.__traceback__))
 		else:
 			pytest.fail(str(e))
 
@@ -132,7 +134,7 @@ def test_compression():
 		client.close()
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			print(traceback.print_tb(e.__traceback__))
+			logger.error(traceback.print_tb(e.__traceback__))
 		else:
 			pytest.fail(str(e))
  
@@ -176,7 +178,7 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
 		assert np.array_equal(frame_server, frame_client)
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			print(traceback.print_tb(e.__traceback__))
+			logger.error(traceback.print_tb(e.__traceback__))
 		else:
 			pytest.fail(str(e))
 
@@ -189,7 +191,7 @@ def test_bidirectional_mode(target_data):
 	Testing NetGear's Bidirectional Mode with different datatypes
 	"""
 	try:
-		print('[LOG] Given Input Data: {}'.format(target_data))
+		logger.debug('Given Input Data: {}'.format(target_data))
 
 		#open strem
 		stream = VideoGear(source=return_testvideo_path()).start()
@@ -214,9 +216,9 @@ def test_bidirectional_mode(target_data):
 		server.close()
 		client.close()
 
-		#print data recieved at client-end and server-end
-		print('[LOG] Data recieved at Server-end: {}'.format(server_data))
-		print('[LOG] Data recieved at Client-end: {}'.format(client_data))
+		#logger.debug data recieved at client-end and server-end
+		logger.debug('Data recieved at Server-end: {}'.format(server_data))
+		logger.debug('Data recieved at Client-end: {}'.format(client_data))
 		
 		#check if recieved frame exactly matches input frame
 		assert np.array_equal(frame_server, frame_client)
@@ -224,7 +226,7 @@ def test_bidirectional_mode(target_data):
 		assert client_data == server_data
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			print(traceback.print_tb(e.__traceback__))
+			logger.error(traceback.print_tb(e.__traceback__))
 		else:
 			pytest.fail(str(e))
 
@@ -287,6 +289,6 @@ def test_multiserver_mode():
 
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			print(traceback.print_tb(e.__traceback__))
+			logger.error(traceback.print_tb(e.__traceback__))
 		else:
 			pytest.fail(str(e)) 

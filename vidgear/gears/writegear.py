@@ -22,6 +22,7 @@ limitations under the License.
 from pkg_resources import parse_version
 import os, sys, time
 import subprocess as sp
+import logging as log
 
 from .helper import get_valid_ffmpeg_path
 from .helper import capPropId
@@ -34,9 +35,9 @@ try:
 	import cv2
 	# check whether OpenCV Binaries are 3.x+
 	if parse_version(cv2.__version__) < parse_version('3'):
-		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
+		raise ImportError('[WriteGear:ERROR] :: OpenCV library version >= 3.0 is only supported by this library')
 except ImportError as error:
-	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
+	raise ImportError('[WriteGear:ERROR] :: Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
 
 
 
@@ -93,7 +94,12 @@ class WriteGear:
 		# assign parameter values to class variables
 		self.compression = compression_mode
 		self.os_windows  = True if os.name == 'nt' else False #checks if machine in-use is running windows os or not
-		self.logging = logging #enable logging
+		
+		# enable logging if specified
+		self.logging = False
+		if logging:
+			self.logger = log.getLogger('WriteGear')
+			self.logging = True
 
 		# initialize various important class variables
 		self.output_parameters = {}
@@ -111,7 +117,7 @@ class WriteGear:
 
 		# handles output file name (if not given)
 		if not output_filename:
-			raise ValueError('[ERROR]: Kindly provide a valid `output_filename` value, Refer VidGear Docs for more information!')
+			raise ValueError('[WriteGear:ERROR] :: Kindly provide a valid `output_filename` value, Refer VidGear Docs for more information!')
 		elif output_filename and os.path.isdir(output_filename): # check if directory path is given instead
 			output_filename = os.path.join(output_filename, 'VidGear-{}.mp4'.format(time.strftime("%Y%m%d-%H%M%S"))) # auto-assign valid name and adds it to path
 		else:
@@ -132,15 +138,15 @@ class WriteGear:
 			try:
 				self.output_parameters = {str(k).strip().lower(): str(v).strip() for k,v in output_params.items()}
 			except Exception as e:
-				if self.logging: print(e)
-				raise ValueError('[ERROR]: Wrong output_params parameters passed to WriteGear class!')
+				if self.logging: self.logger.exception(str(e))
+				raise ValueError('[WriteGear:ERROR] :: Wrong output_params parameters passed to WriteGear class!')
 
 		#handles FFmpeg binaries validity tests 
 		if self.compression:
 
 			if self.logging:
-				print('[LOG]: Compression Mode is enabled therefore checking for valid FFmpeg executables!')
-				print(self.output_parameters)
+				self.logger.debug('Compression Mode is enabled therefore checking for valid FFmpeg executables!')
+				self.logger.debug(self.output_parameters)
 
 			# handles where to save the downloaded FFmpeg Static Binaries on Windows(if specified)
 			ffmpeg_download_path_ = ''
@@ -160,12 +166,12 @@ class WriteGear:
 			if actual_command:
 				self.ffmpeg += actual_command #assign it to class variable
 				if self.logging:
-					print('[LOG]: Found valid FFmpeg executables: `{}`'.format(self.ffmpeg))
+					self.logger.debug('Found valid FFmpeg executables: `{}`'.format(self.ffmpeg))
 			else:
 				#otherwise disable Compression Mode
 				if self.logging and not self.os_windows:
-					print('[LOG]: Kindly install working FFmpeg or provide a valid custom FFmpeg Path')
-				print('[LOG]: Caution: Disabling Video Compression Mode since no valid FFmpeg executables found on this machine!')
+					self.logger.debug('Kindly install working FFmpeg or provide a valid custom FFmpeg Path')
+				self.logger.debug('Caution: Disabling Video Compression Mode since no valid FFmpeg executables found on this machine!')
 				self.compression = False # compression mode disabled
 
 		#validate this class has the access rights to specified directory or not
@@ -174,9 +180,9 @@ class WriteGear:
 		#display confirmation if logging is enabled/disabled
 		if self.compression and self.ffmpeg:
 			self.DEVNULL = open(os.devnull, 'wb') 
-			if self.logging: print('[LOG]: Compression Mode is configured properly!')
+			if self.logging: self.logger.debug('Compression Mode is configured properly!')
 		else:
-			if self.logging: print('[LOG]: Compression Mode is disabled, Activating OpenCV In-built Writer!')
+			if self.logging: self.logger.debug('Compression Mode is disabled, Activating OpenCV In-built Writer!')
 
 
 
@@ -202,14 +208,14 @@ class WriteGear:
 			self.inputwidth = width
 			self.inputchannels = channels
 			if self.logging:
-				print('[LOG]: InputFrame => Height:{} Width:{} Channels:{}'.format(self.inputheight, self.inputwidth, self.inputchannels))
+				self.logger.debug('InputFrame => Height:{} Width:{} Channels:{}'.format(self.inputheight, self.inputwidth, self.inputchannels))
 
 		#validate size of frame
 		if height != self.inputheight or width != self.inputwidth:
-			raise ValueError('[ERROR]: All frames in a video should have same size')
+			raise ValueError('[WriteGear:ERROR] :: All frames in a video should have same size')
 		#validate number of channels
 		if channels != self.inputchannels:
-			raise ValueError('[ERROR]: All frames in a video should have same number of channels')
+			raise ValueError('[WriteGear:ERROR] :: All frames in a video should have same number of channels')
 
 		if self.compression:
 			# checks if compression mode is enabled
@@ -226,7 +232,7 @@ class WriteGear:
 				self.process.stdin.write(frame.tostring())
 			except (OSError, IOError):
 				# log something is wrong!
-				print ('[ERROR]: BrokenPipeError caught: Wrong Values passed to FFmpeg Pipe, Kindly Refer Docs!')
+				self.logger.error('BrokenPipeError caught: Wrong Values passed to FFmpeg Pipe, Kindly Refer Docs!')
 				self.DEVNULL.close()
 				raise ValueError #for testing purpose only
 		else:
@@ -238,7 +244,7 @@ class WriteGear:
 				assert self.process is not None
 				if self.logging:
 					# log OpenCV warning
-					print('[WARNING]: RGBA and 16-bit grayscale video frames are not supported by OpenCV yet, switch to `compression_mode` to use them!')
+					self.logger.warning('RGBA and 16-bit grayscale video frames are not supported by OpenCV yet, switch to `compression_mode` to use them!')
 			#write the frame
 			self.process.write(frame)
 
@@ -278,8 +284,7 @@ class WriteGear:
 
 		if self.inputframerate > 5:
 			#set input framerate - minimum threshold is 5.0
-			if self.logging:
-				print("Setting Input FrameRate = {}".format(self.inputframerate))
+			if self.logging: self.logger.debug("Setting Input FrameRate = {}".format(self.inputframerate))
 			input_parameters["-framerate"] = str(self.inputframerate)
 
 		#initiate FFmpeg process
@@ -319,7 +324,7 @@ class WriteGear:
 		self.cmd += " ".join(cmd)
 		# Launch the FFmpeg process
 		if self.logging:
-			print('[LOG]: Executing FFmpeg command: `{}`'.format(self.cmd))
+			self.logger.debug('Executing FFmpeg command: `{}`'.format(self.cmd))
 			# In debugging mode
 			self.process = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
 		else:
@@ -336,21 +341,21 @@ class WriteGear:
 		"""
 		#check if valid command
 		if cmd is None:
-			print('[Alert]: Input FFmpeg command is empty, Nothing to execute!')
+			self.logger.warning('Input FFmpeg command is empty, Nothing to execute!')
 			return
 		else:
 			if not(isinstance(cmd, list)): 
-				raise ValueError("[ERROR]: Invalid input FFmpeg command! Kindly read docs.")
+				raise ValueError("[WriteGear:ERROR] :: Invalid input FFmpeg command! Kindly read docs.")
 
 		#check if Compression Mode is enabled
-		if not(self.compression): raise RuntimeError("[ERROR]: Compression Mode is disabled, Kindly enable it to access this function!")
+		if not(self.compression): raise RuntimeError("[WriteGear:ERROR] :: Compression Mode is disabled, Kindly enable it to access this function!")
 
 		#add configured FFmpeg path
 		cmd = [self.ffmpeg] + cmd
 
 		try:
 			if self.logging:
-				print('[LOG]: Executing FFmpeg command: `{}`'.format(' '.join(cmd)))
+				self.logger.debug('Executing FFmpeg command: `{}`'.format(' '.join(cmd)))
 				# In debugging mode
 				sp.call(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
 			else:
@@ -358,7 +363,7 @@ class WriteGear:
 				sp.call(cmd, stdin=sp.PIPE, stdout=self.DEVNULL, stderr=sp.STDOUT)
 		except (OSError, IOError):
 			# log something is wrong!
-			print ('[ERROR]: BrokenPipeError caught: Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!')
+			self.logger.error('BrokenPipeError caught: Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!')
 			self.DEVNULL.close()
 			raise ValueError #for testing purpose only
 
@@ -404,13 +409,12 @@ class WriteGear:
 
 		except Exception as e:
 			# log if something is wrong
-			if self.logging:
-				print(e)
-			raise ValueError('[ERROR]: Wrong Values passed to OpenCV Writer, Kindly Refer Docs!')
+			if self.logging: self.logger.exception(str(e))
+			raise ValueError('[WriteGear:ERROR] :: Wrong Values passed to OpenCV Writer, Kindly Refer Docs!')
 
 		if self.logging:
 			#log values for debugging
-			print('[LOG]: FILE_PATH: {}, FOURCC = {}, FPS = {}, WIDTH = {}, HEIGHT = {}, BACKEND = {}'.format(self.out_file, FOURCC, FPS, WIDTH, HEIGHT, BACKEND))
+			self.logger.debug('FILE_PATH: {}, FOURCC = {}, FPS = {}, WIDTH = {}, HEIGHT = {}, BACKEND = {}'.format(self.out_file, FOURCC, FPS, WIDTH, HEIGHT, BACKEND))
 
 		#start different process for with/without Backend.
 		if BACKEND: 
@@ -424,6 +428,8 @@ class WriteGear:
 		"""
 		Terminates the Write process
 		"""
+		if self.logging: self.logger.debug("Terminating WriteGear Processes.")
+
 		if self.compression:
 			#if Compression Mode is enabled
 			if self.process is None:  

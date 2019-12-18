@@ -20,7 +20,9 @@ limitations under the License.
 
 import pytest, os, tempfile
 from vidgear.gears import VideoGear
+import logging as log
 
+logger = log.getLogger('Test_videogear')
 
 
 def return_testvideo_path():
@@ -52,7 +54,7 @@ def test_CamGear_import():
 		output_stream = VideoGear(source = return_testvideo_path(), logging=True, **options).start()
 		framerate = output_stream.framerate
 		output_stream.stop()
-		print('[LOG] Input Framerate: {}'.format(framerate))
+		logger.debug('Input Framerate: {}'.format(framerate))
 		assert framerate>0
 	except Exception as e:
 		pytest.fail(str(e))

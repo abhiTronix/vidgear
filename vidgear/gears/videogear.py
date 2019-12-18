@@ -20,7 +20,7 @@ limitations under the License.
 
 # import the necessary packages
 from .camgear import CamGear
-
+import logging as log
 
 
 class VideoGear:
@@ -79,7 +79,14 @@ class VideoGear:
 
 	def __init__(self, enablePiCamera = False, stabilize = False, source = 0, y_tube = False, backend = 0, colorspace = None, resolution = (640, 480), framerate = 25, logging = False, time_delay = 0, **options):
 		
+		#initialize stabilizer
 		self.stablization_mode = stabilize
+
+		# enable logging if specified
+		self.logging = False
+		if logging:
+			self.logger = log.getLogger('VideoGear')
+			self.logging = True
 
 		if self.stablization_mode:
 			from .stabilizer import Stabilizer
@@ -102,7 +109,7 @@ class VideoGear:
 						crop_n_zoom = options["CROP_N_ZOOM"] #assigsn special parameter
 					del options["CROP_N_ZOOM"] #clean
 			self.stabilizer_obj = Stabilizer(smoothing_radius = s_radius, border_type = border_type, border_size = border_size, crop_n_zoom = crop_n_zoom, logging = logging)
-			if logging: print('[LOG]: Enabling Stablization Mode for the current video source!') #log info
+			if self.logging: self.logger.debug('Enabling Stablization Mode for the current video source!') #log info
 
 		if enablePiCamera:
 			# only import the pigear module only if required

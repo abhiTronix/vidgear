@@ -20,12 +20,14 @@ limitations under the License.
 
 import os, pytest, tempfile, shutil, platform
 from os.path import expanduser
+import logging as log
 
 from vidgear.gears.helper import download_ffmpeg_binaries
 from vidgear.gears.helper import validate_ffmpeg
 from vidgear.gears.helper import get_valid_ffmpeg_path
 from vidgear.gears.helper import generate_auth_certificates
 
+logger = log.getLogger('Test_helper')
 
 
 def return_static_ffmpeg():
@@ -51,10 +53,10 @@ def test_ffmpeg_static_installation():
 	for root, dirs, files in os.walk(startpath):
 		level = root.replace(startpath, '').count(os.sep)
 		indent = ' ' * 4 * (level)
-		print('[LOG]: {}{}/'.format(indent, os.path.basename(root)))
+		logger.debug('{}{}/'.format(indent, os.path.basename(root)))
 		subindent = ' ' * 4 * (level + 1)
 		for f in files:
-			print('[LOG]: {}{}'.format(subindent, f))
+			logger.debug('{}{}'.format(subindent, f))
 
 
 
@@ -133,7 +135,7 @@ def test_generate_auth_certificates(paths, overwrite_cert, results):
 	Testing auto-Generation and auto-validation of CURVE ZMQ keys/certificates 
 	"""
 	try:
-		if overwrite_cert: print('[WARNING]: Overwriting ZMQ Authentication certificates over previous ones!')
+		if overwrite_cert: logger.warning('Overwriting ZMQ Authentication certificates over previous ones!')
 		output = generate_auth_certificates(paths, overwrite = overwrite_cert)
 		if paths != 'wrong_test_path':
 			assert bool(output) == results

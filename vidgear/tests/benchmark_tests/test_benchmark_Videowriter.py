@@ -24,7 +24,9 @@ import tempfile
 from vidgear.gears import WriteGear
 from vidgear.gears import VideoGear
 from .fps import FPS
+import logging as log
 
+logger = log.getLogger('Test_benchmark_videowriter')
 
 
 def return_testvideo_path():
@@ -68,9 +70,9 @@ def WriteGear_non_compression_mode(path):
 	fps_CV.stop()
 	stream.stop()
 	writer.close()
-	print("OpenCV Writer")
-	print("[LOG] total elasped time: {:.2f}".format(fps_CV.total_time_elapsed()))
-	print("[LOG] approx. FPS: {:.2f}".format(fps_CV.fps()))
+	logger.debug("OpenCV Writer")
+	logger.debug("total elasped time: {:.2f}".format(fps_CV.total_time_elapsed()))
+	logger.debug("approx. FPS: {:.2f}".format(fps_CV.fps()))
 	os.remove(os.path.abspath('Output_vnc.mp4'))
 
 
@@ -92,9 +94,9 @@ def WriteGear_compression_mode(path):
 	fps_Vid.stop()
 	stream.stop()
 	writer.close()
-	print("FFmpeg Writer")
-	print("[LOG] total elasped time: {:.2f}".format(fps_Vid.total_time_elapsed()))
-	print("[LOG] approx. FPS: {:.2f}".format(fps_Vid.fps()))
+	logger.debug("FFmpeg Writer")
+	logger.debug("total elasped time: {:.2f}".format(fps_Vid.total_time_elapsed()))
+	logger.debug("approx. FPS: {:.2f}".format(fps_Vid.fps()))
 	os.remove(os.path.abspath('Output_vc.mp4'))
 
 

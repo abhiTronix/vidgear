@@ -26,7 +26,7 @@ from collections import deque
 from .helper import check_CV_version
 import numpy as np
 import cv2
-
+import logging as log
 
 
 class Stabilizer:
@@ -54,6 +54,12 @@ class Stabilizer:
 		self.frame_queue = deque(maxlen=smoothing_radius)
 		self.frame_queue_indexes = deque(maxlen=smoothing_radius)
 
+		# enable logging if specified
+		self.logging = False
+		if logging:
+			self.logger = log.getLogger('Stabilizer')
+			self.logging = True
+
 		# define and create Adaptive histogram equalization (AHE) object for optimizations
 		self.clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
 
@@ -73,11 +79,11 @@ class Stabilizer:
 			self.crop_n_zoom = border_size #crops and zoom frame to original size
 			self.border_size = 0 #zero out border size
 			self.frame_size = None #handles frame size for zooming
-			if logging: print('[LOG]: Setting Cropping margin {} pixels'.format(border_size))
+			if logging: self.logger.debug('Setting Cropping margin {} pixels'.format(border_size))
 		else:
 			# Add output borders to frame 
 			self.border_size = border_size
-			if logging and border_size: print('[LOG]: Setting Border size {} pixels'.format(border_size))
+			if self.logging and border_size: self.logger.debug('Setting Border size {} pixels'.format(border_size))
 
 		# define valid border modes
 		border_modes = {'black': cv2.BORDER_CONSTANT,'reflect': cv2.BORDER_REFLECT, 'reflect_101': cv2.BORDER_REFLECT_101, 'replicate': cv2.BORDER_REPLICATE, 'wrap': cv2.BORDER_WRAP}
@@ -86,21 +92,18 @@ class Stabilizer:
 			if not crop_n_zoom:
 				#initialize global border mode variable 
 				self.border_mode = border_modes[border_type]
-				if logging and border_type != 'black': print('[LOG]: Setting Border type: {}'.format(border_type))
+				if self.logging and border_type != 'black': self.logger.debug('Setting Border type: {}'.format(border_type))
 			else:
 				#log and reset to default
-				if logging and border_type != 'black': print('[LOG]: Setting border type is disabled if cropping is enabled!')
+				if self.logging and border_type != 'black': self.logger.debug('Setting border type is disabled if cropping is enabled!')
 				self.border_mode = border_modes['black']
 		else:
 			#otherwise log if not
-			if logging: print('[LOG]: Invalid input border type!')
+			if logging: self.logger.debug('Invalid input border type!')
 			self.border_mode = border_modes['black'] #reset to default mode
 			
 		# define normalized box filter
 		self.box_filter = np.ones(smoothing_radius)/smoothing_radius
-
-		# decide whether to log
-		self.logging = logging
 
 
 

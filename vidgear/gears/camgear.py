@@ -24,6 +24,7 @@ from pkg_resources import parse_version
 from .helper import capPropId
 from .helper import check_CV_version
 import re, time
+import logging as log
 
 
 
@@ -46,10 +47,10 @@ try:
 	import cv2
 	# check whether OpenCV Binaries are 3.x+
 	if parse_version(cv2.__version__) < parse_version('3'):
-		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
+		raise ImportError('[CamGear:ERROR] :: OpenCV library version >= 3.0 is only supported by this library')
 
 except ImportError as error:
-	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
+	raise ImportError('[CamGear:ERROR] :: Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
 
 
 
@@ -113,6 +114,12 @@ class CamGear:
 		#intialize threaded queue mode
 		self.threaded_queue_mode = True
 
+		# enable logging if specified
+		self.logging = False
+		if logging:
+			self.logger = log.getLogger('CamGear')
+			self.logging = True
+
 		# check if Youtube Mode is ON (True)
 		if y_tube:
 			try:
@@ -124,11 +131,12 @@ class CamGear:
 					source_object = pafy.new(url)
 					_source = source_object.getbestvideo("any", ftypestrict=False)
 					if _source is None: _source = source_object.getbest("any", ftypestrict=False)
-					if logging: print('[LOG]: YouTube source ID: `{}`, Title: `{}` & Video_Extension: `{}`'.format(url, source_object.title, _source.extension))
+					if self.logging: self.logger.debug('YouTube source ID: `{}`, Title: `{}` & Video_Extension: `{}`'.format(url, source_object.title, _source.extension))
 					source = _source.url
+				else: raise RuntimeError('URL cannot be processed!')
 			except Exception as e:
-				if logging: print(e)
-				raise ValueError('[ERROR]: YouTube Mode is enabled and the input YouTube Url is invalid!')
+				if self.logging: self.logger.exception(str(e))
+				raise ValueError('[CamGear:ERROR] :: YouTube Mode is enabled and the input YouTube URL is invalid!')
 
 		# youtube mode variable initialization
 		self.youtube_mode = y_tube
@@ -149,12 +157,12 @@ class CamGear:
 			#define deque and assign it to global var
 			self.queue = deque(maxlen=96) #max len 96 to check overflow
 			#log it
-			if logging: print('[LOG]: Enabling Threaded Queue Mode for the current video source!') 
+			if self.logging: self.logger.debug('Enabling Threaded Queue Mode for the current video source!') 
 		else:
 			#otherwise disable it
 			self.threaded_queue_mode = False
 			#log it
-			if logging: print('[LOG]: Threaded Queue Mode is disabled for the current video source!') 
+			if self.logging: self.logger.debug('Threaded Queue Mode is disabled for the current video source!') 
 
 		# stream variable initialization
 		self.stream = None
@@ -185,12 +193,11 @@ class CamGear:
 			# separately handle colorspace value to int conversion
 			if not(colorspace is None): 
 				self.color_space = capPropId(colorspace.strip())
-				if logging: print('[LOG]: Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
+				if self.logging: self.logger.debug('Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
 
 		except Exception as e:
 			# Catch if any error occurred
-			if logging:
-				print(e)
+			if self.logging: self.logger.exception(str(e))
 
 		#initialize and assign framerate variable
 		self.framerate = 0.0
@@ -198,7 +205,7 @@ class CamGear:
 			_fps = self.stream.get(cv2.CAP_PROP_FPS)
 			if _fps>1: self.framerate = _fps
 		except Exception as e:
-			if logging: print(e)
+			if self.logging: self.logger.exception(str(e))
 			self.framerate = 0.0
 
 		# applying time delay to warm-up webcam only if specified
@@ -216,10 +223,7 @@ class CamGear:
 				#intitialize and append to queue
 				self.queue.append(self.frame)
 		else:
-			raise RuntimeError('[ERROR]: Source is invalid, CamGear failed to intitialize stream on this source!')
-
-		# enable logging if specified
-		self.logging = logging
+			raise RuntimeError('[CamGear:ERROR] :: Source is invalid, CamGear failed to intitialize stream on this source!')
 
 		# thread initialization
 		self.thread=None
@@ -233,7 +237,7 @@ class CamGear:
 		"""
 		start the thread to read frames from the video stream
 		"""
-		self.thread = Thread(target=self.update, args=())
+		self.thread = Thread(target=self.update, name='CamGear', args=())
 		self.thread.daemon = True
 		self.thread.start()
 		return self
@@ -280,13 +284,13 @@ class CamGear:
 						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
 						self.color_space = None
-						if self.logging: print('[LOG]: Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
+						if self.logging: self.logger.debug('Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None
 					if self.logging:
-						print(e)
-						print('[LOG]: Input Colorspace is not a valid Colorspace!')
+						self.logger.exception(str(e))
+						self.logger.debug('Input Colorspace is not a valid Colorspace!')
 
 				if not(color_frame is None):
 					self.frame = color_frame
@@ -320,7 +324,7 @@ class CamGear:
 		"""
 		Terminates the Read process
 		"""
-		if self.logging: print('[LOG]: Terminating processes')
+		if self.logging: self.logger.debug('Terminating processes.')
 		#terminate Threaded queue mode seperately
 		if self.threaded_queue_mode and not(self.queue is None):
 			if len(self.queue)>0: self.queue.clear()

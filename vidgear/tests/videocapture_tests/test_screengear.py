@@ -21,6 +21,9 @@ limitations under the License.
 from vidgear.gears import ScreenGear
 from mss.exception import ScreenShotError
 import pytest, platform
+import logging as log
+
+logger = log.getLogger('Test_screengear')
 
 def test_screengear():
 	"""
@@ -41,6 +44,6 @@ def test_screengear():
 		stream.stop()
 	except Exception as e:
 		if platform.system() == 'Linux' or platform.system() == 'Windows':
-			print(e)
+			logger.exception(e)
 		else:
 			pytest.fail(str(e))

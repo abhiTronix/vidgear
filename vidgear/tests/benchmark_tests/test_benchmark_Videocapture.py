@@ -24,7 +24,9 @@ import pytest
 import tempfile
 from vidgear.gears import CamGear
 from .fps import FPS
+import logging as log
 
+logger = log.getLogger('Test_benchmark_videocapture')
 
 
 def return_testvideo_path():
@@ -49,9 +51,9 @@ def Videocapture_withCV(path):
 		fps_CV.update()
 	fps_CV.stop()
 	stream.release()
-	print("OpenCV")
-	print("[LOG] total elasped time: {:.2f}".format(fps_CV.total_time_elapsed()))
-	print("[LOG] approx. FPS: {:.2f}".format(fps_CV.fps()))
+	logger.debug("OpenCV")
+	logger.debug("total elasped time: {:.2f}".format(fps_CV.total_time_elapsed()))
+	logger.debug("approx. FPS: {:.2f}".format(fps_CV.fps()))
 
 
 
@@ -69,9 +71,9 @@ def Videocapture_withVidGear(path):
 		fps_Vid.update()
 	fps_Vid.stop()
 	stream.stop()
-	print("VidGear")
-	print("[LOG] total elasped time: {:.2f}".format(fps_Vid.total_time_elapsed()))
-	print("[LOG] approx. FPS: {:.2f}".format(fps_Vid.fps()))
+	logger.debug("VidGear")
+	logger.debug("total elasped time: {:.2f}".format(fps_Vid.total_time_elapsed()))
+	logger.debug("approx. FPS: {:.2f}".format(fps_Vid.fps()))
 
 
 @pytest.mark.xfail(raises=RuntimeError)

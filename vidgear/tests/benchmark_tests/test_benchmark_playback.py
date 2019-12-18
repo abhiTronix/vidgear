@@ -23,7 +23,9 @@ import pytest
 import tempfile
 from vidgear.gears import CamGear
 from .fps import FPS
+import logging as log
 
+logger = log.getLogger('Test_benchmark_playback')
 
 
 def return_testvideo(level=0):
@@ -50,8 +52,8 @@ def playback(level):
 		fps.update()
 	stream.stop()
 	fps.stop()
-	print("[LOG] total elasped time: {:.2f}".format(fps.total_time_elapsed()))
-	print("[LOG] approx. FPS: {:.2f}".format(fps.fps()))
+	logger.debug("total elasped time: {:.2f}".format(fps.total_time_elapsed()))
+	logger.debug("approx. FPS: {:.2f}".format(fps.fps()))
 
 
 
@@ -64,6 +66,6 @@ def test_benchmark(level):
 		try:
 			playback(level)
 		except Exception as e:
-			print(e)
+			logger.exception(str(e))
 	else:
-		print("Skipping this test for macOS!")
+		logger.debug("Skipping this test for macOS!")

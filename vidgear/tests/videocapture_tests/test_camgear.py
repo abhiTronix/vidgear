@@ -25,10 +25,10 @@ import os, time
 import pytest
 import tempfile
 import numpy as np
-
 from vidgear.gears import CamGear
+import logging as log
 
-
+logger = log.getLogger('Test_camgear')
 
 def return_youtubevideo_params(url):
 	"""
@@ -59,7 +59,7 @@ def return_total_frame_count():
 	while True:
 		(grabbed, frame) = stream.read()
 		if not grabbed:
-			print(num_cv)
+			logger.debug(num_cv)
 			break
 		num_cv += 1
 	stream.release()
@@ -79,7 +79,7 @@ def test_threaded_queue_mode():
 	while True:
 		frame = stream_camgear.read()
 		if frame is None:
-			print(camgear_frames_num)
+			logger.debug(camgear_frames_num)
 			break
 		
 		time.sleep(0.2) #dummy computational task
@@ -114,19 +114,19 @@ def test_youtube_playback():
 				if height == 0 or width == 0:
 					fps = stream.framerate
 					height,width = frame.shape[:2]
-			print('[LOG]: WIDTH: {} HEIGHT: {} FPS: {}'.format(true_video_param[0],true_video_param[1],true_video_param[2]))
-			print('[LOG]: WIDTH: {} HEIGHT: {} FPS: {}'.format(width,height,fps))
+			logger.debug('WIDTH: {} HEIGHT: {} FPS: {}'.format(true_video_param[0],true_video_param[1],true_video_param[2]))
+			logger.debug('WIDTH: {} HEIGHT: {} FPS: {}'.format(width,height,fps))
 		except Exception as error:
-			print(error)
+			logger.exception(error)
 			errored = True
 
 		if not errored:
 			assert true_video_param[0] == width and true_video_param[1] == height and true_video_param[2] == fps
 		else:
-			print('[LOG]: YouTube playback Test is skipped due to above error!')
+			logger.debug('YouTube playback Test is skipped due to above error!')
 
 	else:
-		print('[LOG]: YouTube playback Test is skipped due to bug with opencv-python library builds on windows and macOS!')
+		logger.debug('YouTube playback Test is skipped due to bug with opencv-python library builds on windows and macOS!')
 
 
 
@@ -156,11 +156,11 @@ def test_network_playback():
 				Output_data.append(frame)
 				i+=1
 			output_stream.stop()
-			print('[LOG]: Output data shape:', np.array(Output_data).shape)
+			logger.debug('Output data shape:', np.array(Output_data).shape)
 			if Output_data[-1].shape[:2] > (50,50): break
 		except Exception as e:
 			if isinstance(e, RuntimeError):
-				print("[LOG] `{}` URL is not working".format(Publictest_rstp_urls[index]))
+				logger.debug("`{}` URL is not working".format(Publictest_rstp_urls[index]))
 				index+=1
 				continue
 			else:

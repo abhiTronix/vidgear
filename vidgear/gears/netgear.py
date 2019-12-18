@@ -27,6 +27,7 @@ import numpy as np
 import time
 import os
 import random
+import logging as log
 
 
 try:
@@ -34,9 +35,9 @@ try:
 	import cv2
 	# check whether OpenCV Binaries are 3.x+
 	if parse_version(cv2.__version__) < parse_version('3'):
-		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
+		raise ImportError('[NetGear:ERROR] :: OpenCV library version >= 3.0 is only supported by this library')
 except ImportError as error:
-	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip3 install opencv-python` command.')
+	raise ImportError('[NetGear:ERROR] :: Failed to detect OpenCV executables, install it with `pip3 install opencv-python` command.')
 
 
 
@@ -110,7 +111,7 @@ class NetGear:
 							This attribute provides the flexibility to manipulate ZeroMQ internal parameters 
 							directly. Checkout vidgear docs for usage details.
 
-	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
+	:param (boolean) self.logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 
 	"""
 	
@@ -126,7 +127,13 @@ class NetGear:
 			self.ZMQError = ZMQError
 		except ImportError as error:
 			#raise error
-			raise ImportError('[ERROR]: pyzmq python library not installed. Kindly install it with `pip install pyzmq` command.')
+			raise ImportError('[NetGear:ERROR] :: pyzmq python library not installed. Kindly install it with `pip install pyzmq` command.')
+
+		# enable logging if specified
+		self.logging = False
+		if logging:
+			self.logger = log.getLogger('NetGear')
+			self.logging = True
 
 		#define valid messaging patterns => `0`: zmq.PAIR, `1`:(zmq.REQ,zmq.REP), and `1`:(zmq.SUB,zmq.PUB)
 		valid_messaging_patterns = {0:(zmq.PAIR,zmq.PAIR), 1:(zmq.REQ,zmq.REP), 2:(zmq.PUB,zmq.SUB)}
@@ -143,14 +150,14 @@ class NetGear:
 			self.pattern = 0
 			msg_pattern = valid_messaging_patterns[self.pattern]
 			#log it
-			if logging: print('[LOG]: Wrong pattern value, Defaulting to `zmq.PAIR`! Kindly refer Docs for more Information.')
+			if self.logging: self.logger.debug('Wrong pattern value, Defaulting to `zmq.PAIR`! Kindly refer Docs for more Information.')
 		
 		#check  whether user-defined messaging protocol is valid
 		if not(protocol in ['tcp', 'udp',  'pgm', 'epgm', 'inproc', 'ipc']):
 			# else default to `tcp` protocol
 			protocol = 'tcp'
 			#log it
-			if logging: print('[LOG]: protocol is not valid or provided. Defaulting to `tcp` protocol!')
+			if self.logging: self.logger.debug('protocol is not valid or provided. Defaulting to `tcp` protocol!')
 
 		#generate random device id
 		self.id = ''.join(random.choice('0123456789ABCDEF') for i in range(5))
@@ -193,8 +200,8 @@ class NetGear:
 					self.multiserver_mode = value
 				else:
 					self.multiserver_mode = False
-					print('[ALERT]: Multi-Server is disabled!')
-					raise ValueError('[ERROR]: `{}` pattern is not valid when Multi-Server Mode is enabled. Kindly refer Docs for more Information.'.format(pattern))
+					self.logger.critical('Multi-Server is disabled!')
+					raise ValueError('[NetGear:ERROR] :: `{}` pattern is not valid when Multi-Server Mode is enabled. Kindly refer Docs for more Information.'.format(pattern))
 			elif key == 'filter' and isinstance(value, str):
 				#custom filter in multi-server mode
 				recv_filter = value
@@ -202,18 +209,18 @@ class NetGear:
 			elif key == 'secure_mode' and isinstance(value,int) and (value in valid_security_mech):
 				#secure mode 
 				try:
-					assert zmq.zmq_version_info() >= (4,0), "[ERROR]: ZMQ Security feature is not supported in libzmq version < 4.0."
+					assert zmq.zmq_version_info() >= (4,0), "[NetGear:ERROR] :: ZMQ Security feature is not supported in libzmq version < 4.0."
 					self.secure_mode = value
 				except Exception as e:
-					print(e)
+					self.logger.exception(str(e))
 			elif key == 'custom_cert_location' and isinstance(value,str):
 				# custom auth certificates path
 				try:
-					assert os.access(value, os.W_OK), "[ERROR]: Permission Denied!, cannot write ZMQ authentication certificates to '{}' directory!".format(value)
-					assert not(os.path.isfile(value)), "[ERROR]: `custom_cert_location` value must be the path to a directory and not to a file!"
+					assert os.access(value, os.W_OK), "[NetGear:ERROR] :: Permission Denied!, cannot write ZMQ authentication certificates to '{}' directory!".format(value)
+					assert not(os.path.isfile(value)), "[NetGear:ERROR] :: `custom_cert_location` value must be the path to a directory and not to a file!"
 					custom_cert_location = os.path.abspath(value)
 				except Exception as e:
-					print(e)
+					self.logger.exception(str(e))
 			elif key == 'overwrite_cert' and isinstance(value,bool):
 				# enable/disable auth certificate overwriting
 				overwrite_cert = value
@@ -226,12 +233,12 @@ class NetGear:
 				# specify encoding/decoding params
 				if receive_mode and isinstance(value, int):
 					self.compression_params = value
-					if logging: print("[LOG]: Decoding flag: {}.".format(value))
+					if self.logging: self.logger.debug("Decoding flag: {}.".format(value))
 				elif not(receive_mode) and isinstance(value, (list,tuple)):
-					if logging: print("[LOG]: Encoding parameters: {}.".format(value))
+					if self.logging: self.logger.debug("Encoding parameters: {}.".format(value))
 					self.compression_params = list(value)
 				else:	
-					if logging: print("[WARNING]: Invalid compression parameters: {} skipped!".format(value))
+					if self.logging: self.logger.warning("Invalid compression parameters: {} skipped!".format(value))
 					self.compression_params = cv2.IMREAD_COLOR if receive_mode else [] # skip to defaults
 
 			# enable bi-directional data transmission if specified
@@ -241,18 +248,18 @@ class NetGear:
 					self.bi_mode = True
 				else:
 					self.bi_mode = False
-					print('[ALERT]: Bi-Directional data transmission is disabled!')
-					raise ValueError('[ERROR]: `{}` pattern is not valid when Bi-Directional Mode is enabled. Kindly refer Docs for more Information.'.format(pattern))
+					self.logger.critical('Bi-Directional data transmission is disabled!')
+					raise ValueError('[NetGear:ERROR] :: `{}` pattern is not valid when Bi-Directional Mode is enabled. Kindly refer Docs for more Information.'.format(pattern))
 
 			# enable force socket closing if specified
 			elif key == 'force_terminate' and isinstance(value, bool):
 				# check if pattern is valid
 				if address is None and not(receive_mode):
 					self.force_close = False
-					print('[ALERT]: Force termination is disabled for local servers!')
+					self.logger.critical('Force termination is disabled for local servers!')
 				else:
 					self.force_close = True
-					if logging: print("[LOG]: Force termination is enabled for this connection!")
+					if self.logging: self.logger.debug("Force termination is enabled for this connection!")
 
 			# various ZMQ flags 
 			elif key == 'flag' and isinstance(value, int):
@@ -273,10 +280,10 @@ class NetGear:
 			# log if overwriting is enabled
 			if overwrite_cert: 
 				if not receive_mode:
-					if logging: print('[WARNING]: Overwriting ZMQ Authentication certificates over previous ones!')
+					if self.logging: self.logger.warning('Overwriting ZMQ Authentication certificates over previous ones!')
 				else:
 					overwrite_cert = False
-					if logging: print('[ALERT]: Overwriting ZMQ Authentication certificates is disabled for Client-end!')
+					if self.logging: self.logger.critical('Overwriting ZMQ Authentication certificates is disabled for Client-end!')
 
 			#generate and validate certificates path
 			try:
@@ -285,38 +292,36 @@ class NetGear:
 					if os.path.isdir(custom_cert_location): #custom certificate location must be a directory
 						(auth_cert_dir, self.auth_secretkeys_dir, self.auth_publickeys_dir) = generate_auth_certificates(custom_cert_location, overwrite = overwrite_cert)
 					else:
-						raise ValueError("[ERROR]: Invalid `custom_cert_location` value!")
+						raise ValueError("[NetGear:ERROR] :: Invalid `custom_cert_location` value!")
 				else:
 					# otherwise auto-generate suitable path
 					from os.path import expanduser
 					(auth_cert_dir, self.auth_secretkeys_dir, self.auth_publickeys_dir) = generate_auth_certificates(os.path.join(expanduser("~"),".vidgear"), overwrite = overwrite_cert)
 				
 				#log it
-				if logging: print('[LOG]: `{}` is the default location for storing ZMQ authentication certificates/keys.'.format(auth_cert_dir))
+				if self.logging: self.logger.debug('`{}` is the default location for storing ZMQ authentication certificates/keys.'.format(auth_cert_dir))
 			except Exception as e:
 				# catch if any error occurred
-				print(e)
+				self.logger.exception(str(e))
 				# also disable secure mode
 				self.secure_mode = 0
-				print('[WARNING]: ZMQ Security Mechanism is disabled for this connection!')
+				self.logger.warning('ZMQ Security Mechanism is disabled for this connection!')
 		else:
 			#log if disabled
-			if logging: print('[LOG]: ZMQ Security Mechanism is disabled for this connection!')
+			if self.logging: self.logger.debug('ZMQ Security Mechanism is disabled for this connection!')
 
 		#handle bi_mode
 		if self.bi_mode:
 			#disable bi_mode if multi-server is enabled
 			if self.multiserver_mode:
 				self.bi_mode = False
-				print('[ALERT]: Bi-Directional Data Transmission is disabled when Multi-Server Mode is Enabled due to incompatibility!')
+				self.logger.critical('Bi-Directional Data Transmission is disabled when Multi-Server Mode is Enabled due to incompatibility!')
 			else:
 				#enable force termination by default
 				self.force_close = True
-				if logging: print("[LOG]: Force termination is enabled for this connection by default!")
-				if logging: print('[LOG]: Bi-Directional Data Transmission is enabled for this connection!')
-
-		# enable logging if specified
-		self.logging = logging
+				if self.logging: 
+					self.logger.debug("Force termination is enabled for this connection by default!")
+					self.logger.debug('Bi-Directional Data Transmission is enabled for this connection!')
 
 		# initialize termination flag
 		self.terminate = False
@@ -341,10 +346,10 @@ class NetGear:
 				# check if unique server port address list/tuple is assigned or not in multiserver_mode
 				if port is None or not isinstance(port, (tuple, list)):
 					# raise error if not
-					raise ValueError('[ERROR]: Incorrect port value! Kindly provide a list/tuple of ports while Multi-Server mode is enabled. For more information refer VidGear docs.')
+					raise ValueError('[NetGear:ERROR] :: Incorrect port value! Kindly provide a list/tuple of ports while Multi-Server mode is enabled. For more information refer VidGear docs.')
 				else:
 					#otherwise log it
-					print('[LOG]: Enabling Multi-Server Mode at PORTS: {}!'.format(port))
+					self.logger.debug('Enabling Multi-Server Mode at PORTS: {}!'.format(port))
 				#create port address buffer for keeping track of incoming server's port
 				self.port_buffer = []
 			else:
@@ -416,30 +421,31 @@ class NetGear:
 					self.msg_socket.setsockopt(zmq.LINGER, 0)
 											
 			except Exception as e:
+				self.logger.exception(str(e))
 				# otherwise raise value error if errored
-				if self.secure_mode: print('Failed to activate ZMQ Security Mechanism: `{}` for this address!'.format(valid_security_mech[self.secure_mode]))
+				if self.secure_mode: self.logger.warning('Failed to activate ZMQ Security Mechanism: `{}` for this address!'.format(valid_security_mech[self.secure_mode]))
 				if self.multiserver_mode:
-					raise ValueError('[ERROR]: Multi-Server Mode, failed to connect to ports: {} with pattern: {}! Kindly recheck all parameters.'.format( str(port), pattern))
+					raise ValueError('[NetGear:ERROR] :: Multi-Server Mode, failed to connect to ports: {} with pattern: {}! Kindly recheck all parameters.'.format( str(port), pattern))
 				else:
-					raise ValueError('[ERROR]: Failed to bind address: {} and pattern: {}! Kindly recheck all parameters.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
+					raise ValueError('[NetGear:ERROR] :: Failed to bind address: {} and pattern: {}! Kindly recheck all parameters.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
 			
 			#log and enable threaded queue mode
-			if logging: print('[LOG]: Threaded Queue Mode is enabled by default for NetGear.')
+			if self.logging: self.logger.debug('Threaded Queue Mode is enabled by default for NetGear.')
 			#define deque and assign it to global var
 			self.queue = deque(maxlen=96) #max len 96 to check overflow
 
 			# initialize and start threading instance
-			self.thread = Thread(target=self.update, args=())
+			self.thread = Thread(target=self.update, name='NetGear', args=())
 			self.thread.daemon = True
 			self.thread.start()
 
-			if logging:
+			if self.logging:
 				#finally log progress
-				print('[LOG]: Successfully Binded to address: {} with pattern: {}.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
-				if self.secure_mode: print('[LOG]: Enabled ZMQ Security Mechanism: `{}` for this address, Successfully!'.format(valid_security_mech[self.secure_mode]))
-				print('[LOG]: Multi-threaded Receive Mode is enabled Successfully!')
-				print('[LOG]: Device Unique ID is {}.'.format(self.id))
-				print('[LOG]: Receive Mode is activated successfully!')
+				self.logger.debug('Successfully Binded to address: {} with pattern: {}.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
+				if self.secure_mode: self.logger.debug('Enabled ZMQ Security Mechanism: `{}` for this address, Successfully!'.format(valid_security_mech[self.secure_mode]))
+				self.logger.debug('Multi-threaded Receive Mode is enabled Successfully!')
+				self.logger.debug('Device Unique ID is {}.'.format(self.id))
+				self.logger.debug('Receive Mode is activated successfully!')
 		else:
 			#otherwise default to `Send Mode`
 			if address is None: address = 'localhost'#define address
@@ -449,10 +455,10 @@ class NetGear:
 				# check if unique server port address is assigned or not in multiserver_mode
 				if port is None:
 					#raise error is not
-					raise ValueError('[ERROR]: Kindly provide a unique & valid port value at Server-end. For more information refer VidGear docs.')
+					raise ValueError('[NetGear:ERROR] :: Kindly provide a unique & valid port value at Server-end. For more information refer VidGear docs.')
 				else:
 					#otherwise log it
-					print('[LOG]: Enabling Multi-Server Mode at PORT: {} on this device!'.format(port))
+					self.logger.debug('Enabling Multi-Server Mode at PORT: {} on this device!'.format(port))
 					#assign value to global variable
 					self.port = port
 			else:
@@ -505,17 +511,18 @@ class NetGear:
 				self.msg_socket.setsockopt(zmq.LINGER, 0)
 
 			except Exception as e:
+				self.logger.exception(str(e))
 				#log if errored
-				if self.secure_mode: print('Failed to activate ZMQ Security Mechanism: `{}` for this address!'.format(valid_security_mech[self.secure_mode]))
+				if self.secure_mode: self.logger.warning('Failed to activate ZMQ Security Mechanism: `{}` for this address!'.format(valid_security_mech[self.secure_mode]))
 				# raise value error
-				raise ValueError('[ERROR]: Failed to connect address: {} and pattern: {}! Kindly recheck all parameters.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
+				raise ValueError('[NetGear:ERROR] :: Failed to connect address: {} and pattern: {}! Kindly recheck all parameters.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
 
-			if logging:
+			if self.logging:
 				#finally log progress
-				print('[LOG]: Successfully connected to address: {} with pattern: {}.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
-				if self.secure_mode: print('[LOG]: Enabled ZMQ Security Mechanism: `{}` for this address, Successfully!'.format(valid_security_mech[self.secure_mode]))
-				print('[LOG]: This device Unique ID is {}.'.format(self.id))
-				print('[LOG]: Send Mode is successfully activated and ready to send data!')
+				self.logger.debug('Successfully connected to address: {} with pattern: {}.'.format((protocol+'://' + str(address) + ':' + str(port)), pattern))
+				if self.secure_mode: self.logger.debug('Enabled ZMQ Security Mechanism: `{}` for this address, Successfully!'.format(valid_security_mech[self.secure_mode]))
+				self.logger.debug('This device Unique ID is {}.'.format(self.id))
+				self.logger.debug('Send Mode is successfully activated and ready to send data!')
 
 
 
@@ -553,26 +560,26 @@ class NetGear:
 					# check and remove from which ports signal is received
 					if msg_json['port'] in self.port_buffer:
 						# if pattern is 1, then send back server the info about termination
-						if self.pattern == 1: self.msg_socket.send_string('[INFO]: Termination signal received at client!')
+						if self.pattern == 1: self.msg_socket.send_string('Termination signal received at client!')
 						self.port_buffer.remove(msg_json['port'])
-						if self.logging: print('[ALERT]: Termination signal received from server at port: {}!'.format(msg_json['port']))
+						if self.logging: self.logger.warning('Termination signal received from server at port: {}!'.format(msg_json['port']))
 					#if termination signal received from all servers then exit client.
 					if not self.port_buffer:
-						print('[WARNING]: Termination signal received from all Servers!!!')
+						self.logger.warning('Termination signal received from all Servers!!!')
 						self.terminate = True #termination
 					continue
 				else:
 					# if pattern is 1, then send back server the info about termination
-					if self.pattern == 1: self.msg_socket.send_string('[INFO]: Termination signal received at client!')
+					if self.pattern == 1: self.msg_socket.send_string('Termination signal received at client!')
 					#termination
 					self.terminate = True
 					#notify client
-					if self.logging: print('[ALERT]: Termination signal received from server!')
+					if self.logging: self.logger.warning('Termination signal received from server!')
 					continue
 
 			#check if pattern is same at both server's and client's end.
 			if int(msg_json['pattern']) != self.pattern:
-				raise ValueError("[ERROR]: Messaging patterns on both Server-end & Client-end must a valid pairs! Kindly refer VidGear docs.")
+				raise ValueError("[NetGear:ERROR] :: Messaging patterns on both Server-end & Client-end must a valid pairs! Kindly refer VidGear docs.")
 				self.terminate = True
 				continue
 
@@ -587,7 +594,7 @@ class NetGear:
 					self.msg_socket.send_json(bi_dict, self.msg_flag)
 				else:
 					# send confirmation message to server
-					self.msg_socket.send_string('[LOG]: Data received on device: {} !'.format(self.id))
+					self.msg_socket.send_string('Data received on device: {} !'.format(self.id))
 
 			# recover frame from array buffer
 			frame_buffer = np.frombuffer(msg_data, dtype=msg_json['dtype'])
@@ -600,7 +607,7 @@ class NetGear:
 				#check if valid frame returned
 				if frame is None:
 					#otherwise raise error and exit
-					raise ValueError("[ERROR]: `{}` Frame Decoding failed with Parameter: {}".format(msg_json['compression'], self.compression_params))
+					raise ValueError("[NetGear:ERROR] :: `{}` Frame Decoding failed with Parameter: {}".format(msg_json['compression'], self.compression_params))
 					self.terminate = True
 					continue
 
@@ -640,7 +647,7 @@ class NetGear:
 		# check whether `receive mode` is activated
 		if not(self.receive_mode):
 			#raise value error and exit
-			raise ValueError('[ERROR]: `recv()` function cannot be used while receive_mode is disabled. Kindly refer vidgear docs!')
+			raise ValueError('[NetGear:ERROR] :: `recv()` function cannot be used while receive_mode is disabled. Kindly refer vidgear docs!')
 			self.terminate = True
 		
 		#handle bi-directional return data
@@ -668,7 +675,7 @@ class NetGear:
 		# check whether `receive_mode` is disabled
 		if self.receive_mode:
 			#raise value error and exit
-			raise ValueError('[ERROR]: `send()` function cannot be used while receive_mode is enabled. Kindly refer vidgear docs!')
+			raise ValueError('[NetGear:ERROR] :: `send()` function cannot be used while receive_mode is enabled. Kindly refer vidgear docs!')
 			self.terminate = True
 
 		# define exit_flag and assign value
@@ -685,7 +692,7 @@ class NetGear:
 			#check if it works
 			if not(retval): 
 				#otherwise raise error and exit
-				raise ValueError("[ERROR]: Frame Encoding failed with format: {} and Parameters: {}".format(self.compression, self.compression_params))
+				raise ValueError("[NetGear:ERROR] :: Frame Encoding failed with format: {} and Parameters: {}".format(self.compression, self.compression_params))
 				self.terminate = True
 
 
@@ -724,7 +731,7 @@ class NetGear:
 				#otherwise log normally
 				recv_confirmation = self.msg_socket.recv()
 				# log confirmation 
-				if self.logging : print(recv_confirmation)
+				if self.logging : self.logger.debug(recv_confirmation)
 			
 
 
@@ -735,7 +742,7 @@ class NetGear:
 		"""
 		if self.logging:
 			#log it
-			print(' \n[LOG]: Terminating various {} Processes \n'.format('Receive Mode' if self.receive_mode else 'Send Mode'))
+			self.logger.debug('Terminating various {} Processes.'.format('Receive Mode' if self.receive_mode else 'Send Mode'))
 		#  whether `receive_mode` is enabled or not
 		if self.receive_mode:
 			# indicate that process should be terminated

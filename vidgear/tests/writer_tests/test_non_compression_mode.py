@@ -27,7 +27,9 @@ import os, platform
 import pytest
 import cv2
 import tempfile
+import logging as log
 
+logger = log.getLogger('Test_non_commpression_mode')
 
 
 def return_static_ffmpeg():
@@ -81,7 +83,7 @@ def test_write(conversion):
 	if result:
 		if not isinstance(result, string_types):
 			result = result.decode()
-		print('[LOG]: Result: {}'.format(result))
+		logger.debug('Result: {}'.format(result))
 		for i in ["Error", "Invalid", "error", "invalid"]:
 			assert not(i in result)
 	os.remove(os.path.abspath('Output_twc.avi'))
@@ -112,5 +114,4 @@ def test_WriteGear_compression(f_name, output_params, result):
 		if f_name and f_name != tempfile.gettempdir():
 			os.remove(os.path.abspath(f_name))
 	except Exception as e:
-		if result:
-			pytest.fail(str(e))
+		if result: pytest.fail(str(e))
