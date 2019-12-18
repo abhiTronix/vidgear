@@ -57,7 +57,7 @@ curl -s https://api.github.com/repos/abhiTronix/OpenCV-Travis-Builds/releases/la
 | tr -d \" \
 | wget -qi -
 
-sudo dpkg -i OpenCV-$OPENCV_VERSION-$(python -c 'import platform; print(platform.python_version())').deb
+sudo dpkg -i OpenCV-$OPENCV_VERSION-$PYTHONVERSIONMIN.*.deb
 
 sudo ln -s /usr/local/lib/python$PYTHONSUFFIX/site-packages/*.so $HOME/virtualenv/python$PYTHONVERSION/lib/python$PYTHONSUFFIX/site-packages
 
