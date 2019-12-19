@@ -83,6 +83,7 @@ class VideoGear:
 		self.stablization_mode = stabilize
 
 		# enable logging if specified
+		self.logging = False
 		self.logger = log.getLogger('VideoGear')
 		if logging: self.logging = logging
 

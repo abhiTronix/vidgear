@@ -96,6 +96,7 @@ class WriteGear:
 		self.os_windows  = True if os.name == 'nt' else False #checks if machine in-use is running windows os or not
 		
 		# enable logging if specified
+		self.logging = False
 		self.logger = log.getLogger('WriteGear')
 		if logging: self.logging = logging
 

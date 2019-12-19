@@ -115,6 +115,7 @@ class CamGear:
 		self.threaded_queue_mode = True
 
 		# enable logging if specified
+		self.logging = False
 		self.logger = log.getLogger('CamGear')
 		if logging: self.logging = logging
 

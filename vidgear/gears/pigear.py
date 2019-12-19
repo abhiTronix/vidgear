@@ -80,6 +80,7 @@ class PiGear:
 				raise RuntimeError('[PiGear:ERROR] :: Picamera API failure: {}'.format(error))
 
 		# enable logging if specified
+		self.logging = False
 		self.logger = log.getLogger('PiGear')
 		if logging: self.logging = logging
 

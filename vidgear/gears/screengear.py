@@ -81,6 +81,7 @@ class ScreenGear:
 			raise ImportError('[ScreenGear:ERROR] :: python-mss library not found, install it with `pip install mss` command.')
 
 		# enable logging if specified
+		self.logging = False
 		self.logger = log.getLogger('ScreenGear')
 		if logging: self.logging = logging
 

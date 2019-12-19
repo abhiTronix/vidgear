@@ -130,6 +130,7 @@ class NetGear:
 			raise ImportError('[NetGear:ERROR] :: pyzmq python library not installed. Kindly install it with `pip install pyzmq` command.')
 
 		# enable logging if specified
+		self.logging = False
 		self.logger = log.getLogger('NetGear')
 		if logging: self.logging = logging
 

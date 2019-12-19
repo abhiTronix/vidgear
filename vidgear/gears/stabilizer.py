@@ -55,6 +55,7 @@ class Stabilizer:
 		self.frame_queue_indexes = deque(maxlen=smoothing_radius)
 
 		# enable logging if specified
+		self.logging = False
 		self.logger = log.getLogger('Stabilizer')
 		if logging: self.logging = logging
 
