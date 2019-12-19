@@ -39,7 +39,7 @@ limitations under the License.
 
 &nbsp;
 
-VidGear is a powerful python Video Processing library built with multi-threaded [**Gears**](#gear) each with a unique set of trailblazing features. These APIs provides a easy-to-use, highly extensible, and multi-threaded wrapper around many underlying state-of-the-art libraries such as *[OpenCV ➶][opencv], [FFmpeg ➶][ffmpeg], [picamera ➶][picamera], [pafy ➶][pafy], [pyzmq ➶][pyzmq] and [python-mss ➶][mss]*
+VidGear is a powerful python Video Processing library built with multi-threaded [**Gears**](#gears) each with a unique set of trailblazing features. These APIs provides a easy-to-use, highly extensible, and multi-threaded wrapper around many underlying state-of-the-art libraries such as *[OpenCV ➶][opencv], [FFmpeg ➶][ffmpeg], [picamera ➶][picamera], [pafy ➶][pafy], [pyzmq ➶][pyzmq] and [python-mss ➶][mss]*
 
 &nbsp;
 
@@ -125,9 +125,9 @@ Each of these API is designed exclusively to handle/control different device-spe
 
 ### CamGear
 
-> **CamGear can grab ultrafast frames at from diverse range of VideoStreams, which includes almost any IP/USB Cameras, multimedia video file format ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rstp, rtmp, mms, etc.`, plus support for live Gstreamer's stream pipeline and YouTube video/livestreams URLs.**
+> **CamGear can grab ultrafast frames from diverse range of VideoStreams, which includes almost any IP/USB Cameras, multimedia video file format ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rstp, rtmp, mms, etc.`, plus support for live Gstreamer's stream pipeline and YouTube video/livestreams URLs.**
 
-CamGear provides a flexible, high-level multi-threaded wrapper around `OpenCV's` [VideoCapture class][opencv-vc] with access almost all of its available parameters and also employs `pafy` python APIs for live [YouTube streaming][youtube-wiki]. Furthermore, CamGear implements exclusively on [**Threaded Queue mode**][TQM-wiki] for ultra-fast, error-free and synchronized frame handling.
+CamGear provides a flexible, high-level multi-threaded wrapper around `OpenCV's` [VideoCapture class][opencv-vc] with access almost all of its available parameters and also employs [`pafy`][pafy] python APIs for live [YouTube streaming][youtube-wiki]. Furthermore, CamGear implements exclusively on [**Threaded Queue mode**][TQM-wiki] for ultra-fast, error-free and synchronized frame handling.
 
 
 **Following simplified functional block diagram depicts CamGear API's generalized working:**
@@ -136,7 +136,7 @@ CamGear provides a flexible, high-level multi-threaded wrapper around `OpenCV's`
   <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/CamGear.png" alt="CamGear Functional Block Diagram" width=60%/>
 </p>
 
-**CamGear API Guide:**
+#### CamGear API Guide:
 
 [**>>> Usage Guide**][camgear-wiki]
 
@@ -205,7 +205,7 @@ stream_stab.stop()
 ```
  
 
-**VideoGear API Guide:**
+#### VideoGear API Guide:
 
 [**>>> Usage Guide**][videogear-wiki]
 
@@ -213,9 +213,9 @@ stream_stab.stop()
 
 ### PiGear
 
-> **PiGear is similar to CamGear but made to support various Raspberry Pi Camera Modules (such as [OmniVision OV5647 Camera Module][OV5647-picam] and [Sony IMX219 Camera Module][IMX219-picam]).**
+> **PiGear is similar to CamGear but made to support various Raspberry Pi Camera Modules *(such as [OmniVision OV5647 Camera Module][OV5647-picam] and [Sony IMX219 Camera Module][IMX219-picam])*.**
 
-PiGear provides a flexible multi-threaded wrapper around complete [picamera][picamera] python library to interface with these modules correctly, and also grants the ability to exploit its various features like `brightness, saturation, sensor_mode, etc.` effortlessly. 
+PiGear provides a flexible multi-threaded wrapper around complete [**picamera**][picamera] python library to interface with these modules correctly, and also grants the ability to exploit its various features like `brightness, saturation, sensor_mode, etc.` effortlessly. 
 
 Best of all, PiGear API provides excellent Error-Handling with features like a threaded internal timer that keeps active track of any frozen threads and handles hardware failures/frozen threads robustly thereby will exit safely if any failure occurs. So if you accidently pulled your camera cable out when running PiGear API in your script, instead of going into possible kernel panic due to IO error, it will exit safely to save resources. 
 
@@ -225,7 +225,7 @@ Best of all, PiGear API provides excellent Error-Handling with features like a t
   <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/PiGear.png" alt="PiGear Functional Block Diagram" width=40%/>
 </p>
 
-**PiGear API Guide:**
+#### PiGear API Guide:
 
 [**>>> Usage Guide**][pigear-wiki]
 
@@ -235,7 +235,7 @@ Best of all, PiGear API provides excellent Error-Handling with features like a t
 
 > **ScreenGear act as Screen Recorder, that can grab frames from your monitor in real-time either by define an area on the computer screen or fullscreen at the expense of insignificant latency. It also provide seemless support for capturing frames from multiple monitors.** 
 
-ScreenGear provides a high-level multi-threaded wrapper around [**`mss`**][mss] python library API and also supports a easy and flexible direct internal parameter manipulation. 
+ScreenGear provides a high-level multi-threaded wrapper around [**python-mss**][mss] python library API and also supports a easy and flexible direct internal parameter manipulation. 
 
 **Below is a snapshot of a ScreenGear API in action:**
 
@@ -279,7 +279,7 @@ stream.stop()
 # safely close video stream.
 ```
 
-**ScreenGear API Guide:**
+#### ScreenGear API Guide:
 
 [**>>> Usage Guide**][screengear-wiki]
 
@@ -291,7 +291,7 @@ stream.stop()
 
 > **WriteGear handles various powerful Writer Tools that provide us the freedom to do almost anything imagine with multimedia files.** 
 
-WriteGear API provide a High-Level complete, flexible & robust wrapper around [**FFmpeg**][ffmpeg], a leading multimedia framework. With WriteGear, we can process real-time video frames into a lossless compressed format with any suitable specification in just few easy [lines of codes][compression-mode-ex]. These specifications include setting any video/audio property such as `bitrate, codec, framerate, resolution, subtitles,  etc.` easily as well complex tasks such as multiplexing video with audio in real-time(see this [example wiki][live-audio-wiki]). Best of all, WriteGear grants the freedom to play with any FFmpeg parameter with its exclusive custom Command function(see this [example wiki][custom-command-wiki]), while handling all errors robustly. 
+WriteGear API provide a complete, flexible & robust wrapper around [**FFmpeg**][ffmpeg], a leading multimedia framework. With WriteGear, we can process real-time video frames into a lossless compressed format with any suitable specification in just few easy [lines of codes][compression-mode-ex]. These specifications include setting any video/audio property such as `bitrate, codec, framerate, resolution, subtitles,  etc.` easily as well complex tasks such as multiplexing video with audio in real-time(see this [example wiki][live-audio-wiki]). Best of all, WriteGear grants the freedom to play with any FFmpeg parameter with its exclusive custom Command function(see this [example wiki][custom-command-wiki]), while handling all errors robustly. 
 
 In addition to this, WriteGear also provides flexible access to [**OpenCV's VideoWriter API**][opencv-writer] which provides some basic tools for video frames encoding but without compression.
 
@@ -307,7 +307,7 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
   <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/WriteGear.png" alt="WriteGear Functional Block Diagram" width=70%/>
 </p>
 
-**WriteGear API Guide:**
+#### WriteGear API Guide:
 
 [**>>> Usage Guide**][writegear-wiki]
 
@@ -317,7 +317,7 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 
 > **NetGear is exclusively designed to transfer video frames synchronously and asynchronously between interconnecting systems over the network in real-time.** 
 
-NetGear implements a high-level wrapper around [PyZmQ][pyzmq] python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance asynchronous distributed messaging library that aim to be used in distributed or concurrent applications.  It provides a message queue, but unlike message-oriented middleware, a ZeroMQ system can run without a dedicated message broker. 
+NetGear implements a high-level wrapper around [**PyZmQ**][pyzmq] python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance asynchronous distributed messaging library that aim to be used in distributed or concurrent applications.  It provides a message queue, but unlike message-oriented middleware, a ZeroMQ system can run without a dedicated message broker. 
 
 NetGear provides seamless support for bidirectional data transmission between receiver(client) and sender(server) through bi-directional synchronous messaging patterns such as zmq.PAIR _(ZMQ Pair Pattern)_ & zmq.REQ/zmq.REP _(ZMQ Request/Reply Pattern)_. 
 
@@ -341,7 +341,7 @@ Best of all, NetGear can robustly handle Multiple Servers at once, thereby provi
   <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/NetGear.png" alt="NetGear Functional Block Diagram" width=80%/>
 </p>
 
-**NetGear API Guide:**
+#### NetGear API Guide:
 
 [**>>> Usage Guide**][netgear-wiki]
 
