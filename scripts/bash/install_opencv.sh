@@ -15,10 +15,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-######################################
-#  Installing OpenCV Binaries        #
-######################################
+########################################
+# Installs OpenCV Offical Binaries for #
+#        CLI Linux Environments        #
+########################################
 
+#opencv version to install
 OPENCV_VERSION='4.2.0-pre'
 
 #determining system specific temp directory
@@ -30,7 +32,6 @@ PYTHONVERSION=$(python -c 'import platform; print(platform.python_version())')
 PYTHONVERSIONMIN=$(python3 -c 'import platform; print(platform.python_version()[:3])')
 
 echo "Installing OpenCV..."
-
 echo "Installing OpenCV Dependencies..."
 
 sudo apt-get install -y --allow-unauthenticated build-essential cmake pkg-config gfortran libavutil-dev ffmpeg

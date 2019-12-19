@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## VidGear 0.1.6-dev
+## VidGear 0.1.6
 
 ### New Features:
   * **NetGear API:**
@@ -55,7 +55,8 @@
     
 
 ### Updates/Improvements:
-  * Updated support for screen casting from all monitors in ScreenGear API.
+  * Replace `print` logging commands with python's logging module completely.
+  * Updated support for screen casting from multiple/all monitors in ScreenGear API.
   * Updated ScreenGear API to use *Threaded Queue Mode* by default, thereby removed redundant `THREADED_QUEUE_MODE` param.
   * Updated bash script path to download test dataset in `$TMPDIR` rather than `$HOME` directory for downloading testdata.
   * Added support for `REQ/REP` pattern in Multi-Server Mode
@@ -70,8 +71,9 @@
 
 ### Breaking Updates / Improvements / Changes
   * :warning: Python 2.7 legacy support dropped completely.
-  * :warning: Source-code Relicensed to Apache 2.0 License
-  * Python 3+ are only supported legacies for installing Vidgear v0.1.6 and above. 
+  * :warning: Source-code Relicensed to Apache 2.0 License.
+  * Python 3+ are only supported legacies for installing Vidgear v0.1.6 and above.
+  * Python 2.7 and 3.4 legacies support dropped from VidGear CLI tests.
 
 ### Fixes
   * Reimplemented `Pub/Sub` pattern for smoother performance(#70)
@@ -123,7 +125,6 @@
   * Updated New dependencies: `mss`, `pyzmq` and rejected redundant ones.
   * Revamped and refreshed look for `readme.md` and added new badges.
   * Updated Releases Documentation completely.
-  * Replace `print` commands with python's logging module completely
   * Updated CLI tests for new changes
   * Updated Code Documentation.
   * Updated bash scripts and removed redundant information
