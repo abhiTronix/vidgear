@@ -22,7 +22,7 @@ codecov:
 
 coverage:
   status:
-    patch: no
+    patch: off
 
 ignore:
   - "vidgear/tests"
