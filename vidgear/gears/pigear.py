@@ -80,10 +80,8 @@ class PiGear:
 				raise RuntimeError('[PiGear:ERROR] :: Picamera API failure: {}'.format(error))
 
 		# enable logging if specified
-		self.logging = False
-		if logging:
-			self.logger = log.getLogger('PiGear')
-			self.logging = True
+		self.logger = log.getLogger('PiGear')
+		if logging: self.logging = logging
 
 		assert (isinstance(framerate, (int, float)) and framerate > 5.0), "[PiGear:ERROR] :: Input framerate value `{}` is a Invalid! Kindly read docs.".format(framerate)
 		assert (isinstance(resolution, (tuple, list)) and len(resolution) == 2), "[PiGear:ERROR] :: Input resolution value `{}` is a Invalid! Kindly read docs.".format(resolution)

@@ -115,10 +115,8 @@ class CamGear:
 		self.threaded_queue_mode = True
 
 		# enable logging if specified
-		self.logging = False
-		if logging:
-			self.logger = log.getLogger('CamGear')
-			self.logging = True
+		self.logger = log.getLogger('CamGear')
+		if logging: self.logging = logging
 
 		# check if Youtube Mode is ON (True)
 		if y_tube:

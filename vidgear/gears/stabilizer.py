@@ -55,10 +55,8 @@ class Stabilizer:
 		self.frame_queue_indexes = deque(maxlen=smoothing_radius)
 
 		# enable logging if specified
-		self.logging = False
-		if logging:
-			self.logger = log.getLogger('Stabilizer')
-			self.logging = True
+		self.logger = log.getLogger('Stabilizer')
+		if logging: self.logging = logging
 
 		# define and create Adaptive histogram equalization (AHE) object for optimizations
 		self.clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))

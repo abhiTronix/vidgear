@@ -96,10 +96,8 @@ class WriteGear:
 		self.os_windows  = True if os.name == 'nt' else False #checks if machine in-use is running windows os or not
 		
 		# enable logging if specified
-		self.logging = False
-		if logging:
-			self.logger = log.getLogger('WriteGear')
-			self.logging = True
+		self.logger = log.getLogger('WriteGear')
+		if logging: self.logging = logging
 
 		# initialize various important class variables
 		self.output_parameters = {}
@@ -363,7 +361,7 @@ class WriteGear:
 				sp.call(cmd, stdin=sp.PIPE, stdout=self.DEVNULL, stderr=sp.STDOUT)
 		except (OSError, IOError):
 			# log something is wrong!
-			self.logger.error('BrokenPipeError caught: Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!')
+			self.logger.error('BrokenPipeError caught, Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!')
 			self.DEVNULL.close()
 			raise ValueError #for testing purpose only
 
