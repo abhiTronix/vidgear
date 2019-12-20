@@ -1,25 +1,20 @@
 """
-============================================
-vidgear library code is placed under the MIT license
-Copyright (c) 2019 Abhishek Thakur
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ===============================================
 """
 
@@ -27,6 +22,8 @@ import platform
 import setuptools
 from pkg_resources import parse_version
 from setuptools import setup
+
+
 
 def test_opencv():
 	"""
@@ -37,7 +34,6 @@ def test_opencv():
 	try:
 		# import OpenCV Binaries
 		import cv2
-		
 		# check whether OpenCV Binaries are 3.x+
 		if parse_version(cv2.__version__) < parse_version('3'):
 			raise ImportError('Incompatible (< 3.0) OpenCV version-{} Installation found on this machine!'.format(parse_version(cv2.__version__)))
@@ -45,15 +41,17 @@ def test_opencv():
 		return True
 	return False
 
+
+
 with open("README.md", "r") as fh:
 	long_description = fh.read()
 
 setup(
 	name='vidgear',
 	packages=['vidgear','vidgear.gears'],
-	version='0.1.6-dev',
+	version='0.1.6',
 	description='Most Powerful multi-threaded Video Processing Python framework powerpacked with unique trailblazing features.',
-	license='MIT License',
+	license='Apache License 2.0',
 	author='abhiTronix',
 	install_requires = ["pafy", "mss", "youtube-dl", "requests","pyzmq"] 
 	+ (["opencv-contrib-python"] if test_opencv() else []) 
@@ -66,8 +64,13 @@ setup(
 	keywords=['opencv', 'multithreading', 'FFmpeg', 'picamera', 'mss', 'pyzmq', 'pafy', 'Video Processing', 'Video Stablization', 'Computer Vision'],
 	classifiers=[
 	'Development Status :: 5 - Production/Stable',
+	'Operating System :: POSIX',
+    'Operating System :: MacOS :: MacOS X',
+    'Operating System :: Microsoft :: Windows',
+    'Topic :: Multimedia :: Video',
+    'Topic :: Scientific/Engineering',
 	'Intended Audience :: Developers',
-	'License :: OSI Approved :: MIT License',
+	'License :: OSI Approved :: Apache Software License',
 	'Programming Language :: Python :: 3',
 	'Programming Language :: Python :: 3.4',
 	'Programming Language :: Python :: 3.5',
@@ -76,7 +79,7 @@ setup(
 	'Programming Language :: Python :: 3.8'],
 	python_requires='>=3',
 	scripts=[],
-	project_urls={  # Optional
+	project_urls={
 		'Bug Reports': 'https://github.com/abhiTronix/vidgear/issues',
 		'Funding': 'https://www.buymeacoffee.com/2twOXFvlA',
 		'Source': 'https://github.com/abhiTronix/vidgear',},

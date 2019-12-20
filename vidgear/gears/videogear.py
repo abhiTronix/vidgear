@@ -1,31 +1,26 @@
 """
-============================================
-vidgear library code is placed under the MIT license
-Copyright (c) 2019 Abhishek Thakur
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ===============================================
 """
 
 # import the necessary packages
 from .camgear import CamGear
-
+import logging as log
 
 
 class VideoGear:
@@ -84,7 +79,13 @@ class VideoGear:
 
 	def __init__(self, enablePiCamera = False, stabilize = False, source = 0, y_tube = False, backend = 0, colorspace = None, resolution = (640, 480), framerate = 25, logging = False, time_delay = 0, **options):
 		
+		#initialize stabilizer
 		self.stablization_mode = stabilize
+
+		# enable logging if specified
+		self.logging = False
+		self.logger = log.getLogger('VideoGear')
+		if logging: self.logging = logging
 
 		if self.stablization_mode:
 			from .stabilizer import Stabilizer
@@ -107,7 +108,7 @@ class VideoGear:
 						crop_n_zoom = options["CROP_N_ZOOM"] #assigsn special parameter
 					del options["CROP_N_ZOOM"] #clean
 			self.stabilizer_obj = Stabilizer(smoothing_radius = s_radius, border_type = border_type, border_size = border_size, crop_n_zoom = crop_n_zoom, logging = logging)
-			if logging: print('[LOG]: Enabling Stablization Mode for the current video source!') #log info
+			if self.logging: self.logger.debug('Enabling Stablization Mode for the current video source!') #log info
 
 		if enablePiCamera:
 			# only import the pigear module only if required
@@ -143,6 +144,7 @@ class VideoGear:
 
 
 	def stop(self):
+		if self.logging: self.logger.debug("Terminating VideoGear.")
 		# stop the thread and release any resources
 		self.stream.stop()
 		#clean queue

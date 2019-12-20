@@ -1,23 +1,26 @@
 
 #!/bin/sh
 
-#Copyright (c) 2019 Abhishek Thakur
+# Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
-#Permission is hereby granted, free of charge, to any person obtaining a copy
-#of this software and associated documentation files (the "Software"), to deal
-#in the Software without restriction, including without limitation the rights
-#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#copies of the Software, and to permit persons to whom the Software is
-#furnished to do so, subject to the following conditions:
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 
-#The above copyright notice and this permission notice shall be included in all
-#copies or substantial portions of the Software.
+#    http://www.apache.org/licenses/LICENSE-2.0
 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-######################################
-#  Installing OpenCV Binaries        #
-######################################
+########################################
+# Installs OpenCV Offical Binaries for #
+#        CLI Linux Environments        #
+########################################
 
+#opencv version to install
 OPENCV_VERSION='4.2.0-pre'
 
 #determining system specific temp directory
@@ -26,9 +29,9 @@ TMPFOLDER=$(python -c 'import tempfile; print(tempfile.gettempdir())')
 #determining system Python suffix and  version
 PYTHONSUFFIX=$(python -c 'import platform; a = platform.python_version(); print(".".join(a.split(".")[:2]))')
 PYTHONVERSION=$(python -c 'import platform; print(platform.python_version())')
+PYTHONVERSIONMIN=$(python3 -c 'import platform; print(platform.python_version()[:3])')
 
 echo "Installing OpenCV..."
-
 echo "Installing OpenCV Dependencies..."
 
 sudo apt-get install -y --allow-unauthenticated build-essential cmake pkg-config gfortran libavutil-dev ffmpeg
@@ -49,9 +52,13 @@ cd $TMPFOLDER
 
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 
-wget https://github.com/abhiTronix/OpenCV-Travis-Builds/releases/download/opencv-$OPENCV_VERSION/OpenCV-$OPENCV_VERSION-$PYTHONVERSION.deb
+curl -s https://api.github.com/repos/abhiTronix/OpenCV-Travis-Builds/releases/latest \
+| grep "OpenCV-$OPENCV_VERSION-$PYTHONVERSIONMIN.*.deb" \
+| cut -d : -f 2,3 \
+| tr -d \" \
+| wget -qi -
 
-sudo dpkg -i OpenCV-$OPENCV_VERSION-$(python -c 'import platform; print(platform.python_version())').deb
+sudo dpkg -i OpenCV-$OPENCV_VERSION-$PYTHONVERSIONMIN.*.deb
 
 sudo ln -s /usr/local/lib/python$PYTHONSUFFIX/site-packages/*.so $HOME/virtualenv/python$PYTHONVERSION/lib/python$PYTHONSUFFIX/site-packages
 

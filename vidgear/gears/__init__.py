@@ -8,4 +8,4 @@ from .netgear import NetGear
 
 __all__ = ["PiGear", "CamGear", "VideoGear", "ScreenGear", "WriteGear", "NetGear"]
 
-__author__ = "Abhishek Thakur <abhi.una12@gmail.com>"
+__author__ = "Abhishek Thakur (@abhiTronix) <abhi.una12@gmail.com>"

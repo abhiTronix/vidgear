@@ -1,25 +1,20 @@
 """
-============================================
-vidgear library code is placed under the MIT license
-Copyright (c) 2019 Abhishek Thakur
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ===============================================
 """
 
@@ -29,7 +24,7 @@ from pkg_resources import parse_version
 from .helper import capPropId
 import numpy as np
 import time
-
+import logging as log
 
 
 try:
@@ -37,10 +32,10 @@ try:
 	import cv2
 	# check whether OpenCV Binaries are 3.x+
 	if parse_version(cv2.__version__) < parse_version('3'):
-		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
+		raise ImportError('[ScreenGear:ERROR] :: OpenCV library version >= 3.0 is only supported by this library')
 
 except ImportError as error:
-	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
+	raise ImportError('[ScreenGear:ERROR] :: Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
 
 
 
@@ -83,7 +78,12 @@ class ScreenGear:
 			from mss.exception import ScreenShotError
 		except ImportError as error:
 			# otherwise raise import error
-			raise ImportError('[ERROR]: python-mss library not found, install it with `pip install mss` command.')
+			raise ImportError('[ScreenGear:ERROR] :: python-mss library not found, install it with `pip install mss` command.')
+
+		# enable logging if specified
+		self.logging = False
+		self.logger = log.getLogger('ScreenGear')
+		if logging: self.logging = logging
 
 		# create mss object
 		self.mss_object = mss() 
@@ -92,7 +92,7 @@ class ScreenGear:
 		if (monitor >= 0):
 			monitor_instance = self.mss_object.monitors[monitor]
 		else:
-			raise ValueError("[ERROR]: `monitor` value cannot be negative, Read Docs!")
+			raise ValueError("[ScreenGear:ERROR] :: `monitor` value cannot be negative, Read Docs!")
 
 		# Initialize Queue
 		self.queue = None
@@ -102,7 +102,7 @@ class ScreenGear:
 		#define deque and assign it to global var
 		self.queue = deque(maxlen=96) #max len 96 to check overflow
 		#log it
-		if logging: print('[LOG]: Enabling Threaded Queue Mode by default for ScreenGear!') 
+		if logging: self.logger.debug('Enabling Threaded Queue Mode by default for ScreenGear!') 
 
 		#intiate screen dimension handler
 		screen_dims = {}
@@ -114,17 +114,17 @@ class ScreenGear:
 			# separately handle colorspace value to int conversion
 			if not(colorspace is None): 
 				self.color_space = capPropId(colorspace.strip())
-				if logging: print('[LOG]: Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
+				if logging: self.logger.debug('Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
 		except Exception as e:
 			# Catch if any error occurred
-			if logging: print(e)
+			if logging: self.logger.exception(str(e))
 
 		# intialize mss capture instance
 		self.mss_capture_instance = None
 		try:
 			# check whether user-defined dimensions are provided
 			if screen_dims and len(screen_dims) == 4:
-				if logging: print('[LOG]: Setting capture dimensions: {}!'.format(screen_dims)) 
+				if logging: self.logger.debug('Setting capture dimensions: {}!'.format(screen_dims)) 
 				self.mss_capture_instance = screen_dims #create instance from dimensions
 			else:
 				self.mss_capture_instance = monitor_instance #otherwise create instance from monitor
@@ -135,11 +135,9 @@ class ScreenGear:
 				self.queue.append(self.frame)
 		except ScreenShotError:
 			#otherwise catch and log errors
-			raise ValueError("[ERROR]: ScreenShotError caught: Wrong dimensions passed to python-mss, Kindly Refer Docs!")
-			if logging: print(self.mss_object.get_error_details())
+			if logging: self.logger.error(self.mss_object.get_error_details())
+			raise ValueError("[ScreenGear:ERROR] :: ScreenShotError caught, Wrong dimensions passed to python-mss, Kindly Refer Docs!")
 				
-		# enable logging if specified
-		self.logging = logging
 		# thread initialization
 		self.thread=None
 		# initialize termination flag
@@ -150,7 +148,7 @@ class ScreenGear:
 		"""
 		start the thread to read frames from the video stream
 		"""
-		self.thread = Thread(target=self.update, args=())
+		self.thread = Thread(target=self.update, name='ScreenGear', args=())
 		self.thread.daemon = True
 		self.thread.start()
 		return self
@@ -196,13 +194,13 @@ class ScreenGear:
 						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
 						self.color_space = None
-						if self.logging: print('[LOG]: Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
+						if self.logging: self.logger.debug('Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None
 					if self.logging:
-						print(e)
-						print('[LOG]: Input Colorspace is not a valid Colorspace!')
+						self.logger.exception(str(e))
+						self.logger.debug('Input Colorspace is not a valid Colorspace!')
 				if not(color_frame is None):
 					self.frame = color_frame
 				else:
@@ -231,6 +229,7 @@ class ScreenGear:
 		"""
 		Terminates the Read process
 		"""
+		if self.logging: self.logger.debug("Terminating ScreenGear Processes.")
 		#terminate Threaded queue mode seperately
 		if self.threaded_queue_mode and not(self.queue is None):
 			self.queue.clear()
@@ -242,9 +241,3 @@ class ScreenGear:
 		if self.thread is not None: 
 			self.thread.join()
 			#properly handle thread exit
-
-
-
-	
-
-

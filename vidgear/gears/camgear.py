@@ -1,25 +1,20 @@
 """
-============================================
-vidgear library code is placed under the MIT license
-Copyright (c) 2019 Abhishek Thakur
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ===============================================
 """
 
@@ -29,6 +24,7 @@ from pkg_resources import parse_version
 from .helper import capPropId
 from .helper import check_CV_version
 import re, time
+import logging as log
 
 
 
@@ -51,10 +47,10 @@ try:
 	import cv2
 	# check whether OpenCV Binaries are 3.x+
 	if parse_version(cv2.__version__) < parse_version('3'):
-		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
+		raise ImportError('[CamGear:ERROR] :: OpenCV library version >= 3.0 is only supported by this library')
 
 except ImportError as error:
-	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
+	raise ImportError('[CamGear:ERROR] :: Failed to detect OpenCV executables, install it with `pip install opencv-python` command.')
 
 
 
@@ -118,6 +114,11 @@ class CamGear:
 		#intialize threaded queue mode
 		self.threaded_queue_mode = True
 
+		# enable logging if specified
+		self.logging = False
+		self.logger = log.getLogger('CamGear')
+		if logging: self.logging = logging
+
 		# check if Youtube Mode is ON (True)
 		if y_tube:
 			try:
@@ -129,11 +130,12 @@ class CamGear:
 					source_object = pafy.new(url)
 					_source = source_object.getbestvideo("any", ftypestrict=False)
 					if _source is None: _source = source_object.getbest("any", ftypestrict=False)
-					if logging: print('[LOG]: YouTube source ID: `{}`, Title: `{}` & Video_Extension: `{}`'.format(url, source_object.title, _source.extension))
+					if self.logging: self.logger.debug('YouTube source ID: `{}`, Title: `{}` & Video_Extension: `{}`'.format(url, source_object.title, _source.extension))
 					source = _source.url
+				else: raise RuntimeError('URL cannot be processed!')
 			except Exception as e:
-				if logging: print(e)
-				raise ValueError('[ERROR]: YouTube Mode is enabled and the input YouTube Url is invalid!')
+				if self.logging: self.logger.exception(str(e))
+				raise ValueError('[CamGear:ERROR] :: YouTube Mode is enabled and the input YouTube URL is invalid!')
 
 		# youtube mode variable initialization
 		self.youtube_mode = y_tube
@@ -154,12 +156,12 @@ class CamGear:
 			#define deque and assign it to global var
 			self.queue = deque(maxlen=96) #max len 96 to check overflow
 			#log it
-			if logging: print('[LOG]: Enabling Threaded Queue Mode for the current video source!') 
+			if self.logging: self.logger.debug('Enabling Threaded Queue Mode for the current video source!') 
 		else:
 			#otherwise disable it
 			self.threaded_queue_mode = False
 			#log it
-			if logging: print('[LOG]: Threaded Queue Mode is disabled for the current video source!') 
+			if self.logging: self.logger.debug('Threaded Queue Mode is disabled for the current video source!') 
 
 		# stream variable initialization
 		self.stream = None
@@ -190,12 +192,11 @@ class CamGear:
 			# separately handle colorspace value to int conversion
 			if not(colorspace is None): 
 				self.color_space = capPropId(colorspace.strip())
-				if logging: print('[LOG]: Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
+				if self.logging: self.logger.debug('Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
 
 		except Exception as e:
 			# Catch if any error occurred
-			if logging:
-				print(e)
+			if self.logging: self.logger.exception(str(e))
 
 		#initialize and assign framerate variable
 		self.framerate = 0.0
@@ -203,7 +204,7 @@ class CamGear:
 			_fps = self.stream.get(cv2.CAP_PROP_FPS)
 			if _fps>1: self.framerate = _fps
 		except Exception as e:
-			if logging: print(e)
+			if self.logging: self.logger.exception(str(e))
 			self.framerate = 0.0
 
 		# applying time delay to warm-up webcam only if specified
@@ -221,10 +222,7 @@ class CamGear:
 				#intitialize and append to queue
 				self.queue.append(self.frame)
 		else:
-			raise RuntimeError('[ERROR]: Source is invalid, CamGear failed to intitialize stream on this source!')
-
-		# enable logging if specified
-		self.logging = logging
+			raise RuntimeError('[CamGear:ERROR] :: Source is invalid, CamGear failed to intitialize stream on this source!')
 
 		# thread initialization
 		self.thread=None
@@ -238,7 +236,7 @@ class CamGear:
 		"""
 		start the thread to read frames from the video stream
 		"""
-		self.thread = Thread(target=self.update, args=())
+		self.thread = Thread(target=self.update, name='CamGear', args=())
 		self.thread.daemon = True
 		self.thread.start()
 		return self
@@ -285,13 +283,13 @@ class CamGear:
 						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
 						self.color_space = None
-						if self.logging: print('[LOG]: Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
+						if self.logging: self.logger.debug('Colorspace value {} is not a valid Colorspace!'.format(self.color_space))
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None
 					if self.logging:
-						print(e)
-						print('[LOG]: Input Colorspace is not a valid Colorspace!')
+						self.logger.exception(str(e))
+						self.logger.debug('Input Colorspace is not a valid Colorspace!')
 
 				if not(color_frame is None):
 					self.frame = color_frame
@@ -325,7 +323,7 @@ class CamGear:
 		"""
 		Terminates the Read process
 		"""
-		if self.logging: print('[LOG]: Terminating processes')
+		if self.logging: self.logger.debug('Terminating processes.')
 		#terminate Threaded queue mode seperately
 		if self.threaded_queue_mode and not(self.queue is None):
 			if len(self.queue)>0: self.queue.clear()

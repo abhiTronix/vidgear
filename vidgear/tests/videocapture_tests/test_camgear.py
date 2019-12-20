@@ -1,25 +1,20 @@
 """
-============================================
-vidgear library code is placed under the MIT license
-Copyright (c) 2019 Abhishek Thakur
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ===============================================
 """
 
@@ -30,10 +25,10 @@ import os, time
 import pytest
 import tempfile
 import numpy as np
-
 from vidgear.gears import CamGear
+import logging as log
 
-
+logger = log.getLogger('Test_camgear')
 
 def return_youtubevideo_params(url):
 	"""
@@ -64,7 +59,7 @@ def return_total_frame_count():
 	while True:
 		(grabbed, frame) = stream.read()
 		if not grabbed:
-			print(num_cv)
+			logger.debug(num_cv)
 			break
 		num_cv += 1
 	stream.release()
@@ -84,7 +79,7 @@ def test_threaded_queue_mode():
 	while True:
 		frame = stream_camgear.read()
 		if frame is None:
-			print(camgear_frames_num)
+			logger.debug(camgear_frames_num)
 			break
 		
 		time.sleep(0.2) #dummy computational task
@@ -119,19 +114,19 @@ def test_youtube_playback():
 				if height == 0 or width == 0:
 					fps = stream.framerate
 					height,width = frame.shape[:2]
-			print('[LOG]: WIDTH: {} HEIGHT: {} FPS: {}'.format(true_video_param[0],true_video_param[1],true_video_param[2]))
-			print('[LOG]: WIDTH: {} HEIGHT: {} FPS: {}'.format(width,height,fps))
+			logger.debug('WIDTH: {} HEIGHT: {} FPS: {}'.format(true_video_param[0],true_video_param[1],true_video_param[2]))
+			logger.debug('WIDTH: {} HEIGHT: {} FPS: {}'.format(width,height,fps))
 		except Exception as error:
-			print(error)
+			logger.exception(error)
 			errored = True
 
 		if not errored:
 			assert true_video_param[0] == width and true_video_param[1] == height and true_video_param[2] == fps
 		else:
-			print('[LOG]: YouTube playback Test is skipped due to above error!')
+			logger.debug('YouTube playback Test is skipped due to above error!')
 
 	else:
-		print('[LOG]: YouTube playback Test is skipped due to bug with opencv-python library builds on windows and macOS!')
+		logger.debug('YouTube playback Test is skipped due to bug with opencv-python library builds on windows and macOS!')
 
 
 
@@ -161,25 +156,14 @@ def test_network_playback():
 				Output_data.append(frame)
 				i+=1
 			output_stream.stop()
-			print('[LOG]: Output data shape:', np.array(Output_data).shape)
+			logger.debug('Output data shape:', np.array(Output_data).shape)
 			if Output_data[-1].shape[:2] > (50,50): break
 		except Exception as e:
 			if isinstance(e, RuntimeError):
-				print("[LOG] `{}` URL is not working".format(Publictest_rstp_urls[index]))
+				logger.debug("`{}` URL is not working".format(Publictest_rstp_urls[index]))
 				index+=1
 				continue
 			else:
 				pytest.fail(str(e))
 
 	if (index == len(Publictest_rstp_urls)): pytest.fail(str(e))
-
-
-
-
-
-
-
-
-
-
-

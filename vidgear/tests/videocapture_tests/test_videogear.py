@@ -1,33 +1,28 @@
 """
-============================================
-vidgear library code is placed under the MIT license
-Copyright (c) 2019 Abhishek Thakur
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ===============================================
 """
 
-#Video credit: http://www.liushuaicheng.org/CVPR2014/index.html
-
 import pytest, os, tempfile
 from vidgear.gears import VideoGear
+import logging as log
 
+logger = log.getLogger('Test_videogear')
 
 
 def return_testvideo_path():
@@ -59,7 +54,7 @@ def test_CamGear_import():
 		output_stream = VideoGear(source = return_testvideo_path(), logging=True, **options).start()
 		framerate = output_stream.framerate
 		output_stream.stop()
-		print('[LOG] Input Framerate: {}'.format(framerate))
+		logger.debug('Input Framerate: {}'.format(framerate))
 		assert framerate>0
 	except Exception as e:
 		pytest.fail(str(e))
@@ -71,6 +66,7 @@ def test_video_stablization():
 	Testing VideoGear's Video Stablization playback capabilities 
 	"""
 	try:
+		#Video credit: http://www.liushuaicheng.org/CVPR2014/index.html
 		Url = 'https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/example4_train_input.mp4'
 		#define params
 		options = {'SMOOTHING_RADIUS': 5, 'BORDER_SIZE': 10, 'BORDER_TYPE': 'replicate', 'CROP_N_ZOOM': True}

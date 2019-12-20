@@ -1,25 +1,20 @@
 """
-============================================
-vidgear library code is placed under the MIT license
-Copyright (c) 2019 Abhishek Thakur
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ===============================================
 """
 
@@ -30,15 +25,11 @@ import os, sys
 import cv2
 import numpy as np
 from pkg_resources import parse_version
+import logging as log
 
 
-
-def check_python_version():
-	"""
-	returns current python version's - first bit 
-	"""
-	return sys.version_info[0]
-
+log.basicConfig(format='%(name)s :: %(levelname)s :: %(message)s', level=log.DEBUG)
+logger = log.getLogger('Helper')
 
 
 def check_CV_version():
@@ -60,7 +51,7 @@ def capPropId(property):
 	try:
 		integer_value = getattr(cv2, property)
 	except Exception:
-		print('[ALERT]: {} is not a valid OpenCV property!'.format(property))
+		logger.critical('{} is not a valid OpenCV property!'.format(property))
 		return None
 	return integer_value
 
@@ -97,7 +88,7 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 					ffmpeg_download_path = tempfile.gettempdir()
 
 				if logging:
-					print('[LOG]: FFmpeg Windows Download Path: {}'.format(ffmpeg_download_path))
+					logger.debug('FFmpeg Windows Download Path: {}'.format(ffmpeg_download_path))
 
 				#download Binaries
 				_path = download_ffmpeg_binaries(path = ffmpeg_download_path, os_windows = is_windows)
@@ -107,8 +98,8 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 			except Exception as e:
 				#log if any error occurred
 				if logging:
-					print(e)
-					print('[LOG]: Error downloading FFmpeg binaries, Check your network and Try again!')
+					self.logger.exception(str(e))
+					logger.debug('Error in downloading FFmpeg binaries, Check your network and Try again!')
 				return False
 
 		if os.path.isfile(final_path):
@@ -119,7 +110,7 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 			final_path = os.path.join(final_path, 'ffmpeg.exe')
 		else:
 			#else return False
-			if logging: print('[LOG]: No valid FFmpeg executables found at Custom FFmpeg path!')
+			if logging: logger.debug('No valid FFmpeg executables found at Custom FFmpeg path!')
 			return False
 	else:
 		#otherwise perform test for Unix
@@ -134,14 +125,14 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 			else:
 				#else return False
 				if logging:
-					print('[LOG]: No valid FFmpeg executables found at Custom FFmpeg path!')
+					logger.debug('No valid FFmpeg executables found at Custom FFmpeg path!')
 				return False
 		else:
 			#otherwise assign ffmpeg binaries from system
 			final_path += "ffmpeg"
 
 	if logging:
-		print('[LOG]: Final FFmpeg Path: {}'.format(final_path))
+		logger.debug('Final FFmpeg Path: {}'.format(final_path))
 
 	# Final Auto-Validation for FFmeg Binaries. returns final path if test is passed
 	if validate_ffmpeg(final_path, logging = logging):
@@ -177,7 +168,7 @@ def download_ffmpeg_binaries(path, os_windows = False):
 				os.remove(file_name)
 			#download and write file to the given path
 			with open(file_name, "wb") as f:
-				print("No Custom FFmpeg path provided, Auto-Downloading binaries for Windows. Please wait...")
+				logger.debug("No Custom FFmpeg path provided, Auto-Downloading binaries for Windows. Please wait...")
 				response  = requests.get(file_url, stream=True)
 				total_length = response.headers.get('content-length')
 				if total_length is None: # no content length header
@@ -191,12 +182,12 @@ def download_ffmpeg_binaries(path, os_windows = False):
 						done = int(50 * dl / total_length)
 						sys.stdout.write("\r[{}{}]{}{}".format('=' * done, ' ' * (50-done), done * 2, '%') )    
 						sys.stdout.flush()
-			print("\nExtracting executables, Please Wait...")
+			logger.debug("\nExtracting executables, Please Wait...")
 			with zipfile.ZipFile(file_name, "r") as zip_ref:
 				zip_ref.extractall(base_path)
 			#perform cleaning
 			os.remove(file_name)
-			print("FFmpeg binaries for Windows Configured Successfully!")
+			logger.debug("FFmpeg binaries for Windows Configured Successfully!")
 			final_path += file_path
 	#return final path
 	return final_path
@@ -214,13 +205,13 @@ def validate_ffmpeg(path, logging = False):
 		version = firstline.split(b' ')[2].strip()
 		if logging:
 			#log if test are passed 
-			print('[LOG]: FFmpeg validity Test Passed!')
-			print('[LOG]: Found valid FFmpeg Version: `{}` installed on this system'.format(version))
+			logger.debug('FFmpeg validity Test Passed!')
+			logger.debug('Found valid FFmpeg Version: `{}` installed on this system'.format(version))
 	except Exception as e:
 		#log if test are failed
 		if logging:
-			print(e)
-			print('[LOG]: FFmpeg validity Test Failed!')
+			self.logger.exception(str(e))
+			logger.debug('FFmpeg validity Test Failed!')
 		return False
 	return True
 
@@ -345,7 +336,7 @@ def generate_auth_certificates(path, overwrite = False):
 	status_private_keys = validate_auth_keys(secret_keys_dir, '.key_secret')
 
 	# raise error is validation test fails
-	if not(status_private_keys) or not(status_public_keys): raise RuntimeError('[Error]: Unable to generate valid ZMQ authentication certificates at `{}`!'.format(keys_dir))
+	if not(status_private_keys) or not(status_public_keys): raise RuntimeError('[Helper:ERROR] :: Unable to generate valid ZMQ authentication certificates at `{}`!'.format(keys_dir))
 
 	# finally return valid key paths
 	return (keys_dir, secret_keys_dir, public_keys_dir)

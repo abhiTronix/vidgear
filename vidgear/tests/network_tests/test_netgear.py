@@ -1,27 +1,23 @@
 """
-============================================
-vidgear library code is placed under the MIT license
-Copyright (c) 2019 Abhishek Thakur
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ===============================================
 """
+
 from vidgear.gears import NetGear
 from vidgear.gears import VideoGear
 
@@ -33,7 +29,9 @@ import os
 import numpy as np
 import traceback
 from zmq.error import ZMQError
+import logging as log
 
+logger = log.getLogger('Test_netgear')
 
 
 def return_testvideo_path():
@@ -67,7 +65,7 @@ def test_playback():
 		client.close()
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			print(traceback.print_tb(e.__traceback__))
+			logger.debug(traceback.print_tb(e.__traceback__))
 		else:
 			pytest.fail(str(e))
 
@@ -106,7 +104,7 @@ def test_patterns(pattern):
 		assert np.array_equal(frame_server, frame_client)
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			print(traceback.print_tb(e.__traceback__))
+			logger.error(traceback.print_tb(e.__traceback__))
 		else:
 			pytest.fail(str(e))
 
@@ -136,7 +134,7 @@ def test_compression():
 		client.close()
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			print(traceback.print_tb(e.__traceback__))
+			logger.error(traceback.print_tb(e.__traceback__))
 		else:
 			pytest.fail(str(e))
  
@@ -180,7 +178,7 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
 		assert np.array_equal(frame_server, frame_client)
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			print(traceback.print_tb(e.__traceback__))
+			logger.error(traceback.print_tb(e.__traceback__))
 		else:
 			pytest.fail(str(e))
 
@@ -193,7 +191,7 @@ def test_bidirectional_mode(target_data):
 	Testing NetGear's Bidirectional Mode with different datatypes
 	"""
 	try:
-		print('[LOG] Given Input Data: {}'.format(target_data))
+		logger.debug('Given Input Data: {}'.format(target_data))
 
 		#open strem
 		stream = VideoGear(source=return_testvideo_path()).start()
@@ -218,9 +216,9 @@ def test_bidirectional_mode(target_data):
 		server.close()
 		client.close()
 
-		#print data recieved at client-end and server-end
-		print('[LOG] Data recieved at Server-end: {}'.format(server_data))
-		print('[LOG] Data recieved at Client-end: {}'.format(client_data))
+		#logger.debug data recieved at client-end and server-end
+		logger.debug('Data recieved at Server-end: {}'.format(server_data))
+		logger.debug('Data recieved at Client-end: {}'.format(client_data))
 		
 		#check if recieved frame exactly matches input frame
 		assert np.array_equal(frame_server, frame_client)
@@ -228,7 +226,7 @@ def test_bidirectional_mode(target_data):
 		assert client_data == server_data
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			print(traceback.print_tb(e.__traceback__))
+			logger.error(traceback.print_tb(e.__traceback__))
 		else:
 			pytest.fail(str(e))
 
@@ -291,6 +289,6 @@ def test_multiserver_mode():
 
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			print(traceback.print_tb(e.__traceback__))
+			logger.error(traceback.print_tb(e.__traceback__))
 		else:
 			pytest.fail(str(e)) 

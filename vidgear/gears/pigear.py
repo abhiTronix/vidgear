@@ -1,25 +1,20 @@
 """
-============================================
-vidgear library code is placed under the MIT license
-Copyright (c) 2019 Abhishek Thakur
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ===============================================
 """
 
@@ -28,7 +23,7 @@ from threading import Thread
 from pkg_resources import parse_version
 import sys, time
 from .helper import capPropId
-
+import logging as log
 
 
 try:
@@ -37,10 +32,10 @@ try:
 
 	# check whether OpenCV Binaries are 3.x+
 	if parse_version(cv2.__version__) < parse_version('3'):
-		raise ImportError('[ERROR]: OpenCV library version >= 3.0 is only supported by this library')
+		raise ImportError('[PiGear:ERROR] :: OpenCV library version >= 3.0 is only supported by this library')
 
 except ImportError as error:
-	raise ImportError('[ERROR]: Failed to detect OpenCV executables, install it with `pip3 install opencv-python` command.')
+	raise ImportError('[PiGear:ERROR] :: Failed to detect OpenCV executables, install it with `pip3 install opencv-python` command.')
 
 
 
@@ -62,7 +57,7 @@ class PiGear:
 							/ These attribute provides the flexibility to manipulate input raspicam video stream directly. 
 							/ Parameters can be passed using this **option, allows you to pass key worded variable length of arguments to PiGear Class.
 
-	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
+	:param (boolean) self.logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
 
 	:param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
 					/ This delay is essentially required for camera to warm-up. 
@@ -79,20 +74,27 @@ class PiGear:
 		except Exception as error:
 			if isinstance(error, ImportError):
 				# Output expected ImportErrors.
-				raise ImportError('[ERROR]: Failed to detect Picamera executables, install it with "pip3 install picamera" command.')
+				raise ImportError('[PiGear:ERROR] :: Failed to detect Picamera executables, install it with "pip3 install picamera" command.')
 			else:
 				#Handle any API errors
-				raise RuntimeError('[ERROR]: Picamera API failure: {}'.format(error))
+				raise RuntimeError('[PiGear:ERROR] :: Picamera API failure: {}'.format(error))
 
-		assert (isinstance(framerate, (int, float)) and framerate > 5.0), "[ERROR]: Input framerate value `{}` is a Invalid! Kindly read docs.".format(framerate)
-		assert (isinstance(resolution, (tuple, list)) and len(resolution) == 2), "[ERROR]: Input resolution value `{}` is a Invalid! Kindly read docs.".format(resolution)
-		if not(isinstance(camera_num, int) and camera_num >= 0): print("[ERROR]: `camera_num` value is invalid, Kindly read docs!")
+		# enable logging if specified
+		self.logging = False
+		self.logger = log.getLogger('PiGear')
+		if logging: self.logging = logging
+
+		assert (isinstance(framerate, (int, float)) and framerate > 5.0), "[PiGear:ERROR] :: Input framerate value `{}` is a Invalid! Kindly read docs.".format(framerate)
+		assert (isinstance(resolution, (tuple, list)) and len(resolution) == 2), "[PiGear:ERROR] :: Input resolution value `{}` is a Invalid! Kindly read docs.".format(resolution)
+		if not(isinstance(camera_num, int) and camera_num >= 0): 
+			camera_num = 0
+			self.logger.warning("Input camera_num value `{}` is invalid, Defaulting to index 0!")
 
 		# initialize the picamera stream at given index
 		self.camera = PiCamera(camera_num = camera_num)
 		self.camera.resolution = tuple(resolution)
 		self.camera.framerate = framerate
-		if logging: print("[LOG]: Activating Pi camera at index: {} with resolution: {} & framerate: {}".format(camera_num, resolution, framerate))
+		if self.logging: self.logger.debug("Activating Pi camera at index: {} with resolution: {} & framerate: {}".format(camera_num, resolution, framerate))
 
 		#initialize framerate variable
 		self.framerate = framerate
@@ -110,9 +112,9 @@ class PiGear:
 		if options and "HWFAILURE_TIMEOUT" in options:
 			#for altering timeout variable manually
 			if isinstance(options["HWFAILURE_TIMEOUT"],(int, float)):
-				if not(10.0 > options["HWFAILURE_TIMEOUT"] > 1.0): raise ValueError('[ERROR]: `HWFAILURE_TIMEOUT` value can only be between 1.0 ~ 10.0')
+				if not(10.0 > options["HWFAILURE_TIMEOUT"] > 1.0): raise ValueError('[PiGear:ERROR] :: `HWFAILURE_TIMEOUT` value can only be between 1.0 ~ 10.0')
 				self.failure_timeout = options["HWFAILURE_TIMEOUT"] #assign special parameter
-				if logging: print("[LOG]: Setting HW Failure Timeout: {} seconds".format(self.failure_timeout))
+				if self.logging: self.logger.debug("Setting HW Failure Timeout: {} seconds".format(self.failure_timeout))
 			del options["HWFAILURE_TIMEOUT"] #clean
 
 		try:
@@ -123,11 +125,11 @@ class PiGear:
 			# separately handle colorspace value to int conversion
 			if not(colorspace is None): 
 				self.color_space = capPropId(colorspace.strip())
-				if logging: print('[LOG]: Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
+				if self.logging: self.logger.debug('Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
 
 		except Exception as e:
 			# Catch if any error occurred
-			if logging: print(e)
+			if self.logging: self.logger.exception(str(e))
 
 		# enable rgb capture array thread and capture stream
 		self.rawCapture = PiRGBArray(self.camera, size = resolution)
@@ -143,8 +145,8 @@ class PiGear:
 			#render colorspace if defined
 			if not(self.frame is None and self.color_space is None): self.frame = cv2.cvtColor(self.frame, self.color_space)
 		except Exception as e:
-			print(e)
-			raise RuntimeError('[ERROR]: Camera Module failed to initialize!')
+			self.logger.exception(str(e))
+			raise RuntimeError('[PiGear:ERROR] :: Camera Module failed to initialize!')
 
 		# applying time delay to warm-up picamera only if specified
 		if time_delay: time.sleep(time_delay)
@@ -155,9 +157,6 @@ class PiGear:
 		#timer thread initialization(Keeps check on frozen thread)
 		self._timer = None
 		self.t_elasped = 0.0 #records time taken by thread
-
-		# enable logging if specified
-		self.logging = logging
 
 		# catching thread exceptions
 		self.exceptions = None
@@ -172,12 +171,12 @@ class PiGear:
 		start the thread to read frames from the video stream and initiate internal timer
 		"""
 		#Start frame producer thread
-		self.thread = Thread(target=self.update, args=())
+		self.thread = Thread(target=self.update, name='PiGear', args=())
 		self.thread.daemon = True
 		self.thread.start()
 
 		#Start internal timer thread
-		self._timer = Thread(target=self._timeit, args=())
+		self._timer = Thread(target=self._timeit, name='PiTimer', args=())
 		self._timer.daemon = True
 		self._timer.start()
 
@@ -197,7 +196,7 @@ class PiGear:
 			#check for frozen thread
 			if time.time() - self.t_elasped > self.failure_timeout:
 				#log failure
-				if self.logging: print("[WARNING]: Camera Module Disconnected!")
+				if self.logging: self.logger.critical("Camera Module Disconnected!")
 				#prepare for clean exit
 				self.exceptions = True
 				self.terminate = True #self-terminate
@@ -240,14 +239,14 @@ class PiGear:
 						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
 						self.color_space = None
-						if self.logging: print('[LOG]: Colorspace value `{}` is not a valid colorspace!'.format(self.color_space))
+						if self.logging: self.logger.debug('Colorspace value `{}` is not a valid colorspace!'.format(self.color_space))
 							
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None
 					if self.logging:
-						print(e)
-						print('[WARNING]: Input colorspace is not a valid Colorspace!')
+						self.logger.exception(str(e))
+						self.logger.warning('Input colorspace is not a valid Colorspace!')
 
 				if not(color_frame is None):
 					self.frame = color_frame
@@ -276,12 +275,12 @@ class PiGear:
 				#clear frame
 				self.frame = None
 				#notify user about hardware failure 
-				raise SystemError('[ERROR]: Hardware failure occurred, Kindly reconnect Camera Module and restart your Pi!')
+				raise SystemError('[PiGear:ERROR] :: Hardware failure occurred, Kindly reconnect Camera Module and restart your Pi!')
 			else:
 				#clear frame
 				self.frame = None
 				# re-raise error for debugging
-				error_msg = "[ERROR]: Camera Module API failure occured: {}".format(self.exceptions[1])
+				error_msg = "[PiGear:ERROR] :: Camera Module API failure occured: {}".format(self.exceptions[1])
 				raise RuntimeError(error_msg).with_traceback(self.exceptions[2])
 
 		# return the frame
@@ -293,7 +292,7 @@ class PiGear:
 		"""
 		Terminates the Read process
 		"""
-		if self.logging: print("[LOG]: Terminating PiGear Process.")
+		if self.logging: self.logger.debug("Terminating PiGear Processes.")
 
 		# make sure that the threads should be terminated
 		self.terminate = True
@@ -317,4 +316,3 @@ class PiGear:
 			else:
 				#properly handle thread exit
 				self.thread.join()
-
