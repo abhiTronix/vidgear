@@ -80,14 +80,14 @@ class VideoGear:
 	def __init__(self, enablePiCamera = False, stabilize = False, source = 0, y_tube = False, backend = 0, colorspace = None, resolution = (640, 480), framerate = 25, logging = False, time_delay = 0, **options):
 		
 		#initialize stabilizer
-		self.stablization_mode = stabilize
+		self.__stablization_mode = stabilize
 
 		# enable logging if specified
-		self.logging = False
-		self.logger = log.getLogger('VideoGear')
-		if logging: self.logging = logging
+		self.__logging = False
+		self.__logger = log.getLogger('VideoGear')
+		if logging: self.__logging = logging
 
-		if self.stablization_mode:
+		if self.__stablization_mode:
 			from .stabilizer import Stabilizer
 			s_radius, border_size, border_type, crop_n_zoom = (25, 0, 'black', False) #defaults
 			if options:
@@ -107,8 +107,8 @@ class VideoGear:
 					if isinstance(options["CROP_N_ZOOM"],bool):
 						crop_n_zoom = options["CROP_N_ZOOM"] #assigsn special parameter
 					del options["CROP_N_ZOOM"] #clean
-			self.stabilizer_obj = Stabilizer(smoothing_radius = s_radius, border_type = border_type, border_size = border_size, crop_n_zoom = crop_n_zoom, logging = logging)
-			if self.logging: self.logger.debug('Enabling Stablization Mode for the current video source!') #log info
+			self.__stabilizer_obj = Stabilizer(smoothing_radius = s_radius, border_type = border_type, border_size = border_size, crop_n_zoom = crop_n_zoom, logging = logging)
+			if self.__logging: self.__logger.debug('Enabling Stablization Mode for the current video source!') #log info
 
 		if enablePiCamera:
 			# only import the pigear module only if required
@@ -133,19 +133,19 @@ class VideoGear:
 
 	def read(self):
 		# return the current frame
-		while self.stablization_mode:
+		while self.__stablization_mode:
 			frame = self.stream.read()
 			if frame is None:
 				break
-			frame_stab = self.stabilizer_obj.stabilize(frame)
+			frame_stab = self.__stabilizer_obj.stabilize(frame)
 			if not(frame_stab is None):
 				return frame_stab
 		return self.stream.read()
 
 
 	def stop(self):
-		if self.logging: self.logger.debug("Terminating VideoGear.")
+		if self.__logging: self.__logger.debug("Terminating VideoGear.")
 		# stop the thread and release any resources
 		self.stream.stop()
 		#clean queue
-		if self.stablization_mode: self.stabilizer_obj.clean()
+		if self.__stablization_mode: self.__stabilizer_obj.clean()

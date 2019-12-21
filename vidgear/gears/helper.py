@@ -124,8 +124,7 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 				final_path = os.path.join(custom_ffmpeg, 'ffmpeg')
 			else:
 				#else return False
-				if logging:
-					logger.debug('No valid FFmpeg executables found at Custom FFmpeg path!')
+				if logging: logger.debug('No valid FFmpeg executables found at Custom FFmpeg path!')
 				return False
 		else:
 			#otherwise assign ffmpeg binaries from system
@@ -162,7 +161,7 @@ def download_ffmpeg_binaries(path, os_windows = False):
 			import requests
 			import zipfile
 			#check if given pth has write access
-			assert os.access(path, os.W_OK), "Permission Denied: Cannot write ffmpeg binaries to directory = " + path
+			assert os.access(path, os.W_OK), "[Helper:ERROR] :: Permission Denied, Cannot write ffmpeg binaries to directory = " + path
 			#remove leftovers
 			if os.path.isfile(file_name):
 				os.remove(file_name)
