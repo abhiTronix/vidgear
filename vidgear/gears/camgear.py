@@ -53,7 +53,7 @@ except ImportError as error:
 
 
 
-def self.__youtube_url_validation(url):
+def youtube_url_validation(url):
 	"""
 	convert Youtube video URLs to a valid address
 	"""
@@ -124,7 +124,7 @@ class CamGear:
 				#import pafy and parse youtube stream url
 				import pafy
 				# validate
-				url = self.__youtube_url_validation(source)
+				url = youtube_url_validation(source)
 				if url:
 					source_object = pafy.new(url)
 					_source = source_object.getbestvideo("any", ftypestrict=False)
