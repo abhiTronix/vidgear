@@ -74,7 +74,7 @@ def test_ffmpeg_binaries_download(paths):
 			if paths != return_static_ffmpeg():
 				shutil.rmtree(os.path.abspath(os.path.join(file_path ,"../..")))
 	except Exception as e:
-		if paths == 'wrong_test_path' and "Permission Denied:" in str(e):
+		if paths == 'wrong_test_path':
 			pass
 		else:
 			pytest.fail(str(e))
