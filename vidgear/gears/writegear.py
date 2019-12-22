@@ -278,7 +278,7 @@ class WriteGear:
 		elif channels == 4:
 			input_parameters["-pix_fmt"] = "rgba" if rgb else "bgra"
 		else:
-			raise ValueError("[WriteGear:ERROR] :: Frames with channels, outside range 1-to-4 is not supported!")
+			raise ValueError("[WriteGear:ERROR] :: Frames with channels outside range 1-to-4 are not supported!")
 
 		if self.__inputframerate > 5:
 			#set input framerate - minimum threshold is 5.0
@@ -394,14 +394,14 @@ class WriteGear:
 		#assign parameter dict values to variables
 		try:
 			for key, value in self.__output_parameters.items():
-				if key == '-fourcc':
+				if key == '-fourcc' and isinstance(value, str):
 					FOURCC = cv2.VideoWriter_fourcc(*(value.upper()))
-				elif key == '-fps':
+				elif key == '-fps' and isinstance(value, (float, int)):
 					FPS = float(value)
-				elif key =='-backend':
+				elif key =='-backend' and isinstance(value, str):
 					BACKEND = capPropId(value.upper())
-				elif key == '-color':
-					COLOR = bool(int(value))
+				elif key == '-color' and isinstance(value, bool):
+					COLOR = value
 				else:
 					pass
 
