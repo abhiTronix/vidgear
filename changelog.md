@@ -56,12 +56,13 @@
 
 ### Updates/Improvements:
   * Replace `print` logging commands with python's logging module completely.
+  * Implemented encapsulation for class functions and variables on all gears.
   * Updated support for screen casting from multiple/all monitors in ScreenGear API.
   * Updated ScreenGear API to use *Threaded Queue Mode* by default, thereby removed redundant `THREADED_QUEUE_MODE` param.
   * Updated bash script path to download test dataset in `$TMPDIR` rather than `$HOME` directory for downloading testdata.
-  * Added support for `REQ/REP` pattern in Multi-Server Mode
-  * Added new `camera_num` to support multiple Picameras
-  * Moved thread exceptions to the main thread and then re-raised
+  * Added support for `REQ/REP` pattern in Multi-Server Mode.
+  * Added new `camera_num` to support multiple Picameras.
+  * Moved thread exceptions to the main thread and then re-raised.
   * Replaced `traceback` with `sys.exc_info`.
   * Overall APIs Code and Docs optimizations.
   * Updated Code Readability and Wiki Docs.
@@ -76,15 +77,15 @@
   * Python 2.7 and 3.4 legacies support dropped from VidGear CLI tests.
 
 ### Fixes
-  * Reimplemented `Pub/Sub` pattern for smoother performance(#70)
-  * Fixed `multiserver_mode` not working properly over some networks
-  * Fixed assigned Port address ignored bug (commit 073bca1)
+  * Reimplemented `Pub/Sub` pattern for smoother performance on various networks.
+  * Fixed `multiserver_mode` not working properly over some networks.
+  * Fixed assigned Port address ignored bug (commit 073bca1).
   * Fixed several wrong definition bugs from NetGear API(commit 8f7153c).
   * Fixed unreliable dataset video URL(rehosted file on `github.com`)
   * Removed duplicate code to import MSS(@BoboTiG) from ScreenGear API.
   * Fixed code definitions & Typos.
-  * Fixed Several bugs related to new `secure_mode` & `multiserver_mode` Modes.
-  * Fixed various macOS environment bugs
+  * Fixed several bugs related to `secure_mode` & `multiserver_mode` Modes.
+  * Fixed various macOS environment bugs.
 
 ### Pull requests(PR) involved:
   * PR #39
@@ -98,6 +99,7 @@
   * PR #77
   * PR #78
   * PR #82
+  * PR #84
 
 :warning: PyPi Release does NOT contain Tests and Scripts!
 
