@@ -94,7 +94,7 @@ test_data_class = [
 	('', {}, False),
 	('Output_twc.avi', {}, True),
 	(tempfile.gettempdir(), {}, True),
-	('Output_twc.mp4', {"-fourcc":"DIVX", "-fps": 30, "-backend": "CAP_FFMPEG", "-color":True}, True)]
+	('Output_twc.mp4', {"-fourcc":"DIVX", "-fps": 25, "-backend": "CAP_FFMPEG", "-color":True}, True)]
 	
 @pytest.mark.parametrize('f_name, output_params, result', test_data_class)
 def test_WriteGear_compression(f_name, output_params, result):

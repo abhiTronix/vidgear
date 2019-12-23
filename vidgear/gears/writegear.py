@@ -394,14 +394,14 @@ class WriteGear:
 		#assign parameter dict values to variables
 		try:
 			for key, value in self.__output_parameters.items():
-				if key == '-fourcc' and isinstance(value, str):
+				if key == '-fourcc':
 					FOURCC = cv2.VideoWriter_fourcc(*(value.upper()))
-				elif key == '-fps' and isinstance(value, (float, int)):
-					FPS = float(value)
-				elif key =='-backend' and isinstance(value, str):
+				elif key == '-fps':
+					FPS = int(value)
+				elif key =='-backend':
 					BACKEND = capPropId(value.upper())
-				elif key == '-color' and isinstance(value, bool):
-					COLOR = value
+				elif key == '-color':
+					COLOR = bool(value)
 				else:
 					pass
 
