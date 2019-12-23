@@ -442,7 +442,7 @@ VidGear releases are available for download as packages in the [latest release][
 
 ### Option 3: Clone the Repository
 
-> Best option for trying **latest patches, Pull requests & updgrades**(_maybe experimental_), or **contributing** to development.
+> Best option for trying **latest patches, Pull requests & upgrades**(_maybe experimental_), or **contributing** to development.
 
 You can clone this repository's `testing` branch for development and thereby can install as follows:
 ```sh
