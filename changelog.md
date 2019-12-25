@@ -11,6 +11,7 @@
     * Implemented Robust Multi-Server support for NetGear API:
       * Enables Multiple Servers messaging support with a single client.
       * Added exclusive `multiserver_mode` param for enabling it.
+      * Added support for `REQ/REP` &  `PUB/SUB` patterns for this mode.
       * Added ability to send additional data of any datatype along with the frame in realtime in this mode.
     * Introducing exclusive Bi-Directional Mode for bidirectional data transmission:
       * Added new `return_data` parameter to `recv()` function.
@@ -60,7 +61,11 @@
   * Updated support for screen casting from multiple/all monitors in ScreenGear API.
   * Updated ScreenGear API to use *Threaded Queue Mode* by default, thereby removed redundant `THREADED_QUEUE_MODE` param.
   * Updated bash script path to download test dataset in `$TMPDIR` rather than `$HOME` directory for downloading testdata.
-  * Added support for `REQ/REP` pattern in Multi-Server Mode.
+  * Implemented better error handling of colorspace in various videocapture APIs.
+  * Updated bash scripts, Moved FFmpeg static binaries to `github.com`.
+  * Updated bash scripts, Added additional flag to support un-secure apt sources.
+  * CamGear API will now throw `RuntimeError` if source provided is invalid.
+  * Updated threaded Queue mode in CamGear API for more robust performance.
   * Added new `camera_num` to support multiple Picameras.
   * Moved thread exceptions to the main thread and then re-raised.
   * Replaced `traceback` with `sys.exc_info`.
@@ -78,11 +83,17 @@
 
 ### Fixes
   * Reimplemented `Pub/Sub` pattern for smoother performance on various networks.
+  * Fixed Assertion error in CamGear API during colorspace manipulation.
+  * Fixed random freezing in `Secure Mode` and several related performance updates
   * Fixed `multiserver_mode` not working properly over some networks.
   * Fixed assigned Port address ignored bug (commit 073bca1).
   * Fixed several wrong definition bugs from NetGear API(commit 8f7153c).
-  * Fixed unreliable dataset video URL(rehosted file on `github.com`)
+  * Fixed unreliable dataset video URL(rehosted file on `github.com`).
+  * Disabled `overwrite_cert` for client-end in NetGear API.
+  * Disabled Universal Python wheel builds in `setup.cfg `file.
   * Removed duplicate code to import MSS(@BoboTiG) from ScreenGear API.
+  * Eliminated unused redundant code blocks from library.
+  * Fixed Code indentation in `setup.py` and updated new release information.
   * Fixed code definitions & Typos.
   * Fixed several bugs related to `secure_mode` & `multiserver_mode` Modes.
   * Fixed various macOS environment bugs.

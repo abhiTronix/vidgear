@@ -88,9 +88,15 @@ The following **functional block diagram** clearly depicts the functioning of Vi
 
 # TL;DR
   
+  #### What is vidgear?
+
    > ***"VidGear is an [ultrafast➶][ultrafast-wiki], compact, flexible and easy-to-adapt complete Video Processing Python Library."***
 
-   *Built with simplicity in mind, VidGear lets programmers and software developers to easily integrate and perform complex Video Processing tasks in their existing or new applications, without going through various underlying library's documentation and using just a few lines of code. Beneficial for both, if you're new to programming with Python language or already a pro at it.* 
+  #### What does it do?
+   > ***"VidGear can read, write, process, send & receive video frames from various devices in real-time."***
+
+  #### What is its purpose?
+   > ***"Built with simplicity in mind, VidGear lets programmers and software developers to easily integrate and perform complex Video Processing tasks in their existing or new applications, without going through various underlying library's documentation and using just a few lines of code. Beneficial for both, if you're new to programming with Python language or already a pro at it."***
 
    **For more advanced information, see the [*Wiki Documentation ➶*][wiki].**
 
@@ -100,7 +106,7 @@ The following **functional block diagram** clearly depicts the functioning of Vi
 
 # Gears:
 
-> **VidGear is built with **multi-threaded APIs** *(a.k.a Gears)* each with some unique function/mechanism.**
+> **VidGear is built with various **Multi-Threaded APIs** *(a.k.a Gears)* each with some unique function/mechanism.**
 
 Each of these API is designed exclusively to handle/control different device-specific video streams, network streams, and media encoders. These APIs provides an easy-to-use, highly extensible, and a multi-threaded wrapper around various underlying libraries to exploit their features and functions directly while providing robust error-handling. 
 
@@ -125,7 +131,7 @@ Each of these API is designed exclusively to handle/control different device-spe
 
 ## CamGear
 
-> *CamGear can grab ultrafast frames from diverse range of VideoStreams, which includes almost any IP/USB Cameras, multimedia video file format ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rstp, rtmp, mms, etc.`, plus support for live Gstreamer's stream pipeline and YouTube video/livestreams URLs.*
+> *CamGear can grab ultra-fast frames from diverse range of devices/streams, which includes almost any IP/USB Cameras, multimedia video file format ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rstp, rtmp, mms, etc.`, plus support for live Gstreamer's stream pipeline and YouTube video/livestreams URLs.*
 
 CamGear provides a flexible, high-level multi-threaded wrapper around `OpenCV's` [VideoCapture class][opencv-vc] with access almost all of its available parameters and also employs [`pafy`][pafy] python APIs for live [YouTube streaming][youtube-wiki]. Furthermore, CamGear implements exclusively on [**Threaded Queue mode**][TQM-wiki] for ultra-fast, error-free and synchronized frame handling.
 
@@ -217,7 +223,7 @@ stream_stab.stop()
 
 PiGear provides a flexible multi-threaded wrapper around complete [**picamera**][picamera] python library to interface with these modules correctly, and also grants the ability to exploit its various features like `brightness, saturation, sensor_mode, etc.` effortlessly. 
 
-Best of all, PiGear API provides excellent Error-Handling with features like a threaded internal timer that keeps active track of any frozen threads and handles hardware failures/frozen threads robustly thereby will exit safely if any failure occurs. So if you accidently pulled your camera cable out when running PiGear API in your script, instead of going into possible kernel panic due to IO error, it will exit safely to save resources. 
+Best of all, PiGear API provides excellent Error-Handling with features like a threaded internal timer that keeps active track of any frozen threads and handles hardware failures/frozen threads robustly thereby will exit safely if any failure occurs. So now if you accidently pulled your camera module cable out when running PiGear API in your script, instead of going into possible kernel panic/frozen threads, API exit safely to save resources. 
 
 **Following simplified functional block diagram depicts PiGear API:**
 
@@ -233,7 +239,7 @@ Best of all, PiGear API provides excellent Error-Handling with features like a t
 
 ## ScreenGear
 
-> *ScreenGear act as Screen Recorder, that can grab frames from your monitor in real-time either by define an area on the computer screen or fullscreen at the expense of insignificant latency. It also provide seemless support for capturing frames from multiple monitors.*
+> *ScreenGear API act as Screen Recorder, that can grab frames from your monitor in real-time either by define an area on the computer screen or fullscreen at the expense of insignificant latency. It also provide seemless support for capturing frames from multiple monitors.*
 
 ScreenGear provides a high-level multi-threaded wrapper around [**python-mss**][mss] python library API and also supports a easy and flexible direct internal parameter manipulation. 
 
@@ -325,7 +331,7 @@ NetGear also introduces real-time frame Encoding/Decoding compression capabiliti
 
 For security, NetGear also supports easy access to ZeroMQ's powerful, smart & secure Security Layers, that enables strong encryption on data, and unbreakable authentication between the Server and the Client with the help of custom certificates/keys and brings easy, standardized privacy and authentication for distributed systems over the network. 
 
-Best of all, NetGear can robustly handle Multiple Servers at once, thereby providing access to seamless Live Streams of the various device in a network at the same time.
+Best of all, NetGear can robustly handle Multiple Servers devices at once, thereby providing access to seamless Live Streaming of the multiple device in a network at the same time.
 
 
 **NetGear as of now seamlessly supports three ZeroMQ messaging patterns:**
@@ -379,7 +385,7 @@ Best of all, NetGear can robustly handle Multiple Servers at once, thereby provi
 
 # Installation
 
-## Prerequisites
+## Prerequisites:
 
 Before installing VidGear, you must verify that the following dependencies are met:
 
@@ -421,7 +427,7 @@ Before installing VidGear, you must verify that the following dependencies are m
 
 &nbsp;
 
-## Available Installation Options
+## Available Installation Options:
 
 ### Option 1: PyPI Install
 
@@ -442,7 +448,7 @@ VidGear releases are available for download as packages in the [latest release][
 
 ### Option 3: Clone the Repository
 
-> Best option for trying **latest patches, Pull requests & upgrades**(_maybe experimental_), or **contributing** to development.
+> Best option for trying **latest patches, Pull requests & updgrades**(_maybe experimental_), or **contributing** to development.
 
 You can clone this repository's `testing` branch for development and thereby can install as follows:
 ```sh
