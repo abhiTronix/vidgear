@@ -63,7 +63,7 @@ The following **functional block diagram** clearly depicts the functioning of Vi
   * [**WriteGear**](#writegear)
   * [**NetGear**](#netgear)
 
-[**Installation Options**](#installation)
+[**Installation**](#installation)
   * [**Prerequisites**](#prerequisites)
   * [**1 - PyPI Install**](#option-1-pypi-install)
   * [**2 - Release Archive Download**](#option-2-release-archive-download)
@@ -80,6 +80,7 @@ The following **functional block diagram** clearly depicts the functioning of Vi
 **Additional Info**
   * [**Supported Python legacies**](#supported-python-legacies)
   * [**Changelog**](#changelog)
+  * [**Citing**](#citing)
   * [**License**](#license)
 
 
@@ -104,7 +105,7 @@ The following **functional block diagram** clearly depicts the functioning of Vi
 &nbsp;
 
 
-# Gears:
+# Gears
 
 > **VidGear is built with various **Multi-Threaded APIs** *(a.k.a Gears)* each with some unique function/mechanism.**
 
@@ -323,13 +324,13 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 
 > *NetGear is exclusively designed to transfer video frames synchronously and asynchronously between interconnecting systems over the network in real-time.*
 
-NetGear implements a high-level wrapper around [**PyZmQ**][pyzmq] python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance asynchronous distributed messaging library that aim to be used in distributed or concurrent applications.  It provides a message queue, but unlike message-oriented middleware, a ZeroMQ system can run without a dedicated message broker. 
+NetGear implements a high-level wrapper around [**PyZmQ**][pyzmq] python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance asynchronous distributed messaging library that aim to be used in distributed or concurrent applications. It provides a message queue, but unlike message-oriented middleware, a ZeroMQ system can run without a dedicated message broker. 
 
 NetGear provides seamless support for bidirectional data transmission between receiver(client) and sender(server) through bi-directional synchronous messaging patterns such as zmq.PAIR _(ZMQ Pair Pattern)_ & zmq.REQ/zmq.REP _(ZMQ Request/Reply Pattern)_. 
 
-NetGear also introduces real-time frame Encoding/Decoding compression capabilities for optimizing performance while sending the frames of large size directly over the network by encoding the frame before sending it and decoding it on the client's end automatically all in real-time. 
+NetGear also supports real-time frame Encoding/Decoding compression capabilities for optimizing performance while sending the frames directly over the network, by encoding the frame before sending it and decoding it on the client's end automatically in real-time. 
 
-For security, NetGear also supports easy access to ZeroMQ's powerful, smart & secure Security Layers, that enables strong encryption on data, and unbreakable authentication between the Server and the Client with the help of custom certificates/keys and brings easy, standardized privacy and authentication for distributed systems over the network. 
+For security, NetGear implements easy access to ZeroMQ's powerful, smart & secure Security Layers, that enables strong encryption on data, and unbreakable authentication between the Server and the Client with the help of custom certificates/keys and brings easy, standardized privacy and authentication for distributed systems over the network. 
 
 Best of all, NetGear can robustly handle Multiple Servers devices at once, thereby providing access to seamless Live Streaming of the multiple device in a network at the same time.
 
@@ -448,7 +449,7 @@ VidGear releases are available for download as packages in the [latest release][
 
 ### Option 3: Clone the Repository
 
-> Best option for trying **latest patches, Pull requests & updgrades**(_maybe experimental_), or **contributing** to development.
+> Best option for trying **latest patches(_maybe experimental_), Pull Requests**, or **contributing** to development.
 
 You can clone this repository's `testing` branch for development and thereby can install as follows:
 ```sh
@@ -487,7 +488,7 @@ The full documentation for all VidGear classes and functions can be found in the
 
     ```sh
      chmod +x scripts/bash/prepare_dataset.sh
-     .scripts/bash/prepare_dataset.sh               #for windows, use `sh scripts/pre_install.sh`
+     .scripts/bash/prepare_dataset.sh               #for Windows, use `sh scripts/bash/prepare_dataset.sh`
     ```
 
 * **Run Tests:** Then various VidGear tests can be run with `pytest`(*in VidGear's root folder*) as below:
@@ -515,7 +516,21 @@ See [**contributing.md**](contributing.md).
 
 See [**changelog.md**](changelog.md)
 
-&nbsp; 
+&nbsp;
+
+# Citing
+
+**Here is a Bibtex entry you can use to cite this project in a publication:**
+
+```tex
+@misc{vidgear,
+    Title = {vidgear},
+    Author = {Abhishek Thakur},
+    howpublished = {\url{https://github.com/abhiTronix/vidgear}}   
+  }
+```
+
+&nbsp;  
 
 # License
 

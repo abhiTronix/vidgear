@@ -52,16 +52,16 @@ setup(
 	version='0.1.6',
 	description='Most Powerful multi-threaded Video Processing Python framework powerpacked with unique trailblazing features.',
 	license='Apache License 2.0',
-	author='abhiTronix',
-	install_requires = ["pafy", "mss", "youtube-dl", "requests","pyzmq"] 
-	+ (["opencv-contrib-python"] if test_opencv() else []) 
+	author='Abhishek Thakur',
+	install_requires = ["pafy", "mss", "youtube-dl", "requests", "pyzmq"] 
+	+ (["opencv-python"] if test_opencv() else []) 
 	+ (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
 	long_description=long_description,
 	long_description_content_type="text/markdown",
 	author_email='abhi.una12@gmail.com',
 	url='https://github.com/abhiTronix/vidgear',
 	download_url='https://github.com/abhiTronix/vidgear/releases/download/vidgear-0.1.6/vidgear-0.1.6.tar.gz',
-	keywords=['opencv', 'multithreading', 'FFmpeg', 'picamera', 'mss', 'pyzmq', 'pafy', 'Video Processing', 'Video Stablization', 'Computer Vision'],
+	keywords=['OpenCV', 'multithreading', 'FFmpeg', 'picamera', 'mss', 'pyzmq', 'pafy', 'Video Processing', 'Video Stablization', 'Computer Vision', 'raspberrypi', 'youtube'],
 	classifiers=[
 	'Development Status :: 5 - Production/Stable',
 	'Operating System :: POSIX',
