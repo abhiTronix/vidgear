@@ -26,9 +26,39 @@ import cv2
 import numpy as np
 from pkg_resources import parse_version
 import logging as log
+import logging.config
 
-
-log.basicConfig(format='%(name)s :: %(levelname)s :: %(message)s', level=log.DEBUG)
+#logging formatter
+logging.config.dictConfig({
+	'version': 1,
+	'formatters': {
+		'colored': {
+			'()': 'colorlog.ColoredFormatter',
+			'log_colors': {
+						'DEBUG':    'bold_green',
+						'WARNING':  'bold_yellow',
+						'ERROR':    'bold_red',
+						'CRITICAL': 'bold_red,bg_white',
+					},
+			'format':
+				"%(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
+		}
+	},
+	'handlers': {
+		'stream': {
+			'class': 'logging.StreamHandler',
+			'formatter': 'colored',
+			'level': 'DEBUG'
+		},
+	},
+	'loggers': {
+		'': {
+			'handlers': ['stream'],
+			'level': 'DEBUG',
+		},
+	},
+})
+#logger
 logger = log.getLogger('Helper')
 
 
@@ -158,17 +188,25 @@ def download_ffmpeg_binaries(path, os_windows = False):
 		if os.path.isfile(file_path):
 			final_path += file_path #skip download if does 
 		else:
+			#import libs
 			import requests
 			import zipfile
-			#check if given pth has write access
-			assert os.access(path, os.W_OK), "[Helper:ERROR] :: Permission Denied, Cannot write ffmpeg binaries to directory = " + path
-			#remove leftovers
-			if os.path.isfile(file_name):
-				os.remove(file_name)
+			#check if given path has write access
+			assert os.access(path, os.W_OK), "[Helper:ERROR] :: Permission Denied, Cannot write binaries to directory = " + path
+			#remove leftovers if exists
+			if os.path.isfile(file_name): os.remove(file_name)
 			#download and write file to the given path
 			with open(file_name, "wb") as f:
-				logger.debug("No Custom FFmpeg path provided, Auto-Downloading binaries for Windows. Please wait...")
-				response  = requests.get(file_url, stream=True)
+				logger.debug("No Custom FFmpeg path provided. Auto-Installing FFmpeg static binaries now. Please wait...")
+				try:
+					response  = requests.get(file_url, stream=True, timeout=2)
+					response.raise_for_status()
+				except Exception as e:
+					logger.exception(str(e))
+					logger.warning("Downloading Failed. Trying GitHub mirror now!")
+					file_url = 'https://raw.githubusercontent.com/abhiTronix/ffmpeg-static-builds/master/windows/ffmpeg-latest-{}-static.zip'.format(windows_bit, windows_bit)
+					response  = requests.get(file_url, stream=True, timeout=2)
+					response.raise_for_status()
 				total_length = response.headers.get('content-length')
 				if total_length is None: # no content length header
 					f.write(response.content)
@@ -181,12 +219,12 @@ def download_ffmpeg_binaries(path, os_windows = False):
 						done = int(50 * dl / total_length)
 						sys.stdout.write("\r[{}{}]{}{}".format('=' * done, ' ' * (50-done), done * 2, '%') )    
 						sys.stdout.flush()
-			logger.debug("\nExtracting executables, Please Wait...")
+			logger.debug("Extracting executables.")
 			with zipfile.ZipFile(file_name, "r") as zip_ref:
 				zip_ref.extractall(base_path)
 			#perform cleaning
 			os.remove(file_name)
-			logger.debug("FFmpeg binaries for Windows Configured Successfully!")
+			logger.debug("FFmpeg binaries for Windows configured successfully!")
 			final_path += file_path
 	#return final path
 	return final_path

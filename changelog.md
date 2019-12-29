@@ -68,6 +68,8 @@
   * Updated threaded Queue mode in CamGear API for more robust performance.
   * Added new `camera_num` to support multiple Picameras.
   * Moved thread exceptions to the main thread and then re-raised.
+  * Added alternate github mirror for FFmpeg static binaries auto-installation on windows oses.
+  * Added `colorlog` python module for presentable colored logging.
   * Replaced `traceback` with `sys.exc_info`.
   * Overall APIs Code and Docs optimizations.
   * Updated Code Readability and Wiki Docs.

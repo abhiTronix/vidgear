@@ -53,7 +53,7 @@ setup(
 	description='Most Powerful multi-threaded Video Processing Python framework powerpacked with unique trailblazing features.',
 	license='Apache License 2.0',
 	author='Abhishek Thakur',
-	install_requires = ["pafy", "mss", "youtube-dl", "requests", "pyzmq"] 
+	install_requires = ["pafy", "mss", "youtube-dl", "requests", "pyzmq", "colorlog"] 
 	+ (["opencv-python"] if test_opencv() else []) 
 	+ (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
 	long_description=long_description,
