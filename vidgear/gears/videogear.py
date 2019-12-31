@@ -1,31 +1,26 @@
 """
-============================================
-vidgear library code is placed under the MIT license
-Copyright (c) 2019 Abhishek Thakur
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ===============================================
 """
 
 # import the necessary packages
 from .camgear import CamGear
-
+import logging as log
 
 
 class VideoGear:
@@ -82,13 +77,19 @@ class VideoGear:
 							/ Its default value is 0.
 	"""
 
-	def __init__(self, enablePiCamera = False, stabilize = False, source=0, y_tube = False, backend = 0, colorspace = None, resolution=(640, 480), framerate=25, logging = False, time_delay = 0, **options):
+	def __init__(self, enablePiCamera = False, stabilize = False, source = 0, y_tube = False, backend = 0, colorspace = None, resolution = (640, 480), framerate = 25, logging = False, time_delay = 0, **options):
 		
-		self.stablization_mode = stabilize
+		#initialize stabilizer
+		self.__stablization_mode = stabilize
 
-		if self.stablization_mode:
+		# enable logging if specified
+		self.__logging = False
+		self.__logger = log.getLogger('VideoGear')
+		if logging: self.__logging = logging
+
+		if self.__stablization_mode:
 			from .stabilizer import Stabilizer
-			s_radius, border_size, border_type = (25, 0, 'black')
+			s_radius, border_size, border_type, crop_n_zoom = (25, 0, 'black', False) #defaults
 			if options:
 				if "SMOOTHING_RADIUS" in options:
 					if isinstance(options["SMOOTHING_RADIUS"],int):
@@ -102,45 +103,49 @@ class VideoGear:
 					if isinstance(options["BORDER_TYPE"],str):
 						border_type = options["BORDER_TYPE"] #assigsn special parameter
 					del options["BORDER_TYPE"] #clean
-			self.stabilizer_obj = Stabilizer(smoothing_radius = s_radius, border_type = border_type, border_size = border_size, logging = logging)
-			#log info
-			if logging:
-				print('Enabling Stablization Mode for the current video source!')
+				if "CROP_N_ZOOM" in options:
+					if isinstance(options["CROP_N_ZOOM"],bool):
+						crop_n_zoom = options["CROP_N_ZOOM"] #assigsn special parameter
+					del options["CROP_N_ZOOM"] #clean
+			self.__stabilizer_obj = Stabilizer(smoothing_radius = s_radius, border_type = border_type, border_size = border_size, crop_n_zoom = crop_n_zoom, logging = logging)
+			if self.__logging: self.__logger.debug('Enabling Stablization Mode for the current video source!') #log info
 
 		if enablePiCamera:
 			# only import the pigear module only if required
 			from .pigear import PiGear
 
 			# initialize the picamera stream by enabling PiGear Class
-			self.stream = PiGear(resolution=resolution, framerate=framerate, colorspace = colorspace, logging = logging, time_delay = time_delay, **options)
-
+			self.stream = PiGear(resolution = resolution, framerate = framerate, colorspace = colorspace, logging = logging, time_delay = time_delay, **options)
 		else:
 			# otherwise, we are using OpenCV so initialize the webcam
 			# stream by activating CamGear Class
-			self.stream = CamGear(source=source, y_tube = y_tube, backend = backend, colorspace = colorspace, logging = logging, time_delay = time_delay, **options)
+			self.stream = CamGear(source = source, y_tube = y_tube, backend = backend, colorspace = colorspace, logging = logging, time_delay = time_delay, **options)
+
+		#initialize framerate variable
+		self.framerate = self.stream.framerate
+
 
 	def start(self):
 		# start the threaded video stream
 		self.stream.start()
 		return self
 
-	def update(self):
-		# grab the next frame from the stream
-		self.stream.update()
 
 	def read(self):
 		# return the current frame
-		while self.stablization_mode:
+		while self.__stablization_mode:
 			frame = self.stream.read()
 			if frame is None:
 				break
-			frame_stab = self.stabilizer_obj.stabilize(frame)
+			frame_stab = self.__stabilizer_obj.stabilize(frame)
 			if not(frame_stab is None):
 				return frame_stab
 		return self.stream.read()
 
+
 	def stop(self):
+		if self.__logging: self.__logger.debug("Terminating VideoGear.")
 		# stop the thread and release any resources
 		self.stream.stop()
-		if self.stablization_mode:
-			self.stabilizer_obj.clean()
+		#clean queue
+		if self.__stablization_mode: self.__stabilizer_obj.clean()

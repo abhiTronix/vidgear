@@ -1,25 +1,20 @@
 """
-============================================
-vidgear library code is placed under the MIT license
-Copyright (c) 2019 Abhishek Thakur
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ===============================================
 """
 
@@ -28,31 +23,35 @@ from vidgear.gears.helper import capPropId
 from vidgear.gears.helper import check_output
 from six import string_types
 
-import os
+import os, platform
 import pytest
 import cv2
 import tempfile
+import logging as log
 
+logger = log.getLogger('Test_non_commpression_mode')
 
 
 def return_static_ffmpeg():
 	"""
-	return FFmpeg static path
+	returns system specific FFmpeg static path
 	"""
 	path = ''
-	if os.name == 'nt':
-		path += os.path.join(os.environ['USERPROFILE'],'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe')
+	if platform.system() == 'Windows':
+		path += os.path.join(tempfile.gettempdir(),'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe')
+	elif platform.system() == 'Darwin':
+		path += os.path.join(tempfile.gettempdir(),'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg')
 	else:
-		path += os.path.join(os.environ['HOME'],'Downloads/FFmpeg_static/ffmpeg/ffmpeg')
+		path += os.path.join(tempfile.gettempdir(),'Downloads/FFmpeg_static/ffmpeg/ffmpeg')
 	return os.path.abspath(path)
 
 
 
 def return_testvideo_path():
 	"""
-	return Test Video Data path
+	returns Test Video path
 	"""
-	path = '{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
+	path = '{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4'.format(tempfile.gettempdir())
 	return os.path.abspath(path)
 
 
@@ -84,7 +83,7 @@ def test_write(conversion):
 	if result:
 		if not isinstance(result, string_types):
 			result = result.decode()
-		print('Result: {}'.format(result))
+		logger.debug('Result: {}'.format(result))
 		for i in ["Error", "Invalid", "error", "invalid"]:
 			assert not(i in result)
 	os.remove(os.path.abspath('Output_twc.avi'))
@@ -95,7 +94,7 @@ test_data_class = [
 	('', {}, False),
 	('Output_twc.avi', {}, True),
 	(tempfile.gettempdir(), {}, True),
-	('Output_twc.mp4', {"-fourcc":"DIVX"}, True)]
+	('Output_twc.mp4', {"-fourcc":"DIVX", "-fps": 25, "-backend": "CAP_FFMPEG", "-color":True}, True)]
 	
 @pytest.mark.parametrize('f_name, output_params, result', test_data_class)
 def test_WriteGear_compression(f_name, output_params, result):
@@ -115,5 +114,4 @@ def test_WriteGear_compression(f_name, output_params, result):
 		if f_name and f_name != tempfile.gettempdir():
 			os.remove(os.path.abspath(f_name))
 	except Exception as e:
-		if result:
-			pytest.fail(str(e))
+		if result: pytest.fail(str(e))

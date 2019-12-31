@@ -37,7 +37,6 @@ class FPS:
 		#return total time elaspsed = start time - end time(in sec)
 		if (self._end <= self._start):
 			self._end = time.time()
-
 		return (self._end - self._start)%60
 
 

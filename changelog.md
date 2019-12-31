@@ -1,5 +1,123 @@
 # CHANGELOG
 
+## VidGear 0.1.6
+
+### New Features:
+  * **NetGear API:**
+    * Added powerful ZMQ Authentication & Data Encryption features for NetGear API:
+      * Added exclusive `secure_mode` param for enabling it.
+      * Added support for two most powerful `Stonehouse` & `Ironhouse` ZMQ security mechanisms.
+      * Added smart auth-certificates/key generation and validation features
+    * Implemented Robust Multi-Server support for NetGear API:
+      * Enables Multiple Servers messaging support with a single client.
+      * Added exclusive `multiserver_mode` param for enabling it.
+      * Added support for `REQ/REP` &  `PUB/SUB` patterns for this mode.
+      * Added ability to send additional data of any datatype along with the frame in realtime in this mode.
+    * Introducing exclusive Bi-Directional Mode for bidirectional data transmission:
+      * Added new `return_data` parameter to `recv()` function.
+      * Added new `bidirectional_mode` attribute for enabling this mode.
+      * Added support for `PAIR` & `REQ/REP` patterns for this mode
+      * Added support for sending data of any python datatype.
+      * Added support for `message` parameter for non-exclusive primary modes for this mode
+    * Implemented compression support with on-the-fly flexible frame encoding for the Server-end:
+      * Added initial support for `JPEG`, `PNG` & `BMP` encoding formats 
+      * Added exclusive options attribute `compression_format` & `compression_param` to tweak this feature
+      * Client-end will now decode frame automatically based on the encoding as well as support decoding flags
+    * Added `force_terminate` attribute flag for handling force socket termination at the Server-end if there's latency in the network. 
+    * Implemented new *Publish/Subscribe(`zmq.PUB/zmq.SUB`)* pattern for seamless Live Streaming in NetGear API.
+
+  * **PiGear API:**
+    * Added new threaded internal timing function for PiGear to handle any hardware failures/frozen threads.
+    * PiGear will not exit safely with `SystemError` if Picamera ribbon cable is pulled out to save resources.
+    * Added support for new user-defined `HWFAILURE_TIMEOUT` options attribute to alter timeout.
+
+  * **VideoGear API:** 
+    * Added `framerate` global variable and removed redundant function.
+    * Added `CROP_N_ZOOM` attribute in Videogear API for supporting Crop and Zoom stabilizer feature.
+
+  * **WriteGear API:** Added new `execute_ffmpeg_cmd` function to pass a custom command to its FFmpeg pipeline.
+
+  * **Stabilizer class:** 
+    * Added new Crop and Zoom feature.
+      * Added `crop_n_zoom` param for enabling this feature.
+    * Updated docs.
+
+  * **CLI & Tests updates:**
+    * Replaced python 3.5 matrices with latest python 3.8 matrices in Linux environment.
+    * Added full support for **Codecov** in all CLI environments.
+    * Updated OpenCV to v4.2.0-pre(master branch). 
+    * Added various Netgear API tests.
+    * Added initial Screengear API test.
+    * More test RTSP feeds added with better error handling in CamGear network test.
+    * Added tests for ZMQ authentication certificate generation.
+    * Added badge and Minor doc updates.
+
+  * Added VidGear's official native support for MacOS environments.
+    
+
+### Updates/Improvements:
+  * Replace `print` logging commands with python's logging module completely.
+  * Implemented encapsulation for class functions and variables on all gears.
+  * Updated support for screen casting from multiple/all monitors in ScreenGear API.
+  * Updated ScreenGear API to use *Threaded Queue Mode* by default, thereby removed redundant `THREADED_QUEUE_MODE` param.
+  * Updated bash script path to download test dataset in `$TMPDIR` rather than `$HOME` directory for downloading testdata.
+  * Implemented better error handling of colorspace in various videocapture APIs.
+  * Updated bash scripts, Moved FFmpeg static binaries to `github.com`.
+  * Updated bash scripts, Added additional flag to support un-secure apt sources.
+  * CamGear API will now throw `RuntimeError` if source provided is invalid.
+  * Updated threaded Queue mode in CamGear API for more robust performance.
+  * Added new `camera_num` to support multiple Picameras.
+  * Moved thread exceptions to the main thread and then re-raised.
+  * Added alternate github mirror for FFmpeg static binaries auto-installation on windows oses.
+  * Added `colorlog` python module for presentable colored logging.
+  * Replaced `traceback` with `sys.exc_info`.
+  * Overall APIs Code and Docs optimizations.
+  * Updated Code Readability and Wiki Docs.
+  * Updated ReadMe & Changelog with the latest changes.
+  * Updated Travis CLI Tests with support for macOS environment.
+  * Reformatted & implemented necessary MacOS related changes and dependencies in `travis.yml`.
+
+### Breaking Updates / Improvements / Changes
+  * :warning: Python 2.7 legacy support dropped completely.
+  * :warning: Source-code Relicensed to Apache 2.0 License.
+  * Python 3+ are only supported legacies for installing Vidgear v0.1.6 and above.
+  * Python 2.7 and 3.4 legacies support dropped from VidGear CLI tests.
+
+### Fixes
+  * Reimplemented `Pub/Sub` pattern for smoother performance on various networks.
+  * Fixed Assertion error in CamGear API during colorspace manipulation.
+  * Fixed random freezing in `Secure Mode` and several related performance updates
+  * Fixed `multiserver_mode` not working properly over some networks.
+  * Fixed assigned Port address ignored bug (commit 073bca1).
+  * Fixed several wrong definition bugs from NetGear API(commit 8f7153c).
+  * Fixed unreliable dataset video URL(rehosted file on `github.com`).
+  * Disabled `overwrite_cert` for client-end in NetGear API.
+  * Disabled Universal Python wheel builds in `setup.cfg `file.
+  * Removed duplicate code to import MSS(@BoboTiG) from ScreenGear API.
+  * Eliminated unused redundant code blocks from library.
+  * Fixed Code indentation in `setup.py` and updated new release information.
+  * Fixed code definitions & Typos.
+  * Fixed several bugs related to `secure_mode` & `multiserver_mode` Modes.
+  * Fixed various macOS environment bugs.
+
+### Pull requests(PR) involved:
+  * PR #39
+  * PR #42
+  * PR #44
+  * PR #52
+  * PR #55
+  * PR #62
+  * PR #67
+  * PR #72
+  * PR #77
+  * PR #78
+  * PR #82
+  * PR #84
+
+:warning: PyPi Release does NOT contain Tests and Scripts!
+
+&nbsp; 
+
 ## VidGear v0.1.5
 
 ### New Features:

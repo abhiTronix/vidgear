@@ -1,29 +1,25 @@
 """
-============================================
-vidgear library code is placed under the MIT license
-Copyright (c) 2019 Abhishek Thakur
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ===============================================
 """
 
 from vidgear.gears import WriteGear
+from vidgear.gears import CamGear
 from vidgear.gears.helper import capPropId
 from vidgear.gears.helper import check_output
 from six import string_types
@@ -31,29 +27,33 @@ from six import string_types
 import pytest
 import cv2
 import tempfile
-import os
+import os, platform
 import subprocess, re
+import logging as log
 
+logger = log.getLogger('Test_commpression_mode')
 
 
 def return_static_ffmpeg():
 	"""
-	return FFmpeg static path
+	returns system specific FFmpeg static path
 	"""
 	path = ''
-	if os.name == 'nt':
-		path += os.path.join(os.environ['USERPROFILE'],'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe')
+	if platform.system() == 'Windows':
+		path += os.path.join(tempfile.gettempdir(),'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe')
+	elif platform.system() == 'Darwin':
+		path += os.path.join(tempfile.gettempdir(),'Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg')
 	else:
-		path += os.path.join(os.environ['HOME'],'Downloads/FFmpeg_static/ffmpeg/ffmpeg')
+		path += os.path.join(tempfile.gettempdir(),'Downloads/FFmpeg_static/ffmpeg/ffmpeg')
 	return os.path.abspath(path)
 
 
 
 def return_testvideo_path():
 	"""
-	return Test Video Data path
+	returns Test video path
 	"""
-	path = '{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4'.format(os.environ['USERPROFILE'] if os.name == 'nt' else os.environ['HOME'])
+	path = '{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4'.format(tempfile.gettempdir())
 	return os.path.abspath(path)
 
 
@@ -73,9 +73,9 @@ def getFrameRate(path):
 @pytest.mark.xfail(raises=AssertionError)
 def test_input_framerate():
 	"""
-	Testing "-input_framerate" special parameter provided by WriteGear(in Compression Mode) 
+	Testing "-input_framerate" parameter provided by WriteGear(in Compression Mode) 
 	"""
-	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
+	stream = cv2.VideoCapture(return_testvideo_path()) #Open stream
 	test_video_framerate = stream.get(cv2.CAP_PROP_FPS)
 	output_params = {"-input_framerate":test_video_framerate}
 	writer = WriteGear(output_filename = 'Output_tif.mp4', custom_ffmpeg = return_static_ffmpeg(), **output_params) #Define writer 
@@ -93,24 +93,26 @@ def test_input_framerate():
 
 
 @pytest.mark.xfail(raises=AssertionError)
-@pytest.mark.parametrize('conversion', ['COLOR_BGR2GRAY', '', 'COLOR_BGR2YUV', 'COLOR_BGR2BGRA', 'COLOR_BGR2RGB', 'COLOR_BGR2RGBA'])
+@pytest.mark.parametrize('conversion', ['COLOR_BGR2GRAY', None, 'COLOR_BGR2YUV', 'COLOR_BGR2BGRA', 'COLOR_BGR2RGB', 'COLOR_BGR2RGBA'])
 def test_write(conversion):
 	"""
-	Testing Compression Mode(FFmpeg) Writer capabilties in different colorspace
+	Testing WriteGear Compression-Mode(FFmpeg) Writer capabilties in different colorspace
 	"""
-	stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
+	#Open stream
+	stream = CamGear(source=return_testvideo_path(), colorspace = conversion, logging=True).start()
 	writer = WriteGear(output_filename = 'Output_tw.mp4',  custom_ffmpeg = return_static_ffmpeg()) #Define writer
 	while True:
-		(grabbed, frame) = stream.read()
-		if not grabbed:
+		frame = stream.read()
+		# check if frame is None
+		if frame is None:
+			#if True break the infinite loop
 			break
-		if conversion:
-			frame = cv2.cvtColor(frame, capPropId(conversion))
+
 		if conversion in ['COLOR_BGR2RGB', 'COLOR_BGR2RGBA']:
 			writer.write(frame, rgb_mode = True)
 		else:
 			writer.write(frame)
-	stream.release()
+	stream.stop()
 	writer.close()
 	basepath, _ = os.path.split(return_static_ffmpeg()) 
 	ffprobe_path  = os.path.join(basepath,'ffprobe.exe' if os.name == 'nt' else 'ffprobe')
@@ -118,7 +120,7 @@ def test_write(conversion):
 	if result:
 		if not isinstance(result, string_types):
 			result = result.decode()
-		print('Result: {}'.format(result))
+		logger.debug('Result: {}'.format(result))
 		for i in ["Error", "Invalid", "error", "invalid"]:
 			assert not(i in result)
 	os.remove(os.path.abspath('Output_tw.mp4'))
@@ -162,10 +164,10 @@ test_data_class = [
 @pytest.mark.parametrize('f_name, c_ffmpeg, output_params, result', test_data_class)
 def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
 	"""
-	Testing VidGear Compression(FFmpeg) Mode with different parameters
+	Testing WriteGear Compression-Mode(FFmpeg) with different parameters
 	"""
 	try:
-		stream = cv2.VideoCapture(return_testvideo_path()) #Open live webcam video stream on first index(i.e. 0) device
+		stream = cv2.VideoCapture(return_testvideo_path()) #Open stream
 		writer = WriteGear(output_filename = f_name, compression_mode = True, **output_params)
 		while True:
 			(grabbed, frame) = stream.read()
@@ -177,5 +179,26 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
 		if f_name and f_name != tempfile.gettempdir():
 			os.remove(os.path.abspath(f_name))
 	except Exception as e:
-		if result:
-			pytest.fail(str(e))
+		if result: pytest.fail(str(e))
+
+
+
+@pytest.mark.xfail(raises=AssertionError)
+def test_WriteGear_customFFmpeg():
+	"""
+	Testing WriteGear Compression-Mode(FFmpeg) custom FFmpeg Pipeline by seperating audio from video
+	"""
+	output_audio_filename = 'input_audio.aac'
+
+	#define writer
+	writer = WriteGear(output_filename = 'Output.mp4', logging = True) #Define writer 
+
+	#save stream audio as 'input_audio.aac'
+	ffmpeg_command_to_save_audio = ['-y', '-i', return_testvideo_path(), '-vn', '-acodec', 'copy', output_audio_filename]
+	# `-y` parameter is to overwrite outputfile if exists
+
+	#execute FFmpeg command
+	writer.execute_ffmpeg_cmd(ffmpeg_command_to_save_audio)
+
+	#assert audio file is created successfully
+	assert os.path.isfile(output_audio_filename) 

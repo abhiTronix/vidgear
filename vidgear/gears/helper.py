@@ -1,43 +1,65 @@
 """
-============================================
-vidgear library code is placed under the MIT license
-Copyright (c) 2019 Abhishek Thakur
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ===============================================
 """
 
 # Contains all the support functions/modules required by Vidgear 
 
-# import the neccesary packages
+# import the necessary packages
 import os, sys
 import cv2
+import numpy as np
 from pkg_resources import parse_version
+import logging as log
+import logging.config
 
-
-
-def check_python_version():
-	"""
-	returns current python version's - first bit 
-	"""
-	return sys.version_info[0]
-
+#logging formatter
+logging.config.dictConfig({
+	'version': 1,
+	'formatters': {
+		'colored': {
+			'()': 'colorlog.ColoredFormatter',
+			'log_colors': {
+						'DEBUG':    'bold_green',
+						'WARNING':  'bold_yellow',
+						'ERROR':    'bold_red',
+						'CRITICAL': 'bold_red,bg_white',
+					},
+			'format':
+				"%(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
+		}
+	},
+	'handlers': {
+		'stream': {
+			'class': 'logging.StreamHandler',
+			'formatter': 'colored',
+			'level': 'DEBUG'
+		},
+	},
+	'loggers': {
+		'': {
+			'handlers': ['stream'],
+			'level': 'DEBUG',
+		},
+	},
+})
+#logger
+logger = log.getLogger('Helper')
 
 
 def check_CV_version():
@@ -53,9 +75,15 @@ def check_CV_version():
 
 def capPropId(property):
 	"""
-	Retrieves the Property's Integer(Actual) value. 
+	Retrieves the OpenCV property Integer(Actual) value. 
 	"""
-	return getattr(cv2, property)
+	integer_value = 0 
+	try:
+		integer_value = getattr(cv2, property)
+	except Exception:
+		logger.critical('{} is not a valid OpenCV property!'.format(property))
+		return None
+	return integer_value
 
 
 
@@ -84,16 +112,13 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 		else:
 			#otherwise auto-download them
 			try:
-				if ffmpeg_download_path:
-					#checks if FFmpeg download path specified
-					pass
-				else:
+				if not(ffmpeg_download_path):
 					#otherwise save to Temp Directory
 					import tempfile
 					ffmpeg_download_path = tempfile.gettempdir()
 
 				if logging:
-					print('FFmpeg Windows Download Path: {}'.format(ffmpeg_download_path))
+					logger.debug('FFmpeg Windows Download Path: {}'.format(ffmpeg_download_path))
 
 				#download Binaries
 				_path = download_ffmpeg_binaries(path = ffmpeg_download_path, os_windows = is_windows)
@@ -101,11 +126,12 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 				final_path += _path
 
 			except Exception as e:
-				#log if any error occured
+				#log if any error occurred
 				if logging:
-					print(e)
-					print('Error downloading FFmpeg binaries, Check your network and Try again!')
+					self.logger.exception(str(e))
+					logger.debug('Error in downloading FFmpeg binaries, Check your network and Try again!')
 				return False
+
 		if os.path.isfile(final_path):
 			#check if valid FFmpeg file exist
 			pass
@@ -114,8 +140,7 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 			final_path = os.path.join(final_path, 'ffmpeg.exe')
 		else:
 			#else return False
-			if logging:
-				print('No valid FFmpeg executables found at Custom FFmpeg path!')
+			if logging: logger.debug('No valid FFmpeg executables found at Custom FFmpeg path!')
 			return False
 	else:
 		#otherwise perform test for Unix
@@ -129,15 +154,14 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 				final_path = os.path.join(custom_ffmpeg, 'ffmpeg')
 			else:
 				#else return False
-				if logging:
-					print('No valid FFmpeg executables found at Custom FFmpeg path!')
+				if logging: logger.debug('No valid FFmpeg executables found at Custom FFmpeg path!')
 				return False
 		else:
 			#otherwise assign ffmpeg binaries from system
 			final_path += "ffmpeg"
 
 	if logging:
-		print('Final FFmpeg Path: {}'.format(final_path))
+		logger.debug('Final FFmpeg Path: {}'.format(final_path))
 
 	# Final Auto-Validation for FFmeg Binaries. returns final path if test is passed
 	if validate_ffmpeg(final_path, logging = logging):
@@ -164,17 +188,25 @@ def download_ffmpeg_binaries(path, os_windows = False):
 		if os.path.isfile(file_path):
 			final_path += file_path #skip download if does 
 		else:
+			#import libs
 			import requests
 			import zipfile
-			#check if given pth has write access
-			assert os.access(path, os.W_OK), "Permission Denied: Cannot write ffmpeg binaries to directory = " + path
-			#remove leftovers
-			if os.path.isfile(file_name):
-				os.remove(file_name)
+			#check if given path has write access
+			assert os.access(path, os.W_OK), "[Helper:ERROR] :: Permission Denied, Cannot write binaries to directory = " + path
+			#remove leftovers if exists
+			if os.path.isfile(file_name): os.remove(file_name)
 			#download and write file to the given path
 			with open(file_name, "wb") as f:
-				print("No Custom FFmpeg path provided, Auto-Downloading binaries for Windows. Please wait...")
-				response  = requests.get(file_url, stream=True)
+				logger.debug("No Custom FFmpeg path provided. Auto-Installing FFmpeg static binaries now. Please wait...")
+				try:
+					response  = requests.get(file_url, stream=True, timeout=2)
+					response.raise_for_status()
+				except Exception as e:
+					logger.exception(str(e))
+					logger.warning("Downloading Failed. Trying GitHub mirror now!")
+					file_url = 'https://raw.githubusercontent.com/abhiTronix/ffmpeg-static-builds/master/windows/ffmpeg-latest-{}-static.zip'.format(windows_bit, windows_bit)
+					response  = requests.get(file_url, stream=True, timeout=2)
+					response.raise_for_status()
 				total_length = response.headers.get('content-length')
 				if total_length is None: # no content length header
 					f.write(response.content)
@@ -187,12 +219,12 @@ def download_ffmpeg_binaries(path, os_windows = False):
 						done = int(50 * dl / total_length)
 						sys.stdout.write("\r[{}{}]{}{}".format('=' * done, ' ' * (50-done), done * 2, '%') )    
 						sys.stdout.flush()
-			print("\nExtracting executables, Please Wait...")
+			logger.debug("Extracting executables.")
 			with zipfile.ZipFile(file_name, "r") as zip_ref:
 				zip_ref.extractall(base_path)
 			#perform cleaning
 			os.remove(file_name)
-			print("FFmpeg binaries for Windows Configured Successfully!")
+			logger.debug("FFmpeg binaries for Windows configured successfully!")
 			final_path += file_path
 	#return final path
 	return final_path
@@ -210,13 +242,13 @@ def validate_ffmpeg(path, logging = False):
 		version = firstline.split(b' ')[2].strip()
 		if logging:
 			#log if test are passed 
-			print('FFmpeg validity Test Passed!')
-			print('Found valid FFmpeg Version: `{}` installed on this system'.format(version))
+			logger.debug('FFmpeg validity Test Passed!')
+			logger.debug('Found valid FFmpeg Version: `{}` installed on this system'.format(version))
 	except Exception as e:
 		#log if test are failed
 		if logging:
-			print(e)
-			print('FFmpeg validity Test Failed!')
+			self.logger.exception(str(e))
+			logger.debug('FFmpeg validity Test Failed!')
 		return False
 	return True
 
@@ -242,12 +274,133 @@ def check_output(*args, **kwargs):
 	#close the process
 	if closeNULL:
 		DEVNULL.close()
-	#if error occured raise error
+	#if error occurred raise error
 	if retcode:
 		cmd = kwargs.get("args")
-		if cmd is None:
-			cmd = args[0]
+		if cmd is None: cmd = args[0]
 		error = sp.CalledProcessError(retcode, cmd)
 		error.output = output
 		raise error
 	return output
+
+
+
+def generate_auth_certificates(path, overwrite = False):
+
+	""" 
+	auto-Generates and auto-validates CURVE ZMQ keys/certificates for Netgear 
+	"""
+
+	#import necessary libs
+	import shutil, errno
+	import zmq.auth
+
+	#check if path corresponds to vidgear only
+	if (os.path.basename(path) != ".vidgear"): path = os.path.join(path,".vidgear")
+
+	#generate keys dir
+	keys_dir = os.path.join(path, 'keys')
+	try:
+		os.makedirs(keys_dir)
+	except OSError as e:
+		if e.errno != errno.EEXIST: raise
+
+	#generate separate public and private key dirs
+	public_keys_dir = os.path.join(keys_dir, 'public_keys')
+	secret_keys_dir = os.path.join(keys_dir, 'private_keys')
+
+	#check if overwriting is allowed
+	if overwrite:
+		#delete previous certificates
+		for d in [public_keys_dir, secret_keys_dir]:
+			if os.path.exists(d): shutil.rmtree(d)
+			os.mkdir(d)
+
+		# generate new keys
+		server_public_file, server_secret_file = zmq.auth.create_certificates(keys_dir, "server")
+		client_public_file, client_secret_file = zmq.auth.create_certificates(keys_dir, "client")
+
+		# move keys to their appropriate directory respectively
+		for key_file in os.listdir(keys_dir):
+			if key_file.endswith(".key"):
+				shutil.move(os.path.join(keys_dir, key_file), public_keys_dir)
+			elif key_file.endswith(".key_secret"):
+				shutil.move(os.path.join(keys_dir, key_file), secret_keys_dir)
+			else:
+				# clean redundant keys if present
+				redundant_key = os.path.join(keys_dir,key_file)
+				if os.path.isfile(redundant_key):
+					os.remove(redundant_key)
+	else:
+		# otherwise validate available keys
+		status_public_keys = validate_auth_keys(public_keys_dir, '.key')
+		status_private_keys = validate_auth_keys(secret_keys_dir, '.key_secret')
+
+		# check if all valid keys are found
+		if status_private_keys and status_public_keys: return (keys_dir, secret_keys_dir, public_keys_dir)
+
+		# check if valid public keys are found
+		if not(status_public_keys):
+			try:
+				os.makedirs(public_keys_dir)
+			except OSError as e:
+				if e.errno != errno.EEXIST: raise
+
+		# check if valid private keys are found
+		if not(status_private_keys): 
+			try:
+				os.makedirs(secret_keys_dir)
+			except OSError as e:
+				if e.errno != errno.EEXIST: raise
+
+		# generate new keys
+		server_public_file, server_secret_file = zmq.auth.create_certificates(keys_dir, "server")
+		client_public_file, client_secret_file = zmq.auth.create_certificates(keys_dir, "client")
+
+		# move keys to their appropriate directory respectively
+		for key_file in os.listdir(keys_dir):
+			if key_file.endswith(".key") and not(status_public_keys):
+				shutil.move(os.path.join(keys_dir, key_file), os.path.join(public_keys_dir, '.'))
+			elif key_file.endswith(".key_secret") and not(status_private_keys):
+				shutil.move(os.path.join(keys_dir, key_file), os.path.join(secret_keys_dir, '.'))
+			else:
+				# clean redundant keys if present
+				redundant_key = os.path.join(keys_dir,key_file)
+				if os.path.isfile(redundant_key): os.remove(redundant_key)
+
+	# validate newly generated keys 
+	status_public_keys = validate_auth_keys(public_keys_dir, '.key')
+	status_private_keys = validate_auth_keys(secret_keys_dir, '.key_secret')
+
+	# raise error is validation test fails
+	if not(status_private_keys) or not(status_public_keys): raise RuntimeError('[Helper:ERROR] :: Unable to generate valid ZMQ authentication certificates at `{}`!'.format(keys_dir))
+
+	# finally return valid key paths
+	return (keys_dir, secret_keys_dir, public_keys_dir)
+
+
+
+def validate_auth_keys(path, extension):
+
+	"""
+	validates and maintains ZMQ Auth Keys/Certificates
+	"""
+	#check for valid path
+	if not(os.path.exists(path)): return False
+	
+	#check if directory empty
+	if not(os.listdir(path)): return False
+
+	keys_buffer = [] #stores auth-keys
+
+	# loop over auth-keys
+	for key_file in os.listdir(path):
+		key = os.path.splitext(key_file)
+		#check if valid key is generated
+		if key and (key[0] in ['server','client']) and (key[1] == extension): keys_buffer.append(key_file) #store it
+
+	#remove invalid keys if found
+	if(len(keys_buffer) == 1): os.remove(os.path.join(path,keys_buffer[0])) 
+
+	#return results
+	return True if(len(keys_buffer) == 2) else False
