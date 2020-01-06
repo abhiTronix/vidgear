@@ -121,7 +121,7 @@ script:
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     python -m pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/;
-    flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics;
+    python -m flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics;
     fi
 
 after_success:
