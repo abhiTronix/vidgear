@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## VidGear 0.1.7-alpha0
+
+### Fixes:
+
+  * `self` is an undefined name in helper.py context which will raise NameError. (@cclauss)
+
+### Pull requests(PR) involved:
+
+#88
+
+:warning: PyPi Release does NOT contain Tests and Scripts!
+
+&nbsp; 
+
 ## VidGear 0.1.6
 
 ### New Features:
