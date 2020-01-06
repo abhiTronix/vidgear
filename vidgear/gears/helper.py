@@ -128,7 +128,7 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 			except Exception as e:
 				#log if any error occurred
 				if logging:
-					self.logger.exception(str(e))
+					logger.exception(str(e))
 					logger.debug('Error in downloading FFmpeg binaries, Check your network and Try again!')
 				return False
 
@@ -247,7 +247,7 @@ def validate_ffmpeg(path, logging = False):
 	except Exception as e:
 		#log if test are failed
 		if logging:
-			self.logger.exception(str(e))
+			logger.exception(str(e))
 			logger.debug('FFmpeg validity Test Failed!')
 		return False
 	return True
