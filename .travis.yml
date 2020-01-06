@@ -88,6 +88,7 @@ install:
     pip uninstall opencv-contrib-python -y;
     pip install six;
     pip install codecov;
+    pip install --upgarde flake8;
     pip install --upgrade pytest;
     pip install --upgrade pytest-cov;
     pip install --upgrade youtube-dl;
@@ -120,8 +121,7 @@ script:
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     python -m pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/;
-    pip install flake8
-    flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+    flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics;
     fi
 
 after_success:
