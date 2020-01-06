@@ -2,6 +2,10 @@
 
 ## VidGear 0.1.7-alpha0
 
+### Updates/Improvements:
+  
+  * Add flake8 tests to Travis CLI to find undefined names. (@cclauss )
+
 ### Fixes:
 
   * `self` is an undefined name in helper.py context which will raise NameError. (@cclauss)
@@ -9,6 +13,7 @@
 ### Pull requests(PR) involved:
 
 #88
+#91
 
 :warning: PyPi Release does NOT contain Tests and Scripts!
 

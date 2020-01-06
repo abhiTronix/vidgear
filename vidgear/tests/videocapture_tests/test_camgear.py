@@ -166,4 +166,4 @@ def test_network_playback():
 			else:
 				pytest.fail(str(e))
 
-	if (index == len(Publictest_rstp_urls)): pytest.fail(str(e))
+	if (index == len(Publictest_rstp_urls)): pytest.fail("Tests failed to play any URL!")

@@ -106,7 +106,7 @@ def test_benchmark_videowriter():
 	Benchmarking WriteGear's optimized Compression Mode(FFmpeg) against Non-Compression Mode(OpenCV)
 	"""
 	try:
-		Videowriter_non_compression_mode(return_testvideo_path())
-		Videowriter_compression_mode(return_testvideo_path())
+		WriteGear_non_compression_mode(return_testvideo_path())
+		WriteGear_compression_mode(return_testvideo_path())
 	except Exception as e:
 		raise RuntimeError(e)
