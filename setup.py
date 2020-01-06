@@ -49,7 +49,7 @@ with open("README.md", "r") as fh:
 setup(
 	name='vidgear',
 	packages=['vidgear','vidgear.gears'],
-	version='0.1.7-alpha0',
+	version='0.1.7a0',
 	description='Most Powerful multi-threaded Video Processing Python framework powerpacked with unique trailblazing features.',
 	license='Apache License 2.0',
 	author='Abhishek Thakur',
@@ -60,7 +60,7 @@ setup(
 	long_description_content_type="text/markdown",
 	author_email='abhi.una12@gmail.com',
 	url='https://github.com/abhiTronix/vidgear',
-	download_url='https://github.com/abhiTronix/vidgear/releases/download/vidgear-0.1.7-alpha0/vidgear-0.1.7-alpha0.tar.gz',
+	download_url='https://github.com/abhiTronix/vidgear/releases/download/vidgear-0.1.7a0/vidgear-0.1.7a0.tar.gz',
 	keywords=['OpenCV', 'multithreading', 'FFmpeg', 'picamera', 'mss', 'pyzmq', 'pafy', 'Video Processing', 'Video Stablization', 'Computer Vision', 'raspberrypi', 'youtube'],
 	classifiers=[
 	'Development Status :: 5 - Production/Stable',
