@@ -75,6 +75,8 @@ class ScreenGear:
 			from mss import mss
 			# import mss error handler
 			from mss.exception import ScreenShotError
+			#assign values to global variable for further use
+			self.__ScreenShotError = ScreenShotError
 		except ImportError as error:
 			# otherwise raise import error
 			raise ImportError('[ScreenGear:ERROR] :: python-mss library not found, install it with `pip install mss` command.')
@@ -139,7 +141,7 @@ class ScreenGear:
 				#intitialize and append to queue
 				self.__queue.append(self.frame)
 		except Exception as e:
-			if isinstance(e, ScreenShotError):
+			if isinstance(e, self.__ScreenShotError):
 				#otherwise catch and log errors
 				if logging: self.__logger.exception(self.__mss_object.get_error_details())
 				raise ValueError("[ScreenGear:ERROR] :: ScreenShotError caught, Wrong dimensions passed to python-mss, Kindly Refer Docs!")
@@ -183,7 +185,7 @@ class ScreenGear:
 					continue
 			try:
 				frame = np.asanyarray(self.__mss_object.grab(self.__mss_capture_instance))
-			except ScreenShotError:
+			except self.__ScreenShotError:
 				raise RuntimeError(self.__mss_object.get_error_details())
 				self.__terminate = True
 				continue
