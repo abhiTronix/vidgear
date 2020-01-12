@@ -26,4 +26,5 @@ coverage:
 
 ignore:
   - "vidgear/tests"
+  - "vidgear/gears/pigear.py" #CLI hardware emulation limitation
   - "setup.py"

@@ -22,44 +22,47 @@ limitations under the License.
 
 # import the necessary packages
 import os, sys
-import cv2
 import numpy as np
 from pkg_resources import parse_version
+from colorlog import ColoredFormatter
 import logging as log
-import logging.config
 
-#logging formatter
-logging.config.dictConfig({
-	'version': 1,
-	'formatters': {
-		'colored': {
-			'()': 'colorlog.ColoredFormatter',
-			'log_colors': {
+try:
+	# import OpenCV Binaries
+	import cv2
+	# check whether OpenCV Binaries are 3.x+
+	if parse_version(cv2.__version__) < parse_version('3'):
+		raise ImportError('[Vidgear:ERROR] :: Installed OpenCV API version(< 3.0) is not supported!')
+except ImportError as error:
+	raise ImportError('[Vidgear:ERROR] :: Failed to detect correct OpenCV executables, install it with `pip3 install opencv-python` command.')
+
+
+
+def logger_handler():
+	"""
+	returns logger handler
+	"""
+	#logging formatter
+	formatter = ColoredFormatter(
+			"%(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
+			datefmt=None,
+			reset=True,
+			log_colors={
 						'DEBUG':    'bold_green',
 						'WARNING':  'bold_yellow',
 						'ERROR':    'bold_red',
 						'CRITICAL': 'bold_red,bg_white',
-					},
-			'format':
-				"%(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
-		}
-	},
-	'handlers': {
-		'stream': {
-			'class': 'logging.StreamHandler',
-			'formatter': 'colored',
-			'level': 'DEBUG'
-		},
-	},
-	'loggers': {
-		'': {
-			'handlers': ['stream'],
-			'level': 'DEBUG',
-		},
-	},
-})
-#logger
+						})
+	#define handler
+	handler = log.StreamHandler()
+	handler.setFormatter(formatter)
+	return handler
+
+
+#define logger
 logger = log.getLogger('Helper')
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
 
 
 def check_CV_version():

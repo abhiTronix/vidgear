@@ -20,10 +20,14 @@ limitations under the License.
 
 from vidgear.gears import ScreenGear
 from mss.exception import ScreenShotError
+from vidgear.gears.helper import logger_handler
 import pytest, platform
 import logging as log
 
 logger = log.getLogger('Test_screengear')
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
+
 
 def test_screengear():
 	"""
@@ -36,9 +40,10 @@ def test_screengear():
 		stream = ScreenGear(monitor=1, logging=True, colorspace = 'COLOR_BGR2GRAY', **options).start() 
 		#playback
 		i = 0
-		while (i>10):
+		while (i<20):
 			frame = stream.read()
 			if frame is None: break
+			if (i == 10): stream.color_space = "red" #invalid colorspace value
 			i+=1
 		#clean resources
 		stream.stop()

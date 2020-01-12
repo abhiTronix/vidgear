@@ -22,20 +22,16 @@ limitations under the License.
 from threading import Thread
 from pkg_resources import parse_version
 from .helper import capPropId
+from .helper import logger_handler
 import numpy as np
-import time
+import cv2, time
 import logging as log
 
 
-try:
-	# import OpenCV Binaries
-	import cv2
-	# check whether OpenCV Binaries are 3.x+
-	if parse_version(cv2.__version__) < parse_version('3'):
-		raise ImportError('[ScreenGear:ERROR] :: OpenCV API version >= 3.0 is only supported by this library.')
-except ImportError as error:
-	raise ImportError('[ScreenGear:ERROR] :: Failed to detect correct OpenCV executables, install it with `pip3 install opencv-python` command.')
-
+#define logger
+logger = log.getLogger('ScreenGear')
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
 
 
 class ScreenGear:
@@ -83,7 +79,6 @@ class ScreenGear:
 
 		# enable logging if specified
 		self.__logging = False
-		self.__logger = log.getLogger('ScreenGear')
 		if logging: self.__logging = logging
 
 		# create mss object
@@ -94,7 +89,7 @@ class ScreenGear:
 			try:
 				monitor_instance = self.__mss_object.monitors[monitor]
 			except Exception as e:
-				self.__logger.exception(str(e))
+				logger.exception(str(e))
 				monitor_instance = None
 		else:
 			raise ValueError("[ScreenGear:ERROR] :: `monitor` value cannot be negative, Read Docs!")
@@ -107,7 +102,7 @@ class ScreenGear:
 		#define deque and assign it to global var
 		self.__queue = deque(maxlen=96) #max len 96 to check overflow
 		#log it
-		if logging: self.__logger.debug('Enabling Threaded Queue Mode by default for ScreenGear!') 
+		if logging: logger.debug('Enabling Threaded Queue Mode by default for ScreenGear!') 
 
 		#intiate screen dimension handler
 		screen_dims = {}
@@ -119,17 +114,17 @@ class ScreenGear:
 			# separately handle colorspace value to int conversion
 			if not(colorspace is None): 
 				self.color_space = capPropId(colorspace.strip())
-				if logging: self.__logger.debug('Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
+				if logging: logger.debug('Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
 		except Exception as e:
 			# Catch if any error occurred
-			if logging: self.__logger.exception(str(e))
+			if logging: logger.exception(str(e))
 
 		# intialize mss capture instance
 		self.__mss_capture_instance = None
 		try:
 			# check whether user-defined dimensions are provided
 			if screen_dims and len(screen_dims) == 4:
-				if logging: self.__logger.debug('Setting capture dimensions: {}!'.format(screen_dims)) 
+				if logging: logger.debug('Setting capture dimensions: {}!'.format(screen_dims)) 
 				self.__mss_capture_instance = screen_dims #create instance from dimensions
 			elif not(monitor_instance is None):
 				self.__mss_capture_instance = monitor_instance #otherwise create instance from monitor
@@ -143,7 +138,7 @@ class ScreenGear:
 		except Exception as e:
 			if isinstance(e, self.__ScreenShotError):
 				#otherwise catch and log errors
-				if logging: self.__logger.exception(self.__mss_object.get_error_details())
+				if logging: logger.exception(self.__mss_object.get_error_details())
 				raise ValueError("[ScreenGear:ERROR] :: ScreenShotError caught, Wrong dimensions passed to python-mss, Kindly Refer Docs!")
 			else:
 				raise SystemError("[ScreenGear:ERROR] :: Unable to initiate any MSS instance on this system, Are you running headless?")
@@ -204,13 +199,13 @@ class ScreenGear:
 						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
 						self.color_space = None
-						if self.__logging: self.__logger.warning('Colorspace value `{}` is not a valid colorspace!'.format(self.color_space))
+						if self.__logging: logger.warning('Colorspace value `{}` is not a valid colorspace!'.format(self.color_space))
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None
 					if self.__logging:
-						self.__logger.exception(str(e))
-						self.__logger.warning('Input colorspace is not a valid colorspace!')
+						logger.exception(str(e))
+						logger.warning('Input colorspace is not a valid colorspace!')
 				if not(color_frame is None):
 					self.frame = color_frame
 				else:
@@ -239,7 +234,7 @@ class ScreenGear:
 		"""
 		Terminates the Read process
 		"""
-		if self.__logging: self.__logger.debug("Terminating ScreenGear Processes.")
+		if self.__logging: logger.debug("Terminating ScreenGear Processes.")
 		#terminate Threaded queue mode seperately
 		if self.__threaded_queue_mode and not(self.__queue is None):
 			self.__queue.clear()

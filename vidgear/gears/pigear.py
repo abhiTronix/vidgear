@@ -21,20 +21,16 @@ limitations under the License.
 # import the packages
 from threading import Thread
 from pkg_resources import parse_version
-import sys, time
+import cv2, sys, time
 from .helper import capPropId
+from .helper import logger_handler
 import logging as log
 
 
-try:
-	# import OpenCV Binaries
-	import cv2
-	# check whether OpenCV Binaries are 3.x+
-	if parse_version(cv2.__version__) < parse_version('3'):
-		raise ImportError('[PiGear:ERROR] :: OpenCV library version >= 3.0 is only supported by this library')
-except ImportError as error:
-	raise ImportError('[PiGear:ERROR] :: Failed to detect correct OpenCV executables, install it with `pip3 install opencv-python` command.')
-
+#define logger
+logger = log.getLogger('PiGear')
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
 
 
 class PiGear:
@@ -84,20 +80,19 @@ class PiGear:
 
 		# enable logging if specified
 		self.__logging = False
-		self.__logger = log.getLogger('PiGear')
 		if logging: self.__logging = logging
 
 		assert (isinstance(framerate, (int, float)) and framerate > 5.0), "[PiGear:ERROR] :: Input framerate value `{}` is a Invalid! Kindly read docs.".format(framerate)
 		assert (isinstance(resolution, (tuple, list)) and len(resolution) == 2), "[PiGear:ERROR] :: Input resolution value `{}` is a Invalid! Kindly read docs.".format(resolution)
 		if not(isinstance(camera_num, int) and camera_num >= 0): 
 			camera_num = 0
-			self.__logger.warning("Input camera_num value `{}` is invalid, Defaulting to index 0!")
+			logger.warning("Input camera_num value `{}` is invalid, Defaulting to index 0!")
 
 		# initialize the picamera stream at given index
 		self.__camera = PiCamera(camera_num = camera_num)
 		self.__camera.resolution = tuple(resolution)
 		self.__camera.framerate = framerate
-		if self.__logging: self.__logger.debug("Activating Pi camera at index: {} with resolution: {} & framerate: {}".format(camera_num, resolution, framerate))
+		if self.__logging: logger.debug("Activating Pi camera at index: {} with resolution: {} & framerate: {}".format(camera_num, resolution, framerate))
 
 		#initialize framerate variable
 		self.framerate = framerate
@@ -117,7 +112,7 @@ class PiGear:
 			if isinstance(options["HWFAILURE_TIMEOUT"],(int, float)):
 				if not(10.0 > options["HWFAILURE_TIMEOUT"] > 1.0): raise ValueError('[PiGear:ERROR] :: `HWFAILURE_TIMEOUT` value can only be between 1.0 ~ 10.0')
 				self.__failure_timeout = options["HWFAILURE_TIMEOUT"] #assign special parameter
-				if self.__logging: self.__logger.debug("Setting HW Failure Timeout: {} seconds".format(self.__failure_timeout))
+				if self.__logging: logger.debug("Setting HW Failure Timeout: {} seconds".format(self.__failure_timeout))
 			del options["HWFAILURE_TIMEOUT"] #clean
 
 		try:
@@ -127,10 +122,10 @@ class PiGear:
 			# separately handle colorspace value to int conversion
 			if not(colorspace is None): 
 				self.color_space = capPropId(colorspace.strip())
-				if self.__logging: self.__logger.debug('Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
+				if self.__logging: logger.debug('Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
 		except Exception as e:
 			# Catch if any error occurred
-			if self.__logging: self.__logger.exception(str(e))
+			if self.__logging: logger.exception(str(e))
 
 		# enable rgb capture array thread and capture stream
 		self.__rawCapture = PiRGBArray(self.__camera, size = resolution)
@@ -146,7 +141,7 @@ class PiGear:
 			#render colorspace if defined
 			if not(self.frame is None and self.color_space is None): self.frame = cv2.cvtColor(self.frame, self.color_space)
 		except Exception as e:
-			self.__logger.exception(str(e))
+			logger.exception(str(e))
 			raise RuntimeError('[PiGear:ERROR] :: Camera Module failed to initialize!')
 
 		# applying time delay to warm-up picamera only if specified
@@ -197,7 +192,7 @@ class PiGear:
 			#check for frozen thread
 			if time.time() - self.__t_elasped > self.__failure_timeout:
 				#log failure
-				if self.__logging: self.__logger.critical("Camera Module Disconnected!")
+				if self.__logging: logger.critical("Camera Module Disconnected!")
 				#prepare for clean exit
 				self.__exceptions = True
 				self.__terminate = True #self-terminate
@@ -240,14 +235,14 @@ class PiGear:
 						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
 						self.color_space = None
-						if self.__logging: self.__logger.warning('Colorspace `{}` is not a valid colorspace!'.format(self.color_space))
+						if self.__logging: logger.warning('Colorspace `{}` is not a valid colorspace!'.format(self.color_space))
 							
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None
 					if self.__logging:
-						self.__logger.exception(str(e))
-						self.__logger.warning('Input colorspace is not a valid colorspace!')
+						logger.exception(str(e))
+						logger.warning('Input colorspace is not a valid colorspace!')
 
 				if not(color_frame is None):
 					self.frame = color_frame
@@ -293,7 +288,7 @@ class PiGear:
 		"""
 		Terminates the Read process
 		"""
-		if self.__logging: self.__logger.debug("Terminating PiGear Processes.")
+		if self.__logging: logger.debug("Terminating PiGear Processes.")
 
 		# make sure that the threads should be terminated
 		self.__terminate = True

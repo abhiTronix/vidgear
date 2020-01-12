@@ -476,7 +476,7 @@ The full documentation for all VidGear classes and functions can be found in the
 
 * **Prerequisites:** Testing VidGear require some *additional dependencies & data* which can be downloaded manually as follows:
 
-  * **Clone & Install [Testing Branch](#option-3-clone-the-repo)**
+  * **Clone & Install [Testing Branch](#option-3-clone-the-repository)**
 
   * **Download few additional python libraries:**
     ```sh

@@ -20,7 +20,14 @@ limitations under the License.
 
 # import the necessary packages
 from .camgear import CamGear
+from .helper import logger_handler
 import logging as log
+
+
+#define logger
+logger = log.getLogger('VideoGear')
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
 
 
 class VideoGear:
@@ -77,14 +84,13 @@ class VideoGear:
 							/ Its default value is 0.
 	"""
 
-	def __init__(self, enablePiCamera = False, stabilize = False, source = 0, y_tube = False, backend = 0, colorspace = None, resolution = (640, 480), framerate = 25, logging = False, time_delay = 0, **options):
+	def __init__(self, enablePiCamera = False, stabilize = False, source = 0, camera_num = 0, y_tube = False, backend = 0, colorspace = None, resolution = (640, 480), framerate = 25, logging = False, time_delay = 0, **options):
 		
 		#initialize stabilizer
 		self.__stablization_mode = stabilize
 
 		# enable logging if specified
 		self.__logging = False
-		self.__logger = log.getLogger('VideoGear')
 		if logging: self.__logging = logging
 
 		if self.__stablization_mode:
@@ -108,14 +114,14 @@ class VideoGear:
 						crop_n_zoom = options["CROP_N_ZOOM"] #assigsn special parameter
 					del options["CROP_N_ZOOM"] #clean
 			self.__stabilizer_obj = Stabilizer(smoothing_radius = s_radius, border_type = border_type, border_size = border_size, crop_n_zoom = crop_n_zoom, logging = logging)
-			if self.__logging: self.__logger.debug('Enabling Stablization Mode for the current video source!') #log info
+			if self.__logging: logger.debug('Enabling Stablization Mode for the current video source!') #log info
 
 		if enablePiCamera:
 			# only import the pigear module only if required
 			from .pigear import PiGear
 
 			# initialize the picamera stream by enabling PiGear Class
-			self.stream = PiGear(resolution = resolution, framerate = framerate, colorspace = colorspace, logging = logging, time_delay = time_delay, **options)
+			self.stream = PiGear(camera_num = camera_num, resolution = resolution, framerate = framerate, colorspace = colorspace, logging = logging, time_delay = time_delay, **options)
 		else:
 			# otherwise, we are using OpenCV so initialize the webcam
 			# stream by activating CamGear Class
@@ -144,8 +150,9 @@ class VideoGear:
 
 
 	def stop(self):
-		if self.__logging: self.__logger.debug("Terminating VideoGear.")
 		# stop the thread and release any resources
 		self.stream.stop()
+		#logged
+		if self.__logging: logger.debug("Terminating VideoGear.")
 		#clean queue
 		if self.__stablization_mode: self.__stabilizer_obj.clean()

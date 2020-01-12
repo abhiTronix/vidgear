@@ -20,6 +20,7 @@ limitations under the License.
 
 from vidgear.gears import NetGear
 from vidgear.gears import VideoGear
+from vidgear.gears.helper import logger_handler
 
 import pytest
 import cv2
@@ -32,7 +33,8 @@ from zmq.error import ZMQError
 import logging as log
 
 logger = log.getLogger('Test_netgear')
-
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
 
 def return_testvideo_path():
 	"""

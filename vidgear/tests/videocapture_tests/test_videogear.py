@@ -20,9 +20,12 @@ limitations under the License.
 
 import pytest, os, tempfile
 from vidgear.gears import VideoGear
+from vidgear.gears.helper import logger_handler
 import logging as log
 
 logger = log.getLogger('Test_videogear')
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
 
 
 def return_testvideo_path():

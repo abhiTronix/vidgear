@@ -21,6 +21,7 @@ limitations under the License.
 from vidgear.gears import WriteGear
 from vidgear.gears.helper import capPropId
 from vidgear.gears.helper import check_output
+from vidgear.gears.helper import logger_handler
 from six import string_types
 
 import os, platform
@@ -30,7 +31,8 @@ import tempfile
 import logging as log
 
 logger = log.getLogger('Test_non_commpression_mode')
-
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
 
 def return_static_ffmpeg():
 	"""
