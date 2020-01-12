@@ -26,9 +26,13 @@ import pytest
 import tempfile
 import numpy as np
 from vidgear.gears import CamGear
+from vidgear.gears.helper import logger_handler
 import logging as log
 
 logger = log.getLogger('Test_camgear')
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
+
 
 def return_youtubevideo_params(url):
 	"""
@@ -166,4 +170,4 @@ def test_network_playback():
 			else:
 				pytest.fail(str(e))
 
-	if (index == len(Publictest_rstp_urls)): pytest.fail("Tests failed to play any URL!")
+	if (index == len(Publictest_rstp_urls)): pytest.fail("Failed to play any URL!")

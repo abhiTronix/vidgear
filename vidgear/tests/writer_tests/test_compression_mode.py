@@ -22,6 +22,7 @@ from vidgear.gears import WriteGear
 from vidgear.gears import CamGear
 from vidgear.gears.helper import capPropId
 from vidgear.gears.helper import check_output
+from vidgear.gears.helper import logger_handler
 from six import string_types
 
 import pytest
@@ -32,7 +33,8 @@ import subprocess, re
 import logging as log
 
 logger = log.getLogger('Test_commpression_mode')
-
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
 
 def return_static_ffmpeg():
 	"""

@@ -24,6 +24,7 @@ limitations under the License.
 # import the necessary packages
 from collections import deque
 from .helper import check_CV_version
+from .helper import logger_handler
 import numpy as np
 import cv2
 import logging as log
@@ -57,6 +58,8 @@ class Stabilizer:
 		# enable logging if specified
 		self.__logging = False
 		self.__logger = log.getLogger('Stabilizer')
+		self.__logger.addHandler(logger_handler())
+		self.__logger.setLevel(log.DEBUG)
 		if logging: self.__logging = logging
 
 		# define and create Adaptive histogram equalization (AHE) object for optimizations

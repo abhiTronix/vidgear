@@ -22,6 +22,7 @@ limitations under the License.
 from threading import Thread
 from pkg_resources import parse_version
 from .helper import generate_auth_certificates
+from .helper import logger_handler
 from collections import deque
 import numpy as np
 import time
@@ -131,6 +132,8 @@ class NetGear:
 		# enable logging if specified
 		self.__logging = False
 		self.__logger = log.getLogger('NetGear')
+		self.__logger.addHandler(logger_handler())
+		self.__logger.setLevel(log.DEBUG)
 		if logging: self.__logging = logging
 
 		#define valid messaging patterns => `0`: zmq.PAIR, `1`:(zmq.REQ,zmq.REP), and `1`:(zmq.SUB,zmq.PUB)

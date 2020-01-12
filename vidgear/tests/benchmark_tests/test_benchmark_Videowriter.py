@@ -23,11 +23,13 @@ import pytest
 import tempfile
 from vidgear.gears import WriteGear
 from vidgear.gears import VideoGear
+from vidgear.gears.helper import logger_handler
 from .fps import FPS
 import logging as log
 
 logger = log.getLogger('Test_benchmark_videowriter')
-
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
 
 def return_testvideo_path():
 	"""

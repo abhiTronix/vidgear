@@ -23,6 +23,7 @@ from threading import Thread
 from pkg_resources import parse_version
 from .helper import capPropId
 from .helper import check_CV_version
+from .helper import logger_handler
 import re, time
 import logging as log
 
@@ -116,6 +117,8 @@ class CamGear:
 		# enable logging if specified
 		self.__logging = False
 		self.__logger = log.getLogger('CamGear')
+		self.__logger.addHandler(logger_handler())
+		self.__logger.setLevel(log.DEBUG)
 		if logging: self.__logging = logging
 
 		# check if Youtube Mode is ON (True)

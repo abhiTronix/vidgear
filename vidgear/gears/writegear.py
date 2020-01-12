@@ -23,11 +23,10 @@ from pkg_resources import parse_version
 import os, sys, time
 import subprocess as sp
 import logging as log
-
 from .helper import get_valid_ffmpeg_path
 from .helper import capPropId
 from .helper import dict2Args
-
+from .helper import logger_handler
 
 
 try:
@@ -98,6 +97,8 @@ class WriteGear:
 		# enable logging if specified
 		self.__logging = False
 		self.__logger = log.getLogger('WriteGear')
+		self.__logger.addHandler(logger_handler())
+		self.__logger.setLevel(log.DEBUG)
 		if logging: self.__logging = logging
 
 		# initialize various important class variables

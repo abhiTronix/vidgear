@@ -26,8 +26,11 @@ from vidgear.gears.helper import download_ffmpeg_binaries
 from vidgear.gears.helper import validate_ffmpeg
 from vidgear.gears.helper import get_valid_ffmpeg_path
 from vidgear.gears.helper import generate_auth_certificates
+from vidgear.gears.helper import logger_handler
 
 logger = log.getLogger('Test_helper')
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
 
 
 def return_static_ffmpeg():

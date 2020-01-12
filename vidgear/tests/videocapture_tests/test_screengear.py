@@ -20,10 +20,14 @@ limitations under the License.
 
 from vidgear.gears import ScreenGear
 from mss.exception import ScreenShotError
+from vidgear.gears.helper import logger_handler
 import pytest, platform
 import logging as log
 
 logger = log.getLogger('Test_screengear')
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
+
 
 def test_screengear():
 	"""

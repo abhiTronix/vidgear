@@ -22,10 +22,13 @@ import os, platform
 import pytest
 import tempfile
 from vidgear.gears import CamGear
+from vidgear.gears.helper import logger_handler
 from .fps import FPS
 import logging as log
 
 logger = log.getLogger('Test_benchmark_playback')
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
 
 
 def return_testvideo(level=0):

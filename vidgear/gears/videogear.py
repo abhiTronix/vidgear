@@ -20,6 +20,7 @@ limitations under the License.
 
 # import the necessary packages
 from .camgear import CamGear
+from .helper import logger_handler
 import logging as log
 
 
@@ -77,7 +78,7 @@ class VideoGear:
 							/ Its default value is 0.
 	"""
 
-	def __init__(self, enablePiCamera = False, stabilize = False, source = 0, y_tube = False, backend = 0, colorspace = None, resolution = (640, 480), framerate = 25, logging = False, time_delay = 0, **options):
+	def __init__(self, enablePiCamera = False, stabilize = False, source = 0, camera_num = 0, y_tube = False, backend = 0, colorspace = None, resolution = (640, 480), framerate = 25, logging = False, time_delay = 0, **options):
 		
 		#initialize stabilizer
 		self.__stablization_mode = stabilize
@@ -85,6 +86,8 @@ class VideoGear:
 		# enable logging if specified
 		self.__logging = False
 		self.__logger = log.getLogger('VideoGear')
+		self.__logger.addHandler(logger_handler())
+		self.__logger.setLevel(log.DEBUG)
 		if logging: self.__logging = logging
 
 		if self.__stablization_mode:
@@ -115,7 +118,7 @@ class VideoGear:
 			from .pigear import PiGear
 
 			# initialize the picamera stream by enabling PiGear Class
-			self.stream = PiGear(resolution = resolution, framerate = framerate, colorspace = colorspace, logging = logging, time_delay = time_delay, **options)
+			self.stream = PiGear(camera_num = camera_num, resolution = resolution, framerate = framerate, colorspace = colorspace, logging = logging, time_delay = time_delay, **options)
 		else:
 			# otherwise, we are using OpenCV so initialize the webcam
 			# stream by activating CamGear Class
@@ -144,8 +147,9 @@ class VideoGear:
 
 
 	def stop(self):
-		if self.__logging: self.__logger.debug("Terminating VideoGear.")
 		# stop the thread and release any resources
 		self.stream.stop()
+		#logged
+		if self.__logging: self.__logger.debug("Terminating VideoGear.")
 		#clean queue
 		if self.__stablization_mode: self.__stabilizer_obj.clean()
