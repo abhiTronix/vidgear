@@ -24,19 +24,14 @@ from pkg_resources import parse_version
 from .helper import capPropId
 from .helper import logger_handler
 import numpy as np
-import time
+import cv2, time
 import logging as log
 
 
-try:
-	# import OpenCV Binaries
-	import cv2
-	# check whether OpenCV Binaries are 3.x+
-	if parse_version(cv2.__version__) < parse_version('3'):
-		raise ImportError('[ScreenGear:ERROR] :: OpenCV API version >= 3.0 is only supported by this library.')
-except ImportError as error:
-	raise ImportError('[ScreenGear:ERROR] :: Failed to detect correct OpenCV executables, install it with `pip3 install opencv-python` command.')
-
+#define logger
+logger = log.getLogger('ScreenGear')
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
 
 
 class ScreenGear:
@@ -84,9 +79,6 @@ class ScreenGear:
 
 		# enable logging if specified
 		self.__logging = False
-		self.__logger = log.getLogger('ScreenGear')
-		self.__logger.addHandler(logger_handler())
-		self.__logger.setLevel(log.DEBUG)
 		if logging: self.__logging = logging
 
 		# create mss object

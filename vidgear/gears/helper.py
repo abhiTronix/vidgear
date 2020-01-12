@@ -22,11 +22,19 @@ limitations under the License.
 
 # import the necessary packages
 import os, sys
-import cv2
 import numpy as np
 from pkg_resources import parse_version
 from colorlog import ColoredFormatter
 import logging as log
+
+try:
+	# import OpenCV Binaries
+	import cv2
+	# check whether OpenCV Binaries are 3.x+
+	if parse_version(cv2.__version__) < parse_version('3'):
+		raise ImportError('[Vidgear:ERROR] :: Installed OpenCV API version(< 3.0) is not supported!')
+except ImportError as error:
+	raise ImportError('[Vidgear:ERROR] :: Failed to detect correct OpenCV executables, install it with `pip3 install opencv-python` command.')
 
 
 
@@ -51,12 +59,10 @@ def logger_handler():
 	return handler
 
 
-
 #define logger
 logger = log.getLogger('Helper')
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
-
 
 
 def check_CV_version():
