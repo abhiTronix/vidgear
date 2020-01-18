@@ -220,17 +220,14 @@ def download_ffmpeg_binaries(path, os_windows = False):
 					response  = requests.get(file_url, stream=True, timeout=2)
 					response.raise_for_status()
 				total_length = response.headers.get('content-length')
+				pbar = tqdm(total=int(total_length), unit="B", unit_scale=True)
 				if total_length is None: # no content length header
 					f.write(response.content)
 				else:
-					dl = 0
-					total_length = int(total_length)
 					for data in response.iter_content(chunk_size=4096):
-						dl += len(data)
+						pbar.update(len(data))
 						f.write(data)
-						done = int(50 * dl / total_length)
-						sys.stdout.write("\r[{}{}]{}{}".format('=' * done, ' ' * (50-done), done * 2, '%') )    
-						sys.stdout.flush()
+				pbar.close()	
 			logger.debug("Extracting executables.")
 			with zipfile.ZipFile(file_name, "r") as zip_ref:
 				zip_ref.extractall(base_path)
