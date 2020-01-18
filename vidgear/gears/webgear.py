@@ -53,7 +53,7 @@ class WebGear:
 	independently. Thereby providing it the ability to interact with the Starlette's ecosystem of shared middleware and mountable applications 
 	& seamless access to its various Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.
 
-	In simple words, WebGear acts as robust Live Video Streaming Server that can stream live video frames to any web browser on a network in real-time. 
+	WebGear acts as robust Live Video Streaming Server that can stream live video frames to any web browser on a network in real-time. 
 	It addition to this, WebGear provides a special internal wrapper around VideoGear API, which itself provides internal access to both CamGear and PiGear 
 	APIs thereby granting it exclusive power for streaming frames incoming from any device/source. Also on the plus side, since WebGear has access 
 	to all functions of VideoGear API, therefore it can stabilize video frames even while streaming live.
@@ -69,11 +69,11 @@ class WebGear:
 		options = {k.lower().strip(): v for k,v in options.items()}
 
 		#initialize global params
-		self.jpeg_quality = 95 #90% quality
-		self.jpeg_optimize = 0 #optimization on
-		self.jpeg_progressive=0 #jpeg will be baseline instead
-		self.frame_size_reduction = 0 #40% reduction
-		self.logging = logging
+		self.__jpeg_quality = 90 #90% quality
+		self.__jpeg_optimize = 0 #optimization off
+		self.__jpeg_progressive=0 #jpeg will be baseline instead
+		self.__frame_size_reduction = 20 #20% reduction
+		self.__logging = logging
 
 		custom_data_location = '' #path to save data-files to custom location
 		data_path = '' #path to WebGear data-files
@@ -84,28 +84,28 @@ class WebGear:
 			if 'frame_size_reduction' in options:
 				value = options["frame_size_reduction"]
 				if isinstance(value, (int, float)) and value >= 0 and value <= 90:
-					self.frame_size_reduction = value
+					self.__frame_size_reduction = value
 				else: 
 					logger.warning("Skipped invalid `frame_size_reduction` value!")
 				del options['frame_size_reduction'] #clean
 			if 'frame_jpeg_quality' in options:
 				value = options["frame_jpeg_quality"]
 				if isinstance(value, (int, float)) and value >= 10 and value <= 95:
-					self.jpeg_quality = int(value)
+					self.__jpeg_quality = int(value)
 				else: 
 					logger.warning("Skipped invalid `frame_jpeg_quality` value!")
 				del options['frame_jpeg_quality'] #clean
 			if 'frame_jpeg_optimize' in options:
 				value = options["frame_jpeg_optimize"]
 				if isinstance(value, bool): 
-					self.jpeg_optimize = int(value)
+					self.__jpeg_optimize = int(value)
 				else: 
 					logger.warning("Skipped invalid `frame_jpeg_optimize` value!")
 				del options['frame_jpeg_optimize'] #clean
 			if 'frame_jpeg_progressive' in options:
 				value = options["frame_jpeg_progressive"]
 				if isinstance(value, bool):
-					self.jpeg_progressive = int(value)
+					self.__jpeg_progressive = int(value)
 				else: 
 					logger.warning("Skipped invalid `frame_jpeg_progressive` value!")
 				del options['frame_jpeg_progressive'] #clean
@@ -139,28 +139,28 @@ class WebGear:
 			else:
 				raise ValueError("[WebGear:ERROR] :: Invalid `custom_data_location` value!")
 		else:
-			# otherwise auto-generate suitable path
+			# otherwise auto-encapsulation for class functions and variablesgenerate suitable path
 			from os.path import expanduser
 			data_path = generate_webdata(os.path.join(expanduser("~"),".vidgear"), overwrite_default = overwrite_default, logging = logging)
 		
 		#log it
-		if self.logging: logger.debug('`{}` is the default location for saving WebGear data-files.'.format(data_path))
-		if self.logging: logger.debug('Setting params:: Size Reduction:{}%, JPEG quality:{}%, JPEG optimizations:{}, JPEG progressive:{}'.format(self.frame_size_reduction, self.jpeg_quality, bool(self.jpeg_optimize), bool(self.jpeg_progressive)))
+		if self.__logging: logger.debug('`{}` is the default location for saving WebGear data-files.'.format(data_path))
+		if self.__logging: logger.debug('Setting params:: Size Reduction:{}%, JPEG quality:{}%, JPEG optimizations:{}, JPEG progressive:{}'.format(self.__frame_size_reduction, self.__jpeg_quality, bool(self.__jpeg_optimize), bool(self.__jpeg_progressive)))
 
 		#define Jinja2 templates handler
-		self.templates = Jinja2Templates(directory='{}/templates'.format(data_path))
+		self.__templates = Jinja2Templates(directory='{}/templates'.format(data_path))
 
 		#define custom exception handlers
-		self.exception_handlers = {404: self.not_found,
-									500: self.server_error}
+		self.__exception_handlers = {404: self.__not_found,
+									500: self.__server_error}
 		#define routing tables
-		self.routes = [Route('/', endpoint=self.homepage),
-						Route('/video', endpoint=self.video),
+		self.routes = [Route('/', endpoint=self.__homepage),
+						Route('/video', endpoint=self.__video),
 						Mount('/static', app=StaticFiles(directory='{}/static'.format(data_path)), name="static")]
 		#copy original routing tables for verfication
-		self.rt_org_copy = self.routes[:]
+		self.__rt_org_copy = self.routes[:]
 		#keeps check if producer loop should be running
-		self.isrunning = True
+		self.__isrunning = True
 
 
 
@@ -170,75 +170,75 @@ class WebGear:
 		"""
 		#validate routing tables
 		assert not(self.routes is None), "Routing tables are NoneType!"
-		if not isinstance(self.routes, list) or not all(x in self.routes for x in self.rt_org_copy): raise RuntimeError("Routing tables are not valid!")
+		if not isinstance(self.routes, list) or not all(x in self.routes for x in self.__rt_org_copy): raise RuntimeError("Routing tables are not valid!")
 		#initate stream
-		if self.logging: logger.debug('Initiating Video Streaming.')
+		if self.__logging: logger.debug('Initiating Video Streaming.')
 		self.stream.start()
 		#return Starlette application
-		if self.logging: logger.debug('Running Starlette application.')
-		return Starlette(debug = (True if self.logging else False), routes=self.routes, exception_handlers=self.exception_handlers, on_shutdown=[self.shutdown])
+		if self.__logging: logger.debug('Running Starlette application.')
+		return Starlette(debug = (True if self.__logging else False), routes=self.routes, exception_handlers=self.__exception_handlers, on_shutdown=[self.__shutdown])
 
 
 
-	async def producer(self):
+	async def __producer(self):
 		"""
 		Implements async frame producer.
 		"""
 		# loop over frames
-		while self.isrunning:
+		while self.__isrunning:
 			#read frame
 			frame = self.stream.read()
 			#break if NoneType
 			if frame is None: break
 			#reducer frames size if specified
-			if self.frame_size_reduction: frame = reducer(frame, percentage = self.frame_size_reduction)
+			if self.__frame_size_reduction: frame = reducer(frame, percentage = self.__frame_size_reduction)
 			#handle JPEG encoding
-			encodedImage = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, self.jpeg_quality, cv2.IMWRITE_JPEG_PROGRESSIVE, self.jpeg_progressive,cv2.IMWRITE_JPEG_OPTIMIZE, self.jpeg_optimize])[1].tobytes()
+			encodedImage = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, self.__jpeg_quality, cv2.IMWRITE_JPEG_PROGRESSIVE, self.__jpeg_progressive,cv2.IMWRITE_JPEG_OPTIMIZE, self.__jpeg_optimize])[1].tobytes()
 			#yield frame in byte format
 			yield  (b'--frame\r\nContent-Type:image/jpeg\r\n\r\n'+encodedImage+b'\r\n')
 			await asyncio.sleep(0.01)
 
 
 
-	async def video(self, scope):
+	async def __video(self, scope):
 		"""
 		Return a async video streaming response.
 		"""
 		assert scope['type'] == 'http'
-		return StreamingResponse(self.producer(), media_type='multipart/x-mixed-replace; boundary=frame')
+		return StreamingResponse(self.__producer(), media_type='multipart/x-mixed-replace; boundary=frame')
 
 
 
-	async def homepage(self, request):
+	async def __homepage(self, request):
 		"""
 		Return an HTML index page.
 		"""
-		return self.templates.TemplateResponse('index.html', {'request': request})
+		return self.__templates.TemplateResponse('index.html', {'request': request})
 
 
 
-	async def not_found(self, request, exc):
+	async def __not_found(self, request, exc):
 		"""
 		Return an HTML 404 page.
 		"""
-		return self.templates.TemplateResponse('404.html', {'request': request}, status_code=404)
+		return self.__templates.TemplateResponse('404.html', {'request': request}, status_code=404)
 
 
 
-	async def server_error(self, request, exc):
+	async def __server_error(self, request, exc):
 		"""
 		Return an HTML 500 page.
 		"""
-		return self.templates.TemplateResponse('500.html', {'request': request}, status_code=500)
+		return self.__templates.TemplateResponse('500.html', {'request': request}, status_code=500)
 
 
 
-	def shutdown(self):
+	def __shutdown(self):
 		"""
 		Implements a callables to run on application shutdown
 		"""
-		if self.logging: logger.debug('Closing Video Streaming.')
+		if self.__logging: logger.debug('Closing Video Streaming.')
 		#stops frame producer
-		self.isrunning = False
+		self.__isrunning = False
 		#stops VideoGear stream
 		self.stream.stop()
