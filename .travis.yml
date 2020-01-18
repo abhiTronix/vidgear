@@ -17,11 +17,6 @@ language: python
 matrix:
     include:
         - os: osx
-          python: "3.5"
-          language: generic
-          osx_image: xcode11
-          env: PYTHON=35
-        - os: osx
           python: "3.6"
           language: generic
           osx_image: xcode11
@@ -31,6 +26,11 @@ matrix:
           language: generic
           osx_image: xcode11
           env: PYTHON=37
+        - os: osx
+          python: "3.8"
+          language: generic
+          osx_image: xcode11
+          env: PYTHON=38
         - os: linux
           dist: bionic
           python: "3.6"
