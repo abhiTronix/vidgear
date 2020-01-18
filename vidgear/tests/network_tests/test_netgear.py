@@ -122,7 +122,7 @@ def test_compression():
 		options = {'compression_param':cv2.IMREAD_COLOR} #read color image 
 		client = NetGear(pattern = 1, receive_mode = True, logging = True, **options)
 		#define server parameters
-		options = {'compression_format': '.jpg', 'compression_param':[cv2.IMWRITE_JPEG_OPTIMIZE, 20]} #JPEG compression
+		options = {'compression_format': '.jpg', 'compression_param':[cv2.IMWRITE_JPEG_QUALITY, 20]} #JPEG compression
 		server = NetGear(pattern = 1, logging = True, **options)
 		#send over network
 		while True:

@@ -49,7 +49,7 @@ class VideoGear:
 		:param (dict) **options: can be used in addition, to pass parameter supported by VidGear's stabilizer class.
 								/ Supported dict keys are: 
 									- `SMOOTHING_RADIUS` (int) : to alter averaging window size. It handles the quality of stabilization at expense of latency and sudden panning. 
-															/ Larger its value, less will be panning, more will be latency and vice-versa. It's default value is 25.
+															/ Larger its value, less will be panning, more will be latency and vice-versa. It's default value is 30.
 									- `BORDER_SIZE` (int) : to alter output border cropping. It's will crops the border to reduce the black borders from stabilization being too noticeable. 
 															/ Larger its value, more will be cropping. It's default value is 0 (i.e. no cropping).			
 									- `BORDER_TYPE` (string) : to change the border mode. Valid border types are 'black', 'reflect', 'reflect_101', 'replicate' and 'wrap'. It's default value is 'black'
@@ -84,7 +84,7 @@ class VideoGear:
 							/ Its default value is 0.
 	"""
 
-	def __init__(self, enablePiCamera = False, stabilize = False, source = 0, camera_num = 0, y_tube = False, backend = 0, colorspace = None, resolution = (640, 480), framerate = 25, logging = False, time_delay = 0, **options):
+	def __init__(self, enablePiCamera = False, stabilize = False, source = 0, camera_num = 0, y_tube = False, backend = 0, colorspace = None, resolution = (640, 480), framerate = 30, logging = False, time_delay = 0, **options):
 		
 		#initialize stabilizer
 		self.__stablization_mode = stabilize
@@ -131,10 +131,12 @@ class VideoGear:
 		self.framerate = self.stream.framerate
 
 
+
 	def start(self):
 		# start the threaded video stream
 		self.stream.start()
 		return self
+
 
 
 	def read(self):
@@ -147,6 +149,7 @@ class VideoGear:
 			if not(frame_stab is None):
 				return frame_stab
 		return self.stream.read()
+
 
 
 	def stop(self):
