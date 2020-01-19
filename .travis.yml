@@ -54,6 +54,8 @@ before_install:
     brew install swig;
     brew install ffmpeg;
     brew link ffmpeg;
+    brew install youtube-dl;
+    brew link youtube-dl;
     brew install unzip;
     curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci;
     source ./macports-ci install;
@@ -101,7 +103,6 @@ install:
     pip install --user codecov;
     pip install --upgrade --user pytest;
     pip install --upgrade --user pytest-cov;
-    pip install --upgrade --user youtube-dl;
     fi
 
 before_script:
