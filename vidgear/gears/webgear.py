@@ -184,7 +184,7 @@ class WebGear:
 				del options['frame_jpeg_progressive'] #clean
 			if 'custom_data_location' in options:
 				value = options["custom_data_location"]
-				if isinstance(value,str) in options:
+				if isinstance(value,str):
 					try:
 						assert os.access(value, os.W_OK), "[WebGear:ERROR] :: Permission Denied!, cannot write WebGear data-files to '{}' directory!".format(value)
 						assert not(os.path.isfile(value)), "[WebGear:ERROR] :: `custom_data_location` value must be the path to a directory and not to a file!"
@@ -249,7 +249,7 @@ class WebGear:
 		self.stream.start()
 		#return Starlette application
 		if self.__logging: logger.debug('Running Starlette application.')
-		return Starlette(debug = (True if self.__logging else False), routes=self.routes, exception_handlers=self.__exception_handlers, on_shutdown=[self.__shutdown])
+		return Starlette(debug = (True if self.__logging else False), routes=self.routes, exception_handlers=self.__exception_handlers, on_shutdown=[self.shutdown])
 
 
 
@@ -306,12 +306,15 @@ class WebGear:
 
 
 
-	def __shutdown(self):
+	def shutdown(self):
 		"""
-		Implements a callables to run on application shutdown
+		Implements a callable to run on application shutdown
 		"""
-		if self.__logging: logger.debug('Closing Video Streaming.')
-		#stops frame producer
-		self.__isrunning = False
-		#stops VideoGear stream
-		self.stream.stop()
+		if not(self.stream is None):
+			if self.__logging: logger.debug('Closing Video Streaming.')
+			#stops frame producer
+			self.__isrunning = False
+			#stops VideoGear stream
+			self.stream.stop()
+			#prevent re-iteration
+			self.stream = None

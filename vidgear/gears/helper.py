@@ -126,7 +126,8 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 					logger.debug('FFmpeg Windows Download Path: {}'.format(ffmpeg_download_path))
 
 				#download Binaries
-				_path = download_ffmpeg_binaries(path = ffmpeg_download_path, os_windows = is_windows)
+				os_bit = ('win64' if platform.machine().endswith('64') else 'win32') if is_windows else ''
+				_path = download_ffmpeg_binaries(path = ffmpeg_download_path, os_windows = is_windows, os_bit=os_bit)
 				#assign to local variable
 				final_path += _path
 
@@ -176,18 +177,17 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 
 
 
-def download_ffmpeg_binaries(path, os_windows = False):
+def download_ffmpeg_binaries(path, os_windows = False, os_bit = ''):
 	"""
 	Download and Extract FFmpeg Static Binaries for windows(if not available)
 	"""
 	import platform
 	final_path = ''
-	if os_windows:
-		windows_bit = 'win64' if platform.machine().endswith('64') else 'win32' #checks current Windows Bit Mode
+	if os_windows and os_bit:
 		#initialize variables
-		file_url = 'https://ffmpeg.zeranoe.com/builds/{}/static/ffmpeg-latest-{}-static.zip'.format(windows_bit, windows_bit)
-		file_name = os.path.join(os.path.abspath(path),'ffmpeg-latest-{}-static.zip'.format(windows_bit))
-		file_path = os.path.join(os.path.abspath(path), 'ffmpeg-latest-{}-static/bin/ffmpeg.exe'.format(windows_bit))
+		file_url = 'https://ffmpeg.zeranoe.com/builds/{}/static/ffmpeg-latest-{}-static.zip'.format(os_bit, os_bit)
+		file_name = os.path.join(os.path.abspath(path),'ffmpeg-latest-{}-static.zip'.format(os_bit))
+		file_path = os.path.join(os.path.abspath(path), 'ffmpeg-latest-{}-static/bin/ffmpeg.exe'.format(os_bit))
 		base_path, _ = os.path.split(file_name) #extract file base path
 		#check if file already exists
 		if os.path.isfile(file_path):
@@ -201,24 +201,22 @@ def download_ffmpeg_binaries(path, os_windows = False):
 			if os.path.isfile(file_name): os.remove(file_name)
 			#download and write file to the given path
 			with open(file_name, "wb") as f:
-				logger.debug("No Custom FFmpeg path provided. Auto-Installing FFmpeg static binaries now. Please wait...")
+				logger.debug("No Custom FFmpeg path provided. Auto-Installing FFmpeg static binaries now. Please wait...") 
 				try:
 					response  = requests.get(file_url, stream=True, timeout=2)
 					response.raise_for_status()
 				except Exception as e:
 					logger.exception(str(e))
 					logger.warning("Downloading Failed. Trying GitHub mirror now!")
-					file_url = 'https://raw.githubusercontent.com/abhiTronix/ffmpeg-static-builds/master/windows/ffmpeg-latest-{}-static.zip'.format(windows_bit, windows_bit)
+					file_url = 'https://raw.githubusercontent.com/abhiTronix/ffmpeg-static-builds/master/windows/ffmpeg-latest-{}-static.zip'.format(os_bit, os_bit)
 					response  = requests.get(file_url, stream=True, timeout=2)
 					response.raise_for_status()
 				total_length = response.headers.get('content-length')
+				assert not(total_length is None), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
 				pbar = tqdm(total=int(total_length), unit="B", unit_scale=True)
-				if total_length is None: # no content length header
-					f.write(response.content)
-				else:
-					for data in response.iter_content(chunk_size=4096):
-						pbar.update(len(data))
-						f.write(data)
+				for data in response.iter_content(chunk_size=4096):
+					pbar.update(len(data))
+					f.write(data)
 				pbar.close()	
 			logger.debug("Extracting executables.")
 			with zipfile.ZipFile(file_name, "r") as zip_ref:
@@ -417,7 +415,7 @@ def reducer(frame = None, percentage = 0):
 	if frame is None: raise ValueError("[Helper:ERROR] :: Input frame cannot be NoneType!")
 
 	#check if valid reduction percentage is given
-	if not(percentage > 0 and percentage < 95): raise ValueError("[Helper:ERROR] :: Given frame-size reduction percentage is invalid, Kindly refer docs.")
+	if not(percentage > 0 and percentage < 90): raise ValueError("[Helper:ERROR] :: Given frame-size reduction percentage is invalid, Kindly refer docs.")
 
 	# grab the frame size
 	(height, width) = frame.shape[:2]
@@ -502,14 +500,12 @@ def download_webdata(path, files = [], logging = False):
 		response  = requests.get(file_url, stream=True, timeout=2)
 		response.raise_for_status()
 		total_length = response.headers.get('content-length')
+		assert not(total_length is None), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
 		pbar = tqdm(total=int(total_length), unit="B", unit_scale=True)
 		with open(file_name, "wb") as f:
-			if total_length is None: # no content length header
-				f.write(response.content)
-			else:
-				for data in response.iter_content(chunk_size=1024):
-					pbar.update(len(data))
-					f.write(data)
+			for data in response.iter_content(chunk_size=1024):
+				pbar.update(len(data))
+				f.write(data)
 		pbar.close()
 	if logging: logger.debug("Verifying downloaded data:")
 	if validate_webdata(path, files = files, logging = logging):

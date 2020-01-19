@@ -96,7 +96,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
     pip install --upgrade --user pip wheel;
     pip install --upgrade --user numpy;
-    pip install --user .;
+    pip install --upgrade --user .;
     pip install --user six;
     pip install --user codecov;
     pip install --upgrade --user pytest;
