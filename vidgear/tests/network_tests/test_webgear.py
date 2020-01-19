@@ -37,7 +37,7 @@ def return_testvideo_path():
 	"""
 	returns Test Video path
 	"""
-	path = '/home/abhishek/big_buck_bunny_720p_1mb.mp4'
+	path = '{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4'.format(tempfile.gettempdir())
 	return os.path.abspath(path)
 
 
