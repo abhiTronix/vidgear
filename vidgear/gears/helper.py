@@ -21,7 +21,7 @@ limitations under the License.
 # Contains all the support functions/modules required by Vidgear 
 
 # import the necessary packages
-import os, sys, requests
+import os, sys, requests, platform
 import numpy as np
 from pkg_resources import parse_version
 from colorlog import ColoredFormatter
@@ -181,7 +181,6 @@ def download_ffmpeg_binaries(path, os_windows = False, os_bit = ''):
 	"""
 	Download and Extract FFmpeg Static Binaries for windows(if not available)
 	"""
-	import platform
 	final_path = ''
 	if os_windows and os_bit:
 		#initialize variables

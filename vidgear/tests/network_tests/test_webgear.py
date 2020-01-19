@@ -19,7 +19,7 @@ limitations under the License.
 """
 
 import tempfile, asyncio
-import os, pytest, platform
+import os, pytest
 import logging as log
 
 from vidgear.gears import WebGear

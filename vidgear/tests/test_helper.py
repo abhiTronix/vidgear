@@ -93,7 +93,7 @@ def test_ffmpeg_binaries_download(paths, os_bit):
 			assert os.path.isfile(file_path), "FFmpeg download failed!"
 			shutil.rmtree(os.path.abspath(os.path.join(file_path ,"../..")))
 	except Exception as e:
-		if paths == 'wrong_test_path':
+		if paths == 'wrong_test_path' or os_bit == 'wrong_bit':
 			pass
 		else:
 			pytest.fail(str(e))

@@ -384,6 +384,9 @@ options = {"frame_size_reduction": 35, "frame_jpeg_quality": 90, "frame_jpeg_opt
 web = WebGear(source = "test.mp4", logging = True, **options)
 #run this app on Uvicorn server at address http//0.0.0.0:8000/
 uvicorn.run(web(), host='0.0.0.0', port=8000)
+
+#close app safely
+web.shutdown
 ```
 
 
