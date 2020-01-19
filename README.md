@@ -39,7 +39,7 @@ limitations under the License.
 
 &nbsp;
 
-VidGear is a powerful python Video Processing library built with multi-threaded [**Gears**](#gears) each with a unique set of trailblazing features. These APIs provides a easy-to-use, highly extensible, and multi-threaded wrapper around many underlying state-of-the-art libraries such as *[OpenCV ➶][opencv], [FFmpeg ➶][ffmpeg], [picamera ➶][picamera], [pafy ➶][pafy], [pyzmq ➶][pyzmq] and [python-mss ➶][mss]*
+VidGear is a powerful python Video Processing library built with multi-threaded [**Gears**](#gears) each with a unique set of trailblazing features. These APIs provides a easy-to-use, highly extensible, and multi-threaded wrapper around many underlying state-of-the-art libraries such as *[OpenCV ➶][opencv], [FFmpeg ➶][ffmpeg], [picamera ➶][picamera], [starlette ➶][starlette], [pafy ➶][pafy], [pyzmq ➶][pyzmq] and [python-mss ➶][mss]*
 
 &nbsp;
 
@@ -62,6 +62,7 @@ The following **functional block diagram** clearly depicts the functioning of Vi
   * [**ScreenGear**](#screengear)
   * [**WriteGear**](#writegear)
   * [**NetGear**](#netgear)
+  * [**WebGear**](#webgear)
 
 [**Installation**](#installation)
   * [**Prerequisites**](#prerequisites)
@@ -124,9 +125,11 @@ Each of these API is designed exclusively to handle/control different device-spe
 
   * [**WriteGear:**](#writegear) _Handles easy Lossless Video Encoding and Compression._
 
-**C. Network Gear:**
+**C. Network Gears:**
 
   * [**NetGear:**](#netgear) _Targets synchronous/asynchronous video frames transferring between interconnecting systems over the network._
+
+  * [**WebGear:**](#webgear) _A powerful ASGI Video Server that transfers live video frames to any web browser on the network._
 
 &nbsp;
 
@@ -171,19 +174,19 @@ from vidgear.gears import VideoGear
 import numpy as np
 import cv2
 
-stream_stab = VideoGear(source='test.mp4', stabilize = True).start() # To open any valid video stream with `stabilize` flag set to True.
-stream_org = VideoGear(source='test.mp4').start() # open same stream without stabilization for comparison
+# Open any valid video stream with stabilization (`stabilize = True`)
+stream_stab = VideoGear(source='test.mp4', stabilize = True).start()
+# Open the same stream without stabilization for comparison
+stream_org = VideoGear(source='test.mp4').start() 
 
-# infinite loop
+# loop
 while True:
   
+  # read stabilized frame
   frame_stab = stream_stab.read()
-  # read stabilized frames
 
-  # check if frame is None
-  if frame_stab is None:
-    #if True break the infinite loop
-    break
+  # check for NoneType
+  if frame_stab is None: break
   
   #read original frame
   frame_org = stream_org.read()
@@ -191,24 +194,23 @@ while True:
   #concatenate both frames
   output_frame = np.concatenate((frame_org, frame_stab), axis=1)
 
-  #put text
+  #Add text
   cv2.putText(output_frame, "Before", (10, output_frame.shape[0] - 10),cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,255,0), 2)
   cv2.putText(output_frame, "After", (output_frame.shape[1]//2+10, frame.shape[0] - 10),cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,255,0), 2)
   
-  cv2.imshow("Stabilized Frame", output_frame)
   # Show output window
+  cv2.imshow("Stabilized Frame", output_frame)
 
-  key = cv2.waitKey(1) & 0xFF
   # check for 'q' key-press
-  if key == ord("q"):
-    #if 'q' key-pressed break out
-    break
+  key = cv2.waitKey(1) & 0xFF
+  if key == ord("q"): break
 
-cv2.destroyAllWindows()
 # close output window
+cv2.destroyAllWindows()
+
+# safely close video streams.
 stream_org.stop()
 stream_stab.stop()
-# safely close video streams.
 ```
  
 
@@ -257,30 +259,27 @@ Code to generate the above result:
 from vidgear.gears import ScreenGear
 import cv2
 
+#initiate stream
 stream = ScreenGear().start()
 
-# infinite loop
+# loop
 while True:
   
-  frame = stream.read()
   # read frames
+  frame = stream.read()
 
-  # check if frame is None
-  if frame is None:
-    #if True break the infinite loop
-    break
+  # check for NoneType
+  if frame is None: break
   
-  cv2.imshow("Output Frame", frame)
   # Show output window
+  cv2.imshow("Output Frame", frame)
 
-  key = cv2.waitKey(1) & 0xFF
   # check for 'q' key-press
-  if key == ord("q"):
-    #if 'q' key-pressed break out
-    break
+  key = cv2.waitKey(1) & 0xFF
+  if key == ord("q"): break
 
-cv2.destroyAllWindows()
 # close output window
+cv2.destroyAllWindows()
 
 stream.stop()
 # safely close video stream.
@@ -352,13 +351,52 @@ Best of all, NetGear can robustly handle Multiple Servers devices at once, there
 
 [**>>> Usage Guide**][netgear-wiki]
 
+&nbsp;
+
+## WebGear
+
+> *WebGear is a powerful ASGI Video Streamer API, that transfers live video frames to any web browser on the network in real-time.*
+
+WebGear API provides a flexible abtract asyncio wrapper around [Starlette][starlette] ASGI library and easy access to its various components independently. Thereby implementing the ability to flexibly interact with the Starlette's ecosystem of shared middleware and mountable applications & seamless access to its various Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.
+
+WebGear can acts as robust _Live Video Streaming Server_ that can stream live video frames to any web browser on a network in real-time. It also auto-generates necessary data files for its default template and provides us the freedom to easily alter its [_performance parameters and routing tables_][advanced-webgear-wiki] according to our applications while handling errors robustly.
+
+
+In addition to this, WebGear provides a special internal wrapper around VideoGear API, which itself provides internal access to both CamGear and PiGear APIs thereby granting it exclusive power for streaming frames incoming from any device/source. Also on the plus side, since WebGear has access to all functions of VideoGear API, therefore it can stabilize video frames even while streaming live.
+
+**Below is a snapshot of a WebGear Video Server in action on Mozilla Firefox browser:**
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/web.jpg" alt="WebGear in action!" />
+</p>
+
+Code to generate the above result:
+
+```python
+#import libs
+import uvicorn
+from vidgear.gears import WebGear
+
+#various performance tweaks
+options = {"frame_size_reduction": 35, "frame_jpeg_quality": 90, "frame_jpeg_optimize": True}
+
+#initialize WebGear app  
+web = WebGear(source = "test.mp4", logging = True, **options)
+#run this app on Uvicorn server at address http//0.0.0.0:8000/
+uvicorn.run(web(), host='0.0.0.0', port=8000)
+```
+
+
+### WebGear API Guide:
+
+[**>>> Usage Guide**][webgear-wiki]
+
 
 &nbsp;
 
 
 # New Release SneekPeak : VidGear 0.1.6
 
-* ***:warning: Python 2.7 legacy support [dropped in v0.1.6][drop27] !***
 
 * **NetGear API:**
   * Added powerful ZMQ Authentication & Data Encryption features for NetGear API
@@ -393,20 +431,27 @@ Before installing VidGear, you must verify that the following dependencies are m
 * :warning: Must be using only [**supported Python legacies**](#supported-python-legacies) and also [**pip**][pip] already installed and configured.
 
 
-* **`OpenCV:`** VidGear must require OpenCV(3.0+) python enabled binaries to be installed on your machine for its core functions. For its installation, you can follow these online tutorials for [linux][OpenCV-linux] and [raspberry pi][OpenCV-pi], otherwise, install it via pip:
+* **`OpenCV:`** Required OpenCV(3.0+) python enabled binaries for core functions. For installation, you can either follow these online tutorials for [linux][OpenCV-linux] and [raspberry pi][OpenCV-pi], or, install it directly via pip:
 
     ```sh
       pip3 install -U opencv-python       #or install opencv-contrib-python similarly
     ```
 
-* **`FFmpeg:`** VidGear must require FFmpeg for its powerful video compression and encoding capabilities. :star2: Follow this [**FFmpeg wiki page**][ffmpeg-wiki] for its installation. :star2:
+* **`FFmpeg:`** Require FFmpeg for video compression and encoding. :star2: Follow this [**FFmpeg wiki page**][ffmpeg-wiki] for its installation. :star2:
 
-* **`picamera:`** Required if using Raspberry Pi Camera Modules(_such as OmniVision OV5647 Camera Module_) with your Raspberry Pi machine. You can easily install it via pip:
+* **`picamera:`** Required if you're using Raspberry Pi Camera Modules(_such as OmniVision OV5647 Camera Module_) with your Raspberry Pi machine. You can easily install it via pip:
 
     ```sh
       pip3 install picamera
     ``` 
-  Also, make sure to enable Raspberry Pi hardware-specific settings prior to using this library.
+  _:bulb: Also, make sure to [enable Raspberry Pi hardware-specific settings][picamera-setting] prior to using this library._
+
+* **`starlette:`** Require [`starlette`][starlette] for ASGI video streaming. You can easily install it via pip:
+
+    ```sh
+      pip3 install starlette 
+      pip3 install jinja2, aiofiles #additional dependencies
+    ``` 
 
 * **`mss:`** Required for using Screen Casting. Install it via pip:
 
@@ -419,12 +464,17 @@ Before installing VidGear, you must verify that the following dependencies are m
       pip3 install pyzmq
     ```
 
-* **`pafy:`** Required for direct YouTube Video streaming capabilities. Both [`pafy`][pafy] and latest only [`youtube-dl`][yt-dl](_as pafy's backend_) libraries must be installed via pip as follows:
+* **`pafy:`** Required for direct YouTube Video streaming capabilities. Both [`pafy`][pafy] and latest [`youtube-dl`][yt-dl](_as pafy's backend_) library can be installed via pip as follows:
 
     ```sh
       pip3 install pafy
       pip3 install -U youtube-dl
     ```
+* **Optional:** You'll also need to install an ASGI [`uvicorn`][uvicorn] Server to run WebGear examples, it can be done as follows: 
+    ```sh
+    pip3 install uvicorn
+    ```
+  But you can also use other ASGI server such as [`daphne`][daphne], or [`hypercorn`][hypercorn].
 
 &nbsp;
 
@@ -480,7 +530,6 @@ The full documentation for all VidGear classes and functions can be found in the
 
   * **Download few additional python libraries:**
     ```sh
-     pip3 install six
      pip3 install pytest
     ```
   
@@ -507,8 +556,7 @@ See [**contributing.md**](contributing.md).
 
 # Supported Python legacies
 
-  * **Python 3+ are only supported legacies for installing Vidgear v0.1.6 and above.**
-  * **:warning: Python 2.7 legacy support [dropped in v0.1.6][drop27].**
+  * **[Python 3.6+][drop35] are only supported legacies for installing Vidgear v0.1.7-dev and above.**
 
 &nbsp;
 
@@ -589,8 +637,11 @@ Internal URLs
 [screengear-wiki]:https://github.com/abhiTronix/vidgear/wiki/ScreenGear#screengear-api
 [writegear-wiki]:https://github.com/abhiTronix/vidgear/wiki/WriteGear#writegear-api
 [netgear-wiki]:https://github.com/abhiTronix/vidgear/wiki/NetGear#netgear-api
-[drop27]:https://github.com/abhiTronix/vidgear/issues/29
+[webgear-wiki]:https://github.com/abhiTronix/vidgear/wiki/WebGear#webgear-api
+[drop35]:https://github.com/abhiTronix/vidgear/issues/99
 [custom-command-wiki]:https://github.com/abhiTronix/vidgear/wiki/Custom-FFmpeg-Commands-in-WriteGear-API#custom-ffmpeg-commands-in-writegear-api
+[advanced-webgear-wiki]:https://github.com/abhiTronix/vidgear/wiki/Advanced-WebGear-API-Usage
+
 
 <!--
 External URLs
@@ -599,6 +650,10 @@ External URLs
 [opencv-writer]:https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5
 [OpenCV-linux]:https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/
 [OpenCV-pi]:https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/
+[starlette]:https://www.starlette.io/
+[uvicorn]:http://www.uvicorn.org/
+[daphne]:https://github.com/django/daphne/
+[hypercorn]:https://pgjones.gitlab.io/hypercorn/
 [prs]:http://makeapullrequest.com
 [opencv]:https://github.com/opencv/opencv
 [picamera]:https://github.com/waveform80/picamera
@@ -615,3 +670,4 @@ External URLs
 [zmq-pair]:https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pair.html
 [zmq-req-rep]:https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/client_server.html
 [zmq-pub-sub]:https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html
+[picamera-setting]:https://picamera.readthedocs.io/en/release-1.13/quickstart.html

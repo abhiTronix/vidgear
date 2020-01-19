@@ -29,7 +29,6 @@ from starlette.routing import Route
 from .videogear import VideoGear
 from .helper import reducer
 from .helper import logger_handler
-from .helper import check_python_version
 from .helper import generate_webdata
 from collections import deque
 
@@ -138,9 +137,6 @@ class WebGear:
 
 
 	def __init__(self, enablePiCamera = False, stabilize = False, source = 0, camera_num = 0, y_tube = False, backend = 0, colorspace = None, resolution = (640, 480), framerate = 25, logging = False, time_delay = 0, **options):
-		
-		#assert if python in-use is valid
-		assert check_python_version() >= (3,6), "[WebGear:ERROR] :: Invalid python version. WebGear API only supports python 3.6+ versions!"
 
 		#reformat dict
 		options = {k.lower().strip(): v for k,v in options.items()}

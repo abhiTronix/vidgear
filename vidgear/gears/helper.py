@@ -78,14 +78,6 @@ def check_CV_version():
 
 
 
-def check_python_version():
-	"""
-	returns python in-use version
-	"""
-	return sys.version_info[:2]
-
-
-
 def capPropId(property):
 	"""
 	Retrieves the OpenCV property Integer(Actual) value. 

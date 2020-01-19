@@ -53,7 +53,7 @@ setup(
 	description='Most Powerful multi-threaded Video Processing Python framework powerpacked with unique trailblazing features.',
 	license='Apache License 2.0',
 	author='Abhishek Thakur',
-	install_requires = ["pafy", "starlette[full]", "mss", "youtube-dl", "requests", "pyzmq", "colorlog", "tqdm"] 
+	install_requires = ["pafy", "starlette", "aiofiles", "jinja2", "mss", "youtube-dl", "requests", "pyzmq", "colorlog", "tqdm"] 
 	+ (["opencv-python"] if test_opencv() else []) 
 	+ (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
 	long_description=long_description,
@@ -76,13 +76,11 @@ setup(
     'Topic :: Scientific/Engineering',
 	'Intended Audience :: Developers',
 	'License :: OSI Approved :: Apache Software License',
-	'Programming Language :: Python :: 3',
-	'Programming Language :: Python :: 3.4',
-	'Programming Language :: Python :: 3.5',
+	"Programming Language :: Python :: 3",
 	'Programming Language :: Python :: 3.6',
 	'Programming Language :: Python :: 3.7',
 	'Programming Language :: Python :: 3.8'],
-	python_requires='>=3',
+	python_requires='>=3.6',
 	scripts=[],
 	project_urls={
 		'Bug Reports': 'https://github.com/abhiTronix/vidgear/issues',
