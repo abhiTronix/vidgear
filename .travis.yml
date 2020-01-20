@@ -53,8 +53,10 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
     brew install swig;
     brew install ffmpeg;
-    brew link ffmpeg;
     brew reinstall openssl;
+    export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig";
+    echo 'export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"' >> ~/.bash_profile;
+    source ~/.bash_profile;
     brew install unzip;
     curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci;
     source ./macports-ci install;
@@ -102,7 +104,6 @@ install:
     pip install --user codecov;
     pip install --upgrade --user pytest;
     pip install --upgrade --user pytest-cov;
-    pip install --upgrade --user certifi;
     pip install --upgrade --user youtube-dl;
     fi
 
