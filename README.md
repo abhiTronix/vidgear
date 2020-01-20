@@ -386,7 +386,7 @@ web = WebGear(source = "test.mp4", logging = True, **options)
 uvicorn.run(web(), host='0.0.0.0', port=8000)
 
 #close app safely
-web.shutdown
+web.shutdown()
 ```
 
 

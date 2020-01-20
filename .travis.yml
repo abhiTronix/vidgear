@@ -55,7 +55,6 @@ before_install:
     brew install ffmpeg;
     brew link ffmpeg;
     brew install youtube-dl;
-    brew link youtube-dl;
     brew install unzip;
     curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci;
     source ./macports-ci install;
@@ -65,10 +64,10 @@ before_install:
     sudo port select --set pip pip$PYTHON;
     python3 --version;
     pip --version;
-    export PATH=$PATH:$(python3 -c "import site; print(site.USER_BASE)")/bin;
     curl -LO https://raw.githubusercontent.com/python/cpython/master/Mac/BuildScript/resources/install_certificates.command;
-    chmod +x ./install_certificates.command;
+    chmod +x install_certificates.command;
     ./install_certificates.command;
+    export PATH=$PATH:$(python3 -c "import site; print(site.USER_BASE)")/bin;
     chmod +x scripts/bash/prepare_dataset.sh;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
