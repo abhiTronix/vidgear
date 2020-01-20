@@ -65,8 +65,8 @@ before_install:
     python3 --version;
     pip --version;
     pip install --upgrade --user certifi;
-    export SSL_CERT_FILE=$(python3 -m certifi)
-    export REQUESTS_CA_BUNDLE=$(python3 -m certifi)
+    export SSL_CERT_FILE=$(python3 -m certifi);
+    export REQUESTS_CA_BUNDLE=$(python3 -m certifi);
     export PATH=$PATH:$(python3 -c "import site; print(site.USER_BASE)")/bin;
     chmod +x scripts/bash/prepare_dataset.sh;
     fi
