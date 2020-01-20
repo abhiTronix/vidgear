@@ -54,18 +54,19 @@ before_install:
     brew install swig;
     brew install ffmpeg;
     brew reinstall openssl;
-    export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig";
-    echo 'export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"' >> ~/.bash_profile;
-    source ~/.bash_profile;
     brew install unzip;
     curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci;
     source ./macports-ci install;
     yes | sudo port install python$PYTHON;
+    open /Applications/Python\ 3.7/Install\ Certificates.command
     yes | sudo port install py$PYTHON-pip;
     sudo port select --set python3 python$PYTHON;
     sudo port select --set pip pip$PYTHON;
     python3 --version;
     pip --version;
+    pip install --upgrade --user certifi;
+    export SSL_CERT_FILE=$(python3 -m certifi)
+    export REQUESTS_CA_BUNDLE=$(python3 -m certifi)
     export PATH=$PATH:$(python3 -c "import site; print(site.USER_BASE)")/bin;
     chmod +x scripts/bash/prepare_dataset.sh;
     fi
