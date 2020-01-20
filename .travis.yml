@@ -64,11 +64,9 @@ before_install:
     python3 --version;
     pip --version;
     export PATH=$PATH:$(python3 -c "import site; print(site.USER_BASE)")/bin;
-    ### [SSL: CERTIFICATE_VERIFY_FAILED workaround] ###
     pip install --upgrade --user certifi;
     export SSL_CERT_FILE=$(python3 -m certifi);
     export REQUESTS_CA_BUNDLE=$(python3 -m certifi);
-    ###################################################
     chmod +x scripts/bash/prepare_dataset.sh;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
