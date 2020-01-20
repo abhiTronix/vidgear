@@ -246,7 +246,7 @@ def validate_ffmpeg(path, logging = False):
 		#log if test are failed
 		if logging:
 			logger.exception(str(e))
-			logger.debug('FFmpeg validity Test Failed!')
+			logger.warning('FFmpeg validity Test Failed!')
 		return False
 	return True
 

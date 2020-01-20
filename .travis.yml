@@ -66,6 +66,9 @@ before_install:
     python3 --version;
     pip --version;
     export PATH=$PATH:$(python3 -c "import site; print(site.USER_BASE)")/bin;
+    curl -LO https://raw.githubusercontent.com/python/cpython/master/Mac/BuildScript/resources/install_certificates.command;
+    chmod +x ./install_certificates.command;
+    source ./install_certificates.command;
     chmod +x scripts/bash/prepare_dataset.sh;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
