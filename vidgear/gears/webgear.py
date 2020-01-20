@@ -138,8 +138,8 @@ class WebGear:
 
 	def __init__(self, enablePiCamera = False, stabilize = False, source = 0, camera_num = 0, y_tube = False, backend = 0, colorspace = None, resolution = (640, 480), framerate = 25, logging = False, time_delay = 0, **options):
 
-		#reformat dict
-		options = {k.lower().strip(): v for k,v in options.items()}
+		#reformat dictionary
+		options = {k.strip(): v for k,v in options.items()}
 
 		#initialize global params
 		self.__jpeg_quality = 90 #90% quality
@@ -212,7 +212,7 @@ class WebGear:
 			else:
 				raise ValueError("[WebGear:ERROR] :: Invalid `custom_data_location` value!")
 		else:
-			# otherwise auto-encapsulation for class functions and variablesgenerate suitable path
+			# otherwise generate suitable path
 			from os.path import expanduser
 			data_path = generate_webdata(os.path.join(expanduser("~"),".vidgear"), overwrite_default = overwrite_default, logging = logging)
 		
@@ -230,7 +230,7 @@ class WebGear:
 		self.routes = [Route('/', endpoint=self.__homepage),
 						Route('/video', endpoint=self.__video),
 						Mount('/static', app=StaticFiles(directory='{}/static'.format(data_path)), name="static")]
-		#copy original routing tables for verfication
+		#copying original routing tables for further validation
 		self.__rt_org_copy = self.routes[:]
 		#keeps check if producer loop should be running
 		self.__isrunning = True
@@ -244,7 +244,7 @@ class WebGear:
 		#validate routing tables
 		assert not(self.routes is None), "Routing tables are NoneType!"
 		if not isinstance(self.routes, list) or not all(x in self.routes for x in self.__rt_org_copy): raise RuntimeError("Routing tables are not valid!")
-		#initate stream
+		#initiate stream
 		if self.__logging: logger.debug('Initiating Video Streaming.')
 		self.stream.start()
 		#return Starlette application
@@ -312,9 +312,9 @@ class WebGear:
 		"""
 		if not(self.stream is None):
 			if self.__logging: logger.debug('Closing Video Streaming.')
-			#stops frame producer
+			#stops producer
 			self.__isrunning = False
 			#stops VideoGear stream
 			self.stream.stop()
-			#prevent re-iteration
+			#prevent any re-iteration
 			self.stream = None

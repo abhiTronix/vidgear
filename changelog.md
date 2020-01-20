@@ -1,19 +1,61 @@
 # CHANGELOG
 
-## VidGear 0.1.7-alpha0
+## VidGear 0.1.7-dev
+
+### New Features:
+
+  * **WebGear Updates:**
+    * Added a robust Live Video Streaming Server API that can transfer live video frames to any web browser on the network in real-time.
+    * Implemented a flexible asyncio wrapper around Starlette ASGI application and can easily access its various components independently.
+    * Added seamless access to various Starlette Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.
+    * Created a special internal wrapper around VideoGear API and gave access to all its properties.
+    * Introduced new Auto-Generation Process to generate WebGear data files from the GitHub server and validate them automatically.
+    * Added exclusive dictionary attributes to tweak WebGear performance, Route Tables and other internal properties.
+    * Added new simple & elegant Bootstrap's Cover template, by @mdo for WebGear Server.
+    * Implemented a new reducer function to reduce the frame size on-the-go.
+    * Built `__main__.py` to directly run WebGear Server through the terminal.
+    
+  * **Logging Updates:**
+    * Added new `logging handler` helper function.
 
 ### Updates/Improvements:
   
   * Add flake8 tests to Travis CLI to find undefined names. (@cclauss )
+  * Removed PiGear from CLI completely  due to hardware emulation limitation.
+  * Defined and isolated each API & test loggers and defined them globally to avoid copies. 
+  * Limited Importing OpenCV API version check's scope to `helper.py` only.
+  * Added case for incorrect `color_space` value in ScreenGear API.
+  * Added `uvicorn` as an optional dependency to run WebGear as a live server.
+  * Removed conflicting old system-wide logging formatter.
+  * Added encapsulation for class functions and variables in WebGear API.
+  * Improved and added `shutdown` function for safely stopping frame producer threads.
+  * Replaced scratch progress bar with exclusive `TQDM` library's pbar.
+  * Added various CLI tests for WebGear API.
+  * Various Docs Updates.
+
+### Breaking Updates / Improvements / Changes
+
+  * :warning: Dropped support for Python 3.5 and below legacies.
+  * Replaced python 3.5 matrices with python 3.8 matrices in Windows & macOS environment.
 
 ### Fixes:
 
-  * `self` is an undefined name in helper.py context which will raise NameError. (@cclauss)
+  * `self` is an undefined name in `helper.py` context which will raise NameError. (@cclauss)
+  * Fixed incorrect logic for pulling frames in ScreenGear API.
+  * Added missing `camera_num` parameter to VideoGear.
+  * Added OpenSSL's [SSL: CERTIFICATE_VERIFY_FAILED] bug workaround for macOS envs.
+  * Removed videocapture benchmark tests for macOS envs.
+  * Removed trivial `__main__.py` from codecov
+  * Fixed various CLI tests for CamGear, NetGear & VideoGear API.
+
+
 
 ### Pull requests(PR) involved:
 
 #88
 #91
+#95
+#98
 
 :warning: PyPi Release does NOT contain Tests and Scripts!
 

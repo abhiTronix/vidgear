@@ -49,7 +49,7 @@ with open("README.md", "r") as fh:
 setup(
 	name='vidgear',
 	packages=['vidgear','vidgear.gears'],
-	version='0.1.7b0',
+	version='0.1.7-dev',
 	description='Most Powerful multi-threaded Video Processing Python framework powerpacked with unique trailblazing features.',
 	license='Apache License 2.0',
 	author='Abhishek Thakur',
