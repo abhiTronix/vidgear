@@ -107,8 +107,11 @@ def test_benchmark_videowriter():
 	"""
 	Benchmarking WriteGear's optimized Compression Mode(FFmpeg) against Non-Compression Mode(OpenCV)
 	"""
-	try:
-		WriteGear_non_compression_mode(return_testvideo_path())
-		WriteGear_compression_mode(return_testvideo_path())
-	except Exception as e:
-		raise RuntimeError(e)
+	if platform.system() != 'Darwin':
+		try:
+			WriteGear_non_compression_mode(return_testvideo_path())
+			WriteGear_compression_mode(return_testvideo_path())
+		except Exception as e:
+			raise RuntimeError(e)
+	else:
+		logger.debug("Skipping this test for macOS!")
