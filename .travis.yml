@@ -58,7 +58,6 @@ before_install:
     curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci;
     source ./macports-ci install;
     yes | sudo port install python$PYTHON;
-    open /Applications/Python\ 3.7/Install\ Certificates.command
     yes | sudo port install py$PYTHON-pip;
     sudo port select --set python3 python$PYTHON;
     sudo port select --set pip pip$PYTHON;
