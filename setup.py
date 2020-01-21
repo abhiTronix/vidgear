@@ -49,19 +49,24 @@ with open("README.md", "r") as fh:
 setup(
 	name='vidgear',
 	packages=['vidgear','vidgear.gears'],
-	version='0.1.7a0',
+	version='0.1.7-dev',
 	description='Most Powerful multi-threaded Video Processing Python framework powerpacked with unique trailblazing features.',
 	license='Apache License 2.0',
 	author='Abhishek Thakur',
-	install_requires = ["pafy", "mss", "youtube-dl", "requests", "pyzmq", "colorlog"] 
+	install_requires = ["pafy", "starlette", "aiofiles", "jinja2", "mss", "youtube-dl", "requests", "pyzmq", "colorlog", "tqdm"] 
 	+ (["opencv-python"] if test_opencv() else []) 
 	+ (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
 	long_description=long_description,
 	long_description_content_type="text/markdown",
 	author_email='abhi.una12@gmail.com',
 	url='https://github.com/abhiTronix/vidgear',
+	extras_require={
+        "full": [
+            "uvicorn",
+        ]
+    },
 	download_url='https://github.com/abhiTronix/vidgear/releases/download/vidgear-0.1.7a0/vidgear-0.1.7a0.tar.gz',
-	keywords=['OpenCV', 'multithreading', 'FFmpeg', 'picamera', 'mss', 'pyzmq', 'pafy', 'Video Processing', 'Video Stablization', 'Computer Vision', 'raspberrypi', 'youtube'],
+	keywords=['OpenCV', 'multithreading', 'FFmpeg', 'picamera', 'starlette', 'mss', 'pyzmq', 'pafy', 'Video Processing', 'Video Stablization', 'Computer Vision', 'Web Streaming', 'raspberrypi', 'youtube'],
 	classifiers=[
 	'Development Status :: 5 - Production/Stable',
 	'Operating System :: POSIX',
@@ -71,13 +76,11 @@ setup(
     'Topic :: Scientific/Engineering',
 	'Intended Audience :: Developers',
 	'License :: OSI Approved :: Apache Software License',
-	'Programming Language :: Python :: 3',
-	'Programming Language :: Python :: 3.4',
-	'Programming Language :: Python :: 3.5',
+	"Programming Language :: Python :: 3",
 	'Programming Language :: Python :: 3.6',
 	'Programming Language :: Python :: 3.7',
 	'Programming Language :: Python :: 3.8'],
-	python_requires='>=3',
+	python_requires='>=3.6',
 	scripts=[],
 	project_urls={
 		'Bug Reports': 'https://github.com/abhiTronix/vidgear/issues',

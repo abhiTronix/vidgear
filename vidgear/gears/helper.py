@@ -21,10 +21,11 @@ limitations under the License.
 # Contains all the support functions/modules required by Vidgear 
 
 # import the necessary packages
-import os, sys
+import os, sys, requests, platform
 import numpy as np
 from pkg_resources import parse_version
 from colorlog import ColoredFormatter
+from tqdm import tqdm
 import logging as log
 
 try:
@@ -33,7 +34,7 @@ try:
 	# check whether OpenCV Binaries are 3.x+
 	if parse_version(cv2.__version__) < parse_version('3'):
 		raise ImportError('[Vidgear:ERROR] :: Installed OpenCV API version(< 3.0) is not supported!')
-except ImportError as error:
+except ImportError:
 	raise ImportError('[Vidgear:ERROR] :: Failed to detect correct OpenCV executables, install it with `pip3 install opencv-python` command.')
 
 
@@ -65,9 +66,10 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
+
 def check_CV_version():
 	"""
-	returns current OpenCV binary version's first bit 
+	returns OpenCV binary in-use version first bit 
 	"""
 	if parse_version(cv2.__version__) >= parse_version('4'):
 		return 4
@@ -124,7 +126,8 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 					logger.debug('FFmpeg Windows Download Path: {}'.format(ffmpeg_download_path))
 
 				#download Binaries
-				_path = download_ffmpeg_binaries(path = ffmpeg_download_path, os_windows = is_windows)
+				os_bit = ('win64' if platform.machine().endswith('64') else 'win32') if is_windows else ''
+				_path = download_ffmpeg_binaries(path = ffmpeg_download_path, os_windows = is_windows, os_bit=os_bit)
 				#assign to local variable
 				final_path += _path
 
@@ -174,25 +177,22 @@ def get_valid_ffmpeg_path(custom_ffmpeg = '', is_windows = False, ffmpeg_downloa
 
 
 
-def download_ffmpeg_binaries(path, os_windows = False):
+def download_ffmpeg_binaries(path, os_windows = False, os_bit = ''):
 	"""
 	Download and Extract FFmpeg Static Binaries for windows(if not available)
 	"""
-	import platform
 	final_path = ''
-	if os_windows:
-		windows_bit = 'win64' if platform.machine().endswith('64') else 'win32' #checks current Windows Bit Mode
-		#inialize varibles
-		file_url = 'https://ffmpeg.zeranoe.com/builds/{}/static/ffmpeg-latest-{}-static.zip'.format(windows_bit, windows_bit)
-		file_name = os.path.join(os.path.abspath(path),'ffmpeg-latest-{}-static.zip'.format(windows_bit))
-		file_path = os.path.join(os.path.abspath(path), 'ffmpeg-latest-{}-static/bin/ffmpeg.exe'.format(windows_bit))
+	if os_windows and os_bit:
+		#initialize variables
+		file_url = 'https://ffmpeg.zeranoe.com/builds/{}/static/ffmpeg-latest-{}-static.zip'.format(os_bit, os_bit)
+		file_name = os.path.join(os.path.abspath(path),'ffmpeg-latest-{}-static.zip'.format(os_bit))
+		file_path = os.path.join(os.path.abspath(path), 'ffmpeg-latest-{}-static/bin/ffmpeg.exe'.format(os_bit))
 		base_path, _ = os.path.split(file_name) #extract file base path
 		#check if file already exists
 		if os.path.isfile(file_path):
 			final_path += file_path #skip download if does 
 		else:
 			#import libs
-			import requests
 			import zipfile
 			#check if given path has write access
 			assert os.access(path, os.W_OK), "[Helper:ERROR] :: Permission Denied, Cannot write binaries to directory = " + path
@@ -200,28 +200,23 @@ def download_ffmpeg_binaries(path, os_windows = False):
 			if os.path.isfile(file_name): os.remove(file_name)
 			#download and write file to the given path
 			with open(file_name, "wb") as f:
-				logger.debug("No Custom FFmpeg path provided. Auto-Installing FFmpeg static binaries now. Please wait...")
+				logger.debug("No Custom FFmpeg path provided. Auto-Installing FFmpeg static binaries now. Please wait...") 
 				try:
 					response  = requests.get(file_url, stream=True, timeout=2)
 					response.raise_for_status()
 				except Exception as e:
 					logger.exception(str(e))
 					logger.warning("Downloading Failed. Trying GitHub mirror now!")
-					file_url = 'https://raw.githubusercontent.com/abhiTronix/ffmpeg-static-builds/master/windows/ffmpeg-latest-{}-static.zip'.format(windows_bit, windows_bit)
+					file_url = 'https://raw.githubusercontent.com/abhiTronix/ffmpeg-static-builds/master/windows/ffmpeg-latest-{}-static.zip'.format(os_bit, os_bit)
 					response  = requests.get(file_url, stream=True, timeout=2)
 					response.raise_for_status()
 				total_length = response.headers.get('content-length')
-				if total_length is None: # no content length header
-					f.write(response.content)
-				else:
-					dl = 0
-					total_length = int(total_length)
-					for data in response.iter_content(chunk_size=4096):
-						dl += len(data)
-						f.write(data)
-						done = int(50 * dl / total_length)
-						sys.stdout.write("\r[{}{}]{}{}".format('=' * done, ' ' * (50-done), done * 2, '%') )    
-						sys.stdout.flush()
+				assert not(total_length is None), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
+				pbar = tqdm(total=int(total_length), unit="B", unit_scale=True)
+				for data in response.iter_content(chunk_size=4096):
+					pbar.update(len(data))
+					f.write(data)
+				pbar.close()	
 			logger.debug("Extracting executables.")
 			with zipfile.ZipFile(file_name, "r") as zip_ref:
 				zip_ref.extractall(base_path)
@@ -251,7 +246,7 @@ def validate_ffmpeg(path, logging = False):
 		#log if test are failed
 		if logging:
 			logger.exception(str(e))
-			logger.debug('FFmpeg validity Test Failed!')
+			logger.warning('FFmpeg validity Test Failed!')
 		return False
 	return True
 
@@ -407,3 +402,135 @@ def validate_auth_keys(path, extension):
 
 	#return results
 	return True if(len(keys_buffer) == 2) else False
+
+
+
+def reducer(frame = None, percentage = 0):
+
+	"""
+	Reduces frame size by given percentage
+	"""
+	#check if frame is valid
+	if frame is None: raise ValueError("[Helper:ERROR] :: Input frame cannot be NoneType!")
+
+	#check if valid reduction percentage is given
+	if not(percentage > 0 and percentage < 90): raise ValueError("[Helper:ERROR] :: Given frame-size reduction percentage is invalid, Kindly refer docs.")
+
+	# grab the frame size
+	(height, width) = frame.shape[:2]
+
+	# calculate the ratio of the width from percentage
+	reduction = ((100-percentage)/100)*width
+	ratio = (reduction / float(width))
+	#construct the dimensions
+	dimensions = (int(reduction), int(height * ratio))
+
+	# return the resized frame
+	return cv2.resize(frame, dimensions, interpolation=cv2.INTER_LANCZOS4)
+
+
+
+def generate_webdata(path, overwrite_default = False, logging = False):
+	""" 
+	handles WebGear API data-files validation and generation 
+	"""
+	#import necessary libs
+	import errno
+
+	#check if path corresponds to vidgear only
+	if (os.path.basename(path) != ".vidgear"): path = os.path.join(path,".vidgear")
+
+	#self-generate dirs
+	template_dir = os.path.join(path, 'templates') #generates HTML templates dir
+	static_dir = os.path.join(path, 'static') #generates static dir
+	#generate js & css static and favicon img subdirs
+	js_static_dir = os.path.join(static_dir, 'js')
+	css_static_dir = os.path.join(static_dir, 'css')
+	favicon_dir = os.path.join(static_dir, 'img')
+	try:
+		os.makedirs(static_dir)
+		os.makedirs(template_dir)
+		os.makedirs(js_static_dir)
+		os.makedirs(css_static_dir)
+		os.makedirs(favicon_dir)
+	except OSError as e:
+		if e.errno != errno.EEXIST: raise
+
+	#check if overwriting is enabled
+	if overwrite_default:
+		logger.critical("Overwriting existing WebGear data-files with default data-files from the server!")
+		download_webdata(template_dir, files = ['index.html', '404.html', '500.html', 'base.html'], logging = logging)
+		download_webdata(css_static_dir, files = ['bootstrap.min.css', 'cover.css'], logging = logging)
+		download_webdata(js_static_dir, files = ['bootstrap.min.js', 'jquery-3.4.1.slim.min.js', 'popper.min.js'], logging = logging)
+		download_webdata(favicon_dir, files = ['favicon-32x32.png'], logging = logging)
+	else:
+		#validate important data-files
+		if validate_webdata(template_dir, ['index.html', '404.html', '500.html']):
+			if logging: logger.debug("Found valid WebGear data-files successfully.")
+		else:
+			#otherwise download default files
+			logger.critical("Failed to detect critical WebGear data-files: index.html, 404.html & 500.html!")
+			logger.warning("Re-downloading default data-files from the server.")
+			download_webdata(template_dir, files = ['index.html', '404.html', '500.html', 'base.html'], logging = logging)
+			download_webdata(css_static_dir, files = ['bootstrap.min.css', 'cover.css'], logging = logging)
+			download_webdata(js_static_dir, files = ['bootstrap.min.js', 'jquery-3.4.1.slim.min.js', 'popper.min.js'], logging = logging)
+			download_webdata(favicon_dir, files = ['favicon-32x32.png'], logging = logging)
+	return path
+
+
+
+def download_webdata(path, files = [], logging = False):
+	"""
+	Downloads default data-files from the server
+	"""
+	basename = os.path.basename(path)
+	if logging: logger.debug("Downloading {} data-files at `{}`".format(basename, path))
+	for file in files:
+		#get filename
+		file_name = os.path.join(path, file)
+		#get URL
+		if basename == 'templates':
+			file_url = 'https://raw.githubusercontent.com/abhiTronix/webgear_data/master/{}/{}'.format(basename, file)
+		else:
+			file_url = 'https://raw.githubusercontent.com/abhiTronix/webgear_data/master/static/{}/{}'.format(basename, file)
+		#download and write file to the given path
+		if logging: logger.debug("Downloading {} data-file: {}.".format(basename, file))
+		
+		response  = requests.get(file_url, stream=True, timeout=2)
+		response.raise_for_status()
+		total_length = response.headers.get('content-length')
+		assert not(total_length is None), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
+		pbar = tqdm(total=int(total_length), unit="B", unit_scale=True)
+		with open(file_name, "wb") as f:
+			for data in response.iter_content(chunk_size=1024):
+				pbar.update(len(data))
+				f.write(data)
+		pbar.close()
+	if logging: logger.debug("Verifying downloaded data:")
+	if validate_webdata(path, files = files, logging = logging):
+		if logging: logger.info("Successful!")
+		return path
+	else:
+		raise RuntimeError("[Helper:ERROR] :: Failed to download required {} data-files at: {}, Check your Internet connectivity!".format(basename, path))
+
+
+
+def validate_webdata(path, files = [], logging = False):
+	"""
+	validates WebGear API data-files
+	"""
+	#check if valid path or directory empty
+	if not(os.path.exists(path)) or not(os.listdir(path)): return False
+
+	files_buffer = []
+	# loop over files
+	for file in os.listdir(path):
+		if file in files: 
+			files_buffer.append(file) #store them
+
+	#return results
+	if(len(files_buffer) < len(files)):
+		if logging: logger.warning('`{}` file(s) missing from data-files!'.format(' ,'.join(list(set(files_buffer) ^ set(files)))))
+		return False
+	else:
+		return True

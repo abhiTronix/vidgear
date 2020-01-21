@@ -77,7 +77,6 @@ def test_threaded_queue_mode():
 	Test for New Thread Queue Mode in CamGear Class
 	"""
 	actual_frame_num = return_total_frame_count()
-
 	stream_camgear = CamGear(source=return_testvideo_path(), logging=True).start() #start stream on CamGear
 	camgear_frames_num = 0
 	while True:
@@ -90,7 +89,6 @@ def test_threaded_queue_mode():
 
 		camgear_frames_num += 1
 	stream_camgear.stop()
-
 	assert camgear_frames_num == actual_frame_num
 
 
@@ -100,37 +98,23 @@ def test_youtube_playback():
 	"""
 	Testing Youtube Video Playback capabilities of VidGear
 	"""
-	if not platform.system() in ['Windows', 'Darwin']:
-		Url = 'https://youtu.be/YqeW9_5kURI'
-		result = True
-		errored = False #keep watch if youtube streaming not successful
-		try:
-			true_video_param = return_youtubevideo_params(Url)
-			options = {'THREADED_QUEUE_MODE':False}
-			stream = CamGear(source=Url, y_tube = True, logging=True, **options).start() # YouTube Video URL as input
-			height = 0
-			width = 0
-			fps = 0
-			while True:
-				frame = stream.read()
-				if frame is None:
-					break
-				if height == 0 or width == 0:
-					fps = stream.framerate
-					height,width = frame.shape[:2]
-			logger.debug('WIDTH: {} HEIGHT: {} FPS: {}'.format(true_video_param[0],true_video_param[1],true_video_param[2]))
-			logger.debug('WIDTH: {} HEIGHT: {} FPS: {}'.format(width,height,fps))
-		except Exception as error:
-			logger.exception(error)
-			errored = True
-
-		if not errored:
-			assert true_video_param[0] == width and true_video_param[1] == height and true_video_param[2] == fps
-		else:
-			logger.debug('YouTube playback Test is skipped due to above error!')
-
-	else:
-		logger.debug('YouTube playback Test is skipped due to bug with opencv-python library builds on windows and macOS!')
+	Url = 'https://youtu.be/YqeW9_5kURI'
+	height = 0
+	width = 0
+	fps = 0
+	true_video_param = return_youtubevideo_params(Url)
+	stream = CamGear(source=Url, y_tube = True, logging=True).start() # YouTube Video URL as input
+	while True:
+		frame = stream.read()
+		if frame is None: break
+		if height == 0 or width == 0:
+			fps = stream.framerate
+			height,width = frame.shape[:2]
+			break
+	stream.stop()
+	logger.debug('WIDTH: {} HEIGHT: {} FPS: {}'.format(true_video_param[0],true_video_param[1],true_video_param[2]))
+	logger.debug('WIDTH: {} HEIGHT: {} FPS: {}'.format(width,height,fps))
+	assert true_video_param[0] == width and true_video_param[1] == height and true_video_param[2] == fps
 
 
 
@@ -149,8 +133,7 @@ def test_network_playback():
 
 	while (index < len(Publictest_rstp_urls)):
 		try:
-			options = {'THREADED_QUEUE_MODE':False}
-			output_stream = CamGear(source = Publictest_rstp_urls[index], logging = True, **options).start()
+			output_stream = CamGear(source = Publictest_rstp_urls[index], logging = True).start()
 			i = 0
 			Output_data = []
 			while i<10:
@@ -170,4 +153,4 @@ def test_network_playback():
 			else:
 				pytest.fail(str(e))
 
-	if (index == len(Publictest_rstp_urls)): pytest.fail("Failed to play any URL!")
+	if (index == len(Publictest_rstp_urls)): pytest.fail("Test failed to play any URL!")

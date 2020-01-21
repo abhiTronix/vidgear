@@ -48,7 +48,7 @@ class PiGear:
 	
 	:param (tuple) resolution: sets the resolution (width,height). Its default value is (640,480).
 
-	:param (integer) framerate: sets the framerate. Its default value is 25.
+	:param (integer) framerate: sets the framerate. Its default value is 30.
 
 	:param (string) colorspace: set colorspace of the video stream. Its default value is None.
 

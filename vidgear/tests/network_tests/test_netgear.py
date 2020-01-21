@@ -28,7 +28,6 @@ import random
 import tempfile
 import os
 import numpy as np
-import traceback
 from zmq.error import ZMQError
 import logging as log
 
@@ -67,7 +66,7 @@ def test_playback():
 		client.close()
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			logger.debug(traceback.print_tb(e.__traceback__))
+			logger.exception(str(e))
 		else:
 			pytest.fail(str(e))
 
@@ -106,7 +105,7 @@ def test_patterns(pattern):
 		assert np.array_equal(frame_server, frame_client)
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			logger.error(traceback.print_tb(e.__traceback__))
+			logger.exception(str(e))
 		else:
 			pytest.fail(str(e))
 
@@ -122,7 +121,7 @@ def test_compression():
 		options = {'compression_param':cv2.IMREAD_COLOR} #read color image 
 		client = NetGear(pattern = 1, receive_mode = True, logging = True, **options)
 		#define server parameters
-		options = {'compression_format': '.jpg', 'compression_param':[cv2.IMWRITE_JPEG_OPTIMIZE, 20]} #JPEG compression
+		options = {'compression_format': '.jpg', 'compression_param':[cv2.IMWRITE_JPEG_QUALITY, 20]} #JPEG compression
 		server = NetGear(pattern = 1, logging = True, **options)
 		#send over network
 		while True:
@@ -136,7 +135,7 @@ def test_compression():
 		client.close()
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			logger.error(traceback.print_tb(e.__traceback__))
+			logger.exception(str(e))
 		else:
 			pytest.fail(str(e))
  
@@ -180,7 +179,7 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
 		assert np.array_equal(frame_server, frame_client)
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			logger.error(traceback.print_tb(e.__traceback__))
+			logger.exception(str(e))
 		else:
 			pytest.fail(str(e))
 
@@ -228,7 +227,7 @@ def test_bidirectional_mode(target_data):
 		assert client_data == server_data
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			logger.error(traceback.print_tb(e.__traceback__))
+			logger.exception(str(e))
 		else:
 			pytest.fail(str(e))
 
@@ -291,6 +290,6 @@ def test_multiserver_mode():
 
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
-			logger.error(traceback.print_tb(e.__traceback__))
+			logger.exception(str(e))
 		else:
 			pytest.fail(str(e)) 

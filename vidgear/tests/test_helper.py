@@ -18,19 +18,25 @@ limitations under the License.
 ===============================================
 """
 
-import os, pytest, tempfile, shutil, platform
+import cv2, os, pytest, tempfile, shutil, platform
 from os.path import expanduser
 import logging as log
+import numpy as np
 
 from vidgear.gears.helper import download_ffmpeg_binaries
 from vidgear.gears.helper import validate_ffmpeg
 from vidgear.gears.helper import get_valid_ffmpeg_path
 from vidgear.gears.helper import generate_auth_certificates
 from vidgear.gears.helper import logger_handler
+from vidgear.gears.helper import reducer
+from vidgear.gears.helper import generate_webdata
 
 logger = log.getLogger('Test_helper')
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+
+#define machine os
+_windows  = True if os.name == 'nt' else False
 
 
 def return_static_ffmpeg():
@@ -45,6 +51,14 @@ def return_static_ffmpeg():
 	else:
 		path += os.path.join(tempfile.gettempdir(),'Downloads/FFmpeg_static/ffmpeg/ffmpeg')
 	return os.path.abspath(path)
+
+
+
+def getframe():
+	"""
+	returns empty numpy frame/array of dimensions: (500,800,3)
+	"""
+	return np.zeros([500,800,3],dtype=np.uint8)
 
 
 
@@ -63,21 +77,23 @@ def test_ffmpeg_static_installation():
 
 
 
-@pytest.mark.parametrize('paths', ['..','wrong_test_path', tempfile.gettempdir()])
-def test_ffmpeg_binaries_download(paths):
+test_data = [('wrong_test_path', ('win64' if platform.machine().endswith('64') else 'win32') if _windows else ''),
+(tempfile.gettempdir(), ('win64' if platform.machine().endswith('64') else 'win32') if _windows else ''), 
+(tempfile.gettempdir(), 'wrong_bit')]
+
+@pytest.mark.parametrize('paths, os_bit', test_data)
+def test_ffmpeg_binaries_download(paths, os_bit):
 	"""
 	Testing Static FFmpeg auto-download on Windows OS
 	"""
-	_windows  = True if os.name == 'nt' else False
 	file_path = ''
 	try: 
-		file_path = download_ffmpeg_binaries(path = paths, os_windows = _windows)
+		file_path = download_ffmpeg_binaries(path = paths, os_windows = _windows, os_bit=os_bit)
 		if file_path:
 			assert os.path.isfile(file_path), "FFmpeg download failed!"
-			if paths != return_static_ffmpeg():
-				shutil.rmtree(os.path.abspath(os.path.join(file_path ,"../..")))
+			shutil.rmtree(os.path.abspath(os.path.join(file_path ,"../..")))
 	except Exception as e:
-		if paths == 'wrong_test_path':
+		if paths == 'wrong_test_path' or os_bit == 'wrong_bit':
 			pass
 		else:
 			pytest.fail(str(e))
@@ -113,7 +129,6 @@ def test_get_valid_ffmpeg_path(paths, ffmpeg_download_paths, results):
 	"""
 	Testing FFmpeg excutables validation and correction:
 	"""
-	_windows  = True if os.name == 'nt' else False
 	try:
 		output = get_valid_ffmpeg_path(custom_ffmpeg = paths, is_windows = _windows, ffmpeg_download_path = ffmpeg_download_paths, logging = True)
 		if not (paths == 'wrong_test_path' or ffmpeg_download_paths == 'wrong_test_path'):
@@ -140,10 +155,45 @@ def test_generate_auth_certificates(paths, overwrite_cert, results):
 	try:
 		if overwrite_cert: logger.warning('Overwriting ZMQ Authentication certificates over previous ones!')
 		output = generate_auth_certificates(paths, overwrite = overwrite_cert)
-		if paths != 'wrong_test_path':
-			assert bool(output) == results
+		assert bool(output) == results
 	except Exception as e:
-		if paths == 'wrong_test_path':
+		pytest.fail(str(e))
+
+
+
+@pytest.mark.parametrize('frame , percentage, result',[(getframe(),85,True), (None,80, False), (getframe(),95,False)])
+def test_reducer(frame, percentage, result):
+	"""
+	Testing frame size reducer function 
+	"""
+	if not(frame is None): 
+		org_size = frame.shape[:2]
+	try:
+		reduced_frame = reducer(frame, percentage)
+		assert not(reduced_frame is None)
+		reduced_frame_size = reduced_frame.shape[:2]
+		assert 100*reduced_frame_size[0]//(100-percentage) == org_size[0] #cross-check width 
+		assert 100*reduced_frame_size[1]//(100-percentage) == org_size[1] #cross-check height
+	except Exception as e:
+		if isinstance(e, ValueError) and not(result):
 			pass
 		else:
 			pytest.fail(str(e))
+
+
+
+test_data = [(expanduser("~"), False, True), 
+(os.path.join(expanduser("~"),".vidgear"), True, True),
+('test_folder', False, True), 
+(tempfile.gettempdir(), False, True)]
+
+@pytest.mark.parametrize('paths, overwrite_default, results', test_data)
+def test_generate_webdata(paths, overwrite_default, results):
+	"""
+	Testing auto-Generation and auto-validation of WebGear data files 
+	"""
+	try:
+		output = generate_webdata(paths, overwrite_default = overwrite_default, logging = True)
+		assert bool(output) == results
+	except Exception as e:
+		pytest.fail(str(e))

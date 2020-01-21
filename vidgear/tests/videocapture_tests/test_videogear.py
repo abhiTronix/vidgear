@@ -53,8 +53,7 @@ def test_CamGear_import():
 	and returns a valid framerate
 	"""
 	try:
-		options = {'THREADED_QUEUE_MODE':False}
-		output_stream = VideoGear(source = return_testvideo_path(), logging=True, **options).start()
+		output_stream = VideoGear(source = return_testvideo_path(), logging=True).start()
 		framerate = output_stream.framerate
 		output_stream.stop()
 		logger.debug('Input Framerate: {}'.format(framerate))

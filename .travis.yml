@@ -17,11 +17,6 @@ language: python
 matrix:
     include:
         - os: osx
-          python: "3.5"
-          language: generic
-          osx_image: xcode11
-          env: PYTHON=35
-        - os: osx
           python: "3.6"
           language: generic
           osx_image: xcode11
@@ -31,6 +26,11 @@ matrix:
           language: generic
           osx_image: xcode11
           env: PYTHON=37
+        - os: osx
+          python: "3.8"
+          language: generic
+          osx_image: xcode11
+          env: PYTHON=38
         - os: linux
           dist: bionic
           python: "3.6"
@@ -53,7 +53,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
     brew install swig;
     brew install ffmpeg;
-    brew link ffmpeg;
+    brew reinstall openssl;
     brew install unzip;
     curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci;
     source ./macports-ci install;
@@ -64,6 +64,9 @@ before_install:
     python3 --version;
     pip --version;
     export PATH=$PATH:$(python3 -c "import site; print(site.USER_BASE)")/bin;
+    pip install --upgrade --user certifi;
+    export SSL_CERT_FILE=$(python3 -m certifi);
+    export REQUESTS_CA_BUNDLE=$(python3 -m certifi);
     chmod +x scripts/bash/prepare_dataset.sh;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
@@ -96,7 +99,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
     pip install --upgrade --user pip wheel;
     pip install --upgrade --user numpy;
-    pip install --user .;
+    pip install --upgrade --user .;
     pip install --user six;
     pip install --user codecov;
     pip install --upgrade --user pytest;

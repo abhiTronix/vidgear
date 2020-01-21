@@ -278,10 +278,10 @@ class Stabilizer:
 
 		#crop and zoom
 		if self.__crop_n_zoom:
-			#crop
+			#crop stabilized frame
 			frame_cropped = frame_stabilized[self.__crop_n_zoom:-self.__crop_n_zoom, self.__crop_n_zoom:-self.__crop_n_zoom]
-			#zoom
-			interpolation = cv2.INTER_CUBIC if (check_CV_version() == 3) else cv2.INTER_LINEAR_EXACT
+			#zoom stabilized frame
+			interpolation = cv2.INTER_CUBIC if (check_CV_version() < 4) else cv2.INTER_LINEAR_EXACT
 			frame_stabilized = cv2.resize(frame_cropped, self.__frame_size[::-1], interpolation = interpolation)
 
 		#finally return stabilized frame
