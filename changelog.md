@@ -52,10 +52,10 @@
 
 ### Pull requests(PR) involved:
 
-#88
-#91
-#95
-#98
+* #88
+* #91
+* #95
+* #98
 
 :warning: PyPi Release does NOT contain Tests and Scripts!
 
