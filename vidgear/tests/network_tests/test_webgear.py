@@ -49,17 +49,16 @@ def hello_webpage(request):
 
 
 
-test_data = [ (return_testvideo_path(), False, True, None, 0), 
-('https://youtu.be/YqeW9_5kURI', True, False, None, 0),
-(return_testvideo_path(), False, False, 'COLOR_BGR2HSV', 10)]
+test_data = [ (return_testvideo_path(), True, None, 0), 
+(return_testvideo_path(), False, 'COLOR_BGR2HSV', 10)]
 
-@pytest.mark.parametrize('source, y_tube, stabilize, colorspace, time_delay', test_data)
-def test_webgear_class(source, y_tube, stabilize, colorspace, time_delay):
+@pytest.mark.parametrize('source, stabilize, colorspace, time_delay', test_data)
+def test_webgear_class(source, stabilize, colorspace, time_delay):
 	"""
 	Test for various WebGear API parameters
 	"""
 	try:
-		web = WebGear(source = source, y_tube = y_tube, stabilize = stabilize, colorspace = colorspace, time_delay = time_delay, logging = True)
+		web = WebGear(source = source, stabilize = stabilize, colorspace = colorspace, time_delay = time_delay, logging = True)
 		client = TestClient(web(),raise_server_exceptions=True)
 		response = client.get('/')
 		assert response.status_code == 200
