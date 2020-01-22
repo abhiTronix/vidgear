@@ -625,8 +625,8 @@ class NetGear:
 		# check whether `receive mode` is activated
 		if not(self.__receive_mode):
 			#raise value error and exit
-			raise ValueError('[NetGear:ERROR] :: `recv()` function cannot be used while receive_mode is disabled. Kindly refer vidgear docs!')
 			self.__terminate = True
+			raise ValueError('[NetGear:ERROR] :: `recv()` function cannot be used while receive_mode is disabled. Kindly refer vidgear docs!')
 		
 		#handle bi-directional return data
 		if (self.__bi_mode and not(return_data is None)): self.__bi_data = return_data
@@ -653,8 +653,8 @@ class NetGear:
 		# check whether `receive_mode` is disabled
 		if self.__receive_mode:
 			#raise value error and exit
-			raise ValueError('[NetGear:ERROR] :: `send()` function cannot be used while receive_mode is enabled. Kindly refer vidgear docs!')
 			self.__terminate = True
+			raise ValueError('[NetGear:ERROR] :: `send()` function cannot be used while receive_mode is enabled. Kindly refer vidgear docs!')
 
 		# define exit_flag and assign value
 		exit_flag = True if (frame is None or self.__terminate) else False
