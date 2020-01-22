@@ -43,6 +43,7 @@ def return_testvideo_path():
 	return os.path.abspath(path)
 
 
+
 @pytest.mark.parametrize('address, port', [('www.idk.com', '5555'), (None, '5555')])
 def test_playback(address, port):
 	"""
@@ -108,6 +109,7 @@ def test_patterns(pattern):
 			logger.exception(str(e))
 		else:
 			pytest.fail(str(e))
+
 
 
 def test_compression():
@@ -179,6 +181,8 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
 		assert np.array_equal(frame_server, frame_client)
 	except Exception as e:
 		if isinstance(e, (ZMQError, ValueError)):
+			logger.exception(str(e))
+		elif isinstance(e, AssertionError) and custom_cert_location == "INVALID_DIRECTORY":
 			logger.exception(str(e))
 		else:
 			pytest.fail(str(e))
