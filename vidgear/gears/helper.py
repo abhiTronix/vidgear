@@ -86,7 +86,7 @@ def mkdir_safe(dir):
 		os.makedirs(dir)
 		logger.debug("Created directory at `{}`".format(dir))
 	except OSError as e:
-		logger.error("Failed to create directory at `{}`".format(dir))
+		logger.debug("Directory already exists at `{}`".format(dir))
 		if e.errno != errno.EEXIST: raise
 
 

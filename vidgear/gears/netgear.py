@@ -203,12 +203,9 @@ class NetGear:
 				self.__secure_mode = value
 			elif key == 'custom_cert_location' and isinstance(value,str):
 				# custom auth certificates path
-				try:
-					assert os.access(value, os.W_OK), "[NetGear:ERROR] :: Permission Denied!, cannot write ZMQ authentication certificates to '{}' directory!".format(value)
-					assert os.path.isdir(os.path.abspath(value)), "[NetGear:ERROR] :: `custom_cert_location` value must be the path to a valid directory!"
-					custom_cert_location = os.path.abspath(value)
-				except Exception as e:
-					logger.exception(str(e))
+				assert os.access(value, os.W_OK), "[NetGear:ERROR] :: Permission Denied!, cannot write ZMQ authentication certificates to '{}' directory!".format(value)
+				assert os.path.isdir(os.path.abspath(value)), "[NetGear:ERROR] :: `custom_cert_location` value must be the path to a valid directory!"
+				custom_cert_location = os.path.abspath(value)
 			elif key == 'overwrite_cert' and isinstance(value,bool):
 				# enable/disable auth certificate overwriting
 				overwrite_cert = value
