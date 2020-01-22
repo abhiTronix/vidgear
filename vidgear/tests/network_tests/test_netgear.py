@@ -43,7 +43,7 @@ def return_testvideo_path():
 	return os.path.abspath(path)
 
 
-@pytest.mark.parametrize('address, port', [('www.idk.com', '80'), (None, '5555')])
+@pytest.mark.parametrize('address, port', [('www.idk.com', '5555'), (None, '5555')])
 def test_playback(address, port):
 	"""
 	Tests NetGear Bare-minimum network playback capabilities
@@ -88,19 +88,15 @@ def test_patterns(pattern):
 		frame_server = None
 		#select random input frame from stream
 		i = 0
-		while (i < random.randint(10, 100)):
+		random_cutoff = random.randint(10, 100)
+		while (i < random_cutoff):
 			frame_server = stream.read()
 			i+=1
 		#check if input frame is valid
 		assert not(frame_server is None)
 		#send frame over network
-		if pattern == 3:
-			#test wrong usage
-			client.send(frame_server)
-			frame_client = server.recv()
-		else:
-			server.send(frame_server)
-			frame_client = client.recv()
+		server.send(frame_server)
+		frame_client = client.recv()
 		#clean resources
 		stream.stop()
 		server.close()
