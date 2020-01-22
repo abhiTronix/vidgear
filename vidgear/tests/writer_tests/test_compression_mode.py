@@ -148,7 +148,7 @@ def test_output_dimensions():
 	stream = cv2.VideoCapture(return_testvideo_path())
 	output_params = {}
 	if platform.system() == 'Windows':
-		output_params = {"-output_dimensions":dimensions, "ffmpeg_download_path":tempfile.gettempdir()}
+		output_params = {"-output_dimensions":dimensions, "-ffmpeg_download_path":tempfile.gettempdir()}
 	else:
 		output_params = {"-output_dimensions":dimensions}
 	writer = WriteGear(output_filename = 'Output_tod.mp4',  custom_ffmpeg = return_static_ffmpeg(), logging = True, **output_params) #Define writer

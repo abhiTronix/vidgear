@@ -30,7 +30,7 @@ def test_assertfailedwrite():
 	"""
 	np.random.seed(0)
 	# generate random data for 10 frames
-	random_data = np.random.random(size=(10, 1080, 1920, 3)) * 255
+	random_data = np.random.random(size=(10, 480, 640, 3)) * 255
 	input_data = random_data.astype(np.uint8)
 
 	with pytest.raises(AssertionError):
@@ -47,7 +47,7 @@ def test_failedextension():
 	"""
 	np.random.seed(0)
 	# generate random data for 10 frames
-	random_data = np.random.random(size=(10, 1080, 1920, 3)) * 255
+	random_data = np.random.random(size=(10, 480, 640, 3)) * 255
 	input_data = random_data.astype(np.uint8)
 	
 	# 'garbage' extension does not exist
