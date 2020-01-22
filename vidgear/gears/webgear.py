@@ -186,7 +186,7 @@ class WebGear:
 				value = options["custom_data_location"]
 				if isinstance(value,str):
 					assert os.access(value, os.W_OK), "[WebGear:ERROR] :: Permission Denied!, cannot write WebGear data-files to '{}' directory!".format(value)
-					assert if os.path.isdir(os.path.abspath(value)), "[WebGear:ERROR] :: `custom_data_location` value must be the path to a directory and not to a file!"
+					assert os.path.isdir(os.path.abspath(value)), "[WebGear:ERROR] :: `custom_data_location` value must be the path to a directory and not to a file!"
 					custom_data_location = os.path.abspath(value)
 				else:
 					logger.warning("Skipped invalid `custom_data_location` value!")
