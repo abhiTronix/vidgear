@@ -21,7 +21,7 @@ limitations under the License.
 # Contains all the support functions/modules required by Vidgear 
 
 # import the necessary packages
-import os, sys, requests, platform
+import os, sys, requests, platform, errno
 import numpy as np
 from pkg_resources import parse_version
 from colorlog import ColoredFormatter
@@ -304,7 +304,7 @@ def generate_auth_certificates(path, overwrite = False):
 	"""
 
 	#import necessary libs
-	import shutil, errno
+	import shutil
 	import zmq.auth
 
 	#check if path corresponds to vidgear only
@@ -437,8 +437,6 @@ def generate_webdata(path, overwrite_default = False, logging = False):
 	""" 
 	handles WebGear API data-files validation and generation 
 	"""
-	#import necessary libs
-	import errno
 
 	#check if path corresponds to vidgear only
 	if (os.path.basename(path) != ".vidgear"): path = os.path.join(path,".vidgear")

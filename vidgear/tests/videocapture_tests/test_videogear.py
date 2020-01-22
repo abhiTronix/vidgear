@@ -59,7 +59,7 @@ def test_video_stablization(source, options):
 	try:
 		#open stream
 		stab_stream = VideoGear(source = source, stabilize = True, logging = True, **options).start()
-		framerate = output_stream.framerate
+		framerate = stab_stream.framerate
 		#playback
 		while True:
 			frame = stab_stream.read() #read stablized frames

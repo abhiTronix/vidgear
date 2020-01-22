@@ -89,7 +89,10 @@ def test_webgear_options(options):
 		assert response_video.status_code == 200
 		web.shutdown()
 	except Exception as e:
-		pytest.fail(str(e))
+		if isinstance(e, AssertionError):
+			logger.exception(str(e))
+		else:
+			pytest.fail(str(e))
 
 
 
