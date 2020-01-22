@@ -71,8 +71,8 @@ def test_webgear_class(source, y_tube, stabilize, colorspace, time_delay):
 
 
 
-test_data = [{"frame_size_reduction": 47, "frame_jpeg_quality": 88, "frame_jpeg_optimize": True, "frame_jpeg_progressive": False},
-{"overwrite_default_files": True},
+test_data = [{"frame_size_reduction": 47, "frame_jpeg_quality": 88, "frame_jpeg_optimize": True, "frame_jpeg_progressive": False,  "overwrite_default_files": "invalid_value", "custom_data_location": True},
+{"frame_size_reduction": "invalid_value", "frame_jpeg_quality": "invalid_value", "frame_jpeg_optimize": "invalid_value", "frame_jpeg_progressive": "invalid_value", "overwrite_default_files": True, "custom_data_location": "im_wrong"},
 {"custom_data_location": tempfile.gettempdir()}]
 
 @pytest.mark.parametrize('options', test_data)

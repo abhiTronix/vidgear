@@ -59,11 +59,11 @@ def return_total_frame_count():
 	simply counts the total frames in a given video
 	"""
 	stream = cv2.VideoCapture(return_testvideo_path())
-	num_cv=0
+	num_cv = 0
 	while True:
 		(grabbed, frame) = stream.read()
 		if not grabbed:
-			logger.debug(num_cv)
+			logger.debug('Total frames: {}'.format(num_cv))
 			break
 		num_cv += 1
 	stream.release()
@@ -71,50 +71,72 @@ def return_total_frame_count():
 
 
 
-@pytest.mark.xfail(raises=AssertionError)
-def test_threaded_queue_mode():
+test_data = [ (return_testvideo_path(), {"CAP_PROP_FRAME_WIDTH ":320, "CAP_PROP_FRAME_HEIGHT":240}), 
+			(return_testvideo_path(), {"im_wrong":True}), 
+			('im_not_a_source.mp4',{})]
+
+@pytest.mark.parametrize('source, options', test_data)
+def test_threaded_queue_mode(source, options):
 	"""
-	Test for New Thread Queue Mode in CamGear Class
+	Test for the Thread Queue Mode in CamGear API
 	"""
-	actual_frame_num = return_total_frame_count()
-	stream_camgear = CamGear(source=return_testvideo_path(), logging=True).start() #start stream on CamGear
-	camgear_frames_num = 0
-	while True:
-		frame = stream_camgear.read()
-		if frame is None:
-			logger.debug(camgear_frames_num)
-			break
-		
-		time.sleep(0.2) #dummy computational task
+	try:
+		if platform.system() == 'Linux':
+			stream_camgear = CamGear(source=source, backend = cv2.CAP_FFMPEG, logging = True, **options).start()
+		else:
+			stream_camgear = CamGear(source=source, logging = True, **options).start()
+		camgear_frames_num = 0
+		while True:
+			frame = stream_camgear.read()
+			if frame is None:
+				logger.debug('VidGear Total frames: {}'.format(camgear_frames_num))
+				break
+			
+			time.sleep(0.2) #dummy computational task
 
-		camgear_frames_num += 1
-	stream_camgear.stop()
-	assert camgear_frames_num == actual_frame_num
+			camgear_frames_num += 1
+		stream_camgear.stop()
+		actual_frame_num = return_total_frame_count()
+		assert camgear_frames_num == actual_frame_num
+	except Exception as e:
+		if isinstance(e, RuntimeError) and source == 'im_not_a_source.mp4':
+			pass
+		else:
+			pytest.fail(str(e))
 
 
 
-@pytest.mark.xfail(raises=AssertionError)
-def test_youtube_playback():
+@pytest.mark.parametrize('url', [ 'https://youtu.be/YqeW9_5kURI', 'im_not_a_url'])
+def test_youtube_playback(url):
 	"""
 	Testing Youtube Video Playback capabilities of VidGear
 	"""
-	Url = 'https://youtu.be/YqeW9_5kURI'
-	height = 0
-	width = 0
-	fps = 0
-	true_video_param = return_youtubevideo_params(Url)
-	stream = CamGear(source=Url, y_tube = True, logging=True).start() # YouTube Video URL as input
-	while True:
-		frame = stream.read()
-		if frame is None: break
-		if height == 0 or width == 0:
-			fps = stream.framerate
-			height,width = frame.shape[:2]
-			break
-	stream.stop()
-	logger.debug('WIDTH: {} HEIGHT: {} FPS: {}'.format(true_video_param[0],true_video_param[1],true_video_param[2]))
-	logger.debug('WIDTH: {} HEIGHT: {} FPS: {}'.format(width,height,fps))
-	assert true_video_param[0] == width and true_video_param[1] == height and true_video_param[2] == fps
+	try:
+		height = 0
+		width = 0
+		fps = 0
+		#get params
+		stream = CamGear(source=url, y_tube = True, logging=True).start() # YouTube Video URL as input
+		while True:
+			frame = stream.read()
+			if frame is None: break
+			if height == 0 or width == 0:
+				fps = stream.framerate
+				height,width = frame.shape[:2]
+				break
+		stream.stop()
+		#get true params
+		true_video_param = return_youtubevideo_params(url)
+		#log everything
+		logger.debug('WIDTH: {} HEIGHT: {} FPS: {}'.format(true_video_param[0],true_video_param[1],true_video_param[2]))
+		logger.debug('WIDTH: {} HEIGHT: {} FPS: {}'.format(width,height,fps))
+		#assert true verses ground results
+		assert true_video_param[0] == width and true_video_param[1] == height and true_video_param[2] == fps
+	except Exception as e:
+		if isinstance(e, (RuntimeError,ValueError)) and url == 'im_not_a_url':
+			pass
+		else:
+			pytest.fail(str(e))
 
 
 

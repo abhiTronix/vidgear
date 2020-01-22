@@ -181,7 +181,7 @@ class NetGear:
 		self.__compression_params = None
 		
 		#reformat dict
-		options = {k.lower().strip(): v for k,v in options.items()}
+		options = {str(k).strip(): v for k,v in options.items()}
 
 		# assign values to global variables if specified and valid
 		for key, value in options.items():
@@ -199,16 +199,13 @@ class NetGear:
 
 			elif key == 'secure_mode' and isinstance(value,int) and (value in valid_security_mech):
 				#secure mode 
-				try:
-					assert zmq.zmq_version_info() >= (4,0), "[NetGear:ERROR] :: ZMQ Security feature is not supported in libzmq version < 4.0."
-					self.__secure_mode = value
-				except Exception as e:
-					logger.exception(str(e))
+				assert zmq.zmq_version_info() >= (4,0), "[NetGear:ERROR] :: ZMQ Security feature is not supported in libzmq version < 4.0."
+				self.__secure_mode = value
 			elif key == 'custom_cert_location' and isinstance(value,str):
 				# custom auth certificates path
 				try:
 					assert os.access(value, os.W_OK), "[NetGear:ERROR] :: Permission Denied!, cannot write ZMQ authentication certificates to '{}' directory!".format(value)
-					assert not(os.path.isfile(value)), "[NetGear:ERROR] :: `custom_cert_location` value must be the path to a directory and not to a file!"
+					assert os.path.isdir(os.path.abspath(value)), "[NetGear:ERROR] :: `custom_cert_location` value must be the path to a valid directory!"
 					custom_cert_location = os.path.abspath(value)
 				except Exception as e:
 					logger.exception(str(e))
@@ -244,8 +241,8 @@ class NetGear:
 
 			# enable force socket closing if specified
 			elif key == 'force_terminate' and isinstance(value, bool):
-				# check if pattern is valid
-				if address is None and not(receive_mode):
+				# check if address is local
+				if address is None:
 					self.__force_close = False
 					logger.critical('Force termination is disabled for local servers!')
 				else:
@@ -280,10 +277,7 @@ class NetGear:
 			try:
 				#check if custom certificates path is specified
 				if custom_cert_location:
-					if os.path.isdir(custom_cert_location): #custom certificate location must be a directory
-						(auth_cert_dir, self.__auth_secretkeys_dir, self.__auth_publickeys_dir) = generate_auth_certificates(custom_cert_location, overwrite = overwrite_cert)
-					else:
-						raise ValueError("[NetGear:ERROR] :: Invalid `custom_cert_location` value!")
+					(auth_cert_dir, self.__auth_secretkeys_dir, self.__auth_publickeys_dir) = generate_auth_certificates(custom_cert_location, overwrite = overwrite_cert)
 				else:
 					# otherwise auto-generate suitable path
 					from os.path import expanduser
@@ -296,7 +290,7 @@ class NetGear:
 				logger.exception(str(e))
 				# also disable secure mode
 				self.__secure_mode = 0
-				logger.warning('ZMQ Security Mechanism is disabled for this connection!')
+				logger.critical('ZMQ Security Mechanism is disabled for this connection!')
 		else:
 			#log if disabled
 			if self.__logging: logger.warning('ZMQ Security Mechanism is disabled for this connection!')
@@ -568,12 +562,6 @@ class NetGear:
 					if self.__logging: logger.warning('Termination signal received from server!')
 					continue
 
-			#check if pattern is same at both server's and client's end.
-			if int(msg_json['pattern']) != self.__pattern:
-				raise ValueError("[NetGear:ERROR] :: Messaging patterns on both Server-end & Client-end must a valid pairs! Kindly refer VidGear docs.")
-				self.__terminate = True
-				continue
-
 			# extract array from socket
 			msg_data = self.__msg_socket.recv(flags=self.__msg_flag, copy=self.__msg_copy, track=self.__msg_track)
 
@@ -597,10 +585,9 @@ class NetGear:
 				frame = cv2.imdecode(frame, self.__compression_params)
 				#check if valid frame returned
 				if frame is None:
+					self.__terminate = True
 					#otherwise raise error and exit
 					raise ValueError("[NetGear:ERROR] :: `{}` Frame Decoding failed with Parameter: {}".format(msg_json['compression'], self.__compression_params))
-					self.__terminate = True
-					continue
 
 			if self.__multiserver_mode:
 				# check if multiserver_mode
@@ -683,8 +670,8 @@ class NetGear:
 			#check if it works
 			if not(retval): 
 				#otherwise raise error and exit
-				raise ValueError("[NetGear:ERROR] :: Frame Encoding failed with format: {} and Parameters: {}".format(self.__compression, self.__compression_params))
 				self.__terminate = True
+				raise ValueError("[NetGear:ERROR] :: Frame Encoding failed with format: {} and Parameters: {}".format(self.__compression, self.__compression_params))
 
 
 		#check if multiserver_mode is activated

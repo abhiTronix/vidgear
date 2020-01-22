@@ -138,9 +138,6 @@ class WebGear:
 
 	def __init__(self, enablePiCamera = False, stabilize = False, source = 0, camera_num = 0, y_tube = False, backend = 0, colorspace = None, resolution = (640, 480), framerate = 25, logging = False, time_delay = 0, **options):
 
-		#reformat dictionary
-		options = {k.strip(): v for k,v in options.items()}
-
 		#initialize global params
 		self.__jpeg_quality = 90 #90% quality
 		self.__jpeg_optimize = 0 #optimization off
@@ -151,6 +148,9 @@ class WebGear:
 		custom_data_location = '' #path to save data-files to custom location
 		data_path = '' #path to WebGear data-files
 		overwrite_default=False
+
+		#reformat dictionary
+		options = {str(k).strip(): v for k,v in options.items()}
 
 		# assign values to global variables if specified and valid
 		if options:
@@ -185,12 +185,9 @@ class WebGear:
 			if 'custom_data_location' in options:
 				value = options["custom_data_location"]
 				if isinstance(value,str):
-					try:
-						assert os.access(value, os.W_OK), "[WebGear:ERROR] :: Permission Denied!, cannot write WebGear data-files to '{}' directory!".format(value)
-						assert not(os.path.isfile(value)), "[WebGear:ERROR] :: `custom_data_location` value must be the path to a directory and not to a file!"
-						custom_data_location = os.path.abspath(value)
-					except Exception as e:
-						logger.exception(str(e))
+					assert os.access(value, os.W_OK), "[WebGear:ERROR] :: Permission Denied!, cannot write WebGear data-files to '{}' directory!".format(value)
+					assert if os.path.isdir(os.path.abspath(value)), "[WebGear:ERROR] :: `custom_data_location` value must be the path to a directory and not to a file!"
+					custom_data_location = os.path.abspath(value)
 				else:
 					logger.warning("Skipped invalid `custom_data_location` value!")
 				del options['custom_data_location'] #clean
@@ -207,10 +204,7 @@ class WebGear:
 
 		#check if custom certificates path is specified
 		if custom_data_location:
-			if os.path.isdir(custom_data_location): #custom certificate location must be a directory
-				data_path = generate_webdata(custom_data_location, overwrite_default = overwrite_default, logging = logging)
-			else:
-				raise ValueError("[WebGear:ERROR] :: Invalid `custom_data_location` value!")
+			data_path = generate_webdata(custom_data_location, overwrite_default = overwrite_default, logging = logging)
 		else:
 			# otherwise generate suitable path
 			from os.path import expanduser

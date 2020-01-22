@@ -30,6 +30,7 @@ from vidgear.gears.helper import generate_auth_certificates
 from vidgear.gears.helper import logger_handler
 from vidgear.gears.helper import reducer
 from vidgear.gears.helper import generate_webdata
+from vidgear.gears.helper import validate_webdata
 
 logger = log.getLogger('Test_helper')
 logger.addHandler(logger_handler())
@@ -197,3 +198,12 @@ def test_generate_webdata(paths, overwrite_default, results):
 		assert bool(output) == results
 	except Exception as e:
 		pytest.fail(str(e))
+
+
+
+@pytest.mark.xfail(raises=Exception)
+def test_validate_webdata():
+	"""
+	Testing validation function of WebGear API
+	"""
+	validate_webdata(os.path.join(expanduser("~"),".vidgear"), files = ['im_not_a_file1', 'im_not_a_file2', 'im_not_a_file3'], logging = True)

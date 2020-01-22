@@ -108,16 +108,13 @@ class ScreenGear:
 		screen_dims = {}
 		#initializing colorspace variable
 		self.color_space = None
-		try: 
-			#reformat proper mss dict and assign to screen dimension handler
-			screen_dims = {k.strip(): v for k,v in options.items() if k.strip() in ["top", "left", "width", "height"]}
-			# separately handle colorspace value to int conversion
-			if not(colorspace is None): 
-				self.color_space = capPropId(colorspace.strip())
-				if logging: logger.debug('Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
-		except Exception as e:
-			# Catch if any error occurred
-			if logging: logger.exception(str(e))
+
+		#reformat proper mss dict and assign to screen dimension handler
+		screen_dims = {k.strip(): v for k,v in options.items() if k.strip() in ["top", "left", "width", "height"]}
+		# separately handle colorspace value to int conversion
+		if not(colorspace is None): 
+			self.color_space = capPropId(colorspace.strip())
+			if logging and not(self.color_space is None): logger.debug('Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
 
 		# intialize mss capture instance
 		self.__mss_capture_instance = None
@@ -198,8 +195,8 @@ class ScreenGear:
 					if isinstance(self.color_space, int):
 						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
+						if self.__logging: logger.warning('Global color_space parameter value `{}` is not a valid!'.format(self.color_space))
 						self.color_space = None
-						if self.__logging: logger.warning('Colorspace value `{}` is not a valid colorspace!'.format(self.color_space))
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None

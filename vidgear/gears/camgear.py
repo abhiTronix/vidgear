@@ -34,9 +34,9 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
-def youtube_url_validation(url):
+def youtube_url_validator(url):
 	"""
-	convert Youtube video URLs to a valid address
+	validate & retrieves Youtube video URLs ID 
 	"""
 	youtube_regex = (
 		r'(https?://)?(www\.)?'
@@ -104,14 +104,14 @@ class CamGear:
 				#import pafy and parse youtube stream url
 				import pafy
 				# validate
-				url = youtube_url_validation(source)
+				url = youtube_url_validator(source)
 				if url:
 					source_object = pafy.new(url)
 					_source = source_object.getbestvideo("any", ftypestrict=False)
 					if _source is None: _source = source_object.getbest("any", ftypestrict=False)
 					if self.__logging: logger.debug('YouTube source ID: `{}`, Title: `{}` & Video_Extension: `{}`'.format(url, source_object.title, _source.extension))
 					source = _source.url
-				else: raise RuntimeError('URL cannot be processed!')
+				else: raise RuntimeError('`{}` URL cannot be processed!'.format(source))
 			except Exception as e:
 				if self.__logging: logger.exception(str(e))
 				raise ValueError('[CamGear:ERROR] :: YouTube Mode is enabled and the input YouTube URL is invalid!')
@@ -140,7 +140,7 @@ class CamGear:
 			#otherwise disable it
 			self.__threaded_queue_mode = False
 			#log it
-			if self.__logging: logger.debug('Threaded Queue Mode is disabled for the current video source!') 
+			if self.__logging: logger.warning('Threaded Queue Mode is disabled for the current video source!') 
 
 		# stream variable initialization
 		self.stream = None
@@ -153,6 +153,7 @@ class CamGear:
 			else:
 				# Two parameters are available since OpenCV 4+ (master branch)
 				self.stream = cv2.VideoCapture(source, backend)
+			logger.debug('Setting backend `{}` for this source.'.format(backend))
 		else:
 			# initialize the camera stream
 			self.stream = cv2.VideoCapture(source)
@@ -161,21 +162,17 @@ class CamGear:
 		#initializing colorspace variable
 		self.color_space = None
 
-		try: 
-			# try to apply attributes to source if specified
-			#reformat dict
-			options = {k.strip(): v for k,v in options.items()}
-			for key, value in options.items():
-				self.stream.set(capPropId(key),value)
 
-			# separately handle colorspace value to int conversion
-			if not(colorspace is None): 
-				self.color_space = capPropId(colorspace.strip())
-				if self.__logging: logger.debug('Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
+		#apply attributes to source if specified
+		options = {str(k).strip(): v for k,v in options.items()}
+		for key, value in options.items():
+			property = capPropId(key)
+			if not(property is None): self.stream.set(property, value)
 
-		except Exception as e:
-			# Catch if any error occurred
-			if self.__logging: logger.exception(str(e))
+		# handle colorspace value
+		if not(colorspace is None): 
+			self.color_space = capPropId(colorspace.strip())
+			if self.__logging and not(self.color_space is None): logger.debug('Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
 
 		#initialize and assign framerate variable
 		self.framerate = 0.0
@@ -261,8 +258,8 @@ class CamGear:
 					if isinstance(self.color_space, int):
 						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
+						if self.__logging: logger.warning('Global color_space parameter value `{}` is not a valid!'.format(self.color_space))
 						self.color_space = None
-						if self.__logging: logger.warning('Colorspace value: {}, is not a valid colorspace!'.format(self.color_space))
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None

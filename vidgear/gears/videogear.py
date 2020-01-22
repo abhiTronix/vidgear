@@ -98,6 +98,9 @@ class VideoGear:
 		self.__logging = False
 		if logging: self.__logging = logging
 
+		#reformat dictionary
+		options = {str(k).strip(): v for k,v in options.items()}
+
 		if self.__stablization_mode:
 			from .stabilizer import Stabilizer
 			s_radius, border_size, border_type, crop_n_zoom = (25, 0, 'black', False) #defaults
