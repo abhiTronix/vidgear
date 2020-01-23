@@ -46,7 +46,7 @@ VidGear is a powerful python Video Processing library built with multi-threaded 
 The following **functional block diagram** clearly depicts the functioning of VidGear library:
 
 <p align="center">
-  <img src="https://abhitronix.github.io/img/vidgear/vidgear_function2-01.svg" alt="@Vidgear Functional Block Diagram" />
+  <img src="https://abhitronix.github.io/img/vidgear/vidgear_function2020_3.svg" alt="@Vidgear Functional Block Diagram" />
 </p>
 
 &nbsp;
