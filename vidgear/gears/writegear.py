@@ -120,18 +120,14 @@ class WriteGear:
 		self.__out_file = _filename
 		basepath, _ = os.path.split(_filename) #extract file base path for debugging ahead
 
-
 		if output_params:
 			#handle user defined output dimensions(must be a tuple or list)
 			if output_params and "-output_dimensions" in output_params:
 				self.__output_dimensions = output_params["-output_dimensions"] #assign special parameter to global variable
 				del output_params["-output_dimensions"] #clean
-				#cleans and reformat output parameters
-			try:
-				self.__output_parameters = {str(k).strip().lower(): str(v).strip() for k,v in output_params.items()}
-			except Exception as e:
-				if self.__logging: logger.exception(str(e))
-				raise ValueError('[WriteGear:ERROR] :: Wrong output_params parameters passed to WriteGear class!')
+			
+			#cleans and reformat output parameters
+			self.__output_parameters = {str(k).strip().lower(): str(v).strip() for k,v in output_params.items()}
 
 		#handles FFmpeg binaries validity tests 
 		if self.__compression:

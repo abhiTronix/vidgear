@@ -46,7 +46,7 @@ VidGear is a powerful python Video Processing library built with multi-threaded 
 The following **functional block diagram** clearly depicts the functioning of VidGear library:
 
 <p align="center">
-  <img src="https://abhitronix.github.io/img/vidgear/vidgear_function2-01.svg" alt="@Vidgear Functional Block Diagram" />
+  <img src="https://abhitronix.github.io/img/vidgear/vidgear_function2020_3.svg" alt="@Vidgear Functional Block Diagram" />
 </p>
 
 &nbsp;
@@ -70,7 +70,7 @@ The following **functional block diagram** clearly depicts the functioning of Vi
   * [**2 - Release Archive Download**](#option-2-release-archive-download)
   * [**3 - Clone Repo**](#option-3-clone-the-repo)
 
-[**New-Release SneekPeak: v0.1.6**](#new-release-sneekpeak--vidgear-016)
+[**New-Release SneekPeak: v0.1.7-dev**](#new-release-sneekpeak--vidgear-017-dev)
 
 [**Documentation**](#documentation)
 
@@ -161,7 +161,7 @@ Furthermore, VideoGear API can provide internal access to both [CamGear](#camgea
 **Below is a snapshot of a VideoGear Stabilizer in action:**
 
 <p align="center">
-  <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/stabilizer.gif" alt="VideoGear Stabilizer in action!" />
+  <img src="https://github.com/abhiTronix/Imbakup/blob/master/Images/stabilizer.gif" alt="VideoGear Stabilizer in action!"/>
   <br>
   <sub><i>Original Video Courtesy <a href="http://liushuaicheng.org/SIGGRAPH2013/database.html" title="opensourced video samples database">@SIGGRAPH2013</a></i></sub>
 </p>
@@ -364,10 +364,12 @@ WebGear can acts as robust _Live Video Streaming Server_ that can stream live vi
 
 In addition to this, WebGear provides a special internal wrapper around VideoGear API, which itself provides internal access to both CamGear and PiGear APIs thereby granting it exclusive power for streaming frames incoming from any device/source. Also on the plus side, since WebGear has access to all functions of VideoGear API, therefore it can stabilize video frames even while streaming live.
 
-**Below is a snapshot of a WebGear Video Server in action on Mozilla Firefox browser:**
+**Below is a snapshot of a WebGear Video Server in action on the Mozilla Firefox browser:**
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/web.jpg" alt="WebGear in action!" />
+  <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/webgear.gif" alt="WebGear in action!" width=120%/>
+  <br>
+  <sub><i>WebGear Video Server at <a href="http//0.0.0.0:8000/" title="default address">http//0.0.0.0:8000/</a> address.</i></sub>
 </p>
 
 Code to generate the above result:
@@ -377,10 +379,10 @@ Code to generate the above result:
 import uvicorn
 from vidgear.gears import WebGear
 
-#various performance tweaks
-options = {"frame_size_reduction": 35, "frame_jpeg_quality": 90, "frame_jpeg_optimize": True}
+#add various performance tweaks
+options = {"frame_size_reduction": 40, "frame_jpeg_quality": 90, "frame_jpeg_optimize": True}
 
-#initialize WebGear app  
+#initialize WebGear app with suitable source(for e.g `test.mp4`)
 web = WebGear(source = "test.mp4", logging = True, **options)
 #run this app on Uvicorn server at address http//0.0.0.0:8000/
 uvicorn.run(web(), host='0.0.0.0', port=8000)
@@ -398,25 +400,25 @@ web.shutdown()
 &nbsp;
 
 
-# New Release SneekPeak : VidGear 0.1.6
+# New Release SneekPeak : VidGear 0.1.7-dev
 
+:warning: Dropped support for Python 3.5 and below legacies.
 
-* **NetGear API:**
-  * Added powerful ZMQ Authentication & Data Encryption features for NetGear API
-  * Added robust Multi-Server support for NetGear API.
-  * Added exclusive Bi-Directional Mode for bidirectional data transmission.
-  * Added frame-compression support with on-the-fly flexible encoding/decoding.
-  * Implemented new *Publish/Subscribe(`zmq.PUB/zmq.SUB`)* pattern for seamless Live Streaming in NetGear API.
+* **WebGear API:**
+  * Added a robust Live Video Streaming Server API that can transfer live video frames to any web browser on the network in real-time.
+  * Implemented a flexible asyncio wrapper around [`starlette`][starlette] ASGI application and can easily access its various components independently.
+  * Added seamless access to various starlette's Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.
+  * Implemented a special internal wrapper around VideoGear API and gave access to all its properties.
+  * Introduced new Auto-Generation Process to generate WebGear data files from the GitHub server and validate them automatically.
+  * Added exclusive dictionary attributes to tweak WebGear performance, Route Tables and other internal properties.
+  * Added new simple & elegant Bootstrap's Cover template, by @mdo for WebGear Server.
+  * Built `__main__.py` for directly running WebGear Server through the terminal.
+  
+* **Logging Updates:**
+  * Added new `logging handler` helper function.
+  * Add flake8 tests to Travis CLI to find undefined names.
 
-* **PiGear API:**
-  * Added new threaded internal timing function for PiGear to handle any hardware failures/frozen threads
-  * PiGear will not exit safely with `SystemError` if Picamera ribbon cable is pulled out to save resources.
-
-* **WriteGear API:** Added new `execute_ffmpeg_cmd` function to pass a custom command to its internal FFmpeg pipeline.
-
-* **Stabilizer class:** Added new _Crop and Zoom_ feature.
-
-* ***Added VidGear's official native support for MacOS environment and [many more...](changelog.md)***
+* ***Added Implemented a new Reducer function to reduce the frame size on-the-go and [many more...](changelog.md)***
 
 
 
@@ -449,7 +451,7 @@ Before installing VidGear, you must verify that the following dependencies are m
     ``` 
   _:bulb: Also, make sure to [enable Raspberry Pi hardware-specific settings][picamera-setting] prior to using this library._
 
-* **`starlette:`** Require [`starlette`][starlette] for ASGI video streaming. You can easily install it via pip:
+* **`starlette:`** Require [`starlette`][starlette] for ASGI video streaming. You can easily install it along with some additional dependencies via pip as follows:
 
     ```sh
       pip3 install starlette 

@@ -101,7 +101,7 @@ class PiGear:
 		self.color_space = None
 
 		#reformat dict
-		options = {k.strip(): v for k,v in options.items()}
+		options = {str(k).strip(): v for k,v in options.items()}
 
 		#define timeout variable default value(handles hardware failures)
 		self.__failure_timeout = 2.0
@@ -119,13 +119,14 @@ class PiGear:
 			# apply attributes to source if specified
 			for key, value in options.items():
 				setattr(self.__camera, key, value)
-			# separately handle colorspace value to int conversion
-			if not(colorspace is None): 
-				self.color_space = capPropId(colorspace.strip())
-				if self.__logging: logger.debug('Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
 		except Exception as e:
 			# Catch if any error occurred
 			if self.__logging: logger.exception(str(e))
+
+		# separately handle colorspace value to int conversion
+		if not(colorspace is None): 
+			self.color_space = capPropId(colorspace.strip())
+			if self.__logging and not(self.color_space is None): logger.debug('Enabling `{}` colorspace for this video stream!'.format(colorspace.strip()))
 
 		# enable rgb capture array thread and capture stream
 		self.__rawCapture = PiRGBArray(self.__camera, size = resolution)
@@ -234,9 +235,8 @@ class PiGear:
 					if isinstance(self.color_space, int):
 						color_frame = cv2.cvtColor(frame, self.color_space)
 					else:
+						if self.__logging: logger.warning('Global color_space parameter value `{}` is not a valid!'.format(self.color_space))
 						self.color_space = None
-						if self.__logging: logger.warning('Colorspace `{}` is not a valid colorspace!'.format(self.color_space))
-							
 				except Exception as e:
 					# Catch if any error occurred
 					self.color_space = None

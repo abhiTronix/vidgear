@@ -59,8 +59,7 @@ def WriteGear_non_compression_mode():
 	"""
 	Function to Benchmark WriteGear's Non-Compression Mode(OpenCV)
 	"""
-	options = {'THREADED_QUEUE_MODE':False}
-	stream = VideoGear(source=return_testvideo_path(), **options).start() 
+	stream = VideoGear(source=return_testvideo_path()).start() 
 	writer = WriteGear(output_filename = 'Output_vnc.mp4', compression_mode = False )
 	fps_CV = FPS().start()
 	while True:
@@ -83,8 +82,7 @@ def WriteGear_compression_mode():
 	"""
 	Function to Benchmark WriteGear's Compression Mode(FFmpeg)
 	"""
-	options = {'THREADED_QUEUE_MODE':False}
-	stream = VideoGear(source=return_testvideo_path(), **options).start()
+	stream = VideoGear(source=return_testvideo_path()).start()
 	writer = WriteGear(output_filename = 'Output_vc.mp4', custom_ffmpeg = return_static_ffmpeg())
 	fps_Vid = FPS().start()
 	while True:
@@ -102,16 +100,16 @@ def WriteGear_compression_mode():
 	os.remove(os.path.abspath('Output_vc.mp4'))
 
 
-@pytest.mark.xfail(raises=RuntimeError)
+
 def test_benchmark_videowriter():
 	"""
 	Benchmarking WriteGear's optimized Compression Mode(FFmpeg) against Non-Compression Mode(OpenCV)
 	"""
 	if platform.system() != 'Darwin':
 		try:
-			WriteGear_non_compression_mode(return_testvideo_path())
-			WriteGear_compression_mode(return_testvideo_path())
+			WriteGear_non_compression_mode()
+			WriteGear_compression_mode()
 		except Exception as e:
-			raise RuntimeError(e)
+			pytest.fail(str(e))
 	else:
 		logger.debug("Skipping this test for macOS!")

@@ -79,3 +79,5 @@ if __name__ == "__main__":
 	web = WebGear(enablePiCamera = args['enablePiCamera'], stabilize = args['stabilize'], source = args['source'], camera_num = args['camera_num'], y_tube = args['y_tube'], backend = args['backend'], colorspace = args['colorspace'], resolution = args['resolution'], framerate = args['framerate'], logging = args['logging'], time_delay = args['time_delay'], **options)
 	#run this object on Uvicorn server
 	uvicorn.run(web(), host=args['ipaddress'], port=args['port'])
+	#close app safely
+	web.shutdown()

@@ -21,7 +21,7 @@ limitations under the License.
 # Contains all the support functions/modules required by Vidgear 
 
 # import the necessary packages
-import os, sys, requests, platform
+import os, sys, requests, platform, errno
 import numpy as np
 from pkg_resources import parse_version
 from colorlog import ColoredFormatter
@@ -78,15 +78,29 @@ def check_CV_version():
 
 
 
+def mkdir_safe(dir):
+	"""
+	Simply creates directory safely
+	"""
+	try:
+		os.makedirs(dir)
+		logger.debug("Created directory at `{}`".format(dir))
+	except OSError as e:
+		logger.debug("Directory already exists at `{}`".format(dir))
+		if e.errno != errno.EEXIST: raise
+
+
+
 def capPropId(property):
 	"""
-	Retrieves the OpenCV property Integer(Actual) value. 
+	Retrieves the OpenCV property's Integer(Actual) value. 
 	"""
 	integer_value = 0 
 	try:
 		integer_value = getattr(cv2, property)
-	except Exception:
-		logger.critical('{} is not a valid OpenCV property!'.format(property))
+	except Exception as e:
+		logger.exception(str(e))
+		logger.critical('`{}` is not a valid OpenCV property!'.format(property))
 		return None
 	return integer_value
 
@@ -290,7 +304,7 @@ def generate_auth_certificates(path, overwrite = False):
 	"""
 
 	#import necessary libs
-	import shutil, errno
+	import shutil
 	import zmq.auth
 
 	#check if path corresponds to vidgear only
@@ -298,10 +312,7 @@ def generate_auth_certificates(path, overwrite = False):
 
 	#generate keys dir
 	keys_dir = os.path.join(path, 'keys')
-	try:
-		os.makedirs(keys_dir)
-	except OSError as e:
-		if e.errno != errno.EEXIST: raise
+	mkdir_safe(keys_dir)
 
 	#generate separate public and private key dirs
 	public_keys_dir = os.path.join(keys_dir, 'public_keys')
@@ -338,18 +349,10 @@ def generate_auth_certificates(path, overwrite = False):
 		if status_private_keys and status_public_keys: return (keys_dir, secret_keys_dir, public_keys_dir)
 
 		# check if valid public keys are found
-		if not(status_public_keys):
-			try:
-				os.makedirs(public_keys_dir)
-			except OSError as e:
-				if e.errno != errno.EEXIST: raise
+		if not(status_public_keys): mkdir_safe(public_keys_dir)
 
 		# check if valid private keys are found
-		if not(status_private_keys): 
-			try:
-				os.makedirs(secret_keys_dir)
-			except OSError as e:
-				if e.errno != errno.EEXIST: raise
+		if not(status_private_keys): mkdir_safe(secret_keys_dir)
 
 		# generate new keys
 		server_public_file, server_secret_file = zmq.auth.create_certificates(keys_dir, "server")
@@ -434,8 +437,6 @@ def generate_webdata(path, overwrite_default = False, logging = False):
 	""" 
 	handles WebGear API data-files validation and generation 
 	"""
-	#import necessary libs
-	import errno
 
 	#check if path corresponds to vidgear only
 	if (os.path.basename(path) != ".vidgear"): path = os.path.join(path,".vidgear")
@@ -447,14 +448,12 @@ def generate_webdata(path, overwrite_default = False, logging = False):
 	js_static_dir = os.path.join(static_dir, 'js')
 	css_static_dir = os.path.join(static_dir, 'css')
 	favicon_dir = os.path.join(static_dir, 'img')
-	try:
-		os.makedirs(static_dir)
-		os.makedirs(template_dir)
-		os.makedirs(js_static_dir)
-		os.makedirs(css_static_dir)
-		os.makedirs(favicon_dir)
-	except OSError as e:
-		if e.errno != errno.EEXIST: raise
+
+	mkdir_safe(static_dir)
+	mkdir_safe(template_dir)
+	mkdir_safe(js_static_dir)
+	mkdir_safe(css_static_dir)
+	mkdir_safe(favicon_dir)
 
 	#check if overwriting is enabled
 	if overwrite_default:

@@ -60,7 +60,7 @@ def return_testvideo_path():
 
 
 @pytest.mark.xfail(raises=AssertionError)
-@pytest.mark.parametrize('conversion', ['COLOR_BGR2GRAY', '', 'COLOR_BGR2YUV', 'COLOR_BGR2BGRA', 'COLOR_BGR2RGB', 'COLOR_BGR2RGBA'])
+@pytest.mark.parametrize('conversion', ['COLOR_BGR2GRAY', 'COLOR_BGR2YUV', 'COLOR_BGR2BGRA'])
 def test_write(conversion):
 	"""
 	Testing VidGear Non-Compression(OpenCV) Mode Writer

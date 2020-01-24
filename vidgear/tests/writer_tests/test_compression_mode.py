@@ -73,14 +73,15 @@ def getFrameRate(path):
 
 
 @pytest.mark.xfail(raises=AssertionError)
-def test_input_framerate():
+@pytest.mark.parametrize('c_ffmpeg', [return_static_ffmpeg(), 'wrong_path'])
+def test_input_framerate(c_ffmpeg):
 	"""
 	Testing "-input_framerate" parameter provided by WriteGear(in Compression Mode) 
 	"""
 	stream = cv2.VideoCapture(return_testvideo_path()) #Open stream
 	test_video_framerate = stream.get(cv2.CAP_PROP_FPS)
 	output_params = {"-input_framerate":test_video_framerate}
-	writer = WriteGear(output_filename = 'Output_tif.mp4', custom_ffmpeg = return_static_ffmpeg(), **output_params) #Define writer 
+	writer = WriteGear(output_filename = 'Output_tif.mp4', custom_ffmpeg = c_ffmpeg, **output_params) #Define writer 
 	while True:
 		(grabbed, frame) = stream.read()
 		if not grabbed:
@@ -95,10 +96,10 @@ def test_input_framerate():
 
 
 @pytest.mark.xfail(raises=AssertionError)
-@pytest.mark.parametrize('conversion', ['COLOR_BGR2GRAY', None, 'COLOR_BGR2YUV', 'COLOR_BGR2BGRA', 'COLOR_BGR2RGB', 'COLOR_BGR2RGBA'])
+@pytest.mark.parametrize('conversion', ['COLOR_BGR2GRAY', 'COLOR_BGR2INVALID', 'COLOR_BGR2BGRA'])
 def test_write(conversion):
 	"""
-	Testing WriteGear Compression-Mode(FFmpeg) Writer capabilties in different colorspace
+	Testing WriteGear Compression-Mode(FFmpeg) Writer capabilties in different colorspace with CamGearAPI.
 	"""
 	#Open stream
 	stream = CamGear(source=return_testvideo_path(), colorspace = conversion, logging=True).start()
@@ -109,9 +110,18 @@ def test_write(conversion):
 		if frame is None:
 			#if True break the infinite loop
 			break
-
-		if conversion in ['COLOR_BGR2RGB', 'COLOR_BGR2RGBA']:
+		if conversion == 'COLOR_BGR2RGBA':
 			writer.write(frame, rgb_mode = True)
+		elif conversion == 'COLOR_BGR2INVALID':
+			#test invalid color_space value
+			stream.color_space = "wrong_colorspace"
+			conversion = 'COLOR_BGR2INVALID2'
+			writer.write(frame)
+		elif conversion == 'COLOR_BGR2INVALID2':
+			#test wrong color_space value
+			stream.color_space = 1546755
+			conversion = ''
+			writer.write(frame)
 		else:
 			writer.write(frame)
 	stream.stop()
@@ -135,8 +145,12 @@ def test_output_dimensions():
 	Testing "-output_dimensions" special parameter provided by WriteGear(in Compression Mode) 
 	"""
 	dimensions = (640,480)
-	stream = cv2.VideoCapture(return_testvideo_path()) 
-	output_params = {"-output_dimensions":dimensions}
+	stream = cv2.VideoCapture(return_testvideo_path())
+	output_params = {}
+	if platform.system() == 'Windows':
+		output_params = {"-output_dimensions":dimensions, "-ffmpeg_download_path":tempfile.gettempdir()}
+	else:
+		output_params = {"-output_dimensions":dimensions}
 	writer = WriteGear(output_filename = 'Output_tod.mp4',  custom_ffmpeg = return_static_ffmpeg(), logging = True, **output_params) #Define writer
 	while True:
 		(grabbed, frame) = stream.read()
