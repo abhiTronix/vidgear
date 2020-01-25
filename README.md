@@ -78,12 +78,11 @@ The following **functional block diagram** clearly depicts the functioning of Vi
 **For Developers/Contributors**
   * [**Testing**](#testing)
   * [**Contributing**](#contributing)
-  * [**Community Channel**](#community-channel)
 
 **Additional Info**
-  * [**Changelog**](#changelog)
+  * [**Community Channel**](#community-channel)
   * [**Citing**](#citing)
-  * [**License**](#license)
+  * [**Copyright**](#copyright)
 
 
 &nbsp;
@@ -99,7 +98,7 @@ The following **functional block diagram** clearly depicts the functioning of Vi
    > ***"VidGear can read, write, process, send & receive video frames from various devices in real-time."***
 
   #### What is its purpose?
-   > ***"Built with simplicity in mind, VidGear lets programmers and software developers to easily integrate and perform complex Video Processing tasks in their existing or new applications, without going through various underlying library's documentation and using just a few lines of code. Beneficial for both, if you're new to programming with Python language or already a pro at it."***
+   > ***"Built with simplicity in mind, VidGear lets programmers and software developers to easily integrate and perform complex Video Processing tasks in their existing or new applications, without going through various underlying library's documentation and using just a [few lines of code][flic]. Beneficial for both, if you're new to programming with Python language or already a pro at it."***
 
    **For more advanced information, see the [*Wiki Documentation ➶*][wiki].**
 
@@ -326,13 +325,13 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 
 NetGear implements a high-level wrapper around [**PyZmQ**][pyzmq] python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance asynchronous distributed messaging library that aim to be used in distributed or concurrent applications. It provides a message queue, but unlike message-oriented middleware, a ZeroMQ system can run without a dedicated message broker. 
 
-NetGear provides seamless support for bidirectional data transmission between receiver(client) and sender(server) through bi-directional synchronous messaging patterns such as zmq.PAIR _(ZMQ Pair Pattern)_ & zmq.REQ/zmq.REP _(ZMQ Request/Reply Pattern)_. 
+NetGear provides seamless support for [bidirectional data transmission][netgear_bidata_wiki] between receiver(client) and sender(server) through bi-directional synchronous messaging patterns such as zmq.PAIR _(ZMQ Pair Pattern)_ & zmq.REQ/zmq.REP _(ZMQ Request/Reply Pattern)_. 
 
-NetGear also supports real-time frame Encoding/Decoding compression capabilities for optimizing performance while sending the frames directly over the network, by encoding the frame before sending it and decoding it on the client's end automatically in real-time. 
+NetGear also supports real-time frame [Encoding/Decoding compression capabilities][netgear_compression_wiki] for optimizing performance while sending the frames directly over the network, by encoding the frame before sending it and decoding it on the client's end automatically in real-time. 
 
-For security, NetGear implements easy access to ZeroMQ's powerful, smart & secure Security Layers, that enables strong encryption on data, and unbreakable authentication between the Server and the Client with the help of custom certificates/keys and brings easy, standardized privacy and authentication for distributed systems over the network. 
+For security, NetGear implements easy access to ZeroMQ's powerful, smart & secure Security Layers, that [enables strong encryption on data][netgear_security_wiki], and unbreakable authentication between the Server and the Client with the help of custom certificates/keys and brings easy, standardized privacy and authentication for distributed systems over the network. 
 
-Best of all, NetGear can robustly handle Multiple Servers devices at once, thereby providing access to seamless Live Streaming of the multiple device in a network at the same time.
+Best of all, NetGear can robustly [handle Multiple Servers][netgear_multi_wiki] devices at once, thereby providing access to seamless Live Streaming of the multiple device in a network at the same time.
 
 
 **NetGear as of now seamlessly supports three ZeroMQ messaging patterns:**
@@ -363,14 +362,14 @@ WebGear API provides a flexible abtract asyncio wrapper around [Starlette][starl
 WebGear can acts as robust _Live Video Streaming Server_ that can stream live video frames to any web browser on a network in real-time. It also auto-generates necessary data files for its default template and provides us the freedom to easily alter its [_performance parameters and routing tables_][advanced-webgear-wiki] according to our applications while handling errors robustly.
 
 
-In addition to this, WebGear provides a special internal wrapper around VideoGear API, which itself provides internal access to both CamGear and PiGear APIs thereby granting it exclusive power for streaming frames incoming from any device/source. Also on the plus side, since WebGear has access to all functions of VideoGear API, therefore it can stabilize video frames even while streaming live.
+In addition to this, WebGear provides a special internal wrapper around [VideoGear](#vidgear) API, which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs thereby granting it exclusive power for streaming frames incoming from any device/source. Also on the plus side, since WebGear has access to all functions of [VideoGear](#vidgear) API, therefore it can [stabilize video frames][stabilize_webgear_wiki] even while streaming live.
 
 **Below is a snapshot of a WebGear Video Server in action on the Mozilla Firefox browser:**
 
 <p align="center">
   <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/webgear.gif" alt="WebGear in action!" width=120%/>
   <br>
-  <sub><i>WebGear Video Server at <a href="http//0.0.0.0:8000/" title="default address">http//0.0.0.0:8000/</a> address.</i></sub>
+  <sub><i>WebGear Video Server at <a href="http://0.0.0.0:8000/" title="default address">http://0.0.0.0:8000/</a> address.</i></sub>
 </p>
 
 Code to generate the above result:
@@ -527,7 +526,7 @@ You can clone this repository's `testing` branch for development and thereby can
 
 # Documentation
 
-The full documentation for all VidGear classes and functions can be found in the link below:
+The complete documentation for all VidGear classes and functions can be found in the link below:
 
 * [Wiki Documentation - English][wiki]
 
@@ -570,21 +569,17 @@ We're on [**Gitter**][gitter]! Please join us.
 
 # Contributing
 
-See [**contributing.md**](contributing.md).
+Contributions are welcome! Please see our [Contributing Guide](contributing.md) for more details.
+
 
 &nbsp;
 
-# Changelog
-
-See [**changelog.md**](changelog.md)
-
-&nbsp;
 
 # Citing
 
-**Here is a Bibtex entry you can use to cite this project in a publication:**
+*Here is a Bibtex entry you can use to cite this project in a publication:*
 
-```tex
+```latex
 @misc{vidgear,
     Title = {vidgear},
     Author = {Abhishek Thakur},
@@ -594,7 +589,7 @@ See [**changelog.md**](changelog.md)
 
 &nbsp;  
 
-# License
+# Copyright
 
 **Copyright © abhiTronix 2019**
 
@@ -655,7 +650,12 @@ Internal URLs
 [drop35]:https://github.com/abhiTronix/vidgear/issues/99
 [custom-command-wiki]:https://github.com/abhiTronix/vidgear/wiki/Custom-FFmpeg-Commands-in-WriteGear-API#custom-ffmpeg-commands-in-writegear-api
 [advanced-webgear-wiki]:https://github.com/abhiTronix/vidgear/wiki/Advanced-WebGear-API-Usage
-
+[netgear_bidata_wiki]:https://github.com/abhiTronix/vidgear/wiki/Bidirectional-Mode:-Bidirectional-Data-Transfer-in-NetGear-API#bi-directional-mode-bidirectional-data-transfer-in-netgear-api
+[netgear_compression_wiki]:https://github.com/abhiTronix/vidgear/wiki/Compression-in-NetGear-API#frame-encodingdecoding-compression-capabilities-for-netgear-api
+[netgear_security_wiki]:https://github.com/abhiTronix/vidgear/wiki/Secure-Mode:-Authentication-&-Data-Encryption-in-NetGear-API#secure-mode-authentication--data-encryption-in-netgear-api
+[netgear_multi_wiki]:https://github.com/abhiTronix/vidgear/wiki/Multi-Server-Mode-for-NetGear-API#multi-server-mode-for-netgear-api
+[stabilize_webgear_wiki]:https://github.com/abhiTronix/vidgear/wiki/Advanced-WebGear-API-Usage#d2-using-webgear-api-with-real-time-video-stabilization-enabled
+[flic]:https://github.com/abhiTronix/vidgear/wiki/CamGear#1-bare-minimum-example
 
 <!--
 External URLs
