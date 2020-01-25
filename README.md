@@ -31,7 +31,7 @@ limitations under the License.
 
 [![Build Status][travis-cli]][travis] [![Codecov branch][codecov]][code] [![Build Status][appveyor]][app]
 
-[![Twitter][twitter-badge]][twitter-intent] [![PyPi version][pypi-badge]][pypi] [![Glitter chat][gitter-bagde]][gitter]
+[![Glitter chat][gitter-bagde]][gitter] [![PyPi version][pypi-badge]][pypi] [![Twitter][twitter-badge]][twitter-intent]
 
 [![Buy Me A Coffee][Coffee-badge]][coffee]
 
@@ -69,6 +69,7 @@ The following **functional block diagram** clearly depicts the functioning of Vi
   * [**1 - PyPI Install**](#option-1-pypi-install)
   * [**2 - Release Archive Download**](#option-2-release-archive-download)
   * [**3 - Clone Repo**](#option-3-clone-the-repo)
+  * [**Supported Python legacies**](#supported-python-legacies)
 
 [**New-Release SneekPeak: v0.1.7-dev**](#new-release-sneekpeak--vidgear-017-dev)
 
@@ -77,9 +78,9 @@ The following **functional block diagram** clearly depicts the functioning of Vi
 **For Developers/Contributors**
   * [**Testing**](#testing)
   * [**Contributing**](#contributing)
+  * [**Community Channel**](#community-channel)
 
 **Additional Info**
-  * [**Supported Python legacies**](#supported-python-legacies)
   * [**Changelog**](#changelog)
   * [**Citing**](#citing)
   * [**License**](#license)
@@ -517,6 +518,11 @@ You can clone this repository's `testing` branch for development and thereby can
 
 &nbsp;
 
+## Supported Python legacies
+
+  * **[Python 3.6+][drop35] are only supported legacies for installing Vidgear v0.1.7-dev and above.**
+
+&nbsp;
 
 
 # Documentation
@@ -524,6 +530,7 @@ You can clone this repository's `testing` branch for development and thereby can
 The full documentation for all VidGear classes and functions can be found in the link below:
 
 * [Wiki Documentation - English][wiki]
+
 
 &nbsp;
 
@@ -551,17 +558,19 @@ The full documentation for all VidGear classes and functions can be found in the
    pytest -sv                                   #-sv for verbose output.
   ```
 
+&nbsp;
+
+
+# Community Channel
+
+We're on [**Gitter**][gitter]! Please join us.
+
+
 &nbsp; 
 
 # Contributing
 
 See [**contributing.md**](contributing.md).
-
-&nbsp;
-
-# Supported Python legacies
-
-  * **[Python 3.6+][drop35] are only supported legacies for installing Vidgear v0.1.7-dev and above.**
 
 &nbsp;
 
@@ -602,9 +611,9 @@ Badges
 [codecov]:https://img.shields.io/codecov/c/github/abhiTronix/vidgear/testing?style=for-the-badge&logo=codecov
 [travis-cli]:https://img.shields.io/travis/abhiTronix/vidgear.svg?style=for-the-badge&logo=travis
 [prs-badge]:https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABC0lEQVRYhdWVPQoCMRCFX6HY2ghaiZUXsLW0EDyBrbWtN/EUHsHTWFnYyCL4gxibVZZlZzKTnWz0QZpk5r0vIdkF/kBPAMOKeddE+CQPKoc5Yt5cTjBMdQSwDQToWgBJAn3jmhqgltapAV6E6b5U17MGGAUaUj07TficMfIBZDV6vxowBm1BP9WbSQE4o5h9IjPJmy73TEPDDxVmoZdQrQ5jRhly9Q8tgMUXkIIWn0oG4GYQfAXQzz1PGoCiQndM7b4RgJay/h7zBLT3hASgoKjamQJMreKf0gfuAGyYtXEIAKcL/Dss15iq6ohXghozLYiAMxPuACwtIT4yeQUxAaLrZwAoqGRKGk7qDSYTfYQ8LuYnAAAAAElFTkSuQmCC
-[twitter-badge]:https://img.shields.io/twitter/url/http/shields.io.svg?style=for-the-badge&logo=twitter
+[twitter-badge]:https://img.shields.io/badge/Tweet-Now-blue.svg?style=for-the-badge&logo=twitter
 [pypi-badge]:https://img.shields.io/pypi/v/vidgear.svg?style=for-the-badge&logo=pypi
-[gitter-bagde]:https://img.shields.io/gitter/room/abhiTronix/vidgear?style=for-the-badge&logo=gitter
+[gitter-bagde]:https://img.shields.io/badge/Chat-Gitter-yellow.svg?style=for-the-badge&logo=gitter
 [Coffee-badge]:https://abhitronix.github.io/img/vidgear/orange_img.png
 
 <!--
