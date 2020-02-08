@@ -161,7 +161,7 @@ Furthermore, VideoGear API can provide internal access to both [CamGear](#camgea
 **Below is a snapshot of a VideoGear Stabilizer in action:**
 
 <p align="center">
-  <img src="https://github.com/abhiTronix/Imbakup/blob/master/Images/stabilizer.gif" alt="VideoGear Stabilizer in action!"/>
+  <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/stabilizer.gif" alt="VideoGear Stabilizer in action!"/>
   <br>
   <sub><i>Original Video Courtesy <a href="http://liushuaicheng.org/SIGGRAPH2013/database.html" title="opensourced video samples database">@SIGGRAPH2013</a></i></sub>
 </p>
@@ -303,9 +303,9 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 
 **WriteGear primarily operates in the following two modes:**
 
-  * **Compression Mode:** In this mode, WriteGear utilizes [**`FFmpeg's`**][ffmpeg] inbuilt encoders to encode lossless multimedia files. It provides us the ability to exploit almost any available parameters available within FFmpeg, with so much ease and flexibility and while doing that it robustly handles all errors/warnings quietly. **You can find more about this mode [here][cm-writegear-wiki]**.
+  * **Compression Mode:** In this mode, WriteGear utilizes [**FFmpeg**][ffmpeg] inbuilt encoders to encode lossless multimedia files. It provides us the ability to exploit almost any available parameters available within FFmpeg, with so much ease and flexibility and while doing that it robustly handles all errors/warnings quietly. **You can find more about this mode [here][cm-writegear-wiki]**.
 
-  * **Non-Compression Mode:** In this mode, WriteGear utilizes basic OpenCV's inbuilt [**VideoWriter API**][opencv-vw]. Similar to compression mode, WriteGear also supports all parameters manipulation available within OpenCV's VideoWriter API. But this mode lacks the ability to manipulate encoding parameters and other important features like video compression, audio encoding, etc. **You can learn about this mode [here][ncm-writegear-wiki]**.
+  * **Non-Compression Mode:** In this mode, WriteGear utilizes basic [**OpenCV's inbuilt VideoWriter API**][opencv-vw]. Similar to compression mode, WriteGear also supports all parameters manipulation available within this API. But this mode lacks the ability to manipulate encoding parameters and other important features like video compression, audio encoding, etc. **You can learn about this mode [here][ncm-writegear-wiki]**.
 
 **Following functional block diagram depicts WriteGear API's generalized working:**
 
@@ -362,7 +362,7 @@ WebGear API provides a flexible abtract asyncio wrapper around [Starlette][starl
 WebGear can acts as robust _Live Video Streaming Server_ that can stream live video frames to any web browser on a network in real-time. It also auto-generates necessary data files for its default template and provides us the freedom to easily alter its [_performance parameters and routing tables_][advanced-webgear-wiki] according to our applications while handling errors robustly.
 
 
-In addition to this, WebGear provides a special internal wrapper around [VideoGear](#vidgear) API, which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs thereby granting it exclusive power for streaming frames incoming from any device/source. Also on the plus side, since WebGear has access to all functions of [VideoGear](#vidgear) API, therefore it can [stabilize video frames][stabilize_webgear_wiki] even while streaming live.
+In addition to this, WebGear provides a special internal wrapper around [VideoGear](#videogear) API, which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs thereby granting it exclusive power for streaming frames incoming from any device/source. Also on the plus side, since WebGear has access to all functions of [VideoGear](#videogear) API, therefore it can [stabilize video frames][stabilize_webgear_wiki] even while streaming live.
 
 **Below is a snapshot of a WebGear Video Server in action on the Mozilla Firefox browser:**
 
@@ -438,46 +438,46 @@ Before installing VidGear, you must verify that the following dependencies are m
 
 * **`OpenCV:`** Required OpenCV(3.0+) python enabled binaries for core functions. For installation, you can either follow these online tutorials for [linux][OpenCV-linux] and [raspberry pi][OpenCV-pi], or, install it directly via pip:
 
-    ```sh
-      pip3 install -U opencv-python       #or install opencv-contrib-python similarly
+    ```shellsession
+      (sudo) pip3 install -U opencv-python       #or install opencv-contrib-python similarly
     ```
 
 * **`FFmpeg:`** Require FFmpeg for video compression and encoding. :star2: Follow this [**FFmpeg wiki page**][ffmpeg-wiki] for its installation. :star2:
 
 * **`picamera:`** Required if you're using Raspberry Pi Camera Modules(_such as OmniVision OV5647 Camera Module_) with your Raspberry Pi machine. You can easily install it via pip:
 
-    ```sh
-      pip3 install picamera
+    ```shellsession
+      (sudo) pip3 install picamera
     ``` 
   _:bulb: Also, make sure to [enable Raspberry Pi hardware-specific settings][picamera-setting] prior to using this library._
 
 * **`starlette:`** Require [`starlette`][starlette] for ASGI video streaming. You can easily install it along with some additional dependencies via pip as follows:
 
-    ```sh
-      pip3 install starlette 
-      pip3 install jinja2, aiofiles #additional dependencies
+    ```shellsession
+      (sudo) pip3 install starlette 
+      (sudo) pip3 install jinja2, aiofiles #additional dependencies
     ``` 
 
 * **`mss:`** Required for using Screen Casting. Install it via pip:
 
-    ```sh
-      pip3 install mss
+    ```shellsession
+      (sudo) pip3 install mss
     ```
 * **`pyzmq:`** Required for transferring live video frames through _ZeroMQ messaging system_ over the network. Install it via pip:
 
-    ```sh
-      pip3 install pyzmq
+    ```shellsession
+      (sudo) pip3 install pyzmq
     ```
 
 * **`pafy:`** Required for direct YouTube Video streaming capabilities. Both [`pafy`][pafy] and latest [`youtube-dl`][yt-dl](_as pafy's backend_) library can be installed via pip as follows:
 
-    ```sh
-      pip3 install pafy
-      pip3 install -U youtube-dl
+    ```shellsession
+      (sudo) pip3 install pafy
+      (sudo) pip3 install -U youtube-dl
     ```
 * **Optional:** You'll also need to install an ASGI [`uvicorn`][uvicorn] Server to run WebGear examples, it can be done as follows: 
-    ```sh
-    pip3 install uvicorn
+    ```shellsession
+      (sudo) pip3 install uvicorn
     ```
   But you can also use other ASGI server such as [`daphne`][daphne], or [`hypercorn`][hypercorn].
 
@@ -489,8 +489,8 @@ Before installing VidGear, you must verify that the following dependencies are m
 
 > Best option for **quickly** getting VidGear installed.
 
-```sh
-  pip3 install vidgear
+```shellsession
+  (sudo) pip3 install vidgear
 ```
 
 
@@ -507,11 +507,11 @@ VidGear releases are available for download as packages in the [latest release][
 > Best option for trying **latest patches(_maybe experimental_), Pull Requests**, or **contributing** to development.
 
 You can clone this repository's `testing` branch for development and thereby can install as follows:
-```sh
- git clone https://github.com/abhiTronix/vidgear.git
- cd vidgear
- git checkout testing
- sudo pip3 install .
+```shellsession
+  git clone https://github.com/abhiTronix/vidgear.git
+  cd vidgear
+  git checkout testing
+  (sudo) pip3 install .        #sudo for root privileges on Unix
 ```
 
 
@@ -519,7 +519,7 @@ You can clone this repository's `testing` branch for development and thereby can
 
 ## Supported Python legacies
 
-  * **[Python 3.6+][drop35] are only supported legacies for installing Vidgear v0.1.7-dev and above.**
+  * [Python 3.6+][drop35] are only supported legacies for installing Vidgear v0.1.7-dev and above.
 
 &nbsp;
 
@@ -539,21 +539,21 @@ The complete documentation for all VidGear classes and functions can be found in
 
   * **Clone & Install [Testing Branch](#option-3-clone-the-repository)**
 
-  * **Download few additional python libraries:**
-    ```sh
-     pip3 install pytest
+  * **Download [`pytest`][pytest] python library:**
+    ```shellsession
+     (sudo) pip3 install pytest
     ```
   
   * **Download Test Dataset:** To perform tests, additional *test dataset* is required, which can be downloaded *(to temp dir)* by running [*bash script*][bs_script_dataset] as follows:
 
-    ```sh
+    ```shellsession
      chmod +x scripts/bash/prepare_dataset.sh
      .scripts/bash/prepare_dataset.sh               #for Windows, use `sh scripts/bash/prepare_dataset.sh`
     ```
 
 * **Run Tests:** Then various VidGear tests can be run with `pytest`(*in VidGear's root folder*) as below:
 
-  ```sh
+  ```shellsession
    pytest -sv                                   #-sv for verbose output.
   ```
 
@@ -569,7 +569,7 @@ We're on [**Gitter**][gitter]! Please join us.
 
 # Contributing
 
-Contributions are welcome! Please see our [Contributing Guide](contributing.md) for more details.
+Contributions are welcome! Please see our **[Contributing Guide](contributing.md)** for more details.
 
 
 &nbsp;
@@ -577,7 +577,8 @@ Contributions are welcome! Please see our [Contributing Guide](contributing.md) 
 
 # Citing
 
-*Here is a Bibtex entry you can use to cite this project in a publication:*
+Here is a Bibtex entry you can use to cite this project in a publication:
+
 
 ```latex
 @misc{vidgear,
@@ -661,6 +662,7 @@ Internal URLs
 External URLs
 -->
 [ffmpeg]:https://www.ffmpeg.org/
+[pytest]:https://docs.pytest.org/en/latest/
 [opencv-writer]:https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5
 [OpenCV-linux]:https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/
 [OpenCV-pi]:https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/
