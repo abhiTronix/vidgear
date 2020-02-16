@@ -306,7 +306,7 @@ class PiGear:
 				self.__camera.close()
 
 				#properly handle thread exit
-				self.__thread.terminate()
+				self.__thread.join()
 				self.__thread.wait() #wait if still process is still processing some information
 				self.__thread = None
 			else:
