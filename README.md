@@ -226,7 +226,7 @@ stream_stab.stop()
 
 PiGear provides a flexible multi-threaded wrapper around complete [**picamera**][picamera] python library to interface with these modules correctly, and also grants the ability to exploit its various features like `brightness, saturation, sensor_mode, etc.` effortlessly. 
 
-Best of all, PiGear API provides excellent Error-Handling with features like a threaded internal timer that keeps active track of any frozen threads and handles hardware failures/frozen threads robustly thereby will exit safely if any failure occurs. So now if you accidently pulled your camera module cable out when running PiGear API in your script, instead of going into possible kernel panic/frozen threads, API exit safely to save resources. 
+Best of all, PiGear API provides excellent Error-Handling with features like a threaded internal timer that keeps active track of any frozen threads and handles hardware failures/frozen threads robustly thereby will exit safely if any failure occurs. So now if you accidentally pulled your camera module cable out when running PiGear API in your script, instead of going into possible kernel panic/frozen threads, API exit safely to save resources. 
 
 **Following simplified functional block diagram depicts PiGear API:**
 
@@ -242,7 +242,7 @@ Best of all, PiGear API provides excellent Error-Handling with features like a t
 
 ## ScreenGear
 
-> *ScreenGear API act as Screen Recorder, that can grab frames from your monitor in real-time either by define an area on the computer screen or fullscreen at the expense of insignificant latency. It also provide seemless support for capturing frames from multiple monitors.*
+> *ScreenGear API act as Screen Recorder, that can grab frames from your monitor in real-time either by define an area on the computer screen or fullscreen at the expense of insignificant latency. It also provide seamless support for capturing frames from multiple monitors.*
 
 ScreenGear provides a high-level multi-threaded wrapper around [**python-mss**][mss] python library API and also supports a easy and flexible direct internal parameter manipulation. 
 
@@ -357,7 +357,7 @@ Best of all, NetGear can robustly [handle Multiple Servers][netgear_multi_wiki] 
 
 > *WebGear is a powerful ASGI Video Streamer API, that transfers live video frames to any web browser on the network in real-time.*
 
-WebGear API provides a flexible abtract asyncio wrapper around [Starlette][starlette] ASGI library and easy access to its various components independently. Thereby implementing the ability to flexibly interact with the Starlette's ecosystem of shared middleware and mountable applications & seamless access to its various Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.
+WebGear API provides a flexible abstract asyncio wrapper around [Starlette][starlette] ASGI library and easy access to its various components independently. Thereby implementing the ability to flexibly interact with the Starlette's ecosystem of shared middleware and mountable applications & seamless access to its various Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.
 
 WebGear can acts as robust _Live Video Streaming Server_ that can stream live video frames to any web browser on a network in real-time. It also auto-generates necessary data files for its default template and provides us the freedom to easily alter its [_performance parameters and routing tables_][advanced-webgear-wiki] according to our applications while handling errors robustly.
 
@@ -569,7 +569,7 @@ We're on [**Gitter**][gitter]! Please join us.
 
 # Contributing
 
-Contributions are welcome! Please see our **[Contributing Guide](contributing.md)** for more details.
+Contributions are welcome! Please see our **[Contribution Guidelines](contributing.md)** for more details.
 
 
 &nbsp;
