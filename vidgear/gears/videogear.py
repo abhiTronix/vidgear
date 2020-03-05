@@ -24,15 +24,15 @@ from .helper import logger_handler
 import logging as log
 
 
-#define logger
-logger = log.getLogger('VideoGear')
+# define logger
+logger = log.getLogger("VideoGear")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
 class VideoGear:
 
-	"""
+    """
 	VideoGear API provides a special internal wrapper around VidGear's exclusive Video Stabilizer Class. Furthermore, VideoGear API can provide 
 	internal access to both CamGear and PiGear APIs separated by a special flag. Thereby, this API holds the exclusive power for any incoming 
 	VideoStream from any source, whether it is live or not, to stabilize it directly with minimum latency and memory requirements.
@@ -89,81 +89,131 @@ class VideoGear:
 							/ Its default value is 0.
 	"""
 
-	def __init__(self, enablePiCamera = False, stabilize = False, source = 0, camera_num = 0, y_tube = False, backend = 0, colorspace = None, resolution = (640, 480), framerate = 30, logging = False, time_delay = 0, **options):
-		
-		#initialize stabilizer
-		self.__stablization_mode = stabilize
+    def __init__(
+        self,
+        enablePiCamera=False,
+        stabilize=False,
+        source=0,
+        camera_num=0,
+        y_tube=False,
+        backend=0,
+        colorspace=None,
+        resolution=(640, 480),
+        framerate=30,
+        logging=False,
+        time_delay=0,
+        **options
+    ):
 
-		# enable logging if specified
-		self.__logging = False
-		if logging: self.__logging = logging
+        # initialize stabilizer
+        self.__stablization_mode = stabilize
 
-		#reformat dictionary
-		options = {str(k).strip(): v for k,v in options.items()}
+        # enable logging if specified
+        self.__logging = False
+        if logging:
+            self.__logging = logging
 
-		if self.__stablization_mode:
-			from .stabilizer import Stabilizer
-			s_radius, border_size, border_type, crop_n_zoom = (25, 0, 'black', False) #defaults
-			if options:
-				if "SMOOTHING_RADIUS" in options:
-					if isinstance(options["SMOOTHING_RADIUS"],int):
-						s_radius = options["SMOOTHING_RADIUS"] #assigsn special parameter to global variable
-					del options["SMOOTHING_RADIUS"] #clean
-				if "BORDER_SIZE" in options:
-					if isinstance(options["BORDER_SIZE"],int):
-						border_size = options["BORDER_SIZE"] #assigsn special parameter
-					del options["BORDER_SIZE"] #clean
-				if "BORDER_TYPE" in options:
-					if isinstance(options["BORDER_TYPE"],str):
-						border_type = options["BORDER_TYPE"] #assigsn special parameter
-					del options["BORDER_TYPE"] #clean
-				if "CROP_N_ZOOM" in options:
-					if isinstance(options["CROP_N_ZOOM"],bool):
-						crop_n_zoom = options["CROP_N_ZOOM"] #assigsn special parameter
-					del options["CROP_N_ZOOM"] #clean
-			self.__stabilizer_obj = Stabilizer(smoothing_radius = s_radius, border_type = border_type, border_size = border_size, crop_n_zoom = crop_n_zoom, logging = logging)
-			if self.__logging: logger.debug('Enabling Stablization Mode for the current video source!') #log info
+        # reformat dictionary
+        options = {str(k).strip(): v for k, v in options.items()}
 
-		if enablePiCamera:
-			# only import the pigear module only if required
-			from .pigear import PiGear
+        if self.__stablization_mode:
+            from .stabilizer import Stabilizer
 
-			# initialize the picamera stream by enabling PiGear API
-			self.stream = PiGear(camera_num = camera_num, resolution = resolution, framerate = framerate, colorspace = colorspace, logging = logging, time_delay = time_delay, **options)
-		else:
-			# otherwise, we are using OpenCV so initialize the webcam
-			# stream by activating CamGear API
-			self.stream = CamGear(source = source, y_tube = y_tube, backend = backend, colorspace = colorspace, logging = logging, time_delay = time_delay, **options)
+            s_radius, border_size, border_type, crop_n_zoom = (
+                25,
+                0,
+                "black",
+                False,
+            )  # defaults
+            if options:
+                if "SMOOTHING_RADIUS" in options:
+                    if isinstance(options["SMOOTHING_RADIUS"], int):
+                        s_radius = options[
+                            "SMOOTHING_RADIUS"
+                        ]  # assigsn special parameter to global variable
+                    del options["SMOOTHING_RADIUS"]  # clean
+                if "BORDER_SIZE" in options:
+                    if isinstance(options["BORDER_SIZE"], int):
+                        border_size = options[
+                            "BORDER_SIZE"
+                        ]  # assigsn special parameter
+                    del options["BORDER_SIZE"]  # clean
+                if "BORDER_TYPE" in options:
+                    if isinstance(options["BORDER_TYPE"], str):
+                        border_type = options[
+                            "BORDER_TYPE"
+                        ]  # assigsn special parameter
+                    del options["BORDER_TYPE"]  # clean
+                if "CROP_N_ZOOM" in options:
+                    if isinstance(options["CROP_N_ZOOM"], bool):
+                        crop_n_zoom = options[
+                            "CROP_N_ZOOM"
+                        ]  # assigsn special parameter
+                    del options["CROP_N_ZOOM"]  # clean
+            self.__stabilizer_obj = Stabilizer(
+                smoothing_radius=s_radius,
+                border_type=border_type,
+                border_size=border_size,
+                crop_n_zoom=crop_n_zoom,
+                logging=logging,
+            )
+            if self.__logging:
+                logger.debug(
+                    "Enabling Stablization Mode for the current video source!"
+                )  # log info
 
-		#initialize framerate variable
-		self.framerate = self.stream.framerate
+        if enablePiCamera:
+            # only import the pigear module only if required
+            from .pigear import PiGear
 
+            # initialize the picamera stream by enabling PiGear API
+            self.stream = PiGear(
+                camera_num=camera_num,
+                resolution=resolution,
+                framerate=framerate,
+                colorspace=colorspace,
+                logging=logging,
+                time_delay=time_delay,
+                **options
+            )
+        else:
+            # otherwise, we are using OpenCV so initialize the webcam
+            # stream by activating CamGear API
+            self.stream = CamGear(
+                source=source,
+                y_tube=y_tube,
+                backend=backend,
+                colorspace=colorspace,
+                logging=logging,
+                time_delay=time_delay,
+                **options
+            )
 
+        # initialize framerate variable
+        self.framerate = self.stream.framerate
 
-	def start(self):
-		# start the threaded video stream
-		self.stream.start()
-		return self
+    def start(self):
+        # start the threaded video stream
+        self.stream.start()
+        return self
 
+    def read(self):
+        # return the current frame
+        while self.__stablization_mode:
+            frame = self.stream.read()
+            if frame is None:
+                break
+            frame_stab = self.__stabilizer_obj.stabilize(frame)
+            if not (frame_stab is None):
+                return frame_stab
+        return self.stream.read()
 
-
-	def read(self):
-		# return the current frame
-		while self.__stablization_mode:
-			frame = self.stream.read()
-			if frame is None:
-				break
-			frame_stab = self.__stabilizer_obj.stabilize(frame)
-			if not(frame_stab is None):
-				return frame_stab
-		return self.stream.read()
-
-
-
-	def stop(self):
-		# stop the thread and release any resources
-		self.stream.stop()
-		#logged
-		if self.__logging: logger.debug("Terminating VideoGear.")
-		#clean queue
-		if self.__stablization_mode: self.__stabilizer_obj.clean()
+    def stop(self):
+        # stop the thread and release any resources
+        self.stream.stop()
+        # logged
+        if self.__logging:
+            logger.debug("Terminating VideoGear.")
+        # clean queue
+        if self.__stablization_mode:
+            self.__stabilizer_obj.clean()

@@ -23,35 +23,33 @@ import numpy as np
 import pytest
 
 
-
 def test_assertfailedwrite():
-	"""
+    """
 	IO Test - made to fail with Wrong Output file path
 	"""
-	np.random.seed(0)
-	# generate random data for 10 frames
-	random_data = np.random.random(size=(10, 480, 640, 3)) * 255
-	input_data = random_data.astype(np.uint8)
+    np.random.seed(0)
+    # generate random data for 10 frames
+    random_data = np.random.random(size=(10, 480, 640, 3)) * 255
+    input_data = random_data.astype(np.uint8)
 
-	with pytest.raises(AssertionError):
-		# wrong folder path does not exist
-		writer = WriteGear("wrong_path/output.mp4")
-		writer.write(input_data)
-		writer.close()
-
+    with pytest.raises(AssertionError):
+        # wrong folder path does not exist
+        writer = WriteGear("wrong_path/output.mp4")
+        writer.write(input_data)
+        writer.close()
 
 
 def test_failedextension():
-	"""
+    """
 	IO Test - made to fail with filename with wrong extention
 	"""
-	np.random.seed(0)
-	# generate random data for 10 frames
-	random_data = np.random.random(size=(10, 480, 640, 3)) * 255
-	input_data = random_data.astype(np.uint8)
-	
-	# 'garbage' extension does not exist
-	with pytest.raises(ValueError):
-		writer = WriteGear("garbage.garbage")
-		writer.write(input_data)
-		writer.close()
+    np.random.seed(0)
+    # generate random data for 10 frames
+    random_data = np.random.random(size=(10, 480, 640, 3)) * 255
+    input_data = random_data.astype(np.uint8)
+
+    # 'garbage' extension does not exist
+    with pytest.raises(ValueError):
+        writer = WriteGear("garbage.garbage")
+        writer.write(input_data)
+        writer.close()

@@ -27,64 +27,63 @@ from vidgear.gears.helper import logger_handler
 from .fps import FPS
 import logging as log
 
-logger = log.getLogger('Test_benchmark_videocapture')
+logger = log.getLogger("Test_benchmark_videocapture")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
+
 def return_testvideo_path():
-	"""
+    """
 	returns Test Video path
 	"""
-	path = '{}/Downloads/Test_videos/BigBuckBunny.mp4'.format(tempfile.gettempdir())
-	return os.path.abspath(path)
-
+    path = "{}/Downloads/Test_videos/BigBuckBunny.mp4".format(tempfile.gettempdir())
+    return os.path.abspath(path)
 
 
 def Videocapture_withCV(path):
-	"""
+    """
 	Function to benchmark OpenCV video playback 
 	"""
-	stream = cv2.VideoCapture(path)
-	fps_CV = FPS().start()
-	while True:
-		(grabbed, frame) = stream.read()
-		if not grabbed:
-			break
-		fps_CV.update()
-	fps_CV.stop()
-	stream.release()
-	logger.debug("OpenCV")
-	logger.debug("total elasped time: {:.2f}".format(fps_CV.total_time_elapsed()))
-	logger.debug("approx. FPS: {:.2f}".format(fps_CV.fps()))
-
+    stream = cv2.VideoCapture(path)
+    fps_CV = FPS().start()
+    while True:
+        (grabbed, frame) = stream.read()
+        if not grabbed:
+            break
+        fps_CV.update()
+    fps_CV.stop()
+    stream.release()
+    logger.debug("OpenCV")
+    logger.debug("total elasped time: {:.2f}".format(fps_CV.total_time_elapsed()))
+    logger.debug("approx. FPS: {:.2f}".format(fps_CV.fps()))
 
 
 def Videocapture_withVidGear(path):
-	"""
+    """
 	Function to benchmark VidGear multi-threaded video playback 
 	"""
-	options = {'THREADED_QUEUE_MODE':False}
-	stream = CamGear(source=path, **options).start()
-	fps_Vid = FPS().start()
-	while True:
-		frame = stream.read()
-		if frame is None:
-			break
-		fps_Vid.update()
-	fps_Vid.stop()
-	stream.stop()
-	logger.debug("VidGear")
-	logger.debug("total elasped time: {:.2f}".format(fps_Vid.total_time_elapsed()))
-	logger.debug("approx. FPS: {:.2f}".format(fps_Vid.fps()))
+    options = {"THREADED_QUEUE_MODE": False}
+    stream = CamGear(source=path, **options).start()
+    fps_Vid = FPS().start()
+    while True:
+        frame = stream.read()
+        if frame is None:
+            break
+        fps_Vid.update()
+    fps_Vid.stop()
+    stream.stop()
+    logger.debug("VidGear")
+    logger.debug("total elasped time: {:.2f}".format(fps_Vid.total_time_elapsed()))
+    logger.debug("approx. FPS: {:.2f}".format(fps_Vid.fps()))
 
 
 @pytest.mark.xfail(raises=RuntimeError)
 def test_benchmark_videocapture():
-	"""
+    """
 	Benchmarking OpenCV playback against VidGear playback (in FPS)
 	"""
-	try:
-		Videocapture_withCV(return_testvideo_path())
-		Videocapture_withVidGear(return_testvideo_path())
-	except Exception as e:
-		raise RuntimeError(e)
+    try:
+        Videocapture_withCV(return_testvideo_path())
+        Videocapture_withVidGear(return_testvideo_path())
+    except Exception as e:
+        raise RuntimeError(e)
