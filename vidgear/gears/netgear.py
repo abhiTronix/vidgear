@@ -154,7 +154,7 @@ class NetGear:
 		self.__id = ''.join(random.choice('0123456789ABCDEF') for i in range(5))
 
 		self.__msg_flag = 0 #handles connection flags
-		self.__msg_copy = True #handles whether to copy data
+		self.__msg_copy = False #handles whether to copy data
 		self.__msg_track = False #handles whether to track packets
 
 		self.__multiserver_mode = False #handles multiserver_mode state

@@ -49,8 +49,9 @@ def logger_handler():
 			datefmt=None,
 			reset=True,
 			log_colors={
-						'DEBUG':    'bold_green',
-						'WARNING':  'bold_yellow',
+						'INFO':     'bold_green',
+						'DEBUG':    'bold_yellow',
+						'WARNING':  'bold_purple',
 						'ERROR':    'bold_red',
 						'CRITICAL': 'bold_red,bg_white',
 						})
@@ -58,6 +59,7 @@ def logger_handler():
 	handler = log.StreamHandler()
 	handler.setFormatter(formatter)
 	return handler
+
 
 
 #define logger
@@ -405,131 +407,3 @@ def validate_auth_keys(path, extension):
 
 	#return results
 	return True if(len(keys_buffer) == 2) else False
-
-
-
-def reducer(frame = None, percentage = 0):
-
-	"""
-	Reduces frame size by given percentage
-	"""
-	#check if frame is valid
-	if frame is None: raise ValueError("[Helper:ERROR] :: Input frame cannot be NoneType!")
-
-	#check if valid reduction percentage is given
-	if not(percentage > 0 and percentage < 90): raise ValueError("[Helper:ERROR] :: Given frame-size reduction percentage is invalid, Kindly refer docs.")
-
-	# grab the frame size
-	(height, width) = frame.shape[:2]
-
-	# calculate the ratio of the width from percentage
-	reduction = ((100-percentage)/100)*width
-	ratio = (reduction / float(width))
-	#construct the dimensions
-	dimensions = (int(reduction), int(height * ratio))
-
-	# return the resized frame
-	return cv2.resize(frame, dimensions, interpolation=cv2.INTER_LANCZOS4)
-
-
-
-def generate_webdata(path, overwrite_default = False, logging = False):
-	""" 
-	handles WebGear API data-files validation and generation 
-	"""
-
-	#check if path corresponds to vidgear only
-	if (os.path.basename(path) != ".vidgear"): path = os.path.join(path,".vidgear")
-
-	#self-generate dirs
-	template_dir = os.path.join(path, 'templates') #generates HTML templates dir
-	static_dir = os.path.join(path, 'static') #generates static dir
-	#generate js & css static and favicon img subdirs
-	js_static_dir = os.path.join(static_dir, 'js')
-	css_static_dir = os.path.join(static_dir, 'css')
-	favicon_dir = os.path.join(static_dir, 'img')
-
-	mkdir_safe(static_dir)
-	mkdir_safe(template_dir)
-	mkdir_safe(js_static_dir)
-	mkdir_safe(css_static_dir)
-	mkdir_safe(favicon_dir)
-
-	#check if overwriting is enabled
-	if overwrite_default:
-		logger.critical("Overwriting existing WebGear data-files with default data-files from the server!")
-		download_webdata(template_dir, files = ['index.html', '404.html', '500.html', 'base.html'], logging = logging)
-		download_webdata(css_static_dir, files = ['bootstrap.min.css', 'cover.css'], logging = logging)
-		download_webdata(js_static_dir, files = ['bootstrap.min.js', 'jquery-3.4.1.slim.min.js', 'popper.min.js'], logging = logging)
-		download_webdata(favicon_dir, files = ['favicon-32x32.png'], logging = logging)
-	else:
-		#validate important data-files
-		if validate_webdata(template_dir, ['index.html', '404.html', '500.html']):
-			if logging: logger.debug("Found valid WebGear data-files successfully.")
-		else:
-			#otherwise download default files
-			logger.critical("Failed to detect critical WebGear data-files: index.html, 404.html & 500.html!")
-			logger.warning("Re-downloading default data-files from the server.")
-			download_webdata(template_dir, files = ['index.html', '404.html', '500.html', 'base.html'], logging = logging)
-			download_webdata(css_static_dir, files = ['bootstrap.min.css', 'cover.css'], logging = logging)
-			download_webdata(js_static_dir, files = ['bootstrap.min.js', 'jquery-3.4.1.slim.min.js', 'popper.min.js'], logging = logging)
-			download_webdata(favicon_dir, files = ['favicon-32x32.png'], logging = logging)
-	return path
-
-
-
-def download_webdata(path, files = [], logging = False):
-	"""
-	Downloads default data-files from the server
-	"""
-	basename = os.path.basename(path)
-	if logging: logger.debug("Downloading {} data-files at `{}`".format(basename, path))
-	for file in files:
-		#get filename
-		file_name = os.path.join(path, file)
-		#get URL
-		if basename == 'templates':
-			file_url = 'https://raw.githubusercontent.com/abhiTronix/webgear_data/master/{}/{}'.format(basename, file)
-		else:
-			file_url = 'https://raw.githubusercontent.com/abhiTronix/webgear_data/master/static/{}/{}'.format(basename, file)
-		#download and write file to the given path
-		if logging: logger.debug("Downloading {} data-file: {}.".format(basename, file))
-		
-		response  = requests.get(file_url, stream=True, timeout=2)
-		response.raise_for_status()
-		total_length = response.headers.get('content-length')
-		assert not(total_length is None), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
-		pbar = tqdm(total=int(total_length), unit="B", unit_scale=True)
-		with open(file_name, "wb") as f:
-			for data in response.iter_content(chunk_size=1024):
-				pbar.update(len(data))
-				f.write(data)
-		pbar.close()
-	if logging: logger.debug("Verifying downloaded data:")
-	if validate_webdata(path, files = files, logging = logging):
-		if logging: logger.info("Successful!")
-		return path
-	else:
-		raise RuntimeError("[Helper:ERROR] :: Failed to download required {} data-files at: {}, Check your Internet connectivity!".format(basename, path))
-
-
-
-def validate_webdata(path, files = [], logging = False):
-	"""
-	validates WebGear API data-files
-	"""
-	#check if valid path or directory empty
-	if not(os.path.exists(path)) or not(os.listdir(path)): return False
-
-	files_buffer = []
-	# loop over files
-	for file in os.listdir(path):
-		if file in files: 
-			files_buffer.append(file) #store them
-
-	#return results
-	if(len(files_buffer) < len(files)):
-		if logging: logger.warning('`{}` file(s) missing from data-files!'.format(' ,'.join(list(set(files_buffer) ^ set(files)))))
-		return False
-	else:
-		return True

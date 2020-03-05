@@ -26,7 +26,7 @@ from starlette.staticfiles import StaticFiles
 from starlette.routing import Mount
 from starlette.routing import Route
 
-from .videogear import VideoGear
+from ..videogear import VideoGear
 from .helper import reducer
 from .helper import logger_handler
 from .helper import generate_webdata
@@ -61,30 +61,30 @@ class WebGear:
 
 	WebGear specific parameters:
 
-    - ** options:(dict): can be used in addition, to pass user-defined parameter to WebGear API in the form of python dictionary. Supported WebGear 
-    					dictionary attributes are:
+	- ** options:(dict): can be used in addition, to pass user-defined parameter to WebGear API in the form of python dictionary. Supported WebGear 
+						dictionary attributes are:
 
-        - `custom_data_location` (str): Can be used to change/alter `default location` path to somewhere else. 
+		- `custom_data_location` (str): Can be used to change/alter `default location` path to somewhere else. 
 
-        - `overwrite_default_files` (bool): Can be used to force trigger the `Auto-generation process` to overwrite existing data-files. Remember only downloaded 
-        									files will be overwritten in this process, and any other file/folder will NOT be affected/overwritten.
+		- `overwrite_default_files` (bool): Can be used to force trigger the `Auto-generation process` to overwrite existing data-files. Remember only downloaded 
+											files will be overwritten in this process, and any other file/folder will NOT be affected/overwritten.
 
-        - `frame_size_reduction`: (int/float) This attribute controls the size reduction (in percentage) of the frame to be streamed on Server. 
-        										Its value can be between 0-90, and the recommended value is 40. 
+		- `frame_size_reduction`: (int/float) This attribute controls the size reduction (in percentage) of the frame to be streamed on Server. 
+												Its value can be between 0-90, and the recommended value is 40. 
 
-        - JPEG Encoding Parameters: In WebGear, the input video frames are first encoded into Motion JPEG (M-JPEG or MJPEG) video compression format in which 
-        						each video frame or interlaced field of a digital video sequence is compressed separately as a JPEG image, before sending onto 
-        						a server. Therefore, WebGear API provides various attributes to have full control over JPEG encoding performance and quality, 
-        						which are as follows:
+		- JPEG Encoding Parameters: In WebGear, the input video frames are first encoded into Motion JPEG (M-JPEG or MJPEG) video compression format in which 
+								each video frame or interlaced field of a digital video sequence is compressed separately as a JPEG image, before sending onto 
+								a server. Therefore, WebGear API provides various attributes to have full control over JPEG encoding performance and quality, 
+								which are as follows:
 
-            - `frame_jpeg_quality`(int) It controls the JPEG encoder quality and value varies from 0 to 100 (the higher is the better quality but 
-            								performance will be lower). Its default value is 95. 
+			- `frame_jpeg_quality`(int) It controls the JPEG encoder quality and value varies from 0 to 100 (the higher is the better quality but 
+											performance will be lower). Its default value is 95. 
 
-            - `frame_jpeg_optimize`(bool) It enables various JPEG compression optimizations such as Chroma subsampling, Quantization table, etc. 
-            							Its default value is `False`. 
+			- `frame_jpeg_optimize`(bool) It enables various JPEG compression optimizations such as Chroma subsampling, Quantization table, etc. 
+										Its default value is `False`. 
 
-            - `frame_jpeg_progressive`(bool) It enables Progressive JPEG encoding instead of the Baseline. Progressive Mode. 
-            								Its default value is `False` means baseline mode. 
+			- `frame_jpeg_progressive`(bool) It enables Progressive JPEG encoding instead of the Baseline. Progressive Mode. 
+											Its default value is `False` means baseline mode. 
 
 
 	VideoGear Specific parameters for WebGear:
@@ -202,14 +202,26 @@ class WebGear:
 		#define stream with necessary params
 		self.stream = VideoGear(enablePiCamera = enablePiCamera, stabilize = stabilize, source = source, camera_num = camera_num, y_tube = y_tube, backend = backend, colorspace = colorspace, resolution = resolution, framerate = framerate, logging = logging, time_delay = time_delay, **options)
 
+
+		loop = asyncio.get_event_loop()
 		#check if custom certificates path is specified
-		if custom_data_location:
-			data_path = generate_webdata(custom_data_location, overwrite_default = overwrite_default, logging = logging)
-		else:
-			# otherwise generate suitable path
-			from os.path import expanduser
-			data_path = generate_webdata(os.path.join(expanduser("~"),".vidgear"), overwrite_default = overwrite_default, logging = logging)
-		
+		try:
+			if custom_data_location:
+				data_path = loop.run_until_complete(generate_webdata(custom_data_location, overwrite_default = overwrite_default, logging = logging))
+				loop.stop()
+			else:
+				# otherwise generate suitable path
+				from os.path import expanduser
+				data_path = loop.run_until_complete(generate_webdata(os.path.join(expanduser("~"),".vidgear"), overwrite_default = overwrite_default, logging = logging))
+				loop.stop()
+		except Exception as err:
+			if isinstance(err, asyncio.CancelledError):
+				logger.critical("ZMQ Auto-generation terminated")
+			else:
+				logger.error(str(err))
+			raise RuntimeError("Failed to generate webdata!")
+		loop.close()
+
 		#log it
 		if self.__logging: logger.debug('`{}` is the default location for saving WebGear data-files.'.format(data_path))
 		if self.__logging: logger.debug('Setting params:: Size Reduction:{}%, JPEG quality:{}%, JPEG optimizations:{}, JPEG progressive:{}'.format(self.__frame_size_reduction, self.__jpeg_quality, bool(self.__jpeg_optimize), bool(self.__jpeg_progressive)))
@@ -258,7 +270,7 @@ class WebGear:
 			#break if NoneType
 			if frame is None: break
 			#reducer frames size if specified
-			if self.__frame_size_reduction: frame = reducer(frame, percentage = self.__frame_size_reduction)
+			if self.__frame_size_reduction: frame = await reducer(frame, percentage = self.__frame_size_reduction)
 			#handle JPEG encoding
 			encodedImage = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, self.__jpeg_quality, cv2.IMWRITE_JPEG_PROGRESSIVE, self.__jpeg_progressive,cv2.IMWRITE_JPEG_OPTIMIZE, self.__jpeg_optimize])[1].tobytes()
 			#yield frame in byte format
