@@ -187,7 +187,7 @@ class PiGear:
             self.__rawCapture.seek(0)
             self.__rawCapture.truncate()
             # render colorspace if defined
-            if not (self.frame is None and self.color_space is None):
+            if not(self.frame is None) and not(self.color_space is None):
                 self.frame = cv2.cvtColor(self.frame, self.color_space)
         except Exception as e:
             logger.exception(str(e))

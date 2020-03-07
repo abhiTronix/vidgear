@@ -53,7 +53,7 @@ setup(
     name="vidgear",
     packages=["vidgear", "vidgear.gears", "vidgear.gears.async"],
     version="0.1.7-dev",
-    description="Most Powerful multi-threaded Video Processing Python framework powerpacked with unique trailblazing features.",
+    description="Most Powerful cross-platform Video Processing Python framework powerpacked with unique trailblazing features.",
     license="Apache License 2.0",
     author="Abhishek Thakur",
     install_requires=[
@@ -72,7 +72,7 @@ setup(
     author_email="abhi.una12@gmail.com",
     url="https://github.com/abhiTronix/vidgear",
     extras_require={
-        "async": ["starlette", "aiofiles", "jinja2", "aiohttp", "uvicorn",]
+        "async": ["starlette", "aiofiles", "jinja2", "aiohttp", "uvicorn", "async-timeout", "msgpack_numpy",]
     },
     download_url="https://github.com/abhiTronix/vidgear/releases/download/vidgear-0.1.7.dev0/vidgear-0.1.7.dev0.tar.gz",
     keywords=[
@@ -100,7 +100,6 @@ setup(
         "Topic :: Scientific/Engineering",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: Apache Software License",
-        "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",

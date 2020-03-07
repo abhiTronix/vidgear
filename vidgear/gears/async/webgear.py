@@ -259,7 +259,7 @@ class WebGear:
                 loop.stop()
         except Exception as err:
             if isinstance(err, asyncio.CancelledError):
-                logger.critical("ZMQ Auto-generation terminated")
+                logger.critical("WebGear Auto-generation terminated")
             else:
                 logger.error(str(err))
             raise RuntimeError("Failed to generate webdata!")
