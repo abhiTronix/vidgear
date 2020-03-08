@@ -28,9 +28,8 @@ from vidgear.gears.helper import validate_ffmpeg
 from vidgear.gears.helper import get_valid_ffmpeg_path
 from vidgear.gears.helper import generate_auth_certificates
 from vidgear.gears.helper import logger_handler
-from vidgear.gears.helper import reducer
-from vidgear.gears.helper import generate_webdata
-from vidgear.gears.helper import validate_webdata
+from vidgear.gears.async.helper import reducer
+
 
 logger = log.getLogger("Test_helper")
 logger.addHandler(logger_handler())
@@ -219,37 +218,3 @@ def test_reducer(frame, percentage, result):
             pass
         else:
             pytest.fail(str(e))
-
-
-test_data = [
-    (expanduser("~"), False, True),
-    (os.path.join(expanduser("~"), ".vidgear"), True, True),
-    ("test_folder", False, True),
-    (tempfile.gettempdir(), False, True),
-]
-
-
-@pytest.mark.parametrize("paths, overwrite_default, results", test_data)
-def test_generate_webdata(paths, overwrite_default, results):
-    """
-	Testing auto-Generation and auto-validation of WebGear data files 
-	"""
-    try:
-        output = generate_webdata(
-            paths, overwrite_default=overwrite_default, logging=True
-        )
-        assert bool(output) == results
-    except Exception as e:
-        pytest.fail(str(e))
-
-
-@pytest.mark.xfail(raises=Exception)
-def test_validate_webdata():
-    """
-	Testing validation function of WebGear API
-	"""
-    validate_webdata(
-        os.path.join(expanduser("~"), ".vidgear"),
-        files=["im_not_a_file1", "im_not_a_file2", "im_not_a_file3"],
-        logging=True,
-    )
