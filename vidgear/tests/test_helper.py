@@ -28,7 +28,7 @@ from vidgear.gears.helper import validate_ffmpeg
 from vidgear.gears.helper import get_valid_ffmpeg_path
 from vidgear.gears.helper import generate_auth_certificates
 from vidgear.gears.helper import logger_handler
-from vidgear.gears.async.helper import reducer
+from vidgear.gears.asyncio.helper import reducer
 
 
 logger = log.getLogger("Test_helper")

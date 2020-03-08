@@ -24,7 +24,7 @@ from ..videogear import VideoGear
 from collections import deque
 
 import cv2, inspect, platform
-import asyncio, uvloop, msgpack
+import asyncio, msgpack
 import msgpack_numpy as m
 import numpy as np
 import logging as log
@@ -242,7 +242,9 @@ class NetGear_Async:
                 self.__port = "5555"
 
         # Setup and assign uvloop event loop policy
-        if (platform.system() != "Windows"): asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+        if platform.system() != "Windows":
+            import uvloop
+            asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
         # Retrieve event loop and assign it
         self.loop = asyncio.get_event_loop()
 
@@ -292,7 +294,7 @@ class NetGear_Async:
                 )
         else:
             # raise error if validation fails
-            raise RunTimeError(
+            raise RuntimeError(
                 "[NetGear_Async:ERROR] :: Assigned NetGear configuration is invalid!"
             )
 
@@ -307,7 +309,7 @@ class NetGear_Async:
         except Exception as e:
             # log ad raise error if failed
             logger.exception(str(e))
-            raise RunTimeError(
+            raise RuntimeError(
                 "[NetGear_Async:ERROR] :: Failed to connect address: {} and pattern: {}!".format(
                     (
                         self.__protocol

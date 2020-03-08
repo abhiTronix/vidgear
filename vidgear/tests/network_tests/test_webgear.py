@@ -22,8 +22,8 @@ import tempfile, asyncio
 import os, pytest
 import logging as log
 
-from vidgear.gears.async import WebGear
-from vidgear.gears.async.helper import logger_handler
+from vidgear.gears.asyncio import WebGear
+from vidgear.gears.asyncio.helper import logger_handler
 from starlette.testclient import TestClient
 from starlette.responses import PlainTextResponse
 from starlette.routing import Route

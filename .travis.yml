@@ -87,7 +87,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     pip install --upgrade pip wheel;
     pip install --upgrade numpy;
-    pip install .[async];
+    pip install .[asyncio];
     pip uninstall opencv-python -y;
     pip install six;
     pip install codecov;
@@ -99,7 +99,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
     pip install --upgrade --user pip wheel;
     pip install --upgrade --user numpy;
-    pip install --upgrade --user .[async];
+    pip install --upgrade --user .[asyncio];
     pip install --user six;
     pip install --user codecov;
     pip install --upgrade --user pytest;
