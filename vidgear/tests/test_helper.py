@@ -191,30 +191,4 @@ def test_generate_auth_certificates(paths, overwrite_cert, results):
         assert bool(output) == results
     except Exception as e:
         pytest.fail(str(e))
-
-
-@pytest.mark.parametrize(
-    "frame , percentage, result",
-    [(getframe(), 85, True), (None, 80, False), (getframe(), 95, False)],
-)
-def test_reducer(frame, percentage, result):
-    """
-	Testing frame size reducer function 
-	"""
-    if not (frame is None):
-        org_size = frame.shape[:2]
-    try:
-        reduced_frame = reducer(frame, percentage)
-        assert not (reduced_frame is None)
-        reduced_frame_size = reduced_frame.shape[:2]
-        assert (
-            100 * reduced_frame_size[0] // (100 - percentage) == org_size[0]
-        )  # cross-check width
-        assert (
-            100 * reduced_frame_size[1] // (100 - percentage) == org_size[1]
-        )  # cross-check height
-    except Exception as e:
-        if isinstance(e, ValueError) and not (result):
-            pass
-        else:
-            pytest.fail(str(e))
+        
