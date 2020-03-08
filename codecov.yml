@@ -27,6 +27,6 @@ coverage:
 ignore:
   - "vidgear/tests"
   - "vidgear/gears/pigear.py" #CLI hardware emulation limitation
-  - "vidgear/gears/async/__main__.py" #trivial
-  - "vidgear/gears/async/netgear_async.py" #TODO
+  - "vidgear/gears/asyncio/__main__.py" #trivial
+  - "vidgear/gears/asyncio/netgear_async.py" #TODO
   - "setup.py"
