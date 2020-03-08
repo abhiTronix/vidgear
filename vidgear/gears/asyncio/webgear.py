@@ -233,11 +233,11 @@ class WebGear:
             **options
         )
 
-        self.loop = asyncio.get_event_loop()
+        loop = asyncio.get_event_loop()
         # check if custom certificates path is specified
         try:
             if custom_data_location:
-                data_path = self.loop.run_until_complete(
+                data_path = loop.run_until_complete(
                     generate_webdata(
                         custom_data_location,
                         overwrite_default=overwrite_default,
@@ -248,7 +248,7 @@ class WebGear:
                 # otherwise generate suitable path
                 from os.path import expanduser
 
-                data_path = self.loop.run_until_complete(
+                data_path = loop.run_until_complete(
                     generate_webdata(
                         os.path.join(expanduser("~"), ".vidgear"),
                         overwrite_default=overwrite_default,
@@ -261,7 +261,7 @@ class WebGear:
             else:
                 logger.error(str(err))
             raise RuntimeError("Failed to generate webdata!")
-        self.loop.stop()
+        loop.stop()
 
         # log it
         if self.__logging:
@@ -401,4 +401,3 @@ class WebGear:
             self.stream.stop()
             # prevent any re-iteration
             self.stream = None
-        self.loop.close()
