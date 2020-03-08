@@ -72,7 +72,7 @@ setup(
     author_email="abhi.una12@gmail.com",
     url="https://github.com/abhiTronix/vidgear",
     extras_require={
-        "async": ["starlette", "aiofiles", "jinja2", "aiohttp", "uvloop", "msgpack_numpy",]
+        "async": ["starlette", "aiofiles", "jinja2", "aiohttp", "uvicorn", "msgpack_numpy",] + (["uvloop"] if (platform.system() != "Windows") else [])
     },
     download_url="https://github.com/abhiTronix/vidgear/releases/download/vidgear-0.1.7.dev0/vidgear-0.1.7.dev0.tar.gz",
     keywords=[
@@ -83,6 +83,8 @@ setup(
         "starlette",
         "mss",
         "pyzmq",
+        "uvicorn",
+        "uvloops",
         "pafy",
         "Video Processing",
         "Video Stablization",

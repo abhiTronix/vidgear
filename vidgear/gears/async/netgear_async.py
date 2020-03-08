@@ -23,7 +23,7 @@ from .helper import logger_handler
 from ..videogear import VideoGear
 from collections import deque
 
-import cv2, inspect
+import cv2, inspect, platform
 import asyncio, uvloop, msgpack
 import msgpack_numpy as m
 import numpy as np
@@ -242,7 +242,7 @@ class NetGear_Async:
                 self.__port = "5555"
 
         # Setup and assign uvloop event loop policy
-        asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+        if (platform.system() != "Windows"): asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
         # Retrieve event loop and assign it
         self.loop = asyncio.get_event_loop()
 
