@@ -33,75 +33,79 @@ logger.setLevel(log.DEBUG)
 class VideoGear:
 
     """
-	VideoGear API provides a special internal wrapper around VidGear's exclusive Video Stabilizer Class. Furthermore, VideoGear API can provide 
-	internal access to both CamGear and PiGear APIs separated by a special flag. Thereby, this API holds the exclusive power for any incoming 
-	VideoStream from any source, whether it is live or not, to stabilize it directly with minimum latency and memory requirements.
+    VideoGear API provides a special internal wrapper around VidGear's exclusive Video Stabilizer Class. Furthermore, VideoGear API can provide 
+    internal access to both CamGear and PiGear APIs separated by a special flag. Thereby, this API holds the exclusive power for any incoming 
+    VideoStream from any source, whether it is live or not, to stabilize it directly with minimum latency and memory requirements.
 
 
-	VideoGear Specific parameters:
-	
-		:param (boolean) enablePiCamera: set this flag to access PiGear or CamGear API respectively. 
-										/ This means the if enablePiCamera flag is `True`, PiGear API will be accessed 
-										/ and if `False`, the camGear API will be accessed. Its default value is False.
+    VideoGear Specific parameters:
+    
+        :param (boolean) enablePiCamera: set this flag to access PiGear or CamGear API respectively. 
+                                        / This means the if enablePiCamera flag is `True`, PiGear API will be accessed 
+                                        / and if `False`, the camGear API will be accessed. Its default value is False.
 
-		:param (boolean) stabilize: set this flag to enable access to VidGear's Stabilizer API. This basically enables(if True) or disables(if False) 
-										video stabilization in VidGear. Its default value is False.
+        :param (boolean) stabilize: set this flag to enable access to VidGear's Stabilizer API. This basically enables(if True) or disables(if False) 
+                                        video stabilization in VidGear. Its default value is False.
 
-		:param (dict) **options: can be used in addition, to pass parameter supported by VidGear's stabilizer Class.
-								/ Supported dict keys are: 
-									- `SMOOTHING_RADIUS` (int) : to alter averaging window size. It handles the quality of stabilization at expense of latency and sudden panning. 
-															/ Larger its value, less will be panning, more will be latency and vice-versa. It's default value is 30.
-									- `BORDER_SIZE` (int) : to alter output border cropping. It's will crops the border to reduce the black borders from stabilization being too noticeable. 
-															/ Larger its value, more will be cropping. It's default value is 0 (i.e. no cropping).			
-									- `BORDER_TYPE` (string) : to change the border mode. Valid border types are 'black', 'reflect', 'reflect_101', 'replicate' and 'wrap'. It's default value is 'black'
-		
-		:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
-	
+        :param (dict) **options: can be used in addition, to pass parameter supported by VidGear's stabilizer Class.
+                                / Supported dict keys are: 
+                                    - `SMOOTHING_RADIUS` (int) : to alter averaging window size. It handles the quality of stabilization at expense of latency and sudden panning. 
+                                                            / Larger its value, less will be panning, more will be latency and vice-versa. It's default value is 30.
+                                    - `BORDER_SIZE` (int) : to alter output border cropping. It's will crops the border to reduce the black borders from stabilization being too noticeable. 
+                                                            / Larger its value, more will be cropping. It's default value is 0 (i.e. no cropping).          
+                                    - `BORDER_TYPE` (string) : to change the border mode. Valid border types are 'black', 'reflect', 'reflect_101', 'replicate' and 'wrap'. It's default value is 'black'
+        
+        :param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
+    
 
-	CamGear Specific supported parameters for VideoGear:
+    CamGear Specific supported parameters for VideoGear:
 
-		:param source : take the source value for CamGear API. Its default value is 0. Valid Inputs are:
-			- Index(integer): Valid index of the video device.
-			- YouTube Url(string): Youtube URL as input.
-			- Network_Stream_Address(string): Incoming Stream Valid Network address. 
-			- GStreamer (string) videostream Support
-		:param (boolean) y_tube: enables YouTube Mode in CamGear API, i.e If enabled the API will interpret the given source string as YouTube URL. 
-								/ Its default value is False.
-		:param (int) backend: set the backend of the video stream (if specified). Its default value is 0.
-
-
-	PiGear Specific supported parameters for VideoGear:
-		
-		:param (integer) camera_num: selects the camera module index that will be used by API. 
-								/	Its default value is 0 and shouldn't be altered until unless 
-								/	if you using Raspberry Pi 3/3+ compute module in your project along with multiple camera modules. 
-								/	Furthermore, Its value can only be greater than zero, otherwise, it will throw ValueError for any negative value.
-		:param (tuple) resolution: sets the resolution (width,height) in Picamera API. Its default value is (640,480).
-		:param (integer) framerate: sets the framerate in Picamera API. Its default value is 25.
+        :param source : take the source value for CamGear API. Its default value is 0. Valid Inputs are:
+            - Index(integer): Valid index of the video device.
+            - YouTube Url(string): Youtube URL as input.
+            - Network_Stream_Address(string): Incoming Stream Valid Network address. 
+            - GStreamer (string) videostream Support
+        :param (boolean) y_tube: enables YouTube Mode in CamGear API, i.e If enabled the API will interpret the given source string as YouTube URL. 
+                                / Its default value is False.
+        :param (int) backend: set the backend of the video stream (if specified). Its default value is 0.
 
 
-	Common parameters for CamGear and PiGear: 
-		:param (string) colorspace: set colorspace of the video stream. Its default value is None.
-		:param (dict) **options: sets parameter supported by PiCamera or Camgear API (whichever being accessed).
-		:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
-		:param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
-							/ This delay is essentially required for camera to warm-up. 
-							/ Its default value is 0.
-	"""
+    PiGear Specific supported parameters for VideoGear:
+        
+        :param (integer) camera_num: selects the camera module index that will be used by API. 
+                                /   Its default value is 0 and shouldn't be altered until unless 
+                                /   if you using Raspberry Pi 3/3+ compute module in your project along with multiple camera modules. 
+                                /   Furthermore, Its value can only be greater than zero, otherwise, it will throw ValueError for any negative value.
+        :param (tuple) resolution: sets the resolution (width,height) in Picamera API. Its default value is (640,480).
+        :param (integer) framerate: sets the framerate in Picamera API. Its default value is 25.
+
+
+    Common parameters for CamGear and PiGear: 
+        :param (string) colorspace: set colorspace of the video stream. Its default value is None.
+        :param (dict) **options: sets parameter supported by PiCamera or Camgear API (whichever being accessed).
+        :param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
+        :param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
+                            / This delay is essentially required for camera to warm-up. 
+                            / Its default value is 0.
+    """
 
     def __init__(
         self,
+        #VideoGear parameters
         enablePiCamera=False,
         stabilize=False,
-        source=0,
+        #PiGear parameters
         camera_num=0,
-        y_tube=False,
-        backend=0,
-        colorspace=None,
         resolution=(640, 480),
         framerate=30,
-        logging=False,
+        #CamGear parameters
+        source=0,
+        y_tube=False,
+        backend=0,
+        #common parameters
         time_delay=0,
+        colorspace=None,
+        logging=False,
         **options
     ):
 

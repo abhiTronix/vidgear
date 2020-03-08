@@ -52,7 +52,7 @@ with open("README.md", "r") as fh:
 setup(
     name="vidgear",
     packages=["vidgear", "vidgear.gears", "vidgear.gears.async"],
-    version="0.1.7-dev",
+    version="0.1.7-dev1",
     description="Most Powerful cross-platform Video Processing Python framework powerpacked with unique trailblazing features.",
     license="Apache License 2.0",
     author="Abhishek Thakur",
@@ -72,7 +72,7 @@ setup(
     author_email="abhi.una12@gmail.com",
     url="https://github.com/abhiTronix/vidgear",
     extras_require={
-        "async": ["starlette", "aiofiles", "jinja2", "aiohttp", "uvicorn", "async-timeout", "msgpack_numpy",]
+        "async": ["starlette", "aiofiles", "jinja2", "aiohttp", "uvicorn", "msgpack_numpy",]
     },
     download_url="https://github.com/abhiTronix/vidgear/releases/download/vidgear-0.1.7.dev0/vidgear-0.1.7.dev0.tar.gz",
     keywords=[
