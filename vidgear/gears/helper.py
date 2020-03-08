@@ -262,7 +262,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                 assert not (
                     total_length is None
                 ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
-                bar = progressbar.ProgressBar(max_value=total_length)
+                bar = progressbar.ProgressBar(max_value=int(total_length))
                 for data in response.iter_content(chunk_size=4096):
                     f.write(data)
                     if len(data) > 0:
