@@ -28,7 +28,8 @@ from vidgear.gears.helper import validate_ffmpeg
 from vidgear.gears.helper import get_valid_ffmpeg_path
 from vidgear.gears.helper import generate_auth_certificates
 from vidgear.gears.helper import logger_handler
-from vidgear.gears.asyncio.helper import reducer
+from vidgear.gears.asyncio.helper import generate_webdata
+from vidgear.gears.asyncio.helper import validate_webdata
 
 
 logger = log.getLogger("Test_helper")
@@ -41,8 +42,8 @@ _windows = True if os.name == "nt" else False
 
 def return_static_ffmpeg():
     """
-	returns system specific FFmpeg static path
-	"""
+    returns system specific FFmpeg static path
+    """
     path = ""
     if platform.system() == "Windows":
         path += os.path.join(
@@ -61,15 +62,15 @@ def return_static_ffmpeg():
 
 def getframe():
     """
-	returns empty numpy frame/array of dimensions: (500,800,3)
-	"""
+    returns empty numpy frame/array of dimensions: (500,800,3)
+    """
     return np.zeros([500, 800, 3], dtype=np.uint8)
 
 
 def test_ffmpeg_static_installation():
     """
-	Test to ensure successful FFmpeg static Installation on Windows
-	"""
+    Test to ensure successful FFmpeg static Installation on Windows
+    """
     startpath = os.path.abspath(
         os.path.join(tempfile.gettempdir(), "Downloads/FFmpeg_static")
     )
@@ -98,8 +99,8 @@ test_data = [
 @pytest.mark.parametrize("paths, os_bit", test_data)
 def test_ffmpeg_binaries_download(paths, os_bit):
     """
-	Testing Static FFmpeg auto-download on Windows OS
-	"""
+    Testing Static FFmpeg auto-download on Windows OS
+    """
     file_path = ""
     try:
         file_path = download_ffmpeg_binaries(
@@ -118,8 +119,8 @@ def test_ffmpeg_binaries_download(paths, os_bit):
 @pytest.mark.parametrize("paths", ["wrong_test_path", return_static_ffmpeg()])
 def test_validate_ffmpeg(paths):
     """
-	Testing downloaded FFmpeg Static binaries validation on Windows OS
-	"""
+    Testing downloaded FFmpeg Static binaries validation on Windows OS
+    """
     try:
         output = validate_ffmpeg(paths, logging=True)
         if paths != "wrong_test_path":
@@ -144,8 +145,8 @@ test_data = [
 @pytest.mark.parametrize("paths, ffmpeg_download_paths, results", test_data)
 def test_get_valid_ffmpeg_path(paths, ffmpeg_download_paths, results):
     """
-	Testing FFmpeg excutables validation and correction:
-	"""
+    Testing FFmpeg excutables validation and correction:
+    """
     try:
         output = get_valid_ffmpeg_path(
             custom_ffmpeg=paths,
@@ -180,8 +181,8 @@ test_data = [
 @pytest.mark.parametrize("paths, overwrite_cert, results", test_data)
 def test_generate_auth_certificates(paths, overwrite_cert, results):
     """
-	Testing auto-Generation and auto-validation of CURVE ZMQ keys/certificates 
-	"""
+    Testing auto-Generation and auto-validation of CURVE ZMQ keys/certificates 
+    """
     try:
         if overwrite_cert:
             logger.warning(
@@ -191,4 +192,37 @@ def test_generate_auth_certificates(paths, overwrite_cert, results):
         assert bool(output) == results
     except Exception as e:
         pytest.fail(str(e))
-        
+
+
+test_data = [
+    (expanduser("~"), False, True),
+    (os.path.join(expanduser("~"), ".vidgear"), True, True),
+    ("test_folder", False, True),
+    (tempfile.gettempdir(), False, True),
+]
+
+
+@pytest.mark.parametrize("paths, overwrite_default, results", test_data)
+def test_generate_webdata(paths, overwrite_default, results):
+    """
+    Testing auto-Generation and auto-validation of WebGear data files 
+    """
+    try:
+        output = generate_webdata(
+            paths, overwrite_default=overwrite_default, logging=True
+        )
+        assert bool(output) == results
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+@pytest.mark.xfail(raises=Exception)
+def test_validate_webdata():
+    """
+    Testing validation function of WebGear API
+    """
+    validate_webdata(
+        os.path.join(expanduser("~"), ".vidgear"),
+        files=["im_not_a_file1", "im_not_a_file2", "im_not_a_file3"],
+        logging=True,
+    )

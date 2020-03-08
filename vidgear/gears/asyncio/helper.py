@@ -47,8 +47,8 @@ except ImportError:
 
 def logger_handler():
     """
-	returns logger handler
-	"""
+    returns logger handler
+    """
     # logging formatter
     formatter = ColoredFormatter(
         "%(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
@@ -76,8 +76,8 @@ logger.setLevel(log.DEBUG)
 
 def mkdir_safe(dir, logging=False):
     """
-	Simply creates directory safely
-	"""
+    Simply creates directory safely
+    """
     try:
         os.makedirs(dir)
         if logging:
@@ -92,8 +92,8 @@ def mkdir_safe(dir, logging=False):
 async def reducer(frame=None, percentage=0):
 
     """
-	Reduces frame size by given percentage
-	"""
+    Reduces frame size by given percentage
+    """
     # check if frame is valid
     if frame is None:
         raise ValueError("[Helper:ERROR] :: Input frame cannot be NoneType!")
@@ -117,10 +117,10 @@ async def reducer(frame=None, percentage=0):
     return cv2.resize(frame, dimensions, interpolation=cv2.INTER_LANCZOS4)
 
 
-async def generate_webdata(path, overwrite_default=False, logging=False):
+def generate_webdata(path, overwrite_default=False, logging=False):
     """ 
-	handles WebGear API data-files validation and generation 
-	"""
+    handles WebGear API data-files validation and generation 
+    """
 
     # check if path corresponds to vidgear only
     if os.path.basename(path) != ".vidgear":
@@ -150,22 +150,20 @@ async def generate_webdata(path, overwrite_default=False, logging=False):
         logger.critical(
             "Overwriting existing WebGear data-files with default data-files from the server!"
         )
-        await download_webdata(
+        download_webdata(
             template_dir,
             files=["index.html", "404.html", "500.html", "base.html"],
             logging=logging,
         )
-        await download_webdata(
+        download_webdata(
             css_static_dir, files=["bootstrap.min.css", "cover.css"], logging=logging
         )
-        await download_webdata(
+        download_webdata(
             js_static_dir,
             files=["bootstrap.min.js", "jquery-3.4.1.slim.min.js", "popper.min.js"],
             logging=logging,
         )
-        await download_webdata(
-            favicon_dir, files=["favicon-32x32.png"], logging=logging
-        )
+        download_webdata(favicon_dir, files=["favicon-32x32.png"], logging=logging)
     else:
         # validate important data-files
         if validate_webdata(template_dir, ["index.html", "404.html", "500.html"]):
@@ -177,37 +175,32 @@ async def generate_webdata(path, overwrite_default=False, logging=False):
                 "Failed to detect critical WebGear data-files: index.html, 404.html & 500.html!"
             )
             logger.warning("Re-downloading default data-files from the server.")
-            await download_webdata(
+            download_webdata(
                 template_dir,
                 files=["index.html", "404.html", "500.html", "base.html"],
                 logging=logging,
             )
-            await download_webdata(
+            download_webdata(
                 css_static_dir,
                 files=["bootstrap.min.css", "cover.css"],
                 logging=logging,
             )
-            await download_webdata(
+            download_webdata(
                 js_static_dir,
                 files=["bootstrap.min.js", "jquery-3.4.1.slim.min.js", "popper.min.js"],
                 logging=logging,
             )
-            await download_webdata(
-                favicon_dir, files=["favicon-32x32.png"], logging=logging
-            )
+            download_webdata(favicon_dir, files=["favicon-32x32.png"], logging=logging)
     return path
 
 
-async def download_webdata(path, files=[], logging=False):
+def download_webdata(path, files=[], logging=False):
     """
-	Downloads default WebGear data-files from the server
-	"""
+    Downloads default data-files from the server
+    """
     basename = os.path.basename(path)
     if logging:
         logger.debug("Downloading {} data-files at `{}`".format(basename, path))
-
-    # collect data
-    targets = []
     for file in files:
         # get filename
         file_name = os.path.join(path, file)
@@ -220,19 +213,25 @@ async def download_webdata(path, files=[], logging=False):
             file_url = "https://raw.githubusercontent.com/abhiTronix/webgear_data/master/static/{}/{}".format(
                 basename, file
             )
-        targets.append((file_url, file_name))
+        # download and write file to the given path
+        if logging:
+            logger.debug("Downloading {} data-file: {}.".format(basename, file))
 
-    # download data asynchronously
-    async with aiohttp.ClientSession(raise_for_status=True, read_timeout=4) as session:
-        tasks = [
-            download(session, file_path, url, logging=logging)
-            for (url, file_path) in targets
-        ]
-        await asyncio.gather(*tasks)
-
-    # verify downloaded data
+        response = requests.get(file_url, stream=True, timeout=2)
+        response.raise_for_status()
+        total_length = response.headers.get("content-length")
+        assert not (
+            total_length is None
+        ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
+        bar = progressbar.ProgressBar(max_value=int(total_length))
+        with open(file_name, "wb") as f:
+            for data in response.iter_content(chunk_size=128):
+                f.write(data)
+                if len(data) > 0:
+                    bar.update(len(data))
+        bar.finish()
     if logging:
-        logger.debug("Verifying downloaded data at `{}`:".format(path))
+        logger.debug("Verifying downloaded data:")
     if validate_webdata(path, files=files, logging=logging):
         if logging:
             logger.info("Successful!")
@@ -245,31 +244,10 @@ async def download_webdata(path, files=[], logging=False):
         )
 
 
-async def download(session, target, url, logging=False):
-    """
-	Downloads data asynchronously
-	"""
-    async with session.get(url) as response:
-        # download and write file to the given path
-        if logging:
-            logger.debug("Downloading  data-file: {}.".format(target))
-        total_length = int(response.headers.get("content-length", 0)) or None
-        assert not (
-            total_length is None and total_length > 0
-        ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
-        bar = progressbar.ProgressBar(max_value=total_length)
-        with open(target, mode="wb") as f:
-            async for chunk in response.content.iter_chunked(512):
-                f.write(chunk)
-                if len(chunk) > 0:
-                    bar.update(len(chunk))
-        bar.finish()
-
-
 def validate_webdata(path, files=[], logging=False):
     """
-	validates WebGear API data-files
-	"""
+    validates WebGear API data-files
+    """
     # check if valid path or directory empty
     if not (os.path.exists(path)) or not (os.listdir(path)):
         return False

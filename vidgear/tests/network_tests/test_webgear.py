@@ -35,8 +35,8 @@ logger.setLevel(log.DEBUG)
 
 def return_testvideo_path():
     """
-	returns Test Video path
-	"""
+    returns Test Video path
+    """
     path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
         tempfile.gettempdir()
     )
@@ -45,8 +45,8 @@ def return_testvideo_path():
 
 def hello_webpage(request):
     """
-	returns PlainTextResponse callback for hello world webpage
-	"""
+    returns PlainTextResponse callback for hello world webpage
+    """
     return PlainTextResponse("Hello, world!")
 
 
@@ -59,8 +59,8 @@ test_data = [
 @pytest.mark.parametrize("source, stabilize, colorspace, time_delay", test_data)
 def test_webgear_class(source, stabilize, colorspace, time_delay):
     """
-	Test for various WebGear API parameters
-	"""
+    Test for various WebGear API parameters
+    """
     try:
         web = WebGear(
             source=source,
@@ -103,8 +103,8 @@ test_data = [
 @pytest.mark.parametrize("options", test_data)
 def test_webgear_options(options):
     """
-	Test for various WebGear API internal options
-	"""
+    Test for various WebGear API internal options
+    """
     try:
         web = WebGear(source=return_testvideo_path(), logging=True, **options)
         client = TestClient(web(), raise_server_exceptions=True)
@@ -122,8 +122,8 @@ def test_webgear_options(options):
 
 def test_webgear_routes():
     """
-	Test for WebGear API's custom routes
-	"""
+    Test for WebGear API's custom routes
+    """
     try:
         # add various performance tweaks as usual
         options = {
