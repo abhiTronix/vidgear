@@ -63,7 +63,7 @@ setup(
         "requests",
         "pyzmq",
         "colorlog",
-        "tqdm",
+        "progressbar2",
     ]
     + (["opencv-python"] if test_opencv() else [])
     + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),

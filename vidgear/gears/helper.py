@@ -25,7 +25,7 @@ import os, sys, requests, platform, errno
 import numpy as np
 from pkg_resources import parse_version
 from colorlog import ColoredFormatter
-from tqdm import tqdm
+import progressbar
 import logging as log
 
 try:
@@ -262,11 +262,12 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                 assert not (
                     total_length is None
                 ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
-                pbar = tqdm(total=int(total_length), unit="B", unit_scale=True)
+                bar = progressbar.ProgressBar(max_value=total_length)
                 for data in response.iter_content(chunk_size=4096):
-                    pbar.update(len(data))
                     f.write(data)
-                pbar.close()
+                    if len(data) > 0:
+                        bar.update(len(data))
+                bar.finish()
             logger.debug("Extracting executables.")
             with zipfile.ZipFile(file_name, "r") as zip_ref:
                 zip_ref.extractall(base_path)
