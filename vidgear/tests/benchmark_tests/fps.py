@@ -26,7 +26,7 @@ class FPS:
 
     def fps(self):
         # return FPS
-        if (time.time() - start_time) > 1.0:
+        if (time.time() - self.__start) > 1.0:
             self.__fps = self.__numFrames / (time.time() - self.__start)
             self.__numFrames = 0
             self.__start = time.time()
