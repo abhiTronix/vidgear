@@ -56,7 +56,7 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 
 RETRY=3
 while [ "$RETRY" -gt 0 ] ; do
-  curl -s https://api.github.com/repos/abhiTronix/OpenCV-Travis-Builds/releases/latest \
+  curl -s "https://api.github.com/repos/abhiTronix/OpenCV-Travis-Builds/releases/latest" \
   | grep "OpenCV-$OPENCV_VERSION-$PYTHONSUFFIX.*.deb" \
   | cut -d : -f 2,3 \
   | tr -d \" \
