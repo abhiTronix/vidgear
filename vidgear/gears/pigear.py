@@ -249,11 +249,7 @@ class PiGear:
 		Update frames from stream
 		"""
         # keep looping infinitely until the thread is terminated
-        while True:
-
-            # check for termination flag
-            if self.__terminate:
-                break
+        while not(self.__terminate):
 
             try:
                 # Try to iterate next frame from generator

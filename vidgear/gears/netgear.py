@@ -27,7 +27,7 @@ from collections import deque
 import numpy as np
 import cv2, time, os, random
 import logging as log
-
+import zmq
 
 # define logger
 logger = log.getLogger("NetGear")
@@ -118,22 +118,6 @@ class NetGear:
         logging=False,
         **options
     ):
-
-        try:
-            # import PyZMQ library
-            import zmq
-
-            # import ZMQError
-            from zmq.error import ZMQError
-
-            # assign values to global variable for further use
-            self.__zmq = zmq
-            self.__ZMQError = ZMQError
-        except ImportError as error:
-            # raise error
-            raise ImportError(
-                "[NetGear:ERROR] :: pyzmq python library not installed. Kindly install it with `pip install pyzmq` command."
-            )
 
         # enable logging if specified
         self.__logging = False
@@ -910,7 +894,7 @@ class NetGear:
             )
 
         # send the json dict
-        self.__msg_socket.send_json(msg_dict, self.__msg_flag | self.__zmq.SNDMORE)
+        self.__msg_socket.send_json(msg_dict, self.__msg_flag | zmq.SNDMORE)
         # send the frame array with correct flags
         self.__msg_socket.send(
             frame, flags=self.__msg_flag, copy=self.__msg_copy, track=self.__msg_track

@@ -61,13 +61,6 @@ def return_static_ffmpeg():
     return os.path.abspath(path)
 
 
-def getframe():
-    """
-    returns empty numpy frame/array of dimensions: (500,800,3)
-    """
-    return np.zeros([500, 800, 3], dtype=np.uint8)
-
-
 def test_ffmpeg_static_installation():
     """
     Test to ensure successful FFmpeg static Installation on Windows
@@ -229,9 +222,9 @@ def test_validate_webdata():
     )
 
 
-@pytest.mark.xfail(raises=FileNotFoundError)
+@pytest.mark.xfail(raises=Exception)
 def test_check_output():
     """
     Testing validation function of WebGear API
     """
-    check_output(["ffmpeg3", "-V"])
+    check_output(["ffmpeg", "-Vv"])

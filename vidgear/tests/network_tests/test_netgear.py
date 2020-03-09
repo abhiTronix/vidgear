@@ -114,17 +114,17 @@ def test_patterns(pattern):
         else:
             pytest.fail(str(e))
 
-
-def test_compression():
+@pytest.mark.parametrize(
+    "options_client", [{"compression_param": cv2.IMREAD_UNCHANGED}, {"compression_param": [cv2.IMWRITE_JPEG_QUALITY, 80]}]
+)
+def test_compression(options_client):
     """
 	Testing NetGear's real-time frame compression capabilities
 	"""
     try:
         # open streams
         stream = VideoGear(source=return_testvideo_path()).start()
-        # define client parameters@pytest.mark.parametrize('pattern', [0, 1])
-        options = {"compression_param": [cv2.IMWRITE_JPEG_QUALITY, 80]}  # wrong params
-        client = NetGear(pattern=1, receive_mode=True, logging=True, **options)
+        client = NetGear(pattern=1, receive_mode=True, logging=True, **options_client)
         # define server parameters
         options = {
             "compression_format": ".jpg",
@@ -155,6 +155,7 @@ def test_compression():
 
 
 test_data_class = [
+    (0, 1, tempfile.gettempdir(), True),
     (0, 1, tempfile.gettempdir(), True),
     (1, 1, "INVALID_DIRECTORY", False),
 ]

@@ -23,6 +23,9 @@ from threading import Thread
 from pkg_resources import parse_version
 from .helper import capPropId
 from .helper import logger_handler
+from mss import mss
+from mss.exception import ScreenShotError
+
 import numpy as np
 import cv2, time
 import logging as log
@@ -62,24 +65,6 @@ class ScreenGear:
 	"""
 
     def __init__(self, monitor=1, colorspace=None, logging=False, **options):
-
-        # intialize threaded queue mode by default
-        self.__threaded_queue_mode = True
-
-        try:
-            # import mss factory
-            from mss import mss
-
-            # import mss error handler
-            from mss.exception import ScreenShotError
-
-            # assign values to global variable for further use
-            self.__ScreenShotError = ScreenShotError
-        except ImportError as error:
-            # otherwise raise import error
-            raise ImportError(
-                "[ScreenGear:ERROR] :: python-mss library not found, install it with `pip install mss` command."
-            )
 
         # enable logging if specified
         self.__logging = False
@@ -154,11 +139,10 @@ class ScreenGear:
             self.frame = np.asanyarray(
                 self.__mss_object.grab(self.__mss_capture_instance)
             )
-            if self.__threaded_queue_mode:
-                # intitialize and append to queue
-                self.__queue.append(self.frame)
+            # intitialize and append to queue
+            self.__queue.append(self.frame)
         except Exception as e:
-            if isinstance(e, self.__ScreenShotError):
+            if isinstance(e, ScreenShotError):
                 # otherwise catch and log errors
                 if logging:
                     logger.exception(self.__mss_object.get_error_details())
@@ -192,31 +176,33 @@ class ScreenGear:
         frame = None
         # keep looping infinitely until the thread is terminated
         while True:
-            # if the thread terminate is set, stop the thread
+            
+            # check if global termination_flag is enabled
             if self.__terminate:
-                break
-
-            if self.__threaded_queue_mode:
-                # check queue buffer for overflow
-                if len(self.__queue) >= 96:
-                    # stop iterating if overflowing occurs
-                    time.sleep(0.000001)
+                # check whether there is still frames in queue before breaking out
+                if len(self.__queue) > 0:
                     continue
+                else:
+                    break
+
+            # check queue buffer for overflow
+            if len(self.__queue) >= 96:
+                # stop iterating if overflowing occurs
+                time.sleep(0.000001)
+                continue
+
             try:
                 frame = np.asanyarray(
                     self.__mss_object.grab(self.__mss_capture_instance)
                 )
-            except self.__ScreenShotError:
-                raise RuntimeError(self.__mss_object.get_error_details())
+                assert not(frame is None or np.shape(frame) == ()), "[ScreenGear:ERROR] :: Failed to retreive any valid frames!"
+            except ScreenShotError:
+                if isinstance(e, ScreenShotError):
+                    raise RuntimeError(self.__mss_object.get_error_details())
+                else:
+                    logger.exception(str(e))
                 self.__terminate = True
                 continue
-            if frame is None or frame.size == 0:
-                # no frames received, then safely exit
-                if self.__threaded_queue_mode:
-                    if len(self.__queue) == 0:
-                        self.__terminate = True
-                else:
-                    self.__terminate = True
 
             if not (self.color_space is None):
                 # apply colorspace to frames
@@ -245,8 +231,7 @@ class ScreenGear:
             else:
                 self.frame = frame
             # append to queue
-            if self.__threaded_queue_mode:
-                self.__queue.append(self.frame)
+            self.__queue.append(self.frame)
         # finally release mss resources
         self.__mss_object.close()
 
@@ -254,10 +239,15 @@ class ScreenGear:
         """
 		return the frame
 		"""
-        while self.__threaded_queue_mode:
+        # check whether or not termination flag is enabled
+        while not self.__terminate:
+            # check if queue is empty
             if len(self.__queue) > 0:
                 return self.__queue.popleft()
-        return self.frame
+            else:
+                continue
+        # otherwise return NoneType
+        return None
 
     def stop(self):
         """
@@ -266,10 +256,8 @@ class ScreenGear:
         if self.__logging:
             logger.debug("Terminating ScreenGear Processes.")
         # terminate Threaded queue mode seperately
-        if self.__threaded_queue_mode and not (self.__queue is None):
+        if not (self.__queue is None):
             self.__queue.clear()
-            self.__threaded_queue_mode = False
-            self.frame = None
         # indicate that the thread should be terminated
         self.__terminate = True
         # wait until stream resources are released (producer thread might be still grabbing frame)
