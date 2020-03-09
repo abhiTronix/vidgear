@@ -56,7 +56,7 @@ curl -s https://api.github.com/repos/abhiTronix/OpenCV-Travis-Builds/releases/la
 | grep "OpenCV-$OPENCV_VERSION-$PYTHONVERSIONMIN.*.deb" \
 | cut -d : -f 2,3 \
 | tr -d \" \
-| wget -qi -
+| wget -i -
 
 sudo dpkg -i OpenCV-$OPENCV_VERSION-$PYTHONVERSIONMIN.*.deb
 
