@@ -12,7 +12,6 @@ class FPS:
         # initiating FPS class and its variable
         self._start = 0
         self._end = 0
-        self._numFrames = 0
 
     def start(self):
         # start timer
@@ -23,16 +22,12 @@ class FPS:
         # stop timer
         self._end = time.time()
 
-    def update(self):
-        # calculate frames
-        self._numFrames += 1
-
     def total_time_elapsed(self):
         # return total time elaspsed = start time - end time(in sec)
         if self._end <= self._start:
             self._end = time.time()
-        return (self._end - self._start) % 60
+        return (self._end - self._start)
 
     def fps(self):
         # return FPS
-        return self._numFrames / self.total_time_elapsed()
+        return 1.0 / self.total_time_elapsed()

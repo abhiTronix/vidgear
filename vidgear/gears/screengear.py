@@ -175,15 +175,7 @@ class ScreenGear:
         # intialize frame variable
         frame = None
         # keep looping infinitely until the thread is terminated
-        while True:
-            
-            # check if global termination_flag is enabled
-            if self.__terminate:
-                # check whether there is still frames in queue before breaking out
-                if len(self.__queue) > 0:
-                    continue
-                else:
-                    break
+        while not(self.__terminate):
 
             # check queue buffer for overflow
             if len(self.__queue) >= 96:
@@ -255,11 +247,11 @@ class ScreenGear:
 		"""
         if self.__logging:
             logger.debug("Terminating ScreenGear Processes.")
+        # indicate that the thread should be terminated
+        self.__terminate = True
         # terminate Threaded queue mode seperately
         if not (self.__queue is None):
             self.__queue.clear()
-        # indicate that the thread should be terminated
-        self.__terminate = True
         # wait until stream resources are released (producer thread might be still grabbing frame)
         if self.__thread is not None:
             self.__thread.join()

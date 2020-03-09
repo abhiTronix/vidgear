@@ -56,7 +56,6 @@ def playback(level):
         frame = stream.read()
         if frame is None:
             break
-        fps.update()
     stream.stop()
     fps.stop()
     logger.debug("total elasped time: {:.2f}".format(fps.total_time_elapsed()))
