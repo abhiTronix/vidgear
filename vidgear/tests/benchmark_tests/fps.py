@@ -1,18 +1,17 @@
-# This class is a modified fps module from `imutils` python library.
-
 import time
+import numpy as np
 
 
 class FPS:
     """
-    Class to calculate FPS based on time.time python module
+    Class to calculate average FPS based on time.time() python module
     """
 
     def __init__(self):
         # initiating FPS class and its variable
         self.__start = 0
         self.__numFrames = 0
-        self.__fps = 0.0
+        self.__average_fps = []
 
     def start(self):
         # start timer
@@ -23,11 +22,11 @@ class FPS:
     def update(self):
         # calculate frames
         self.__numFrames += 1
-
-    def fps(self):
-        # return FPS
         if (time.time() - self.__start) > 1.0:
-            self.__fps = self.__numFrames / (time.time() - self.__start)
+            fps = self.__numFrames / (time.time() - self.__start)
             self.__numFrames = 0
+            self.__average_fps.append(fps)
             self.__start = time.time()
-        return self.__fps
+
+    def average_fps(self):
+        return np.average(self.__average_fps)

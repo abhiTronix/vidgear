@@ -51,9 +51,9 @@ def Videocapture_withCV(path):
         if not grabbed:
             break
         fps_CV.update()
-        logger.info("approx. FPS: {:.2f}".format(fps_CV.fps()))
     stream.release()
     logger.debug("OpenCV")
+    logger.info("approx. FPS: {:.2f}".format(fps_CV.average_fps()))
     
 
 
@@ -69,9 +69,9 @@ def Videocapture_withVidGear(path):
         if frame is None:
             break
         fps_Vid.update()
-        logger.info("approx. FPS: {:.2f}".format(fps_Vid.fps()))
     stream.stop()
     logger.debug("VidGear")
+    logger.info("approx. FPS: {:.2f}".format(fps_Vid.average_fps()))
     
 
 
