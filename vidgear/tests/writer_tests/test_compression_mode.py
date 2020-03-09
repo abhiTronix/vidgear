@@ -217,14 +217,7 @@ test_data_class = [
         {"-vcodec": "libx264", "-crf": 0, "-preset": "fast"},
         True,
     ),
-    (
-        "Output4.mp4",
-        "wrong_test_path",
-        {" -vcodec  ": " libx264", "   -crf": 0, "-preset    ": " fast "},
-        False,
-    ),
 ]
-
 
 @pytest.mark.parametrize("f_name, c_ffmpeg, output_params, result", test_data_class)
 def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):

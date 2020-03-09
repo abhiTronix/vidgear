@@ -33,11 +33,10 @@ logger.setLevel(log.DEBUG)
 
 def return_testvideo(level=0):
     """
-	returns test H264 videos path with increasing Video quality(resolution & bitrate) with Level-0(Lowest ~HD 2Mbps) and Level-5(Highest ~4k UHD 120mpbs)
-	"""
+    returns test H264 videos path with increasing Video quality(resolution & bitrate) with Level-0(Lowest ~HD 2Mbps) and Level-5(Highest ~4k UHD 120mpbs)
+    """
     Levels = [
         "BigBuckBunny.mp4",
-        "20_mbps_hd_hevc_10bit.mkv",
         "50_mbps_hd_h264.mkv",
         "90_mbps_hd_hevc_10bit.mkv",
         "120_mbps_4k_uhd_h264.mkv",
@@ -48,8 +47,8 @@ def return_testvideo(level=0):
 
 def playback(level):
     """
-	tests CamGear API's playback capabilities
-	"""
+    tests CamGear API's playback capabilities
+    """
     options = {"THREADED_QUEUE_MODE": False}
     stream = CamGear(source=level, **options).start()
     fps = FPS().start()
@@ -64,6 +63,7 @@ def playback(level):
     logger.debug("approx. FPS: {:.2f}".format(fps.fps()))
 
 
+@pytest.mark.skipif(platform.system() == "Darwin", reason="Too Slow!")
 @pytest.mark.parametrize(
     "level",
     [
@@ -71,17 +71,13 @@ def playback(level):
         return_testvideo(1),
         return_testvideo(2),
         return_testvideo(3),
-        return_testvideo(4),
     ],
 )
 def test_benchmark(level):
     """
-	Benchmarks low to extreme 4k video playback capabilities of CamGear API
-	"""
-    if platform.system() != "Darwin":
-        try:
-            playback(level)
-        except Exception as e:
-            logger.exception(str(e))
-    else:
-        logger.debug("Skipping this test for macOS!")
+    Benchmarks low to extreme 4k video playback capabilities of CamGear API
+    """
+    try:
+        playback(level)
+    except Exception as e:
+        logger.exception(str(e))

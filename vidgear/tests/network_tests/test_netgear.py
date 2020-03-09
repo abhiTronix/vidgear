@@ -76,8 +76,8 @@ def test_playback(address, port):
 
 
 @pytest.mark.parametrize(
-    "pattern", [1, 2, 3]
-)  # 0:(zmq.PAIR,zmq.PAIR), 1:(zmq.REQ,zmq.REP), 2:(zmq.PUB,zmq.SUB) (#3 is incorrect value)
+    "pattern", [2, 3]
+)  # 2:(zmq.PUB,zmq.SUB) (#3 is incorrect value)
 def test_patterns(pattern):
     """
 	Testing NetGear different messaging patterns
@@ -124,7 +124,7 @@ def test_compression(options_client):
     try:
         # open streams
         stream = VideoGear(source=return_testvideo_path()).start()
-        client = NetGear(pattern=1, receive_mode=True, logging=True, **options_client)
+        client = NetGear(pattern=0, receive_mode=True, logging=True, **options_client)
         # define server parameters
         options = {
             "compression_format": ".jpg",
@@ -135,7 +135,7 @@ def test_compression(options_client):
                 True,
             ],
         }  # JPEG compression
-        server = NetGear(pattern=1, logging=True, **options)
+        server = NetGear(pattern=0, logging=True, **options)
         # send over network
         while True:
             frame_server = stream.read()
@@ -156,7 +156,7 @@ def test_compression(options_client):
 
 test_data_class = [
     (0, 1, tempfile.gettempdir(), True),
-    (0, 1, tempfile.gettempdir(), True),
+    (0, 1, ["invalid"], True),
     (1, 1, "INVALID_DIRECTORY", False),
 ]
 
@@ -259,9 +259,7 @@ def test_bidirectional_mode(pattern, target_data):
         else:
             pytest.fail(str(e))
 
-
-@pytest.mark.parametrize("pattern", [0, 1])
-def test_multiserver_mode(pattern):
+def test_multiserver_mode():
     """
 	Testing NetGear's Multi-Server Mode with three unique servers
 	"""
@@ -278,7 +276,7 @@ def test_multiserver_mode(pattern):
         # define a single client
         client = NetGear(
             port=["5556", "5557", "5558"],
-            pattern=pattern,
+            pattern=1,
             receive_mode=True,
             logging=True,
             **options
@@ -288,13 +286,13 @@ def test_multiserver_mode(pattern):
 
         # define three unique server
         server_1 = NetGear(
-            pattern=pattern, port="5556", logging=True, **options
+            pattern=1, port="5556", logging=True, **options
         )  # at port `5556`
         server_2 = NetGear(
-            pattern=pattern, port="5557", logging=True, **options
+            pattern=1, port="5557", logging=True, **options
         )  # at port `5557`
         server_3 = NetGear(
-            pattern=pattern, port="5558", logging=True, **options
+            pattern=1, port="5558", logging=True, **options
         )  # at port `5558`
 
         # generate a random input frame

@@ -165,7 +165,6 @@ def test_get_valid_ffmpeg_path(paths, ffmpeg_download_paths, results):
 
 test_data = [
     (os.path.join(expanduser("~"), ".vidgear"), False, True),
-    (os.path.join(expanduser("~"), ".vidgear"), True, True),
     ("test_folder", False, True),
     (tempfile.gettempdir(), False, True),
     (tempfile.gettempdir(), True, True),
@@ -192,7 +191,6 @@ test_data = [
     (expanduser("~"), False, True),
     (os.path.join(expanduser("~"), ".vidgear"), True, True),
     ("test_folder", False, True),
-    (tempfile.gettempdir(), False, True),
 ]
 
 

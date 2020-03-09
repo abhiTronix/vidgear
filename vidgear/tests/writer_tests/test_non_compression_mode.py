@@ -67,7 +67,7 @@ def return_testvideo_path():
 
 @pytest.mark.xfail(raises=AssertionError)
 @pytest.mark.parametrize(
-    "conversion", ["COLOR_BGR2GRAY", "COLOR_BGR2YUV", "COLOR_BGR2BGRA"]
+    "conversion", ["COLOR_BGR2GRAY", "COLOR_BGR2YUV"]
 )
 def test_write(conversion):
     """
