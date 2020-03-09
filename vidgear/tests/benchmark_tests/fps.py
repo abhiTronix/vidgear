@@ -5,29 +5,29 @@ import time
 
 class FPS:
     """
-	Class to calculate FPS based on time.time python module
-	"""
+    Class to calculate FPS based on time.time python module
+    """
 
     def __init__(self):
         # initiating FPS class and its variable
-        self._start = 0
-        self._end = 0
+        self.__start = 0
+        self.__numFrames = 0
+        self.__fps = 0.0
 
     def start(self):
         # start timer
-        self._start = time.time()
+        if not (self.__start):
+            self.__start = time.time()
         return self
 
-    def stop(self):
-        # stop timer
-        self._end = time.time()
-
-    def total_time_elapsed(self):
-        # return total time elaspsed = start time - end time(in sec)
-        if self._end <= self._start:
-            self._end = time.time()
-        return (self._end - self._start)
+    def update(self):
+        # calculate frames
+        self.__numFrames += 1
 
     def fps(self):
         # return FPS
-        return 1.0 / self.total_time_elapsed()
+        if (time.time() - start_time) > 1.0:
+            self.__fps = self.__numFrames / (time.time() - self.__start)
+            self.__numFrames = 0
+            self.__start = time.time()
+        return self.__fps

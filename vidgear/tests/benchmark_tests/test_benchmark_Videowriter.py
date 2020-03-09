@@ -36,7 +36,7 @@ def return_testvideo_path():
     """
 	returns Test Video path
 	"""
-    path = "{}/Downloads/Test_videos/BigBuckBunny.mp4".format(tempfile.gettempdir())
+    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(tempfile.gettempdir())
     return os.path.abspath(path)
 
 
@@ -72,12 +72,11 @@ def WriteGear_non_compression_mode():
         if frame is None:
             break
         writer.write(frame)
-    fps_CV.stop()
+        fps_CV.update()
+        logger.info("approx. FPS: {:.2f}".format(fps_CV.fps()))
     stream.stop()
     writer.close()
     logger.debug("OpenCV Writer")
-    logger.debug("total elasped time: {:.2f}".format(fps_CV.total_time_elapsed()))
-    logger.debug("approx. FPS: {:.2f}".format(fps_CV.fps()))
     os.remove(os.path.abspath("Output_vnc.mp4"))
 
 
@@ -95,12 +94,11 @@ def WriteGear_compression_mode():
         if frame is None:
             break
         writer.write(frame)
-    fps_Vid.stop()
+        fps_Vid.update()
+        logger.info("approx. FPS: {:.2f}".format(fps_Vid.fps()))
     stream.stop()
     writer.close()
     logger.debug("FFmpeg Writer")
-    logger.debug("total elasped time: {:.2f}".format(fps_Vid.total_time_elapsed()))
-    logger.debug("approx. FPS: {:.2f}".format(fps_Vid.fps()))
     os.remove(os.path.abspath("Output_vc.mp4"))
 
 

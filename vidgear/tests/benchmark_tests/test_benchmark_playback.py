@@ -56,10 +56,9 @@ def playback(level):
         frame = stream.read()
         if frame is None:
             break
+        fps.update()
+        logger.info("approx. FPS: {:.2f}".format(fps.fps()))
     stream.stop()
-    fps.stop()
-    logger.debug("total elasped time: {:.2f}".format(fps.total_time_elapsed()))
-    logger.debug("approx. FPS: {:.2f}".format(fps.fps()))
 
 
 @pytest.mark.skipif(platform.system() == "Darwin", reason="Too Slow!")

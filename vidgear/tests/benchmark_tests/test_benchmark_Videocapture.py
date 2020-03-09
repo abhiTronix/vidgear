@@ -36,7 +36,7 @@ def return_testvideo_path():
     """
 	returns Test Video path
 	"""
-    path = "{}/Downloads/Test_videos/BigBuckBunny.mp4".format(tempfile.gettempdir())
+    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(tempfile.gettempdir())
     return os.path.abspath(path)
 
 
@@ -50,11 +50,11 @@ def Videocapture_withCV(path):
         (grabbed, frame) = stream.read()
         if not grabbed:
             break
-    fps_CV.stop()
+        fps_CV.update()
+        logger.info("approx. FPS: {:.2f}".format(fps_CV.fps()))
     stream.release()
     logger.debug("OpenCV")
-    logger.debug("total elasped time: {:.2f}".format(fps_CV.total_time_elapsed()))
-    logger.debug("approx. FPS: {:.2f}".format(fps_CV.fps()))
+    
 
 
 def Videocapture_withVidGear(path):
@@ -68,11 +68,11 @@ def Videocapture_withVidGear(path):
         frame = stream.read()
         if frame is None:
             break
-    fps_Vid.stop()
+        fps_Vid.update()
+        logger.info("approx. FPS: {:.2f}".format(fps_Vid.fps()))
     stream.stop()
     logger.debug("VidGear")
-    logger.debug("total elasped time: {:.2f}".format(fps_Vid.total_time_elapsed()))
-    logger.debug("approx. FPS: {:.2f}".format(fps_Vid.fps()))
+    
 
 
 @pytest.mark.xfail(raises=RuntimeError)
