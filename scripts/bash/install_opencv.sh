@@ -60,7 +60,7 @@ while [ "$RETRY" -gt 0 ] ; do
   | grep "OpenCV-$OPENCV_VERSION-$PYTHONSUFFIX.*.deb" \
   | cut -d : -f 2,3 \
   | tr -d \" \
-  | wget -i -
+  | xargs -n 1 curl -O -sSL
   if [ -f $(find . -name 'OpenCV-*.deb') ];
     then
       echo "Downloaded OpenCV binary successfully."
