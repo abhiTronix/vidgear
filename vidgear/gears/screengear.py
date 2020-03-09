@@ -196,7 +196,7 @@ class ScreenGear:
                     self.__mss_object.grab(self.__mss_capture_instance)
                 )
                 assert not(frame is None or np.shape(frame) == ()), "[ScreenGear:ERROR] :: Failed to retreive any valid frames!"
-            except ScreenShotError:
+            except Exception as e:
                 if isinstance(e, ScreenShotError):
                     raise RuntimeError(self.__mss_object.get_error_details())
                 else:

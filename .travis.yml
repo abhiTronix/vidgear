@@ -93,6 +93,7 @@ install:
     pip install codecov;
     pip install --upgrade flake8;
     pip install --upgrade pytest;
+    pip install --upgrade pytest-asyncio;
     pip install --upgrade pytest-cov;
     pip install --upgrade youtube-dl;
     fi
@@ -103,6 +104,7 @@ install:
     pip install --user six;
     pip install --user codecov;
     pip install --upgrade --user pytest;
+    pip install --upgrade --user pytest-asyncio;
     pip install --upgrade --user pytest-cov;
     pip install --upgrade --user youtube-dl;
     fi
