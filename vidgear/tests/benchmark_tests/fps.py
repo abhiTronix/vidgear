@@ -29,4 +29,5 @@ class FPS:
             self.__start = time.time()
 
     def average_fps(self):
-        return np.average(self.__average_fps)
+        av_fps = np.average(self.__average_fps) if self.__average_fps else 0.0
+        return av_fps

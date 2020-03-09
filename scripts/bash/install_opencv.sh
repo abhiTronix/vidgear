@@ -29,11 +29,9 @@ TMPFOLDER=$(python -c 'import tempfile; print(tempfile.gettempdir())')
 #determining system Python suffix and  version
 PYTHONSUFFIX=$(python -c 'import platform; a = platform.python_version(); print(".".join(a.split(".")[:2]))')
 PYTHONVERSION=$(python -c 'import platform; print(platform.python_version())')
-PYTHONVERSIONMIN=$(python -c 'import platform; print(platform.python_version()[:5])')
 
 echo $PYTHONSUFFIX
 echo $PYTHONVERSION
-echo $PYTHONVERSIONMIN
 
 echo "Installing OpenCV..."
 echo "Installing OpenCV Dependencies..."
@@ -59,7 +57,7 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 RETRY=3
 while [ "$RETRY" -gt 0 ] ; do
   curl -s https://api.github.com/repos/abhiTronix/OpenCV-Travis-Builds/releases/latest \
-  | grep "OpenCV-$OPENCV_VERSION-$PYTHONVERSIONMIN.*.deb" \
+  | grep "OpenCV-$OPENCV_VERSION-$PYTHONSUFFIX.*.deb" \
   | cut -d : -f 2,3 \
   | tr -d \" \
   | wget -i -
@@ -74,7 +72,7 @@ while [ "$RETRY" -gt 0 ] ; do
   fi
 done
 
-sudo dpkg -i OpenCV-$OPENCV_VERSION-$PYTHONVERSIONMIN.*.deb
+sudo dpkg -i OpenCV-$OPENCV_VERSION-$PYTHONSUFFIX.*.deb
 
 sudo ln -s /usr/local/lib/python$PYTHONSUFFIX/site-packages/*.so $HOME/virtualenv/python$PYTHONVERSION/lib/python$PYTHONSUFFIX/site-packages
 

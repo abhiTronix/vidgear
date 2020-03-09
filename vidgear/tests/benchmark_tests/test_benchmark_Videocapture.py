@@ -36,7 +36,7 @@ def return_testvideo_path():
     """
 	returns Test Video path
 	"""
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(tempfile.gettempdir())
+    path = "{}/Downloads/Test_videos/BigBuckBunny.mp4".format(tempfile.gettempdir())
     return os.path.abspath(path)
 
 
@@ -61,7 +61,6 @@ def Videocapture_withVidGear(path):
     """
 	Function to benchmark VidGear multi-threaded video playback 
 	"""
-    options = {"THREADED_QUEUE_MODE": False}
     stream = CamGear(source=path, **options).start()
     fps_Vid = FPS().start()
     while True:
