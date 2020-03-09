@@ -114,13 +114,17 @@ def test_write(conversion):
 
 test_data_class = [
     ("", {}, False),
-    ("Output_twc.avi", {}, True),
     (tempfile.gettempdir(), {}, True),
     (
         "Output_twc.mp4",
         {"-fourcc": "DIVX", "-fps": 25, "-backend": "CAP_FFMPEG", "-color": True},
         True,
     ),
+    (
+        "Output_twc.avi",
+        {"-fourcc": "NULL", "-backend": "INVALID"},
+        False,
+    )
 ]
 
 

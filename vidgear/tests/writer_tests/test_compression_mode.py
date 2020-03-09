@@ -39,8 +39,8 @@ logger.setLevel(log.DEBUG)
 
 def return_static_ffmpeg():
     """
-	returns system specific FFmpeg static path
-	"""
+    returns system specific FFmpeg static path
+    """
     path = ""
     if platform.system() == "Windows":
         path += os.path.join(
@@ -59,8 +59,8 @@ def return_static_ffmpeg():
 
 def return_testvideo_path():
     """
-	returns Test video path
-	"""
+    returns Test video path
+    """
     path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
         tempfile.gettempdir()
     )
@@ -69,8 +69,8 @@ def return_testvideo_path():
 
 def getFrameRate(path):
     """
-	Returns framerate of video(at path provided) using FFmpeg
-	"""
+    Returns framerate of video(at path provided) using FFmpeg
+    """
     process = subprocess.Popen(
         [return_static_ffmpeg(), "-i", path],
         stdout=subprocess.PIPE,
@@ -86,8 +86,8 @@ def getFrameRate(path):
 @pytest.mark.parametrize("c_ffmpeg", [return_static_ffmpeg(), "wrong_path"])
 def test_input_framerate(c_ffmpeg):
     """
-	Testing "-input_framerate" parameter provided by WriteGear(in Compression Mode) 
-	"""
+    Testing "-input_framerate" parameter provided by WriteGear(in Compression Mode) 
+    """
     stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
     test_video_framerate = stream.get(cv2.CAP_PROP_FPS)
     output_params = {"-input_framerate": test_video_framerate}
@@ -112,8 +112,8 @@ def test_input_framerate(c_ffmpeg):
 )
 def test_write(conversion):
     """
-	Testing WriteGear Compression-Mode(FFmpeg) Writer capabilties in different colorspace with CamGearAPI.
-	"""
+    Testing WriteGear Compression-Mode(FFmpeg) Writer capabilties in different colorspace with CamGearAPI.
+    """
     # Open stream
     stream = CamGear(
         source=return_testvideo_path(), colorspace=conversion, logging=True
@@ -169,8 +169,8 @@ def test_write(conversion):
 @pytest.mark.xfail(raises=AssertionError)
 def test_output_dimensions():
     """
-	Testing "-output_dimensions" special parameter provided by WriteGear(in Compression Mode) 
-	"""
+    Testing "-output_dimensions" special parameter provided by WriteGear(in Compression Mode) 
+    """
     dimensions = (640, 480)
     stream = cv2.VideoCapture(return_testvideo_path())
     output_params = {}
@@ -229,8 +229,8 @@ test_data_class = [
 @pytest.mark.parametrize("f_name, c_ffmpeg, output_params, result", test_data_class)
 def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
     """
-	Testing WriteGear Compression-Mode(FFmpeg) with different parameters
-	"""
+    Testing WriteGear Compression-Mode(FFmpeg) with different parameters
+    """
     try:
         stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
         writer = WriteGear(
@@ -250,30 +250,38 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
             pytest.fail(str(e))
 
 
-@pytest.mark.xfail(raises=AssertionError)
-def test_WriteGear_customFFmpeg():
+
+@pytest.mark.parametrize(
+    "ffmpeg_command_to_save_audio",
+    [
+        [
+            "-y",
+            "-i",
+            return_testvideo_path(),
+            "-vn",
+            "-acodec",
+            "copy",
+            "input_audio.aac",
+        ],
+        None,
+        [],
+        "wrong_input",
+    ],
+)
+def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio):
     """
-	Testing WriteGear Compression-Mode(FFmpeg) custom FFmpeg Pipeline by seperating audio from video
-	"""
-    output_audio_filename = "input_audio.aac"
+    Testing WriteGear Compression-Mode(FFmpeg) custom FFmpeg Pipeline by seperating audio from video
+    """
+    try:
+        # define writer
+        writer = WriteGear(output_filename="Output.mp4", compression_mode = (True if ffmpeg_command_to_save_audio else False), logging=True)  # Define writer
 
-    # define writer
-    writer = WriteGear(output_filename="Output.mp4", logging=True)  # Define writer
+        # execute FFmpeg command
+        writer.execute_ffmpeg_cmd(ffmpeg_command_to_save_audio)
 
-    # save stream audio as 'input_audio.aac'
-    ffmpeg_command_to_save_audio = [
-        "-y",
-        "-i",
-        return_testvideo_path(),
-        "-vn",
-        "-acodec",
-        "copy",
-        output_audio_filename,
-    ]
-    # `-y` parameter is to overwrite outputfile if exists
-
-    # execute FFmpeg command
-    writer.execute_ffmpeg_cmd(ffmpeg_command_to_save_audio)
-
-    # assert audio file is created successfully
-    assert os.path.isfile(output_audio_filename)
+        # assert audio file is created successfully
+        if ffmpeg_command_to_save_audio and isinstance(ffmpeg_command_to_save_audio, list):
+            assert os.path.isfile("input_audio.aac")
+    except Exception as e:
+        if isinstance(e, AssertionError):
+            pytest.fail(str(e))

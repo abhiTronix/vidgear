@@ -28,6 +28,7 @@ from vidgear.gears.helper import validate_ffmpeg
 from vidgear.gears.helper import get_valid_ffmpeg_path
 from vidgear.gears.helper import generate_auth_certificates
 from vidgear.gears.helper import logger_handler
+from vidgear.gears.helper import check_output
 from vidgear.gears.asyncio.helper import generate_webdata
 from vidgear.gears.asyncio.helper import validate_webdata
 
@@ -226,3 +227,11 @@ def test_validate_webdata():
         files=["im_not_a_file1", "im_not_a_file2", "im_not_a_file3"],
         logging=True,
     )
+
+
+@pytest.mark.xfail(raises=FileNotFoundError)
+def test_check_output():
+    """
+    Testing validation function of WebGear API
+    """
+    check_output(["ffmpeg3", "-V"])
