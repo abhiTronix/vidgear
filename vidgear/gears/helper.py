@@ -45,8 +45,8 @@ except ImportError:
 
 def logger_handler():
     """
-	returns logger handler
-	"""
+    returns logger handler
+    """
     # logging formatter
     formatter = ColoredFormatter(
         "%(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
@@ -74,31 +74,33 @@ logger.setLevel(log.DEBUG)
 
 def check_CV_version():
     """
-	returns OpenCV binary in-use version first bit 
-	"""
+    returns OpenCV binary in-use version first bit 
+    """
     if parse_version(cv2.__version__) >= parse_version("4"):
         return 4
     else:
         return 3
 
 
-def mkdir_safe(dir):
+def mkdir_safe(dir, logging=False):
     """
-	Simply creates directory safely
-	"""
+    Simply creates directory safely
+    """
     try:
         os.makedirs(dir)
-        logger.debug("Created directory at `{}`".format(dir))
+        if logging:
+            logger.debug("Created directory at `{}`".format(dir))
     except OSError as e:
-        logger.debug("Directory already exists at `{}`".format(dir))
         if e.errno != errno.EEXIST:
             raise
+        if logging:
+            logger.debug("Directory already exists at `{}`".format(dir))
 
 
 def capPropId(property):
     """
-	Retrieves the OpenCV property's Integer(Actual) value. 
-	"""
+    Retrieves the OpenCV property's Integer(Actual) value. 
+    """
     integer_value = 0
     try:
         integer_value = getattr(cv2, property)
@@ -111,8 +113,8 @@ def capPropId(property):
 
 def dict2Args(param_dict):
     """
-	converts dict to list(args)
-	"""
+    converts dict to list(args)
+    """
     args = []
     for key in param_dict.keys():
         args.append(key)
@@ -124,8 +126,8 @@ def get_valid_ffmpeg_path(
     custom_ffmpeg="", is_windows=False, ffmpeg_download_path="", logging=False
 ):
     """
-	Validate the FFmpeg path/binaries and returns valid FFmpeg file executable location(also downloads static binaries on windows) 
-	"""
+    Validate the FFmpeg path/binaries and returns valid FFmpeg file executable location(also downloads static binaries on windows) 
+    """
     final_path = ""
     if is_windows:
         # checks if current os is windows
@@ -211,8 +213,8 @@ def get_valid_ffmpeg_path(
 
 def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
     """
-	Download and Extract FFmpeg Static Binaries for windows(if not available)
-	"""
+    Download and Extract FFmpeg Static Binaries for windows(if not available)
+    """
     final_path = ""
     if os_windows and os_bit:
         # initialize variables
@@ -281,8 +283,8 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
 
 def validate_ffmpeg(path, logging=False):
     """
-	Validate FFmeg Binaries. returns True if tests passed
-	"""
+    Validate FFmeg Binaries. returns True if tests passed
+    """
     try:
         # get the FFmpeg version
         version = check_output([path, "-version"])
@@ -307,8 +309,8 @@ def validate_ffmpeg(path, logging=False):
 
 def check_output(*args, **kwargs):
     """
-	return output from the sub-process
-	"""
+    return output from the sub-process
+    """
     # silent subprocess execution
     closeNULL = 0
     import subprocess as sp
@@ -338,11 +340,11 @@ def check_output(*args, **kwargs):
     return output
 
 
-def generate_auth_certificates(path, overwrite=False):
+def generate_auth_certificates(path, overwrite = False, logging = False):
 
     """ 
-	auto-Generates and auto-validates CURVE ZMQ keys/certificates for Netgear 
-	"""
+    auto-Generates and auto-validates CURVE ZMQ keys/certificates for Netgear 
+    """
 
     # import necessary libs
     import shutil
@@ -354,7 +356,7 @@ def generate_auth_certificates(path, overwrite=False):
 
     # generate keys dir
     keys_dir = os.path.join(path, "keys")
-    mkdir_safe(keys_dir)
+    mkdir_safe(keys_dir, logging = logging)
 
     # generate separate public and private key dirs
     public_keys_dir = os.path.join(keys_dir, "public_keys")
@@ -363,10 +365,10 @@ def generate_auth_certificates(path, overwrite=False):
     # check if overwriting is allowed
     if overwrite:
         # delete previous certificates
-        for d in [public_keys_dir, secret_keys_dir]:
-            if os.path.exists(d):
-                shutil.rmtree(d)
-            os.mkdir(d)
+        for dirs in [public_keys_dir, secret_keys_dir]:
+            if os.path.exists(dirs):
+                shutil.rmtree(dirs)
+            mkdir_safe(dirs, logging = logging)
 
         # generate new keys
         server_public_file, server_secret_file = zmq.auth.create_certificates(
@@ -398,11 +400,11 @@ def generate_auth_certificates(path, overwrite=False):
 
         # check if valid public keys are found
         if not (status_public_keys):
-            mkdir_safe(public_keys_dir)
+            mkdir_safe(public_keys_dir, logging = logging)
 
         # check if valid private keys are found
         if not (status_private_keys):
-            mkdir_safe(secret_keys_dir)
+            mkdir_safe(secret_keys_dir, logging = logging)
 
         # generate new keys
         server_public_file, server_secret_file = zmq.auth.create_certificates(
@@ -447,8 +449,8 @@ def generate_auth_certificates(path, overwrite=False):
 def validate_auth_keys(path, extension):
 
     """
-	validates and maintains ZMQ Auth Keys/Certificates
-	"""
+    validates and maintains ZMQ Auth Keys/Certificates
+    """
     # check for valid path
     if not (os.path.exists(path)):
         return False

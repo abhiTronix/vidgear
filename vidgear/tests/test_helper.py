@@ -185,7 +185,7 @@ def test_generate_auth_certificates(paths, overwrite_cert, results):
             logger.warning(
                 "Overwriting ZMQ Authentication certificates over previous ones!"
             )
-        output = generate_auth_certificates(paths, overwrite=overwrite_cert)
+        output = generate_auth_certificates(paths, overwrite=overwrite_cert, logging = True)
         assert bool(output) == results
     except Exception as e:
         pytest.fail(str(e))

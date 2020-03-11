@@ -29,20 +29,7 @@ import progressbar
 import logging as log
 import asyncio
 import aiohttp
-
-try:
-    # import OpenCV Binaries
-    import cv2
-
-    # check whether OpenCV Binaries are 3.x+
-    if parse_version(cv2.__version__) < parse_version("3"):
-        raise ImportError(
-            "[Vidgear:ERROR] :: Installed OpenCV API version(< 3.0) is not supported!"
-        )
-except ImportError:
-    raise ImportError(
-        "[Vidgear:ERROR] :: Failed to detect correct OpenCV executables, install it with `pip3 install opencv-python` command."
-    )
+import cv2
 
 
 def logger_handler():
@@ -69,7 +56,7 @@ def logger_handler():
 
 
 # define logger
-logger = log.getLogger("Helper")
+logger = log.getLogger("Helper Asyncio")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
@@ -134,11 +121,11 @@ def generate_webdata(path, overwrite_default=False, logging=False):
     css_static_dir = os.path.join(static_dir, "css")
     favicon_dir = os.path.join(static_dir, "img")
 
-    mkdir_safe(static_dir)
-    mkdir_safe(template_dir)
-    mkdir_safe(js_static_dir)
-    mkdir_safe(css_static_dir)
-    mkdir_safe(favicon_dir)
+    mkdir_safe(static_dir, logging = logging)
+    mkdir_safe(template_dir, logging = logging)
+    mkdir_safe(js_static_dir, logging = logging)
+    mkdir_safe(css_static_dir, logging = logging)
+    mkdir_safe(favicon_dir, logging = logging)
 
     if len(logger.handlers) > 1:
         logger.handlers.clear()

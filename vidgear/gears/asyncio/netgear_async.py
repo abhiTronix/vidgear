@@ -306,7 +306,7 @@ class NetGear_Async:
         except Exception as e:
             # log ad raise error if failed
             logger.exception(str(e))
-            raise RuntimeError(
+            raise ValueError(
                 "[NetGear_Async:ERROR] :: Failed to connect address: {} and pattern: {}!".format(
                     (
                         self.__protocol

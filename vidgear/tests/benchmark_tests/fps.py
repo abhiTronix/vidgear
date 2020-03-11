@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import libs
 import time
 import numpy as np
@@ -27,6 +28,7 @@ class FPS:
     """
     Threaded Class to calculate average FPS based on time.perf_counter() python module
     """
+
     def __init__(self):
         # initiating FPS class and its variable
         # intiate Time elasped hander
@@ -41,13 +43,18 @@ class FPS:
         self.__timer = None
 
     def start(self):
-        # start and return timer
+        """
+        start and return Timer Threaded instance
+        """
         self.__timer = Thread(target=self.__timeit, name="FPS_Timer", args=())
         self.__timer.daemon = True
         self.__timer.start()
         return self
 
     def __timeit(self):
+        """
+        Calculates Frames Per Second and resets variables 
+        """
         # assign current time
         self.__t_elasped = time.perf_counter()
         # loop until termainated
@@ -64,10 +71,15 @@ class FPS:
                 self.__t_elasped = time.perf_counter()
 
     def update(self):
-        # count frames
+        """
+        counts frames
+        """
         self.__numFrames += 1
 
     def average_fps(self):
+        """
+        calculates and return average FPS
+        """
         self.__terminate = True
         if not (self.__timer is None):
             self.__timer.join()
