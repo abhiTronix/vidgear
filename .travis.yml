@@ -116,6 +116,7 @@ before_script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     bash scripts/bash/install_opencv.sh;
     bash scripts/bash/prepare_dataset.sh;
+    python -m pip install .;
     fi
 
 script:

@@ -21,7 +21,7 @@
 ########################################
 
 #opencv version to install
-OPENCV_VERSION='4.2.0-pre'
+OPENCV_VERSION='4.2.0-dev'
 
 #determining system specific temp directory
 TMPFOLDER=$(python -c 'import tempfile; print(tempfile.gettempdir())')

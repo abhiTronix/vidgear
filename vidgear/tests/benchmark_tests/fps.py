@@ -1,33 +1,76 @@
+"""
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
+
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+===============================================
+"""
+# import libs
 import time
 import numpy as np
+from threading import Thread
 
 
 class FPS:
     """
-    Class to calculate average FPS based on time.time() python module
+    Threaded Class to calculate average FPS based on time.perf_counter() python module
     """
-
     def __init__(self):
         # initiating FPS class and its variable
-        self.__start = 0
+        # intiate Time elasped hander
+        self.__t_elasped = 0
+        # intiate frame counter
         self.__numFrames = 0
-        self.__average_fps = []
+        # intiate calculated fps holder
+        self.__fps = []
+        # initiate termination flag
+        self.__terminate = False
+        # intiate Timer thread
+        self.__timer = None
 
     def start(self):
-        # start timer
-        if not (self.__start):
-            self.__start = time.time()
+        # start and return timer
+        self.__timer = Thread(target=self.__timeit, name="FPS_Timer", args=())
+        self.__timer.daemon = True
+        self.__timer.start()
         return self
 
+    def __timeit(self):
+        # assign current time
+        self.__t_elasped = time.perf_counter()
+        # loop until termainated
+        while not (self.__terminate):
+            # calulate frames elasped per second
+            if time.perf_counter() - self.__t_elasped > 1.0:
+                # calculate FPS
+                fps = self.__numFrames / (time.perf_counter() - self.__t_elasped)
+                # reset frames counter
+                self.__numFrames = 0
+                # append calulated FPS
+                self.__fps.append(fps)
+                # reset timer
+                self.__t_elasped = time.perf_counter()
+
     def update(self):
-        # calculate frames
+        # count frames
         self.__numFrames += 1
-        if (time.time() - self.__start) > 1.0:
-            fps = self.__numFrames / (time.time() - self.__start)
-            self.__numFrames = 0
-            self.__average_fps.append(fps)
-            self.__start = time.time()
 
     def average_fps(self):
-        av_fps = np.average(self.__average_fps) if self.__average_fps else 0.0
+        self.__terminate = True
+        if not (self.__timer is None):
+            self.__timer.join()
+            self.__timer = None
+        av_fps = np.average(self.__fps) if self.__fps else 0.0
         return av_fps

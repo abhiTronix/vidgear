@@ -19,7 +19,7 @@ limitations under the License.
 """
 
 import tempfile, asyncio
-import os, pytest
+import os, pytest, requests
 import logging as log
 
 from vidgear.gears.asyncio import WebGear
@@ -116,6 +116,8 @@ def test_webgear_options(options):
     except Exception as e:
         if isinstance(e, AssertionError):
             logger.exception(str(e))
+        elif isinstance(e, requests.exceptions.Timeout):
+            logger.exceptions(str(e))
         else:
             pytest.fail(str(e))
 

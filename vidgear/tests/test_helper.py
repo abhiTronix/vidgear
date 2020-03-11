@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 """
 
-import cv2, os, pytest, tempfile, shutil, platform
+import cv2, os, pytest, tempfile, shutil, platform, requests
 from os.path import expanduser
 import logging as log
 import numpy as np
@@ -106,6 +106,8 @@ def test_ffmpeg_binaries_download(paths, os_bit):
     except Exception as e:
         if paths == "wrong_test_path" or os_bit == "wrong_bit":
             pass
+        elif isinstance(e, requests.exceptions.Timeout):
+            logger.exceptions(str(e))
         else:
             pytest.fail(str(e))
 
@@ -159,6 +161,8 @@ def test_get_valid_ffmpeg_path(paths, ffmpeg_download_paths, results):
     except Exception as e:
         if paths == "wrong_test_path" or ffmpeg_download_paths == "wrong_test_path":
             pass
+        elif isinstance(e, requests.exceptions.Timeout):
+            logger.exceptions(str(e))
         else:
             pytest.fail(str(e))
 
@@ -205,7 +209,10 @@ def test_generate_webdata(paths, overwrite_default, results):
         )
         assert bool(output) == results
     except Exception as e:
-        pytest.fail(str(e))
+        if isinstance(e, requests.exceptions.Timeout):
+            logger.exceptions(str(e))
+        else:
+            pytest.fail(str(e))
 
 
 @pytest.mark.xfail(raises=Exception)

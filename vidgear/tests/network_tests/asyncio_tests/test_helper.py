@@ -17,7 +17,7 @@ def getframe():
 
 pytestmark = pytest.mark.asyncio
 
-@pytest.mark.skipif(sys.version_info >= (3, 8), reason="python3.8 not supported yet")
+@pytest.mark.skipif(sys.version_info >= (3, 8), reason="python3.8 is not supported yet by pytest-asyncio")
 @pytest.mark.parametrize(
     "frame , percentage, result",
     [(getframe(), 85, True), (None, 80, False), (getframe(), 95, False)],

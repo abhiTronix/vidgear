@@ -216,9 +216,9 @@ class NetGear_Async:
                 self.__port = "5555"
         else:
             # Handle video source if not None
-            if not (source is None):
+            if not (source is None) and source:
                 # define stream with necessary params
-                self.stream = VideoGear(
+                self.__stream = VideoGear(
                     enablePiCamera=enablePiCamera,
                     stabilize=stabilize,
                     source=source,
@@ -234,16 +234,22 @@ class NetGear_Async:
                 )
                 # define default frame generator in configuration
                 self.config = {"generator": self.__frame_generator()}
+            else:
+                # else set it to None
+                self.config = {"generator": None}
             # assign local ip address if None
             if address is None:
                 self.__address = "localhost"
             # assign default port address if None
             if port is None:
                 self.__port = "5555"
+            # add server task handler
+            self.task = None
 
         # Setup and assign uvloop event loop policy
         if platform.system() != "Windows":
             import uvloop
+
             asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
         # Retrieve event loop and assign it
         self.loop = asyncio.get_event_loop()
@@ -260,23 +266,14 @@ class NetGear_Async:
             self.loop.run_in_executor(None, self.recv_generator)
             # return instance
             return self
-        # Otherwise launch Server handler
-        try:
+        else:
+            # Otherwise launch Server handler
             if self.__logging:
-                logger.debug("Running NetGear asynchronous server handler!")
-            # try run loop until its completed
-            self.loop.run_until_complete(self.__server_handler())
-        except KeyboardInterrupt:
-            # terminate loop
-            self.loop.stop()
-        except Exception as e:
-            # terminate and log error
-            self.loop.stop()
-            if not isinstance(e, (asyncio.CancelledError)):
-                logger.exception(str(e))
-        finally:
-            # finally terminate when complete
-            self.__terminate = True
+                logger.debug("Creating NetGear asynchronous server handler!")
+            # create task for Server Handler
+            self.task = asyncio.ensure_future(self.__server_handler(), loop = self.loop)
+            # return instance
+            return self
 
     async def __server_handler(self):
         """
@@ -370,13 +367,13 @@ class NetGear_Async:
                 "[NetGear:ERROR] :: `recv_generator()` function cannot be accessed while `receive_mode` is disabled. Kindly refer vidgear docs!"
             )
 
-        # initialize and define thread-safe messaging socket
+        # initialize and define messaging socket
         self.__msg_socket = self.__msg_context.socket(self.__pattern[1])
 
         try:
             # define exclusive socket options for patterns
             if self.__msg_pattern == 2:
-                self.__msg_socket.setsockopt(zmq.SUBSCRIBE, "")
+                self.__msg_socket.setsockopt(zmq.SUBSCRIBE, b"")
             # bind socket to the assigned protocol, address and port
             self.__msg_socket.bind(
                 self.__protocol + "://" + str(self.__address) + ":" + str(self.__port)
@@ -430,29 +427,31 @@ class NetGear_Async:
             # yield received frame
             yield frame
             # sleep for sometime
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0.00001)
 
     async def __frame_generator(self):
         """
         Default frame generator for NetGear's Server Handler 
         """
         # start stream
-        self.stream.start()
+        self.__stream.start()
         # loop over stream until its terminated
         while not self.__terminate:
             # read frames
-            frame = self.stream.read()
+            frame = self.__stream.read()
             # break if NoneType
             if frame is None:
                 break
             # yield frame
             yield frame
             # sleep for sometime
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0.00001)
 
-    def close(self):
+    def close(self, skip_loop=False):
         """
         Terminates the NetGear Asynchronous processes safely
+
+        :param: skip_loop(Boolean) => used if closing loop throws error
         """
         # log termination
         if self.__logging:
@@ -465,13 +464,13 @@ class NetGear_Async:
         if self.__receive_mode:
             # indicate that process should be terminated
             self.__terminate = True
-            # close event loop
-            self.loop.close()
         else:
             # indicate that process should be terminated
             self.__terminate = True
             # terminate stream
             if not (self.__stream is None):
                 self.__stream.stop()
-            # close event loop
+
+        # close event loop if specified
+        if not (skip_loop):
             self.loop.close()

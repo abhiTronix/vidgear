@@ -1,0 +1,98 @@
+# import libraries
+from vidgear.gears.asyncio import NetGear_Async
+from vidgear.gears import VideoGear
+import numpy as np
+import logging as log
+import pytest, sys, asyncio, os, tempfile
+from vidgear.gears.asyncio.helper import logger_handler
+
+logger = log.getLogger("Test_NetGear_Async")
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
+
+
+def return_testvideo_path():
+    """
+    returns Test Video path
+    """
+    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
+        tempfile.gettempdir()
+    )
+    return os.path.abspath(path)
+
+
+# Create a async frame generator as custom source
+async def custom_frame_generator():
+    # Open video stream
+    stream = VideoGear(source=return_testvideo_path()).start()
+    # loop over stream until its terminated
+    while True:
+        # read frames
+        frame = stream.read()
+        # check if frame empty
+        if frame is None:
+            break
+        # yield frame
+        yield frame
+        # sleep for sometime
+        await asyncio.sleep(0.01)
+    # close stream
+    stream.stop()
+
+
+# Create a async function where you want to show/manipulate your received frames
+async def client_iterator(client):
+    # loop over Client's Asynchronous Frame Generator
+    async for frame in client.recv_generator():
+        # test frame validity
+        assert not (frame is None or np.shape(frame) == ()), "Failed Test"
+        # await before continuing
+        await asyncio.sleep(0.01)
+
+
+pytestmark = pytest.mark.asyncio
+
+
+@pytest.mark.skipif(
+    sys.version_info >= (3, 8),
+    reason="python3.8 is not supported yet by pytest-asyncio",
+)
+@pytest.mark.parametrize(
+    "pattern", [0, 1, 2, 3],
+)
+async def test_netgear_async_playback(pattern):
+    try:
+        # define and launch Client with `receive_mode = True`
+        client = NetGear_Async(
+            logging=True, pattern=pattern, receive_mode=True
+        ).launch()
+        server = NetGear_Async(
+            source=return_testvideo_path(), pattern=pattern, logging=True
+        ).launch()
+        input_coroutines = [server.task, client_iterator(client)]
+        res = await asyncio.gather(*input_coroutines, return_exceptions=True)
+    except Exception as e:
+        pytest.fail(str(e))
+    finally:
+        server.close(skip_loop=True)
+        client.close(skip_loop=True)
+
+@pytest.mark.skipif(
+    sys.version_info >= (3, 8),
+    reason="python3.8 is not supported yet by pytest-asyncio",
+)
+async def test_netgear_async_custom_server_generator():
+    try:
+        server = NetGear_Async(logging=True)
+        server.config["generator"] = custom_frame_generator()
+        server.launch()
+        # define and launch Client with `receive_mode = True`
+        client = NetGear_Async(logging=True, receive_mode=True).launch()
+        # gather and run tasks
+        input_coroutines = [server.task, client_iterator(client)]
+        res = await asyncio.gather(*input_coroutines, return_exceptions=True)
+    except Exception as e:
+        pytest.fail(str(e))
+    finally:
+        server.close(skip_loop=True)
+        client.close(skip_loop=True)

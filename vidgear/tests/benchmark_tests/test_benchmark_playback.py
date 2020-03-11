@@ -33,7 +33,7 @@ logger.setLevel(log.DEBUG)
 
 def return_testvideo(level=0):
     """
-    returns test H264 videos path with increasing Video quality(resolution & bitrate) with Level-0(Lowest ~HD 2Mbps) and Level-5(Highest ~4k UHD 120mpbs)
+    returns test H264 videos path with increasing Video quality(resolution & bitrate) with Level-0(Lowest ~HD 2Mbps) and Level-3(Highest ~4k UHD 120mpbs)
     """
     Levels = [
         "BigBuckBunny.mp4",

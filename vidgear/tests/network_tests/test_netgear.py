@@ -259,7 +259,11 @@ def test_bidirectional_mode(pattern, target_data):
         else:
             pytest.fail(str(e))
 
-def test_multiserver_mode():
+
+@pytest.mark.parametrize(
+    "pattern", [0, 1]
+)
+def test_multiserver_mode(pattern):
     """
 	Testing NetGear's Multi-Server Mode with three unique servers
 	"""
@@ -276,7 +280,7 @@ def test_multiserver_mode():
         # define a single client
         client = NetGear(
             port=["5556", "5557", "5558"],
-            pattern=1,
+            pattern=pattern,
             receive_mode=True,
             logging=True,
             **options
@@ -286,13 +290,13 @@ def test_multiserver_mode():
 
         # define three unique server
         server_1 = NetGear(
-            pattern=1, port="5556", logging=True, **options
+            pattern=pattern, port="5556", logging=True, **options
         )  # at port `5556`
         server_2 = NetGear(
-            pattern=1, port="5557", logging=True, **options
+            pattern=pattern, port="5557", logging=True, **options
         )  # at port `5557`
         server_3 = NetGear(
-            pattern=1, port="5558", logging=True, **options
+            pattern=pattern, port="5558", logging=True, **options
         )  # at port `5558`
 
         # generate a random input frame
