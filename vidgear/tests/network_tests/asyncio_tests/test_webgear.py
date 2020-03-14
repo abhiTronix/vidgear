@@ -137,7 +137,7 @@ def test_webgear_routes():
         # initialize WebGear app
         web = WebGear(
             source=return_testvideo_path(), logging=True, **options
-        )  # enable source i.e. `test.mp4` and enable `logging` for debugging
+        )  
 
         # modify route to point our rendered webpage
         web.routes.append(Route("/hello", endpoint=hello_webpage))
@@ -151,3 +151,16 @@ def test_webgear_routes():
         web.shutdown()
     except Exception as e:
         pytest.fail(str(e))
+
+@pytest.mark.xfail(raises=RuntimeError)
+def test_webgear_routes_validity():
+    # initialize WebGear app
+    web = WebGear(
+        source=return_testvideo_path(), logging=True
+    )  
+    # modify route
+    web.routes.clear()
+    # test
+    client = TestClient(web(), raise_server_exceptions=True)
+    #shutdown
+    web.shutdown()

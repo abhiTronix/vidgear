@@ -69,6 +69,7 @@ async def test_netgear_async_playback(pattern):
         server = NetGear_Async(
             source=return_testvideo_path(), pattern=pattern, logging=True
         ).launch()
+        # gather and run tasks
         input_coroutines = [server.task, client_iterator(client)]
         res = await asyncio.gather(*input_coroutines, return_exceptions=True)
     except Exception as e:
@@ -119,9 +120,9 @@ async def test_netgear_async_custom_server_generator(generator, result):
 @pytest.mark.parametrize("address, port", [("www.idk.com", "5555"), (None, "5555")])
 async def test_netgear_async_addresses(address, port):
     try:
-        server = NetGear_Async(logging=True).launch()
+        server = NetGear_Async(address = address, port = port, logging=True).launch()
         # define and launch Client with `receive_mode = True` and timeout = 12.0
-        client = NetGear_Async(logging=True, receive_mode=True).launch()
+        client = NetGear_Async(address = address, port = port, logging=True, receive_mode=True).launch()
         # gather and run tasks
         input_coroutines = [server.task, client_iterator(client)]
         res = await asyncio.gather(*input_coroutines, return_exceptions=True)
