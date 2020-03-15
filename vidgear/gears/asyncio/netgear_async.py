@@ -211,9 +211,13 @@ class NetGear_Async:
             # assign local ip address if None
             if address is None:
                 self.__address = "*"  # define address
+            else: 
+                self.__address = address
             # assign default port address if None
             if port is None:
                 self.__port = "5555"
+            else: 
+                self.__port = port
         else:
             # Handle video source if not None
             if not (source is None) and source:
