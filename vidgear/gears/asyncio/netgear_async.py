@@ -240,9 +240,13 @@ class NetGear_Async:
             # assign local ip address if None
             if address is None:
                 self.__address = "localhost"
+            else:
+                self.__address = address
             # assign default port address if None
             if port is None:
                 self.__port = "5555"
+            else:
+                self.__port = str(port)
             # add server task handler
             self.task = None
 
