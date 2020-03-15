@@ -175,7 +175,7 @@ class NetGear_Async:
             self.__msg_pattern = 0
             self.__pattern = valid_messaging_patterns[self.__msg_pattern]
             if self.__logging:
-                logger.warning("Invalid pattern. Defaulting to `zmq.PAIR`!")
+                logger.warning("Invalid pattern {pattern}. Defaulting to `zmq.PAIR`!".format(pattern=pattern))
 
         # check  whether user-defined messaging protocol is valid
         if isinstance(protocol, str) and protocol in ["tcp", "ipc"]:
