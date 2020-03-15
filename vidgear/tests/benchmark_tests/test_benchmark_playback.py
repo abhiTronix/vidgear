@@ -26,49 +26,56 @@ from vidgear.gears.helper import logger_handler
 from .fps import FPS
 import logging as log
 
-logger = log.getLogger('Test_benchmark_playback')
+logger = log.getLogger("Test_benchmark_playback")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
 def return_testvideo(level=0):
-	"""
-	returns test H264 videos path with increasing Video quality(resolution & bitrate) with Level-0(Lowest ~HD 2Mbps) and Level-5(Highest ~4k UHD 120mpbs)
-	"""
-	Levels = ['BigBuckBunny.mp4','20_mbps_hd_hevc_10bit.mkv','50_mbps_hd_h264.mkv','90_mbps_hd_hevc_10bit.mkv','120_mbps_4k_uhd_h264.mkv']
-	path = '{}/Downloads/Test_videos/{}'.format(tempfile.gettempdir(), Levels[level])
-	return os.path.abspath(path)
-
+    """
+    returns test H264 videos path with increasing Video quality(resolution & bitrate) with Level-0(Lowest ~HD 2Mbps) and Level-3(Highest ~4k UHD 120mpbs)
+    """
+    Levels = [
+        "BigBuckBunny.mp4",
+        "50_mbps_hd_h264.mkv",
+        "90_mbps_hd_hevc_10bit.mkv",
+        "120_mbps_4k_uhd_h264.mkv",
+    ]
+    path = "{}/Downloads/Test_videos/{}".format(tempfile.gettempdir(), Levels[level])
+    return os.path.abspath(path)
 
 
 def playback(level):
-	"""
-	tests CamGear API's playback capabilities
-	"""
-	options = {'THREADED_QUEUE_MODE':False}
-	stream = CamGear(source=level, **options).start()
-	fps = FPS().start()
-	while True:
-		frame = stream.read()
-		if frame is None:
-			break
-		fps.update()
-	stream.stop()
-	fps.stop()
-	logger.debug("total elasped time: {:.2f}".format(fps.total_time_elapsed()))
-	logger.debug("approx. FPS: {:.2f}".format(fps.fps()))
+    """
+    tests CamGear API's playback capabilities
+    """
+    options = {"THREADED_QUEUE_MODE": False}
+    stream = CamGear(source=level, **options).start()
+    fps = FPS().start()
+    while True:
+        frame = stream.read()
+        if frame is None:
+            break
+        fps.update()
+    stream.stop()
+    logger.info("approx. FPS: {:.2f}".format(fps.average_fps()))
 
 
-
-@pytest.mark.parametrize('level', [return_testvideo(0), return_testvideo(1), return_testvideo(2),return_testvideo(3),return_testvideo(4)])
+@pytest.mark.skipif(platform.system() == "Darwin", reason="Too Slow!")
+@pytest.mark.parametrize(
+    "level",
+    [
+        return_testvideo(0),
+        return_testvideo(1),
+        return_testvideo(2),
+        return_testvideo(3),
+    ],
+)
 def test_benchmark(level):
-	"""
-	Benchmarks low to extreme 4k video playback capabilities of CamGear API
-	"""
-	if platform.system() != 'Darwin':
-		try:
-			playback(level)
-		except Exception as e:
-			logger.exception(str(e))
-	else:
-		logger.debug("Skipping this test for macOS!")
+    """
+    Benchmarks low to extreme 4k video playback capabilities of CamGear API
+    """
+    try:
+        playback(level)
+    except Exception as e:
+        logger.exception(str(e))

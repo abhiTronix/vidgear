@@ -57,11 +57,12 @@ install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
   - "python -m pip install --upgrade pip wheel"
-  - "python -m pip install --upgrade ."
+  - "python -m pip install --upgrade .[asyncio]"
   - "python -m pip install six"
   - "python -m pip install codecov"
   - "python -m pip install --upgrade pytest"
   - "python -m pip install --upgrade pytest-cov"
+  - "python -m pip install --upgrade pytest-asyncio"
   - "python -m pip install --upgrade youtube-dl"
   - cmd: chmod +x scripts/bash/prepare_dataset.sh
   - cmd: bash scripts/bash/prepare_dataset.sh
