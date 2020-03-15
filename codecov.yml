@@ -18,7 +18,6 @@ codecov:
     - "travis.org"
     - appveyor
   branch: testing
-  strict_yaml_branch: testing
 
 coverage:
   status:
