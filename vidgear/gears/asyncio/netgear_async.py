@@ -250,7 +250,7 @@ class NetGear_Async:
             if port is None:
                 self.__port = "5555"
             else:
-                self.__port = str(port)
+                self.__port = port
             # add server task handler
             self.task = None
 
