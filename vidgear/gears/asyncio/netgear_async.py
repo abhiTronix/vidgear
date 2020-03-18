@@ -175,7 +175,7 @@ class NetGear_Async:
             self.__msg_pattern = 0
             self.__pattern = valid_messaging_patterns[self.__msg_pattern]
             if self.__logging:
-                logger.warning("Invalid pattern. Defaulting to `zmq.PAIR`!")
+                logger.warning("Invalid pattern {pattern}. Defaulting to `zmq.PAIR`!".format(pattern=pattern))
 
         # check  whether user-defined messaging protocol is valid
         if isinstance(protocol, str) and protocol in ["tcp", "ipc"]:
@@ -211,9 +211,13 @@ class NetGear_Async:
             # assign local ip address if None
             if address is None:
                 self.__address = "*"  # define address
+            else: 
+                self.__address = address
             # assign default port address if None
             if port is None:
                 self.__port = "5555"
+            else: 
+                self.__port = port
         else:
             # Handle video source if not None
             if not (source is None) and source:
@@ -240,9 +244,13 @@ class NetGear_Async:
             # assign local ip address if None
             if address is None:
                 self.__address = "localhost"
+            else:
+                self.__address = address
             # assign default port address if None
             if port is None:
                 self.__port = "5555"
+            else:
+                self.__port = port
             # add server task handler
             self.task = None
 
