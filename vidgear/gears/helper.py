@@ -25,7 +25,7 @@ import os, sys, requests, platform, errno
 import numpy as np
 from pkg_resources import parse_version
 from colorlog import ColoredFormatter
-import progressbar
+from tqdm import tqdm
 import logging as log
 
 try:
@@ -264,12 +264,12 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                 assert not (
                     total_length is None
                 ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
-                bar = progressbar.ProgressBar(max_value=int(total_length))
+                bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
                 for data in response.iter_content(chunk_size=4096):
                     f.write(data)
-                    if len(data) > 0:
+                    if data:
                         bar.update(len(data))
-                bar.finish()
+                bar.close()
             logger.debug("Extracting executables.")
             with zipfile.ZipFile(file_name, "r") as zip_ref:
                 zip_ref.extractall(base_path)
@@ -340,7 +340,7 @@ def check_output(*args, **kwargs):
     return output
 
 
-def generate_auth_certificates(path, overwrite = False, logging = False):
+def generate_auth_certificates(path, overwrite=False, logging=False):
 
     """ 
     auto-Generates and auto-validates CURVE ZMQ keys/certificates for Netgear 
@@ -356,7 +356,7 @@ def generate_auth_certificates(path, overwrite = False, logging = False):
 
     # generate keys dir
     keys_dir = os.path.join(path, "keys")
-    mkdir_safe(keys_dir, logging = logging)
+    mkdir_safe(keys_dir, logging=logging)
 
     # generate separate public and private key dirs
     public_keys_dir = os.path.join(keys_dir, "public_keys")
@@ -368,7 +368,7 @@ def generate_auth_certificates(path, overwrite = False, logging = False):
         for dirs in [public_keys_dir, secret_keys_dir]:
             if os.path.exists(dirs):
                 shutil.rmtree(dirs)
-            mkdir_safe(dirs, logging = logging)
+            mkdir_safe(dirs, logging=logging)
 
         # generate new keys
         server_public_file, server_secret_file = zmq.auth.create_certificates(
@@ -400,11 +400,11 @@ def generate_auth_certificates(path, overwrite = False, logging = False):
 
         # check if valid public keys are found
         if not (status_public_keys):
-            mkdir_safe(public_keys_dir, logging = logging)
+            mkdir_safe(public_keys_dir, logging=logging)
 
         # check if valid private keys are found
         if not (status_private_keys):
-            mkdir_safe(secret_keys_dir, logging = logging)
+            mkdir_safe(secret_keys_dir, logging=logging)
 
         # generate new keys
         server_public_file, server_secret_file = zmq.auth.create_certificates(

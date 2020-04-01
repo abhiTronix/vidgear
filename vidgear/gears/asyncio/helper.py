@@ -25,7 +25,7 @@ import os, sys, requests, platform, errno
 import numpy as np
 from pkg_resources import parse_version
 from colorlog import ColoredFormatter
-import progressbar
+from tqdm import tqdm
 import logging as log
 import asyncio
 import aiohttp
@@ -121,11 +121,11 @@ def generate_webdata(path, overwrite_default=False, logging=False):
     css_static_dir = os.path.join(static_dir, "css")
     favicon_dir = os.path.join(static_dir, "img")
 
-    mkdir_safe(static_dir, logging = logging)
-    mkdir_safe(template_dir, logging = logging)
-    mkdir_safe(js_static_dir, logging = logging)
-    mkdir_safe(css_static_dir, logging = logging)
-    mkdir_safe(favicon_dir, logging = logging)
+    mkdir_safe(static_dir, logging=logging)
+    mkdir_safe(template_dir, logging=logging)
+    mkdir_safe(js_static_dir, logging=logging)
+    mkdir_safe(css_static_dir, logging=logging)
+    mkdir_safe(favicon_dir, logging=logging)
 
     if len(logger.handlers) > 1:
         logger.handlers.clear()
@@ -210,13 +210,12 @@ def download_webdata(path, files=[], logging=False):
         assert not (
             total_length is None
         ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
-        bar = progressbar.ProgressBar(max_value=int(total_length))
-        with open(file_name, "wb") as f:
-            for data in response.iter_content(chunk_size=128):
-                f.write(data)
-                if len(data) > 0:
-                    bar.update(len(data))
-        bar.finish()
+        bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
+        for data in response.iter_content(chunk_size=256):
+            f.write(data)
+            if data:
+                bar.update(len(data))
+        bar.close()
     if logging:
         logger.debug("Verifying downloaded data:")
     if validate_webdata(path, files=files, logging=logging):
