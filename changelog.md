@@ -59,13 +59,13 @@
   * Replaced old `mkdir` function with new `mkdir_safe` helper function for creating directories safely.
   * Updated ReadMe.md with updated diagrams, images, gifs and information.
   * Bumped Codecov to maximum. 
-  
+
 ### Breaking Updates / Improvements / Changes
 
   * ***:warning: Dropped support for Python 3.5 and below legacies. (See [issue #99](https://github.com/abhiTronix/vidgear/issues/99))***
-  * Dropped and Replaced python 3.5 matrices with python 3.8 matrices in Windows & macOS environment.
+  * Dropped and replaced Python 3.5 matrices with new Python 3.8 matrices in all CI environments.
   * Implemented PEP-8 Styled [**Black**](https://github.com/psf/black) formatting throughout the source-code.
-  * Limited support to `tcp` and `ipc` protocols only in NetGear API.
+  * Limited protocols support to `tcp` and `ipc` only, in NetGear API.
 
 ### Fixes:
   

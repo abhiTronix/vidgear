@@ -99,12 +99,13 @@ The following **functional block diagram** clearly depicts the functioning of Vi
    > ***"VidGear is an [ultrafast➶][ultrafast-wiki], compact, flexible and easy-to-adapt complete Video Processing Python Library."***
 
   #### What does it do?
-   > ***"VidGear can read, write, process, send & receive video frames from various devices in real-time."***
+   > ***"VidGear can read, write, process, send & receive video frames from/to various devices in real-time."***
 
   #### What is its purpose?
    > ***"Built with simplicity in mind, VidGear lets programmers and software developers to easily integrate and perform complex Video Processing tasks in their existing or new applications, without going through various underlying library's documentation and using just a [few lines of code][flic]. Beneficial for both, if you're new to programming with Python language or already a pro at it."***
 
-   **For more advanced information, see the [*Wiki Documentation ➶*][wiki].**
+
+**For more advanced information, see the [*Wiki Documentation ➶*][wiki].**
 
 
 &nbsp;
@@ -157,7 +158,7 @@ CamGear provides a flexible, high-level multi-threaded wrapper around `OpenCV's`
 **Following simplified functional block diagram depicts CamGear API's generalized working:**
 
 <p align="center">
-  <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/CamGear.png" alt="CamGear Functional Block Diagram" width=60%/>
+  <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/camgearz.png" alt="CamGear Functional Block Diagram"  width="70%"/>
 </p>
 
 ### CamGear API Guide:
@@ -231,7 +232,7 @@ ScreenGear provides a high-level multi-threaded wrapper around [**python-mss**][
 
 **Code to generate the above results:**
 
-<img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/screengearz2.png" alt="CamGear Functional Block Diagram"/>
+<img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/screengearz2.png" alt="CamGear Functional Block Diagram" width="90%"/>
 
 ### ScreenGear API Guide:
 
@@ -261,7 +262,7 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 **Following functional block diagram depicts WriteGear API's generalized working:**
 
 <p align="center">
-  <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/WriteGear.png" alt="WriteGear Functional Block Diagram" width=70%/>
+  <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/writegear.png" alt="WriteGear Functional Block Diagram"/>
 </p>
 
 ### WriteGear API Guide:
@@ -279,13 +280,13 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 
 NetGear implements a high-level wrapper around [**PyZmQ**][pyzmq] python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance asynchronous distributed messaging library that aim to be used in distributed or concurrent applications. It provides a message queue, but unlike message-oriented middleware, a ZeroMQ system can run without a dedicated message broker. 
 
-NetGear provides seamless support for [bidirectional data transmission][netgear_bidata_wiki] between receiver(client) and sender(server) through bi-directional synchronous messaging patterns such as zmq.PAIR _(ZMQ Pair Pattern)_ & zmq.REQ/zmq.REP _(ZMQ Request/Reply Pattern)_. 
+NetGear provides seamless support for [*Bi-directional data transmission*][netgear_bidata_wiki] between receiver(client) and sender(server) through bi-directional synchronous messaging patterns such as zmq.PAIR _(ZMQ Pair Pattern)_ & zmq.REQ/zmq.REP _(ZMQ Request/Reply Pattern)_. 
 
-NetGear also supports real-time frame [Encoding/Decoding compression capabilities][netgear_compression_wiki] for optimizing performance while sending the frames directly over the network, by encoding the frame before sending it and decoding it on the client's end automatically in real-time. 
+NetGear also supports real-time [*Frame Compression capabilities*][netgear_compression_wiki] for optimizing performance while sending the frames directly over the network, by encoding the frame before sending it and decoding it on the client's end automatically in real-time. 
 
-For security, NetGear implements easy access to ZeroMQ's powerful, smart & secure Security Layers, that [enables strong encryption on data][netgear_security_wiki], and unbreakable authentication between the Server and the Client with the help of custom certificates/keys and brings easy, standardized privacy and authentication for distributed systems over the network. 
+For security, NetGear implements easy access to ZeroMQ's powerful, smart & secure Security Layers, that enables [*Strong encryption on data*][netgear_security_wiki], and unbreakable authentication between the Server and the Client with the help of custom certificates/keys and brings easy, standardized privacy and authentication for distributed systems over the network. 
 
-Best of all, NetGear can robustly [handle Multiple Servers][netgear_multi_wiki] devices at once, thereby providing access to seamless Live Streaming of the multiple device in a network at the same time.
+Best of all, NetGear can robustly handle [*Multiple Servers devices*][netgear_multi_wiki] at once, thereby providing access to seamless Live Streaming of the multiple device in a network at the same time.
 
 
 **NetGear as of now seamlessly supports three ZeroMQ messaging patterns:**
@@ -294,11 +295,12 @@ Best of all, NetGear can robustly [handle Multiple Servers][netgear_multi_wiki] 
 * [**`zmq.REQ/zmq.REP`**][zmq-req-rep] _(ZMQ Request/Reply Pattern)_
 * [**`zmq.PUB/zmq.SUB`**][zmq-pub-sub] _(ZMQ Publish/Subscribe Pattern)_
 
+Whereas supported protocol are: `tcp` and `ipc`.
 
 **Following functional block diagram depicts generalized functioning of NetGear API:**
 
 <p align="center">
-  <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/NetGear.png" alt="NetGear Functional Block Diagram" width=80%/>
+  <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/netgearz.png" alt="NetGear Functional Block Diagram" width="90%" />
 </p>
 
 ### NetGear API Guide:
@@ -347,7 +349,7 @@ In addition to this, WebGear provides a special internal wrapper around [VideoGe
 
 NetGear_Async is an asynchronous videoframe messaging framework built on [**AsyncIO ZmQ**](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html) and powered by high-performance asyncio event loop called [**`uvloop`**](https://github.com/MagicStack/uvloop) to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraint. Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system.
 
-NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to [NetGear API](#netgear) but doesn't support any [**NetGear Exclusive modes**](https://github.com/abhiTronix/vidgear/wiki/NetGear#modes-of-operation) yet. NetGear_Async also allows you to easily define your own custom Source at Server-end that you want to use to manipulate your frames before sending them onto the network(See this [wiki-example](https://github.com/abhiTronix/vidgear/wiki/NetGear_Async#2-use-netgear_async-with-custom-server-source-using-opencv)).
+NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to [NetGear API](#netgear) but doesn't support any [*NetGear Exclusive modes*](https://github.com/abhiTronix/vidgear/wiki/NetGear#modes-of-operation) yet. NetGear_Async also allows you to easily define your own custom Source at Server-end that you want to use to manipulate your frames before sending them onto the network(See this [wiki-example](https://github.com/abhiTronix/vidgear/wiki/NetGear_Async#2-use-netgear_async-with-custom-server-source-using-opencv)).
 
 NetGear_Async as of now supports [all four ZeroMQ messaging patterns](#attributes-and-parameters-wrench):
   * [`zmq.PAIR`](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pair.html) _(ZMQ Pair Pattern)_
@@ -356,6 +358,10 @@ NetGear_Async as of now supports [all four ZeroMQ messaging patterns](#attribute
   * [`zmq.PUSH/zmq.PULL`](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pushpull.html#push-pull) _(ZMQ Push/Pull Pattern)_
 
 Whereas supported protocol are: `tcp` and `ipc`.
+
+**Following is the code for NetGear_Async Server-Client API:**
+
+<img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/netgear_async.png"/>
 
 
 ### NetGear_Async API Guide:
@@ -514,7 +520,7 @@ You can easily clone the repository's latest [`testing`](https://github.com/abhi
 &nbsp;
 
 
-# Testing
+# Testing, Formatting & Linting
 
 ### Prerequisites:
 
@@ -527,10 +533,11 @@ You can easily clone the repository's latest [`testing`](https://github.com/abhi
       $ git checkout testing
     ```
 
-  * **Download and Install additional python libraries:**
+  * **Install additional python libraries:**
     ```sh
       $ pip install --upgrade six
       $ pip install --upgrade flake8
+      $ pip install --upgrade black
       $ pip install --upgrade pytest
       $ pip install --upgrade pytest-asyncio
     ```
@@ -546,16 +553,27 @@ You can easily clone the repository's latest [`testing`](https://github.com/abhi
 
 ### Running Tests: 
 
-  * **Pytest:** Then, tests can be run with `pytest`(*in VidGear's root folder*) as follows:
+* **Pytest:** Then, tests can be run with `pytest`(*in VidGear's root folder*) as follows:
 
-    ```sh
-      $ pytest -sv                                   #-sv for verbose output.
-    ```
-  * **Flake:** You must also run `flake8` tests for checking your code base against coding style (PEP8), programming errors and other cyclomatic complexity:
-    
-    ```sh
-      $ flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-    ```
+  ```sh
+    $ pytest -sv                                   #-sv for verbose output.
+  ```
+
+### Formatting & Linting: 
+
+For formatting and linting the python tests, following tools are used:
+
+* **Flake8:** You must also run `flake8` linting for checking your code base against coding style (PEP8), programming errors and other cyclomatic complexity:
+
+  ```sh
+    $ flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+  ```
+
+* **Black:**  Vidgear follows `black` formatting to make code review faster by producing the smallest diffs possible:
+
+  ```sh
+    $ black {source_file_or_directory}
+  ```
 
 &nbsp;
 

@@ -1,29 +1,50 @@
 # Contribution Guidelines
 
-**Working on your first Pull Request?** You can *freely* learn about it from [How to Contribute to an Open Source Project on GitHub][PR]
+## How to contribute with a Pull Request (PR)
 
-## How to contribute with Pull Request (PR)
+**Tip:bulb:: Working on your first Pull Request?** You can *freely* learn about it from [How to Contribute to an Open Source Project on GitHub][PR]
 
-* Fork the project from the `testing` branch and submit a Pull Request (PR)
-  * PR must be a fork from `testing` branch only.
-  * Explain what the PR fixes or improves.
-  * Related screenshots are recommended.
-* Use sensible commit messages and follow the template.
+* **Use sensible commit messages:**
   * If your PR fixes a separate issue number, include it in the commit message.
-  * Use a sensible number of commit messages as well(_don't overdo_)
-  * Also, always remember to fill the PR template.
+  * Use a sensible number of commit messages as well(_don't overdo_).
+
+* **Fork the project from the testing branch:**
+  * PR must be a fork from [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch only.
+
+* **Test, format & lint your code:**
+  * PR must be tested, formatted & linted against [our library standards][test]. 
+
+* **Submit the Pull Request (PR) and follow the template:**
+  * Add a brief but descriptive Title of your PR.
+  * Explain what the PR adds, fixes or improves.
+  * Related screenshots are recommended.
+  * Most important of all, *remember to fill the PR template*.
 
 &nbsp; 
 
-## Report Bug or Feature Request
+## Reporting an Issue
 
-If you've found a new  bug or you've come up with some new feature which can make VidGear API even better: 
-* Remember first to go comprehensively through [**Wiki Documentation**][wiki]. 
-* Just keep the it simple, in context, give it a nice title and follow the issue templates.
-* Related screenshots are recommended.
-* Finally, raise your [**Issue**](https://github.com/abhiTronix/vidgear/issues/new) where you can describe in details what the problem is, or what would you like to improve. 
+If you've found a new  bug or you've come up with some new feature which can make VidGear API even better, then:
+
+* **Search the Docs and previous issues:**
+  * Remember first search if the *issue has already been reported*. You may also find related information that may help to resolve the issue. 
+  * Then, go comprehensively through [Wiki Documentation][wiki] and our [FAQ & Troubleshooting section][faq].
+
+* **Report the Issue and follow the appropriate template:**
+  * Add a brief but descriptive Title of your 
+  * Keep the issue in context of the problem.
+  * Attach source-code/screenshots if you have one.
+  * Finally, raise it by *choosing the appropriate Issue Template*: [Bug report](https://github.com/abhiTronix/vidgear/issues/new?labels=issue%3A+bug&template=bug_report.md), [Proposal](https://github.com/abhiTronix/vidgear/issues/new?labels=issue%3A+proposal&template=proposal.md), [Question](https://github.com/abhiTronix/vidgear/issues/new?labels=issue%3A+question&template=question.md).
 
 &nbsp; 
+
+
+## Community Channel
+
+If you want to share some information, or you've come up with some new idea, or looking for the fastest way troubleshoot your problems, then join our [**Gitter ➶**][gitter] Community channel.
+
+
+&nbsp;
 
 ## Become Stargazer :star:
 
@@ -33,9 +54,9 @@ If you think VidGear library is helpful and would like to help in return - **the
 
 ## Donate to Project development :heart_decoration:
 
-If you would like to help the continued efforts of this project, any size donations are welcomed and highly appreciated:
+Love using VidGear? Consider supporting the project to fund new features and improvements
 
-[![Buy Me A Coffee][Coffee-badge]][coffee]
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W8WTYO)
 
 <!--
 Internal URLs
@@ -44,3 +65,6 @@ Internal URLs
 [coffee]:https://www.buymeacoffee.com/2twOXFvlA
 [wiki]:https://github.com/abhiTronix/vidgear/wiki
 [PR]: https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github
+[test]: https://github.com/abhiTronix/vidgear#testing
+[gitter]:https://gitter.im/vidgear/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
+[faq]: https://github.com/abhiTronix/vidgear/wiki/FAQ-&-Troubleshooting
