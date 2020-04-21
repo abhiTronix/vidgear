@@ -39,7 +39,7 @@ limitations under the License.
 
 &nbsp;
 
-VidGear is a powerful python Video Processing library built with multiple APIs *(a.k.a [**Gears**](#gears))* each with a unique set of trailblazing features. These APIs provides an easy-to-use, highly extensible, multi-threaded & asyncio wrapper around many state-of-the-art libraries under the hood such as *[OpenCV ➶][opencv], [FFmpeg ➶][ffmpeg], [ZeroMQ ➶][zmq], [picamera ➶][picamera], [starlette ➶][starlette], [pafy ➶][pafy] and [python-mss ➶][mss]*
+VidGear is a powerful python Video Processing library built with multiple APIs *(a.k.a [**Gears**](#gears))* each with a unique set of trailblazing features. These APIs provides an easy-to-use, highly extensible, multi-threaded & asyncio wrapper around many underlying state-of-the-art libraries such as *[OpenCV ➶][opencv], [FFmpeg ➶][ffmpeg], [ZeroMQ ➶][zmq], [picamera ➶][picamera], [starlette ➶][starlette], [pafy ➶][pafy] and [python-mss ➶][mss]*
 
 &nbsp;
 
@@ -166,7 +166,7 @@ CamGear provides a flexible, high-level multi-threaded wrapper around `OpenCV's`
 **Following functional block diagram depicts CamGear API's generalized workflow:**
 
 <p align="center">
-  <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/camgearz.png" alt="CamGear Functional Block Diagram"  width="70%"/>
+  <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/camgearz2.png" alt="CamGear Functional Block Diagram"  width="70%"/>
 </p>
 
 ### CamGear API Guide:
@@ -194,7 +194,60 @@ Furthermore, VideoGear API can provide internal access to both [CamGear](#camgea
 
 **Code to generate above result:**
 
-<img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/videogearz2.png" alt="VidGear Stablizer Code"/>
+```python
+# import required libraries
+from vidgear.gears import VideoGear
+import numpy as np
+import cv2
+
+# open any valid video stream with stabilization enabled(`stabilize = True`)
+stream_stab = VideoGear(source="test.mp4", stabilize=True).start()
+
+# open same stream without stabilization for comparison
+stream_org = VideoGear(source="test.mp4").start()
+
+# loop over
+while True:
+
+    # read stabilized frames
+    frame_stab = stream_stab.read()
+
+    # check for stabilized frame if Nonetype
+    if frame_stab is None:
+        break
+
+    # read un-stabilized frame
+    frame_org = stream_org.read()
+
+    # concatenate both frames
+    output_frame = np.concatenate((frame_org, frame_stab), axis=1)
+
+    # put text over concatenated frame
+    cv2.putText(
+        output_frame, "Before", (10, output_frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX,
+        0.6, (0, 255, 0), 2,
+    )
+    cv2.putText(
+        output_frame, "After", (output_frame.shape[1] // 2 + 10, output_frame.shape[0] - 10),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.6, (0, 255, 0), 2,
+    )
+
+    # Show output window
+    cv2.imshow("Stabilized Frame", output_frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close both video streams
+stream_org.stop()
+stream_stab.stop()
+```
 
 ### VideoGear API Guide:
 
@@ -215,8 +268,45 @@ Best of all, PiGear API provides excellent Error-Handling with features like a t
 
 **Code to open Picamera stream with variable parameters in PiGear API:**
 
-<img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/pigearz2.png" alt="PiGear Source-Code" width="110%"/>
+```python
+# import required libraries
+from vidgear.gears import PiGear
+import cv2
 
+# add various Picamera tweak parameters to dictionary
+options = {"hflip": True, "exposure_mode": "auto", "iso": 800, "exposure_compensation": 15, "awb_mode": "horizon", "sensor_mode": 0}
+
+# open pi video stream with defined parameters
+stream = PiGear(resolution=(640, 480), framerate=60, logging = True, **options).start() 
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+
+    # {do something with the frame here}
+
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+```
 ### PiGear API Guide:
 
 [**>>> Usage Guide**][pigear-wiki]
@@ -240,7 +330,42 @@ ScreenGear provides a high-level multi-threaded wrapper around [**python-mss**][
 
 **Code to generate the above results:**
 
-<img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/screengearz2.png" alt="ScreenGear Source-Code" width="90%"/>
+```python
+# import required libraries
+from vidgear.gears import ScreenGear
+import cv2
+
+# open video stream with default parameters
+stream = ScreenGear().start()
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+
+    # {do something with the frame here}
+
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+```
 
 ### ScreenGear API Guide:
 
@@ -363,7 +488,7 @@ NetGear_Async as of now supports [all four ZeroMQ messaging patterns](#attribute
 * [**`zmq.PAIR`**][zmq-pair] _(ZMQ Pair Pattern)_ 
 * [**`zmq.REQ/zmq.REP`**][zmq-req-rep] _(ZMQ Request/Reply Pattern)_
 * [**`zmq.PUB/zmq.SUB`**][zmq-pub-sub] _(ZMQ Publish/Subscribe Pattern)_ 
-* [`zmq.PUSH/zmq.PULL`][zmq-pull-push] _(ZMQ Push/Pull Pattern)_
+* [**`zmq.PUSH/zmq.PULL`**][zmq-pull-push] _(ZMQ Push/Pull Pattern)_
 
 Whereas supported protocol are: `tcp` and `ipc`.
 
