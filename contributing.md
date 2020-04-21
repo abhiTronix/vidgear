@@ -31,9 +31,10 @@ If you've found a new  bug or you've come up with some new feature which can mak
   * Then, go comprehensively through [Wiki Documentation][wiki] and our [FAQ & Troubleshooting section][faq].
 
 * **Report the Issue and follow the appropriate template:**
-  * Add a brief but descriptive Title of your 
+  * Add a brief but descriptive Title of your issue.
   * Keep the issue in context of the problem.
   * Attach source-code/screenshots if you have one.
+  * Make sure to turn `logging=True` in parameters of the respective API for getting debug output. 
   * Finally, raise it by *choosing the appropriate Issue Template*: [Bug report][bug], [Proposal][proposal], [Question][question].
 
 &nbsp; 

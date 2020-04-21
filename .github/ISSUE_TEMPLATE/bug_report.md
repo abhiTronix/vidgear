@@ -43,6 +43,7 @@ labels: "issue: bug"
 
 ### Actual Behavior
 <!--- Tell us what happens instead -->
+<!--- You can turn `logging=True` in parameters of the respective vidgear API for getting debug output -->
 
 ### Possible Fix
 <!--- Not obligatory, but suggest a fix or reason for the bug -->
