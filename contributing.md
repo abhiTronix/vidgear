@@ -9,7 +9,7 @@
   * Use a sensible number of commit messages as well(_don't overdo_).
 
 * **Fork the project from the testing branch:**
-  * PR must be a fork from [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch only.
+  * PR must be a fork from [`testing`][testing-br] branch only.
 
 * **Test, format & lint your code:**
   * PR must be tested, formatted & linted against [our library standards][test]. 
@@ -34,7 +34,7 @@ If you've found a new  bug or you've come up with some new feature which can mak
   * Add a brief but descriptive Title of your 
   * Keep the issue in context of the problem.
   * Attach source-code/screenshots if you have one.
-  * Finally, raise it by *choosing the appropriate Issue Template*: [Bug report](https://github.com/abhiTronix/vidgear/issues/new?labels=issue%3A+bug&template=bug_report.md), [Proposal](https://github.com/abhiTronix/vidgear/issues/new?labels=issue%3A+proposal&template=proposal.md), [Question](https://github.com/abhiTronix/vidgear/issues/new?labels=issue%3A+question&template=question.md).
+  * Finally, raise it by *choosing the appropriate Issue Template*: [Bug report][bug], [Proposal][proposal], [Question][question].
 
 &nbsp; 
 
@@ -48,7 +48,7 @@ If you want to share some information, or you've come up with some new idea, or 
 
 ## Become Stargazer :star:
 
-If you think VidGear library is helpful and would like to help in return - **then you can be a :star2:[stargazer](https://github.com/abhiTronix/vidgear/stargazers):star2:**. _By starring this project, you're making it easier for others to find & trust this library._
+If you think VidGear library is helpful and would like to help in return - **then you can be a :star2:[stargazer][stars]:star2:**. _By starring this project, you're making it easier for others to find & trust this library._
 
 &nbsp;
 
@@ -56,15 +56,22 @@ If you think VidGear library is helpful and would like to help in return - **the
 
 Love using VidGear? Consider supporting the project to fund new features and improvements
 
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W8WTYO)
+[![ko-fi][kofi-badge]][kofi]
 
 <!--
 Internal URLs
 -->
 [Coffee-badge]:https://abhitronix.github.io/img/vidgear/orange_img.png
 [coffee]:https://www.buymeacoffee.com/2twOXFvlA
+[kofi-badge]:https://www.ko-fi.com/img/githubbutton_sm.svg
+[kofi]: https://ko-fi.com/W7W8WTYO
 [wiki]:https://github.com/abhiTronix/vidgear/wiki
 [PR]: https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github
-[test]: https://github.com/abhiTronix/vidgear#testing
+[test]: https://github.com/abhiTronix/vidgear/tree/testing#testing-formatting--linting
 [gitter]:https://gitter.im/vidgear/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
 [faq]: https://github.com/abhiTronix/vidgear/wiki/FAQ-&-Troubleshooting
+[testing-br]: https://github.com/abhiTronix/vidgear/tree/testing
+[bug]: https://github.com/abhiTronix/vidgear/issues/new?labels=issue%3A+bug&template=bug_report.md
+[proposal]: https://github.com/abhiTronix/vidgear/issues/new?labels=issue%3A+proposal&template=proposal.md
+[question]: https://github.com/abhiTronix/vidgear/issues/new?labels=issue%3A+question&template=question.md
+[stars]: https://github.com/abhiTronix/vidgear/stargazers

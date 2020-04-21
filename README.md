@@ -43,7 +43,7 @@ VidGear is a powerful python Video Processing library built with multi-threaded 
 
 &nbsp;
 
-The following **functional block diagram** clearly depicts the functioning of VidGear library:
+The following **functional block diagram** clearly depicts the generalized functioning of VidGear library:
 
 <p align="center">
   <img src="https://abhitronix.github.io/img/vidgear/vidgear_function2020_3.svg" alt="@Vidgear Functional Block Diagram" />
@@ -56,34 +56,43 @@ The following **functional block diagram** clearly depicts the functioning of Vi
 [**TL;DR**](#tldr)
 
 [**Gears: What are these?**](#gears)
-  * [**CamGear**](#camgear)
-  * [**PiGear**](#pigear)
-  * [**VideoGear**](#videogear)
-  * [**ScreenGear**](#screengear)
-  * [**WriteGear**](#writegear)
-  * [**NetGear**](#netgear)
-  * [**WebGear**](#webgear)
-  * [**NetGear_Async**](#netgear_async)
-
-[**Installation**](#installation)
-  * [**Prerequisites**](#prerequisites)
-  * [**1 - PyPI Install**](#option-1-pypi-install)
-  * [**2 - Release Archive Download**](#option-2-release-archive-download)
-  * [**3 - Build from source**](#option-3-build-from-source)
-  * [**Supported Python legacies**](#supported-python-legacies)
+* [**CamGear**](#camgear)
+* [**PiGear**](#pigear)
+* [**VideoGear**](#videogear)
+* [**ScreenGear**](#screengear)
+* [**WriteGear**](#writegear)
+* [**NetGear**](#netgear)
+* [**WebGear**](#webgear)
+* [**NetGear_Async**](#netgear_async)
 
 [**New-Release SneekPeak: v0.1.7**](#new-release-sneekpeak--vidgear-017)
 
 [**Documentation**](#documentation)
 
-**For Developers/Contributors**
-  * [**Testing**](#testing)
-  * [**Contributing**](#contributing)
+[**Installation**](#installation)
+* [**Prerequisites**](#prerequisites)
+  * [**Supported Systems**](#supported-systems)
+  * [**Supported Python legacies**](#supported-python-legacies)
+  * [**Pip Dependencies**](#pip-dependencies)
+* [**Available Installation Options**](#available-installation-options)
+  * [**PyPI Install**](#option-1-pypi-installrecommended)
+  * [**Release Download**](#option-2-release-download)
+  * [**Build from source**](#option-3-build-from-source)
+  
+[**Testing, Formatting & Linting**](#testing-formatting--linting)
+* [**Requirements**](#requirements)
+* [**Running Tests**](#running-tests)
+* [**Formatting & Linting**](#formatting--linting)
 
-**Additional Info**
-  * [**Community Channel**](#community-channel)
-  * [**Citing**](#citing)
-  * [**Copyright**](#copyright)
+[**Contributions & Support**](#contributions--support)
+* [**Support**](#support)
+* [**Contributors**](#contributors)
+
+[**Community Channel**](#community-channel)
+
+[**Citing**](#citing)
+
+[**Copyright**](#copyright)
 
 
 &nbsp;
@@ -104,8 +113,8 @@ The following **functional block diagram** clearly depicts the functioning of Vi
   #### What is its purpose?
    > ***"Built with simplicity in mind, VidGear lets programmers and software developers to easily integrate and perform complex Video Processing tasks in their existing or new applications, without going through various underlying library's documentation and using just a [few lines of code][flic]. Beneficial for both, if you're new to programming with Python language or already a pro at it."***
 
-
-**For more advanced information, see the [*Wiki Documentation ➶*][wiki].**
+&nbsp;
+**For more information, see our [*Wiki Documentation ➶*][wiki].**
 
 
 &nbsp;
@@ -115,7 +124,7 @@ The following **functional block diagram** clearly depicts the functioning of Vi
 
 # Gears
 
-> **VidGear is built with Multi-Threaded APIs *(a.k.a Gears)* each with some unique function/mechanism.**
+> **VidGear is built with multiple APIs *(a.k.a Gears)*, each with some unique function/mechanism.**
 
 Each of these APIs are exclusively designed to handle/control different device-specific video streams, network streams, and media encoders. These APIs provides an easy-to-use, highly extensible, multi-threaded and asyncio wrapper around state-of-the-art libraries to exploit their internal parameters and methods flexibly while providing robust error-handling. 
 
@@ -139,7 +148,6 @@ Each of these APIs are exclusively designed to handle/control different device-s
   * **Asynchronous Network Gears:**
 
     * [**WebGear:**](#webgear) _ASGI Video Server that transfers live video frames to any web browser on the network._
-
     * [**NetGear_Async:**](#netgear_sync) _Fast, Memory-Efficient Asyncio video-frame messaging framework._ 
 
 
@@ -155,7 +163,7 @@ Each of these APIs are exclusively designed to handle/control different device-s
 CamGear provides a flexible, high-level multi-threaded wrapper around `OpenCV's` [VideoCapture class][opencv-vc] with access almost all of its available parameters and also employs [`pafy`][pafy] python APIs for live [YouTube streaming][youtube-wiki]. Furthermore, CamGear implements exclusively on [**Threaded Queue mode**][TQM-wiki] for ultra-fast, error-free and synchronized frame handling.
 
 
-**Following simplified functional block diagram depicts CamGear API's generalized working:**
+**Following functional block diagram depicts CamGear API's generalized workflow:**
 
 <p align="center">
   <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/camgearz.png" alt="CamGear Functional Block Diagram"  width="70%"/>
@@ -186,7 +194,7 @@ Furthermore, VideoGear API can provide internal access to both [CamGear](#camgea
 
 **Code to generate above result:**
 
-<img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/videogearz2.png" alt="CamGear Functional Block Diagram"/>
+<img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/videogearz2.png" alt="VidGear Stablizer Code"/>
 
 ### VideoGear API Guide:
 
@@ -203,11 +211,11 @@ Furthermore, VideoGear API can provide internal access to both [CamGear](#camgea
 
 PiGear provides a flexible multi-threaded wrapper around complete [**picamera**][picamera] python library to interface with these modules correctly, and also grants the ability to exploit its various parameters like `brightness, saturation, sensor_mode, etc.` effortlessly. 
 
-Best of all, PiGear API provides excellent Error-Handling with features like a threaded internal timer that keeps active track of any frozen threads and handles hardware failures/frozen threads robustly thereby will exit safely if any failure occurs. So now if you accidentally pulled your camera module cable out when running PiGear API in your script, instead of going into possible kernel panic/frozen threads, API exit safely to save resources. 
+Best of all, PiGear API provides excellent Error-Handling with features like a threaded internal timer that keeps active track of any frozen threads and handles hardware failures/frozen threads robustly thereby will exit safely if any failure occurs. So now if someone accidentally pulled your Raspi-camera module cable out when you're running PiGear API in your script, instead of going into possible kernel panic/frozen threads, this API will exit safely to save resources. 
 
-**Code to open Picamera stream with variable parameters:**
+**Code to open Picamera stream with variable parameters in PiGear API:**
 
-<img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/pigearz2.png" alt="CamGear Functional Block Diagram"/>
+<img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/pigearz2.png" alt="PiGear Source-Code" width="110%"/>
 
 ### PiGear API Guide:
 
@@ -232,7 +240,7 @@ ScreenGear provides a high-level multi-threaded wrapper around [**python-mss**][
 
 **Code to generate the above results:**
 
-<img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/screengearz2.png" alt="CamGear Functional Block Diagram" width="90%"/>
+<img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/screengearz2.png" alt="ScreenGear Source-Code" width="90%"/>
 
 ### ScreenGear API Guide:
 
@@ -259,7 +267,7 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 
   * **Non-Compression Mode:** In this mode, WriteGear utilizes basic [**OpenCV's inbuilt VideoWriter API**][opencv-vw]. Similar to compression mode, WriteGear also supports all parameters manipulation available within this API. But this mode lacks the ability to manipulate encoding parameters and other important features like video compression, audio encoding, etc. **You can learn about this mode [here][ncm-writegear-wiki]**.
 
-**Following functional block diagram depicts WriteGear API's generalized working:**
+**Following functional block diagram depicts WriteGear API's generalized workflow:**
 
 <p align="center">
   <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/writegear.png" alt="WriteGear Functional Block Diagram"/>
@@ -297,7 +305,7 @@ Best of all, NetGear can robustly handle [*Multiple Servers devices*][netgear_mu
 
 Whereas supported protocol are: `tcp` and `ipc`.
 
-**Following functional block diagram depicts generalized functioning of NetGear API:**
+**Following functional block diagram depicts generalized workflow of NetGear API in its Multi-Servers Mode:**
 
 <p align="center">
   <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/netgearz.png" alt="NetGear Functional Block Diagram" width="90%" />
@@ -347,19 +355,19 @@ In addition to this, WebGear provides a special internal wrapper around [VideoGe
 
 > _NetGear_Async can performance boost upto 1.2~2x times as compared to [NetGear API](#netgear) at about 1/3 of memory consumption but only at the expense of limited modes and features._
 
-NetGear_Async is an asynchronous videoframe messaging framework built on [**AsyncIO ZmQ**](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html) and powered by high-performance asyncio event loop called [**`uvloop`**](https://github.com/MagicStack/uvloop) to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraint. Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system.
+NetGear_Async is an asynchronous videoframe messaging framework built on [**AsyncIO ZmQ**][asyncio-zmq] and powered by high-performance asyncio event loop called [**`uvloop`**][uvloop] to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraint. Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system.
 
-NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to [NetGear API](#netgear) but doesn't support any [*NetGear Exclusive modes*](https://github.com/abhiTronix/vidgear/wiki/NetGear#modes-of-operation) yet. NetGear_Async also allows you to easily define your own custom Source at Server-end that you want to use to manipulate your frames before sending them onto the network(See this [wiki-example](https://github.com/abhiTronix/vidgear/wiki/NetGear_Async#2-use-netgear_async-with-custom-server-source-using-opencv)).
+NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to [NetGear API](#netgear) but doesn't support any [*NetGear Exclusive modes*][netgear-exm] yet. NetGear_Async also allows you to easily define your own custom Source at Server-end that you want to use to manipulate your frames before sending them onto the network(See this [wiki-example][netgear_Async-cs]).
 
 NetGear_Async as of now supports [all four ZeroMQ messaging patterns](#attributes-and-parameters-wrench):
-  * [`zmq.PAIR`](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pair.html) _(ZMQ Pair Pattern)_
-  * [`zmq.REQ/zmq.REP`](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/client_server.html) _(ZMQ Request/Reply Pattern)_
-  * [`zmq.PUB/zmq.SUB`](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html) _(ZMQ Publish/Subscribe Pattern)_ 
-  * [`zmq.PUSH/zmq.PULL`](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pushpull.html#push-pull) _(ZMQ Push/Pull Pattern)_
+* [**`zmq.PAIR`**][zmq-pair] _(ZMQ Pair Pattern)_ 
+* [**`zmq.REQ/zmq.REP`**][zmq-req-rep] _(ZMQ Request/Reply Pattern)_
+* [**`zmq.PUB/zmq.SUB`**][zmq-pub-sub] _(ZMQ Publish/Subscribe Pattern)_ 
+* [`zmq.PUSH/zmq.PULL`][zmq-pull-push] _(ZMQ Push/Pull Pattern)_
 
 Whereas supported protocol are: `tcp` and `ipc`.
 
-**Following is the code for NetGear_Async Server-Client API:**
+**Code for NetGear_Async Server-Client API:**
 
 <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/netgear_async.png"/>
 
@@ -378,7 +386,7 @@ Whereas supported protocol are: `tcp` and `ipc`.
 
 * **WebGear API:**
   * _Added a robust Live Video Server API that can transfer live video frames to any web browser on the network in real-time._
-  * _Implemented a flexible asyncio wrapper around [`starlette`](https://www.starlette.io/) ASGI Application Server._
+  * _Implemented a flexible asyncio wrapper around [`starlette`][starlette] ASGI Application Server._
   * _Added seamless access to various starlette's Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc._
   * _Added a special internal access to VideoGear API and all its parameters._
   * _Implemented a new Auto-Generation Workflow to generate/download & thereby validate WebGear API data files from its GitHub server automatically._
@@ -388,21 +396,19 @@ Whereas supported protocol are: `tcp` and `ipc`.
 
 
 * **NetGear_Async API** 
-  * _Designed NetGear_Async asynchronous I/O API built on AsyncIO ZmQ API for vidgear's asyncio package._
-  * _Implemented a state-of-the-art asyncio event loop called `uvloop` at backend._
+  * _Designed NetGear_Async asynchronous network API built upon ZeroMQ's asyncio API._
+  * _Implemented support for state-of-the-art asyncio event loop [`uvloop`][uvloop] at its backend._
   * _Achieved Unmatchable high-speed and lag-free video streaming over the network with minimal resource constraint._
-  * _Added internal wrapper around VideoGear API for this API._
+  * _Added exclusive internal wrapper around VideoGear API for this API._
   * _Implemented complete server-client handling and options to use variable protocols/patterns for this API._
   * _Implemented support for  all four ZeroMQ messaging patterns: i.e `zmq.PAIR`, `zmq.REQ/zmq.REP`, `zmq.PUB/zmq.SUB`, and `zmq.PUSH/zmq.PULL`._
-  * _Implemented support for `tcp` and `ipc` protocols._
+  * _Implemented initial support for `tcp` and `ipc` protocols._
 
 * **Asynchronous Enhancements** 
-  * _Added `asyncio` package to vidgear for handling asynchronous APIs._
-  * _Various Performance tweaks for Asyncio APIs with concurrency within a single thread._
+  * _Added `asyncio` package to vidgear for handling asynchronous network APIs._
+  * _Various Performance enhancements for these Asyncio APIs for achieving concurrency within a single thread._
 
-* _Added new highly-precise Threaded FPS class for accurate benchmarking with `time.perf_counter` python module._
-
-* ***Added asyncio package to vidgear for handling asynchronous APIs and [many more...](changelog.md)***
+* ***Added new highly-precise Threaded FPS class for accurate VidGear benchmarking with `time.perf_counter` python module and [many more...](changelog.md)***
 
 
 &nbsp;
@@ -412,7 +418,7 @@ Whereas supported protocol are: `tcp` and `ipc`.
 
 # Documentation
 
-The complete documentation for all VidGear classes and functions can be found in the link below:
+The complete documentation for all VidGear APIs and  functions can be found in the link below:
 
 * [**Wiki Documentation - English**][wiki]
 
@@ -465,7 +471,7 @@ Before installing VidGear, you must verify that the following dependencies are m
 
   * **Uvloop:** Only Required if you're using its [NetGear_Async](#netgear_async) API on unix machines for maximum performance. You can easily install it via pip:
 
-      _:warning: Uvloop is [**NOT** yet supported on Windows Systems](https://github.com/MagicStack/uvloop/issues/14)._
+      _:warning: Uvloop is [**NOT** yet supported on Windows Systems][uvloop-ns]._
 
       ```sh
         $ pip install uvloop
@@ -495,6 +501,9 @@ Before installing VidGear, you must verify that the following dependencies are m
 > Best option if you want a **compressed archive**.
 
 VidGear releases are available for download as wheel(`.whl`) packages from the [latest release][release] and thereby can be installed with `pip` as follows:
+
+***:warning: See [Pip Dependencies](#pip-dependencies) before installing!***
+
 ```sh
   # directly installs the wheel
   $ pip install vidgear-{downloaded version}-py3-none-any.whl
@@ -522,16 +531,9 @@ You can easily clone the repository's latest [`testing`](https://github.com/abhi
 
 # Testing, Formatting & Linting
 
-### Prerequisites:
+### Requirements:
 
-  Testing VidGear require some *additional setup dependencies & data* that can be downloaded manually as follows:
-
-  * **Clone the Testing Branch:**
-    ```sh
-      $ git clone https://github.com/abhiTronix/vidgear.git
-      $ cd vidgear
-      $ git checkout testing
-    ```
+  Testing VidGear require some *additional dependencies & dataset* that can be downloaded manually as follows:
 
   * **Install additional python libraries:**
     ```sh
@@ -553,7 +555,7 @@ You can easily clone the repository's latest [`testing`](https://github.com/abhi
 
 ### Running Tests: 
 
-* **Pytest:** Then, tests can be run with `pytest`(*in VidGear's root folder*) as follows:
+* **Pytest:** Then, tests can be run with [`pytest`][pytest](*in VidGear's root folder*) as follows:
 
   ```sh
     $ pytest -sv                                   #-sv for verbose output.
@@ -563,13 +565,13 @@ You can easily clone the repository's latest [`testing`](https://github.com/abhi
 
 For formatting and linting the python tests, following tools are used:
 
-* **Flake8:** You must also run `flake8` linting for checking your code base against coding style (PEP8), programming errors and other cyclomatic complexity:
+* **Flake8:** You must run [`flake8`][flake8] linting for checking your code base against coding style (PEP8), programming errors and other cyclomatic complexity:
 
   ```sh
     $ flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
   ```
 
-* **Black:**  Vidgear follows `black` formatting to make code review faster by producing the smallest diffs possible:
+* **Black:**  Vidgear follows [`black`][black] formatting to make code review faster by producing the smallest diffs possible. You must run it with sensible defaults as follows:
 
   ```sh
     $ black {source_file_or_directory}
@@ -588,7 +590,7 @@ Contributions are welcome! Please see our **[Contribution Guidelines](contributi
 
 Love using VidGear? Consider supporting the project to fund new features and improvements
 
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W8WTYO)
+[![ko-fi][kofi-badge]][kofi]
 
 ### Contributors
 
@@ -652,6 +654,8 @@ Badges
 [pypi-badge]:https://img.shields.io/pypi/v/vidgear.svg?style=for-the-badge&logo=pypi
 [gitter-bagde]:https://img.shields.io/badge/Chat-Gitter-yellow.svg?style=for-the-badge&logo=gitter
 [Coffee-badge]:https://abhitronix.github.io/img/vidgear/orange_img.png
+[kofi-badge]:https://www.ko-fi.com/img/githubbutton_sm.svg
+[kofi]: https://ko-fi.com/W7W8WTYO
 
 <!--
 Internal URLs
@@ -696,13 +700,20 @@ Internal URLs
 [netgear_compression_wiki]:https://github.com/abhiTronix/vidgear/wiki/Compression-in-NetGear-API#frame-encodingdecoding-compression-capabilities-for-netgear-api
 [netgear_security_wiki]:https://github.com/abhiTronix/vidgear/wiki/Secure-Mode:-Authentication-&-Data-Encryption-in-NetGear-API#secure-mode-authentication--data-encryption-in-netgear-api
 [netgear_multi_wiki]:https://github.com/abhiTronix/vidgear/wiki/Multi-Server-Mode-for-NetGear-API#multi-server-mode-for-netgear-api
+[netgear-exm]: https://github.com/abhiTronix/vidgear/wiki/NetGear#modes-of-operation
 [stabilize_webgear_wiki]:https://github.com/abhiTronix/vidgear/wiki/Advanced-WebGear-API-Usage#d2-using-webgear-api-with-real-time-video-stabilization-enabled
 [flic]:https://github.com/abhiTronix/vidgear/wiki/CamGear#1-bare-minimum-example
+[netgear_Async-cs]: https://github.com/abhiTronix/vidgear/wiki/NetGear_Async#2-use-netgear_async-with-custom-server-source-using-opencv
 
 <!--
 External URLs
 -->
+[asyncio-zmq]:https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html
+[uvloop]: https://github.com/MagicStack/uvloop
+[uvloop-ns]: https://github.com/MagicStack/uvloop/issues/14
 [ffmpeg]:https://www.ffmpeg.org/
+[flake8]: https://flake8.pycqa.org/en/latest/
+[black]: https://github.com/psf/black
 [pytest]:https://docs.pytest.org/en/latest/
 [opencv-writer]:https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5
 [OpenCV-linux]:https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/
@@ -728,4 +739,5 @@ External URLs
 [zmq-pair]:https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pair.html
 [zmq-req-rep]:https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/client_server.html
 [zmq-pub-sub]:https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html
+[zmq-pull-push]: https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pushpull.html#push-pull
 [picamera-setting]:https://picamera.readthedocs.io/en/release-1.13/quickstart.html

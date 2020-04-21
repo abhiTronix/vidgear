@@ -18,13 +18,13 @@
 
 
   * **NetGear_Async API** 
-    * Designed NetGear_Async asynchronous I/O API built on AsyncIO ZmQ API for vidgear's asyncio package.
-    * Implemented a state-of-the-art asyncio event loop called `uvloop` at backend.
+    * Designed NetGear_Async asynchronous network API built upon ZeroMQ's asyncio API.
+    * Implemented support for state-of-the-art asyncio event loop [`uvloop`](https://github.com/MagicStack/uvloop) at its backend.
     * Achieved Unmatchable high-speed and lag-free video streaming over the network with minimal resource constraint.
-    * Added internal wrapper around VideoGear API for this API.
+    * Added exclusive internal wrapper around VideoGear API for this API.
     * Implemented complete server-client handling and options to use variable protocols/patterns for this API.
     * Implemented support for  all four ZeroMQ messaging patterns: i.e `zmq.PAIR`, `zmq.REQ/zmq.REP`, `zmq.PUB/zmq.SUB`, and `zmq.PUSH/zmq.PULL`.
-    * Implemented support for 'tcp' and 'ipc' protocols.
+    * Implemented initial support for `tcp` and `ipc` protocols.
     * Added new Coverage CI tests for NetGear_Async Network Gear.
     * Added new Benchmark tests for benchmarking NetGear_Async against NetGear.
 
@@ -58,6 +58,7 @@
   * Re-implemented and simplified all CI tests with maximum code-coverage in mind.
   * Replaced old `mkdir` function with new `mkdir_safe` helper function for creating directories safely.
   * Updated ReadMe.md with updated diagrams, images, gifs and information.
+  * Improve, structured and Simplified the Contribution Guideliness.
   * Bumped Codecov to maximum. 
 
 ### Breaking Updates / Improvements / Changes
