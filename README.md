@@ -39,7 +39,7 @@ limitations under the License.
 
 &nbsp;
 
-VidGear is a powerful python Video Processing library built with multi-threaded [**Gears**](#gears) each with a unique set of trailblazing features. These APIs provides a easy-to-use, highly extensible, and multi-threaded wrapper around many underlying state-of-the-art libraries such as *[OpenCV ➶][opencv], [FFmpeg ➶][ffmpeg], [ZeroMQ ➶][zmq], [picamera ➶][picamera], [starlette ➶][starlette], [pafy ➶][pafy] and [python-mss ➶][mss]*
+VidGear is a powerful python Video Processing library built with multiple APIs *(a.k.a [**Gears**](#gears))* each with a unique set of trailblazing features. These APIs provides an easy-to-use, highly extensible, multi-threaded & asyncio wrapper around many state-of-the-art libraries under the hood such as *[OpenCV ➶][opencv], [FFmpeg ➶][ffmpeg], [ZeroMQ ➶][zmq], [picamera ➶][picamera], [starlette ➶][starlette], [pafy ➶][pafy] and [python-mss ➶][mss]*
 
 &nbsp;
 
@@ -126,7 +126,7 @@ The following **functional block diagram** clearly depicts the generalized funct
 
 > **VidGear is built with multiple APIs *(a.k.a Gears)*, each with some unique function/mechanism.**
 
-Each of these APIs are exclusively designed to handle/control different device-specific video streams, network streams, and media encoders. These APIs provides an easy-to-use, highly extensible, multi-threaded and asyncio wrapper around state-of-the-art libraries to exploit their internal parameters and methods flexibly while providing robust error-handling. 
+Each of these APIs is exclusively designed to handle/control different device-specific video streams, network streams, and media encoders. These APIs provide an easy-to-use, highly extensible, multi-threaded and asyncio wrapper around state-of-the-art libraries under the hood to exploit their internal parameters and methods flexibly while providing robust error-handling and unparalleled performance. 
 
 **These Gears can be classified as follows:**
 
