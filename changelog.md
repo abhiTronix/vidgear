@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## VidGear 0.1.7 <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif" />
+## VidGear v0.1.7 <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif" />
 
 ### New Features:
 
@@ -115,7 +115,7 @@
 
 &nbsp; 
 
-## VidGear 0.1.6
+## VidGear v0.1.6
 
 ### New Features:
   * **NetGear API:**
