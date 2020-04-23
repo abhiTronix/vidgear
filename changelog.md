@@ -59,6 +59,8 @@
   * Replaced old `mkdir` function with new `mkdir_safe` helper function for creating directories safely.
   * Updated ReadMe.md with updated diagrams, images, gifs and information.
   * Improve, structured and Simplified the Contribution Guideliness.
+  * Replaced line endings CRLF with LF endings.
+  * Added dos2unix for Travis OSX envs.
   * Bumped Codecov to maximum. 
 
 ### Breaking Updates / Improvements / Changes
@@ -72,6 +74,7 @@
   
   * Fixed Major NetGear_Async bug where `__address` and `__port` are not set in async mode.(PR by otter-in-a-suit) 
   * Fixed Major PiGear Color-space Conversion logic bug.
+  * Workaround for CAP_IMAGES: error in Youtube Mode.
   * Replaced incorrect `terminate()` with `join()` in PiGear.
   * Removed `uvloop` for windows as still [NOT yet supported](https://github.com/MagicStack/uvloop/issues/14).
   * Refactored Asynchronous Packagename `async` to `asyncio`, since it is used as Keyword in python>=3.7*(raises SyntaxError)*.
