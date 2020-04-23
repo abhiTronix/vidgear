@@ -118,9 +118,9 @@ class CamGear:
                 url = youtube_url_validator(source)
                 if url:
                     source_object = pafy.new(url)
-                    _source = source_object.getbestvideo("any", ftypestrict=False)
+                    _source = source_object.getbestvideo("webm", ftypestrict=True)
                     if _source is None:
-                        _source = source_object.getbest("any", ftypestrict=False)
+                        _source = source_object.getbest("webm", ftypestrict=False)
                     if self.__logging:
                         logger.debug(
                             "YouTube source ID: `{}`, Title: `{}` & Video_Extension: `{}`".format(
@@ -129,7 +129,9 @@ class CamGear:
                         )
                     source = _source.url
                 else:
-                    raise RuntimeError("`{}` URL cannot be processed!".format(source))
+                    raise RuntimeError(
+                        "`{}` Youtube URL cannot be processed!".format(source)
+                    )
             except Exception as e:
                 if self.__logging:
                     logger.exception(str(e))
