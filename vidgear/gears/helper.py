@@ -267,7 +267,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                 bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
                 for data in response.iter_content(chunk_size=4096):
                     f.write(data)
-                    if data:
+                    if len(data) > 0:
                         bar.update(len(data))
                 bar.close()
             logger.debug("Extracting executables.")

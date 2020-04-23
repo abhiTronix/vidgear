@@ -449,7 +449,7 @@ Whereas supported protocol are: `tcp` and `ipc`.
 
 > *WebGear is a powerful ASGI Video Streamer API, that transfers live video frames to any web browser on the network in real-time.*
 
-WebGear API provides a flexible abstract asyncio wrapper around [Starlette][starlette] ASGI library and easy access to its various components independently. Thereby implementing the ability to flexibly interact with the Starlette's ecosystem of shared middleware and mountable applications & seamless access to its various Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.
+WebGear API provides a flexible abstract asyncio wrapper around [Starlette][starlette] ASGI library and easy access to its various components independently. Thereby implementing the ability to flexibly interact with the Starlette's ecosystem of shared middle-ware and mountable applications & seamless access to its various Response classes, Routing tables, Static Files, Template engine(with Jinja2), etc.
 
 WebGear can acts as robust _Live Video Streaming Server_ that can stream live video frames to any web browser on a network in real-time. It also auto-generates necessary data files for its default template and provides us the freedom to easily alter its [_performance parameters and routing tables_][advanced-webgear-wiki] according to our applications while handling errors robustly.
 
@@ -465,7 +465,23 @@ In addition to this, WebGear provides a special internal wrapper around [VideoGe
 
 **Code to generate the above result:**
 
-<img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/vidgear/webgearz2.png" alt="CamGear Functional Block Diagram"/>
+```python
+# import required libraries
+import uvicorn
+from vidgear.gears.asyncio import WebGear
+
+#various performance tweaks
+options = {"frame_size_reduction": 40, "frame_jpeg_quality": 80, "frame_jpeg_optimize": True, "frame_jpeg_progressive": False}
+
+#initialize WebGear app  
+web = WebGear(source = "foo.mp4", logging = True, **options)
+
+#run this app on Uvicorn server at address http://0.0.0.0:8000/
+uvicorn.run(web(), host='0.0.0.0', port=8000)
+
+#close app safely
+web.shutdown()
+```
 
 ### WebGear API Guide:
 
@@ -594,7 +610,7 @@ Before installing VidGear, you must verify that the following dependencies are m
       ``` 
     _:bulb: Also, make sure to [enable Raspberry Pi hardware-specific settings][picamera-setting] prior to using this library._
 
-  * **Uvloop:** Only Required if you're using its [NetGear_Async](#netgear_async) API on unix machines for maximum performance. You can easily install it via pip:
+  * **Uvloop:** Only Required if you're using its [NetGear_Async](#netgear_async) API on UNIX machines for maximum performance. You can easily install it via pip:
 
       _:warning: Uvloop is [**NOT** yet supported on Windows Systems][uvloop-ns]._
 

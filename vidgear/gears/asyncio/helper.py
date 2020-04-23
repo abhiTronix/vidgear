@@ -211,10 +211,11 @@ def download_webdata(path, files=[], logging=False):
             total_length is None
         ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
         bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
-        for data in response.iter_content(chunk_size=256):
-            f.write(data)
-            if data:
-                bar.update(len(data))
+        with open(file_name, "wb") as f:
+            for data in response.iter_content(chunk_size=256):
+                f.write(data)
+                if len(data) > 0:
+                    bar.update(len(data))
         bar.close()
     if logging:
         logger.debug("Verifying downloaded data:")

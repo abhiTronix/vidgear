@@ -76,6 +76,7 @@
   * Removed `uvloop` for windows as still [NOT yet supported](https://github.com/MagicStack/uvloop/issues/14).
   * Refactored Asynchronous Packagename `async` to `asyncio`, since it is used as Keyword in python>=3.7*(raises SyntaxError)*.
   * Fixed unfinished close of event loops bug in WebGear API.
+  * Fixed NameError in helper.py.
   * Added fix for OpenCV installer failure on Linux test envs.
   * Fixed undefined NameError in `helper.py` context. (@cclauss)
   * Fixed incorrect logic while pulling frames from ScreenGear API.
@@ -97,11 +98,13 @@
 
 * PR #88
 * PR #91
+* PR #93
 * PR #95
 * PR #98
 * PR #101
 * PR #114
 * PR #118
+* PR #124
 
 :warning: PyPi Release does NOT contain Tests and Scripts!
 
