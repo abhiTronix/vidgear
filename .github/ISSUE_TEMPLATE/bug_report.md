@@ -21,9 +21,8 @@ labels: "issue: bug"
 
 ### Acknowledgment
 
-<!--- By posting an issue you acknowledge the following: -->
+<!--- By posting an issue you acknowledge the following: (Put an `x` in all the boxes that apply(important)) -->
 
-- [ ] A brief but descriptive Title of your issue
 - [ ] I have searched the [issues](https://github.com/abhiTronix/vidgear/issues) for my issue and found nothing related or helpful.
 - [ ] I have read the [FAQ](https://github.com/abhiTronix/vidgear/wiki/FAQ-&-Troubleshooting).
 - [ ] I have read the [Wiki](https://github.com/abhiTronix/vidgear/wiki#vidgear).
@@ -44,6 +43,7 @@ labels: "issue: bug"
 
 ### Actual Behavior
 <!--- Tell us what happens instead -->
+<!--- You can turn `logging=True` in parameters of the respective vidgear API for getting debug output -->
 
 ### Possible Fix
 <!--- Not obligatory, but suggest a fix or reason for the bug -->
@@ -63,6 +63,4 @@ labels: "issue: bug"
 
 
 ### Optional
-
 <!--- Provide screenshots where appropriate -->
-

@@ -165,13 +165,13 @@ class NetGear:
                 )
 
         # check  whether user-defined messaging protocol is valid
-        if not (protocol in ["tcp", "udp", "pgm", "epgm", "inproc", "ipc"]):
+        if not (protocol in ["tcp", "ipc"]):
             # else default to `tcp` protocol
             protocol = "tcp"
             # log it
             if self.__logging:
                 logger.warning(
-                    "protocol is not valid or provided. Defaulting to `tcp` protocol!"
+                    "Protocol is invalid or not provided. Defaulting to `tcp` protocol!"
                 )
 
         # generate random device id

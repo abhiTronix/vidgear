@@ -9,7 +9,7 @@ _Kindly explain the changes you made here._
 
 ### Requirements / Checklist
 
-<!--- Put an `x` in all the boxes that apply(important): -->
+<!--- By pushing this PR you acknowledge the following: Put an `x` in all the boxes that apply(important): -->
 
 - [ ] Read the [Contributing Guidelines](https://github.com/abhiTronix/vidgear/blob/master/contributing.md)
 - [ ] Read the [FAQ](https://github.com/abhiTronix/vidgear/wiki/FAQ-&-Troubleshooting)
@@ -33,7 +33,4 @@ _Kindly explain the changes you made here._
 - [ ] Breaking change (fix or feature that would cause existing functionality to change)
 
 ### Screenshots (if available):
-
-
-
-
+<!--- Provide screenshots where appropriate -->

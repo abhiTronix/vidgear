@@ -52,7 +52,7 @@ with open("README.md", "r") as fh:
 setup(
     name="vidgear",
     packages=["vidgear", "vidgear.gears", "vidgear.gears.asyncio"],
-    version="0.1.7-dev1",
+    version="0.1.7",
     description="Most Powerful cross-platform Video Processing Python framework powerpacked with unique trailblazing features.",
     license="Apache License 2.0",
     author="Abhishek Thakur",
@@ -63,7 +63,7 @@ setup(
         "requests",
         "pyzmq",
         "colorlog",
-        "progressbar2",
+        "tqdm",
     ]
     + (["opencv-python"] if test_opencv() else [])
     + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
@@ -74,7 +74,6 @@ setup(
     extras_require={
         "asyncio": ["starlette", "aiofiles", "jinja2", "aiohttp", "uvicorn", "msgpack_numpy",] + (["uvloop"] if (platform.system() != "Windows") else [])
     },
-    download_url="https://github.com/abhiTronix/vidgear/releases/download/vidgear-0.1.7.dev0/vidgear-0.1.7.dev0.tar.gz",
     keywords=[
         "OpenCV",
         "multithreading",
@@ -110,7 +109,7 @@ setup(
     scripts=[],
     project_urls={
         "Bug Reports": "https://github.com/abhiTronix/vidgear/issues",
-        "Funding": "https://www.buymeacoffee.com/2twOXFvlA",
+        "Funding": "https://ko-fi.com/W7W8WTYO",
         "Source": "https://github.com/abhiTronix/vidgear",
     },
 )

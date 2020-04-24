@@ -55,6 +55,7 @@ before_install:
     brew install ffmpeg;
     brew reinstall openssl;
     brew install unzip;
+    brew install dos2unix;
     curl -LO https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci;
     source ./macports-ci install;
     yes | sudo port install python$PYTHON;
@@ -67,6 +68,7 @@ before_install:
     pip install --upgrade --user certifi;
     export SSL_CERT_FILE=$(python3 -m certifi);
     export REQUESTS_CA_BUNDLE=$(python3 -m certifi);
+    dos2unix scripts/bash/prepare_dataset.sh;
     chmod +x scripts/bash/prepare_dataset.sh;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then

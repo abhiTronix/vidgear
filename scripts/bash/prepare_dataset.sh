@@ -49,46 +49,46 @@ cd "$TMPFOLDER"/Downloads/FFmpeg_static
 
 if [ $OS_NAME = "linux" ]; then
 
-	echo "Downloading Linux Static FFmpeg Binaries..."
-	if [ "$MACHINE_BIT" = "x86_64" ]; then
-	  curl -L https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/ffmpeg-release-amd64-static.tar.xz -o ffmpeg-release-amd64-static.tar.xz
-	  tar -xJf ffmpeg-release-amd64-static.tar.xz
-	  rm *.tar.*
-	  mv ffmpeg* ffmpeg
-	else
-	  curl -L https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/ffmpeg-release-i686-static.tar.xz -o ffmpeg-release-i686-static.tar.xz
-	  tar -xJf ffmpeg-release-i686-static.tar.xz
-	  rm *.tar.*
-	  mv ffmpeg* ffmpeg
-	fi
+    echo "Downloading Linux Static FFmpeg Binaries..."
+    if [ "$MACHINE_BIT" = "x86_64" ]; then
+      curl -L https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/ffmpeg-release-amd64-static.tar.xz -o ffmpeg-release-amd64-static.tar.xz
+      tar -xJf ffmpeg-release-amd64-static.tar.xz
+      rm *.tar.*
+      mv ffmpeg* ffmpeg
+    else
+      curl -L https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/ffmpeg-release-i686-static.tar.xz -o ffmpeg-release-i686-static.tar.xz
+      tar -xJf ffmpeg-release-i686-static.tar.xz
+      rm *.tar.*
+      mv ffmpeg* ffmpeg
+    fi
 
 elif [ $OS_NAME = "windows" ]; then
 
-	echo "Downloading Windows Static FFmpeg Binaries..."
-	if [ "$MACHINE_BIT" = "x86_64" ]; then
-	  curl -L https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/ffmpeg-latest-win64-static.zip -o ffmpeg-latest-win64-static.zip
-	  unzip -qq ffmpeg-latest-win64-static.zip
-	  rm ffmpeg-latest-win64-static.zip
-	  mv ffmpeg-latest-win64-static ffmpeg
-	else
-	  curl -L https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/ffmpeg-latest-win32-static.zip -o ffmpeg-latest-win32-static.zip
-	  unzip -qq ffmpeg-latest-win32-static.zip
-	  rm ffmpeg-latest-win32-static.zip
-	  mv ffmpeg-latest-win32-static ffmpeg
-	fi
+    echo "Downloading Windows Static FFmpeg Binaries..."
+    if [ "$MACHINE_BIT" = "x86_64" ]; then
+      curl -L https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/ffmpeg-latest-win64-static.zip -o ffmpeg-latest-win64-static.zip
+      unzip -qq ffmpeg-latest-win64-static.zip
+      rm ffmpeg-latest-win64-static.zip
+      mv ffmpeg-latest-win64-static ffmpeg
+    else
+      curl -L https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/ffmpeg-latest-win32-static.zip -o ffmpeg-latest-win32-static.zip
+      unzip -qq ffmpeg-latest-win32-static.zip
+      rm ffmpeg-latest-win32-static.zip
+      mv ffmpeg-latest-win32-static ffmpeg
+    fi
 
 else
 
-	echo "Downloading MacOS64 Static FFmpeg Binary..."
-	curl -LO https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/ffmpeg-latest-macos64-static.zip
-	unzip -qq ffmpeg-latest-macos64-static.zip
-	rm ffmpeg-latest-macos64-static.zip
-	mv ffmpeg-latest-macos64-static ffmpeg
+    echo "Downloading MacOS64 Static FFmpeg Binary..."
+    curl -LO https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/ffmpeg-latest-macos64-static.zip
+    unzip -qq ffmpeg-latest-macos64-static.zip
+    rm ffmpeg-latest-macos64-static.zip
+    mv ffmpeg-latest-macos64-static ffmpeg
 
 fi
 
 # Downloading Test Data
-cd "$TMPFOLDER"/Downloads/Test_videos
+cd "$TMPFOLDER"/Downloads/Test_videos || exit
 
 echo "Downloading Test-Data..."
 curl https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/big_buck_bunny_720p_1mb.mp4 -o BigBuckBunny_4sec.mp4

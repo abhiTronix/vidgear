@@ -31,7 +31,7 @@ if __name__ == "__main__":
         )
 
     # define argument parser and parse command line arguments
-    usage = """python -m vidgear.gears [-h] [-s SOURCE] [-ep ENABLEPICAMERA] [-S STABILIZE]
+    usage = """python -m vidgear.gears.asyncio [-h] [-s SOURCE] [-ep ENABLEPICAMERA] [-S STABILIZE]
 				[-cn CAMERA_NUM] [-yt Y_TUBE] [-b BACKEND] [-cs COLORSPACE]
 				[-r RESOLUTION] [-f FRAMERATE] [-td TIME_DELAY]
 				[-ip IPADDRESS] [-pt PORT] [-l LOGGING] [-op OPTIONS]"""

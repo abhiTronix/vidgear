@@ -1,76 +1,121 @@
 # CHANGELOG
 
-## VidGear 0.1.7-dev
+## VidGear v0.1.7 <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/new.gif" />
 
 ### New Features:
 
-  * **WebGear Updates:**
-    * Added a robust Live Video Streaming Server API that can transfer live video frames to any web browser on the network in real-time.
-    * Implemented a flexible asyncio wrapper around [starlette](https://www.starlette.io/) ASGI application and can easily access its various components independently.
+  * **WebGear API:**
+    * Added a robust Live Video Server API that can transfer live video frames to any web browser on the network in real-time.
+    * Implemented a flexible asyncio wrapper around [`starlette`](https://www.starlette.io/) ASGI Application Server.
     * Added seamless access to various starlette's Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.
-    * Created a special internal wrapper around VideoGear API and gave access to all its properties.
-    * Introduced new Auto-Generation Process to generate WebGear data files from the GitHub server and validate them automatically.
-    * Added exclusive dictionary attributes to tweak WebGear performance, Route Tables and other internal properties.
-    * Added new simple & elegant Bootstrap's Cover template, by @mdo for WebGear Server.
-    * Built `__main__.py` to directly run WebGear Server through the terminal.
-    
-  * **Logging Updates:**
-    * Added new `logging handler` helper function.
-    * Add flake8 tests to Travis CLI to find undefined names. (@cclauss )
+    * Added a special internal access to VideoGear API and all its parameters.
+    * Implemented a new Auto-Generation Workflow to generate/download & thereby validate WebGear API data files from its GitHub server automatically.
+    * Added on-the-go dictionary parameter in WebGear to tweak performance, Route Tables and other internal properties easily.
+    * Added new simple & elegant default Bootstrap Cover Template for WebGear Server.
+    * Added `__main__.py` to directly run WebGear Server through the terminal.
+    * Added new gif and related docs for WebGear API.
+    * Added and Updated various CI tests for this API.
 
-  * Implemented a new *Reducer* function to reduce the frame size on-the-go.
+
+  * **NetGear_Async API** 
+    * Designed NetGear_Async asynchronous network API built upon ZeroMQ's asyncio API.
+    * Implemented support for state-of-the-art asyncio event loop [`uvloop`](https://github.com/MagicStack/uvloop) at its backend.
+    * Achieved Unmatchable high-speed and lag-free video streaming over the network with minimal resource constraint.
+    * Added exclusive internal wrapper around VideoGear API for this API.
+    * Implemented complete server-client handling and options to use variable protocols/patterns for this API.
+    * Implemented support for  all four ZeroMQ messaging patterns: i.e `zmq.PAIR`, `zmq.REQ/zmq.REP`, `zmq.PUB/zmq.SUB`, and `zmq.PUSH/zmq.PULL`.
+    * Implemented initial support for `tcp` and `ipc` protocols.
+    * Added new Coverage CI tests for NetGear_Async Network Gear.
+    * Added new Benchmark tests for benchmarking NetGear_Async against NetGear.
+
+  * **Asynchronous Enhancements** 
+    * Added `asyncio` package to vidgear for handling asynchronous APIs.
+    * Moved WebGear API(webgear.py) to `asyncio` and created separate asyncio `helper.py` for it.
+    * Various Performance tweaks for Asyncio APIs with concurrency within a single thread.
+    * Moved `__main__.py` to asyncio for easier access to WebGear API through the terminal.
+    * Updated `setup.py` with new dependencies and separated asyncio dependencies.
+
+  * **General Updates:**
+    
+    * Added new dependencies for upcoming asyncio updates to `setup.py`.
+    * Added new highly-precise Threaded FPS class for accurate benchmarking with `time.perf_counter` python module.
+    * Added a new [Gitter](https://gitter.im/vidgear/community) community channel.
+    * Add flake8 tests to Travis CI to find undefined names. (PR by @cclauss)
+    * Added a new unified `logging handler` helper function for vidgear.
+    * Added a new *Reducer* function to reduce the frame size on-the-go.
 
 ### Updates/Improvements:
   
-  * Removed PiGear from CLI completely  due to hardware emulation limitation.
-  * Defined and isolated each API & test loggers and defined them globally to avoid copies. 
+  * Re-implemented and simplified logic for NetGear Async server-end.
+  * Added `retry` function and replaced `wget` with `curl` for Linux test envs. 
+  * Bumped OpenCV to latest `4.2.0-dev` for Linux test envs.
+  * Updated YAML files to reflect new changes to different CI envs.
+  * Separated each API logger with a common helper method to avoid multiple copies. 
   * Limited Importing OpenCV API version check's scope to `helper.py` only.
-  * Replaced `say thankyou` badge with vidgear's new [Glitter](https://gitter.im/vidgear/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) invitation badge.
-  * Added case for incorrect `color_space` value in ScreenGear API.
-  * Added `uvicorn` as an optional dependency to run WebGear as a live server.
-  * Removed conflicting old system-wide logging formatter.
-  * Added encapsulation for class functions and variables in WebGear API.
+  * Implemented case for incorrect `color_space` value in ScreenGear API.
+  * Removed old conflicting logging formatter with a common method and expanded logging.
   * Improved and added `shutdown` function for safely stopping frame producer threads.
-  * Replaced scratch progress bar with exclusive `TQDM` library's pbar.
-  * Added new functional gif and various CLI tests for WebGear API.
-  * Re-implemented and simplified all CLI tests with maximum code-coverage in mind.
-  * Added new `mkdir_safe` helper function for creating directories safely.
-  * Improved and expanded logging.
-  * Various Docs Updates.
+  * Re-implemented and simplified all CI tests with maximum code-coverage in mind.
+  * Replaced old `mkdir` function with new `mkdir_safe` helper function for creating directories safely.
+  * Updated ReadMe.md with updated diagrams, images, gifs and information.
+  * Improve, structured and Simplified the Contribution Guideliness.
+  * Replaced line endings CRLF with LF endings.
+  * Added dos2unix for Travis OSX envs.
+  * Bumped Codecov to maximum. 
 
 ### Breaking Updates / Improvements / Changes
 
   * ***:warning: Dropped support for Python 3.5 and below legacies. (See [issue #99](https://github.com/abhiTronix/vidgear/issues/99))***
-  * Replaced python 3.5 matrices with python 3.8 matrices in Windows & macOS environment.
+  * Dropped and replaced Python 3.5 matrices with new Python 3.8 matrices in all CI environments.
+  * Implemented PEP-8 Styled [**Black**](https://github.com/psf/black) formatting throughout the source-code.
+  * Limited protocols support to `tcp` and `ipc` only, in NetGear API.
 
 ### Fixes:
-
-  * `self` is an undefined name in `helper.py` context which will raise NameError. (@cclauss)
-  * Fixed incorrect logic for pulling frames in ScreenGear API.
+  
+  * Fixed Major NetGear_Async bug where `__address` and `__port` are not set in async mode.(PR by otter-in-a-suit) 
+  * Fixed Major PiGear Color-space Conversion logic bug.
+  * Workaround for CAP_IMAGES: error in Youtube Mode.
+  * Replaced incorrect `terminate()` with `join()` in PiGear.
+  * Removed `uvloop` for windows as still [NOT yet supported](https://github.com/MagicStack/uvloop/issues/14).
+  * Refactored Asynchronous Packagename `async` to `asyncio`, since it is used as Keyword in python>=3.7*(raises SyntaxError)*.
+  * Fixed unfinished close of event loops bug in WebGear API.
+  * Fixed NameError in helper.py.
+  * Added fix for OpenCV installer failure on Linux test envs.
+  * Fixed undefined NameError in `helper.py` context. (@cclauss)
+  * Fixed incorrect logic while pulling frames from ScreenGear API.
+  * Fixed missing functions in `__main__.py`.
+  * Fixed Typos and definitions in docs.
   * Added missing `camera_num` parameter to VideoGear.
   * Added OpenSSL's [SSL: CERTIFICATE_VERIFY_FAILED] bug workaround for macOS envs.
-  * Removed videocapture benchmark tests for macOS envs.
-  * Removed trivial `__main__.py` from codecov
+  * Removed `download_url` meta from setup.py.
+  * Removed PiGear from CI completely due to hardware emulation limitation.
+  * Removed VideoCapture benchmark tests for macOS envs.
+  * Removed trivial `__main__.py` from codecov.
   * Removed several redundant `try-catch` loops.
   * Renamed `youtube_url_validation` as `youtube_url_validator`.
   * Several minor wrong/duplicate variable definitions and various bugs fixed.
-  * Fixed & Removed redundant CLI tests for various APIs.
-
+  * Fixed, Improved & removed many Redundant CI tests for various APIs.
 
 
 ### Pull requests(PR) involved:
 
 * PR #88
 * PR #91
+* PR #93
 * PR #95
 * PR #98
 * PR #101
+* PR #114
+* PR #118
+* PR #124
 
 :warning: PyPi Release does NOT contain Tests and Scripts!
 
 &nbsp; 
 
-## VidGear 0.1.6
+&nbsp; 
+
+## VidGear v0.1.6
 
 ### New Features:
   * **NetGear API:**
@@ -112,9 +157,9 @@
       * Added `crop_n_zoom` param for enabling this feature.
     * Updated docs.
 
-  * **CLI & Tests updates:**
+  * **CI & Tests updates:**
     * Replaced python 3.5 matrices with latest python 3.8 matrices in Linux environment.
-    * Added full support for **Codecov** in all CLI environments.
+    * Added full support for **Codecov** in all CI environments.
     * Updated OpenCV to v4.2.0-pre(master branch). 
     * Added various Netgear API tests.
     * Added initial Screengear API test.
@@ -144,14 +189,14 @@
   * Overall APIs Code and Docs optimizations.
   * Updated Code Readability and Wiki Docs.
   * Updated ReadMe & Changelog with the latest changes.
-  * Updated Travis CLI Tests with support for macOS environment.
+  * Updated Travis CI Tests with support for macOS environment.
   * Reformatted & implemented necessary MacOS related changes and dependencies in `travis.yml`.
 
 ### Breaking Updates / Improvements / Changes
   * :warning: Python 2.7 legacy support dropped completely.
   * :warning: Source-code Relicensed to Apache 2.0 License.
   * Python 3+ are only supported legacies for installing Vidgear v0.1.6 and above.
-  * Python 2.7 and 3.4 legacies support dropped from VidGear CLI tests.
+  * Python 2.7 and 3.4 legacies support dropped from VidGear CI tests.
 
 ### Fixes
   * Reimplemented `Pub/Sub` pattern for smoother performance on various networks.
@@ -188,6 +233,8 @@
 
 &nbsp; 
 
+&nbsp; 
+
 ## VidGear v0.1.5
 
 ### New Features:
@@ -210,7 +257,7 @@
   * Updated New dependencies: `mss`, `pyzmq` and rejected redundant ones.
   * Revamped and refreshed look for `readme.md` and added new badges.
   * Updated Releases Documentation completely.
-  * Updated CLI tests for new changes
+  * Updated CI tests for new changes
   * Updated Code Documentation.
   * Updated bash scripts and removed redundant information
   * Updated `Youtube video` URL in tests
@@ -221,11 +268,11 @@
   * Implemented experimental Threaded Queue Mode(_a.k.a Blocking Mode_) for fast, synchronized, error-free multi-threading.
   * Renamed bash script `pre-install.sh` to `prepare_dataset.sh` - downloads opensourced test datasets and static FFmpeg binaries for debugging.
   * Changed `script` folder location to `bash/script`.
-  * `Python 3.4` removed from Travis CLI tests.
+  * `Python 3.4` removed from Travis CI tests.
 
 ### Fixes
-  * Temporarily fixed Travis CLI bug: Replaced `opencv-contrib-python` with OpenCV built from scratch as dependency.
-  * Fixed CLI Timeout Bug: Disable Threaded Queue Mode for CLI Tests
+  * Temporarily fixed Travis CI bug: Replaced `opencv-contrib-python` with OpenCV built from scratch as dependency.
+  * Fixed CI Timeout Bug: Disable Threaded Queue Mode for CI Tests
   * Fixes `sys.stderr.close()` throws ValueError bug: Replaced `sys.close()` with `DEVNULL.close()`
   * Fixed Youtube Live Stream bug that return `NonType` frames in CamGear API.
   * Fixed `NoneType` frames bug in  PiGear class on initialization.
@@ -236,7 +283,7 @@
   * Fixed bugs in ScreenGear: Non-negative `monitor` values
   * Fixed missing import, typos, wrong variable definitions
   * Removed redundant hack from `setup.py`
-  * Fixed Minor YouTube playback Test CLI Bug 
+  * Fixed Minor YouTube playback Test CI Bug 
   * Fixed new Twitter Intent
   * Fixed bug in bash script that not working properly due to changes at server end.
 
@@ -251,6 +298,8 @@
   * PR #34
 
 :warning: PyPi Release does NOT contain Tests and Scripts!
+
+&nbsp; 
 
 &nbsp; 
 
@@ -269,9 +318,9 @@
   * Added new `framerate` class variable for CamGear API, to retrieve input framerate.
   * Added new parameter `backend` - changes the backend of CamGear's API
   * Added automatic required prerequisites installation ability, when installation from source.
-  * Added Travis CLI Complete Integration for Linux-based Testing for VidGear.
+  * Added Travis CI Complete Integration for Linux-based Testing for VidGear.
   * Added and configured `travis.yml`
-  * Added Appveyor CLI Complete Integration for Windows-based Testing in VidGear.
+  * Added Appveyor CI Complete Integration for Windows-based Testing in VidGear.
   * Added and configured new `appveyor.yml`
   * Added new bash script `pre-install.sh` to download opensourced test datasets and static FFmpeg binaries for debugging.
   * Added several new Tests(including Benchmarking Tests) for each API for testing with `pytest`.
@@ -310,6 +359,8 @@
 
 &nbsp; 
 
+&nbsp; 
+
 ## VidGear v0.1.3
 
 ### Fixes
@@ -321,6 +372,8 @@
 ### Pull requests(PR) Involved:
   * PR #6
   * PR #5
+
+&nbsp; 
 
 &nbsp; 
 
