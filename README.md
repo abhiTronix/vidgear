@@ -114,7 +114,8 @@ The following **functional block diagram** clearly depicts the generalized funct
 > ***"Built with simplicity in mind, VidGear lets programmers and software developers to easily integrate and perform complex Video Processing tasks in their existing or new applications, without going through various underlying library's documentation and using just a [few lines of code][flic]. Beneficial for both, if you're new to programming with Python language or already a pro at it."***
 
 &nbsp;
-**For more information, see our [*Wiki Documentation ➶*][wiki].**
+
+**For more information, see [*Frequently Asked Questions ➶*][faq].**
 
 
 &nbsp;
@@ -590,18 +591,20 @@ Before installing VidGear, you must verify that the following dependencies are m
 
 * ### Pip Dependencies:
 
-  When [Installing VidGear via PyPI](#option-1-pypi-install), you need to install following dependencies manually:
+  When [installing VidGear with pip](#option-1-pypi-installrecommended), you need to install following dependencies manually:
 
 
-  * **OpenCV:** Must Require OpenCV(3.0+) python binaries installed for its core functions. For installation, you can either follow these complete online tutorials for [linux][OpenCV-linux] and [raspberry pi][OpenCV-pi], or, just install it directly via pip:
+  * **OpenCV:** Must Require OpenCV(3.0+) python binaries installed for its core functions. For installation, you can either follow these complete online tutorials for [Windows][OpenCV-windows], [Linux][OpenCV-linux] and [Raspberry Pi][OpenCV-pi], or, just install it directly via pip:
 
       ```sh
         $ pip install -U opencv-python       # or install `opencv-contrib-python` similarly
       ```
 
+
   * **FFmpeg:** Must Require FFmpeg for its video compression and encoding compatibilities in [WriteGear](#writegear) API. 
 
     :star2: Follow this [**FFmpeg wiki page**][ffmpeg-wiki] for its installation. :star2:
+
 
   * **Picamera:** Must Required if you're using Raspberry Pi Camera Modules(_such as OmniVision OV5647 Camera Module_) with its [PiGear](#pigear) API. You can easily install it via pip:
 
@@ -609,6 +612,7 @@ Before installing VidGear, you must verify that the following dependencies are m
         $ pip install picamera
       ``` 
     _:bulb: Also, make sure to [enable Raspberry Pi hardware-specific settings][picamera-setting] prior to using this library._
+
 
   * **Uvloop:** Only Required if you're using its [NetGear_Async](#netgear_async) API on UNIX machines for maximum performance. You can easily install it via pip:
 
@@ -641,7 +645,7 @@ Before installing VidGear, you must verify that the following dependencies are m
 
 > Best option if you want a **compressed archive**.
 
-VidGear releases are available for download as wheel(`.whl`) packages from the [latest release][release] and thereby can be installed with `pip` as follows:
+VidGear is available for download as wheel(`.whl`) package in our [release][release] section, and can be installed with `pip` as follows:
 
 ***:warning: See [Pip Dependencies](#pip-dependencies) before installing!***
 
@@ -655,13 +659,13 @@ VidGear releases are available for download as wheel(`.whl`) packages from the [
 
 > Best option for trying **latest patches(_maybe experimental_), Pull Requests**, or **contributing** to development.
 
-You can easily clone the repository's latest [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch for development and thereby can install as follows:
+You can easily clone the repository's latest [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch, and thereby install it as follows:
 
 ```sh
   $ git clone https://github.com/abhiTronix/vidgear.git
   $ cd vidgear
   $ git checkout testing
-  $ pip install .[asyncio]           # also installs asyncio dependencies
+  $ pip install .[asyncio]           # installs all required dependencies including asyncio
 ```
 
 
@@ -704,7 +708,7 @@ You can easily clone the repository's latest [`testing`](https://github.com/abhi
 
 ### Formatting & Linting: 
 
-For formatting and linting the python tests, following tools are used:
+For formatting and linting, following tools are used:
 
 * **Flake8:** You must run [`flake8`][flake8] linting for checking the code base against the coding style (PEP8), programming errors and other cyclomatic complexity:
 
@@ -816,6 +820,7 @@ Internal URLs
 [bs_script_dataset]:https://github.com/abhiTronix/vidgear/blob/testing/scripts/bash/prepare_dataset.sh
 
 [wiki]:https://github.com/abhiTronix/vidgear/wiki
+[faq]:https://github.com/abhiTronix/vidgear/wiki/FAQ-&-Troubleshooting#frequently-asked-questions
 [wiki-vidgear-purpose]:https://github.com/abhiTronix/vidgear/wiki/Project-Motivation#why-is-vidgear-a-thing
 [ultrafast-wiki]:https://github.com/abhiTronix/vidgear/wiki/FAQ-&-Troubleshooting#2-vidgear-is-ultrafast-but-how
 [compression-mode-ex]:https://github.com/abhiTronix/vidgear/wiki/Compression-Mode:-FFmpeg#1-writegear-bare-minimum-examplecompression-mode
@@ -857,6 +862,7 @@ External URLs
 [black]: https://github.com/psf/black
 [pytest]:https://docs.pytest.org/en/latest/
 [opencv-writer]:https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5
+[OpenCV-windows]:https://www.learnopencv.com/install-opencv3-on-windows/
 [OpenCV-linux]:https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/
 [OpenCV-pi]:https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/
 [starlette]:https://www.starlette.io/

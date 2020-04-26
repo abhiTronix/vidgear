@@ -1,5 +1,7 @@
 # Contribution Guidelines
 
+&nbsp; 
+
 ## How to contribute with a Pull Request (PR)
 
 **Tip:bulb:: Working on your first Pull Request?** You can *freely* learn about it from [How to Contribute to an Open Source Project on GitHub][PR]
@@ -22,6 +24,8 @@
 
 &nbsp; 
 
+&nbsp; 
+
 ## Reporting an Issue
 
 If you've found a new  bug or you've come up with some new feature which can make VidGear API even better, then:
@@ -37,27 +41,35 @@ If you've found a new  bug or you've come up with some new feature which can mak
   * Make sure to turn `logging=True` in parameters of the respective API for getting debug output. 
   * Finally, raise it by *choosing the appropriate Issue Template*: [Bug report][bug], [Proposal][proposal], [Question][question].
 
+
+&nbsp; 
+
 &nbsp; 
 
 
-## Community Channel
+## Join our Community Channel :people_holding_hands:
 
-If you want to share some information, or you've come up with some new idea, or looking for the fastest way troubleshoot your problems, then join our [**Gitter ➶**][gitter] Community channel.
+If you want to share some information, or you've come up with some new idea, or looking for the fastest way troubleshoot your problems, then please, join our [**Gitter ➶**][gitter] community channel.
 
+&nbsp; 
 
 &nbsp;
 
 ## Become Stargazer :star:
 
-If you think VidGear library is helpful and would like to help in return - **then you can be a :star2:[stargazer][stars]:star2:**. _By starring this project, you're making it easier for others to find & trust this library._
+If you think VidGear library is helpful and would like to help in return - **then you can be a :star2:[STARGAZER][stars]:star2:**. _By starring this project, you're making it easier for others to find & trust this library._
 
 &nbsp;
 
-## Donate to Project development :heart_decoration:
+&nbsp;
 
-Love using VidGear? Consider supporting the project to fund new features and improvements
+## Donate to Project development :heart:
+
+_Love using VidGear?_ Consider supporting the project to fund new features and improvements:
+
 
 [![ko-fi][kofi-badge]][kofi]
+
 
 <!--
 Internal URLs
