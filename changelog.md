@@ -7,9 +7,9 @@
   * **WebGear API:**
     * Added a robust Live Video Server API that can transfer live video frames to any web browser on the network in real-time.
     * Implemented a flexible asyncio wrapper around [`starlette`](https://www.starlette.io/) ASGI Application Server.
-    * Added seamless access to various starlette's Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.
+    * Added seamless access to various starlette's Response classes, Routing tables, Static Files, Template engine(with Jinja2), etc.
     * Added a special internal access to VideoGear API and all its parameters.
-    * Implemented a new Auto-Generation Workflow to generate/download & thereby validate WebGear API data files from its GitHub server automatically.
+    * Implemented a new Auto-Generation Work-flow to generate/download & thereby validate WebGear API data files from its GitHub server automatically.
     * Added on-the-go dictionary parameter in WebGear to tweak performance, Route Tables and other internal properties easily.
     * Added new simple & elegant default Bootstrap Cover Template for WebGear Server.
     * Added `__main__.py` to directly run WebGear Server through the terminal.
@@ -35,18 +35,18 @@
     * Moved `__main__.py` to asyncio for easier access to WebGear API through the terminal.
     * Updated `setup.py` with new dependencies and separated asyncio dependencies.
 
-  * **General Updates:**
+  * **General Enhancements:**
     
-    * Added new dependencies for upcoming asyncio updates to `setup.py`.
     * Added new highly-precise Threaded FPS class for accurate benchmarking with `time.perf_counter` python module.
     * Added a new [Gitter](https://gitter.im/vidgear/community) community channel.
-    * Add flake8 tests to Travis CI to find undefined names. (PR by @cclauss)
-    * Added a new unified `logging handler` helper function for vidgear.
     * Added a new *Reducer* function to reduce the frame size on-the-go.
+    * Add *Flake8* tests to Travis CI to find undefined names. (PR by @cclauss)
+    * Added a new unified `logging handler` helper function for vidgear.
 
 ### Updates/Improvements:
   
   * Re-implemented and simplified logic for NetGear Async server-end.
+  * Added new dependencies for upcoming asyncio updates to `setup.py`.
   * Added `retry` function and replaced `wget` with `curl` for Linux test envs. 
   * Bumped OpenCV to latest `4.2.0-dev` for Linux test envs.
   * Updated YAML files to reflect new changes to different CI envs.
@@ -54,11 +54,12 @@
   * Limited Importing OpenCV API version check's scope to `helper.py` only.
   * Implemented case for incorrect `color_space` value in ScreenGear API.
   * Removed old conflicting logging formatter with a common method and expanded logging.
-  * Improved and added `shutdown` function for safely stopping frame producer threads.
+  * Improved and added `shutdown` function for safely stopping frame producer threads in WebGear API.
   * Re-implemented and simplified all CI tests with maximum code-coverage in mind.
   * Replaced old `mkdir` function with new `mkdir_safe` helper function for creating directories safely.
-  * Updated ReadMe.md with updated diagrams, images, gifs and information.
-  * Improve, structured and Simplified the Contribution Guideliness.
+  * Updated ReadMe.md with updated diagrams, gifs and information.
+  * Improve, structured and Simplified the Contribution Guidelines.
+  * Bundled CI requirements in a single command.(Suggested by @cclauss)
   * Replaced line endings CRLF with LF endings.
   * Added dos2unix for Travis OSX envs.
   * Bumped Codecov to maximum. 
@@ -72,12 +73,12 @@
 
 ### Fixes:
   
-  * Fixed Major NetGear_Async bug where `__address` and `__port` are not set in async mode.(PR by otter-in-a-suit) 
+  * Fixed Major NetGear_Async bug where `__address` and `__port` are not set in async mode.(PR by @otter-in-a-suit) 
   * Fixed Major PiGear Color-space Conversion logic bug.
-  * Workaround for CAP_IMAGES: error in Youtube Mode.
+  * Workaround for CAP_IMAGES: error in YouTube Mode.
   * Replaced incorrect `terminate()` with `join()` in PiGear.
   * Removed `uvloop` for windows as still [NOT yet supported](https://github.com/MagicStack/uvloop/issues/14).
-  * Refactored Asynchronous Packagename `async` to `asyncio`, since it is used as Keyword in python>=3.7*(raises SyntaxError)*.
+  * Refactored Asynchronous Package name `async` to `asyncio`, since it is used as Keyword in python>=3.7*(raises SyntaxError)*.
   * Fixed unfinished close of event loops bug in WebGear API.
   * Fixed NameError in helper.py.
   * Added fix for OpenCV installer failure on Linux test envs.

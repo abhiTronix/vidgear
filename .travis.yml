@@ -88,27 +88,13 @@ branches:
 install: 
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     pip install --upgrade pip wheel;
-    pip install --upgrade numpy;
-    pip install .[asyncio];
+    pip install --upgrade .[asyncio];
     pip uninstall opencv-python -y;
-    pip install six;
-    pip install codecov;
-    pip install --upgrade flake8;
-    pip install --upgrade pytest;
-    pip install --upgrade pytest-asyncio;
-    pip install --upgrade pytest-cov;
-    pip install --upgrade youtube-dl;
+    pip install --upgrade flake8 six codecov pytest pytest-asyncio pytest-cov youtube-dl;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
     pip install --upgrade --user pip wheel;
-    pip install --upgrade --user numpy;
-    pip install --upgrade --user .[asyncio];
-    pip install --user six;
-    pip install --user codecov;
-    pip install --upgrade --user pytest;
-    pip install --upgrade --user pytest-asyncio;
-    pip install --upgrade --user pytest-cov;
-    pip install --upgrade --user youtube-dl;
+    pip install --upgrade --user .[asyncio] six codecov pytest pytest-asyncio pytest-cov youtube-dl;
     fi
 
 before_script:

@@ -26,10 +26,10 @@ from setuptools import setup
 
 def test_opencv():
     """
-	This function is workaround to 
-	test if correct OpenCV Library version has already been installed
-	on the machine or not. Returns True if previously not installed.
-	"""
+    This function is workaround to 
+    test if correct OpenCV Library version has already been installed
+    on the machine or not. Returns True if previously not installed.
+    """
     try:
         # import OpenCV Binaries
         import cv2
@@ -59,6 +59,7 @@ setup(
     install_requires=[
         "pafy",
         "mss",
+        "numpy",
         "youtube-dl",
         "requests",
         "pyzmq",
@@ -72,7 +73,15 @@ setup(
     author_email="abhi.una12@gmail.com",
     url="https://github.com/abhiTronix/vidgear",
     extras_require={
-        "asyncio": ["starlette", "aiofiles", "jinja2", "aiohttp", "uvicorn", "msgpack_numpy",] + (["uvloop"] if (platform.system() != "Windows") else [])
+        "asyncio": [
+            "starlette",
+            "aiofiles",
+            "jinja2",
+            "aiohttp",
+            "uvicorn",
+            "msgpack_numpy",
+        ]
+        + (["uvloop"] if (platform.system() != "Windows") else [])
     },
     keywords=[
         "OpenCV",
@@ -83,14 +92,16 @@ setup(
         "mss",
         "pyzmq",
         "uvicorn",
-        "uvloops",
+        "uvloop",
         "pafy",
+        "youtube-dl",
+        "asyncio",
         "Video Processing",
         "Video Stablization",
         "Computer Vision",
         "Web Streaming",
         "raspberrypi",
-        "youtube",
+        "YouTube",
     ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
