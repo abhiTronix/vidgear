@@ -17,7 +17,7 @@
 
 ########################################
 # Installs OpenCV Offical Binaries for #
-#        CLI Linux Environments        #
+#        CI Linux Environments        #
 ########################################
 
 #opencv version to install
