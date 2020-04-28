@@ -18,7 +18,6 @@ codecov:
     - "travis.org"
     - appveyor
   branch: testing
-  strict_yaml_branch: testing
 
 coverage:
   status:
@@ -26,4 +25,6 @@ coverage:
 
 ignore:
   - "vidgear/tests"
+  - "vidgear/gears/pigear.py" #CLI hardware emulation limitation
+  - "vidgear/gears/asyncio/__main__.py" #trivial
   - "setup.py"

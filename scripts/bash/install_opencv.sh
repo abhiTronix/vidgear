@@ -17,11 +17,11 @@
 
 ########################################
 # Installs OpenCV Offical Binaries for #
-#        CLI Linux Environments        #
+#        CI Linux Environments        #
 ########################################
 
 #opencv version to install
-OPENCV_VERSION='4.2.0-pre'
+OPENCV_VERSION='4.2.0-dev'
 
 #determining system specific temp directory
 TMPFOLDER=$(python -c 'import tempfile; print(tempfile.gettempdir())')
@@ -29,7 +29,9 @@ TMPFOLDER=$(python -c 'import tempfile; print(tempfile.gettempdir())')
 #determining system Python suffix and  version
 PYTHONSUFFIX=$(python -c 'import platform; a = platform.python_version(); print(".".join(a.split(".")[:2]))')
 PYTHONVERSION=$(python -c 'import platform; print(platform.python_version())')
-PYTHONVERSIONMIN=$(python3 -c 'import platform; print(platform.python_version()[:3])')
+
+echo $PYTHONSUFFIX
+echo $PYTHONVERSION
 
 echo "Installing OpenCV..."
 echo "Installing OpenCV Dependencies..."
@@ -52,13 +54,25 @@ cd $TMPFOLDER
 
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 
-curl -s https://api.github.com/repos/abhiTronix/OpenCV-Travis-Builds/releases/latest \
-| grep "OpenCV-$OPENCV_VERSION-$PYTHONVERSIONMIN.*.deb" \
-| cut -d : -f 2,3 \
-| tr -d \" \
-| wget -qi -
+RETRY=3
+while [ "$RETRY" -gt 0 ] ; do
+  curl -s "https://api.github.com/repos/abhiTronix/OpenCV-Travis-Builds/releases/latest" \
+  | grep "OpenCV-$OPENCV_VERSION-$PYTHONSUFFIX.*.deb" \
+  | cut -d : -f 2,3 \
+  | tr -d \" \
+  | xargs -n 1 curl -O -sSL
+  if [ -f $(find . -name 'OpenCV-*.deb') ];
+    then
+      echo "Downloaded OpenCV binary successfully."
+      break
+    else
+      echo "Retrying!!!"
+      (( RETRY-=1 ))
+      sleep 5
+  fi
+done
 
-sudo dpkg -i OpenCV-$OPENCV_VERSION-$PYTHONVERSIONMIN.*.deb
+sudo dpkg -i OpenCV-$OPENCV_VERSION-$PYTHONSUFFIX.*.deb
 
 sudo ln -s /usr/local/lib/python$PYTHONSUFFIX/site-packages/*.so $HOME/virtualenv/python$PYTHONVERSION/lib/python$PYTHONSUFFIX/site-packages
 

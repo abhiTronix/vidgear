@@ -20,64 +20,75 @@ limitations under the License.
 
 import pytest, os, tempfile
 from vidgear.gears import VideoGear
+from vidgear.gears.helper import logger_handler
 import logging as log
 
-logger = log.getLogger('Test_videogear')
+logger = log.getLogger("Test_videogear")
+logger.addHandler(logger_handler())
+logger.setLevel(log.DEBUG)
 
 
 def return_testvideo_path():
-	"""
+    """
 	returns Test video path
 	"""
-	path = '{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4'.format(tempfile.gettempdir())
-	return os.path.abspath(path)
-
+    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
+        tempfile.gettempdir()
+    )
+    return os.path.abspath(path)
 
 
 def test_PiGear_import():
-	"""
+    """
 	Testing VideoGear Import -> assign to fail when PiGear class is imported
 	"""
-	with pytest.raises(ImportError):
-		stream = VideoGear(enablePiCamera = True, logging = True).start()
-		stream.stop()
+    with pytest.raises(ImportError):
+        stream = VideoGear(enablePiCamera=True, logging=True).start()
+        stream.stop()
 
 
+# Video credit: http://www.liushuaicheng.org/CVPR2014/index.html
+test_data = [
+    (
+        "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/example4_train_input.mp4",
+        {
+            "SMOOTHING_RADIUS": 5,
+            "BORDER_SIZE": 10,
+            "BORDER_TYPE": "replicate",
+            "CROP_N_ZOOM": True,
+        },
+    ),
+    (
+        "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/example4_train_input.mp4",
+        {
+            "SMOOTHING_RADIUS": 5,
+            "BORDER_SIZE": 15,
+            "BORDER_TYPE": "reflect",
+        },
+    ),
+    (return_testvideo_path(), {"BORDER_TYPE": "im_wrong"}),
+]
 
-def test_CamGear_import():
-	"""
-	Testing VideoGear Import -> passed if CamGear Class is Imported sucessfully 
-	and returns a valid framerate
-	"""
-	try:
-		options = {'THREADED_QUEUE_MODE':False}
-		output_stream = VideoGear(source = return_testvideo_path(), logging=True, **options).start()
-		framerate = output_stream.framerate
-		output_stream.stop()
-		logger.debug('Input Framerate: {}'.format(framerate))
-		assert framerate>0
-	except Exception as e:
-		pytest.fail(str(e))
 
-
-
-def test_video_stablization():
-	"""
+@pytest.mark.parametrize("source, options", test_data)
+def test_video_stablization(source, options):
+    """
 	Testing VideoGear's Video Stablization playback capabilities 
 	"""
-	try:
-		#Video credit: http://www.liushuaicheng.org/CVPR2014/index.html
-		Url = 'https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/example4_train_input.mp4'
-		#define params
-		options = {'SMOOTHING_RADIUS': 5, 'BORDER_SIZE': 10, 'BORDER_TYPE': 'replicate', 'CROP_N_ZOOM': True}
-		#open stream
-		stab_stream = VideoGear(source = Url, stabilize = True, logging = True, **options).start()
-		#playback
-		while True:
-			frame = stab_stream.read() #read stablized frames
-			if frame is None:
-				break
-		#clean resources
-		stab_stream.stop()
-	except Exception as e:
-		pytest.fail(str(e))
+    try:
+        # open stream
+        stab_stream = VideoGear(
+            source=source, stabilize=True, logging=True, **options
+        ).start()
+        framerate = stab_stream.framerate
+        # playback
+        while True:
+            frame = stab_stream.read()  # read stablized frames
+            if frame is None:
+                break
+        # clean resources
+        stab_stream.stop()
+        logger.debug("Input Framerate: {}".format(framerate))
+        assert framerate > 0
+    except Exception as e:
+        pytest.fail(str(e))
