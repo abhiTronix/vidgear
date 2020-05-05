@@ -181,12 +181,17 @@ class NetGear:
         self.__msg_copy = False  # handles whether to copy data
         self.__msg_track = False  # handles whether to track packets
 
-        self.__multiserver_mode = False  # handles multiserver_mode state
+        # define Multi-Server mode
+        self.__multiserver_mode = False  # handles multi-server_mode state
         recv_filter = ""  # user-defined filter to allow specific port/servers only in multiserver_mode
 
-        # define bi-directional data transmission mode
+        # define Multi-Client mode
+        self.__multiclient_mode = False  # handles multi-client_mode state
+
+        # define Bi-directional data transmission mode
         self.__bi_mode = False  # handles bi_mode state
-        self.__bi_data = None  # handles return data
+
+        self.__return_data = None  # handles receiver return data
 
         # define valid  ZMQ security mechanisms => `0`: Grasslands, `1`:StoneHouse, and `1`:IronHouse
         valid_security_mech = {0: "Grasslands", 1: "StoneHouse", 2: "IronHouse"}
@@ -196,9 +201,6 @@ class NetGear:
         self.__auth_secretkeys_dir = ""  # handles valid ZMQ private certificates dir
         overwrite_cert = False  # checks if certificates overwriting allowed
         custom_cert_location = ""  # handles custom ZMQ certificates path
-
-        # handle force socket termination if there's latency in network
-        self.__force_close = False
 
         # define stream compression handlers
         self.__compression = ""  # disabled by default
@@ -215,9 +217,21 @@ class NetGear:
                     self.__multiserver_mode = value
                 else:
                     self.__multiserver_mode = False
-                    logger.critical("Multi-Server is disabled!")
+                    logger.critical("Multi-Server Mode is disabled!")
                     raise ValueError(
                         "[NetGear:ERROR] :: `{}` pattern is not valid when Multi-Server Mode is enabled. Kindly refer Docs for more Information.".format(
+                            pattern
+                        )
+                    )
+            if key == "multiclient_mode" and isinstance(value, bool):
+                if pattern > 0:
+                    # multi-server mode
+                    self.__multiclient_mode = value
+                else:
+                    self.__multiclient_mode = False
+                    logger.critical("Multi-Client Mode is disabled!")
+                    raise ValueError(
+                        "[NetGear:ERROR] :: `{}` pattern is not valid when Multi-Client Mode is enabled. Kindly refer Docs for more Information.".format(
                             pattern
                         )
                     )
@@ -292,19 +306,6 @@ class NetGear:
                             pattern
                         )
                     )
-
-            # enable force socket closing if specified
-            elif key == "force_terminate" and isinstance(value, bool):
-                # check if address is local
-                if address is None:
-                    self.__force_close = False
-                    logger.critical("Force termination is disabled for local servers!")
-                else:
-                    self.__force_close = True
-                    if self.__logging:
-                        logger.warning(
-                            "Force termination is enabled for this connection!"
-                        )
 
             # various ZMQ flags
             elif key == "flag" and isinstance(value, int):
@@ -391,16 +392,20 @@ class NetGear:
                 logger.critical(
                     "Bi-Directional Data Transmission is disabled when Multi-Server Mode is Enabled due to incompatibility!"
                 )
+            elif self.__multiclient_mode:
+                self.__bi_mode = False
+                logger.critical(
+                    "Bi-Directional Data Transmission is disabled when Multi-Client Mode is Enabled due to incompatibility!"
+                )
             else:
-                # enable force termination by default
-                self.__force_close = True
                 if self.__logging:
-                    logger.warning(
-                        "Force termination is enabled for this connection by default!"
-                    )
                     logger.debug(
                         "Bi-Directional Data Transmission is enabled for this connection!"
                     )
+        elif self.__multiclient_mode and self.__multiserver_mode:
+            raise ValueError(
+                "Multi-Client and Multi-Server Mode cannot be enabled simultaneously!"
+            )
 
         # initialize termination flag
         self.__terminate = False
@@ -427,7 +432,7 @@ class NetGear:
                 if port is None or not isinstance(port, (tuple, list)):
                     # raise error if not
                     raise ValueError(
-                        "[NetGear:ERROR] :: Incorrect port value! Kindly provide a list/tuple of ports while Multi-Server mode is enabled. For more information refer VidGear docs."
+                        "[NetGear:ERROR] :: Incorrect port value! Kindly provide a list/tuple of Server ports while Multi-Server mode is enabled. For more information refer VidGear docs."
                     )
                 else:
                     # otherwise log it
@@ -436,6 +441,23 @@ class NetGear:
                     )
                 # create port address buffer for keeping track of incoming server's port
                 self.__port_buffer = []
+            # check if multiclient_mode is enabled
+            elif self.__multiclient_mode:
+                # check if unique server port address is assigned or not in multiclient_mode
+                if port is None:
+                    # raise error is not
+                    raise ValueError(
+                        "[NetGear:ERROR] :: Kindly provide a unique & valid port value at Client-end. For more information refer VidGear docs."
+                    )
+                else:
+                    # otherwise log it
+                    logger.debug(
+                        "Enabling Multi-Client Mode at PORT: {} on this device!".format(
+                            port
+                        )
+                    )
+                    # assign value to global variable
+                    self.__port = port
             else:
                 # otherwise assign local port address if None
                 if port is None:
@@ -495,9 +517,6 @@ class NetGear:
                             protocol + "://" + str(address) + ":" + str(pt)
                         )
 
-                    # define socket optimizer
-                    self.__msg_socket.setsockopt(zmq.LINGER, 0)
-
                 else:
                     # enable specified secure mode for the zmq socket
                     if self.__secure_mode > 0:
@@ -523,8 +542,8 @@ class NetGear:
                         protocol + "://" + str(address) + ":" + str(port)
                     )
 
-                    # define socket optimizer
-                    self.__msg_socket.setsockopt(zmq.LINGER, 0)
+                # define socket optimizer
+                self.__msg_socket.setsockopt(zmq.LINGER, 0)
 
             except Exception as e:
                 logger.exception(str(e))
@@ -596,7 +615,22 @@ class NetGear:
                         )
                     )
                     # assign value to global variable
-                    self.port = port
+                    self.__port = port
+            # check if multiclient_mode is enabled
+            elif self.__multiclient_mode:
+                # check if unique client port address list/tuple is assigned or not in multiclient_mode
+                if port is None or not isinstance(port, (tuple, list)):
+                    # raise error if not
+                    raise ValueError(
+                        "[NetGear:ERROR] :: Incorrect port value! Kindly provide a list/tuple of Client ports while Multi-Client mode is enabled. For more information refer VidGear docs."
+                    )
+                else:
+                    # otherwise log it
+                    logger.debug(
+                        "Enabling Multi-Client Mode at PORTS: {}!".format(port)
+                    )
+                # create port address buffer for keeping track of connected client ports
+                self.__port_buffer = []
             else:
                 # otherwise assign local port address if None
                 if port is None:
@@ -634,30 +668,60 @@ class NetGear:
                         1
                     )  # if pattern is 2, define additional optimizer
 
-                # enable specified secure mode for the zmq socket
-                if self.__secure_mode > 0:
-                    # load client key
-                    client_secret_file = os.path.join(
-                        self.__auth_secretkeys_dir, "client.key_secret"
-                    )
-                    client_public, client_secret = zmq.auth.load_certificate(
-                        client_secret_file
-                    )
-                    # load  all CURVE keys
-                    self.__msg_socket.curve_secretkey = client_secret
-                    self.__msg_socket.curve_publickey = client_public
-                    # load server key
-                    server_public_file = os.path.join(
-                        self.__auth_publickeys_dir, "server.key"
-                    )
-                    server_public, _ = zmq.auth.load_certificate(server_public_file)
-                    # inject public key to make a CURVE connection.
-                    self.__msg_socket.curve_serverkey = server_public
+                if self.__multiclient_mode:
+                    # if multiclient_mode is enabled, then assign port addresses to zmq socket
+                    for pt in port:
+                        # enable specified secure mode for the zmq socket
+                        if self.__secure_mode > 0:
+                            # load client key
+                            client_secret_file = os.path.join(
+                                self.__auth_secretkeys_dir, "client.key_secret"
+                            )
+                            client_public, client_secret = zmq.auth.load_certificate(
+                                client_secret_file
+                            )
+                            # load  all CURVE keys
+                            self.__msg_socket.curve_secretkey = client_secret
+                            self.__msg_socket.curve_publickey = client_public
+                            # load server key
+                            server_public_file = os.path.join(
+                                self.__auth_publickeys_dir, "server.key"
+                            )
+                            server_public, _ = zmq.auth.load_certificate(
+                                server_public_file
+                            )
+                            # inject public key to make a CURVE connection.
+                            self.__msg_socket.curve_serverkey = server_public
 
-                # connect socket to given protocol, address and port
-                self.__msg_socket.connect(
-                    protocol + "://" + str(address) + ":" + str(port)
-                )
+                        # bind socket to given server protocol, address and ports
+                        self.__msg_socket.connect(
+                            protocol + "://" + str(address) + ":" + str(pt)
+                        )
+                else:
+                    # enable specified secure mode for the zmq socket
+                    if self.__secure_mode > 0:
+                        # load client key
+                        client_secret_file = os.path.join(
+                            self.__auth_secretkeys_dir, "client.key_secret"
+                        )
+                        client_public, client_secret = zmq.auth.load_certificate(
+                            client_secret_file
+                        )
+                        # load  all CURVE keys
+                        self.__msg_socket.curve_secretkey = client_secret
+                        self.__msg_socket.curve_publickey = client_public
+                        # load server key
+                        server_public_file = os.path.join(
+                            self.__auth_publickeys_dir, "server.key"
+                        )
+                        server_public, _ = zmq.auth.load_certificate(server_public_file)
+                        # inject public key to make a CURVE connection.
+                        self.__msg_socket.curve_serverkey = server_public
+
+                    # connect socket to given protocol, address and port
+                    self.__msg_socket.connect(
+                        protocol + "://" + str(address) + ":" + str(port)
+                    )
 
                 # define socket options
                 self.__msg_socket.setsockopt(zmq.LINGER, 0)
@@ -671,12 +735,19 @@ class NetGear:
                             valid_security_mech[self.__secure_mode]
                         )
                     )
-                # raise value error
-                raise ValueError(
-                    "[NetGear:ERROR] :: Failed to connect address: {} and pattern: {}! Kindly recheck all parameters.".format(
-                        (protocol + "://" + str(address) + ":" + str(port)), pattern
+                if self.__multiclient_mode:
+                    raise ValueError(
+                        "[NetGear:ERROR] :: Multi-Client Mode, failed to connect to ports: {} with pattern: {}! Kindly recheck all parameters.".format(
+                            str(port), pattern
+                        )
                     )
-                )
+                else:
+                    # raise value error
+                    raise ValueError(
+                        "[NetGear:ERROR] :: Failed to connect address: {} and pattern: {}! Kindly recheck all parameters.".format(
+                            (protocol + "://" + str(address) + ":" + str(port)), pattern
+                        )
+                    )
 
             if self.__logging:
                 # finally log progress
@@ -766,12 +837,14 @@ class NetGear:
                 flags=self.__msg_flag, copy=self.__msg_copy, track=self.__msg_track
             )
 
-            if self.__pattern != 2:
-                # check if bi-directional mode is enabled
+            if self.__pattern < 2:
+                # handle return data
                 if self.__bi_mode:
-                    # handle return data
-                    bi_dict = dict(data=self.__bi_data)
-                    self.__msg_socket.send_json(bi_dict, self.__msg_flag)
+                    return_dict = dict(data=self.__return_data)
+                    self.__msg_socket.send_json(return_dict, self.__msg_flag)
+                elif self.__multiclient_mode:
+                    return_dict = {"port": self.__port, "data": self.__return_data}
+                    self.__msg_socket.send_json(return_dict, self.__msg_flag)
                 else:
                     # send confirmation message to server
                     self.__msg_socket.send_string(
@@ -795,10 +868,8 @@ class NetGear:
                             msg_json["compression"], self.__compression_params
                         )
                     )
-
+            # check if multiserver_mode
             if self.__multiserver_mode:
-                # check if multiserver_mode
-
                 # save the unique port addresses
                 if not msg_json["port"] in self.__port_buffer:
                     self.__port_buffer.append(msg_json["port"])
@@ -817,7 +888,6 @@ class NetGear:
                 else:
                     # otherwise append recovered frame to queue
                     self.__queue.append(frame)
-
         # finally properly close the socket
         self.__msg_socket.close()
 
@@ -836,8 +906,8 @@ class NetGear:
             )
 
         # handle bi-directional return data
-        if self.__bi_mode and not (return_data is None):
-            self.__bi_data = return_data
+        if (self.__bi_mode or self.__multiclient_mode) and not (return_data is None):
+            self.__return_data = return_data
 
         # check whether or not termination flag is enabled
         while not self.__terminate:
@@ -893,7 +963,7 @@ class NetGear:
             msg_dict = dict(
                 terminate_flag=exit_flag,
                 compression=str(self.__compression),
-                port=self.port,
+                port=self.__port,
                 pattern=str(self.__pattern),
                 message=message,
                 dtype=str(frame.dtype),
@@ -918,12 +988,21 @@ class NetGear:
         )
         # wait for confirmation
 
-        if self.__pattern != 2:
+        if self.__pattern < 2:
             # check if bi-directional data transmission is enabled
             if self.__bi_mode:
                 # handle return data
                 return_dict = self.__msg_socket.recv_json(flags=self.__msg_flag)
                 return return_dict["data"] if return_dict else None
+            elif self.__multiclient_mode:
+                # handle return data
+                return_dict = self.__msg_socket.recv_json(flags=self.__msg_flag)
+                # save the unique port addresses
+                if not return_dict["port"] in self.__port_buffer:
+                    self.__port_buffer.append(return_dict["port"])
+                return (
+                    (return_dict["port"], return_dict["data"]) if return_dict else None
+                )
             else:
                 # otherwise log normally
                 recv_confirmation = self.__msg_socket.recv()
@@ -947,7 +1026,7 @@ class NetGear:
             # indicate that process should be terminated
             self.__terminate = True
             # check whether queue mode is empty
-            if not (self.__queue is None):
+            if not (self.__queue is None) and self.__queue:
                 self.__queue.clear()
             # call immediate termination
             self.__exit_loop = True
@@ -965,20 +1044,25 @@ class NetGear:
             if self.__multiserver_mode:
                 # check if multiserver_mode
                 # send termination flag to client with its unique port
-                term_dict = dict(terminate_flag=True, port=self.port)
+                term_dict = dict(terminate_flag=True, port=self.__port)
             else:
                 # otherwise send termination flag to client
                 term_dict = dict(terminate_flag=True)
-            # otherwise inform client(s) that the termination has been reached
-            if self.__force_close:
-                # overflow socket with termination signal
-                for _ in range(500):
+
+            if self.__multiclient_mode and self.__port_buffer:
+                for _ in self.__port_buffer:
                     self.__msg_socket.send_json(term_dict)
+            elif self.__multiclient_mode and not self.__port_buffer:
+                # No connections was made. Closing socket!
+                self.__msg_socket.close(linger=0)
+                return
             else:
                 self.__msg_socket.send_json(term_dict)
-                # check for confirmation if available
-                if self.__pattern < 2:
-                    if self.__pattern == 1:
-                        self.__msg_socket.recv()
+
+            # check for confirmation if available within timeout
+            if self.__pattern < 2:
+                if self.__msg_socket.poll(1000, self.__zmq.POLLIN):
+                    self.__msg_socket.recv(self.__zmq.NOBLOCK)
+
             # properly close the socket
             self.__msg_socket.close(linger=0)
