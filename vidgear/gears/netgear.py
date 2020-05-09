@@ -849,7 +849,9 @@ class NetGear:
                             data=None,
                         )
                         # send the json dict
-                        self.__msg_socket.send_json(return_dict, self.__msg_flag | self.__zmq.SNDMORE)
+                        self.__msg_socket.send_json(
+                            return_dict, self.__msg_flag | self.__zmq.SNDMORE
+                        )
                         # send the array with correct flags
                         self.__msg_socket.send(
                             self.__return_data,
@@ -875,7 +877,9 @@ class NetGear:
                             data=None,
                         )
                         # send the json dict
-                        self.__msg_socket.send_json(return_dict, self.__msg_flag | self.__zmq.SNDMORE)
+                        self.__msg_socket.send_json(
+                            return_dict, self.__msg_flag | self.__zmq.SNDMORE
+                        )
                         # send the array with correct flags
                         self.__msg_socket.send(
                             self.__return_data,
@@ -1039,9 +1043,9 @@ class NetGear:
                 # handle return data
                 recv_json = self.__msg_socket.recv_json(flags=self.__msg_flag)
                 if recv_json:
-                    #return recvd data
+                    # return recvd data
                     return_data = None
-                    #check if ndarray
+                    # check if ndarray
                     if recv_json["return_type"] == "ndarray":
                         recv_array = self.__msg_socket.recv(
                             flags=self.__msg_flag,
@@ -1063,9 +1067,9 @@ class NetGear:
                     # save the unique port addresses
                     if not recv_json["port"] in self.__port_buffer:
                         self.__port_buffer.append(recv_json["port"])
-                    #return recvd data
+                    # return recvd data
                     return_data = None
-                    #check if ndarray
+                    # check if ndarray
                     if recv_json["return_type"] == "ndarray":
                         recv_array = self.__msg_socket.recv(
                             flags=self.__msg_flag,

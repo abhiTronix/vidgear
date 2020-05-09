@@ -38,8 +38,8 @@ logger.setLevel(log.DEBUG)
 
 def return_testvideo_path():
     """
-	returns Test Video path
-	"""
+    returns Test Video path
+    """
     path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
         tempfile.gettempdir()
     )
@@ -49,8 +49,8 @@ def return_testvideo_path():
 @pytest.mark.parametrize("address, port", [("www.idk.com", "5555"), (None, "5555")])
 def test_playback(address, port):
     """
-	Tests NetGear Bare-minimum network playback capabilities
-	"""
+    Tests NetGear Bare-minimum network playback capabilities
+    """
     try:
         # open stream
         stream = VideoGear(source=return_testvideo_path()).start()
@@ -80,8 +80,8 @@ def test_playback(address, port):
 )  # 2:(zmq.PUB,zmq.SUB) (#3 is incorrect value)
 def test_patterns(pattern):
     """
-	Testing NetGear different messaging patterns
-	"""
+    Testing NetGear different messaging patterns
+    """
     # open stream
     try:
         stream = VideoGear(source=return_testvideo_path()).start()
@@ -114,13 +114,18 @@ def test_patterns(pattern):
         else:
             pytest.fail(str(e))
 
+
 @pytest.mark.parametrize(
-    "options_client", [{"compression_param": cv2.IMREAD_UNCHANGED}, {"compression_param": [cv2.IMWRITE_JPEG_QUALITY, 80]}]
+    "options_client",
+    [
+        {"compression_param": cv2.IMREAD_UNCHANGED},
+        {"compression_param": [cv2.IMWRITE_JPEG_QUALITY, 80]},
+    ],
 )
 def test_compression(options_client):
     """
-	Testing NetGear's real-time frame compression capabilities
-	"""
+    Testing NetGear's real-time frame compression capabilities
+    """
     try:
         # open streams
         stream = VideoGear(source=return_testvideo_path()).start()
@@ -166,8 +171,8 @@ test_data_class = [
 )
 def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cert):
     """
-	Testing NetGear's Secure Mode
-	"""
+    Testing NetGear's Secure Mode
+    """
     try:
         # open stream
         stream = VideoGear(source=return_testvideo_path()).start()
@@ -213,12 +218,17 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
 
 
 @pytest.mark.parametrize(
-    "pattern, target_data", [(0, [1, "string", ["list"]]), (1, np.random.random(size=(10, 480, 640, 3)) * 255), (2, {1: "apple", 2: "cat"})]
+    "pattern, target_data",
+    [
+        (0, [1, "string", ["list"]]),
+        (1, np.random.random(size=(10, 480, 640, 3)) * 255),
+        (2, {1: "apple", 2: "cat"}),
+    ],
 )
 def test_bidirectional_mode(pattern, target_data):
     """
-	Testing NetGear's Bidirectional Mode with different datatypes
-	"""
+    Testing NetGear's Bidirectional Mode with different datatypes
+    """
     try:
         logger.debug("Given Input Data: {}".format(target_data))
 
@@ -260,13 +270,11 @@ def test_bidirectional_mode(pattern, target_data):
             pytest.fail(str(e))
 
 
-@pytest.mark.parametrize(
-    "pattern", [0, 1]
-)
+@pytest.mark.parametrize("pattern", [0, 1])
 def test_multiserver_mode(pattern):
     """
-	Testing NetGear's Multi-Server Mode with three unique servers
-	"""
+    Testing NetGear's Multi-Server Mode with three unique servers
+    """
     try:
         # open network stream
         stream = VideoGear(source=return_testvideo_path()).start()
