@@ -840,11 +840,56 @@ class NetGear:
             if self.__pattern < 2:
                 # handle return data
                 if self.__bi_mode:
-                    return_dict = dict(data=self.__return_data)
-                    self.__msg_socket.send_json(return_dict, self.__msg_flag)
+                    # check if numpy array
+                    if isinstance(self.__return_data, np.ndarray):
+                        return_dict = dict(
+                            return_type=(type(self.__return_data).__name__),
+                            array_dtype=str(self.__return_data.dtype),
+                            array_shape=self.__return_data.shape,
+                            data=None,
+                        )
+                        # send the json dict
+                        self.__msg_socket.send_json(return_dict, self.__msg_flag | self.__zmq.SNDMORE)
+                        # send the array with correct flags
+                        self.__msg_socket.send(
+                            self.__return_data,
+                            flags=self.__msg_flag,
+                            copy=self.__msg_copy,
+                            track=self.__msg_track,
+                        )
+                    else:
+                        return_dict = dict(
+                            return_type=(type(self.__return_data).__name__),
+                            data=self.__return_data,
+                        )
+                        self.__msg_socket.send_json(return_dict, self.__msg_flag)
+
                 elif self.__multiclient_mode:
-                    return_dict = {"port": self.__port, "data": self.__return_data}
-                    self.__msg_socket.send_json(return_dict, self.__msg_flag)
+                    # check if numpy array
+                    if isinstance(self.__return_data, np.ndarray):
+                        return_dict = dict(
+                            port=self.__port,
+                            return_type=(type(self.__return_data).__name__),
+                            array_dtype=str(self.__return_data.dtype),
+                            array_shape=self.__return_data.shape,
+                            data=None,
+                        )
+                        # send the json dict
+                        self.__msg_socket.send_json(return_dict, self.__msg_flag | self.__zmq.SNDMORE)
+                        # send the array with correct flags
+                        self.__msg_socket.send(
+                            self.__return_data,
+                            flags=self.__msg_flag,
+                            copy=self.__msg_copy,
+                            track=self.__msg_track,
+                        )
+                    else:
+                        return_dict = dict(
+                            port=self.__port,
+                            return_type=(type(self.__return_data).__name__),
+                            data=self.__return_data,
+                        )
+                        self.__msg_socket.send_json(return_dict, self.__msg_flag)
                 else:
                     # send confirmation message to server
                     self.__msg_socket.send_string(
@@ -992,17 +1037,49 @@ class NetGear:
             # check if bi-directional data transmission is enabled
             if self.__bi_mode:
                 # handle return data
-                return_dict = self.__msg_socket.recv_json(flags=self.__msg_flag)
-                return return_dict["data"] if return_dict else None
+                recv_json = self.__msg_socket.recv_json(flags=self.__msg_flag)
+                if recv_json:
+                    #return recvd data
+                    return_data = None
+                    #check if ndarray
+                    if recv_json["return_type"] == "ndarray":
+                        recv_array = self.__msg_socket.recv(
+                            flags=self.__msg_flag,
+                            copy=self.__msg_copy,
+                            track=self.__msg_track,
+                        )
+                        return_data = np.frombuffer(
+                            recv_array, dtype=recv_json["array_dtype"]
+                        ).reshape(recv_json["array_shape"])
+                    else:
+                        return_data = recv_json["data"]
+                    return return_data
+                else:
+                    return None
             elif self.__multiclient_mode:
                 # handle return data
-                return_dict = self.__msg_socket.recv_json(flags=self.__msg_flag)
-                # save the unique port addresses
-                if not return_dict["port"] in self.__port_buffer:
-                    self.__port_buffer.append(return_dict["port"])
-                return (
-                    (return_dict["port"], return_dict["data"]) if return_dict else None
-                )
+                recv_json = self.__msg_socket.recv_json(flags=self.__msg_flag)
+                if recv_json:
+                    # save the unique port addresses
+                    if not recv_json["port"] in self.__port_buffer:
+                        self.__port_buffer.append(recv_json["port"])
+                    #return recvd data
+                    return_data = None
+                    #check if ndarray
+                    if recv_json["return_type"] == "ndarray":
+                        recv_array = self.__msg_socket.recv(
+                            flags=self.__msg_flag,
+                            copy=self.__msg_copy,
+                            track=self.__msg_track,
+                        )
+                        return_data = np.frombuffer(
+                            recv_array, dtype=recv_json["array_dtype"]
+                        ).reshape(recv_json["array_shape"])
+                    else:
+                        return_data = recv_json["data"]
+                    return (recv_json["port"], return_data)
+                else:
+                    return None
             else:
                 # otherwise log normally
                 recv_confirmation = self.__msg_socket.recv()

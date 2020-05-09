@@ -213,7 +213,7 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
 
 
 @pytest.mark.parametrize(
-    "pattern, target_data", [(0, [1, "string", ["list"]]), (2, {1: "apple", 2: "cat"})]
+    "pattern, target_data", [(0, [1, "string", ["list"]]), (1, np.random.random(size=(10, 480, 640, 3)) * 255), (2, {1: "apple", 2: "cat"})]
 )
 def test_bidirectional_mode(pattern, target_data):
     """
