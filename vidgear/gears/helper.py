@@ -111,6 +111,34 @@ def capPropId(property):
     return integer_value
 
 
+def reducer(frame=None, percentage=0):
+
+    """
+    Reduces frame size by given percentage
+    """
+    # check if frame is valid
+    if frame is None:
+        raise ValueError("[Helper:ERROR] :: Input frame cannot be NoneType!")
+
+    # check if valid reduction percentage is given
+    if not (percentage > 0 and percentage < 90):
+        raise ValueError(
+            "[Helper:ERROR] :: Given frame-size reduction percentage is invalid, Kindly refer docs."
+        )
+
+    # grab the frame size
+    (height, width) = frame.shape[:2]
+
+    # calculate the ratio of the width from percentage
+    reduction = ((100 - percentage) / 100) * width
+    ratio = reduction / float(width)
+    # construct the dimensions
+    dimensions = (int(reduction), int(height * ratio))
+
+    # return the resized frame
+    return cv2.resize(frame, dimensions, interpolation=cv2.INTER_LANCZOS4)
+
+
 def dict2Args(param_dict):
     """
     converts dict to list(args)
