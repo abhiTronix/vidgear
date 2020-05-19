@@ -52,8 +52,8 @@ with open("README.md", "r") as fh:
 setup(
     name="vidgear",
     packages=["vidgear", "vidgear.gears", "vidgear.gears.asyncio"],
-    version="0.1.8-dev",
-    description="Most Powerful cross-platform Video Processing Python framework powerpacked with unique trailblazing features.",
+    version="0.1.8-dev1",
+    description="High-performance cross-platform Video Processing Python framework powerpacked with unique trailblazing features.",
     license="Apache License 2.0",
     author="Abhishek Thakur",
     install_requires=[
