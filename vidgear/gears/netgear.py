@@ -971,98 +971,82 @@ class NetGear:
                         raise RuntimeError("API failed to restart the Client-end!")
                     self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
 
-                # handle return data
-                return_data = self.__return_data[:]
 
-                if isinstance(return_data, np.ndarray):
+                if not(self.__return_data is None):
+                    # handle return data
+                    return_data = self.__return_data[:]
 
-                    # check whether exit_flag is False
-                    if not (return_data.flags["C_CONTIGUOUS"]):
-                        # check whether the incoming frame is contiguous
-                        return_data = np.ascontiguousarray(
-                            return_data, dtype=return_data.dtype
-                        )
+                    if isinstance(return_data, np.ndarray):
 
-                    # handle encoding
-                    if self.__compression:
-                        retval, return_data = cv2.imencode(
-                            self.__compression,
-                            return_data,
-                            self.__ex_compression_params,
-                        )
-                        # check if it works
-                        if not (retval):
-                            # otherwise raise error and exit
-                            self.__terminate = True
-                            raise RuntimeError(
-                                "[NetGear:ERROR] :: Return frame compression failed with encoding: {} and parameters: {}.".format(
-                                    self.__compression, self.__ex_compression_params
-                                )
+                        # check whether exit_flag is False
+                        if not (return_data.flags["C_CONTIGUOUS"]):
+                            # check whether the incoming frame is contiguous
+                            return_data = np.ascontiguousarray(
+                                return_data, dtype=return_data.dtype
                             )
 
-                    if self.__bi_mode:
-                        return_dict = dict(
-                            return_type=(type(return_data).__name__),
-                            compression=str(self.__compression),
-                            array_dtype=str(return_data.dtype),
-                            array_shape=return_data.shape,
-                            data=None,
-                        )
-                        # send the json dict
-                        self.__msg_socket.send_json(
-                            return_dict, self.__msg_flag | self.__zmq.SNDMORE
-                        )
-                        # send the array with correct flags
-                        self.__msg_socket.send(
-                            return_data,
-                            flags=self.__msg_flag,
-                            copy=self.__msg_copy,
-                            track=self.__msg_track,
-                        )
-                    elif self.__multiclient_mode:
-                        return_dict = dict(
-                            port=self.__port,
-                            return_type=(type(return_data).__name__),
-                            compression=str(self.__compression),
-                            array_dtype=str(return_data.dtype),
-                            array_shape=return_data.shape,
-                            data=None,
-                        )
-                        # send the json dict
-                        self.__msg_socket.send_json(
-                            return_dict, self.__msg_flag | self.__zmq.SNDMORE
-                        )
-                        # send the array with correct flags
-                        self.__msg_socket.send(
-                            return_data,
-                            flags=self.__msg_flag,
-                            copy=self.__msg_copy,
-                            track=self.__msg_track,
-                        )
-                    else:
-                        # send confirmation message to server
-                        self.__msg_socket.send_string(
-                            "Data received on device: {} !".format(self.__id)
-                        )
-                else:
-                    if self.__bi_mode:
-                        return_dict = dict(
-                            return_type=(type(return_data).__name__), data=return_data,
-                        )
-                        self.__msg_socket.send_json(return_dict, self.__msg_flag)
+                        # handle encoding
+                        if self.__compression:
+                            retval, return_data = cv2.imencode(
+                                self.__compression,
+                                return_data,
+                                self.__ex_compression_params,
+                            )
+                            # check if it works
+                            if not (retval):
+                                # otherwise raise error and exit
+                                self.__terminate = True
+                                raise RuntimeError(
+                                    "[NetGear:ERROR] :: Return frame compression failed with encoding: {} and parameters: {}.".format(
+                                        self.__compression, self.__ex_compression_params
+                                    )
+                                )
 
-                    elif self.__multiclient_mode:
-                        return_dict = dict(
-                            port=self.__port,
-                            return_type=(type(return_data).__name__),
-                            data=return_data,
+                        if self.__bi_mode:
+                            return_dict = dict(
+                                return_type=(type(return_data).__name__),
+                                compression=str(self.__compression),
+                                array_dtype=str(return_data.dtype),
+                                array_shape=return_data.shape,
+                                data=None,
+                            )
+                        else:
+                            return_dict = dict(
+                                port=self.__port,
+                                return_type=(type(return_data).__name__),
+                                compression=str(self.__compression),
+                                array_dtype=str(return_data.dtype),
+                                array_shape=return_data.shape,
+                                data=None,
+                            )
+                        # send the json dict
+                        self.__msg_socket.send_json(
+                            return_dict, self.__msg_flag | self.__zmq.SNDMORE
                         )
-                        self.__msg_socket.send_json(return_dict, self.__msg_flag)
+                        # send the array with correct flags
+                        self.__msg_socket.send(
+                            return_data,
+                            flags=self.__msg_flag,
+                            copy=self.__msg_copy,
+                            track=self.__msg_track,
+                        )
                     else:
-                        # send confirmation message to server
-                        self.__msg_socket.send_string(
-                            "Data received on device: {} !".format(self.__id)
-                        )
+                        if self.__bi_mode:
+                            return_dict = dict(
+                                return_type=(type(return_data).__name__), data=return_data,
+                            )
+                        else:
+                            return_dict = dict(
+                                port=self.__port,
+                                return_type=(type(return_data).__name__),
+                                data=return_data,
+                            )
+                        self.__msg_socket.send_json(return_dict, self.__msg_flag)
+                else:
+                    # send confirmation message to server
+                    self.__msg_socket.send_string(
+                        "Data received on device: {} !".format(self.__id)
+                    )
             else:
                 if self.__return_data and self.__logging:
                     logger.warning("`return_data` is disabled for this pattern!")
