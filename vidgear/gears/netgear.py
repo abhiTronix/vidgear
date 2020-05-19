@@ -222,9 +222,6 @@ class NetGear:
         # define termination flag
         self.__terminate = False
 
-        # define exit_loop flag
-        self.__exit_loop = False
-
         # additional settings for reliability
         if pattern < 2:
             # define zmq poller for reliable transmission
@@ -232,7 +229,7 @@ class NetGear:
             # define max retries
             self.__max_retries = 3
             # request timeout
-            self.__request_timeout = 10000  # 10 secs
+            self.__request_timeout = 4000  # 4 secs
 
         # Handle user-defined options dictionary values
 
@@ -340,13 +337,13 @@ class NetGear:
                 if value >= 0:
                     self.__max_retries = value
                 else:
-                    self.warning("Invalid `max_retries` value skipped!")
+                    logger.warning("Invalid `max_retries` value skipped!")
             # assign request timeout in synchronous patterns
             elif key == "request_timeout" and isinstance(value, int) and pattern < 2:
-                if value >= 5:
+                if value >= 4:
                     self.__request_timeout = value * 1000  # covert to milliseconds
                 else:
-                    self.warning("Invalid `request_timeout` value skipped!")
+                    logger.warning("Invalid `request_timeout` value skipped!")
 
             # assign ZMQ flags
             elif key == "flag" and isinstance(value, int):
@@ -846,15 +843,7 @@ class NetGear:
         frame = None
 
         # keep looping infinitely until the thread is terminated
-        while not self.__exit_loop:
-
-            # check if global termination_flag is enabled
-            if self.__terminate:
-                # check whether there is still frames in queue before breaking out
-                if len(self.__queue) > 0:
-                    continue
-                else:
-                    self.exit_loop = True
+        while not self.__terminate:
 
             # check queue buffer for overflow
             if len(self.__queue) >= 96:
@@ -879,7 +868,7 @@ class NetGear:
                             logger.error("All Servers seems to be offline, Abandoning!")
                         else:
                             logger.error("Server seems to be offline, Abandoning!")
-                        self.__exit_loop = True
+                        self.__terminate = True
                         continue
 
                     # Create new connection
@@ -890,7 +879,7 @@ class NetGear:
                         self.__msg_socket.bind(self.__connection_address)
                     except Exception as e:
                         logger.exception(str(e))
-                        self.__exit_loop = True
+                        self.__terminate = True
                         raise RuntimeError("API failed to restart the Client-end!")
                     self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
 
@@ -921,7 +910,7 @@ class NetGear:
                         logger.critical(
                             "Termination signal received from all Servers!!!"
                         )
-                        self.__exit_loop = True  # termination
+                        self.__terminate = True  # termination
                 else:
                     # if pattern is 1, then send back server the info about termination
                     if self.__pattern == 1:
@@ -929,7 +918,7 @@ class NetGear:
                             "Termination signal successfully received at Client's end!"
                         )
                     # termination
-                    self.__exit_loop = True
+                    self.__terminate = True
                     # notify client
                     if self.__logging:
                         logger.critical("Termination signal received from server!")
@@ -956,7 +945,7 @@ class NetGear:
                             logger.error("All Servers seems to be offline, Abandoning!")
                         else:
                             logger.error("Server seems to be offline, Abandoning!")
-                        self.__exit_loop = True
+                        self.__terminate = True
                         continue
 
                     # Create new connection
@@ -967,12 +956,11 @@ class NetGear:
                         self.__msg_socket.bind(self.__connection_address)
                     except Exception as e:
                         logger.exception(str(e))
-                        self.__exit_loop = True
+                        self.__terminate = True
                         raise RuntimeError("API failed to restart the Client-end!")
                     self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
 
-
-                if not(self.__return_data is None):
+                if not (self.__return_data is None):
                     # handle return data
                     return_data = self.__return_data[:]
 
@@ -1033,7 +1021,8 @@ class NetGear:
                     else:
                         if self.__bi_mode:
                             return_dict = dict(
-                                return_type=(type(return_data).__name__), data=return_data,
+                                return_type=(type(return_data).__name__),
+                                data=return_data,
                             )
                         else:
                             return_dict = dict(
@@ -1104,7 +1093,6 @@ class NetGear:
         if not (self.__receive_mode):
             # raise value error and exit
             self.__terminate = True
-            self.__exit_loop = True
             raise ValueError(
                 "[NetGear:ERROR] :: `recv()` function cannot be used while receive_mode is disabled. Kindly refer vidgear docs!"
             )
@@ -1114,7 +1102,7 @@ class NetGear:
             self.__return_data = return_data
 
         # check whether or not termination flag is enabled
-        while not self.__exit_loop:
+        while not self.__terminate:
             # check if queue is empty
             if len(self.__queue) > 0:
                 return self.__queue.popleft()
@@ -1246,17 +1234,17 @@ class NetGear:
                         copy=self.__msg_copy,
                         track=self.__msg_track,
                     )
-                    return_data = np.frombuffer(
+                    recvd_data = np.frombuffer(
                         recv_array, dtype=recv_json["array_dtype"]
                     ).reshape(recv_json["array_shape"])
 
                     # check if encoding was enabled
                     if recv_json["compression"]:
-                        return_data = cv2.imdecode(
-                            return_data, self.__ex_compression_params
+                        recvd_data = cv2.imdecode(
+                            recvd_data, self.__ex_compression_params
                         )
                         # check if valid frame returned
-                        if return_data is None:
+                        if recvd_data is None:
                             self.__terminate = True
                             # otherwise raise error and exit
                             raise RuntimeError(
@@ -1266,12 +1254,12 @@ class NetGear:
                                 )
                             )
                 else:
-                    return_data = recv_json["data"]
+                    recvd_data = recv_json["data"]
 
                 return (
-                    (recv_json["port"], return_data)
+                    (recv_json["port"], recvd_data)
                     if self.__multiclient_mode
-                    else return_data
+                    else recvd_data
                 )
             else:
                 # otherwise log normally
@@ -1317,24 +1305,22 @@ class NetGear:
             )
         #  whether `receive_mode` is enabled or not
         if self.__receive_mode:
-            # indicate that process should be terminated
-            self.__terminate = True
             # check whether queue mode is empty
             if not (self.__queue is None) and self.__queue:
                 self.__queue.clear()
             # call immediate termination
-            self.__exit_loop = True
+            self.__terminate = True
             # wait until stream resources are released (producer thread might be still grabbing frame)
             if self.__thread is not None:
                 # properly handle thread exit
                 self.__thread.join()
                 self.__thread = None
-            logger.debug("Terminating. Please wait...")
+            if self.__logging:
+                logger.debug("Terminating. Please wait...")
             # properly close the socket
-            self.__msg_socket.close(linger=self.__request_timeout // 4)
-            # close context
-            self.__msg_context.term()
-            logger.debug("Terminated Successfully!")
+            self.__msg_socket.close(linger=self.__request_timeout // 5)
+            if self.__logging:
+                logger.debug("Terminated Successfully!")
 
         else:
             # indicate that process should be terminated
@@ -1347,8 +1333,6 @@ class NetGear:
                 # properly close the socket
                 self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
                 self.__msg_socket.close()
-                # terminate context
-                self.__msg_context.term()
                 return
 
             if self.__multiserver_mode:
@@ -1367,9 +1351,10 @@ class NetGear:
 
                         # check for confirmation if available within half timeout
                         if self.__pattern < 2:
-                            logger.debug("Terminating. Please wait...")
+                            if self.__logging:
+                                logger.debug("Terminating. Please wait...")
                             if self.__msg_socket.poll(
-                                self.__request_timeout // 4, self.__zmq.POLLIN
+                                self.__request_timeout // 5, self.__zmq.POLLIN
                             ):
                                 self.__msg_socket.recv()
                 else:
@@ -1377,9 +1362,10 @@ class NetGear:
 
                     # check for confirmation if available within half timeout
                     if self.__pattern < 2:
-                        logger.debug("Terminating. Please wait...")
+                        if self.__logging:
+                            logger.debug("Terminating. Please wait...")
                         if self.__msg_socket.poll(
-                            self.__request_timeout // 4, self.__zmq.POLLIN
+                            self.__request_timeout // 5, self.__zmq.POLLIN
                         ):
                             self.__msg_socket.recv()
             except Exception as e:
@@ -1389,6 +1375,5 @@ class NetGear:
                 # properly close the socket
                 self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
                 self.__msg_socket.close()
-                # terminate context
-                self.__msg_context.term()
-                logger.debug("Terminated Successfully!")
+                if self.__logging:
+                    logger.debug("Terminated Successfully!")
