@@ -31,7 +31,7 @@ import requests
 from os.path import expanduser
 from vidgear.gears.asyncio.helper import generate_webdata, validate_webdata
 from vidgear.gears.helper import (
-    check_output,
+    check_output, reducer
     download_ffmpeg_binaries,
     generate_auth_certificates,
     get_valid_ffmpeg_path,
@@ -263,7 +263,7 @@ def test_reducer(frame, percentage, result):
     if not (frame is None):
         org_size = frame.shape[:2]
     try:
-        reduced_frame = await reducer(frame, percentage)
+        reduced_frame = reducer(frame, percentage)
         logger.debug(reduced_frame.shape)
         assert not (reduced_frame is None)
         reduced_frame_size = reduced_frame.shape[:2]
