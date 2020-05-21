@@ -159,7 +159,7 @@ def test_youtube_playback(url):
         assert (
             true_video_param[0] == width
             and true_video_param[1] == height
-            and true_video_param[2] == fps
+            and round(true_video_param[2], 1) == round(fps, 1)
         )
     except Exception as e:
         if isinstance(e, (RuntimeError, ValueError)) and url == "im_not_a_url":
