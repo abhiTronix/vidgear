@@ -31,7 +31,7 @@ import requests
 from os.path import expanduser
 from vidgear.gears.asyncio.helper import generate_webdata, validate_webdata
 from vidgear.gears.helper import (
-    check_output, reducer
+    check_output, reducer,
     download_ffmpeg_binaries,
     generate_auth_certificates,
     get_valid_ffmpeg_path,
