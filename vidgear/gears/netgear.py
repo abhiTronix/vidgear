@@ -209,11 +209,13 @@ class NetGear:
                 cv2.IMWRITE_JPEG_QUALITY,
                 85,
                 cv2.IMWRITE_JPEG_PROGRESSIVE,
-                True,
+                False,
                 cv2.IMWRITE_JPEG_OPTIMIZE,
                 True,
             ]
         )
+        # defines frame compression on return data
+        self.__ex_compression_params = None
 
         # define receiver return data handler
         self.__return_data = None
@@ -327,8 +329,23 @@ class NetGear:
                 # assign encoding/decoding params/flags for frame-compression if valid
                 if receive_mode and isinstance(value, int):
                     self.__compression_params = value
-                elif not (receive_mode) and isinstance(value, (list, tuple)):
-                    self.__compression_params = list(value)
+                elif not (receive_mode) and isinstance(value, list):
+                    self.__compression_params = value
+                elif isinstance(value, tuple) and len(value) == 2:
+                    if receive_mode:
+                        self.__compression_params = [
+                            x for x in value if isinstance(x, int)
+                        ][0]
+                        self.__ex_compression_params = [
+                            x for x in value if (value and isinstance(x, list))
+                        ][0]
+                    else:
+                        self.__compression_params = [
+                            x for x in value if (value and isinstance(x, list))
+                        ][0]
+                        self.__ex_compression_params = [
+                            x for x in value if isinstance(x, int)
+                        ][0]
                 else:
                     logger.warning(
                         "Invalid compression parameters: {} skipped!".format(value)
@@ -421,7 +438,7 @@ class NetGear:
 
         if self.__multiclient_mode and self.__multiserver_mode:
             raise ValueError(
-                "Multi-Client and Multi-Server Mode cannot be enabled simultaneously!"
+                "[NetGear:ERROR] :: Multi-Client and Multi-Server Mode cannot be enabled simultaneously!"
             )
         elif self.__multiserver_mode or self.__multiclient_mode:
             # check if Bi-directional Mode also enabled
@@ -434,25 +451,31 @@ class NetGear:
                     )
                 )
         elif self.__bi_mode:
-            if self.__compression:
-                # define exclusive compression params
-                self.__ex_compression_params = (
-                    [
-                        cv2.IMWRITE_JPEG_QUALITY,
-                        85,
-                        cv2.IMWRITE_JPEG_PROGRESSIVE,
-                        True,
-                        cv2.IMWRITE_JPEG_OPTIMIZE,
-                        True,
-                    ]
-                    if receive_mode
-                    else cv2.IMREAD_COLOR
-                )
             # log Bi-directional mode activation
             if self.__logging:
                 logger.debug(
                     "Bi-Directional Data Transmission is enabled for this connection!"
                 )
+
+        # handle frame compression on return data
+        if (
+            (self.__bi_mode or self.__multiclient_mode)
+            and self.__compression
+            and self.__ex_compression_params is None
+        ):
+            # define exclusive compression params
+            self.__ex_compression_params = (
+                [
+                    cv2.IMWRITE_JPEG_QUALITY,
+                    85,
+                    cv2.IMWRITE_JPEG_PROGRESSIVE,
+                    False,
+                    cv2.IMWRITE_JPEG_OPTIMIZE,
+                    True,
+                ]
+                if receive_mode
+                else cv2.IMREAD_COLOR
+            )
 
         # define messaging context instance
         self.__msg_context = zmq.Context.instance()
@@ -1269,7 +1292,7 @@ class NetGear:
                             # otherwise raise error and exit
                             raise RuntimeError(
                                 "[NetGear:ERROR] :: Received compressed frame `{}` decoding failed with flag: {}.".format(
-                                    msg_json["compression"],
+                                    recv_json["compression"],
                                     self.__ex_compression_params,
                                 )
                             )
