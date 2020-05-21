@@ -490,7 +490,8 @@ def test_multiclient_mode(pattern):
     "options",
     [
         {"max_retries": -1, "request_timeout": 3},
-        {"max_retries": 1, "request_timeout": 4},
+        {"max_retries": 2, "request_timeout": 4, "bidirectional_mode": True},
+        {"max_retries": 2, "request_timeout": 4, "multiclient_mode": True},
     ],
 )
 def test_client_reliablity(options):
@@ -500,7 +501,9 @@ def test_client_reliablity(options):
     client = None
     try:
         # define params
-        client = NetGear(pattern=1, receive_mode=True, **options)
+        client = NetGear(
+            pattern=1, port=5554, receive_mode=True, logging=True, **options
+        )
         # get data without any connection
         frame_client = client.recv()
         # check for frame
@@ -517,7 +520,14 @@ def test_client_reliablity(options):
             client.close()
 
 
-def test_server_reliablity():
+@pytest.mark.parametrize(
+    "options",
+    [
+        {"max_retries": 2, "request_timeout": 4},
+        {"max_retries": 2, "request_timeout": 4, "bidirectional_mode": True},
+    ],
+)
+def test_server_reliablity(options):
     """
     Testing validation function of WebGear API
     """
@@ -525,8 +535,12 @@ def test_server_reliablity():
     stream = None
     try:
         # define params
-        options = {"max_retries": 1, "request_timeout": 4}
-        server = NetGear(pattern=1, **options)
+        server = NetGear(
+            pattern=1,
+            port=[5585] if "multiclient_mode" in options.keys() else 6654,
+            logging=True,
+            **options
+        )
         stream = VideoGear(source=return_testvideo_path()).start()
         i = 0
         while i < random.randint(10, 100):
@@ -535,6 +549,7 @@ def test_server_reliablity():
         # check if input frame is valid
         assert not (frame_client is None)
         # send frame without connection
+        server.send(frame_client)
         server.send(frame_client)
     except Exception as e:
         if isinstance(e, (RuntimeError)):
