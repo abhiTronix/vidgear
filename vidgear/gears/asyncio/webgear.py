@@ -30,7 +30,6 @@ from starlette.responses import StreamingResponse
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
-
 from ..videogear import VideoGear
 from .helper import generate_webdata, logger_handler, reducer
 

@@ -27,7 +27,7 @@ import numpy as np
 import pytest
 from zmq.error import ZMQError
 
-from vidgear.gears impo# define test loggerrt NetGear, VideoGear
+from vidgear.gears import NetGear, VideoGear
 from vidgear.gears.helper import logger_handler
 
 # define test logger

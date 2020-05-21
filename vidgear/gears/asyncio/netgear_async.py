@@ -22,7 +22,6 @@ import asyncio
 import inspect
 import logging as log
 import platform
-from collections import deque
 
 import cv2
 import msgpack
@@ -31,6 +30,7 @@ import numpy as np
 import zmq
 import zmq.asyncio
 
+from collections import deque
 from ..videogear import VideoGear
 from .helper import logger_handler
 
