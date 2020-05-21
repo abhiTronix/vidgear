@@ -45,7 +45,7 @@ pytestmark = pytest.mark.asyncio
     "frame , percentage, result",
     [(getframe(), 85, True), (None, 80, False), (getframe(), 95, False)],
 )
-async def test_reducer(frame, percentage, result):
+async def test_reducer_asyncio(frame, percentage, result):
     """
     Testing frame size reducer function 
     """

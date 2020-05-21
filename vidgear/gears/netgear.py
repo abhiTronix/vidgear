@@ -321,7 +321,6 @@ class NetGear:
                 key == "compression_format"
                 and isinstance(value, str)
                 and value.lower().strip() in [".jpg", ".jpeg", ".bmp", ".png"]
-                and not (receive_mode)
             ):
                 # assign frame-compression encoding value
                 self.__compression = value.lower().strip()
@@ -1382,10 +1381,14 @@ class NetGear:
             if (self.__pattern < 2 and not self.__max_retries) or (
                 self.__multiclient_mode and not self.__port_buffer
             ):
-                # properly close the socket
-                self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
-                self.__msg_socket.close()
-                return
+                try:
+                    # properly close the socket
+                    self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
+                    self.__msg_socket.close()
+                except self.__ZMQError:
+                    pass
+                finally:
+                    return
 
             if self.__multiserver_mode:
                 # check if multiserver_mode
