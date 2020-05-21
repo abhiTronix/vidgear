@@ -19,14 +19,15 @@ limitations under the License.
 """
 
 # import the necessary packages/libraries
-from pkg_resources import parse_version
-import cv2, os, sys, time
-import subprocess as sp
 import logging as log
-from .helper import get_valid_ffmpeg_path
-from .helper import capPropId
-from .helper import dict2Args
-from .helper import logger_handler
+import os
+import subprocess as sp
+import sys
+import time
+import cv2
+
+from pkg_resources import parse_version
+from .helper import capPropId, dict2Args, get_valid_ffmpeg_path, logger_handler
 
 
 # define logger

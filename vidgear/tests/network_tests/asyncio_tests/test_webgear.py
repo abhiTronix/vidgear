@@ -17,17 +17,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
-import tempfile, asyncio
-import os, pytest, requests
+# import libs
+import asyncio
 import logging as log
+import os
+import tempfile
+import pytest
+import requests
 
-from vidgear.gears.asyncio import WebGear
-from vidgear.gears.asyncio.helper import logger_handler
-from starlette.testclient import TestClient
 from starlette.responses import PlainTextResponse
 from starlette.routing import Route
+from starlette.testclient import TestClient
+from vidgear.gears.asyncio import WebGear
+from vidgear.gears.asyncio.helper import logger_handler
 
+# define test logger
 logger = log.getLogger("Test_webgear")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)

@@ -17,12 +17,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+# import libraries
+import logging as log
+import os
+import tempfile
+import pytest
 
-import pytest, os, tempfile
 from vidgear.gears import VideoGear
 from vidgear.gears.helper import logger_handler
-import logging as log
 
+# define test logger
 logger = log.getLogger("Test_videogear")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)

@@ -17,13 +17,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+# import libraries
+import logging as log
+import platform
+import pytest
+from mss.exception import ScreenShotError
 
 from vidgear.gears import ScreenGear
-from mss.exception import ScreenShotError
 from vidgear.gears.helper import logger_handler
-import pytest, platform
-import logging as log
 
+# define test logger
 logger = log.getLogger("Test_screengear")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)

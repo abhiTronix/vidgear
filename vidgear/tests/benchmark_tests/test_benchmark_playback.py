@@ -17,15 +17,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
-import os, platform
-import pytest
+# import the necessary packages
+import logging as log
+import os
+import platform
 import tempfile
+import pytest
+
 from vidgear.gears import CamGear
 from vidgear.gears.helper import logger_handler
 from .fps import FPS
-import logging as log
 
+# define test logger
 logger = log.getLogger("Test_benchmark_playback")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)

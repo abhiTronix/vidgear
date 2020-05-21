@@ -17,25 +17,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
-import cv2, os, pytest, tempfile, shutil, platform, requests
-from os.path import expanduser
+# import libraries
 import logging as log
+import os
+import platform
+import shutil
+import tempfile
+import cv2
 import numpy as np
+import pytest
+import requests
 
-from vidgear.gears.helper import download_ffmpeg_binaries
-from vidgear.gears.helper import validate_ffmpeg
-from vidgear.gears.helper import get_valid_ffmpeg_path
-from vidgear.gears.helper import generate_auth_certificates
-from vidgear.gears.helper import logger_handler
-from vidgear.gears.helper import check_output
-from vidgear.gears.asyncio.helper import generate_webdata
-from vidgear.gears.asyncio.helper import validate_webdata
+from os.path import expanduser
+from vidgear.gears.asyncio.helper import generate_webdata, validate_webdata
+from vidgear.gears.helper import (check_output, download_ffmpeg_binaries,
+                                  generate_auth_certificates,
+                                  get_valid_ffmpeg_path, logger_handler,
+                                  validate_ffmpeg)
 
-
+# define test logger
 logger = log.getLogger("Test_helper")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+
 
 # define machine os
 _windows = True if os.name == "nt" else False

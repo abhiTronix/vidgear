@@ -17,23 +17,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
 # import the necessary packages
+import asyncio
+import logging as log
+import os
+import sys
+import cv2
+
+from collections import deque
 from starlette.applications import Starlette
 from starlette.responses import StreamingResponse
-from starlette.templating import Jinja2Templates
+from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
-from starlette.routing import Mount
-from starlette.routing import Route
+from starlette.templating import Jinja2Templates
 
 from ..videogear import VideoGear
-from .helper import reducer
-from .helper import logger_handler
-from .helper import generate_webdata
-from collections import deque
-
-import logging as log
-import os, cv2, asyncio, sys
+from .helper import generate_webdata, logger_handler, reducer
 
 
 # define logger

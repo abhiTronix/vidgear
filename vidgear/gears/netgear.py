@@ -17,17 +17,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
 # import the necessary packages
+import cv2
+import numpy as np
+import logging as log
+import os
+import random
+import time
+
+from collections import deque
 from threading import Thread
 from pkg_resources import parse_version
-from .helper import generate_auth_certificates
-from .helper import logger_handler
-from collections import deque
-import numpy as np
-import cv2, time, os, random
-import logging as log
-
+from .helper import generate_auth_certificates, logger_handler
 
 # define logger
 logger = log.getLogger("NetGear")
@@ -146,19 +147,20 @@ class NetGear:
 
         # Handle messaging pattern
         msg_pattern = None
-        self.__pattern = 0
         # check whether user-defined messaging pattern is valid
-        if isinstance(pattern, int) and pattern in valid_messaging_patterns:
+        if isinstance(pattern, int) and pattern in valid_messaging_patterns.keys():
             # assign value
             msg_pattern = valid_messaging_patterns[pattern]
-            self.__pattern = pattern
         else:
             # otherwise default to 0:`zmq.PAIR`
-            msg_pattern = valid_messaging_patterns[self.__pattern]
+            pattern = 0
+            msg_pattern = valid_messaging_patterns[pattern]
             if self.__logging:
                 logger.warning(
                     "Wrong pattern value, Defaulting to `zmq.PAIR`! Kindly refer Docs for more Information."
                 )
+        # assign pattern to global parameter for further use
+        self.__pattern = pattern
 
         # Handle messaging protocol
         if protocol is None or not (protocol in ["tcp", "ipc"]):
@@ -760,7 +762,7 @@ class NetGear:
                     )
 
                 # additional settings
-                if pattern < 2:
+                if pattern < 2 and not self.__multiclient_mode:
                     self.__connection_address = (
                         protocol + "://" + str(address) + ":" + str(port)
                     )
@@ -960,11 +962,14 @@ class NetGear:
                         raise RuntimeError("API failed to restart the Client-end!")
                     self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
 
-                if not (self.__return_data is None):
-                    # handle return data
-                    return_data = self.__return_data[:]
+                if self.__bi_mode or self.__multiclient_mode:
 
-                    if isinstance(return_data, np.ndarray):
+                    if not (self.__return_data is None) and isinstance(
+                        self.__return_data, np.ndarray
+                    ):
+
+                        # handle return data
+                        return_data = self.__return_data[:]
 
                         # check whether exit_flag is False
                         if not (return_data.flags["C_CONTIGUOUS"]):
@@ -1021,14 +1026,14 @@ class NetGear:
                     else:
                         if self.__bi_mode:
                             return_dict = dict(
-                                return_type=(type(return_data).__name__),
-                                data=return_data,
+                                return_type=(type(self.__return_data).__name__),
+                                data=self.__return_data,
                             )
                         else:
                             return_dict = dict(
                                 port=self.__port,
-                                return_type=(type(return_data).__name__),
-                                data=return_data,
+                                return_type=(type(self.__return_data).__name__),
+                                data=self.__return_data,
                             )
                         self.__msg_socket.send_json(return_dict, self.__msg_flag)
                 else:
@@ -1127,6 +1132,14 @@ class NetGear:
                 "[NetGear:ERROR] :: `send()` function cannot be used while receive_mode is enabled. Kindly refer vidgear docs!"
             )
 
+        if not (message is None) and isinstance(message, np.ndarray):
+            logger.warning(
+                "Skipped unsupported `message` of datatype: {}!".format(
+                    type(message).__name__
+                )
+            )
+            message = None
+
         # define exit_flag and assign value
         exit_flag = True if (frame is None or self.__terminate) else False
 
@@ -1186,40 +1199,47 @@ class NetGear:
             if self.__bi_mode or self.__multiclient_mode:
 
                 # handles return data
-                return_data = None
+                recvd_data = None
 
-                socks = dict(self.__poll.poll(self.__request_timeout))
-                if socks.get(self.__msg_socket) == self.__zmq.POLLIN:
-                    # handle return data
+                if self.__multiclient_mode:
                     recv_json = self.__msg_socket.recv_json(flags=self.__msg_flag)
                 else:
-                    logger.critical("No response from Client, Reconnecting again...")
-                    # Socket is confused. Close and remove it.
-                    self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
-                    self.__msg_socket.close()
-                    self.__poll.unregister(self.__msg_socket)
-                    self.__max_retries -= 1
-
-                    if not (self.__max_retries):
-                        if self.__multiclient_mode:
-                            logger.error(
-                                "All Clients failed to respond on multiple attempts."
-                            )
-                        else:
-                            logger.error(
-                                "Client failed to respond on multiple attempts."
-                            )
-                        self.__terminate = True
-                        raise RuntimeError(
-                            "[NetGear:ERROR] :: Client(s) seems to be offline, Abandoning."
+                    socks = dict(self.__poll.poll(self.__request_timeout))
+                    if socks.get(self.__msg_socket) == self.__zmq.POLLIN:
+                        # handle return data
+                        recv_json = self.__msg_socket.recv_json(flags=self.__msg_flag)
+                    else:
+                        logger.critical(
+                            "No response from Client, Reconnecting again..."
                         )
+                        # Socket is confused. Close and remove it.
+                        self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
+                        self.__msg_socket.close()
+                        self.__poll.unregister(self.__msg_socket)
+                        self.__max_retries -= 1
 
-                    # Create new connection
-                    self.__msg_socket = self.__msg_context.socket(self.__msg_pattern)
-                    self.__msg_socket.connect(self.__connection_address)
-                    self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
+                        if not (self.__max_retries):
+                            if self.__multiclient_mode:
+                                logger.error(
+                                    "All Clients failed to respond on multiple attempts."
+                                )
+                            else:
+                                logger.error(
+                                    "Client failed to respond on multiple attempts."
+                                )
+                            self.__terminate = True
+                            raise RuntimeError(
+                                "[NetGear:ERROR] :: Client(s) seems to be offline, Abandoning."
+                            )
 
-                    return None
+                        # Create new connection
+                        self.__msg_socket = self.__msg_context.socket(
+                            self.__msg_pattern
+                        )
+                        self.__msg_socket.connect(self.__connection_address)
+                        self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
+
+                        return None
 
                 # save the unique port addresses
                 if (
@@ -1262,31 +1282,40 @@ class NetGear:
                     else recvd_data
                 )
             else:
-                # otherwise log normally
-                socks = dict(self.__poll.poll(self.__request_timeout))
-                if socks.get(self.__msg_socket) == self.__zmq.POLLIN:
+                if self.__multiclient_mode:
                     recv_confirmation = self.__msg_socket.recv()
                 else:
-                    logger.critical("No response from Client, Reconnecting again...")
-                    # Socket is confused. Close and remove it.
-                    self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
-                    self.__msg_socket.close()
-                    self.__poll.unregister(self.__msg_socket)
-                    self.__max_retries -= 1
-
-                    if not (self.__max_retries):
-                        logger.error("Client failed to respond on repeated attempts.")
-                        self.__terminate = True
-                        raise RuntimeError(
-                            "[NetGear:ERROR] :: Client seems to be offline, Abandoning!"
+                    # otherwise log normally
+                    socks = dict(self.__poll.poll(self.__request_timeout))
+                    if socks.get(self.__msg_socket) == self.__zmq.POLLIN:
+                        recv_confirmation = self.__msg_socket.recv()
+                    else:
+                        logger.critical(
+                            "No response from Client, Reconnecting again..."
                         )
+                        # Socket is confused. Close and remove it.
+                        self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
+                        self.__msg_socket.close()
+                        self.__poll.unregister(self.__msg_socket)
+                        self.__max_retries -= 1
 
-                    # Create new connection
-                    self.__msg_socket = self.__msg_context.socket(self.__msg_pattern)
-                    self.__msg_socket.connect(self.__connection_address)
-                    self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
+                        if not (self.__max_retries):
+                            logger.error(
+                                "Client failed to respond on repeated attempts."
+                            )
+                            self.__terminate = True
+                            raise RuntimeError(
+                                "[NetGear:ERROR] :: Client seems to be offline, Abandoning!"
+                            )
 
-                    return None
+                        # Create new connection
+                        self.__msg_socket = self.__msg_context.socket(
+                            self.__msg_pattern
+                        )
+                        self.__msg_socket.connect(self.__connection_address)
+                        self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
+
+                        return None
 
                 # log confirmation
                 if self.__logging:
@@ -1318,7 +1347,7 @@ class NetGear:
             if self.__logging:
                 logger.debug("Terminating. Please wait...")
             # properly close the socket
-            self.__msg_socket.close(linger=self.__request_timeout // 5)
+            self.__msg_socket.close(linger=0)
             if self.__logging:
                 logger.debug("Terminated Successfully!")
 

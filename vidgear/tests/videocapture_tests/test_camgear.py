@@ -17,18 +17,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
-import youtube_dl
-import cv2
+# import libraries
+import logging as log
+import os
 import platform
-import os, time
-import pytest
 import tempfile
+import time
+import cv2
 import numpy as np
+import pytest
+import youtube_dl
+
 from vidgear.gears import CamGear
 from vidgear.gears.helper import logger_handler
-import logging as log
 
+# define test logger
 logger = log.getLogger("Test_camgear")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)

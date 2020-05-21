@@ -17,21 +17,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
-from vidgear.gears import WriteGear
-from vidgear.gears import CamGear
-from vidgear.gears.helper import capPropId
-from vidgear.gears.helper import check_output
-from vidgear.gears.helper import logger_handler
-from six import string_types
-
-import pytest
-import cv2
-import tempfile
-import os, platform
-import subprocess, re
+# import libraries
 import logging as log
+import os
+import platform
+import re
+import subprocess
+import tempfile
+import cv2
+import pytest
 
+from six import string_types
+from vidgear.gears import CamGear, WriteGear
+from vidgear.gears.helper import capPropId, check_output, logger_handler
+
+# define test logger
 logger = log.getLogger("Test_commpression_mode")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
