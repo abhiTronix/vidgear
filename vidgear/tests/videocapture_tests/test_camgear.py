@@ -124,7 +124,7 @@ def test_threaded_queue_mode(source, options):
             pytest.fail(str(e))
 
 
-@pytest.mark.parametrize("url", ["https://youtu.be/YqeW9_5kURI", "im_not_a_url"])
+@pytest.mark.parametrize("url", ["https://youtu.be/uCy5OuSQnyA", "im_not_a_url"])
 def test_youtube_playback(url):
     """
 	Testing Youtube Video Playback capabilities of VidGear
