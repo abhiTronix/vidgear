@@ -402,7 +402,7 @@ class WriteGear:
         :param cmd(list): custom command with input as list  
         """
         # check if valid command
-        if cmd is None:
+        if cmd is None or not(cmd):
             logger.warning("Input FFmpeg command is empty, Nothing to execute!")
             return
         else:

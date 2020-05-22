@@ -264,7 +264,7 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
         ),
         (None, True),
         ([], False),
-        ("wrong_input", True),
+        (["wrong_input"], True),
     ],
 )
 def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio, logging):
