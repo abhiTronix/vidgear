@@ -169,7 +169,7 @@ class NetGear:
             # log it
             if self.__logging:
                 logger.warning(
-                    "Protocol is supported or not provided. Defaulting to `tcp` protocol!"
+                    "Protocol is not supported or not provided. Defaulting to `tcp` protocol!"
                 )
 
         # Handle connection params
@@ -442,7 +442,7 @@ class NetGear:
         elif self.__multiserver_mode or self.__multiclient_mode:
             # check if Bi-directional Mode also enabled
             if self.__bi_mode:
-                # disable bi_mode if multi-server is enabled
+                # disable bi_mode if enabled
                 self.__bi_mode = False
                 logger.warning(
                     "Bi-Directional Data Transmission is disabled when {} Mode is Enabled due to incompatibility!".format(
@@ -604,34 +604,29 @@ class NetGear:
             except Exception as e:
                 # otherwise log and raise error
                 logger.exception(str(e))
-
                 if self.__secure_mode:
                     logger.critical(
-                        "Failed to activate ZMQ Security Mechanism: `{}` for this address!".format(
+                        "Failed to activate Secure Mode: `{}` for this connection!".format(
                             valid_security_mech[self.__secure_mode]
                         )
                     )
-
-                if self.__bi_mode:
-                    logger.critical(
-                        "Failed to activate Bi-Directional Mode for this address!"
-                    )
-
-                if self.__multiserver_mode:
+                if self.__multiserver_mode or self.__multiclient_mode:
                     raise RuntimeError(
-                        "[NetGear:ERROR] :: Multi-Server Mode failed to bind to ports: {} with pattern: {}! Kindly recheck all parameters.".format(
-                            port, pattern
-                        )
-                    )
-                elif self.__multiclient_mode:
-                    raise RuntimeError(
-                        "[NetGear:ERROR] :: Multi-Client Mode failed to bind to port: {} with pattern: {}! Kindly recheck all parameters.".format(
-                            port, pattern
+                        "[NetGear:ERROR] :: Receive Mode failed to activate {} Mode at address: {} with pattern: {}! Kindly recheck all parameters.".format(
+                            "Multi-Server"
+                            if self.__multiserver_mode
+                            else "Multi-Client",
+                            (protocol + "://" + str(address) + ":" + str(port)),
+                            pattern,
                         )
                     )
                 else:
+                    if self.__bi_mode:
+                        logger.critical(
+                            "Failed to activate Bi-Directional Mode for this connection!"
+                        )
                     raise RuntimeError(
-                        "[NetGear:ERROR] :: Failed to bind address: {} and pattern: {}! Kindly recheck all parameters.".format(
+                        "[NetGear:ERROR] :: Receive Mode failed to bind address: {} and pattern: {}! Kindly recheck all parameters.".format(
                             (protocol + "://" + str(address) + ":" + str(port)), pattern
                         )
                     )
@@ -801,34 +796,29 @@ class NetGear:
             except Exception as e:
                 # otherwise log and raise error
                 logger.exception(str(e))
-
                 if self.__secure_mode:
                     logger.critical(
-                        "Failed to activate ZMQ Security Mechanism: `{}` for this address!".format(
+                        "Failed to activate Secure Mode: `{}` for this connection!".format(
                             valid_security_mech[self.__secure_mode]
                         )
                     )
-
-                if self.__bi_mode:
-                    logger.critical(
-                        "Failed to activate Bi-Directional Mode for this address!"
-                    )
-
-                if self.__multiserver_mode:
+                if self.__multiserver_mode or self.__multiclient_mode:
                     raise RuntimeError(
-                        "[NetGear:ERROR] :: Multi-Server Mode failed to connect to port: {} with pattern: {}! Kindly recheck all parameters.".format(
-                            port, pattern
-                        )
-                    )
-                elif self.__multiclient_mode:
-                    raise RuntimeError(
-                        "[NetGear:ERROR] :: Multi-Client Mode failed to connect to ports: {} with pattern: {}! Kindly recheck all parameters.".format(
-                            port, pattern
+                        "[NetGear:ERROR] :: Send Mode failed to activate {} Mode at address: {} with pattern: {}! Kindly recheck all parameters.".format(
+                            "Multi-Server"
+                            if self.__multiserver_mode
+                            else "Multi-Client",
+                            (protocol + "://" + str(address) + ":" + str(port)),
+                            pattern,
                         )
                     )
                 else:
+                    if self.__bi_mode:
+                        logger.critical(
+                            "Failed to activate Bi-Directional Mode for this connection!"
+                        )
                     raise RuntimeError(
-                        "[NetGear:ERROR] :: Failed to connect address: {} and pattern: {}! Kindly recheck all parameters.".format(
+                        "[NetGear:ERROR] :: Send Mode failed to connect address: {} and pattern: {}! Kindly recheck all parameters.".format(
                             (protocol + "://" + str(address) + ":" + str(port)), pattern
                         )
                     )
@@ -948,41 +938,13 @@ class NetGear:
                         logger.critical("Termination signal received from server!")
                 continue
 
+            msg_data = self.__msg_socket.recv(
+                flags=self.__msg_flag | self.__zmq.DONTWAIT,
+                copy=self.__msg_copy,
+                track=self.__msg_track,
+            )
+
             if self.__pattern < 2:
-
-                socks = dict(self.__poll.poll(self.__request_timeout * 3))
-                if socks.get(self.__msg_socket) == self.__zmq.POLLIN:
-                    msg_data = self.__msg_socket.recv(
-                        flags=self.__msg_flag | self.__zmq.DONTWAIT,
-                        copy=self.__msg_copy,
-                        track=self.__msg_track,
-                    )
-                else:
-                    logger.critical("No response from Server(s), Reconnecting again...")
-                    # Socket is confused. Close and remove it.
-                    self.__msg_socket.close(linger=0)
-                    self.__poll.unregister(self.__msg_socket)
-                    self.__max_retries -= 1
-
-                    if not (self.__max_retries):
-                        if self.__multiserver_mode:
-                            logger.error("All Servers seems to be offline, Abandoning!")
-                        else:
-                            logger.error("Server seems to be offline, Abandoning!")
-                        self.__terminate = True
-                        continue
-
-                    # Create new connection
-                    try:
-                        self.__msg_socket = self.__msg_context.socket(
-                            self.__msg_pattern
-                        )
-                        self.__msg_socket.bind(self.__connection_address)
-                    except Exception as e:
-                        logger.exception(str(e))
-                        self.__terminate = True
-                        raise RuntimeError("API failed to restart the Client-end!")
-                    self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
 
                 if self.__bi_mode or self.__multiclient_mode:
 
@@ -1067,10 +1029,6 @@ class NetGear:
                 if self.__return_data and self.__logging:
                     logger.warning("`return_data` is disabled for this pattern!")
 
-                msg_data = self.__msg_socket.recv(
-                    flags=self.__msg_flag, copy=self.__msg_copy, track=self.__msg_track
-                )
-
             # recover and reshape frame from buffer
             frame_buffer = np.frombuffer(msg_data, dtype=msg_json["dtype"])
             frame = frame_buffer.reshape(msg_json["shape"])
@@ -1130,12 +1088,16 @@ class NetGear:
 
         # check whether or not termination flag is enabled
         while not self.__terminate:
-            # check if queue is empty
-            if len(self.__queue) > 0:
-                return self.__queue.popleft()
-            else:
-                time.sleep(0.00001)
-                continue
+            try:
+                # check if queue is empty
+                if len(self.__queue) > 0:
+                    return self.__queue.popleft()
+                else:
+                    time.sleep(0.00001)
+                    continue
+            except KeyboardInterrupt:
+                self.__terminate = True
+                break
         # otherwise return NoneType
         return None
 
