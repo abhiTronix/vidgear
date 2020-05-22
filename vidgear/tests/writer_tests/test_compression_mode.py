@@ -92,7 +92,10 @@ def test_input_framerate(c_ffmpeg):
     test_video_framerate = stream.get(cv2.CAP_PROP_FPS)
     output_params = {"-input_framerate": test_video_framerate}
     writer = WriteGear(
-        output_filename="Output_tif.mp4", custom_ffmpeg=c_ffmpeg, **output_params
+        output_filename="Output_tif.mp4",
+        custom_ffmpeg=c_ffmpeg,
+        logging=True,
+        **output_params
     )  # Define writer
     while True:
         (grabbed, frame) = stream.read()
@@ -219,6 +222,7 @@ test_data_class = [
     ),
 ]
 
+
 @pytest.mark.parametrize("f_name, c_ffmpeg, output_params, result", test_data_class)
 def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
     """
@@ -243,38 +247,50 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
             pytest.fail(str(e))
 
 
-
 @pytest.mark.parametrize(
-    "ffmpeg_command_to_save_audio",
+    "ffmpeg_command_to_save_audio, logging",
     [
-        [
-            "-y",
-            "-i",
-            return_testvideo_path(),
-            "-vn",
-            "-acodec",
-            "copy",
-            "input_audio.aac",
-        ],
-        None,
-        [],
-        "wrong_input",
+        (
+            [
+                "-y",
+                "-i",
+                return_testvideo_path(),
+                "-vn",
+                "-acodec",
+                "copy",
+                "input_audio.aac",
+            ],
+            False,
+        ),
+        (None, True),
+        ([], False),
+        ("wrong_input", True),
     ],
 )
-def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio):
+def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio, logging):
     """
     Testing WriteGear Compression-Mode(FFmpeg) custom FFmpeg Pipeline by seperating audio from video
     """
     try:
         # define writer
-        writer = WriteGear(output_filename="Output.mp4", compression_mode = (True if ffmpeg_command_to_save_audio else False), logging=True)  # Define writer
+        writer = WriteGear(
+            output_filename="Output.mp4",
+            compression_mode=(True if ffmpeg_command_to_save_audio else False),
+            logging=logging,
+        )  # Define writer
 
         # execute FFmpeg command
         writer.execute_ffmpeg_cmd(ffmpeg_command_to_save_audio)
 
         # assert audio file is created successfully
-        if ffmpeg_command_to_save_audio and isinstance(ffmpeg_command_to_save_audio, list):
+        if ffmpeg_command_to_save_audio and isinstance(
+            ffmpeg_command_to_save_audio, list
+        ):
             assert os.path.isfile("input_audio.aac")
     except Exception as e:
         if isinstance(e, AssertionError):
             pytest.fail(str(e))
+        elif isinstance(e, ValueError):
+            pytest.xfail("Test Passed!")
+        else:
+            logger.exception(str(e))

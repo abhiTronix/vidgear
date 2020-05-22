@@ -82,6 +82,72 @@ def test_playback(address, port):
             client.close()
 
 
+@pytest.mark.parametrize("receive_mode", [True, False])
+def test_primary_mode(receive_mode):
+    """
+    Tests NetGear Bare-minimum network playback capabilities
+    """
+    stream = None
+    conn = None
+    try:
+        # open stream
+        stream = VideoGear(source=return_testvideo_path()).start()
+        frame = stream.read()
+        # open server and client with default params
+        conn = NetGear(receive_mode=receive_mode)
+        if receive_mode:
+            conn.send(frame)
+        else:
+            frame_client = conn.recv()
+    except Exception as e:
+        if isinstance(e, ValueError):
+            pytest.xfail("Test Passed!")
+        else:
+            pytest.fail(str(e))
+    finally:
+        # clean resources
+        if not (stream is None):
+            stream.stop()
+        if not (conn is None):
+            conn.close()
+
+
+@pytest.mark.parametrize("address, port", [("www.idk.com", "5555"), (None, "5555")])
+def test_playback(address, port):
+    """
+    Tests NetGear Bare-minimum network playback capabilities
+    """
+    stream = None
+    server = None
+    client = None
+    try:
+        # open stream
+        stream = VideoGear(source=return_testvideo_path()).start()
+        # open server and client with default params
+        client = NetGear(address=address, port=port, receive_mode=True)
+        server = NetGear(address=address, port=port)
+        # playback
+        while True:
+            frame_server = stream.read()
+            if frame_server is None:
+                break
+            server.send(frame_server)  # send
+            frame_client = client.recv()  # recv
+    except Exception as e:
+        if isinstance(e, (ZMQError, ValueError)) or address == "www.idk.com":
+            logger.exception(str(e))
+        else:
+            pytest.fail(str(e))
+    finally:
+        # clean resources
+        if not (stream is None):
+            stream.stop()
+        if not (server is None):
+            server.close()
+        if not (client is None):
+            client.close()
+
+
 @pytest.mark.parametrize(
     "pattern", [2, 3]
 )  # 2:(zmq.PUB,zmq.SUB) (#3 is incorrect value)
@@ -90,7 +156,7 @@ def test_patterns(pattern):
     Testing NetGear different messaging patterns
     """
     # define parameters
-    options = {"flag": 0, "copy": False, "track": False, "force_terminate": True}
+    options = {"flag": 0, "copy": False, "track": False}
     # initialize
     frame_server = None
     stream = None

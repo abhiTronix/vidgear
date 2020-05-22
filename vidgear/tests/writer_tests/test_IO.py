@@ -26,8 +26,8 @@ from vidgear.gears import WriteGear
 
 def test_assertfailedwrite():
     """
-	IO Test - made to fail with Wrong Output file path
-	"""
+    IO Test - made to fail with Wrong Output file path
+    """
     np.random.seed(0)
     # generate random data for 10 frames
     random_data = np.random.random(size=(10, 480, 640, 3)) * 255
@@ -42,8 +42,8 @@ def test_assertfailedwrite():
 
 def test_failedextension():
     """
-	IO Test - made to fail with filename with wrong extention
-	"""
+    IO Test - made to fail with filename with wrong extention
+    """
     np.random.seed(0)
     # generate random data for 10 frames
     random_data = np.random.random(size=(10, 480, 640, 3)) * 255
@@ -54,3 +54,63 @@ def test_failedextension():
         writer = WriteGear("garbage.garbage")
         writer.write(input_data)
         writer.close()
+
+
+@pytest.mark.parametrize("compression_mode", [True, False])
+def test_fail_framedimension(compression_mode):
+    """
+    IO Test - made to fail with multiple frame dimension
+    """
+    np.random.seed(0)
+    # generate random data for 10 frames
+    random_data1 = np.random.random(size=(480, 640, 3)) * 255
+    input_data1 = random_data1.astype(np.uint8)
+
+    np.random.seed(0)
+    random_data2 = np.random.random(size=(580, 640, 3)) * 255
+    input_data2 = random_data2.astype(np.uint8)
+
+    writer = None
+    try:
+        writer = WriteGear("output.mp4", compression_mode=compression_mode)
+        writer.write(None)
+        writer.write(input_data1)
+        writer.write(input_data2)
+    except Exception as e:
+        if isinstance(e, ValueError):
+            pytest.xfail("Test Passed!")
+        else:
+            pytest.fail(str(e))
+    finally:
+        if not writer is None:
+            writer.close()
+
+
+@pytest.mark.parametrize("compression_mode", [True, False])
+def test_fail_framechannels(compression_mode):
+    """
+    IO Test - made to fail with multiple frame channels
+    """
+    np.random.seed(0)
+    # generate random data for 10 frames
+    random_data1 = np.random.random(size=(480, 640, 3)) * 255
+    input_data1 = random_data1.astype(np.uint8)
+
+    np.random.seed(0)
+    random_data2 = np.random.random(size=(480, 640, 4)) * 255
+    input_data2 = random_data2.astype(np.uint8)
+
+    writer = None
+    try:
+        writer = WriteGear("output.mp4", compression_mode=compression_mode)
+        writer.write(None)
+        writer.write(input_data1)
+        writer.write(input_data2)
+    except Exception as e:
+        if isinstance(e, ValueError):
+            pytest.xfail("Test Passed!")
+        else:
+            pytest.fail(str(e))
+    finally:
+        if not writer is None:
+            writer.close()
