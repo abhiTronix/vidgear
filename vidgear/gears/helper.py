@@ -18,15 +18,20 @@ limitations under the License.
 ===============================================
 """
 
-# Contains all the support functions/modules required by Vidgear
+# Contains all the support functions/modules required by Vidgear packages
 
 # import the necessary packages
-import os, sys, requests, platform, errno
-import numpy as np
-from pkg_resources import parse_version
-from colorlog import ColoredFormatter
-from tqdm import tqdm
+import errno
 import logging as log
+import os
+import platform
+import sys
+
+import numpy as np
+import requests
+from colorlog import ColoredFormatter
+from pkg_resources import parse_version
+from tqdm import tqdm
 
 try:
     # import OpenCV Binaries
@@ -109,6 +114,34 @@ def capPropId(property):
         logger.critical("`{}` is not a valid OpenCV property!".format(property))
         return None
     return integer_value
+
+
+def reducer(frame=None, percentage=0):
+
+    """
+    Reduces frame size by given percentage
+    """
+    # check if frame is valid
+    if frame is None:
+        raise ValueError("[Helper:ERROR] :: Input frame cannot be NoneType!")
+
+    # check if valid reduction percentage is given
+    if not (percentage > 0 and percentage < 90):
+        raise ValueError(
+            "[Helper:ERROR] :: Given frame-size reduction percentage is invalid, Kindly refer docs."
+        )
+
+    # grab the frame size
+    (height, width) = frame.shape[:2]
+
+    # calculate the ratio of the width from percentage
+    reduction = ((100 - percentage) / 100) * width
+    ratio = reduction / float(width)
+    # construct the dimensions
+    dimensions = (int(reduction), int(height * ratio))
+
+    # return the resized frame
+    return cv2.resize(frame, dimensions, interpolation=cv2.INTER_LANCZOS4)
 
 
 def dict2Args(param_dict):

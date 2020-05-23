@@ -18,18 +18,24 @@ limitations under the License.
 ===============================================
 """
 
-# Contains all the support functions/modules required by Vidgear
+# Contains all the support functions/modules required by Vidgear Asyncio packages
 
 # import the necessary packages
-import os, sys, requests, platform, errno
-import numpy as np
-from pkg_resources import parse_version
-from colorlog import ColoredFormatter
-from tqdm import tqdm
-import logging as log
 import asyncio
+import errno
+import logging as log
+import os
+import platform
+import sys
+
 import aiohttp
 import cv2
+import numpy as np
+import requests
+
+from colorlog import ColoredFormatter
+from pkg_resources import parse_version
+from tqdm import tqdm
 
 
 def logger_handler():

@@ -17,18 +17,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
 # import the necessary packages
-from threading import Thread
-from pkg_resources import parse_version
-from .helper import capPropId
-from .helper import logger_handler
+import logging as log
+import time
+import cv2
+import numpy as np
+
 from mss import mss
 from mss.exception import ScreenShotError
-
-import numpy as np
-import cv2, time
-import logging as log
+from pkg_resources import parse_version
+from threading import Thread
+from .helper import capPropId, logger_handler
 
 
 # define logger

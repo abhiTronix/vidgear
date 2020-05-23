@@ -20,14 +20,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
 # import the necessary packages
-from collections import deque
-from .helper import check_CV_version
-from .helper import logger_handler
-import numpy as np
-import cv2
 import logging as log
+import cv2
+import numpy as np
+
+from collections import deque
+from .helper import check_CV_version, logger_handler
 
 
 # define logger

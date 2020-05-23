@@ -19,9 +19,10 @@ limitations under the License.
 """
 
 # import the necessary packages
+import logging as log
+
 from .camgear import CamGear
 from .helper import logger_handler
-import logging as log
 
 
 # define logger

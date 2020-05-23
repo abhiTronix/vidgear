@@ -17,15 +17,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
 # import the necessary packages
+import cv2
+import logging as log
+import re
+import time
+
 from threading import Thread
 from pkg_resources import parse_version
-from .helper import capPropId
-from .helper import check_CV_version
-from .helper import logger_handler
-import cv2, re, time
-import logging as log
+from .helper import capPropId, check_CV_version, logger_handler
 
 
 # define logger

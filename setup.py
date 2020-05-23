@@ -17,9 +17,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
+# import the necessary packages
 import platform
 import setuptools
+
 from pkg_resources import parse_version
 from setuptools import setup
 
@@ -52,8 +53,8 @@ with open("README.md", "r") as fh:
 setup(
     name="vidgear",
     packages=["vidgear", "vidgear.gears", "vidgear.gears.asyncio"],
-    version="0.1.7",
-    description="Most Powerful cross-platform Video Processing Python framework powerpacked with unique trailblazing features.",
+    version="0.1.8-dev1",
+    description="High-performance cross-platform Video Processing Python framework powerpacked with unique trailblazing features.",
     license="Apache License 2.0",
     author="Abhishek Thakur",
     install_requires=[

@@ -1,12 +1,35 @@
-from vidgear.gears.asyncio.helper import reducer
-import numpy as np
-import logging as log
-import pytest, sys
-from vidgear.gears.asyncio.helper import logger_handler
+"""
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
 
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+===============================================
+"""
+# import libraries
+import logging as log
+import sys
+import numpy as np
+import pytest
+
+from vidgear.gears.asyncio.helper import logger_handler, reducer
+
+# define test logger
 logger = log.getLogger("Test_Asyncio_Helper")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+
 
 def getframe():
     """
@@ -22,7 +45,7 @@ pytestmark = pytest.mark.asyncio
     "frame , percentage, result",
     [(getframe(), 85, True), (None, 80, False), (getframe(), 95, False)],
 )
-async def test_reducer(frame, percentage, result):
+async def test_reducer_asyncio(frame, percentage, result):
     """
     Testing frame size reducer function 
     """

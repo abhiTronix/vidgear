@@ -1,13 +1,18 @@
 # import libraries
-from vidgear.gears.asyncio import NetGear_Async
-from vidgear.gears import VideoGear
-from vidgear.gears import NetGear
-import numpy as np
+import asyncio
 import logging as log
-from .fps import FPS
-import pytest, sys, asyncio, os, tempfile
-from vidgear.gears.asyncio.helper import logger_handler
+import os
+import sys
+import tempfile
+import numpy as np
+import pytest
 
+from vidgear.gears import NetGear, VideoGear
+from vidgear.gears.asyncio import NetGear_Async
+from vidgear.gears.asyncio.helper import logger_handler
+from .fps import FPS
+
+# define test logger
 logger = log.getLogger("Benchmark NetworkGears")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)

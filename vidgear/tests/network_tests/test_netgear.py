@@ -17,20 +17,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
-from vidgear.gears import NetGear
-from vidgear.gears import VideoGear
-from vidgear.gears.helper import logger_handler
-
-import pytest
-import cv2
+# import libraries
+import logging as log
+import os
 import random
 import tempfile
-import os
+import cv2
 import numpy as np
+import pytest
 from zmq.error import ZMQError
-import logging as log
 
+from vidgear.gears import NetGear, VideoGear
+from vidgear.gears.helper import logger_handler
+
+# define test logger
 logger = log.getLogger("Test_netgear")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
@@ -38,8 +38,8 @@ logger.setLevel(log.DEBUG)
 
 def return_testvideo_path():
     """
-	returns Test Video path
-	"""
+    returns Test Video path
+    """
     path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
         tempfile.gettempdir()
     )
@@ -49,8 +49,11 @@ def return_testvideo_path():
 @pytest.mark.parametrize("address, port", [("www.idk.com", "5555"), (None, "5555")])
 def test_playback(address, port):
     """
-	Tests NetGear Bare-minimum network playback capabilities
-	"""
+    Tests NetGear Bare-minimum network playback capabilities
+    """
+    stream = None
+    server = None
+    client = None
     try:
         # open stream
         stream = VideoGear(source=return_testvideo_path()).start()
@@ -64,15 +67,85 @@ def test_playback(address, port):
                 break
             server.send(frame_server)  # send
             frame_client = client.recv()  # recv
-        # clean resources
-        stream.stop()
-        server.close()
-        client.close()
     except Exception as e:
         if isinstance(e, (ZMQError, ValueError)) or address == "www.idk.com":
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
+    finally:
+        # clean resources
+        if not (stream is None):
+            stream.stop()
+        if not (server is None):
+            server.close()
+        if not (client is None):
+            client.close()
+
+
+@pytest.mark.parametrize("receive_mode", [True, False])
+def test_primary_mode(receive_mode):
+    """
+    Tests NetGear Bare-minimum network playback capabilities
+    """
+    stream = None
+    conn = None
+    try:
+        # open stream
+        stream = VideoGear(source=return_testvideo_path()).start()
+        frame = stream.read()
+        # open server and client with default params
+        conn = NetGear(receive_mode=receive_mode)
+        if receive_mode:
+            conn.send(frame)
+        else:
+            frame_client = conn.recv()
+    except Exception as e:
+        if isinstance(e, ValueError):
+            pytest.xfail("Test Passed!")
+        else:
+            pytest.fail(str(e))
+    finally:
+        # clean resources
+        if not (stream is None):
+            stream.stop()
+        if not (conn is None):
+            conn.close()
+
+
+@pytest.mark.parametrize("address, port", [("www.idk.com", "5555"), (None, "5555")])
+def test_playback(address, port):
+    """
+    Tests NetGear Bare-minimum network playback capabilities
+    """
+    stream = None
+    server = None
+    client = None
+    try:
+        # open stream
+        stream = VideoGear(source=return_testvideo_path()).start()
+        # open server and client with default params
+        client = NetGear(address=address, port=port, receive_mode=True)
+        server = NetGear(address=address, port=port)
+        # playback
+        while True:
+            frame_server = stream.read()
+            if frame_server is None:
+                break
+            server.send(frame_server)  # send
+            frame_client = client.recv()  # recv
+    except Exception as e:
+        if isinstance(e, (ZMQError, ValueError)) or address == "www.idk.com":
+            logger.exception(str(e))
+        else:
+            pytest.fail(str(e))
+    finally:
+        # clean resources
+        if not (stream is None):
+            stream.stop()
+        if not (server is None):
+            server.close()
+        if not (client is None):
+            client.close()
 
 
 @pytest.mark.parametrize(
@@ -80,17 +153,20 @@ def test_playback(address, port):
 )  # 2:(zmq.PUB,zmq.SUB) (#3 is incorrect value)
 def test_patterns(pattern):
     """
-	Testing NetGear different messaging patterns
-	"""
-    # open stream
+    Testing NetGear different messaging patterns
+    """
+    # define parameters
+    options = {"flag": 0, "copy": False, "track": False}
+    # initialize
+    frame_server = None
+    stream = None
+    server = None
+    client = None
     try:
+        # open stream
         stream = VideoGear(source=return_testvideo_path()).start()
-        # define parameters
-        options = {"flag": 0, "copy": True, "track": False, "force_terminate": True}
         client = NetGear(pattern=pattern, receive_mode=True, logging=True, **options)
         server = NetGear(pattern=pattern, logging=True, **options)
-        # initialize
-        frame_server = None
         # select random input frame from stream
         i = 0
         random_cutoff = random.randint(10, 100)
@@ -102,39 +178,51 @@ def test_patterns(pattern):
         # send frame over network
         server.send(frame_server)
         frame_client = client.recv()
-        # clean resources
-        stream.stop()
-        server.close()
-        client.close()
-        # check if recieved frame exactly matches input frame
+        # check if received frame exactly matches input frame
         assert np.array_equal(frame_server, frame_client)
     except Exception as e:
         if isinstance(e, (ZMQError, ValueError)):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
+    finally:
+        # clean resources
+        if not (stream is None):
+            stream.stop()
+        if not (server is None):
+            server.close()
+        if not (client is None):
+            client.close()
+
 
 @pytest.mark.parametrize(
-    "options_client", [{"compression_param": cv2.IMREAD_UNCHANGED}, {"compression_param": [cv2.IMWRITE_JPEG_QUALITY, 80]}]
+    "options_client",
+    [
+        {"compression_param": cv2.IMREAD_UNCHANGED},
+        {"compression_param": [cv2.IMWRITE_JPEG_QUALITY, 80]},
+    ],
 )
 def test_compression(options_client):
     """
-	Testing NetGear's real-time frame compression capabilities
-	"""
+    Testing NetGear's real-time frame compression capabilities
+    """
+    options = {
+        "compression_format": ".jpg",
+        "compression_param": [
+            cv2.IMWRITE_JPEG_QUALITY,
+            20,
+            cv2.IMWRITE_JPEG_OPTIMIZE,
+            True,
+        ],
+    }  # JPEG compression
+    # initialize
+    stream = None
+    server = None
+    client = None
     try:
         # open streams
         stream = VideoGear(source=return_testvideo_path()).start()
         client = NetGear(pattern=0, receive_mode=True, logging=True, **options_client)
-        # define server parameters
-        options = {
-            "compression_format": ".jpg",
-            "compression_param": [
-                cv2.IMWRITE_JPEG_QUALITY,
-                20,
-                cv2.IMWRITE_JPEG_OPTIMIZE,
-                True,
-            ],
-        }  # JPEG compression
         server = NetGear(pattern=0, logging=True, **options)
         # send over network
         while True:
@@ -143,15 +231,19 @@ def test_compression(options_client):
                 break
             server.send(frame_server)
             frame_client = client.recv()
-        # clean resources
-        stream.stop()
-        server.close()
-        client.close()
     except Exception as e:
         if isinstance(e, (ZMQError, ValueError)):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
+    finally:
+        # clean resources
+        if not (stream is None):
+            stream.stop()
+        if not (server is None):
+            server.close()
+        if not (client is None):
+            client.close()
 
 
 test_data_class = [
@@ -166,24 +258,25 @@ test_data_class = [
 )
 def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cert):
     """
-	Testing NetGear's Secure Mode
-	"""
+    Testing NetGear's Secure Mode
+    """
+    # define security mechanism
+    options = {
+        "secure_mode": security_mech,
+        "custom_cert_location": custom_cert_location,
+        "overwrite_cert": overwrite_cert,
+    }
+    # initialize
+    frame_server = None
+    stream = None
+    server = None
+    client = None
     try:
         # open stream
         stream = VideoGear(source=return_testvideo_path()).start()
-
-        # define security mechanism
-        options = {
-            "secure_mode": security_mech,
-            "custom_cert_location": custom_cert_location,
-            "overwrite_cert": overwrite_cert,
-        }
-
         # define params
         server = NetGear(pattern=pattern, logging=True, **options)
         client = NetGear(pattern=pattern, receive_mode=True, logging=True, **options)
-        # initialize
-        frame_server = None
         # select random input frame from stream
         i = 0
         while i < random.randint(10, 100):
@@ -194,11 +287,7 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
         # send and recv input frame
         server.send(frame_server)
         frame_client = client.recv()
-        # clean resources
-        stream.stop()
-        server.close()
-        client.close()
-        # check if recieved frame exactly matches input frame
+        # check if received frame exactly matches input frame
         assert np.array_equal(frame_server, frame_client)
     except Exception as e:
         if isinstance(e, (ZMQError, ValueError)):
@@ -210,73 +299,124 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
+    finally:
+        # clean resources
+        if not (stream is None):
+            stream.stop()
+        if not (server is None):
+            server.close()
+        if not (client is None):
+            client.close()
 
 
 @pytest.mark.parametrize(
-    "pattern, target_data", [(0, [1, "string", ["list"]]), (2, {1: "apple", 2: "cat"})]
+    "pattern, target_data, options",
+    [
+        (0, [1, "string", ["list"]], {"bidirectional_mode": True}),
+        (
+            1,
+            (np.random.random(size=(480, 640, 3)) * 255).astype(np.uint8),
+            {
+                "bidirectional_mode": True,
+                "compression_format": ".jpg",
+                "compression_param": (
+                    cv2.IMREAD_COLOR,
+                    [
+                        cv2.IMWRITE_JPEG_QUALITY,
+                        85,
+                        cv2.IMWRITE_JPEG_PROGRESSIVE,
+                        False,
+                        cv2.IMWRITE_JPEG_OPTIMIZE,
+                        True,
+                    ],
+                ),
+            },
+        ),
+        (2, {1: "apple", 2: "cat"}, {"bidirectional_mode": True}),
+    ],
 )
-def test_bidirectional_mode(pattern, target_data):
+def test_bidirectional_mode(pattern, target_data, options):
     """
-	Testing NetGear's Bidirectional Mode with different datatypes
-	"""
+    Testing NetGear's Bidirectional Mode with different data-types
+    """
+    # initialize
+    stream = None
+    server = None
+    client = None
     try:
         logger.debug("Given Input Data: {}".format(target_data))
-
-        # open strem
+        # open stream
         stream = VideoGear(source=return_testvideo_path()).start()
-        # activate bidirectional_mode
-        options = {"bidirectional_mode": True}
         # define params
-        client = NetGear(pattern=pattern, receive_mode=True, logging=True, **options)
-        server = NetGear(pattern=pattern, logging=True, **options)
+        client = NetGear(pattern=pattern, receive_mode=True, **options)
+        server = NetGear(pattern=pattern, **options)
         # get frame from stream
         frame_server = stream.read()
         assert not (frame_server is None)
-
-        # sent frame and data from server to client
-        server.send(frame_server, message=target_data)
-        # client recieves the data and frame and send its data
-        server_data, frame_client = client.recv(return_data=target_data)
-        # server recieves the data and cycle continues
-        client_data = server.send(frame_server, message=target_data)
-
-        # clean resources
-        stream.stop()
-        server.close()
-        client.close()
-
-        # logger.debug data recieved at client-end and server-end
-        logger.debug("Data recieved at Server-end: {}".format(server_data))
-        logger.debug("Data recieved at Client-end: {}".format(client_data))
-
-        # check if recieved frame exactly matches input frame
-        assert np.array_equal(frame_server, frame_client)
-        # check if client-end data exactly matches server-end data
-        assert client_data == server_data
+        # check if target data is numpy ndarray
+        if isinstance(target_data, np.ndarray):
+            # sent frame and data from server to client
+            server.send(target_data, message=target_data)
+            # client receives the data and frame and send its data
+            server_data, frame_client = client.recv(return_data=target_data)
+            # server receives the data and cycle continues
+            client_data = server.send(target_data, message=target_data)
+            # logger.debug data received at client-end and server-end
+            logger.debug("Data received at Server-end: {}".format(frame_client))
+            logger.debug("Data received at Client-end: {}".format(client_data))
+            assert np.array_equal(client_data, frame_client)
+        else:
+            # sent frame and data from server to client
+            server.send(frame_server, message=target_data)
+            # client receives the data and frame and send its data
+            server_data, frame_client = client.recv(return_data=target_data)
+            # server receives the data and cycle continues
+            client_data = server.send(frame_server, message=target_data)
+            # check if received frame exactly matches input frame
+            assert np.array_equal(frame_server, frame_client)
+            # logger.debug data received at client-end and server-end
+            logger.debug("Data received at Server-end: {}".format(server_data))
+            logger.debug("Data received at Client-end: {}".format(client_data))
+            assert client_data == server_data
     except Exception as e:
         if isinstance(e, (ZMQError, ValueError)):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
+    finally:
+        # clean resources
+        if not (stream is None):
+            stream.stop()
+        if not (server is None):
+            server.close()
+        if not (client is None):
+            client.close()
 
 
 @pytest.mark.parametrize(
-    "pattern", [0, 1]
+    "pattern, options",
+    [
+        (0, {"multiserver_mode": True, "multiclient_mode": True}),
+        (0, {"multiserver_mode": True}),
+        (1, {"multiserver_mode": True, "bidirectional_mode": True}),
+    ],
 )
-def test_multiserver_mode(pattern):
+def test_multiserver_mode(pattern, options):
     """
-	Testing NetGear's Multi-Server Mode with three unique servers
-	"""
+    Testing NetGear's Multi-Server Mode with three unique servers
+    """
+    # initialize
+    frame_server = None
+    stream = None
+    server_1 = None
+    server_2 = None
+    server_3 = None
+    client = None
+    # define client-end dict to save frames in-accordance with unique port
+    client_frame_dict = {}
     try:
-        # open network stream
+        # open stream
         stream = VideoGear(source=return_testvideo_path()).start()
-
-        # define and activate Multi-Server Mode
-        options = {
-            "multiserver_mode": True,
-            "bidirectional_mode": True,
-        }  # bidirectional_mode is activated for testing only
-
         # define a single client
         client = NetGear(
             port=["5556", "5557", "5558"],
@@ -285,9 +425,6 @@ def test_multiserver_mode(pattern):
             logging=True,
             **options
         )
-        # define client-end dict to save frames inaccordance with unique port
-        client_frame_dict = {}
-
         # define three unique server
         server_1 = NetGear(
             pattern=pattern, port="5556", logging=True, **options
@@ -298,9 +435,6 @@ def test_multiserver_mode(pattern):
         server_3 = NetGear(
             pattern=pattern, port="5558", logging=True, **options
         )  # at port `5558`
-
-        # generate a random input frame
-        frame_server = None
         i = 0
         while i < random.randint(10, 100):
             frame_server = stream.read()
@@ -321,13 +455,6 @@ def test_multiserver_mode(pattern):
         unique_address, frame = client.recv()
         client_frame_dict[unique_address] = frame
 
-        # clean all resources
-        stream.stop()
-        server_1.close()
-        server_2.close()
-        server_3.close()
-        client.close()
-
         # check if recieved frames from each unique server exactly matches input frame
         for key in client_frame_dict.keys():
             assert np.array_equal(frame_server, client_frame_dict[key])
@@ -337,3 +464,167 @@ def test_multiserver_mode(pattern):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
+    finally:
+        # clean resources
+        if not (stream is None):
+            stream.stop()
+        if not (server_1 is None):
+            server_1.close()
+        if not (server_2 is None):
+            server_2.close()
+        if not (server_3 is None):
+            server_3.close()
+        if not (client is None):
+            client.close()
+
+
+@pytest.mark.parametrize("pattern", [0, 1])
+def test_multiclient_mode(pattern):
+    """
+    Testing NetGear's Multi-Client Mode with three unique clients
+    """
+    # define and activate Multi-Client Mode
+    options = {
+        "multiclient_mode": True,
+        "bidirectional_mode": True,
+    }  # bidirectional_mode is activated for testing only
+
+    # initialize
+    frame_client = None
+    stream = None
+    server = None
+    client_1 = None
+    client_2 = None
+    client_3 = None
+    try:
+        # open network stream
+        stream = VideoGear(source=return_testvideo_path()).start()
+        # define single server
+        server = NetGear(
+            pattern=pattern, port=["5556", "5557", "5558"], logging=True, **options
+        )
+        # define a three unique clients
+        client_1 = NetGear(
+            port="5556", pattern=pattern, receive_mode=True, logging=True, **options
+        )
+        client_2 = NetGear(
+            port="5557", pattern=pattern, receive_mode=True, logging=True, **options
+        )
+        client_3 = NetGear(
+            port="5558", pattern=pattern, receive_mode=True, logging=True, **options
+        )
+        i = 0
+        while i < random.randint(10, 100):
+            frame_client = stream.read()
+            i += 1
+        # check if input frame is valid
+        assert not (frame_client is None)
+
+        # send frame from 1 server to multiple clients
+        server.send(frame_client)
+        frame_1 = client_1.recv()
+        server.send(frame_client)
+        frame_2 = client_2.recv()
+        server.send(frame_client)
+        frame_3 = client_3.recv()
+
+        # check if received frames from server exactly matches input frame
+        assert np.array_equal(frame_1, frame_client)
+        assert np.array_equal(frame_2, frame_client)
+        assert np.array_equal(frame_3, frame_client)
+
+    except Exception as e:
+        if isinstance(e, (ZMQError, ValueError)):
+            logger.exception(str(e))
+        else:
+            pytest.fail(str(e))
+    finally:
+        # clean resources
+        if not (stream is None):
+            stream.stop()
+        if not (server is None):
+            server.close()
+        if not (client_1 is None):
+            client_1.close()
+        if not (client_2 is None):
+            client_1.close()
+        if not (client_3 is None):
+            client_1.close()
+
+
+@pytest.mark.parametrize(
+    "options",
+    [
+        {"max_retries": -1, "request_timeout": 3},
+        {"max_retries": 2, "request_timeout": 4, "bidirectional_mode": True},
+        {"max_retries": 2, "request_timeout": 4, "multiclient_mode": True},
+    ],
+)
+def test_client_reliablity(options):
+    """
+    Testing validation function of WebGear API
+    """
+    client = None
+    try:
+        # define params
+        client = NetGear(
+            pattern=1, port=5554, receive_mode=True, logging=True, **options
+        )
+        # get data without any connection
+        frame_client = client.recv()
+        # check for frame
+        if frame_client is None:
+            raise RuntimeError
+    except Exception as e:
+        if isinstance(e, (RuntimeError)):
+            pytest.xfail("Reconnection ran successfully.")
+        else:
+            logger.exception(str(e))
+    finally:
+        # clean resources
+        if not (client is None):
+            client.close()
+
+
+@pytest.mark.parametrize(
+    "options",
+    [
+        {"max_retries": 2, "request_timeout": 4},
+        {"max_retries": 2, "request_timeout": 4, "bidirectional_mode": True},
+    ],
+)
+def test_server_reliablity(options):
+    """
+    Testing validation function of WebGear API
+    """
+    server = None
+    stream = None
+    try:
+        # define params
+        server = NetGear(
+            pattern=1,
+            port=[5585] if "multiclient_mode" in options.keys() else 6654,
+            logging=True,
+            **options
+        )
+        stream = VideoGear(source=return_testvideo_path()).start()
+        i = 0
+        while i < random.randint(10, 100):
+            frame_client = stream.read()
+            i += 1
+        # check if input frame is valid
+        assert not (frame_client is None)
+        # send frame without connection
+        server.send(frame_client)
+        server.send(frame_client)
+    except Exception as e:
+        if isinstance(e, (RuntimeError)):
+            pytest.xfail("Reconnection ran successfully.")
+        else:
+            logger.exception(str(e))
+    finally:
+        # clean resources
+        if not (stream is None):
+            stream.stop()
+        if not (server is None):
+            server.close()

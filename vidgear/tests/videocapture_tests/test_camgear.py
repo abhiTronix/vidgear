@@ -17,18 +17,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
-import youtube_dl
-import cv2
+# import libraries
+import logging as log
+import os
 import platform
-import os, time
-import pytest
 import tempfile
+import time
+import cv2
 import numpy as np
+import pytest
+import youtube_dl
+
 from vidgear.gears import CamGear
 from vidgear.gears.helper import logger_handler
-import logging as log
 
+# define test logger
 logger = log.getLogger("Test_camgear")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
@@ -121,7 +124,7 @@ def test_threaded_queue_mode(source, options):
             pytest.fail(str(e))
 
 
-@pytest.mark.parametrize("url", ["https://youtu.be/YqeW9_5kURI", "im_not_a_url"])
+@pytest.mark.parametrize("url", ["https://youtu.be/uCy5OuSQnyA", "im_not_a_url"])
 def test_youtube_playback(url):
     """
 	Testing Youtube Video Playback capabilities of VidGear
@@ -156,7 +159,7 @@ def test_youtube_playback(url):
         assert (
             true_video_param[0] == width
             and true_video_param[1] == height
-            and true_video_param[2] == fps
+            and round(true_video_param[2], 1) == round(fps, 1)
         )
     except Exception as e:
         if isinstance(e, (RuntimeError, ValueError)) and url == "im_not_a_url":
