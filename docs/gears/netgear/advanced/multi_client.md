@@ -1,0 +1,628 @@
+<!--
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
+
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+===============================================
+-->
+
+# Advanced Usage: Multi-Clients Mode for NetGear API 
+
+
+## Overview
+
+<p align="center">
+  <img src="/assets/images/multi_client.png" alt="NetGear's Multi-Clients Mode"/>
+  <br>
+  <sub><i>NetGear's Multi-Clients Mode generalised</i></sub>
+</p>
+
+
+In this exclusive mode, NetGear API robustly handles Multiple Clients at once, thereby providing seamless access to frames and unidirectional data transfer to multiple Clients/Consumers across the network in real-time. This mode works almost contrary to Multi-Servers Mode but data transfer only works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_.
+
+Each new client connects to a single server, and can be identified by its unique port address on the network. The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`), and it can be easily activated in NetGear API through `multiclient_mode` attribute of its [`option`](/gears/netgear/params/#options) dictionary parameter, during initialization.
+
+
+&nbsp;
+
+
+!!! warning "Multi-Clients Mode Requirements"
+
+    * A unique PORT address **MUST** be assigned to each Client on the network using its [`port`](/gears/netgear/params/#port) parameter.
+    
+    * A list/tuple of PORT addresses of all unique Cients **MUST** be assigned at Server's end using its [`port`](/gears/netgear/params/#port) parameter for a successful connection.
+
+    * `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ and `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ are the only supported pattern values for this Mode. Thereby, calling any other pattern value will result in `ValueError`.
+
+    * The [`address`](/gears/netgear/params/#address) parameter value of each Client **MUST** exactly match the Server. 
+
+&nbsp;
+
+## Key Features
+
+- [x] Enables Multiple Client(s) connection with a single Client.
+
+- [x] Ability to [send any additional data](/gears/netgear/advanced/multi_client/#using-multi-clients-mode-with-custom-data-transfer) of any datatype along with frames in real-time.
+
+- [x] Number of Clients can be extended to several numbers depending upon your system's hardware limit.
+
+- [x] Employs powerful **Publish/Subscribe & Request/Reply** messaging patterns.
+
+- [x] Each new Client on the network can be identified at Server's end by their unique port addresses.
+
+- [x] NetGear API actively tracks the state of each connected Client.
+
+- [x] If the server gets disconnected, all the clients will automatically exit to save resources.
+
+&nbsp;
+
+&nbsp;
+
+
+## Usage Examples
+
+
+!!! danger "Important Information"
+
+    * ==Frame/Data transmission will **NOT START** untill all given Client(s) are connected to the Server.==
+
+    * For sake of simplicity, in these examples we will use only two unique Clients, but, the number of these Clients can be extended to several numbers depending upon your network bandwidth.
+
+    * A single Server will be transferring frames to a all Clients at the same time in these usage examples.
+
+    *  Multi-Clients and Multi-Servers exclusive modes **CANNOT** be enabled simultaneously, Otherwise NetGear API will throw `ValueError`.
+
+
+&nbsp;
+
+
+### Bare-Minimum Usage
+
+In this example, we will capturing live video-frames from a source _(a.k.a Servers)_, with a webcam connected to it. Then, those captured frame will be transferred over the network to a two independent system _(a.k.a Client)_ at the same time, and will be displayed in Output Window at real-time. All this by using this Multi-Clients Mode in NetGear API.
+
+#### Server's End
+
+Now, Open the terminal on a Server System _(with a webcam connected to it at index `0`)_. Now execute the following python code: 
+
+!!! info "Important Notes"
+
+    * Note down the IP-address of this system(required at all Client's end) by executing the command: `hostname -I` and also replace it in the following code.
+    * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
+
+!!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
+
+!!! tip "You can terminate streaming anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+
+
+```python
+# import required libraries
+from vidgear.gears import NetGear
+from vidgear.gears import CamGear
+
+# Open suitable video stream (webcam on first index in our case) 
+stream = CamGear(source=0).start() 
+
+# activate multiclient_mode mode
+options = {'multiclient_mode': True} 
+
+# Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters 
+server = NetGear(address = '192.168.x.x', port = (5567,5577), protocol = 'tcp', pattern = 1, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+
+# Define received data dictionary
+data_dict = {}
+
+# loop over until KeyBoard Interrupted
+while True:
+
+  try: 
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if not None-type
+    if frame is None:
+      break
+
+
+    # {do something with the frame here}
+
+
+    # send frame and also receive data from Client(s)
+    recv_data = server.send(frame)
+
+    # check if valid data recieved
+    if not(recv_data is None):
+      # extract unique port address and its respective data
+      unique_address, data = recv_data
+      # update the extracted data in the data dictionary
+      data_dict[unique_address] = data
+
+    if data_dict:
+      #print data just received from Client(s)
+      for key, value in data_dict.items():
+          print("Client at port {} said: {}".format(key,value))
+  
+  except KeyboardInterrupt:
+    break
+
+# safely close video stream
+stream.stop()
+# safely close server
+server.close()
+```
+
+&nbsp;
+
+#### Client-1's End
+
+Now, Open a terminal on another Client System _(where you want to display the input frames received from Server)_, let's name it Client-1. Execute the following python code: 
+
+!!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
+
+!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+
+```python
+# import required libraries
+from vidgear.gears import NetGear
+import cv2
+
+# activate Multi-Clients mode
+options = {'multiclient_mode': True} 
+
+# Define NetGear Client at Server's IP address and assign a unique port address and other parameters 
+client = NetGear(address = '192.168.x.x', port = '5567', protocol = 'tcp',  pattern = 1, receive_mode = True, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+
+# loop over
+while True:
+    # receive data from server
+    frame = client.recv()
+
+    # check for frame if None
+    if frame is None:
+        break
+
+    # {do something with frame here}
+
+    # Show output window
+    cv2.imshow("Client 5567 Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close client
+client.close()
+```
+
+&nbsp;
+
+
+#### Client-2's End
+
+Finally, Open a terminal on another Client System _(where you want to display the input frames received from Server)_, let's name it Client-2. Execute the following python code: 
+
+!!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
+
+!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+
+```python
+# import required libraries
+from vidgear.gears import NetGear
+import cv2
+
+# activate Multi-Clients mode
+options = {'multiclient_mode': True} 
+
+# Define NetGear Client at Server's IP address and assign a unique port address and other parameters 
+client = NetGear(address = '192.168.x.x', port = '5577', protocol = 'tcp',  pattern = 1, receive_mode = True, logging = True, **options)  # !!! change following IP address '192.168.x.xxx' with yours !!!
+
+# loop over
+while True:
+    # receive data from server
+    frame = client.recv()
+
+    # check for frame if None
+    if frame is None:
+        break
+
+    # {do something with frame here}
+
+    # Show output window
+    cv2.imshow("Client 5577 Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close client
+client.close()
+```
+
+&nbsp;
+
+&nbsp;
+
+### Bare-Minimum Usage with OpenCV
+
+In this example, we will be re-implementing previous bare-minimum example with OpenCV and NetGear API.
+
+
+#### Server's End
+
+Now, Open the terminal on a Server System _(with a webcam connected to it at index `0`)_. Now execute the following python code: 
+
+!!! info "Important Notes"
+
+    * Note down the IP-address of this system(required at all Client's end) by executing the command: `hostname -I` and also replace it in the following code.
+    * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
+
+!!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
+
+!!! tip "You can terminate streaming anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+
+```python
+# import required libraries
+from vidgear.gears import NetGear
+import cv2
+
+# Open suitable video stream (webcam on first index in our case) 
+stream = cv2.VideoCapture(0) 
+
+# activate multiclient_mode mode
+options = {'multiclient_mode': True} 
+
+# Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters 
+server = NetGear(address = '192.168.x.x', port = (5567,5577), protocol = 'tcp', pattern = 2, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+
+# Define received data dictionary
+data_dict = {}
+
+# loop over until KeyBoard Interrupted
+while True:
+
+  try: 
+
+    # read frames from stream
+    (grabbed, frame) = stream.read()
+
+    # check for frame if not grabbed
+    if not grabbed:
+      break
+
+
+    # {do something with the frame here}
+
+
+    # send frame and also receive data from Client(s)
+    recv_data = server.send(frame)
+
+    # check if valid data recieved
+    if not(recv_data is None):
+      # extract unique port address and its respective data
+      unique_address, data = recv_data
+      # update the extracted data in the data dictionary
+      data_dict[unique_address] = data
+
+    if data_dict:
+      #print data just received from Client(s)
+      for key, value in data_dict.items():
+          print("Client at port {} said: {}".format(key,value))
+  
+  except KeyboardInterrupt:
+    break
+
+# safely close video stream
+stream.release()
+# safely close server
+server.close()
+```
+
+&nbsp;
+
+#### Client-1's End
+
+Now, Open a terminal on another Client System _(where you want to display the input frames received from Server)_, let's name it Client-1. Execute the following python code: 
+
+!!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
+
+!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+
+```python
+# import required libraries
+from vidgear.gears import NetGear
+import cv2
+
+# activate Multi-Clients mode
+options = {'multiclient_mode': True} 
+
+# Define NetGear Client at Server's IP address and assign a unique port address and other parameters 
+client = NetGear(address = '192.168.x.x', port = '5567', protocol = 'tcp',  pattern = 2, receive_mode = True, logging = True, **options)  # !!! change following IP address '192.168.x.xxx' with yours !!!
+
+# loop over
+while True:
+    # receive data from server
+    frame = client.recv()
+
+    # check for frame if None
+    if frame is None:
+        break
+
+    # {do something with frame here}
+
+    # Show output window
+    cv2.imshow("Client 5567 Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close client
+client.close()
+```
+
+&nbsp;
+
+#### Client-2's End
+
+Finally, Open a terminal on another Client System _(also, where you want to display the input frames received from Server)_, let's name it Client-2. Execute the following python code: 
+
+!!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
+
+!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+
+```python
+# import required libraries
+from vidgear.gears import NetGear
+import cv2
+
+# activate Multi-Clients mode
+options = {'multiclient_mode': True} 
+
+# Define NetGear Client at Server's IP address and assign a unique port address and other parameters 
+client = NetGear(address = '192.168.x.x', port = '5577', protocol = 'tcp',  pattern = 2, receive_mode = True, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+
+# loop over
+while True:
+    # receive data from server
+    frame = client.recv()
+
+    # check for frame if None
+    if frame is None:
+        break
+
+    # {do something with frame here}
+
+    # Show output window
+    cv2.imshow("Client 5577 Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close client
+client.close()
+```
+
+&nbsp;
+
+&nbsp;
+
+
+### Using Multi-Clients Mode with Custom Data Transfer
+
+
+!!! info
+
+    With Multi-Clients Mode, you can also send additional data of any data-type _(such as list, tuple, string, int, ndarray etc.)_ along with frame, from all connected Clients(s) back to  a Server unidirectionally.
+
+    !!! warning "In Multi-Clients Mode, unidirectional data transfer **ONLY** works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_, and **NOT** with pattern `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_!"
+
+In this example, We will be transferring video-frames from a single Server _(consisting of  Raspberry Pi with Camera Module)_ over the network to two independent Client for displaying them in real-time. At the same time, we will be sending data _(a Text String, for the sake of simplicity)_ from both the Client(s) back to our Server, which will be printed onto the terminal.
+
+#### Server's End
+
+Now, Open the terminal on a Server System _(with a webcam connected to it at index `0`)_. Now execute the following python code: 
+
+!!! info "Important Notes"
+
+    * Note down the IP-address of this system(required at all Client's end) by executing the command: `hostname -I` and also replace it in the following code.
+    * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
+
+!!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
+
+!!! tip "You can terminate streaming anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+
+```python
+# import required libraries
+from vidgear.gears import PiGear
+from vidgear.gears import NetGear
+
+# add various Picamera tweak parameters to dictionary
+options = {"hflip": True, "exposure_mode": "auto", "iso": 800, "exposure_compensation": 15, "awb_mode": "horizon", "sensor_mode": 0}
+
+# open pi video stream with defined parameters
+stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start() 
+
+# activate multiclient_mode mode
+options = {'multiclient_mode': True} 
+
+# Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters 
+server = NetGear(address = '192.168.x.x', port = (5577,5578), protocol = 'tcp', pattern = 1, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+
+# Define received data dictionary
+data_dict = {}
+
+# loop over until KeyBoard Interrupted
+while True:
+
+  try: 
+
+     # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+
+    # {do something with the frame here}
+
+
+    # send frame and also receive data from Client(s)
+    recv_data = server.send(frame)
+
+    # check if valid data recieved
+    if not(recv_data is None):
+      # extract unique port address and its respective data
+      unique_address, data = recv_data
+      # update the extracted data in the data dictionary
+      data_dict[unique_address] = data
+
+    if data_dict:
+      #print data just received from Client(s)
+      for key, value in data_dict.items():
+          print("Client at port {} said: {}".format(key,value))
+  
+  except KeyboardInterrupt:
+    break
+
+# safely close video stream
+stream.stop()
+
+# safely close server
+server.close()
+```
+
+&nbsp;
+
+
+#### Client-1's End
+
+Now, Open a terminal on another Client System _(where you want to display the input frames received from Server)_, let's name it Client-1. Execute the following python code: 
+
+!!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
+
+!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+
+```python
+# import required libraries
+from vidgear.gears import NetGear
+import cv2
+
+# activate Multi-Clients mode
+options = {'multiclient_mode': True} 
+
+# Define NetGear Client at Server's IP address and assign a unique port address and other parameters 
+client = NetGear(address = '192.168.x.x', port = '5577', protocol = 'tcp',  pattern = 1, receive_mode = True, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+
+# loop over
+while True:
+
+    #prepare data to be sent
+    target_data = "Hi, I am 5577 Client here."
+
+    # receive data from server and also send our data
+    frame = client.recv(return_data = target_data)
+
+    # check for frame if None
+    if frame is None:
+        break
+
+    # {do something with frame here}
+
+    # Show output window
+    cv2.imshow("Client 5577 Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close client
+client.close()
+```
+
+&nbsp;
+
+#### Client-2's End
+
+Finally, Open a terminal on another Client System _(also, where you want to display the input frames received from Server)_, let's name it Client-2. Execute the following python code: 
+
+!!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
+
+!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+
+
+```python
+# import required libraries
+from vidgear.gears import NetGear
+import cv2
+
+# activate Multi-Clients mode
+options = {'multiclient_mode': True} 
+
+# Define NetGear Client at Server's IP address and assign a unique port address and other parameters 
+client = NetGear(address = '192.168.x.x', port = '5578', protocol = 'tcp',  pattern = 1, receive_mode = True, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+
+# loop over
+while True:
+
+    #prepare data to be sent
+    target_data = "Hi, I am 5578 Client here."
+
+    # receive data from server and also send our data
+    frame = client.recv(return_data = target_data)
+
+    # check for frame if None
+    if frame is None:
+        break
+
+    # {do something with frame here}
+
+    # Show output window
+    cv2.imshow("Client 5578 Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close client
+client.close()
+```
+
+&nbsp;

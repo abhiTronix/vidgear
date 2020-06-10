@@ -4,7 +4,7 @@ about: Suggest an idea for improving VidGear
 labels: "issue: proposal"
 ---
 
-<!--- Provide a general summary of the issue in the Title above -->
+<!--- Add a brief but descriptive title for your issue above -->
 
 
 ## Detailed Description
@@ -19,7 +19,7 @@ labels: "issue: proposal"
 
 ### Your Environment
 <!--- Include as many relevant details about the environment you worked in -->
-* VidGear version:
+* VidGear version: <!--- Run command `python -c "import vidgear; print(vidgear.__version__)`" -->
 * Branch: <!--- Master/Testing/Development/PyPi -->
 * Python version:
 * pip version:

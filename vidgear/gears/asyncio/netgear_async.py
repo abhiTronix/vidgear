@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -43,94 +43,27 @@ logger.setLevel(log.DEBUG)
 
 class NetGear_Async:
     """
-    NetGear_Async is NetGear API on steroids. NetGear_Async is invented for uninterrupted network performance with excellent system-resources 
-    handling, insignificant latency and no fancy stuff.
+    NetGear_Async is an asyncio videoframe messaging framework, built on `zmq.asyncio`, and powered by high-performance asyncio event loop 
+    called **`uvloop`** to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. 
+    Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system. 
 
-    NetGear_Async is asynchronous I/O API built on AsyncIO ZmQ API and powered by state-of-the-art asyncio event loop called `uvloop`, to 
-    achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraint. 
+    NetGear_Async can generate double performance as compared to [NetGear API](#netgear) at about 1/3rd of memory consumption, and also 
+    provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support 
+    any NetGear's Exclusive Modes yet. 
 
-    NetGear_Async provides complete server-client handling and options to use variable protocols/patterns but no support for any NetGear API modes.
-    It supports  all four ZeroMQ messaging patterns: i.e zmq.PAIR, zmq.REQ/zmq.REP, zmq.PUB/zmq.SUB, and zmq.PUSH/zmq.PULL , whereas supported 
-    protocol are: 'tcp' and 'ipc'. 
+    Furthermore, NetGear_Async allows us to  define our own custom Server Source to manipulate frames easily before sending them across the 
+    network. In addition to all this, NetGear_Async also **provides a special internal wrapper around VideoGear API]**, which itself provides 
+    internal access to both CamGear and PiGear APIs thereby granting it exclusive power for streaming frames incoming from any connected 
+    device/source to the network.
 
+    NetGear_Async as of now supports four ZeroMQ messaging patterns:
 
-    NetGear_Async specific parameters:
+    - `zmq.PAIR` _(ZMQ Pair Pattern)_
+    - `zmq.REQ/zmq.REP` _(ZMQ Request/Reply Pattern)_
+    - `zmq.PUB/zmq.SUB` _(ZMQ Publish/Subscribe Pattern)_ 
+    - `zmq.PUSH/zmq.PULL` _(ZMQ Push/Pull Pattern)_
 
-    :param address(string): sets the valid network address of the server/client. Network addresses unique identifiers across the 
-                            network. Its default value of this parameter is based on mode it is working, 'localhost' for Send Mode
-                            and `*` for Receive Mode.
-
-    :param port(string): sets the valid network port of the server/client. A network port is a number that identifies one side 
-                            of a connection between two devices on network. It is used determine to which process or application 
-                            a message should be delivered. Its default value is '5555'. 
-
-    :param protocol(string): sets the valid messaging protocol between server and client. A network protocol is a set of established rules
-                             that dictates how to format, transmit and receive data so computer network devices - from servers and 
-                             routers to endpoints - can communicate regardless of the differences in their underlying infrastructures, 
-                             designs or standards. As of now, supported protocol are: 'tcp', and 'ipc'. Its default value is `tcp`.
-
-    :param pattern(int): sets the supported messaging pattern(flow of communication) between server and client. Messaging patterns are network 
-                            oriented architectural pattern that describes the flow of communication between interconnecting systems.
-                            vidgear provides access to ZeroMQ's pre-optimized sockets which enables you to take advantage of these patterns.
-                            The supported patterns are:
-                                0: zmq.PAIR -> In this, the communication is bidirectional. There is no specific state stored within the socket. 
-                                                There can only be one connected peer.The server listens on a certain port and a client connects to it.
-                                1. zmq.REQ/zmq.REP -> In this, ZMQ REQ sockets can connect to many servers. The requests will be
-                                                        interleaved or distributed to both the servers. socket zmq.REQ will block 
-                                                        on send unless it has successfully received a reply back and socket zmq.REP 
-                                                        will block on recv unless it has received a request.
-                                2. zmq.PUB,zmq.SUB -> Publish/Subscribe is another classic pattern where senders of messages, called publishers, 
-                                                        do not program the messages to be sent directly to specific receivers, called subscribers. 
-                                                        Messages are published without the knowledge of what or if any subscriber of that knowledge exists.
-                                3. zmq.PUSH, zmq.PULL - > Push and Pull sockets let you distribute messages to multiple workers, arranged in a pipeline. 
-                                                        A Push socket will distribute sent messages to its Pull clients evenly. This is equivalent to 
-                                                        producer/consumer model but the results computed by consumer are not sent upstream but downstream 
-                                                        to another pull/consumer socket.
-                            Its default value is `0`(i.e zmq.PAIR).
-
-    :param (boolean) receive_mode: set this flag to select the Netgear's Mode of operation. This basically activates `Receive Mode`(if True) and `Send Mode`(if False). 
-                                    Furthermore `recv()` function will only works when this flag is enabled(i.e. `Receive Mode`) and `send()` function will only works 
-                                    when this flag is disabled(i.e.`Send Mode`). Checkout VidGear docs for usage details.
-                                    Its default value is False(i.e. Send Mode is activated by default).
-
-
-    VideoGear Specific parameters for NetGear_Async:
-    
-        :param (boolean) enablePiCamera: set this flag to access PiGear or CamGear class respectively. 
-                                        / This means the if enablePiCamera flag is `True`, PiGear class will be accessed 
-                                        / and if `False`, the camGear Class will be accessed. Its default value is False.
-
-        :param (boolean) stabilize: set this flag to enable access to VidGear's Stabilizer Class. This basically enables(if True) or disables(if False) 
-                                        video stabilization in VidGear. Its default value is False.
-
-    CamGear Specific supported parameters for NetGear_Async:
-
-        :param source : take the source value for CamGear Class. Its default value is 0. Valid Inputs are:
-            - Index(integer): Valid index of the video device.
-            - YouTube Url(string): Youtube URL as input.
-            - Network_Stream_Address(string): Incoming Stream Valid Network address. 
-            - GStreamer (string) videostream Support
-        :param (boolean) y_tube: enables YouTube Mode in CamGear Class, i.e If enabled the class will interpret the given source string as YouTube URL. 
-                                / Its default value is False.
-        :param (int) backend: set the backend of the video stream (if specified). Its default value is 0.
-
-
-    PiGear Specific supported parameters for NetGear_Async:
-        :param (integer) camera_num: selects the camera module index that will be used by API. 
-                                /   Its default value is 0 and shouldn't be altered until unless 
-                                /   if you using Raspberry Pi 3/3+ compute module in your project along with multiple camera modules. 
-                                /   Furthermore, Its value can only be greater than zero, otherwise, it will throw ValueError for any negative value.
-        :param (tuple) resolution: sets the resolution (width,height) in Picamera class. Its default value is (640,480).
-        :param (integer) framerate: sets the framerate in Picamera class. Its default value is 25.
-
-
-    Common parameters for NetGear_Async: 
-        :param (string) colorspace: set colorspace of the video stream. Its default value is None.
-        :param (dict) **options: parameter supported by various API (whichever being accessed).
-        :param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
-        :param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
-                            / This delay is essentially required for camera to warm-up. 
-                            / Its default value is 0.
+    Whereas supported protocol are: `tcp` and `ipc`.
     """
 
     def __init__(
@@ -178,7 +111,11 @@ class NetGear_Async:
             self.__msg_pattern = 0
             self.__pattern = valid_messaging_patterns[self.__msg_pattern]
             if self.__logging:
-                logger.warning("Invalid pattern {pattern}. Defaulting to `zmq.PAIR`!".format(pattern=pattern))
+                logger.warning(
+                    "Invalid pattern {pattern}. Defaulting to `zmq.PAIR`!".format(
+                        pattern=pattern
+                    )
+                )
 
         # check  whether user-defined messaging protocol is valid
         if isinstance(protocol, str) and protocol in ["tcp", "ipc"]:
@@ -214,12 +151,12 @@ class NetGear_Async:
             # assign local ip address if None
             if address is None:
                 self.__address = "*"  # define address
-            else: 
+            else:
                 self.__address = address
             # assign default port address if None
             if port is None:
                 self.__port = "5555"
-            else: 
+            else:
                 self.__port = port
         else:
             # Handle video source if not None
@@ -267,7 +204,7 @@ class NetGear_Async:
 
     def launch(self):
         """
-        Launches asynchronous loop executors for various tasks
+        Launches an asynchronous loop executors for respective task.
         """
         # check if receive mode enabled
         if self.__receive_mode:
@@ -282,13 +219,13 @@ class NetGear_Async:
             if self.__logging:
                 logger.debug("Creating NetGear asynchronous server handler!")
             # create task for Server Handler
-            self.task = asyncio.ensure_future(self.__server_handler(), loop = self.loop)
+            self.task = asyncio.ensure_future(self.__server_handler(), loop=self.loop)
             # return instance
             return self
 
     async def __server_handler(self):
         """
-        Handles various Server-end  processes
+        Handles various Server-end processes/tasks.
         """
         # validate assigned frame generator in NetGear configuration
         if isinstance(self.config, dict) and "generator" in self.config:
@@ -368,7 +305,7 @@ class NetGear_Async:
 
     async def recv_generator(self):
         """
-        Asynchronous Frame Generator for NetGear's receiver-end  
+        A default Asynchronous Frame Generator for NetGear's Receiver-end.  
         """
         # check whether `receive mode` is activated
         if not (self.__receive_mode):
@@ -442,7 +379,7 @@ class NetGear_Async:
 
     async def __frame_generator(self):
         """
-        Default frame generator for NetGear's Server Handler 
+        Returns a default frame-generator for NetGear's Server Handler. 
         """
         # start stream
         self.__stream.start()
@@ -460,9 +397,10 @@ class NetGear_Async:
 
     def close(self, skip_loop=False):
         """
-        Terminates the NetGear Asynchronous processes safely
-
-        :param: skip_loop(Boolean) => used if closing loop throws error
+        Terminates all NetGear Asynchronous processes safely.
+        
+        Parameters:
+            skip_loop (Boolean): (optional)used only if closing executor loop throws an error.
         """
         # log termination
         if self.__logging:

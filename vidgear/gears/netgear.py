@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,74 +39,57 @@ logger.setLevel(log.DEBUG)
 class NetGear:
 
     """
-    NetGear is exclusively designed to transfer video frames synchronously between interconnecting systems over the network in real-time. 
-    This is achieved by implementing a high-level wrapper around PyZmQ python library that contains python bindings for ZeroMQ - a 
-    high-performance asynchronous distributed messaging library that aim to be used in distributed or concurrent applications. 
-    It provides a message queue, but unlike message-oriented middleware, a ZeroMQ system can run without a dedicated message broker. 
-    Furthermore, NetGear currently supports three ZeroMQ messaging patterns: i.e zmq.PAIR, zmq.REQ and zmq.REP,and zmq.PUB,zmq.SUB whereas
-    supported protocol are: 'tcp', 'upd', 'pgm', 'inproc', 'ipc'.
+    NetGear is exclusively designed to transfer video frames synchronously and asynchronously between interconnecting systems over the network in real-time.
 
-    Multi-Server Mode:  This mode enables NetGear API to robustly handle multiple servers at once through exclusive Publish/Subscribe (zmq.PUB/zmq.SUB) 
-                        messaging pattern for seamless Live Streaming across various device at the same time. Each device new server on network is 
-                        identified using its unique port address. Also, when all the connected servers on the network get disconnected, the client 
-                        itself automatically exits too. This mode can be activated through`multiserver_mode` option boolean attribute during 
-                        NetGear API initialization easily.
+    NetGear implements a high-level wrapper around `PyZmQ` python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance 
+    asynchronous distributed messaging library that provides a message queue, but unlike message-oriented middle-ware, its system can run without a dedicated 
+    message broker. 
 
-    Secure Mode: This mode provides secure ZeroMQ's Security Layers for NetGear API that enables strong encryption on data, and (as far as we know) unbreakable 
-                 authentication between the Server and the Client with the help of custom auth certificates/keys. It's default value is `Grassland`:0 => which means no
-                 security at all. 
+    NetGear also supports real-time *Frame Compression capabilities* for optimizing performance while sending the frames directly over the network, by encoding 
+    the frame before sending it and decoding it on the client's end automatically in real-time.
+    
+    !!! info
+        NetGear API now internally implements robust *Lazy Pirate pattern* (auto-reconnection) for its synchronous messaging patterns _(i.e. `zmq.PAIR` & `zmq.REQ/zmq.REP`)_ 
+        at both Server and Client ends, where its API instead of doing a blocking receive, will:
 
-                 This mode supports the two most powerful ZMQ security mechanisms:
+        * Poll the socket and receive from it only when it's sure a reply has arrived.
+        * Attempt to reconnect, if no reply has arrived within a timeout period.
+        * Abandon the connection if there is still no reply after several requests.
 
-                 * `StoneHouse`: 1 => which switches to the "CURVE" security mechanism, giving us strong encryption on data, and unbreakable authentication. 
-                                      Stonehouse is the minimum you would use over public networks and assures clients that they are speaking to an authentic server while allowing any client 
-                                      to connect. It is less secure but at the same time faster than IronHouse security mechanism.
+    NetGear as of now seamlessly supports three ZeroMQ messaging patterns:
 
-                 * `IronHouse`: 2 => which extends Stonehouse with client public key authentication. This is the strongest security model ZMQ have today, 
-                                        protecting against every attack we know about, except end-point attacks (where an attacker plants spyware on a machine 
-                                        to capture data before it's encrypted, or after it's decrypted). IronHouse enhanced security comes at a price of additional latency.
+    - `zmq.PAIR` _(ZMQ Pair Pattern)_
+    - `zmq.REQ/zmq.REP` _(ZMQ Request/Reply Pattern)_
+    - `zmq.PUB/zmq.SUB` _(ZMQ Publish/Subscribe Pattern)_ 
 
+    _whereas the supported protocol are: `tcp` and `ipc`_.
 
-    :param address(string): sets the valid network address of the server/client. Network addresses unique identifiers across the 
-                            network. Its default value of this parameter is based on mode it is working, 'localhost' for Send Mode
-                            and `*` for Receive Mode.
+    ??? tip "Modes of Operation"
 
-    :param port(string/dict/list): sets the valid network port of the server/client. A network port is a number that identifies one side 
-                            of a connection between two devices on network. It is used determine to which process or application 
-                            a message should be delivered. In Multi-Server Mode a unique port number must required at each server, and a
-                            list/tuple of port addresses of each connected server is required at clients end.
+        * **Primary Modes**
 
-    :param protocol(string): sets the valid messaging protocol between server and client. A network protocol is a set of established rules
-                             that dictates how to format, transmit and receive data so computer network devices - from servers and 
-                             routers to endpoints - can communicate regardless of the differences in their underlying infrastructures, 
-                             designs or standards. Supported protocol are: 'tcp', 'upd', 'pgm', 'inproc', 'ipc'. Its default value is `tcp`.
+            NetGear API primarily has two modes of operations:
+              
+            * **Send Mode:** _which employs `send()` function to send video frames over the network in real-time._
+              
+            * **Receive Mode:** _which employs `recv()` function to receive frames, sent over the network with *Send Mode* in real-time. The mode sends back confirmation when the 
+            frame is received successfully in few patterns._
 
-    :param pattern(int): sets the supported messaging pattern(flow of communication) between server and client. Messaging patterns are network 
-                            oriented architectural pattern that describes the flow of communication between interconnecting systems.
-                            vidgear provides access to ZeroMQ's pre-optimized sockets which enables you to take advantage of these patterns.
-                            The supported patterns are:
-                                0: zmq.PAIR -> In this, the communication is bidirectional. There is no specific state stored within the socket. 
-                                                There can only be one connected peer.The server listens on a certain port and a client connects to it.
-                                1. zmq.REQ/zmq.REP -> In this, ZMQ REQ sockets can connect to many servers. The requests will be
-                                                        interleaved or distributed to both the servers. socket zmq.REQ will block 
-                                                        on send unless it has successfully received a reply back and socket zmq.REP 
-                                                        will block on recv unless it has received a request.
-                                2. zmq.PUB,zmq.SUB -> Publish/Subscribe is another classic pattern where senders of messages, called publishers, 
-                                                        do not program the messages to be sent directly to specific receivers, called subscribers. 
-                                                        Messages are published without the knowledge of what or if any subscriber of that knowledge exists.
-                            Its default value is `0`(i.e zmq.PAIR).
+        * **Exclusive Modes**
 
-    :param (boolean) receive_mode: set this flag to select the Netgear's Mode of operation. This basically activates `Receive Mode`(if True) and `Send Mode`(if False). 
-                                    Furthermore `recv()` function will only works when this flag is enabled(i.e. `Receive Mode`) and `send()` function will only works 
-                                    when this flag is disabled(i.e.`Send Mode`). Checkout VidGear docs for usage details.
-                                    Its default value is False(i.e. Send Mode is activated by default).
+            In addition to these primary modes, NetGear API offers applications-specific Exclusive Modes:
 
-    :param **options(dict): can be used to pass flexible parameters to NetGear API. 
-                            This attribute provides the flexibility to manipulate ZeroMQ internal parameters 
-                            directly. Checkout vidgear docs for usage details.
+            * **Multi-Servers Mode:** _In this exclusive mode, NetGear API robustly **handles multiple servers at once**, thereby providing seamless access to frames and unidirectional 
+            data transfer from multiple Servers/Publishers across the network in real-time._
 
-    :param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
+            * **Multi-Clients Mode:** _In this exclusive mode, NetGear API robustly **handles multiple clients at once**, thereby providing seamless access to frames and unidirectional 
+            data transfer to multiple Client/Consumers across the network in real-time._
 
+            * **Bidirectional Mode:** _This exclusive mode **provides seamless support for bidirectional data transmission between between Server and Client along with video frames**._
+
+            * **Secure Mode:** _In this exclusive mode, NetGear API **provides easy access to powerful, smart & secure ZeroMQ's Security Layers** that enables strong encryption on 
+            data, and unbreakable authentication between the Server and Client with the help of custom certificates/keys that brings cheap, standardized privacy and authentication 
+            for distributed systems over the network._
     """
 
     def __init__(
@@ -579,7 +562,6 @@ class NetGear:
                         self.__msg_socket.bind(
                             protocol + "://" + str(address) + ":" + str(pt)
                         )
-
                 else:
                     # bind socket to given protocol, address and port normally
                     self.__msg_socket.bind(
@@ -850,9 +832,9 @@ class NetGear:
     def __recv_handler(self):
 
         """
-        Receives frames from Server and it to the queue
+        A threaded receiver handler, that keep iterating data from ZMQ socket to a internally monitored deque, 
+        until the thread is terminated, or socket disconnects.
         """
-
         # initialize frame variable
         frame = None
 
@@ -1070,9 +1052,13 @@ class NetGear:
 
     def recv(self, return_data=None):
         """
-        return the recovered frame
+        A Receiver end method, that extracts received frames synchronously from monitored deque, while maintaining a 
+        fixed-length frame buffer in the memory, and blocks the thread if the deque is full.
 
-        :param return_data: handles return data for bi-directional mode 
+        Parameters:
+            return_data (any): inputs return data _(of any datatype)_, for sending back to Server. 
+
+        **Returns:** A n-dimensional numpy array. 
         """
         # check whether `receive mode` is activated
         if not (self.__receive_mode):
@@ -1103,10 +1089,14 @@ class NetGear:
 
     def send(self, frame, message=None):
         """
-        send the frames over the messaging network
+        A Server end method, that sends the data and frames over the network to Client(s).
 
-        :param frame(ndarray): frame array to send
-        :param message(string/int): additional message for the client(s) 
+        Parameters:
+            frame (numpy.ndarray): inputs numpy array(frame).
+            message (any): input for sending additional data _(of any datatype except `numpy.ndarray`)_ to Client(s).
+
+        **Returns:** A n-dimensional numpy array in selected modes, otherwise None-type.
+        
         """
         # check whether `receive_mode` is disabled
         if self.__receive_mode:
@@ -1307,7 +1297,7 @@ class NetGear:
 
     def close(self):
         """
-        Terminates the NetGear processes safely
+        Safely terminates the threads, and NetGear resources.
         """
         if self.__logging:
             # log it
