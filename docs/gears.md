@@ -23,7 +23,7 @@ limitations under the License.
 ## Gears, What are these?
 
 <p align="center">
-  <img src="/assets/images/gears_fbd" alt="@Vidgear Functional Block Diagram" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
+  <img src="assets/images/gears_fbd" alt="@Vidgear Functional Block Diagram" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
 </p>
 
 

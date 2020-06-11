@@ -24,7 +24,7 @@ limitations under the License.
 ## Overview
 
 <p align="center">
-  <img src="/assets/images/videogear_workflow.png" alt="VideoGear Flow Diagram"  width="80%" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
+  <img src="assets/images/videogear_workflow.png" alt="VideoGear Flow Diagram"  width="80%" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
   <br>
   <sub><i>VideoGear API's generalized workflow</i></sub>
 </p>

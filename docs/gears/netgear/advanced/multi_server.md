@@ -23,7 +23,7 @@ limitations under the License.
 ## Overview
 
 <p align="center">
-  <img src="/assets/images/multi_server.png" alt="NetGear's Multi-Servers Mode"/>
+  <img src="assets/images/multi_server.png" alt="NetGear's Multi-Servers Mode"/>
   <br>
   <sub><i>NetGear's Multi-Servers Mode generalised</i></sub>
 </p>

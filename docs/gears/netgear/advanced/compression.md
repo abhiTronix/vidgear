@@ -22,7 +22,7 @@ limitations under the License.
 
 
 <p align="center">
-  <img src="/assets/images/compression.png" alt="Frame Compression" />
+  <img src="assets/images/compression.png" alt="Frame Compression" />
 </p>
 
 
