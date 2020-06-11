@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,23 +17,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
 # import the necessary packages
+import asyncio
+import logging as log
+import os
+import sys
+import cv2
+
+from collections import deque
 from starlette.applications import Starlette
 from starlette.responses import StreamingResponse
-from starlette.templating import Jinja2Templates
+from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
-from starlette.routing import Mount
-from starlette.routing import Route
-
+from starlette.templating import Jinja2Templates
 from ..videogear import VideoGear
-from .helper import reducer
-from .helper import logger_handler
-from .helper import generate_webdata
-from collections import deque
-
-import logging as log
-import os, cv2, asyncio, sys
+from .helper import generate_webdata, logger_handler, reducer
 
 
 # define logger
@@ -45,93 +43,16 @@ logger.setLevel(log.DEBUG)
 class WebGear:
 
     """
-    WebGear is a powerful ASGI Video-streamer API, that is built upon Starlette - a lightweight ASGI framework/toolkit, which is ideal 
-    for building high-performance asyncio services.
+    WebGear is a powerful ASGI Video-streamer API, that is built upon `Starlette` - a lightweight ASGI python framework/toolkit, 
+    which is ideal for building high-performance asyncio services.
 
-    WebGear API provides a flexible but robust asyncio wrapper around Starlette ASGI application and can easily access its various components 
-    independently. Thereby providing it the ability to interact with the Starlette's ecosystem of shared middleware and mountable applications 
-    & seamless access to its various Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.
+    WebGear API provides a highly extensible and flexible asyncio wrapper around Starlette ASGI application, and provides easy access to its complete framework. 
+    Thereby, WebGear API can flexibly interact with the Starlette's ecosystem of shared middleware and mountable applications, and its various 
+    Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc. 
 
-    WebGear acts as robust Live Video Streaming Server that can stream live video frames to any web browser on a network in real-time. 
-    It addition to this, WebGear provides a special internal wrapper around VideoGear API, which itself provides internal access to both CamGear and PiGear 
-    APIs thereby granting it exclusive power for streaming frames incoming from any device/source. Also on the plus side, since WebGear has access 
-    to all functions of VideoGear API, therefore it can stabilize video frames even while streaming live.
-
-
-    WebGear specific parameters:
-
-    - ** options:(dict): can be used in addition, to pass user-defined parameter to WebGear API in the form of python dictionary. Supported WebGear 
-                        dictionary attributes are:
-
-        - `custom_data_location` (str): Can be used to change/alter `default location` path to somewhere else. 
-
-        - `overwrite_default_files` (bool): Can be used to force trigger the `Auto-generation process` to overwrite existing data-files. Remember only downloaded 
-                                            files will be overwritten in this process, and any other file/folder will NOT be affected/overwritten.
-
-        - `frame_size_reduction`: (int/float) This attribute controls the size reduction (in percentage) of the frame to be streamed on Server. 
-                                                Its value can be between 0-90, and the recommended value is 40. 
-
-        - JPEG Encoding Parameters: In WebGear, the input video frames are first encoded into Motion JPEG (M-JPEG or MJPEG) video compression format in which 
-                                each video frame or interlaced field of a digital video sequence is compressed separately as a JPEG image, before sending onto 
-                                a server. Therefore, WebGear API provides various attributes to have full control over JPEG encoding performance and quality, 
-                                which are as follows:
-
-            - `frame_jpeg_quality`(int) It controls the JPEG encoder quality and value varies from 0 to 100 (the higher is the better quality but 
-                                            performance will be lower). Its default value is 95. 
-
-            - `frame_jpeg_optimize`(bool) It enables various JPEG compression optimizations such as Chroma subsampling, Quantization table, etc. 
-                                        Its default value is `False`. 
-
-            - `frame_jpeg_progressive`(bool) It enables Progressive JPEG encoding instead of the Baseline. Progressive Mode. 
-                                            Its default value is `False` means baseline mode. 
-
-
-    VideoGear Specific parameters for WebGear:
-    
-        :param (boolean) enablePiCamera: set this flag to access PiGear or CamGear class respectively. 
-                                        / This means the if enablePiCamera flag is `True`, PiGear class will be accessed 
-                                        / and if `False`, the camGear Class will be accessed. Its default value is False.
-
-        :param (boolean) stabilize: set this flag to enable access to VidGear's Stabilizer Class. This basically enables(if True) or disables(if False) 
-                                        video stabilization in VidGear. Its default value is False.
-
-        :param (dict) **options: can be used in addition, to pass parameter supported by VidGear's stabilizer class.
-                                / Supported dict keys are: 
-                                    - `SMOOTHING_RADIUS` (int) : to alter averaging window size. It handles the quality of stabilization at expense of latency and sudden panning. 
-                                                            / Larger its value, less will be panning, more will be latency and vice-versa. It's default value is 30.
-                                    - `BORDER_SIZE` (int) : to alter output border cropping. It's will crops the border to reduce the black borders from stabilization being too noticeable. 
-                                                            / Larger its value, more will be cropping. It's default value is 0 (i.e. no cropping).          
-                                    - `BORDER_TYPE` (string) : to change the border mode. Valid border types are 'black', 'reflect', 'reflect_101', 'replicate' and 'wrap'. It's default value is 'black'
-    
-
-    CamGear Specific supported parameters for WebGear:
-
-        :param source : take the source value for CamGear Class. Its default value is 0. Valid Inputs are:
-            - Index(integer): Valid index of the video device.
-            - YouTube Url(string): Youtube URL as input.
-            - Network_Stream_Address(string): Incoming Stream Valid Network address. 
-            - GStreamer (string) videostream Support
-        :param (boolean) y_tube: enables YouTube Mode in CamGear Class, i.e If enabled the class will interpret the given source string as YouTube URL. 
-                                / Its default value is False.
-        :param (int) backend: set the backend of the video stream (if specified). Its default value is 0.
-
-
-    PiGear Specific supported parameters for WebGear:
-        :param (integer) camera_num: selects the camera module index that will be used by API. 
-                                /   Its default value is 0 and shouldn't be altered until unless 
-                                /   if you using Raspberry Pi 3/3+ compute module in your project along with multiple camera modules. 
-                                /   Furthermore, Its value can only be greater than zero, otherwise, it will throw ValueError for any negative value.
-        :param (tuple) resolution: sets the resolution (width,height) in Picamera class. Its default value is (640,480).
-        :param (integer) framerate: sets the framerate in Picamera class. Its default value is 25.
-
-
-    Common parameters for WebGear: 
-        :param (string) colorspace: set colorspace of the video stream. Its default value is None.
-        :param (dict) **options: parameter supported by various API (whichever being accessed).
-        :param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
-        :param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
-                            / This delay is essentially required for camera to warm-up. 
-                            / Its default value is 0.
+    In layman's terms, WebGear can acts as powerful **Video Streaming Server** that transfers live video-frames to any web browser on a network. It addition to this, 
+    WebGear API also provides a special internal wrapper around VideoGear API, which itself provides internal access to both CamGear and PiGear APIs thereby granting 
+    it exclusive power for streaming frames incoming from any device/source, such as streaming Stabilization enabled Video in real-time.
     """
 
     def __init__(
@@ -289,7 +210,7 @@ class WebGear:
 
     def __call__(self):
         """
-        Implements custom callable method
+        Implements a custom Callable method for WebGear application.
         """
         # validate routing tables
         assert not (self.routes is None), "Routing tables are NoneType!"
@@ -313,7 +234,7 @@ class WebGear:
 
     async def __producer(self):
         """
-        Implements async frame producer.
+        A asynchronous frame producer/generator for WebGear application.
         """
         # loop over frames
         while self.__isrunning:
@@ -377,7 +298,7 @@ class WebGear:
 
     def shutdown(self):
         """
-        Implements a callable to run on application shutdown
+        Implements a Callable to be run on application shutdown
         """
         if not (self.stream is None):
             if self.__logging:

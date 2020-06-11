@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,15 +17,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
 # import the necessary packages
+import cv2
+import logging as log
+import re
+import time
+
 from threading import Thread
 from pkg_resources import parse_version
-from .helper import capPropId
-from .helper import check_CV_version
-from .helper import logger_handler
-import cv2, re, time
-import logging as log
+from .helper import capPropId, check_CV_version, logger_handler
 
 
 # define logger
@@ -50,43 +50,15 @@ def youtube_url_validator(url):
 
 
 class CamGear:
-
     """
-    CamGear API supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia 
-    video file format (upto 4k tested), network stream URL such as http(s), rtp, rstp, mms, etc. In addition to this, it also supports 
-    live Gstreamer's RAW pipelines and YouTube video/livestreams URLs. CamGear provides a flexible, high-level multi-threaded wrapper 
-    around OpenCV's VideoCapture API with access almost all of its available parameters and also employs pafy's APIs for YouTube streaming. 
-    Furthermore, CamGear relies exclusively on Threaded Queue mode for ultra-fast, error-free and synchronized frame handling.  
+    CamGear API supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format 
+    (_upto 4k tested_), any network stream URL such as *http(s), rtp, rstp, rtmp, mms, etc.* In addition to this, it also supports live Gstreamer's RAW pipelines
+    and YouTube video/livestreams URLs.  
 
-    Threaded Queue Mode => Sequentially adds and releases frames to/from deque and handles overflow of this queue. It utilizes 
-    Deques that support thread-safe, memory efficient appends and pops from either side of the deque with approximately the 
-    same O(1) performance in either direction.  
+    CamGear API provides a flexible, high-level multi-threaded wrapper around [**OpenCV's VideoCapture Class**](https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html) with direct access to almost all of its available parameters, 
+    and also internally employs `pafy` with `youtube-dl` backend for enabling seamless live *YouTube streaming*. 
 
-    :param source : take the source value. Its default value is 0. Valid Inputs are:
-
-        - Index(integer): Valid index of the video device.
-
-        - YouTube Url(string): Valid Youtube URL as input.
-
-        - Network_Stream_Address(string): Incoming Stream Valid Network address. 
-
-        - GStreamer (string) pipeline
-
-    :param (boolean) y_tube: enables YouTube Mode, i.e If enabled class will interpret the given source string as YouTube URL. Its default value is False.
-
-    :param (int) backend: set the backend of the video stream (if specified). Its default value is 0.
-
-    :param (string) colorspace: set the colorspace of the video stream. Its default value is None.
-
-    :param (dict) **options: provides the ability to tweak properties supported by OpenCV's VideoCapture 
-                            API properties for any given input video stream directly. All the supported 
-                            parameters can be passed to CamGear API using this dict as follows:
-
-    :param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
-
-    :param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
-                        / This delay is essentially required for camera to warm-up. 
-                        /Its default value is 0.
+    CamGear relies exclusively on **Threaded Queue mode** for threaded, error-free and synchronized frame handling.
     """
 
     def __init__(
@@ -100,7 +72,7 @@ class CamGear:
         **options
     ):
 
-        # intialize threaded queue mode
+        # initialize threaded queue mode
         self.__threaded_queue_mode = True
 
         # enable logging if specified
@@ -118,16 +90,21 @@ class CamGear:
                 url = youtube_url_validator(source)
                 if url:
                     source_object = pafy.new(url)
-                    _source = source_object.getbestvideo("webm", ftypestrict=True)
-                    if _source is None:
-                        _source = source_object.getbest("webm", ftypestrict=False)
+                    vo_source = source_object.getbestvideo("webm", ftypestrict=True)
+                    va_source = source_object.getbest("webm", ftypestrict=False)
+                    # select the best quality
+                    if vo_source is None or (
+                        va_source.dimensions >= vo_source.dimensions
+                    ):
+                        source = va_source.url
+                    else:
+                        source = vo_source.url
                     if self.__logging:
                         logger.debug(
-                            "YouTube source ID: `{}`, Title: `{}` & Video_Extension: `{}`".format(
-                                url, source_object.title, _source.extension
+                            "YouTube source ID: `{}`, Title: `{}`".format(
+                                url, source_object.title
                             )
                         )
-                    source = _source.url
                 else:
                     raise RuntimeError(
                         "`{}` Youtube URL cannot be processed!".format(source)
@@ -148,12 +125,12 @@ class CamGear:
                 if isinstance(options["THREADED_QUEUE_MODE"], bool):
                     self.__threaded_queue_mode = options[
                         "THREADED_QUEUE_MODE"
-                    ]  # assigsn special parameter to global variable
+                    ]  # assigns special parameter to global variable
                 del options["THREADED_QUEUE_MODE"]  # clean
                 # reformat option dict
 
         self.__queue = None
-        # intialize deque for video files only
+        # initialize deque for video files only
         if self.__threaded_queue_mode and isinstance(source, str):
             # import deque
             from collections import deque
@@ -210,7 +187,7 @@ class CamGear:
                     )
                 )
 
-        # initialize and assign framerate variable
+        # initialize and assign frame-rate variable
         self.framerate = 0.0
         _fps = self.stream.get(cv2.CAP_PROP_FPS)
         if _fps > 1.0:
@@ -223,14 +200,14 @@ class CamGear:
         # frame variable initialization
         (grabbed, self.frame) = self.stream.read()
 
-        # check if vaild stream
+        # check if valid stream
         if grabbed:
             # render colorspace if defined
             if not (self.color_space is None):
                 self.frame = cv2.cvtColor(self.frame, self.color_space)
 
             if self.__threaded_queue_mode:
-                # intitialize and append to queue
+                # initialize and append to queue
                 self.__queue.append(self.frame)
         else:
             raise RuntimeError(
@@ -245,8 +222,11 @@ class CamGear:
 
     def start(self):
         """
-        start the thread to read frames from the video stream
+        Launches the internal *Threaded Frames Extractor* daemon
+
+        **Returns:** A reference to the CamGear class object.
         """
+
         self.__thread = Thread(target=self.__update, name="CamGear", args=())
         self.__thread.daemon = True
         self.__thread.start()
@@ -254,7 +234,8 @@ class CamGear:
 
     def __update(self):
         """
-        Update frames from stream
+        A **Threaded Frames Extractor**, that keep iterating frames from OpenCV's VideoCapture API to a internal monitored deque, 
+        until the thread is terminated, or frames runs out.
         """
 
         # keep iterating infinitely until the thread is terminated or frames runs out
@@ -322,8 +303,12 @@ class CamGear:
 
     def read(self):
         """
-        return the frame
+        Extracts frames synchronously from monitored deque, while maintaining a fixed-length frame buffer in the memory, 
+        and blocks the thread if the deque is full.
+
+        **Returns:** A n-dimensional numpy array. 
         """
+
         while self.__threaded_queue_mode:
             if len(self.__queue) > 0:
                 return self.__queue.popleft()
@@ -331,11 +316,11 @@ class CamGear:
 
     def stop(self):
         """
-        Terminates the Read process
+        Safely terminates the thread, and release the VideoStream resources.
         """
         if self.__logging:
             logger.debug("Terminating processes.")
-        # terminate Threaded queue mode seperately
+        # terminate Threaded queue mode separately
         if self.__threaded_queue_mode and not (self.__queue is None):
             if len(self.__queue) > 0:
                 self.__queue.clear()

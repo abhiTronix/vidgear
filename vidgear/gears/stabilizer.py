@@ -5,7 +5,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,14 +20,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
 # import the necessary packages
-from collections import deque
-from .helper import check_CV_version
-from .helper import logger_handler
-import numpy as np
-import cv2
 import logging as log
+import cv2
+import numpy as np
+
+from collections import deque
+from .helper import check_CV_version, logger_handler
 
 
 # define logger
@@ -37,23 +36,14 @@ logger.setLevel(log.DEBUG)
 
 
 class Stabilizer:
-
     """
-	This is an auxiliary class that enables Real-time Video Stabilization for vidgear with minimalistic latency and at the expense of little to no 
-	additional computational power requirement. The basic idea behind it is to tracks and save the salient feature array for the given number of frames 
-	and then uses these anchor point to cancel out all perturbations relative to it for the incoming frames in the queue. This class relies heavily on 
-	Threaded Queue mode for error-free, ultrafast frame handling and it is enabled by default.
+    This is an auxiliary class that enables Video Stabilization for vidgear with minimalistic latency, and at the expense 
+    of little to no additional computational requirements. 
 
-	:param smoothing_radius` (int) : to alter averaging window size. It handles the quality of stabilization at expense of latency and sudden panning. 
-									/ Larger its value, less will be panning, more will be latency and vice-versa. It's default value is 25.
-	:param border_size (int) :  to create extended output border size. It's default value is `0`(no borders).			
-	:param border_type (string) : to change the border mode. Valid border types are 'black', 'reflect', 'reflect_101', 'replicate' and 'wrap'. It's default value is 'black'
-	:param (boolean) crop_n_zoom : to enable cropping and zooms frames to reduce the black borders from stabilization being too noticeable. 
-									/It works in conjunction with the `border_size` parameter, i.e. when this parameter is enabled `border_size` 
-									/ will be used for cropping border instead of making them. Its default value is False.
-	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
-
-	"""
+    The basic idea behind it is to tracks and save the salient feature array for the given number of frames and then uses 
+    these anchor point to cancel out all perturbations relative to it for the incoming frames in the queue. This class relies 
+    heavily on **Threaded Queue mode** for error-free & ultra-fast frame handling.
+    """
 
     def __init__(
         self,
@@ -138,10 +128,11 @@ class Stabilizer:
 
     def stabilize(self, frame):
         """
-		Return stabilized video frame
-
-		:param frame(numpy.ndarray): input video frame
-		"""
+        This method takes an unstabilized video frame, and returns a stabilized one.
+        
+        Parameters:
+            frame (numpy.ndarray): inputs unstabilized video frames.
+        """
         # check if frame is None
         if frame is None:
             # return if it does
@@ -215,8 +206,8 @@ class Stabilizer:
 
     def __generate_transformations(self):
         """
-		Generate pevious_2_current transformations [dx,dy,da]
-		"""
+        An internal method that generate previous-to-current transformations [dx,dy,da].
+        """
         frame_gray = cv2.cvtColor(
             self.__frame_queue[-1], cv2.COLOR_BGR2GRAY
         )  # retrieve current frame and convert to gray
@@ -227,11 +218,11 @@ class Stabilizer:
             self.__previous_gray, frame_gray, self.__previous_keypoints, None
         )
 
-        # select only valid keypoints
+        # select only valid key-points
         valid_curr_kps = curr_kps[status == 1]  # current
         valid_previous_keypoints = self.__previous_keypoints[status == 1]  # previous
 
-        # calculate optimal affine transformation between pevious_2_current keypoints
+        # calculate optimal affine transformation between pevious_2_current key-points
         if check_CV_version() == 3:
             # backward compatibility with OpenCV3
             transformation = cv2.estimateRigidTransform(
@@ -263,7 +254,7 @@ class Stabilizer:
         # create smoothed path from a copy of path
         self.__smoothed_path = np.copy(self.__path)
 
-        # re-calculate and save GFTT keypoints for current gray frame
+        # re-calculate and save GFTT key-points for current gray frame
         self.__previous_keypoints = cv2.goodFeaturesToTrack(
             frame_gray,
             maxCorners=200,
@@ -279,11 +270,13 @@ class Stabilizer:
 
     def __box_filter_convolve(self, path, window_size):
         """
-		applies normalized linear box filter to path w.r.t to averaging window
-		
-		:param: path(nd.array)(cumulative sum of transformations)
-		:param: averaging window size(int)
-		"""
+        An internal method that applies *normalized linear box filter* to path w.r.t averaging window
+        
+        Parameters:
+        
+        * path (numpy.ndarray): a cumulative sum of transformations
+        * window_size (int): averaging window size
+        """
         # pad path to size of averaging window
         path_padded = np.pad(path, (window_size, window_size), "median")
         # apply linear box filter to path
@@ -297,10 +290,9 @@ class Stabilizer:
 
     def __apply_transformations(self):
         """
-		Applies affine transformation to the given frame 
-		build from previously calculated transformations
-		"""
-
+        An internal method that applies affine transformation to the given frame 
+        from previously calculated transformations
+        """
         # extract frame and its index from deque
         queue_frame = self.__frame_queue.popleft()
         queue_frame_index = self.__frame_queue_indexes.popleft()
@@ -371,8 +363,8 @@ class Stabilizer:
 
     def clean(self):
         """
-		clean resources(deque)
-		"""
+        Cleans Stabilizer resources
+        """
         # check if deque present
         if self.__frame_queue:
             # clear frame deque

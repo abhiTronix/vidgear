@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,18 +17,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
 # import the necessary packages
-from threading import Thread
-from pkg_resources import parse_version
-from .helper import capPropId
-from .helper import logger_handler
+import logging as log
+import time
+import cv2
+import numpy as np
+
 from mss import mss
 from mss.exception import ScreenShotError
-
-import numpy as np
-import cv2, time
-import logging as log
+from pkg_resources import parse_version
+from threading import Thread
+from .helper import capPropId, logger_handler
 
 
 # define logger
@@ -40,29 +39,16 @@ logger.setLevel(log.DEBUG)
 class ScreenGear:
 
     """
-	With ScreenGear, we can easily define an area on the computer screen or an open window to record the live screen frames in 
-	real-time at the expense of insignificant latency. To achieve this, ScreenGear provides a high-level multi-threaded wrapper 
-	around mss python library API and also supports the flexible direct parameter manipulation. Furthermore, ScreenGear relies on 
-	Threaded Queue mode for ultra-fast live frame handling and which is enabled by default.
 
-	Threaded Queue Mode => Sequentially adds and releases frames to/from deque and handles overflow of this queue. It utilizes 
-	Deques that support thread-safe, memory efficient appends and pops from either side of the deque with approximately the 
-	same O(1) performance in either direction.  
+    ScreenGear is designed exclusively for ultra-fast Screencasting, that means it can grab frames from your monitor in real-time, either by define
+     an area on the computer screen, or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing 
+     from multiple monitors.
 
+    ScreenGear API implements a multi-threaded wrapper around [`python-mss`](https://python-mss.readthedocs.io/index.html) python library, and also flexibly supports its internal parameter. 
 
-	:param monitor(int): sets the Positions/Location of monitor where to grab frame from. More information can be found in the docs. 
-						/ It default value is 1 (means current monitor will be used).
+    Furthermore, ScreenGear API relies on **Threaded Queue mode** for threaded, error-free and synchronized frame handling.
 
-	:param **options(dict): can be used to pass parameters to ScreenGear Class. 
-							/This attribute provides the flexibility to manipulate mss input parameters 
-							/directly like the dimensions of the region of the given monitor from where the 
-							frames to be grabbed. Checkout VidGear docs for usage details.
-
-	:param (string) colorspace: set the colorspace of the video stream. Its default value is None.
-
-	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
-
-	"""
+    """
 
     def __init__(self, monitor=1, colorspace=None, logging=False, **options):
 
@@ -161,8 +147,10 @@ class ScreenGear:
 
     def start(self):
         """
-		start the thread to read frames from the video stream
-		"""
+        Launches the internal *Threaded Frames Extractor* daemon
+
+        **Returns:** A reference to the ScreenGear class object.
+        """
         self.__thread = Thread(target=self.__update, name="ScreenGear", args=())
         self.__thread.daemon = True
         self.__thread.start()
@@ -170,12 +158,13 @@ class ScreenGear:
 
     def __update(self):
         """
-		Update frames from stream
-		"""
+        A **Threaded Frames Extractor**, that keep iterating frames from `mss` API to a internal monitored deque, 
+        until the thread is terminated, or frames runs out.
+        """
         # intialize frame variable
         frame = None
         # keep looping infinitely until the thread is terminated
-        while not(self.__terminate):
+        while not (self.__terminate):
 
             # check queue buffer for overflow
             if len(self.__queue) >= 96:
@@ -187,7 +176,9 @@ class ScreenGear:
                 frame = np.asanyarray(
                     self.__mss_object.grab(self.__mss_capture_instance)
                 )
-                assert not(frame is None or np.shape(frame) == ()), "[ScreenGear:ERROR] :: Failed to retreive any valid frames!"
+                assert not (
+                    frame is None or np.shape(frame) == ()
+                ), "[ScreenGear:ERROR] :: Failed to retreive any valid frames!"
             except Exception as e:
                 if isinstance(e, ScreenShotError):
                     raise RuntimeError(self.__mss_object.get_error_details())
@@ -229,8 +220,11 @@ class ScreenGear:
 
     def read(self):
         """
-		return the frame
-		"""
+        Extracts frames synchronously from monitored deque, while maintaining a fixed-length frame buffer in the memory, 
+        and blocks the thread if the deque is full.
+
+        **Returns:** A n-dimensional numpy array. 
+        """
         # check whether or not termination flag is enabled
         while not self.__terminate:
             # check if queue is empty
@@ -243,8 +237,8 @@ class ScreenGear:
 
     def stop(self):
         """
-		Terminates the Read process
-		"""
+        Safely terminates the thread, and release the resources.
+        """
         if self.__logging:
             logger.debug("Terminating ScreenGear Processes.")
         # indicate that the thread should be terminated

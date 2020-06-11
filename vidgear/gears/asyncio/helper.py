@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,23 +18,33 @@ limitations under the License.
 ===============================================
 """
 
-# Contains all the support functions/modules required by Vidgear
+# Contains all the support functions/modules required by Vidgear Asyncio packages
 
 # import the necessary packages
-import os, sys, requests, platform, errno
-import numpy as np
-from pkg_resources import parse_version
-from colorlog import ColoredFormatter
-from tqdm import tqdm
-import logging as log
 import asyncio
+import errno
+import logging as log
+import os
+import platform
+import sys
+
 import aiohttp
 import cv2
+import numpy as np
+import requests
+
+from colorlog import ColoredFormatter
+from pkg_resources import parse_version
+from tqdm import tqdm
 
 
 def logger_handler():
     """
-    returns logger handler
+    ### logger_handler
+
+    Returns a color formatted logger handler
+
+    **Returns:** A asyncio package logger handler
     """
     # logging formatter
     formatter = ColoredFormatter(
@@ -63,7 +73,13 @@ logger.setLevel(log.DEBUG)
 
 def mkdir_safe(dir, logging=False):
     """
-    Simply creates directory safely
+    ### mkdir_safe
+
+    Safely creates directory at given path.
+
+    Parameters:
+        logging (bool): enables logging for its operations
+
     """
     try:
         os.makedirs(dir)
@@ -77,9 +93,16 @@ def mkdir_safe(dir, logging=False):
 
 
 async def reducer(frame=None, percentage=0):
-
     """
-    Reduces frame size by given percentage
+    ### reducer
+
+    Asynchronous method that reduces frame size by given percentage.
+
+    Parameters:
+        frame (numpy.ndarray): inputs numpy array(frame).
+        percentage (int/float): inputs size-reduction percentage.
+
+    **Returns:**  A reduced numpy ndarray array.
     """
     # check if frame is valid
     if frame is None:
@@ -106,9 +129,17 @@ async def reducer(frame=None, percentage=0):
 
 def generate_webdata(path, overwrite_default=False, logging=False):
     """ 
-    handles WebGear API data-files validation and generation 
-    """
+    ### generate_webdata
 
+    Auto-Generates, and Auto-validates default data for WebGear API.
+    
+    Parameters:
+        path (string): path for generating data
+        overwrite_default (boolean): overwrite existing data or not?
+        logging (bool): enables logging for its operations
+
+    **Returns:** A valid data path as string.
+    """
     # check if path corresponds to vidgear only
     if os.path.basename(path) != ".vidgear":
         path = os.path.join(path, ".vidgear")
@@ -183,7 +214,17 @@ def generate_webdata(path, overwrite_default=False, logging=False):
 
 def download_webdata(path, files=[], logging=False):
     """
-    Downloads default data-files from the server
+    ### download_webdata
+
+    Downloads given list of files for WebGear API(if not available) from GitHub Server, 
+    and also Validates them. 
+
+    Parameters:
+        path (string): path for downloading data
+        files (list): list of files to be downloaded
+        logging (bool): enables logging for its operations
+
+    **Returns:** A valid path as string.
     """
     basename = os.path.basename(path)
     if logging:
@@ -233,7 +274,16 @@ def download_webdata(path, files=[], logging=False):
 
 def validate_webdata(path, files=[], logging=False):
     """
-    validates WebGear API data-files
+    ### validate_auth_keys
+
+    Validates, and also maintains downloaded list of files.
+
+    Parameters:
+        path (string): path of downloaded files
+        files (list): list of files to be validated
+        logging (bool): enables logging for its operations
+
+    **Returns:** A  boolean value, confirming whether tests passed, or not?.
     """
     # check if valid path or directory empty
     if not (os.path.exists(path)) or not (os.listdir(path)):

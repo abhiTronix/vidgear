@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,12 +17,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+# import libraries
+import logging as log
+import os
+import tempfile
+import pytest
 
-import pytest, os, tempfile
 from vidgear.gears import VideoGear
 from vidgear.gears.helper import logger_handler
-import logging as log
 
+# define test logger
 logger = log.getLogger("Test_videogear")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)

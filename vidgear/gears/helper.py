@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,15 +18,20 @@ limitations under the License.
 ===============================================
 """
 
-# Contains all the support functions/modules required by Vidgear
+# Contains all the support functions/modules required by Vidgear packages
 
 # import the necessary packages
-import os, sys, requests, platform, errno
-import numpy as np
-from pkg_resources import parse_version
-from colorlog import ColoredFormatter
-from tqdm import tqdm
+import errno
 import logging as log
+import os
+import platform
+import sys
+
+import numpy as np
+import requests
+from colorlog import ColoredFormatter
+from pkg_resources import parse_version
+from tqdm import tqdm
 
 try:
     # import OpenCV Binaries
@@ -45,7 +50,11 @@ except ImportError:
 
 def logger_handler():
     """
-    returns logger handler
+    ### logger_handler
+
+    Returns a color formatted logger handler
+
+    **Returns:** A logger handler
     """
     # logging formatter
     formatter = ColoredFormatter(
@@ -74,7 +83,9 @@ logger.setLevel(log.DEBUG)
 
 def check_CV_version():
     """
-    returns OpenCV binary in-use version first bit 
+    ### check_CV_version
+
+    Returns OpenCV binary in-use, version's first bit 
     """
     if parse_version(cv2.__version__) >= parse_version("4"):
         return 4
@@ -84,7 +95,13 @@ def check_CV_version():
 
 def mkdir_safe(dir, logging=False):
     """
-    Simply creates directory safely
+    ### mkdir_safe
+
+    Safely creates directory at given path.
+
+    Parameters:
+        logging (bool): enables logging for its operations
+
     """
     try:
         os.makedirs(dir)
@@ -99,7 +116,14 @@ def mkdir_safe(dir, logging=False):
 
 def capPropId(property):
     """
-    Retrieves the OpenCV property's Integer(Actual) value. 
+    ### capPropId
+
+    Retrieves the OpenCV property's Integer(Actual) value from string.
+
+    Parameters:
+        property (string): inputs OpenCV property as string.
+
+    **Returns:** Resultant integer value.
     """
     integer_value = 0
     try:
@@ -111,9 +135,51 @@ def capPropId(property):
     return integer_value
 
 
+def reducer(frame=None, percentage=0):
+    """
+    ### reducer
+
+    Reduces frame size by given percentage
+
+    Parameters:
+        frame (numpy.ndarray): inputs numpy array(frame).
+        percentage (int/float): inputs size-reduction percentage.
+
+    **Returns:**  A reduced numpy ndarray array.
+    """
+    # check if frame is valid
+    if frame is None:
+        raise ValueError("[Helper:ERROR] :: Input frame cannot be NoneType!")
+
+    # check if valid reduction percentage is given
+    if not (percentage > 0 and percentage < 90):
+        raise ValueError(
+            "[Helper:ERROR] :: Given frame-size reduction percentage is invalid, Kindly refer docs."
+        )
+
+    # grab the frame size
+    (height, width) = frame.shape[:2]
+
+    # calculate the ratio of the width from percentage
+    reduction = ((100 - percentage) / 100) * width
+    ratio = reduction / float(width)
+    # construct the dimensions
+    dimensions = (int(reduction), int(height * ratio))
+
+    # return the resized frame
+    return cv2.resize(frame, dimensions, interpolation=cv2.INTER_LANCZOS4)
+
+
 def dict2Args(param_dict):
     """
-    converts dict to list(args)
+    ### dict2Args
+
+    Converts dictionary attributes to list(args)
+    
+    Parameters:
+        param_dict (dict): Parameters dictionary
+
+    **Returns:** Arguments list
     """
     args = []
     for key in param_dict.keys():
@@ -126,7 +192,17 @@ def get_valid_ffmpeg_path(
     custom_ffmpeg="", is_windows=False, ffmpeg_download_path="", logging=False
 ):
     """
-    Validate the FFmpeg path/binaries and returns valid FFmpeg file executable location(also downloads static binaries on windows) 
+    ### get_valid_ffmpeg_path
+
+    Validate the given FFmpeg path/binaries, and returns a valid FFmpeg executable path.
+
+    Parameters:
+        custom_ffmpeg (string): path to custom FFmpeg executables
+        is_windows (boolean): is running on Windows OS?
+        ffmpeg_download_path(string): FFmpeg static binaries download location _(Windows only)_
+        logging (bool): enables logging for its operations
+
+    **Returns:** A  valid FFmpeg executable path string.
     """
     final_path = ""
     if is_windows:
@@ -213,7 +289,16 @@ def get_valid_ffmpeg_path(
 
 def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
     """
-    Download and Extract FFmpeg Static Binaries for windows(if not available)
+    ### download_ffmpeg_binaries
+
+    Generates FFmpeg Static Binaries for windows(if not available)
+
+    Parameters:
+        path (string): path for downloading custom FFmpeg executables
+        os_windows (boolean): is running on Windows OS?
+        os_bit (string): 32-bit or 64-bit OS?
+
+    **Returns:** A  valid FFmpeg executable path string.
     """
     final_path = ""
     if os_windows and os_bit:
@@ -283,7 +368,14 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
 
 def validate_ffmpeg(path, logging=False):
     """
-    Validate FFmeg Binaries. returns True if tests passed
+    ### validate_ffmpeg
+
+    Validate FFmeg Binaries. returns `True` if tests are passed.
+
+    Parameters:
+        logging (bool): enables logging for its operations
+
+    **Returns:** A  boolean value, confirming whether tests passed, or not?.
     """
     try:
         # get the FFmpeg version
@@ -309,26 +401,19 @@ def validate_ffmpeg(path, logging=False):
 
 def check_output(*args, **kwargs):
     """
-    return output from the sub-process
+    ### check_output
+
+    Returns stdin output from subprocess module
     """
-    # silent subprocess execution
-    closeNULL = 0
+    # import libs
     import subprocess as sp
+    from subprocess import DEVNULL
 
-    try:
-        from subprocess import DEVNULL
-
-        closeNULL = 0
-    except ImportError:
-        DEVNULL = open(os.devnull, "wb")
-        closeNULL = 1
     # execute command in subprocess
     process = sp.Popen(stdout=sp.PIPE, stderr=DEVNULL, *args, **kwargs)
     output, unused_err = process.communicate()
     retcode = process.poll()
-    # close the process
-    if closeNULL:
-        DEVNULL.close()
+
     # if error occurred raise error
     if retcode:
         cmd = kwargs.get("args")
@@ -341,11 +426,18 @@ def check_output(*args, **kwargs):
 
 
 def generate_auth_certificates(path, overwrite=False, logging=False):
-
     """ 
-    auto-Generates and auto-validates CURVE ZMQ keys/certificates for Netgear 
-    """
+    ### generate_auth_certificates
 
+    Auto-Generates, and Auto-validates CURVE ZMQ key-pairs for NetGear API's Secure Mode.
+    
+    Parameters:
+        path (string): path for generating CURVE key-pairs
+        overwrite (boolean): overwrite existing key-pairs or not?
+        logging (bool): enables logging for its operations
+
+    **Returns:** A valid CURVE key-pairs path as string.
+    """
     # import necessary libs
     import shutil
     import zmq.auth
@@ -447,9 +539,16 @@ def generate_auth_certificates(path, overwrite=False, logging=False):
 
 
 def validate_auth_keys(path, extension):
-
     """
-    validates and maintains ZMQ Auth Keys/Certificates
+    ### validate_auth_keys
+
+    Validates, and also maintains generated ZMQ CURVE Key-pairs.
+
+    Parameters:
+        path (string): path of generated CURVE key-pairs
+        extension (string): type of key-pair to be validated
+
+    **Returns:** A  boolean value, confirming whether tests passed, or not?.
     """
     # check for valid path
     if not (os.path.exists(path)):

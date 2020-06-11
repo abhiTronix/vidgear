@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,9 +17,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
+# import the necessary packages
 import platform
 import setuptools
+
 from pkg_resources import parse_version
 from setuptools import setup
 
@@ -52,8 +53,8 @@ with open("README.md", "r") as fh:
 setup(
     name="vidgear",
     packages=["vidgear", "vidgear.gears", "vidgear.gears.asyncio"],
-    version="0.1.7",
-    description="Most Powerful cross-platform Video Processing Python framework powerpacked with unique trailblazing features.",
+    version="0.1.8",
+    description="High-performance cross-platform Video Processing Python framework powerpacked with unique trailblazing features.",
     license="Apache License 2.0",
     author="Abhishek Thakur",
     install_requires=[
@@ -71,7 +72,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     author_email="abhi.una12@gmail.com",
-    url="https://github.com/abhiTronix/vidgear",
+    url="https://abhitronix.github.io/vidgear",
     extras_require={
         "asyncio": [
             "starlette",

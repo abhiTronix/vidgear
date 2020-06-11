@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,14 +17,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
 # import the packages
-from threading import Thread
-from pkg_resources import parse_version
-import cv2, sys, time
-from .helper import capPropId
-from .helper import logger_handler
 import logging as log
+import sys
+import time
+import cv2
+
+from pkg_resources import parse_version
+from threading import Thread
+from .helper import capPropId, logger_handler
 
 
 # define logger
@@ -34,35 +35,22 @@ logger.setLevel(log.DEBUG)
 
 
 class PiGear:
+    """
+
+    PiGear is similar to CamGear API but exclusively made to support various Raspberry Pi Camera Modules 
+    _(such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module)_.
+
+    PiGear provides a flexible multi-threaded wrapper around complete [`picamera`](https://picamera.readthedocs.io/en/release-1.13/index.html) python library, 
+    and also provides us the ability to exploit almost all of its parameters like _brightness, saturation, 
+    sensor_mode, iso, exposure, etc._ effortlessly. Furthermore, PiGear supports multiple camera modules, 
+    such as in case of Raspberry Pi Compute module IO boards.
+
+    Best of all, PiGear provides excellent error-handling with features like a **Threaded Internal Timer** - 
+    that keeps active track of any frozen-threads/hardware-failures robustly, and exit safely if it does occurs, 
+    _i.e. If you're running PiGear API in your script, and someone accidentally pulls Camera module cable out, 
+    instead of going into possible kernel panic, PiGear will exit safely to save resources._
 
     """
-	PiGear is similar to CamGear but exclusively made to support various Raspberry Pi Camera Modules 
-	(such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module). To interface with these 
-	modules correctly, PiGear provides a flexible multi-threaded wrapper around complete picamera 
-	python library and provides us the ability to exploit its various features like `brightness, saturation, sensor_mode`, etc. effortlessly.
-
-	:param (integer) camera_num: selects the camera module index that will be used by API. 
-								/	Its default value is 0 and shouldn't be altered until unless 
-								/	if you using Raspberry Pi 3/3+ compute module in your project along with multiple camera modules. 
-								/	Furthermore, Its value can only be greater than zero, otherwise, it will throw ValueError for any negative value.
-	
-	:param (tuple) resolution: sets the resolution (width,height). Its default value is (640,480).
-
-	:param (integer) framerate: sets the framerate. Its default value is 30.
-
-	:param (string) colorspace: set colorspace of the video stream. Its default value is None.
-
-	:param (dict) **options: sets parameter supported by PiCamera Class to the input video stream. 
-							/ These attribute provides the flexibility to manipulate input raspicam video stream directly. 
-							/ Parameters can be passed using this **option, allows you to pass key worded variable length of arguments to PiGear Class.
-
-	:param (boolean) logging: set this flag to enable/disable error logging essential for debugging. Its default value is False.
-
-	:param (integer) time_delay: sets time delay(in seconds) before start reading the frames. 
-					/ This delay is essentially required for camera to warm-up. 
-					/ Its default value is 0.
-
-	"""
 
     def __init__(
         self,
@@ -187,7 +175,7 @@ class PiGear:
             self.__rawCapture.seek(0)
             self.__rawCapture.truncate()
             # render colorspace if defined
-            if not(self.frame is None) and not(self.color_space is None):
+            if not (self.frame is None) and not (self.color_space is None):
                 self.frame = cv2.cvtColor(self.frame, self.color_space)
         except Exception as e:
             logger.exception(str(e))
@@ -212,8 +200,11 @@ class PiGear:
 
     def start(self):
         """
-		start the thread to read frames from the video stream and initiate internal timer
-		"""
+        Launches the internal *Threaded Frames Extractor* daemon
+
+        **Returns:** A reference to the CamGear class object.
+        """
+
         # Start frame producer thread
         self.__thread = Thread(target=self.__update, name="PiGear", args=())
         self.__thread.daemon = True
@@ -228,8 +219,9 @@ class PiGear:
 
     def __timeit(self):
         """
-		Keep checks on Thread excecution timing
-		"""
+        Threaded Internal Timer that keep checks on thread excecution timing
+        """
+
         # assign current time
         self.__t_elasped = time.time()
 
@@ -246,10 +238,11 @@ class PiGear:
 
     def __update(self):
         """
-		Update frames from stream
-		"""
+        A **Threaded Frames Extractor**, that keep iterating frames from PiCamera API to a internal monitored deque, 
+        until the thread is terminated, or frames runs out.
+        """
         # keep looping infinitely until the thread is terminated
-        while not(self.__terminate):
+        while not (self.__terminate):
 
             try:
                 # Try to iterate next frame from generator
@@ -308,8 +301,11 @@ class PiGear:
 
     def read(self):
         """
-		return the frame
-		"""
+        Extracts frames synchronously from monitored deque, while maintaining a fixed-length frame buffer in the memory, 
+        and blocks the thread if the deque is full.
+
+        **Returns:** A n-dimensional numpy array. 
+        """
         # check if there are any thread exceptions
         if not (self.__exceptions is None):
             if isinstance(self.__exceptions, bool):
@@ -333,8 +329,8 @@ class PiGear:
 
     def stop(self):
         """
-		Terminates the Read process
-		"""
+        Safely terminates the thread, and release the VideoStream resources.
+        """
         if self.__logging:
             logger.debug("Terminating PiGear Processes.")
 
