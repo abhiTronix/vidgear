@@ -199,7 +199,7 @@ def get_valid_ffmpeg_path(
     Parameters:
         custom_ffmpeg (string): path to custom FFmpeg executables
         is_windows (boolean): is running on Windows OS?
-        ffmpeg_download_path(string): FFmpeg static binaries download location _(Windows only)_
+        ffmpeg_download_path (string): FFmpeg static binaries download location _(Windows only)_
         logging (bool): enables logging for its operations
 
     **Returns:** A  valid FFmpeg executable path string.
