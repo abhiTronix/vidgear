@@ -19,7 +19,7 @@ limitations under the License.
 -->
 
 <h1 align="center">
-  <img src="docs/assets/images/banner.png" alt="VidGear Logo"/>
+  <img src="docs/assets/images/vidgear.png" alt="VidGear"/>
 </h1>
 <h2 align="center">
   <img src="https://abhitronix.github.io/img/vidgear/vidgear banner.svg" alt="VidGear Banner" width="40%"/>
@@ -487,7 +487,7 @@ web.shutdown()
 ## NetGear_Async 
 
 <p align="center">
-  <img src="docs/assets/images/zmq_asyncio.png" alt="WebGear in action!"/>
+  <img src="docs/assets/images/zmq_asyncio.png" alt="WebGear in action!" width="80%" />
 </p>
 
 > _NetGear_Async can generate double performance as compared to [NetGear API](#netgear) at about 1/3rd of memory consumption, and also provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support any [NetGear's Exclusive Modes][netgear-exm] yet._
@@ -552,7 +552,7 @@ Sending a donation using link below is **extremely** helpful in keeping VidGear 
 
 # Community Channel
 
-If you've come up with some new idea, or looking for the fastest way troubleshoot your problems, then please **join our [Gitter community channel][gitter]**.
+If you've come up with some new idea, or looking for the fastest way troubleshoot your problems, then please **join our [Gitter community channel ➶][gitter]**
 
 
 &nbsp;

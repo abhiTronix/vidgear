@@ -20,7 +20,7 @@ limitations under the License.
 
 # Introduction
 
-<img src="assets/images/banner.png" alt="VidGear Logo"/>
+<img src="assets/images/vidgear.png" alt="VidGear"/>
 
 <h2 align="center">
 	<img src="https://abhitronix.github.io/img/vidgear/vidgear banner.svg" alt="VidGear Banner", width="50%" />
