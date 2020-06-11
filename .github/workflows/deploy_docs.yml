@@ -39,9 +39,13 @@ jobs:
       - uses: actions/setup-python@v1
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-      - name: install
+      - name: install_vidgear
         run: |
-          pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin mkdocstrings 
+          pip install .[asyncio]
+        if: success()
+      - name: install_dependencies
+        run: |
+          pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin mkdocstrings mkdocs-exclude
         if: success()
       - name: configure
         run: |

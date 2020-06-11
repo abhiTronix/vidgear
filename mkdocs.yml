@@ -65,7 +65,10 @@ plugins:
         python:
           rendering:
             show_source: true
-            
+  - exclude:
+      glob:
+        - ./docs/assets/README.md
+
 # Customization
 extra:
   social:

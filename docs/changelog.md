@@ -98,6 +98,7 @@ limitations under the License.
 - [X] Updated README.md, Issue and PR templates with new information and updates.
 - [X] Moved `changelog.md` to `/docs` and updated contribution guidelines.
 - [X] Improved source-code docs for compatibility with `mkdocstrings`.
+- [X] Added additional dependency `mkdocs-exclude`, for excluding files from Mkdocs builds.
 - [X] Updated license and compressed images/diagrams.
 - [X] Added new CI tests and Bumped Codecov.
 - [X] Changed YouTube video URL for CI tests to Creative Commons(CC) video.
@@ -117,6 +118,8 @@ limitations under the License.
 - [X] Fixed bugs related to delayed termination in NetGear API.
 - [X] Reduced default `request_timeout` value to 4 and also lowered cut-off limit for the same.
 - [X] Removed redundant ZMQ context termination and similar variables.
+- [X] Added missing VidGear installation in workflow.
+- [X] Excluded conflicting assets `README.md` from Mkdocs builds.
 - [X] Fixed `pattern` value check bypassed if wrong value is assigned.
 - [X] Fixed incorrect handling of additional data transferred in synchronous mode at both Server and Client end.
 - [X] Replaced Netgear CI test with more reliable `try-except-final` blocks.
