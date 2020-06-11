@@ -72,7 +72,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     author_email="abhi.una12@gmail.com",
-    url="https://github.com/abhiTronix/vidgear",
+    url="https://abhitronix.github.io/vidgear",
     extras_require={
         "asyncio": [
             "starlette",

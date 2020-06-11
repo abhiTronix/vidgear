@@ -24,7 +24,7 @@ limitations under the License.
 ## Overview
 
 <p align="center">
-  <img src="/assets/images/writegear.png" alt="WriteGear Functional Block Diagram"/>
+  <img src="/assets/images/writegear.png" alt="WriteGear Functional Block Diagram" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
   <br>
   <sub><i>Functional block diagram depicts WriteGear API's generalized workflow</i></sub>
 </p>

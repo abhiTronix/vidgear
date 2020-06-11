@@ -46,7 +46,7 @@ VidGear is well-tested and supported on the following systems, with [python 3.6+
 
 ## Testing the Latest Version
 
-If you want to just install and try out the latest version of VidGear you can do so with the following command. This can be useful if you want to provide feedback for a new feature or want to confirm if a bug you have encountered is fixed in the `master` branch. 
+If you want to just install and try out the latest version of VidGear you can do so with the following command. This can be useful if you want to provide feedback for a new feature or want to confirm if a bug you have encountered is fixed in the `testing` branch. 
 
 !!! tip "It is strongly recommended that you do this within a [virtualenv](https://virtualenv.pypa.io/en/latest/user_guide.html)."
 

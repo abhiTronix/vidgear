@@ -20,10 +20,10 @@ limitations under the License.
 
 # Introduction
 
-<img src="assets/images/vidgear.png" alt="VidGear"/>
+<img src="assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
 
 <h2 align="center">
-	<img src="https://abhitronix.github.io/img/vidgear/vidgear banner.svg" alt="VidGear Banner", width="50%" />
+	<img src="assets/images/tagline.svg" alt="VidGear tagline", width="50%"/>
 </h2>
 
 &nbsp;
@@ -84,13 +84,13 @@ Please see our [Contribution Guidelines ➶](contribution.md) for more details.
 
 ## Community Channel
 
-If you've come up with some new idea, or looking for the fastest way troubleshoot your problems, then please **join our [Gitter community channel ➶][gitter]**
+If you've come up with some new idea, or looking for the fastest way troubleshoot your problems, then please join our [Gitter community channel ➶][gitter]
 
 &nbsp; 
 
 ## Become a Stargazer
 
-You can be a [**Stargazer**][stargazer] by starring this framework, it helps us a lot and **you're making it easier for others to find & trust this library.** Thanks!
+You can be a [Stargazer :star2:][stargazer] by starring us on Github, it helps us a lot and **you're making it easier for others to find & trust this library.** Thanks!
 
 &nbsp;
 

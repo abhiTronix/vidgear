@@ -34,7 +34,7 @@ limitations under the License.
 
 - There's also the official [**OpenCV Tutorials** ➶](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_tutorials.html), provided by the OpenCV folks themselves.
 
-Finally, when you're done, go through [Gears ➶](/gears/#gears-what-are-these) to see how VidGear works. If you run into any trouble, or have any questions, then do not hesitate to then join our [Gitter ➶](https://gitter.im/vidgear/community) Community channel, or else [report an Issue ➶](/contribution/issue/). 
+Finally, when you're done, go through [Gears ➶](/gears/#gears-what-are-these) to see how VidGear works. If you run into any trouble, or have any questions, then join our [Gitter ➶](https://gitter.im/vidgear/community) Community channel, or else [report an Issue ➶](/contribution/issue/). 
 
 &nbsp;
 
@@ -42,21 +42,15 @@ Finally, when you're done, go through [Gears ➶](/gears/#gears-what-are-these) 
 
 **Answer:** See [Installation Notes ➶](/installation/).
 
-
 &nbsp;
-
 
 ## "VidGear is using Multi-threading, but Python is notorious for its poor performance in multithreading?"
 
 **Answer:** 
 
-Most of the VidGear task are I/O bounded, meaning that the thread spends most of its time handling I/O processes such as performing network requests, pooling frames out of Camera devices etc. It is perfectly fine to use multi-threading as the thread is most of the time being blocked and put into blocked queue by the OS automatically.
-
-Also see [Threaded-Queue-Mode ➶](/bonus/TQM/)
+Most of the VidGear task are I/O bounded, meaning that the thread spends most of its time handling I/O processes such as performing network requests, pooling frames out of Camera devices etc. It is perfectly fine to use multi-threading for these tasks, as the thread is most of the time being blocked and put into blocked queue by the OS automatically. For further reading, see [Threaded-Queue-Mode ➶](/bonus/TQM/)
 
 &nbsp;
-
-
 
 ## Why VidGear APIs not working for me?
 
@@ -64,15 +58,11 @@ Also see [Threaded-Queue-Mode ➶](/bonus/TQM/)
 
 &nbsp;
 
-
-
 ## How do I report an issue?
 
 **Answer:** See [Reporting an Issue ➶](/contribution/issue/)
 
 &nbsp;
-
-
 
 ## Can I ask my question directly without raising an issue?
 
@@ -80,16 +70,11 @@ Also see [Threaded-Queue-Mode ➶](/bonus/TQM/)
 
 &nbsp;
 
-
-
 ## How to contribute to VidGear development?
 
 **Answer:** See our [Contribution Guidelines ➶](/contribution/PR/)
 
 &nbsp;
-
-
-
 
 ## What OSes are supported by VidGear?
 
@@ -97,16 +82,11 @@ Also see [Threaded-Queue-Mode ➶](/bonus/TQM/)
 
 &nbsp;
 
-
-
-
 ## What Python versions are supported by VidGear?
 
 **Answer:** See [Supported Python legacies ➶](/installation/#supported-python-legacies)
 
 &nbsp;
-
-
 
 ## Can I include VidGear in my project commercially or not?
 
@@ -114,13 +94,8 @@ Also see [Threaded-Queue-Mode ➶](/bonus/TQM/)
 
 &nbsp;
 
-
-
-
 ## "I Love using VidGear", How can I support it?
 
 **Answer:** Thank you! See [Helping VidGear ➶](/help/#helping-vidgear)  
-
-
 
 &nbsp;

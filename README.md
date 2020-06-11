@@ -19,10 +19,10 @@ limitations under the License.
 -->
 
 <h1 align="center">
-  <img src="docs/assets/images/vidgear.png" alt="VidGear"/>
+  <img src="docs/assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
 </h1>
 <h2 align="center">
-  <img src="https://abhitronix.github.io/img/vidgear/vidgear banner.svg" alt="VidGear Banner" width="40%"/>
+  <img src="docs/assets/images/tagline.svg" alt="VidGear tagline" width="40%"/>
 </h2>
 
 <div align="center">
@@ -48,7 +48,7 @@ VidGear primarily focuses on simplicity, and thereby lets programmers and softwa
 The following **functional block diagram** clearly depicts the generalized functioning of VidGear APIs:
 
 <p align="center">
-  <img src="docs/assets/images/gears_fbd" alt="@Vidgear Functional Block Diagram" />
+  <img src="docs/assets/images/gears_fbd" alt="@Vidgear Functional Block Diagram" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" />
 </p>
 
 &nbsp;
@@ -156,7 +156,7 @@ CamGear provides a flexible, high-level multi-threaded wrapper around `OpenCV's`
 **Following functional block diagram depicts CamGear API's generalized workflow:**
 
 <p align="center">
-  <img src="docs/assets/images/camgear.png" alt="CamGear Functional Block Diagram"  width="50%"/>
+  <img src="docs/assets/images/camgear.png" alt="CamGear Functional Block Diagram"  width="50%" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
 </p>
 
 ### CamGear API Guide:
@@ -391,7 +391,7 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 **Following functional block diagram depicts WriteGear API's generalized workflow:**
 
 <p align="center">
-  <img src="docs/assets/images/writegear.png" alt="WriteGear Functional Block Diagram"/>
+  <img src="docs/assets/images/writegear.png" alt="WriteGear Functional Block Diagram" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
 </p>
 
 ### WriteGear API Guide:
@@ -406,7 +406,7 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 ## NetGear
 
 <p align="center">
-  <img src="docs/assets/images/netgear.png" alt="NetGear API" width=80%/>
+  <img src="docs/assets/images/netgear.png" alt="NetGear API" width=80% title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
 </p>
 
 > *NetGear is exclusively designed to transfer video frames synchronously and asynchronously between interconnecting systems over the network in real-time.*
@@ -487,7 +487,7 @@ web.shutdown()
 ## NetGear_Async 
 
 <p align="center">
-  <img src="docs/assets/images/zmq_asyncio.png" alt="WebGear in action!" width="80%" />
+  <img src="docs/assets/images/zmq_asyncio.png" alt="WebGear in action!" width="80%" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
 </p>
 
 > _NetGear_Async can generate double performance as compared to [NetGear API](#netgear) at about 1/3rd of memory consumption, and also provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support any [NetGear's Exclusive Modes][netgear-exm] yet._
@@ -612,7 +612,7 @@ Internal URLs
 [release]:https://github.com/abhiTronix/vidgear/releases/latest
 [pypi]:https://pypi.org/project/vidgear/
 [gitter]:https://gitter.im/vidgear/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
-[twitter-intent]:https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2FabhiTronix%2Fvidgear&via%20%40abhi_una12&text=VidGear%20-%20A%20simple%2C%20powerful%2C%20flexible%20%26%20threaded%20Python%20Video%20Processing%20Library&hashtags=vidgear%20%23multithreaded%20%23python%20%23video-processing%20%23github
+[twitter-intent]:https://twitter.com/intent/tweet?url=https%3A%2F%2Fabhitronix.github.io%2Fvidgear&via%20%40abhi_una12&text=Checkout%20VidGear%20-%20A%20High-Performance%20Video-Processing%20Python%20Framework.&hashtags=vidgear%20%23videoprocessing%20%23python%20%23threaded%20%23asyncio
 [coffee]:https://www.buymeacoffee.com/2twOXFvlA
 [kofi]: https://ko-fi.com/W7W8WTYO
 [license]:https://github.com/abhiTronix/vidgear/blob/master/LICENSE

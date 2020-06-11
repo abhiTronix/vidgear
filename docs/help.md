@@ -62,7 +62,7 @@ You can try helping solving those issues, or give valuable feedback/review on ne
 
 Tweet about VidGear and Spread the word:
 
-<a href="https://twitter.com/intent/tweet?button_hashtag=vidgear&ref_src=twsrc%5Etfw" class="twitter-hashtag-button" data-size="large" data-text="VidGear - A High-Performance Video-Processing Python Framework" data-url="https://github.com/abhiTronix" data-related="abhi_una12" data-show-count="false">Tweet #vidgear</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<a href="https://twitter.com/intent/tweet?button_hashtag=vidgear&ref_src=twsrc%5Etfw" class="twitter-hashtag-button" data-size="large" data-text="Checkout VidGear - A High-Performance Video-Processing Python Framework." data-url="https://abhitronix.github.io/vidgear" data-related="abhi_una12" data-show-count="false">Tweet #vidgear</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 Let others know how are you using VidGear and why you like it!
 
@@ -86,7 +86,7 @@ Thanks!
 
 You can connect with me, the author([Abhishek Thakur | @abhiTronix](abhitronix.github.io/)):
 
-* Follow me on GitHub: <a class="github-button" href="https://github.com/abhiTronix" data-color-scheme="no-preference: dark; light: dark; dark: dark;" aria-label="Follow @abhiTronix on GitHub">Follow &commat;abhiTronix</a>
+* Follow me on GitHub: [![GitHub follow](https://img.shields.io/github/followers/abhiTronix?label=Follow%20%40abhiTronix&logo=github&style=flat-square)](https://github.com/abhiTronix)
 * Follow me on Twitter. <a href="https://twitter.com/abhi_una12?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow &commat;abhi_una12</a>
 * Follow me on Linkedin: [![Linkedin follow](https://img.shields.io/badge/Follow-&commat;Abhishek&nbsp;Thakur-orange.svg?logo=linkedin&style=flat-square)](https://in.linkedin.com/in/abhishek-abhitronix?trk=profile-badge)
 

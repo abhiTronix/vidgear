@@ -107,7 +107,7 @@ markdown_extensions:
   - pymdownx.magiclink:
       repo_url_shorthand: true
       user: abhiTronix
-      repo: mkdocs-material
+      repo: vidgear
   - pymdownx.mark
   - pymdownx.smartsymbols
   - pymdownx.snippets:

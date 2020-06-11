@@ -173,12 +173,12 @@ Finally, There are some important things you need to check while submitting your
 ## Frequently Asked Questions
 
 
-### Why Do my Changes Take so Long to Be Reviewed and/or Merged?
+**Q1. Why do my changes taking so long to be Reviewed and/or Merged?**
 
 Please be patient. It can take up to several days before your pull request can be fully reviewed. After merging the changes, it could take again several hours/days before your changes appear on `master` branch.
 
 
-### What If I Want to Submit my Work that is still in progress?
+**Q2. What if I want to submit my Work that is Still In Progress?**
 
 You can do it. But please use one of these two prefixes to let reviewers know about the state of your work:
 
@@ -186,7 +186,7 @@ You can do it. But please use one of these two prefixes to let reviewers know ab
 *  **[WCM]** _(Waiting Code Merge)_: is used when you're documenting a new feature or change that hasn't been accepted yet into the core code. The pull request will not be merged until it is merged in the core code _(or closed if the change is rejected)_.
 
 
-### Would You Accept a Huge Pull Request with Lots of Changes?
+**Q3. Would you accept a huge Pull Request with Lots of Changes?**
 
 First, make sure that the changes are somewhat related. Otherwise, please create separate pull requests. Anyway, before submitting a huge change, it's probably a good idea to [open an issue](/contribution/issue/) in the VidGear Github repository to ask the maintainers if they agree with your proposed changes. Otherwise, they could refuse your proposal after you put all that hard work into making the changes. We definitely don't want you to waste your time!
 
