@@ -16,6 +16,7 @@ labels: "issue: bug"
 -->
 
 ## Description
+
 <!--- Provide a more detailed introduction to the issue itself, and why you consider it to be a bug -->
 
 
@@ -24,15 +25,14 @@ labels: "issue: bug"
 <!--- By posting an issue you acknowledge the following: (Put an `x` in all the boxes that apply(important)) -->
 
 - [ ] I have searched the [issues](https://github.com/abhiTronix/vidgear/issues) for my issue and found nothing related or helpful.
-- [ ] I have read the [FAQ](https://github.com/abhiTronix/vidgear/wiki/FAQ-&-Troubleshooting).
-- [ ] I have read the [Wiki](https://github.com/abhiTronix/vidgear/wiki#vidgear).
-- [ ] I have read the [Contributing Guidelines](https://github.com/abhiTronix/vidgear/blob/master/contributing.md).
+- [ ] I have read the [Documentation](https://abhitronix.github.io/vidgear).
+- [ ] I have read the [Issue Guidelines](https://abhitronix.github.io/contribution/issue/).
 
 
 ### Environment
 
 <!--- Include as many relevant details about the environment you experienced the bug in -->
-* VidGear version:
+* VidGear version: <!--- Run command `python -c "import vidgear; print(vidgear.__version__)`" -->
 * Branch: <!--- Master/Testing/Development/PyPi -->
 * Python version:
 * pip version:
@@ -46,7 +46,7 @@ labels: "issue: bug"
 <!--- You can turn `logging=True` in parameters of the respective vidgear API for getting debug output -->
 
 ### Possible Fix
-<!--- Not obligatory, but suggest a fix or reason for the bug -->
+<!--- Not obligatory, but suggest a fix or reason for the bug or remove this block-->
 
 ### Steps to reproduce
 

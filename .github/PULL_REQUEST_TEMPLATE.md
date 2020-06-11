@@ -11,9 +11,8 @@ _Kindly explain the changes you made here._
 
 <!--- By pushing this PR you acknowledge the following: Put an `x` in all the boxes that apply(important): -->
 
-- [ ] Read the [Contributing Guidelines](https://github.com/abhiTronix/vidgear/blob/master/contributing.md)
-- [ ] Read the [FAQ](https://github.com/abhiTronix/vidgear/wiki/FAQ-&-Troubleshooting)
-- [ ] Comprehended the [Wiki Documentation](https://github.com/abhiTronix/vidgear/wiki#vidgear)
+- [ ] I have read the [PR Guidelines](https://abhitronix.github.io/contribution/PR/).
+- [ ] I have read the [Documentation](https://abhitronix.github.io/vidgear).
 - [ ] Updated the source-code documentation accordingly(if required).
 
 

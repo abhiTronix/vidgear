@@ -1,0 +1,239 @@
+<!--
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
+
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+===============================================
+-->
+
+# ScreenGear API Usage Examples:
+
+## Bare-Minimum Usage
+
+Following is the bare-minimum code you need to get started with ScreenGear API:
+
+```python
+# import required libraries
+from vidgear.gears import ScreenGear
+import cv2
+
+# open video stream with default parameters
+stream = ScreenGear().start()
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+
+    # {do something with the frame here}
+
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+```
+
+&nbsp; 
+
+## Using ScreenGear with Variable Screen Dimensions
+
+ScreenGear API provides us the flexibility to directly set the dimensions of capture screen w.r.t selected `monitor` value. These dimensions can be easily applied to ScreenGear API through its `options` dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
+
+
+```python
+# import required libraries
+from vidgear.gears import ScreenGear
+import cv2
+
+# define dimensions of screen w.r.t to given monitor to be captured
+options = {'top': 40, 'left': 0, 'width': 100, 'height': 100}
+
+# open video stream with defined parameters
+stream = ScreenGear(monitor=1, logging=True, **options).start()
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+
+    # {do something with the frame here}
+
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+``` 
+
+&nbsp; 
+
+## Using ScreenGear with Direct Colorspace Manipulation
+
+ScreenGear API also supports **Direct Colorspace Manipulation**, which is ideal for changing source colorspace on the run. 
+
+!!! info "A more detailed  information on colorspace manipulation can be found [here ➶](/bonus/colorspace_manipulation/)"
+
+In following example code, we will start with [**HSV**](https://en.wikipedia.org/wiki/HSL_and_HSV) as source colorspace, and then we will switch to [**GRAY**](https://en.wikipedia.org/wiki/Grayscale)  colorspace when `w` key is pressed, and then [**LAB**](https://en.wikipedia.org/wiki/CIELAB_color_space) colorspace when `e` key is pressed, finally default colorspace _(i.e. **BGR**)_ when `s` key is pressed. Also, quit when `q` key is pressed:
+
+
+!!! warning "Any incorrect or None-type value, will immediately revert the colorspace to default i.e. `BGR`."
+
+
+```python
+# import required libraries
+from vidgear.gears import ScreenGear
+import cv2
+
+# Change colorspace to `HSV`
+stream = ScreenGear(colorspace = 'COLOR_BGR2HSV', logging=True).start()
+
+# loop over
+while True:
+  
+    # read HSV frames
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+
+    # {do something with the HSV frame here}
+
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
+
+    # check for key if pressed
+    key = cv2.waitKey(1) & 0xFF
+
+    # check if 'w' key is pressed
+    if key == ord("w"):
+        #directly change colorspace at any instant
+        stream.color_space = cv2.COLOR_BGR2GRAY #Now colorspace is GRAY
+      
+    # check for 'e' key is pressed
+    if key == ord("e"):
+        stream.color_space = cv2.COLOR_BGR2LAB  #Now colorspace is CieLAB
+   
+    # check for 's' key is pressed
+    if key == ord("s"):
+         stream.color_space = None #Now colorspace is default(ie BGR)
+
+    # check for 'q' key is pressed
+    if key == ord("q"):
+      break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+```
+
+&nbsp;
+
+
+## Using ScreenGear with WriteGear API
+
+ScreenGear can be used in conjunction with WriteGear API directly without any compatibility issues. The suitable example is as follows:
+
+```python
+# import required libraries
+from vidgear.gears import ScreenGear
+from vidgear.gears import WriteGear
+import cv2
+
+
+# define dimensions of screen w.r.t to given monitor to be captured
+options = {'top': 40, 'left': 0, 'width': 100, 'height': 100}
+
+# define suitable (Codec,CRF,preset) FFmpeg parameters for writer
+output_params = {"-vcodec":"libx264", "-crf": 0, "-preset": "fast"}
+
+# open video stream with defined parameters
+stream = ScreenGear(monitor=1, logging=True, **options).start()
+
+# Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
+writer = WriteGear(output_filename = 'Output.mp4', logging = True, **output_params)
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+
+    # {do something with the frame here}
+    # lets convert frame to gray for this example
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    # write gray frame to writer
+    writer.write(gray)
+
+    # Show output window
+    cv2.imshow("Output Gray Frame", gray)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+
+# safely close writer
+writer.close()
+``` 
+
+&nbsp; 

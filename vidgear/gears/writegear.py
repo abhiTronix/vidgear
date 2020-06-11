@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,48 +39,28 @@ logger.setLevel(log.DEBUG)
 class WriteGear:
 
     """
-    solely handles various powerful FFmpeg tools that allow us to do almost anything you can imagine with multimedia files. 
-    With WriteGear API, you can process real-time video frames into a lossless format and specification suitable for our playback 
-    in just a few lines of codes. These specifications include setting bitrate, codec, framerate, resolution, subtitles, compression, etc.  
-    In addition to this, WriteGear also provides flexible access to OpenCV's VideoWriter API which provide some basic tools 
-    for video frames encoding but without compression.
+    WriteGear API provides a complete, flexible and robust wrapper around [**FFmpeg**](https://ffmpeg.org/), a leading multimedia framework. With WriteGear, we can process 
+    real-time frames into a lossless compressed video-file with any suitable specification in just few easy lines of codes. 
+    These specifications include setting video/audio properties such as `bitrate, codec, framerate, resolution, subtitles,  etc.`, 
+    and also performing complex tasks such as multiplexing video with audio in real-time, while handling all errors robustly. 
 
-    WriteGear primarily operates in the following two modes:
+    Best of all, WriteGear grants the complete freedom to play with any FFmpeg parameter with its exclusive **Custom Commands function**, 
+    without relying on any Third-party library.
 
-        Compression Mode: In this mode, WriteGear utilizes FFmpeg's inbuilt encoders to encode lossless multimedia files. 
-                            It provides us the ability to exploit almost any available parameters available within FFmpeg, with so much ease 
-                            and flexibility and while doing that it robustly handles all errors/warnings quietly. 
+    In addition to this, WriteGear also provides flexible access to [**OpenCV's VideoWriter API**](https://docs.opencv.org/3.4/dd/d9e/classcv_1_1VideoWriter.html) which provides some basic tools for video 
+    frames encoding but without compression.
 
-        Non-Compression Mode: In this mode, WriteGear utilizes basic OpenCV's inbuilt VideoWriter API. Similar to compression mode, WriteGear also supports 
-                            all parameters manipulation available within OpenCV's VideoWriter API. But this mode lacks the ability to manipulate encoding parameters 
-                            and other important features like video compression, audio encoding, etc. 
+    ??? tip "Modes of Operation"
 
+        WriteGear primarily operates in following modes:
 
-    ```Warning: In case, This class fails to detect valid FFmpeg executables on your system, It can automatically fallbacks to Non-Compression Mode.```
+        * **Compression Mode**: In this mode, WriteGear utilizes powerful **FFmpeg** inbuilt encoders to encode lossless multimedia files. 
+                                This mode provides us the ability to exploit almost any parameter available within FFmpeg, effortlessly and flexibly, 
+                                and while doing that it robustly handles all errors/warnings quietly.
 
-
-    :param output_filename (string): sets the output Video file path/filename. Valid Inputs are:
-
-        - path: Valid path of the directory to save the output video file. Then, the class will automatically assign filename(with default extension `.mp4`).  
-
-        - filename(with path): Valid filename(with valid extension) of the output video file. 
-
-    ```Note: Make sure to provide valid filename with path and file-extension(based on encoder(in case of FFmpeg)/fourcc(in case of OpenCV) being currently used)```
-
-    :param compression_mode (boolean): enables/disables Video Compression Mode, i.e If enabled(means Compression Mode) WriteGear class will utilize 
-                        / the FFmpeg installed/given executables to encode output video and if disabled(means Non-Compression Mode) 
-                        / OpenCV's VideoWriter Class will be used. Its default value is True.
-
-    :param custom_ffmpeg (string): (if specified) sets the custom path/directory where the `Custom FFmpeg executables` are located, works only in Compression Mode.
-                        / It is compulsory to provide custom binaries on a Windows Machine, otherwise this class with automatically download and extract suitable Static FFmpeg 
-                        / binaries to Temporary directory.Read VidGear Docs for more info.
-
-    :param logging (boolean): set this flag to enable/disable error logging essential for debugging. Its default value is False.
-
-    :param **output_params (dict): sets all properties supported by FFmpeg(in Compression Mode)/ OpenCV's VideoWriter(in Non-Compression Mode) properties 
-                        / to the input video stream in CamGear Class. All the valid User-defined FFmeg/OpenCV's VideoWriter output video file parameters/properties 
-                        / manipulation is currently supported. These attribute provides the flexibility to manipulate output video  directly. 
-                        / In addition other special attributes to manipulate WriteGear inbuilt properties are also supported. Read VidGear Docs for more info.
+        * **Non-Compression Mode**: In this mode, WriteGear utilizes basic **OpenCV's inbuilt VideoWriter API** tools. This mode also supports all 
+                                    parameters manipulation available within VideoWriter API, but it lacks the ability to manipulate encoding parameters 
+                                    and other important features like video compression, audio encoding, etc.
 
     """
 
@@ -228,10 +208,11 @@ class WriteGear:
     def write(self, frame, rgb_mode=False):
 
         """  
-        pipelines ndarray frames to valid Video File. Utilizes FFmpeg in Compression Mode and OpenCV VideoWriter Class in Non-Compression Mode
+        Pipelines `ndarray` frames to respective API _(FFmpeg in Compression Mode & OpenCV VideoWriter API in Non-Compression Mode)_.
 
-        :param frame (ndarray): valid frame
-        :param rgb_mode (boolean): set this flag to enable rgb_mode, i.e. specifies that incoming frames are of RGB format(instead of default BGR). Its default value is False.
+        Parameters:
+            frame (ndarray): a valid numpy frame
+            rgb_mode (boolean): enable this flag to activate RGB mode _(i.e. specifies that incoming frames are of RGB format(instead of default BGR)_.
 
         """
         if frame is None:  # NoneType frames will be skipped
@@ -298,10 +279,11 @@ class WriteGear:
 
     def __Preprocess(self, channels, rgb=False):
         """
-        pre-processing FFmpeg parameters
+        Internal method that pre-processes FFmpeg Parameters before beginning pipelining.
         
-        :param channels (int): Number of channels
-        :param rgb_mode (boolean): set this flag to enable rgb_mode, Its default value is False.
+        Parameters:
+            channels (int): Number of channels
+            rgb_mode (boolean): activates RGB mode _(if enabled)_.
         """
         # turn off initiate flag
         self.__initiate = False
@@ -350,12 +332,13 @@ class WriteGear:
     def __startFFmpeg_Process(self, input_params, output_params):
 
         """
-        Start FFmpeg process
-
-        :param input_params (dict): Input parameters
-        :param output_params (dict): Output parameters
+        An Internal method that launches FFmpeg subprocess, that pipelines frames to 
+        stdin, in Compression Mode.  
+    
+        Parameters:
+            input_params (dict): Input FFmpeg parameters
+            output_params (dict): Output FFmpeg parameters
         """
-
         # convert input parameters to list
         input_parameters = dict2Args(input_params)
 
@@ -397,12 +380,15 @@ class WriteGear:
 
     def execute_ffmpeg_cmd(self, cmd=None):
         """
-        Executes custom FFmpeg process
 
-        :param cmd(list): custom command with input as list  
+        Executes user-defined FFmpeg Terminal command, formatted as a python list(in Compression Mode only).
+        
+        Parameters:
+            cmd (list): inputs list data-type command.
+
         """
         # check if valid command
-        if cmd is None or not(cmd):
+        if cmd is None or not (cmd):
             logger.warning("Input FFmpeg command is empty, Nothing to execute!")
             return
         else:
@@ -437,9 +423,8 @@ class WriteGear:
 
     def __startCV_Process(self):
         """
-        Start OpenCV VideoWriter Class process
+        An Internal method that launches OpenCV VideoWriter process for given settings, in Non-Compression Mode. 
         """
-
         # turn off initiate flag
         self.__initiate = False
 
@@ -510,7 +495,7 @@ class WriteGear:
 
     def close(self):
         """
-        Terminates the Write process
+        Safely terminates various WriteGear process.
         """
         if self.__logging:
             logger.debug("Terminating WriteGear Processes.")

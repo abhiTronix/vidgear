@@ -1,0 +1,57 @@
+# Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#    http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: VidGear Docs Deployer
+
+on:
+  push:
+    branches:
+      - master
+  release:
+    branches:
+      - master
+      
+env:
+  PYTHON_VERSION: 3.x
+
+jobs:
+  deploy-docs:
+    name: Deploy Docs
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    env:
+      GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+      GIT_NAME: ${{ secrets.GIT_NAME }}
+      GIT_EMAIL: ${{ secrets.GIT_EMAIL }
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: install
+        run: |
+          pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin mkdocstrings 
+        if: success()
+      - name: configure
+        run: |
+          REMOTE="https://${GIT_TOKEN}@github.com/${GITHUB_REPOSITORY}"
+          git config --global user.name "${GIT_NAME}"
+          git config --global user.email "${GIT_EMAIL}"
+          git remote set-url origin ${REMOTE}
+        if: success()
+      - name: deploy
+        run: |
+          mkdocs gh-deploy --force
+          mkdocs --version
+        if: success()

@@ -4,7 +4,7 @@ about: Have any questions regarding VidGear?
 labels: "issue: question"
 ---
 
-<!--- Provide a general summary of the issue in the Title above -->
+<!--- Add a brief but descriptive title for your issue above -->
 
 
 ## Question
@@ -17,8 +17,9 @@ labels: "issue: question"
 <!--- By posting an issue you acknowledge the following: (Put an `x` in all the boxes that apply(important)) -->
 
 - [ ] I have searched the [issues](https://github.com/abhiTronix/vidgear/issues) for my issue and found nothing related or helpful.
-- [ ] I have read the [FAQ](https://github.com/abhiTronix/vidgear/wiki/FAQ-&-Troubleshooting).
-- [ ] I have read the [Wiki](https://github.com/abhiTronix/vidgear/wiki#vidgear).
+- [ ] I have read the [FAQs](https://abhitronix.github.io/vidgear/help/get_help/#frequently-asked-questions).
+- [ ] I have read the [Documentation](https://abhitronix.github.io/vidgear).
+
 
 
 ### Context
@@ -30,7 +31,7 @@ labels: "issue: question"
 
 ### Your Environment
 <!--- Include as many relevant details about the environment you worked in -->
-* VidGear version:
+* VidGear version: <!--- Run command `python -c "import vidgear; print(vidgear.__version__)`" -->
 * Branch: <!--- Master/Testing/Development/PyPi -->
 * Python version:
 * pip version:

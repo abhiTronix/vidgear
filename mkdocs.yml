@@ -1,0 +1,233 @@
+# Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#    http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Project information
+site_name: VidGear
+site_url: https://github.com/abhiTronix/vidgear
+site_author: Abhishek Thakur
+site_description: >-
+  High-performance cross-platform Video Processing Python framework powerpacked with unique trailblazing features.
+
+# Repository
+repo_name: abhiTronix/vidgear
+repo_url: https://github.com/abhiTronix/vidgear
+edit_uri: ""
+
+# Google analytics
+google_analytics: ['UA-131929464-1', 'abhitronix.github.io']
+
+# Copyright
+copyright: Copyright &copy; 2019 - 2020 Abhishek Thakur(@abhiTronix)
+
+# Configuration
+theme:
+  name: material
+
+  # Don't include MkDocs' JavaScript
+  include_search_page: false
+  search_index_only: true
+
+  # Default values, taken from mkdocs_theme.yml
+  language: en
+  features:
+    - tabs
+  palette:
+    primary: black
+    accent: light green
+  font:
+    text: Roboto
+    code: Roboto Mono
+  icon:
+    logo: logo
+  logo: assets/images/logo.svg
+  favicon: assets/images/favicon-32.png
+
+# Plugins
+plugins:
+  - search
+  - git-revision-date-localized
+  - minify:
+      minify_html: true
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          rendering:
+            show_source: true
+            
+# Customization
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/abhiTronix
+    - icon: fontawesome/brands/gitter
+      link: https://gitter.im/vidgear/community
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/abhi_una12
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/abhishek-singh-thakur-a37845a5
+  manifest: assets/site.webmanifest
+
+extra_css:
+    - assets/stylesheets/custom.css
+
+# Extensions
+markdown_extensions:
+  - markdown.extensions.admonition
+  - markdown.extensions.attr_list
+  - markdown.extensions.codehilite:
+      guess_lang: false
+  - markdown.extensions.def_list
+  - markdown.extensions.footnotes
+  - markdown.extensions.meta
+  - markdown.extensions.toc:
+      permalink: true
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: abhiTronix
+      repo: vidgear
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Page tree
+nav:
+  - Home: 
+    - Overview: index.md
+    - Installation: 
+      - Installation Notes: installation.md
+      - Install using pip: installation/pip_install.md
+      - Install from source: installation/source_install.md
+    - Switching from OpenCV: switch_from_cv.md
+    - Contribution Guidelines: 
+      - Contribution Overview: contribution.md
+      - Submitting an Issue Guidelines: contribution/issue.md
+      - Submitting Pull Request(PR) Guidelines: contribution/PR.md
+    - Release Notes: changelog.md
+    - License: license.md
+  - Gears:
+    - Introduction: gears.md
+    - CamGear: 
+      - Overview: gears/camgear/overview.md
+      - Usage Examples: gears/camgear/usage.md
+      - Advanced Usage:
+        - Source Tweak Parameters: gears/camgear/source_params.md
+      - Parameters: gears/camgear/params.md
+      - Reference: bonus/reference/camgear.md
+    - PiGear: 
+      - Overview: gears/pigear/overview.md
+      - Usage Examples: gears/pigear/usage.md
+      - Parameters: gears/pigear/params.md
+      - Reference: bonus/reference/pigear.md
+    - VideoGear: 
+      - Overview: gears/videogear/overview.md
+      - Usage Examples: gears/videogear/usage.md
+      - Parameters: gears/videogear/params.md
+      - Reference: bonus/reference/videogear.md
+    - ScreenGear: 
+      - Overview: gears/screengear/overview.md
+      - Usage Examples: gears/screengear/usage.md
+      - Parameters: gears/screengear/params.md
+      - Reference: bonus/reference/screengear.md
+    - WriteGear:
+      - Introduction: gears/writegear/introduction.md
+      - Compression Mode:
+        - Overview: gears/writegear/compression/overview.md
+        - Usage Examples: gears/writegear/compression/usage.md
+        - Advanced Usage: 
+          - Custom FFmpeg Commands: gears/writegear/compression/advanced/cciw.md
+          - FFmpeg Installation: gears/writegear/compression/advanced/ffmpeg_install.md
+        - Parameters: gears/writegear/compression/params.md
+      - Non-Compression Mode:
+        - Overview: gears/writegear/non_compression/overview.md
+        - Usage Examples: gears/writegear/non_compression/usage.md
+        - Parameters: gears/writegear/non_compression/params.md
+      - Reference: bonus/reference/writegear.md
+    - NetGear: 
+      - Overview: gears/netgear/overview.md
+      - Usage Examples: gears/netgear/usage.md
+      - Advanced Usage:
+        - Multi-Servers Mode: gears/netgear/advanced/multi_server.md
+        - Multi-Clients Mode: gears/netgear/advanced/multi_client.md
+        - Bidirectional Mode: gears/netgear/advanced/bidirectional_mode.md
+        - Secure Mode: gears/netgear/advanced/secure_mode.md 
+        - Frame Compression: gears/netgear/advanced/compression.md 
+      - Parameters: gears/netgear/params.md
+      - Reference: bonus/reference/netgear.md
+    - WebGear: 
+      - Overview: gears/webgear/overview.md
+      - Usage Examples: gears/webgear/usage.md
+      - Advanced Usage: gears/webgear/advanced.md
+      - Parameters: gears/webgear/params.md
+      - Reference: bonus/reference/webgear.md
+    - NetGear_Async: 
+      - Overview: gears/netgear_async/overview.md
+      - Usage Examples: gears/netgear_async/usage.md
+      - Parameters: gears/netgear_async/params.md
+      - Reference: bonus/reference/netgear_async.md
+    - Stabilizer Class: 
+      - Overview: gears/stabilizer/overview.md
+      - Usage Examples: gears/stabilizer/usage.md
+      - Parameters: gears/stabilizer/params.md
+      - Reference: bonus/reference/stabilizer.md
+  - Bonus:
+    - API Reference:
+      - vidgear.gears: 
+        - camgear.py: bonus/reference/camgear.md
+        - pigear.py: bonus/reference/pigear.md
+        - videogear.py: bonus/reference/videogear.md
+        - screengear.py: bonus/reference/screengear.md
+        - writegear.py: bonus/reference/writegear.md
+        - netgear.py: bonus/reference/netgear.md
+        - stabilizer.py: bonus/reference/stabilizer.md
+        - helper.py: bonus/reference/helper.md
+      - vidgear.gears.asyncio:
+        - webgear.py: bonus/reference/webgear.md
+        - netgear_async.py: bonus/reference/netgear_async.md
+        - helper.py: bonus/reference/helper_async.md
+    - Colorspace Manipulation: bonus/colorspace_manipulation.md
+    - Threaded Queue Mode: bonus/TQM.md
+  - Help:
+    - Help VidGear 'n' Get Help:
+      - Help VidGear: help.md
+      - Getting Help: help/get_help.md
+    - Frequently Asked Questions:
+      - General FAQs: help/general_faqs.md
+      - CamGear FAQs: help/camgear_faqs.md
+      - PiGear FAQs: help/pigear_faqs.md
+      - ScreenGear FAQs: help/screengear_faqs.md
+      - WriteGear FAQs: help/writegear_faqs.md
+      - NetGear FAQs: help/netgear_faqs.md
+      - WebGear FAQs: help/webgear_faqs.md
+      - VideoGear FAQs: help/videogear_faqs.md
+      - Stabilizer Class FAQs: help/stabilizer_faqs.md
+      - NetGear_Async FAQs: help/netgear_async_faqs.md
+    - Project Motivation: help/motivation.md
