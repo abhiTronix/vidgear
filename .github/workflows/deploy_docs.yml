@@ -33,7 +33,7 @@ jobs:
     env:
       GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
       GIT_NAME: ${{ secrets.GIT_NAME }}
-      GIT_EMAIL: ${{ secrets.GIT_EMAIL }
+      GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
