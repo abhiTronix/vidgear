@@ -20,9 +20,13 @@ limitations under the License.
 
 # WriteGear API: Compression Mode
 
+<p align="center">
+  <img src="../../../../assets/images/writegear_cm.png" alt="Compression Mode" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
+  <br>
+  <sub><i>WriteGear API's Compression Mode generalized workflow</i></sub>
+</p>
 
 ## Overview
-
 
 When [`compression_mode`](/gears/writegear/compression/params/#compression_mode) parameter is enabled _(.i.e `compression_mode = True`)_, WriteGear API utilizes powerful **FFmpeg** encoders to encode lossless & compressed multimedia files, Thereby, also known as Compression Mode.
 

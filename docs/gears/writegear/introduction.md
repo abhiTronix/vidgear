@@ -24,9 +24,9 @@ limitations under the License.
 ## Overview
 
 <p align="center">
-  <img src="assets/images/writegear.png" alt="WriteGear Functional Block Diagram" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
+  <img src="../../../assets/images/writegear.png" alt="WriteGear Functional Block Diagram" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
   <br>
-  <sub><i>Functional block diagram depicts WriteGear API's generalized workflow</i></sub>
+  <sub><i>WriteGear API generalized workflow</i></sub>
 </p>
 
 WriteGear API provides a complete, flexible and robust wrapper around [**FFmpeg**](https://ffmpeg.org/), a leading multimedia framework. With WriteGear, we can process real-time frames into a lossless compressed video-file with any suitable specification in just few easy lines of codes. These specifications include setting video/audio properties such as `bitrate, codec, framerate, resolution, subtitles,  etc.`, and also performing complex tasks such as multiplexing video with audio in real-time _(see this [doc](https://github.com/abhiTronix/vidgear/wiki/Working-with-Audio#a-live-audio-input-to-writegear-class))_, while handling all errors robustly. 

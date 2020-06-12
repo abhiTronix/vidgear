@@ -21,7 +21,7 @@ limitations under the License.
 # Advanced Usage: Bidirectional Mode for NetGear API 
 
 <h3 align="center">
-  <img src="https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/bidir.png" alt="Bi-directional Mode"/>
+  <img src="../../../../assets/images/bidir.png" alt="Bi-directional Mode"/>
 </h3>
 
 ## Overview

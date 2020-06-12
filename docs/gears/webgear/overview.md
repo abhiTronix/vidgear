@@ -24,7 +24,7 @@ limitations under the License.
 ## Overview
 
 <p align="center">
-  <img src="/assets/gifs/webgear.gif" alt="WebGear in action!" width=120%/>
+  <img src="../../../assets/gifs/webgear.gif" alt="WebGear in action!" width=120%/>
   <br>
   <sub><i>WebGear Video Server at <a href="http://0.0.0.0:8000/" title="default address">http://0.0.0.0:8000/</a> address.</i></sub>
 </p>
@@ -116,7 +116,7 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
 *Can be accessed by visiting WebGear app server, running at http://0.0.0.0:8000/:*
 
 <h2 align="center">
-  <img src="assets/images/webgear_temp_index.jpg" alt="WebGear default Index page"/>
+  <img src="../../../assets/images/webgear_temp_index.jpg" alt="WebGear default Index page"/>
 </h2>
 
 
@@ -125,7 +125,7 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
 *Appears when respective URL is not found, for example http://0.0.0.0:8000/ok:*
 
 <h2 align="center">
-  <img src="assets/images/webgear_temp_404.jpg" alt="WebGear default 404 page"/>
+  <img src="../../../assets/images/webgear_temp_404.jpg" alt="WebGear default 404 page"/>
 </h2>
 
 
@@ -136,7 +136,7 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
 !!! warning "If [`logging`](/gears/webgear/params/#logging) is enabled and an error occurs, then instead of displaying this 500 handler, WebGear will respond with a traceback response."
 
 <h2 align="center">
-  <img src="assets/images/webgear_temp_500.jpg" alt="WebGear default 500 page"/>
+  <img src="../../../assets/images/webgear_temp_500.jpg" alt="WebGear default 500 page"/>
 </h2>
 
 

@@ -23,7 +23,7 @@ limitations under the License.
 ## Overview
 
 <p align="center">
-  <img src="assets/images/picam.jpg" alt="Pi Zero with Camera Module"/>
+  <img src="../../../assets/images/picam.jpg" alt="Pi Zero with Camera Module"/>
   <br>
   <sub><i>Raspberry Pi Camera Module</i></sub>
 </p>
