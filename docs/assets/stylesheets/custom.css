@@ -3,8 +3,9 @@ To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-
 Commons, PO Box 1866, Mountain View, CA 94042, USA. */
 
 code {
-    word-break: keep-all !important;
-  }
+	word-break: keep-all !important;
+}
 
 td {
-      vertical-align: middle !important;
+	vertical-align: middle !important;
+}

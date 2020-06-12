@@ -43,8 +43,8 @@ theme:
   features:
     - tabs
   palette:
-    primary: black
-    accent: light green
+    primary: indigo
+    accent: light blue
   font:
     text: Roboto
     code: Roboto Mono

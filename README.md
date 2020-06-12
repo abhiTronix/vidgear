@@ -19,7 +19,7 @@ limitations under the License.
 -->
 
 <h1 align="center">
-  <img src="docs/assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
+  <img src="docs/assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="90%"/>
 </h1>
 <h2 align="center">
   <img src="docs/assets/images/tagline.svg" alt="VidGear tagline" width="40%"/>

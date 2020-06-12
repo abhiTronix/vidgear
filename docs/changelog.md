@@ -20,7 +20,7 @@ limitations under the License.
 
 # Release Notes
 
-## v0.1.8 (2020-06-11)
+## v0.1.8 (2020-06-12)
 
 ### New Features
 
@@ -130,6 +130,7 @@ limitations under the License.
 - [X] Enabled missing support for frame compression in its primary receive mode.
 - [X] Fixed several bugs from CI Bidirectional Mode tests.
 - [X] Removed or Grouped redundant code for increasing codecov.
+- [X] Fixed Mkdocs only accepting Relative paths.
 - [X] Fixed round off error in FPS.
 - [X] Many small typos and bugs fixes.
 

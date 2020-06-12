@@ -36,11 +36,12 @@ jobs:
       GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v2
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: install_vidgear
         run: |
+          python -m pip install --upgrade pip wheel
           pip install .[asyncio]
         if: success()
       - name: install_dependencies
