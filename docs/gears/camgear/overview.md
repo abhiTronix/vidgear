@@ -30,11 +30,11 @@ limitations under the License.
 </p>
 
 
-CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras,  multimedia video file format ([_upto 4k tested_](https://github.com/abhiTronix/vidgear/blob/62f32ad6663c871ec6aa4890ca1b55cd1286511a/vidgear/tests/benchmark_tests/test_benchmark_playback.py#L31-L71)), any network stream URL such as `http(s), rtp, rstp, rtmp, mms, etc.` In addition to this, it also supports live [Gstreamer's RAW pipelines](https://gstreamer.freedesktop.org/documentation/frequently-asked-questions/using.html) and [YouTube video/livestreams URLs](/gears/camgear/usage/#using-camgear-with-youtube-videos).
+CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras,  multimedia video file format ([_upto 4k tested_](https://github.com/abhiTronix/vidgear/blob/62f32ad6663c871ec6aa4890ca1b55cd1286511a/vidgear/tests/benchmark_tests/test_benchmark_playback.py#L31-L71)), any network stream URL such as `http(s), rtp, rstp, rtmp, mms, etc.` In addition to this, it also supports live [Gstreamer's RAW pipelines](https://gstreamer.freedesktop.org/documentation/frequently-asked-questions/using.html) and [YouTube video/livestreams URLs](../usage/#using-camgear-with-youtube-videos).
 
-CamGear API provides a flexible, high-level multi-threaded wrapper around OpenCV's *[VideoCapture API](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80)* with direct access to almost all of its available [*parameters*](/gears/camgear/source_params/) and also internally employs `pafy` with `youtube-dl` backend for seamless live [*YouTube streaming*](/gears/camgear/usage/#using-camgear-with-youtube-videos). 
+CamGear API provides a flexible, high-level multi-threaded wrapper around OpenCV's *[VideoCapture API](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80)* with direct access to almost all of its available [*parameters*](../source_params/) and also internally employs `pafy` with `youtube-dl` backend for seamless live [*YouTube streaming*](../usage/#using-camgear-with-youtube-videos). 
 
-CamGear relies exclusively on [**Threaded Queue mode**](/bonus/TQM/) for threaded, error-free and synchronized frame handling.
+CamGear relies exclusively on [**Threaded Queue mode**](../../../bonus/TQM/) for threaded, error-free and synchronized frame handling.
 
 &nbsp; 
 
@@ -43,7 +43,7 @@ CamGear relies exclusively on [**Threaded Queue mode**](/bonus/TQM/) for threade
 
   * It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 
-  * You can use `framerate` class variable to retrieve framerate of the input source. Its usage example can be found [here ➶](/gears/writegear/compression/usage/#using-compression-mode-with-controlled-framerate)
+  * You can use `framerate` class variable to retrieve framerate of the input source. Its usage example can be found [here ➶](../writegear/compression/usage/#using-compression-mode-with-controlled-framerate)
 
 
 &nbsp; 

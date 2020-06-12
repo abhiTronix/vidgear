@@ -48,13 +48,13 @@ This parameter selects the colorspace of the source stream.
 
 **Usage:**
 
-!!! tip "All supported `colorspace` values are given [here ➶](/bonus/colorspace_manipulation/)."
+!!! tip "All supported `colorspace` values are given [here ➶](../../../bonus/colorspace_manipulation/)."
 
 ```python
 ScreenGear(colorspace="COLOR_BGR2HSV")
 ```
 
-Its complete usage example is given [here ➶](/gears/screengear/usage/#using-screengear-with-direct-colorspace-manipulation)
+Its complete usage example is given [here ➶](../usage/#using-screengear-with-direct-colorspace-manipulation)
 
 &nbsp;
 

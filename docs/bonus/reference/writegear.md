@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-!!! info "All WriteGear Class parameters are explained [here ➶](/gears/writegear/params/)"
+!!! info "All WriteGear Class parameters are explained [here ➶](../../../gears/writegear/params/)"
 
 ::: vidgear.gears.WriteGear	
 	

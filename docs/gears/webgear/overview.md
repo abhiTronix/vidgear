@@ -33,7 +33,7 @@ WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-strea
 
 WebGear API provides a highly extensible and flexible asyncio wrapper around Starlette ASGI application, and provides easy access to its complete framework. Thereby, WebGear API can flexibly interact with the Starlette's ecosystem of shared middleware and mountable applications, and its various [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
 
-In layman's terms, WebGear can acts as powerful **Video Streaming Server** that transfers live video-frames to any web browser on a network. It addition to this, WebGear API also provides a special internal wrapper around [VideoGear API](/gears/videogear/overview/), which itself provides internal access to both [CamGear](/gears/camgear/overview/) and [PiGear](/gears/pigear/overview/) APIs thereby granting it exclusive power for streaming frames incoming from any device/source, such as streaming [Stabilization enabled Video](/gears/webgear/advanced/#using-webgear-with-real-time-video-stabilization-enabled) in real-time.
+In layman's terms, WebGear can acts as powerful **Video Streaming Server** that transfers live video-frames to any web browser on a network. It addition to this, WebGear API also provides a special internal wrapper around [VideoGear API](../../videogear/overview/), which itself provides internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs thereby granting it exclusive power for streaming frames incoming from any device/source, such as streaming [Stabilization enabled Video](../advanced/#using-webgear-with-real-time-video-stabilization-enabled) in real-time.
 
 
 &nbsp; 
@@ -50,10 +50,10 @@ On initializing WebGear API, it automatically checks for three critical data-fil
 
 * A _default location_ is the path of the directory where data files/folders are downloaded/generated/saved.
 * By default, the `.vidgear` the folder at the home directory of your machine _(for e.g `/home/foo/.vidgear` on Linux)_ serves as the _default location_.
-* But you can also use WebGear's [`custom_data_location`](/gears/webgear/params/#webgear-specific-attributes) dictionary attribute to change/alter *default location* path to somewhere else.
+* But you can also use WebGear's [`custom_data_location`](../params/#webgear-specific-attributes) dictionary attribute to change/alter *default location* path to somewhere else.
 
 	!!! tip
-			You can set [`logging=True`](/gears/webgear/params/#logging) during initialization, for easily identifying the selected _default location_, which will be something like this _(on a Linux machine)_:
+			You can set [`logging=True`](../params/#logging) during initialization, for easily identifying the selected _default location_, which will be something like this _(on a Linux machine)_:
 
 		  ```sh
 		  WebGear :: DEBUG :: `/home/foo/.vidgear` is the default location for saving WebGear data-files.
@@ -91,7 +91,7 @@ On initializing WebGear API, it automatically checks for three critical data-fil
 
 !!! tip "Important Tips"
 
-		* You can also force trigger the Auto-generation process to overwrite existing data-files using [`overwrite_default_files`](/gears/webgear/params/#webgear-specific-attributes) dictionary attribute. Remember, only downloaded default data files(given above) will be overwritten in this process, and any other file/folder will NOT be affected.
+		* You can also force trigger the Auto-generation process to overwrite existing data-files using [`overwrite_default_files`](../params/#webgear-specific-attributes) dictionary attribute. Remember, only downloaded default data files(given above) will be overwritten in this process, and any other file/folder will NOT be affected.
 
 		* It is advised to enable logging(`logging=True`) on the first run for easily identifying any runtime errors
 
@@ -133,7 +133,7 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
 
 *Appears when an API Error is encountered:*
 
-!!! warning "If [`logging`](/gears/webgear/params/#logging) is enabled and an error occurs, then instead of displaying this 500 handler, WebGear will respond with a traceback response."
+!!! warning "If [`logging`](../params/#logging) is enabled and an error occurs, then instead of displaying this 500 handler, WebGear will respond with a traceback response."
 
 <h2 align="center">
   <img src="../../../assets/images/webgear_temp_500.jpg" alt="WebGear default 500 page"/>

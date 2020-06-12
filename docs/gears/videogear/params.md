@@ -22,7 +22,7 @@ limitations under the License.
 
 ## **`enablePiCamera`** 
 
-This parameter select access to [PiGear](/gears/pigear/overview/) or [CamGear](/gears/camgear/overview/) API respectively. This means the if `enablePiCamera` flag is `True`, `PiGear` API will be accessed and if `False`, the `CamGear` API will be accessed. 
+This parameter select access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) API respectively. This means the if `enablePiCamera` flag is `True`, `PiGear` API will be accessed and if `False`, the `CamGear` API will be accessed. 
 
 
 **Data-Type:** Boolean
@@ -35,7 +35,7 @@ This parameter select access to [PiGear](/gears/pigear/overview/) or [CamGear](/
 VideoGear(enablePiCamera=True) # enable access to PiGear API
 ```
 
-Its complete usage example is given [here ➶](/gears/videogear/usage/#bare-minimum-usage-with-pigear-backend).
+Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend).
 
 
 &nbsp; 
@@ -48,7 +48,7 @@ Its complete usage example is given [here ➶](/gears/videogear/usage/#bare-mini
 
 ### **`stabilize`**
 
-This parameter set this flag to enable access to [Stabilizer Class](/gears/stabilizer/overview/), i.e. flag can be set to `True`(_to enable_) or unset to `False`(_to disable_) this mode. 
+This parameter set this flag to enable access to [Stabilizer Class](../../stabilizer/overview/), i.e. flag can be set to `True`(_to enable_) or unset to `False`(_to disable_) this mode. 
 
 **Data-Type:** Boolean
 
@@ -60,13 +60,13 @@ This parameter set this flag to enable access to [Stabilizer Class](/gears/stabi
 VideoGear(stabilize=True) # enable stablization
 ```
 
-Its complete usage example is given [here ➶](/gears/videogear/usage/#using-videogear-with-video-stabilizer-backend).
+Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend).
 
 &nbsp; 
 
 ### **`options`**
 
-This parameter can be used in addition, to pass user-defined parameters supported by [Stabilizer Class](/gears/stabilizer/overview/). These parameters can be passed by formatting them as this parameter's attribute.
+This parameter can be used in addition, to pass user-defined parameters supported by [Stabilizer Class](../../stabilizer/overview/). These parameters can be passed by formatting them as this parameter's attribute.
 
 **Supported dictionary attributes for Stabilizer Class are:**
 
@@ -227,7 +227,7 @@ This parameter provides the ability to alter various **Source Tweak Parameters**
 
 **Usage:**
 
-!!! tip "All supported parameters are listed [here ➶](/gears/camgear/source_params/)"
+!!! tip "All supported parameters are listed [here ➶](../../camgear/source_params/)"
 
 The desired parameters can be passed to VideoGear API by formatting them as this parameter's attributes, as follows:
 
@@ -355,13 +355,13 @@ This parameter selects the colorspace of the source stream.
 
 **Usage:**
 
-!!! tip "All supported `colorspace` values are given [here ➶](/bonus/colorspace_manipulation/)"
+!!! tip "All supported `colorspace` values are given [here ➶](../../../bonus/colorspace_manipulation/)"
 
 ```python
 VideoGear(colorspace="COLOR_BGR2HSV")
 ```
 
-Its complete usage example is given [here ➶](/gears/videogear/usage/#using-videogear-with-colorspace-manipulation)
+Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)
 
 &nbsp;
 

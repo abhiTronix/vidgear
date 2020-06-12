@@ -53,7 +53,7 @@ Its valid input can be one of the following:
 
 ## **`compression_mode`**
 
-This parameter selects the WriteGear's primary [Mode of Operation](/gears/writegear/introduction/#modes-of-operation), i.e. if this parameter is enabled _(.i.e `compression_mode = True`)_ WriteGear will use **FFmpeg** to encode output video, and if disabled _(.i.e `compression_mode = False`)_, the **OpenCV's VideoWriter API** will be used for encoding. 
+This parameter selects the WriteGear's primary [Mode of Operation](../../introduction/#modes-of-operation), i.e. if this parameter is enabled _(.i.e `compression_mode = True`)_ WriteGear will use **FFmpeg** to encode output video, and if disabled _(.i.e `compression_mode = False`)_, the **OpenCV's VideoWriter API** will be used for encoding. 
 
 **Data-Type:** Boolean
 
@@ -81,7 +81,7 @@ This parameter allows us to exploit almost all [**OpenCV's VideoWriter API**](ht
 
 !!! info
 
-    Remember, Non-Compression mode lacks the ability to control output quality and other important features like _lossless video compression, audio encoding, etc._, which are available with WriteGear's [Compression Mode](/gears/writegear/compression/overview/) only.
+    Remember, Non-Compression mode lacks the ability to control output quality and other important features like _lossless video compression, audio encoding, etc._, which are available with WriteGear's [Compression Mode](../../compression/overview/) only.
 
 
 **Data-Type:** Dictionary
@@ -114,7 +114,7 @@ output_params = {"-fps":30}
 WriteGear(output_filename = 'output.mp4', **output_params)
 ```
 
-!!! info "Its usage example can be found [here ➶](/gears/writegear/non_compression/usage/#using-non-compression-mode-with-videocapture-gears)."
+!!! info "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-videocapture-gears)."
 
 ### Supported FOURCC Codecs
 
@@ -133,7 +133,7 @@ output_params = {"-fourcc":"MJPG"}
 WriteGear(output_filename = 'output.mp4', **output_params)
 ```
 
-!!! info "Its usage example can be found [here ➶](/gears/writegear/non_compression/usage/#using-non-compression-mode-with-videocapture-gears)."
+!!! info "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-videocapture-gears)."
 
 &nbsp; 
 

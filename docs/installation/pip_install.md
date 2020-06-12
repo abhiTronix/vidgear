@@ -28,7 +28,7 @@ limitations under the License.
 
 When installing VidGear with pip, you need to check manually if following dependencies are installed:
 
-**OpenCV:** 
+### OpenCV 
 
 Must require OpenCV(3.0+) python binaries installed for its core functions. You install it directly via [pip](https://pip.pypa.io/en/stable/installing/):
 
@@ -41,34 +41,30 @@ Must require OpenCV(3.0+) python binaries installed for its core functions. You 
   pip install -U opencv-python       
 ```
 
-**FFmpeg:** 
+### FFmpeg 
 
-Must require for the video compression and encoding compatibilities within [**Compression Mode**](/gears/writegear/compression/overview/) in [WriteGear](#writegear) API. 
+Must require for the video compression and encoding compatibilities within [**Compression Mode**](../../gears/writegear/compression/overview/) in [WriteGear](#writegear) API. 
 
 !!! tip "FFmpeg Installation"
 
-    Follow this dedicated [**FFmpeg Installation doc**](/gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
+    Follow this dedicated [**FFmpeg Installation doc**](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
 
-**Picamera:** 
+### Picamera
 
-Must Required if you're using Raspberry Pi Camera Modules with its [PiGear](/gears/pigear/overview/) API. You can easily install it via pip:
+Must Required if you're using Raspberry Pi Camera Modules with its [PiGear](../../gears/pigear/overview/) API. You can easily install it via pip:
 
 
-!!! danger "Remember to enable Raspberry Pi settings"
-
-    Make sure to [**enable Raspberry Pi hardware-specific settings**](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior to using this library, otherwise it won't work.
+!!! danger "Make sure to [**enable Raspberry Pi hardware-specific settings**](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior to using this library, otherwise it won't work."
 
 ```sh
   pip install picamera
 ``` 
 
-**Uvloop:** 
+### Uvloop
 
-It's an optional dependency, and only required if you're using the [NetGear_Async](/gears/netgear_async/overview/) API on a UNIX machine for maximum performance. You can easily install it via pip:
+It's an optional dependency, and only required if you're using the [NetGear_Async](../../gears/netgear_async/overview/) API on a UNIX machine for maximum performance. You can easily install it via pip:
 
-!!! warning "Uvloop is missing Windows support" 
-
-    Uvloop is **[NOT yet supported on Windows Systems](https://github.com/MagicStack/uvloop/issues/14).**
+!!! warning "Uvloop is **[NOT yet supported on Windows Systems](https://github.com/MagicStack/uvloop/issues/14).**"
 
 ```sh
   pip install uvloop
@@ -119,7 +115,7 @@ And if you prefer to install VidGear directly from the repository:
   pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[asyncio]
 ```
 
-Or you can also download its wheel (`.whl`) package from our [release](release) section, and thereby can be installed as follows:
+Or you can also download its wheel (`.whl`) package from our [releases](https://github.com/abhiTronix/vidgear/releases), and thereby can be installed as follows:
 
 ```sh
   pip install vidgear-0.1.7-py3-none-any.whl

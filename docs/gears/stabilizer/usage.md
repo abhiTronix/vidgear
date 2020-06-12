@@ -139,7 +139,7 @@ stream.release()
 
 ## Using Stabilizer with Variable Parameters
 
-Stablizer class provide certain [parameters](/gears/stabilizer/params/) which you can use to manipulate its internal properties. The complete usage example is as follows:
+Stablizer class provide certain [parameters](../stabilizer/params/) which you can use to manipulate its internal properties. The complete usage example is as follows:
 
 ```python
 # import required libraries
@@ -263,9 +263,9 @@ writer.close()
 
 ## Using VideoGear with Stabilizer backend
 
-[VideoGear API](/gears/videogear/overview/) provides a special internal wrapper around Stabilizer class, that enables easy stabilization for various video-streams _(real-time or not)_ with minimum effort and using just fewer lines of code.
+[VideoGear API](../../videogear/overview/) provides a special internal wrapper around Stabilizer class, that enables easy stabilization for various video-streams _(real-time or not)_ with minimum effort and using just fewer lines of code.
 
 
-!!! tip "The complete usage example can be found [here ➶](/gears/videogear/usage/#using-videogear-with-video-stabilizer-backend)"
+!!! tip "The complete usage example can be found [here ➶](../../videogear/usage/#using-videogear-with-video-stabilizer-backend)"
 
 &nbsp;

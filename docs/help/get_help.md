@@ -34,16 +34,16 @@ Got a question related to VidGear Working?
 
 Checkout our Frequently Asked Questions, a curated list of all the questions with answer, that we commonly recieve, for quickly troubleshoot your problems:
 
-- [General FAQs](general_faqs.md)
-- [CamGear FAQs](camgear_faqs.md)
-- [PiGear FAQs](pigear_faqs.md)
-- [ScreenGear FAQs](screengear_faqs.md)
-- [WriteGear FAQs](writegear_faqs.md)
-- [NetGear FAQs](netgear_faqs.md)
-- [WebGear FAQs](webgear_faqs.md)
-- [VideoGear FAQs](videogear_faqs.md)
-- [Stabilizer Class FAQs](stabilizer_faqs.md)
-- [NetGear_Async FAQs](netgear_async_faqs.md)
+- [General FAQs ➶](general_faqs.md)
+- [CamGear FAQs ➶](camgear_faqs.md)
+- [PiGear FAQs ➶](pigear_faqs.md)
+- [ScreenGear FAQs ➶](screengear_faqs.md)
+- [WriteGear FAQs ➶](writegear_faqs.md)
+- [NetGear FAQs ➶](netgear_faqs.md)
+- [WebGear FAQs ➶](webgear_faqs.md)
+- [VideoGear FAQs ➶](videogear_faqs.md)
+- [Stabilizer Class FAQs ➶](stabilizer_faqs.md)
+- [NetGear_Async FAQs ➶](netgear_async_faqs.md)
 
 
 &nbsp; 
@@ -61,10 +61,10 @@ There you can ask quick questions, swiftly troubleshoot your problems, help othe
 
 ## This is what you do when...
 
-* [Got a question or problem?](/contribution/#got-a-question-or-problem)
-* [Found a typo?](/contribution/#found-a-typo)
-* [Found a bug?](/contribution/#found-a-bug)
-* [Missing a feature/improvement?](/contribution/#missing-a-featureimprovement)
+* [Got a question or problem?](../../contribution/#got-a-question-or-problem)
+* [Found a typo?](../../contribution/#found-a-typo)
+* [Found a bug?](../../contribution/#found-a-bug)
+* [Missing a feature/improvement?](../../contribution/#missing-a-featureimprovement)
 
 
 &nbsp; 
@@ -76,7 +76,7 @@ Want to report a bug?
     
 Suggest a new feature?
 
-Before you do, please read our [guidelines](/contribution/issue/).
+Before you do, please read our [guidelines ➶](../../contribution/issue/)
 
 
 &nbsp; 
@@ -88,6 +88,6 @@ Interested in contributing to VidGear?
 
 Would you like to implement a new feature or fix a bug?
 
-Before you do, please read our [guidelines](/contribution/PR/).
+Before you do, please read our [guidelines ➶](../../contribution/PR/)
 
 &nbsp; 

@@ -20,13 +20,13 @@ limitations under the License.
 
 # WebGear API Advanced Usage:
 
-!!! note "This is a continuation of the [WebGear doc ➶](/gears/webgear/overview/#webgear-api). Thereby, It's advised to first get familiarize with this API, and its [requirements](/gears/webgear/usage/#requirements)."
+!!! note "This is a continuation of the [WebGear doc ➶](../overview/#webgear-api). Thereby, It's advised to first get familiarize with this API, and its [requirements](../usage/#requirements)."
 
 
 
 ## Performance Enhancements :fire:
 
-Previously, on running [bare-minimum usage example](/gears/webgear/usage/#bare-minimum-usage), you will notice a significant performance throttling, lag and frame drop in output Stream on the browser. To cope with this throttling problem, WebGear provides certain performance enhancing attributes for its [`option`](/gears/webgear/params/#options) dictionary parameter.
+Previously, on running [bare-minimum usage example](../usage/#bare-minimum-usage), you will notice a significant performance throttling, lag and frame drop in output Stream on the browser. To cope with this throttling problem, WebGear provides certain performance enhancing attributes for its [`option`](../params/#options) dictionary parameter.
 
 
 ??? tip "Performance Enhancing Attributes"
@@ -197,26 +197,26 @@ web.shutdown()
 
 ## Rules for Altering WebGear Files and Folders
 
-WebGear gives us complete freedom of altering data files generated in [**Auto-Generation Process**](/gears/webgear/overview/#auto-generation-process), But you've to  keep the following rules in mind:
+WebGear gives us complete freedom of altering data files generated in [**Auto-Generation Process**](../overview/#auto-generation-process), But you've to  keep the following rules in mind:
 
 ### Rules for Altering Data Files
   
-- [x] You allowed to alter/change code in all existing [default downloaded files](/gears/webgear/overview/#auto-generation-process) at your convenience without any restrictions.
-- [x] You allowed to delete/rename all existing data files, except remember **NOT** to delete/rename three critical data-files i.e `index.html`, `404.html` & `500.html` present in `templates` folder at the [default location](/gears/webgear/overview/#default-location), otherwise, it will trigger [Auto-generation process](/gears/webgear/overview/#auto-generation-process), and it will overwrite the existing files with Server ones.
-- [x] You're allowed to add your own additional `.html`, `.css`, `.js`, etc. files in the respective folders at the [**default location**](/gears/webgear/overview/#default-location) and [custom mounted Data folders](#using-webgear-with-custom-mounting-points).
+- [x] You allowed to alter/change code in all existing [default downloaded files](../overview/#auto-generation-process) at your convenience without any restrictions.
+- [x] You allowed to delete/rename all existing data files, except remember **NOT** to delete/rename three critical data-files i.e `index.html`, `404.html` & `500.html` present in `templates` folder at the [default location](../overview/#default-location), otherwise, it will trigger [Auto-generation process](../overview/#auto-generation-process), and it will overwrite the existing files with Server ones.
+- [x] You're allowed to add your own additional `.html`, `.css`, `.js`, etc. files in the respective folders at the [**default location**](../overview/#default-location) and [custom mounted Data folders](#using-webgear-with-custom-mounting-points).
 
 ### Rules for Altering Data Folders 
   
 - [x] You're allowed to add/mount any number of additional folder as shown in [this example above](#using-webgear-with-custom-mounting-points).
-- [x] You're allowed to delete/rename existing folders at the [**default location**](/gears/webgear/overview/#default-location) except remember **NOT** to delete/rename `templates` folder where critical data-files i.e `index.html`, `404.html` & `500.html` are located, otherwise, it will trigger [Auto-generation process](/gears/webgear/overview/#auto-generation-process).
+- [x] You're allowed to delete/rename existing folders at the [**default location**](../overview/#default-location) except remember **NOT** to delete/rename `templates` folder where critical data-files i.e `index.html`, `404.html` & `500.html` are located, otherwise, it will trigger [Auto-generation process](../overview/#auto-generation-process).
 
 &nbsp;
 
 ## Bonus Usage Examples
 
-Because of WebGear API's flexible internal wapper around [VideoGear](/gears/videogear/overview/), it can easily access any parameter of [CamGear](#camgear) and [PiGear](#pigear) videocapture APIs.
+Because of WebGear API's flexible internal wapper around [VideoGear](../../videogear/overview/), it can easily access any parameter of [CamGear](#camgear) and [PiGear](#pigear) videocapture APIs.
 
-!!! info "Following usage examples are just an idea of what can be done with WebGear API, you can try various [VideoGear](/gears/videogear/params/), [CamGear](/gears/camgear/params/) and [PiGear](/gears/pigear/params/) parameters directly in WebGear API in the similar manner."
+!!! info "Following usage examples are just an idea of what can be done with WebGear API, you can try various [VideoGear](../../videogear/params/), [CamGear](../../camgear/params/) and [PiGear](../../pigear/params/) parameters directly in WebGear API in the similar manner."
 
 ### Using WebGear with Pi Camera Module
  

@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-!!! info "All ScreenGear Class parameters are explained [here ➶](/gears/screengear/params/)"
+!!! info "All ScreenGear Class parameters are explained [here ➶](../../../gears/screengear/params/)"
 
 ::: vidgear.gears.ScreenGear	
 	

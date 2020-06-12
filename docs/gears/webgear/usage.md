@@ -44,7 +44,7 @@ You'll also need to install an ASGI Server to run following WebGear usage exampl
 
 Following is the bare-minimum code you need to get started with WebGear API:
 
-!!! warning "If you experience any performance-throttling/lag while running this bare-minimum example, then Kindly see advanced [Performance Tweaks ➶](/gears/webgear/advanced/#performance-enhancements)."
+!!! warning "If you experience any performance-throttling/lag while running this bare-minimum example, then Kindly see advanced [Performance Tweaks ➶](../advanced/#performance-enhancements)."
 
 ### Running Programmatically
 
@@ -85,7 +85,7 @@ which can be accessed on any browser on the network.
 
     You can run `#!py3 python3 -m vidgear.gears -h` help command to see all the advanced settings, as follows:
 
-    !!! warning "If you're using `--options/-op` flag, then kindly wrap your dictionary value in single `''` quotes as shown in [this example](/gears/webgear/advanced/#running-from-terminal)."
+    !!! warning "If you're using `--options/-op` flag, then kindly wrap your dictionary value in single `''` quotes as shown in [this example](../advanced/#running-from-terminal)."
 
     ```sh
     usage: python -m vidgear.gears.asyncio [-h] [-s SOURCE] [-ep ENABLEPICAMERA] [-S STABILIZE]

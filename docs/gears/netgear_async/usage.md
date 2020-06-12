@@ -314,7 +314,7 @@ if __name__ == '__main__':
 
 NetGear_Async can be used with any other Gears without any compatibility issues. 
 
-Let's implement a bare-minimum example where we are sending [Stabilized](/gears/stabilizer/overview/) frames from Server-end and saving them at Client's end with [WriteGear](/gears/writegear/introduction/) as follows:
+Let's implement a bare-minimum example where we are sending [Stabilized](../../stabilizer/overview/) frames from Server-end and saving them at Client's end with [WriteGear](../writegear/introduction/) as follows:
 
 ### Server's End
 

@@ -24,13 +24,13 @@ limitations under the License.
 
 ## What is PiGear API and what does it do?
 
-**Answer:** PiGear is similar to CamGear but exclusively made to support various Raspberry Pi Camera Modules (such as [OmniVision OV5647 Camera Module](https://github.com/techyian/MMALSharp/wiki/OmniVision-OV5647-Camera-Module) and [Sony IMX219 Camera Module](https://github.com/techyian/MMALSharp/wiki/Sony-IMX219-Camera-Module)). _For more info. see [PiGear doc ➶](/gears/pigear/overview/)_
+**Answer:** PiGear is similar to CamGear but exclusively made to support various Raspberry Pi Camera Modules (such as [OmniVision OV5647 Camera Module](https://github.com/techyian/MMALSharp/wiki/OmniVision-OV5647-Camera-Module) and [Sony IMX219 Camera Module](https://github.com/techyian/MMALSharp/wiki/Sony-IMX219-Camera-Module)). _For more info. see [PiGear doc ➶](../../gears/pigear/overview/)_
 
 &nbsp;
 
 ## I'm only familiar with OpenCV, how to get started with PiGear API?
 
-**Answer:** First see [Switching from OpenCV](/switch_from_cv/#switching-videocapture-apis), then go through [PiGear doc](/gears/pigear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First see [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis), then go through [PiGear doc](../../gears/pigear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
@@ -48,7 +48,7 @@ limitations under the License.
 
 ## How to assign `picamera` settings for Camera Module with PiGear?
 
-**Answer:** See [this usage example ➶](/gears/pigear/usage/#using-pigear-with-variable-camera-properties)
+**Answer:** See [this usage example ➶](../../gears/pigear/usage/#using-pigear-with-variable-camera-properties)
 
 &nbsp;
 
@@ -60,6 +60,6 @@ limitations under the License.
 
 ## How to select camera index on Pi Compute IO board with two Cameras attached?
 
-**Answer:** See [PiGear's `camera_num` parameter ➶](/gears/pigear/params/#camera_num)
+**Answer:** See [PiGear's `camera_num` parameter ➶](../../gears/pigear/params/#camera_num)
 
 &nbsp;

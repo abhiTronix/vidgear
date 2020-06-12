@@ -34,13 +34,13 @@ limitations under the License.
 
 - There's also the official [**OpenCV Tutorials** ➶](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_tutorials.html), provided by the OpenCV folks themselves.
 
-Finally, when you're done, go through [Gears ➶](/gears/#gears-what-are-these) to see how VidGear works. If you run into any trouble, or have any questions, then join our [Gitter ➶](https://gitter.im/vidgear/community) Community channel, or else [report an Issue ➶](/contribution/issue/). 
+Finally, when you're done, go through [Gears ➶](../../gears/#gears-what-are-these) to see how VidGear works. If you run into any trouble, or have any questions, then join our [Gitter ➶](https://gitter.im/vidgear/community) Community channel, or else [report an Issue ➶](../../contribution/issue/). 
 
 &nbsp;
 
 ## How to install VidGear python library on my machine?
 
-**Answer:** See [Installation Notes ➶](/installation/).
+**Answer:** See [Installation Notes ➶](../../installation/).
 
 &nbsp;
 
@@ -48,19 +48,19 @@ Finally, when you're done, go through [Gears ➶](/gears/#gears-what-are-these) 
 
 **Answer:** 
 
-Most of the VidGear task are I/O bounded, meaning that the thread spends most of its time handling I/O processes such as performing network requests, pooling frames out of Camera devices etc. It is perfectly fine to use multi-threading for these tasks, as the thread is most of the time being blocked and put into blocked queue by the OS automatically. For further reading, see [Threaded-Queue-Mode ➶](/bonus/TQM/)
+Most of the VidGear task are I/O bounded, meaning that the thread spends most of its time handling I/O processes such as performing network requests, pooling frames out of Camera devices etc. It is perfectly fine to use multi-threading for these tasks, as the thread is most of the time being blocked and put into blocked queue by the OS automatically. For further reading, see [Threaded-Queue-Mode ➶](../../bonus/TQM/)
 
 &nbsp;
 
 ## Why VidGear APIs not working for me?
 
-**Answer:** VidGear docs contains a lot of detailed information, please take your time to read it. Please see [Getting Help ➶](/help/get_help/) for troubleshooting your problems.
+**Answer:** VidGear docs contains a lot of detailed information, please take your time to read it. Please see [Getting Help ➶](../../help/get_help/) for troubleshooting your problems.
 
 &nbsp;
 
 ## How do I report an issue?
 
-**Answer:** See [Reporting an Issue ➶](/contribution/issue/)
+**Answer:** See [Reporting an Issue ➶](../../contribution/issue/)
 
 &nbsp;
 
@@ -72,19 +72,19 @@ Most of the VidGear task are I/O bounded, meaning that the thread spends most of
 
 ## How to contribute to VidGear development?
 
-**Answer:** See our [Contribution Guidelines ➶](/contribution/PR/)
+**Answer:** See our [Contribution Guidelines ➶](../../contribution/PR/)
 
 &nbsp;
 
 ## What OSes are supported by VidGear?
 
-**Answer:** See [Supported Systems ➶](/installation/#supported-systems)
+**Answer:** See [Supported Systems ➶](../../installation/#supported-systems)
 
 &nbsp;
 
 ## What Python versions are supported by VidGear?
 
-**Answer:** See [Supported Python legacies ➶](/installation/#supported-python-legacies)
+**Answer:** See [Supported Python legacies ➶](../../installation/#supported-python-legacies)
 
 &nbsp;
 
@@ -96,6 +96,6 @@ Most of the VidGear task are I/O bounded, meaning that the thread spends most of
 
 ## "I Love using VidGear", How can I support it?
 
-**Answer:** Thank you! See [Helping VidGear ➶](/help/#helping-vidgear)  
+**Answer:** Thank you! See [Helping VidGear ➶](../../help/#helping-vidgear)  
 
 &nbsp;

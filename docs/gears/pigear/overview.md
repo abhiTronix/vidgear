@@ -28,7 +28,7 @@ limitations under the License.
   <sub><i>Raspberry Pi Camera Module</i></sub>
 </p>
 
-PiGear is similar to [CamGear API](/gears/camgear/overview/) but exclusively made to support various Raspberry Pi Camera Modules _(such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module)_.
+PiGear is similar to [CamGear API](../../camgear/overview/) but exclusively made to support various Raspberry Pi Camera Modules _(such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module)_.
 
 PiGear provides a flexible multi-threaded wrapper around complete [picamera](https://picamera.readthedocs.io/en/release-1.13/index.html) python library, and also provides us the ability to exploit almost all of its parameters like _brightness, saturation, sensor_mode, iso, exposure, etc._ effortlessly. Furthermore, PiGear supports multiple camera modules, such as in case of Raspberry Pi Compute module IO boards.
 

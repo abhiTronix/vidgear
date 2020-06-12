@@ -26,7 +26,7 @@ limitations under the License.
 
     * NetGear provides auto-termination feature, where if you terminate server end manually, the connected client(s) end will also terminate themselves to save resources.
 
-    * Only either of two functions (i.e. `send()` and `recv()`) can be accessed at any given instance based on activated [primary mode](/gears/netgear/overview/#primary-modes) selected during NetGear API initialization. Trying to access wrong function in incorrect mode (_for e.g using `send()` function in Receive Mode_), will result in `ValueError`.
+    * Only either of two functions (i.e. `send()` and `recv()`) can be accessed at any given instance based on activated [primary mode](../overview/#primary-modes) selected during NetGear API initialization. Trying to access wrong function in incorrect mode (_for e.g using `send()` function in Receive Mode_), will result in `ValueError`.
 
 ## Bare-Minimum Usage
 

@@ -108,7 +108,7 @@ This parameter controls the YouTube Mode, .i.e if enabled(`y_tube=True`), the Ca
 CamGear(source='https://youtu.be/dQw4w9WgXcQ', y_tube=True)
 ```
 
-Its complete usage example is given [here ➶](/gears/camgear/usage/#using-camgear-with-youtube-videos).
+Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos).
 
 
 &nbsp;
@@ -123,13 +123,13 @@ This parameter selects the colorspace of the source stream.
 
 **Usage:**
 
-!!! tip "All supported `colorspace` values are given [here ➶](/bonus/colorspace_manipulation/)"
+!!! tip "All supported `colorspace` values are given [here ➶](../../../bonus/colorspace_manipulation/)"
 
 ```python
 CamGear(source=0, colorspace="COLOR_BGR2HSV")
 ```
 
-Its complete usage example is given [here ➶](/gears/camgear/usage/#using-camgear-with-direct-colorspace-manipulation)
+Its complete usage example is given [here ➶](../usage/#using-camgear-with-direct-colorspace-manipulation)
 
 &nbsp;
 
@@ -164,7 +164,7 @@ This parameter provides the ability to alter various **Source Tweak Parameters**
 
 **Usage:**
 
-!!! tip "All supported parameters are listed [here ➶](/gears/camgear/source_params/)"
+!!! tip "All supported parameters are listed [here ➶](../source_params/)"
 
 The desired parameters can be passed to CamGear API by formatting them as this parameter's attributes, as follows:
 

@@ -27,7 +27,7 @@ This parameter sets the valid Network IP address for Server/Client. Network addr
 
 **Data-Type:** String
 
-**Default Value:** Its default value is based on selected [primary mode](/gears/netgear/overview/#primary-modes), _i.e `'localhost'` for Send Mode and `'*'` for Receive Mode._
+**Default Value:** Its default value is based on selected [primary mode](../overview/#primary-modes), _i.e `'localhost'` for Send Mode and `'*'` for Receive Mode._
 
 **Usage:**
 
@@ -44,17 +44,17 @@ This parameter sets the valid Network Port for Server/Client. Network port is a 
 
 !!! danger "Exclusive Mode Exception"
     
-    * [**In Multi-Servers Mode**](/gears/netgear/advanced/multi_server/):
+    * [**In Multi-Servers Mode**](../advanced/multi_server/):
 
         * A unique port number MUST be assigned to each Server on the network using this parameter. 
         * At Client end, a List/Tuple of all available Server(s) ports MUST be assigned, using this same parameter. 
-        * See its usage example [here ➶](/gears/netgear/advanced/multi_server/#bare-minimum-usage).
+        * See its usage example [here ➶](../advanced/multi_server/#bare-minimum-usage).
 
-    *  [**In Multi-Client Mode**](/gears/netgear/advanced/multi_client/):
+    *  [**In Multi-Client Mode**](../advanced/multi_client/):
 
         * A unique port number MUST be assigned to each Client on the network using this parameter. 
         * At Server end, a List/Tuple of all available Client(s) ports MUST be assigned, using this same parameter. 
-        * See its usage example [here ➶](/gears/netgear/advanced/multi_client/#bare-minimum-usage).
+        * See its usage example [here ➶](../advanced/multi_client/#bare-minimum-usage).
 
 **Data-Type:** String or List/Tuple
 
@@ -138,21 +138,21 @@ This parameter provides the flexibility to alter various NetGear API's internal 
 
 ??? tip "Supported dictionary attributes for NetGear API"
 
-    * **`multiserver_mode`** (_boolean_) : This internal attribute activates the exclusive [**Multi-Servers Mode**](/gears/netgear/advanced/multi_server/), if enabled(`True`).
+    * **`multiserver_mode`** (_boolean_) : This internal attribute activates the exclusive [**Multi-Servers Mode**](../advanced/multi_server/), if enabled(`True`).
 
-    * **`multiclient_mode`** (_boolean_) : This internal attribute activates the exclusive [**Multi-Clients Mode**](/gears/netgear/advanced/multi_client/), if enabled(`True`).
+    * **`multiclient_mode`** (_boolean_) : This internal attribute activates the exclusive [**Multi-Clients Mode**](../advanced/multi_client/), if enabled(`True`).
 
-    * **`secure_mode`** (_integer_) : This internal attribute selects the exclusive [**Secure Mode**](/gears/netgear/advanced/secure_mode/). Its possible values are: `0`_(i.e. Grassland(no security))_ or `1`_(i.e. StoneHouse)_ or `2`_(i.e. IronHouse)_.
+    * **`secure_mode`** (_integer_) : This internal attribute selects the exclusive [**Secure Mode**](../advanced/secure_mode/). Its possible values are: `0`_(i.e. Grassland(no security))_ or `1`_(i.e. StoneHouse)_ or `2`_(i.e. IronHouse)_.
 
-    * **`bidirectional_mode`** (_boolean_) : This internal attribute activates the exclusive [**Bidirectional Mode**](/gears/netgear/advanced/bidirectional_mode/), if enabled(`True`).
+    * **`bidirectional_mode`** (_boolean_) : This internal attribute activates the exclusive [**Bidirectional Mode**](../advanced/bidirectional_mode/), if enabled(`True`).
 
-    * **`custom_cert_location`** (_string_) : In Secure Mode, This internal attribute assigns user-defined location/path to directory for generating/storing Public+Secret Keypair necessary for encryption. More information can be found [here ➶](/gears/netgear/advanced/secure_mode/#supported-attributes)
+    * **`custom_cert_location`** (_string_) : In Secure Mode, This internal attribute assigns user-defined location/path to directory for generating/storing Public+Secret Keypair necessary for encryption. More information can be found [here ➶](../advanced/secure_mode/#supported-attributes)
 
-    * **`overwrite_cert`** (_boolean_) : In Secure Mode, This internal attribute decides whether to overwrite existing Public+Secret Keypair/Certificates or not, ==at the Server-end only==. More information can be found [here ➶](/gears/netgear/advanced/secure_mode/#supported-attributes)
+    * **`overwrite_cert`** (_boolean_) : In Secure Mode, This internal attribute decides whether to overwrite existing Public+Secret Keypair/Certificates or not, ==at the Server-end only==. More information can be found [here ➶](../advanced/secure_mode/#supported-attributes)
 
-    * **`compression_format`**(_string_): This internal attribute activates compression with selected encoding format at the Server end only. The possible values are `.jpg`, `.png`, `.bmp`. More information can be found [here ➶](/gears/netgear/advanced/compression/#supported-attributes)
+    * **`compression_format`**(_string_): This internal attribute activates compression with selected encoding format at the Server end only. The possible values are `.jpg`, `.png`, `.bmp`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
 
-    * **`compression_param`**(_integer & list/tuple_): This internal attribute allow us to pass different format-specific [Encoding parameters](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga461f9ac09887e47797a54567df3b8b63) and [Decoding flags](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e). More information can be found [here ➶](/gears/netgear/advanced/compression/#supported-attributes)
+    * **`compression_param`**(_integer & list/tuple_): This internal attribute allow us to pass different format-specific [Encoding parameters](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga461f9ac09887e47797a54567df3b8b63) and [Decoding flags](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e). More information can be found [here ➶](../advanced/compression/#supported-attributes)
 
     * **`max_retries`**(_integer_): This internal attribute controls the maximum retries before Server/Client exit itself, if it's unable to get any response/reply from the socket before a certain amount of time, when synchronous messaging patterns like (`zmq.PAIR` & `zmq.REQ/zmq.REP`) are being used. It's value can anything greater than `0`, and its default value is `3`.
 

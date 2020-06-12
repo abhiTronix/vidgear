@@ -56,7 +56,7 @@ Its valid input can be one of the following:
 
 ## **`compression_mode`**
 
-This parameter selects the WriteGear's primary [Mode of Operation](/gears/writegear/introduction/#modes-of-operation), i.e. if this parameter is enabled _(.i.e `compression_mode = True`)_ WriteGear will use **FFmpeg** to encode output video, and if disabled _(.i.e `compression_mode = False`)_, the **OpenCV's VideoWriter API** will be used for encoding. 
+This parameter selects the WriteGear's primary [Mode of Operation](../../introduction/#modes-of-operation), i.e. if this parameter is enabled _(.i.e `compression_mode = True`)_ WriteGear will use **FFmpeg** to encode output video, and if disabled _(.i.e `compression_mode = False`)_, the **OpenCV's VideoWriter API** will be used for encoding. 
 
 **Data-Type:** Boolean
 
@@ -77,7 +77,7 @@ This parameter assigns the custom _path/directory_ where the custom FFmpeg execu
 
 !!! info "Compression Mode Behavior on Windows"
     
-    In Compression Mode, if a custom FFmpeg executable's path | directory is not provided through `custom_ffmpeg` parameter on Windows machine, then WriteGear API will ==automatically attempt to download and extract suitable Static FFmpeg binaries at suitable location on your windows machine==. More information can be found [here ➶](/gears/writegear/compression/advanced/ffmpeg_install/#a-auto-installation).
+    In Compression Mode, if a custom FFmpeg executable's path | directory is not provided through `custom_ffmpeg` parameter on Windows machine, then WriteGear API will ==automatically attempt to download and extract suitable Static FFmpeg binaries at suitable location on your windows machine==. More information can be found [here ➶](../advanced/ffmpeg_install/#a-auto-installation).
 
 **Data-Type:** String
 
@@ -120,7 +120,7 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
 
 * **Special Internal Parameters:** In addition to FFmpeg parameters, WriteGear API also supports some Special Parameters to tweak its internal properties. These parameters are discussed below:
 
-    * **`-ffmpeg_download_path`** _(string)_: sets the custom directory for downloading FFmpeg Static Binaries in Compression Mode, during the [Auto-Installation](/gears/writegear/compression/advanced/ffmpeg_install/#a-auto-installation) on Windows Machines Only. If this parameter is not altered, then these binaries will auto-save to the default temporary directory (for e.g. `C:/User/temp`) on your windows machine. It can be used as follows: 
+    * **`-ffmpeg_download_path`** _(string)_: sets the custom directory for downloading FFmpeg Static Binaries in Compression Mode, during the [Auto-Installation](../advanced/ffmpeg_install/#a-auto-installation) on Windows Machines Only. If this parameter is not altered, then these binaries will auto-save to the default temporary directory (for e.g. `C:/User/temp`) on your windows machine. It can be used as follows: 
 
         ```python
         output_params = {"-ffmpeg_download_path": "C:/User/foo/foo1"} # will be saved to "C:/User/foo/foo1"
@@ -132,7 +132,7 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
         output_params = {"-input_framerate": 60.0} # set the constant framerate to 60fps
         ```
 
-        !!! tip "Its usage example can be found [here ➶](/gears/writegear/compression/usage/#using-compression-mode-with-controlled-framerate)"
+        !!! tip "Its usage example can be found [here ➶](../usage/#using-compression-mode-with-controlled-framerate)"
       
     * **`-output_dimensions`** _(tuple/list)_ : sets the custom dimensions(*size/resolution*) of the output video _(otherwise input video-frame size will be used)_. Its value can either be a **tuple** => `(width,height)` or a **list** => `[width, height]`, Its usage is as follows: 
     

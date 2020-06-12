@@ -30,9 +30,9 @@ limitations under the License.
 </p>
 
 
-VideoGear provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**](/gears/stabilizer/overview/) class. 
+VideoGear provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**](../../stabilizer/overview/) class. 
 
-VideoGear also act as a Common API, that provides an internal access to both [CamGear](/gears/camgear/overview/) and [PiGear](/gears/pigear/overview/) APIs and their parameters, with a special [`enablePiCamera`](/gears/videogear/params/#enablepicamera) boolean flag.
+VideoGear also act as a Common API, that provides an internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs and their parameters, with a special [`enablePiCamera`](../params/#enablepicamera) boolean flag.
 
 VideoGear is basically ideal when you need to switch to different video sources without changing your code much. Also, it enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort and using way fewer lines of code.
 

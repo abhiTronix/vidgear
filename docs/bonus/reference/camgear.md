@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-!!! info "All CamGear Class parameters are explained [here ➶](/gears/camgear/params/)"
+!!! info "All CamGear Class parameters are explained [here ➶](../../../gears/camgear/params/)"
 
 ::: vidgear.gears.CamGear	
 	

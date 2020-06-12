@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-!!! info "All WebGear Class parameters are explained [here ➶](/gears/webgear/params/)"
+!!! info "All WebGear Class parameters are explained [here ➶](../../../gears/webgear/params/)"
 
 ::: vidgear.gears.asyncio.WebGear	
 	

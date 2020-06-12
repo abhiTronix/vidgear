@@ -23,9 +23,9 @@ limitations under the License.
 
 !!! warning "Important Information"
 
-    * WriteGear **MUST** requires FFmpeg executables for its Compression capabilities in Compression Mode. Follow these dedicated [Installation Instructions ➶](/gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
+    * WriteGear **MUST** requires FFmpeg executables for its Compression capabilities in Compression Mode. Follow these dedicated [Installation Instructions ➶](../advanced/ffmpeg_install/) for its installation.
 
-    * ==In case WriteGear API fails to detect valid FFmpeg executables on your system _(even if Compression Mode is enabled)_, it automatically fallbacks to [Non-Compression Mode](/gears/writegear/non_compression/overview/).==
+    * ==In case WriteGear API fails to detect valid FFmpeg executables on your system _(even if Compression Mode is enabled)_, it automatically fallbacks to [Non-Compression Mode](../../non_compression/overview/).==
 
     * **DO NOT** feed frames with different dimensions or channels to WriteGear, otherwise WriteGear will exit with `ValueError`.
 
@@ -144,7 +144,7 @@ writer.close()
 
 ## Using Compression Mode with controlled FrameRate
 
-WriteGear API provides [`-input_framerate`](/gears/writegear/compression/params/#supported-parameters)  attribute for its `options` dictionary parameter in Compression Mode, which allow us to control/set the constant framerate of the output video. 
+WriteGear API provides [`-input_framerate`](../params/#supported-parameters)  attribute for its `options` dictionary parameter in Compression Mode, which allow us to control/set the constant framerate of the output video. 
 
 ??? tip "Advanced Tip for setting constant framerate"
 
@@ -217,7 +217,7 @@ writer.close()
 ## Using Compression Mode with Hardware encoders
 
 
-By default, WriteGear API uses *libx264/libx265 encoders* for encoding its output files in Compression Mode. But you can easily change encoder to your suitable [supported encoder](/gears/writegear/compression/params/#supported-encoders) by passing `-vcodec` FFmpeg parameter as an attribute in its [*output_param*](/gears/writegear/compression/params/#output_params) dictionary parameter. In addition to this, you can also specify the additional properties/features of your system's GPU easily. 
+By default, WriteGear API uses *libx264/libx265 encoders* for encoding its output files in Compression Mode. But you can easily change encoder to your suitable [supported encoder](../params/#supported-encoders) by passing `-vcodec` FFmpeg parameter as an attribute in its [*output_param*](../params/#output_params) dictionary parameter. In addition to this, you can also specify the additional properties/features of your system's GPU easily. 
 
 ??? warning "User Discretion Advised"
 

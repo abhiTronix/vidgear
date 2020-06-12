@@ -32,7 +32,7 @@ limitations under the License.
 
 In this exclusive mode, NetGear API robustly handles Multiple Clients at once, thereby providing seamless access to frames and unidirectional data transfer to multiple Clients/Consumers across the network in real-time. This mode works almost contrary to Multi-Servers Mode but data transfer only works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_.
 
-Each new client connects to a single server, and can be identified by its unique port address on the network. The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`), and it can be easily activated in NetGear API through `multiclient_mode` attribute of its [`option`](/gears/netgear/params/#options) dictionary parameter, during initialization.
+Each new client connects to a single server, and can be identified by its unique port address on the network. The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`), and it can be easily activated in NetGear API through `multiclient_mode` attribute of its [`option`](../../params/#options) dictionary parameter, during initialization.
 
 
 &nbsp;
@@ -40,13 +40,13 @@ Each new client connects to a single server, and can be identified by its unique
 
 !!! warning "Multi-Clients Mode Requirements"
 
-    * A unique PORT address **MUST** be assigned to each Client on the network using its [`port`](/gears/netgear/params/#port) parameter.
+    * A unique PORT address **MUST** be assigned to each Client on the network using its [`port`](../../params/#port) parameter.
     
-    * A list/tuple of PORT addresses of all unique Cients **MUST** be assigned at Server's end using its [`port`](/gears/netgear/params/#port) parameter for a successful connection.
+    * A list/tuple of PORT addresses of all unique Cients **MUST** be assigned at Server's end using its [`port`](../../params/#port) parameter for a successful connection.
 
     * `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ and `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ are the only supported pattern values for this Mode. Thereby, calling any other pattern value will result in `ValueError`.
 
-    * The [`address`](/gears/netgear/params/#address) parameter value of each Client **MUST** exactly match the Server. 
+    * The [`address`](../../params/#address) parameter value of each Client **MUST** exactly match the Server. 
 
 &nbsp;
 
@@ -54,7 +54,7 @@ Each new client connects to a single server, and can be identified by its unique
 
 - [x] Enables Multiple Client(s) connection with a single Client.
 
-- [x] Ability to [send any additional data](/gears/netgear/advanced/multi_client/#using-multi-clients-mode-with-custom-data-transfer) of any datatype along with frames in real-time.
+- [x] Ability to [send any additional data](../../advanced/multi_client/#using-multi-clients-mode-with-custom-data-transfer) of any datatype along with frames in real-time.
 
 - [x] Number of Clients can be extended to several numbers depending upon your system's hardware limit.
 

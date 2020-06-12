@@ -188,6 +188,6 @@ You can do it. But please use one of these two prefixes to let reviewers know ab
 
 **Q3. Would you accept a huge Pull Request with Lots of Changes?**
 
-First, make sure that the changes are somewhat related. Otherwise, please create separate pull requests. Anyway, before submitting a huge change, it's probably a good idea to [open an issue](/contribution/issue/) in the VidGear Github repository to ask the maintainers if they agree with your proposed changes. Otherwise, they could refuse your proposal after you put all that hard work into making the changes. We definitely don't want you to waste your time!
+First, make sure that the changes are somewhat related. Otherwise, please create separate pull requests. Anyway, before submitting a huge change, it's probably a good idea to [open an issue](../../contribution/issue) in the VidGear Github repository to ask the maintainers if they agree with your proposed changes. Otherwise, they could refuse your proposal after you put all that hard work into making the changes. We definitely don't want you to waste your time!
 
 &nbsp; 

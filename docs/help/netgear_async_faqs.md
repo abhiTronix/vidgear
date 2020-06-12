@@ -24,19 +24,19 @@ limitations under the License.
 
 ## What is NetGear_Async API and what does it do?
 
-**Answer:** NetGear_Async is an asyncio videoframe messaging framework, built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html), and powered by high-performance asyncio event loop called [**`uvloop`**](https://github.com/MagicStack/uvloop) to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system. _For more info. see [NetGear_Async doc ➶](/gears/netgear_async/overview/)_
+**Answer:** NetGear_Async is an asyncio videoframe messaging framework, built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html), and powered by high-performance asyncio event loop called [**`uvloop`**](https://github.com/MagicStack/uvloop) to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system. _For more info. see [NetGear_Async doc ➶](../../gears/netgear_async/overview/)_
 
 &nbsp;
 
 ## How to get started with NetGear_Async API?
 
-**Answer:** See [NetGear_Async doc ➶](/gears/netgear_async/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** See [NetGear_Async doc ➶](../../gears/netgear_async/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
 ## "NetGear_Async is throwing `ModuleNotFoundError` on importing", Why?
 
-**Answer:** This error means, VidGear is installed **WITHOUT asyncio package support** on your machine. For this support, see [Requirements ➶](/gears/netgear_async/usage/#requirement).
+**Answer:** This error means, VidGear is installed **WITHOUT asyncio package support** on your machine. For this support, see [Requirements ➶](../../gears/netgear_async/usage/#requirement).
 
 &nbsp;
 
@@ -48,18 +48,18 @@ limitations under the License.
 
 * **NetGear_Async:** is an asyncio videoframe messaging framework, built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html), and powered by high-performance asyncio event loop called [**`uvloop`**](https://github.com/MagicStack/uvloop) to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints.
 
-**Key Difference:** NetGear_Async is way memory efficient and little faster, but has less features as compared to NetGear API. On the other hand, NetGear API provides many powerful [Exclusive Modes](/gears/netgear/overview/#exclusive-modes), but is way less memory efficient and a bit slower than NetGear_Async API.
+**Key Difference:** NetGear_Async is way memory efficient and little faster, but has less features as compared to NetGear API. On the other hand, NetGear API provides many powerful [Exclusive Modes](../../gears/netgear/overview/#exclusive-modes), but is way less memory efficient and a bit slower than NetGear_Async API.
 
 &nbsp;
 
 ## Can I use Multi-Server, Bi-Directional like modes in NetGear_Async?
 
-**Answer:** No, NetGear_Async does NOT provide support for any NetGear's [Exclusive modes](/gears/netgear/overview/#exclusive-modes) yet.
+**Answer:** No, NetGear_Async does NOT provide support for any NetGear's [Exclusive modes](../../gears/netgear/overview/#exclusive-modes) yet.
 
 &nbsp;
 
 ## How to use NetGear_Async with custom Server Source from OpenCV?
 
-**Answer:** See [this usage example ➶](/gears/netgear_async/usage/#using-netgear_async-with-a-custom-sourceopencv). 
+**Answer:** See [this usage example ➶](../../gears/netgear_async/usage/#using-netgear_async-with-a-custom-sourceopencv). 
 
 &nbsp;

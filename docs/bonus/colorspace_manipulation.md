@@ -29,7 +29,7 @@ All VidGear's VideoCapture Gears, namely CamGear, PiGear, ScreenGear, and VideoG
   
 Primarily, the safest way is by **`colorspace`** _(string)_ parameter of the respective VideoCapture API, that can be used to easily alter the colorspace of the input source, during initialization. But on the downside, `colorspace` parameter value **CANNOT** be changed/altered at runtime. 
 
-All possible values for this parameter are discussed [below ➶](/bonus/colorspace_manipulation/)
+All possible values for this parameter are discussed [below ➶](#supported-colorspace-parameter-values)
 
 ### Using **`color_space`** global variable
 
@@ -50,7 +50,7 @@ Alternatively, a more direct approach is by using **`color_space`** _(integer)_ 
 
 	* Any incorrect or None-type value, will immediately revert the colorspace to default _(i.e. `BGR`)_.
 
-	* Using `color_space` global variable with [Threaded Queue Mode](/bonus/TQM/) may have minor lag, User discretion is advised.
+	* Using `color_space` global variable with [Threaded Queue Mode](../../bonus/TQM/) may have minor lag, User discretion is advised.
 
 
 &nbsp; 
@@ -91,21 +91,21 @@ All supported string values for `colorspace` parameter are as follows:
 ## Usage examples
 
 ### Using CamGear with Direct Colorspace Manipulation
-[The complete usage example can be found here ➶](/gears/camgear/usage/#using-camgear-with-direct-colorspace-manipulation)
+[The complete usage example can be found here ➶](../../gears/camgear/usage/#using-camgear-with-direct-colorspace-manipulation)
 
 &nbsp; 
 
 ### Using PiGear with Direct Colorspace Manipulation
-[The complete usage example can be found here ➶](/gears/pigear/usage/#using-pigear-with-direct-colorspace-manipulation)
+[The complete usage example can be found here ➶](../../gears/pigear/usage/#using-pigear-with-direct-colorspace-manipulation)
 
 &nbsp; 
 
 ### Using VideoGear with Colorspace Manipulation
-[The complete usage example can be found here ➶](/gears/videogear/usage/#using-videogear-with-colorspace-manipulation)
+[The complete usage example can be found here ➶](../../gears/videogear/usage/#using-videogear-with-colorspace-manipulation)
 
 &nbsp; 
 
 ### Using ScreenGear with Direct Colorspace Manipulation
-[The complete usage example can be found here ➶](/gears/screengear/usage/#using-screengear-with-direct-colorspace-manipulation)
+[The complete usage example can be found here ➶](../../gears/screengear/usage/#using-screengear-with-direct-colorspace-manipulation)
 
 &nbsp; 

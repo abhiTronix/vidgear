@@ -33,7 +33,7 @@ If you've found a new bug or you've come up with some new feature which can impr
 
   * Remember to first search GitHub for a open or closed issue that relates to your submission or already been reported. You may find related information and the discussion might inform you of workarounds that may help to resolve the issue. 
   * For quick questions, please refrain from opening an issue, as you can reach us on [Gitter](https://gitter.im/vidgear/community) community channel.
-  * Also, go comprehensively through our dedicated [FAQ & Troubleshooting section](http://127.0.0.1:8000/help/get_help/#frequently-asked-questions).
+  * Also, go comprehensively through our dedicated [FAQ & Troubleshooting section](../../help/get_help/#frequently-asked-questions).
 
 ### Gather Required Information
 

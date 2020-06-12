@@ -31,7 +31,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 
 ### WebGear Specific attributes
 
-* **`custom_data_location`** _(string)_ : Can be used to change/alter [*default location*](/gears/webgear/overview/#default-location) path to somewhere else. Its usage is as follows:
+* **`custom_data_location`** _(string)_ : Can be used to change/alter [*default location*](../overview/#default-location) path to somewhere else. Its usage is as follows:
 
     ```python
     options = {"custom_data_location": "/home/foo/foo1"} #setdefault location to '/home/foo/foo1'
@@ -39,7 +39,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     WebGear(logging=True, **options)
     ```
 
-* **`overwrite_default_files`** _(boolean)_ : Can be used to force trigger the [Auto-generation process](/gears/webgear/overview/#auto-generation-process) to overwrite existing data-files. Its usage is as follows:
+* **`overwrite_default_files`** _(boolean)_ : Can be used to force trigger the [Auto-generation process](../overview/#auto-generation-process) to overwrite existing data-files. Its usage is as follows:
 
     ```python
     options = {"overwrite_default_files": True} #force trigger the Auto-generation process
@@ -47,7 +47,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     WebGear(logging=True, **options)
     ```
     
-    !!! danger "Remember only [downloaded files](/gears/webgear/overview/#auto-generation-process) will be overwritten in this process, and any other file/folder will NOT be affected/overwritten."
+    !!! danger "Remember only [downloaded files](../overview/#auto-generation-process) will be overwritten in this process, and any other file/folder will NOT be affected/overwritten."
 
 * **`frame_size_reduction`** _(int/float)_ : This attribute controls the size reduction _(in percentage)_ of the frame to be streamed on Server._ The value defaults to `20`, and must be no higher than `90` _(fastest, max compression, Barely Visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40-60`. Its usage is as follows:
 
@@ -128,7 +128,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 
 ### CamGear Specific attributes
 
-!!! tip "All supported parameters are listed [here ➶](/gears/camgear/source_params/#supported-source-tweak-parameters)"
+!!! tip "All supported parameters are listed [here ➶](../../camgear/source_params/#supported-source-tweak-parameters)"
 
 The desired parameters can be passed to VideoGear API by formatting them as this parameter's attributes, as follows:
 
@@ -172,7 +172,7 @@ Additionaly, `options` parameter also support some User-specific attributes, whi
 
 ### **`enablePiCamera`** 
 
-This parameter select access to [PiGear](/gears/pigear/overview/) or [CamGear](/gears/camgear/overview/) API respectively. This means the if `enablePiCamera` flag is `True`, `PiGear` API will be accessed and if `False`, the `CamGear` API will be accessed. 
+This parameter select access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) API respectively. This means the if `enablePiCamera` flag is `True`, `PiGear` API will be accessed and if `False`, the `CamGear` API will be accessed. 
 
 
 **Data-Type:** Boolean
@@ -185,7 +185,7 @@ This parameter select access to [PiGear](/gears/pigear/overview/) or [CamGear](/
 WebGear(enablePiCamera=True) # enable access to PiGear API
 ```
 
-Its complete usage example is given [here ➶](/gears/webgear/advanced/#using-webgear-with-pi-camera-module).
+Its complete usage example is given [here ➶](../advanced/#using-webgear-with-pi-camera-module).
 
 
 &nbsp; 
@@ -196,7 +196,7 @@ Its complete usage example is given [here ➶](/gears/webgear/advanced/#using-we
 
 ### **`stabilize`**
 
-This parameter set this flag to enable access to [Stabilizer Class](/gears/stabilizer/overview/), i.e. flag can be set to `True`(_to enable_) or unset to `False`(_to disable_) this mode. 
+This parameter set this flag to enable access to [Stabilizer Class](../../stabilizer/overview/), i.e. flag can be set to `True`(_to enable_) or unset to `False`(_to disable_) this mode. 
 
 **Data-Type:** Boolean
 
@@ -208,7 +208,7 @@ This parameter set this flag to enable access to [Stabilizer Class](/gears/stabi
 WebGear(stabilize=True) # enable stabilization
 ```
 
-Its complete usage example is given [here ➶](/gears/webgear/advanced/#using-webgear-with-real-time-video-stabilization-enabled).
+Its complete usage example is given [here ➶](../advanced/#using-webgear-with-real-time-video-stabilization-enabled).
 
 
 &nbsp;
@@ -404,7 +404,7 @@ This parameter selects the colorspace of the source stream.
 
 **Usage:**
 
-!!! tip "All supported `colorspace` values are given [here ➶](/bonus/colorspace_manipulation/)"
+!!! tip "All supported `colorspace` values are given [here ➶](../../../bonus/colorspace_manipulation/)"
 
 ```python
 WebGear(colorspace="COLOR_BGR2HSV")

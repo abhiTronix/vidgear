@@ -122,7 +122,7 @@ stream.stop()
 CamGear API also flexibly support various **Source Tweak Parameters** available within [OpenCV's VideoCapture API](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d). These parameters can be easily applied to source stream in CamGear API through its `options` dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
 
 
-!!! tip "All the supported Source Tweak Parameters can be found [here ➶](/gears/camgear/source_params/#source-tweak-parameters-for-camgear-api)"
+!!! tip "All the supported Source Tweak Parameters can be found [here ➶](../source_params/#source-tweak-parameters-for-camgear-api)"
 
 
 ```python
@@ -172,7 +172,7 @@ stream.stop()
 
 CamGear API also supports **Direct Colorspace Manipulation**, which is ideal for changing source colorspace on the run. 
 
-!!! info "A more detailed  information on colorspace manipulation can be found [here ➶](/bonus/TQM/#threaded-queue-mode)"
+!!! info "A more detailed  information on colorspace manipulation can be found [here ➶](../../../bonus/TQM/#threaded-queue-mode)"
 
 In following example code, we will start with [**HSV**](https://en.wikipedia.org/wiki/HSL_and_HSV) as source colorspace, and then we will switch to [**GRAY**](https://en.wikipedia.org/wiki/Grayscale)  colorspace when `w` key is pressed, and then [**LAB**](https://en.wikipedia.org/wiki/CIELAB_color_space) colorspace when `e` key is pressed, finally default colorspace _(i.e. **BGR**)_ when `s` key is pressed. Also, quit when `q` key is pressed:
 

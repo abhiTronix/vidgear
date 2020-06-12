@@ -34,7 +34,7 @@ ScreenGear is designed exclusively for ultra-fast Screencasting, that means it c
 
 ScreenGear API implements a multi-threaded wrapper around [**python-mss**](https://github.com/BoboTiG/python-mss) python library, and also flexibly supports its internal parameter. 
 
-Furthermore, ScreenGear API relies on [**Threaded Queue mode**](/bonus/TQM/) for threaded, error-free and synchronized frame handling.
+Furthermore, ScreenGear API relies on [**Threaded Queue mode**](../../../bonus/TQM/) for threaded, error-free and synchronized frame handling.
 
 &nbsp; 
 

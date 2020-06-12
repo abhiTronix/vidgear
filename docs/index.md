@@ -54,23 +54,23 @@ These Gears can be classified as follows:
 
 **VideoCapture Gears**
 
-* [CamGear](/gears/camgear/overview/): Multi-threaded API targeting various IP-USB-Cameras/Network-Streams/YouTube-Video-URLs.
-* [PiGear](/gears/pigear/overview/): Multi-threaded API targeting  various Raspberry Pi Camera Modules.
-* [ScreenGear](/gears/screengear/overview/): Multi-threaded ultra-fast Screencasting.    
-* [VideoGear](/gears/videogear/overview/): Common API with internal [Video Stabilizer](/gears/stabilizer/overview/) wrapper.  
+* [CamGear](../gears/camgear/overview/): Multi-threaded API targeting various IP-USB-Cameras/Network-Streams/YouTube-Video-URLs.
+* [PiGear](../gears/pigear/overview/): Multi-threaded API targeting  various Raspberry Pi Camera Modules.
+* [ScreenGear](../gears/screengear/overview/): Multi-threaded ultra-fast Screencasting.    
+* [VideoGear](../gears/videogear/overview/): Common API with internal [Video Stabilizer](../gears/stabilizer/overview/) wrapper.  
 
 **VideoWriter Gears**
 
-* [WriteGear](/gears/writegear/introduction/): Handles Flexible Lossless Video Encoding and Compression.
+* [WriteGear](../gears/writegear/introduction/): Handles Flexible Lossless Video Encoding and Compression.
 
 **Network Gears**
 
-* [NetGear](/gears/netgear/overview/): Handles high-performance video-frames & data transfer between interconnecting systems over the network.
+* [NetGear](../gears/netgear/overview/): Handles high-performance video-frames & data transfer between interconnecting systems over the network.
 
 * **Asynchronous I/O Network Gears:**
 
-    * [WebGear](/gears/webgear/overview/): ASGI Video Server that can send live video-frames to any web browser on the network.
-    * [NetGear_Async](/gears/netgear_async/overview/): Immensely Memory-efficient Asyncio video-frames network messaging framework. 
+    * [WebGear](../gears/webgear/overview/): ASGI Video Server that can send live video-frames to any web browser on the network.
+    * [NetGear_Async](../gears/netgear_async/overview/): Immensely Memory-efficient Asyncio video-frames network messaging framework. 
 
 &nbsp;
 

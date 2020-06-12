@@ -32,7 +32,7 @@ NetGear API supports real-time Frame Compression _(Encoding/Decoding capabilitie
 
 In Frame Compression, NetGear API utilizes OpenCV's [imencode](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e) & [imdecode](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e) methods in conjunction with its flexible APIs at Server and Client end respectively. Eurthrermore, this aid us to achieve better control over the compression of the frame being sent over the network, and thereby helps in optimizing the performance, but only at the cost of quality. 
 
-Frame Compression can be easily activated in NetGear API through `compression_format` & `compression_param` attributes of its [`option`](/gears/netgear/params/#options) dictionary parameter, during initialization.
+Frame Compression can be easily activated in NetGear API through `compression_format` & `compression_param` attributes of its [`option`](../../params/#options) dictionary parameter, during initialization.
 
 &nbsp;
 
@@ -64,7 +64,7 @@ Frame Compression can be easily activated in NetGear API through `compression_fo
 
 ## Supported Attributes
 
-For implementing Frame Compression, NetGear API currently provide following attribute for its [`option`](/gears/netgear/params/#options) dictionary parameter:
+For implementing Frame Compression, NetGear API currently provide following attribute for its [`option`](../../params/#options) dictionary parameter:
 
 * `compression_format` (_string_): This attribute activates compression with selected encoding format at the Server end only. Its possible valid values are: `'.jpg'`/`'.jpeg'` or `'.png'` or `'.bmp'`, and its usage is as follows:
     
@@ -315,7 +315,7 @@ In this example we are going to implement a bare-minimum example, where we will 
 
 !!! tip "This feature is great for building applications like Real-Time Video Chat."
 
-!!! note "This Dual Frame Compression feature also available for [Multi-Clients](/gears/netgear/advanced/multi_client/) Mode at Client(s) end only."
+!!! note "This Dual Frame Compression feature also available for [Multi-Clients](../../advanced/multi_client/) Mode at Client(s) end only."
 
 !!! info "We're also using VidGear's real-time _Frame-Size Reducer_(`reducer`) method for reducing frame-size on-the-go for additional performance."
 

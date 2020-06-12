@@ -38,9 +38,9 @@ The CamGear API's [`option`](https://github.com/abhiTronix/vidgear/wiki/CamGear#
 
 **All Source Tweak Parameters supported by CamGear API are as follows:**
 
-!!! info "These parameters can be passed to CamGear's [`option`](/gears/camgear/params/#options) dictionary parameter by formatting them as its string attributes."
+!!! info "These parameters can be passed to CamGear's [`option`](../params/#options) dictionary parameter by formatting them as its string attributes."
 
-!!! tip "Its complete usage example is [here ➶](/gears/camgear/usage/#using-camgear-with-variable-camera-properties)"
+!!! tip "Its complete usage example is [here ➶](../usage/#using-camgear-with-variable-camera-properties)"
 
 |Values|Description|
 |:--------------------------------------:	|:--------------------------------------------------------------------------------------------------------------------	|

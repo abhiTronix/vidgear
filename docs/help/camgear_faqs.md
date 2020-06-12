@@ -24,13 +24,13 @@ limitations under the License.
 
 ## What is CamGear API and what does it do?
 
-**Answer:** CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format (upto 4k tested), any network stream URL such as http(s), rtp, rstp, rtmp, mms, etc. In addition to this, it also supports live Gstreamer's RAW pipelines and YouTube video/livestreams URLs. _For more info. see [CamGear doc➶](/gears/camgear/overview/)._
+**Answer:** CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format (upto 4k tested), any network stream URL such as http(s), rtp, rstp, rtmp, mms, etc. In addition to this, it also supports live Gstreamer's RAW pipelines and YouTube video/livestreams URLs. _For more info. see [CamGear doc➶](../../gears/camgear/overview/)._
 
 &nbsp;
 
 ## I'm only familiar with OpenCV, how to get started with CamGear API?
 
-**Answer:** First see [Switching from OpenCV](/switch_from_cv/#switching-videocapture-apis), then go through [CamGear doc](/gears/camgear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First see [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis), then go through [CamGear doc](../../gears/camgear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
@@ -42,19 +42,19 @@ limitations under the License.
 
 ## How to change OpenCV source backend in CamGear API?
 
-**Answer:** See [its Parameters ➶](/gears/camgear/params/). Its, `backend`(int) parameter sets the backend of the source. Its value can be for e.g. `backend = cv2.CAP_DSHOW` in case of Direct Show.
+**Answer:** See [its Parameters ➶](../../gears/camgear/params/). Its, `backend`(int) parameter sets the backend of the source. Its value can be for e.g. `backend = cv2.CAP_DSHOW` in case of Direct Show.
 
 &nbsp;
 
 ## How to get framerate of the source?
 
-**Answer:** CamGear's `framerate` global variable can be used to retrieve framerate of the input video stream.  See [this example ➶](/gears/writegear/compression/usage/#using-compression-mode-with-controlled-framerate).
+**Answer:** CamGear's `framerate` global variable can be used to retrieve framerate of the input video stream.  See [this example ➶](../../gears/writegear/compression/usage/#using-compression-mode-with-controlled-framerate).
 
 &nbsp;
 
 ## How to open network streams with VidGear?
 
-**Answer:** Just give your stream URL directly to CamGear's [`source`](/gears/camgear/params/#source) parameter.
+**Answer:** Just give your stream URL directly to CamGear's [`source`](../../gears/camgear/params/#source) parameter.
 
 &nbsp;
 
@@ -82,13 +82,13 @@ stream = CamGear(source='udpsrc port=5000 ! application/x-rtp,media=video,payloa
 
 ## How to set USB camera properties?
 
-**Answer:** See [this usage example ➶](/gears/camgear/usage/#using-camgear-with-variable-camera-properties).
+**Answer:** See [this usage example ➶](../../gears/camgear/usage/#using-camgear-with-variable-camera-properties).
 
 &nbsp;
 
 ## How to play YouTube Live Stream or Video with CamGear API?
 
-**Answer:** See [this usage example ➶](/gears/camgear/usage/#using-camgear-with-youtube-videos).
+**Answer:** See [this usage example ➶](../../gears/camgear/usage/#using-camgear-with-youtube-videos).
 
 &nbsp;
 
@@ -118,6 +118,6 @@ stream = CamGear(source='udpsrc port=5000 ! application/x-rtp,media=video,payloa
 
 ## Why CamGear is throwing warning that Threaded Queue Mode is disabled?
 
-**Answer:** That's a normal behaviour. Please read about [Threaded Queue Mode ➶](/bonus/TQM/)
+**Answer:** That's a normal behaviour. Please read about [Threaded Queue Mode ➶](../../bonus/TQM/)
 
 &nbsp;

@@ -29,9 +29,9 @@ limitations under the License.
 ## Overview
 
 
-When [`compression_mode`](/gears/writegear/non_compression/params/#compression_mode) parameter is disabled _(.i.e `compression_mode = False`)_, WriteGear API uses basic OpenCV's inbuilt [**VideoWriter API**](https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) tools for encoding multimedia files but without compression, Thereby, also known as Non-Compression Mode.
+When [`compression_mode`](../params/#compression_mode) parameter is disabled _(.i.e `compression_mode = False`)_, WriteGear API uses basic OpenCV's inbuilt [**VideoWriter API**](https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) tools for encoding multimedia files but without compression, Thereby, also known as Non-Compression Mode.
 
-This mode provides flexible access to [**OpenCV's VideoWriter API**](https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5),and also supports various parameters available within this API, but lacks the ability to control output quality, compression, and other important features like _lossless video compression, audio encoding, etc._, which are available in [Compression Mode](/gears/writegear/compression/overview/) only. Thereby, the resultant output videofile size of this Mode, will be many times larger as compared to Compression Mode.
+This mode provides flexible access to [**OpenCV's VideoWriter API**](https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5),and also supports various parameters available within this API, but lacks the ability to control output quality, compression, and other important features like _lossless video compression, audio encoding, etc._, which are available in [Compression Mode](../../compression/overview/) only. Thereby, the resultant output videofile size of this Mode, will be many times larger as compared to Compression Mode.
 
 &nbsp; 
 

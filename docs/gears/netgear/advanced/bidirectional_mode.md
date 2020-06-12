@@ -29,7 +29,7 @@ limitations under the License.
 Bi-directional Mode enables seamless support for Bidirectional data transmission between Client/Consumer and Sender/Publisher along with Video frames, through its synchronous messaging patterns such as `zmq.PAIR` (ZMQ Pair Pattern) & `zmq.REQ/zmq.REP` (ZMQ Request/Reply Pattern).
 
 
-In Bi-directional Mode, We can utilize its [`message`](/bonus/reference/netgear/#vidgear.gears.netgear.NetGear.send) parameter of `send()` method at Server's end for sending data to Client, and [`return_data`](/bonus/reference/netgear/#vidgear.gears.netgear.NetGear.recv) parameter of `recv()` method at Client end to return data back to Server, all while transferring frames in real-time. This mode can be easily activated in NetGear API through `bidirectional_mode` attribute of its [`option`](/gears/netgear/params/#options) dictionary parameter, during initialization.
+In Bi-directional Mode, We can utilize its [`message`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.send) parameter of `send()` method at Server's end for sending data to Client, and [`return_data`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.recv) parameter of `recv()` method at Client end to return data back to Server, all while transferring frames in real-time. This mode can be easily activated in NetGear API through `bidirectional_mode` attribute of its [`option`](../../params/#options) dictionary parameter, during initialization.
 
 &nbsp;
 
@@ -38,7 +38,7 @@ In Bi-directional Mode, We can utilize its [`message`](/bonus/reference/netgear/
 
     * In Bi-directional Mode, `zmq.PAIR`(ZMQ Pair) & `zmq.REQ/zmq.REP`(ZMQ Request/Reply) are **ONLY** Supported messaging patterns. Accessing this mode with any other messaging pattern, will result in `ValueError`.
 
-    * Bidirectional Mode is **NOT** compatibile with [Multi-Servers mode](/gears/netgear/advanced/multi_server/) and [Multi-Clients mode](/gears/netgear/advanced/multi_client/) exclusive modes. Thereby, if Bidirectional mode is enabled with any of these modes, it will be **DISABLED** automatically.
+    * Bidirectional Mode is **NOT** compatibile with [Multi-Servers mode](../../advanced/multi_server/) and [Multi-Clients mode](../../advanced/multi_client/) exclusive modes. Thereby, if Bidirectional mode is enabled with any of these modes, it will be **DISABLED** automatically.
 
     * Bi-directional Mode may lead to additional **LATENCY** depending upon the bytes of the data being transfer bidirectionally. User discretion is advised!
 
@@ -69,9 +69,9 @@ In Bi-directional Mode, We can utilize its [`message`](/bonus/reference/netgear/
 
 To send data bidirectionally, NetGear API provides two exclusive parameters for its methods:
 
-* [`message`](/bonus/reference/netgear/#vidgear.gears.netgear.NetGear.send): It enables us to send data to Client, directly through `send()` method at Server's end. 
+* [`message`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.send): It enables us to send data to Client, directly through `send()` method at Server's end. 
 
-* [`return_data`](/bonus/reference/netgear/#vidgear.gears.netgear.NetGear.recv): It enables us to send data back to Server, directly through `recv()` method at Client's end.
+* [`return_data`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.recv): It enables us to send data back to Server, directly through `recv()` method at Client's end.
 
 
 &nbsp;
@@ -489,7 +489,7 @@ client.close()
 ## Using Bidirectional Mode for Video-Frames Transfer with Frame Compression :fire:
 
 
-See complete usage example [here ➶](/gears/netgear/advanced/compression/#using-bidirectional-mode-for-video-frames-transfer-with-frame-compression)
+See complete usage example [here ➶](../../advanced/compression/#using-bidirectional-mode-for-video-frames-transfer-with-frame-compression)
 
 
 &nbsp;
@@ -497,7 +497,7 @@ See complete usage example [here ➶](/gears/netgear/advanced/compression/#using
 
 [^1]: 
     
-    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **ONLY SUPPORTED** at Client's end with its [`return_data`](/bonus/reference/netgear/#vidgear.gears.netgear.NetGear.recv) parameter."
+    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **ONLY SUPPORTED** at Client's end with its [`return_data`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.recv) parameter."
 
 
 &nbsp;

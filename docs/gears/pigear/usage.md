@@ -122,7 +122,7 @@ stream.stop()
 
 PiGear API also supports **Direct Colorspace Manipulation**, which is ideal for changing source colorspace on the run. 
 
-!!! info "A more detailed  information on colorspace manipulation can be found [here ➶](/bonus/colorspace_manipulation/)"
+!!! info "A more detailed  information on colorspace manipulation can be found [here ➶](../../../bonus/colorspace_manipulation/)"
 
 In following example code, we will start with [**HSV**](https://en.wikipedia.org/wiki/HSL_and_HSV) as source colorspace, and then we will switch to [**GRAY**](https://en.wikipedia.org/wiki/Grayscale)  colorspace when `w` key is pressed, and then [**LAB**](https://en.wikipedia.org/wiki/CIELAB_color_space) colorspace when `e` key is pressed, finally default colorspace _(i.e. **BGR**)_ when `s` key is pressed. Also, quit when `q` key is pressed:
 

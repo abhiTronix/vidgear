@@ -22,8 +22,8 @@ limitations under the License.
 
 ## Installation methods
 
-* [Install using pip](/install/pip_install/) _(recommended)_
-* [Install from source](/install/source_install/)
+* [Install using pip](../install/pip_install/) _(recommended)_
+* [Install from source](../install/source_install/)
 
 &nbsp;
 

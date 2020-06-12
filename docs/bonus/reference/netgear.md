@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-!!! info "All NetGear Class parameters are explained [here ➶](/gears/netgear/params/)"
+!!! info "All NetGear Class parameters are explained [here ➶](../../../gears/netgear/params/)"
 
 ::: vidgear.gears.NetGear	
 	

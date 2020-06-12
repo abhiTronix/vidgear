@@ -32,13 +32,13 @@ When installing VidGear from source, FFmpeg is the only dependency you need to i
 
     Any other python dependencies will be automatically installed based on your OS specifications.
 
-**FFmpeg:** 
+### FFmpeg
 
-Must require for the video compression and encoding compatibilities within [**Compression Mode**](/gears/writegear/compression/overview/) in [WriteGear](#writegear) API. 
+Must require for the video compression and encoding compatibilities within [**Compression Mode**](../../gears/writegear/compression/overview/) in [WriteGear](#writegear) API. 
 
 !!! tip "FFmpeg Installation"
 
-    Follow this dedicated [**FFmpeg Installation doc**](/gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
+    Follow this dedicated [**FFmpeg Installation doc**](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
 
 &nbsp;
 

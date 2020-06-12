@@ -31,7 +31,7 @@ Secure Mode provides easy access to powerful, smart & secure ZeroMQ's Security L
 
 Secure Mode uses a new wire protocol, [**ZMTP 3.0**](http://zmtp.org/), that adds a security handshake to all ZeroMQ connections and a new security protocol, [**CurveZMQ**](http://curvezmq.org/), that implements "perfect forward security" between two ZeroMQ peers over a TCP connection. 
 
-Secure Mode can be easily activated in NetGear API through `secure_mode` attribute of its [`option`](/gears/netgear/params/#options) dictionary parameter, during initialization. Furthermore, for managing this mode, NetGear API provides additional `custom_cert_location` & `overwrite_cert` like attribute too.
+Secure Mode can be easily activated in NetGear API through `secure_mode` attribute of its [`option`](../../params/#options) dictionary parameter, during initialization. Furthermore, for managing this mode, NetGear API provides additional `custom_cert_location` & `overwrite_cert` like attribute too.
 
 
 &nbsp;
@@ -54,9 +54,9 @@ Secure mode, as of now, supports the two most powerful ZMQ security layers:
 
     * The Public+Secret Keypairs generated at the Server end **MUST** be made available at Client's end too for successful authentication. If mismatched, connection failure will occur.
 
-    * By Default, the Public+Secret Keypairs will be generated/stored at the Home directory of your machine, in the `.vidgear/keys` folder _(for e.g `/home/foo/.vidgear/keys` on Linux)_. But you can also use [`'custom_cert_location'`](/gears/netgear/params/#options) attribute, to set a your own Custom location/path of directory to generate/store these Keypairs.
+    * By Default, the Public+Secret Keypairs will be generated/stored at the Home directory of your machine, in the `.vidgear/keys` folder _(for e.g `/home/foo/.vidgear/keys` on Linux)_. But you can also use [`'custom_cert_location'`](../../params/#options) attribute, to set a your own Custom location/path of directory to generate/store these Keypairs.
 
-    * ==**DO NOT** share generated public+secret Keypairs with anyone outside the network to avoid any potential security breach.== At the Server End, You can easily use the [`'overwrite_cert'`](/gears/netgear/params/#options) attribute for regenerating new Keypairs on initialization. But make sure newly generated Keypairs at the Server End, **MUST** be made available at Client's End too.
+    * ==**DO NOT** share generated public+secret Keypairs with anyone outside the network to avoid any potential security breach.== At the Server End, You can easily use the [`'overwrite_cert'`](../../params/#options) attribute for regenerating new Keypairs on initialization. But make sure newly generated Keypairs at the Server End, **MUST** be made available at Client's End too.
 
     * **IronHouse** is the strongest Security Layer available, but it involves certain security checks that lead to  **ADDITIONAL LATENCY**.
 
@@ -85,7 +85,7 @@ Secure mode, as of now, supports the two most powerful ZMQ security layers:
 
 ## Supported Attributes:
 
-For implementing Secure Mode, NetGear API currently provide following attribute for its [`option`](/gears/netgear/params/#options) dictionary parameter:
+For implementing Secure Mode, NetGear API currently provide following attribute for its [`option`](../../params/#options) dictionary parameter:
 
 
 * `secure_mode` (_integer_) : This attribute activates and sets the ZMQ security Mechanism. Its possible values are: `1`(_StoneHouse_) & `2`(_IronHouse_), and its default value is `0`(_Grassland(no security)_). Its usage is as follows:
