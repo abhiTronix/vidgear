@@ -128,7 +128,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 
 ### CamGear Specific attributes
 
-!!! tip "All supported parameters are listed [here ➶](../../camgear/source_params/#supported-source-tweak-parameters)"
+!!! tip "All supported parameters are listed [here ➶](../../camgear/advanced/source_params/#supported-source-tweak-parameters)"
 
 The desired parameters can be passed to VideoGear API by formatting them as this parameter's attributes, as follows:
 

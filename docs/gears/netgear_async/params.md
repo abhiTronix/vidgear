@@ -337,7 +337,7 @@ This parameter provides the ability to alter various **Source Tweak Parameters**
 
 **Usage:**
 
-!!! tip "All supported parameters are listed [here ➶](../../camgear/source_params/)"
+!!! tip "All supported parameters are listed [here ➶](../../camgear/advanced/source_params/)"
 
 The desired parameters can be passed to NetGear_Async API by formatting them as this parameter's attributes, as follows:
 

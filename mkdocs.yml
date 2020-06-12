@@ -142,7 +142,7 @@ nav:
       - Overview: gears/camgear/overview.md
       - Usage Examples: gears/camgear/usage.md
       - Advanced Usage:
-        - Source Tweak Parameters: gears/camgear/source_params.md
+        - Source Tweak Parameters: gears/camgear/advanced/source_params.md
       - Parameters: gears/camgear/params.md
       - Reference: bonus/reference/camgear.md
     - PiGear: 
