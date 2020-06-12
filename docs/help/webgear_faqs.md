@@ -24,61 +24,61 @@ limitations under the License.
 
 ## What is WebGear API and what does it do?
 
-**Answer:** WebGear is as powerful **Video Streaming Server** that transfers live video-frames to any web browser on a network. _For more info. see [WebGear doc ➶](http://127.0.0.1:8000/gears/webgear/overview/)_
+**Answer:** WebGear is as powerful **Video Streaming Server** that transfers live video-frames to any web browser on a network. _For more info. see [WebGear doc ➶](../../gears/webgear/overview/)_
 
 &nbsp;
 
 ## How to get started with WebGear API?
 
-**Answer:** See [WebGear doc ➶](http://127.0.0.1:8000/gears/webgear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** See [WebGear doc ➶](../../gears/webgear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
 ## "WebGear is throwing `ModuleNotFoundError` on importing", Why?
 
-**Answer:** This error means, VidGear is installed **WITHOUT asyncio package support** on your machine. For this support, see [Requirements ➶](http://127.0.0.1:8000/gears/webgear/usage/#requirements).
+**Answer:** This error means, VidGear is installed **WITHOUT asyncio package support** on your machine. For this support, see [Requirements ➶](../../gears/webgear/usage/#requirements).
 
 &nbsp;
 
 ## Can WebGear always need Active Internet Connection?
 
-**Answer:** No, it just need Internet only once, during its [Auto-Generation Process ➶](http://127.0.0.1:8000/gears/webgear/overview/#auto-generation-process) to download default data-files, and it takes few seconds. _For more information see [Data-Files Auto-Generation WorkFlow ➶](http://127.0.0.1:8000/gears/webgear/overview/#data-files-auto-generation-workflow)_
+**Answer:** No, it just need Internet only once, during its [Auto-Generation Process ➶](../../gears/webgear/overview/#auto-generation-process) to download default data-files, and it takes few seconds. _For more information see [Data-Files Auto-Generation WorkFlow ➶](../../gears/webgear/overview/#data-files-auto-generation-workflow)_
 
 &nbsp;
 
 ## Can I manually place default files for WebGear?
 
-**Answer:** Yes, you can either download default files from [Github Server](git), and manually place at [default location](http://127.0.0.1:8000/gears/webgear/overview/#default-location), OR, you can yourself create the require three critical files _(i.e `index.html`, `404.html` & `500.html`)_  inside `templates` folder at the [default location](http://127.0.0.1:8000/gears/webgear/overview/#default-location), thereby you don't need any internet connection at all. _For more information see [Data-Files Auto-Generation WorkFlow ➶](http://127.0.0.1:8000/gears/webgear/overview/#data-files-auto-generation-workflow)_
+**Answer:** Yes, you can either download default files from [Github Server](https://github.com/abhiTronix/webgear_data), and manually place at [default location](../../gears/webgear/overview/#default-location), OR, you can yourself create the require three critical files _(i.e `index.html`, `404.html` & `500.html`)_  inside `templates` folder at the [default location](../../gears/webgear/overview/#default-location), thereby you don't need any internet connection at all. _For more information see [Data-Files Auto-Generation WorkFlow ➶](../../gears/webgear/overview/#data-files-auto-generation-workflow)_
 
 &nbsp;
 
 ## Can I run WebGear from terminal?
 
-**Answer:** Yes, see [this usage example ➶](http://127.0.0.1:8000/gears/webgear/usage/#running-from-terminal).
+**Answer:** Yes, see [this usage example ➶](../../gears/webgear/usage/#running-from-terminal).
 
 &nbsp;
 
 ## How can I add my custom WebPage to WebGear?
 
-**Answer:** See [this usage example ➶](http://127.0.0.1:8000/gears/webgear/advanced/#using-webgear-with-custom-webpage-routes).
+**Answer:** See [this usage example ➶](../../gears/webgear/advanced/#using-webgear-with-custom-webpage-routes).
 
 &nbsp;
 
 ## Can I re-download default data in WebGear?
 
-**Answer:** Yes, either you can delete default data-files manually, OR, you can force trigger the [Auto-generation process](http://127.0.0.1:8000/gears/webgear/overview/#auto-generation-process) to overwrite existing data-files using [`overwrite_default_files`](http://127.0.0.1:8000/gears/webgear/params/#webgear-specific-attributes) attribute of `option` parameter in WebGear API. _Remember only downloaded default data-files will be overwritten in this process, and any other file/folder will **NOT** be affected._
+**Answer:** Yes, either you can delete default data-files manually, OR, you can force trigger the [Auto-generation process](../../gears/webgear/overview/#auto-generation-process) to overwrite existing data-files using [`overwrite_default_files`](../../gears/webgear/params/#webgear-specific-attributes) attribute of `option` parameter in WebGear API. _Remember only downloaded default data-files will be overwritten in this process, and any other file/folder will **NOT** be affected._
 
 &nbsp;
 
 ## Can I change the default location?
 
-**Answer:** Yes, you can use WebGear's [`custom_data_location`](http://127.0.0.1:8000/gears/webgear/params/#webgear-specific-attributes) attribute of `option` parameter in WebGear API, to change [default location](http://127.0.0.1:8000/gears/webgear/overview/#default-location) to somewhere else.
+**Answer:** Yes, you can use WebGear's [`custom_data_location`](../../gears/webgear/params/#webgear-specific-attributes) attribute of `option` parameter in WebGear API, to change [default location](../../gears/webgear/overview/#default-location) to somewhere else.
 
 &nbsp;
 
 ## Can I delete/rename the WebGear default data?
 
-**Answer:** Yes, WebGear gives us complete freedom of altering data files generated in [Auto-Generation Process](http://127.0.0.1:8000/gears/webgear/overview/#auto-generation-process), But you've to follow [these rules ➶](http://127.0.0.1:8000/gears/webgear/advanced/#rules-for-altering-webgear-files-and-folders)
+**Answer:** Yes, WebGear gives us complete freedom of altering data files generated in [Auto-Generation Process](../../gears/webgear/overview/#auto-generation-process), But you've to follow [these rules ➶](../../gears/webgear/advanced/#rules-for-altering-webgear-files-and-folders)
 
 &nbsp;
 
@@ -86,9 +86,9 @@ limitations under the License.
 
 **Answer:** Here's the trick to do it:
 
-**Step-1: Trigger Auto-Generation Process:** Firstly, run any WebGear [usage example](http://127.0.0.1:8000/gears/webgear/usage/) to trigger the [Auto-generation process](https://github.com/abhiTronix/vidgear/doc/WebGear#auto-generation-process). Thereby, the default generated files will be saved at [default location](http://127.0.0.1:8000/gears/webgear/overview/#default-location) of your machine.
+**Step-1: Trigger Auto-Generation Process:** Firstly, run any WebGear [usage example](../../gears/webgear/usage/) to trigger the [Auto-generation process](https://github.com/abhiTronix/vidgear/doc/WebGear#auto-generation-process). Thereby, the default generated files will be saved at [default location](../../gears/webgear/overview/#default-location) of your machine.
 
-**Step-2: Change Webpage address in your own HTML file:** then, Go inside `templates` directory at [default location](http://127.0.0.1:8000/gears/webgear/overview/#default-location) of your machine, _and change the line -> `25` on `index.html` file_:
+**Step-2: Change Webpage address in your own HTML file:** then, Go inside `templates` directory at [default location](../../gears/webgear/overview/#default-location) of your machine, _and change the line -> `25` on `index.html` file_:
 
 **From:**
 
@@ -165,7 +165,7 @@ web.shutdown()
 
 ## "WebGear is too slow on my browser", How can I make it run faster?
 
-**Answer:** See [Performance Tweaks doc ➶](http://127.0.0.1:8000/gears/webgear/advanced/#performance-enhancements).
+**Answer:** See [Performance Tweaks doc ➶](../../gears/webgear/advanced/#performance-enhancements).
 
 &nbsp;
 

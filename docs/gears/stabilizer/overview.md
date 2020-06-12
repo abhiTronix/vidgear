@@ -24,7 +24,7 @@ limitations under the License.
 ## Overview
 
 <p align="center">
-  <img src="/assets/gifs/stabilized.gif" alt="VideoGear Stabilizer in action!" width="120%" />
+  <img src="../../../assets/gifs/stabilized.gif" alt="VideoGear Stabilizer in action!" width="120%" />
   <br>
   <sub><i>Original Video Courtesy <a href="http://liushuaicheng.org/SIGGRAPH2013/database.html" title="opensourced video samples database">@SIGGRAPH2013</a></i></sub>
 </p>

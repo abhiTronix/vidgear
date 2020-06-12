@@ -84,7 +84,7 @@ Thanks!
 
 ## Connect with Author
 
-You can connect with me, the author([Abhishek Thakur | @abhiTronix](abhitronix.github.io/)):
+You can connect with me, the author([Abhishek Thakur | @abhiTronix](https://abhitronix.github.io/)):
 
 * Follow me on GitHub: [![GitHub follow](https://img.shields.io/github/followers/abhiTronix?label=Follow%20%40abhiTronix&logo=github&style=flat-square)](https://github.com/abhiTronix)
 * Follow me on Twitter. <a href="https://twitter.com/abhi_una12?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow &commat;abhi_una12</a>

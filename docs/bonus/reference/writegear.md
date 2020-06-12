@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-!!! info "All WriteGear Class parameters are explained [here ➶](../../../gears/writegear/params/)"
+!!! info "All WriteGear Class parameters: [Compression Mode here➶](../../../gears/writegear/compression/params/) and [Non-Compression Mode here➶](../../../gears/writegear/non_compression/params/)" 
 
 ::: vidgear.gears.WriteGear	
 	

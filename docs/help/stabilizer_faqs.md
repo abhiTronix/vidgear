@@ -24,30 +24,30 @@ limitations under the License.
 
 ## What is Stabilizer Class and what does it do?
 
-**Answer:** Stabilizer Class is an auxiliary class that enables Video Stabilization for vidgear with minimalistic latency, and at the expense of little to no additional computational requirements. _For more info. see [Stabilizer Class doc ➶](http://127.0.0.1:8000/gears/stabilizer/overview/)_
+**Answer:** Stabilizer Class is an auxiliary class that enables Video Stabilization for vidgear with minimalistic latency, and at the expense of little to no additional computational requirements. _For more info. see [Stabilizer Class doc ➶](../../gears/stabilizer/overview/)_
 
 &nbsp;
 
 ## How much latency you would typically expect with Stabilizer Class?
 
-**Answer:** The stabilizer might be slower for High-Quality videos-frames, try reducing frames size before feeding them for reducing latency. Also, see [`smoothing_radius`](http://127.0.0.1:8000/gears/stabilizer/params/#smoothing_radius) parameter of Stabilizer class that handles the quality of stabilization at the expense of latency and sudden panning. Larger its value, less will be panning, more will be latency and vice-versa.
+**Answer:** The stabilizer might be slower for High-Quality videos-frames, try reducing frames size before feeding them for reducing latency. Also, see [`smoothing_radius`](../../gears/stabilizer/params/#smoothing_radius) parameter of Stabilizer class that handles the quality of stabilization at the expense of latency and sudden panning. Larger its value, less will be panning, more will be latency and vice-versa.
 
 &nbsp;
 
 ## How to remove black borders in output video after stabilizing it?
 
-**Answer:** See [`crop_n_zoom`](http://127.0.0.1:8000/gears/stabilizer/params/#crop_n_zoom) parameter of Stabilizer class, that enables the feature, where it crops and zooms frames(to original size) to reduce the black borders from stabilization being too noticeable _(similar to the feature available in Adobe AfterEffects)_. It works in conjunction with the [`border_size`](http://127.0.0.1:8000/gears/stabilizer/params/#border_size) parameter, i.e. when this parameter is enabled border_size will be used for cropping border instead of making them. Its default value is False.
+**Answer:** See [`crop_n_zoom`](../../gears/stabilizer/params/#crop_n_zoom) parameter of Stabilizer class, that enables the feature, where it crops and zooms frames(to original size) to reduce the black borders from stabilization being too noticeable _(similar to the feature available in Adobe AfterEffects)_. It works in conjunction with the [`border_size`](../../gears/stabilizer/params/#border_size) parameter, i.e. when this parameter is enabled border_size will be used for cropping border instead of making them. Its default value is False.
 
 &nbsp;
 
 ## Can I use Stabilizer directly with OpenCV?
 
-**Answer:** Yes, see [this usage example ➶](http://127.0.0.1:8000/gears/stabilizer/usage/#bare-minimum-usage-with-opencv).
+**Answer:** Yes, see [this usage example ➶](../../gears/stabilizer/usage/#bare-minimum-usage-with-opencv).
 
 &nbsp;
 
 ## Why stabilization is not working for my video?
 
-**Answer:** The Stabilizer may not perform well against High-frequency jitter in video. Use at your own risk! Also, check if increasing [`smoothing_radius`](http://127.0.0.1:8000/gears/stabilizer/params/#smoothing_radius) parameter value helps, but it will add latency too.
+**Answer:** The Stabilizer may not perform well against High-frequency jitter in video. Use at your own risk! Also, check if increasing [`smoothing_radius`](../../gears/stabilizer/params/#smoothing_radius) parameter value helps, but it will add latency too.
 
 &nbsp;

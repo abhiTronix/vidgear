@@ -43,7 +43,7 @@ CamGear relies exclusively on [**Threaded Queue mode**](../../../bonus/TQM/) for
 
   * It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 
-  * You can use `framerate` class variable to retrieve framerate of the input source. Its usage example can be found [here ➶](../writegear/compression/usage/#using-compression-mode-with-controlled-framerate)
+  * You can use `framerate` class variable to retrieve framerate of the input source. Its usage example can be found [here ➶](../../writegear/compression/usage/#using-compression-mode-with-controlled-framerate)
 
 
 &nbsp; 

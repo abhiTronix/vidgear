@@ -90,7 +90,7 @@ writer.close()
 
 ## Using Compression Mode in RGB Mode
 
-For Compression Mode, WriteGear API contains [`rgb_mode`](http://127.0.0.1:8000/bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.write) boolean parameter, which if enabled _(i.e. `rgb_mode=True`)_, specifies that incoming frames are of RGB format _(instead of default BGR format)_, thereby also known as ==RGB Mode==. The complete usage example is as follows:
+For Compression Mode, WriteGear API contains [`rgb_mode`](../../../../bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.write) boolean parameter, which if enabled _(i.e. `rgb_mode=True`)_, specifies that incoming frames are of RGB format _(instead of default BGR format)_, thereby also known as ==RGB Mode==. The complete usage example is as follows:
 
 ```python
 # import required libraries

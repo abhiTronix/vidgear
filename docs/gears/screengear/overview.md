@@ -24,7 +24,7 @@ limitations under the License.
 ## Overview
 
 <p align="center">
-  <img src="/assets/gifs/screengear.gif" alt="ScreenGear in action!"/>
+  <img src="../../../assets/gifs/screengear.gif" alt="ScreenGear in action!"/>
   <br>
   <sub><i>ScreenGear in action</i></sub>
 </p>

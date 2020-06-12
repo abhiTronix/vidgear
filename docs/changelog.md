@@ -131,6 +131,7 @@ limitations under the License.
 - [X] Fixed several bugs from CI Bidirectional Mode tests.
 - [X] Removed or Grouped redundant code for increasing codecov.
 - [X] Fixed Mkdocs only accepting Relative paths.
+- [X] Fixed broken links in docs. 
 - [X] Fixed round off error in FPS.
 - [X] Many small typos and bugs fixes.
 
