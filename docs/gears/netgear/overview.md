@@ -21,7 +21,7 @@ limitations under the License.
 # NetGear API 
 
 <p align="center">
-  <img src="../../../assets/images/netgear.png" alt="NetGear API" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
+  <img src="../../../assets/images/netgear.png" alt="NetGear API" width="70%"/>
   <br>
   <sub><i>NetGear API generalised</i></sub>
 </p>

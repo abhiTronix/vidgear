@@ -21,7 +21,7 @@ limitations under the License.
 # WriteGear API: Non-Compression Mode
 
 <p align="center">
-  <img src="../../../../assets/images/writegear_ncm.png" alt="Non-Compression Mode" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
+  <img src="../../../../assets/images/writegear_ncm.png" alt="Non-Compression Mode" />
   <br>
   <sub><i>WriteGear API's Non-Compression Mode generalized workflow</i></sub>
 </p>

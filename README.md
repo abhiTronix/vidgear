@@ -19,7 +19,7 @@ limitations under the License.
 -->
 
 <h1 align="center">
-  <img src="docs/assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="90%"/>
+  <img src="docs/assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="80%"/>
 </h1>
 <h2 align="center">
   <img src="docs/assets/images/tagline.svg" alt="VidGear tagline" width="40%"/>
@@ -48,7 +48,7 @@ VidGear primarily focuses on simplicity, and thereby lets programmers and softwa
 The following **functional block diagram** clearly depicts the generalized functioning of VidGear APIs:
 
 <p align="center">
-  <img src="docs/assets/images/gears_fbd" alt="@Vidgear Functional Block Diagram" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" />
+  <img src="docs/assets/images/gears_fbd.png" alt="@Vidgear Functional Block Diagram" />
 </p>
 
 &nbsp;
@@ -71,7 +71,7 @@ The following **functional block diagram** clearly depicts the generalized funct
 * [**Contributions & Support**](#contributions--support)
   * [**Support**](#support)
   * [**Contributors**](#contributors)
-* [**Citing**](#citing)
+* [**Citation**](#citation)
 * [**Copyright**](#copyright)
 
 
@@ -149,15 +149,13 @@ Each of these APIs is exclusively designed to handle/control different device-sp
 
 ## CamGear
 
+<p align="center">
+  <img src="docs/assets/images/camgear.png" alt="CamGear Functional Block Diagram" width="45%"/>
+</p>
+
 > *CamGear can grab ultra-fast frames from diverse range of devices/streams, which includes almost any IP/USB Cameras, multimedia video file format ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rstp, rtmp, mms, etc.`, plus support for live Gstreamer's stream pipeline and YouTube video/live-streams URLs.*
 
 CamGear provides a flexible, high-level multi-threaded wrapper around `OpenCV's` [VideoCapture class][opencv-vc] with access almost all of its available parameters and also employs [`pafy`][pafy] python APIs for live [YouTube streaming][youtube-doc]. Furthermore, CamGear relies exclusively on [**Threaded Queue mode**][TQM-doc] for ultra-fast, error-free and synchronized frame handling.
-
-**Following functional block diagram depicts CamGear API's generalized workflow:**
-
-<p align="center">
-  <img src="docs/assets/images/camgear.png" alt="CamGear Functional Block Diagram"  width="50%" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
-</p>
 
 ### CamGear API Guide:
 
@@ -253,6 +251,10 @@ stream_stab.stop()
 
 ## PiGear
 
+<p align="center">
+  <img src="docs/assets/images/picam2.webp" alt="PiGear" width="50%" />
+</p>
+
 > *PiGear is similar to CamGear but made to support various Raspberry Pi Camera Modules *(such as [OmniVision OV5647 Camera Module][OV5647-picam] and [Sony IMX219 Camera Module][IMX219-picam])*.*
 
 PiGear provides a flexible multi-threaded wrapper around complete [picamera](https://picamera.readthedocs.io/en/release-1.13/index.html) python library, and also provides us the ability to exploit almost all of its parameters like `brightness, saturation, sensor_mode, iso, exposure, etc.` effortlessly. Furthermore, PiGear supports multiple camera modules, such as in case of Raspberry Pi Compute module IO boards.
@@ -319,7 +321,7 @@ ScreenGear implements a multi-threaded wrapper around [**python-mss**][mss] pyth
 **Below is a snapshot of a ScreenGear API in action:**
 
 <p align="center">
-  <img src="docs/assets/gifs/screengear.gif" alt="ScreenGear in action!" />
+  <img src="docs/assets/gifs/screengear.gif" alt="ScreenGear in action!"/>
 </p>
 
 **Code to generate the above results:**
@@ -374,6 +376,10 @@ stream.stop()
 
 ## WriteGear
 
+<p align="center">
+  <img src="docs/assets/images/writegear.png" alt="WriteGear Functional Block Diagram" width="70%" />
+</p>
+
 > *WriteGear handles various powerful Writer Tools that provide us the freedom to do almost anything imagine with multimedia files.*
 
 WriteGear API provides a complete, flexible and robust wrapper around [**FFmpeg**][ffmpeg], a leading multimedia framework. With WriteGear, we can process real-time frames into a lossless compressed video-file with any suitable specification in just few easy lines of codes. These specifications include setting video/audio properties such as `bitrate, codec, framerate, resolution, subtitles,  etc.`, and also performing complex tasks such as multiplexing video with audio in real-time _(see this [doc][live-audio-doc])_, while handling all errors robustly. 
@@ -388,12 +394,6 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 
   * **Non-Compression Mode:**  In this mode, WriteGear utilizes basic [**OpenCV's inbuilt VideoWriter API**][opencv-vw] tools. This mode also supports all parameters manipulation available within VideoWriter API, but it lacks the ability to manipulate encoding parameters and other important features like video compression, audio encoding, etc. *You can learn about this mode [here ➶][ncm-writegear-doc]*
 
-**Following functional block diagram depicts WriteGear API's generalized workflow:**
-
-<p align="center">
-  <img src="docs/assets/images/writegear.png" alt="WriteGear Functional Block Diagram" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
-</p>
-
 ### WriteGear API Guide:
 
 [**>>> Usage Guide**][writegear-doc]
@@ -406,7 +406,7 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 ## NetGear
 
 <p align="center">
-  <img src="docs/assets/images/netgear.png" alt="NetGear API" width=80% title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
+  <img src="docs/assets/images/netgear.png" alt="NetGear API" width=65%/>
 </p>
 
 > *NetGear is exclusively designed to transfer video frames synchronously and asynchronously between interconnecting systems over the network in real-time.*
@@ -450,7 +450,7 @@ In layman's terms, WebGear can acts as powerful **Video Streaming Server** that 
 **Below is a snapshot of a WebGear Video Server in action on the Mozilla Firefox browser:**
 
 <p align="center">
-  <img src="docs/assets/gifs/webgear.gif" alt="WebGear in action!" width=120%/>
+  <img src="docs/assets/gifs/webgear.gif" alt="WebGear in action!" width="70%" />
   <br>
   <sub><i>WebGear Video Server at <a href="http://0.0.0.0:8000/" title="default address">http://0.0.0.0:8000/</a> address.</i></sub>
 </p>
@@ -487,7 +487,7 @@ web.shutdown()
 ## NetGear_Async 
 
 <p align="center">
-  <img src="docs/assets/images/zmq_asyncio.png" alt="WebGear in action!" width="80%" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
+  <img src="docs/assets/images/zmq_asyncio.png" alt="WebGear in action!" width="70%"/>
 </p>
 
 > _NetGear_Async can generate double performance as compared to [NetGear API](#netgear) at about 1/3rd of memory consumption, and also provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support any [NetGear's Exclusive Modes][netgear-exm] yet._
@@ -552,7 +552,7 @@ Sending a donation using link below is **extremely** helpful in keeping VidGear 
 
 # Community Channel
 
-If you've come up with some new idea, or looking for the fastest way troubleshoot your problems, then please **join our [Gitter community channel ➶][gitter]**
+If you've come up with some new idea, or looking for the fastest way troubleshoot your problems, then *join our [Gitter community channel ➶][gitter]*
 
 
 &nbsp;
@@ -561,7 +561,7 @@ If you've come up with some new idea, or looking for the fastest way troubleshoo
 
 
 
-# Citing
+# Citation
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 

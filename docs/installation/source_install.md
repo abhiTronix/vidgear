@@ -44,26 +44,9 @@ Must require for the video compression and encoding compatibilities within [**Co
 
 ## Installation
 
-You can easily checkout the latest beta [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch, and thereby install it as follows:
+If you want to just install and try out the checkout the latest beta [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch , you can do so with the following command. This can be useful if you want to provide feedback for a new feature or want to confirm if a bug you have encountered is fixed in the `testing` branch. 
 
-!!! warning
-
-    **DO NOT clone or install `development` branch**, as it is not tested with CI environments and is possibly very unstable or unusable.
-
-
-```sh
-  # clone the repository and get inside
-  git clone https://github.com/abhiTronix/vidgear.git && cd vidgear
-
-  # checkout the latest testing branch
-  git checkout testing
-
-  # install normally
-  pip install .
-
-  # OR install with asyncio support
-  pip install .[asyncio]
-```
+!!! warning "DO NOT clone or install `development` branch instead, as it is not tested with CI environments and is possibly very unstable or unusable."
 
 ??? tip "Windows Installation"
   
@@ -84,5 +67,28 @@ You can easily checkout the latest beta [`testing`](https://github.com/abhiTroni
         # OR install with asyncio support
         python - m pip install .[asyncio]
         ```
+
+```sh
+  # clone the repository and get inside
+  git clone https://github.com/abhiTronix/vidgear.git && cd vidgear
+
+  # checkout the latest testing branch
+  git checkout testing
+
+  # install normally
+  pip install .
+
+  # OR install with asyncio support
+  pip install .[asyncio]
+```
+
+**Or just install directly without cloning:**
+
+```sh
+pip install git+git://github.com/abhiTronix/vidgear@testing#egg=vidgear
+
+# or with asyncio support
+pip install git+git://github.com/abhiTronix/vidgear@testing#egg=vidgear[asyncio]
+```
 
 &nbsp;

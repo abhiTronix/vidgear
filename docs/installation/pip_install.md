@@ -34,8 +34,7 @@ Must require OpenCV(3.0+) python binaries installed for its core functions. You 
 
 ??? tip "OpenCV installation from source"
 
-    You can also follow online tutorials for building & installing OpenCV from source on [Windows](https://www.learnopencv.com/install-opencv3-on-windows/), [Linux](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) and [Raspberry Pi](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/) machines manually. 
-
+    You can also follow online tutorials for building & installing OpenCV on [Windows](https://www.learnopencv.com/install-opencv3-on-windows/), [Linux](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) and [Raspberry Pi](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/) machines manually from its source. 
 
 ```sh
   pip install -U opencv-python       
@@ -106,7 +105,7 @@ Installation is as simple as:
   pip install vidgear[asyncio]
 ```
 
-And if you prefer to install VidGear directly from the repository:
+**And if you prefer to install VidGear directly from the repository:**
 
 ```sh
   pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear
@@ -115,7 +114,7 @@ And if you prefer to install VidGear directly from the repository:
   pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[asyncio]
 ```
 
-Or you can also download its wheel (`.whl`) package from our [releases](https://github.com/abhiTronix/vidgear/releases), and thereby can be installed as follows:
+**Or you can also download its wheel (`.whl`) package from our [releases](https://github.com/abhiTronix/vidgear/releases), and thereby can be installed as follows:**
 
 ```sh
   pip install vidgear-0.1.7-py3-none-any.whl

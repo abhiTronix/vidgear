@@ -20,10 +20,10 @@ limitations under the License.
 
 # Introduction
 
-<img src="assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
+<img src="assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="90%" />
 
 <h2 align="center">
-	<img src="assets/images/tagline.svg" alt="VidGear tagline", width="50%"/>
+	<img src="assets/images/tagline.svg" alt="VidGear tagline", width="40%"/>
 </h2>
 
 &nbsp;
@@ -57,7 +57,7 @@ These Gears can be classified as follows:
 * [CamGear](gears/camgear/overview/): Multi-threaded API targeting various IP-USB-Cameras/Network-Streams/YouTube-Video-URLs.
 * [PiGear](gears/pigear/overview/): Multi-threaded API targeting  various Raspberry Pi Camera Modules.
 * [ScreenGear](gears/screengear/overview/): Multi-threaded ultra-fast Screencasting.    
-* [VideoGear](gears/videogear/overview/): Common API with internal [Video Stabilizer](gears/stabilizer/overview/) wrapper.  
+* [VideoGear](gears/videogear/overview/): Common API with internal [Video Stabilizer ➶](gears/stabilizer/overview/) wrapper.  
 
 **VideoWriter Gears**
 
@@ -84,21 +84,21 @@ Please see our [Contribution Guidelines ➶](contribution.md) for more details.
 
 ## Community Channel
 
-If you've come up with some new idea, or looking for the fastest way troubleshoot your problems, then please join our [Gitter community channel ➶][gitter]
+If you've come up with some new idea, or looking for the fastest way troubleshoot your problems, then *join our [Gitter community channel ➶][gitter]*
 
 &nbsp; 
 
 ## Become a Stargazer
 
-You can be a [Stargazer :star2:][stargazer] by starring us on Github, it helps us a lot and **you're making it easier for others to find & trust this library.** Thanks!
+You can be a [Stargazer :star2:][stargazer] by starring us on Github, it helps us a lot and *you're making it easier for others to find & trust this library.* Thanks!
 
 &nbsp;
 
-## Love using VidGear? 
+## Support Us
 
 **VidGear is free, but rely on your support.** 
 
-Sending a donation using link below is **extremely** helpful in keeping VidGear development alive:
+Sending a donation using link below is *extremely* helpful in keeping VidGear development alive:
 
 <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#eba100', 'W7W8WTYO');kofiwidget2.draw();</script> 
 

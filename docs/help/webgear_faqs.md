@@ -86,7 +86,7 @@ limitations under the License.
 
 **Answer:** Here's the trick to do it:
 
-**Step-1: Trigger Auto-Generation Process:** Firstly, run any WebGear [usage example](../../gears/webgear/usage/) to trigger the [Auto-generation process](https://github.com/abhiTronix/vidgear/doc/WebGear#auto-generation-process). Thereby, the default generated files will be saved at [default location](../../gears/webgear/overview/#default-location) of your machine.
+**Step-1: Trigger Auto-Generation Process:** Firstly, run any WebGear [usage example](../../gears/webgear/usage/) to trigger the [Auto-generation process](../../gears/webgear/overview/#auto-generation-process). Thereby, the default generated files will be saved at [default location](../../gears/webgear/overview/#default-location) of your machine.
 
 **Step-2: Change Webpage address in your own HTML file:** then, Go inside `templates` directory at [default location](../../gears/webgear/overview/#default-location) of your machine, _and change the line -> `25` on `index.html` file_:
 
@@ -101,7 +101,7 @@ limitations under the License.
 **Step-3: Build your own Frame Producer and add it to route:** Now, create a python script code with OpenCV source, as follows:
 
 ```python
-#import necessary libs
+# import necessary libs
 import uvicorn, asyncio, cv2
 from starlette.routing import Route
 from vidgear.gears.asyncio import WebGear
@@ -111,20 +111,20 @@ from starlette.responses import StreamingResponse
 # !!! define your own video source here !!!
 stream = cv2.VideoCapture("/home/foo/foo.avi") 
 
-#initialize WebGear app with same source
-web = WebGear(source = "/home/foo/foo.avi", logging = True) #also enable `logging` for debugging 
+# initialize WebGear app with same source
+web = WebGear(source = "/home/foo/foo.avi", logging = True) # also enable `logging` for debugging 
 
-#create your own frame producer
+# create your own frame producer
 async def my_frame_producer():
   # loop over frames
   while True:
-    #read frame from provided source
+    # read frame from provided source
     (grabbed,  frame) = stream.read()
-    #break if NoneType
+    # break if NoneType
     if not grabbed: break
 
 
-    #do something with frame here
+    # do something with frame here
 
 
     #reducer frames size if you want more performance otherwise comment this line
@@ -136,20 +136,20 @@ async def my_frame_producer():
     await asyncio.sleep(0.01)
 
 
-#now create your own streaming response server
+# now create your own streaming response server
 async def video_server(scope):
   assert scope['type'] == 'http'
-  return StreamingResponse(my_frame_producer(), media_type='multipart/x-mixed-replace; boundary=frame') #add your frame producer
+  return StreamingResponse(my_frame_producer(), media_type='multipart/x-mixed-replace; boundary=frame') # add your frame producer
 
 
 
-#append new route to point your own streaming response server created above
+# append new route to point your own streaming response server created above
 web.routes.append(Route('/my_frames', endpoint=video_server)) #new route for your frames producer will be `{address}/my_frames`
 
-#run this app on Uvicorn server at address http://0.0.0.0:8000/
+# run this app on Uvicorn server at address http://0.0.0.0:8000/
 uvicorn.run(web(), host='0.0.0.0', port=8000)
 
-#close app safely
+# close app safely
 web.shutdown()
 ```
 

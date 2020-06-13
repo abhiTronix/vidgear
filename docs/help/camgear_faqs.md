@@ -94,7 +94,7 @@ stream = CamGear(source='udpsrc port=5000 ! application/x-rtp,media=video,payloa
 
 ## Can I play 4k video with vidgear?
 
-**Answer:** Yes, you can if your System Hardware supports it. It proven by our [playback benchmarking test](https://github.com/abhiTronix/vidgear/blob/testing/vidgear/tests/benchmark_tests/test_benchmark_playback.py).
+**Answer:** Yes, you can if your System Hardware supports it. It proven by our [playback benchmarking test](https://github.com/abhiTronix/vidgear/blob/master/vidgear/tests/benchmark_tests/test_benchmark_playback.py).
 
 &nbsp;
 

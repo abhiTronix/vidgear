@@ -22,7 +22,7 @@ limitations under the License.
 
 ## Overview
 
-The CamGear API's [`option`](https://github.com/abhiTronix/vidgear/wiki/CamGear#parameters-and-attributes-wrench) dictionary parameter, provides the ability to alter various **Source Tweak Parameters** available within [OpenCV's VideoCapture Class](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80). These tweak parameters can be used to manipulate input source Camera-Device properties _(such as its brightness, saturation, size, iso, gain etc.)_ seemlessly. Thereby, All Source Tweak Parameters supported by CamGear API are disscussed in this document.
+The CamGear API's [`option`](../../params/#options) dictionary parameter, provides the ability to alter various **Source Tweak Parameters** available within [OpenCV's VideoCapture Class](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80). These tweak parameters can be used to manipulate input source Camera-Device properties _(such as its brightness, saturation, size, iso, gain etc.)_ seemlessly. Thereby, All Source Tweak Parameters supported by CamGear API are disscussed in this document.
 
 
 !!! warning "Remember, Not all parameters are supported by all cameras devices, which is one of the most troublesome thing with OpenCV library. Each camera type, from android cameras, to USB cameras , to professional ones, offers a different interface to modify its parameters. Therefore, there are many branches in OpenCV code to support as many of them, but of course, not all possible devices are covered, and thereby works. Furthermore, OpenCV does not return any helpful error messages regarding this problem, so it’s pretty much based on _trial and error_."

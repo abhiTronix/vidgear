@@ -139,7 +139,7 @@ stream.release()
 
 ## Using Stabilizer with Variable Parameters
 
-Stablizer class provide certain [parameters](../params/) which you can use to manipulate its internal properties. The complete usage example is as follows:
+Stabilizer class provide certain [parameters](../params/) which you can use to manipulate its internal properties. The complete usage example is as follows:
 
 ```python
 # import required libraries

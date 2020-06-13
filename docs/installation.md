@@ -30,7 +30,7 @@ limitations under the License.
 
 ## Supported Systems
 
-VidGear is well-tested and supported on the following systems, with [python 3.6+]() and [pip]() installed:
+VidGear is well-tested and supported on the following systems, with [python 3.6+](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/installing/#do-i-need-to-install-pip) installed:
 
 * Any Linux distro released in 2016 or later
 * Windows 7 or later
@@ -44,24 +44,6 @@ VidGear is well-tested and supported on the following systems, with [python 3.6+
 
 &nbsp;
 
-## Testing the Latest Version
-
-If you want to just install and try out the latest version of VidGear you can do so with the following command. This can be useful if you want to provide feedback for a new feature or want to confirm if a bug you have encountered is fixed in the `testing` branch. 
-
-!!! tip "It is strongly recommended that you do this within a [virtualenv](https://virtualenv.pypa.io/en/latest/user_guide.html)."
-
-```sh
-pip install git+git://github.com/abhiTronix/vidgear@testing#egg=vidgear
-
-# or with asyncio support
-pip install git+git://github.com/abhiTronix/vidgear@testing#egg=vidgear[asyncio]
-```
-
-&nbsp;
-
 <!--
 External URLs
 -->
-
-[python]: https://www.python.org/doc/
-[pip]: https://pip.pypa.io/en/stable/installing/#installation

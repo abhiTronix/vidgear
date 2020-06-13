@@ -23,16 +23,11 @@ limitations under the License.
 ## Gears, What are these?
 
 <p align="center">
-  <img src="../assets/images/gears_fbd" alt="@Vidgear Functional Block Diagram" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
+  <img src="../assets/images/gears_fbd.png" alt="@Vidgear Functional Block Diagram"/>
 </p>
 
 
-VidGear is built with Gears(APIs), each with some unique functionality.
-
-Gears creates a more powerful, easy-to-use, highly extensible, **Multi-Threaded + Asyncio** layer above multiple state-of-the-art specialized libraries like *[OpenCV ➶][opencv], [FFmpeg ➶][ffmpeg], [ZeroMQ ➶][zmq], [picamera ➶][picamera], [starlette ➶][starlette], [pafy ➶][pafy] and [python-mss ➶][mss]*, to exploit their internal properties flexibly, while providing robust error-free and unparalleled real-time performance.
-
-
-These Gears are built with simplicity in mind, and thereby lets programmers and software developers to easily integrate and perform complex Video Processing tasks in their applications, without going through various underlying library's documentation and using just a few lines of code.
+VidGear is built with Gears(APIs), each with some unique functionality. These Gears provides VidGear, a powerful, easy-to-use, highly extensible, **Multi-Threaded + Asyncio** layer above many state-of-the-art specialized libraries to exploit their internal properties flexibly, while providing robust error-free and unparalleled real-time performance.
 
 
 &nbsp;
@@ -40,7 +35,6 @@ These Gears are built with simplicity in mind, and thereby lets programmers and 
 ## Gears Classification
 
 These Gears can be classified as follows:
-
 
 ### A. VideoCapture Gears
 
@@ -71,16 +65,3 @@ These Gears can be classified as follows:
     * [NetGear_Async](../gears/netgear_async/overview/): Immensely Memory-efficient Asyncio video-frames network messaging framework.
 
 &nbsp;
-
-<!--
-External URLs
--->
-[opencv]:https://github.com/opencv/opencv
-[picamera]:https://github.com/waveform80/picamera
-[pafy]:https://github.com/mps-youtube/pafy
-[zmq]:https://zeromq.org/
-[mss]:https://github.com/BoboTiG/python-mss
-[gitter]: https://gitter.im/vidgear/community
-[starlette]:https://www.starlette.io/
-[stargazer]: https://github.com/abhiTronix/vidgear/stargazers
-[ffmpeg]:https://www.ffmpeg.org/

@@ -21,7 +21,7 @@ limitations under the License.
 # WriteGear API: Compression Mode
 
 <p align="center">
-  <img src="../../../../assets/images/writegear_cm.png" alt="Compression Mode" title="Designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License"/>
+  <img src="../../../../assets/images/writegear_cm.png" alt="Compression Mode" />
   <br>
   <sub><i>WriteGear API's Compression Mode generalized workflow</i></sub>
 </p>

@@ -103,7 +103,7 @@ Despite `bmp` being the fasted, using `jpg` is more suitable for encoding, since
 
 ## Why NetGear API not working correctly?
 
-**Answer:** First, carefully go through [NetGear doc ➶](../../gears/netgear/overview/) that contains detailed information. Also, checkout [PyZmq Docs ➶](https://zeromq.github.io/pyzmq/) for its various settings/parameters. If still it doesn't work for you, then [tell us on Gitter ➶](https://github.com/abhiTronix/vidgear/blob/testing/contributing.md#reporting-an-issue), and if that doesn't help, then finally [report an issue ➶](../../contribution/issue/)
+**Answer:** First, carefully go through [NetGear doc ➶](../../gears/netgear/overview/) that contains detailed information. Also, checkout [PyZmq Docs ➶](https://zeromq.github.io/pyzmq/) for its various settings/parameters. If still it doesn't work for you, then [tell us on Gitter ➶](https://gitter.im/vidgear/community), and if that doesn't help, then finally [report an issue ➶](../../contribution/issue/)
 
 &nbsp;
 
@@ -121,7 +121,7 @@ Despite `bmp` being the fasted, using `jpg` is more suitable for encoding, since
 
 * **Use Wired connection instead of Wireless connection**: Remember typical 802.11g Wireless has a theoretical maximum of 54Mbps. Typical wired 10/100/1000 Ethernet has a theoretical maximum of 100 Gbps. So in theory wired is faster. However, these speeds are only on your local network. So chose your network configuration wisely.
 
-* **Compress your image/frame before transmission:** Try [Frame Encoding/Decoding Compression capabilities for NetGear API ➶](https://github.com/abhiTronix/vidgear/doc/Compression-in-NetGear-API#frame-encodingdecoding-compression-capabilities-for-netgear-api).
+* **Compress your image/frame before transmission:** Try [Frame Encoding/Decoding Compression capabilities for NetGear API ➶](../../gears/netgear/advanced/compression/).
 
 * **Reduce Frame Size:** Use VidGear's real-time _Frame-Size Reducer_(`reducer`) method for reducing frame-size on-the-go for additional performance _(see [this usage example ➶](../../gears/netgear/advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer-with-frame-compression))_. Remember, sending large HQ video-frames may required more network bandwidth and packet size, which may add to video latency!
 

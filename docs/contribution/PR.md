@@ -90,7 +90,7 @@ Testing VidGear requires additional test dependencies and dataset, which can be 
 
 * **Download Tests Dataset:** 
 
-    To perform tests, you also need to download additional dataset *(to your temp dir)* by running [`prepare_dataset.sh`](https://github.com/abhiTronix/vidgear/blob/testing/scripts/bash/prepare_dataset.sh)  bash script as follows:
+    To perform tests, you also need to download additional dataset *(to your temp dir)* by running [`prepare_dataset.sh`](https://github.com/abhiTronix/vidgear/blob/master/scripts/bash/prepare_dataset.sh)  bash script as follows:
 
     ```sh
     chmod +x scripts/bash/prepare_dataset.sh

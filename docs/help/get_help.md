@@ -22,7 +22,7 @@ limitations under the License.
 
 > Would you like to get help with VidGear?
 
-There are several ways to get help with VidGear, those are listed below:
+There are several ways to get help with VidGear:
 
 
 &nbsp; 
@@ -72,9 +72,7 @@ There you can ask quick questions, swiftly troubleshoot your problems, help othe
 
 ## Reporting an issues
 
-Want to report a bug?
-    
-Suggest a new feature?
+> Want to report a bug? Suggest a new feature?
 
 Before you do, please read our [guidelines ➶](../../contribution/issue/)
 
@@ -84,9 +82,7 @@ Before you do, please read our [guidelines ➶](../../contribution/issue/)
 
 ## Preparing a Pull Request
 
-Interested in contributing to VidGear?
-
-Would you like to implement a new feature or fix a bug?
+> Interested in contributing to VidGear?
 
 Before you do, please read our [guidelines ➶](../../contribution/PR/)
 
