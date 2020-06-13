@@ -159,28 +159,24 @@ class NetGear_Async:
             else:
                 self.__port = port
         else:
-            # Handle video source if not None
-            if not (source is None) and source:
-                # define stream with necessary params
-                self.__stream = VideoGear(
-                    enablePiCamera=enablePiCamera,
-                    stabilize=stabilize,
-                    source=source,
-                    camera_num=camera_num,
-                    y_tube=y_tube,
-                    backend=backend,
-                    colorspace=colorspace,
-                    resolution=resolution,
-                    framerate=framerate,
-                    logging=logging,
-                    time_delay=time_delay,
-                    **options
-                )
-                # define default frame generator in configuration
-                self.config = {"generator": self.__frame_generator()}
-            else:
-                # else set it to None
-                self.config = {"generator": None}
+            # define stream with necessary params
+            self.__stream = VideoGear(
+                enablePiCamera=enablePiCamera,
+                stabilize=stabilize,
+                source=source,
+                camera_num=camera_num,
+                y_tube=y_tube,
+                backend=backend,
+                colorspace=colorspace,
+                resolution=resolution,
+                framerate=framerate,
+                logging=logging,
+                time_delay=time_delay,
+                **options
+            )
+            # define default frame generator in configuration
+            self.config = {"generator": self.__frame_generator()}
+
             # assign local ip address if None
             if address is None:
                 self.__address = "localhost"
@@ -400,7 +396,7 @@ class NetGear_Async:
         Terminates all NetGear Asynchronous processes safely.
         
         Parameters:
-            skip_loop (Boolean): (optional)used only if closing executor loop throws an error.
+            skip_loop (Boolean): (optional)used only if closing executor loop throws an error or freezing.
         """
         # log termination
         if self.__logging:

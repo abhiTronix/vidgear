@@ -68,6 +68,8 @@ if __name__ == '__main__':
 
 Then open another terminal on the same system and execute the following python code and see the output:
 
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in time!"
+
 !!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
 
 ```python
@@ -122,6 +124,8 @@ if __name__ == '__main__':
 Open a terminal on Client System _(where you want to display the input frames received from the Server)_ and execute the following python code: 
 
 !!! info "Note down the IP-address of this system(required at Server's end) by executing the command: `hostname -I` and also replace it in the following code."
+
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in time!"
 
 !!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
 
@@ -264,6 +268,8 @@ if __name__ == '__main__':
 ### Client's End
 Then open another terminal on the same system and execute the following python code and see the output:
 
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in time!"
+
 !!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
 
 ```python
@@ -346,6 +352,8 @@ if __name__ == '__main__':
 
 ### Client's End
 Then open another terminal on the same system and execute the following python code and see the output:
+
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in time!"
 
 !!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
 

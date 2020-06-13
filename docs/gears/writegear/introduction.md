@@ -52,9 +52,9 @@ WriteGear primarily operates in following modes:
 
 !!! tip "Helpful Tips"
 
-  * It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
+	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 
-  * Compression Mode must require FFmpeg, Follow these [Installation Instructions ➶](../compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions) for its installation.
+	* Compression Mode must require FFmpeg, Follow these [Installation Instructions ➶](../compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions) for its installation.
 
 
 &nbsp; 
