@@ -246,28 +246,21 @@ class NetGear_Async:
         # define our messaging socket
         self.__msg_socket = self.__msg_context.socket(self.__pattern[0])
 
+        # if req/rep pattern, define additional flags
+        if self.__msg_pattern == 1:
+            self.__msg_socket.REQ_RELAXED = True
+            self.__msg_socket.REQ_CORRELATE = True
+
+        # if pub/sub pattern, define additional optimizer
+        if self.__msg_pattern == 2:
+            self.__msg_socket.set_hwm(1)
+
         # try connecting socket to assigned protocol, address and port
         try:
             self.__msg_socket.connect(
                 self.__protocol + "://" + str(self.__address) + ":" + str(self.__port)
             )
-        except Exception as e:
-            # log ad raise error if failed
-            logger.exception(str(e))
-            raise ValueError(
-                "[NetGear_Async:ERROR] :: Failed to connect address: {} and pattern: {}!".format(
-                    (
-                        self.__protocol
-                        + "://"
-                        + str(self.__address)
-                        + ":"
-                        + str(self.__port)
-                    ),
-                    self.__msg_pattern,
-                )
-            )
-        finally:
-            # finally log if successful
+            # log if successful
             if self.__logging:
                 logger.debug(
                     "Successfully connected to address: {} with pattern: {}.".format(
@@ -284,6 +277,22 @@ class NetGear_Async:
                 logger.debug(
                     "Send Mode is successfully activated and ready to send data!"
                 )
+        except Exception as e:
+            # log and raise error if failed
+            logger.exception(str(e))
+            self.__terminate = True
+            raise RuntimeError(
+                "[NetGear_Async:ERROR] :: Failed to connect address: {} and pattern: {}!".format(
+                    (
+                        self.__protocol
+                        + "://"
+                        + str(self.__address)
+                        + ":"
+                        + str(self.__port)
+                    ),
+                    self.__msg_pattern,
+                )
+            )
         # loop over our Asynchronous frame generator
         async for frame in self.config["generator"]:
             # check if retrieved frame is `CONTIGUOUS`
@@ -318,30 +327,17 @@ class NetGear_Async:
         # initialize and define messaging socket
         self.__msg_socket = self.__msg_context.socket(self.__pattern[1])
 
+        # define exclusive socket options for patterns
+        if self.__msg_pattern == 2:
+            self.__msg_socket.set_hwm(1)
+            self.__msg_socket.setsockopt(zmq.SUBSCRIBE, b"")
+
         try:
-            # define exclusive socket options for patterns
-            if self.__msg_pattern == 2:
-                self.__msg_socket.setsockopt(zmq.SUBSCRIBE, b"")
             # bind socket to the assigned protocol, address and port
             self.__msg_socket.bind(
                 self.__protocol + "://" + str(self.__address) + ":" + str(self.__port)
             )
-        except Exception as e:
-            logger.exception(str(e))
-            raise ValueError(
-                "[NetGear:ERROR] :: Failed to bind address: {} and pattern: {}!".format(
-                    (
-                        self.__protocol
-                        + "://"
-                        + str(self.__address)
-                        + ":"
-                        + str(self.__port)
-                    ),
-                    self.__msg_pattern,
-                )
-            )
-        finally:
-            # finally log progress
+            # log progress
             if self.__logging:
                 logger.debug(
                     "Successfully Binded to address: {} with pattern: {}.".format(
@@ -356,12 +352,28 @@ class NetGear_Async:
                     )
                 )
                 logger.debug("Receive Mode is activated successfully!")
+        except Exception as e:
+            # log and raise error if failed
+            logger.exception(str(e))
+            self.__terminate = True
+            raise RuntimeError(
+                "[NetGear:ERROR] :: Failed to bind address: {} and pattern: {}!".format(
+                    (
+                        self.__protocol
+                        + "://"
+                        + str(self.__address)
+                        + ":"
+                        + str(self.__port)
+                    ),
+                    self.__msg_pattern,
+                )
+            )
 
         # loop until terminated
         while not self.__terminate:
             # get message withing timeout limit
             recvd_msg = await asyncio.wait_for(
-                self.__msg_socket.recv_multipart(), timeout=self.__timeout
+                self.__msg_socket.recv_multipart(), timeout=self.__timeout,
             )
             # check if bidirectional patterns
             if self.__msg_pattern < 2:

@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
 Then open another terminal on the same system and execute the following python code and see the output:
 
-!!! warning "Client will throw TimeoutError if it fails to connect to the Server in time!"
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
 
 !!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
 
@@ -125,7 +125,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! info "Note down the IP-address of this system(required at Server's end) by executing the command: `hostname -I` and also replace it in the following code."
 
-!!! warning "Client will throw TimeoutError if it fails to connect to the Server in time!"
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
 
 !!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
 
@@ -135,7 +135,7 @@ from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
 
 #define and launch Client with `receive_mode=True`. #change following IP address '192.168.x.xxx' with yours
-client=NetGear_Async(address='192.168.x.xxx', port='5454', protocol='tcp',  pattern=3, receive_mode=True, logging=True).launch()
+client=NetGear_Async(address='192.168.x.xxx', port='5454', protocol='tcp',  pattern=2, receive_mode=True, logging=True).launch()
 
 
 #Create a async function where you want to show/manipulate your received frames
@@ -185,7 +185,7 @@ from vidgear.gears.asyncio import NetGear_Async
 import asyncio
 
 #initialize Server with suitable source
-server=NetGear_Async(source=0, address='192.168.x.xxx', port='5454', protocol='tcp',  pattern=3, logging=True).launch()
+server=NetGear_Async(source=0, address='192.168.x.xxx', port='5454', protocol='tcp',  pattern=2, logging=True).launch()
 
 if __name__ == '__main__':
     #set event loop
@@ -268,7 +268,7 @@ if __name__ == '__main__':
 ### Client's End
 Then open another terminal on the same system and execute the following python code and see the output:
 
-!!! warning "Client will throw TimeoutError if it fails to connect to the Server in time!"
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
 
 !!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
 
@@ -353,7 +353,7 @@ if __name__ == '__main__':
 ### Client's End
 Then open another terminal on the same system and execute the following python code and see the output:
 
-!!! warning "Client will throw TimeoutError if it fails to connect to the Server in time!"
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
 
 !!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
 

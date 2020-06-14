@@ -136,7 +136,7 @@ async def test_netgear_async_addresses(address, port):
     client = None
     try:
         server = NetGear_Async(
-            source=return_testvideo_path(), address=address, port=port, logging=True
+            source=None, address=address, port=port, logging=True
         ).launch()
         # define and launch Client with `receive_mode = True` and timeout = 12.0
         client = NetGear_Async(
