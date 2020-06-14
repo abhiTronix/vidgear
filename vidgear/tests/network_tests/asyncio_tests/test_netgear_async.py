@@ -60,7 +60,7 @@ async def custom_frame_generator():
         # yield frame
         yield frame
         # sleep for sometime
-        await asyncio.sleep(0.01)
+        await asyncio.sleep(0.000001)
     # close stream
     stream.stop()
 
@@ -72,16 +72,12 @@ async def client_iterator(client):
         # test frame validity
         assert not (frame is None or np.shape(frame) == ()), "Failed Test"
         # await before continuing
-        await asyncio.sleep(0.01)
+        await asyncio.sleep(0.000001)
 
 
 pytestmark = pytest.mark.asyncio
 
 
-@pytest.mark.skipif(
-    sys.version_info >= (3, 8),
-    reason="python3.8 is not supported yet by pytest-asyncio",
-)
 @pytest.mark.parametrize(
     "pattern", [0, 2, 3, 4],
 )
@@ -111,14 +107,10 @@ test_data_class = [
 ]
 
 
-@pytest.mark.skipif(
-    sys.version_info >= (3, 8),
-    reason="python3.8 is not supported yet by pytest-asyncio",
-)
 @pytest.mark.parametrize("generator, result", test_data_class)
 async def test_netgear_async_custom_server_generator(generator, result):
     try:
-        server = NetGear_Async(protocol="udp", logging=True)  # invalid protocol
+        server = NetGear_Async(source=None, protocol="udp", logging=True)  # invalid protocol for testing only
         if generator:
             server.config["generator"] = generator
         else:
@@ -138,16 +130,18 @@ async def test_netgear_async_custom_server_generator(generator, result):
             client.close(skip_loop=True)
 
 
-@pytest.mark.skipif(
-    sys.version_info >= (3, 8),
-    reason="python3.8 is not supported yet by pytest-asyncio",
-)
-@pytest.mark.parametrize("address, port", [("www.idk.com", "5555"), (None, "5555")])
+@pytest.mark.parametrize("address, port", [("www.idk.com", "5555"), (None, "5565")])
 async def test_netgear_async_addresses(address, port):
+    server = None
+    client = None
     try:
-        server = NetGear_Async(address = address, port = port, logging=True).launch()
+        server = NetGear_Async(
+            source=return_testvideo_path(), address=address, port=port, logging=True
+        ).launch()
         # define and launch Client with `receive_mode = True` and timeout = 12.0
-        client = NetGear_Async(address = address, port = port, logging=True, receive_mode=True).launch()
+        client = NetGear_Async(
+            address=address, port=port, logging=True, receive_mode=True
+        ).launch()
         # gather and run tasks
         input_coroutines = [server.task, client_iterator(client)]
         res = await asyncio.gather(*input_coroutines, return_exceptions=True)
@@ -157,14 +151,12 @@ async def test_netgear_async_addresses(address, port):
         else:
             pytest.fail(str(e))
     finally:
-        server.close(skip_loop=True)
-        client.close(skip_loop=True)
+        if not (server is None):
+            server.close(skip_loop=True)
+        if not (client is None):
+            client.close(skip_loop=True)
 
 
-@pytest.mark.skipif(
-    sys.version_info >= (3, 8),
-    reason="python3.8 is not supported yet by pytest-asyncio",
-)
 @pytest.mark.xfail(raises=ValueError)
 async def test_netgear_async_recv_generator():
     # define and launch server

@@ -159,24 +159,28 @@ class NetGear_Async:
             else:
                 self.__port = port
         else:
-            # define stream with necessary params
-            self.__stream = VideoGear(
-                enablePiCamera=enablePiCamera,
-                stabilize=stabilize,
-                source=source,
-                camera_num=camera_num,
-                y_tube=y_tube,
-                backend=backend,
-                colorspace=colorspace,
-                resolution=resolution,
-                framerate=framerate,
-                logging=logging,
-                time_delay=time_delay,
-                **options
-            )
-            # define default frame generator in configuration
-            self.config = {"generator": self.__frame_generator()}
-
+            if source is None:
+                self.config = None
+                if self.__logging:
+                    logger.warning("Given source is of NoneType!")
+            else:
+                # define stream with necessary params
+                self.__stream = VideoGear(
+                    enablePiCamera=enablePiCamera,
+                    stabilize=stabilize,
+                    source=source,
+                    camera_num=camera_num,
+                    y_tube=y_tube,
+                    backend=backend,
+                    colorspace=colorspace,
+                    resolution=resolution,
+                    framerate=framerate,
+                    logging=logging,
+                    time_delay=time_delay,
+                    **options
+                )
+                # define default frame generator in configuration
+                self.config = {"generator": self.__frame_generator()}
             # assign local ip address if None
             if address is None:
                 self.__address = "localhost"
