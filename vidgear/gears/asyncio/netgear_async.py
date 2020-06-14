@@ -160,7 +160,7 @@ class NetGear_Async:
                 self.__port = port
         else:
             if source is None:
-                self.config = None
+                self.config = {"generator": None}
                 if self.__logging:
                     logger.warning("Given source is of NoneType!")
             else:
@@ -235,7 +235,7 @@ class NetGear_Async:
             ):
                 # otherwise raise error
                 raise ValueError(
-                    "[NetGear_Async:ERROR] :: Invalid configuration. Assigned generator must be a asynchronous generator function/method only!"
+                    "[NetGear_Async:ERROR] :: Invalid Configuration. Assigned generator must be a asynchronous generator function/method only!"
                 )
         else:
             # raise error if validation fails
