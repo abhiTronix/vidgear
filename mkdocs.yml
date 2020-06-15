@@ -145,21 +145,25 @@ nav:
         - Source Tweak Parameters: gears/camgear/advanced/source_params.md
       - Parameters: gears/camgear/params.md
       - Reference: bonus/reference/camgear.md
+      - FAQs: help/camgear_faqs.md
     - PiGear: 
       - Overview: gears/pigear/overview.md
       - Usage Examples: gears/pigear/usage.md
       - Parameters: gears/pigear/params.md
       - Reference: bonus/reference/pigear.md
+      - FAQs: help/pigear_faqs.md
     - VideoGear: 
       - Overview: gears/videogear/overview.md
       - Usage Examples: gears/videogear/usage.md
       - Parameters: gears/videogear/params.md
       - Reference: bonus/reference/videogear.md
+      - FAQs: help/videogear_faqs.md
     - ScreenGear: 
       - Overview: gears/screengear/overview.md
       - Usage Examples: gears/screengear/usage.md
       - Parameters: gears/screengear/params.md
       - Reference: bonus/reference/screengear.md
+      - FAQs: help/screengear_faqs.md
     - WriteGear:
       - Introduction: gears/writegear/introduction.md
       - Compression Mode:
@@ -174,6 +178,7 @@ nav:
         - Usage Examples: gears/writegear/non_compression/usage.md
         - Parameters: gears/writegear/non_compression/params.md
       - Reference: bonus/reference/writegear.md
+      - FAQs: help/writegear_faqs.md
     - NetGear: 
       - Overview: gears/netgear/overview.md
       - Usage Examples: gears/netgear/usage.md
@@ -185,22 +190,26 @@ nav:
         - Frame Compression: gears/netgear/advanced/compression.md 
       - Parameters: gears/netgear/params.md
       - Reference: bonus/reference/netgear.md
+      - FAQs: help/netgear_faqs.md
     - WebGear: 
       - Overview: gears/webgear/overview.md
       - Usage Examples: gears/webgear/usage.md
       - Advanced Usage: gears/webgear/advanced.md
       - Parameters: gears/webgear/params.md
       - Reference: bonus/reference/webgear.md
+      - FAQs: help/webgear_faqs.md
     - NetGear_Async: 
       - Overview: gears/netgear_async/overview.md
       - Usage Examples: gears/netgear_async/usage.md
       - Parameters: gears/netgear_async/params.md
       - Reference: bonus/reference/netgear_async.md
+      - FAQs: help/netgear_async_faqs.md
     - Stabilizer Class: 
       - Overview: gears/stabilizer/overview.md
       - Usage Examples: gears/stabilizer/usage.md
       - Parameters: gears/stabilizer/params.md
       - Reference: bonus/reference/stabilizer.md
+      - FAQs: help/stabilizer_faqs.md
   - Bonus:
     - API Reference:
       - vidgear.gears: 
