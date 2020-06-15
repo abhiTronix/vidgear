@@ -426,7 +426,7 @@ class NetGear_Async:
 
     def close(self, skip_loop=False):
         """
-        Terminates all NetGear Asynchronous processes safely.
+        Terminates all NetGear Asynchronous processes gracefully.
         
         Parameters:
             skip_loop (Boolean): (optional)used only if closing executor loop throws an error.
