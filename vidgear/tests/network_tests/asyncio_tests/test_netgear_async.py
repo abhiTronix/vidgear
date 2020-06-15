@@ -60,7 +60,7 @@ async def custom_frame_generator():
         # yield frame
         yield frame
         # sleep for sometime
-        await asyncio.sleep(0.01)
+        await asyncio.sleep(0.000001)
     # close stream
     stream.stop()
 
@@ -72,7 +72,7 @@ async def client_iterator(client):
         # test frame validity
         assert not (frame is None or np.shape(frame) == ()), "Failed Test"
         # await before continuing
-        await asyncio.sleep(0.01)
+        await asyncio.sleep(0.000001)
 
 
 pytestmark = pytest.mark.asyncio
@@ -118,26 +118,24 @@ async def test_netgear_async_custom_server_generator(generator, result):
         else:
             server.config = ["Invalid"]
         server.launch()
-        if result:
-            # define and launch Client with `receive_mode = True` and timeout = 12.0
-            client = NetGear_Async(logging=True, timeout=12.0, receive_mode=True).launch()
-            # gather and run tasks
-            input_coroutines = [server.task, client_iterator(client)]
-            await asyncio.gather(*input_coroutines, return_exceptions=True)
-        else:
-            await asyncio.ensure_future(server.task)
+        # define and launch Client with `receive_mode = True` and timeout = 12.0
+        client = NetGear_Async(logging=True, timeout=12.0, receive_mode=True).launch()
+        # gather and run tasks
+        input_coroutines = [server.task, client_iterator(client)]
+        res = await asyncio.gather(*input_coroutines, return_exceptions=True)
     except Exception as e:
         if result:
             pytest.fail(str(e))
     finally:
-        server.close(skip_loop=True)
         if result:
+            server.close(skip_loop=True)
             client.close(skip_loop=True)
 
 
-@pytest.mark.parametrize("address, port", [("www.idk.com", "5555"), (None, "5565")])
+@pytest.mark.parametrize("address, port", [("www.idk.com", "5555"), (None, "5555")])
 async def test_netgear_async_addresses(address, port):
     try:
+        # define and launch Client with `receive_mode = True`
         client = NetGear_Async(
             address=address, port=port, logging=True, receive_mode=True
         ).launch()
@@ -145,7 +143,6 @@ async def test_netgear_async_addresses(address, port):
             server = NetGear_Async(
                 source=return_testvideo_path(), address=address, port=port, logging=True
             ).launch()
-            # define and launch Client with `receive_mode = True`
             # gather and run tasks
             input_coroutines = [server.task, client_iterator(client)]
             await asyncio.gather(*input_coroutines, return_exceptions=True)

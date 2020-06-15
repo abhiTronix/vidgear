@@ -200,13 +200,9 @@ class NetGear_Async:
             import uvloop
 
             asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-            # Retrieve event loop and assign it
-            self.loop = asyncio.get_event_loop()
-            # add exit handler
-            self.loop.add_signal_handler(signal.SIGINT, self.__termination_handler)
-        else:
-            # Retrieve event loop and assign it
-            self.loop = asyncio.get_event_loop()
+            
+        # Retrieve event loop and assign it
+        self.loop = asyncio.get_event_loop()
 
     def launch(self):
         """
@@ -315,6 +311,7 @@ class NetGear_Async:
                 recv_confirmation = await self.__msg_socket.recv_multipart()
                 if self.__logging:
                     logger.debug(recv_confirmation)
+                    
         # send `exit` flag when done!
         await self.__msg_socket.send_multipart([b"exit"])
         # check if bidirectional patterns
@@ -417,13 +414,6 @@ class NetGear_Async:
             # sleep for sometime
             await asyncio.sleep(0.00001)
 
-    def __termination_handler(self):
-        """
-        Seeks for any termination signals on UNIX systems and handles it safely.
-        """
-        for task in asyncio.Task.all_tasks():
-            task.cancel()
-
     def close(self, skip_loop=False):
         """
         Terminates all NetGear Asynchronous processes gracefully.
@@ -451,5 +441,4 @@ class NetGear_Async:
 
         # close event loop if specified
         if not (skip_loop):
-            self.__msg_socket.close(linger=0)
             self.loop.close()
