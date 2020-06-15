@@ -22,7 +22,6 @@ import asyncio
 import inspect
 import logging as log
 import platform
-import signal
 
 import cv2
 import msgpack
@@ -143,7 +142,7 @@ class NetGear_Async:
         if timeout > 0 and isinstance(timeout, (int, float)):
             self.__timeout = float(timeout)
         else:
-            self.__timeout = 20.0  # default is 20 seconds
+            self.__timeout = 15.0
         # define messaging asynchronous Context
         self.__msg_context = zmq.asyncio.Context()
 
@@ -160,6 +159,7 @@ class NetGear_Async:
             else:
                 self.__port = port
         else:
+            # Handle video source if not None
             if source is None:
                 self.config = {"generator": None}
                 if self.__logging:
@@ -241,7 +241,7 @@ class NetGear_Async:
             ):
                 # otherwise raise error
                 raise ValueError(
-                    "[NetGear_Async:ERROR] :: Invalid Configuration. Assigned generator must be a asynchronous generator function/method only!"
+                    "[NetGear_Async:ERROR] :: Invalid configuration. Assigned generator must be a asynchronous generator function/method only!"
                 )
         else:
             # raise error if validation fails
@@ -266,7 +266,7 @@ class NetGear_Async:
             self.__msg_socket.connect(
                 self.__protocol + "://" + str(self.__address) + ":" + str(self.__port)
             )
-            # log if successful
+            # finally log if successful
             if self.__logging:
                 logger.debug(
                     "Successfully connected to address: {} with pattern: {}.".format(
@@ -284,10 +284,9 @@ class NetGear_Async:
                     "Send Mode is successfully activated and ready to send data!"
                 )
         except Exception as e:
-            # log and raise error if failed
+            # log ad raise error if failed
             logger.exception(str(e))
-            self.__terminate = True
-            raise RuntimeError(
+            raise ValueError(
                 "[NetGear_Async:ERROR] :: Failed to connect address: {} and pattern: {}!".format(
                     (
                         self.__protocol
@@ -299,6 +298,7 @@ class NetGear_Async:
                     self.__msg_pattern,
                 )
             )
+            
         # loop over our Asynchronous frame generator
         async for frame in self.config["generator"]:
             # check if retrieved frame is `CONTIGUOUS`
@@ -315,6 +315,14 @@ class NetGear_Async:
                 recv_confirmation = await self.__msg_socket.recv_multipart()
                 if self.__logging:
                     logger.debug(recv_confirmation)
+        # send `exit` flag when done!
+        await self.__msg_socket.send_multipart([b"exit"])
+        # check if bidirectional patterns
+        if self.__msg_pattern < 2:
+            # then receive and log confirmation
+            recv_confirmation = await self.__msg_socket.recv_multipart()
+            if self.__logging:
+                logger.debug(recv_confirmation)
 
     async def recv_generator(self):
         """
@@ -341,7 +349,7 @@ class NetGear_Async:
             self.__msg_socket.bind(
                 self.__protocol + "://" + str(self.__address) + ":" + str(self.__port)
             )
-            # log progress
+            # finally log progress
             if self.__logging:
                 logger.debug(
                     "Successfully Binded to address: {} with pattern: {}.".format(
@@ -357,10 +365,8 @@ class NetGear_Async:
                 )
                 logger.debug("Receive Mode is activated successfully!")
         except Exception as e:
-            # log and raise error if failed
             logger.exception(str(e))
-            self.__terminate = True
-            raise RuntimeError(
+            raise ValueError(
                 "[NetGear:ERROR] :: Failed to bind address: {} and pattern: {}!".format(
                     (
                         self.__protocol
@@ -372,12 +378,12 @@ class NetGear_Async:
                     self.__msg_pattern,
                 )
             )
-
+            
         # loop until terminated
         while not self.__terminate:
             # get message withing timeout limit
             recvd_msg = await asyncio.wait_for(
-                self.__msg_socket.recv_multipart(), timeout=self.__timeout,
+                self.__msg_socket.recv_multipart(), timeout=self.__timeout
             )
             # check if bidirectional patterns
             if self.__msg_pattern < 2:
@@ -411,19 +417,6 @@ class NetGear_Async:
             # sleep for sometime
             await asyncio.sleep(0.00001)
 
-    async def __send_terminate_signal(self):
-        """
-        Asynchronous methods for sending termination signal to Client.
-        """
-        # send `exit` flag when done!
-        await self.__msg_socket.send_multipart([b"exit"])
-        # check if bidirectional patterns
-        if self.__msg_pattern < 2:
-            # then receive and log confirmation
-            recv_confirmation = await self.__msg_socket.recv_multipart()
-            if self.__logging:
-                logger.debug(recv_confirmation)
-
     def __termination_handler(self):
         """
         Seeks for any termination signals on UNIX systems and handles it safely.
@@ -433,15 +426,15 @@ class NetGear_Async:
 
     def close(self, skip_loop=False):
         """
-        Terminates all NetGear Asynchronous processes and tasks gracefully.
+        Terminates all NetGear Asynchronous processes safely.
         
         Parameters:
-            skip_loop (Boolean): (optional)used only if closing executor loop throws an error or freezing.
+            skip_loop (Boolean): (optional)used only if closing executor loop throws an error.
         """
         # log termination
         if self.__logging:
             logger.debug(
-                "Terminating various {} Processes...".format(
+                "Terminating various {} Processes.".format(
                     "Receive Mode" if self.__receive_mode else "Send Mode"
                 )
             )
@@ -449,28 +442,14 @@ class NetGear_Async:
         if self.__receive_mode:
             # indicate that process should be terminated
             self.__terminate = True
-            # close event loop if specified
-            if not (skip_loop):
-                logger.warning("Please wait for termination!")
-                self.__msg_socket.close(linger=0)
-                self.loop.close()
-            else:
-                self.loop.stop()
         else:
             # indicate that process should be terminated
             self.__terminate = True
             # terminate stream
             if not (self.__stream is None):
                 self.__stream.stop()
-            # close event loop if specified
-            if not (skip_loop):
-                try:
-                    task = self.loop.create_task(self.__send_terminate_signal())
-                    self.loop.run_until_complete(task)
-                except asyncio.CancelledError:
-                    logger.debug("All tasks has been manually canceled!")
-                finally:
-                    self.__msg_socket.close(linger=0)
-                    self.loop.close()
-            else:
-                self.loop.stop()
+
+        # close event loop if specified
+        if not (skip_loop):
+            self.__msg_socket.close(linger=0)
+            self.loop.close()

@@ -44,10 +44,6 @@ async def client_iterator(client):
 pytestmark = pytest.mark.asyncio
 
 
-@pytest.mark.skipif(
-    sys.version_info >= (3, 8),
-    reason="python3.8 is not supported yet by pytest-asyncio",
-)
 async def test_benchmark_Netgear_Async():
     """
     Benchmark NetGear Async in FPS
@@ -68,10 +64,6 @@ async def test_benchmark_Netgear_Async():
         client.close(skip_loop=True)
 
 
-@pytest.mark.skipif(
-    sys.version_info >= (3, 8),
-    reason="python3.8 is not supported yet by pytest-asyncio",
-)
 async def test_benchmark_NetGear():
     """
     Benchmark NetGear original in FPS
