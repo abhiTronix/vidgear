@@ -436,8 +436,7 @@ class NetGear_Async:
         Terminates all NetGear Asynchronous processes and tasks gracefully.
         
         Parameters:
-            skip_loop (Boolean): (optional)used only for stopping processes, 
-            instead of closing them permanently.
+            skip_loop (Boolean): (optional)used only if closing executor loop throws an error or freezing.
         """
         # log termination
         if self.__logging:
@@ -451,24 +450,27 @@ class NetGear_Async:
             # indicate that process should be terminated
             self.__terminate = True
             # close event loop if specified
-            logger.warning("Please wait for termination!")
-            if skip_loop:
-                self.loop.stop()
-            else:
+            if not (skip_loop):
+                logger.warning("Please wait for termination!")
+                self.__msg_socket.close(linger=0)
                 self.loop.close()
+            else:
+                self.loop.stop()
         else:
             # indicate that process should be terminated
             self.__terminate = True
             # terminate stream
             if not (self.__stream is None):
                 self.__stream.stop()
-            try:
-                task = self.loop.create_task(self.__send_terminate_signal())
-                self.loop.run_until_complete(task)
-            except asyncio.CancelledError:
-                logger.debug("All tasks has been manually canceled!")
-            finally:
-                if skip_loop:
-                    self.loop.stop()
-                else:
+            # close event loop if specified
+            if not (skip_loop):
+                try:
+                    task = self.loop.create_task(self.__send_terminate_signal())
+                    self.loop.run_until_complete(task)
+                except asyncio.CancelledError:
+                    logger.debug("All tasks has been manually canceled!")
+                finally:
+                    self.__msg_socket.close(linger=0)
                     self.loop.close()
+            else:
+                self.loop.stop()

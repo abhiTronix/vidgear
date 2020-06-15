@@ -56,7 +56,7 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         server.loop.run_until_complete(server.task)
-    except (KeyboardInterrupt, SystemExit, asyncio.CancelledError):
+    except (KeyboardInterrupt, SystemExit):
         #wait for interrupts
         pass
     finally:
@@ -104,7 +104,7 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         client.loop.run_until_complete(main())
-    except (KeyboardInterrupt, SystemExit, asyncio.CancelledError):
+    except (KeyboardInterrupt, SystemExit):
         #wait for interrupts
         pass
         
@@ -161,7 +161,7 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         client.loop.run_until_complete(main())
-    except (KeyboardInterrupt, SystemExit, asyncio.CancelledError):
+    except (KeyboardInterrupt, SystemExit):
         #wait for interrupts
         pass
         
@@ -193,7 +193,7 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         server.loop.run_until_complete(server.task)
-    except (KeyboardInterrupt, SystemExit, asyncio.CancelledError):
+    except (KeyboardInterrupt, SystemExit):
         #wait for interrupts
         pass
     finally:
@@ -257,7 +257,7 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         server.loop.run_until_complete(server.task)
-    except (KeyboardInterrupt, SystemExit, asyncio.CancelledError):
+    except (KeyboardInterrupt, SystemExit):
         #wait for interrupts
         pass
     finally:
@@ -304,7 +304,7 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         client.loop.run_until_complete(main())
-    except (KeyboardInterrupt, SystemExit, asyncio.CancelledError):
+    except (KeyboardInterrupt, SystemExit):
         #wait for interrupts
         pass
         
@@ -342,7 +342,7 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         server.loop.run_until_complete(server.task)
-    except (KeyboardInterrupt, SystemExit, asyncio.CancelledError):
+    except (KeyboardInterrupt, SystemExit):
         #wait for interrupts
         pass
     finally:
@@ -395,7 +395,7 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         client.loop.run_until_complete(main())
-    except (KeyboardInterrupt, SystemExit, asyncio.CancelledError):
+    except (KeyboardInterrupt, SystemExit):
         #wait for interrupts
         pass
         

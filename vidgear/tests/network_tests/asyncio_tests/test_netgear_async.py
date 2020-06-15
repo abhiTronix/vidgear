@@ -85,16 +85,17 @@ async def test_netgear_async_playback(pattern):
     try:
         # define and launch Client with `receive_mode = True`
         client = NetGear_Async(
-            logging=True, pattern=pattern, receive_mode=True
+            logging=True, pattern=pattern, receive_mode=True, timeout=5
         ).launch()
         server = NetGear_Async(
             source=return_testvideo_path(), pattern=pattern, logging=True
         ).launch()
         # gather and run tasks
         input_coroutines = [server.task, client_iterator(client)]
-        res = await asyncio.gather(*input_coroutines, return_exceptions=True)
+        res = await asyncio.gather(*input_coroutines)
     except Exception as e:
-        pytest.fail(str(e))
+        if not isinstance(e, asyncio.TimeoutError):
+            pytest.fail(str(e))
     finally:
         server.close(skip_loop=True)
         client.close(skip_loop=True)
@@ -110,14 +111,16 @@ test_data_class = [
 @pytest.mark.parametrize("generator, result", test_data_class)
 async def test_netgear_async_custom_server_generator(generator, result):
     try:
-        server = NetGear_Async(source=None, protocol="udp", logging=True)  # invalid protocol for testing only
+        server = NetGear_Async(
+            source=None, protocol="udp", logging=True
+        )  # invalid protocol for testing only
         if generator:
             server.config["generator"] = generator
         else:
             server.config = ["Invalid"]
         server.launch()
-        # define and launch Client with `receive_mode = True` and timeout = 12.0
-        client = NetGear_Async(logging=True, timeout=12.0, receive_mode=True).launch()
+        # define and launch Client with `receive_mode = True` and timeout 5 secs
+        client = NetGear_Async(logging=True, timeout=5, receive_mode=True).launch()
         # gather and run tasks
         input_coroutines = [server.task, client_iterator(client)]
         res = await asyncio.gather(*input_coroutines, return_exceptions=True)
@@ -132,29 +135,28 @@ async def test_netgear_async_custom_server_generator(generator, result):
 
 @pytest.mark.parametrize("address, port", [("www.idk.com", "5555"), (None, "5565")])
 async def test_netgear_async_addresses(address, port):
-    server = None
-    client = None
     try:
-        server = NetGear_Async(
-            source=None, address=address, port=port, logging=True
-        ).launch()
-        # define and launch Client with `receive_mode = True` and timeout = 12.0
-        client = NetGear_Async(
-            address=address, port=port, logging=True, receive_mode=True
-        ).launch()
-        # gather and run tasks
-        input_coroutines = [server.task, client_iterator(client)]
-        res = await asyncio.gather(*input_coroutines, return_exceptions=True)
+        if address is None:
+            server = NetGear_Async(
+                source=return_testvideo_path(), address=address, port=port, logging=True
+            ).launch()
+            client = NetGear_Async(
+                address=address, port=port, logging=True, receive_mode=True
+            ).launch()
+            # gather and run tasks
+            input_coroutines = [server.task, client_iterator(client)]
+            await asyncio.gather(*input_coroutines, return_exceptions=True)
+        else:
+            client = NetGear_Async(
+                address=address, port=port, logging=True, receive_mode=True
+            ).launch()
+            # gather and run task
+            await asyncio.ensure_future(client_iterator(client))
     except Exception as e:
         if address == "www.idk.com":
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
-    finally:
-        if not (server is None):
-            server.close(skip_loop=True)
-        if not (client is None):
-            client.close(skip_loop=True)
 
 
 @pytest.mark.xfail(raises=ValueError)
