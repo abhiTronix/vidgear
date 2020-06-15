@@ -56,8 +56,8 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         server.loop.run_until_complete(server.task)
-    except KeyboardInterrupt:
-        #wait for keyboard interrupt
+    except (KeyboardInterrupt, SystemExit, asyncio.CancelledError):
+        #wait for interrupts
         pass
     finally:
         # finally close the server
@@ -104,8 +104,8 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         client.loop.run_until_complete(main())
-    except KeyboardInterrupt:
-        #wait for keyboard interrupt
+    except (KeyboardInterrupt, SystemExit, asyncio.CancelledError):
+        #wait for interrupts
         pass
         
     # close all output window
@@ -161,8 +161,8 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         client.loop.run_until_complete(main())
-    except KeyboardInterrupt:
-        #wait for keyboard interrupt
+    except (KeyboardInterrupt, SystemExit, asyncio.CancelledError):
+        #wait for interrupts
         pass
         
     # close all output window
@@ -193,8 +193,8 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         server.loop.run_until_complete(server.task)
-    except KeyboardInterrupt:
-        #wait for keyboard interrupt
+    except (KeyboardInterrupt, SystemExit, asyncio.CancelledError):
+        #wait for interrupts
         pass
     finally:
         # finally close the server
@@ -257,8 +257,8 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         server.loop.run_until_complete(server.task)
-    except KeyboardInterrupt:
-        #wait for keyboard interrupt
+    except (KeyboardInterrupt, SystemExit, asyncio.CancelledError):
+        #wait for interrupts
         pass
     finally:
         # finally close the server
@@ -304,8 +304,8 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         client.loop.run_until_complete(main())
-    except KeyboardInterrupt:
-        #wait for keyboard interrupt
+    except (KeyboardInterrupt, SystemExit, asyncio.CancelledError):
+        #wait for interrupts
         pass
         
     # close all output window
@@ -342,8 +342,8 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         server.loop.run_until_complete(server.task)
-    except KeyboardInterrupt:
-        #wait for keyboard interrupt
+    except (KeyboardInterrupt, SystemExit, asyncio.CancelledError):
+        #wait for interrupts
         pass
     finally:
         # finally close the server
@@ -360,12 +360,13 @@ Then open another terminal on the same system and execute the following python c
 ```python
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
+from vidgear.gears import WriteGear
 import cv2, asyncio
 
 #define and launch Client with `receive_mode=True`
 client=NetGear_Async(receive_mode=True).launch()
 #Define writer with output filename 'Output.mp4' 
-writer=WriteGear(output_filename='Output.mp4', compression_mode=True, logging=True, **output_params) 
+writer=WriteGear(output_filename='Output.mp4', logging=True) 
 
 
 #Create a async function where you want to show/manipulate your received frames
@@ -377,7 +378,7 @@ async def main():
         # do something with received frames here
 
         # write a modified frame to writer
-        writer.write(gray) 
+        writer.write(frame) 
 
         
         # Show output window
@@ -394,8 +395,8 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         client.loop.run_until_complete(main())
-    except KeyboardInterrupt:
-        #wait for keyboard interrupt
+    except (KeyboardInterrupt, SystemExit, asyncio.CancelledError):
+        #wait for interrupts
         pass
         
     # close all output window

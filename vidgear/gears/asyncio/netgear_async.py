@@ -22,6 +22,7 @@ import asyncio
 import inspect
 import logging as log
 import platform
+import signal
 
 import cv2
 import msgpack
@@ -142,7 +143,7 @@ class NetGear_Async:
         if timeout > 0 and isinstance(timeout, (int, float)):
             self.__timeout = float(timeout)
         else:
-            self.__timeout = 10.0
+            self.__timeout = 20.0  # default is 20 seconds
         # define messaging asynchronous Context
         self.__msg_context = zmq.asyncio.Context()
 
@@ -199,8 +200,13 @@ class NetGear_Async:
             import uvloop
 
             asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-        # Retrieve event loop and assign it
-        self.loop = asyncio.get_event_loop()
+            # Retrieve event loop and assign it
+            self.loop = asyncio.get_event_loop()
+            # add exit handler
+            self.loop.add_signal_handler(signal.SIGINT, self.__termination_handler)
+        else:
+            # Retrieve event loop and assign it
+            self.loop = asyncio.get_event_loop()
 
     def launch(self):
         """
@@ -309,8 +315,6 @@ class NetGear_Async:
                 recv_confirmation = await self.__msg_socket.recv_multipart()
                 if self.__logging:
                     logger.debug(recv_confirmation)
-        # send `exit` flag when done!
-        await self.__msg_socket.send_multipart([b"exit"])
 
     async def recv_generator(self):
         """
@@ -407,17 +411,38 @@ class NetGear_Async:
             # sleep for sometime
             await asyncio.sleep(0.00001)
 
+    async def __send_terminate_signal(self):
+        """
+        Asynchronous methods for sending termination signal to Client.
+        """
+        # send `exit` flag when done!
+        await self.__msg_socket.send_multipart([b"exit"])
+        # check if bidirectional patterns
+        if self.__msg_pattern < 2:
+            # then receive and log confirmation
+            recv_confirmation = await self.__msg_socket.recv_multipart()
+            if self.__logging:
+                logger.debug(recv_confirmation)
+
+    def __termination_handler(self):
+        """
+        Seeks for any termination signals on UNIX systems and handles it safely.
+        """
+        for task in asyncio.Task.all_tasks():
+            task.cancel()
+
     def close(self, skip_loop=False):
         """
-        Terminates all NetGear Asynchronous processes safely.
+        Terminates all NetGear Asynchronous processes and tasks gracefully.
         
         Parameters:
-            skip_loop (Boolean): (optional)used only if closing executor loop throws an error or freezing.
+            skip_loop (Boolean): (optional)used only for stopping processes, 
+            instead of closing them permanently.
         """
         # log termination
         if self.__logging:
             logger.debug(
-                "Terminating various {} Processes.".format(
+                "Terminating various {} Processes...".format(
                     "Receive Mode" if self.__receive_mode else "Send Mode"
                 )
             )
@@ -425,13 +450,25 @@ class NetGear_Async:
         if self.__receive_mode:
             # indicate that process should be terminated
             self.__terminate = True
+            # close event loop if specified
+            logger.warning("Please wait for termination!")
+            if skip_loop:
+                self.loop.stop()
+            else:
+                self.loop.close()
         else:
             # indicate that process should be terminated
             self.__terminate = True
             # terminate stream
             if not (self.__stream is None):
                 self.__stream.stop()
-
-        # close event loop if specified
-        if not (skip_loop):
-            self.loop.close()
+            try:
+                task = self.loop.create_task(self.__send_terminate_signal())
+                self.loop.run_until_complete(task)
+            except asyncio.CancelledError:
+                logger.debug("All tasks has been manually canceled!")
+            finally:
+                if skip_loop:
+                    self.loop.stop()
+                else:
+                    self.loop.close()
