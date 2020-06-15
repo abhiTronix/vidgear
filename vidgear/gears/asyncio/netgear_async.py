@@ -21,7 +21,7 @@ limitations under the License.
 import asyncio
 import inspect
 import logging as log
-import platform
+import platform, signal
 
 import cv2
 import msgpack
