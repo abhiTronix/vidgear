@@ -85,7 +85,7 @@ async def test_netgear_async_playback(pattern):
     try:
         # define and launch Client with `receive_mode = True`
         client = NetGear_Async(
-            logging=True, pattern=pattern, receive_mode=True, timeout=5
+            logging=True, pattern=pattern, receive_mode=True, timeout=2
         ).launch()
         server = NetGear_Async(
             source=return_testvideo_path(), pattern=pattern, logging=True
@@ -119,17 +119,20 @@ async def test_netgear_async_custom_server_generator(generator, result):
         else:
             server.config = ["Invalid"]
         server.launch()
-        # define and launch Client with `receive_mode = True` and timeout 5 secs
-        client = NetGear_Async(logging=True, timeout=5, receive_mode=True).launch()
-        # gather and run tasks
-        input_coroutines = [server.task, client_iterator(client)]
-        res = await asyncio.gather(*input_coroutines, return_exceptions=True)
+        if result:
+            # define and launch Client with `receive_mode = True` and timeout 5 secs
+            client = NetGear_Async(logging=True, timeout=2, receive_mode=True).launch()
+            # gather and run tasks
+            input_coroutines = [server.task, client_iterator(client)]
+            res = await asyncio.gather(*input_coroutines, return_exceptions=True)
+        else:
+            await asyncio.ensure_future(server.task)
     except Exception as e:
         if result:
             pytest.fail(str(e))
     finally:
+        server.close(skip_loop=True)
         if result:
-            server.close(skip_loop=True)
             client.close(skip_loop=True)
 
 
@@ -141,14 +144,14 @@ async def test_netgear_async_addresses(address, port):
                 source=return_testvideo_path(), address=address, port=port, logging=True
             ).launch()
             client = NetGear_Async(
-                address=address, port=port, logging=True, receive_mode=True
+                address=address, port=port, logging=True, timeout=2, receive_mode=True
             ).launch()
             # gather and run tasks
             input_coroutines = [server.task, client_iterator(client)]
             await asyncio.gather(*input_coroutines, return_exceptions=True)
         else:
             client = NetGear_Async(
-                address=address, port=port, logging=True, receive_mode=True
+                address=address, port=port, logging=True, timeout=2, receive_mode=True
             ).launch()
             # gather and run task
             await asyncio.ensure_future(client_iterator(client))
