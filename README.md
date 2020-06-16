@@ -616,7 +616,7 @@ Internal URLs
 [coffee]:https://www.buymeacoffee.com/2twOXFvlA
 [kofi]: https://ko-fi.com/W7W8WTYO
 [license]:https://github.com/abhiTronix/vidgear/blob/master/LICENSE
-[travis]:https://travis-ci.org/abhiTronix/vidgear
+[travis]:https://travis-ci.com/github/abhiTronix/vidgear
 [app]:https://ci.appveyor.com/project/abhiTronix/vidgear
 [code]:https://codecov.io/gh/abhiTronix/vidgear
 

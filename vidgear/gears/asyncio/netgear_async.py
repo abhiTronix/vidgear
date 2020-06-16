@@ -195,12 +195,14 @@ class NetGear_Async:
             # add server task handler
             self.task = None
 
-        # Setup and assign uvloop event loop policy
-        if platform.system() != "Windows":
+        # Setup and assign event loop policy
+        if platform.system() == "Windows":
+            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+        else:
             import uvloop
 
             asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-            
+
         # Retrieve event loop and assign it
         self.loop = asyncio.get_event_loop()
 
@@ -294,7 +296,7 @@ class NetGear_Async:
                     self.__msg_pattern,
                 )
             )
-            
+
         # loop over our Asynchronous frame generator
         async for frame in self.config["generator"]:
             # check if retrieved frame is `CONTIGUOUS`
@@ -311,7 +313,7 @@ class NetGear_Async:
                 recv_confirmation = await self.__msg_socket.recv_multipart()
                 if self.__logging:
                     logger.debug(recv_confirmation)
-                    
+
         # send `exit` flag when done!
         await self.__msg_socket.send_multipart([b"exit"])
         # check if bidirectional patterns
@@ -375,7 +377,7 @@ class NetGear_Async:
                     self.__msg_pattern,
                 )
             )
-            
+
         # loop until terminated
         while not self.__terminate:
             # get message withing timeout limit
