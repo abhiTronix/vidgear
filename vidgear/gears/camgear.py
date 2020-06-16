@@ -20,33 +20,17 @@ limitations under the License.
 # import the necessary packages
 import cv2
 import logging as log
-import re
 import time
 
 from threading import Thread
 from pkg_resources import parse_version
-from .helper import capPropId, check_CV_version, logger_handler
+from .helper import capPropId, check_CV_version, logger_handler, youtube_url_validator
 
 
 # define logger
 logger = log.getLogger("CamGear")
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
-
-
-def youtube_url_validator(url):
-    """
-    validate & retrieves Youtube video URLs ID 
-    """
-    youtube_regex = (
-        r"(https?://)?(www\.)?"
-        "(youtube|youtu|youtube-nocookie)\.(com|be)/"
-        "(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})"
-    )
-    youtube_regex_match = re.match(youtube_regex, url)
-    if youtube_regex_match:
-        return youtube_regex_match.group(6)
-    return youtube_regex_match
 
 
 class CamGear:
@@ -87,9 +71,9 @@ class CamGear:
                 import pafy
 
                 # validate
-                url = youtube_url_validator(source)
-                if url:
-                    source_object = pafy.new(url)
+                video_url = youtube_url_validator(source)
+                if video_url:
+                    source_object = pafy.new(video_url)
                     vo_source = source_object.getbestvideo("webm", ftypestrict=True)
                     va_source = source_object.getbest("webm", ftypestrict=False)
                     # select the best quality
@@ -102,18 +86,18 @@ class CamGear:
                     if self.__logging:
                         logger.debug(
                             "YouTube source ID: `{}`, Title: `{}`".format(
-                                url, source_object.title
+                                video_url, source_object.title
                             )
                         )
                 else:
                     raise RuntimeError(
-                        "`{}` Youtube URL cannot be processed!".format(source)
+                        "Invalid `{}` Youtube URL cannot be processed!".format(source)
                     )
             except Exception as e:
                 if self.__logging:
                     logger.exception(str(e))
                 raise ValueError(
-                    "[CamGear:ERROR] :: YouTube Mode is enabled and the input YouTube URL is invalid!"
+                    "[CamGear:ERROR] :: YouTube Mode is enabled and the input YouTube URL is incorrect!"
                 )
 
         # youtube mode variable initialization

@@ -23,7 +23,7 @@ limitations under the License.
 # import the necessary packages
 import errno
 import logging as log
-import os
+import os, re
 import platform
 import sys
 
@@ -133,6 +133,29 @@ def capPropId(property):
         logger.critical("`{}` is not a valid OpenCV property!".format(property))
         return None
     return integer_value
+
+
+def youtube_url_validator(url):
+    """
+    ### youtube_url_validator
+
+    Validates & extracts Youtube video ID from URL.
+
+    Parameters:
+        url (string): inputs URL.
+
+    **Returns:**  A valid Youtube video string ID.
+    """
+    youtube_regex = (
+        r"(?:http:|https:)*?\/\/(?:www\.|)(?:youtube\.com|m\.youtube\.com|youtu\.|youtube-nocookie\.com).*"
+        "(?:v=|v%3D|v\/|(?:a|p)\/(?:a|u)\/\d.*\/|watch\?|vi(?:=|\/)|\/embed\/|oembed\?|be\/|e\/)([^&?%#\/\n]*)"
+    )
+    matched = re.search(youtube_regex, url)
+    # check for None-type
+    if not (matched is None):
+        return matched.groups()[0]
+    else:
+        return ""
 
 
 def reducer(frame=None, percentage=0):
