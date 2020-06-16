@@ -75,9 +75,15 @@ async def client_iterator(client):
         await asyncio.sleep(0.000001)
 
 
-pytestmark = pytest.mark.asyncio
+@pytest.fixture
+def event_loop():
+    """Create an instance of the default event loop for each test case."""
+    loop = asyncio.SelectorEventLoop()
+    yield loop
+    loop.close()
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "pattern", [0, 2, 3, 4],
 )
@@ -107,6 +113,7 @@ test_data_class = [
 ]
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize("generator, result", test_data_class)
 async def test_netgear_async_custom_server_generator(generator, result):
     try:
@@ -132,6 +139,7 @@ async def test_netgear_async_custom_server_generator(generator, result):
             client.close(skip_loop=True)
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize("address, port", [("www.idk.com", "5555"), (None, "5555")])
 async def test_netgear_async_addresses(address, port):
     try:
@@ -159,6 +167,7 @@ async def test_netgear_async_addresses(address, port):
         client.close(skip_loop=True)
 
 
+@pytest.mark.asyncio
 @pytest.mark.xfail(raises=ValueError)
 async def test_netgear_async_recv_generator():
     # define and launch server

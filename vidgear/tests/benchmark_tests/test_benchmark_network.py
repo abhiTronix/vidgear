@@ -41,16 +41,24 @@ async def client_iterator(client):
     logger.info("NetGear_Async approx. FPS: {:.2f}".format(fps_async.average_fps()))
 
 
-pytestmark = pytest.mark.asyncio
+@pytest.fixture
+def event_loop():
+    """Create an instance of the default event loop for each test case."""
+    loop = asyncio.SelectorEventLoop()
+    yield loop
+    loop.close()
 
 
+@pytest.mark.asyncio
 async def test_benchmark_Netgear_Async():
     """
     Benchmark NetGear Async in FPS
     """
     try:
         # launch server with valid source
-        server = NetGear_Async(source=return_testvideo_path(), pattern=1, logging=True).launch()
+        server = NetGear_Async(
+            source=return_testvideo_path(), pattern=1, logging=True
+        ).launch()
         # launch client
         client = NetGear_Async(receive_mode=True, pattern=1, logging=True).launch()
         # gather and run tasks
@@ -64,7 +72,7 @@ async def test_benchmark_Netgear_Async():
         client.close(skip_loop=True)
 
 
-async def test_benchmark_NetGear():
+def test_benchmark_NetGear():
     """
     Benchmark NetGear original in FPS
     """
