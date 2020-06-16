@@ -50,9 +50,9 @@ async def test_benchmark_Netgear_Async():
     """
     try:
         # launch server with valid source
-        server = NetGear_Async(source=return_testvideo_path(), pattern=1).launch()
+        server = NetGear_Async(source=return_testvideo_path(), pattern=1, logging=True).launch()
         # launch client
-        client = NetGear_Async(receive_mode=True, pattern=1).launch()
+        client = NetGear_Async(receive_mode=True, pattern=1, logging=True).launch()
         # gather and run tasks
         input_coroutines = [server.task, client_iterator(client)]
         res = await asyncio.gather(*input_coroutines, return_exceptions=True)
@@ -72,8 +72,8 @@ async def test_benchmark_NetGear():
         # open stream with valid source
         stream = VideoGear(source=return_testvideo_path()).start()
         # open server and client
-        client = NetGear(receive_mode=True, pattern=1)
-        server = NetGear(pattern=1)
+        client = NetGear(receive_mode=True, pattern=1, logging=True)
+        server = NetGear(pattern=1, logging=True)
         # start FPS handler
         fps = FPS().start()
         # playback

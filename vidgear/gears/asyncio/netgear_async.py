@@ -199,6 +199,7 @@ class NetGear_Async:
         # Setup and assign event loop policy
         if platform.system() == "Windows":
             if sys.version_info[:2] >= (3, 8):
+                logger.critical("Changing event loop!")
                 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         else:
             import uvloop
@@ -207,6 +208,8 @@ class NetGear_Async:
 
         # Retrieve event loop and assign it
         self.loop = asyncio.get_event_loop()
+        # temporary debugging
+        logger.warning(self.loop.__class__)
 
     def launch(self):
         """
