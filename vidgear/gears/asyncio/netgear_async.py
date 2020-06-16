@@ -21,7 +21,8 @@ limitations under the License.
 import asyncio
 import inspect
 import logging as log
-import platform, signal
+import platform
+import sys
 
 import cv2
 import msgpack
@@ -197,7 +198,8 @@ class NetGear_Async:
 
         # Setup and assign event loop policy
         if platform.system() == "Windows":
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+            if sys.version_info[:2] >= (3, 8):
+                asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         else:
             import uvloop
 
