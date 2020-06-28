@@ -97,9 +97,7 @@ WriteGear(output_filename = 'output.mp4', custom_ffmpeg="/foo/foo1/FFmpeg")
 This parameter allows us to exploit almost all FFmpeg supported parameters effortlessly and flexibly for encoding in Compression Mode, by formatting desired FFmpeg Parameters as this parameter's attributes. All supported parameters and encoders for compression mode discussed below:
 
 
-!!! warning "Read FFmpeg Docs"
-
-    Kindly read [**FFmpeg Docs**](https://ffmpeg.org/documentation.html) carefully, before passing any values to `output_param` dictionary parameter. Wrong values may result in undesired Errors or no output at all.
+!!! danger "Kindly read [**FFmpeg Docs**](https://ffmpeg.org/documentation.html) carefully, before passing any values to `output_param` dictionary parameter. Wrong values may result in undesired Errors or no output at all."
 
 
 **Data-Type:** Dictionary
@@ -110,6 +108,8 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
 ### Supported Parameters
 
 * **FFmpeg Parameters:** All parameters based on selected [encoder](#supported-encoders) in use, are supported, and can be passed as dictionary attributes in `output_param`. For example, for using `libx264 encoder` to produce a lossless output video, we can pass required FFmpeg parameters as dictionary attributes, as follows:
+
+    !!! warning "**DO NOT** provide additional video-source with `-i` FFmpeg parameter in `output_params`, otherwise it will interfere with frame you input later, and it will break things!"
 
     !!! tip "Kindly check [H.264 docs ➶](https://trac.ffmpeg.org/wiki/Encode/H.264) and other [FFmpeg Docs ➶](https://ffmpeg.org/documentation.html) for more information on these parameters"
 
@@ -138,6 +138,11 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
     
         ```python
         output_params = {"-output_dimensions": (1280,720)} #to produce a 1280x720 resolution/scale output video
+        ```
+    * **`-clones`** _(list)_: sets the special FFmpeg parameters that are repeated more than once in the command _(For more info., see [this issue](https://github.com/abhiTronix/vidgear/issues/141))_ as **list** only. Its usage is as follows: 
+
+        ```python
+        output_params = {"-clones": ['-map', '0:v:0', '-map', '1:a?']}
         ```
 
 ### Supported Encoders
