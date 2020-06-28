@@ -198,21 +198,31 @@ class NetGear_Async:
 
         # Setup and assign event loop policy
         if platform.system() == "Windows":
+            # On Windows, VidGear requires the ``WindowsSelectorEventLoop``, and this is
+            # the default in Python 3.7 and older, but new Python 3.8, defaults to an
+            # event loop that is not compatible with it. Thereby, we had to set it manually.
             if sys.version_info[:2] >= (3, 8):
                 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         else:
+            # import library
             import uvloop
 
+            # uvloop eventloop is only available for UNIX machines.
             asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
         # Retrieve event loop and assign it
         self.loop = asyncio.get_event_loop()
-        # temporary debugging
-        logger.warning(self.loop.__class__)
+
+        # debugging
+        logger.info(
+            "Using `{}` event loop for this process.".format(
+                self.loop.__class__.__name__
+            )
+        )
 
     def launch(self):
         """
-        Launches an asynchronous loop executors for respective task.
+        Launches an asynchronous generators and loop executors for respective task.
         """
         # check if receive mode enabled
         if self.__receive_mode:

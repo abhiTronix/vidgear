@@ -114,7 +114,7 @@ Here is a Bibtex entry you can use to cite this project in a publication:
     author = {Abhishek Thakur},
     title = {vidgear},
     howpublished = {\url{https://github.com/abhiTronix/vidgear}},
-    year = {2019}
+    year = {2019-2020}
   }
 ```
 

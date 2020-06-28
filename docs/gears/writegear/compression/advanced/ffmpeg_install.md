@@ -29,6 +29,8 @@ WriteGear must requires FFmpeg executables for its Compression capabilities in C
 
 &nbsp;
 
+&nbsp;
+
 
 ## Linux FFmpeg Installation
 
@@ -38,7 +40,7 @@ The WriteGear API supports _Auto-Detection_ and _Manual Configuration_ methods o
 
 !!! note "This is a recommended approach on Linux Machines"
 
-If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) attribute of its `options` dictionary parameter, then on Linux system, it tries to **auto-detects** the required FFmpeg installed binaries through validation test that employs `subprocess` python module. 
+If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) parameter, then on Linux system, it tries to **auto-detects** the required FFmpeg installed binaries through validation test that employs `subprocess` python module. 
 
 **Installation:** You can install easily install official FFmpeg according to your Linux Distro by following [this post ➶](https://www.tecmint.com/install-ffmpeg-in-linux/)
 
@@ -47,11 +49,13 @@ If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](.
 
 * **Download:** You can also manually download the latest Linux Static Binaries(*based on your machine arch(x86/x64)*) from the link below:
 
-    **Linux Static Binaries:** http://johnvansickle.com/ffmpeg/
+    *Linux Static Binaries:* http://johnvansickle.com/ffmpeg/
 
-* **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'ffmpeg/bin'`)  or path of `ffmpeg` executable itself to the [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) attribute of `options` dictionary parameter in the WriteGear API.
+* **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'ffmpeg/bin'`)  or path of `ffmpeg` executable itself to the [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) parameter in the WriteGear API.
 
     !!! warning "If binaries were not found at the manually specified path, WriteGear API will disable the Compression Mode!"
+
+&nbsp;
 
 &nbsp;
 
@@ -63,11 +67,11 @@ The WriteGear API supports _Auto-Installation_ and _Manual Configuration_ method
 
 !!! note "This is a recommended approach on Windows Machines"
 
-If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) attribute of its `options` dictionary parameter, then on Windows system WriteGear API **auto-generates** the required FFmpeg Static Binaries, according to your system specifications, into the temporary directory _(for e.g. `C:\Temp`)_ of your machine.
+If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) parameter, then on Windows system WriteGear API **auto-generates** the required FFmpeg Static Binaries, according to your system specifications, into the temporary directory _(for e.g. `C:\Temp`)_ of your machine.
 
 !!! warning Important Information
 
-    * The files downloaded to temporary directory _(for e.g. `C:\TEMP`)_, may get deleted if your machine shuts down or restarts.
+    * The files downloaded to temporary directory _(for e.g. `C:\TEMP`)_, may get erased if your machine shutdowns/restarts.
 
     * You can also provide a custom save path for auto-downloading **FFmpeg Static Binaries** through [`-ffmpeg_download_path`](../../params/#output_params) parameter.
 
@@ -80,15 +84,16 @@ If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](.
 
 * **Download:** You can also manually download the latest Windows Static Binaries(*based on your machine arch(x86/x64)*) from the link below:
    
-      **Windows Static Binaries:** http://ffmpeg.zeranoe.com/builds/
+      *Windows Static Binaries:* http://ffmpeg.zeranoe.com/builds/
 
-*  **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'C:/foo/Downloads/ffmpeg/bin'`) or path of `ffmpeg.exe` executable itself to the [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) attribute of `options` dictionary parameter in the WriteGear API.
+*  **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'C:/foo/Downloads/ffmpeg/bin'`) or path of `ffmpeg.exe` executable itself to the [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) parameter in the WriteGear API.
 
     !!! warning "If binaries were not found at the manually specified path, WriteGear API will disable the Compression Mode!"
 
 
 &nbsp;
 
+&nbsp;
 
 ## MacOS FFmpeg Installation
 
@@ -98,7 +103,7 @@ The WriteGear API supports _Auto-Detection_ and _Manual Configuration_ methods o
 
 !!! note "This is a recommended approach on MacOS Machines"
 
-If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) attribute of its `options` dictionary parameter, then on macOS system, it tries to **auto-detects** the required FFmpeg installed binaries through validation test that employs `subprocess` python module.
+If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) parameter, then on macOS system, it tries to **auto-detects** the required FFmpeg installed binaries through validation test that employs `subprocess` python module.
 
 **Installation:** You can easily install FFmpeg on your macOS machine by following [this tutorial ➶](https://trac.ffmpeg.org/wiki/CompilationGuide/macOS)
 
@@ -106,9 +111,9 @@ If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](.
 
 * **Download:** You can also manually download the latest macOS Static Binaries(*only x64 Binaries*) from the link below:
   
-    **MacOS Static Binaries:** http://johnvansickle.com/ffmpeg/
+    *MacOS Static Binaries:* http://johnvansickle.com/ffmpeg/
 
-* **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'ffmpeg/bin'`) or path of `ffmpeg` executable itself to the [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) attribute of `options` dictionary parameter in the WriteGear API.
+* **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'ffmpeg/bin'`) or path of `ffmpeg` executable itself to the [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) parameter in the WriteGear API.
 
 
     !!! warning "If binaries were not found at the manually specified path, WriteGear API will disable the Compression Mode!"

@@ -452,7 +452,7 @@ In layman's terms, WebGear can acts as powerful **Video Streaming Server** that 
 <p align="center">
   <img src="docs/assets/gifs/webgear.gif" alt="WebGear in action!" width="70%" />
   <br>
-  <sub><i>WebGear Video Server at <a href="http://0.0.0.0:8000/" title="default address">http://0.0.0.0:8000/</a> address.</i></sub>
+  <sub><i>WebGear Video Server at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</i></sub>
 </p>
 
 **Code to generate the above result:**
@@ -468,8 +468,8 @@ options = {"frame_size_reduction": 40, "frame_jpeg_quality": 80, "frame_jpeg_opt
 #initialize WebGear app  
 web = WebGear(source = "foo.mp4", logging = True, **options)
 
-#run this app on Uvicorn server at address http://0.0.0.0:8000/
-uvicorn.run(web(), host='0.0.0.0', port=8000)
+#run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host='localhost', port=8000)
 
 #close app safely
 web.shutdown()

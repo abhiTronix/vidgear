@@ -63,7 +63,7 @@ Its complete usage example is given [here ➶](../usage/#using-screengear-with-d
 
 This parameter provides the flexibility to manually set the dimensions of capture screen w.r.t selected [`monitor`](#monitor) value. 
 
-!!! info "Dimensional Parameters"
+!!! info "Supported Dimensional Parameters"
     
     Supported Dimensional Parameters for selected `monitor` value are as follows: 
   

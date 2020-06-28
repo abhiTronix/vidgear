@@ -45,9 +45,9 @@ The following guidelines tells you how to submit a valid PR for vidGear:
     
     **Any Pull Request failed to comply following requirements will be rejected:**
 
-    * The [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch of your Forked repository MUST be up-to-date with VidGear, before starting working on Pull Request.
-    * Your new working branch for Pull Request MUST be a sub-branch of [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch of your Forked repository only.
-    * All Pull Requests MUST be pushed against VidGear's [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch only.
+    * The [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch of your Forked repository **MUST** be up-to-date with VidGear, before starting working on Pull Request.
+    * Your new working branch for Pull Request **MUST** be a sub-branch of [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch of your Forked repository only.
+    * All Pull Requests **MUST** be pushed against VidGear's [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch only.
 
 
 

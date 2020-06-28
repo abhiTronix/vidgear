@@ -1095,7 +1095,7 @@ class NetGear:
             frame (numpy.ndarray): inputs numpy array(frame).
             message (any): input for sending additional data _(of any datatype except `numpy.ndarray`)_ to Client(s).
 
-        **Returns:** A n-dimensional numpy array in selected modes, otherwise None-type.
+        **Returns:** Data _(of any datatype)_ in selected exclusive modes, otherwise None-type.
         
         """
         # check whether `receive_mode` is disabled

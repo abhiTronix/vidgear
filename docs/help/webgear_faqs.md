@@ -146,14 +146,14 @@ async def video_server(scope):
 # append new route to point your own streaming response server created above
 web.routes.append(Route('/my_frames', endpoint=video_server)) #new route for your frames producer will be `{address}/my_frames`
 
-# run this app on Uvicorn server at address http://0.0.0.0:8000/
-uvicorn.run(web(), host='0.0.0.0', port=8000)
+# run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host='localhost', port=8000)
 
 # close app safely
 web.shutdown()
 ```
 
-**Final Step:** Finally, you can run the above python script, and see the desire output at address http://0.0.0.0:8000/ on your browser. 
+**Final Step:** Finally, you can run the above python script, and see the desire output at address http://localhost:8000/ on your browser. 
 
 &nbsp;
 

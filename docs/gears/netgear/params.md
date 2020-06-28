@@ -27,7 +27,7 @@ This parameter sets the valid Network IP address for Server/Client. Network addr
 
 **Data-Type:** String
 
-**Default Value:** Its default value is based on selected [primary mode](../overview/#primary-modes), _i.e `'localhost'` for Send Mode and `'*'` for Receive Mode._
+**Default Value:** Its default value is based on selected [primary mode](../overview/#primary-modes), _i.e `'localhost'` for Send Mode and `'*'` for Receive Mode_ on a local machine.
 
 **Usage:**
 
@@ -46,14 +46,14 @@ This parameter sets the valid Network Port for Server/Client. Network port is a 
     
     * [**In Multi-Servers Mode**](../advanced/multi_server/):
 
-        * A unique port number MUST be assigned to each Server on the network using this parameter. 
-        * At Client end, a List/Tuple of all available Server(s) ports MUST be assigned, using this same parameter. 
+        * A unique port number **MUST** be assigned to each Server on the network using this parameter. 
+        * At Client end, a List/Tuple of all available Server(s) ports **MUST** be assigned, using this same parameter. 
         * See its usage example [here ➶](../advanced/multi_server/#bare-minimum-usage).
 
     *  [**In Multi-Client Mode**](../advanced/multi_client/):
 
-        * A unique port number MUST be assigned to each Client on the network using this parameter. 
-        * At Server end, a List/Tuple of all available Client(s) ports MUST be assigned, using this same parameter. 
+        * A unique port number **MUST** be assigned to each Client on the network using this parameter. 
+        * At Server end, a List/Tuple of all available Client(s) ports **MUST** be assigned, using this same parameter. 
         * See its usage example [here ➶](../advanced/multi_client/#bare-minimum-usage).
 
 **Data-Type:** String or List/Tuple

@@ -67,7 +67,7 @@ stream.stop()
 
 ## Using Camgear with Youtube Videos
 
-CamGear API provides complete support for **Live + Normal YouTube Video frames pipelining**. You just have to provide the desired YouTube Video's URL to its `source` parameter and enable `y_tube` parameter. The complete usage example is as follows:
+CamGear API provides complete support for **Live + Normal YouTube Video frames pipelining**. All you have to do is to provide the desired YouTube Video's URL to its `source` parameter and enable the `y_tube` parameter. The complete usage example is as follows:
 
 !!! bug "Bug in `opencv-python` library"
 
@@ -119,7 +119,7 @@ stream.stop()
 
 ## Using CamGear with Variable Camera Properties
 
-CamGear API also flexibly support various **Source Tweak Parameters** available within [OpenCV's VideoCapture API](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d). These parameters can be easily applied to source stream in CamGear API through its `options` dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
+CamGear API also flexibly support various **Source Tweak Parameters** available within [OpenCV's VideoCapture API](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d). These tweak parameters can be used to manipulate input source Camera-Device properties _(such as its brightness, saturation, size, iso, gain etc.)_ seemlessly, and can be easily applied in CamGear API through its `options` dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
 
 
 !!! tip "All the supported Source Tweak Parameters can be found [here ➶](../advanced/source_params/#source-tweak-parameters-for-camgear-api)"

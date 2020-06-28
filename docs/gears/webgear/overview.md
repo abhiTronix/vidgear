@@ -26,7 +26,7 @@ limitations under the License.
 <p align="center">
   <img src="../../../assets/gifs/webgear.gif" alt="WebGear in action!" width=120%/>
   <br>
-  <sub><i>WebGear Video Server at <a href="http://0.0.0.0:8000/" title="default address">http://0.0.0.0:8000/</a> address.</i></sub>
+  <sub><i>WebGear Video Server at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</i></sub>
 </p>
 
 WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-streamer API, that is built upon [Starlette](https://www.starlette.io/) - a lightweight ASGI framework/toolkit, which is ideal for building high-performance asyncio services.
@@ -113,7 +113,7 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
 
 ### Index.html
 
-*Can be accessed by visiting WebGear app server, running at http://0.0.0.0:8000/:*
+*Can be accessed by visiting WebGear app server, running at http://localhost:8000/:*
 
 <h2 align="center">
   <img src="../../../assets/images/webgear_temp_index.jpg" alt="WebGear default Index page"/>
@@ -122,7 +122,7 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
 
 ### 404.html
 
-*Appears when respective URL is not found, for example http://0.0.0.0:8000/ok:*
+*Appears when respective URL is not found, for example http://localhost:8000/ok:*
 
 <h2 align="center">
   <img src="../../../assets/images/webgear_temp_404.jpg" alt="WebGear default 404 page"/>

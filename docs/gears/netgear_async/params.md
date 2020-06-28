@@ -27,7 +27,7 @@ This parameter sets the valid network address of the server/client. Network addr
 
 **Data-Type:** String
 
-**Default Value:** Its default value is based on current primary mode, _i.e `'localhost'` for Send Mode and `'*'` for Receive Mode._
+**Default Value:** Its default value is based on selected primary mode, _i.e `'localhost'` for Send Mode and `'*'` for Receive Mode._
 
 **Usage:**
 

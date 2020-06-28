@@ -65,7 +65,7 @@ stream.stop()
 
 ## Using ScreenGear with Variable Screen Dimensions
 
-ScreenGear API provides us the flexibility to directly set the dimensions of capture screen w.r.t selected `monitor` value. These dimensions can be easily applied to ScreenGear API through its `options` dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
+ScreenGear API provides us the flexibility to directly set the dimensions of capture screen w.r.t selected [`monitor`](../params/#monitor) value. These dimensions can be easily applied to ScreenGear API through its [`options`](../params/#options) dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
 
 
 ```python

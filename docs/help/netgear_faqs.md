@@ -97,19 +97,19 @@ The time varies differently for different encoding/decoding format as follows:
 | jpg | 50-70 |
 | png | 200-250 | 
 
-Despite `bmp` being the fasted, using `jpg` is more suitable for encoding, since highly-optimized `turbojpeg` JPEG library is now a part of OpenCV binaries. But you can choose whatever suits you.
+Despite `bmp` being the fasted, using `jpg` is more suitable for encoding, since highly-optimized [`libjpeg-turbo`](https://libjpeg-turbo.org/) library is now a part of OpenCV binaries. But you can choose whatever suits you.
 
 &nbsp;
 
 ## Why NetGear API not working correctly?
 
-**Answer:** First, carefully go through [NetGear doc ➶](../../gears/netgear/overview/) that contains detailed information. Also, checkout [PyZmq Docs ➶](https://zeromq.github.io/pyzmq/) for its various settings/parameters. If still it doesn't work for you, then [tell us on Gitter ➶](https://gitter.im/vidgear/community), and if that doesn't help, then finally [report an issue ➶](../../contribution/issue/)
+**Answer:** First, carefully go through [NetGear doc ➶](../../gears/netgear/overview/) that contains detailed information. Also, checkout [PyZmq Docs ➶](https://zeromq.github.io/pyzmq/) for its various settings/parameters. If still it doesn't work for you, then let us know on [Gitter ➶](https://gitter.im/vidgear/community)
 
 &nbsp;
 
-## Why NetGear is slow?
+## Why NetGear is running slow?
 
-**Answer:** Here are few tips that may help you in improving speed significantly:
+**Answer:** Here are few tips to troubleshoot performance on your machine:
 
 * **Update ZMQ to latest:** Update your `pyzmq` lib as follows:
 
@@ -117,15 +117,18 @@ Despite `bmp` being the fasted, using `jpg` is more suitable for encoding, since
     sudo pip3 install -U pyzmq
     ``` 
 
-* **Use PUB/SUB pattern if you're live streaming**: Remember to use [**Publisher/Subscriber pattern**](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html) only for asynchronous high-speed transmission over live streams. Other messaging patterns such as Pair & Client/Server are only useful for slower synchronous transmission. You can set parameter [`pattern=2` during NetGear class initialization](../../gears/netgear/params/#pattern) in your code to activate Publisher/Subscriber pattern.
+* **Install testing branch:** The [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch may contain many latest performance updates, which are not yet merged into master branch. Therefore, you can try them earlier, by [installing `testing` branch directly ➶](../../installation/source_install/#installation).
+
+* **Use PUB/SUB pattern if you're live streaming**:  Try different [`pattern`](../../gears/netgear/params/#pattern) values, as each of them suits different settings. For example, you can use its [**Publisher/Subscriber pattern**](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html) _(i.e. `pattern=2`)_ for asynchronous high-speed transmission over real-time streams, and it works faster than other synchronous patterns for this scenario.
 
 * **Use Wired connection instead of Wireless connection**: Remember typical 802.11g Wireless has a theoretical maximum of 54Mbps. Typical wired 10/100/1000 Ethernet has a theoretical maximum of 100 Gbps. So in theory wired is faster. However, these speeds are only on your local network. So chose your network configuration wisely.
 
 * **Compress your image/frame before transmission:** Try [Frame Encoding/Decoding Compression capabilities for NetGear API ➶](../../gears/netgear/advanced/compression/).
 
-* **Reduce Frame Size:** Use VidGear's real-time _Frame-Size Reducer_(`reducer`) method for reducing frame-size on-the-go for additional performance _(see [this usage example ➶](../../gears/netgear/advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer-with-frame-compression))_. Remember, sending large HQ video-frames may required more network bandwidth and packet size, which may add to video latency!
+* **Reduce Frame Size:** Use VidGear's real-time _Frame-Size Reducer_(`reducer`) method for reducing frame-size on-the-go for additional performance _(see [this usage example ➶](../../gears/netgear/advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer-with-frame-compression))_. Remember, sending large HQ video-frames may required more network bandwidth and packet size, which can lead to additional latency!
 
-* _Finally, if nothing works, then, switch to more faster and efficient [**NetGear_Async API ➶**](../../gears/netgear_async/overview/)_
+* Systematically, **check for [Hardware/Network Issues ➶](https://github.com/abhiTronix/vidgear/issues/137)**
 
+* Finally, if nothing works, then, **checkout [**NetGear_Async API ➶**](../../gears/netgear_async/overview/)**
 
 &nbsp;

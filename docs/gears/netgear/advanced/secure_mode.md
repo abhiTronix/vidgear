@@ -83,7 +83,7 @@ Secure mode, as of now, supports the two most powerful ZMQ security layers:
 
 &nbsp;
 
-## Supported Attributes:
+## Supported Attributes
 
 For implementing Secure Mode, NetGear API currently provide following attribute for its [`option`](../../params/#options) dictionary parameter:
 
