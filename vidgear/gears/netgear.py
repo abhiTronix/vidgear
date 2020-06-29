@@ -300,17 +300,22 @@ class NetGear:
                         )
                     )
 
-            elif (
-                key == "compression_format"
-            ):
-            	if isinstance(value, str) and value.lower().strip() in [".jpg", ".jpeg", ".bmp", ".png"]
-                	# assign frame-compression encoding value
-                	self.__compression = value.lower().strip()
+            elif key == "compression_format":
+                if isinstance(value, str) and value.lower().strip() in [
+                    ".jpg",
+                    ".jpeg",
+                    ".bmp",
+                    ".png",
+                ]:
+                    # assign frame-compression encoding value
+                    self.__compression = value.lower().strip()
                 else:
-                	logger.warning(
-                        "Incorrect encoding format: `{}` skipped. Disabling Frame-Compression!".format(value)
+                    logger.warning(
+                        "Incorrect encoding format: `{}` skipped. Disabling Frame-Compression!".format(
+                            value
+                        )
                     )
-                	self.__compression = None
+                    self.__compression = None
             elif key == "compression_param":
                 # assign encoding/decoding params/flags for frame-compression if valid
                 if receive_mode and isinstance(value, int):
@@ -446,7 +451,7 @@ class NetGear:
         # handle frame compression on return data
         if (
             (self.__bi_mode or self.__multiclient_mode)
-            and not(self.__compression is None)
+            and not (self.__compression is None)
             and self.__ex_compression_params is None
         ):
             # define exclusive compression params
@@ -638,7 +643,7 @@ class NetGear:
                         (protocol + "://" + str(address) + ":" + str(port)), pattern
                     )
                 )
-                if not(self.__compression is None):
+                if not (self.__compression is None):
                     logger.debug(
                         "Optimized `{}` Frame-Compression is enabled with decoding flag:`{}` for this connection.".format(
                             self.__compression, self.__compression_params
@@ -816,7 +821,7 @@ class NetGear:
                         (protocol + "://" + str(address) + ":" + str(port)), pattern
                     )
                 )
-                if not(self.__compression is None):
+                if not (self.__compression is None):
                     logger.debug(
                         "Optimized `{}` Frame-Compression is enabled with encoding params:`{}` for this connection.".format(
                             self.__compression, self.__compression_params
@@ -949,7 +954,7 @@ class NetGear:
                             )
 
                         # handle encoding
-                        if not(self.__compression is None):
+                        if not (self.__compression is None):
                             retval, return_data = cv2.imencode(
                                 self.__compression,
                                 return_data,
@@ -1020,7 +1025,7 @@ class NetGear:
             frame = frame_buffer.reshape(msg_json["shape"])
 
             # check if encoding was enabled
-            if msg_json["compression"] and not(self.__compression is None):
+            if msg_json["compression"] and not (self.__compression is None):
                 frame = cv2.imdecode(frame, self.__compression_params)
                 # check if valid frame returned
                 if frame is None:
@@ -1127,7 +1132,7 @@ class NetGear:
             frame = np.ascontiguousarray(frame, dtype=frame.dtype)
 
         # handle encoding
-        if not(self.__compression is None):
+        if not (self.__compression is None):
             retval, frame = cv2.imencode(
                 self.__compression, frame, self.__compression_params
             )
@@ -1146,7 +1151,9 @@ class NetGear:
             # prepare the exclusive json dict and assign values with unique port
             msg_dict = dict(
                 terminate_flag=exit_flag,
-                compression=str(self.__compression) if not(self.__compression is None) else '',
+                compression=str(self.__compression)
+                if not (self.__compression is None)
+                else "",
                 port=self.__port,
                 pattern=str(self.__pattern),
                 message=message,
@@ -1157,7 +1164,9 @@ class NetGear:
             # otherwise prepare normal json dict and assign values
             msg_dict = dict(
                 terminate_flag=exit_flag,
-                compression=str(self.__compression) if not(self.__compression is None) else '',
+                compression=str(self.__compression)
+                if not (self.__compression is None)
+                else "",
                 message=message,
                 pattern=str(self.__pattern),
                 dtype=str(frame.dtype),

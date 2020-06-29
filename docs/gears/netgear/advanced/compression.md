@@ -117,6 +117,7 @@ Open your favorite terminal and execute the following python code:
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
+import cv2
 
 # open any valid video stream(for e.g `test.mp4` file)
 stream = VideoGear(source='test.mp4').start()
@@ -272,6 +273,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
+import cv2
 
 # define decode image as 3 channel BGR color image
 options = {'compression_format': '.jpg', 'compression_param':cv2.IMREAD_COLOR}
