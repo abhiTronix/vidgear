@@ -120,21 +120,17 @@ class WriteGear:
             _filename
         )  # extract file base path for debugging ahead
 
-        if output_params:
-            # handle user defined output dimensions(must be a tuple or list)
-            if output_params and "-output_dimensions" in output_params:
-                self.__output_dimensions = output_params[
-                    "-output_dimensions"
-                ]  # assign special parameter to global variable
-                del output_params["-output_dimensions"]  # clean
-
-            # cleans and reformat output parameters
-            self.__output_parameters = {
-                str(k).strip().lower(): str(v).strip() for k, v in output_params.items()
-            }
+        # cleans and reformat output parameters
+        self.__output_parameters = {
+            str(k).strip(): v.strip() if isinstance(v, str) else v
+            for k, v in output_params.items()
+        }
 
         # handles FFmpeg binaries validity tests
         if self.__compression:
+
+            # handles where to save the downloaded FFmpeg Static Binaries on Windows(if specified)
+            ffmpeg_download_path_ = ""
 
             if self.__logging:
                 logger.debug(
@@ -142,26 +138,27 @@ class WriteGear:
                 )
                 logger.debug(self.__output_parameters)
 
-            # handles where to save the downloaded FFmpeg Static Binaries on Windows(if specified)
-            ffmpeg_download_path_ = ""
-            if (
-                self.__output_parameters
-                and "-ffmpeg_download_path" in self.__output_parameters
-            ):
-                ffmpeg_download_path_ += self.__output_parameters[
-                    "-ffmpeg_download_path"
-                ]
-                del self.__output_parameters["-ffmpeg_download_path"]  # clean
+            if self.__output_parameters:
 
-            # handle input framerate if specified
-            if (
-                self.__output_parameters
-                and "-input_framerate" in self.__output_parameters
-            ):
-                self.__inputframerate = float(
-                    self.__output_parameters["-input_framerate"]
-                )
-                del self.__output_parameters["-input_framerate"]  # clean
+                # handle user defined output dimensions(must be a tuple or list)
+                if "-output_dimensions" in self.__output_parameters:
+                    self.__output_dimensions = output_params[
+                        "-output_dimensions"
+                    ]  # assign special parameter to global variable
+                    del output_params["-output_dimensions"]  # clean
+
+                if "-ffmpeg_download_path" in self.__output_parameters:
+                    ffmpeg_download_path_ += self.__output_parameters[
+                        "-ffmpeg_download_path"
+                    ]
+                    del self.__output_parameters["-ffmpeg_download_path"]  # clean
+
+                # handle input framerate if specified
+                if "-input_framerate" in self.__output_parameters:
+                    self.__inputframerate = float(
+                        self.__output_parameters["-input_framerate"]
+                    )
+                    del self.__output_parameters["-input_framerate"]  # clean
 
             # validate the FFmpeg path/binaries and returns valid FFmpeg file executable location(also downloads static binaries on windows)
             actual_command = get_valid_ffmpeg_path(
