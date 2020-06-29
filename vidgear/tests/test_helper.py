@@ -123,7 +123,7 @@ def test_dict2Args(dictionary):
     if result and isinstance(result, list):
         logger.debug("dict2Args converted Arguments are: {}".format(result))
     else:
-        pytest.fail(str(e))
+        pytest.fail("Failed to complete this test!")
 
 
 test_data = [
