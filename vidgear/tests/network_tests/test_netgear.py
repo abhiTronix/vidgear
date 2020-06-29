@@ -198,8 +198,11 @@ def test_patterns(pattern):
 @pytest.mark.parametrize(
     "options_client",
     [
-        {"compression_param": cv2.IMREAD_UNCHANGED},
-        {"compression_param": [cv2.IMWRITE_JPEG_QUALITY, 80]},
+        {"compression_format": None, "compression_param": cv2.IMREAD_UNCHANGED},
+        {
+            "compression_format": ".jpg",
+            "compression_param": [cv2.IMWRITE_JPEG_QUALITY, 80],
+        },
     ],
 )
 def test_compression(options_client):
