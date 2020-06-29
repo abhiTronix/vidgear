@@ -143,7 +143,7 @@ class WriteGear:
                 logger.debug(
                     "Compression Mode is enabled therefore checking for valid FFmpeg executables."
                 )
-                logger.debug(self.__output_parameters)
+                logger.debug("Output_params Dict: {}".format(self.__output_parameters))
 
             if self.__output_parameters:
 
