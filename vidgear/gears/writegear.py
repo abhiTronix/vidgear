@@ -120,9 +120,16 @@ class WriteGear:
             _filename
         )  # extract file base path for debugging ahead
 
+        # handle user defined output dimensions(must be a tuple or list)
+        if output_params and "-output_dimensions" in output_params:
+            self.__output_dimensions = output_params[
+                "-output_dimensions"
+            ]  # assign special parameter to global variable
+            del output_params["-output_dimensions"]  # clean
+
         # cleans and reformat output parameters
         self.__output_parameters = {
-            str(k).strip(): v.strip() if isinstance(v, str) else v
+            str(k).strip(): str(v).strip() if not isinstance(v, list) else v
             for k, v in output_params.items()
         }
 
@@ -139,13 +146,6 @@ class WriteGear:
                 logger.debug(self.__output_parameters)
 
             if self.__output_parameters:
-
-                # handle user defined output dimensions(must be a tuple or list)
-                if "-output_dimensions" in self.__output_parameters:
-                    self.__output_dimensions = output_params[
-                        "-output_dimensions"
-                    ]  # assign special parameter to global variable
-                    del output_params["-output_dimensions"]  # clean
 
                 if "-ffmpeg_download_path" in self.__output_parameters:
                     ffmpeg_download_path_ += self.__output_parameters[
