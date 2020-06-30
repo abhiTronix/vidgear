@@ -212,7 +212,7 @@ class WriteGear:
             rgb_mode (boolean): enable this flag to activate RGB mode _(i.e. specifies that incoming frames are of RGB format(instead of default BGR)_.
 
         """
-        if frame is None:  # NoneType frames will be skipped
+        if frame is None:  # None-Type frames will be skipped
             return
 
         # get height, width and number of channels of current frame
