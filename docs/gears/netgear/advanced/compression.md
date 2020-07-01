@@ -22,15 +22,15 @@ limitations under the License.
 
 
 <p align="center">
-  <img src="../../../../assets/images/compression.png" alt="Frame Compression" />
+  <img src="../../../../assets/images/compression.png" alt="Frame Compression" width="75%" />
 </p>
 
 
 ## Overview
 
-NetGear API supports real-time Frame Compression _(Encoding/Decoding capabilities)_, for optimizing performance while sending frames over the network. This compression works by encoding the frame before sending it at Server's end, and therby, decoding it on the Client's end automatically, all in real-time.
+NetGear API supports real-time Frame Compression _(Encoding/Decoding capabilities)_, for optimizing performance while sending frames over the network. This compression works by encoding the frame before sending it at Server's end, and thereby, smartly decoding it on the Client's end, all in real-time.
 
-In Frame Compression, NetGear API utilizes OpenCV's [imencode](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e) & [imdecode](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e) methods in conjunction with its flexible APIs at Server and Client end respectively. Eurthrermore, this aid us to achieve better control over the compression of the frame being sent over the network, and thereby helps in optimizing the performance, but only at the cost of quality. 
+In Frame Compression, NetGear API utilizes OpenCV's [imencode](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e) & [imdecode](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e) methods in conjunction with its flexible APIs at Server and Client end respectively. Furthermore, this aid us to achieve better control over the compression of the frame being sent over the network, and thereby helps in optimizing the performance, but only at the cost of quality. 
 
 Frame Compression can be easily activated in NetGear API through `compression_format` & `compression_param` attributes of its [`option`](../../params/#options) dictionary parameter, during initialization.
 
@@ -39,7 +39,9 @@ Frame Compression can be easily activated in NetGear API through `compression_fo
 
 !!! warning "Important Information"
 
-    * Frame Compression only supports `JPG/JPEG`, `PNG` & `BMP` encoding formats as of now.
+    * Frame Compression only supports three `JPG` or `JPEG`, `PNG` & `BMP` encoding formats as of now.
+
+    * Any Incorrect/Invalid encoding format will **DISABLE** this Frame Compression!
 
     * Incorrect Format-specific parameters through `compression_param` attribute are skipped automatically.
 
@@ -51,7 +53,7 @@ Frame Compression can be easily activated in NetGear API through `compression_fo
 
 - [x] Enables real-time Frame Compression for further optimizing performance.
 
-- [x] Client End automatically decodes frame based on the encoding used at Server End.
+- [x] Client End intelligently decodes frame only w.r.t the encoding used at Server End.
 
 - [x] Encoding and decoding supports all Format-specific flags.
 
@@ -66,7 +68,11 @@ Frame Compression can be easily activated in NetGear API through `compression_fo
 
 For implementing Frame Compression, NetGear API currently provide following attribute for its [`option`](../../params/#options) dictionary parameter:
 
-* `compression_format` (_string_): This attribute activates compression with selected encoding format at the Server end only. Its possible valid values are: `'.jpg'`/`'.jpeg'` or `'.png'` or `'.bmp'`, and its usage is as follows:
+* `compression_format` (_string_): This attribute activates compression with selected encoding format. Its possible valid values are: `'.jpg'`/`'.jpeg'` or `'.png'` or `'.bmp'`, and its usage is as follows:
+
+    !!! warning "Any Incorrect/Invalid encoding format value on `compression_format` attribute will **DISABLE** this Frame Compression!"
+
+    !!! info "Even if you assign different `compression_format` value at Client's end, NetGear will auto-select the Server's encoding format instead."
     
     ```python
     options = {'compression_format': '.jpg'} #activates jpeg encoding
@@ -111,6 +117,7 @@ Open your favorite terminal and execute the following python code:
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
+import cv2
 
 # open any valid video stream(for e.g `test.mp4` file)
 stream = VideoGear(source='test.mp4').start()
@@ -162,7 +169,7 @@ from vidgear.gears import NetGear
 import cv2
 
 # define decode image as 3 channel BGR color image
-options = {'compression_param':cv2.IMREAD_COLOR}
+options = {'compression_format': '.jpg', 'compression_param':cv2.IMREAD_COLOR}
 
 #define NetGear Client with `receive_mode = True` and defined parameter
 client = NetGear(receive_mode = True, pattern = 1, logging = True, **options)
@@ -266,9 +273,10 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
+import cv2
 
 # define decode image as 3 channel BGR color image
-options = {'compression_param':cv2.IMREAD_COLOR}
+options = {'compression_format': '.jpg', 'compression_param':cv2.IMREAD_COLOR}
 
 # Open live video stream on webcam at first index(i.e. 0) device
 stream = VideoGear(source=0).start()

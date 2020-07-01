@@ -31,12 +31,14 @@ import requests
 from os.path import expanduser
 from vidgear.gears.asyncio.helper import generate_webdata, validate_webdata
 from vidgear.gears.helper import (
-    check_output, reducer,
+    check_output,
+    reducer,
     download_ffmpeg_binaries,
     generate_auth_certificates,
     get_valid_ffmpeg_path,
     logger_handler,
     validate_ffmpeg,
+    dict2Args,
 )
 
 # define test logger
@@ -90,6 +92,38 @@ def test_ffmpeg_static_installation():
         subindent = " " * 4 * (level + 1)
         for f in files:
             logger.debug("{}{}".format(subindent, f))
+
+
+test_data = [
+    {"-thread_queue_size": "512", "-f": "alsa", "-clones": 24},
+    {
+        "-thread_queue_size": "512",
+        "-f": "alsa",
+        "-clones": ["-map", "0:v:0", "-map", "1:a?"],
+        "-ac": "1",
+        "-ar": "48000",
+        "-i": "plughw:CARD=CAMERA,DEV=0",
+    },
+    {
+        "-thread_queue_size": "512",
+        "-f": "alsa",
+        "-ac": "1",
+        "-ar": "48000",
+        "-i": "plughw:CARD=CAMERA,DEV=0",
+    },
+]
+
+
+@pytest.mark.parametrize("dictionary", test_data)
+def test_dict2Args(dictionary):
+    """
+    Testing dict2Args helper function. 
+    """
+    result = dict2Args(dictionary)
+    if result and isinstance(result, list):
+        logger.debug("dict2Args converted Arguments are: {}".format(result))
+    else:
+        pytest.fail("Failed to complete this test!")
 
 
 test_data = [

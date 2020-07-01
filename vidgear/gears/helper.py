@@ -206,8 +206,14 @@ def dict2Args(param_dict):
     """
     args = []
     for key in param_dict.keys():
-        args.append(key)
-        args.append(param_dict[key])
+        if key in ["-clones"]:
+            if isinstance(param_dict[key], list):
+                args.extend(param_dict[key])
+            else:
+                logger.warning("Invalid datatype clones:`{}` skipped!".format(param_dict[key]))
+        else:
+            args.append(key)
+            args.append(param_dict[key])
     return args
 
 

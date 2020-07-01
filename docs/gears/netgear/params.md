@@ -150,7 +150,7 @@ This parameter provides the flexibility to alter various NetGear API's internal 
 
     * **`overwrite_cert`** (_boolean_) : In Secure Mode, This internal attribute decides whether to overwrite existing Public+Secret Keypair/Certificates or not, ==at the Server-end only==. More information can be found [here ➶](../advanced/secure_mode/#supported-attributes)
 
-    * **`compression_format`**(_string_): This internal attribute activates compression with selected encoding format at the Server end only. The possible values are `.jpg`, `.png`, `.bmp`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
+    * **`compression_format`**(_string_): This internal attribute activates frame compression with selected encoding format. The possible values are `.jpg`, `.png`, `.bmp`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
 
     * **`compression_param`**(_integer & list/tuple_): This internal attribute allow us to pass different format-specific [Encoding parameters](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga461f9ac09887e47797a54567df3b8b63) and [Decoding flags](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e). More information can be found [here ➶](../advanced/compression/#supported-attributes)
 
