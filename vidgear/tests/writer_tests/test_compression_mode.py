@@ -33,6 +33,7 @@ from vidgear.gears.helper import capPropId, check_output, logger_handler
 
 # define test logger
 logger = log.getLogger("Test_commpression_mode")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 

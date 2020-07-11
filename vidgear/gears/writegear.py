@@ -27,11 +27,18 @@ import time
 import cv2
 
 from pkg_resources import parse_version
-from .helper import capPropId, dict2Args, get_valid_ffmpeg_path, logger_handler
+from .helper import (
+    capPropId,
+    dict2Args,
+    get_valid_ffmpeg_path,
+    logger_handler,
+    is_valid_url,
+)
 
 
 # define logger
 logger = log.getLogger("WriteGear")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
@@ -98,27 +105,36 @@ class WriteGear:
         self.__initiate = (
             True  # initiate one time process for valid process initialization
         )
+        self.__out_file = None  # handles output filename
 
         # handles output file name (if not given)
         if not output_filename:
             raise ValueError(
                 "[WriteGear:ERROR] :: Kindly provide a valid `output_filename` value. Refer Docs for more information."
             )
-        elif output_filename and os.path.isdir(
-            output_filename
-        ):  # check if directory path is given instead
-            output_filename = os.path.join(
-                output_filename, "VidGear-{}.mp4".format(time.strftime("%Y%m%d-%H%M%S"))
-            )  # auto-assign valid name and adds it to path
         else:
-            pass
+            # validate this class has the access rights to specified directory or not
+            abs_path = os.path.abspath(output_filename)
+            if os.access in os.supports_effective_ids and os.access(
+                os.path.dirname(abs_path), os.W_OK
+            ):
 
-        # some definitions and assigning output file absolute path to class variable
-        _filename = os.path.abspath(output_filename)
-        self.__out_file = _filename
-        basepath, _ = os.path.split(
-            _filename
-        )  # extract file base path for debugging ahead
+                if os.path.isdir(abs_path):  # check if given path is directory
+                    abs_path = os.path.join(
+                        abs_path,
+                        "VidGear-{}.mp4".format(time.strftime("%Y%m%d-%H%M%S")),
+                    )  # auto-assign valid name and adds it to path
+
+                # assign output file absolute path to class variable
+                self.__out_file = abs_path
+
+            else:
+                # log warning if
+                logger.warning(
+                    "The given path:`{}` does not have write access permission. Skipped!".format(
+                        output_filename
+                    )
+                )
 
         # handle user defined output dimensions(must be a tuple or list)
         if output_params and "-output_dimensions" in output_params:
@@ -186,17 +202,29 @@ class WriteGear:
                     )
                 self.__compression = False  # compression mode disabled
 
-        # validate this class has the access rights to specified directory or not
-        assert os.access(basepath, os.W_OK), (
-            "[WriteGear:ERROR] :: Permission Denied: Cannot write to directory: "
-            + basepath
-        )
-
         # display confirmation if logging is enabled/disabled
         if self.__compression and self.__ffmpeg:
+            # check whether is valid url instead
+            if self.__out_file is None:
+                if is_valid_url(self.__ffmpeg, url = output_filename, logging = logging):
+                    if self.__logging:
+                        logger.debug("URL:`{}` is sucessfully configured for streaming.".format(output_filename))
+                    self.__out_file = output_filename
+                else:
+                    raise ValueError(
+                        "[WriteGear:ERROR] :: output_filename value:`{}` is not valid/supported in Compression Mode!".format(
+                            output_filename
+                        )
+                    )
             if self.__logging:
                 logger.debug("Compression Mode is configured properly!")
         else:
+            if self.__out_file is None:
+                raise ValueError(
+                    "[WriteGear:ERROR] :: output_filename value:`{}` is not vaild in Non-Compression Mode!".format(
+                        output_filename
+                    )
+                )
             if self.__logging:
                 logger.debug(
                     "Compression Mode is disabled, Activating OpenCV built-in Writer!"

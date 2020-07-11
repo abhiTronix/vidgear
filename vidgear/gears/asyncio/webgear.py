@@ -36,6 +36,7 @@ from .helper import generate_webdata, logger_handler, reducer
 
 # define logger
 logger = log.getLogger("WebGear")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 

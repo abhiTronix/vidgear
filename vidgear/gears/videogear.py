@@ -27,6 +27,7 @@ from .helper import logger_handler
 
 # define logger
 logger = log.getLogger("VideoGear")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 

@@ -32,6 +32,7 @@ from .helper import capPropId, logger_handler
 
 # define logger
 logger = log.getLogger("ScreenGear")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 

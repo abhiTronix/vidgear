@@ -33,6 +33,7 @@ from vidgear.gears.helper import logger_handler
 
 # define test logger
 logger = log.getLogger("Test_camgear")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 

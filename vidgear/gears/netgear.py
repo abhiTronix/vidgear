@@ -32,6 +32,7 @@ from .helper import generate_auth_certificates, logger_handler
 
 # define logger
 logger = log.getLogger("NetGear")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
