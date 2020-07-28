@@ -215,7 +215,7 @@ class WriteGear:
         if self.__compression and self.__ffmpeg:
             # check whether is valid url instead
             if self.__out_file is None:
-                if is_valid_url(self.__ffmpeg, url=output_filename, logging=logging):
+                if is_valid_url(self.__ffmpeg, url=output_filename, logging=self.__logging):
                     if self.__logging:
                         logger.debug(
                             "URL:`{}` is sucessfully configured for streaming.".format(

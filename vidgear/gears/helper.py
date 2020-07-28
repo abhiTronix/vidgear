@@ -108,7 +108,7 @@ def is_valid_url(path, url=None, logging=False):
     
     **Returns:** A boolean value, confirming whether tests passed, or not?.
     """
-    if (url is None):
+    if url is None or not (url):
         logger.warning("URL is empty!")
         return False
     # extract URL scheme
