@@ -26,7 +26,7 @@ labels: "issue: bug"
 
 - [ ] I have searched the [issues](https://github.com/abhiTronix/vidgear/issues) for my issue and found nothing related or helpful.
 - [ ] I have read the [Documentation](https://abhitronix.github.io/vidgear).
-- [ ] I have read the [Issue Guidelines](https://abhitronix.github.io/contribution/issue/).
+- [ ] I have read the [Issue Guidelines](https://abhitronix.github.io/vidgear/contribution/issue/#submitting-an-issue-guidelines).
 
 
 ### Environment

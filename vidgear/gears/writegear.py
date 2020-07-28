@@ -105,6 +105,9 @@ class WriteGear:
         self.__initiate = (
             True  # initiate one time process for valid process initialization
         )
+        self.__force_termination = (
+            False  # handles force termination in compression mode
+        )
         self.__out_file = None  # handles output filename
 
         # handles output file name (if not given)
@@ -115,9 +118,10 @@ class WriteGear:
         else:
             # validate this class has the access rights to specified directory or not
             abs_path = os.path.abspath(output_filename)
-            if os.access in os.supports_effective_ids and os.access(
-                os.path.dirname(abs_path), os.W_OK
-            ):
+
+            if (
+                self.__os_windows or os.access in os.supports_effective_ids
+            ) and os.access(os.path.dirname(abs_path), os.W_OK):
 
                 if os.path.isdir(abs_path):  # check if given path is directory
                     abs_path = os.path.join(
@@ -127,7 +131,6 @@ class WriteGear:
 
                 # assign output file absolute path to class variable
                 self.__out_file = abs_path
-
             else:
                 # log warning if
                 logger.warning(
@@ -176,6 +179,12 @@ class WriteGear:
                     )
                     del self.__output_parameters["-input_framerate"]  # clean
 
+                if "-i" in self.__output_parameters:  # activate force termination
+                    if "-disable_force_termination" in self.__output_parameters:
+                        self.__force_termination = False
+                    else:
+                        self.__force_termination = True
+
             # validate the FFmpeg path/binaries and returns valid FFmpeg file executable location(also downloads static binaries on windows)
             actual_command = get_valid_ffmpeg_path(
                 custom_ffmpeg,
@@ -206,9 +215,13 @@ class WriteGear:
         if self.__compression and self.__ffmpeg:
             # check whether is valid url instead
             if self.__out_file is None:
-                if is_valid_url(self.__ffmpeg, url = output_filename, logging = logging):
+                if is_valid_url(self.__ffmpeg, url=output_filename, logging=logging):
                     if self.__logging:
-                        logger.debug("URL:`{}` is sucessfully configured for streaming.".format(output_filename))
+                        logger.debug(
+                            "URL:`{}` is sucessfully configured for streaming.".format(
+                                output_filename
+                            )
+                        )
                     self.__out_file = output_filename
                 else:
                     raise ValueError(
@@ -436,9 +449,9 @@ class WriteGear:
             if self.__logging:
                 logger.debug("Executing FFmpeg command: `{}`".format(" ".join(cmd)))
                 # In debugging mode
-                sp.call(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
+                sp.run(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
             else:
-                sp.call(cmd, stdin=sp.PIPE, stdout=sp.DEVNULL, stderr=sp.STDOUT)
+                sp.run(cmd, stdin=sp.PIPE, stdout=sp.DEVNULL, stderr=sp.STDOUT)
         except (OSError, IOError):
             # log something is wrong!
             logger.error(
@@ -498,7 +511,6 @@ class WriteGear:
                     self.__out_file, FOURCC, FPS, WIDTH, HEIGHT, BACKEND
                 )
             )
-
         # start different process for with/without Backend.
         if BACKEND:
             self.__process = cv2.VideoWriter(
@@ -531,7 +543,7 @@ class WriteGear:
                 return  # no process was initiated at first place
             if self.__process.stdin:
                 self.__process.stdin.close()  # close `stdin` output
-            if self.__output_parameters and "-i" in self.__output_parameters:
+            if self.__force_termination:
                 self.__process.terminate()
             self.__process.wait()  # wait if still process is still processing some information
             self.__process = None
