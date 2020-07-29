@@ -31,6 +31,7 @@ from .helper import check_CV_version, logger_handler
 
 # define logger
 logger = log.getLogger("Stabilizer")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 

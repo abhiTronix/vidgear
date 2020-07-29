@@ -31,11 +31,7 @@ This parameter sets the valid output Video filename/path for the output video.
 
 **Data-Type:** String
 
-**Default Value:** Its default value is `0`. 
-
 **Usage:**
-
-!!! danger "Make sure to provide valid filename with valid file-extension based on the encoder in use _(default is `.mp4`)_."
 
 Its valid input can be one of the following: 
 
@@ -49,6 +45,15 @@ Its valid input can be one of the following:
 
     ```python
     writer = WriteGear(output_filename = 'output.mp4') #Define writer 
+    ```
+
+    !!! danger "Make sure to provide valid filename with valid file-extension based on the encoder in use _(default is `.mp4`)_."
+
+
+* **URL**: Valid URL of a network stream with a protocol supported by installed FFmpeg _(verify with command `ffmpeg -protocols`)_ only. This is useful for building a [**Video-Streaming Server**](https://trac.ffmpeg.org/wiki/StreamingGuide) with FFmpeg in WriteGear API. For example, you can stream on a `rtmp` protocol URL as follows:
+
+    ```python
+    writer = WriteGear(output_filename = 'rtmp://localhost/live/test') #Define writer 
     ```
 
 &nbsp;
@@ -143,6 +148,12 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
 
         ```python
         output_params = {"-clones": ['-map', '0:v:0', '-map', '1:a?']}
+        ```
+
+    * **`-disable_force_termination`** _(bool)_: sets a special flag to disable the default forced-termination behaviour in WriteGear API when `-i` FFmpeg parameter is used _(For more details, see issue: #149)_. Its usage is as follows:
+
+        ```python
+        output_params = {"-disable_force_termination": True} # disable the default forced-termination behaviour
         ```
 
 ### Supported Encoders

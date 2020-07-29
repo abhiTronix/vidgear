@@ -33,6 +33,7 @@ from vidgear.gears.helper import capPropId, check_output, logger_handler
 
 # define test logger
 logger = log.getLogger("Test_commpression_mode")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
@@ -271,12 +272,21 @@ def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio, logging):
     """
     Testing WriteGear Compression-Mode(FFmpeg) custom FFmpeg Pipeline by seperating audio from video
     """
+    writer = None
     try:
+        # for testing purposes only
+        output_params = (
+            {"-i": None, "-disable_force_termination": True}
+            if ffmpeg_command_to_save_audio
+            else {"-i": None}
+        )
+
         # define writer
         writer = WriteGear(
             output_filename="Output.mp4",
             compression_mode=(True if ffmpeg_command_to_save_audio else False),
             logging=logging,
+            **output_params
         )  # Define writer
 
         # execute FFmpeg command
@@ -294,3 +304,6 @@ def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio, logging):
             pytest.xfail("Test Passed!")
         else:
             logger.exception(str(e))
+    finally:
+        if not (writer is None):
+            writer.close()

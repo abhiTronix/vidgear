@@ -77,6 +77,7 @@ def logger_handler():
 
 # define logger
 logger = log.getLogger("Helper")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
@@ -85,12 +86,51 @@ def check_CV_version():
     """
     ### check_CV_version
 
-    Returns OpenCV binary in-use, version's first bit 
+    **Returns:** OpenCV's version first bit 
     """
     if parse_version(cv2.__version__) >= parse_version("4"):
         return 4
     else:
         return 3
+
+
+def is_valid_url(path, url=None, logging=False):
+    """
+    ### is_valid_url
+
+    Checks URL validity by testing its scheme against 
+    FFmpeg's supported protocols
+
+    Parameters:
+        path (string): absolute path of FFmpeg binaries
+        url (string): URL to be validated
+        logging (bool): enables logging for its operations
+    
+    **Returns:** A boolean value, confirming whether tests passed, or not?.
+    """
+    if url is None or not (url):
+        logger.warning("URL is empty!")
+        return False
+    # extract URL scheme
+    extracted_scheme_url = url.split("://", 1)[0]
+    # extract all FFmpeg supported protocols
+    protocols = check_output([path, "-hide_banner", "-protocols"])
+    splitted = protocols.split(b"\n")
+    supported_protocols = [
+        x.decode("utf-8").strip() for x in splitted[2 : len(splitted) - 1]
+    ]
+    # Test and return result whether scheme is supported
+    if extracted_scheme_url and extracted_scheme_url in supported_protocols:
+        if logging:
+            logger.debug(
+                "URL scheme `{}` is supported by FFmpeg.".format(extracted_scheme_url)
+            )
+        return True
+    else:
+        logger.warning(
+            "URL scheme `{}` is not supported by FFmpeg!".format(extracted_scheme_url)
+        )
+        return False
 
 
 def mkdir_safe(dir, logging=False):
@@ -210,7 +250,9 @@ def dict2Args(param_dict):
             if isinstance(param_dict[key], list):
                 args.extend(param_dict[key])
             else:
-                logger.warning("Invalid datatype clones:`{}` skipped!".format(param_dict[key]))
+                logger.warning(
+                    "Invalid datatype clones:`{}` skipped!".format(param_dict[key])
+                )
         else:
             args.append(key)
             args.append(param_dict[key])
@@ -231,7 +273,7 @@ def get_valid_ffmpeg_path(
         ffmpeg_download_path (string): FFmpeg static binaries download location _(Windows only)_
         logging (bool): enables logging for its operations
 
-    **Returns:** A  valid FFmpeg executable path string.
+    **Returns:** A valid FFmpeg executable path string.
     """
     final_path = ""
     if is_windows:
@@ -327,7 +369,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
         os_windows (boolean): is running on Windows OS?
         os_bit (string): 32-bit or 64-bit OS?
 
-    **Returns:** A  valid FFmpeg executable path string.
+    **Returns:** A valid FFmpeg executable path string.
     """
     final_path = ""
     if os_windows and os_bit:
@@ -402,9 +444,10 @@ def validate_ffmpeg(path, logging=False):
     Validate FFmeg Binaries. returns `True` if tests are passed.
 
     Parameters:
+        path (string): absolute path of FFmpeg binaries
         logging (bool): enables logging for its operations
 
-    **Returns:** A  boolean value, confirming whether tests passed, or not?.
+    **Returns:** A boolean value, confirming whether tests passed, or not?.
     """
     try:
         # get the FFmpeg version
@@ -577,7 +620,7 @@ def validate_auth_keys(path, extension):
         path (string): path of generated CURVE key-pairs
         extension (string): type of key-pair to be validated
 
-    **Returns:** A  boolean value, confirming whether tests passed, or not?.
+    **Returns:** A boolean value, confirming whether tests passed, or not?.
     """
     # check for valid path
     if not (os.path.exists(path)):

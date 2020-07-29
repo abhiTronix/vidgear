@@ -14,6 +14,7 @@ from .fps import FPS
 
 # define test logger
 logger = log.getLogger("Benchmark NetworkGears")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 

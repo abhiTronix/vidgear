@@ -39,10 +39,12 @@ from vidgear.gears.helper import (
     logger_handler,
     validate_ffmpeg,
     dict2Args,
+    is_valid_url,
 )
 
 # define test logger
 logger = log.getLogger("Test_helper")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
@@ -312,3 +314,22 @@ def test_reducer(frame, percentage, result):
             pass
         else:
             pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "URL, result",
+    [
+        ("rtmp://live.twitch.tv/", True),
+        (None, False),
+        ("unknown://invalid.com/", False),
+    ],
+)
+def test_is_valid_url(URL, result):
+    """
+    Testing is_valid_url function 
+    """
+    try:
+        result_url = is_valid_url(return_static_ffmpeg(), url=URL, logging=True)
+        assert result_url == result, "URL validity test Failed!"
+    except Exception as e:
+        pytest.fail(str(e))

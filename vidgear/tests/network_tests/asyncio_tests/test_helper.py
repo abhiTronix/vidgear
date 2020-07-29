@@ -27,6 +27,7 @@ from vidgear.gears.asyncio.helper import logger_handler, reducer
 
 # define test logger
 logger = log.getLogger("Test_Asyncio_Helper")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 

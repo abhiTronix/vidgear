@@ -27,11 +27,18 @@ import time
 import cv2
 
 from pkg_resources import parse_version
-from .helper import capPropId, dict2Args, get_valid_ffmpeg_path, logger_handler
+from .helper import (
+    capPropId,
+    dict2Args,
+    get_valid_ffmpeg_path,
+    logger_handler,
+    is_valid_url,
+)
 
 
 # define logger
 logger = log.getLogger("WriteGear")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
@@ -98,27 +105,39 @@ class WriteGear:
         self.__initiate = (
             True  # initiate one time process for valid process initialization
         )
+        self.__force_termination = (
+            False  # handles force termination in compression mode
+        )
+        self.__out_file = None  # handles output filename
 
         # handles output file name (if not given)
         if not output_filename:
             raise ValueError(
                 "[WriteGear:ERROR] :: Kindly provide a valid `output_filename` value. Refer Docs for more information."
             )
-        elif output_filename and os.path.isdir(
-            output_filename
-        ):  # check if directory path is given instead
-            output_filename = os.path.join(
-                output_filename, "VidGear-{}.mp4".format(time.strftime("%Y%m%d-%H%M%S"))
-            )  # auto-assign valid name and adds it to path
         else:
-            pass
+            # validate this class has the access rights to specified directory or not
+            abs_path = os.path.abspath(output_filename)
 
-        # some definitions and assigning output file absolute path to class variable
-        _filename = os.path.abspath(output_filename)
-        self.__out_file = _filename
-        basepath, _ = os.path.split(
-            _filename
-        )  # extract file base path for debugging ahead
+            if (
+                self.__os_windows or os.access in os.supports_effective_ids
+            ) and os.access(os.path.dirname(abs_path), os.W_OK):
+
+                if os.path.isdir(abs_path):  # check if given path is directory
+                    abs_path = os.path.join(
+                        abs_path,
+                        "VidGear-{}.mp4".format(time.strftime("%Y%m%d-%H%M%S")),
+                    )  # auto-assign valid name and adds it to path
+
+                # assign output file absolute path to class variable
+                self.__out_file = abs_path
+            else:
+                # log warning if
+                logger.warning(
+                    "The given path:`{}` does not have write access permission. Skipped!".format(
+                        output_filename
+                    )
+                )
 
         # handle user defined output dimensions(must be a tuple or list)
         if output_params and "-output_dimensions" in output_params:
@@ -160,6 +179,12 @@ class WriteGear:
                     )
                     del self.__output_parameters["-input_framerate"]  # clean
 
+                if "-i" in self.__output_parameters:  # activate force termination
+                    if "-disable_force_termination" in self.__output_parameters:
+                        self.__force_termination = False
+                    else:
+                        self.__force_termination = True
+
             # validate the FFmpeg path/binaries and returns valid FFmpeg file executable location(also downloads static binaries on windows)
             actual_command = get_valid_ffmpeg_path(
                 custom_ffmpeg,
@@ -186,17 +211,33 @@ class WriteGear:
                     )
                 self.__compression = False  # compression mode disabled
 
-        # validate this class has the access rights to specified directory or not
-        assert os.access(basepath, os.W_OK), (
-            "[WriteGear:ERROR] :: Permission Denied: Cannot write to directory: "
-            + basepath
-        )
-
         # display confirmation if logging is enabled/disabled
         if self.__compression and self.__ffmpeg:
+            # check whether is valid url instead
+            if self.__out_file is None:
+                if is_valid_url(self.__ffmpeg, url=output_filename, logging=self.__logging):
+                    if self.__logging:
+                        logger.debug(
+                            "URL:`{}` is sucessfully configured for streaming.".format(
+                                output_filename
+                            )
+                        )
+                    self.__out_file = output_filename
+                else:
+                    raise ValueError(
+                        "[WriteGear:ERROR] :: output_filename value:`{}` is not valid/supported in Compression Mode!".format(
+                            output_filename
+                        )
+                    )
             if self.__logging:
                 logger.debug("Compression Mode is configured properly!")
         else:
+            if self.__out_file is None:
+                raise ValueError(
+                    "[WriteGear:ERROR] :: output_filename value:`{}` is not vaild in Non-Compression Mode!".format(
+                        output_filename
+                    )
+                )
             if self.__logging:
                 logger.debug(
                     "Compression Mode is disabled, Activating OpenCV built-in Writer!"
@@ -408,9 +449,9 @@ class WriteGear:
             if self.__logging:
                 logger.debug("Executing FFmpeg command: `{}`".format(" ".join(cmd)))
                 # In debugging mode
-                sp.call(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
+                sp.run(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
             else:
-                sp.call(cmd, stdin=sp.PIPE, stdout=sp.DEVNULL, stderr=sp.STDOUT)
+                sp.run(cmd, stdin=sp.PIPE, stdout=sp.DEVNULL, stderr=sp.STDOUT)
         except (OSError, IOError):
             # log something is wrong!
             logger.error(
@@ -470,7 +511,6 @@ class WriteGear:
                     self.__out_file, FOURCC, FPS, WIDTH, HEIGHT, BACKEND
                 )
             )
-
         # start different process for with/without Backend.
         if BACKEND:
             self.__process = cv2.VideoWriter(
@@ -503,7 +543,7 @@ class WriteGear:
                 return  # no process was initiated at first place
             if self.__process.stdin:
                 self.__process.stdin.close()  # close `stdin` output
-            if self.__output_parameters and "-i" in self.__output_parameters:
+            if self.__force_termination:
                 self.__process.terminate()
             self.__process.wait()  # wait if still process is still processing some information
             self.__process = None

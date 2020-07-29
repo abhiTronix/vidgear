@@ -38,6 +38,7 @@ from .helper import logger_handler
 
 # define logger
 logger = log.getLogger("NetGear_Async")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 

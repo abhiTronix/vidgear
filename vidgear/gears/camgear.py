@@ -29,6 +29,7 @@ from .helper import capPropId, check_CV_version, logger_handler, youtube_url_val
 
 # define logger
 logger = log.getLogger("CamGear")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 

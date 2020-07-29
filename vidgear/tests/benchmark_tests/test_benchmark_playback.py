@@ -30,6 +30,7 @@ from .fps import FPS
 
 # define test logger
 logger = log.getLogger("Test_benchmark_playback")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
