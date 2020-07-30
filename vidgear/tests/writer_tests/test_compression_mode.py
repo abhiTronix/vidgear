@@ -249,7 +249,7 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
 
 
 @pytest.mark.parametrize(
-    "ffmpeg_command_to_save_audio, logging",
+    "ffmpeg_command_to_save_audio, logging, output_params",
     [
         (
             [
