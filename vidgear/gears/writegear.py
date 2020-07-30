@@ -181,9 +181,17 @@ class WriteGear:
 
                 if "-i" in self.__output_parameters:  # activate force termination
                     if "-disable_force_termination" in self.__output_parameters:
-                        self.__force_termination = False
+                        self.__force_termination = (
+                            self.__output_parameters["-disable_force_termination"]
+                            if isinstance(
+                                self.__output_parameters["-disable_force_termination"],
+                                boolean,
+                            )
+                            else False
+                        )
                     else:
                         self.__force_termination = True
+                    del self.__output_parameters["-disable_force_termination"]  # clean
 
             # validate the FFmpeg path/binaries and returns valid FFmpeg file executable location(also downloads static binaries on windows)
             actual_command = get_valid_ffmpeg_path(
@@ -215,7 +223,9 @@ class WriteGear:
         if self.__compression and self.__ffmpeg:
             # check whether is valid url instead
             if self.__out_file is None:
-                if is_valid_url(self.__ffmpeg, url=output_filename, logging=self.__logging):
+                if is_valid_url(
+                    self.__ffmpeg, url=output_filename, logging=self.__logging
+                ):
                     if self.__logging:
                         logger.debug(
                             "URL:`{}` is sucessfully configured for streaming.".format(
