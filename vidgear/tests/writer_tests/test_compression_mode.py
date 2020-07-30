@@ -262,25 +262,19 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
                 "input_audio.aac",
             ],
             False,
+            {"-i": None, "-disable_force_termination": True},
         ),
-        (None, True),
-        ([], False),
-        (["wrong_input"], True),
+        (None, True, {"-i": None, "-disable_force_termination": "OK"}),
+        ([], False, {"-i": None}),
+        (["wrong_input"], True, {"-disable_force_termination": True}),
     ],
 )
-def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio, logging):
+def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio, logging, output_params):
     """
     Testing WriteGear Compression-Mode(FFmpeg) custom FFmpeg Pipeline by seperating audio from video
     """
     writer = None
     try:
-        # for testing purposes only
-        output_params = (
-            {"-i": None, "-disable_force_termination": True}
-            if ffmpeg_command_to_save_audio
-            else {"-i": None}
-        )
-
         # define writer
         writer = WriteGear(
             output_filename="Output.mp4",

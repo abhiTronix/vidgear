@@ -179,19 +179,24 @@ class WriteGear:
                     )
                     del self.__output_parameters["-input_framerate"]  # clean
 
-                if "-i" in self.__output_parameters:  # activate force termination
-                    if "-disable_force_termination" in self.__output_parameters:
+                # handle force termination if required
+                if "-disable_force_termination" in self.__output_parameters:
+                    if "-i" in self.__output_parameters:
                         self.__force_termination = (
                             self.__output_parameters["-disable_force_termination"]
                             if isinstance(
                                 self.__output_parameters["-disable_force_termination"],
-                                boolean,
+                                bool,
                             )
                             else False
                         )
                     else:
                         self.__force_termination = True
                     del self.__output_parameters["-disable_force_termination"]  # clean
+                else:
+                    self.__force_termination = (
+                        True if ("-i" in self.__output_parameters) else False
+                    )
 
             # validate the FFmpeg path/binaries and returns valid FFmpeg file executable location(also downloads static binaries on windows)
             actual_command = get_valid_ffmpeg_path(
