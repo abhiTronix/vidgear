@@ -57,9 +57,6 @@ class CamGear:
         **options
     ):
 
-        # initialize threaded queue mode
-        self.__threaded_queue_mode = True
-
         # enable logging if specified
         self.__logging = False
         if logging:
@@ -104,15 +101,11 @@ class CamGear:
         # youtube mode variable initialization
         self.__youtube_mode = y_tube
 
-        # User-Defined Threaded Queue Mode
-        if options:
-            if "THREADED_QUEUE_MODE" in options:
-                if isinstance(options["THREADED_QUEUE_MODE"], bool):
-                    self.__threaded_queue_mode = options[
-                        "THREADED_QUEUE_MODE"
-                    ]  # assigns special parameter to global variable
-                del options["THREADED_QUEUE_MODE"]  # clean
-                # reformat option dict
+        # assigns special parameter to global variable and clear
+        self.__threaded_queue_mode = options.pop("THREADED_QUEUE_MODE", True)
+        if not isinstance(self.__threaded_queue_mode, bool):
+            # reset improper values
+            self.__threaded_queue_mode = True
 
         self.__queue = None
         # initialize deque for video files only

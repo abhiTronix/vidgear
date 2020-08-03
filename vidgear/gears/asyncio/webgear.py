@@ -95,6 +95,7 @@ class WebGear:
                 else:
                     logger.warning("Skipped invalid `frame_size_reduction` value!")
                 del options["frame_size_reduction"]  # clean
+
             if "frame_jpeg_quality" in options:
                 value = options["frame_jpeg_quality"]
                 if isinstance(value, (int, float)) and value >= 10 and value <= 95:
@@ -102,6 +103,7 @@ class WebGear:
                 else:
                     logger.warning("Skipped invalid `frame_jpeg_quality` value!")
                 del options["frame_jpeg_quality"]  # clean
+
             if "frame_jpeg_optimize" in options:
                 value = options["frame_jpeg_optimize"]
                 if isinstance(value, bool):
@@ -109,6 +111,7 @@ class WebGear:
                 else:
                     logger.warning("Skipped invalid `frame_jpeg_optimize` value!")
                 del options["frame_jpeg_optimize"]  # clean
+
             if "frame_jpeg_progressive" in options:
                 value = options["frame_jpeg_progressive"]
                 if isinstance(value, bool):
@@ -116,6 +119,7 @@ class WebGear:
                 else:
                     logger.warning("Skipped invalid `frame_jpeg_progressive` value!")
                 del options["frame_jpeg_progressive"]  # clean
+
             if "custom_data_location" in options:
                 value = options["custom_data_location"]
                 if isinstance(value, str):
@@ -131,6 +135,7 @@ class WebGear:
                 else:
                     logger.warning("Skipped invalid `custom_data_location` value!")
                 del options["custom_data_location"]  # clean
+                
             if "overwrite_default_files" in options:
                 value = options["overwrite_default_files"]
                 if isinstance(value, bool):

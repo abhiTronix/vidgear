@@ -96,17 +96,11 @@ class WriteGear:
         self.__inputheight = None
         self.__inputwidth = None
         self.__inputchannels = None
-        self.__inputframerate = 0
-        self.__output_dimensions = None
         self.__process = None  # handle process to be frames written
-
         self.__cmd = ""  # handle FFmpeg Pipe command
         self.__ffmpeg = ""  # handle valid FFmpeg binaries location
         self.__initiate = (
             True  # initiate one time process for valid process initialization
-        )
-        self.__force_termination = (
-            False  # handles force termination in compression mode
         )
         self.__out_file = None  # handles output filename
 
@@ -139,13 +133,6 @@ class WriteGear:
                     )
                 )
 
-        # handle user defined output dimensions(must be a tuple or list)
-        if output_params and "-output_dimensions" in output_params:
-            self.__output_dimensions = output_params[
-                "-output_dimensions"
-            ]  # assign special parameter to global variable
-            del output_params["-output_dimensions"]  # clean
-
         # cleans and reformat output parameters
         self.__output_parameters = {
             str(k).strip(): str(v).strip() if not isinstance(v, list) else v
@@ -155,60 +142,61 @@ class WriteGear:
         # handles FFmpeg binaries validity tests
         if self.__compression:
 
-            # handles where to save the downloaded FFmpeg Static Binaries on Windows(if specified)
-            ffmpeg_download_path_ = ""
-
             if self.__logging:
                 logger.debug(
                     "Compression Mode is enabled therefore checking for valid FFmpeg executables."
                 )
-                logger.debug("Output_params Dict: {}".format(self.__output_parameters))
+                logger.debug("Output Parameters: {}".format(self.__output_parameters))
 
-            if self.__output_parameters:
+            # handles where to save the downloaded FFmpeg Static Binaries on Windows(if specified)
+            __ffmpeg_download_path = output_params.pop("-ffmpeg_download_path", "")
+            if not isinstance(__ffmpeg_download_path, (str)):
+                # reset improper values
+                __ffmpeg_download_path = ""
 
-                if "-ffmpeg_download_path" in self.__output_parameters:
-                    ffmpeg_download_path_ += self.__output_parameters[
-                        "-ffmpeg_download_path"
-                    ]
-                    del self.__output_parameters["-ffmpeg_download_path"]  # clean
+            # handle user defined output dimensions(must be a tuple or list)
+            self.__output_dimensions = output_params.pop("-output_dimensions", None)
+            if not isinstance(self.__output_dimensions, (list, tuple)):
+                # reset improper values
+                self.__output_dimensions = None
 
-                # handle input framerate if specified
-                if "-input_framerate" in self.__output_parameters:
-                    self.__inputframerate = float(
-                        self.__output_parameters["-input_framerate"]
-                    )
-                    del self.__output_parameters["-input_framerate"]  # clean
+            # handle user defined framerate
+            self.__inputframerate = self.__output_parameters.pop(
+                "-input_framerate", 0.0
+            )
+            if not isinstance(self.__inputframerate, (float, int)):
+                # reset improper values
+                self.__inputframerate = 0.0
+            else:
+                # must be float
+                self.__inputframerate = float(self.__inputframerate)
 
-                # handle force termination if required
-                if "-disable_force_termination" in self.__output_parameters:
-                    if "-i" in self.__output_parameters:
-                        self.__force_termination = (
-                            self.__output_parameters["-disable_force_termination"]
-                            if isinstance(
-                                self.__output_parameters["-disable_force_termination"],
-                                bool,
-                            )
-                            else False
-                        )
-                    else:
-                        self.__force_termination = True
-                    del self.__output_parameters["-disable_force_termination"]  # clean
-                else:
-                    self.__force_termination = (
-                        True if ("-i" in self.__output_parameters) else False
-                    )
+            # handle special-case force-termination in compression mode
+            self.__force_termination = self.__output_parameters.pop(
+                "-disable_force_termination", False
+            )
+            if not isinstance(self.__force_termination, bool):
+                # handle improper values
+                self.__force_termination = (
+                    True if ("-i" in self.__output_parameters) else False
+                )
+            else:
+                self.__force_termination = (
+                    self.__force_termination
+                    if ("-i" in self.__output_parameters)
+                    else False
+                )
 
-            # validate the FFmpeg path/binaries and returns valid FFmpeg file executable location(also downloads static binaries on windows)
-            actual_command = get_valid_ffmpeg_path(
+            # validate the FFmpeg path/binaries and returns valid FFmpeg file executable location (also downloads static binaries on windows)
+            self.__ffmpeg = get_valid_ffmpeg_path(
                 custom_ffmpeg,
                 self.__os_windows,
-                ffmpeg_download_path=ffmpeg_download_path_,
+                ffmpeg_download_path=__ffmpeg_download_path,
                 logging=self.__logging,
             )
 
             # check if valid path returned
-            if actual_command:
-                self.__ffmpeg += actual_command  # assign it to class variable
+            if self.__ffmpeg:
                 if self.__logging:
                     logger.debug(
                         "Found valid FFmpeg executables: `{}`.".format(self.__ffmpeg)
@@ -373,7 +361,7 @@ class WriteGear:
             # set input framerate - minimum threshold is 5.0
             if self.__logging:
                 logger.debug(
-                    "Setting Input FrameRate = {}".format(self.__inputframerate)
+                    "Setting Input framerate: {}".format(self.__inputframerate)
                 )
             input_parameters["-framerate"] = str(self.__inputframerate)
 

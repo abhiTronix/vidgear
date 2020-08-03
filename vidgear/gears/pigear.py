@@ -122,26 +122,21 @@ class PiGear:
         options = {str(k).strip(): v for k, v in options.items()}
 
         # define timeout variable default value(handles hardware failures)
-        self.__failure_timeout = 2.0
-
-        # User-Defined parameter
-        if options and "HWFAILURE_TIMEOUT" in options:
-            # for altering timeout variable manually
-            if isinstance(options["HWFAILURE_TIMEOUT"], (int, float)):
-                if not (10.0 > options["HWFAILURE_TIMEOUT"] > 1.0):
-                    raise ValueError(
-                        "[PiGear:ERROR] :: `HWFAILURE_TIMEOUT` value can only be between 1.0 ~ 10.0"
+        self.__failure_timeout = options.pop("HWFAILURE_TIMEOUT", 2.0)
+        if isinstance(self.__failure_timeout, (int, float)):
+            if not (10.0 > self.__failure_timeout > 1.0):
+                raise ValueError(
+                    "[PiGear:ERROR] :: `HWFAILURE_TIMEOUT` value can only be between 1.0 ~ 10.0"
+                )
+            if self.__logging:
+                logger.debug(
+                    "Setting HW Failure Timeout: {} seconds".format(
+                        self.__failure_timeout
                     )
-                self.__failure_timeout = options[
-                    "HWFAILURE_TIMEOUT"
-                ]  # assign special parameter
-                if self.__logging:
-                    logger.debug(
-                        "Setting HW Failure Timeout: {} seconds".format(
-                            self.__failure_timeout
-                        )
-                    )
-            del options["HWFAILURE_TIMEOUT"]  # clean
+                )
+        else:
+            # reset improper values
+            self.__failure_timeout = 2.0
 
         try:
             # apply attributes to source if specified
