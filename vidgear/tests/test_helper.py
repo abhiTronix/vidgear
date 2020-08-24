@@ -90,7 +90,7 @@ def return_testvideo_path():
     return os.path.abspath(path)
 
 
-def check_valid_mpd(file="", rep_len=2):
+def check_valid_mpd(file=""):
     """
     checks if given file is a valid MPD(MPEG-DASH Manifest file)
     """
@@ -106,7 +106,8 @@ def check_valid_mpd(file="", rep_len=2):
     except Exception as e:
         logger.error(str(e))
         return False
-    return True if (len(all_reprs) == rep_len) else False
+    logger.debug(all_reprs)
+    return True if (len(all_reprs) > 0) else False
 
 
 def getframe():
@@ -396,7 +397,7 @@ def test_validate_audio(path, result):
     try:
         results = validate_audio(return_static_ffmpeg(), file_path=path)
         if result:
-            assert not (results), "Audio path validity test Failed!"
+            assert results, "Audio path validity test Failed!"
     except Exception as e:
         pytest.fail(str(e))
 
