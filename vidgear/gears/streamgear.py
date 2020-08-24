@@ -339,7 +339,7 @@ class StreamGear:
         # assign height, width and framerate
         self.__inputheight = int(self.__aspect_source[1])
         self.__inputwidth = int(self.__aspect_source[0])
-        self.__sourceframerate = self.__fps_source
+        self.__sourceframerate = float(self.__fps_source)
         # launch pre-processing
         self.__PreProcess()
 
@@ -612,7 +612,7 @@ class StreamGear:
         output_params["-b:v:0"] = (
             str(
                 get_video_bitrate(
-                    self.__inputwidth, self.__inputheight, self.__sourceframerate, bpp,
+                    int(self.__inputwidth), int(self.__inputheight), self.__sourceframerate, bpp,
                 )
             )
             + "k"

@@ -135,7 +135,7 @@ class WriteGear:
 
         # cleans and reformat output parameters
         self.__output_parameters = {
-            str(k).strip(): str(v).strip() if not isinstance(v, (list, int, float)) else v
+            str(k).strip(): str(v).strip() if not isinstance(v, (list, tuple, int, float)) else v
             for k, v in output_params.items()
         }
 
@@ -149,13 +149,13 @@ class WriteGear:
                 logger.debug("Output Parameters: {}".format(self.__output_parameters))
 
             # handles where to save the downloaded FFmpeg Static Binaries on Windows(if specified)
-            __ffmpeg_download_path = output_params.pop("-ffmpeg_download_path", "")
+            __ffmpeg_download_path = self.__output_parameters.pop("-ffmpeg_download_path", "")
             if not isinstance(__ffmpeg_download_path, (str)):
                 # reset improper values
                 __ffmpeg_download_path = ""
 
             # handle user defined output dimensions(must be a tuple or list)
-            self.__output_dimensions = output_params.pop("-output_dimensions", None)
+            self.__output_dimensions = self.__output_parameters.pop("-output_dimensions", None)
             if not isinstance(self.__output_dimensions, (list, tuple)):
                 # reset improper values
                 self.__output_dimensions = None

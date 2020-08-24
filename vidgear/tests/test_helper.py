@@ -29,6 +29,7 @@ import pytest
 import requests
 
 from os.path import expanduser
+from mpegdash.parser import MPEGDASHParser
 from vidgear.gears.asyncio.helper import generate_webdata, validate_webdata
 from vidgear.gears.helper import (
     check_output,
@@ -40,6 +41,12 @@ from vidgear.gears.helper import (
     validate_ffmpeg,
     dict2Args,
     is_valid_url,
+    extract_time,
+    get_video_bitrate,
+    validate_audio,
+    validate_video,
+    mkdir_safe,
+    delete_safe,
 )
 
 # define test logger
@@ -71,6 +78,35 @@ def return_static_ffmpeg():
             tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/ffmpeg"
         )
     return os.path.abspath(path)
+
+
+def return_testvideo_path():
+    """
+    returns Test video path
+    """
+    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
+        tempfile.gettempdir()
+    )
+    return os.path.abspath(path)
+
+
+def check_valid_mpd(file="", rep_len=2):
+    """
+    checks if given file is a valid MPD(MPEG-DASH Manifest file)
+    """
+    if not file or not os.path.isfile(file):
+        return False
+    try:
+        mpd = MPEGDASHParser.parse(file)
+        all_reprs = []
+        for period in mpd.periods:
+            for adapt_set in period.adaptation_sets:
+                for repr in adapt_set.representations:
+                    all_reprs.append(repr)
+    except Exception as e:
+        logger.error(str(e))
+        return False
+    return True if (len(all_reprs) == rep_len) else False
 
 
 def getframe():
@@ -331,5 +367,90 @@ def test_is_valid_url(URL, result):
     try:
         result_url = is_valid_url(return_static_ffmpeg(), url=URL, logging=True)
         assert result_url == result, "URL validity test Failed!"
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "path, result", [(return_testvideo_path(), True), (None, False),],
+)
+def test_validate_video(path, result):
+    """
+    Testing validate_video function 
+    """
+    try:
+        results = validate_video(return_static_ffmpeg(), video_path=path)
+        if result:
+            assert not (results is None), "Video path validity test Failed!"
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "path, result", [(return_testvideo_path(), True), (None, False),],
+)
+def test_validate_audio(path, result):
+    """
+    Testing validate_audio function 
+    """
+    try:
+        results = validate_audio(return_static_ffmpeg(), file_path=path)
+        if result:
+            assert not (results), "Audio path validity test Failed!"
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "value, result",
+    [
+        ("Duration: 00:00:08.44, start: 0.000000, bitrate: 804 kb/s", 8),
+        ("Duration: 00:07:08 , start: 0.000000, bitrate: 804 kb/s", 428),
+        ("", False),
+    ],
+)
+def test_extract_time(value, result):
+    """
+    Testing extract_time function 
+    """
+    try:
+        results = extract_time(value)
+        assert results == result, "Extract time function test Failed!"
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+def test_get_video_bitrate():
+    """
+    Testing get_video_bitrate function 
+    """
+    try:
+        get_video_bitrate(640, 480, 60.0, 0.1)
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "ext, result", [([".m4s", ".mpd"], True), ([], False),],
+)
+def test_delete_safe(ext, result):
+    """
+    Testing delete_safe function
+    """
+    try:
+        path = os.path.join(expanduser("~"), "test_mpd")
+        if ext:
+            mkdir_safe(path, logging=True)
+            mpd_file_path = os.path.join(path, "dash_test.mpd")
+            from vidgear.gears import StreamGear
+
+            stream_params = {"-video_source": return_testvideo_path()}
+            streamer = StreamGear(output=mpd_file_path, **stream_params)
+            streamer.transcode_source()
+            streamer.terminate()
+            assert check_valid_mpd(mpd_file_path)
+        delete_safe(path, ext, logging=True)
+        if result:
+            assert not os.listdir(path), "`delete_safe` Test failed!"
     except Exception as e:
         pytest.fail(str(e))
