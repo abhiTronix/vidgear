@@ -20,6 +20,175 @@ limitations under the License.
 
 # Release Notes
 
+## v0.1.9-dev (in Progress)
+
+### New Features
+
+- **StreamGear API:**
+
+    * [X] New API that automates transcoding workflow for generating Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats.
+    * [X] Implemented multi-platform , standalone, highly extensible and flexible wrapper around FFmpeg for generating chunked-encoded media segments of the media, and easily accessing almost all of its parameters.
+    * [X] API automatically transcodes videos/audio files & real-time frames into a sequence of multiple smaller chunks/segments and also creates a Manifest file.
+    * [X] Added initial support for [MPEG-DASH](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_.
+    * [X] Constructed default behavior in StreamGear, for auto-creating a Primary Stream of same resolution and framerate as source.
+    * [X] Added [TQDM](https://github.com/tqdm/tqdm) progress bar in non-debugged output for visual representation of internal processes.
+    * [X] Implemented several internal methods for preprocessing FFmpeg and internal parameters for producing streams.
+    * [X] Several standalone internal checks to ensure robust performance.
+    * [X] New [`terminate()`](../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.terminate) function to terminate StremGear Safely.
+
+    * [X] New StreamGear Dual Modes of Operation:
+        + Implemented *Single-Source* and *Real-time Frames* like independent Transcoding Modes.
+        + Linked `-video_source` attribute for activating these modes
+        + **Single-Source Mode**, transcodes entire video/audio file _(as opposed to frames by frame)_ into a sequence of multiple smaller segments for streaming
+        + **Real-time Frames Mode**, directly transcodes video-frames _(as opposed to a entire file)_, into a sequence of multiple smaller segments for streaming
+        + Added separate functions, [`stream()`](../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) for Real-time Frame Mode and [`transcode_source()`](../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) for Single-Source Mode for easy trancoding.
+        + Included auto-colorspace detection and RGB Mode like features _(extracted from WriteGear)_, into StreamGear.  
+
+    * [X] New StreamGear Parameters:
+        + Developed several new parameters such as:
+            + `output`: handles assets directory
+            + `formats`: handles adaptive HTTP streaming format.
+            + `custom_ffmpeg`: handles custom FFmpeg location.
+            + `stream_params`: handles internal and FFmpeg parameter seamlessly.
+            + `logging`: turns logging on or off.
+        + New `stream_params` parameter allows us to exploit almost all FFmpeg parameters and flexibly change its internal settings, and seamlessly generating high-quality streams with its attributes:
+            + `-streams` _(list of dictionaries)_ for building additional streams with `-resolution`, `-video_bitrate` & `-framerate` like sub-attributes.
+            + `-audio` for specifying external audio.
+            + `-video_source` for specifying Single-Source Mode source.
+            + `-input_framerate` for handling input framerate in Real-time Frames Mode.
+            + `-bpp` attribute for handling bits-per-pixels used to auto-calculate video-bitrate.
+            + `-gop` to manually specify GOP length.
+            + `-ffmpeg_download_path` to handle custom FFmpeg download path on windows.
+            + `-clear_prev_assets` to remove any previous copies of SteamGear Assets.
+
+    * [X] New StreamGear docs, MPEG-DASH demo, and recommended DASH players list:
+        + Added new StreamGear docs, usage examples, parameters, references, new FAQs.
+        + Added Several StreamGear usage examples w.r.t Mode of Operation.
+        + Implemented [**Clappr**](https://github.com/clappr/clappr) based on [**Shaka-Player**](https://github.com/google/shaka-player), as Demo Player.
+        + Hosted StreamGear generated DASH chunks on GitHub and served with `raw.githack.com`.
+        + Introduced variable quality level-selector plugin for Clapper Player.
+        + Provide various required javascripts and implemented additional functionality for player in `extra.js`.
+        + Recommended tested Online, Command-line and GUI Adaptive Stream players.
+        + Implemented separate FFmpeg installation doc for StremGear API.
+
+- **NetGear_Async API:**
+    * [X] Added new `send_terminate_signal` internal method.
+    * [X] Moved Client auto-termination to separate method.
+    * [X] Implemented graceful termination with `signal` API on UNIX machines.
+    * [X] Added new `timeout` attribute for controlling Timeout in Connections.
+    * [X] Added missing termination optimizer (`linger=0`) flag.
+    * [X] Several ZMQ Optimizer Flags added to boost performance.
+
+- **WriteGear API:**
+
+    * [X] Added support for adding duplicate FFmpeg parameters to `output_params`:
+        + Added new `-clones` attribute in `output_params` parameter for handing this behavior..
+        + Support to pass FFmpeg parameters as list, while maintaining the exact order it was specified.
+        + Built support for `zmq.REQ/zmq.REP` and `zmq.PUB/zmq.SUB` patterns in this mode.
+        + Added new CI tests debugging this behavior.
+        + Updated docs accordingly.
+    * [X] Added support for Networks URLs in Compression Mode:
+        + `output_filename` parameter supports Networks URLs in compression modes only
+        + Added automated handling of non path/file Networks URLs as input.
+        + Implemented new `is_valid_url` helper method to easily validate assigned URLs value.
+        + Validates whether the given URL value has scheme/protocol supported by assigned/installed ffmpeg or not. 
+        + WriteGear will throw `ValueError` if `-output_filename` is not supported.
+        + Added related CI tests and docs.
+    * [X] Added `disable_force_termination` attribute in WriteGear to disable force-termination.
+
+- **NetGear API:**
+
+    * [X] Added option to completely disable Native Frame-Compression:
+        + Checks if any Incorrect/Invalid value is assigned on `compression_format` attribute.
+        + Completely disables Native Frame-Compression.
+        + Updated docs accordingly.
+
+- **New `helper.py` methods:** 
+    * [X] Added `validate_video` function to validate video_source.
+    * [X] Added `extract_time` Extract time from give string value.
+    * [X] Added `get_video_bitrate` to caliculate video birate from resolution, framerate, bits-per-pixels values.
+    * [X] Added `delete_safe` to safely delete files of given extension.
+    * [X] Added `validate_audio` to validate audio source.
+
+- **Deployed New Docs Upgrades:**
+    * [X] Added new assets like _images, custom scripts, javascripts fonts etc._ for achieving better visual graphics in docs.
+    * [X] Added `clappr.min.js`, `dash-shaka-playback.js`, `clappr-level-selector.min.js` third-party javascripts locally.
+    * [X] Extended Overview docs Hyperlinks to include all major sub-pages _(such as Usage Examples, Reference, FAQs etc.)_.
+    * [X] Replaced GIF with interactive MPEG-DASH Video Example in Stabilizer Docs. 
+    * [X] Added new `pymdownx.keys` to replace `[Ctrl+C]/[⌘+C]` formats.
+    * [X] Added new `custom.css` stylescripts variables for fluid animations in docs.
+    * [X] Overridden announce bar and added donation button. 
+    * [X] Reimplemented Admonitions contexts and added new ones.
+    * [X] Added StreamGear and its different modes Docs Assets.
+
+- Added new `-clones` attribute to handle FFmpeg parameter clones in StreamGear and WriteGear API.
+
+
+### Updates/Improvements
+
+- [X] Added new CI tests and Bumped Codecov.
+- [X] Completed migration to `travis.com`.
+- [X] Employed `isort` library to sort and group imports in Vidgear APIs.
+- [X] Enabled missing support for frame-compression in its primary Receive Mode.
+- [X] Improved check for valid system path detection in WriteGear API.
+- [X] Quoted Gear Headline for understanding each gear easily. 
+- [X] Re-Positioned Gear's banner images in overview for better readability.
+- [X] Reduced redundant try-except blocks in NetGear Async.
+- [X] Reformatted and Simplified Docs context.
+- [X] Removed or Grouped redundant code for increasing codecov.
+- [X] Removed Python < 3.8 condition from all CI tests.
+- [X] Replaced `;nbsp` with `;thinsp` and `;emsp`.
+- [X] Replaced `del` with `pop` in dicts.
+- [X] Replaced all Netgear CI tests with more reliable `try-except-final` blocks.
+- [X] Replaced simple lists with `pymdownx.tasklist`.
+- [X] Replaced subprocess `call()` with `run()` for better error handling in `execute_ffmpeg_cmd` function.
+- [X] Resized over-sized docs images. 
+- [X] Simplified algorithmic complexities in Gears.
+- [X] Updated `check_output` and added `force_retrieve_stderr` support to `**kwargs` to extract `stderr` output even on FFmpeg  error.
+- [X] Updated `dicts2args` to support internal repeated `coreX` FFmpeg parameters for StreamGear. 
+- [X] Updated `mkdocs.yml`, `changelog.md` and `README.md` with latest changes.
+- [X] Updated CI tests and cleared redundant code.
+- [X] Updated Missing Helpful tips.
+- [X] Updated termination linger to zero at Server's end.
+
+### Breaking Updates/Changes
+
+- [X] In Netgear_Async, `source` value can now be NoneType for using a custom frame generator at Server-end only.
+- [X] Moved vidgear docs assets _(i.e images, gifs, javascripts and stylescripts)_ to `override` directory.
+
+### Bug-fixes
+
+- [X] Added fixes to CLI tests and missing docs imports.
+- [X] Fixed `NameError` bug in NetGear API.
+- [X] Fixed `NameError` in `test_dict2Args` CI test.
+- [X] Fixed broken links in docs. 
+- [X] Fixed Critical Bug in NetGear_Async throwing ValueError with None-type Source.
+- [X] Fixed duplicate logging bugs.
+- [X] Fixed handling of incorrect paths detection.
+- [X] Fixed incorrect definitions in NetGear_Async.
+- [X] Fixed left-over attribute bug in WriteGear.
+- [X] Fixed logic for handling output parameters in WriteGear API.
+- [X] Fixed missing support for compression parameters in Multi-Clients Mode.
+- [X] Fixed Mkdocs only accepting Relative paths.
+- [X] Fixed round off error in FPS.
+- [X] Fixed several bugs from CI Bidirectional Mode tests.
+- [X] Fixed several typos in docs usage examples.
+- [X] Fixed Typos and Indentation bugs in NetGear API.
+- [X] Fixed wrong and missing definitions in docs.
+- [X] Fixed wrong type error bug in WriteGear API.
+- [X] Fixed ZMQ throwing error on termination if all max-tries exhausted.
+- [X] Many small typos and bugs fixes.
+
+### Pull Requests
+
+* PR #129
+* PR #130
+
+
+&nbsp; 
+
+&nbsp; 
+
 ## v0.1.8 (2020-06-12)
 
 ### New Features

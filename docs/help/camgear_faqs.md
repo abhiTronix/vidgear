@@ -112,7 +112,7 @@ stream = CamGear(source='udpsrc port=5000 ! application/x-rtp,media=video,payloa
 
 ## Can I perform Deep Learning task with VidGear?
 
-**Answer:** VidGear is a Video Processing library _(similar to OpenCV, FFmpeg etc.)_, so you have to use a third party library with VidGear to deal with Deep Learning operations. But surely VidGear's  high-performance APIs will definitely leverages the overall performance.
+**Answer:** VidGear is a High-performance Video Processing library _(similar to OpenCV, FFmpeg etc.)_, that can read, write, process, send & receive sequence of Video-frames from/to various devices in real-time. So you have to use a third party library with VidGear to deal with Deep Learning operations. But surely VidGear's  high-performance APIs will definitely leverages the overall performance.
 
 &nbsp;
 

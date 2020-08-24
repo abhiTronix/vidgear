@@ -18,32 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-# Installation Overview
+!!! info "All StreamGear Class parameters are explained [here ➶](../../../gears/streamgear/params/)"
 
-
-## Supported Systems
-
-VidGear is well-tested and supported on the following systems, with [python 3.6+](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/installing/#do-i-need-to-install-pip) installed:
-
-* Any Linux distro released in 2016 or later
-* Windows 7 or later
-* macOS 10.12.6 (Sierra) or later
-
-&thinsp;
-
-## Supported Python legacies
-
-[**Python 3.6+**](https://www.python.org/downloads/) are only supported legacies for installing Vidgear v0.1.7 and above.
-
-&thinsp;
-
-## Installation methods
-
-* [Install using pip](../installation/pip_install/) _(recommended)_
-* [Install from source](../installation/source_install/)
-
-&thinsp;
-
-<!--
-External URLs
--->
+::: vidgear.gears.StreamGear	
+	
+    
+&nbsp;

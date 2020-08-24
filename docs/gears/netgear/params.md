@@ -136,7 +136,7 @@ This parameter provides the flexibility to alter various NetGear API's internal 
 
 **Usage:**
 
-??? tip "Supported dictionary attributes for NetGear API"
+!!! abstract "Supported dictionary attributes for NetGear API"
 
     * **`multiserver_mode`** (_boolean_) : This internal attribute activates the exclusive [**Multi-Servers Mode**](../advanced/multi_server/), if enabled(`True`).
 

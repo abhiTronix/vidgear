@@ -20,6 +20,8 @@ limitations under the License.
 
 # PiGear API Parameters 
 
+&thinsp;
+
 ## **`camera_num`** 
 
 This parameter selects the camera module index which will be used as source, if you're having multiple camera modules connected. Its value can only be greater than zero, otherwise, it will throw `ValueError` for any negative value.

@@ -20,14 +20,13 @@ limitations under the License.
 
 # NetGear_Async API 
 
-
-## Overview
-
 <p align="center">
   <img src="../../../assets/images/zmq_asyncio.png" alt="NetGear_Async generalized" width="70%" />
 </p>
 
-NetGear_Async is an asyncio videoframe messaging framework, built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html), and powered by high-performance asyncio event loop called [**`uvloop`**](https://github.com/MagicStack/uvloop) to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system. 
+## Overview
+
+> NetGear_Async is an asyncio videoframe messaging framework, built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html), and powered by high-performance asyncio event loop called [**`uvloop`**](https://github.com/MagicStack/uvloop) to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system. 
 
 NetGear_Async can generate double performance as compared to [NetGear API](../../netgear/overview/) at about 1/3rd of memory consumption, and also provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support any [NetGear's Exclusive Modes](../../netgear/overview/#exclusive-modes) yet. 
 
@@ -35,25 +34,24 @@ Furthermore, NetGear_Async allows us to  define our own custom Server Source to 
 
 NetGear_Async as of now supports four ZeroMQ messaging patterns:
 
-- [`zmq.PAIR`](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pair.html) _(ZMQ Pair Pattern)_
-- [`zmq.REQ/zmq.REP`](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/client_server.html) _(ZMQ Request/Reply Pattern)_
-- [`zmq.PUB/zmq.SUB`](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html) _(ZMQ Publish/Subscribe Pattern)_ 
-- [`zmq.PUSH/zmq.PULL`](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pushpull.html#push-pull) _(ZMQ Push/Pull Pattern)_
+- [x] [`zmq.PAIR`](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pair.html) _(ZMQ Pair Pattern)_
+- [x] [`zmq.REQ/zmq.REP`](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/client_server.html) _(ZMQ Request/Reply Pattern)_
+- [x] [`zmq.PUB/zmq.SUB`](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html) _(ZMQ Publish/Subscribe Pattern)_ 
+- [x] [`zmq.PUSH/zmq.PULL`](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pushpull.html#push-pull) _(ZMQ Push/Pull Pattern)_
 
 Whereas supported protocol are: `tcp` and `ipc`.
 
-
-&nbsp; 
+&thinsp; 
 
 
 !!! tip "Helpful Tips"
 
-  * It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
+	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 
-  * It is advised to comprehend [NetGear API](../../netgear/overview/) before using this API.
+	* It is advised to comprehend [NetGear API](../../netgear/overview/) before using this API.
 
 
-&nbsp; 
+&thinsp; 
 
 ## Importing
 
@@ -63,4 +61,33 @@ You can import NetGear_Async API in your program as follows:
 from vidgear.gears import NetGear_Async
 ```
 
-&nbsp; 
+&thinsp;
+
+## Usage Examples
+
+<div class="zoom">
+<a href="../usage/">See here 🚀</a>
+</div>
+
+
+## Parameters
+
+<div class="zoom">
+<a href="../params/">See here 🚀</a>
+</div>
+
+## Reference
+
+<div class="zoom">
+<a href="../../../bonus/reference/netgear_async/">See here 🚀</a>
+</div>
+
+
+## FAQs
+
+<div class="zoom">
+<a href="../../../help/netgear_async_faqs/">See here 🚀</a>
+</div> 
+
+
+&thinsp;

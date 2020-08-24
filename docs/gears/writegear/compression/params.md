@@ -23,11 +23,11 @@ limitations under the License.
 
 ## **`output_filename`**
 
-This parameter sets the valid output Video filename/path for the output video.
+This parameter sets the valid filename/path for saving the output video.
 
 !!! warning
 
-    WriteGear API will throw `RuntimeError` if `output_filename` provided is empty or invalid.
+    WriteGear API will throw `ValueError` if `output_filename` provided is empty or invalid.
 
 **Data-Type:** String
 
@@ -47,7 +47,7 @@ Its valid input can be one of the following:
     writer = WriteGear(output_filename = 'output.mp4') #Define writer 
     ```
 
-    !!! danger "Make sure to provide valid filename with valid file-extension based on the encoder in use _(default is `.mp4`)_."
+    !!! danger "Make sure to provide valid filename with valid file-extension based on the encoder in use."
 
 
 * **URL**: Valid URL of a network stream with a protocol supported by installed FFmpeg _(verify with command `ffmpeg -protocols`)_ only. This is useful for building a [**Video-Streaming Server**](https://trac.ffmpeg.org/wiki/StreamingGuide) with FFmpeg in WriteGear API. For example, you can stream on a `rtmp` protocol URL as follows:

@@ -135,7 +135,7 @@ class WriteGear:
 
         # cleans and reformat output parameters
         self.__output_parameters = {
-            str(k).strip(): str(v).strip() if not isinstance(v, list) else v
+            str(k).strip(): str(v).strip() if not isinstance(v, (list, int, float)) else v
             for k, v in output_params.items()
         }
 
@@ -384,16 +384,12 @@ class WriteGear:
         input_parameters = dict2Args(input_params)
 
         # pre-assign default encoder parameters (if not assigned by user).
-        if "-vcodec" not in output_params:
+        if not "-vcodec" in output_params:
             output_params["-vcodec"] = "libx264"
         if output_params["-vcodec"] in ["libx264", "libx265"]:
-            if "-crf" in output_params:
-                pass
-            else:
+            if not "-crf" in output_params:
                 output_params["-crf"] = "18"
-            if "-preset" in output_params:
-                pass
-            else:
+            if not "-preset" in output_params:
                 output_params["-preset"] = "fast"
         # convert output parameters to list
         output_parameters = dict2Args(output_params)

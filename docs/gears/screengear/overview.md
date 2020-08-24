@@ -20,29 +20,31 @@ limitations under the License.
 
 # ScreenGear API 
 
-
-## Overview
-
 <p align="center">
   <img src="../../../assets/gifs/screengear.gif" alt="ScreenGear in action!"/>
   <br>
   <sub><i>ScreenGear in action</i></sub>
 </p>
 
+## Overview
 
-ScreenGear is designed exclusively for ultra-fast Screencasting, that means it can grab frames from your monitor in real-time, either by define an area on the computer screen, or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors.
+> ScreenGear is designed exclusively for ultra-fast Screencasting, that means it can grab frames from your monitor in real-time, either by define an area on the computer screen, or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors.
 
 ScreenGear API implements a multi-threaded wrapper around [**python-mss**](https://github.com/BoboTiG/python-mss) python library, and also flexibly supports its internal parameter. 
 
 Furthermore, ScreenGear API relies on [**Threaded Queue mode**](../../../bonus/TQM/) for threaded, error-free and synchronized frame handling.
 
-&nbsp; 
+&thinsp; 
 
 
-!!! tip "It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors."
+!!! tip "Helpful Tips"
+
+	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../switch_from_cv/#switching-videocapture-apis)
+
+	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 
 
-&nbsp; 
+&thinsp; 
 
 ## Importing
 
@@ -52,4 +54,32 @@ You can import ScreenGear API in your program as follows:
 from vidgear.gears import ScreenGear
 ```
 
-&nbsp; 
+&thinsp;
+
+## Usage Examples
+
+<div class="zoom">
+<a href="../usage/">See here 🚀</a>
+</div>
+
+
+## Parameters
+
+<div class="zoom">
+<a href="../params/">See here 🚀</a>
+</div>
+
+## Reference
+
+<div class="zoom">
+<a href="../../../bonus/reference/screengear/">See here 🚀</a>
+</div>
+
+
+## FAQs
+
+<div class="zoom">
+<a href="../../../help/screengear_faqs/">See here 🚀</a>
+</div>  
+
+&thinsp; 

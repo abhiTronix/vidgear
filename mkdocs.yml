@@ -33,6 +33,7 @@ copyright: Copyright &copy; 2019 - 2020 Abhishek Thakur(@abhiTronix)
 # Configuration
 theme:
   name: material
+  custom_dir: docs/overrides
 
   # Don't include MkDocs' JavaScript
   include_search_page: false
@@ -46,8 +47,8 @@ theme:
     primary: indigo
     accent: light blue
   font:
-    text: Roboto
-    code: Roboto Mono
+    text: Nunito 
+    code: IBM Plex
   icon:
     logo: logo
   logo: assets/images/logo.svg
@@ -65,6 +66,8 @@ plugins:
         python:
           rendering:
             show_source: true
+      watch:
+        - vidgear
   - exclude:
       glob:
         - ./docs/assets/README.md
@@ -80,10 +83,16 @@ extra:
       link: https://twitter.com/abhi_una12
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/abhishek-singh-thakur-a37845a5
-  manifest: assets/site.webmanifest
+  manifest: site.webmanifest
 
 extra_css:
     - assets/stylesheets/custom.css
+
+extra_javascript:
+    - assets/javascripts/clappr.min.js
+    - assets/javascripts/clappr-level-selector.min.js
+    - assets/javascripts/dash-shaka-playback.js
+    - assets/javascripts/extra.js
 
 # Extensions
 markdown_extensions:
@@ -126,7 +135,7 @@ nav:
   - Home: 
     - Overview: index.md
     - Installation: 
-      - Installation Notes: installation.md
+      - Installation Overview: installation.md
       - Install using pip: installation/pip_install.md
       - Install from source: installation/source_install.md
     - Switching from OpenCV: switch_from_cv.md
@@ -179,6 +188,14 @@ nav:
         - Parameters: gears/writegear/non_compression/params.md
       - Reference: bonus/reference/writegear.md
       - FAQs: help/writegear_faqs.md
+    - StreamGear: 
+      - Overview: gears/streamgear/overview.md
+      - Usage Examples: gears/streamgear/usage.md
+      - Advanced:
+          - FFmpeg Installation: gears/streamgear/ffmpeg_install.md
+      - Parameters: gears/streamgear/params.md
+      - Reference: bonus/reference/streamgear.md
+      - FAQs: help/streamgear_faqs.md
     - NetGear: 
       - Overview: gears/netgear/overview.md
       - Usage Examples: gears/netgear/usage.md
@@ -218,6 +235,7 @@ nav:
         - videogear.py: bonus/reference/videogear.md
         - screengear.py: bonus/reference/screengear.md
         - writegear.py: bonus/reference/writegear.md
+        - streamgear.py: bonus/reference/streamgear.md
         - netgear.py: bonus/reference/netgear.md
         - stabilizer.py: bonus/reference/stabilizer.md
         - helper.py: bonus/reference/helper.md
@@ -236,6 +254,7 @@ nav:
       - CamGear FAQs: help/camgear_faqs.md
       - PiGear FAQs: help/pigear_faqs.md
       - ScreenGear FAQs: help/screengear_faqs.md
+      - StreamGear FAQs: help/streamgear_faqs.md
       - WriteGear FAQs: help/writegear_faqs.md
       - NetGear FAQs: help/netgear_faqs.md
       - WebGear FAQs: help/webgear_faqs.md
