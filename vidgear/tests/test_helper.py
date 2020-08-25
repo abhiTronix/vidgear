@@ -90,7 +90,7 @@ def return_testvideo_path():
     return os.path.abspath(path)
 
 
-def check_valid_mpd(file="", repr=1):
+def check_valid_mpd(file="", exp_reps=1):
     """
     checks if given file is a valid MPD(MPEG-DASH Manifest file)
     """
@@ -101,12 +101,12 @@ def check_valid_mpd(file="", repr=1):
         all_reprs = []
         for period in mpd.periods:
             for adapt_set in period.adaptation_sets:
-                for repr in adapt_set.representations:
-                    all_reprs.append(repr)
+                for rep in adapt_set.representations:
+                    all_reprs.append(rep)
     except Exception as e:
         logger.error(str(e))
         return False
-    return True if (len(all_reprs) >= repr) else False
+    return True if (len(all_reprs) >= exp_reps) else False
 
 
 def getframe():
