@@ -21,15 +21,12 @@ limitations under the License.
 import logging as log
 import os
 import platform
-import re
-import subprocess
 import tempfile
-import cv2
 import pytest
 
 from os.path import expanduser
-from vidgear.gears import CamGear, StreamGear
-from mpegdash.parser import MPEGDASHParser
+from vidgear.gears import StreamGear
+from vidgear.gears.helper import logger_handler
 
 # define test logger
 logger = log.getLogger("Test_init")
@@ -38,10 +35,6 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
-# define machine os
-_windows = True if os.name == "nt" else False
-
-
 def return_static_ffmpeg():
     """
     returns system specific FFmpeg static path
@@ -59,72 +52,6 @@ def return_static_ffmpeg():
         path += os.path.join(
             tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/ffmpeg"
         )
-    return os.path.abspath(path)
-
-
-def return_testvideo_path():
-    """
-    returns Test video path
-    """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
-    )
-    return os.path.abspath(path)
-
-
-def check_valid_mpd(file="", exp_reps=1):
-    """
-    checks if given file is a valid MPD(MPEG-DASH Manifest file)
-    """
-    if not file or not os.path.isfile(file):
-        return False
-    try:
-        mpd = MPEGDASHParser.parse(file)
-        all_reprs = []
-        for period in mpd.periods:
-            for adapt_set in period.adaptation_sets:
-                for rep in adapt_set.representations:
-                    all_reprs.append(rep)
-    except Exception as e:
-        logger.error(str(e))
-        return False
-    return True if (len(all_reprs) >= exp_reps) else False
-
-
-def getframe():
-    """
-    returns empty numpy frame/array of dimensions: (500,800,3)
-    """
-    return np.zeros([500, 800, 3], dtype=np.uint8)
-
-
-def return_static_ffmpeg():
-    """
-    returns system specific FFmpeg static path
-    """
-    path = ""
-    if platform.system() == "Windows":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe"
-        )
-    elif platform.system() == "Darwin":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg"
-        )
-    else:
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/ffmpeg"
-        )
-    return os.path.abspath(path)
-
-
-def return_testvideo_path():
-    """
-    returns Test video path
-    """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
-    )
     return os.path.abspath(path)
 
 
