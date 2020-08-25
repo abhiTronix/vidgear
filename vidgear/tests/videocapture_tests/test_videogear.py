@@ -66,6 +66,8 @@ test_data = [
     (
         "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/example4_train_input.mp4",
         {"SMOOTHING_RADIUS": 5, "BORDER_SIZE": 15, "BORDER_TYPE": "reflect",},
+    ),
+    (
         "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/example4_train_input.mp4",
         {
             "SMOOTHING_RADIUS": "5",
