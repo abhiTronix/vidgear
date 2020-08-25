@@ -221,6 +221,7 @@ class StreamGear:
                 self.__os_windows or os.access in os.supports_effective_ids
             ) and os.access(os.path.dirname(abs_path), os.W_OK):
                 # check if given path is directory
+                valid_extension = "mpd" if self.__format == "dash" else "m3u8"
                 if os.path.isdir(abs_path):
                     if self.__clear_assets:
                         delete_safe(abs_path, [".m4s", ".mpd"], logging=self.__logging)
@@ -229,20 +230,26 @@ class StreamGear:
                         "{}-{}.{}".format(
                             self.__format,
                             time.strftime("%Y%m%d-%H%M%S"),
-                            "mpd" if self.__format == "dash" else "m3u8",
+                            valid_extension,
                         ),
                     )  # auto-assign valid name and adds it to path
-                if self.__logging:
-                    logger.debug(
-                        "Path:`{}` is sucessfully configured for streaming.".format(
-                            abs_path
-                        )
-                    )
                 elif self.__clear_assets and os.path.isfile(abs_path):
                     delete_safe(
                         os.path.dirname(abs_path),
                         [".m4s", ".mpd"],
                         logging=self.__logging,
+                    )
+                # check if path has valid file extension
+                assert abs_path.endswith(
+                    valid_extension
+                ), "Given `{}` path has invalid file-extension w.r.t selected format: `{}`!".format(
+                    output, self.__format.upper()
+                )
+                if self.__logging:
+                    logger.debug(
+                        "Path:`{}` is sucessfully configured for streaming.".format(
+                            abs_path
+                        )
                     )
                 # assign it
                 self.__out_file = abs_path
@@ -279,7 +286,7 @@ class StreamGear:
         """
         # check if function is called in correct context
         if self.__video_source:
-            raise IOError(
+            raise RuntimeError(
                 "[StreamGear:ERROR] :: `stream()` function cannot be used when streaming from a `-video_source` input file. Kindly refer vidgear docs!"
             )
         # None-Type frames will be skipped
@@ -333,7 +340,7 @@ class StreamGear:
         """
         # check if function is called in correct context
         if not (self.__video_source):
-            raise IOError(
+            raise RuntimeError(
                 "[StreamGear:ERROR] :: `transcode_source()` function cannot be used without a valid `-video_source` input. Kindly refer vidgear docs!"
             )
         # assign height, width and framerate
@@ -612,7 +619,10 @@ class StreamGear:
         output_params["-b:v:0"] = (
             str(
                 get_video_bitrate(
-                    int(self.__inputwidth), int(self.__inputheight), self.__sourceframerate, bpp,
+                    int(self.__inputwidth),
+                    int(self.__inputheight),
+                    self.__sourceframerate,
+                    bpp,
                 )
             )
             + "k"
@@ -727,42 +737,46 @@ class StreamGear:
             stderr=sp.STDOUT if (self.__video_source and not self.__logging) else None,
         )
         # post handle progress bar and runtime errors in case of video_source
-        if not self.__logging and self.__video_source:
+        if self.__video_source:
+            return_code = 0
             pbar = None
             sec_prev = 0
-            # iterate until stdout runs out
-            while True:
-                # read and process data
-                data = self.__process.stdout.readline()
-                if data:
-                    data = data.decode("utf-8")
-                    # extract duration and time-left
-                    if pbar is None:
-                        if "Duration:" in data:
-                            sec_duration = extract_time(data)
-                            # initate progress bar
-                            pbar = tqdm(
-                                total=sec_duration,
-                                desc="Processing Frames",
-                                unit="frame",
-                            )
+            if not self.__logging:
+                # iterate until stdout runs out
+                while True:
+                    # read and process data
+                    data = self.__process.stdout.readline()
+                    if data:
+                        data = data.decode("utf-8")
+                        # extract duration and time-left
+                        if pbar is None:
+                            if "Duration:" in data:
+                                sec_duration = extract_time(data)
+                                # initate progress bar
+                                pbar = tqdm(
+                                    total=sec_duration,
+                                    desc="Processing Frames",
+                                    unit="frame",
+                                )
+                        else:
+                            if "time=" in data:
+                                sec_current = extract_time(data)
+                                # update progress bar
+                                if sec_current:
+                                    pbar.update(sec_current - sec_prev)
+                                    sec_prev = sec_current
                     else:
-                        if "time=" in data:
-                            sec_current = extract_time(data)
-                            # update progress bar
-                            if sec_current:
-                                pbar.update(sec_current - sec_prev)
-                                sec_prev = sec_current
-                else:
-                    # poll if no data
-                    if self.__process.poll() is not None:
-                        break
+                        # poll if no data
+                        if self.__process.poll() is not None:
+                            break
+                return_code = self.__process.poll()
+            else:
+                self.__process.communicate()
+                return_code = self.__process.returncode
             # close progress bar
             if pbar:
                 pbar.close()
-
             # handle return_code
-            return_code = self.__process.poll()
             if return_code:
                 # log and raise error if return_code is `1`
                 logger.error(

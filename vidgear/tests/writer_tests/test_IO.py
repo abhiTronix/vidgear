@@ -56,6 +56,22 @@ def test_failedextension():
         writer.close()
 
 
+def test_failedchannels():
+    """
+    IO Test - made to fail with invalid channel length
+    """
+    np.random.seed(0)
+    # generate random data for 10 frames
+    random_data = np.random.random(size=(480, 640, 5)) * 255
+    input_data = random_data.astype(np.uint8)
+
+    # 'garbage' extension does not exist
+    with pytest.raises(ValueError):
+        writer = WriteGear("output.mp4")
+        writer.write(input_data)
+        writer.close()
+
+
 @pytest.mark.parametrize("compression_mode", [True, False])
 def test_fail_framedimension(compression_mode):
     """
@@ -111,3 +127,21 @@ def test_paths(compression_mode, path):
     finally:
         if not writer is None:
             writer.close()
+
+
+def test_invalid_params():
+    """
+    Invalid parameter Failure Test - Made to fail by calling invalid parameters
+    """
+    np.random.seed(0)
+    # generate random data for 10 frames
+    random_data = np.random.random(size=(480, 640, 3)) * 255
+    input_data = random_data.astype(np.uint8)
+    with pytest.raises(ValueError):
+        output_params = {"-vcodec": "unknown"}
+        writer = WriteGear(
+            "output.mp4", compression_mode=True, logging=True, **output_params
+        )
+        writer.write(input_data)
+        writer.write(input_data)
+        writer.close()

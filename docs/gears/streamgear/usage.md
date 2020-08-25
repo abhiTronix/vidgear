@@ -52,7 +52,7 @@ This mode can be easily activated by assigning suitable video path as input to [
 
 !!! warning 
 
-    * Using [`stream()`](../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) function instead of [`transcode_source()`](../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) in Single-Source Mode will instantly result in **`IOError`**!
+    * Using [`stream()`](../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) function instead of [`transcode_source()`](../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) in Single-Source Mode will instantly result in **`RuntimeError`**!
     * Any invalid value to the [`-video_source`](../params/#a-exclusive-parameters) attribute will result in **`AssertionError`**! 
 
 &thinsp;
@@ -216,9 +216,9 @@ This mode provide [`stream()`](../../../bonus/reference/streamgear/#vidgear.gear
 
 !!! warning 
 
-    * Using [`transcode_source()`](../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) function instead of [`stream()`](../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) in Real-time Frames Mode will instantly result in **`IOError`**!
+    * Using [`transcode_source()`](../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) function instead of [`stream()`](../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) in Real-time Frames Mode will instantly result in **`RuntimeError`**!
 
-    * **NEVER** assign anything to [`-video_source`](../params/#a-exclusive-parameters) attribute of [`stream_params`](../params/#supported-parameters) dictionary parameter, otherwise [Single-Source Mode](#a-single-source-mode) may get activated, and as a result, using [`stream()`](../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) function will throw **`IOError`**!
+    * **NEVER** assign anything to [`-video_source`](../params/#a-exclusive-parameters) attribute of [`stream_params`](../params/#supported-parameters) dictionary parameter, otherwise [Single-Source Mode](#a-single-source-mode) may get activated, and as a result, using [`stream()`](../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) function will throw **`RuntimeError`**!
 
     * In this mode, Primary Stream's framerate defaults to [`-input_framerate`](../params/#a-exclusive-parameters) attribute value, if defined, else it will be `25.0` fps.
 

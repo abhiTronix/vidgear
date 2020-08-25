@@ -91,7 +91,11 @@ def test_input_framerate(c_ffmpeg):
     """
     stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
     test_video_framerate = stream.get(cv2.CAP_PROP_FPS)
-    output_params = {"-input_framerate": test_video_framerate}
+    output_params = (
+        {"-input_framerate": test_video_framerate}
+        if (c_ffmpeg != "wrong_path")
+        else {"-input_framerate": "wrong_input"}
+    )
     writer = WriteGear(
         output_filename="Output_tif.mp4",
         custom_ffmpeg=c_ffmpeg,
@@ -266,6 +270,13 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
         ),
         (None, True, {"-i": None, "-disable_force_termination": "OK"}),
         ([], False, {"-i": None}),
+        (
+            ["wrong_input"],
+            True,
+            {"-ffmpeg_download_path": 53}
+            if (platform.system() == "Windows")
+            else {"-disable_force_termination": "OK"},
+        ),
         (["wrong_input"], True, {"-disable_force_termination": True}),
     ],
 )

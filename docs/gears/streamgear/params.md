@@ -48,7 +48,7 @@ Its valid input can be one of the following:
     streamer = StreamGear(output = 'output_foo.mpd') # Define streamer with manifest file name
     ```
 
-    !!! danger "Make sure to provide valid filename with valid file-extension for selected [format](#format) value _(such as `.mpd` in case of MPEG-DASH)_."
+    !!! warning "Make sure to provide _valid filename with valid file-extension_ for selected [format](#format) value _(such as `output.mpd` in case of MPEG-DASH)_, otherwise StreamGear will throw `AssertionError`."
 
 
 * **URL**: Valid URL of a network stream with a protocol supported by installed FFmpeg _(verify with command `ffmpeg -protocols`)_ only. This is useful for directly storing assets to a network server. For example, you can use a `http` protocol URL as follows:
