@@ -441,6 +441,8 @@ def test_delete_safe(ext, result):
         path = os.path.join(expanduser("~"), "test_mpd")
         if ext:
             mkdir_safe(path, logging=True)
+            # re-create directory for more coverage
+            mkdir_safe(path, logging=True)
             mpd_file_path = os.path.join(path, "dash_test.mpd")
             from vidgear.gears import StreamGear
 

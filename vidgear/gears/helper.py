@@ -276,7 +276,8 @@ def delete_safe(dir_path, extensions=[], logging=False):
         logging (bool): enables logging for its operations
 
     """
-    if not extensions:
+    if not extensions or not os.path.exists(dir_path):
+        logger.warning("Invalid input provided for deleting!")
         return
 
     if logging:
@@ -287,13 +288,9 @@ def delete_safe(dir_path, extensions=[], logging=False):
             os.path.join(dir_path, f) for f in os.listdir(dir_path) if f.endswith(ext)
         ]
         for file in files_ext:
-            try:
-                os.remove(file)
-                if logging:
-                    logger.debug("Deleted file: `{}`".format(file))
-            except OSError as e:
-                if e.errno != errno.ENOENT:
-                    raise
+            os.remove(file)
+            if logging:
+                logger.debug("Deleted file: `{}`".format(file))
 
 
 def capPropId(property):
@@ -497,10 +494,7 @@ def get_valid_ffmpeg_path(
         logger.debug("Final FFmpeg Path: {}".format(final_path))
 
     # Final Auto-Validation for FFmeg Binaries. returns final path if test is passed
-    if validate_ffmpeg(final_path, logging=logging):
-        return final_path
-    else:
-        return False
+    return final_path if validate_ffmpeg(final_path, logging=logging) else False
 
 
 def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
