@@ -203,7 +203,7 @@ def validate_audio(path, file_path=None):
     """
     ### validate_audio
 
-    Validates audio by retrieving audio sample-rate from file.
+    Validates audio by retrieving audio-bitrate from file.
 
     Parameters:
         path (string): absolute path of FFmpeg binaries
@@ -219,10 +219,16 @@ def validate_audio(path, file_path=None):
     metadata = check_output(
         [path, "-hide_banner", "-i", file_path], force_retrieve_stderr=True
     )
-    audio_sample_rate = re.findall(r"(\d+) Hz", metadata.decode("utf-8"))
-
-    # return value(if present)
-    return audio_sample_rate[-1] if (audio_sample_rate) else ""
+    audio_bitrate = re.findall(r"fltp,\s[0-9]+\s\w\w[/]s", metadata.decode("utf-8"))
+    if audio_bitrate:
+        filtered = audio_bitrate[0].split(" ")[1:3]
+        final_bitrate = "{}{}".format(
+            int(filtered[0].strip()),
+            "k" if (filtered[1].strip().startswith("k")) else "M",
+        )
+        return final_bitrate
+    else:
+        return ""
 
 
 def get_video_bitrate(width, height, fps, bpp):

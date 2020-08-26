@@ -80,12 +80,18 @@ def return_static_ffmpeg():
     return os.path.abspath(path)
 
 
-def return_testvideo_path():
+def return_testvideo_path(fmt="av"):
     """
     returns Test video path
     """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
+    supported_fmts = {
+        "av": "BigBuckBunny_4sec.mp4",
+        "vo": "BigBuckBunny_4sec_VO.mp4",
+        "ao": "BigBuckBunny_4sec_AO.mp4",
+    }
+    req_fmt = fmt if (fmt in supported_fmts) else "av"
+    path = "{}/Downloads/Test_videos/{}".format(
+        tempfile.gettempdir(), supported_fmts[req_fmt]
     )
     return os.path.abspath(path)
 
@@ -387,7 +393,12 @@ def test_validate_video(path, result):
 
 
 @pytest.mark.parametrize(
-    "path, result", [(return_testvideo_path(), True), (None, False),],
+    "path, result",
+    [
+        (return_testvideo_path(), True),
+        (return_testvideo_path(fmt="vo"), False),
+        (None, False),
+    ],
 )
 def test_validate_audio(path, result):
     """
@@ -446,13 +457,18 @@ def test_delete_safe(ext, result):
             mpd_file_path = os.path.join(path, "dash_test.mpd")
             from vidgear.gears import StreamGear
 
-            stream_params = {"-video_source": return_testvideo_path()}
+            stream_params = {
+                "-video_source": return_testvideo_path(),
+            }
             streamer = StreamGear(output=mpd_file_path, **stream_params)
             streamer.transcode_source()
             streamer.terminate()
             assert check_valid_mpd(mpd_file_path)
         delete_safe(path, ext, logging=True)
-        if result:
-            assert not os.listdir(path), "`delete_safe` Test failed!"
+        assert not os.listdir(path), "`delete_safe` Test failed!"
+        # cleanup
+        if os.path.isdir(path):
+            shutil.rmtree(path)
     except Exception as e:
-        pytest.fail(str(e))
+        if result:
+            pytest.fail(str(e))

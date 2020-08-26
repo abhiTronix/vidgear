@@ -80,7 +80,11 @@ def test_outputs(output):
     """
     Testing different output for StreamGear 
     """
-    stream_params = {"-clear_prev_assets": True} if not (output is None) else {}
+    stream_params = (
+        {"-clear_prev_assets": True}
+        if (output and output == "output.mpd")
+        else {"-clear_prev_assets": "invalid"}
+    )
     try:
         StreamGear(output=output, logging=True, **stream_params)
     except Exception as e:

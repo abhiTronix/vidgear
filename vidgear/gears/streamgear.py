@@ -108,7 +108,16 @@ class StreamGear:
             __ffmpeg_download_path = ""
 
         # handle Audio-Input
-        self.__audio = self.__params.pop("-audio", "")
+        audio = self.__params.pop("-audio", "")
+        if audio and isinstance(audio, str):
+            if os.path.isfile(audio):
+                self.__audio = os.path.abspath(audio)
+            elif is_valid_url(audio):
+                self.__audio = audio
+            else:
+                self.__audio = ""
+        else:
+            self.__audio = ""
 
         # validate the FFmpeg assets and return location (also downloads static assets on windows)
         self.__ffmpeg = get_valid_ffmpeg_path(
@@ -393,26 +402,26 @@ class StreamGear:
                 "-x265-params", "lossless=1"
             )
         # enable audio (if present)
-        if self.__audio and isinstance(self.__audio, str):
-            if os.path.isfile(self.__audio):
-                self.__audio = os.path.abspath(self.__audio)
-            elif is_valid_url(self.__audio):
-                pass
-            else:
-                self.__audio = ""
+        if self.__audio:
             # validate audio source
-            if self.__audio and validate_audio(self.__ffmpeg, file_path=self.__audio):
+            bitrate = validate_audio(self.__ffmpeg, file_path=self.__audio)
+            if bitrate:
                 # assign audio
                 output_parameters["-i"] = self.__audio
                 # assign audio codec
                 output_parameters["-acodec"] = self.__params.pop("-acodec", "copy")
+                output_parameters["a_bitrate"] = bitrate  # temporary handler
             else:
                 logger.critical(
                     "Audio source `{}` is not valid, Skipped!".format(self.__audio)
                 )
         elif self.__video_source:
-            if validate_audio(self.__ffmpeg, file_path=self.__video_source):
+            # validate audio source
+            bitrate = validate_audio(self.__ffmpeg, file_path=self.__video_source)
+            if bitrate:
+                # assign audio codec
                 output_parameters["-acodec"] = "aac"
+                output_parameters["a_bitrate"] = bitrate  # temporary handler
             else:
                 logger.warning(
                     "No valid audio_source available. Disabling audio for streams!"
@@ -421,10 +430,10 @@ class StreamGear:
             logger.warning(
                 "No valid audio_source provided. Disabling audio for streams!"
             )
-
         # enable audio optimizations based on audio codec
         if "-acodec" in output_parameters and output_parameters["-acodec"] == "aac":
             output_parameters["-movflags"] = "+faststart"
+
         # set input framerate
         if self.__inputframerate > 5.0 and not (self.__video_source):
             # minimum threshold is 5.0
@@ -532,7 +541,7 @@ class StreamGear:
                 if (
                     video_bitrate
                     and isinstance(video_bitrate, str)
-                    and video_bitrate.endswith(("k", "K", "m", "M"))
+                    and video_bitrate.endswith(("k", "M"))
                 ):
                     # assign it
                     intermediate_dict["-b:v:{}".format(stream_num)] = video_bitrate
@@ -556,7 +565,7 @@ class StreamGear:
                 # verify given stream audio-bitrate
                 audio_bitrate = stream.pop("-audio_bitrate", "")
                 if "-acodec" in output_params:
-                    if audio_bitrate and audio_bitrate.endswith(("k", "K")):
+                    if audio_bitrate and audio_bitrate.endswith(("k", "M")):
                         intermediate_dict["-b:a:{}".format(stream_num)] = audio_bitrate
                     else:
                         # otherwise calculate audio-bitrate
@@ -602,7 +611,7 @@ class StreamGear:
             gop = 2 * int(self.__sourceframerate)
         else:
             # reset to some recommended value
-            bpp = 100
+            gop = 100
         # log it
         if self.__logging and gop:
             logger.debug("Setting GOP: {} for this stream.".format(gop))
@@ -611,10 +620,12 @@ class StreamGear:
         output_params["-map"] = 0
         # assign resolution
         if "-s:v:0" in self.__params:
+            # prevent duplicates
             del self.__params["-s:v:0"]
         output_params["-s:v:0"] = "{}x{}".format(self.__inputwidth, self.__inputheight)
         # assign video-bitrate
         if "-b:v:0" in self.__params:
+            # prevent duplicates
             del self.__params["-b:v:0"]
         output_params["-b:v:0"] = (
             str(
@@ -627,17 +638,14 @@ class StreamGear:
             )
             + "k"
         )
-
-        # calculate and assign audio-bitrate
+        # assign audio-bitrate
         if "-b:a:0" in self.__params:
+            # prevent duplicates
             del self.__params["-b:a:0"]
-        if "-acodec" in output_params:
-            a_bitrate = 96
-            if self.__inputwidth >= 1300:
-                a_bitrate = 192
-            elif 1300 > self.__inputwidth > 800:
-                a_bitrate = 128
-            output_params["-b:a:0"] = "{}k".format(a_bitrate)
+        # extract audio-bitrate from temporary handler
+        a_bitrate = output_params.pop("a_bitrate", "")
+        if "-acodec" in output_params and a_bitrate:
+            output_params["-b:a:0"] = a_bitrate
 
         # handle user-defined streams
         streams = self.__params.pop("-streams", {})
