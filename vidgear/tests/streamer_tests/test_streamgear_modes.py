@@ -26,6 +26,7 @@ import tempfile
 import cv2
 import pytest
 
+from mpegdash.parser import MPEGDASHParser
 from vidgear.gears import CamGear, StreamGear
 from vidgear.gears.helper import logger_handler
 
@@ -116,8 +117,15 @@ def extract_resolutions(streams):
     results = []
     for stream in streams:
         if "-resolution" in stream:
-            res = stream["-resolution"].split("x")
-            results.append({"width": res[0].strip(), "height": res[1].strip()})
+            try:
+                res = stream["-resolution"].split("x")
+                assert res
+                width, height = res[0].strip(), res[1].strip()
+                assert width.isnumeric() and height.isnumeric()
+                results.append({"width": width, "height": height})
+            except Exception as e:
+                logger.error(str(e))
+                continue
         else:
             continue
     return results
