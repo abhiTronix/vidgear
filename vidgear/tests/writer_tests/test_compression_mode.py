@@ -217,7 +217,7 @@ def test_output_dimensions():
 test_data_class = [
     ("", "", {}, False),
     ("Output1.mp4", "", {}, True),
-    (os.path.join(tempfile.gettempdir(), "test"), "", {}, True),
+    (os.path.join(tempfile.gettempdir(), "temp_write"), "", {}, True),
     ("Output2.mp4", "", {"-vcodec": "libx264", "-crf": 0, "-preset": "fast"}, True),
     (
         "Output3.mp4",
@@ -245,7 +245,7 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
             writer.write(frame)
         stream.release()
         writer.close()
-        if f_name and f_name != tempfile.gettempdir():
+        if f_name:
             os.remove(os.path.abspath(f_name))
     except Exception as e:
         if result:

@@ -548,7 +548,7 @@ class StreamGear:
                     intermediate_dict["-b:v:{}".format(stream_num)] = video_bitrate
                 else:
                     # otherwise calculate video-bitrate
-                    fps = stream.pop("-fps", 0.0)
+                    fps = stream.pop("-framerate", 0.0)
                     if dimensions and isinstance(fps, (float, int)) and fps > 0:
                         intermediate_dict["-b:v:{}".format(stream_num)] = "{}k".format(
                             get_video_bitrate(

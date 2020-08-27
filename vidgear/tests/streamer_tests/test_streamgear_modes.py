@@ -83,7 +83,7 @@ def extract_meta_mpd(file):
             meta = {}
             meta["mime_type"] = rep.mime_type
             if meta["mime_type"].startswith("audio"):
-                meta["audioSamplingRate"] = rep.audioSamplingRate
+                meta["audioSamplingRate"] = rep.audio_sampling_rate
             else:
                 meta["width"] = rep.width
                 meta["height"] = rep.height
@@ -110,11 +110,16 @@ def string_to_float(value):
     return cleaned[0] / cleaned[1]
 
 
-def extract_resolutions(streams):
+def extract_resolutions(source, streams):
     """
     Extracts resolution value from dictionaries
     """
+    if not (source) or not (streams):
+        return []
     results = []
+    assert os.path.isfile(source), "Not a valid source"
+    s_cv = cv2.VideoCapture(source)
+    results.append({"width": s_cv.get(cv2.CAP_PROP_FRAME_WIDTH), "height": s_cv.get(cv2.CAP_PROP_FRAME_HEIGHT)})
     for stream in streams:
         if "-resolution" in stream:
             try:
@@ -342,8 +347,10 @@ def test_multistreams(stream_params):
     """
     Testing Support for additional Secondary Streams of variable bitrates or spatial resolutions.
     """
-    results = extract_resolutions(stream_params["-streams"])
     mpd_file_path = os.path.join(return_mpd_path(), "dash_test.mpd")
+    results = extract_resolutions(
+        stream_params["-video_source"], stream_params["-streams"]
+    )
     try:
         streamer = StreamGear(output=mpd_file_path, **stream_params)
         streamer.transcode_source()
@@ -351,7 +358,7 @@ def test_multistreams(stream_params):
         metadata = extract_meta_mpd(mpd_file_path)
         assert metadata and (len(metadata) == len(results)), "Test Failed!"
         for x, y in zip(results, metadata):
-            assert x["width"] == y["width"], "Width check failed!"
-            assert x["height"] == y["height"], "Height check failed!"
+            assert int(x["width"]) == int(y["width"]), "Width check failed!"
+            assert int(x["height"]) == int(y["height"]), "Height check failed!"
     except Exception as e:
         pytest.fail(str(e))
