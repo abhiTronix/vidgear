@@ -52,21 +52,21 @@ logger.setLevel(log.DEBUG)
 class StreamGear:
 
     """
-    StreamGear is built for _Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH) with FFmpeg_ to generate 
-    the chunked-encoded media segments of the content, in just few lines of python code. StreamGear provides a standalone, highly extensible and 
-    flexible wrapper around [**FFmpeg**](https://ffmpeg.org/) - a leading multimedia framework and access to almost all of its parameter for 
+    StreamGear is built for _Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH) with FFmpeg_ to generate
+    the chunked-encoded media segments of the content, in just few lines of python code. StreamGear provides a standalone, highly extensible and
+    flexible wrapper around [**FFmpeg**](https://ffmpeg.org/) - a leading multimedia framework and access to almost all of its parameter for
     seamlessly generating these streams.
 
-    SteamGear API ***automatically transcodes source videos/audio files & real-time frames, and breaks them into a sequence of multiple smaller 
-    chunks/segments (typically 2-4 seconds in length) at different quality levels (i.e. different bitrates or spatial resolutions)***. It also 
-    creates a media presentation description _(MPD in-case of DASH)_ that describes these segment information _(timing, URL, media characteristics 
-    like video resolution and bit rates)_, and is provided to the client prior to the streaming session. Thereby, segments are served on a web-server 
-    and can be downloaded through HTTP standard compliant GET requests. This makes it possible to stream videos at different quality levels, and to 
+    SteamGear API ***automatically transcodes source videos/audio files & real-time frames, and breaks them into a sequence of multiple smaller
+    chunks/segments (typically 2-4 seconds in length) at different quality levels (i.e. different bitrates or spatial resolutions)***. It also
+    creates a media presentation description _(MPD in-case of DASH)_ that describes these segment information _(timing, URL, media characteristics
+    like video resolution and bit rates)_, and is provided to the client prior to the streaming session. Thereby, segments are served on a web-server
+    and can be downloaded through HTTP standard compliant GET requests. This makes it possible to stream videos at different quality levels, and to
     switch in the middle of a video from one quality level to another one.
 
-    SteamGear currently only supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_, 
+    SteamGear currently only supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_,
     but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming, will be added soon.
-    
+
     """
 
     def __init__(
@@ -285,7 +285,7 @@ class StreamGear:
         )
 
     def stream(self, frame, rgb_mode=False):
-        """  
+        """
         Pipelines `ndarray` frames to FFmpeg Pipeline for transcoding into multi-bitrate streamable assets.
 
         Parameters:
@@ -362,7 +362,7 @@ class StreamGear:
     def __PreProcess(self, channels=0, rgb=False):
         """
         Internal method that pre-processes default FFmpeg parameters before beginning pipelining.
-        
+
         Parameters:
             channels (int): Number of channels
             rgb_mode (boolean): activates RGB mode _(if enabled)_.
@@ -464,7 +464,8 @@ class StreamGear:
         process_params = None
         if self.__format == "dash":
             process_params = self.__generate_dash_stream(
-                input_params=input_parameters, output_params=output_parameters,
+                input_params=input_parameters,
+                output_params=output_parameters,
             )
         # check if processing completed successfully
         assert not (
@@ -591,10 +592,16 @@ class StreamGear:
 
     def __generate_dash_stream(self, input_params, output_params):
         """
+        An internal function that parses user-defined parameters and generates
+        suitable FFmpeg Terminal Command for transcoding input into MPEG-dash Stream.
+
+        Parameters:
+            input_params (dict): Input FFmpeg parameters
+            output_params (dict): Output FFmpeg parameters
         """
         # handle bit-per-pixels
         bpp = self.__params.pop("-bpp", 0.1000)
-        if bpp > 0 and isinstance(bpp, (float, int)):
+        if isinstance(bpp, (float, int)) and bpp > 0.0:
             bpp = float(bpp) if (bpp > 0.001) else 0.1000
         else:
             # reset to defaut if invalid
@@ -665,7 +672,7 @@ class StreamGear:
         if output_params["-vcodec"] == "libx265":
             output_params["-core_x265"] = [
                 "-x265-params",
-                "keyint={}:min-keyint={}".format(gop),
+                "keyint={}:min-keyint={}".format(gop, gop),
             ]
 
         # Finally, some hardcoded DASH parameters (Refer FFmpeg docs for more info.)
@@ -682,8 +689,8 @@ class StreamGear:
     def __Build_n_Execute(self, input_params, output_params):
 
         """
-        An Internal function that launches FFmpeg subprocess and pipelines commands. 
-    
+        An Internal function that launches FFmpeg subprocess and pipelines commands.
+
         Parameters:
             input_params (dict): Input FFmpeg parameters
             output_params (dict): Output FFmpeg parameters

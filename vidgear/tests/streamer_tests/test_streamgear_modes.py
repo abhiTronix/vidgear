@@ -81,8 +81,8 @@ def extract_meta_mpd(file):
         metas = []
         for rep in reprs:
             meta = {}
-            meta["mimeType"] = rep.mimeType
-            if meta["mimeType"].startswith("audio"):
+            meta["mime_type"] = rep.mime_type
+            if meta["mime_type"].startswith("audio"):
                 meta["audioSamplingRate"] = rep.audioSamplingRate
             else:
                 meta["width"] = rep.width
@@ -207,7 +207,7 @@ def test_input_framerate_rtf():
         streamer.terminate()
         meta_data = extract_meta_mpd(mpd_file_path)
         assert metadata, "Test Failed!"
-        meta_vids = [x for x in metadata if x["mimeType"].startswith("video")]
+        meta_vids = [x for x in metadata if x["mime_type"].startswith("video")]
         assert round(string_to_float(meta_vids[0]["framerate"])) == round(
             test_video_framerate
         ), "Test Failed!"
