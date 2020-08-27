@@ -81,8 +81,8 @@ def extract_meta_mpd(file):
         metas = []
         for rep in reprs:
             meta = {}
-            meta["contentType"] = rep.contentType
-            if meta["contentType"] == "audio":
+            meta["mimeType"] = rep.mimeType
+            if meta["mimeType"].startswith("audio"):
                 meta["audioSamplingRate"] = rep.audioSamplingRate
             else:
                 meta["width"] = rep.width
@@ -119,7 +119,7 @@ def extract_resolutions(streams):
         if "-resolution" in stream:
             try:
                 res = stream["-resolution"].split("x")
-                assert res
+                assert len(res) == 2
                 width, height = res[0].strip(), res[1].strip()
                 assert width.isnumeric() and height.isnumeric()
                 results.append({"width": width, "height": height})
@@ -199,15 +199,15 @@ def test_input_framerate_rtf():
         }
         streamer = StreamGear(output=mpd_file_path, logging=True, **stream_params)
         while True:
-            frame = stream.read()
-            if frame is None:
+            (grabbed, frame) = stream.read()
+            if not grabbed:
                 break
             streamer.stream(frame)
         stream.release()
         streamer.terminate()
         meta_data = extract_meta_mpd(mpd_file_path)
         assert metadata, "Test Failed!"
-        meta_vids = [x for x in metadata if x["contentType"] == "video"]
+        meta_vids = [x for x in metadata if x["mimeType"].startswith("video")]
         assert round(string_to_float(meta_vids[0]["framerate"])) == round(
             test_video_framerate
         ), "Test Failed!"
@@ -237,9 +237,9 @@ def test_params(stream_params):
         mpd_file_path = os.path.join(return_mpd_path(), "dash_test.mpd")
         stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
         streamer = StreamGear(output=mpd_file_path, logging=True, **stream_params)
-        while True:
-            frame = stream.read()
-            if frame is None:
+         while True:
+            (grabbed, frame) = stream.read()
+            if not grabbed:
                 break
             streamer.stream(frame)
         stream.release()
@@ -290,8 +290,12 @@ def test_audio(stream_params):
             "-clear_prev_assets": True,
             "-video_source": return_testvideo_path(fmt="vo"),
             "-streams": [
-                {"-video_bitrate": "unknown",},  # Invalid Stream 1
-                {"-resolution": "unxun",},  # Invalid Stream 2
+                {
+                    "-video_bitrate": "unknown",
+                },  # Invalid Stream 1
+                {
+                    "-resolution": "unxun",
+                },  # Invalid Stream 2
                 {
                     "-resolution": "640x480",
                     "-video_bitrate": "unknown",
@@ -336,7 +340,7 @@ def test_audio(stream_params):
 )
 def test_multistreams(stream_params):
     """
-    Testing Support for additional Secondary Streams of variable bitrates or spatial resolutions. 
+    Testing Support for additional Secondary Streams of variable bitrates or spatial resolutions.
     """
     results = extract_resolutions(stream_params["-streams"])
     mpd_file_path = os.path.join(return_mpd_path(), "dash_test.mpd")
