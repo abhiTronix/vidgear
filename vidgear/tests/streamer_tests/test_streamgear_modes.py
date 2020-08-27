@@ -87,7 +87,7 @@ def extract_meta_mpd(file):
             else:
                 meta["width"] = rep.width
                 meta["height"] = rep.height
-                meta["framerate"] = rep.framerate
+                meta["framerate"] = rep.frame_rate
             metas.append(meta)
         return metas
     else:
@@ -206,8 +206,8 @@ def test_input_framerate_rtf():
         stream.release()
         streamer.terminate()
         meta_data = extract_meta_mpd(mpd_file_path)
-        assert metadata, "Test Failed!"
-        meta_vids = [x for x in metadata if x["mime_type"].startswith("video")]
+        assert meta_data, "Test Failed!"
+        meta_vids = [x for x in meta_data if x["mime_type"].startswith("video")]
         assert round(string_to_float(meta_vids[0]["framerate"])) == round(
             test_video_framerate
         ), "Test Failed!"

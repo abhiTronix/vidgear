@@ -87,7 +87,7 @@ def getFrameRate(path):
 @pytest.mark.parametrize("c_ffmpeg", [return_static_ffmpeg(), "wrong_path"])
 def test_input_framerate(c_ffmpeg):
     """
-    Testing "-input_framerate" parameter provided by WriteGear(in Compression Mode) 
+    Testing "-input_framerate" parameter provided by WriteGear(in Compression Mode)
     """
     stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
     test_video_framerate = stream.get(cv2.CAP_PROP_FPS)
@@ -177,7 +177,7 @@ def test_write(conversion):
 @pytest.mark.xfail(raises=AssertionError)
 def test_output_dimensions():
     """
-    Testing "-output_dimensions" special parameter provided by WriteGear(in Compression Mode) 
+    Testing "-output_dimensions" special parameter provided by WriteGear(in Compression Mode)
     """
     dimensions = (640, 480)
     stream = cv2.VideoCapture(return_testvideo_path())
@@ -217,7 +217,7 @@ def test_output_dimensions():
 test_data_class = [
     ("", "", {}, False),
     ("Output1.mp4", "", {}, True),
-    (tempfile.gettempdir(), "", {}, True),
+    (os.path.join(tempfile.gettempdir(), "test"), "", {}, True),
     ("Output2.mp4", "", {"-vcodec": "libx264", "-crf": 0, "-preset": "fast"}, True),
     (
         "Output3.mp4",
