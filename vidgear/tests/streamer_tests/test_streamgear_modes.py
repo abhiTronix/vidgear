@@ -97,7 +97,7 @@ def return_mpd_path():
     """
     returns MPD assets temp path
     """
-    return os.path.join(tempfile.gettempdir(), temp_mpd)
+    return os.path.join(tempfile.gettempdir(), "temp_mpd")
 
 
 def string_to_float(value):
