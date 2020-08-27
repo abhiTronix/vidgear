@@ -237,7 +237,7 @@ def test_params(stream_params):
         mpd_file_path = os.path.join(return_mpd_path(), "dash_test.mpd")
         stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
         streamer = StreamGear(output=mpd_file_path, logging=True, **stream_params)
-         while True:
+        while True:
             (grabbed, frame) = stream.read()
             if not grabbed:
                 break
