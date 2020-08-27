@@ -407,10 +407,11 @@ class StreamGear:
             bitrate = validate_audio(self.__ffmpeg, file_path=self.__audio)
             if bitrate:
                 # assign audio
-                output_parameters["-i"] = self.__audio
+                input_parameters["-i"] = self.__audio
                 # assign audio codec
                 output_parameters["-acodec"] = self.__params.pop("-acodec", "copy")
                 output_parameters["a_bitrate"] = bitrate  # temporary handler
+                output_parameters["-core_audio"] = ["-map", "1:a:0"]
             else:
                 logger.critical(
                     "Audio source `{}` is not valid, Skipped!".format(self.__audio)
@@ -607,20 +608,18 @@ class StreamGear:
             # reset to defaut if invalid
             bpp = 0.1000
         # log it
-        if self.__logging and bpp:
+        if self.__logging:
             logger.debug("Setting bit-per-pixels: {} for this stream.".format(bpp))
 
         # handle gop
         gop = self.__params.pop("-gop", 0)
-        if gop >= 0 and isinstance(bpp, (int, float)):
+        if isinstance(gop, (int, float)) and gop > 0:
             gop = int(gop)
-        elif "-framerate" in input_params:
-            gop = 2 * int(self.__sourceframerate)
         else:
             # reset to some recommended value
-            gop = 100
+            gop = 2 * int(self.__sourceframerate)
         # log it
-        if self.__logging and gop:
+        if self.__logging:
             logger.debug("Setting GOP: {} for this stream.".format(gop))
 
         # define and map default stream
@@ -682,6 +681,7 @@ class StreamGear:
         output_params["-adaptation_sets"] = "id=0,streams=v{}".format(
             " id=1,streams=a" if ("-acodec" in output_params) else ""
         )
+        # enable dash formatting
         output_params["-f"] = "dash"
 
         return (input_params, output_params)
@@ -740,7 +740,6 @@ class StreamGear:
                 + stream_commands
                 + [self.__out_file]
             )
-
         # Launch the FFmpeg pipeline with built command
         logger.critical("Transcoding streaming chunks. Please wait...")  # log it
         self.__process = sp.Popen(

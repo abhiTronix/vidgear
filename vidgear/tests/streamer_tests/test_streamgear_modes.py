@@ -115,19 +115,21 @@ def extract_resolutions(source, streams):
     Extracts resolution value from dictionaries
     """
     if not (source) or not (streams):
-        return []
-    results = []
+        return {}
+    results = {}
     assert os.path.isfile(source), "Not a valid source"
     s_cv = cv2.VideoCapture(source)
-    results.append({"width": s_cv.get(cv2.CAP_PROP_FRAME_WIDTH), "height": s_cv.get(cv2.CAP_PROP_FRAME_HEIGHT)})
+    results[int(s_cv.get(cv2.CAP_PROP_FRAME_WIDTH))] = int(
+        s_cv.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    )
     for stream in streams:
         if "-resolution" in stream:
             try:
                 res = stream["-resolution"].split("x")
                 assert len(res) == 2
-                width, height = res[0].strip(), res[1].strip()
+                width, height = (res[0].strip(), res[1].strip())
                 assert width.isnumeric() and height.isnumeric()
-                results.append({"width": width, "height": height})
+                results[int(width)] = int(height)
             except Exception as e:
                 logger.error(str(e))
                 continue
@@ -213,7 +215,7 @@ def test_input_framerate_rtf():
         meta_data = extract_meta_mpd(mpd_file_path)
         assert meta_data, "Test Failed!"
         meta_vids = [x for x in meta_data if x["mime_type"].startswith("video")]
-        assert round(string_to_float(meta_vids[0]["framerate"])) == round(
+        assert meta_vids and round(string_to_float(meta_vids[0]["framerate"])) == round(
             test_video_framerate
         ), "Test Failed!"
     except Exception as e:
@@ -356,9 +358,12 @@ def test_multistreams(stream_params):
         streamer.transcode_source()
         streamer.terminate()
         metadata = extract_meta_mpd(mpd_file_path)
-        assert metadata and (len(metadata) == len(results)), "Test Failed!"
-        for x, y in zip(results, metadata):
-            assert int(x["width"]) == int(y["width"]), "Width check failed!"
-            assert int(x["height"]) == int(y["height"]), "Height check failed!"
+        meta_videos = [x for x in metadata if x["mime_type"].startswith("video")]
+        assert meta_videos and (len(meta_videos) <= len(results)), "Test Failed!"
+        for s_v in meta_videos:
+            assert int(s_v["width"]) in results, "Width check failed!"
+            assert (
+                int(s_v["height"]) == results[int(s_v["width"])]
+            ), "Height check failed!"
     except Exception as e:
         pytest.fail(str(e))
