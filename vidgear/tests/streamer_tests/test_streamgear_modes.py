@@ -44,7 +44,7 @@ def return_testvideo_path(fmt="av"):
     supported_fmts = {
         "av": "BigBuckBunny_4sec.mp4",
         "vo": "BigBuckBunny_4sec_VO.mp4",
-        "ao": "BigBuckBunny_4sec_AO.mp4",
+        "ao": "BigBuckBunny_4sec_AO.aac",
     }
     req_fmt = fmt if (fmt in supported_fmts) else "av"
     path = "{}/Downloads/Test_videos/{}".format(
@@ -292,7 +292,7 @@ def test_audio(stream_params):
     """
     mpd_file_path = os.path.join(return_mpd_path(), "dash_test.mpd")
     try:
-        streamer = StreamGear(output=mpd_file_path, **stream_params)
+        streamer = StreamGear(output=mpd_file_path, logging=True, **stream_params)
         streamer.transcode_source()
         streamer.terminate()
         assert check_valid_mpd(mpd_file_path)
