@@ -88,7 +88,9 @@ def extract_meta_mpd(file):
                 meta["width"] = rep.width
                 meta["height"] = rep.height
                 meta["framerate"] = rep.frame_rate
+            logger.debug("Found Meta: {}".format(meta))
             metas.append(meta)
+        logger.debug("MetaData: {}".format(metas))
         return metas
     else:
         return []
