@@ -56,7 +56,7 @@ def return_static_ffmpeg():
 
 
 @pytest.mark.xfail(raises=RuntimeError)
-@pytest.mark.parametrize("c_ffmpeg", [return_static_ffmpeg(), "wrong_path"])
+@pytest.mark.parametrize("c_ffmpeg", [return_static_ffmpeg(), "wrong_path", 1234])
 def test_custom_ffmpeg(c_ffmpeg):
     """
     Testing custom FFmpeg for StreamGear 
@@ -65,7 +65,7 @@ def test_custom_ffmpeg(c_ffmpeg):
 
 
 @pytest.mark.xfail(raises=ValueError)
-@pytest.mark.parametrize("format", ["dash", "mash", 1234, None])
+@pytest.mark.parametrize("format", ["dash", "mash", "unknown", 1234, None])
 def test_formats(format):
     """
     Testing different formats for StreamGear 

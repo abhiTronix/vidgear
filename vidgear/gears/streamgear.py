@@ -107,18 +107,6 @@ class StreamGear:
             # reset improper values
             __ffmpeg_download_path = ""
 
-        # handle Audio-Input
-        audio = self.__params.pop("-audio", "")
-        if audio and isinstance(audio, str):
-            if os.path.isfile(audio):
-                self.__audio = os.path.abspath(audio)
-            elif is_valid_url(audio):
-                self.__audio = audio
-            else:
-                self.__audio = ""
-        else:
-            self.__audio = ""
-
         # validate the FFmpeg assets and return location (also downloads static assets on windows)
         self.__ffmpeg = get_valid_ffmpeg_path(
             custom_ffmpeg,
@@ -141,6 +129,22 @@ class StreamGear:
                 )
             )
 
+
+        # handle Audio-Input
+        audio = self.__params.pop("-audio", "")
+        if audio and isinstance(audio, str):
+            if os.path.isfile(audio):
+                self.__audio = os.path.abspath(audio)
+            elif is_valid_url(self.__ffmpeg, url=audio, logging=self.__logging):
+                self.__audio = audio
+            else:
+                self.__audio = ""
+        else:
+            self.__audio = ""
+
+        if self.__audio and self.__logging:
+            logger.debug("External audio source detected!")
+
         # handle Video-Source input
         source = self.__params.pop("-video_source", "")
         # Check if input is valid
@@ -148,7 +152,7 @@ class StreamGear:
             # Differentiate input
             if os.path.isfile(source):
                 self.__video_source = os.path.abspath(source)
-            elif is_valid_url(self.__ffmpeg, url=source, logging=logging):
+            elif is_valid_url(self.__ffmpeg, url=source, logging=self.__logging):
                 self.__video_source = source
             else:
                 self.__video_source = ""
@@ -407,6 +411,9 @@ class StreamGear:
             # validate audio source
             bitrate = validate_audio(self.__ffmpeg, file_path=self.__audio)
             if bitrate:
+                logger.info(
+                    "Detected External Audio Source is valid, and will be used for streams."
+                )
                 # assign audio
                 input_parameters["-i"] = self.__audio
                 # assign audio codec
@@ -421,6 +428,7 @@ class StreamGear:
             # validate audio source
             bitrate = validate_audio(self.__ffmpeg, file_path=self.__video_source)
             if bitrate:
+                logger.info("Source Audio will be used for streams.")
                 # assign audio codec
                 output_parameters["-acodec"] = "aac"
                 output_parameters["a_bitrate"] = bitrate  # temporary handler

@@ -364,7 +364,7 @@ def test_multistreams(stream_params):
         stream_params["-video_source"], stream_params["-streams"]
     )
     try:
-        streamer = StreamGear(output=mpd_file_path, **stream_params)
+        streamer = StreamGear(output=mpd_file_path, logging=True, **stream_params)
         streamer.transcode_source()
         streamer.terminate()
         metadata = extract_meta_mpd(mpd_file_path)
