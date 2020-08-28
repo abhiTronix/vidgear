@@ -147,7 +147,7 @@ def test_WriteGear_compression(f_name, output_params, result):
             writer.write(frame)
         stream.release()
         writer.close()
-        if f_name and f_name != tempfile.gettempdir():
+        if f_name and os.path.isfile(os.path.abspath(f_name)):
             os.remove(os.path.abspath(f_name))
     except Exception as e:
         if result:

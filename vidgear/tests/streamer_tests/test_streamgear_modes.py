@@ -59,24 +59,26 @@ def check_valid_mpd(file="", exp_reps=1):
     """
     if not file or not os.path.isfile(file):
         return False
+    all_reprs = []
+    all_adapts = []
     try:
         mpd = MPEGDASHParser.parse(file)
-        all_reprs = []
         for period in mpd.periods:
             for adapt_set in period.adaptation_sets:
+                all_adapts.append(adapt_set)
                 for rep in adapt_set.representations:
                     all_reprs.append(rep)
     except Exception as e:
         logger.error(str(e))
         return False
-    return all_reprs if (len(all_reprs) >= exp_reps) else False
+    return (all_adapts, all_reprs) if (len(all_reprs) >= exp_reps) else False
 
 
 def extract_meta_mpd(file):
     """
     Extracts metadata from a valid MPD(MPEG-DASH Manifest file)
     """
-    reprs = check_valid_mpd(file)
+    adapts, reprs = check_valid_mpd(file)
     if reprs:
         metas = []
         for rep in reprs:
@@ -87,7 +89,11 @@ def extract_meta_mpd(file):
             else:
                 meta["width"] = rep.width
                 meta["height"] = rep.height
-                meta["framerate"] = rep.frame_rate
+                meta["framerate"] = (
+                    rep.frame_rate
+                    if not (rep.frame_rate is None)
+                    else adapts[0].frame_rate
+                )
             logger.debug("Found Meta: {}".format(meta))
             metas.append(meta)
         logger.debug("MetaData: {}".format(metas))

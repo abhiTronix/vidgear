@@ -261,7 +261,9 @@ class StreamGear:
                         )
                     )
                 # assign it
-                self.__out_file = abs_path
+                self.__out_file = abs_path.replace(
+                    "\\", "/"
+                )  # workaround for Windows platform only, others will not be affected
             # check if given output is a valid URL
             elif is_valid_url(self.__ffmpeg, url=output, logging=self.__logging):
                 if self.__logging:
@@ -375,7 +377,13 @@ class StreamGear:
         # pre-assign default codec parameters (if not assigned by user).
         default_codec = "libx264rgb" if rgb else "libx264"
         output_parameters["-vcodec"] = self.__params.pop("-vcodec", default_codec)
-        # enable optimizations w.r.t selected codec
+        # enable optimizations and enforce compatibility
+        output_parameters["-vf"] = self.__params.pop("-vf", "format=yuv420p")
+        aspect_ratio = Fraction(
+            self.__inputwidth / self.__inputheight
+        ).limit_denominator(10)
+        output_parameters["-aspect"] = ":".join(str(aspect_ratio).split("/"))
+        # w.r.t selected codec
         if output_parameters["-vcodec"] in [
             "libx264",
             "libx264rgb",
@@ -383,13 +391,6 @@ class StreamGear:
             "libvpx-vp9",
         ]:
             output_parameters["-crf"] = self.__params.pop("-crf", "18")
-            if not (self.__video_source):
-                output_parameters["-vf"] = self.__params.pop("-vf", "format=yuv420p")
-                aspect_ratio = Fraction(
-                    self.__inputwidth / self.__inputheight
-                ).limit_denominator(10)
-                source_aspect_ratio = ":".join(str(aspect_ratio).split("/"))
-                output_parameters["-aspect"] = source_aspect_ratio
         if output_parameters["-vcodec"] in ["libx264", "libx264rgb"]:
             if not (self.__video_source):
                 output_parameters["-profile:v"] = self.__params.pop(
