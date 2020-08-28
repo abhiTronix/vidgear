@@ -109,7 +109,7 @@ class StreamGear:
 
         # validate the FFmpeg assets and return location (also downloads static assets on windows)
         self.__ffmpeg = get_valid_ffmpeg_path(
-            custom_ffmpeg,
+            str(custom_ffmpeg),
             self.__os_windows,
             ffmpeg_download_path=__ffmpeg_download_path,
             logging=self.__logging,

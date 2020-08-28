@@ -86,7 +86,7 @@ def check_CV_version():
     """
     ### check_CV_version
 
-    **Returns:** OpenCV's version first bit
+    **Returns:** OpenCV's version first bit 
     """
     if parse_version(cv2.__version__) >= parse_version("4"):
         return 4
@@ -98,14 +98,14 @@ def is_valid_url(path, url=None, logging=False):
     """
     ### is_valid_url
 
-    Checks URL validity by testing its scheme against
+    Checks URL validity by testing its scheme against 
     FFmpeg's supported protocols
 
     Parameters:
         path (string): absolute path of FFmpeg binaries
         url (string): URL to be validated
         logging (bool): enables logging for its operations
-
+    
     **Returns:** A boolean value, confirming whether tests passed, or not?.
     """
     if url is None or not (url):
@@ -142,7 +142,7 @@ def validate_video(path, video_path=None):
     Parameters:
         path (string): absolute path of FFmpeg binaries
         video_path (string): absolute path to Video.
-
+    
     **Returns:** A dictionary of retieved Video resolution _(as tuple(width, height))_ and framerate _(as float)_.
     """
     if video_path is None or not (video_path):
@@ -178,7 +178,7 @@ def extract_time(value):
 
     Parameters:
         value (string): string value.
-
+    
     **Returns:** Time _(in seconds)_ as integer.
     """
     if not (value):
@@ -208,7 +208,7 @@ def validate_audio(path, file_path=None):
     Parameters:
         path (string): absolute path of FFmpeg binaries
         file_path (string): absolute path to file to be validated.
-
+    
     **Returns:** A string value, confirming whether audio is present, or not?.
     """
     if file_path is None or not (file_path):
@@ -235,14 +235,14 @@ def get_video_bitrate(width, height, fps, bpp):
     """
     ### get_video_bitrate
 
-    Calculate optimum Bitrate from resolution, framerate, bits-per-pixels values
+    Calculate optimum Bitrate from resolution, framerate, bits-per-pixels values 
 
     Parameters:
         width (int): video-width
         height (int): video-height
         fps (float): video-framerate
         bpp (float): bit-per-pixels value
-
+    
     **Returns:** Video bitrate _(in Kbps)_ as integer.
     """
     return round((width * height * bpp * fps) / 1000)
@@ -383,7 +383,7 @@ def dict2Args(param_dict):
     ### dict2Args
 
     Converts dictionary attributes to list(args)
-
+    
     Parameters:
         param_dict (dict): Parameters dictionary
 
@@ -424,85 +424,83 @@ def get_valid_ffmpeg_path(
     **Returns:** A valid FFmpeg executable path string.
     """
     final_path = ""
-    if custom_ffmpeg and isinstance(custom_ffmpeg, str):
-        if is_windows:
-            # checks if current os is windows
-            if custom_ffmpeg:
-                # if custom FFmpeg path is given assign to local variable
-                final_path += custom_ffmpeg
-            else:
-                # otherwise auto-download them
-                try:
-                    if not (ffmpeg_download_path):
-                        # otherwise save to Temp Directory
-                        import tempfile
+    if is_windows:
+        # checks if current os is windows
+        if custom_ffmpeg:
+            # if custom FFmpeg path is given assign to local variable
+            final_path += custom_ffmpeg
+        else:
+            # otherwise auto-download them
+            try:
+                if not (ffmpeg_download_path):
+                    # otherwise save to Temp Directory
+                    import tempfile
 
-                        ffmpeg_download_path = tempfile.gettempdir()
+                    ffmpeg_download_path = tempfile.gettempdir()
 
-                    if logging:
-                        logger.debug(
-                            "FFmpeg Windows Download Path: {}".format(
-                                ffmpeg_download_path
-                            )
-                        )
-
-                    # download Binaries
-                    os_bit = (
-                        ("win64" if platform.machine().endswith("64") else "win32")
-                        if is_windows
-                        else ""
+                if logging:
+                    logger.debug(
+                        "FFmpeg Windows Download Path: {}".format(ffmpeg_download_path)
                     )
-                    _path = download_ffmpeg_binaries(
-                        path=ffmpeg_download_path, os_windows=is_windows, os_bit=os_bit
-                    )
-                    # assign to local variable
-                    final_path += _path
 
-                except Exception as e:
-                    # log if any error occurred
+                # download Binaries
+                os_bit = (
+                    ("win64" if platform.machine().endswith("64") else "win32")
+                    if is_windows
+                    else ""
+                )
+                _path = download_ffmpeg_binaries(
+                    path=ffmpeg_download_path, os_windows=is_windows, os_bit=os_bit
+                )
+                # assign to local variable
+                final_path += _path
+
+            except Exception as e:
+                # log if any error occurred
+                if logging:
                     logger.exception(str(e))
-                    logger.error(
+                    logger.debug(
                         "Error in downloading FFmpeg binaries, Check your network and Try again!"
                     )
-                    return False
+                return False
 
-            if os.path.isfile(final_path):
-                # check if valid FFmpeg file exist
-                pass
-            elif os.path.isfile(os.path.join(final_path, "ffmpeg.exe")):
-                # check if FFmpeg directory exists, if does, then check for valid file
-                final_path = os.path.join(final_path, "ffmpeg.exe")
-            else:
-                # revert to None
-                final_path = None
+        if os.path.isfile(final_path):
+            # check if valid FFmpeg file exist
+            pass
+        elif os.path.isfile(os.path.join(final_path, "ffmpeg.exe")):
+            # check if FFmpeg directory exists, if does, then check for valid file
+            final_path = os.path.join(final_path, "ffmpeg.exe")
         else:
-            # otherwise perform test for Unix
-            if custom_ffmpeg:
-                # if custom FFmpeg path is given assign to local variable
-                if os.path.isfile(custom_ffmpeg):
-                    # check if valid FFmpeg file exist
-                    final_path += custom_ffmpeg
-                elif os.path.isfile(os.path.join(custom_ffmpeg, "ffmpeg")):
-                    # check if FFmpeg directory exists, if does, then check for valid file
-                    final_path += os.path.join(custom_ffmpeg, "ffmpeg")
-                else:
-                    # revert to None
-                    final_path = None
+            # else return False
+            if logging:
+                logger.debug("No valid FFmpeg executables found at Custom FFmpeg path!")
+            return False
+    else:
+        # otherwise perform test for Unix
+        if custom_ffmpeg:
+            # if custom FFmpeg path is given assign to local variable
+            if os.path.isfile(custom_ffmpeg):
+                # check if valid FFmpeg file exist
+                final_path += custom_ffmpeg
+            elif os.path.isfile(os.path.join(custom_ffmpeg, "ffmpeg")):
+                # check if FFmpeg directory exists, if does, then check for valid file
+                final_path = os.path.join(custom_ffmpeg, "ffmpeg")
             else:
-                # otherwise assign ffmpeg binaries from system
-                final_path += "ffmpeg"
-    else:
-        # revert to None
-        final_path = None
+                # else return False
+                if logging:
+                    logger.debug(
+                        "No valid FFmpeg executables found at Custom FFmpeg path!"
+                    )
+                return False
+        else:
+            # otherwise assign ffmpeg binaries from system
+            final_path += "ffmpeg"
 
-    if final_path:
-        if logging:
-            logger.debug("Final FFmpeg Path: {}".format(final_path))
-        # Final Auto-Validation for FFmeg Binaries. returns final path if test is passed
-        return final_path if validate_ffmpeg(final_path, logging=logging) else False
-    else:
-        logger.error("No valid FFmpeg executables found at Custom FFmpeg path!")
-        return False
+    if logging:
+        logger.debug("Final FFmpeg Path: {}".format(final_path))
+
+    # Final Auto-Validation for FFmeg Binaries. returns final path if test is passed
+    return final_path if validate_ffmpeg(final_path, logging=logging) else False
 
 
 def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
@@ -653,11 +651,11 @@ def check_output(*args, **kwargs):
 
 
 def generate_auth_certificates(path, overwrite=False, logging=False):
-    """
+    """ 
     ### generate_auth_certificates
 
     Auto-Generates, and Auto-validates CURVE ZMQ key-pairs for NetGear API's Secure Mode.
-
+    
     Parameters:
         path (string): path for generating CURVE key-pairs
         overwrite (boolean): overwrite existing key-pairs or not?
