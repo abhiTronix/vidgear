@@ -424,85 +424,85 @@ def get_valid_ffmpeg_path(
     **Returns:** A valid FFmpeg executable path string.
     """
     final_path = ""
-    if is_windows:
-        # checks if current os is windows
-        if custom_ffmpeg:
-            # if custom FFmpeg path is given assign to local variable
-            final_path += custom_ffmpeg
-        else:
-            # otherwise auto-download them
-            try:
-                if not (ffmpeg_download_path):
-                    # otherwise save to Temp Directory
-                    import tempfile
+    if custom_ffmpeg and isinstance(custom_ffmpeg, str):
+        if is_windows:
+            # checks if current os is windows
+            if custom_ffmpeg:
+                # if custom FFmpeg path is given assign to local variable
+                final_path += custom_ffmpeg
+            else:
+                # otherwise auto-download them
+                try:
+                    if not (ffmpeg_download_path):
+                        # otherwise save to Temp Directory
+                        import tempfile
 
-                    ffmpeg_download_path = tempfile.gettempdir()
+                        ffmpeg_download_path = tempfile.gettempdir()
 
-                if logging:
-                    logger.debug(
-                        "FFmpeg Windows Download Path: {}".format(ffmpeg_download_path)
+                    if logging:
+                        logger.debug(
+                            "FFmpeg Windows Download Path: {}".format(
+                                ffmpeg_download_path
+                            )
+                        )
+
+                    # download Binaries
+                    os_bit = (
+                        ("win64" if platform.machine().endswith("64") else "win32")
+                        if is_windows
+                        else ""
                     )
+                    _path = download_ffmpeg_binaries(
+                        path=ffmpeg_download_path, os_windows=is_windows, os_bit=os_bit
+                    )
+                    # assign to local variable
+                    final_path += _path
 
-                # download Binaries
-                os_bit = (
-                    ("win64" if platform.machine().endswith("64") else "win32")
-                    if is_windows
-                    else ""
-                )
-                _path = download_ffmpeg_binaries(
-                    path=ffmpeg_download_path, os_windows=is_windows, os_bit=os_bit
-                )
-                # assign to local variable
-                final_path += _path
-
-            except Exception as e:
-                # log if any error occurred
-                if logging:
+                except Exception as e:
+                    # log if any error occurred
                     logger.exception(str(e))
-                    logger.debug(
+                    logger.error(
                         "Error in downloading FFmpeg binaries, Check your network and Try again!"
                     )
-                return False
+                    return False
 
-        if os.path.isfile(final_path):
-            # check if valid FFmpeg file exist
-            pass
-        elif os.path.isfile(os.path.join(final_path, "ffmpeg.exe")):
-            # check if FFmpeg directory exists, if does, then check for valid file
-            final_path = os.path.join(final_path, "ffmpeg.exe")
-        else:
-            # else return False
-            if logging:
-                logger.debug("No valid FFmpeg executables found at Custom FFmpeg path!")
-            return False
-    else:
-        # otherwise perform test for Unix
-        if custom_ffmpeg:
-            # if custom FFmpeg path is given assign to local variable
-            if os.path.isfile(custom_ffmpeg):
+            if os.path.isfile(final_path):
                 # check if valid FFmpeg file exist
-                final_path += custom_ffmpeg
-            elif isinstance(custom_ffmpeg, str) and os.path.isfile(
-                os.path.join(custom_ffmpeg, "ffmpeg")
-            ):
+                pass
+            elif os.path.isfile(os.path.join(final_path, "ffmpeg.exe")):
                 # check if FFmpeg directory exists, if does, then check for valid file
-                final_path = os.path.join(custom_ffmpeg, "ffmpeg")
+                final_path = os.path.join(final_path, "ffmpeg.exe")
             else:
-                # else return False
-                if logging:
-                    logger.debug(
-                        "No valid FFmpeg executables found at Custom FFmpeg path!"
-                    )
-                return False
+                # revert to None
+                final_path = None
         else:
-            # otherwise assign ffmpeg binaries from system
-            final_path += "ffmpeg"
+            # otherwise perform test for Unix
+            if custom_ffmpeg:
+                # if custom FFmpeg path is given assign to local variable
+                if os.path.isfile(custom_ffmpeg):
+                    # check if valid FFmpeg file exist
+                    final_path += custom_ffmpeg
+                elif os.path.isfile(os.path.join(custom_ffmpeg, "ffmpeg")):
+                    # check if FFmpeg directory exists, if does, then check for valid file
+                    final_path += os.path.join(custom_ffmpeg, "ffmpeg")
+                else:
+                    # revert to None
+                    final_path = None
+            else:
+                # otherwise assign ffmpeg binaries from system
+                final_path += "ffmpeg"
+    else:
+        # revert to None
+        final_path = None
 
-    if logging:
-        logger.debug("Final FFmpeg Path: {}".format(final_path))
-
-    # Final Auto-Validation for FFmeg Binaries. returns final path if test is passed
-    return final_path if validate_ffmpeg(final_path, logging=logging) else False
+    if final_path:
+        if logging:
+            logger.debug("Final FFmpeg Path: {}".format(final_path))
+        # Final Auto-Validation for FFmeg Binaries. returns final path if test is passed
+        return final_path if validate_ffmpeg(final_path, logging=logging) else False
+    else:
+        logger.error("No valid FFmpeg executables found at Custom FFmpeg path!")
+        return False
 
 
 def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
