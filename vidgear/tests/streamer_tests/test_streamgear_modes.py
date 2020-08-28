@@ -105,6 +105,9 @@ def string_to_float(value):
     """
     Converts fraction to float
     """
+    if value is None:
+        logger.error("Input value is None!")
+        return 0.0
     extracted = value.strip().split("/")
     cleaned = [float(x.strip()) for x in extracted]
     return cleaned[0] / cleaned[1]
@@ -199,10 +202,10 @@ def test_input_framerate_rtf():
     try:
         mpd_file_path = os.path.join(return_mpd_path(), "dash_test.mpd")
         stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
-        test_video_framerate = stream.get(cv2.CAP_PROP_FPS)
+        test_framerate = stream.get(cv2.CAP_PROP_FPS)
         stream_params = {
             "-clear_prev_assets": True,
-            "-input_framerate": test_video_framerate,
+            "-input_framerate": test_framerate,
         }
         streamer = StreamGear(output=mpd_file_path, logging=True, **stream_params)
         while True:
@@ -213,11 +216,10 @@ def test_input_framerate_rtf():
         stream.release()
         streamer.terminate()
         meta_data = extract_meta_mpd(mpd_file_path)
-        assert meta_data, "Test Failed!"
-        meta_vids = [x for x in meta_data if x["mime_type"].startswith("video")]
-        assert meta_vids and round(string_to_float(meta_vids[0]["framerate"])) == round(
-            test_video_framerate
-        ), "Test Failed!"
+        assert meta_data and len(meta_data) > 0, "Test Failed!"
+        framerate_mpd = string_to_float(meta_data[0]["framerate"])
+        assert framerate_mpd > 0.0 and isinstance(framerate_mpd, float), "Test Failed!"
+        assert round(framerate_mpd) == round(test_framerate), "Test Failed!"
     except Exception as e:
         pytest.fail(str(e))
 
