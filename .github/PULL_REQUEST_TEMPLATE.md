@@ -13,7 +13,7 @@ _Kindly explain the changes you made here._
 
 - [ ] I have read the [PR Guidelines](https://abhitronix.github.io/vidgear/contribution/PR/#submitting-pull-requestpr-guidelines).
 - [ ] I have read the [Documentation](https://abhitronix.github.io/vidgear).
-- [ ] Updated the source-code documentation accordingly(if required).
+- [ ] Updated the documentation accordingly(if required).
 
 
 ### Related Issue

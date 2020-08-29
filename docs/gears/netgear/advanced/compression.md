@@ -21,9 +21,9 @@ limitations under the License.
 # Advanced Usage: Frame Compression for NetGear API 
 
 
-<p align="center">
-  <img src="../../../../assets/images/compression.png" alt="Frame Compression" width="75%" />
-</p>
+<figure>
+  <img src="../../../../assets/images/compression.webp" alt="Frame Compression" width="75%" />
+</figure>
 
 
 ## Overview

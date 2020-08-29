@@ -23,11 +23,10 @@ limitations under the License.
 
 ## Overview
 
-<p align="center">
-  <img src="../../../../assets/images/multi_client.png" alt="NetGear's Multi-Clients Mode" width="75%"/>
-  <br>
-  <sub><i>NetGear's Multi-Clients Mode generalised</i></sub>
-</p>
+<figure>
+  <img src="../../../../assets/images/multi_client.webp" alt="NetGear's Multi-Clients Mode" width="75%"/>
+  <figcaption>NetGear's Multi-Clients Mode generalised</figcaption>
+</figure>
 
 
 In this exclusive mode, NetGear API robustly handles Multiple Clients at once, thereby providing seamless access to frames and unidirectional data transfer to multiple Clients/Consumers across the network in real-time. This mode works almost contrary to Multi-Servers Mode but data transfer only works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_.

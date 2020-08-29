@@ -36,7 +36,7 @@ The following guidelines tells you how to submit a valid PR for vidGear:
 
 ## Forking and Cloning
 
-??? question "First fork on GitHub?" 
+??? tip "First fork on GitHub?" 
 
     You can easily learn about it from [Fork a repo](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) wiki.
 
@@ -70,11 +70,49 @@ Now after working with this newly created branch for your Pull Request, you can 
 
 &nbsp; 
 
+## Submission Checklist
+
+There are some important checks you need to perform while submitting your Pull Request(s) for VidGear library:
+
+- [x] **Submit an issue and Link your Pull Request:**
+
+    !!! tip "For more information on Linking a pull request to an issue, See [this wiki](https://docs.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue) doc"
+  
+  * If you would like to implement a new feature/improvement for VidGear, please submit an issue with a [proposal template](https://github.com/abhiTronix/vidgear/issues/new?labels=issue%3A+proposal&template=proposal.md) for your work first and then submit your Pull Request. 
+  * You can link an issue to a pull request manually or using a supported keyword in the pull request description.
+  * When you link a pull request to the issue the pull request addresses, collaborators can see that someone is working on the issue. 
+
+- [x] **Perform PR Integrity Checks:** 
+    
+  * Search GitHub for an open or closed PR that relates to your submission. Duplicate contributions will be rejected.
+  * Submit the pull request from the first day of your development and create it as a draft pull request. Click ready for review when finished and passed all the checks.
+  * Check if your purposed code matches the overall direction, simplicity and structure of the VidGear APIs and improves it.
+  * Make sure your PR must pass through all unit tests including VidGear's [CI tests](#testing-formatting-linting). If it's somehow failing, then ask maintainer for a review.
+  * It is important to state that you retain copyright for your contributions, but also agree to license them for usage by the project and author(s) under the [Apache license](https://github.com/abhiTronix/vidgear/blob/master/LICENSE).
+
+- [x] **Test, Format & lint locally:**
+
+  * Make sure to locally test, format and lint the modified code every time you commit. The details are discussed above.
+
+- [x] **Make sensible commit messages:**
+
+  * If your PR fixes a separate issue number, remember to include `"resolves #issue_number"` in the commit message. Learn more about it [here](https://help.github.com/articles/closing-issues-using-keywords/).
+  * Keep commit message concise as much as possible at every submit. You can make a supplement to the previous commit with `git commit --amend` command.
+  * If we suggest changes, make the required updates, rebase your branch and push the changes to your GitHub repository, which will automatically update your PR.
+
+- [x] **Draft the PR according to template:**
+
+  * Remember to completely fill the whole template for PR. Incomplete ones will be subjected to re-edit!
+  * Add a brief but descriptive title for your PR.
+  * Explain what the PR adds, fixes or improves.
+  * In case of bug fixes, add new unit test case which would fail against your bug fix.
+  * Provide CLI commands and output or screenshots where you can.
+
+&nbsp; 
+
 ## Testing, Formatting & Linting
 
-
-All Pull Request must be tested, formatted & linted against our library standards as discussed below:
-
+All Pull Request(s) must be tested, formatted & linted against our library standards as discussed below:
 
 ### Requirements
 
@@ -110,7 +148,7 @@ All tests can be run with [`pytest`](https://docs.pytest.org/en/stable/)(*in Vid
 
 ### Formatting & Linting
 
-For formatting and linting, following tools are used:
+For formatting and linting, following libraries are used:
 
 * **Flake8:** You must run [`flake8`](https://flake8.pycqa.org/en/latest/manpage.html) linting for checking the code base against the coding style (PEP8), programming errors and other cyclomatic complexity:
 
@@ -126,56 +164,18 @@ For formatting and linting, following tools are used:
 
 &nbsp; 
 
-## Submitting the Pull Request
-
-Finally, There are some important things you need to check while submitting your Pull Request(s):
-
-
-!!! info "Pull Request Reviewing"
-
-    Pull requests will be reviewed by the maintainers and the rationale behind the maintainer’s decision to accept or deny the changes will be posted in the pull request. Please wait for our code review and approval, possibly enhancing your change on request. 
-
-
-**Perform PR Integrity Checks:** 
-    
-  * Search GitHub for an open or closed PR that relates to your submission. Duplicate contributions will be rejected.
-  * Submit the pull request from the first day of your development and create it as a draft pull request. Click ready for review when finished and passed all the checks.
-  * Check if your purposed code matches the overall direction, simplicity and structure of the VidGear APIs and improves it.
-  * Make sure your PR must pass through all unit tests including VidGear's CI unit tests. If it's somehow failing, then ask maintainer for a review.
-  * It is important to state that you retain copyright for your contributions, but also agree to license them for usage by the project and author(s) under the [Apache license](https://github.com/abhiTronix/vidgear/blob/master/LICENSE).
-
-**Test, Format & lint locally:**
-
-  * Make sure to locally test, format and lint the modified code every time you commit. The details are discussed above.
-
-**Make sensible commit messages:**
-
-  * If your PR fixes a separate issue number, remember to include `"resolves #issue_number"` in the commit message. Learn more about it [here](https://help.github.com/articles/closing-issues-using-keywords/).
-  * Keep commit message concise as much as possible at every submit. You can make a supplement to the previous commit with `git commit --amend` command.
-  * If we suggest changes, make the required updates, rebase your branch and push the changes to your GitHub repository, which will automatically update your PR.
-
-**Draft the PR according to template:**
-
-  * Remember to completely fill the whole template for PR. Incomplete ones will be subjected to re-edit!
-  * Add a brief but descriptive title for your PR.
-  * Explain what the PR adds, fixes or improves.
-  * In case of bug fixes, add new unit test case which would fail against your bug fix.
-  * Provide CLI commands and output or screenshots where you can.
-
-**Aftermaths:**
-  
-  * After your PR is merged, you can safely delete your branch and pull the changes from the main (upstream) repository.
-  * The changes will remain in `testing` branch until next VidGear version is released, then it will be merged into `master` branch.
-  * After a successful PR, your newer contributions will be given priority over others. 
-
-&nbsp; 
 
 ## Frequently Asked Questions
 
 
 **Q1. Why do my changes taking so long to be Reviewed and/or Merged?**
 
-Please be patient. It can take up to several days before your pull request can be fully reviewed. After merging the changes, it could take again several hours/days before your changes appear on `master` branch.
+!!! info "Submission Aftermaths"
+    * After your PR is merged, you can safely delete your branch and pull the changes from the main (upstream) repository.
+    * The changes will remain in `testing` branch until next VidGear version is released, then it will be merged into `master` branch.
+    * After a successful Merge, your newer contributions will be given priority over others. 
+
+Pull requests will be reviewed by the maintainers and the rationale behind the maintainer’s decision to accept or deny the changes will be posted in the pull request. Please wait for our code review and approval, possibly enhancing your change on request.
 
 
 **Q2. What if I want to submit my Work that is Still In Progress?**

@@ -23,11 +23,10 @@ limitations under the License.
 
 ## Overview
 
-<p align="center">
+<figure>
   <img src="../../assets/images/tqm.webp" alt="Threading timing diagram"/>
-  <br>
-  <sub><i>Threaded-Queue-Mode generalized timing diagram</i></sub>
-</p>
+  <figcaption>Threaded-Queue-Mode generalized timing diagram</figcaption>
+</figure>
 
 Threaded Queue Mode is designed exclusively for VidGear's Videocapture and Network Gears _(namely CamGear, ScreenGear, VideoGear, and NetGear(Client's end))_, for achieving high-performance, synchronized, and error-free frame handling with its Multi-Threaded APIs. 
 

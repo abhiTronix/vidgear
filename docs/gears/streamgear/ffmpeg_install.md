@@ -20,9 +20,9 @@ limitations under the License.
 
 # FFmpeg Installation Instructions
 
-<p align="center">
-  <a href="http://ffmpeg.org/"><img src="../../../assets/images/ffmpeg.png" alt="FFmpeg"/></a>
-</p>
+<figure>
+  <a href="http://ffmpeg.org/"><img src="../../../assets/images/ffmpeg.webp" alt="FFmpeg"/></a>
+</figure>
 
 
 StreamGear must requires FFmpeg executables for transcoding Media Chunks. You can following machine-specific instructions for its installation:

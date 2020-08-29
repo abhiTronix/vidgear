@@ -17,12 +17,11 @@ labels: "issue: proposal"
 <!--- How can it benefit other users? -->
 
 
-### Your Environment
+### Your Current Environment
 <!--- Include as many relevant details about the environment you worked in -->
 * VidGear version: <!--- Run command `python -c "import vidgear; print(vidgear.__version__)`" -->
 * Branch: <!--- Master/Testing/Development/PyPi -->
-* Python version:
-* pip version:
+* Python version: <!--- Run command `python --version` -->
 * Operating System and version:
 
 

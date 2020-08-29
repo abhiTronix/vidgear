@@ -20,11 +20,10 @@ limitations under the License.
 
 # NetGear API 
 
-<p align="center">
-  <img src="../../../assets/images/netgear.png" alt="NetGear API" width="70%"/>
-  <br>
-  <sub><i>NetGear API generalized</i></sub>
-</p>
+<figure>
+  <img src="../../../assets/images/netgear.webp" alt="NetGear API" width="70%"/>
+  <figcaption>NetGear API generalized</figcaption>
+</figure>
 
 ## Overview
 
@@ -62,11 +61,9 @@ _whereas the supported protocol are: `tcp` and `ipc`_.
 
 NetGear API primarily has two modes of operations:
 
-!!! danger "Remember, only either of two primary mode can be activated during Netgear API initialization, using its [`receive_mode`](../params/#receive_mode) boolean parameter."
-
-* **Send Mode:** _which employs `send()` function to send video frames over the network in real-time. **Activate this mode by setting parameter `receive_mode = False`.**_
+* **Send Mode:** _which employs `send()` function to send video frames over the network in real-time. **Activate this mode by setting parameter [`receive_mode = True`](../params/#receive_mode).**_
   
-* **Receive Mode:** _which employs `recv()` function to receive frames, sent over the network with *Send Mode* in real-time. The mode sends back confirmation when the frame is received successfully in few patterns. **Activate this mode by setting parameter `receive_mode = True`.**_
+* **Receive Mode:** _which employs `recv()` function to receive frames, sent over the network with *Send Mode* in real-time. The mode sends back confirmation when the frame is received successfully in few patterns. **Activate this mode by setting parameter [`receive_mode = True`](../params/#receive_mode).**_
 
 ### Exclusive Modes
 

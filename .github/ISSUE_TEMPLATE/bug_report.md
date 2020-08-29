@@ -32,10 +32,10 @@ labels: "issue: bug"
 ### Environment
 
 <!--- Include as many relevant details about the environment you experienced the bug in -->
-* VidGear version: <!--- Run command `python -c "import vidgear; print(vidgear.__version__)`" -->
-* Branch: <!--- Master/Testing/Development/PyPi -->
-* Python version:
-* pip version:
+* VidGear version: <!--- Run command `python -c "import vidgear; print(vidgear.__version__)"` -->
+* Branch: <!--- Select between: Master | Testing | Development | PyPi -->
+* Python version: <!--- Run command `python --version` -->
+* PiP version: <!--- Run command `python -c "import pip; print(pip.__version__)"` -->
 * Operating System and version:
 
 ### Expected Behavior

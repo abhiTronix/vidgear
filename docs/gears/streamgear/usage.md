@@ -38,11 +38,10 @@ limitations under the License.
 
 ## A. Single-Source Mode
 
-<p align="center">
-  <img src="../../../assets/images/streamgear_file.png" alt="Single-Source Mode Flow Diagram"/>
-  <br>
-  <sub><i>Single-Source Mode generalized workflow</i></sub>
-</p>
+<figure>
+  <img src="../../../assets/images/streamgear_file.webp" alt="Single-Source Mode Flow Diagram"/>
+  <figcaption>Single-Source Mode generalized workflow</figcaption>
+</figure>
 
 In this mode, StreamGear transcodes entire video/audio file _(as opposed to frames by frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well, when you're transcoding lossless long-duration videos(with audio) for streaming and required no extra efforts or interruptions. But on the downside, the provided source cannot be changed or manipulated before sending onto FFmpeg Pipeline for processing.
 
@@ -201,11 +200,10 @@ streamer.terminate()
 
 ## B. Real-time Frames Mode 
 
-<p align="center">
-  <img src="../../../assets/images/streamgear_real.png" alt="Real-time Frames Mode Flow Diagram"/>
-  <br>
-  <sub><i>Real-time Frames Mode generalized workflow</i></sub>
-</p>
+<figure>
+  <img src="../../../assets/images/streamgear_real.webp" alt="Real-time Frames Mode Flow Diagram"/>
+  <figcaption>Real-time Frames Mode generalized workflow</figcaption>
+</figure>
 
 When no valid input is received on [`-video_source`](../params/#a-exclusive-parameters) attribute of [`stream_params`](../params/#supported-parameters) dictionary parameter, StreamGear API activates this mode where it directly transcodes real-time [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) video-frames _(as opposed to a entire file)_ into a sequence of multiple smaller chunks/segments for streaming. 
 

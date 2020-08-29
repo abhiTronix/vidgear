@@ -20,11 +20,10 @@ limitations under the License.
 
 # Introduction
 
-<p align="center">
-  <img src="../assets/images/gears_fbd.png" alt="@Vidgear Functional Block Diagram"/>
-  <br>
-  <sub><i>Gears generalized workflow diagram</i></sub>
-</p>
+<figure>
+  <img src="../assets/images/gears_fbd.webp" alt="@Vidgear Functional Block Diagram"/>
+  <figcaption>Gears generalized workflow diagram</figcaption>
+</figure>
 
 ## Gears, What are these?
 

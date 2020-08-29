@@ -20,11 +20,10 @@ limitations under the License.
 
 # PiGear API 
 
-<p align="center">
+<figure>
   <img src="../../../assets/images/picam2.webp" alt="Pi Zero with Camera Module" width="70%" />
-  <br>
-  <sub><i>Raspberry Pi Camera Module</i></sub>
-</p>
+  <figcaption>Raspberry Pi Camera Module</figcaption>
+</figure>
 
 ## Overview
 

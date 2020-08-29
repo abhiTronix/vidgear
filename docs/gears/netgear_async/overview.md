@@ -20,9 +20,9 @@ limitations under the License.
 
 # NetGear_Async API 
 
-<p align="center">
-  <img src="../../../assets/images/zmq_asyncio.png" alt="NetGear_Async generalized" width="70%" />
-</p>
+<figure>
+  <img src="../../../assets/images/zmq_asyncio.webp" alt="NetGear_Async generalized" width="70%" />
+</figure>
 
 ## Overview
 

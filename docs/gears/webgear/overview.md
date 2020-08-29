@@ -20,11 +20,10 @@ limitations under the License.
 
 # WebGear API 
 
-<p align="center">
-  <img src="../../../assets/gifs/webgear.gif" alt="WebGear in action!" width=120%/>
-  <br>
-  <sub><i>WebGear Video Server at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</i></sub>
-</p>
+<figure>
+  <img src="../../../assets/gifs/webgear.gif" alt="WebGear in action!" loading="lazy" width=120%/>
+  <figcaption>WebGear Video Server at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</figcaption>
+</figure>
 
 ## Overview
 

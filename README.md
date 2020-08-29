@@ -63,6 +63,7 @@ The following **functional block diagram** clearly depicts the generalized funct
   * [**VideoGear**](#videogear)
   * [**ScreenGear**](#screengear)
   * [**WriteGear**](#writegear)
+  * [**StreamGear**](#streamgear)
   * [**NetGear**](#netgear)
   * [**WebGear**](#webgear)
   * [**NetGear_Async**](#netgear_async)
@@ -128,11 +129,16 @@ Each of these APIs is exclusively designed to handle/control different device-sp
   * [**ScreenGear:**](#screengear) Multi-threaded ultra-fast Screencasting.    
   * [**VideoGear:**](#videogear) Common API with internal [Video Stabilizer](/gears/stabilizer/overview/) wrapper.
 
-**B. VideoWriter Gear:**
+**B. VideoWriter Gears:**
 
   * [**WriteGear:**](#writegear) Handles Flexible Lossless Video Encoding and Compression.
 
-**C. Network Gears:**
+**C. Streaming Gears:**
+
+  * [**StreamGear**](#streamgear): Handles Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats.
+
+
+**D. Network Gears:**
 
   * [**NetGear:**](#netgear) Handles high-performance video-frames & data transfer between interconnecting systems over the network.
 
@@ -403,6 +409,37 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 &nbsp;
 
 
+## StreamGear
+
+<p align="center">
+  <img src="docs/overrides/assets/images/streamgear_flow.png" alt="NetGear API" width=80%/>
+</p>
+
+
+> *StreamGear automates transcoding workflow for generating Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH) in just few lines of python code.*
+
+StreamGear provides a standalone, highly extensible and flexible wrapper around [**FFmpeg**][ffmpeg] - a leading multimedia framework, for generating chunked-encoded media segments of the content.
+
+SteamGear API automatically transcodes source videos/audio files & real-time frames, and breaks them into a sequence of multiple smaller chunks/segments (typically 2-4 seconds in length) at different quality levels _(i.e. different bitrates or spatial resolutions)_. It also creates a Manifest file _(such as MPD in-case of DASH)_ that describes these segment information _(timing, URL, media characteristics like video resolution and bit rates)_, and is provided to the client prior to the streaming session. Thereby, segments are served on a web server and can be downloaded through HTTP standard compliant GET requests. This makes it possible to stream videos at different quality levels, and to switch in the middle of a video from one quality level to another one – if bandwidth permits – on a per segment basis.
+
+
+SteamGear currently only supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_ , but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming, will be added soon.
+
+**StreamGear primarily works in two independent modes for transcoding which serves different purposes:**
+
+  * **Single-Source Mode:** In this mode, StreamGear transcodes entire video/audio file _(as opposed to frames by frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well, when you're transcoding lossless long-duration videos(with audio) for streaming and required no extra efforts or interruptions. But on the downside, the provided source cannot be changed or manipulated before sending onto FFmpeg Pipeline for processing.  This mode can be easily activated by assigning suitable video path as input to `-video_source` attribute, during StreamGear initialization. ***Learn more about this mode [here ➶][ss-mode-doc]***
+
+  * **Real-time Frames Mode:** When no valid input is received on `-video_source` attribute, StreamGear API activates this mode where it directly transcodes video-frames _(as opposed to a entire file)_, into a sequence of multiple smaller chunks/segments for streaming. In this mode, StreamGear supports real-time [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames, and process them over FFmpeg pipeline. But on the downside, audio has to added manually _(as separate source)_ for streams. ***Learn more about this mode [here ➶][rtf-mode-doc]***
+
+
+### StreamGear API Guide:
+
+[**>>> Usage Guide**][streamgear-doc]
+
+&nbsp;
+
+&nbsp;
+
 ## NetGear
 
 <p align="center">
@@ -637,6 +674,7 @@ Internal URLs
 [cm-writegear-doc]:https://abhitronix.github.io/vidgear/gears/writegear/compression/overview/
 [ncm-writegear-doc]:https://abhitronix.github.io/vidgear/gears/writegear/non_compression/overview/
 [screengear-doc]:https://abhitronix.github.io/vidgear/gears/screengear/overview/
+[streamgear-doc]:https://abhitronix.github.io/vidgear/gears/streamgear/overview/
 [writegear-doc]:https://abhitronix.github.io/vidgear/gears/writegear/introduction/
 [netgear-doc]:https://abhitronix.github.io/vidgear/gears/netgear/overview/
 [webgear-doc]:https://abhitronix.github.io/vidgear/gears/webgear/overview/
@@ -655,6 +693,8 @@ Internal URLs
 [installation]:https://abhitronix.github.io/vidgear/installation/
 [gears]:https://abhitronix.github.io/vidgear/gears
 [switch_from_cv]:https://abhitronix.github.io/vidgear/switch_from_cv/
+[ss-mode-doc]: https://abhitronix.github.io/vidgear/gears/streamgear/usage/#a-single-source-mode
+[rtf-mode-doc]: https://abhitronix.github.io/vidgear/gears/streamgear/usage/#b-real-time-frames-mode
 [docs]: https://abhitronix.github.io/vidgear
 
 <!--

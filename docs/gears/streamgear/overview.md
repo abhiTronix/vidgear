@@ -21,11 +21,10 @@ limitations under the License.
 # StreamGear API 
 
 
-<p align="center">
-  <img src="../../../assets/images/streamgear_flow.png" alt="StreamGear Flow Diagram"/>
-  <br>
-  <sub><i>StreamGear API's generalized workflow</i></sub>
-</p>
+<figure>
+  <img src="../../../assets/images/streamgear_flow.webp" alt="StreamGear Flow Diagram"/>
+  <figcaption>StreamGear API's generalized workflow</figcaption>
+</figure>
 
 
 ## Overview
@@ -53,7 +52,7 @@ SteamGear currently only supports [**MPEG-DASH**](https://www.encoding.com/mpeg-
 
 ## Mode of Operations
 
-StreamGear works in two independent modes for transcoding which serves different purposes. These modes are as follows:
+StreamGear primarily works in two independent modes for transcoding which serves different purposes. These modes are as follows:
 
 ### A. Single-Source Mode
 
@@ -61,7 +60,7 @@ In this mode, StreamGear transcodes entire video/audio file _(as opposed to fram
 
 ### B. Real-time Frames Mode 
 
-When no valid input is received on [`-video_source`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter, StreamGear API activates this mode where it directly transcodes video-frames _(as opposed to a entire file)_, into a sequence of multiple smaller chunks/segments for streaming. In this mode, StreamGear supports real-time [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames, and process them over FFmpeg Trancoding pipeline. But on the downside, audio has to added manually _(as separate source)_ for streams. ***Learn more about this mode [here ➶](../usage/#b-real-time-frames-mode)***
+When no valid input is received on [`-video_source`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter, StreamGear API activates this mode where it directly transcodes video-frames _(as opposed to a entire file)_, into a sequence of multiple smaller chunks/segments for streaming. In this mode, StreamGear supports real-time [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames, and process them over FFmpeg pipeline. But on the downside, audio has to added manually _(as separate source)_ for streams. ***Learn more about this mode [here ➶](../usage/#b-real-time-frames-mode)***
 
 
 &thinsp; 
@@ -81,9 +80,9 @@ from vidgear.gears import StreamGear
 Watch StreamGear transcoded MPEG-DASH Stream:
 
 <div id="player" align="middle" ></div>
-<p align="middle"><sub><i>Powered by <a href="https://github.com/clappr/clappr" title="clappr">clappr</a> & <a href="https://github.com/google/shaka-player" title="shaka-player">shaka-player</a></i></sub></p>
+<p align="middle">Powered by <a href="https://github.com/clappr/clappr" title="clappr">clappr</a> & <a href="https://github.com/google/shaka-player" title="shaka-player">shaka-player</a></p>
 
-!!! note  "This video assets _(MPD and segments)_ are hosted on [GitHub Repository](https://github.com/abhiTronix/streamgear_chunks) and served with [raw.githack.com](https://raw.githack.com)" 
+!!! info  "This video assets _(Manifest and segments)_ are hosted on [GitHub Repository](https://github.com/abhiTronix/streamgear_chunks) and served with [raw.githack.com](https://raw.githack.com)" 
 
 &thinsp;
 
