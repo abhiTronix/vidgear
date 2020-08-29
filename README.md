@@ -19,7 +19,7 @@ limitations under the License.
 -->
 
 <h1 align="center">
-  <img src="docs/overrides/assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="80%"/>
+  <img src="docs/overrides/assets/images/vidgear.webp" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="80%"/>
 </h1>
 <h2 align="center">
   <img src="docs/overrides/assets/images/tagline.svg" alt="VidGear tagline" width="40%"/>
@@ -48,7 +48,7 @@ VidGear primarily focuses on simplicity, and thereby lets programmers and softwa
 The following **functional block diagram** clearly depicts the generalized functioning of VidGear APIs:
 
 <p align="center">
-  <img src="docs/overrides/assets/images/gears_fbd.png" alt="@Vidgear Functional Block Diagram" />
+  <img src="docs/overrides/assets/images/gears_fbd.webp" alt="@Vidgear Functional Block Diagram" />
 </p>
 
 &nbsp;
@@ -156,7 +156,7 @@ Each of these APIs is exclusively designed to handle/control different device-sp
 ## CamGear
 
 <p align="center">
-  <img src="docs/overrides/assets/images/camgear.png" alt="CamGear Functional Block Diagram" width="45%"/>
+  <img src="docs/overrides/assets/images/camgear.webp" alt="CamGear Functional Block Diagram" width="45%"/>
 </p>
 
 > *CamGear can grab ultra-fast frames from diverse range of devices/streams, which includes almost any IP/USB Cameras, multimedia video file format ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rstp, rtmp, mms, etc.`, plus support for live Gstreamer's stream pipeline and YouTube video/live-streams URLs.*
@@ -383,7 +383,7 @@ stream.stop()
 ## WriteGear
 
 <p align="center">
-  <img src="docs/overrides/assets/images/writegear.png" alt="WriteGear Functional Block Diagram" width="70%" />
+  <img src="docs/overrides/assets/images/writegear.webp" alt="WriteGear Functional Block Diagram" width="70%" />
 </p>
 
 > *WriteGear handles various powerful Writer Tools that provide us the freedom to do almost anything imagine with multimedia files.*
@@ -412,7 +412,7 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 ## StreamGear
 
 <p align="center">
-  <img src="docs/overrides/assets/images/streamgear_flow.png" alt="NetGear API" width=80%/>
+  <img src="docs/overrides/assets/images/streamgear_flow.webp" alt="NetGear API" width=80%/>
 </p>
 
 
@@ -443,7 +443,7 @@ SteamGear currently only supports [**MPEG-DASH**](https://www.encoding.com/mpeg-
 ## NetGear
 
 <p align="center">
-  <img src="docs/overrides/assets/images/netgear.png" alt="NetGear API" width=65%/>
+  <img src="docs/overrides/assets/images/netgear.webp" alt="NetGear API" width=65%/>
 </p>
 
 > *NetGear is exclusively designed to transfer video frames synchronously and asynchronously between interconnecting systems over the network in real-time.*
@@ -524,7 +524,7 @@ web.shutdown()
 ## NetGear_Async 
 
 <p align="center">
-  <img src="docs/overrides/assets/images/zmq_asyncio.png" alt="WebGear in action!" width="70%"/>
+  <img src="docs/overrides/assets/images/zmq_asyncio.webp" alt="WebGear in action!" width="70%"/>
 </p>
 
 > _NetGear_Async can generate double performance as compared to [NetGear API](#netgear) at about 1/3rd of memory consumption, and also provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support any [NetGear's Exclusive Modes][netgear-exm] yet._
