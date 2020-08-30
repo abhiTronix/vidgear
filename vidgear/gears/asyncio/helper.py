@@ -21,21 +21,20 @@ limitations under the License.
 # Contains all the support functions/modules required by Vidgear Asyncio packages
 
 # import the necessary packages
-import asyncio
-import errno
-import logging as log
+
 import os
-import platform
-import sys
-
-import aiohttp
 import cv2
+import sys
+import errno
 import numpy as np
+import aiohttp
+import asyncio
+import logging as log
+import platform
 import requests
-
+from tqdm import tqdm
 from colorlog import ColoredFormatter
 from pkg_resources import parse_version
-from tqdm import tqdm
 
 
 def logger_handler():
@@ -129,11 +128,11 @@ async def reducer(frame=None, percentage=0):
 
 
 def generate_webdata(path, overwrite_default=False, logging=False):
-    """ 
+    """
     ### generate_webdata
 
     Auto-Generates, and Auto-validates default data for WebGear API.
-    
+
     Parameters:
         path (string): path for generating data
         overwrite_default (boolean): overwrite existing data or not?
@@ -217,8 +216,8 @@ def download_webdata(path, files=[], logging=False):
     """
     ### download_webdata
 
-    Downloads given list of files for WebGear API(if not available) from GitHub Server, 
-    and also Validates them. 
+    Downloads given list of files for WebGear API(if not available) from GitHub Server,
+    and also Validates them.
 
     Parameters:
         path (string): path for downloading data

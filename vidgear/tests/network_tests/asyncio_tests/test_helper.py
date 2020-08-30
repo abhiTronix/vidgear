@@ -17,13 +17,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libraries
-import logging as log
+# import the necessary packages
+
 import sys
 import numpy as np
 import pytest
+import logging as log
 
-from vidgear.gears.asyncio.helper import logger_handler, reducer
+from vidgear.gears.asyncio.helper import reducer, logger_handler
 
 # define test logger
 logger = log.getLogger("Test_Asyncio_Helper")
@@ -41,14 +42,18 @@ def getframe():
 
 pytestmark = pytest.mark.asyncio
 
-@pytest.mark.skipif(sys.version_info >= (3, 8), reason="python3.8 is not supported yet by pytest-asyncio")
+
+@pytest.mark.skipif(
+    sys.version_info >= (3, 8),
+    reason="python3.8 is not supported yet by pytest-asyncio",
+)
 @pytest.mark.parametrize(
     "frame , percentage, result",
     [(getframe(), 85, True), (None, 80, False), (getframe(), 95, False)],
 )
 async def test_reducer_asyncio(frame, percentage, result):
     """
-    Testing frame size reducer function 
+    Testing frame size reducer function
     """
     if not (frame is None):
         org_size = frame.shape[:2]

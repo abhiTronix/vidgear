@@ -17,11 +17,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libraries
-import logging as log
+# import the necessary packages
+
 import os
-import tempfile
 import pytest
+import logging as log
+import tempfile
 
 from vidgear.gears import VideoGear
 from vidgear.gears.helper import logger_handler
@@ -65,7 +66,11 @@ test_data = [
     ),
     (
         "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/example4_train_input.mp4",
-        {"SMOOTHING_RADIUS": 5, "BORDER_SIZE": 15, "BORDER_TYPE": "reflect",},
+        {
+            "SMOOTHING_RADIUS": 5,
+            "BORDER_SIZE": 15,
+            "BORDER_TYPE": "reflect",
+        },
     ),
     (
         "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/example4_train_input.mp4",
@@ -83,7 +88,7 @@ test_data = [
 @pytest.mark.parametrize("source, options", test_data)
 def test_video_stablization(source, options):
     """
-    Testing VideoGear's Video Stablization playback capabilities 
+    Testing VideoGear's Video Stablization playback capabilities
     """
     try:
         # open stream

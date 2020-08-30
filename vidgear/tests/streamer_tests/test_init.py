@@ -17,14 +17,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libraries
-import logging as log
+# import the necessary packages
+
 import os
+import pytest
+import logging as log
 import platform
 import tempfile
-import pytest
-
 from os.path import expanduser
+
 from vidgear.gears import StreamGear
 from vidgear.gears.helper import logger_handler
 
@@ -59,7 +60,7 @@ def return_static_ffmpeg():
 @pytest.mark.parametrize("c_ffmpeg", [return_static_ffmpeg(), "wrong_path", 1234])
 def test_custom_ffmpeg(c_ffmpeg):
     """
-    Testing custom FFmpeg for StreamGear 
+    Testing custom FFmpeg for StreamGear
     """
     StreamGear(output="output.mpd", custom_ffmpeg=c_ffmpeg, logging=True)
 
@@ -68,7 +69,7 @@ def test_custom_ffmpeg(c_ffmpeg):
 @pytest.mark.parametrize("format", ["dash", "mash", "unknown", 1234, None])
 def test_formats(format):
     """
-    Testing different formats for StreamGear 
+    Testing different formats for StreamGear
     """
     StreamGear(output="output.mpd", format=format, logging=True)
 
@@ -78,7 +79,7 @@ def test_formats(format):
 )
 def test_outputs(output):
     """
-    Testing different output for StreamGear 
+    Testing different output for StreamGear
     """
     stream_params = (
         {"-clear_prev_assets": True}

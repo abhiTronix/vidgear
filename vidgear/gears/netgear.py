@@ -18,17 +18,18 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-import cv2
-import numpy as np
-import logging as log
-import os
-import random
-import time
 
-from collections import deque
+import os
+import cv2
+import time
+import numpy as np
+import random
+import logging as log
 from threading import Thread
+from collections import deque
 from pkg_resources import parse_version
-from .helper import generate_auth_certificates, logger_handler
+
+from .helper import logger_handler, generate_auth_certificates
 
 # define logger
 logger = log.getLogger("NetGear")
@@ -42,15 +43,15 @@ class NetGear:
     """
     NetGear is exclusively designed to transfer video frames synchronously and asynchronously between interconnecting systems over the network in real-time.
 
-    NetGear implements a high-level wrapper around `PyZmQ` python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance 
-    asynchronous distributed messaging library that provides a message queue, but unlike message-oriented middle-ware, its system can run without a dedicated 
-    message broker. 
+    NetGear implements a high-level wrapper around `PyZmQ` python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance
+    asynchronous distributed messaging library that provides a message queue, but unlike message-oriented middle-ware, its system can run without a dedicated
+    message broker.
 
-    NetGear also supports real-time *Frame Compression capabilities* for optimizing performance while sending the frames directly over the network, by encoding 
+    NetGear also supports real-time *Frame Compression capabilities* for optimizing performance while sending the frames directly over the network, by encoding
     the frame before sending it and decoding it on the client's end automatically in real-time.
-    
+
     !!! info
-        NetGear API now internally implements robust *Lazy Pirate pattern* (auto-reconnection) for its synchronous messaging patterns _(i.e. `zmq.PAIR` & `zmq.REQ/zmq.REP`)_ 
+        NetGear API now internally implements robust *Lazy Pirate pattern* (auto-reconnection) for its synchronous messaging patterns _(i.e. `zmq.PAIR` & `zmq.REQ/zmq.REP`)_
         at both Server and Client ends, where its API instead of doing a blocking receive, will:
 
         * Poll the socket and receive from it only when it's sure a reply has arrived.
@@ -61,7 +62,7 @@ class NetGear:
 
     - `zmq.PAIR` _(ZMQ Pair Pattern)_
     - `zmq.REQ/zmq.REP` _(ZMQ Request/Reply Pattern)_
-    - `zmq.PUB/zmq.SUB` _(ZMQ Publish/Subscribe Pattern)_ 
+    - `zmq.PUB/zmq.SUB` _(ZMQ Publish/Subscribe Pattern)_
 
     _whereas the supported protocol are: `tcp` and `ipc`_.
 
@@ -70,26 +71,26 @@ class NetGear:
         * **Primary Modes**
 
             NetGear API primarily has two modes of operations:
-              
+
             * **Send Mode:** _which employs `send()` function to send video frames over the network in real-time._
-              
-            * **Receive Mode:** _which employs `recv()` function to receive frames, sent over the network with *Send Mode* in real-time. The mode sends back confirmation when the 
+
+            * **Receive Mode:** _which employs `recv()` function to receive frames, sent over the network with *Send Mode* in real-time. The mode sends back confirmation when the
             frame is received successfully in few patterns._
 
         * **Exclusive Modes**
 
             In addition to these primary modes, NetGear API offers applications-specific Exclusive Modes:
 
-            * **Multi-Servers Mode:** _In this exclusive mode, NetGear API robustly **handles multiple servers at once**, thereby providing seamless access to frames and unidirectional 
+            * **Multi-Servers Mode:** _In this exclusive mode, NetGear API robustly **handles multiple servers at once**, thereby providing seamless access to frames and unidirectional
             data transfer from multiple Servers/Publishers across the network in real-time._
 
-            * **Multi-Clients Mode:** _In this exclusive mode, NetGear API robustly **handles multiple clients at once**, thereby providing seamless access to frames and unidirectional 
+            * **Multi-Clients Mode:** _In this exclusive mode, NetGear API robustly **handles multiple clients at once**, thereby providing seamless access to frames and unidirectional
             data transfer to multiple Client/Consumers across the network in real-time._
 
             * **Bidirectional Mode:** _This exclusive mode **provides seamless support for bidirectional data transmission between between Server and Client along with video frames**._
 
-            * **Secure Mode:** _In this exclusive mode, NetGear API **provides easy access to powerful, smart & secure ZeroMQ's Security Layers** that enables strong encryption on 
-            data, and unbreakable authentication between the Server and Client with the help of custom certificates/keys that brings cheap, standardized privacy and authentication 
+            * **Secure Mode:** _In this exclusive mode, NetGear API **provides easy access to powerful, smart & secure ZeroMQ's Security Layers** that enables strong encryption on
+            data, and unbreakable authentication between the Server and Client with the help of custom certificates/keys that brings cheap, standardized privacy and authentication
             for distributed systems over the network._
     """
 
@@ -842,7 +843,7 @@ class NetGear:
     def __recv_handler(self):
 
         """
-        A threaded receiver handler, that keep iterating data from ZMQ socket to a internally monitored deque, 
+        A threaded receiver handler, that keep iterating data from ZMQ socket to a internally monitored deque,
         until the thread is terminated, or socket disconnects.
         """
         # initialize frame variable
@@ -1062,13 +1063,13 @@ class NetGear:
 
     def recv(self, return_data=None):
         """
-        A Receiver end method, that extracts received frames synchronously from monitored deque, while maintaining a 
+        A Receiver end method, that extracts received frames synchronously from monitored deque, while maintaining a
         fixed-length frame buffer in the memory, and blocks the thread if the deque is full.
 
         Parameters:
-            return_data (any): inputs return data _(of any datatype)_, for sending back to Server. 
+            return_data (any): inputs return data _(of any datatype)_, for sending back to Server.
 
-        **Returns:** A n-dimensional numpy array. 
+        **Returns:** A n-dimensional numpy array.
         """
         # check whether `receive mode` is activated
         if not (self.__receive_mode):
@@ -1106,7 +1107,7 @@ class NetGear:
             message (any): input for sending additional data _(of any datatype except `numpy.ndarray`)_ to Client(s).
 
         **Returns:** Data _(of any datatype)_ in selected exclusive modes, otherwise None-type.
-        
+
         """
         # check whether `receive_mode` is disabled
         if self.__receive_mode:

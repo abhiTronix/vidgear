@@ -17,37 +17,38 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libraries
-import logging as log
+# import the necessary packages
+
 import os
-import platform
-import shutil
-import tempfile
 import cv2
 import numpy as np
 import pytest
+import shutil
+import logging as log
+import platform
 import requests
-
+import tempfile
 from os.path import expanduser
 from mpegdash.parser import MPEGDASHParser
-from vidgear.gears.asyncio.helper import generate_webdata, validate_webdata
+
 from vidgear.gears.helper import (
-    check_output,
     reducer,
-    download_ffmpeg_binaries,
-    generate_auth_certificates,
-    get_valid_ffmpeg_path,
-    logger_handler,
-    validate_ffmpeg,
     dict2Args,
-    is_valid_url,
-    extract_time,
-    get_video_bitrate,
-    validate_audio,
-    validate_video,
     mkdir_safe,
     delete_safe,
+    check_output,
+    extract_time,
+    is_valid_url,
+    logger_handler,
+    validate_audio,
+    validate_video,
+    validate_ffmpeg,
+    get_video_bitrate,
+    get_valid_ffmpeg_path,
+    download_ffmpeg_binaries,
+    generate_auth_certificates,
 )
+from vidgear.gears.asyncio.helper import generate_webdata, validate_webdata
 
 # define test logger
 logger = log.getLogger("Test_helper")
@@ -161,7 +162,7 @@ test_data = [
 @pytest.mark.parametrize("dictionary", test_data)
 def test_dict2Args(dictionary):
     """
-    Testing dict2Args helper function. 
+    Testing dict2Args helper function.
     """
     result = dict2Args(dictionary)
     if result and isinstance(result, list):
@@ -271,7 +272,7 @@ test_data = [
 @pytest.mark.parametrize("paths, overwrite_cert, results", test_data)
 def test_generate_auth_certificates(paths, overwrite_cert, results):
     """
-    Testing auto-Generation and auto-validation of CURVE ZMQ keys/certificates 
+    Testing auto-Generation and auto-validation of CURVE ZMQ keys/certificates
     """
     try:
         if overwrite_cert:
@@ -296,7 +297,7 @@ test_data = [
 @pytest.mark.parametrize("paths, overwrite_default, results", test_data)
 def test_generate_webdata(paths, overwrite_default, results):
     """
-    Testing auto-Generation and auto-validation of WebGear data files 
+    Testing auto-Generation and auto-validation of WebGear data files
     """
     try:
         output = generate_webdata(
@@ -336,7 +337,7 @@ def test_check_output():
 )
 def test_reducer(frame, percentage, result):
     """
-    Testing frame size reducer function 
+    Testing frame size reducer function
     """
     if not (frame is None):
         org_size = frame.shape[:2]
@@ -368,7 +369,7 @@ def test_reducer(frame, percentage, result):
 )
 def test_is_valid_url(URL, result):
     """
-    Testing is_valid_url function 
+    Testing is_valid_url function
     """
     try:
         result_url = is_valid_url(return_static_ffmpeg(), url=URL, logging=True)
@@ -378,11 +379,15 @@ def test_is_valid_url(URL, result):
 
 
 @pytest.mark.parametrize(
-    "path, result", [(return_testvideo_path(), True), (None, False),],
+    "path, result",
+    [
+        (return_testvideo_path(), True),
+        (None, False),
+    ],
 )
 def test_validate_video(path, result):
     """
-    Testing validate_video function 
+    Testing validate_video function
     """
     try:
         results = validate_video(return_static_ffmpeg(), video_path=path)
@@ -402,7 +407,7 @@ def test_validate_video(path, result):
 )
 def test_validate_audio(path, result):
     """
-    Testing validate_audio function 
+    Testing validate_audio function
     """
     try:
         results = validate_audio(return_static_ffmpeg(), file_path=path)
@@ -422,7 +427,7 @@ def test_validate_audio(path, result):
 )
 def test_extract_time(value, result):
     """
-    Testing extract_time function 
+    Testing extract_time function
     """
     try:
         results = extract_time(value)
@@ -433,7 +438,7 @@ def test_extract_time(value, result):
 
 def test_get_video_bitrate():
     """
-    Testing get_video_bitrate function 
+    Testing get_video_bitrate function
     """
     try:
         get_video_bitrate(640, 480, 60.0, 0.1)
@@ -442,7 +447,11 @@ def test_get_video_bitrate():
 
 
 @pytest.mark.parametrize(
-    "ext, result", [([".m4s", ".mpd"], True), ([], False),],
+    "ext, result",
+    [
+        ([".m4s", ".mpd"], True),
+        ([], False),
+    ],
 )
 def test_delete_safe(ext, result):
     """

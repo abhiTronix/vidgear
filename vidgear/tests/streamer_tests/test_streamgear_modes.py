@@ -17,16 +17,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libraries
-import logging as log
+# import the necessary packages
+
 import os
-import platform
-import subprocess
-import tempfile
 import cv2
 import pytest
-
+import logging as log
+import platform
+import tempfile
+import subprocess
 from mpegdash.parser import MPEGDASHParser
+
 from vidgear.gears import CamGear, StreamGear
 from vidgear.gears.helper import logger_handler
 

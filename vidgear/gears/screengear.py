@@ -18,17 +18,17 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-import logging as log
-import time
-import cv2
-import numpy as np
 
+import cv2
+import time
+import numpy as np
+import logging as log
 from mss import mss
+from threading import Thread
 from mss.exception import ScreenShotError
 from pkg_resources import parse_version
-from threading import Thread
-from .helper import capPropId, logger_handler
 
+from .helper import capPropId, logger_handler
 
 # define logger
 logger = log.getLogger("ScreenGear")
@@ -42,10 +42,10 @@ class ScreenGear:
     """
 
     ScreenGear is designed exclusively for ultra-fast Screencasting, that means it can grab frames from your monitor in real-time, either by define
-     an area on the computer screen, or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing 
+     an area on the computer screen, or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing
      from multiple monitors.
 
-    ScreenGear API implements a multi-threaded wrapper around [`python-mss`](https://python-mss.readthedocs.io/index.html) python library, and also flexibly supports its internal parameter. 
+    ScreenGear API implements a multi-threaded wrapper around [`python-mss`](https://python-mss.readthedocs.io/index.html) python library, and also flexibly supports its internal parameter.
 
     Furthermore, ScreenGear API relies on **Threaded Queue mode** for threaded, error-free and synchronized frame handling.
 
@@ -159,7 +159,7 @@ class ScreenGear:
 
     def __update(self):
         """
-        A **Threaded Frames Extractor**, that keep iterating frames from `mss` API to a internal monitored deque, 
+        A **Threaded Frames Extractor**, that keep iterating frames from `mss` API to a internal monitored deque,
         until the thread is terminated, or frames runs out.
         """
         # intialize frame variable
@@ -221,10 +221,10 @@ class ScreenGear:
 
     def read(self):
         """
-        Extracts frames synchronously from monitored deque, while maintaining a fixed-length frame buffer in the memory, 
+        Extracts frames synchronously from monitored deque, while maintaining a fixed-length frame buffer in the memory,
         and blocks the thread if the deque is full.
 
-        **Returns:** A n-dimensional numpy array. 
+        **Returns:** A n-dimensional numpy array.
         """
         # check whether or not termination flag is enabled
         while not self.__terminate:

@@ -21,9 +21,8 @@ limitations under the License.
 # import the necessary packages
 import logging as log
 
-from .camgear import CamGear
 from .helper import logger_handler
-
+from .camgear import CamGear
 
 # define logger
 logger = log.getLogger("VideoGear")
@@ -35,16 +34,16 @@ logger.setLevel(log.DEBUG)
 class VideoGear:
 
     """
-    
-    VideoGear provides a special internal wrapper around VidGear's exclusive **Video Stabilizer** class. 
 
-    VideoGear also act as a Common API, that provided an internal access to both CamGear and 
+    VideoGear provides a special internal wrapper around VidGear's exclusive **Video Stabilizer** class.
+
+    VideoGear also act as a Common API, that provided an internal access to both CamGear and
     PiGear APIs and their parameters, with a special `enablePiCamera` boolean flag.
 
-    VideoGear is basically ideal when you need to switch to different video sources without changing your code 
-    much. Also, it enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort 
+    VideoGear is basically ideal when you need to switch to different video sources without changing your code
+    much. Also, it enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort
     and using just fewer lines of code.
-    
+
     """
 
     def __init__(
@@ -150,10 +149,10 @@ class VideoGear:
 
     def read(self):
         """
-        Extracts frames synchronously from selected API's monitored deque, while maintaining a fixed-length frame 
+        Extracts frames synchronously from selected API's monitored deque, while maintaining a fixed-length frame
         buffer in the memory, and blocks the thread if the deque is full.
 
-        **Returns:** A n-dimensional numpy array. 
+        **Returns:** A n-dimensional numpy array.
         """
         while self.__stablization_mode:
             frame = self.stream.read()

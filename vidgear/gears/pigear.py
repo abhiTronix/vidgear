@@ -17,16 +17,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the packages
-import logging as log
+
+import cv2
 import sys
 import time
-import cv2
-
-from pkg_resources import parse_version
+import logging as log
 from threading import Thread
-from .helper import capPropId, logger_handler
+from pkg_resources import parse_version
 
+from .helper import capPropId, logger_handler
 
 # define logger
 logger = log.getLogger("PiGear")
@@ -38,17 +39,17 @@ logger.setLevel(log.DEBUG)
 class PiGear:
     """
 
-    PiGear is similar to CamGear API but exclusively made to support various Raspberry Pi Camera Modules 
+    PiGear is similar to CamGear API but exclusively made to support various Raspberry Pi Camera Modules
     _(such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module)_.
 
-    PiGear provides a flexible multi-threaded wrapper around complete [`picamera`](https://picamera.readthedocs.io/en/release-1.13/index.html) python library, 
-    and also provides us the ability to exploit almost all of its parameters like _brightness, saturation, 
-    sensor_mode, iso, exposure, etc._ effortlessly. Furthermore, PiGear supports multiple camera modules, 
+    PiGear provides a flexible multi-threaded wrapper around complete [`picamera`](https://picamera.readthedocs.io/en/release-1.13/index.html) python library,
+    and also provides us the ability to exploit almost all of its parameters like _brightness, saturation,
+    sensor_mode, iso, exposure, etc._ effortlessly. Furthermore, PiGear supports multiple camera modules,
     such as in case of Raspberry Pi Compute module IO boards.
 
-    Best of all, PiGear provides excellent error-handling with features like a **Threaded Internal Timer** - 
-    that keeps active track of any frozen-threads/hardware-failures robustly, and exit safely if it does occurs, 
-    _i.e. If you're running PiGear API in your script, and someone accidentally pulls Camera module cable out, 
+    Best of all, PiGear provides excellent error-handling with features like a **Threaded Internal Timer** -
+    that keeps active track of any frozen-threads/hardware-failures robustly, and exit safely if it does occurs,
+    _i.e. If you're running PiGear API in your script, and someone accidentally pulls Camera module cable out,
     instead of going into possible kernel panic, PiGear will exit safely to save resources._
 
     """
@@ -66,8 +67,8 @@ class PiGear:
 
         try:
             import picamera
-            from picamera.array import PiRGBArray
             from picamera import PiCamera
+            from picamera.array import PiRGBArray
         except Exception as error:
             if isinstance(error, ImportError):
                 # Output expected ImportErrors.
@@ -234,7 +235,7 @@ class PiGear:
 
     def __update(self):
         """
-        A **Threaded Frames Extractor**, that keep iterating frames from PiCamera API to a internal monitored deque, 
+        A **Threaded Frames Extractor**, that keep iterating frames from PiCamera API to a internal monitored deque,
         until the thread is terminated, or frames runs out.
         """
         # keep looping infinitely until the thread is terminated
@@ -297,10 +298,10 @@ class PiGear:
 
     def read(self):
         """
-        Extracts frames synchronously from monitored deque, while maintaining a fixed-length frame buffer in the memory, 
+        Extracts frames synchronously from monitored deque, while maintaining a fixed-length frame buffer in the memory,
         and blocks the thread if the deque is full.
 
-        **Returns:** A n-dimensional numpy array. 
+        **Returns:** A n-dimensional numpy array.
         """
         # check if there are any thread exceptions
         if not (self.__exceptions is None):
@@ -315,8 +316,10 @@ class PiGear:
                 # clear frame
                 self.frame = None
                 # re-raise error for debugging
-                error_msg = "[PiGear:ERROR] :: Camera Module API failure occured: {}".format(
-                    self.__exceptions[1]
+                error_msg = (
+                    "[PiGear:ERROR] :: Camera Module API failure occured: {}".format(
+                        self.__exceptions[1]
+                    )
                 )
                 raise RuntimeError(error_msg).with_traceback(self.__exceptions[2])
 

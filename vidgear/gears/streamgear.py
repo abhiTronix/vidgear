@@ -17,30 +17,30 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+# import the necessary packages
 
-# import the necessary packages/libraries
 import os
+import cv2
 import sys
 import time
 import difflib
 import logging as log
 import subprocess as sp
-from fractions import Fraction
-
-import cv2
 from tqdm import tqdm
+from fractions import Fraction
 from pkg_resources import parse_version
+
 from .helper import (
     capPropId,
     dict2Args,
+    delete_safe,
     extract_time,
     is_valid_url,
     logger_handler,
     validate_audio,
-    get_video_bitrate,
     validate_video,
+    get_video_bitrate,
     get_valid_ffmpeg_path,
-    delete_safe,
 )
 
 # define logger
@@ -128,7 +128,6 @@ class StreamGear:
                     output
                 )
             )
-
 
         # handle Audio-Input
         audio = self.__params.pop("-audio", "")

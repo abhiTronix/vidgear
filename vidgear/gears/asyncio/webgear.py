@@ -18,21 +18,21 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
+
+import os
+import cv2
+import sys
 import asyncio
 import logging as log
-import os
-import sys
-import cv2
-
 from collections import deque
-from starlette.applications import Starlette
-from starlette.responses import StreamingResponse
 from starlette.routing import Mount, Route
-from starlette.staticfiles import StaticFiles
+from starlette.responses import StreamingResponse
 from starlette.templating import Jinja2Templates
-from ..videogear import VideoGear
-from .helper import generate_webdata, logger_handler, reducer
+from starlette.staticfiles import StaticFiles
+from starlette.applications import Starlette
 
+from .helper import reducer, logger_handler, generate_webdata
+from ..videogear import VideoGear
 
 # define logger
 logger = log.getLogger("WebGear")
@@ -44,15 +44,15 @@ logger.setLevel(log.DEBUG)
 class WebGear:
 
     """
-    WebGear is a powerful ASGI Video-streamer API, that is built upon `Starlette` - a lightweight ASGI python framework/toolkit, 
+    WebGear is a powerful ASGI Video-streamer API, that is built upon `Starlette` - a lightweight ASGI python framework/toolkit,
     which is ideal for building high-performance asyncio services.
 
-    WebGear API provides a highly extensible and flexible asyncio wrapper around Starlette ASGI application, and provides easy access to its complete framework. 
-    Thereby, WebGear API can flexibly interact with the Starlette's ecosystem of shared middleware and mountable applications, and its various 
-    Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc. 
+    WebGear API provides a highly extensible and flexible asyncio wrapper around Starlette ASGI application, and provides easy access to its complete framework.
+    Thereby, WebGear API can flexibly interact with the Starlette's ecosystem of shared middleware and mountable applications, and its various
+    Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.
 
-    In layman's terms, WebGear can acts as powerful **Video Streaming Server** that transfers live video-frames to any web browser on a network. It addition to this, 
-    WebGear API also provides a special internal wrapper around VideoGear API, which itself provides internal access to both CamGear and PiGear APIs thereby granting 
+    In layman's terms, WebGear can acts as powerful **Video Streaming Server** that transfers live video-frames to any web browser on a network. It addition to this,
+    WebGear API also provides a special internal wrapper around VideoGear API, which itself provides internal access to both CamGear and PiGear APIs thereby granting
     it exclusive power for streaming frames incoming from any device/source, such as streaming Stabilization enabled Video in real-time.
     """
 
@@ -135,7 +135,7 @@ class WebGear:
                 else:
                     logger.warning("Skipped invalid `custom_data_location` value!")
                 del options["custom_data_location"]  # clean
-                
+
             if "overwrite_default_files" in options:
                 value = options["overwrite_default_files"]
                 if isinstance(value, bool):

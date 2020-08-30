@@ -17,15 +17,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libraries
-import logging as log
+# import the necessary packages
+
 import os
-import platform
-import tempfile
 import cv2
 import pytest
-from six import string_types
+import logging as log
+import platform
+import tempfile
 
+from six import string_types
 from vidgear.gears import WriteGear
 from vidgear.gears.helper import capPropId, check_output, logger_handler
 

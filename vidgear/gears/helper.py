@@ -21,17 +21,18 @@ limitations under the License.
 # Contains all the support functions/modules required by Vidgear packages
 
 # import the necessary packages
-import errno
-import logging as log
-import os, re
-import platform
-import sys
 
+import os
+import re
+import sys
+import errno
 import numpy as np
+import logging as log
+import platform
 import requests
+from tqdm import tqdm
 from colorlog import ColoredFormatter
 from pkg_resources import parse_version
-from tqdm import tqdm
 
 try:
     # import OpenCV Binaries

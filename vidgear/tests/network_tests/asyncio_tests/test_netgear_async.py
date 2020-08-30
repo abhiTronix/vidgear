@@ -17,14 +17,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libraries
-import asyncio
-import logging as log
+# import the necessary packages
+
 import os
 import sys
-import tempfile
 import numpy as np
 import pytest
+import asyncio
+import logging as log
+import tempfile
 
 from vidgear.gears import VideoGear
 from vidgear.gears.asyncio import NetGear_Async
@@ -86,7 +87,8 @@ def event_loop():
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
-    "pattern", [0, 2, 3, 4],
+    "pattern",
+    [0, 2, 3, 4],
 )
 async def test_netgear_async_playback(pattern):
     try:

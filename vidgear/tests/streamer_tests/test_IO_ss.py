@@ -17,9 +17,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libraries
+# import the necessary packages
+
+import os
 import numpy as np
-import pytest, os, tempfile, subprocess
+import pytest
+import tempfile
+import subprocess
+
 from vidgear.gears import StreamGear
 
 
@@ -58,7 +63,11 @@ def test_failedextensionsource():
 
 
 @pytest.mark.parametrize(
-    "path", ["rtmp://live.twitch.tv/output.mpd", "unknown://invalid.com/output.mpd",],
+    "path",
+    [
+        "rtmp://live.twitch.tv/output.mpd",
+        "unknown://invalid.com/output.mpd",
+    ],
 )
 def test_paths_ss(path):
     """

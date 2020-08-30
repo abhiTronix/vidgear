@@ -1,6 +1,5 @@
-# import the necessary packages
-from .netgear_async import NetGear_Async
 from .webgear import WebGear
+from .netgear_async import NetGear_Async
 
 __all__ = ["WebGear", "NetGear_Async"]
 

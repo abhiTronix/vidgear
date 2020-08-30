@@ -17,7 +17,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libraries
+# import the necessary packages
+
 import numpy as np
 import pytest
 
@@ -84,7 +85,7 @@ def test_method_call_rtf():
     """
     Method calling Test - Made to fail by calling method in the wrong context.
     """
-    stream_params = {"-video_source": 1234} # for CI testing only
+    stream_params = {"-video_source": 1234}  # for CI testing only
     streamer = StreamGear(output="output.mpd", logging=True, **stream_params)
     streamer.transcode_source()
     streamer.terminate()
