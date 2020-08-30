@@ -18,6 +18,10 @@ limitations under the License.
 ===============================================
 -->
 
+<figure>
+  <img src="../assets/images/cv2vidgear.png" alt="Switching from OpenCV" />
+</figure>
+
 # Switching from OpenCV
 
 Switching OpenCV with VidGear APIs is usually a fairly painless process, and will just require changing a few lines in your python script. 

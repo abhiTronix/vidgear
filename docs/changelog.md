@@ -65,11 +65,17 @@ limitations under the License.
         + Added new StreamGear docs, usage examples, parameters, references, new FAQs.
         + Added Several StreamGear usage examples w.r.t Mode of Operation.
         + Implemented [**Clappr**](https://github.com/clappr/clappr) based on [**Shaka-Player**](https://github.com/google/shaka-player), as Demo Player.
+        + Added Adaptive-dimensional behavior for Demo-player, purely in css.
         + Hosted StreamGear generated DASH chunks on GitHub and served with `raw.githack.com`.
         + Introduced variable quality level-selector plugin for Clapper Player.
         + Provide various required javascripts and implemented additional functionality for player in `extra.js`.
         + Recommended tested Online, Command-line and GUI Adaptive Stream players.
-        + Implemented separate FFmpeg installation doc for StremGear API.
+        + Implemented separate FFmpeg installation doc for StreamGear API.
+        + Reduced `rebufferingGoal` for faster response.
+
+    * [X] New StreamGear CI tests:
+        + Added IO and API initialization CI tests for its Modes.
+        + Added various mode Streaming check CI tests.
 
 - **NetGear_Async API:**
     * [X] Added new `send_terminate_signal` internal method.
@@ -109,31 +115,47 @@ limitations under the License.
     * [X] Added `get_video_bitrate` to caliculate video birate from resolution, framerate, bits-per-pixels values.
     * [X] Added `delete_safe` to safely delete files of given extension.
     * [X] Added `validate_audio` to validate audio source.
+    * [X] Added new Helper CI tests.
+        + Added new `check_valid_mpd` function to test MPD files validity.
+        + Added `mpegdash` library to CI requirements.
 
 - **Deployed New Docs Upgrades:**
-    * [X] Added new assets like _images, custom scripts, javascripts fonts etc._ for achieving better visual graphics in docs.
+    * [X] Added new assets like _images, gifs, custom scripts, javascripts fonts etc._ for achieving better visual graphics in docs.
     * [X] Added `clappr.min.js`, `dash-shaka-playback.js`, `clappr-level-selector.min.js` third-party javascripts locally.
     * [X] Extended Overview docs Hyperlinks to include all major sub-pages _(such as Usage Examples, Reference, FAQs etc.)_.
     * [X] Replaced GIF with interactive MPEG-DASH Video Example in Stabilizer Docs. 
     * [X] Added new `pymdownx.keys` to replace `[Ctrl+C]/[⌘+C]` formats.
     * [X] Added new `custom.css` stylescripts variables for fluid animations in docs.
     * [X] Overridden announce bar and added donation button. 
+    * [X] Lossless WEBP compressed all PNG assets for faster loading.
+    * [X] Enabled lazy loading for GIFS for Performance Improvements.
     * [X] Reimplemented Admonitions contexts and added new ones.
     * [X] Added StreamGear and its different modes Docs Assets.
 
-- Added new `-clones` attribute to handle FFmpeg parameter clones in StreamGear and WriteGear API.
+- **Added `Request Info` and `Welcome` GitHub Apps to automate PR and issue workflow**
+    * [X] Added new `config.yml` for customizations.
+    * [X] Added various suitable configurations.
 
+- Added new `-clones` attribute to handle FFmpeg parameter clones in StreamGear and WriteGear API.
+- Added new Video-only and Audio-Only sources in bash script.
+- Added new paths in bash script for storing StreamGear & WriteGear assets temporarily.
 
 ### Updates/Improvements
 
-- [X] Added new CI tests and Bumped Codecov.
+
+- [X] Updated CI with new tests and Bumped Codecov.
 - [X] Completed migration to `travis.com`.
+- [X] Enabled exception for `list, tuple, int, float` in WriteGear API's `output_params` dict.
 - [X] Employed `isort` library to sort and group imports in Vidgear APIs.
 - [X] Enabled missing support for frame-compression in its primary Receive Mode.
 - [X] Improved check for valid system path detection in WriteGear API.
 - [X] Quoted Gear Headline for understanding each gear easily. 
 - [X] Re-Positioned Gear's banner images in overview for better readability.
 - [X] Reduced redundant try-except blocks in NetGear Async.
+- [X] Reimplemented buggy audio handler in StreamGear.
+- [X] Reimplemented `return_testvideo_path` CI function with variable streams.
+- [X] Simplified default audio-bitrate logic in StreamGear
+- [X] Updated `validate_audio` Helper function will now retrieve audio-bitrate for validation.
 - [X] Reformatted and Simplified Docs context.
 - [X] Removed or Grouped redundant code for increasing codecov.
 - [X] Removed Python < 3.8 condition from all CI tests.
@@ -143,33 +165,66 @@ limitations under the License.
 - [X] Replaced simple lists with `pymdownx.tasklist`.
 - [X] Replaced subprocess `call()` with `run()` for better error handling in `execute_ffmpeg_cmd` function.
 - [X] Resized over-sized docs images. 
-- [X] Simplified algorithmic complexities in Gears.
+- [X] Removed redundant code and simplified algorithmic complexities in Gears.
+- [X] Check for valid `output` file extension according to `format` selected in StreamGear.
+- [X] Replaced `IOError` with more reliable `RuntimeError` in StreamGear Pipelines.
 - [X] Updated `check_output` and added `force_retrieve_stderr` support to `**kwargs` to extract `stderr` output even on FFmpeg  error.
+- [X] Updated WriteGear and StreamGear CI tests for not supporting temp directory.
+- [X] Updated buggy `mpegdash` dependency with custom dev fork for Windows machines.
 - [X] Updated `dicts2args` to support internal repeated `coreX` FFmpeg parameters for StreamGear. 
 - [X] Updated `mkdocs.yml`, `changelog.md` and `README.md` with latest changes.
+- [X] Created new `temp_write` temp directory for WriteGear Assets in bash script.
 - [X] Updated CI tests and cleared redundant code.
-- [X] Updated Missing Helpful tips.
+- [X] Enforced pixel formats for streams.
+- [X] Updated Missing Helpful tips and increased logging.
+- [X] Updated core parameters for audio handling.
+- [X] Simplified `delete_safe` Helper function.
 - [X] Updated termination linger to zero at Server's end.
+- [X] Deleted old Redundant assets and added new ones.
+- [X] Updated ReadME.md with new changes.
+- [X] Updated Licenses for new files.
+- [X] Updated Issue and PR templates.
+- [X] Reimplemented images with `<figure>` and `<figurecaption>` like tags.
+- [X] Updated PR guidelines for more clarity.
 
 ### Breaking Updates/Changes
 
-- [X] In Netgear_Async, `source` value can now be NoneType for using a custom frame generator at Server-end only.
+- [X] In Netgear_Async API, `source` value can now be NoneType for a custom frame-generator at Server-end only.
+- [X] Temp_(such as `/tmp` in linux)_ is now not a valid directory for WriteGear & StreamGear API outputs.
 - [X] Moved vidgear docs assets _(i.e images, gifs, javascripts and stylescripts)_ to `override` directory.
 
 ### Bug-fixes
 
-- [X] Added fixes to CLI tests and missing docs imports.
+- [X] Added workaround for system path not handle correctly.
+- [X] Fixes to CLI tests and missing docs imports.
 - [X] Fixed `NameError` bug in NetGear API.
-- [X] Fixed `NameError` in `test_dict2Args` CI test.
+- [X] Fixed `NameError` bugs in StreamGear CI.
+- [X] Fixed wrong type bug in StreamGear API.
+- [X] Fixed wrong variable assignments bug in WriteGear API.
+- [X] Fixed wrong logic for extracting OpenCV frames.
+- [X] Fixed StreamGear CI bugs for Windows and CI envs.
+- [X] Fixed Bug: URL Audio format not being handled properly.
+- [X] Fixed `get_valid_ffmpeg_path` throwing `TypeError` with non-string values.
 - [X] Fixed broken links in docs. 
-- [X] Fixed Critical Bug in NetGear_Async throwing ValueError with None-type Source.
-- [X] Fixed duplicate logging bugs.
+- [X] Fixed Critical external audio handler bug: moved audio-input to input_parameters.
+- [X] Fixed default `gop` value not handle correctly.
+- [X] Fixed OSError in WriteGear's compression mode.
+- [X] Fixed several CI bugs and updated `extract_resolutions` method.
+- [X] Fixed Critical StreamGear Bug: FFmpeg pipeline terminating prematurely in Single-Source Mode.
+- [X] Fixed Critical Bug in NetGear_Async throwing `ValueError` with None-type Source.
+- [X] Fixed missing import and incorrect CI definitions. 
+- [X] Fixed critical duplicate logging bug.
 - [X] Fixed handling of incorrect paths detection.
+- [X] Fixed logic and indentation bugs in CI tests.
+- [X] Fixed missing definitions and logic bug in StreamGear.
+- [X] Fixed various `AttributeError` with wrong attribute names and definition in CI Helper functions.
 - [X] Fixed incorrect definitions in NetGear_Async.
 - [X] Fixed left-over attribute bug in WriteGear.
+- [X] Fixed missing source dimensions from `extract_resolutions` output in StreamGear API.
 - [X] Fixed logic for handling output parameters in WriteGear API.
 - [X] Fixed missing support for compression parameters in Multi-Clients Mode.
 - [X] Fixed Mkdocs only accepting Relative paths.
+- [X] Fixed `NameError` in CI functions and tests.
 - [X] Fixed round off error in FPS.
 - [X] Fixed several bugs from CI Bidirectional Mode tests.
 - [X] Fixed several typos in docs usage examples.
@@ -177,12 +232,13 @@ limitations under the License.
 - [X] Fixed wrong and missing definitions in docs.
 - [X] Fixed wrong type error bug in WriteGear API.
 - [X] Fixed ZMQ throwing error on termination if all max-tries exhausted.
-- [X] Many small typos and bugs fixes.
+- [X] Many minor typos and wrong definitions.
 
 ### Pull Requests
 
 * PR #129
 * PR #130
+* PR #155
 
 
 &nbsp; 
