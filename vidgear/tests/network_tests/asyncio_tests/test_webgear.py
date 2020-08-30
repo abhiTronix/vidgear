@@ -17,17 +17,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libs
+# import the necessary packages
+
+import os
+import pytest
 import asyncio
 import logging as log
-import os
-import tempfile
-import pytest
 import requests
-
-from starlette.responses import PlainTextResponse
+import tempfile
 from starlette.routing import Route
+from starlette.responses import PlainTextResponse
 from starlette.testclient import TestClient
+
 from vidgear.gears.asyncio import WebGear
 from vidgear.gears.asyncio.helper import logger_handler
 
@@ -140,9 +141,7 @@ def test_webgear_routes():
             "frame_jpeg_progressive": False,
         }
         # initialize WebGear app
-        web = WebGear(
-            source=return_testvideo_path(), logging=True, **options
-        )  
+        web = WebGear(source=return_testvideo_path(), logging=True, **options)
 
         # modify route to point our rendered webpage
         web.routes.append(Route("/hello", endpoint=hello_webpage))
@@ -157,15 +156,14 @@ def test_webgear_routes():
     except Exception as e:
         pytest.fail(str(e))
 
+
 @pytest.mark.xfail(raises=RuntimeError)
 def test_webgear_routes_validity():
     # initialize WebGear app
-    web = WebGear(
-        source=return_testvideo_path(), logging=True
-    )  
+    web = WebGear(source=return_testvideo_path(), logging=True)
     # modify route
     web.routes.clear()
     # test
     client = TestClient(web(), raise_server_exceptions=True)
-    #shutdown
+    # shutdown
     web.shutdown()

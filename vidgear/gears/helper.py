@@ -21,17 +21,18 @@ limitations under the License.
 # Contains all the support functions/modules required by Vidgear packages
 
 # import the necessary packages
-import errno
-import logging as log
-import os, re
-import platform
-import sys
 
+import os
+import re
+import sys
+import errno
 import numpy as np
+import logging as log
+import platform
 import requests
+from tqdm import tqdm
 from colorlog import ColoredFormatter
 from pkg_resources import parse_version
-from tqdm import tqdm
 
 try:
     # import OpenCV Binaries
@@ -86,7 +87,7 @@ def check_CV_version():
     """
     ### check_CV_version
 
-    **Returns:** OpenCV's version first bit 
+    **Returns:** OpenCV's version first bit
     """
     if parse_version(cv2.__version__) >= parse_version("4"):
         return 4
@@ -98,14 +99,14 @@ def is_valid_url(path, url=None, logging=False):
     """
     ### is_valid_url
 
-    Checks URL validity by testing its scheme against 
+    Checks URL validity by testing its scheme against
     FFmpeg's supported protocols
 
     Parameters:
         path (string): absolute path of FFmpeg binaries
         url (string): URL to be validated
         logging (bool): enables logging for its operations
-    
+
     **Returns:** A boolean value, confirming whether tests passed, or not?.
     """
     if url is None or not (url):
@@ -133,25 +134,170 @@ def is_valid_url(path, url=None, logging=False):
         return False
 
 
-def mkdir_safe(dir, logging=False):
+def validate_video(path, video_path=None):
+    """
+    ### validate_video
+
+    Validates video by retrieving resolution/size and framerate from file.
+
+    Parameters:
+        path (string): absolute path of FFmpeg binaries
+        video_path (string): absolute path to Video.
+
+    **Returns:** A dictionary of retieved Video resolution _(as tuple(width, height))_ and framerate _(as float)_.
+    """
+    if video_path is None or not (video_path):
+        logger.warning("Video path is empty!")
+        return None
+
+    # extract metadata
+    metadata = check_output(
+        [path, "-hide_banner", "-i", video_path], force_retrieve_stderr=True
+    )
+    # clean and search
+    stripped_data = [x.decode("utf-8").strip() for x in metadata.split(b"\n")]
+    result = {}
+    for data in stripped_data:
+        output_a = re.findall(r"(\d+)x(\d+)", data)
+        output_b = re.findall(r"\d+(?:\.\d+)?\sfps", data)
+        if len(result) == 2:
+            break
+        if output_b and not "framerate" in result:
+            result["framerate"] = re.findall(r"[\d\.\d]+", output_b[0])[0]
+        if output_a and not "resolution" in result:
+            result["resolution"] = output_a[-1]
+
+    # return values
+    return result if (len(result) == 2) else None
+
+
+def extract_time(value):
+    """
+    ### extract_time
+
+    Extract time from give string value.
+
+    Parameters:
+        value (string): string value.
+
+    **Returns:** Time _(in seconds)_ as integer.
+    """
+    if not (value):
+        logger.warning("Value is empty!")
+        return 0
+    else:
+        stripped_data = value.strip()
+        t_duration = re.findall(
+            r"(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)", stripped_data
+        )
+        return (
+            sum(
+                int(x) * 60 ** i
+                for i, x in enumerate(reversed(t_duration[0].split(":")))
+            )
+            if t_duration
+            else 0
+        )
+
+
+def validate_audio(path, file_path=None):
+    """
+    ### validate_audio
+
+    Validates audio by retrieving audio-bitrate from file.
+
+    Parameters:
+        path (string): absolute path of FFmpeg binaries
+        file_path (string): absolute path to file to be validated.
+
+    **Returns:** A string value, confirming whether audio is present, or not?.
+    """
+    if file_path is None or not (file_path):
+        logger.warning("File path is empty!")
+        return ""
+
+    # extract audio sample-rate from metadata
+    metadata = check_output(
+        [path, "-hide_banner", "-i", file_path], force_retrieve_stderr=True
+    )
+    audio_bitrate = re.findall(r"fltp,\s[0-9]+\s\w\w[/]s", metadata.decode("utf-8"))
+    if audio_bitrate:
+        filtered = audio_bitrate[0].split(" ")[1:3]
+        final_bitrate = "{}{}".format(
+            int(filtered[0].strip()),
+            "k" if (filtered[1].strip().startswith("k")) else "M",
+        )
+        return final_bitrate
+    else:
+        return ""
+
+
+def get_video_bitrate(width, height, fps, bpp):
+    """
+    ### get_video_bitrate
+
+    Calculate optimum Bitrate from resolution, framerate, bits-per-pixels values
+
+    Parameters:
+        width (int): video-width
+        height (int): video-height
+        fps (float): video-framerate
+        bpp (float): bit-per-pixels value
+
+    **Returns:** Video bitrate _(in Kbps)_ as integer.
+    """
+    return round((width * height * bpp * fps) / 1000)
+
+
+def mkdir_safe(dir_path, logging=False):
     """
     ### mkdir_safe
 
     Safely creates directory at given path.
 
     Parameters:
+        dir_path (string): path to the directory
         logging (bool): enables logging for its operations
 
     """
     try:
-        os.makedirs(dir)
+        os.makedirs(dir_path)
         if logging:
-            logger.debug("Created directory at `{}`".format(dir))
+            logger.debug("Created directory at `{}`".format(dir_path))
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise
         if logging:
-            logger.debug("Directory already exists at `{}`".format(dir))
+            logger.debug("Directory already exists at `{}`".format(dir_path))
+
+
+def delete_safe(dir_path, extensions=[], logging=False):
+    """
+    ### delete_safe
+
+    Safely deletes files with given extensions at given path.
+
+    Parameters:
+        dir_path (string): path to the directory
+        extensions (list): list of extensions to be deleted
+        logging (bool): enables logging for its operations
+
+    """
+    if not extensions or not os.path.exists(dir_path):
+        logger.warning("Invalid input provided for deleting!")
+        return
+
+    if logging:
+        logger.debug("Clearing Assets at `{}`!".format(dir_path))
+
+    for ext in extensions:
+        files_ext = [
+            os.path.join(dir_path, f) for f in os.listdir(dir_path) if f.endswith(ext)
+        ]
+        for file in files_ext:
+            os.remove(file)
+            if logging:
+                logger.debug("Deleted file: `{}`".format(file))
 
 
 def capPropId(property):
@@ -238,7 +384,7 @@ def dict2Args(param_dict):
     ### dict2Args
 
     Converts dictionary attributes to list(args)
-    
+
     Parameters:
         param_dict (dict): Parameters dictionary
 
@@ -246,16 +392,19 @@ def dict2Args(param_dict):
     """
     args = []
     for key in param_dict.keys():
-        if key in ["-clones"]:
+        if key in ["-clones"] or key.startswith("-core"):
             if isinstance(param_dict[key], list):
                 args.extend(param_dict[key])
             else:
                 logger.warning(
-                    "Invalid datatype clones:`{}` skipped!".format(param_dict[key])
+                    "{} with invalid datatype:`{}`, Skipped!".format(
+                        "Core parameter" if key.startswith("-core") else "Clone",
+                        param_dict[key],
+                    )
                 )
         else:
             args.append(key)
-            args.append(param_dict[key])
+            args.append(str(param_dict[key]))
     return args
 
 
@@ -352,10 +501,7 @@ def get_valid_ffmpeg_path(
         logger.debug("Final FFmpeg Path: {}".format(final_path))
 
     # Final Auto-Validation for FFmeg Binaries. returns final path if test is passed
-    if validate_ffmpeg(final_path, logging=logging):
-        return final_path
-    else:
-        return False
+    return final_path if validate_ffmpeg(final_path, logging=logging) else False
 
 
 def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
@@ -479,30 +625,38 @@ def check_output(*args, **kwargs):
     """
     # import libs
     import subprocess as sp
-    from subprocess import DEVNULL
+
+    # handle additional params
+    retrieve_stderr = kwargs.pop("force_retrieve_stderr", False)
 
     # execute command in subprocess
-    process = sp.Popen(stdout=sp.PIPE, stderr=DEVNULL, *args, **kwargs)
-    output, unused_err = process.communicate()
+    process = sp.Popen(
+        stdout=sp.PIPE,
+        stderr=sp.DEVNULL if not (retrieve_stderr) else sp.PIPE,
+        *args,
+        **kwargs
+    )
+    output, stderr = process.communicate()
     retcode = process.poll()
 
-    # if error occurred raise error
-    if retcode:
+    # handle return code
+    if retcode and not (retrieve_stderr):
         cmd = kwargs.get("args")
         if cmd is None:
             cmd = args[0]
         error = sp.CalledProcessError(retcode, cmd)
         error.output = output
         raise error
-    return output
+
+    return output if not (retrieve_stderr) else stderr
 
 
 def generate_auth_certificates(path, overwrite=False, logging=False):
-    """ 
+    """
     ### generate_auth_certificates
 
     Auto-Generates, and Auto-validates CURVE ZMQ key-pairs for NetGear API's Secure Mode.
-    
+
     Parameters:
         path (string): path for generating CURVE key-pairs
         overwrite (boolean): overwrite existing key-pairs or not?

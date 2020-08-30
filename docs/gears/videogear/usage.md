@@ -21,6 +21,9 @@ limitations under the License.
 # VideoGear API Usage Examples:
 
 
+&thinsp;
+
+
 ## Bare-Minimum Usage with CamGear backend
 
 Following is the bare-minimum code you need to access CamGear API with VideoGear:
@@ -125,6 +128,8 @@ import cv2
 
 # open any valid video stream with stabilization enabled(`stabilize = True`)
 stream_stab = VideoGear(source="test.mp4", stabilize=True).start()
+# open same stream without stablization for comparision
+stream_org = VideoGear(source="test.mp4", stabilize=False).start()
 
 # loop over
 while True:
@@ -154,7 +159,7 @@ while True:
     )
 
     # Show output window
-    cv2.imshow("Stabilized Comparison", output_frame)
+    cv2.imshow("Stabilization Benchmarks", output_frame)
 
     # check for 'q' key if pressed
     key = cv2.waitKey(1) & 0xFF

@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help VidGear improve
+about: Create a bug-report for VidGear
 labels: "issue: bug"
 ---
 
@@ -17,12 +17,13 @@ labels: "issue: bug"
 
 ## Description
 
-<!--- Provide a more detailed introduction to the issue itself, and why you consider it to be a bug -->
+<!-- Provide a more detailed introduction to the issue itself, and why you consider it to be a bug -->
+_Kindly explain the issue here._
 
 
 ### Acknowledgment
 
-<!--- By posting an issue you acknowledge the following: (Put an `x` in all the boxes that apply(important)) -->
+<!-- By posting an issue you acknowledge the following: (Put an `x` in all the boxes that apply(important)) -->
 
 - [ ] I have searched the [issues](https://github.com/abhiTronix/vidgear/issues) for my issue and found nothing related or helpful.
 - [ ] I have read the [Documentation](https://abhitronix.github.io/vidgear).
@@ -31,22 +32,22 @@ labels: "issue: bug"
 
 ### Environment
 
-<!--- Include as many relevant details about the environment you experienced the bug in -->
-* VidGear version: <!--- Run command `python -c "import vidgear; print(vidgear.__version__)`" -->
-* Branch: <!--- Master/Testing/Development/PyPi -->
-* Python version:
-* pip version:
+<!-- Include as many relevant details about the environment you experienced the bug in -->
+* VidGear version: <!-- Run command `python -c "import vidgear; print(vidgear.__version__)"` -->
+* Branch: <!-- Select between: Master | Testing | Development | PyPi -->
+* Python version: <!---Run command `python -V` -->
+* PiP version: <!-- Run command `python -c "import pip; print(pip.__version__)"` -->
 * Operating System and version:
 
 ### Expected Behavior
-<!--- Tell us what should happen -->
+<!-- Tell us what should happen -->
 
 ### Actual Behavior
-<!--- Tell us what happens instead -->
-<!--- You can turn `logging=True` in parameters of the respective vidgear API for getting debug output -->
+<!-- Tell us what happens instead -->
+<!-- You can turn `logging=True` in parameters of the respective vidgear API for getting debug output -->
 
 ### Possible Fix
-<!--- Not obligatory, but suggest a fix or reason for the bug or remove this block-->
+<!-- Not obligatory, but suggest a fix or reason for the bug or remove this block-->
 
 ### Steps to reproduce
 
@@ -63,4 +64,4 @@ labels: "issue: bug"
 
 
 ### Optional
-<!--- Provide screenshots where appropriate -->
+<!-- Provide screenshots where appropriate -->

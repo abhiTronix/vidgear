@@ -17,15 +17,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libraries
-import logging as log
+# import the necessary packages
+
 import os
-import platform
-import tempfile
 import cv2
 import pytest
-from six import string_types
+import logging as log
+import platform
+import tempfile
 
+from six import string_types
 from vidgear.gears import WriteGear
 from vidgear.gears.helper import capPropId, check_output, logger_handler
 
@@ -38,8 +39,8 @@ logger.setLevel(log.DEBUG)
 
 def return_static_ffmpeg():
     """
-	returns system specific FFmpeg static path
-	"""
+    returns system specific FFmpeg static path
+    """
     path = ""
     if platform.system() == "Windows":
         path += os.path.join(
@@ -58,8 +59,8 @@ def return_static_ffmpeg():
 
 def return_testvideo_path():
     """
-	returns Test Video path
-	"""
+    returns Test Video path
+    """
     path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
         tempfile.gettempdir()
     )
@@ -67,13 +68,11 @@ def return_testvideo_path():
 
 
 @pytest.mark.xfail(raises=AssertionError)
-@pytest.mark.parametrize(
-    "conversion", ["COLOR_BGR2GRAY", "COLOR_BGR2YUV"]
-)
+@pytest.mark.parametrize("conversion", ["COLOR_BGR2GRAY", "COLOR_BGR2YUV"])
 def test_write(conversion):
     """
-	Testing VidGear Non-Compression(OpenCV) Mode Writer
-	"""
+    Testing VidGear Non-Compression(OpenCV) Mode Writer
+    """
     stream = cv2.VideoCapture(return_testvideo_path())
     writer = WriteGear(
         output_filename="Output_twc.avi", compression_mode=False
@@ -115,7 +114,7 @@ def test_write(conversion):
 
 test_data_class = [
     ("", {}, False),
-    (tempfile.gettempdir(), {}, True),
+    (os.path.join(tempfile.gettempdir(), "temp_write"), {}, True),
     (
         "Output_twc.mp4",
         {"-fourcc": "DIVX", "-fps": 25, "-backend": "CAP_FFMPEG", "-color": True},
@@ -125,15 +124,15 @@ test_data_class = [
         "Output_twc.avi",
         {"-fourcc": "NULL", "-backend": "INVALID"},
         False,
-    )
+    ),
 ]
 
 
 @pytest.mark.parametrize("f_name, output_params, result", test_data_class)
 def test_WriteGear_compression(f_name, output_params, result):
     """
-	Testing VidGear Non-Compression(OpenCV) Mode with different parameters
-	"""
+    Testing VidGear Non-Compression(OpenCV) Mode with different parameters
+    """
     try:
         stream = cv2.VideoCapture(return_testvideo_path())
         writer = WriteGear(
@@ -149,7 +148,7 @@ def test_WriteGear_compression(f_name, output_params, result):
             writer.write(frame)
         stream.release()
         writer.close()
-        if f_name and f_name != tempfile.gettempdir():
+        if f_name and os.path.isfile(os.path.abspath(f_name)):
             os.remove(os.path.abspath(f_name))
     except Exception as e:
         if result:

@@ -24,6 +24,9 @@ limitations under the License.
 !!! warning "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this API, otherwise it won't work."
 
 
+&thinsp;
+
+
 ## Bare-Minimum Usage
 
 Following is the bare-minimum code you need to get started with PiGear API:

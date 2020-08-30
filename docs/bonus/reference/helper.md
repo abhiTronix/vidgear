@@ -30,6 +30,10 @@ limitations under the License.
 
 &nbsp;
 
+::: vidgear.gears.helper.delete_safe
+
+&nbsp;
+
 ::: vidgear.gears.helper.capPropId	
 
 &nbsp;
@@ -62,6 +66,22 @@ limitations under the License.
 
 &nbsp;
 
-::: vidgear.gears.helper.validate_auth_keys
+::: vidgear.gears.helper.validate_audio
+
+&nbsp;
+
+::: vidgear.gears.helper.extract_time
+
+&nbsp;
+
+::: vidgear.gears.helper.validate_video
+
+&nbsp;
+
+::: vidgear.gears.helper.is_valid_url
+
+&nbsp;
+
+::: vidgear.gears.helper.get_video_bitrate
 
 &nbsp;

@@ -219,7 +219,7 @@ writer.close()
 ## Using Compression Mode with Hardware encoders
 
 
-By default, WriteGear API uses *libx264/libx265 encoders* for encoding its output files in Compression Mode. But you can easily change encoder to your suitable [supported encoder](../params/#supported-encoders) by passing `-vcodec` FFmpeg parameter as an attribute in its [*output_param*](../params/#output_params) dictionary parameter. In addition to this, you can also specify the additional properties/features of your system's GPU easily. 
+By default, WriteGear API uses *libx264 encoder* for encoding its output files in Compression Mode. But you can easily change encoder to your suitable [supported encoder](../params/#supported-encoders) by passing `-vcodec` FFmpeg parameter as an attribute in its [*output_param*](../params/#output_params) dictionary parameter. In addition to this, you can also specify the additional properties/features of your system's GPU easily. 
 
 ??? warning "User Discretion Advised"
 

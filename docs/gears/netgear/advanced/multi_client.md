@@ -23,11 +23,10 @@ limitations under the License.
 
 ## Overview
 
-<p align="center">
-  <img src="../../../../assets/images/multi_client.png" alt="NetGear's Multi-Clients Mode" width="75%"/>
-  <br>
-  <sub><i>NetGear's Multi-Clients Mode generalised</i></sub>
-</p>
+<figure>
+  <img src="../../../../assets/images/multi_client.webp" alt="NetGear's Multi-Clients Mode" width="75%"/>
+  <figcaption>NetGear's Multi-Clients Mode generalised</figcaption>
+</figure>
 
 
 In this exclusive mode, NetGear API robustly handles Multiple Clients at once, thereby providing seamless access to frames and unidirectional data transfer to multiple Clients/Consumers across the network in real-time. This mode works almost contrary to Multi-Servers Mode but data transfer only works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_.
@@ -103,7 +102,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
 
-!!! tip "You can terminate streaming anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 
 ```python
@@ -171,7 +170,7 @@ Now, Open a terminal on another Client System _(where you want to display the in
 
 !!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -219,7 +218,7 @@ Finally, Open a terminal on another Client System _(where you want to display th
 
 !!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -278,7 +277,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
 
-!!! tip "You can terminate streaming anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -345,7 +344,7 @@ Now, Open a terminal on another Client System _(where you want to display the in
 
 !!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -392,7 +391,7 @@ Finally, Open a terminal on another Client System _(also, where you want to disp
 
 !!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -458,7 +457,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
 
-!!! tip "You can terminate streaming anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -530,7 +529,7 @@ Now, Open a terminal on another Client System _(where you want to display the in
 
 !!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -581,7 +580,7 @@ Finally, Open a terminal on another Client System _(also, where you want to disp
 
 !!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 
 ```python

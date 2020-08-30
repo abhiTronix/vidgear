@@ -17,24 +17,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+# import the necessary packages
 
-# import the necessary packages/libraries
-import logging as log
 import os
-import subprocess as sp
+import cv2
 import sys
 import time
-import cv2
-
+import logging as log
+import subprocess as sp
 from pkg_resources import parse_version
+
 from .helper import (
     capPropId,
     dict2Args,
-    get_valid_ffmpeg_path,
-    logger_handler,
     is_valid_url,
+    logger_handler,
+    get_valid_ffmpeg_path,
 )
-
 
 # define logger
 logger = log.getLogger("WriteGear")
@@ -46,27 +45,27 @@ logger.setLevel(log.DEBUG)
 class WriteGear:
 
     """
-    WriteGear API provides a complete, flexible and robust wrapper around [**FFmpeg**](https://ffmpeg.org/), a leading multimedia framework. With WriteGear, we can process 
-    real-time frames into a lossless compressed video-file with any suitable specification in just few easy lines of codes. 
-    These specifications include setting video/audio properties such as `bitrate, codec, framerate, resolution, subtitles,  etc.`, 
-    and also performing complex tasks such as multiplexing video with audio in real-time, while handling all errors robustly. 
+    WriteGear API provides a complete, flexible and robust wrapper around [**FFmpeg**](https://ffmpeg.org/), a leading multimedia framework. With WriteGear, we can process
+    real-time frames into a lossless compressed video-file with any suitable specification in just few easy lines of codes.
+    These specifications include setting video/audio properties such as `bitrate, codec, framerate, resolution, subtitles,  etc.`,
+    and also performing complex tasks such as multiplexing video with audio in real-time, while handling all errors robustly.
 
-    Best of all, WriteGear grants the complete freedom to play with any FFmpeg parameter with its exclusive **Custom Commands function**, 
+    Best of all, WriteGear grants the complete freedom to play with any FFmpeg parameter with its exclusive **Custom Commands function**,
     without relying on any Third-party library.
 
-    In addition to this, WriteGear also provides flexible access to [**OpenCV's VideoWriter API**](https://docs.opencv.org/3.4/dd/d9e/classcv_1_1VideoWriter.html) which provides some basic tools for video 
+    In addition to this, WriteGear also provides flexible access to [**OpenCV's VideoWriter API**](https://docs.opencv.org/3.4/dd/d9e/classcv_1_1VideoWriter.html) which provides some basic tools for video
     frames encoding but without compression.
 
     ??? tip "Modes of Operation"
 
         WriteGear primarily operates in following modes:
 
-        * **Compression Mode**: In this mode, WriteGear utilizes powerful **FFmpeg** inbuilt encoders to encode lossless multimedia files. 
-                                This mode provides us the ability to exploit almost any parameter available within FFmpeg, effortlessly and flexibly, 
+        * **Compression Mode**: In this mode, WriteGear utilizes powerful **FFmpeg** inbuilt encoders to encode lossless multimedia files.
+                                This mode provides us the ability to exploit almost any parameter available within FFmpeg, effortlessly and flexibly,
                                 and while doing that it robustly handles all errors/warnings quietly.
 
-        * **Non-Compression Mode**: In this mode, WriteGear utilizes basic **OpenCV's inbuilt VideoWriter API** tools. This mode also supports all 
-                                    parameters manipulation available within VideoWriter API, but it lacks the ability to manipulate encoding parameters 
+        * **Non-Compression Mode**: In this mode, WriteGear utilizes basic **OpenCV's inbuilt VideoWriter API** tools. This mode also supports all
+                                    parameters manipulation available within VideoWriter API, but it lacks the ability to manipulate encoding parameters
                                     and other important features like video compression, audio encoding, etc.
 
     """
@@ -96,17 +95,11 @@ class WriteGear:
         self.__inputheight = None
         self.__inputwidth = None
         self.__inputchannels = None
-        self.__inputframerate = 0
-        self.__output_dimensions = None
         self.__process = None  # handle process to be frames written
-
         self.__cmd = ""  # handle FFmpeg Pipe command
         self.__ffmpeg = ""  # handle valid FFmpeg binaries location
         self.__initiate = (
             True  # initiate one time process for valid process initialization
-        )
-        self.__force_termination = (
-            False  # handles force termination in compression mode
         )
         self.__out_file = None  # handles output filename
 
@@ -139,76 +132,76 @@ class WriteGear:
                     )
                 )
 
-        # handle user defined output dimensions(must be a tuple or list)
-        if output_params and "-output_dimensions" in output_params:
-            self.__output_dimensions = output_params[
-                "-output_dimensions"
-            ]  # assign special parameter to global variable
-            del output_params["-output_dimensions"]  # clean
-
         # cleans and reformat output parameters
         self.__output_parameters = {
-            str(k).strip(): str(v).strip() if not isinstance(v, list) else v
+            str(k).strip(): str(v).strip()
+            if not isinstance(v, (list, tuple, int, float))
+            else v
             for k, v in output_params.items()
         }
 
         # handles FFmpeg binaries validity tests
         if self.__compression:
 
-            # handles where to save the downloaded FFmpeg Static Binaries on Windows(if specified)
-            ffmpeg_download_path_ = ""
-
             if self.__logging:
                 logger.debug(
                     "Compression Mode is enabled therefore checking for valid FFmpeg executables."
                 )
-                logger.debug("Output_params Dict: {}".format(self.__output_parameters))
+                logger.debug("Output Parameters: {}".format(self.__output_parameters))
 
-            if self.__output_parameters:
+            # handles where to save the downloaded FFmpeg Static Binaries on Windows(if specified)
+            __ffmpeg_download_path = self.__output_parameters.pop(
+                "-ffmpeg_download_path", ""
+            )
+            if not isinstance(__ffmpeg_download_path, (str)):
+                # reset improper values
+                __ffmpeg_download_path = ""
 
-                if "-ffmpeg_download_path" in self.__output_parameters:
-                    ffmpeg_download_path_ += self.__output_parameters[
-                        "-ffmpeg_download_path"
-                    ]
-                    del self.__output_parameters["-ffmpeg_download_path"]  # clean
+            # handle user defined output dimensions(must be a tuple or list)
+            self.__output_dimensions = self.__output_parameters.pop(
+                "-output_dimensions", None
+            )
+            if not isinstance(self.__output_dimensions, (list, tuple)):
+                # reset improper values
+                self.__output_dimensions = None
 
-                # handle input framerate if specified
-                if "-input_framerate" in self.__output_parameters:
-                    self.__inputframerate = float(
-                        self.__output_parameters["-input_framerate"]
-                    )
-                    del self.__output_parameters["-input_framerate"]  # clean
+            # handle user defined framerate
+            self.__inputframerate = self.__output_parameters.pop(
+                "-input_framerate", 0.0
+            )
+            if not isinstance(self.__inputframerate, (float, int)):
+                # reset improper values
+                self.__inputframerate = 0.0
+            else:
+                # must be float
+                self.__inputframerate = float(self.__inputframerate)
 
-                # handle force termination if required
-                if "-disable_force_termination" in self.__output_parameters:
-                    if "-i" in self.__output_parameters:
-                        self.__force_termination = (
-                            self.__output_parameters["-disable_force_termination"]
-                            if isinstance(
-                                self.__output_parameters["-disable_force_termination"],
-                                bool,
-                            )
-                            else False
-                        )
-                    else:
-                        self.__force_termination = True
-                    del self.__output_parameters["-disable_force_termination"]  # clean
-                else:
-                    self.__force_termination = (
-                        True if ("-i" in self.__output_parameters) else False
-                    )
+            # handle special-case force-termination in compression mode
+            self.__force_termination = self.__output_parameters.pop(
+                "-disable_force_termination", False
+            )
+            if not isinstance(self.__force_termination, bool):
+                # handle improper values
+                self.__force_termination = (
+                    True if ("-i" in self.__output_parameters) else False
+                )
+            else:
+                self.__force_termination = (
+                    self.__force_termination
+                    if ("-i" in self.__output_parameters)
+                    else False
+                )
 
-            # validate the FFmpeg path/binaries and returns valid FFmpeg file executable location(also downloads static binaries on windows)
-            actual_command = get_valid_ffmpeg_path(
+            # validate the FFmpeg path/binaries and returns valid FFmpeg file executable location (also downloads static binaries on windows)
+            self.__ffmpeg = get_valid_ffmpeg_path(
                 custom_ffmpeg,
                 self.__os_windows,
-                ffmpeg_download_path=ffmpeg_download_path_,
+                ffmpeg_download_path=__ffmpeg_download_path,
                 logging=self.__logging,
             )
 
             # check if valid path returned
-            if actual_command:
-                self.__ffmpeg += actual_command  # assign it to class variable
+            if self.__ffmpeg:
                 if self.__logging:
                     logger.debug(
                         "Found valid FFmpeg executables: `{}`.".format(self.__ffmpeg)
@@ -260,7 +253,7 @@ class WriteGear:
 
     def write(self, frame, rgb_mode=False):
 
-        """  
+        """
         Pipelines `ndarray` frames to respective API _(FFmpeg in Compression Mode & OpenCV VideoWriter API in Non-Compression Mode)_.
 
         Parameters:
@@ -333,7 +326,7 @@ class WriteGear:
     def __Preprocess(self, channels, rgb=False):
         """
         Internal method that pre-processes FFmpeg Parameters before beginning pipelining.
-        
+
         Parameters:
             channels (int): Number of channels
             rgb_mode (boolean): activates RGB mode _(if enabled)_.
@@ -373,7 +366,7 @@ class WriteGear:
             # set input framerate - minimum threshold is 5.0
             if self.__logging:
                 logger.debug(
-                    "Setting Input FrameRate = {}".format(self.__inputframerate)
+                    "Setting Input framerate: {}".format(self.__inputframerate)
                 )
             input_parameters["-framerate"] = str(self.__inputframerate)
 
@@ -385,9 +378,9 @@ class WriteGear:
     def __startFFmpeg_Process(self, input_params, output_params):
 
         """
-        An Internal method that launches FFmpeg subprocess, that pipelines frames to 
-        stdin, in Compression Mode.  
-    
+        An Internal method that launches FFmpeg subprocess, that pipelines frames to
+        stdin, in Compression Mode.
+
         Parameters:
             input_params (dict): Input FFmpeg parameters
             output_params (dict): Output FFmpeg parameters
@@ -396,16 +389,12 @@ class WriteGear:
         input_parameters = dict2Args(input_params)
 
         # pre-assign default encoder parameters (if not assigned by user).
-        if "-vcodec" not in output_params:
+        if not "-vcodec" in output_params:
             output_params["-vcodec"] = "libx264"
         if output_params["-vcodec"] in ["libx264", "libx265"]:
-            if "-crf" in output_params:
-                pass
-            else:
+            if not "-crf" in output_params:
                 output_params["-crf"] = "18"
-            if "-preset" in output_params:
-                pass
-            else:
+            if not "-preset" in output_params:
                 output_params["-preset"] = "fast"
         # convert output parameters to list
         output_parameters = dict2Args(output_params)
@@ -435,7 +424,7 @@ class WriteGear:
         """
 
         Executes user-defined FFmpeg Terminal command, formatted as a python list(in Compression Mode only).
-        
+
         Parameters:
             cmd (list): inputs list data-type command.
 
@@ -476,7 +465,7 @@ class WriteGear:
 
     def __startCV_Process(self):
         """
-        An Internal method that launches OpenCV VideoWriter process for given settings, in Non-Compression Mode. 
+        An Internal method that launches OpenCV VideoWriter process for given settings, in Non-Compression Mode.
         """
         # turn off initiate flag
         self.__initiate = False

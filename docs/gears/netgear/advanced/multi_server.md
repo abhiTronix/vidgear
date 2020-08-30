@@ -22,11 +22,10 @@ limitations under the License.
 
 ## Overview
 
-<p align="center">
-  <img src="../../../../assets/images/multi_server.png" alt="NetGear's Multi-Servers Mode" width="75%"/>
-  <br>
-  <sub><i>NetGear's Multi-Servers Mode generalised</i></sub>
-</p>
+<figure>
+  <img src="../../../../assets/images/multi_server.webp" alt="NetGear's Multi-Servers Mode" width="75%"/>
+  <figcaption>NetGear's Multi-Servers Mode generalised</figcaption>
+</figure>
 
 In this exclusive mode, NetGear API robustly handles Multiple Servers at once, thereby providing seamless access to frames and unidirectional data transfer from multiple Publishers/Servers across the network in real-time. 
 
@@ -100,7 +99,7 @@ Open a terminal on Client System _(where you want to display the input frames re
     * Note down the IP-address of this system(required at all Server's end) by executing the command: `hostname -I` and also replace it in the following code.
     * Also, assign the tuple/list of port address of all Servers you are going to connect to this system. 
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -174,7 +173,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! info "Replace the IP address in the following code with Client's IP address you noted earlier and also assign a unique port address _(required by Client to identify this system)_."
 
-!!! tip "You can terminate stream anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 
 ```python
@@ -225,7 +224,7 @@ Finally, Open the terminal on another Server System _(also with a webcam connect
 
 !!! info "Replace the IP address in the following code with Client's IP address you noted earlier and also assign a unique port address _(required by Client to identify this system)_."
 
-!!! tip "You can terminate stream anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
@@ -285,7 +284,7 @@ Open a terminal on Client System _(where you want to display the input frames re
     * Note down the IP-address of this system(required at all Server's end) by executing the command: `hostname -I` and also replace it in the following code.
     * Also, assign the tuple/list of port address of all Servers you are going to connect to this system. 
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -358,7 +357,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! info "Replace the IP address in the following code with Client's IP address you noted earlier and also assign a unique port address _(required by Client to identify this system)_."
 
-!!! tip "You can terminate stream anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
@@ -408,7 +407,7 @@ Finally, Open the terminal on another Server System _(also with a webcam connect
 
 !!! info "Replace the IP address in the following code with Client's IP address you noted earlier and also assign a unique port address _(required by Client to identify this system)_."
 
-!!! tip "You can terminate stream anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
@@ -475,7 +474,7 @@ Open a terminal on Client System _(where you want to display the input frames re
     * Note down the IP-address of this system(required at all Server's end) by executing the command: `hostname -I` and also replace it in the following code.
     * Also, assign the tuple/list of port address of all Servers you are going to connect to this system. 
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -551,7 +550,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! info "Replace the IP address in the following code with Client's IP address you noted earlier and also assign a unique port address _(required by Client to identify this system)_."
 
-!!! tip "You can terminate stream anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
@@ -605,7 +604,7 @@ Finally, Open the terminal on another Server System _(this time a Raspberry Pi w
 
 !!! info "Replace the IP address in the following code with Client's IP address you noted earlier and also assign a unique port address _(required by Client to identify this system)_."
 
-!!! tip "You can terminate stream anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries

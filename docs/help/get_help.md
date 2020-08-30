@@ -20,17 +20,22 @@ limitations under the License.
 
 # Getting Help
 
+<figure>
+<img src="https://i.pinimg.com/originals/d1/1a/0e/d11a0e5f0616e5ce74ebf0dd7ec5594f.gif" loading="lazy" alt="Getting help"/>
+<figcaption>Courtesy - <a href="https://www.pinterest.com/pin/435019645249342748/">Pinterest</a></figcaption>
+</figure>
+
 > Would you like to get help with VidGear?
 
 There are several ways to get help with VidGear:
 
 
-&nbsp; 
+&thinsp;
 
 
 ## Frequently Asked Questions
 
-Got a question related to VidGear Working?  
+> Got a question related to VidGear Working?  
 
 Checkout our Frequently Asked Questions, a curated list of all the questions with answer, that we commonly recieve, for quickly troubleshoot your problems:
 
@@ -38,6 +43,7 @@ Checkout our Frequently Asked Questions, a curated list of all the questions wit
 - [CamGear FAQs ➶](camgear_faqs.md)
 - [PiGear FAQs ➶](pigear_faqs.md)
 - [ScreenGear FAQs ➶](screengear_faqs.md)
+- [StreamGear FAQs ➶](streamgear_faqs.md)
 - [WriteGear FAQs ➶](writegear_faqs.md)
 - [NetGear FAQs ➶](netgear_faqs.md)
 - [WebGear FAQs ➶](webgear_faqs.md)
@@ -46,28 +52,30 @@ Checkout our Frequently Asked Questions, a curated list of all the questions wit
 - [NetGear_Async FAQs ➶](netgear_async_faqs.md)
 
 
-&nbsp; 
+&thinsp;
 
 
 ## Join our Gitter Community channel
 
-Join and chat on our Gitter Community channel: [![Glitter chat](https://img.shields.io/badge/Chat&nbsp;on-Gitter-yellow.svg?style=flat-square&logo=gitter)](https://gitter.im/vidgear/community)
+> Have you come up with some new idea, or looking for the fastest way troubleshoot your problems
+
+**Join and chat on our Gitter Community channel:** [![Glitter chat](https://img.shields.io/badge/Chat&nbsp;on-Gitter-yellow.svg?style=flat-square&logo=gitter)](https://gitter.im/vidgear/community)
 
 There you can ask quick questions, swiftly troubleshoot your problems, help others, share ideas & information, etc. 
 
 
-&nbsp; 
+&thinsp;
 
 
 ## This is what you do when...
 
-* [Got a question or problem?](../../contribution/#got-a-question-or-problem)
-* [Found a typo?](../../contribution/#found-a-typo)
-* [Found a bug?](../../contribution/#found-a-bug)
-* [Missing a feature/improvement?](../../contribution/#missing-a-featureimprovement)
+- [x] [Got a question or problem?](../../contribution/#got-a-question-or-problem)
+- [x] [Found a typo?](../../contribution/#found-a-typo)
+- [x] [Found a bug?](../../contribution/#found-a-bug)
+- [x] [Missing a feature/improvement?](../../contribution/#missing-a-featureimprovement)
 
 
-&nbsp; 
+&thinsp;
 
 
 ## Reporting an issues
@@ -77,7 +85,7 @@ There you can ask quick questions, swiftly troubleshoot your problems, help othe
 Before you do, please read our [guidelines ➶](../../contribution/issue/)
 
 
-&nbsp; 
+&thinsp;
 
 
 ## Preparing a Pull Request
@@ -86,4 +94,4 @@ Before you do, please read our [guidelines ➶](../../contribution/issue/)
 
 Before you do, please read our [guidelines ➶](../../contribution/PR/)
 
-&nbsp; 
+&thinsp;

@@ -40,7 +40,7 @@ Following is the bare-minimum code you need to get started with NetGear_Async AP
 
 Open your favorite terminal and execute the following python code:
 
-!!! tip "You can terminate stream on both side anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
@@ -70,7 +70,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
@@ -127,7 +127,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
@@ -177,7 +177,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! info "Replace the IP address in the following code with Client's IP address you noted earlier."
 
-!!! tip "You can terminate stream on both side anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
@@ -212,7 +212,7 @@ NetGear_Async allows you to easily define your own custom Source at Server-end t
 
 Open your favorite terminal and execute the following python code:
 
-!!! tip "You can terminate stream on both side anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import library
@@ -270,7 +270,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
@@ -326,7 +326,7 @@ Let's implement a bare-minimum example where we are sending [Stabilized](../../s
 
 Open your favorite terminal and execute the following python code:
 
-!!! tip "You can terminate stream on both side anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
@@ -355,7 +355,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries

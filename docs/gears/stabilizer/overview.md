@@ -20,21 +20,20 @@ limitations under the License.
 
 # Stabilizer Class
 
+<div id="player_stab" align="middle"></div>
+<p align="middle">Original Video Courtesy <a href="http://liushuaicheng.org/SIGGRAPH2013/database.html" title="opensourced video samples database">@SIGGRAPH2013</a></p>
+
+!!! info "This video frames are transcoded with [**StreamGear API**](../../streamgear/overview/) and hosted on [GitHub Repository](https://github.com/abhiTronix/streamgear_chunks) and served with [raw.githack.com](https://raw.githack.com)"
+
+
 
 ## Overview
 
-<p align="center">
-  <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/stabilizer.gif" alt="VideoGear Stabilizer in action!"/>
-  <br>
-  <sub><i>Original Video Courtesy <a href="http://liushuaicheng.org/SIGGRAPH2013/database.html" title="opensourced video samples database">@SIGGRAPH2013</a></i></sub>
-</p>
-
-This is an auxiliary class that enables Video Stabilization for vidgear with minimalistic latency, and at the expense of little to no additional computational requirements. 
+> Stabilizer is an auxiliary class that enables Video Stabilization for vidgear with minimalistic latency, and at the expense of little to no additional computational requirements. 
 
 The basic idea behind it is to tracks and save the salient feature array for the given number of frames and then uses these anchor point to cancel out all perturbations relative to it for the incoming frames in the queue. This class relies heavily on [**Threaded Queue mode**](../../../bonus/TQM/) for error-free & ultra-fast frame handling.
 
-&nbsp; 
-
+&thinsp; 
 
 ## Features
 
@@ -47,19 +46,18 @@ The basic idea behind it is to tracks and save the salient feature array for the
 - [x] _Also seamlessly works standalone._
 
 
-&nbsp;
+&thinsp;
 
 
-!!! danger "The stabilizer may not perform well against High-frequency jitter in video. Use at your own risk!"
+!!! danger "Important" 
 
-!!! warning "The stabilizer might be slower for High-Quality videos-frames."
+	- The stabilizer may not perform well against High-frequency jitter in video. Use at your own risk!
 
-!!! tip "It is advised to enable logging on the first run for easily identifying any runtime errors."
+	- :warning: The stabilizer might be slower for High-Quality videos-frames.
 
+	- It is advised to enable logging on the first run for easily identifying any runtime errors.
 
-
-
-&nbsp; 
+&thinsp; 
 
 ## Importing
 
@@ -69,4 +67,32 @@ You can import Stabilizer Class in your program as follows:
 from vidgear.gears.stabilizer import Stabilizer
 ```
 
-&nbsp; 
+&thinsp;
+
+## Usage Examples
+
+<div class="zoom">
+<a href="../usage/">See here 🚀</a>
+</div>
+
+
+## Parameters
+
+<div class="zoom">
+<a href="../params/">See here 🚀</a>
+</div>
+
+## Reference
+
+<div class="zoom">
+<a href="../../../bonus/reference/stabilizer/">See here 🚀</a>
+</div>
+
+
+## FAQs
+
+<div class="zoom">
+<a href="../../../help/stabilizer_faqs/">See here 🚀</a>
+</div>  
+
+&thinsp; 

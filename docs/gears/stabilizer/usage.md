@@ -20,9 +20,13 @@ limitations under the License.
 
 # Stabilizer Class Usage Examples:
 
-!!! danger "The stabilizer may not perform well against High-frequency jitter in video. Use at your own risk!"
+&thinsp;
+
+!!! fail "The stabilizer may not perform well against High-frequency jitter in video. Use at your own risk!"
 
 !!! warning "The stabilizer might be slower for High-Quality videos-frames."
+
+&thinsp;
 
 ## Bare-Minimum Usage with VideoCapture Gears
 

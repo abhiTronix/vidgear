@@ -20,13 +20,6 @@ limitations under the License.
 
 # Installation Overview
 
-## Installation methods
-
-* [Install using pip](../installation/pip_install/) _(recommended)_
-* [Install from source](../installation/source_install/)
-
-&nbsp;
-
 
 ## Supported Systems
 
@@ -36,13 +29,20 @@ VidGear is well-tested and supported on the following systems, with [python 3.6+
 * Windows 7 or later
 * macOS 10.12.6 (Sierra) or later
 
-&nbsp;
+&thinsp;
 
 ## Supported Python legacies
 
-**Python 3.6+** are only supported legacies for installing Vidgear v0.1.7 and above.
+[**Python 3.6+**](https://www.python.org/downloads/) are only supported legacies for installing Vidgear v0.1.7 and above.
 
-&nbsp;
+&thinsp;
+
+## Installation methods
+
+* [Install using pip](../installation/pip_install/) _(recommended)_
+* [Install from source](../installation/source_install/)
+
+&thinsp;
 
 <!--
 External URLs

@@ -18,23 +18,22 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
+
+import cv2
+import sys
+import zmq
+import numpy as np
 import asyncio
 import inspect
 import logging as log
-import platform
-import sys
-
-import cv2
 import msgpack
-import msgpack_numpy as m
-import numpy as np
-import zmq
+import platform
 import zmq.asyncio
-
+import msgpack_numpy as m
 from collections import deque
-from ..videogear import VideoGear
-from .helper import logger_handler
 
+from .helper import logger_handler
+from ..videogear import VideoGear
 
 # define logger
 logger = log.getLogger("NetGear_Async")
@@ -45,24 +44,24 @@ logger.setLevel(log.DEBUG)
 
 class NetGear_Async:
     """
-    NetGear_Async is an asyncio videoframe messaging framework, built on `zmq.asyncio`, and powered by high-performance asyncio event loop 
-    called **`uvloop`** to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. 
-    Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system. 
+    NetGear_Async is an asyncio videoframe messaging framework, built on `zmq.asyncio`, and powered by high-performance asyncio event loop
+    called **`uvloop`** to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints.
+    Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system.
 
-    NetGear_Async can generate double performance as compared to [NetGear API](#netgear) at about 1/3rd of memory consumption, and also 
-    provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support 
-    any NetGear's Exclusive Modes yet. 
+    NetGear_Async can generate double performance as compared to [NetGear API](#netgear) at about 1/3rd of memory consumption, and also
+    provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support
+    any NetGear's Exclusive Modes yet.
 
-    Furthermore, NetGear_Async allows us to  define our own custom Server Source to manipulate frames easily before sending them across the 
-    network. In addition to all this, NetGear_Async also **provides a special internal wrapper around VideoGear API]**, which itself provides 
-    internal access to both CamGear and PiGear APIs thereby granting it exclusive power for streaming frames incoming from any connected 
+    Furthermore, NetGear_Async allows us to  define our own custom Server Source to manipulate frames easily before sending them across the
+    network. In addition to all this, NetGear_Async also **provides a special internal wrapper around VideoGear API]**, which itself provides
+    internal access to both CamGear and PiGear APIs thereby granting it exclusive power for streaming frames incoming from any connected
     device/source to the network.
 
     NetGear_Async as of now supports four ZeroMQ messaging patterns:
 
     - `zmq.PAIR` _(ZMQ Pair Pattern)_
     - `zmq.REQ/zmq.REP` _(ZMQ Request/Reply Pattern)_
-    - `zmq.PUB/zmq.SUB` _(ZMQ Publish/Subscribe Pattern)_ 
+    - `zmq.PUB/zmq.SUB` _(ZMQ Publish/Subscribe Pattern)_
     - `zmq.PUSH/zmq.PULL` _(ZMQ Push/Pull Pattern)_
 
     Whereas supported protocol are: `tcp` and `ipc`.
@@ -340,7 +339,7 @@ class NetGear_Async:
 
     async def recv_generator(self):
         """
-        A default Asynchronous Frame Generator for NetGear's Receiver-end.  
+        A default Asynchronous Frame Generator for NetGear's Receiver-end.
         """
         # check whether `receive mode` is activated
         if not (self.__receive_mode):
@@ -415,7 +414,7 @@ class NetGear_Async:
 
     async def __frame_generator(self):
         """
-        Returns a default frame-generator for NetGear's Server Handler. 
+        Returns a default frame-generator for NetGear's Server Handler.
         """
         # start stream
         self.__stream.start()
@@ -434,7 +433,7 @@ class NetGear_Async:
     def close(self, skip_loop=False):
         """
         Terminates all NetGear Asynchronous processes gracefully.
-        
+
         Parameters:
             skip_loop (Boolean): (optional)used only if closing executor loop throws an error.
         """

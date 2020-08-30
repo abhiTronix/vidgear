@@ -20,9 +20,9 @@ limitations under the License.
 
 # Advanced Usage: Secure Mode for NetGear API 
 
-<p align="center">
-  <img src="../../../../assets/images/secure_mode.png" alt="Secure Mode" width="75%"/>
-</p>
+<figure>
+  <img src="../../../../assets/images/secure_mode.webp" alt="Secure Mode" width="75%"/>
+</figure>
 
 
 ## Overview
@@ -123,7 +123,7 @@ Following is the bare-minimum code you need to get started with Secure Mode in N
 
 Open your favorite terminal and execute the following python code:
 
-!!! tip "You can terminate both sides anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -170,7 +170,7 @@ server.close()
 
 Then open another terminal on the same system and execute the following python code and see the output:
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -228,7 +228,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! danger "You need to paste the Public+Secret Keypairs _(generated at the Server End)_, in the `.vidgear/keys` folder here at the Home directory of your Client machine, for a successful authentication!"
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -280,7 +280,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! danger "You also need to copy the Public+Secret Keypairs _(generated here on running this example code)_, present in the `.vidgear/keys` folder here at the Home directory of your Server machine _(Required at Client's end for a successful authentication)_."
 
-!!! tip "You can terminate stream on both side anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries

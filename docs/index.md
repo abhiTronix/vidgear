@@ -20,31 +20,33 @@ limitations under the License.
 
 # Introduction
 
-<img src="assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="90%" />
+<img src="assets/images/vidgear.webp" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="90%" />
 
 <h2 align="center">
 	<img src="assets/images/tagline.svg" alt="VidGear tagline", width="40%"/>
 </h2>
 
-&nbsp;
+&thinsp;
 
-VidGear is a High-Performance Framework that provides an all-in-one complete Video Processing solution for building real-time applications in python.
+> VidGear is a High-Performance Framework that provides an one-stop **Video-Processing** solution for building real-time media applications in python :fire:
 
-VidGear provides an easy-to-use, highly extensible, **Multi-Threaded + Asyncio wrapper** around many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [pafy][pafy] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance. 
+VidGear provides an easy-to-use, highly extensible, **[Multi-Threaded](https://docs.python.org/3/library/threading.html) + [Asyncio](https://docs.python.org/3/library/asyncio.html) wrapper** around many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [pafy][pafy] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance. 
 
-VidGear primarily focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks, in just a few lines of code.
+VidGear primarily focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks in just few lines of python code.
 
-&nbsp;
+&thinsp;
 
 ## Getting Started
 
-If this is your first time using VidGear, head straight to the [Installation ➶](installation.md) to install VidGear.
+- [x] If this is your first time using VidGear, head straight to the [Installation ➶](installation.md) to install VidGear.
 
-Once you have VidGear installed, checkout its [Gears ➶](gears.md)
+- [x] Once you have VidGear installed, **checkout its well-documented [Gears ➶](gears.md)**
 
-Also, if you're already familar with [OpenCV][opencv] library, then see [Switching from OpenCV ➶](switch_from_cv.md)
+- [x] Also, if you're already familar with [OpenCV][opencv] library, then see [Switching from OpenCV ➶](switch_from_cv.md)
 
-&nbsp;
+- [x] Or, if you're just getting started with OpenCV with Python, then see [here ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)
+
+&thinsp;
 
 ## Gears
 
@@ -63,6 +65,10 @@ These Gears can be classified as follows:
 
 * [WriteGear](gears/writegear/introduction/): Handles Flexible Lossless Video Encoding and Compression.
 
+**Streaming Gears**
+
+* [StreamGear](gears/streamgear/overview/): Handles Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats.
+
 **Network Gears**
 
 * [NetGear](gears/netgear/overview/): Handles high-performance video-frames & data transfer between interconnecting systems over the network.
@@ -72,7 +78,7 @@ These Gears can be classified as follows:
     * [WebGear](gears/webgear/overview/): ASGI Video Server that can send live video-frames to any web browser on the network.
     * [NetGear_Async](gears/netgear_async/overview/): Immensely Memory-efficient Asyncio video-frames network messaging framework. 
 
-&nbsp;
+&thinsp;
 
 ## Contributions
 
@@ -80,29 +86,29 @@ Contributions are welcome, and greatly appreciated!
 
 Please see our [Contribution Guidelines ➶](contribution.md) for more details.
 
-&nbsp;
+&thinsp;
 
 ## Community Channel
 
 If you've come up with some new idea, or looking for the fastest way troubleshoot your problems, then *join our [Gitter community channel ➶][gitter]*
 
-&nbsp; 
+&thinsp; 
 
 ## Become a Stargazer
 
 You can be a [Stargazer :star2:][stargazer] by starring us on Github, it helps us a lot and *you're making it easier for others to find & trust this library.* Thanks!
 
-&nbsp;
+&thinsp;
 
 ## Support Us
 
-**VidGear is free, but rely on your support.** 
+> VidGear is free, but rely on your support :heart:
 
 Sending a donation using link below is *extremely* helpful in keeping VidGear development alive:
 
 <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#eba100', 'W7W8WTYO');kofiwidget2.draw();</script> 
 
-&nbsp;
+&thinsp;
 
 ## Citation
 
@@ -118,7 +124,7 @@ Here is a Bibtex entry you can use to cite this project in a publication:
   }
 ```
 
-&nbsp;
+&thinsp;
 
 <!--
 External URLs

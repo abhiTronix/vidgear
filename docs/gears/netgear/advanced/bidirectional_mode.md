@@ -21,7 +21,7 @@ limitations under the License.
 # Advanced Usage: Bidirectional Mode for NetGear API 
 
 <h3 align="center">
-  <img src="../../../../assets/images/bidir.png" alt="Bi-directional Mode" width="85%"/>
+  <img src="../../../../assets/images/bidir.webp" alt="Bi-directional Mode" width="85%"/>
 </h3>
 
 ## Overview
@@ -90,7 +90,7 @@ Following is the bare-minimum code you need to get started with Bidirectional Mo
 
 Open your favorite terminal and execute the following python code:
 
-!!! tip "You can terminate both sides anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -144,7 +144,7 @@ server.close()
 
 Then open another terminal on the same system and execute the following python code and see the output:
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -212,7 +212,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! info "Note down the IP-address of this system(required at Server's end) by executing the command: `hostname -I` and also replace it in the following code."
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -274,7 +274,7 @@ Now, Open the terminal on another Server System _(a Raspberry Pi with Camera Mod
 
 !!! info "Replace the IP address in the following code with Client's IP address you noted earlier."
 
-!!! tip "You can terminate stream on both side anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -347,7 +347,7 @@ In this example we are going to implement a bare-minimum example, where we will 
 
 Open your favorite terminal and execute the following python code:
 
-!!! tip "You can terminate both side anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries
@@ -414,7 +414,7 @@ server.close()
 
 Then open another terminal on the same system and execute the following python code and see the output:
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import required libraries

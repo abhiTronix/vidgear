@@ -20,6 +20,10 @@ limitations under the License.
 
 # FFmpeg Installation Instructions
 
+<figure>
+  <a href="http://ffmpeg.org/"><img src="../../../../../assets/images/ffmpeg.webp" alt="FFmpeg"/></a>
+</figure>
+
 WriteGear must requires FFmpeg executables for its Compression capabilities in Compression Mode. You can following machine-specific instructions for its installation:
 
 
@@ -38,7 +42,7 @@ The WriteGear API supports _Auto-Detection_ and _Manual Configuration_ methods o
 
 ### A. Auto-Detection 
 
-!!! note "This is a recommended approach on Linux Machines"
+!!! quote "This is a recommended approach on Linux Machines"
 
 If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) parameter, then on Linux system, it tries to **auto-detects** the required FFmpeg installed binaries through validation test that employs `subprocess` python module. 
 
@@ -65,7 +69,7 @@ The WriteGear API supports _Auto-Installation_ and _Manual Configuration_ method
 
 ### A. Auto-Installation
 
-!!! note "This is a recommended approach on Windows Machines"
+!!! quote "This is a recommended approach on Windows Machines"
 
 If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) parameter, then on Windows system WriteGear API **auto-generates** the required FFmpeg Static Binaries, according to your system specifications, into the temporary directory _(for e.g. `C:\Temp`)_ of your machine.
 
@@ -101,7 +105,7 @@ The WriteGear API supports _Auto-Detection_ and _Manual Configuration_ methods o
 
 ### A. Auto-Detection
 
-!!! note "This is a recommended approach on MacOS Machines"
+!!! quote "This is a recommended approach on MacOS Machines"
 
 If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) parameter, then on macOS system, it tries to **auto-detects** the required FFmpeg installed binaries through validation test that employs `subprocess` python module.
 

@@ -18,14 +18,16 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-import logging as log
+
 import os
+import pytest
+import logging as log
 import platform
 import tempfile
-import pytest
 
 from vidgear.gears import CamGear
 from vidgear.gears.helper import logger_handler
+
 from .fps import FPS
 
 # define test logger
