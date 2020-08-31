@@ -18,15 +18,20 @@ limitations under the License.
 ===============================================
 -->
 
+
+<img src="../assets/images/contribute.webp" alt="VidGear Contribution" width="90%" />
+
+
 # Contribution Overview
 
-Contributions are welcome, We'd love your contribution to VidGear in order to fix bugs or to implement new features!
 
-!!! tip "Contribution Opportunities"
+> Contributions are welcome, We'd love your contribution to VidGear in order to fix bugs or to implement new features!
+
+??? tip "Contribution Opportunities :heart:"
 
     If you're looking for something to work on, check for the [PR WELCOMED :mailbox_with_mail:](https://github.com/abhiTronix/vidgear/issues?q=is%3Aissue+is%3Aopen+label%3A%22PR+WELCOMED+%3Amailbox_with_mail%3A%22) labeled issues on our GitHub Repository.
 
-&nbsp;
+&thinsp;
 
 ## Submission Contexts
 
@@ -58,11 +63,11 @@ You can request a new feature by [submitting an issue](../contribution/issue/) t
 
 * **Minor Feature Requests:**  Small features and bugs resolved on priority and can be directly submitted as a Pull Request. You just have to [submit an issue](../contribution/issue/) to our GitHub Repository.
 
-&nbsp;
+&thinsp;
 
 ## Submission Guidelines
 
 - [Submitting an Issue Guidelines](../contribution/issue/)
 - [Submitting Pull Request(PR) Guidelines](../contribution/PR/)
 
-&nbsp;
+&thinsp;

@@ -21,6 +21,9 @@ limitations under the License.
 # VideoGear API Usage Examples:
 
 
+&thinsp;
+
+
 ## Bare-Minimum Usage with CamGear backend
 
 Following is the bare-minimum code you need to access CamGear API with VideoGear:
@@ -125,6 +128,8 @@ import cv2
 
 # open any valid video stream with stabilization enabled(`stabilize = True`)
 stream_stab = VideoGear(source="test.mp4", stabilize=True).start()
+# open same stream without stablization for comparision
+stream_org = VideoGear(source="test.mp4", stabilize=False).start()
 
 # loop over
 while True:
@@ -154,7 +159,7 @@ while True:
     )
 
     # Show output window
-    cv2.imshow("Stabilized Comparison", output_frame)
+    cv2.imshow("Stabilization Benchmarks", output_frame)
 
     # check for 'q' key if pressed
     key = cv2.waitKey(1) & 0xFF
@@ -224,13 +229,13 @@ stream.stop()
 
 ## Using VideoGear with Colorspace Manipulation
 
-VideoGear API also supports **Colorspace Manipulation** but not direct. 
+VideoGear API also supports **Colorspace Manipulation** but not direct like other VideoCapture Gears. 
 
 !!! danger "Important"
 
     * `color_space` global variable is **NOT Supported** in VideoGear API, calling it will result in `AttribueError`. More details can be found [here ➶](../../../bonus/colorspace_manipulation/#using-color_space-global-variable)
 
-    * Any incorrect or None-type value, will immediately revert the colorspace to default i.e. `BGR`.
+    * Any incorrect or None-type value on [`colorspace`](../params/#colorspace) parameter will be skipped.
 
 
 In following example code, we will convert source colorspace to [**HSV**](https://en.wikipedia.org/wiki/HSL_and_HSV) on initialization:

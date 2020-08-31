@@ -21,27 +21,28 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-import logging as log
+
 import cv2
 import numpy as np
-
+import logging as log
 from collections import deque
-from .helper import check_CV_version, logger_handler
 
+from .helper import logger_handler, check_CV_version
 
 # define logger
 logger = log.getLogger("Stabilizer")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
 class Stabilizer:
     """
-    This is an auxiliary class that enables Video Stabilization for vidgear with minimalistic latency, and at the expense 
-    of little to no additional computational requirements. 
+    This is an auxiliary class that enables Video Stabilization for vidgear with minimalistic latency, and at the expense
+    of little to no additional computational requirements.
 
-    The basic idea behind it is to tracks and save the salient feature array for the given number of frames and then uses 
-    these anchor point to cancel out all perturbations relative to it for the incoming frames in the queue. This class relies 
+    The basic idea behind it is to tracks and save the salient feature array for the given number of frames and then uses
+    these anchor point to cancel out all perturbations relative to it for the incoming frames in the queue. This class relies
     heavily on **Threaded Queue mode** for error-free & ultra-fast frame handling.
     """
 
@@ -129,7 +130,7 @@ class Stabilizer:
     def stabilize(self, frame):
         """
         This method takes an unstabilized video frame, and returns a stabilized one.
-        
+
         Parameters:
             frame (numpy.ndarray): inputs unstabilized video frames.
         """
@@ -271,9 +272,9 @@ class Stabilizer:
     def __box_filter_convolve(self, path, window_size):
         """
         An internal method that applies *normalized linear box filter* to path w.r.t averaging window
-        
+
         Parameters:
-        
+
         * path (numpy.ndarray): a cumulative sum of transformations
         * window_size (int): averaging window size
         """
@@ -290,7 +291,7 @@ class Stabilizer:
 
     def __apply_transformations(self):
         """
-        An internal method that applies affine transformation to the given frame 
+        An internal method that applies affine transformation to the given frame
         from previously calculated transformations
         """
         # extract frame and its index from deque

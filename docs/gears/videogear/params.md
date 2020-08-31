@@ -20,6 +20,8 @@ limitations under the License.
 
 # VideoGear API Parameters
 
+&thinsp;
+
 ## **`enablePiCamera`** 
 
 This parameter select access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) API respectively. This means the if `enablePiCamera` flag is `True`, `PiGear` API will be accessed and if `False`, the `CamGear` API will be accessed. 

@@ -20,6 +20,10 @@ limitations under the License.
 
 # Helping VidGear
 
+<figure>
+  <img src="../../../assets/images/help_us.webp" alt="Helping Vidgear"/>
+</figure>
+
 > Liked VidGear? Would you like to help VidGear, other users, and the author?
 
 There are very simple ways to help us:

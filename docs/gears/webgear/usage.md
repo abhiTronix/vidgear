@@ -46,6 +46,8 @@ Following is the bare-minimum code you need to get started with WebGear API:
 
 !!! warning "If you experience any performance-throttling/lag while running this bare-minimum example, then Kindly see advanced [Performance Tweaks ➶](../advanced/#performance-enhancements)."
 
+!!! tip "If you want see output on different machine on the same network, then you need to note down the IP-address of host system, and finally you need to replace this address _(along with selected port)_ on the target machine's browser."
+
 ### Running Programmatically
 
 You can access and run WebGear VideoStreamer Server programmatically in your python script in just a few lines of code, as follows:
@@ -59,12 +61,12 @@ from vidgear.gears.asyncio import WebGear
 web=WebGear(source="test.mp4")
 
 # run this app on Uvicorn server
-uvicorn.run(web(), host='0.0.0.0', port=8000)
+uvicorn.run(web(), host='localhost', port=8000)
 
 # close app safely
 web.shutdown()
 ```
-That's all. Now, just run that, and a live video stream can be accessed on any browser at http://0.0.0.0:8000/ address.
+That's all. Now, just run that, and a live video stream can be accessed on any browser at http://localhost:8000/ address.
 
 
 ### Running from Terminal
@@ -73,7 +75,7 @@ You can access and run WebGear Server directly from the terminal commandline as 
 
 !!! danger "Make sure your `PYTHON_PATH` is set to python 3.6+ versions only."
 
-The following command will run a WebGear VideoStreamer server at http://0.0.0.0:8000/:
+The following command will run a WebGear VideoStreamer server at http://localhost:8000/:
 
 ```sh
 python3 -m vidgear.gears.asyncio --source test.avi 

@@ -90,11 +90,11 @@ install:
     pip install --upgrade pip wheel;
     pip install --upgrade .[asyncio];
     pip uninstall opencv-python -y;
-    pip install --upgrade flake8 six codecov pytest pytest-asyncio pytest-cov youtube-dl;
+    pip install --upgrade flake8 six codecov pytest pytest-asyncio pytest-cov youtube-dl mpegdash;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
     pip install --upgrade --user pip wheel;
-    pip install --upgrade --user .[asyncio] six codecov pytest pytest-asyncio pytest-cov youtube-dl;
+    pip install --upgrade --user .[asyncio] six codecov pytest pytest-asyncio pytest-cov youtube-dl mpegdash;
     fi
 
 before_script:

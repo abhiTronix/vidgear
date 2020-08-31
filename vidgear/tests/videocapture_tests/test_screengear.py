@@ -17,10 +17,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libraries
+# import the necessary packages
+
+import pytest
 import logging as log
 import platform
-import pytest
 from mss.exception import ScreenShotError
 
 from vidgear.gears import ScreenGear
@@ -28,6 +29,7 @@ from vidgear.gears.helper import logger_handler
 
 # define test logger
 logger = log.getLogger("Test_screengear")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
@@ -39,12 +41,15 @@ test_data = [
     (3, {}, None),
 ]
 
-@pytest.mark.skipif((platform.system() == "Linux" or platform.system() == "Windows"), reason="Buggy!")
+
+@pytest.mark.skipif(
+    (platform.system() == "Linux" or platform.system() == "Windows"), reason="Buggy!"
+)
 @pytest.mark.parametrize("monitor, options, colorspace", test_data)
 def test_screengear(monitor, options, colorspace):
     """
-	Tests ScreenGear's playback capabilities with custom defined dimensions -> passes if fails with ScreenShotError
-	"""
+    Tests ScreenGear's playback capabilities with custom defined dimensions -> passes if fails with ScreenShotError
+    """
     try:
         # define dimensions of screen w.r.t to given monitor to be captured
         # Open Live Screencast on current monitor
@@ -68,9 +73,7 @@ def test_screengear(monitor, options, colorspace):
         # clean resources
         stream.stop()
     except Exception as e:
-        if (
-             monitor in [-1, 3]
-        ):
+        if monitor in [-1, 3]:
             logger.exception(e)
         else:
             pytest.fail(str(e))

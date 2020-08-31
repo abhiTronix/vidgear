@@ -24,6 +24,9 @@ limitations under the License.
 !!! warning "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this API, otherwise it won't work."
 
 
+&thinsp;
+
+
 ## Bare-Minimum Usage
 
 Following is the bare-minimum code you need to get started with PiGear API:
@@ -70,7 +73,7 @@ stream.stop()
 
 ## Using PiGear with Variable Camera Properties
 
-PiGear API supports all tweak parameters and attributes available within [**Picamera library**](https://picamera.readthedocs.io/en/release-1.13/api_camera.html). These parameters can be easily applied to source stream in PiGear API through its `options` dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
+PiGear API supports all tweak parameters and attributes available within [**Picamera library**](https://picamera.readthedocs.io/en/release-1.13/api_camera.html). These parameters can be easily applied to source stream in PiGear API through its [`options`](../params/#options) dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
 
 
 !!! tip "All supported parameters are listed in [PiCamera Docs ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html)"

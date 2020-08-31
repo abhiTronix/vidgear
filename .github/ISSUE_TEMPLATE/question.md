@@ -10,6 +10,7 @@ labels: "issue: question"
 ## Question
 
 <!--- Provide your question description here -->
+_Kindly describe the issue here._
 
 
 ### Acknowledgment
@@ -31,10 +32,10 @@ labels: "issue: question"
 
 ### Your Environment
 <!--- Include as many relevant details about the environment you worked in -->
-* VidGear version: <!--- Run command `python -c "import vidgear; print(vidgear.__version__)`" -->
-* Branch: <!--- Master/Testing/Development/PyPi -->
-* Python version:
-* pip version:
+* VidGear version: <!--- Run command `python -c "import vidgear; print(vidgear.__version__)"` -->
+* Branch: <!--- Select between: Master | Testing | Development | PyPi -->
+* Python version: <!---Run command `python -V` -->
+* PiP version: <!--- Run command `python -c "import pip; print(pip.__version__)"` -->
 * Operating System and version:
 
 

@@ -20,6 +20,7 @@ limitations under the License.
 
 # CamGear API Usage Examples:
 
+&thinsp;
 
 ## Bare-Minimum Usage
 
@@ -67,15 +68,22 @@ stream.stop()
 
 ## Using Camgear with Youtube Videos
 
-CamGear API provides complete support for **Live + Normal YouTube Video frames pipelining**. You just have to provide the desired YouTube Video's URL to its `source` parameter and enable `y_tube` parameter. The complete usage example is as follows:
+CamGear API provides direct support for **Live + Normal YouTube Video frames pipelining**. All you have to do is to provide the desired YouTube Video's URL to its `source` parameter and enable the `y_tube` parameter. The complete usage example is as follows:
 
-!!! bug "Bug in `opencv-python` library"
+!!! danger "Update Requirements"
 
-    Due to a recent [bug](https://github.com/skvark/opencv-python/issues/204), if you're using `pip` installed [`opencv-python`](https://pypi.org/project/opencv-python/), instead of [**official OpenCV Binaries**](https://github.com/opencv/opencv), then you must need to install the latest `opencv-python` or `opencv-contrib-python` binaries _([v4.1.1.26 or above](https://github.com/skvark/opencv-python/releases/latest))_ on your machine, as follows:
+    If you're using `pip` installed [`opencv-python`](https://pypi.org/project/opencv-python/), then you must need to install the latest `opencv-python` or `opencv-contrib-python` binaries on your machine, along with latest `youtube-dl` and `pafy`. You can do it as follows:
 
     ```sh
     pip install -U opencv-python       #or install opencv-contrib-python similarly
+    pip install -U youtube-dl pafy
     ```
+
+??? bug "Bug in Live YouTube Stream"
+
+    Due to a [**bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) with OpenCV's FFmpeg, some Live Youtube-Stream URLs playback freezes after a few seconds, and CamGear API exit with an error: `/io/opencv/modules/videoio/src/cap_images.cpp:235: error: (-5:Bad argument) CAP_IMAGES: error, expected '0?[1-9][du]' pattern`. This bug occurs with only some live YouTube streams _(not all)_ and hasn't been fixed yet. ***The only workaround for this bug is suggested [here  ➶](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638567443)***
+
+
 
 ```python
 # import required libraries
@@ -119,7 +127,7 @@ stream.stop()
 
 ## Using CamGear with Variable Camera Properties
 
-CamGear API also flexibly support various **Source Tweak Parameters** available within [OpenCV's VideoCapture API](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d). These parameters can be easily applied to source stream in CamGear API through its `options` dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
+CamGear API also flexibly support various **Source Tweak Parameters** available within [OpenCV's VideoCapture API](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d). These tweak parameters can be used to manipulate input source Camera-Device properties _(such as its brightness, saturation, size, iso, gain etc.)_ seemlessly, and can be easily applied in CamGear API through its `options` dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
 
 
 !!! tip "All the supported Source Tweak Parameters can be found [here ➶](../advanced/source_params/#source-tweak-parameters-for-camgear-api)"
@@ -177,7 +185,7 @@ CamGear API also supports **Direct Colorspace Manipulation**, which is ideal for
 In following example code, we will start with [**HSV**](https://en.wikipedia.org/wiki/HSL_and_HSV) as source colorspace, and then we will switch to [**GRAY**](https://en.wikipedia.org/wiki/Grayscale)  colorspace when `w` key is pressed, and then [**LAB**](https://en.wikipedia.org/wiki/CIELAB_color_space) colorspace when `e` key is pressed, finally default colorspace _(i.e. **BGR**)_ when `s` key is pressed. Also, quit when `q` key is pressed:
 
 
-!!! warning "Any incorrect or None-type value, will immediately revert the colorspace to default i.e. `BGR`."
+!!! fail "Any incorrect or None-type value, will immediately revert the colorspace to default i.e. `BGR`."
 
 
 ```python

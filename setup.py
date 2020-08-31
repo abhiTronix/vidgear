@@ -27,7 +27,7 @@ from setuptools import setup
 
 def test_opencv():
     """
-    This function is workaround to 
+    This function is workaround to
     test if correct OpenCV Library version has already been installed
     on the machine or not. Returns True if previously not installed.
     """
@@ -47,13 +47,19 @@ def test_opencv():
     return False
 
 
-with open("README.md", "r") as fh:
+with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
+    long_description = long_description.replace(  # patch for images
+        "docs/overrides/assets", "https://abhitronix.github.io/vidgear/assets"
+    )
+    # patch for unicodes
+    long_description = long_description.replace("➶", ">>")
+    long_description = long_description.replace("©", "(c)")
 
 setup(
     name="vidgear",
     packages=["vidgear", "vidgear.gears", "vidgear.gears.asyncio"],
-    version="0.1.8",
+    version="0.1.9-dev5",
     description="High-performance cross-platform Video Processing Python framework powerpacked with unique trailblazing features.",
     license="Apache License 2.0",
     author="Abhishek Thakur",
@@ -97,10 +103,11 @@ setup(
         "pafy",
         "youtube-dl",
         "asyncio",
+        "dash",
         "Video Processing",
         "Video Stablization",
         "Computer Vision",
-        "Web Streaming",
+        "Video Streaming",
         "raspberrypi",
         "YouTube",
     ],

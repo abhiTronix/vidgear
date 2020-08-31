@@ -67,6 +67,8 @@ Let's re-implement our previous Bare-Minimum usage example with these Performanc
 
 You can access and run WebGear VideoStreamer Server programmatically in your python script in just a few lines of code, as follows:
 
+!!! tip "If you want see output on different machine on the same network, then you need to note down the IP-address of host system, and finally you need to replace this address _(along with selected port)_ on the target machine's browser."
+
 ```python
 # import required libraries
 import uvicorn
@@ -78,14 +80,14 @@ options={"frame_size_reduction": 40, "frame_jpeg_quality": 80, "frame_jpeg_optim
 #initialize WebGear app  
 web=WebGear(source="foo.mp4", logging=True, **options)
 
-#run this app on Uvicorn server at address http://0.0.0.0:8000/
-uvicorn.run(web(), host='0.0.0.0', port=8000)
+#run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host='localhost', port=8000)
 
 #close app safely
 web.shutdown()
 ```
 
-which can be accessed on any browser on the network at http://0.0.0.0:8000/.
+which can be accessed on any browser on the network at http://localhost:8000/.
 
 
 #### Running from Terminal
@@ -99,7 +101,7 @@ Now lets, run this same example directly through the terminal commandline:
 python3 -m vidgear.gears.asyncio --source test.avi --logging True --options '{"frame_size_reduction": 50, "frame_jpeg_quality": 80, "frame_jpeg_optimize": True, "frame_jpeg_progressive": False}'
 ```
 
-which can also be accessed on any browser on the network at http://0.0.0.0:8000/.
+which can also be accessed on any browser on the network at http://localhost:8000/.
 
 &nbsp;
 
@@ -124,8 +126,8 @@ web=WebGear(source="foo.mp4", logging=True, **options) #enable source i.e. `test
 #append new route i.e. mount another folder called `test` located at `/home/foo/.vidgear/test` directory
 web.routes.append(Mount('/test', app=StaticFiles(directory='/home/foo/.vidgear/test'), name="test")) 
 
-#run this app on Uvicorn server at address http://0.0.0.0:8000/
-uvicorn.run(web(), host='0.0.0.0', port=8000)
+#run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host='localhost', port=8000)
 
 #close app safely
 web.shutdown()
@@ -185,13 +187,13 @@ web=WebGear(source="/home/foo/foo1.mp4", logging=True, **options) #enable source
 #append new route to point our rendered webpage 
 web.routes.append(Route('/hello', endpoint=hello_world)) 
 
-#run this app on Uvicorn server at address http://0.0.0.0:8000/
-uvicorn.run(web(), host='0.0.0.0', port=8000)
+#run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host='localhost', port=8000)
 
 #close app safely
 web.shutdown()
 ```
-**And that's all, Now you can see output at [`http://0.0.0.0:8000/hello`](http://0.0.0.0:8000/hello) address.**
+**And that's all, Now you can see output at [`http://localhost:8000/hello`](http://localhost:8000/hello) address.**
 
 &nbsp;
 
@@ -233,8 +235,8 @@ options={"frame_size_reduction": 40, "frame_jpeg_quality": 80, "frame_jpeg_optim
 #initialize WebGear app  
 web=WebGear(enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options)
 
-#run this app on Uvicorn server at address http://0.0.0.0:8000/
-uvicorn.run(web(), host='0.0.0.0', port=8000)
+#run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host='localhost', port=8000)
 
 #close app safely
 web.shutdown()
@@ -257,8 +259,8 @@ options={"frame_size_reduction": 40, "frame_jpeg_quality": 80, "frame_jpeg_optim
 #initialize WebGear app  with a raw source and enable video stabilization(`stabilize=True`)
 web=WebGear(source="foo.mp4", stabilize=True, logging=True, **options)
 
-#run this app on Uvicorn server at address http://0.0.0.0:8000/
-uvicorn.run(web(), host='0.0.0.0', port=8000)
+#run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host='localhost', port=8000)
 
 #close app safely
 web.shutdown()

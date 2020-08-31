@@ -20,7 +20,9 @@ limitations under the License.
 
 if __name__ == "__main__":
     # import libs
-    import argparse, yaml
+    import yaml
+    import argparse
+
     from .webgear import WebGear
 
     try:

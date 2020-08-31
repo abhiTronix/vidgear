@@ -28,7 +28,7 @@ limitations under the License.
 
 When installing VidGear from source, FFmpeg is the only dependency you need to install manually:
 
-??? question "What about rest of the dependencies?"
+!!! question "What about rest of the dependencies?"
 
     Any other python dependencies will be automatically installed based on your OS specifications.
 
@@ -46,7 +46,7 @@ Must require for the video compression and encoding compatibilities within [**Co
 
 If you want to just install and try out the checkout the latest beta [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch , you can do so with the following command. This can be useful if you want to provide feedback for a new feature or want to confirm if a bug you have encountered is fixed in the `testing` branch. 
 
-!!! warning "DO NOT clone or install `development` branch instead, as it is not tested with CI environments and is possibly very unstable or unusable."
+!!! warning "DO NOT clone or install `development` branch, as it is not tested with CI environments and is possibly very unstable or unusable."
 
 ??? tip "Windows Installation"
   
@@ -54,7 +54,7 @@ If you want to just install and try out the checkout the latest beta [`testing`]
 
     * Use following commands to clone and install VidGear:
 
-        ```sh
+      ```sh
         # clone the repository and get inside
         git clone https://github.com/abhiTronix/vidgear.git && cd vidgear
 
@@ -66,7 +66,7 @@ If you want to just install and try out the checkout the latest beta [`testing`]
 
         # OR install with asyncio support
         python - m pip install .[asyncio]
-        ```
+      ```
 
 ```sh
   # clone the repository and get inside

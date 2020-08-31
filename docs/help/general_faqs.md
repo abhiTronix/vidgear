@@ -34,7 +34,7 @@ limitations under the License.
 
 - There's also the official [**OpenCV Tutorials** ➶](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_tutorials.html), provided by the OpenCV folks themselves.
 
-Finally, when you're done, go through [Gears ➶](../../gears/#gears-what-are-these) to see how VidGear works. If you run into any trouble, or have any questions, then join our [Gitter ➶](https://gitter.im/vidgear/community) Community channel, or else [report an Issue ➶](../../contribution/issue/). 
+Finally, when you're done, see [Switching from OpenCV ➶](../../switch_from_cv/), and finally go through our [Gears ➶](../../gears/#gears-what-are-these) to see how VidGear works. If you run into any trouble, or have any questions, then see [getting help ➶](../get_help)
 
 &nbsp;
 

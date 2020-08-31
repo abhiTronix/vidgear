@@ -20,10 +20,13 @@ limitations under the License.
 
 # Colorspace Manipulation for VideoCapture Gears
 
+<figure>
+  <img src="../../assets/images/colorspace.png" alt="Colorspace" width="80%" />
+</figure>
 
 ## Source ColorSpace manipulation
 
-All VidGear's VideoCapture Gears, namely CamGear, PiGear, ScreenGear, and VideoGear - internally supports Source ColorSpace manipulation. There are two ways to alter source colorspace:
+All VidGear's VideoCapture Gears, namely CamGear, PiGear, ScreenGear, and VideoGear - internally supports Source ColorSpace manipulation. **There are two ways to alter source colorspace:**
 
 ### Using `colorspace` parameter
   
@@ -31,26 +34,27 @@ Primarily, the safest way is by **`colorspace`** _(string)_ parameter of the res
 
 All possible values for this parameter are discussed [below ➶](#supported-colorspace-parameter-values)
 
-### Using **`color_space`** global variable
+### Using `color_space` global variable
 
-Alternatively, a more direct approach is by using **`color_space`** _(integer)_ global variable the respective VideoCapture API, can be used for directly changing the source colorspace at runtime. It can be used in conjunction with `colorspace` parameter easily. But using `color_space` global variable is **DISABLED** in VideoGear.
+Alternatively, a more direct approach is by using **`color_space`** _(integer)_ global variable the respective VideoCapture API, can be used for directly changing the source colorspace at runtime. It can be used in conjunction with `colorspace` parameter easily. 
 
 &nbsp; 
 
 !!! info "Supported Colorspace Conversions"
 
-	Any conversion from default Source colorspace _(i.e. **BGR** in case of OpenCV)_, to any other colorspace and vice-versa _(use `None` to revert)_, is supported. 
+	Any conversion from default Source colorspace _(i.e. **BGR** in case of OpenCV)_, to any other colorspace and vice-versa _(use `None` to revert)_, is supported.
 
 
-!!! danger "Important Information"
-
-  	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
+!!! warning "Important Information"
 
   	* Using `color_space` global variable is **NOT Supported** in VideoGear API, calling it will result in `AttribueError`.
 
 	* Any incorrect or None-type value, will immediately revert the colorspace to default _(i.e. `BGR`)_.
 
 	* Using `color_space` global variable with [Threaded Queue Mode](../../bonus/TQM/) may have minor lag, User discretion is advised.
+
+!!! tip
+	It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 
 
 &nbsp; 

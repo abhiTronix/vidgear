@@ -21,12 +21,12 @@ limitations under the License.
 # import the necessary packages
 import logging as log
 
-from .camgear import CamGear
 from .helper import logger_handler
-
+from .camgear import CamGear
 
 # define logger
 logger = log.getLogger("VideoGear")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
@@ -34,32 +34,32 @@ logger.setLevel(log.DEBUG)
 class VideoGear:
 
     """
-    
-    VideoGear provides a special internal wrapper around VidGear's exclusive **Video Stabilizer** class. 
 
-    VideoGear also act as a Common API, that provided an internal access to both CamGear and 
+    VideoGear provides a special internal wrapper around VidGear's exclusive **Video Stabilizer** class.
+
+    VideoGear also act as a Common API, that provided an internal access to both CamGear and
     PiGear APIs and their parameters, with a special `enablePiCamera` boolean flag.
 
-    VideoGear is basically ideal when you need to switch to different video sources without changing your code 
-    much. Also, it enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort 
+    VideoGear is basically ideal when you need to switch to different video sources without changing your code
+    much. Also, it enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort
     and using just fewer lines of code.
-    
+
     """
 
     def __init__(
         self,
-        #VideoGear parameters
+        # VideoGear parameters
         enablePiCamera=False,
         stabilize=False,
-        #PiGear parameters
+        # PiGear parameters
         camera_num=0,
         resolution=(640, 480),
         framerate=30,
-        #CamGear parameters
+        # CamGear parameters
         source=0,
         y_tube=False,
         backend=0,
-        #common parameters
+        # common parameters
         time_delay=0,
         colorspace=None,
         logging=False,
@@ -80,37 +80,22 @@ class VideoGear:
         if self.__stablization_mode:
             from .stabilizer import Stabilizer
 
-            s_radius, border_size, border_type, crop_n_zoom = (
-                25,
-                0,
-                "black",
-                False,
-            )  # defaults
-            if options:
-                if "SMOOTHING_RADIUS" in options:
-                    if isinstance(options["SMOOTHING_RADIUS"], int):
-                        s_radius = options[
-                            "SMOOTHING_RADIUS"
-                        ]  # assigsn special parameter to global variable
-                    del options["SMOOTHING_RADIUS"]  # clean
-                if "BORDER_SIZE" in options:
-                    if isinstance(options["BORDER_SIZE"], int):
-                        border_size = options[
-                            "BORDER_SIZE"
-                        ]  # assigsn special parameter
-                    del options["BORDER_SIZE"]  # clean
-                if "BORDER_TYPE" in options:
-                    if isinstance(options["BORDER_TYPE"], str):
-                        border_type = options[
-                            "BORDER_TYPE"
-                        ]  # assigsn special parameter
-                    del options["BORDER_TYPE"]  # clean
-                if "CROP_N_ZOOM" in options:
-                    if isinstance(options["CROP_N_ZOOM"], bool):
-                        crop_n_zoom = options[
-                            "CROP_N_ZOOM"
-                        ]  # assigsn special parameter
-                    del options["CROP_N_ZOOM"]  # clean
+            s_radius = options.pop("SMOOTHING_RADIUS", 25)
+            if not isinstance(s_radius, int):
+                s_radius = 25
+
+            border_size = options.pop("BORDER_SIZE", 0)
+            if not isinstance(border_size, int):
+                border_size = 0
+
+            border_type = options.pop("BORDER_TYPE", "black")
+            if not isinstance(border_type, str):
+                border_type = "black"
+
+            crop_n_zoom = options.pop("CROP_N_ZOOM", False)
+            if not isinstance(crop_n_zoom, bool):
+                crop_n_zoom = False
+
             self.__stabilizer_obj = Stabilizer(
                 smoothing_radius=s_radius,
                 border_type=border_type,
@@ -164,10 +149,10 @@ class VideoGear:
 
     def read(self):
         """
-        Extracts frames synchronously from selected API's monitored deque, while maintaining a fixed-length frame 
+        Extracts frames synchronously from selected API's monitored deque, while maintaining a fixed-length frame
         buffer in the memory, and blocks the thread if the deque is full.
 
-        **Returns:** A n-dimensional numpy array. 
+        **Returns:** A n-dimensional numpy array.
         """
         while self.__stablization_mode:
             frame = self.stream.read()

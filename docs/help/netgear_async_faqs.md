@@ -63,3 +63,9 @@ limitations under the License.
 **Answer:** See [this usage example ➶](../../gears/netgear_async/usage/#using-netgear_async-with-a-custom-sourceopencv). 
 
 &nbsp;
+
+## Why NetGear_Async is running slow?
+
+**Answer:** Checkout tips suggested in [this answer ➶](../netgear_faqs/#why-netgear-is-slow)
+
+&nbsp;

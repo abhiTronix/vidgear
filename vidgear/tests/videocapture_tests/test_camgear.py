@@ -17,15 +17,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libraries
-import logging as log
+# import the necessary packages
+
 import os
-import platform
-import tempfile
-import time
 import cv2
+import time
 import numpy as np
 import pytest
+import logging as log
+import platform
+import tempfile
 import youtube_dl
 
 from vidgear.gears import CamGear
@@ -33,14 +34,15 @@ from vidgear.gears.helper import logger_handler
 
 # define test logger
 logger = log.getLogger("Test_camgear")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
 def return_youtubevideo_params(url):
     """
-	returns Youtube Video parameters(FPS, dimensions) directly using Youtube-dl
-	"""
+    returns Youtube Video parameters(FPS, dimensions) directly using Youtube-dl
+    """
     ydl = youtube_dl.YoutubeDL(
         {
             "outtmpl": "%(id)s%(ext)s",
@@ -58,8 +60,8 @@ def return_youtubevideo_params(url):
 
 def return_testvideo_path():
     """
-	returns Test Video path
-	"""
+    returns Test Video path
+    """
     path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
         tempfile.gettempdir()
     )
@@ -68,8 +70,8 @@ def return_testvideo_path():
 
 def return_total_frame_count():
     """
-	simply counts the total frames in a given video
-	"""
+    simply counts the total frames in a given video
+    """
     stream = cv2.VideoCapture(return_testvideo_path())
     num_cv = 0
     while True:
@@ -95,8 +97,8 @@ test_data = [
 @pytest.mark.parametrize("source, options", test_data)
 def test_threaded_queue_mode(source, options):
     """
-	Test for the Thread Queue Mode in CamGear API
-	"""
+    Test for the Thread Queue Mode in CamGear API
+    """
     try:
         if platform.system() == "Linux":
             stream_camgear = CamGear(
@@ -127,8 +129,8 @@ def test_threaded_queue_mode(source, options):
 @pytest.mark.parametrize("url", ["https://youtu.be/uCy5OuSQnyA", "im_not_a_url"])
 def test_youtube_playback(url):
     """
-	Testing Youtube Video Playback capabilities of VidGear
-	"""
+    Testing Youtube Video Playback capabilities of VidGear
+    """
     try:
         height = 0
         width = 0
@@ -170,8 +172,8 @@ def test_youtube_playback(url):
 
 def test_network_playback():
     """
-	Testing Direct Network Video Playback capabilities of VidGear(with rtsp streaming)
-	"""
+    Testing Direct Network Video Playback capabilities of VidGear(with rtsp streaming)
+    """
     Publictest_rstp_urls = [
         "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov",
         "rtsp://freja.hiof.no:1935/rtplive/definst/hessdalen03.stream",

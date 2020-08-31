@@ -17,30 +17,42 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libraries
-import logging as log
+# import the necessary packages
+
 import os
-import platform
-import shutil
-import tempfile
 import cv2
 import numpy as np
 import pytest
+import shutil
+import logging as log
+import platform
 import requests
-
+import tempfile
 from os.path import expanduser
-from vidgear.gears.asyncio.helper import generate_webdata, validate_webdata
+from mpegdash.parser import MPEGDASHParser
+
 from vidgear.gears.helper import (
-    check_output, reducer,
+    reducer,
+    dict2Args,
+    mkdir_safe,
+    delete_safe,
+    check_output,
+    extract_time,
+    is_valid_url,
+    logger_handler,
+    validate_audio,
+    validate_video,
+    validate_ffmpeg,
+    get_video_bitrate,
+    get_valid_ffmpeg_path,
     download_ffmpeg_binaries,
     generate_auth_certificates,
-    get_valid_ffmpeg_path,
-    logger_handler,
-    validate_ffmpeg,
 )
+from vidgear.gears.asyncio.helper import generate_webdata, validate_webdata
 
 # define test logger
 logger = log.getLogger("Test_helper")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
@@ -69,6 +81,41 @@ def return_static_ffmpeg():
     return os.path.abspath(path)
 
 
+def return_testvideo_path(fmt="av"):
+    """
+    returns Test video path
+    """
+    supported_fmts = {
+        "av": "BigBuckBunny_4sec.mp4",
+        "vo": "BigBuckBunny_4sec_VO.mp4",
+        "ao": "BigBuckBunny_4sec_AO.mp4",
+    }
+    req_fmt = fmt if (fmt in supported_fmts) else "av"
+    path = "{}/Downloads/Test_videos/{}".format(
+        tempfile.gettempdir(), supported_fmts[req_fmt]
+    )
+    return os.path.abspath(path)
+
+
+def check_valid_mpd(file="", exp_reps=1):
+    """
+    checks if given file is a valid MPD(MPEG-DASH Manifest file)
+    """
+    if not file or not os.path.isfile(file):
+        return False
+    try:
+        mpd = MPEGDASHParser.parse(file)
+        all_reprs = []
+        for period in mpd.periods:
+            for adapt_set in period.adaptation_sets:
+                for rep in adapt_set.representations:
+                    all_reprs.append(rep)
+    except Exception as e:
+        logger.error(str(e))
+        return False
+    return True if (len(all_reprs) >= exp_reps) else False
+
+
 def getframe():
     """
     returns empty numpy frame/array of dimensions: (500,800,3)
@@ -90,6 +137,38 @@ def test_ffmpeg_static_installation():
         subindent = " " * 4 * (level + 1)
         for f in files:
             logger.debug("{}{}".format(subindent, f))
+
+
+test_data = [
+    {"-thread_queue_size": "512", "-f": "alsa", "-clones": 24},
+    {
+        "-thread_queue_size": "512",
+        "-f": "alsa",
+        "-clones": ["-map", "0:v:0", "-map", "1:a?"],
+        "-ac": "1",
+        "-ar": "48000",
+        "-i": "plughw:CARD=CAMERA,DEV=0",
+    },
+    {
+        "-thread_queue_size": "512",
+        "-f": "alsa",
+        "-ac": "1",
+        "-ar": "48000",
+        "-i": "plughw:CARD=CAMERA,DEV=0",
+    },
+]
+
+
+@pytest.mark.parametrize("dictionary", test_data)
+def test_dict2Args(dictionary):
+    """
+    Testing dict2Args helper function.
+    """
+    result = dict2Args(dictionary)
+    if result and isinstance(result, list):
+        logger.debug("dict2Args converted Arguments are: {}".format(result))
+    else:
+        pytest.fail("Failed to complete this test!")
 
 
 test_data = [
@@ -193,7 +272,7 @@ test_data = [
 @pytest.mark.parametrize("paths, overwrite_cert, results", test_data)
 def test_generate_auth_certificates(paths, overwrite_cert, results):
     """
-    Testing auto-Generation and auto-validation of CURVE ZMQ keys/certificates 
+    Testing auto-Generation and auto-validation of CURVE ZMQ keys/certificates
     """
     try:
         if overwrite_cert:
@@ -218,7 +297,7 @@ test_data = [
 @pytest.mark.parametrize("paths, overwrite_default, results", test_data)
 def test_generate_webdata(paths, overwrite_default, results):
     """
-    Testing auto-Generation and auto-validation of WebGear data files 
+    Testing auto-Generation and auto-validation of WebGear data files
     """
     try:
         output = generate_webdata(
@@ -258,7 +337,7 @@ def test_check_output():
 )
 def test_reducer(frame, percentage, result):
     """
-    Testing frame size reducer function 
+    Testing frame size reducer function
     """
     if not (frame is None):
         org_size = frame.shape[:2]
@@ -277,4 +356,128 @@ def test_reducer(frame, percentage, result):
         if isinstance(e, ValueError) and not (result):
             pass
         else:
+            pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "URL, result",
+    [
+        ("rtmp://live.twitch.tv/", True),
+        (None, False),
+        ("unknown://invalid.com/", False),
+    ],
+)
+def test_is_valid_url(URL, result):
+    """
+    Testing is_valid_url function
+    """
+    try:
+        result_url = is_valid_url(return_static_ffmpeg(), url=URL, logging=True)
+        assert result_url == result, "URL validity test Failed!"
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "path, result",
+    [
+        (return_testvideo_path(), True),
+        (None, False),
+    ],
+)
+def test_validate_video(path, result):
+    """
+    Testing validate_video function
+    """
+    try:
+        results = validate_video(return_static_ffmpeg(), video_path=path)
+        if result:
+            assert not (results is None), "Video path validity test Failed!"
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "path, result",
+    [
+        (return_testvideo_path(), True),
+        (return_testvideo_path(fmt="vo"), False),
+        (None, False),
+    ],
+)
+def test_validate_audio(path, result):
+    """
+    Testing validate_audio function
+    """
+    try:
+        results = validate_audio(return_static_ffmpeg(), file_path=path)
+        if result:
+            assert results, "Audio path validity test Failed!"
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "value, result",
+    [
+        ("Duration: 00:00:08.44, start: 0.000000, bitrate: 804 kb/s", 8),
+        ("Duration: 00:07:08 , start: 0.000000, bitrate: 804 kb/s", 428),
+        ("", False),
+    ],
+)
+def test_extract_time(value, result):
+    """
+    Testing extract_time function
+    """
+    try:
+        results = extract_time(value)
+        assert results == result, "Extract time function test Failed!"
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+def test_get_video_bitrate():
+    """
+    Testing get_video_bitrate function
+    """
+    try:
+        get_video_bitrate(640, 480, 60.0, 0.1)
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "ext, result",
+    [
+        ([".m4s", ".mpd"], True),
+        ([], False),
+    ],
+)
+def test_delete_safe(ext, result):
+    """
+    Testing delete_safe function
+    """
+    try:
+        path = os.path.join(expanduser("~"), "test_mpd")
+        if ext:
+            mkdir_safe(path, logging=True)
+            # re-create directory for more coverage
+            mkdir_safe(path, logging=True)
+            mpd_file_path = os.path.join(path, "dash_test.mpd")
+            from vidgear.gears import StreamGear
+
+            stream_params = {
+                "-video_source": return_testvideo_path(),
+            }
+            streamer = StreamGear(output=mpd_file_path, **stream_params)
+            streamer.transcode_source()
+            streamer.terminate()
+            assert check_valid_mpd(mpd_file_path)
+        delete_safe(path, ext, logging=True)
+        assert not os.listdir(path), "`delete_safe` Test failed!"
+        # cleanup
+        if os.path.isdir(path):
+            shutil.rmtree(path)
+    except Exception as e:
+        if result:
             pytest.fail(str(e))

@@ -40,7 +40,7 @@ Following is the bare-minimum code you need to get started with NetGear_Async AP
 
 Open your favorite terminal and execute the following python code:
 
-!!! tip "You can terminate stream on both side anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
@@ -56,8 +56,8 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         server.loop.run_until_complete(server.task)
-    except KeyboardInterrupt:
-        #wait for keyboard interrupt
+    except (KeyboardInterrupt, SystemExit):
+        #wait for interrupts
         pass
     finally:
         # finally close the server
@@ -68,7 +68,9 @@ if __name__ == '__main__':
 
 Then open another terminal on the same system and execute the following python code and see the output:
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
+
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
@@ -102,8 +104,8 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         client.loop.run_until_complete(main())
-    except KeyboardInterrupt:
-        #wait for keyboard interrupt
+    except (KeyboardInterrupt, SystemExit):
+        #wait for interrupts
         pass
         
     # close all output window
@@ -123,7 +125,9 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! info "Note down the IP-address of this system(required at Server's end) by executing the command: `hostname -I` and also replace it in the following code."
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
+
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
@@ -131,7 +135,7 @@ from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
 
 #define and launch Client with `receive_mode=True`. #change following IP address '192.168.x.xxx' with yours
-client=NetGear_Async(address='192.168.x.xxx', port='5454', protocol='tcp',  pattern=3, receive_mode=True, logging=True).launch()
+client=NetGear_Async(address='192.168.x.xxx', port='5454', protocol='tcp',  pattern=2, receive_mode=True, logging=True).launch()
 
 
 #Create a async function where you want to show/manipulate your received frames
@@ -157,8 +161,8 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         client.loop.run_until_complete(main())
-    except KeyboardInterrupt:
-        #wait for keyboard interrupt
+    except (KeyboardInterrupt, SystemExit):
+        #wait for interrupts
         pass
         
     # close all output window
@@ -173,7 +177,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! info "Replace the IP address in the following code with Client's IP address you noted earlier."
 
-!!! tip "You can terminate stream on both side anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
@@ -181,7 +185,7 @@ from vidgear.gears.asyncio import NetGear_Async
 import asyncio
 
 #initialize Server with suitable source
-server=NetGear_Async(source=0, address='192.168.x.xxx', port='5454', protocol='tcp',  pattern=3, logging=True).launch()
+server=NetGear_Async(source=0, address='192.168.x.xxx', port='5454', protocol='tcp',  pattern=2, logging=True).launch()
 
 if __name__ == '__main__':
     #set event loop
@@ -189,8 +193,8 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         server.loop.run_until_complete(server.task)
-    except KeyboardInterrupt:
-        #wait for keyboard interrupt
+    except (KeyboardInterrupt, SystemExit):
+        #wait for interrupts
         pass
     finally:
         # finally close the server
@@ -208,7 +212,7 @@ NetGear_Async allows you to easily define your own custom Source at Server-end t
 
 Open your favorite terminal and execute the following python code:
 
-!!! tip "You can terminate stream on both side anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import library
@@ -253,8 +257,8 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         server.loop.run_until_complete(server.task)
-    except KeyboardInterrupt:
-        #wait for keyboard interrupt
+    except (KeyboardInterrupt, SystemExit):
+        #wait for interrupts
         pass
     finally:
         # finally close the server
@@ -264,7 +268,9 @@ if __name__ == '__main__':
 ### Client's End
 Then open another terminal on the same system and execute the following python code and see the output:
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
+
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
@@ -298,8 +304,8 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         client.loop.run_until_complete(main())
-    except KeyboardInterrupt:
-        #wait for keyboard interrupt
+    except (KeyboardInterrupt, SystemExit):
+        #wait for interrupts
         pass
         
     # close all output window
@@ -320,7 +326,7 @@ Let's implement a bare-minimum example where we are sending [Stabilized](../../s
 
 Open your favorite terminal and execute the following python code:
 
-!!! tip "You can terminate stream on both side anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
@@ -336,8 +342,8 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         server.loop.run_until_complete(server.task)
-    except KeyboardInterrupt:
-        #wait for keyboard interrupt
+    except (KeyboardInterrupt, SystemExit):
+        #wait for interrupts
         pass
     finally:
         # finally close the server
@@ -347,17 +353,20 @@ if __name__ == '__main__':
 ### Client's End
 Then open another terminal on the same system and execute the following python code and see the output:
 
-!!! tip "You can terminate client anytime by pressing **`[Ctrl+C]/[⌘+C]`** on your keyboard!"
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
+
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
+from vidgear.gears import WriteGear
 import cv2, asyncio
 
 #define and launch Client with `receive_mode=True`
 client=NetGear_Async(receive_mode=True).launch()
 #Define writer with output filename 'Output.mp4' 
-writer=WriteGear(output_filename='Output.mp4', compression_mode=True, logging=True, **output_params) 
+writer=WriteGear(output_filename='Output.mp4', logging=True) 
 
 
 #Create a async function where you want to show/manipulate your received frames
@@ -369,7 +378,7 @@ async def main():
         # do something with received frames here
 
         # write a modified frame to writer
-        writer.write(gray) 
+        writer.write(frame) 
 
         
         # Show output window
@@ -386,8 +395,8 @@ if __name__ == '__main__':
     try:
         #run your main function task until it is complete
         client.loop.run_until_complete(main())
-    except KeyboardInterrupt:
-        #wait for keyboard interrupt
+    except (KeyboardInterrupt, SystemExit):
+        #wait for interrupts
         pass
         
     # close all output window

@@ -27,7 +27,7 @@ This parameter sets the valid Network IP address for Server/Client. Network addr
 
 **Data-Type:** String
 
-**Default Value:** Its default value is based on selected [primary mode](../overview/#primary-modes), _i.e `'localhost'` for Send Mode and `'*'` for Receive Mode._
+**Default Value:** Its default value is based on selected [primary mode](../overview/#primary-modes), _i.e `'localhost'` for Send Mode and `'*'` for Receive Mode_ on a local machine.
 
 **Usage:**
 
@@ -46,14 +46,14 @@ This parameter sets the valid Network Port for Server/Client. Network port is a 
     
     * [**In Multi-Servers Mode**](../advanced/multi_server/):
 
-        * A unique port number MUST be assigned to each Server on the network using this parameter. 
-        * At Client end, a List/Tuple of all available Server(s) ports MUST be assigned, using this same parameter. 
+        * A unique port number **MUST** be assigned to each Server on the network using this parameter. 
+        * At Client end, a List/Tuple of all available Server(s) ports **MUST** be assigned, using this same parameter. 
         * See its usage example [here ➶](../advanced/multi_server/#bare-minimum-usage).
 
     *  [**In Multi-Client Mode**](../advanced/multi_client/):
 
-        * A unique port number MUST be assigned to each Client on the network using this parameter. 
-        * At Server end, a List/Tuple of all available Client(s) ports MUST be assigned, using this same parameter. 
+        * A unique port number **MUST** be assigned to each Client on the network using this parameter. 
+        * At Server end, a List/Tuple of all available Client(s) ports **MUST** be assigned, using this same parameter. 
         * See its usage example [here ➶](../advanced/multi_client/#bare-minimum-usage).
 
 **Data-Type:** String or List/Tuple
@@ -136,7 +136,7 @@ This parameter provides the flexibility to alter various NetGear API's internal 
 
 **Usage:**
 
-??? tip "Supported dictionary attributes for NetGear API"
+!!! abstract "Supported dictionary attributes for NetGear API"
 
     * **`multiserver_mode`** (_boolean_) : This internal attribute activates the exclusive [**Multi-Servers Mode**](../advanced/multi_server/), if enabled(`True`).
 
@@ -150,7 +150,7 @@ This parameter provides the flexibility to alter various NetGear API's internal 
 
     * **`overwrite_cert`** (_boolean_) : In Secure Mode, This internal attribute decides whether to overwrite existing Public+Secret Keypair/Certificates or not, ==at the Server-end only==. More information can be found [here ➶](../advanced/secure_mode/#supported-attributes)
 
-    * **`compression_format`**(_string_): This internal attribute activates compression with selected encoding format at the Server end only. The possible values are `.jpg`, `.png`, `.bmp`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
+    * **`compression_format`**(_string_): This internal attribute activates frame compression with selected encoding format. The possible values are `.jpg`, `.png`, `.bmp`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
 
     * **`compression_param`**(_integer & list/tuple_): This internal attribute allow us to pass different format-specific [Encoding parameters](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga461f9ac09887e47797a54567df3b8b63) and [Decoding flags](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e). More information can be found [here ➶](../advanced/compression/#supported-attributes)
 

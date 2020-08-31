@@ -17,14 +17,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libraries
-import logging as log
+# import the necessary packages
+
 import os
-import random
-import tempfile
 import cv2
 import numpy as np
 import pytest
+import random
+import logging as log
+import tempfile
 from zmq.error import ZMQError
 
 from vidgear.gears import NetGear, VideoGear
@@ -32,6 +33,7 @@ from vidgear.gears.helper import logger_handler
 
 # define test logger
 logger = log.getLogger("Test_netgear")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
@@ -198,8 +200,11 @@ def test_patterns(pattern):
 @pytest.mark.parametrize(
     "options_client",
     [
-        {"compression_param": cv2.IMREAD_UNCHANGED},
-        {"compression_param": [cv2.IMWRITE_JPEG_QUALITY, 80]},
+        {"compression_format": None, "compression_param": cv2.IMREAD_UNCHANGED},
+        {
+            "compression_format": ".jpg",
+            "compression_param": [cv2.IMWRITE_JPEG_QUALITY, 80],
+        },
     ],
 )
 def test_compression(options_client):

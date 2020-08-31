@@ -18,49 +18,50 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
+
+import cv2
+import sys
+import zmq
+import numpy as np
 import asyncio
 import inspect
 import logging as log
-import platform
-
-import cv2
 import msgpack
-import msgpack_numpy as m
-import numpy as np
-import zmq
+import platform
 import zmq.asyncio
-
+import msgpack_numpy as m
 from collections import deque
-from ..videogear import VideoGear
-from .helper import logger_handler
 
+from .helper import logger_handler
+from ..videogear import VideoGear
 
 # define logger
 logger = log.getLogger("NetGear_Async")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
 class NetGear_Async:
     """
-    NetGear_Async is an asyncio videoframe messaging framework, built on `zmq.asyncio`, and powered by high-performance asyncio event loop 
-    called **`uvloop`** to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. 
-    Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system. 
+    NetGear_Async is an asyncio videoframe messaging framework, built on `zmq.asyncio`, and powered by high-performance asyncio event loop
+    called **`uvloop`** to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints.
+    Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system.
 
-    NetGear_Async can generate double performance as compared to [NetGear API](#netgear) at about 1/3rd of memory consumption, and also 
-    provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support 
-    any NetGear's Exclusive Modes yet. 
+    NetGear_Async can generate double performance as compared to [NetGear API](#netgear) at about 1/3rd of memory consumption, and also
+    provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support
+    any NetGear's Exclusive Modes yet.
 
-    Furthermore, NetGear_Async allows us to  define our own custom Server Source to manipulate frames easily before sending them across the 
-    network. In addition to all this, NetGear_Async also **provides a special internal wrapper around VideoGear API]**, which itself provides 
-    internal access to both CamGear and PiGear APIs thereby granting it exclusive power for streaming frames incoming from any connected 
+    Furthermore, NetGear_Async allows us to  define our own custom Server Source to manipulate frames easily before sending them across the
+    network. In addition to all this, NetGear_Async also **provides a special internal wrapper around VideoGear API]**, which itself provides
+    internal access to both CamGear and PiGear APIs thereby granting it exclusive power for streaming frames incoming from any connected
     device/source to the network.
 
     NetGear_Async as of now supports four ZeroMQ messaging patterns:
 
     - `zmq.PAIR` _(ZMQ Pair Pattern)_
     - `zmq.REQ/zmq.REP` _(ZMQ Request/Reply Pattern)_
-    - `zmq.PUB/zmq.SUB` _(ZMQ Publish/Subscribe Pattern)_ 
+    - `zmq.PUB/zmq.SUB` _(ZMQ Publish/Subscribe Pattern)_
     - `zmq.PUSH/zmq.PULL` _(ZMQ Push/Pull Pattern)_
 
     Whereas supported protocol are: `tcp` and `ipc`.
@@ -142,7 +143,7 @@ class NetGear_Async:
         if timeout > 0 and isinstance(timeout, (int, float)):
             self.__timeout = float(timeout)
         else:
-            self.__timeout = 10.0
+            self.__timeout = 15.0
         # define messaging asynchronous Context
         self.__msg_context = zmq.asyncio.Context()
 
@@ -160,7 +161,11 @@ class NetGear_Async:
                 self.__port = port
         else:
             # Handle video source if not None
-            if not (source is None) and source:
+            if source is None:
+                self.config = {"generator": None}
+                if self.__logging:
+                    logger.warning("Given source is of NoneType!")
+            else:
                 # define stream with necessary params
                 self.__stream = VideoGear(
                     enablePiCamera=enablePiCamera,
@@ -178,9 +183,6 @@ class NetGear_Async:
                 )
                 # define default frame generator in configuration
                 self.config = {"generator": self.__frame_generator()}
-            else:
-                # else set it to None
-                self.config = {"generator": None}
             # assign local ip address if None
             if address is None:
                 self.__address = "localhost"
@@ -194,17 +196,33 @@ class NetGear_Async:
             # add server task handler
             self.task = None
 
-        # Setup and assign uvloop event loop policy
-        if platform.system() != "Windows":
+        # Setup and assign event loop policy
+        if platform.system() == "Windows":
+            # On Windows, VidGear requires the ``WindowsSelectorEventLoop``, and this is
+            # the default in Python 3.7 and older, but new Python 3.8, defaults to an
+            # event loop that is not compatible with it. Thereby, we had to set it manually.
+            if sys.version_info[:2] >= (3, 8):
+                asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+        else:
+            # import library
             import uvloop
 
+            # uvloop eventloop is only available for UNIX machines.
             asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
         # Retrieve event loop and assign it
         self.loop = asyncio.get_event_loop()
 
+        # debugging
+        logger.info(
+            "Using `{}` event loop for this process.".format(
+                self.loop.__class__.__name__
+            )
+        )
+
     def launch(self):
         """
-        Launches an asynchronous loop executors for respective task.
+        Launches an asynchronous generators and loop executors for respective task.
         """
         # check if receive mode enabled
         if self.__receive_mode:
@@ -246,27 +264,20 @@ class NetGear_Async:
         # define our messaging socket
         self.__msg_socket = self.__msg_context.socket(self.__pattern[0])
 
+        # if req/rep pattern, define additional flags
+        if self.__msg_pattern == 1:
+            self.__msg_socket.REQ_RELAXED = True
+            self.__msg_socket.REQ_CORRELATE = True
+
+        # if pub/sub pattern, define additional optimizer
+        if self.__msg_pattern == 2:
+            self.__msg_socket.set_hwm(1)
+
         # try connecting socket to assigned protocol, address and port
         try:
             self.__msg_socket.connect(
                 self.__protocol + "://" + str(self.__address) + ":" + str(self.__port)
             )
-        except Exception as e:
-            # log ad raise error if failed
-            logger.exception(str(e))
-            raise ValueError(
-                "[NetGear_Async:ERROR] :: Failed to connect address: {} and pattern: {}!".format(
-                    (
-                        self.__protocol
-                        + "://"
-                        + str(self.__address)
-                        + ":"
-                        + str(self.__port)
-                    ),
-                    self.__msg_pattern,
-                )
-            )
-        finally:
             # finally log if successful
             if self.__logging:
                 logger.debug(
@@ -284,6 +295,22 @@ class NetGear_Async:
                 logger.debug(
                     "Send Mode is successfully activated and ready to send data!"
                 )
+        except Exception as e:
+            # log ad raise error if failed
+            logger.exception(str(e))
+            raise ValueError(
+                "[NetGear_Async:ERROR] :: Failed to connect address: {} and pattern: {}!".format(
+                    (
+                        self.__protocol
+                        + "://"
+                        + str(self.__address)
+                        + ":"
+                        + str(self.__port)
+                    ),
+                    self.__msg_pattern,
+                )
+            )
+
         # loop over our Asynchronous frame generator
         async for frame in self.config["generator"]:
             # check if retrieved frame is `CONTIGUOUS`
@@ -300,12 +327,19 @@ class NetGear_Async:
                 recv_confirmation = await self.__msg_socket.recv_multipart()
                 if self.__logging:
                     logger.debug(recv_confirmation)
+
         # send `exit` flag when done!
         await self.__msg_socket.send_multipart([b"exit"])
+        # check if bidirectional patterns
+        if self.__msg_pattern < 2:
+            # then receive and log confirmation
+            recv_confirmation = await self.__msg_socket.recv_multipart()
+            if self.__logging:
+                logger.debug(recv_confirmation)
 
     async def recv_generator(self):
         """
-        A default Asynchronous Frame Generator for NetGear's Receiver-end.  
+        A default Asynchronous Frame Generator for NetGear's Receiver-end.
         """
         # check whether `receive mode` is activated
         if not (self.__receive_mode):
@@ -318,29 +352,16 @@ class NetGear_Async:
         # initialize and define messaging socket
         self.__msg_socket = self.__msg_context.socket(self.__pattern[1])
 
+        # define exclusive socket options for patterns
+        if self.__msg_pattern == 2:
+            self.__msg_socket.set_hwm(1)
+            self.__msg_socket.setsockopt(zmq.SUBSCRIBE, b"")
+
         try:
-            # define exclusive socket options for patterns
-            if self.__msg_pattern == 2:
-                self.__msg_socket.setsockopt(zmq.SUBSCRIBE, b"")
             # bind socket to the assigned protocol, address and port
             self.__msg_socket.bind(
                 self.__protocol + "://" + str(self.__address) + ":" + str(self.__port)
             )
-        except Exception as e:
-            logger.exception(str(e))
-            raise ValueError(
-                "[NetGear:ERROR] :: Failed to bind address: {} and pattern: {}!".format(
-                    (
-                        self.__protocol
-                        + "://"
-                        + str(self.__address)
-                        + ":"
-                        + str(self.__port)
-                    ),
-                    self.__msg_pattern,
-                )
-            )
-        finally:
             # finally log progress
             if self.__logging:
                 logger.debug(
@@ -356,6 +377,20 @@ class NetGear_Async:
                     )
                 )
                 logger.debug("Receive Mode is activated successfully!")
+        except Exception as e:
+            logger.exception(str(e))
+            raise ValueError(
+                "[NetGear:ERROR] :: Failed to bind address: {} and pattern: {}!".format(
+                    (
+                        self.__protocol
+                        + "://"
+                        + str(self.__address)
+                        + ":"
+                        + str(self.__port)
+                    ),
+                    self.__msg_pattern,
+                )
+            )
 
         # loop until terminated
         while not self.__terminate:
@@ -379,7 +414,7 @@ class NetGear_Async:
 
     async def __frame_generator(self):
         """
-        Returns a default frame-generator for NetGear's Server Handler. 
+        Returns a default frame-generator for NetGear's Server Handler.
         """
         # start stream
         self.__stream.start()
@@ -397,8 +432,8 @@ class NetGear_Async:
 
     def close(self, skip_loop=False):
         """
-        Terminates all NetGear Asynchronous processes safely.
-        
+        Terminates all NetGear Asynchronous processes gracefully.
+
         Parameters:
             skip_loop (Boolean): (optional)used only if closing executor loop throws an error.
         """

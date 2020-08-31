@@ -17,25 +17,27 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libraries
-import logging as log
+# import the necessary packages
+
 import os
-import tempfile
 import pytest
+import logging as log
+import tempfile
 
 from vidgear.gears import VideoGear
 from vidgear.gears.helper import logger_handler
 
 # define test logger
 logger = log.getLogger("Test_videogear")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
 def return_testvideo_path():
     """
-	returns Test video path
-	"""
+    returns Test video path
+    """
     path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
         tempfile.gettempdir()
     )
@@ -44,8 +46,8 @@ def return_testvideo_path():
 
 def test_PiGear_import():
     """
-	Testing VideoGear Import -> assign to fail when PiGear class is imported
-	"""
+    Testing VideoGear Import -> assign to fail when PiGear class is imported
+    """
     with pytest.raises(ImportError):
         stream = VideoGear(enablePiCamera=True, logging=True).start()
         stream.stop()
@@ -70,6 +72,15 @@ test_data = [
             "BORDER_TYPE": "reflect",
         },
     ),
+    (
+        "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/example4_train_input.mp4",
+        {
+            "SMOOTHING_RADIUS": "5",
+            "BORDER_SIZE": "15",
+            "BORDER_TYPE": ["reflect"],
+            "CROP_N_ZOOM": "yes",
+        },
+    ),
     (return_testvideo_path(), {"BORDER_TYPE": "im_wrong"}),
 ]
 
@@ -77,8 +88,8 @@ test_data = [
 @pytest.mark.parametrize("source, options", test_data)
 def test_video_stablization(source, options):
     """
-	Testing VideoGear's Video Stablization playback capabilities 
-	"""
+    Testing VideoGear's Video Stablization playback capabilities
+    """
     try:
         # open stream
         stab_stream = VideoGear(

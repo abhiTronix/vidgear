@@ -17,10 +17,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import libs
+# import the necessary packages
+
 import time
 import numpy as np
-
 from threading import Thread
 
 
@@ -53,7 +53,7 @@ class FPS:
 
     def __timeit(self):
         """
-        Calculates Frames Per Second and resets variables 
+        Calculates Frames Per Second and resets variables
         """
         # assign current time
         self.__t_elasped = time.perf_counter()

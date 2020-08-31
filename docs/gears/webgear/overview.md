@@ -20,24 +20,20 @@ limitations under the License.
 
 # WebGear API 
 
+<figure>
+  <img src="../../../assets/gifs/webgear.gif" alt="WebGear in action!" loading="lazy" width=120%/>
+  <figcaption>WebGear Video Server at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</figcaption>
+</figure>
 
 ## Overview
 
-<p align="center">
-  <img src="../../../assets/gifs/webgear.gif" alt="WebGear in action!" width=120%/>
-  <br>
-  <sub><i>WebGear Video Server at <a href="http://0.0.0.0:8000/" title="default address">http://0.0.0.0:8000/</a> address.</i></sub>
-</p>
-
-WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-streamer API, that is built upon [Starlette](https://www.starlette.io/) - a lightweight ASGI framework/toolkit, which is ideal for building high-performance asyncio services.
+> WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-streamer API, that is built upon [Starlette](https://www.starlette.io/) - a lightweight ASGI framework/toolkit, which is ideal for building high-performance asyncio services.
 
 WebGear API provides a highly extensible and flexible asyncio wrapper around Starlette ASGI application, and provides easy access to its complete framework. Thereby, WebGear API can flexibly interact with the Starlette's ecosystem of shared middleware and mountable applications, and its various [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
 
-In layman's terms, WebGear can acts as powerful **Video Streaming Server** that transfers live video-frames to any web browser on a network. It addition to this, WebGear API also provides a special internal wrapper around [VideoGear API](../../videogear/overview/), which itself provides internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs thereby granting it exclusive power for streaming frames incoming from any device/source, such as streaming [Stabilization enabled Video](../advanced/#using-webgear-with-real-time-video-stabilization-enabled) in real-time.
+In layman's terms, WebGear can acts as powerful **Video Streaming Server** that transfers live video-frames to any web browser on a network. It addition to this, WebGear API also provides a special internal wrapper around [VideoGear API](../../webgear/overview/), which itself provides internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs thereby granting it exclusive power for streaming frames incoming from any device/source, such as streaming [Stabilization enabled Video](../advanced/#using-webgear-with-real-time-video-stabilization-enabled) in real-time.
 
-
-&nbsp; 
-
+&thinsp;
 
 ## Data-Files Auto-Generation WorkFlow
 
@@ -95,7 +91,7 @@ On initializing WebGear API, it automatically checks for three critical data-fil
 
 		* It is advised to enable logging(`logging=True`) on the first run for easily identifying any runtime errors
 
-&nbsp; 
+&thinsp;
 
 ## Importing
 
@@ -105,7 +101,7 @@ You can import WebGear API in your program as follows:
 from vidgear.gears import WebGear
 ```
 
-&nbsp; 
+&thinsp;
 
 ## WebGear's Default Template
 
@@ -113,7 +109,7 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
 
 ### Index.html
 
-*Can be accessed by visiting WebGear app server, running at http://0.0.0.0:8000/:*
+*Can be accessed by visiting WebGear app server, running at http://localhost:8000/:*
 
 <h2 align="center">
   <img src="../../../assets/images/webgear_temp_index.jpg" alt="WebGear default Index page"/>
@@ -122,7 +118,7 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
 
 ### 404.html
 
-*Appears when respective URL is not found, for example http://0.0.0.0:8000/ok:*
+*Appears when respective URL is not found, for example http://localhost:8000/ok:*
 
 <h2 align="center">
   <img src="../../../assets/images/webgear_temp_404.jpg" alt="WebGear default 404 page"/>
@@ -139,5 +135,31 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
   <img src="../../../assets/images/webgear_temp_500.jpg" alt="WebGear default 500 page"/>
 </h2>
 
+&nbsp;
 
-&nbsp; 
+## Usage Examples
+
+<div class="zoom">
+<a href="../usage/">See here 🚀</a>
+</div>
+
+## Parameters
+
+<div class="zoom">
+<a href="../params/">See here 🚀</a>
+</div>
+
+## Reference
+
+<div class="zoom">
+<a href="../../../bonus/reference/webgear/">See here 🚀</a>
+</div>
+
+
+## FAQs
+
+<div class="zoom">
+<a href="../../../help/webgear_faqs/">See here 🚀</a>
+</div>
+
+&thinsp;

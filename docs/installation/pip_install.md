@@ -61,9 +61,9 @@ Must Required if you're using Raspberry Pi Camera Modules with its [PiGear](../.
 
 ### Uvloop
 
-It's an optional dependency, and only required if you're using the [NetGear_Async](../../gears/netgear_async/overview/) API on a UNIX machine for maximum performance. You can easily install it via pip:
+Must required if you're using the [NetGear_Async](../../gears/netgear_async/overview/) API on a UNIX machine for maximum performance. You can easily install it via pip:
 
-!!! warning "Uvloop is **[NOT yet supported on Windows Systems](https://github.com/MagicStack/uvloop/issues/14).**"
+!!! warning "uvloop is **[NOT yet supported on Windows Machines](https://github.com/MagicStack/uvloop/issues/14).**"
 
 ```sh
   pip install uvloop

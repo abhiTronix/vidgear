@@ -20,11 +20,10 @@ limitations under the License.
 
 # WriteGear API: Compression Mode
 
-<p align="center">
-  <img src="../../../../assets/images/writegear_cm.png" alt="Compression Mode" />
-  <br>
-  <sub><i>WriteGear API's Compression Mode generalized workflow</i></sub>
-</p>
+<figure>
+  <img src="../../../../assets/images/writegear_cm.webp" alt="Compression Mode" />
+  <figcaption>WriteGear API's Compression Mode generalized workflow</figcaption>
+</figure>
 
 ## Overview
 

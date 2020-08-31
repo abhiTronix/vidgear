@@ -20,7 +20,7 @@ limitations under the License.
 
 # Custom FFmpeg Commands in WriteGear API
 
-WriteGear API now provides the **[`execute_ffmpeg_cmd`](../../../../../bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.execute_ffmpeg_cmd) Function** in [Compression Mode](../../overview/), that enables the user to pass any custom Terminal command _(that works on the terminal)_ as an input to its internal FFmpeg Pipeline by formating it as a list. 
+WriteGear API now provides the **[`execute_ffmpeg_cmd`](../../../../../bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.execute_ffmpeg_cmd) Method** in [Compression Mode](../../overview/), that enables the user to pass any custom terminal command _(that works on the terminal)_, as an input to its internal FFmpeg Pipeline by formating it as a list. 
 
 This opens endless possibilities of exploiting every FFmpeg params within WriteGear without relying on a third-party API to do the same and while doing that it robustly handles all errors/warnings quietly. A user can now pass any custom Terminal command _(that works on the terminal)_ directly to the WriteGear's FFmpeg pipeline by formating it as a list.
 

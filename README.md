@@ -19,10 +19,10 @@ limitations under the License.
 -->
 
 <h1 align="center">
-  <img src="docs/assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="80%"/>
+  <img src="docs/overrides/assets/images/vidgear.webp" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="80%"/>
 </h1>
 <h2 align="center">
-  <img src="docs/assets/images/tagline.svg" alt="VidGear tagline" width="40%"/>
+  <img src="docs/overrides/assets/images/tagline.svg" alt="VidGear tagline" width="40%"/>
 </h2>
 
 <div align="center">
@@ -48,7 +48,7 @@ VidGear primarily focuses on simplicity, and thereby lets programmers and softwa
 The following **functional block diagram** clearly depicts the generalized functioning of VidGear APIs:
 
 <p align="center">
-  <img src="docs/assets/images/gears_fbd.png" alt="@Vidgear Functional Block Diagram" />
+  <img src="docs/overrides/assets/images/gears_fbd.webp" alt="@Vidgear Functional Block Diagram" />
 </p>
 
 &nbsp;
@@ -63,6 +63,7 @@ The following **functional block diagram** clearly depicts the generalized funct
   * [**VideoGear**](#videogear)
   * [**ScreenGear**](#screengear)
   * [**WriteGear**](#writegear)
+  * [**StreamGear**](#streamgear)
   * [**NetGear**](#netgear)
   * [**WebGear**](#webgear)
   * [**NetGear_Async**](#netgear_async)
@@ -104,9 +105,11 @@ The following **functional block diagram** clearly depicts the generalized funct
 
 If this is your first time using VidGear, head straight to the [Installation ➶][installation] to install VidGear.
 
-Once you have VidGear installed, checkout its [Gears ➶][gears]
+Once you have VidGear installed, **checkout its well-documented [Gears ➶][gears]**
 
 Also, if you're already familar with [OpenCV][opencv] library, then see [Switching from OpenCV ➶][switch_from_cv]
+
+Or, if you're just getting started with OpenCV with Python, then see [here ➶](https://abhitronix.github.io/vidgear/help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)
 
 &nbsp;
 
@@ -128,11 +131,16 @@ Each of these APIs is exclusively designed to handle/control different device-sp
   * [**ScreenGear:**](#screengear) Multi-threaded ultra-fast Screencasting.    
   * [**VideoGear:**](#videogear) Common API with internal [Video Stabilizer](/gears/stabilizer/overview/) wrapper.
 
-**B. VideoWriter Gear:**
+**B. VideoWriter Gears:**
 
   * [**WriteGear:**](#writegear) Handles Flexible Lossless Video Encoding and Compression.
 
-**C. Network Gears:**
+**C. Streaming Gears:**
+
+  * [**StreamGear**](#streamgear): Handles Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats.
+
+
+**D. Network Gears:**
 
   * [**NetGear:**](#netgear) Handles high-performance video-frames & data transfer between interconnecting systems over the network.
 
@@ -150,7 +158,7 @@ Each of these APIs is exclusively designed to handle/control different device-sp
 ## CamGear
 
 <p align="center">
-  <img src="docs/assets/images/camgear.png" alt="CamGear Functional Block Diagram" width="45%"/>
+  <img src="docs/overrides/assets/images/camgear.webp" alt="CamGear Functional Block Diagram" width="45%"/>
 </p>
 
 > *CamGear can grab ultra-fast frames from diverse range of devices/streams, which includes almost any IP/USB Cameras, multimedia video file format ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rstp, rtmp, mms, etc.`, plus support for live Gstreamer's stream pipeline and YouTube video/live-streams URLs.*
@@ -252,7 +260,7 @@ stream_stab.stop()
 ## PiGear
 
 <p align="center">
-  <img src="docs/assets/images/picam2.webp" alt="PiGear" width="50%" />
+  <img src="docs/overrides/assets/images/picam2.webp" alt="PiGear" width="50%" />
 </p>
 
 > *PiGear is similar to CamGear but made to support various Raspberry Pi Camera Modules *(such as [OmniVision OV5647 Camera Module][OV5647-picam] and [Sony IMX219 Camera Module][IMX219-picam])*.*
@@ -321,7 +329,7 @@ ScreenGear implements a multi-threaded wrapper around [**python-mss**][mss] pyth
 **Below is a snapshot of a ScreenGear API in action:**
 
 <p align="center">
-  <img src="docs/assets/gifs/screengear.gif" alt="ScreenGear in action!"/>
+  <img src="docs/overrides/assets/gifs/screengear.gif" alt="ScreenGear in action!"/>
 </p>
 
 **Code to generate the above results:**
@@ -377,7 +385,7 @@ stream.stop()
 ## WriteGear
 
 <p align="center">
-  <img src="docs/assets/images/writegear.png" alt="WriteGear Functional Block Diagram" width="70%" />
+  <img src="docs/overrides/assets/images/writegear.webp" alt="WriteGear Functional Block Diagram" width="70%" />
 </p>
 
 > *WriteGear handles various powerful Writer Tools that provide us the freedom to do almost anything imagine with multimedia files.*
@@ -403,10 +411,41 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 &nbsp;
 
 
+## StreamGear
+
+<p align="center">
+  <img src="docs/overrides/assets/images/streamgear_flow.webp" alt="NetGear API" width=80%/>
+</p>
+
+
+> *StreamGear automates transcoding workflow for generating Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH) in just few lines of python code.*
+
+StreamGear provides a standalone, highly extensible and flexible wrapper around [**FFmpeg**][ffmpeg] - a leading multimedia framework, for generating chunked-encoded media segments of the content.
+
+SteamGear API automatically transcodes source videos/audio files & real-time frames, and breaks them into a sequence of multiple smaller chunks/segments (typically 2-4 seconds in length) at different quality levels _(i.e. different bitrates or spatial resolutions)_. It also creates a Manifest file _(such as MPD in-case of DASH)_ that describes these segment information _(timing, URL, media characteristics like video resolution and bit rates)_, and is provided to the client prior to the streaming session. Thereby, segments are served on a web server and can be downloaded through HTTP standard compliant GET requests. This makes it possible to stream videos at different quality levels, and to switch in the middle of a video from one quality level to another one – if bandwidth permits – on a per segment basis.
+
+
+SteamGear currently only supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_ , but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming, will be added soon.
+
+**StreamGear primarily works in two independent modes for transcoding which serves different purposes:**
+
+  * **Single-Source Mode:** In this mode, StreamGear transcodes entire video/audio file _(as opposed to frames by frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well, when you're transcoding lossless long-duration videos(with audio) for streaming and required no extra efforts or interruptions. But on the downside, the provided source cannot be changed or manipulated before sending onto FFmpeg Pipeline for processing.  This mode can be easily activated by assigning suitable video path as input to `-video_source` attribute, during StreamGear initialization. ***Learn more about this mode [here ➶][ss-mode-doc]***
+
+  * **Real-time Frames Mode:** When no valid input is received on `-video_source` attribute, StreamGear API activates this mode where it directly transcodes video-frames _(as opposed to a entire file)_, into a sequence of multiple smaller chunks/segments for streaming. In this mode, StreamGear supports real-time [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames, and process them over FFmpeg pipeline. But on the downside, audio has to added manually _(as separate source)_ for streams. ***Learn more about this mode [here ➶][rtf-mode-doc]***
+
+
+### StreamGear API Guide:
+
+[**>>> Usage Guide**][streamgear-doc]
+
+&nbsp;
+
+&nbsp;
+
 ## NetGear
 
 <p align="center">
-  <img src="docs/assets/images/netgear.png" alt="NetGear API" width=65%/>
+  <img src="docs/overrides/assets/images/netgear.webp" alt="NetGear API" width=65%/>
 </p>
 
 > *NetGear is exclusively designed to transfer video frames synchronously and asynchronously between interconnecting systems over the network in real-time.*
@@ -450,9 +489,9 @@ In layman's terms, WebGear can acts as powerful **Video Streaming Server** that 
 **Below is a snapshot of a WebGear Video Server in action on the Mozilla Firefox browser:**
 
 <p align="center">
-  <img src="docs/assets/gifs/webgear.gif" alt="WebGear in action!" width="70%" />
+  <img src="docs/overrides/assets/gifs/webgear.gif" alt="WebGear in action!" width="70%" />
   <br>
-  <sub><i>WebGear Video Server at <a href="http://0.0.0.0:8000/" title="default address">http://0.0.0.0:8000/</a> address.</i></sub>
+  <sub><i>WebGear Video Server at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</i></sub>
 </p>
 
 **Code to generate the above result:**
@@ -468,8 +507,8 @@ options = {"frame_size_reduction": 40, "frame_jpeg_quality": 80, "frame_jpeg_opt
 #initialize WebGear app  
 web = WebGear(source = "foo.mp4", logging = True, **options)
 
-#run this app on Uvicorn server at address http://0.0.0.0:8000/
-uvicorn.run(web(), host='0.0.0.0', port=8000)
+#run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host='localhost', port=8000)
 
 #close app safely
 web.shutdown()
@@ -487,7 +526,7 @@ web.shutdown()
 ## NetGear_Async 
 
 <p align="center">
-  <img src="docs/assets/images/zmq_asyncio.png" alt="WebGear in action!" width="70%"/>
+  <img src="docs/overrides/assets/images/zmq_asyncio.webp" alt="WebGear in action!" width="70%"/>
 </p>
 
 > _NetGear_Async can generate double performance as compared to [NetGear API](#netgear) at about 1/3rd of memory consumption, and also provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support any [NetGear's Exclusive Modes][netgear-exm] yet._
@@ -595,11 +634,11 @@ Badges
 
 [appveyor]:https://img.shields.io/appveyor/ci/abhitronix/vidgear.svg?style=for-the-badge&logo=appveyor
 [codecov]:https://img.shields.io/codecov/c/github/abhiTronix/vidgear/testing?style=for-the-badge&logo=codecov
-[travis-cli]:https://img.shields.io/travis/abhiTronix/vidgear.svg?style=for-the-badge&logo=travis
+[travis-cli]:https://img.shields.io/travis/com/abhiTronix/vidgear/testing?logo=travis&style=for-the-badge
 [prs-badge]:https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABC0lEQVRYhdWVPQoCMRCFX6HY2ghaiZUXsLW0EDyBrbWtN/EUHsHTWFnYyCL4gxibVZZlZzKTnWz0QZpk5r0vIdkF/kBPAMOKeddE+CQPKoc5Yt5cTjBMdQSwDQToWgBJAn3jmhqgltapAV6E6b5U17MGGAUaUj07TficMfIBZDV6vxowBm1BP9WbSQE4o5h9IjPJmy73TEPDDxVmoZdQrQ5jRhly9Q8tgMUXkIIWn0oG4GYQfAXQzz1PGoCiQndM7b4RgJay/h7zBLT3hASgoKjamQJMreKf0gfuAGyYtXEIAKcL/Dss15iq6ohXghozLYiAMxPuACwtIT4yeQUxAaLrZwAoqGRKGk7qDSYTfYQ8LuYnAAAAAElFTkSuQmCC
 [twitter-badge]:https://img.shields.io/badge/Tweet-Now-blue.svg?style=for-the-badge&logo=twitter
 [pypi-badge]:https://img.shields.io/pypi/v/vidgear.svg?style=for-the-badge&logo=pypi
-[gitter-bagde]:https://img.shields.io/badge/Chat-Gitter-yellow.svg?style=for-the-badge&logo=gitter
+[gitter-bagde]:https://img.shields.io/badge/Chat-Gitter-blue.svg?style=for-the-badge&logo=gitter
 [Coffee-badge]:https://abhitronix.github.io/img/vidgear/orange_img.png
 [kofi-badge]:https://www.ko-fi.com/img/githubbutton_sm.svg
 [black-badge]:https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge&logo=github
@@ -616,7 +655,7 @@ Internal URLs
 [coffee]:https://www.buymeacoffee.com/2twOXFvlA
 [kofi]: https://ko-fi.com/W7W8WTYO
 [license]:https://github.com/abhiTronix/vidgear/blob/master/LICENSE
-[travis]:https://travis-ci.org/abhiTronix/vidgear
+[travis]:https://travis-ci.com/github/abhiTronix/vidgear
 [app]:https://ci.appveyor.com/project/abhiTronix/vidgear
 [code]:https://codecov.io/gh/abhiTronix/vidgear
 
@@ -637,6 +676,7 @@ Internal URLs
 [cm-writegear-doc]:https://abhitronix.github.io/vidgear/gears/writegear/compression/overview/
 [ncm-writegear-doc]:https://abhitronix.github.io/vidgear/gears/writegear/non_compression/overview/
 [screengear-doc]:https://abhitronix.github.io/vidgear/gears/screengear/overview/
+[streamgear-doc]:https://abhitronix.github.io/vidgear/gears/streamgear/overview/
 [writegear-doc]:https://abhitronix.github.io/vidgear/gears/writegear/introduction/
 [netgear-doc]:https://abhitronix.github.io/vidgear/gears/netgear/overview/
 [webgear-doc]:https://abhitronix.github.io/vidgear/gears/webgear/overview/
@@ -655,6 +695,8 @@ Internal URLs
 [installation]:https://abhitronix.github.io/vidgear/installation/
 [gears]:https://abhitronix.github.io/vidgear/gears
 [switch_from_cv]:https://abhitronix.github.io/vidgear/switch_from_cv/
+[ss-mode-doc]: https://abhitronix.github.io/vidgear/gears/streamgear/usage/#a-single-source-mode
+[rtf-mode-doc]: https://abhitronix.github.io/vidgear/gears/streamgear/usage/#b-real-time-frames-mode
 [docs]: https://abhitronix.github.io/vidgear
 
 <!--

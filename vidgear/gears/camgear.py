@@ -18,45 +18,30 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-import cv2
-import logging as log
-import re
-import time
 
+import cv2
+import time
+import logging as log
 from threading import Thread
 from pkg_resources import parse_version
-from .helper import capPropId, check_CV_version, logger_handler
 
+from .helper import capPropId, logger_handler, check_CV_version, youtube_url_validator
 
 # define logger
 logger = log.getLogger("CamGear")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
-def youtube_url_validator(url):
-    """
-    validate & retrieves Youtube video URLs ID 
-    """
-    youtube_regex = (
-        r"(https?://)?(www\.)?"
-        "(youtube|youtu|youtube-nocookie)\.(com|be)/"
-        "(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})"
-    )
-    youtube_regex_match = re.match(youtube_regex, url)
-    if youtube_regex_match:
-        return youtube_regex_match.group(6)
-    return youtube_regex_match
-
-
 class CamGear:
     """
-    CamGear API supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format 
+    CamGear API supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format
     (_upto 4k tested_), any network stream URL such as *http(s), rtp, rstp, rtmp, mms, etc.* In addition to this, it also supports live Gstreamer's RAW pipelines
-    and YouTube video/livestreams URLs.  
+    and YouTube video/livestreams URLs.
 
-    CamGear API provides a flexible, high-level multi-threaded wrapper around [**OpenCV's VideoCapture Class**](https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html) with direct access to almost all of its available parameters, 
-    and also internally employs `pafy` with `youtube-dl` backend for enabling seamless live *YouTube streaming*. 
+    CamGear API provides a flexible, high-level multi-threaded wrapper around [**OpenCV's VideoCapture Class**](https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html) with direct access to almost all of its available parameters,
+    and also internally employs `pafy` with `youtube-dl` backend for enabling seamless live *YouTube streaming*.
 
     CamGear relies exclusively on **Threaded Queue mode** for threaded, error-free and synchronized frame handling.
     """
@@ -72,9 +57,6 @@ class CamGear:
         **options
     ):
 
-        # initialize threaded queue mode
-        self.__threaded_queue_mode = True
-
         # enable logging if specified
         self.__logging = False
         if logging:
@@ -87,9 +69,9 @@ class CamGear:
                 import pafy
 
                 # validate
-                url = youtube_url_validator(source)
-                if url:
-                    source_object = pafy.new(url)
+                video_url = youtube_url_validator(source)
+                if video_url:
+                    source_object = pafy.new(video_url)
                     vo_source = source_object.getbestvideo("webm", ftypestrict=True)
                     va_source = source_object.getbest("webm", ftypestrict=False)
                     # select the best quality
@@ -102,32 +84,28 @@ class CamGear:
                     if self.__logging:
                         logger.debug(
                             "YouTube source ID: `{}`, Title: `{}`".format(
-                                url, source_object.title
+                                video_url, source_object.title
                             )
                         )
                 else:
                     raise RuntimeError(
-                        "`{}` Youtube URL cannot be processed!".format(source)
+                        "Invalid `{}` Youtube URL cannot be processed!".format(source)
                     )
             except Exception as e:
                 if self.__logging:
                     logger.exception(str(e))
                 raise ValueError(
-                    "[CamGear:ERROR] :: YouTube Mode is enabled and the input YouTube URL is invalid!"
+                    "[CamGear:ERROR] :: YouTube Mode is enabled and the input YouTube URL is incorrect!"
                 )
 
         # youtube mode variable initialization
         self.__youtube_mode = y_tube
 
-        # User-Defined Threaded Queue Mode
-        if options:
-            if "THREADED_QUEUE_MODE" in options:
-                if isinstance(options["THREADED_QUEUE_MODE"], bool):
-                    self.__threaded_queue_mode = options[
-                        "THREADED_QUEUE_MODE"
-                    ]  # assigns special parameter to global variable
-                del options["THREADED_QUEUE_MODE"]  # clean
-                # reformat option dict
+        # assigns special parameter to global variable and clear
+        self.__threaded_queue_mode = options.pop("THREADED_QUEUE_MODE", True)
+        if not isinstance(self.__threaded_queue_mode, bool):
+            # reset improper values
+            self.__threaded_queue_mode = True
 
         self.__queue = None
         # initialize deque for video files only
@@ -234,7 +212,7 @@ class CamGear:
 
     def __update(self):
         """
-        A **Threaded Frames Extractor**, that keep iterating frames from OpenCV's VideoCapture API to a internal monitored deque, 
+        A **Threaded Frames Extractor**, that keep iterating frames from OpenCV's VideoCapture API to a internal monitored deque,
         until the thread is terminated, or frames runs out.
         """
 
@@ -303,10 +281,10 @@ class CamGear:
 
     def read(self):
         """
-        Extracts frames synchronously from monitored deque, while maintaining a fixed-length frame buffer in the memory, 
+        Extracts frames synchronously from monitored deque, while maintaining a fixed-length frame buffer in the memory,
         and blocks the thread if the deque is full.
 
-        **Returns:** A n-dimensional numpy array. 
+        **Returns:** A n-dimensional numpy array.
         """
 
         while self.__threaded_queue_mode:
