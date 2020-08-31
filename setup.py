@@ -27,7 +27,7 @@ from setuptools import setup
 
 def test_opencv():
     """
-    This function is workaround to 
+    This function is workaround to
     test if correct OpenCV Library version has already been installed
     on the machine or not. Returns True if previously not installed.
     """
@@ -47,8 +47,11 @@ def test_opencv():
     return False
 
 
-with open("README.md", "r") as fh:
+with open("README.md", "r", encoding='utf-8') as fh:
     long_description = fh.read()
+    long_description = long_description.replace(  # patch for images
+        "docs/overrides/assets", "https://abhitronix.github.io/vidgear/assets"
+    )
 
 setup(
     name="vidgear",
