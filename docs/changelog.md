@@ -41,7 +41,7 @@ limitations under the License.
         + Linked `-video_source` attribute for activating these modes
         + **Single-Source Mode**, transcodes entire video/audio file _(as opposed to frames by frame)_ into a sequence of multiple smaller segments for streaming
         + **Real-time Frames Mode**, directly transcodes video-frames _(as opposed to a entire file)_, into a sequence of multiple smaller segments for streaming
-        + Added separate functions, [`stream()`](../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) for Real-time Frame Mode and [`transcode_source()`](../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) for Single-Source Mode for easy trancoding.
+        + Added separate functions, [`stream()`](../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) for Real-time Frame Mode and [`transcode_source()`](../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) for Single-Source Mode for easy transcoding.
         + Included auto-colorspace detection and RGB Mode like features _(extracted from WriteGear)_, into StreamGear.  
 
     * [X] New StreamGear Parameters:
@@ -136,7 +136,7 @@ limitations under the License.
     * [X] Enabled lazy loading for GIFS for Performance Improvements.
     * [X] Reimplemented Admonitions contexts and added new ones.
     * [X] Added StreamGear and its different modes Docs Assets.
-    * [X] Added patch for images for PiP flavored markdown in `setup.py`.
+    * [X] Added patch for images & unicodes for PiP flavored markdown in `setup.py`.
 
 - **Added `Request Info` and `Welcome` GitHub Apps to automate PR and issue workflow**
     * [X] Added new `config.yml` for customizations.

@@ -47,11 +47,14 @@ def test_opencv():
     return False
 
 
-with open("README.md", "r", encoding='utf-8') as fh:
+with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
     long_description = long_description.replace(  # patch for images
         "docs/overrides/assets", "https://abhitronix.github.io/vidgear/assets"
     )
+    # patch for unicodes
+    long_description = long_description.replace("➶", ">>")
+    long_description = long_description.replace("©", "(c)")
 
 setup(
     name="vidgear",
