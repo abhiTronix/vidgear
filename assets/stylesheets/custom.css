@@ -1,0 +1,156 @@
+/* 
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
+
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+===============================================
+*/
+
+code {
+word-break: keep-all !important;
+}
+
+td {
+vertical-align: middle !important;
+}
+
+th {
+	font-weight: bold !important;
+	text-align: center !important;
+}
+
+.zoom {
+  transition: transform .2s ease-in-out;
+}
+
+.zoom:hover {
+  transform: scale(1.05);
+  transform-origin: left;
+}
+
+blockquote {
+  background: #f9f9f9;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+blockquote:after {
+  visibility: hidden;
+  content: close-quote;
+}
+blockquote p {
+  display: inline;
+}
+
+.c-smileyButton {
+  font-weight: 600;
+  color: #ffffff;
+  border: 0;
+  outline: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 2.5em;
+  padding: 0.5em 0.75em;
+  border-radius: 0.25em;
+  box-sizing: border-box;
+  background-color: transparent;
+  box-shadow: 0 0.15em 1em rgba(255, 0, 0, 0.2);
+  z-index: 1;
+}
+.c-smileyButton:hover .c-smileyButton__face::before {
+  content: '\1F618';
+  animation: animate 1.05s infinite;
+}
+.c-smileyButton::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.c-smileyButton__face::before {
+  content: '\1F496';
+}
+
+.c-smileyButton__hoverListener {
+  position: absolute;
+  cursor: default;
+  z-index: -1;
+}
+.c-smileyButton__hoverListener:hover ~ .c-smileyButton__face::before {
+  animation: none;
+}
+.c-smileyButton__hoverListener:nth-child(1) {
+  width: 290%;
+  height: 550%;
+}
+.c-smileyButton__hoverListener:nth-child(1):hover ~ .c-smileyButton__face::before {
+  content: '\1F60C';
+}
+.c-smileyButton__hoverListener:nth-child(2) {
+  width: 190%;
+  height: 330%;
+}
+.c-smileyButton__hoverListener:nth-child(2):hover ~ .c-smileyButton__face::before {
+  content: '\1F60D';
+}
+
+@keyframes animate {
+  100% {
+    content: '\1F60A';
+  }
+}
+
+/* Fix the player container to take up 100% width and to calculate its height based on its children. */
+[data-player] {
+    position: relative;
+    width: 100%;
+    height: auto;
+    margin: 0;    
+}
+
+/* Fix the video container to take up 100% width and to calculate its height based on its children. */
+[data-player] .container[data-container] {
+    width: 100%;
+    height: auto;
+    position: relative;
+}
+
+/* Fix the media-control element to take up the entire size of the player. */
+[data-player] .media-control[data-media-control] {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+/* Fix the video element to take up 100% width and to calculate its height based on its natural aspect ratio. */
+[data-player] video {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: auto;
+}
