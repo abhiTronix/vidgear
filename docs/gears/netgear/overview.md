@@ -21,7 +21,7 @@ limitations under the License.
 # NetGear API 
 
 <figure>
-  <img src="../../../assets/images/netgear.webp" alt="NetGear API" width="70%"/>
+  <img src="../../../assets/images/netgear.webp" alt="NetGear API" loading="lazy" width="70%"/>
   <figcaption>NetGear API generalized</figcaption>
 </figure>
 

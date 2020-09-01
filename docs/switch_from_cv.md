@@ -19,7 +19,7 @@ limitations under the License.
 -->
 
 <figure>
-  <img src="../assets/images/cv2vidgear.png" alt="Switching from OpenCV" />
+  <img src="../assets/images/cv2vidgear.png" loading="lazy" alt="Switching from OpenCV" />
 </figure>
 
 # Switching from OpenCV
@@ -44,79 +44,82 @@ Let's compare a bare-minimum python code for extracting frames out of webcam/USB
 
 !!! tip "CamGear share the same syntax as other [VideoCapture Gears](../gears/#a-videocapture-gears), thereby you can easily switch to any of those Gear in a similar manner."
 
+=== "OpenCV VideoCapture Class"
 
-```python tab="OpenCV VideoCapture Class"
-# import required libraries
-import cv2
+    ```python
+    # import required libraries
+    import cv2
 
-# Open suitable video stream, such as webcam on first index(i.e. 0)
-stream = cv2.VideoCapture(0) 
+    # Open suitable video stream, such as webcam on first index(i.e. 0)
+    stream = cv2.VideoCapture(0) 
 
-# loop over
-while True:
+    # loop over
+    while True:
 
-    # read frames from stream
-    (grabbed, frame) = stream.read()
+        # read frames from stream
+        (grabbed, frame) = stream.read()
 
-    # check for frame if not grabbed
-    if not grabbed:
-      break
-
-
-    # {do something with the frame here}
+        # check for frame if not grabbed
+        if not grabbed:
+          break
 
 
-    # Show output window
-    cv2.imshow("Output", frame)
-
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
-
-# close output window
-cv2.destroyAllWindows()
-
-# safely close video stream
-stream.release()
-```
-
-```python tab="VidGear's CamGear API"
-# import required libraries
-from vidgear.gears import CamGear
-import cv2
-
-# Open suitable video stream, such as webcam on first index(i.e. 0)
-stream = CamGear(source=0).start() 
-
-# loop over
-while True:
-
-    # read frames from stream
-    frame = stream.read()
-
-    # check for frame if Nonetype
-    if frame is None:
-        break
+        # {do something with the frame here}
 
 
-    # {do something with the frame here}
+        # Show output window
+        cv2.imshow("Output", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.release()
+    ```
+    
+=== "VidGear's CamGear API"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+    import cv2
+
+    # Open suitable video stream, such as webcam on first index(i.e. 0)
+    stream = CamGear(source=0).start() 
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
 
 
-    # Show output window
-    cv2.imshow("Output", frame)
+        # {do something with the frame here}
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
 
-# close output window
-cv2.destroyAllWindows()
+        # Show output window
+        cv2.imshow("Output", frame)
 
-# safely close video stream
-stream.stop()
-```
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+    ```
 
 and both syntax almost looks the same, easy, isn't it?
 
@@ -149,99 +152,103 @@ Let's extend previous bare-minimum python code to save extracted frames to disk 
 
 !!! info "WriteGear API also provides backend for OpenCV's VideoWriter Class. More information [here ➶](../gears/writegear/non_compression/overview/)"
 
-```python tab="OpenCV VideoWriter Class"
-# import required libraries
-import cv2
 
-# Open suitable video stream, such as webcam on first index(i.e. 0)
-stream = cv2.VideoCapture(0) 
+=== "OpenCV VideoWriter Class"
+    ```python
+    # import required libraries
+    import cv2
 
-# Define the codec and create VideoWriter object with suitable output filename for e.g. `Output.avi`
-fourcc = cv2.VideoWriter_fourcc(*'XVID') 
-writer = cv2.VideoWriter('output.avi', fourcc, 20.0, (640, 480)) 
+    # Open suitable video stream, such as webcam on first index(i.e. 0)
+    stream = cv2.VideoCapture(0) 
 
-# loop over
-while True:
+    # Define the codec and create VideoWriter object with suitable output filename for e.g. `Output.avi`
+    fourcc = cv2.VideoWriter_fourcc(*'XVID') 
+    writer = cv2.VideoWriter('output.avi', fourcc, 20.0, (640, 480)) 
 
-    # read frames from stream
-    (grabbed, frame) = stream.read()
+    # loop over
+    while True:
 
-    # check for frame if not grabbed
-    if not grabbed:
-      break
+        # read frames from stream
+        (grabbed, frame) = stream.read()
 
-
-    # {do something with the frame here}
-
-
-    # write frame to writer
-    writer.write(frame)
+        # check for frame if not grabbed
+        if not grabbed:
+          break
 
 
-    # Show output window
-    cv2.imshow("Output", frame)
-
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
-
-# close output window
-cv2.destroyAllWindows()
-
-# safely close video stream
-stream.release()
-
-# safely close writer
-writer.release() 
-```
-
-```python tab="VidGear's WriteGear API"
-# import required libraries
-from vidgear.gears import CamGear
-from vidgear.gears import WriteGear
-import cv2
-
-# Open suitable video stream, such as webcam on first index(i.e. 0)
-stream = CamGear(source=0).start() 
-
-# Define WriteGear Object with suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename = 'Output.mp4') 
-
-# loop over
-while True:
-
-    # read frames from stream
-    frame = stream.read()
-
-    # check for frame if None-type
-    if frame is None:
-        break
+        # {do something with the frame here}
 
 
-    # {do something with the frame here}
+        # write frame to writer
+        writer.write(frame)
 
 
-    # write frame to writer
-    writer.write(frame)
+        # Show output window
+        cv2.imshow("Output", frame)
 
-    # Show output window
-    cv2.imshow("Output Frame", frame)
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+    # close output window
+    cv2.destroyAllWindows()
 
-# close output window
-cv2.destroyAllWindows()
+    # safely close video stream
+    stream.release()
 
-# safely close video stream
-stream.stop()
+    # safely close writer
+    writer.release() 
+    ```
 
-# safely close writer
-writer.close()
-```
+=== "VidGear's WriteGear API"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import WriteGear
+    import cv2
+
+    # Open suitable video stream, such as webcam on first index(i.e. 0)
+    stream = CamGear(source=0).start() 
+
+    # Define WriteGear Object with suitable output filename for e.g. `Output.mp4`
+    writer = WriteGear(output_filename = 'Output.mp4') 
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if None-type
+        if frame is None:
+            break
+
+
+        # {do something with the frame here}
+
+
+        # write frame to writer
+        writer.write(frame)
+
+        # Show output window
+        cv2.imshow("Output Frame", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close writer
+    writer.close()
+    ```
 
 Noticed WriteGear's coding syntax looks similar but less complex?
 

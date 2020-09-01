@@ -112,7 +112,7 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
 *Can be accessed by visiting WebGear app server, running at http://localhost:8000/:*
 
 <h2 align="center">
-  <img src="../../../assets/images/webgear_temp_index.jpg" alt="WebGear default Index page"/>
+  <img src="../../../assets/images/webgear_temp_index.jpg" loading="lazy" alt="WebGear default Index page"/>
 </h2>
 
 
@@ -121,7 +121,7 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
 *Appears when respective URL is not found, for example http://localhost:8000/ok:*
 
 <h2 align="center">
-  <img src="../../../assets/images/webgear_temp_404.jpg" alt="WebGear default 404 page"/>
+  <img src="../../../assets/images/webgear_temp_404.jpg" loading="lazy" alt="WebGear default 404 page"/>
 </h2>
 
 
@@ -132,7 +132,7 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
 !!! warning "If [`logging`](../params/#logging) is enabled and an error occurs, then instead of displaying this 500 handler, WebGear will respond with a traceback response."
 
 <h2 align="center">
-  <img src="../../../assets/images/webgear_temp_500.jpg" alt="WebGear default 500 page"/>
+  <img src="../../../assets/images/webgear_temp_500.jpg" loading="lazy" alt="WebGear default 500 page"/>
 </h2>
 
 &nbsp;

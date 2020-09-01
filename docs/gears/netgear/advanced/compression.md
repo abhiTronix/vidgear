@@ -22,7 +22,7 @@ limitations under the License.
 
 
 <figure>
-  <img src="../../../../assets/images/compression.webp" alt="Frame Compression" width="75%" />
+  <img src="../../../../assets/images/compression.webp" alt="Frame Compression" loading="lazy" width="75%" />
 </figure>
 
 

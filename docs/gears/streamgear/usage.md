@@ -39,7 +39,7 @@ limitations under the License.
 ## A. Single-Source Mode
 
 <figure>
-  <img src="../../../assets/images/streamgear_file.webp" alt="Single-Source Mode Flow Diagram"/>
+  <img src="../../../assets/images/streamgear_file.webp" loading="lazy" alt="Single-Source Mode Flow Diagram"/>
   <figcaption>Single-Source Mode generalized workflow</figcaption>
 </figure>
 
@@ -201,7 +201,7 @@ streamer.terminate()
 ## B. Real-time Frames Mode 
 
 <figure>
-  <img src="../../../assets/images/streamgear_real.webp" alt="Real-time Frames Mode Flow Diagram"/>
+  <img src="../../../assets/images/streamgear_real.webp" loading="lazy" alt="Real-time Frames Mode Flow Diagram"/>
   <figcaption>Real-time Frames Mode generalized workflow</figcaption>
 </figure>
 

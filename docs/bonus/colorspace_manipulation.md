@@ -21,7 +21,7 @@ limitations under the License.
 # Colorspace Manipulation for VideoCapture Gears
 
 <figure>
-  <img src="../../assets/images/colorspace.png" alt="Colorspace" width="80%" />
+  <img src="../../assets/images/colorspace.png" alt="Colorspace" loading="lazy" width="80%" />
 </figure>
 
 ## Source ColorSpace manipulation

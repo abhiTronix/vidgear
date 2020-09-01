@@ -20,10 +20,10 @@ limitations under the License.
 
 # Introduction
 
-<img src="assets/images/vidgear.webp" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="90%" />
+<img src="assets/images/vidgear.webp" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" loading="lazy" width="90%" />
 
 <h2 align="center">
-	<img src="assets/images/tagline.svg" alt="VidGear tagline", width="40%"/>
+	<img src="assets/images/tagline.svg" alt="VidGear tagline" loading="lazy" width="40%"/>
 </h2>
 
 &thinsp;

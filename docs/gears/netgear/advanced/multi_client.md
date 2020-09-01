@@ -24,7 +24,7 @@ limitations under the License.
 ## Overview
 
 <figure>
-  <img src="../../../../assets/images/multi_client.webp" alt="NetGear's Multi-Clients Mode" width="75%"/>
+  <img src="../../../../assets/images/multi_client.webp" alt="NetGear's Multi-Clients Mode" loading="lazy" width="75%"/>
   <figcaption>NetGear's Multi-Clients Mode generalised</figcaption>
 </figure>
 

@@ -20,7 +20,7 @@ limitations under the License.
 
 # Release Notes
 
-## v0.1.9-dev (in Progress)
+## v0.1.9 (2020-08-31)
 
 ### New Features
 
@@ -133,7 +133,7 @@ limitations under the License.
     * [X] Added new `custom.css` stylescripts variables for fluid animations in docs.
     * [X] Overridden announce bar and added donation button. 
     * [X] Lossless WEBP compressed all PNG assets for faster loading.
-    * [X] Enabled lazy loading for GIFS for Performance Improvements.
+    * [X] Enabled lazy-loading for GIFS and Images for performance.
     * [X] Reimplemented Admonitions contexts and added new ones.
     * [X] Added StreamGear and its different modes Docs Assets.
     * [X] Added patch for images & unicodes for PiP flavored markdown in `setup.py`.

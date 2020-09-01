@@ -24,7 +24,7 @@ limitations under the License.
 ## Overview
 
 <figure>
-  <img src="../../assets/images/tqm.webp" alt="Threading timing diagram"/>
+  <img src="../../assets/images/tqm.webp" loading="lazy" alt="Threading timing diagram"/>
   <figcaption>Threaded-Queue-Mode generalized timing diagram</figcaption>
 </figure>
 
