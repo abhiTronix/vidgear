@@ -62,6 +62,12 @@ class CamGear:
         if logging:
             self.__logging = logging
 
+        # handle special y_tube parameter and clear
+        va_mode = options.pop("FORCE_YTUBE_VAMODE", False)
+        if not isinstance(va_mode, bool):
+            # reset improper values
+            va_mode = False
+
         # check if Youtube Mode is ON (True)
         if y_tube:
             try:
@@ -75,7 +81,7 @@ class CamGear:
                     vo_source = source_object.getbestvideo("webm", ftypestrict=True)
                     va_source = source_object.getbest("webm", ftypestrict=False)
                     # select the best quality
-                    if vo_source is None or (
+                    if vo_source is None or va_mode or (
                         va_source.dimensions >= vo_source.dimensions
                     ):
                         source = va_source.url
