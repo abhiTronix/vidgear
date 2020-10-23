@@ -196,6 +196,12 @@ class StreamGear:
             # reset improper values
             self.__clear_assets = False
 
+        # handle whether to livestream?
+        self.__enable_livestream = self.__params.pop("-livestream", False)
+        if not isinstance(self.__enable_livestream, bool):
+            # reset improper values
+            self.__enable_livestream = False
+
         # handle Streaming formats
         supported_formats = ["dash"]  # will be extended in future
         # Validate
@@ -682,16 +688,28 @@ class StreamGear:
                 "keyint={}:min-keyint={}".format(gop, gop),
             ]
 
+        # Check if live-streaming or not?
+        if self.__enable_livestream:
+            output_params["-window_size"] = self.__params.pop("-window_size", 5)
+            output_params["-extra_window_size"] = self.__params.pop(
+                "-extra_window_size", 5
+            )
+            # clean everything at exit?
+            output_params["-remove_at_exit"] = self.__params.pop("-remove_at_exit", 0)
+        else:
+            # default behaviour
+            output_params["-min_seg_duration"] = self.__params.pop(
+                "-min_seg_duration", 5000000
+            )
+
         # Finally, some hardcoded DASH parameters (Refer FFmpeg docs for more info.)
         output_params["-use_timeline"] = 1
         output_params["-use_template"] = 1
-        output_params["-window_size"] = 5
         output_params["-adaptation_sets"] = "id=0,streams=v{}".format(
             " id=1,streams=a" if ("-acodec" in output_params) else ""
         )
         # enable dash formatting
         output_params["-f"] = "dash"
-
         return (input_params, output_params)
 
     def __Build_n_Execute(self, input_params, output_params):

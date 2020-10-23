@@ -205,6 +205,16 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
+* **`-livestream`** _(bool)_: ***(optional)*** specifies whether to enable **Livestream Support**_(chunks will contain information for new frames only)_ for the selected mode, or not. You can easily set it to `True` to enable this feature, and default value is `False`. It can be used as follows: 
+    
+    !!! tip "Use `window_size` & `extra_window_size` FFmpeg parameters for controlling number of frames to be kept in New Chunks."
+
+    ```python
+    stream_params = {"-livestream": True} # enable livestreaming
+    ```
+
+&ensp;
+
 * **`-input_framerate`** _(float/int)_ :  ***(optional)*** specifies the assumed input video source framerate, and only works in [Real-time Frames Mode](../usage/#b-real-time-frames-mode). It can be used as follows:
 
     !!! tip "Usage example can be found [here ➶](../usage/#b3-bare-minimum-usage-with-controlled-input-framerate)" 
