@@ -57,7 +57,7 @@ The following **functional block diagram** clearly depicts the generalized funct
 
 * [**TL;DR**](#tldr)
 * [**Getting Started**](#getting-started)
-* [**Gears: What are these?**](#gears)
+* [**Gears: What are these?**](#gears-what-are-these)
   * [**CamGear**](#camgear)
   * [**PiGear**](#pigear)
   * [**VideoGear**](#videogear)
