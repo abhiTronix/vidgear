@@ -180,7 +180,7 @@ test_data = [
         tempfile.gettempdir(),
         ("win64" if platform.machine().endswith("64") else "win32") if _windows else "",
     ),
-    (tempfile.gettempdir(), "wrong_bit"),
+    (os.path.join(tempfile.gettempdir(), "temp_ffmpeg"), "wrong_bit"),
 ]
 
 
@@ -226,7 +226,7 @@ test_data = [
     ("", "", True),
     ("wrong_test_path", "", False),
     ("", "wrong_test_path", False),
-    ("", tempfile.gettempdir(), True),
+    ("", os.path.join(tempfile.gettempdir(), "temp_ffmpeg"), True),
     (return_static_ffmpeg(), "", True),
     (os.path.dirname(return_static_ffmpeg()), "", True),
 ]
@@ -264,8 +264,8 @@ def test_get_valid_ffmpeg_path(paths, ffmpeg_download_paths, results):
 test_data = [
     (os.path.join(expanduser("~"), ".vidgear"), False, True),
     ("test_folder", False, True),
-    (tempfile.gettempdir(), False, True),
-    (tempfile.gettempdir(), True, True),
+    (os.path.join(tempfile.gettempdir(), "temp_ffmpeg"), False, True),
+    (os.path.join(tempfile.gettempdir(), "temp_ffmpeg"), True, True),
 ]
 
 
