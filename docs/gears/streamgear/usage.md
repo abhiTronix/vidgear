@@ -80,7 +80,33 @@ streamer.terminate()
 
 &thinsp;
 
-### A.2 Usage with Additional Streams
+### A.2 Bare-Minimum Usage with Live-Streaming
+
+If you want to Livestream in Single-Source Mode _(chunks will contain information for few new frames only, and forgets all previous ones)_, you can use exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter as follows:
+
+!!! tip "Use `-window_size` & `-extra_window_size` FFmpeg parameters for controlling number of frames to be kept in Chunks."
+
+!!! warning "All Chunks will be overwritten in this mode after every few Chunks _(equal to the sum of `-window_size` & `-extra_window_size` values)_, Hence Newer Chunks and Manifest contains NO information of any older video-frames."
+
+!!! note "If input video-source _(i.e. `-video_source`)_ contains any audio stream/channel, then it automatically gets mapped to all generated streams without any extra efforts."
+
+```python
+# import required libraries
+from vidgear.gears import StreamGear
+
+# activate Single-Source Mode with valid video input and enable livestreaming
+stream_params = {"-video_source": 0, "-livestream": True}
+# describe a suitable manifest-file location/name and assign params
+streamer = StreamGear(output="dash_out.mpd", **stream_params)
+# trancode source
+streamer.transcode_source()
+# terminate
+streamer.terminate()
+```
+
+&thinsp;
+
+### A.3 Usage with Additional Streams
 
 In addition to Primary Stream, you can easily generate any number of additional Secondary Streams of variable bitrates or spatial resolutions, using exclusive [`-streams`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. You just need to add each resolution and bitrate/framerate as list of dictionaries to this attribute, and rest is done automatically _(More detailed information can be found [here ➶](../params/#a-exclusive-parameters))_. The complete example is as follows:
 
@@ -119,7 +145,7 @@ streamer.terminate()
 
 &thinsp;
 
-### A.3 Usage with Custom Audio
+### A.4 Usage with Custom Audio
 
 By default, if input video-source _(i.e. `-video_source`)_ contains any audio, then it gets automatically mapped to all generated streams. But, if you want to add any custom audio, you can easily do it by using exclusive [`-audio`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. You just need to input the path of your audio file to this attribute as string, and StreamGear API will automatically validate and map it to all generated streams. The complete example is as follows:
 
@@ -152,7 +178,7 @@ streamer.terminate()
 &thinsp;
 
 
-### A.4 Usage with Variable FFmpeg Parameters
+### A.5 Usage with Variable FFmpeg Parameters
 
 For seamlessly generating these streaming assets, StreamGear provides a highly extensible and flexible wrapper around [**FFmpeg**](https://ffmpeg.org/), and access to almost all of its parameter. Hence, you can access almost any parameter available with FFmpeg itself as dictionary attributes in [`stream_params` dictionary parameter](../params/#stream_params), and use it to manipulate transcoding as you like. 
 
@@ -281,7 +307,69 @@ streamer.terminate()
 
 &thinsp;
 
-### B.2 Bare-Minimum Usage with RGB Mode
+### B.2 Bare-Minimum Usage with Live-Streaming
+
+If you want to Livestream in Real-time Frames Mode _(chunks will contain information for few new frames only)_, which is excellent for building Low Latency solutions such as Live Camera Streaming, then you can use exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter as follows:
+
+!!! tip "Use `-window_size` & `-extra_window_size` FFmpeg parameters for controlling number of frames to be kept in Chunks."
+
+!!! warning "All Chunks will be overwritten in this mode after every few Chunks _(equal to the sum of `-window_size` & `-extra_window_size` values)_, Hence Newer Chunks and Manifest contains NO information of any older video-frames."
+
+!!! note "If input video-source _(i.e. `-video_source`)_ contains any audio stream/channel, then it automatically gets mapped to all generated streams without any extra efforts."
+
+```python
+# import required libraries
+from vidgear.gears import CamGear
+from vidgear.gears import StreamGear
+import cv2
+
+# open any valid video stream(from web-camera attached at index `0`)
+stream = CamGear(source=0).start() 
+
+# enable livestreaming
+stream_params = {"-livestream": True}
+
+# describe a suitable manifest-file location/name
+streamer = StreamGear(output="dash_out.mpd", **stream_params)
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+
+    # {do something with the frame here}
+
+
+    # send frame to streamer
+    streamer.stream(frame)
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+
+# safely close streamer
+streamer.terminate()
+```
+
+&thinsp;
+
+### B.3 Bare-Minimum Usage with RGB Mode
 
 In Real-time Frames Mode, StreamGear API provide [`rgb_mode`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) boolean parameter with its `stream()` function, which if enabled _(i.e. `rgb_mode=True`)_, specifies that incoming frames are of RGB format _(instead of default BGR format)_, thereby also known as ==RGB Mode==. The complete usage example is as follows:
 
@@ -335,7 +423,7 @@ streamer.terminate()
 
 &thinsp;
 
-### B.3 Bare-Minimum Usage with controlled Input-framerate
+### B.4 Bare-Minimum Usage with controlled Input-framerate
 
 In Real-time Frames Mode, StreamGear API provides exclusive [`-input_framerate`](../params/#a-exclusive-parameters)  attribute for its `stream_params` dictionary parameter, that allow us to set the assumed constant framerate for incoming frames. In this example, we will retrieve framerate from webcam video-stream, and set it as value for `-input_framerate` attribute in StreamGear:
 
@@ -393,7 +481,7 @@ streamer.terminate()
 
 &thinsp;
 
-### B.4 Bare-Minimum Usage with OpenCV
+### B.5 Bare-Minimum Usage with OpenCV
 
 You can easily use StreamGear API directly with any other Video Processing library(_For e.g. [OpenCV](https://github.com/opencv/opencv) itself_) in Real-time Frames Mode. The complete usage example is as follows:
 
@@ -448,7 +536,7 @@ streamer.terminate()
 
 &thinsp;
 
-### B.5 Usage with Additional Streams
+### B.6 Usage with Additional Streams
 
 Similar to Single-Source Mode, you can easily generate any number of additional Secondary Streams of variable bitrates or spatial resolutions, using exclusive [`-streams`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter _(More detailed information can be found [here ➶](../params/#a-exclusive-parameters))_ in Real-time Frames Mode. The complete example is as follows:
 
@@ -519,7 +607,7 @@ streamer.terminate()
 
 &thinsp;
 
-### B.6 Usage with Audio-Input
+### B.7 Usage with Audio-Input
 
 In Real-time Frames Mode, if you want to add audio to your streams, you've to use exclusive [`-audio`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. You need to input the path of your audio to this attribute as string value, and StreamGear API will automatically validate and map it to all generated streams. The complete example is as follows:
 
@@ -586,7 +674,7 @@ streamer.terminate()
 
 &thinsp;
 
-### B.7 Usage with Hardware Video-Encoder
+### B.8 Usage with Hardware Video-Encoder
 
 
 In Real-time Frames Mode, you can also easily change encoder as per your requirement just by passing `-vcodec` FFmpeg parameter as an attribute in `stream_params` dictionary parameter. In addition to this, you can also specify the additional properties/features/optimizations for your system's GPU similarly. 

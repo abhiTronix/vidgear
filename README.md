@@ -57,7 +57,7 @@ The following **functional block diagram** clearly depicts the generalized funct
 
 * [**TL;DR**](#tldr)
 * [**Getting Started**](#getting-started)
-* [**Gears: What are these?**](#gears)
+* [**Gears: What are these?**](#gears-what-are-these)
   * [**CamGear**](#camgear)
   * [**PiGear**](#pigear)
   * [**VideoGear**](#videogear)
@@ -129,7 +129,7 @@ Each of these APIs is exclusively designed to handle/control different device-sp
   * [**CamGear:**](#camgear) Multi-threaded API targeting various IP-USB-Cameras/Network-Streams/YouTube-Video-URLs.
   * [**PiGear:**](#pigear) Multi-threaded API targeting  various Raspberry Pi Camera Modules.
   * [**ScreenGear:**](#screengear) Multi-threaded ultra-fast Screencasting.    
-  * [**VideoGear:**](#videogear) Common API with internal [Video Stabilizer](/gears/stabilizer/overview/) wrapper.
+  * [**VideoGear:**](#videogear) Common API with internal [Video Stabilizer](https://abhitronix.github.io/vidgear/gears/stabilizer/overview/) wrapper.
 
 **B. VideoWriter Gears:**
 

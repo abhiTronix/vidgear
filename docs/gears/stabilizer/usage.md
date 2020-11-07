@@ -79,6 +79,9 @@ while True:
 # close output window
 cv2.destroyAllWindows()
 
+#clear stabilizer resources
+stab.clean()
+
 # safely close video stream
 stream.stop()
 ```
@@ -189,6 +192,9 @@ while True:
 
 # close output window
 cv2.destroyAllWindows()
+
+#clear stabilizer resources
+stab.clean()
 
 # safely close video stream
 stream.stop()

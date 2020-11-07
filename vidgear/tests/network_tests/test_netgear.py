@@ -563,6 +563,7 @@ def test_multiclient_mode(pattern):
         {"max_retries": -1, "request_timeout": 3},
         {"max_retries": 2, "request_timeout": 4, "bidirectional_mode": True},
         {"max_retries": 2, "request_timeout": 4, "multiclient_mode": True},
+        {"max_retries": 2, "request_timeout": 4, "multiserver_mode": True},
     ],
 )
 def test_client_reliablity(options):
@@ -573,7 +574,11 @@ def test_client_reliablity(options):
     try:
         # define params
         client = NetGear(
-            pattern=1, port=5554, receive_mode=True, logging=True, **options
+            pattern=1,
+            port=[5587] if "multiserver_mode" in options.keys() else 6657,
+            receive_mode=True,
+            logging=True,
+            **options
         )
         # get data without any connection
         frame_client = client.recv()
@@ -594,8 +599,9 @@ def test_client_reliablity(options):
 @pytest.mark.parametrize(
     "options",
     [
-        {"max_retries": 2, "request_timeout": 4},
         {"max_retries": 2, "request_timeout": 4, "bidirectional_mode": True},
+        {"max_retries": 2, "request_timeout": 4, "multiserver_mode": True},
+        {"max_retries": 2, "request_timeout": 4, "multiclient_mode": True},
     ],
 )
 def test_server_reliablity(options):
