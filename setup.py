@@ -59,7 +59,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name="vidgear",
     packages=["vidgear", "vidgear.gears", "vidgear.gears.asyncio"],
-    version="0.2.0-dev1",
+    version="0.2.0-dev2",
     description="High-performance cross-platform Video Processing Python framework powerpacked with unique trailblazing features.",
     license="Apache License 2.0",
     author="Abhishek Thakur",
@@ -72,6 +72,8 @@ setup(
         "pyzmq",
         "colorlog",
         "tqdm",
+        "pyscreenshot",
+        "Pillow",
     ]
     + (["opencv-python"] if test_opencv() else [])
     + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),

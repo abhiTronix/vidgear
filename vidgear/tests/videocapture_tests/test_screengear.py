@@ -35,18 +35,23 @@ logger.setLevel(log.DEBUG)
 
 
 test_data = [
-    (1, {}, "COLOR_BGR2GRAY"),
-    (1, {"top": 40, "left": 0, "width": 100, "height": 100}, "COLOR_BGR2INVALID"),
-    (-1, {}, None),
-    (3, {}, None),
+    (None, "", {}, "COLOR_BGR2GRAY"),
+    (1, "", {"top": 40, "left": 0, "width": 100, "height": 100}, "COLOR_BGR2INVALID"),
+    (
+        None,
+        "mss",
+        {"top": 40, "left": 0, "width": 100, "height": 100},
+        "COLOR_BGR2INVALID",
+    ),
+    (3, "", {}, None),
 ]
 
 
 @pytest.mark.skipif(
     (platform.system() == "Linux" or platform.system() == "Windows"), reason="Buggy!"
 )
-@pytest.mark.parametrize("monitor, options, colorspace", test_data)
-def test_screengear(monitor, options, colorspace):
+@pytest.mark.parametrize("monitor, backend, options, colorspace", test_data)
+def test_screengear(monitor, backend, options, colorspace):
     """
     Tests ScreenGear's playback capabilities with custom defined dimensions -> passes if fails with ScreenShotError
     """
@@ -54,7 +59,11 @@ def test_screengear(monitor, options, colorspace):
         # define dimensions of screen w.r.t to given monitor to be captured
         # Open Live Screencast on current monitor
         stream = ScreenGear(
-            monitor=monitor, logging=True, colorspace=colorspace, **options
+            monitor=monitor,
+            backend=backend,
+            logging=True,
+            colorspace=colorspace,
+            **options
         ).start()
         # playback
         i = 0
