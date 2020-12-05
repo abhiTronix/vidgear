@@ -23,10 +23,11 @@ import cv2
 import time
 import numpy as np
 import logging as log
-import pyscreenshot as pysct
 from mss import mss
+import pyscreenshot as pysct
 from threading import Thread
 from pkg_resources import parse_version
+from mss.exception import ScreenShotError
 from pyscreenshot.err import FailedBackendError
 
 from .helper import capPropId, logger_handler
