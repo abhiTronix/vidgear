@@ -33,7 +33,7 @@ copyright: Copyright &copy; 2019 - 2020 Abhishek Thakur(@abhiTronix)
 # Configuration
 theme:
   name: material
-  custom_dir: docs/overrides
+  # custom_dir: docs/overrides disabled
 
   # Don't include MkDocs' JavaScript
   include_search_page: false
@@ -44,6 +44,7 @@ theme:
   features:
     - tabs
   palette:
+    scheme: default
     primary: indigo
     accent: light blue
   font:
@@ -70,7 +71,7 @@ plugins:
         - vidgear
   - exclude:
       glob:
-        - ./docs/assets/README.md
+        - assets/README.md
 
 # Customization
 extra:

@@ -65,7 +65,7 @@ stream.stop()
 
 ## Using ScreenGear with Variable Screen Dimensions
 
-ScreenGear API provides us the flexibility to directly set the dimensions of capture screen w.r.t selected [`monitor`](../params/#monitor) value. These dimensions can be easily applied to ScreenGear API through its [`options`](../params/#options) dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
+ScreenGear API provides us the flexibility to directly set the dimensions of capture area of the screen. These dimensions can be easily applied to ScreenGear API through its [`options`](../params/#options) dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
 
 
 ```python
@@ -77,7 +77,101 @@ import cv2
 options = {'top': 40, 'left': 0, 'width': 100, 'height': 100}
 
 # open video stream with defined parameters
+stream = ScreenGear(logging=True, **options).start()
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+
+    # {do something with the frame here}
+
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+``` 
+
+&nbsp; 
+
+## Using ScreenGear with Multiple Screens
+
+ScreenGear API provides us the flexibility to select any connected display for fetching frames, with its [`monitor`](../params/#monitor) parameter:
+
+!!! tip "You can assign `monitor` value to `-1`, to fetch frames from all connected multiple monitor screens."
+
+!!! warning "Any value on `monitor` parameter,  will disable the `backend` parameter."
+
+```python
+# import required libraries
+from vidgear.gears import ScreenGear
+import cv2
+
+# open video stream with defined parameters with monitor at index `1` selected
 stream = ScreenGear(monitor=1, logging=True, **options).start()
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+
+    # {do something with the frame here}
+
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+``` 
+
+&nbsp; 
+
+## Using ScreenGear with Variable Backend
+
+With ScreenGear API, you can select from many different backends that generates best performance as well as the most compatible with our machine by employing its [`backend`](../params/#backend) parameter that supports `pil` ,`mss` ,`scrot` ,`maim` ,`imagemagick` ,`pyqt5` ,`pyqt` ,`pyside2` ,`pyside` ,`wx` ,`pygdk3` ,`mac_screencapture` ,`mac_quartz` ,`gnome_dbus` ,`gnome-screenshot` ,`kwin_dbus` like many different parameters easily:  
+
+!!! warning "Remember to install backend library and all of its dependencies, you're planning to use with ScreenGear API."
+
+!!! error "Any value on `monitor` parameter,  will disable the `backend` parameter. You cannot use them simultaneously."
+
+```python
+# import required libraries
+from vidgear.gears import ScreenGear
+import cv2
+
+# open video stream with defined parameters and `mss` backend for extracting frames.
+stream = ScreenGear(backend="mss", logging=True, **options).start()
 
 # loop over
 while True:

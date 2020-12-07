@@ -19,10 +19,10 @@ limitations under the License.
 -->
 
 <h1 align="center">
-  <img src="docs/overrides/assets/images/vidgear.webp" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="80%"/>
+  <img src="docs/assets/images/vidgear.webp" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="80%"/>
 </h1>
 <h2 align="center">
-  <img src="docs/overrides/assets/images/tagline.svg" alt="VidGear tagline" width="40%"/>
+  <img src="docs/assets/images/tagline.svg" alt="VidGear tagline" width="40%"/>
 </h2>
 
 <div align="center">
@@ -39,7 +39,7 @@ limitations under the License.
 
 &nbsp;
 
-VidGear is a high-performance Video Processing python library that provides an easy-to-use, highly extensible, **Multi-Threaded + Asyncio wrapper** around many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [pafy][pafy] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance.
+VidGear is a high-performance Video Processing python library that provides an easy-to-use, highly extensible, **Multi-Threaded + Asyncio wrapper** around many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [pafy][pafy], [pyscreenshot][pyscreenshot] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance.
 
 VidGear primarily focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks, in just a few lines of code.
 
@@ -48,7 +48,7 @@ VidGear primarily focuses on simplicity, and thereby lets programmers and softwa
 The following **functional block diagram** clearly depicts the generalized functioning of VidGear APIs:
 
 <p align="center">
-  <img src="docs/overrides/assets/images/gears_fbd.webp" alt="@Vidgear Functional Block Diagram" />
+  <img src="docs/assets/images/gears_fbd.webp" alt="@Vidgear Functional Block Diagram" />
 </p>
 
 &nbsp;
@@ -158,7 +158,7 @@ Each of these APIs is exclusively designed to handle/control different device-sp
 ## CamGear
 
 <p align="center">
-  <img src="docs/overrides/assets/images/camgear.webp" alt="CamGear Functional Block Diagram" width="45%"/>
+  <img src="docs/assets/images/camgear.webp" alt="CamGear Functional Block Diagram" width="45%"/>
 </p>
 
 > *CamGear can grab ultra-fast frames from diverse range of devices/streams, which includes almost any IP/USB Cameras, multimedia video file format ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rstp, rtmp, mms, etc.`, plus support for live Gstreamer's stream pipeline and YouTube video/live-streams URLs.*
@@ -260,7 +260,7 @@ stream_stab.stop()
 ## PiGear
 
 <p align="center">
-  <img src="docs/overrides/assets/images/picam2.webp" alt="PiGear" width="50%" />
+  <img src="docs/assets/images/picam2.webp" alt="PiGear" width="50%" />
 </p>
 
 > *PiGear is similar to CamGear but made to support various Raspberry Pi Camera Modules *(such as [OmniVision OV5647 Camera Module][OV5647-picam] and [Sony IMX219 Camera Module][IMX219-picam])*.*
@@ -322,14 +322,14 @@ stream.stop()
 
 ## ScreenGear
 
-> *ScreenGear is designed exclusively for ultra-fast Screencasting, that means it can grab frames from your monitor in real-time, either by define an area on the computer screen, or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors.*
+> *ScreenGear is designed exclusively for ultra-fast Screencasting, that means it can grab frames from your monitor in real-time, either by define an area on the computer screen, or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors as well as supports multiple backends.*
 
-ScreenGear implements a multi-threaded wrapper around [**python-mss**][mss] python library API and also supports a easy and flexible direct internal parameter manipulation. 
+ScreenGear implements a multi-threaded wrapper around [**pyscreenshot**][pyscreenshot] & [**python-mss**][mss] python library API and also supports a easy and flexible direct internal parameter manipulation. 
 
 **Below is a snapshot of a ScreenGear API in action:**
 
 <p align="center">
-  <img src="docs/overrides/assets/gifs/screengear.gif" alt="ScreenGear in action!"/>
+  <img src="docs/assets/gifs/screengear.gif" alt="ScreenGear in action!"/>
 </p>
 
 **Code to generate the above results:**
@@ -385,7 +385,7 @@ stream.stop()
 ## WriteGear
 
 <p align="center">
-  <img src="docs/overrides/assets/images/writegear.webp" alt="WriteGear Functional Block Diagram" width="70%" />
+  <img src="docs/assets/images/writegear.webp" alt="WriteGear Functional Block Diagram" width="70%" />
 </p>
 
 > *WriteGear handles various powerful Writer Tools that provide us the freedom to do almost anything imagine with multimedia files.*
@@ -414,7 +414,7 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 ## StreamGear
 
 <p align="center">
-  <img src="docs/overrides/assets/images/streamgear_flow.webp" alt="NetGear API" width=80%/>
+  <img src="docs/assets/images/streamgear_flow.webp" alt="NetGear API" width=80%/>
 </p>
 
 
@@ -445,7 +445,7 @@ SteamGear currently only supports [**MPEG-DASH**](https://www.encoding.com/mpeg-
 ## NetGear
 
 <p align="center">
-  <img src="docs/overrides/assets/images/netgear.webp" alt="NetGear API" width=65%/>
+  <img src="docs/assets/images/netgear.webp" alt="NetGear API" width=65%/>
 </p>
 
 > *NetGear is exclusively designed to transfer video frames synchronously and asynchronously between interconnecting systems over the network in real-time.*
@@ -489,7 +489,7 @@ In layman's terms, WebGear can acts as powerful **Video Streaming Server** that 
 **Below is a snapshot of a WebGear Video Server in action on the Mozilla Firefox browser:**
 
 <p align="center">
-  <img src="docs/overrides/assets/gifs/webgear.gif" alt="WebGear in action!" width="70%" />
+  <img src="docs/assets/gifs/webgear.gif" alt="WebGear in action!" width="70%" />
   <br>
   <sub><i>WebGear Video Server at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</i></sub>
 </p>
@@ -526,7 +526,7 @@ web.shutdown()
 ## NetGear_Async 
 
 <p align="center">
-  <img src="docs/overrides/assets/images/zmq_asyncio.webp" alt="WebGear in action!" width="70%"/>
+  <img src="docs/assets/images/zmq_asyncio.webp" alt="WebGear in action!" width="70%"/>
 </p>
 
 > _NetGear_Async can generate double performance as compared to [NetGear API](#netgear) at about 1/3rd of memory consumption, and also provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support any [NetGear's Exclusive Modes][netgear-exm] yet._
@@ -704,6 +704,7 @@ External URLs
 -->
 [asyncio-zmq]:https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html
 [uvloop]: https://github.com/MagicStack/uvloop
+[pyscreenshot]:https://github.com/ponty/pyscreenshot
 [uvloop-ns]: https://github.com/MagicStack/uvloop/issues/14
 [ffmpeg]:https://www.ffmpeg.org/
 [flake8]: https://flake8.pycqa.org/en/latest/

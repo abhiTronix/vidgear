@@ -22,18 +22,40 @@ limitations under the License.
 
 ## **`monitor`**
 
-This parameter sets the index of the monitor screen, where to grab live frames from. More information can be found [here ➶](https://python-mss.readthedocs.io/api.html#mss.tools.mss.base.MSSMixin.monitors). Its value can be assign to `0`, to fetch frames from all connected monitor screens. 
+This parameter activates [`mss`](https://github.com/BoboTiG/python-mss) backend and sets the index of the monitor screen. This parameter is the most suitable for selecting index of multiple monitor screen from where you want get frames from. For example, its value can be assign to `-1`, to fetch frames from all connected multiple monitor screens. More information can be found [here ➶](https://python-mss.readthedocs.io/examples.html#a-screen-shot-to-grab-them-all)
 
-!!! warning "`monitor` value cannot be negative, Otherwise, ScreenGear API will throw `ValueError`."
+!!! warning "Any value on `monitor` parameter,  will disable the [`backend`](#backend) parameter."
 
 **Data-Type:** Integer
 
-**Default Value:** Its default value is `1` _(means the current monitor will be used)_.
+**Default Value:** Its default value is `None` _(i.e. disabled by default)_.
 
 **Usage:**
 
 ```python
-ScreenGear(monitor=2) # to fetch frames from second screen
+ScreenGear(monitor=-1) # to fetch frames from all connected multiple screens
+```
+
+&nbsp;
+
+## **`backend`**
+
+This parameter activates [`pyscreenshot`](https://github.com/BoboTiG/python-mss) in ScreenGear API that enables us to select any backend _(for extracting frames)_ of our choice. This parameter give us the authority of selecting the best backend which generates best performance as well as the most compatible with our machine. It's possible values/backends are: `default` ,`pil` ,`mss` ,`scrot` ,`maim` ,`imagemagick` ,`pyqt5` ,`pyqt` ,`pyside2` ,`pyside` ,`wx` ,`pygdk3` ,`mac_screencapture` ,`mac_quartz` ,`gnome_dbus` ,`gnome-screenshot` ,`kwin_dbus`. More information on these backends can be found [here ➶](https://github.com/ponty/pyscreenshot)
+
+!!! note "Performance Benchmarking of each backend can be found [here](https://github.com/ponty/pyscreenshot#performance)"
+
+!!! warning "Remember to install backend library and all of its dependencies you're planning to use with ScreenGear API."
+
+!!! error "Any value on [`monitor`](#monitor) parameter,  will disable the `backend` parameter. You cannot use both parameters at same time."
+
+**Data-Type:** string
+
+**Default Value:** Its default value is `""` _(i.e. default backend)_.
+
+**Usage:**
+
+```python
+ScreenGear(backend="mss") # to enforce `mss` as backend for extracting frames.
 ```
 
 &nbsp;
@@ -61,11 +83,11 @@ Its complete usage example is given [here ➶](../usage/#using-screengear-with-d
 
 ## **`options`** 
 
-This parameter provides the flexibility to manually set the dimensions of capture screen w.r.t selected [`monitor`](#monitor) value. 
+This parameter provides the flexibility to manually set the dimensions of capture screen area. 
 
 !!! info "Supported Dimensional Parameters"
     
-    Supported Dimensional Parameters for selected `monitor` value are as follows: 
+    Supported Dimensional Parameters are as follows: 
   
       * **left:** the x-coordinate of the upper-left corner of the region
       * **top:** the y-coordinate of the upper-left corner of the region

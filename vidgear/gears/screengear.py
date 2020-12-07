@@ -24,9 +24,12 @@ import time
 import numpy as np
 import logging as log
 from mss import mss
+import pyscreenshot as pysct
 from threading import Thread
-from mss.exception import ScreenShotError
+from collections import deque, OrderedDict
 from pkg_resources import parse_version
+from mss.exception import ScreenShotError
+from pyscreenshot.err import FailedBackendError
 
 from .helper import capPropId, logger_handler
 
@@ -45,39 +48,39 @@ class ScreenGear:
      an area on the computer screen, or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing
      from multiple monitors.
 
-    ScreenGear API implements a multi-threaded wrapper around [`python-mss`](https://python-mss.readthedocs.io/index.html) python library, and also flexibly supports its internal parameter.
+    ScreenGear API implements a multi-threaded wrapper around [`pyscreenshot`](https://github.com/ponty/pyscreenshot) & [`python-mss`](https://python-mss.readthedocs.io/index.html) python library, and also flexibly supports its internal parameter.
 
     Furthermore, ScreenGear API relies on **Threaded Queue mode** for threaded, error-free and synchronized frame handling.
 
     """
 
-    def __init__(self, monitor=1, colorspace=None, logging=False, **options):
+    def __init__(
+        self, monitor=None, backend="", colorspace=None, logging=False, **options
+    ):
 
-        # enable logging if specified
-        self.__logging = False
-        if logging:
-            self.__logging = logging
+        # enable logging if specified:
+        self.__logging = logging if isinstance(logging, bool) else False
 
-        # create mss object
-        self.__mss_object = mss()
         # create monitor instance for the user-defined monitor
-        monitor_instance = None
-        if monitor >= 0:
+        self.__monitor_instance = None
+        self.__backend = ""
+        if monitor is None:
+            self.__capture_object = pysct
+            self.__backend = backend.lower().strip()
+        else:
+            self.__capture_object = mss()
+            if backend.strip():
+                logger.warning(
+                    "Backends are disabled for Monitor Indexing(monitor>=0)!"
+                )
             try:
-                monitor_instance = self.__mss_object.monitors[monitor]
+                self.__monitor_instance = self.__capture_object.monitors[monitor]
             except Exception as e:
                 logger.exception(str(e))
-                monitor_instance = None
-        else:
-            raise ValueError(
-                "[ScreenGear:ERROR] :: `monitor` value cannot be negative, Read Docs!"
-            )
+                self.__monitor_instance = None
 
         # Initialize Queue
         self.__queue = None
-
-        # import deque
-        from collections import deque
 
         # define deque and assign it to global var
         self.__queue = deque(maxlen=96)  # max len 96 to check overflow
@@ -87,17 +90,23 @@ class ScreenGear:
 
         # intiate screen dimension handler
         screen_dims = {}
-        # initializing colorspace variable
-        self.color_space = None
-
         # reformat proper mss dict and assign to screen dimension handler
         screen_dims = {
             k.strip(): v
             for k, v in options.items()
             if k.strip() in ["top", "left", "width", "height"]
         }
+        # check whether user-defined dimensions are provided
+        if screen_dims and len(screen_dims) == 4:
+            key_order = ("top", "left", "width", "height")
+            screen_dims = OrderedDict((k, screen_dims[k]) for k in key_order)
+            if logging:
+                logger.debug("Setting Capture-Area dimensions: {}!".format(screen_dims))
+        else:
+            screen_dims.clear()
+
         # separately handle colorspace value to int conversion
-        if not (colorspace is None):
+        if colorspace:
             self.color_space = capPropId(colorspace.strip())
             if logging and not (self.color_space is None):
                 logger.debug(
@@ -105,40 +114,57 @@ class ScreenGear:
                         colorspace.strip()
                     )
                 )
+        else:
+            self.color_space = None
 
         # intialize mss capture instance
-        self.__mss_capture_instance = None
+        self.__mss_capture_instance = ""
         try:
-            # check whether user-defined dimensions are provided
-            if screen_dims and len(screen_dims) == 4:
-                if logging:
-                    logger.debug("Setting capture dimensions: {}!".format(screen_dims))
-                self.__mss_capture_instance = (
-                    screen_dims  # create instance from dimensions
-                )
-            elif not (monitor_instance is None):
-                self.__mss_capture_instance = (
-                    monitor_instance  # otherwise create instance from monitor
+            if self.__monitor_instance is None:
+                if screen_dims:
+                    self.__mss_capture_instance = tuple(screen_dims.values())
+                # extract global frame from instance
+                self.frame = np.asanyarray(
+                    self.__capture_object.grab(
+                        bbox=self.__mss_capture_instance,
+                        childprocess=False,
+                        backend=self.__backend,
+                    )
                 )
             else:
-                raise RuntimeError("[ScreenGear:ERROR] :: API Failure occurred!")
-            # extract global frame from instance
-            self.frame = np.asanyarray(
-                self.__mss_object.grab(self.__mss_capture_instance)
-            )
+                if screen_dims:
+                    self.__mss_capture_instance = {
+                        "top": self.__monitor_instance["top"] + screen_dims["top"],
+                        "left": self.__monitor_instance["left"] + screen_dims["left"],
+                        "width": screen_dims["width"],
+                        "height": screen_dims["height"],
+                        "mon": monitor,
+                    }
+                else:
+                    self.__mss_capture_instance = (
+                        self.__monitor_instance  # otherwise create instance from monitor
+                    )
+                # extract global frame from instance
+                self.frame = np.asanyarray(
+                    self.__capture_object.grab(self.__mss_capture_instance)
+                )
             # intitialize and append to queue
             self.__queue.append(self.frame)
         except Exception as e:
             if isinstance(e, ScreenShotError):
                 # otherwise catch and log errors
                 if logging:
-                    logger.exception(self.__mss_object.get_error_details())
+                    logger.exception(self.__capture_object.get_error_details())
                 raise ValueError(
                     "[ScreenGear:ERROR] :: ScreenShotError caught, Wrong dimensions passed to python-mss, Kindly Refer Docs!"
                 )
+            elif isinstance(e, FailedBackendError):
+                raise ValueError(
+                    "[ScreenGear:ERROR] :: ScreenShotError caught, Invalid backend, Kindly Refer Docs!"
+                )
             else:
                 raise SystemError(
-                    "[ScreenGear:ERROR] :: Unable to initiate any MSS instance on this system, Are you running headless?"
+                    "[ScreenGear:ERROR] :: Unable to grab any instance on this system, Are you running headless?"
                 )
 
         # thread initialization
@@ -174,15 +200,26 @@ class ScreenGear:
                 continue
 
             try:
-                frame = np.asanyarray(
-                    self.__mss_object.grab(self.__mss_capture_instance)
-                )
+                if self.__monitor_instance:
+                    frame = np.asanyarray(
+                        self.__capture_object.grab(self.__mss_capture_instance)
+                    )
+                else:
+                    frame = np.asanyarray(
+                        self.__capture_object.grab(
+                            bbox=self.__mss_capture_instance,
+                            childprocess=False,
+                            backend=self.__backend,
+                        )
+                    )
+                    if not self.__backend or self.__backend == "pil":
+                        frame = frame[:, :, ::-1]
                 assert not (
                     frame is None or np.shape(frame) == ()
                 ), "[ScreenGear:ERROR] :: Failed to retreive any valid frames!"
             except Exception as e:
                 if isinstance(e, ScreenShotError):
-                    raise RuntimeError(self.__mss_object.get_error_details())
+                    raise RuntimeError(self.__capture_object.get_error_details())
                 else:
                     logger.exception(str(e))
                 self.__terminate = True
@@ -216,8 +253,10 @@ class ScreenGear:
                 self.frame = frame
             # append to queue
             self.__queue.append(self.frame)
+
         # finally release mss resources
-        self.__mss_object.close()
+        if self.__monitor_instance:
+            self.__capture_object.close()
 
     def read(self):
         """
