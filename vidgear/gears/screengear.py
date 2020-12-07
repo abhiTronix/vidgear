@@ -26,6 +26,7 @@ import logging as log
 from mss import mss
 import pyscreenshot as pysct
 from threading import Thread
+from collections import deque, OrderedDict
 from pkg_resources import parse_version
 from mss.exception import ScreenShotError
 from pyscreenshot.err import FailedBackendError
@@ -47,7 +48,7 @@ class ScreenGear:
      an area on the computer screen, or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing
      from multiple monitors.
 
-    ScreenGear API implements a multi-threaded wrapper around [`python-mss`](https://python-mss.readthedocs.io/index.html) python library, and also flexibly supports its internal parameter.
+    ScreenGear API implements a multi-threaded wrapper around [`pyscreenshot`](https://github.com/ponty/pyscreenshot) & [`python-mss`](https://python-mss.readthedocs.io/index.html) python library, and also flexibly supports its internal parameter.
 
     Furthermore, ScreenGear API relies on **Threaded Queue mode** for threaded, error-free and synchronized frame handling.
 
@@ -57,17 +58,18 @@ class ScreenGear:
         self, monitor=None, backend="", colorspace=None, logging=False, **options
     ):
 
-        # enable logging if specified
-        self.__logging = False
-        if logging:
-            self.__logging = logging
+        # enable logging if specified:
+        self.__logging = logging if isinstance(logging, bool) else False
 
         # create monitor instance for the user-defined monitor
         self.__monitor_instance = None
-        self.__backend = None
-        if monitor:
+        self.__backend = ""
+        if monitor is None:
+            self.__capture_object = pysct
+            self.__backend = backend.lower().strip()
+        else:
             self.__capture_object = mss()
-            if backend:
+            if backend.strip():
                 logger.warning(
                     "Backends are disabled for Monitor Indexing(monitor>=0)!"
                 )
@@ -76,15 +78,9 @@ class ScreenGear:
             except Exception as e:
                 logger.exception(str(e))
                 self.__monitor_instance = None
-        else:
-            self.__capture_object = pysct
-            self.__backend = backend.lower().strip()
 
         # Initialize Queue
         self.__queue = None
-
-        # import deque
-        from collections import deque
 
         # define deque and assign it to global var
         self.__queue = deque(maxlen=96)  # max len 96 to check overflow
@@ -94,9 +90,6 @@ class ScreenGear:
 
         # intiate screen dimension handler
         screen_dims = {}
-        # initializing colorspace variable
-        self.color_space = None
-
         # reformat proper mss dict and assign to screen dimension handler
         screen_dims = {
             k.strip(): v
@@ -105,13 +98,15 @@ class ScreenGear:
         }
         # check whether user-defined dimensions are provided
         if screen_dims and len(screen_dims) == 4:
+            key_order = ("top", "left", "width", "height")
+            screen_dims = OrderedDict((k, screen_dims[k]) for k in key_order)
             if logging:
                 logger.debug("Setting Capture-Area dimensions: {}!".format(screen_dims))
         else:
             screen_dims.clear()
 
         # separately handle colorspace value to int conversion
-        if not (colorspace is None):
+        if colorspace:
             self.color_space = capPropId(colorspace.strip())
             if logging and not (self.color_space is None):
                 logger.debug(
@@ -119,6 +114,8 @@ class ScreenGear:
                         colorspace.strip()
                     )
                 )
+        else:
+            self.color_space = None
 
         # intialize mss capture instance
         self.__mss_capture_instance = ""
@@ -163,7 +160,7 @@ class ScreenGear:
                 )
             elif isinstance(e, FailedBackendError):
                 raise ValueError(
-                    "[ScreenGear:ERROR] :: ScreenShotError caught, Wrong backend, Kindly Refer Docs!"
+                    "[ScreenGear:ERROR] :: ScreenShotError caught, Invalid backend, Kindly Refer Docs!"
                 )
             else:
                 raise SystemError(

@@ -30,7 +30,7 @@ limitations under the License.
 
 > VidGear is a High-Performance Framework that provides an one-stop **Video-Processing** solution for building real-time media applications in python :fire:
 
-VidGear provides an easy-to-use, highly extensible, **[Multi-Threaded](https://docs.python.org/3/library/threading.html) + [Asyncio](https://docs.python.org/3/library/asyncio.html) wrapper** around many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [pafy][pafy] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance. 
+VidGear provides an easy-to-use, highly extensible, **[Multi-Threaded](https://docs.python.org/3/library/threading.html) + [Asyncio](https://docs.python.org/3/library/asyncio.html) wrapper** around many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [pafy][pafy], [pyscreenshot][pyscreenshot] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance. 
 
 VidGear primarily focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks in just few lines of python code.
 
@@ -139,3 +139,4 @@ External URLs
 [starlette]:https://www.starlette.io/
 [stargazer]: https://github.com/abhiTronix/vidgear/stargazers
 [ffmpeg]:https://www.ffmpeg.org/
+[pyscreenshot]:https://github.com/ponty/pyscreenshot

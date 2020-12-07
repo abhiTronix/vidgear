@@ -39,7 +39,7 @@ limitations under the License.
 
 &nbsp;
 
-VidGear is a high-performance Video Processing python library that provides an easy-to-use, highly extensible, **Multi-Threaded + Asyncio wrapper** around many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [pafy][pafy] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance.
+VidGear is a high-performance Video Processing python library that provides an easy-to-use, highly extensible, **Multi-Threaded + Asyncio wrapper** around many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [pafy][pafy], [pyscreenshot][pyscreenshot] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance.
 
 VidGear primarily focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks, in just a few lines of code.
 
@@ -322,9 +322,9 @@ stream.stop()
 
 ## ScreenGear
 
-> *ScreenGear is designed exclusively for ultra-fast Screencasting, that means it can grab frames from your monitor in real-time, either by define an area on the computer screen, or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors.*
+> *ScreenGear is designed exclusively for ultra-fast Screencasting, that means it can grab frames from your monitor in real-time, either by define an area on the computer screen, or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors as well as supports multiple backends.*
 
-ScreenGear implements a multi-threaded wrapper around [**python-mss**][mss] python library API and also supports a easy and flexible direct internal parameter manipulation. 
+ScreenGear implements a multi-threaded wrapper around [**pyscreenshot**][pyscreenshot] & [**python-mss**][mss] python library API and also supports a easy and flexible direct internal parameter manipulation. 
 
 **Below is a snapshot of a ScreenGear API in action:**
 
@@ -704,6 +704,7 @@ External URLs
 -->
 [asyncio-zmq]:https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html
 [uvloop]: https://github.com/MagicStack/uvloop
+[pyscreenshot]:https://github.com/ponty/pyscreenshot
 [uvloop-ns]: https://github.com/MagicStack/uvloop/issues/14
 [ffmpeg]:https://www.ffmpeg.org/
 [flake8]: https://flake8.pycqa.org/en/latest/
