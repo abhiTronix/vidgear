@@ -124,6 +124,9 @@ class Stabilizer:
                 logger.debug("Invalid input border type!")
             self.__border_mode = border_modes["black"]  # reset to default mode
 
+        # define OpenCV version
+        self.__cv2_version = check_CV_version()
+
         # define normalized box filter
         self.__box_filter = np.ones(smoothing_radius) / smoothing_radius
 
@@ -214,25 +217,33 @@ class Stabilizer:
         )  # retrieve current frame and convert to gray
         frame_gray = self.__clahe.apply(frame_gray)  # optimize it
 
-        # calculate optical flow using Lucas-Kanade differential method
-        curr_kps, status, error = cv2.calcOpticalFlowPyrLK(
-            self.__previous_gray, frame_gray, self.__previous_keypoints, None
-        )
-
-        # select only valid key-points
-        valid_curr_kps = curr_kps[status == 1]  # current
-        valid_previous_keypoints = self.__previous_keypoints[status == 1]  # previous
-
-        # calculate optimal affine transformation between pevious_2_current key-points
-        if check_CV_version() == 3:
-            # backward compatibility with OpenCV3
-            transformation = cv2.estimateRigidTransform(
-                valid_previous_keypoints, valid_curr_kps, False
+        transformation = None
+        try:
+            # calculate optical flow using Lucas-Kanade differential method
+            curr_kps, status, error = cv2.calcOpticalFlowPyrLK(
+                self.__previous_gray, frame_gray, self.__previous_keypoints, None
             )
-        else:
-            transformation = cv2.estimateAffinePartial2D(
-                valid_previous_keypoints, valid_curr_kps
-            )[0]
+
+            # select only valid key-points
+            valid_curr_kps = curr_kps[status == 1]  # current
+            valid_previous_keypoints = self.__previous_keypoints[
+                status == 1
+            ]  # previous
+
+            # calculate optimal affine transformation between pevious_2_current key-points
+            if self.__cv2_version == 3:
+                # backward compatibility with OpenCV3
+                transformation = cv2.estimateRigidTransform(
+                    valid_previous_keypoints, valid_curr_kps, False
+                )
+            else:
+                transformation = cv2.estimateAffinePartial2D(
+                    valid_previous_keypoints, valid_curr_kps
+                )[0]
+        except cv2.error as e:
+            # catch any OpenCV assertion errors
+            logger.error("Video-Frame is too dark to generate any transformations!")
+            transformation = None
 
         # check if transformation is not None
         if not (transformation is None):
@@ -353,7 +364,7 @@ class Stabilizer:
             ]
             # zoom stabilized frame
             interpolation = (
-                cv2.INTER_CUBIC if (check_CV_version() < 4) else cv2.INTER_LINEAR_EXACT
+                cv2.INTER_CUBIC if (self.__cv2_version < 4) else cv2.INTER_LINEAR_EXACT
             )
             frame_stabilized = cv2.resize(
                 frame_cropped, self.__frame_size[::-1], interpolation=interpolation

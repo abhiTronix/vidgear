@@ -158,9 +158,9 @@ class ScreenGear:
                 raise ValueError(
                     "[ScreenGear:ERROR] :: ScreenShotError caught, Wrong dimensions passed to python-mss, Kindly Refer Docs!"
                 )
-            elif isinstance(e, FailedBackendError):
+            elif isinstance(e, KeyError):
                 raise ValueError(
-                    "[ScreenGear:ERROR] :: ScreenShotError caught, Invalid backend, Kindly Refer Docs!"
+                    "[ScreenGear:ERROR] :: ScreenShotError caught, Invalid backend: `{}`, Kindly Refer Docs!".format(backend)
                 )
             else:
                 raise SystemError(

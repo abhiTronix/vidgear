@@ -65,7 +65,7 @@ test_data = [
         },
     ),
     (
-        "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/example4_train_input.mp4",
+        "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/example_empty_train_input.mp4",
         {
             "SMOOTHING_RADIUS": 5,
             "BORDER_SIZE": 15,
