@@ -35,11 +35,18 @@ logger.setLevel(log.DEBUG)
 
 
 test_data = [
-    (None, "", {}, "COLOR_BGR2GRAY"),
-    (1, "", {"top": 40, "left": 0, "width": 100, "height": 100}, "COLOR_BGR2INVALID"),
+    (1, "", {}, None),
+    (
+        1,
+        "mss",
+        {"top": 40, "left": 0, "width": 100, "height": 100},
+        "COLOR_BGR2INVALID",
+    ),
+    (None, "", {}, None),
+    (None, "mss", {}, "COLOR_BGR2GRAY"),
     (
         None,
-        "mss",
+        "jil",
         {"top": 40, "left": 0, "width": 100, "height": 100},
         "COLOR_BGR2INVALID",
     ),
@@ -47,9 +54,7 @@ test_data = [
 ]
 
 
-@pytest.mark.skipif(
-    (platform.system() == "Linux" or platform.system() == "Windows"), reason="Buggy!"
-)
+@pytest.mark.skipif((platform.system() == "Windows"), reason="Buggy!")
 @pytest.mark.parametrize("monitor, backend, options, colorspace", test_data)
 def test_screengear(monitor, backend, options, colorspace):
     """
@@ -82,7 +87,7 @@ def test_screengear(monitor, backend, options, colorspace):
         # clean resources
         stream.stop()
     except Exception as e:
-        if monitor in [-1, 3]:
+        if monitor == 3 or platform.system() == "Linux":
             logger.exception(e)
         else:
             pytest.fail(str(e))
