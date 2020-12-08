@@ -87,7 +87,7 @@ def test_screengear(monitor, backend, options, colorspace):
         # clean resources
         stream.stop()
     except Exception as e:
-        if monitor == 3 or platform.system() == "Linux":
+        if monitor == 3 or backend == "jil" or platform.system() == "Linux":
             logger.exception(e)
         else:
             pytest.fail(str(e))
