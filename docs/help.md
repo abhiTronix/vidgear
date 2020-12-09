@@ -21,7 +21,7 @@ limitations under the License.
 # Helping VidGear
 
 <figure>
-  <img src="../assets/images/help_us.webp" loading="lazy" alt="Helping Vidgear"/>
+  <img src="../assets/images/help_us.png" loading="lazy" alt="Helping Vidgear"/>
 </figure>
 
 > Liked VidGear? Would you like to help VidGear, other users, and the author?
