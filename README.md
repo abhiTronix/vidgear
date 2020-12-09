@@ -571,9 +571,9 @@ Please see our **[Contribution Guidelines](contributing.md)** for more details.
 
 ### Support
 
-**VidGear is free, but rely on your support.** 
+<img src="docs/assets/images/help_us.png" alt="PiGear" width="50%" />
 
-Sending a donation using link below is **extremely** helpful in keeping VidGear development alive:
+Sending a donation is **extremely** helpful in keeping VidGear development alive:
 
 [![ko-fi][kofi-badge]][kofi]
 

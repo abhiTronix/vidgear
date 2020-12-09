@@ -44,7 +44,7 @@ theme:
   features:
     - tabs
   palette:
-    scheme: default
+    scheme: preference
     primary: indigo
     accent: light blue
   font:
