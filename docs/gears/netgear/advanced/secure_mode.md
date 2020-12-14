@@ -18,10 +18,10 @@ limitations under the License.
 ===============================================
 -->
 
-# Advanced Usage: Secure Mode for NetGear API 
+# Secure Mode for NetGear API 
 
 <figure>
-  <img src="../../../../assets/images/secure_mode.webp" alt="Secure Mode" loading="lazy" width="75%"/>
+  <img src="../../../../assets/images/secure_mode.webp" alt="Secure Mode" loading="lazy" title="NetGear's Secure Mode" width="75%"/>
 </figure>
 
 

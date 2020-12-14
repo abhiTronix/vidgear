@@ -18,13 +18,13 @@ limitations under the License.
 ===============================================
 -->
 
-# Advanced Usage: Multi-Servers Mode for NetGear API 
+# Multi-Servers Mode for NetGear API 
 
 ## Overview
 
 <figure>
-  <img src="../../../../assets/images/multi_server.png" alt="NetGear's Multi-Servers Mode" loading="lazy" width="75%"/>
-  <figcaption>NetGear's Multi-Servers Mode generalised</figcaption>
+  <img src="../../../../assets/images/multi_server.png" alt="NetGear's Multi-Servers Mode" loading="lazy"/>
+  <figcaption>NetGear's Multi-Servers Mode</figcaption>
 </figure>
 
 In this exclusive mode, NetGear API robustly handles Multiple Servers at once, thereby providing seamless access to frames and unidirectional data transfer from multiple Publishers/Servers across the network in real-time. 

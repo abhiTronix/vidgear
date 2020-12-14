@@ -22,7 +22,7 @@ limitations under the License.
 
 <figure>
   <img src="../assets/images/gears_fbd.png" loading="lazy" alt="@Vidgear Functional Block Diagram"/>
-  <figcaption>Gears generalized workflow diagram</figcaption>
+  <figcaption>Gears: generalized workflow diagram</figcaption>
 </figure>
 
 ## Gears, What are these?
@@ -44,13 +44,13 @@ These Gears can be classified as follows:
 
 ### B. VideoWriter Gears
 
-> **Basic Function:** Writes [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames to a video file.
+> **Basic Function:** Writes [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames to a video file or stream.
 
 * [WriteGear](writegear/introduction/): Handles Flexible Lossless Video Encoding and Compression.
 
 ### C. Streaming Gears
 
-> **Basic Function:** Transcodes videos/audio files & [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames for HTTP streaming.
+> **Basic Function:** Transcodes files & [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames for streaming.
 
 * [StreamGear](streamgear/overview/): Handles Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats.
 

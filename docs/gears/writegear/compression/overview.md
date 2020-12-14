@@ -21,7 +21,7 @@ limitations under the License.
 # WriteGear API: Compression Mode
 
 <figure>
-  <img src="../../../../assets/images/writegear_cm.webp" loading="lazy" alt="Compression Mode" />
+  <img src="../../../../assets/images/writegear_cm.png" loading="lazy" alt="Compression Mode" />
   <figcaption>WriteGear API's Compression Mode generalized workflow</figcaption>
 </figure>
 
@@ -31,7 +31,9 @@ When [`compression_mode`](../params/#compression_mode) parameter is enabled _(.i
 
 In Compression mode, WriteGear API provide a complete, flexible & robust wrapper around [**FFmpeg**](https://ffmpeg.org/) - a leading multimedia framework. 
 
-This mode can process real-time video frames into a lossless compressed format with any suitable specification in just few easy lines of codes. These specifications include setting video/audio properties such as `bitrate, codec, framerate, resolution, subtitles,  etc.`, and also performing complex tasks such as multiplexing video with audio in real-time _(see this [usage example](../usage/#using-compression-mode-with-live-audio-input))_, while handling all errors robustly.
+This mode can process real-time video frames into a lossless compressed format with any suitable specification in just few easy lines of codes. These specifications include setting video/audio properties such as `bitrate, codec, framerate, resolution, subtitles,  etc.`, and also performing complex tasks such as [Live-Streaming](../usage/#using-compression-mode-for-streaming-urls) _(such as for Twitch)_, multiplexing video with audio in real-time _(see this [usage example](../usage/#using-compression-mode-with-live-audio-input))_, while handling all errors robustly.
+
+Plus, you can even [Stream Live _(such as for Twitch)_ easily](../usage/#using-compression-mode-for-streaming-urls) with this Compression Mode.
 
 &nbsp; 
 

@@ -35,7 +35,6 @@ limitations under the License.
     * [X] Implemented several internal methods for preprocessing FFmpeg and internal parameters for producing streams.
     * [X] Several standalone internal checks to ensure robust performance.
     * [X] New [`terminate()`](../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.terminate) function to terminate StremGear Safely.
-
     * [X] New StreamGear Dual Modes of Operation:
         + Implemented *Single-Source* and *Real-time Frames* like independent Transcoding Modes.
         + Linked `-video_source` attribute for activating these modes
@@ -43,7 +42,6 @@ limitations under the License.
         + **Real-time Frames Mode**, directly transcodes video-frames _(as opposed to a entire file)_, into a sequence of multiple smaller segments for streaming
         + Added separate functions, [`stream()`](../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) for Real-time Frame Mode and [`transcode_source()`](../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) for Single-Source Mode for easy transcoding.
         + Included auto-colorspace detection and RGB Mode like features _(extracted from WriteGear)_, into StreamGear.  
-
     * [X] New StreamGear Parameters:
         + Developed several new parameters such as:
             + `output`: handles assets directory
@@ -60,7 +58,6 @@ limitations under the License.
             + `-gop` to manually specify GOP length.
             + `-ffmpeg_download_path` to handle custom FFmpeg download path on windows.
             + `-clear_prev_assets` to remove any previous copies of SteamGear Assets.
-
     * [X] New StreamGear docs, MPEG-DASH demo, and recommended DASH players list:
         + Added new StreamGear docs, usage examples, parameters, references, new FAQs.
         + Added Several StreamGear usage examples w.r.t Mode of Operation.
@@ -72,7 +69,6 @@ limitations under the License.
         + Recommended tested Online, Command-line and GUI Adaptive Stream players.
         + Implemented separate FFmpeg installation doc for StreamGear API.
         + Reduced `rebufferingGoal` for faster response.
-
     * [X] New StreamGear CI tests:
         + Added IO and API initialization CI tests for its Modes.
         + Added various mode Streaming check CI tests.

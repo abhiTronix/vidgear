@@ -20,11 +20,12 @@ limitations under the License.
 
 # Colorspace Manipulation for VideoCapture Gears
 
-<figure>
-  <img src="../../assets/images/colorspace.png" alt="Colorspace" loading="lazy" width="80%" />
-</figure>
-
 ## Source ColorSpace manipulation
+
+<figure>
+  <img src="../../assets/images/colorspace.png" alt="Colorspace" loading="lazy" width="70%" />
+  <figcaption>BGR Colorspace</figcaption>
+</figure>
 
 All VidGear's VideoCapture Gears, namely CamGear, PiGear, ScreenGear, and VideoGear - internally supports Source ColorSpace manipulation. **There are two ways to alter source colorspace:**
 

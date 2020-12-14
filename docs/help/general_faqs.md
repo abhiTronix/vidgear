@@ -58,6 +58,12 @@ Most of the VidGear task are I/O bounded, meaning that the thread spends most of
 
 &nbsp;
 
+## ModuleNotFoundError: No module named 'vidgear.gears'. 'vidgear' is not a package?
+
+**Answer:** This error means you either have a file named `vidgear.py` in your python path or you've named your python script `vidgear.py`. Replace `vidgear` name with anything else to fix this error.
+
+&nbsp;
+
 ## How do I report an issue?
 
 **Answer:** See [Reporting an Issue ➶](../../contribution/issue/)

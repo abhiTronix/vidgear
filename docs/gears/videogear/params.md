@@ -133,7 +133,7 @@ Its valid input can be one of the following:
     VideoGear(source='/home/foo.mp4')
     ```
 
-* **YouTube Video's URL (*string*):** _Valid Youtube video URL as input when YouTube Mode is enabled(*i.e. `y_tube=True`*), for e.g `"https://youtu.be/dQw4w9WgXcQ"` as follows:_
+* **YouTube Video's URL (*string*):** _Valid Youtube video URL as input when YouTube Mode is enabled(*i.e. `y_tube=True`*), for e.g `"https://youtu.be/bvetuLwJIkA"` as follows:_
 
     !!! info "Valid YouTube URL format"
 
@@ -145,7 +145,7 @@ Its valid input can be one of the following:
         * `{video-id}`
 
     ```python
-    VideoGear(source='https://youtu.be/dQw4w9WgXcQ', y_tube=True)
+    VideoGear(source='https://youtu.be/bvetuLwJIkA', y_tube=True)
     ```
 
 * **Network Address (*string*):** _Valid (`http(s), rtp, rstp, rtmp, mms, etc.`) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
@@ -191,7 +191,7 @@ This parameter controls the YouTube Mode, .i.e if enabled(`y_tube=True`), the Ca
 **Usage:**
 
 ```python
-VideoGear(source='https://youtu.be/dQw4w9WgXcQ', y_tube=True)
+VideoGear(source='https://youtu.be/bvetuLwJIkA', y_tube=True)
 ```
 
 

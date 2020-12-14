@@ -29,3 +29,5 @@ The original motivation and thinking behind creating this project was to build a
 ## Chronicle origins
 
 This project began as a part of [my Pull Request(PR)](https://github.com/jrosebr1/imutils/pull/105) to another computer vision python library -`imutils`'s video modules. In this PR I purposed countless bug fixes for the existing implementation by its author. But soon I find out that the author wasn't much interested in merging these fixes and it became apparent it did not belong to the `imutils` library itself. Therefore, I thought it may benefit others more as a separate project and that allow a wider range of experimental features and targets all available devices and video streams. _And that's the chronicle origin of VidGear_.
+
+&thinsp;

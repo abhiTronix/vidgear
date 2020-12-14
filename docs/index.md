@@ -30,9 +30,11 @@ limitations under the License.
 
 > VidGear is a High-Performance Framework that provides an one-stop **Video-Processing** solution for building real-time media applications in python :fire:
 
-VidGear provides an easy-to-use, highly extensible, **[Multi-Threaded](https://docs.python.org/3/library/threading.html) + [Asyncio](https://docs.python.org/3/library/asyncio.html) wrapper** around many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [pafy][pafy], [pyscreenshot][pyscreenshot] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance. 
+VidGear provides an easy-to-use, highly extensible, **[Multi-Threaded](https://docs.python.org/3/library/threading.html) + [Asyncio](https://docs.python.org/3/library/asyncio.html) wrapper** around many state-of-the-art specialized libraries like [OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [pafy][pafy], [pyscreenshot][pyscreenshot] and [python-mss][mss] at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance. 
 
-VidGear primarily focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks in just few lines of python code.
+> _"Write Less and Accomplish More"_ — VidGear's Motto
+
+VidGear focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks in just few lines of python code.
 
 &thinsp;
 
@@ -54,26 +56,26 @@ VidGear is built on multiple [Gears ➶](gears) (APIs), which are exclusively de
 
 These Gears can be classified as follows:
 
-**VideoCapture Gears**
+#### VideoCapture Gears
 
 * [CamGear](gears/camgear/overview/): Multi-threaded API targeting various IP-USB-Cameras/Network-Streams/YouTube-Video-URLs.
 * [PiGear](gears/pigear/overview/): Multi-threaded API targeting  various Raspberry Pi Camera Modules.
 * [ScreenGear](gears/screengear/overview/): Multi-threaded ultra-fast Screencasting.    
 * [VideoGear](gears/videogear/overview/): Common API with internal [Video Stabilizer ➶](gears/stabilizer/overview/) wrapper.  
 
-**VideoWriter Gears**
+#### VideoWriter Gears
 
-* [WriteGear](gears/writegear/introduction/): Handles Flexible Lossless Video Encoding and Compression.
+* [WriteGear](gears/writegear/introduction/): Handles Flexible Lossless Video File Encoding and Compression.
 
-**Streaming Gears**
+#### Streaming Gears
 
 * [StreamGear](gears/streamgear/overview/): Handles Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats.
 
-**Network Gears**
+#### Network Gears
 
 * [NetGear](gears/netgear/overview/): Handles high-performance video-frames & data transfer between interconnecting systems over the network.
 
-* **Asynchronous I/O Network Gears:**
+  * **Asynchronous I/O Network Gears:**
 
     * [WebGear](gears/webgear/overview/): ASGI Video Server that can send live video-frames to any web browser on the network.
     * [NetGear_Async](gears/netgear_async/overview/): Immensely Memory-efficient Asyncio video-frames network messaging framework. 

@@ -1,4 +1,3 @@
-
 <!--
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
@@ -25,7 +24,7 @@ limitations under the License.
 
 <figure>
   <img src="../../assets/images/tqm.webp" loading="lazy" alt="Threading timing diagram"/>
-  <figcaption>Threaded-Queue-Mode generalized timing diagram</figcaption>
+  <figcaption>Threaded-Queue-Mode: generalized timing diagram</figcaption>
 </figure>
 
 Threaded Queue Mode is designed exclusively for VidGear's Videocapture and Network Gears _(namely CamGear, ScreenGear, VideoGear, and NetGear(Client's end))_, for achieving high-performance, synchronized, and error-free frame handling with its Multi-Threaded APIs. 
@@ -67,7 +66,7 @@ Multi-threading is easy, but it may have some undesired effects like _frame-skip
 &nbsp;
 
 
-## Manually disabling Threaded Queue Mode:
+## Manually disabling Threaded Queue Mode
 
 To manually disable Threaded Queue Mode, VidGear provides following attribute for `options` dictionary parameter in respective API:  
 

@@ -33,7 +33,7 @@ copyright: Copyright &copy; 2019 - 2020 Abhishek Thakur(@abhiTronix)
 # Configuration
 theme:
   name: material
-  # custom_dir: docs/overrides disabled
+  custom_dir: docs/overrides
 
   # Don't include MkDocs' JavaScript
   include_search_page: false
@@ -42,11 +42,11 @@ theme:
   # Default values, taken from mkdocs_theme.yml
   language: en
   features:
-    - tabs
+    - navigation.tabs
   palette:
-    scheme: preference
-    primary: indigo
-    accent: light blue
+    scheme: default
+    primary: purple
+    accent: dark purple
   font:
     text: Nunito 
     code: IBM Plex
@@ -66,12 +66,11 @@ plugins:
       handlers:
         python:
           rendering:
+            show_root_heading: false
             show_source: true
-      watch:
-        - vidgear
   - exclude:
       glob:
-        - assets/README.md
+        - overrides/assets/README.md
 
 # Customization
 extra:
@@ -90,9 +89,6 @@ extra_css:
     - assets/stylesheets/custom.css
 
 extra_javascript:
-    - assets/javascripts/clappr.min.js
-    - assets/javascripts/clappr-level-selector.min.js
-    - assets/javascripts/dash-shaka-playback.js
     - assets/javascripts/extra.js
 
 # Extensions
@@ -229,7 +225,7 @@ nav:
       - Reference: bonus/reference/stabilizer.md
       - FAQs: help/stabilizer_faqs.md
   - Bonus:
-    - API Reference:
+    - API References:
       - vidgear.gears: 
         - camgear.py: bonus/reference/camgear.md
         - pigear.py: bonus/reference/pigear.md

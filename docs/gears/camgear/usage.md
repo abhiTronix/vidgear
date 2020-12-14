@@ -91,8 +91,8 @@ from vidgear.gears import CamGear
 import cv2
 
 
-# Add YouTube Video URL as input source (for e.g https://youtu.be/dQw4w9WgXcQ) and enable `y_Tube`
-stream = CamGear(source='https://youtu.be/dQw4w9WgXcQ', y_tube=True, logging=True).start() 
+# Add YouTube Video URL as input source (for e.g https://youtu.be/bvetuLwJIkA) and enable `y_tube = True`
+stream = CamGear(source='https://youtu.be/bvetuLwJIkA', y_tube=True, logging=True).start() 
 
 # loop over
 while True:

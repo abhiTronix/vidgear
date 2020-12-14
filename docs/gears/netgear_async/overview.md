@@ -21,7 +21,7 @@ limitations under the License.
 # NetGear_Async API 
 
 <figure>
-  <img src="../../../assets/images/zmq_asyncio.png" alt="NetGear_Async generalized" loading="lazy" width="70%" />
+  <img src="../../../assets/images/zmq_asyncio.png" alt="NetGear_Async generalized" loading="lazy" width="90%" />
 </figure>
 
 ## Overview

@@ -22,7 +22,7 @@ limitations under the License.
 
 <figure>
   <img src="../../../assets/gifs/screengear.gif" loading="lazy" alt="ScreenGear in action!"/>
-  <figcaption>ScreenGear in action</figcaption>
+  <figcaption>ScreenGear API in action</figcaption>
 </figure>
 
 ## Overview

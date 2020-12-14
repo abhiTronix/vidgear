@@ -18,8 +18,11 @@ limitations under the License.
 ===============================================
 -->
 
-!!! info "All CamGear Class parameters are explained [here ➶](../../../gears/camgear/params/)"
+{% extends "base.html" %}
 
-::: vidgear.gears.CamGear
-
-&nbsp;
+{% block libs %}
+  <script src="{{ 'assets/javascripts/dark-material.js' | url }}" type="text/javascript"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/clappr/clappr-level-selector-plugin@latest/dist/level-selector.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/clappr/dash-shaka-playback@latest/dist/dash-shaka-playback.js"></script>
+{% endblock %}

@@ -22,27 +22,31 @@ limitations under the License.
   <img src="../assets/images/cv2vidgear.png" loading="lazy" alt="Switching from OpenCV" />
 </figure>
 
-# Switching from OpenCV
+&emsp; 
+
+# Switching from OpenCV Library
 
 Switching OpenCV with VidGear APIs is usually a fairly painless process, and will just require changing a few lines in your python script. 
 
-!!! quote "This document is intended to software developers who want to migrate their python code from OpenCV to VidGear APIs."
+!!! quote "This document is intended to software developers who want to migrate their python code from OpenCV Library to VidGear APIs."
 
 !!! warning "Prior knowledge of Python and OpenCV won't be covered in this guide. Proficiency with OpenCV is a must in order understand this document."
 
-!!! info "If you're just getting started with OpenCV with Python, then see [here ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)"
+&nbsp; 
 
+## Why VidGear is better than OpenCV?
+
+!!! tip "If you're just getting started with OpenCV, then see [here ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)"
+
+VidGear employs OpenCV at its backend and enhances its existing capabilities even furthermore by introducing many new state-of-the-art features on top of it, like real-time Stabilization, and inherit support for screen-casting, live network-streaming, multi-devices, multi-threading, etc., plus [way much more ➶](../gears). While VidGear maintains the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax for all of its APIs. Making it even easier to implement Complex OpenCV applications in just a few lines of code.
 
 &nbsp; 
 
+## Switching the VideoCapture APIs 
 
-## Switching VideoCapture APIs 
+Let's compare a bare-minimum python code for extracting frames out of any Webcam/USB-camera _(connected at index 0)_, between OpenCV's [VideoCapture Class](https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80) and VidGear's [CamGear](../gears/camgear/overview/) VideoCapture API side-by-side:
 
-> VidGear introduces many new state-of-the-art features, multi-device support, and multi-threaded performance upgrade for its VideoCapture Gears as compared to standard OpenCV's VideoCapture Class, while maintaining the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax.  
-
-Let's compare a bare-minimum python code for extracting frames out of webcam/USB camera (connected at index 0), between OpenCV's [VideoCapture Class](https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80) and VidGear's [CamGear](../gears/camgear/overview/) VideoCapture API side-by-side:
-
-!!! tip "CamGear share the same syntax as other [VideoCapture Gears](../gears/#a-videocapture-gears), thereby you can easily switch to any of those Gear in a similar manner."
+!!! tip "CamGear API share the same syntax as other [VideoCapture APIs](../gears/#a-videocapture-gears), thereby you can easily switch to any of those APIs in a similar manner."
 
 === "OpenCV VideoCapture Class"
 
@@ -123,14 +127,11 @@ Let's compare a bare-minimum python code for extracting frames out of webcam/USB
 
 and both syntax almost looks the same, easy, isn't it?
 
-
-!!! success "Now, checkout other [VideoCapture Gears ➶](../gears/#a-videocapture-gears)"
-
 &thinsp; 
 
 ### Differences
 
-Let's breakdown a few noteworthy difference in syntaxes:
+Let's breakdown a few noteworthy difference in both syntaxes:
 
 | Task | OpenCV VideoCapture Class | VidGear's CamGear API |
 | :----------: | :--------------------: | :---------------------: |
@@ -140,18 +141,18 @@ Let's breakdown a few noteworthy difference in syntaxes:
 | Terminating | `#!python stream.release()` | `#!python stream.stop()` |
 
 
-&nbsp; 
+!!! success "Now, checkout other [VideoCapture Gears ➶](../gears/#a-videocapture-gears)"
+
 
 &nbsp; 
 
-## Switching VideoWriter API
+&nbsp; 
 
-> VidGear with its [WriteGear](../gears/writegear/introduction/) API, provide a complete, flexible & robust wrapper around [FFmpeg](https://www.ffmpeg.org/) - a leading multimedia framework, processes real-time video frames into a lossless compressed format with any suitable specification and many more, as compared to standard [OpenCV's VideoWriter Class](https://docs.opencv.org/3.4/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5), while maintaining the same standard OpenCV-Python coding syntax.
+## Switching the VideoWriter API
 
-Let's extend previous bare-minimum python code to save extracted frames to disk as a valid file, with OpenCV's VideoWriter Class and VidGear's WriteGear API _(with FFmpeg backend)_, compared side-to-side:
+Let's extend previous bare-minimum python code and save those extracted frames to disk as a valid file, with [OpenCV's VideoWriter Class](https://docs.opencv.org/3.4/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) and VidGear's [WriteGear](../gears/writegear/introduction/), compared side-to-side:
 
 !!! info "WriteGear API also provides backend for OpenCV's VideoWriter Class. More information [here ➶](../gears/writegear/non_compression/overview/)"
-
 
 === "OpenCV VideoWriter Class"
     ```python
@@ -252,9 +253,7 @@ Let's extend previous bare-minimum python code to save extracted frames to disk 
 
 Noticed WriteGear's coding syntax looks similar but less complex?
 
-!!! success "Now, checkout more examples of WriteGear API _(with FFmpeg backend)_ [here ➶](../gears/writegear/compression/usage/)"
-
-&thinsp; 
+&thinsp;
 
 ### Differences
 
@@ -265,5 +264,7 @@ Let's breakdown a few noteworthy difference in both syntaxes:
 | Initiating | `#!python writer = cv2.VideoWriter('output.avi', cv2.VideoWriter_fourcc(*'XVID'), 20.0, (640, 480))` | `#!python writer = WriteGear(output_filename='Output.mp4')` |
 | Writing frames | `#!python writer.write(frame)` | `#!python writer.write(frame)` |
 | Terminating | `#!python writer.release()` | `#!python writer.close()` |
+
+!!! success "Now, checkout more examples of WriteGear API _(with FFmpeg backend)_ [here ➶](../gears/writegear/compression/usage/)"
 
 &thinsp; 

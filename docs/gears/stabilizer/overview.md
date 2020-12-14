@@ -21,7 +21,7 @@ limitations under the License.
 # Stabilizer Class
 
 <div id="player_stab" align="middle"></div>
-<p align="middle">Original Video Courtesy <a href="http://liushuaicheng.org/SIGGRAPH2013/database.html" title="opensourced video samples database">@SIGGRAPH2013</a></p>
+<p align="middle">VidGear's Stabilizer in Action<br><i>(Original Video Courtesy <a href="http://liushuaicheng.org/SIGGRAPH2013/database.html" title="opensourced video samples database">@SIGGRAPH2013</a>)</i></p>
 
 !!! info "This video frames are transcoded with [**StreamGear API**](../../streamgear/overview/) and hosted on [GitHub Repository](https://github.com/abhiTronix/streamgear_chunks) and served with [raw.githack.com](https://raw.githack.com)"
 

@@ -18,14 +18,14 @@ limitations under the License.
 ===============================================
 -->
 
-# Advanced Usage: Multi-Clients Mode for NetGear API 
+# Multi-Clients Mode for NetGear API 
 
 
 ## Overview
 
 <figure>
-  <img src="../../../../assets/images/multi_client.png" alt="NetGear's Multi-Clients Mode" loading="lazy" width="75%"/>
-  <figcaption>NetGear's Multi-Clients Mode generalised</figcaption>
+  <img src="../../../../assets/images/multi_client.png" alt="NetGear's Multi-Clients Mode" loading="lazy"/>
+  <figcaption>NetGear's Multi-Clients Mode</figcaption>
 </figure>
 
 

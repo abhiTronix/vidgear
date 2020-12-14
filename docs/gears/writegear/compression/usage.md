@@ -216,6 +216,82 @@ writer.close()
 
 &nbsp;
 
+
+## Using Compression Mode for Streaming URLs
+
+In Compression Mode, WriteGear can do any complex jobs with FFmpeg in just few lines of code. WriteGear allows any URLs _(as output)_ for network streaming with its [`source`](../params/#source) parameter.   
+
+_In this example, let's stream Live Camera Feed directly to Twitch!_
+
+!!! warning "This example assume you already have a [**Twitch Account**](https://www.twitch.tv/) for publishing video."
+
+!!! danger "Make sure to change [_Twitch Stream Key_](https://www.youtube.com/watch?v=xwOtOfPMIIk) with yours in following code before running!"
+
+```python
+# import required libraries
+from vidgear.gears import CamGear
+from vidgear.gears import WriteGear
+import cv2
+
+# Open live webcam video stream on first index(i.e. 0) device
+stream = CamGear(source=0, logging=True).start()
+
+# define required FFmpeg optimizing parameters for your writer
+output_params = {
+    "-preset:v": "veryfast",
+    "-g": 60,
+    "-keyint_min": 60,
+    "-sc_threshold": 0,
+    "-bufsize": "2500k",
+    "-f": "flv",
+}
+
+
+# [WARNING] Change your Twitch Stream Key here:
+TWITCH_KEY = "live_XXXXXXXXXX~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
+# Define writer with defined parameters and
+writer = WriteGear(
+    output_filename="rtmp://live.twitch.tv/app/{}".format(TWITCH_KEY),
+    logging=True,
+    **output_params
+)
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # write frame to writer
+    writer.write(frame)
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+
+# safely close writer
+writer.close()
+```
+
+&nbsp;
+
 ## Using Compression Mode with Hardware encoders
 
 

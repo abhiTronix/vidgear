@@ -18,29 +18,30 @@ limitations under the License.
 ===============================================
 -->
 
-# Advanced Usage: Bidirectional Mode for NetGear API 
+# Bidirectional Mode for NetGear API 
 
 <h3 align="center">
-  <img src="../../../../assets/images/bidir.png" alt="Bi-directional Mode" loading="lazy" width="85%"/>
+  <img src="../../../../assets/images/bidir.png" alt="Bidirectional Mode" loading="lazy" width="85%"/>
+  <figcaption>NetGear's Bidirectional Mode</figcaption>
 </h3>
 
 ## Overview
 
-Bi-directional Mode enables seamless support for Bidirectional data transmission between Client/Consumer and Sender/Publisher along with Video frames, through its synchronous messaging patterns such as `zmq.PAIR` (ZMQ Pair Pattern) & `zmq.REQ/zmq.REP` (ZMQ Request/Reply Pattern).
+Bidirectional Mode enables seamless support for Bidirectional data transmission between Client/Consumer and Sender/Publisher along with Video frames, through its synchronous messaging patterns such as `zmq.PAIR` (ZMQ Pair Pattern) & `zmq.REQ/zmq.REP` (ZMQ Request/Reply Pattern).
 
 
-In Bi-directional Mode, We can utilize its [`message`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.send) parameter of `send()` method at Server's end for sending data to Client, and [`return_data`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.recv) parameter of `recv()` method at Client end to return data back to Server, all while transferring frames in real-time. This mode can be easily activated in NetGear API through `bidirectional_mode` attribute of its [`option`](../../params/#options) dictionary parameter, during initialization.
+In Bidirectional Mode, We can utilize its [`message`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.send) parameter of `send()` method at Server's end for sending data to Client, and [`return_data`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.recv) parameter of `recv()` method at Client end to return data back to Server, all while transferring frames in real-time. This mode can be easily activated in NetGear API through `bidirectional_mode` attribute of its [`option`](../../params/#options) dictionary parameter, during initialization.
 
 &nbsp;
 
 
 !!! warning "Important Information"
 
-    * In Bi-directional Mode, `zmq.PAIR`(ZMQ Pair) & `zmq.REQ/zmq.REP`(ZMQ Request/Reply) are **ONLY** Supported messaging patterns. Accessing this mode with any other messaging pattern, will result in `ValueError`.
+    * In Bidirectional Mode, `zmq.PAIR`(ZMQ Pair) & `zmq.REQ/zmq.REP`(ZMQ Request/Reply) are **ONLY** Supported messaging patterns. Accessing this mode with any other messaging pattern, will result in `ValueError`.
 
     * Bidirectional Mode is **NOT** compatibile with [Multi-Servers mode](../../advanced/multi_server/) and [Multi-Clients mode](../../advanced/multi_client/) exclusive modes. Thereby, if Bidirectional mode is enabled with any of these modes, it will be **DISABLED** automatically.
 
-    * Bi-directional Mode may lead to additional **LATENCY** depending upon the bytes of the data being transfer bidirectionally. User discretion is advised!
+    * Bidirectional Mode may lead to additional **LATENCY** depending upon the bytes of the data being transfer bidirectionally. User discretion is advised!
 
     * With Bidirectional Mode, you can also send data of **ANY**[^1] Data-type along with frame bidirectionally.
 
@@ -51,7 +52,7 @@ In Bi-directional Mode, We can utilize its [`message`](../../../../bonus/referen
 
 ## Features
 
-- [x] Enables easy-to-use seamless bi-directional data transmission between two systems.
+- [x] Enables easy-to-use seamless Bidirectional data transmission between two systems.
 
 - [x] Supports `zmq.PAIR` & `zmq.REQ/zmq.REP` messaging patterns.
 

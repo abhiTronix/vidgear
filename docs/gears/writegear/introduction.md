@@ -21,7 +21,7 @@ limitations under the License.
 # WriteGear API 
 
 <figure>
-  <img src="../../../assets/images/writegear.png" alt="WriteGear Functional Block Diagram" loading="lazy" width="75%" />
+  <img src="../../../assets/images/writegear.png" alt="WriteGear Functional Block Diagram" loading="lazy" />
   <figcaption>WriteGear API generalized workflow</figcaption>
 </figure>
 
@@ -29,7 +29,7 @@ limitations under the License.
 
 > WriteGear provides a complete, flexible and easily-extensible wrapper around [**FFmpeg**](https://ffmpeg.org/) - a leading multimedia framework - for encoding real-time frames into a lossless compressed video-file with any suitable specification (such as `framerate, bitrate, codec, etc.`) while handling all errors robustly, all in just few easy lines of python code.
 
-Best of all, WriteGear grants the complete freedom to play with any FFmpeg parameter with its exclusive ==Custom Commands function== _(see this [doc](../compression/advanced/cciw/))_, without relying on any Third-party library. It's able to perform complex tasks such as multiplexing video with audio in real-time _(see this [doc](../compression/usage/#using-compression-mode-with-live-audio-input)_.
+Best of all, WriteGear grants the complete freedom to play with any FFmpeg parameter with its exclusive ==Custom Commands function== _(see this [doc](../compression/advanced/cciw/))_, without relying on any Third-party library. It's able to perform complex tasks such as [Live-Streaming](../compression/usage/#using-compression-mode-for-streaming-urls) _(such as for Twitch)_, multiplexing video with audio in real-time _(see this [doc](../compression/usage/#using-compression-mode-with-live-audio-input))_.
 
 In addition to this, WriteGear also provides flexible access to [**OpenCV's VideoWriter API**](https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html) which provides some basic tools for video frames encoding but without compression.
 
