@@ -57,7 +57,16 @@ class ScreenGear:
     def __init__(
         self, monitor=None, backend="", colorspace=None, logging=False, **options
     ):
+        """
+        This constructor method initializes the object state and attributes of the ScreenGear class.
 
+        Parameters:
+            monitor (int): enables `mss` backend and sets the index of the monitor screen.
+            backend (str): enables `pyscreenshot` and select suitable backend for extracting frames.
+            colorspace (str): selects the colorspace of the input stream.
+            logging (bool): enables/disables logging.
+            options (dict): provides the flexibility to manually set the dimensions of capture screen area.
+        """
         # enable logging if specified:
         self.__logging = logging if isinstance(logging, bool) else False
 

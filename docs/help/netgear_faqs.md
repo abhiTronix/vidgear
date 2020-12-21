@@ -30,7 +30,7 @@ limitations under the License.
 
 ## How to get started with NetGear API?
 
-**Answer:** See [NetGear doc ➶](../../gears/netgear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** See [NetGear doc ➶](../../gears/netgear/overview/). Still in doubt, then discuss on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
@@ -48,9 +48,44 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
 
 &nbsp;
 
-## How to receive frames from multiple Servers and multiple Clients through NetGear API?
+## Which compression format is the fastest for NetGear API?
 
-**Answer:** See [Multi-Servers Mode doc ➶](../../gears/netgear/advanced/multi_server/) and [Multi-Clients Mode doc ➶](../../gears/netgear/advanced/multi_client/)
+**Answer:** According to an [answer](https://answers.opencv.org/question/207286/why-imencode-taking-so-long/?answer=211496#post-id-211496), the time varies differently for different encoding/decoding format as follows:
+
+| Encoding format | Time taken _(in milliseconds)_ |
+| :---------: | :-------: |
+| bmp | 20-40 |
+| jpg | 50-70 |
+| png | 200-250 | 
+
+Despite `bmp` being the fasted, using `jpg` is more suitable for encoding, since highly-optimized [`libjpeg-turbo`](https://libjpeg-turbo.org/) library is now a part of OpenCV binaries. But you can choose whatever suits you.
+
+&nbsp;
+
+
+## Why NetGear is running slow?
+
+**Answer:** Here are few tips to troubleshoot performance on your machine:
+
+* **Update ZMQ to latest:** Update your `pyzmq` lib as follows:
+
+    ```sh
+    sudo pip3 install -U pyzmq
+    ``` 
+
+* **Install testing branch:** The [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch may contain many latest performance updates, which are not yet merged into master branch. Therefore, you can try them earlier, by [installing `testing` branch directly ➶](../../installation/source_install/#installation).
+
+* **Use PUB/SUB pattern if you're live streaming**:  Try different [`pattern`](../../gears/netgear/params/#pattern) values, as each of them suits different settings. For example, you can use its [**Publisher/Subscriber pattern**](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html) _(i.e. `pattern=2`)_ for asynchronous high-speed transmission over real-time streams, and it works faster than other synchronous patterns for this scenario.
+
+* **Use Wired connection instead of Wireless connection**: Remember typical 802.11g Wireless has a theoretical maximum of 54Mbps. Typical wired 10/100/1000 Ethernet has a theoretical maximum of 100 Gbps. So in theory wired is faster. However, these speeds are only on your local network. So chose your network configuration wisely.
+
+* **Compress your image/frame before transmission:** Try [Frame Encoding/Decoding Compression capabilities for NetGear API ➶](../../gears/netgear/advanced/compression/).
+
+* **Reduce Frame Size:** Use VidGear's real-time _Frame-Size Reducer_(`reducer`) method for reducing frame-size on-the-go for additional performance _(see [this usage example ➶](../../gears/netgear/advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer-with-frame-compression))_. Remember, sending large HQ video-frames may required more network bandwidth and packet size, which can lead to additional latency!
+
+* Systematically, **check for [Hardware/Network Issues ➶](https://github.com/abhiTronix/vidgear/issues/137)**
+
+* Finally, if nothing works then, **checkout [**NetGear_Async API ➶**](../../gears/netgear_async/overview/)**
 
 &nbsp;
 
@@ -85,50 +120,8 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
 
 &nbsp;
 
-## Which compression format is the fastest for NetGear API?
-
-**Answer:** According to an [answer](https://answers.opencv.org/question/207286/why-imencode-taking-so-long/?answer=211496#post-id-211496):
-
-The time varies differently for different encoding/decoding format as follows:
-
-| Encoding format | Time taken _(in milliseconds)_ |
-| :---------: | :-------: |
-| bmp | 20-40 |
-| jpg | 50-70 |
-| png | 200-250 | 
-
-Despite `bmp` being the fasted, using `jpg` is more suitable for encoding, since highly-optimized [`libjpeg-turbo`](https://libjpeg-turbo.org/) library is now a part of OpenCV binaries. But you can choose whatever suits you.
-
-&nbsp;
-
 ## Why NetGear API not working correctly?
 
 **Answer:** First, carefully go through [NetGear doc ➶](../../gears/netgear/overview/) that contains detailed information. Also, checkout [PyZmq Docs ➶](https://zeromq.github.io/pyzmq/) for its various settings/parameters. If still it doesn't work for you, then let us know on [Gitter ➶](https://gitter.im/vidgear/community)
-
-&nbsp;
-
-## Why NetGear is running slow?
-
-**Answer:** Here are few tips to troubleshoot performance on your machine:
-
-* **Update ZMQ to latest:** Update your `pyzmq` lib as follows:
-
-    ```sh
-    sudo pip3 install -U pyzmq
-    ``` 
-
-* **Install testing branch:** The [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch may contain many latest performance updates, which are not yet merged into master branch. Therefore, you can try them earlier, by [installing `testing` branch directly ➶](../../installation/source_install/#installation).
-
-* **Use PUB/SUB pattern if you're live streaming**:  Try different [`pattern`](../../gears/netgear/params/#pattern) values, as each of them suits different settings. For example, you can use its [**Publisher/Subscriber pattern**](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html) _(i.e. `pattern=2`)_ for asynchronous high-speed transmission over real-time streams, and it works faster than other synchronous patterns for this scenario.
-
-* **Use Wired connection instead of Wireless connection**: Remember typical 802.11g Wireless has a theoretical maximum of 54Mbps. Typical wired 10/100/1000 Ethernet has a theoretical maximum of 100 Gbps. So in theory wired is faster. However, these speeds are only on your local network. So chose your network configuration wisely.
-
-* **Compress your image/frame before transmission:** Try [Frame Encoding/Decoding Compression capabilities for NetGear API ➶](../../gears/netgear/advanced/compression/).
-
-* **Reduce Frame Size:** Use VidGear's real-time _Frame-Size Reducer_(`reducer`) method for reducing frame-size on-the-go for additional performance _(see [this usage example ➶](../../gears/netgear/advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer-with-frame-compression))_. Remember, sending large HQ video-frames may required more network bandwidth and packet size, which can lead to additional latency!
-
-* Systematically, **check for [Hardware/Network Issues ➶](https://github.com/abhiTronix/vidgear/issues/137)**
-
-* Finally, if nothing works, then, **checkout [**NetGear_Async API ➶**](../../gears/netgear_async/overview/)**
 
 &nbsp;

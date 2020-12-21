@@ -21,16 +21,23 @@ limitations under the License.
 # NetGear_Async API Usage Examples:
 
 
+!!! tip "Helpful Tips"
+
+    * It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
+
+    * It is advised to comprehend [NetGear API](../../netgear/overview/) before using this API.
+
+
 ## Requirement
 
 NetGear_Async API is the part of `asyncio` package of VidGear, thereby you need to install VidGear with asyncio support as follows:
 
-  ```sh
-  pip install vidgear[asyncio]
-  ```
+```sh
+pip install vidgear[asyncio]
+```
 
+&nbsp;
 
-&nbsp; 
 
 ## Bare-Minimum Usage
 
@@ -47,17 +54,17 @@ Open your favorite terminal and execute the following python code:
 from vidgear.gears.asyncio import NetGear_Async
 import asyncio
 
-#initialize Server with suitable source
-server=NetGear_Async(source='/home/foo/foo1.mp4').launch()
+# initialize Server with suitable source
+server = NetGear_Async(source="/home/foo/foo1.mp4").launch()
 
-if __name__ == '__main__':
-    #set event loop
+if __name__ == "__main__":
+    # set event loop
     asyncio.set_event_loop(server.loop)
     try:
-        #run your main function task until it is complete
+        # run your main function task until it is complete
         server.loop.run_until_complete(server.task)
     except (KeyboardInterrupt, SystemExit):
-        #wait for interrupts
+        # wait for interrupts
         pass
     finally:
         # finally close the server
@@ -77,37 +84,35 @@ Then open another terminal on the same system and execute the following python c
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
 
-#define and launch Client with `receive_mode=True`
-client=NetGear_Async(receive_mode=True).launch()
+# define and launch Client with `receive_mode=True`
+client = NetGear_Async(receive_mode=True).launch()
 
 
-#Create a async function where you want to show/manipulate your received frames
+# Create a async function where you want to show/manipulate your received frames
 async def main():
     # loop over Client's Asynchronous Frame Generator
     async for frame in client.recv_generator():
 
-        
         # do something with received frames here
 
-        
         # Show output window
         cv2.imshow("Output Frame", frame)
-        key=cv2.waitKey(1) & 0xFF
+        key = cv2.waitKey(1) & 0xFF
 
-        #await before continuing
+        # await before continuing
         await asyncio.sleep(0.00001)
 
 
-if __name__ == '__main__':
-    #Set event loop to client's
+if __name__ == "__main__":
+    # Set event loop to client's
     asyncio.set_event_loop(client.loop)
     try:
-        #run your main function task until it is complete
+        # run your main function task until it is complete
         client.loop.run_until_complete(main())
     except (KeyboardInterrupt, SystemExit):
-        #wait for interrupts
+        # wait for interrupts
         pass
-        
+
     # close all output window
     cv2.destroyAllWindows()
     # safely close client
@@ -134,37 +139,42 @@ Open a terminal on Client System _(where you want to display the input frames re
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
 
-#define and launch Client with `receive_mode=True`. #change following IP address '192.168.x.xxx' with yours
-client=NetGear_Async(address='192.168.x.xxx', port='5454', protocol='tcp',  pattern=2, receive_mode=True, logging=True).launch()
+# define and launch Client with `receive_mode=True`. #change following IP address '192.168.x.xxx' with yours
+client = NetGear_Async(
+    address="192.168.x.xxx",
+    port="5454",
+    protocol="tcp",
+    pattern=2,
+    receive_mode=True,
+    logging=True,
+).launch()
 
 
-#Create a async function where you want to show/manipulate your received frames
+# Create a async function where you want to show/manipulate your received frames
 async def main():
     # loop over Client's Asynchronous Frame Generator
     async for frame in client.recv_generator():
 
-        
         # do something with received frames here
 
-        
         # Show output window
         cv2.imshow("Output Frame", frame)
-        key=cv2.waitKey(1) & 0xFF
+        key = cv2.waitKey(1) & 0xFF
 
-        #await before continuing
+        # await before continuing
         await asyncio.sleep(0.00001)
 
 
-if __name__ == '__main__':
-    #Set event loop to client's
+if __name__ == "__main__":
+    # Set event loop to client's
     asyncio.set_event_loop(client.loop)
     try:
-        #run your main function task until it is complete
+        # run your main function task until it is complete
         client.loop.run_until_complete(main())
     except (KeyboardInterrupt, SystemExit):
-        #wait for interrupts
+        # wait for interrupts
         pass
-        
+
     # close all output window
     cv2.destroyAllWindows()
     # safely close client
@@ -184,17 +194,24 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 from vidgear.gears.asyncio import NetGear_Async
 import asyncio
 
-#initialize Server with suitable source
-server=NetGear_Async(source=0, address='192.168.x.xxx', port='5454', protocol='tcp',  pattern=2, logging=True).launch()
+# initialize Server with suitable source
+server = NetGear_Async(
+    source=0,
+    address="192.168.x.xxx",
+    port="5454",
+    protocol="tcp",
+    pattern=2,
+    logging=True,
+).launch()
 
-if __name__ == '__main__':
-    #set event loop
+if __name__ == "__main__":
+    # set event loop
     asyncio.set_event_loop(server.loop)
     try:
-        #run your main function task until it is complete
+        # run your main function task until it is complete
         server.loop.run_until_complete(server.task)
     except (KeyboardInterrupt, SystemExit):
-        #wait for interrupts
+        # wait for interrupts
         pass
     finally:
         # finally close the server
@@ -219,46 +236,46 @@ Open your favorite terminal and execute the following python code:
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
 
-#initialize Server
-server=NetGear_Async(logging=True)
+# initialize Server
+server = NetGear_Async(logging=True)
 
-#Create a async frame generator as custom source
+# Create a async frame generator as custom source
 async def my_frame_generator():
 
-        #Open any video stream such as live webcam video stream on first index(i.e. 0) device
-        stream=cv2.VideoCapture(0) 
+    # Open any video stream such as live webcam video stream on first index(i.e. 0) device
+    stream = cv2.VideoCapture(0)
 
-        # loop over stream until its terminated
-        while True:
+    # loop over stream until its terminated
+    while True:
 
-            # read frames
-            (grabbed, frame)=stream.read()
+        # read frames
+        (grabbed, frame) = stream.read()
 
-            # check if frame empty
-            if not grabbed:
-                #if True break the infinite loop
-                break
+        # check if frame empty
+        if not grabbed:
+            # if True break the infinite loop
+            break
 
-            # do something with the frame to be sent here
+        # do something with the frame to be sent here
 
-            # yield frame
-            yield frame
-            # sleep for sometime
-            await asyncio.sleep(0.00001)
+        # yield frame
+        yield frame
+        # sleep for sometime
+        await asyncio.sleep(0.00001)
 
 
-if __name__ == '__main__':
-    #set event loop
+if __name__ == "__main__":
+    # set event loop
     asyncio.set_event_loop(server.loop)
-    #Add your custom source generator to Server configuration
-    server.config["generator"]=my_frame_generator() 
-    #Launch the Server 
+    # Add your custom source generator to Server configuration
+    server.config["generator"] = my_frame_generator()
+    # Launch the Server
     server.launch()
     try:
-        #run your main function task until it is complete
+        # run your main function task until it is complete
         server.loop.run_until_complete(server.task)
     except (KeyboardInterrupt, SystemExit):
-        #wait for interrupts
+        # wait for interrupts
         pass
     finally:
         # finally close the server
@@ -266,6 +283,7 @@ if __name__ == '__main__':
 ```
 
 ### Client's End
+
 Then open another terminal on the same system and execute the following python code and see the output:
 
 !!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
@@ -277,37 +295,35 @@ Then open another terminal on the same system and execute the following python c
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
 
-#define and launch Client with `receive_mode=True`
-client=NetGear_Async(receive_mode=True, logging=True).launch()
+# define and launch Client with `receive_mode=True`
+client = NetGear_Async(receive_mode=True, logging=True).launch()
 
 
-#Create a async function where you want to show/manipulate your received frames
+# Create a async function where you want to show/manipulate your received frames
 async def main():
     # loop over Client's Asynchronous Frame Generator
     async for frame in client.recv_generator():
 
-        
-        # do something with received frames here
+        # {do something with received frames here}
 
-        
         # Show output window
         cv2.imshow("Output Frame", frame)
-        key=cv2.waitKey(1) & 0xFF
+        key = cv2.waitKey(1) & 0xFF
 
-        #await before continuing
+        # await before continuing
         await asyncio.sleep(0.01)
 
 
-if __name__ == '__main__':
-    #Set event loop to client's
+if __name__ == "__main__":
+    # Set event loop to client's
     asyncio.set_event_loop(client.loop)
     try:
-        #run your main function task until it is complete
+        # run your main function task until it is complete
         client.loop.run_until_complete(main())
     except (KeyboardInterrupt, SystemExit):
-        #wait for interrupts
+        # wait for interrupts
         pass
-        
+
     # close all output window
     cv2.destroyAllWindows()
     # safely close client
@@ -333,17 +349,19 @@ Open your favorite terminal and execute the following python code:
 from vidgear.gears.asyncio import NetGear_Async
 import asyncio
 
-#initialize Server with suitable source and enable stabilization
-server=NetGear_Async(source='/home/foo/foo1.mp4', stabilize=True, logging=True).launch()
+# initialize Server with suitable source and enable stabilization
+server = NetGear_Async(
+    source="/home/foo/foo1.mp4", stabilize=True, logging=True
+).launch()
 
-if __name__ == '__main__':
-    #set event loop
+if __name__ == "__main__":
+    # set event loop
     asyncio.set_event_loop(server.loop)
     try:
-        #run your main function task until it is complete
+        # run your main function task until it is complete
         server.loop.run_until_complete(server.task)
     except (KeyboardInterrupt, SystemExit):
-        #wait for interrupts
+        # wait for interrupts
         pass
     finally:
         # finally close the server
@@ -363,42 +381,40 @@ from vidgear.gears.asyncio import NetGear_Async
 from vidgear.gears import WriteGear
 import cv2, asyncio
 
-#define and launch Client with `receive_mode=True`
-client=NetGear_Async(receive_mode=True).launch()
-#Define writer with output filename 'Output.mp4' 
-writer=WriteGear(output_filename='Output.mp4', logging=True) 
+# define and launch Client with `receive_mode=True`
+client = NetGear_Async(receive_mode=True).launch()
+# Define writer with output filename 'Output.mp4'
+writer = WriteGear(output_filename="Output.mp4", logging=True)
 
 
-#Create a async function where you want to show/manipulate your received frames
+# Create a async function where you want to show/manipulate your received frames
 async def main():
     # loop over Client's Asynchronous Frame Generator
     async for frame in client.recv_generator():
 
-        
-        # do something with received frames here
+        # {do something with received frames here}
 
         # write a modified frame to writer
-        writer.write(frame) 
+        writer.write(frame)
 
-        
         # Show output window
         cv2.imshow("Output Frame", frame)
-        key=cv2.waitKey(1) & 0xFF
+        key = cv2.waitKey(1) & 0xFF
 
-        #await before continuing
+        # await before continuing
         await asyncio.sleep(0.00001)
 
 
-if __name__ == '__main__':
-    #Set event loop to client's
+if __name__ == "__main__":
+    # Set event loop to client's
     asyncio.set_event_loop(client.loop)
     try:
-        #run your main function task until it is complete
+        # run your main function task until it is complete
         client.loop.run_until_complete(main())
     except (KeyboardInterrupt, SystemExit):
-        #wait for interrupts
+        # wait for interrupts
         pass
-        
+
     # close all output window
     cv2.destroyAllWindows()
     # safely close client

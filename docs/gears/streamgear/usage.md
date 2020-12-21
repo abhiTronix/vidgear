@@ -21,15 +21,13 @@ limitations under the License.
 # StreamGear API Usage Examples:
 
 
-!!! danger "Important Information"
+!!! warning "Important Information"
     
     * StreamGear **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../ffmpeg_install/) for its installation.
 
-    * :warning: StreamGear API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system.
+    * StreamGear API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system.
 
     * By default, when no additional streams are defined, ==StreamGear generates a primary stream of same resolution and framerate[^1] as the input video  _(at the index `0`)_.==
-
-    * It is advised to enable logging _([`logging=True`](../params/#logging))_ on the first run for easily identifying any runtime errors.
 
     * Always use `terminate()` function at the very end of the main code.
 
@@ -82,9 +80,9 @@ streamer.terminate()
 
 ### A.2 Bare-Minimum Usage with Live-Streaming
 
-If you want to Livestream in Single-Source Mode _(chunks will contain information for few new frames only, and forgets all previous ones)_, you can use exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter as follows:
+If you want to **Livestream in Single-Source Mode** _(chunks will contain information for few new frames only, and forgets all previous ones)_, you can use exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter as follows:
 
-!!! tip "Use `-window_size` & `-extra_window_size` FFmpeg parameters for controlling number of frames to be kept in Chunks."
+!!! tip "Use `-window_size` & `-extra_window_size` FFmpeg parameters for controlling number of frames to be kept in Chunks. Less these value, less will be latency."
 
 !!! warning "All Chunks will be overwritten in this mode after every few Chunks _(equal to the sum of `-window_size` & `-extra_window_size` values)_, Hence Newer Chunks and Manifest contains NO information of any older video-frames."
 
@@ -309,9 +307,9 @@ streamer.terminate()
 
 ### B.2 Bare-Minimum Usage with Live-Streaming
 
-If you want to Livestream in Real-time Frames Mode _(chunks will contain information for few new frames only)_, which is excellent for building Low Latency solutions such as Live Camera Streaming, then you can use exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter as follows:
+If you want to **Livestream in Real-time Frames Mode** _(chunks will contain information for few new frames only)_, which is excellent for building Low Latency solutions such as Live Camera Streaming, then you can use exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter as follows:
 
-!!! tip "Use `-window_size` & `-extra_window_size` FFmpeg parameters for controlling number of frames to be kept in Chunks."
+!!! tip "Use `-window_size` & `-extra_window_size` FFmpeg parameters for controlling number of frames to be kept in Chunks. Less these value, less will be latency."
 
 !!! warning "All Chunks will be overwritten in this mode after every few Chunks _(equal to the sum of `-window_size` & `-extra_window_size` values)_, Hence Newer Chunks and Manifest contains NO information of any older video-frames."
 

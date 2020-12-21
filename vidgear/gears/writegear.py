@@ -79,6 +79,17 @@ class WriteGear:
         **output_params
     ):
 
+        """
+        This constructor method initializes the object state and attributes of the WriteGear class.
+
+        Parameters:
+            output_filename (str): sets the valid filename/path/URL for the video output.
+            compression_mode (bool): selects the WriteGear's Primary Mode of Operation.
+            custom_ffmpeg (str): assigns the location of custom path/directory for custom FFmpeg executables.
+            logging (bool): enables/disables logging.
+            output_params (dict): provides the flexibility to control supported internal parameters and properities.
+        """
+
         # assign parameter values to class variables
         self.__compression = compression_mode
         self.__os_windows = (

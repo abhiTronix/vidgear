@@ -30,7 +30,7 @@ limitations under the License.
 
 ## I'm only familiar with OpenCV, how to get started with CamGear API?
 
-**Answer:** First see [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis), then go through [CamGear doc](../../gears/camgear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, see [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis), then go through [CamGear doc](../../gears/camgear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
@@ -46,15 +46,9 @@ limitations under the License.
 
 &nbsp;
 
-## How to get framerate of the source?
+## How to get framerate of the source in CamGear API?
 
 **Answer:** CamGear's `framerate` global variable can be used to retrieve framerate of the input video stream.  See [this example ➶](../../gears/writegear/compression/usage/#using-compression-mode-with-controlled-framerate).
-
-&nbsp;
-
-## How to open network streams with VidGear?
-
-**Answer:** Just give your stream URL directly to CamGear's [`source`](../../gears/camgear/params/#source) parameter.
 
 &nbsp;
 
@@ -80,7 +74,13 @@ stream = CamGear(source='udpsrc port=5000 ! application/x-rtp,media=video,payloa
 
 &nbsp;
 
-## How to set USB camera properties?
+## How to open network streams with VidGear?
+
+**Answer:** See [this usage example ➶](../../gears/camgear/usage/#using-camgear-with-network-streams).
+
+&nbsp;
+
+## How to set Camera Settings with CamGear?
 
 **Answer:** See [this usage example ➶](../../gears/camgear/usage/#using-camgear-with-variable-camera-properties).
 
@@ -92,7 +92,7 @@ stream = CamGear(source='udpsrc port=5000 ! application/x-rtp,media=video,payloa
 
 &nbsp;
 
-## Can I play 4k video with vidgear?
+## Can I play 4k video with CamGear API?
 
 **Answer:** Yes, you can if your System Hardware supports it. It proven by our [playback benchmarking test](https://github.com/abhiTronix/vidgear/blob/master/vidgear/tests/benchmark_tests/test_benchmark_playback.py).
 
@@ -112,7 +112,7 @@ stream = CamGear(source='udpsrc port=5000 ! application/x-rtp,media=video,payloa
 
 ## Can I perform Deep Learning task with VidGear?
 
-**Answer:** VidGear is a High-performance Video Processing library _(similar to OpenCV, FFmpeg etc.)_, that can read, write, process, send & receive sequence of Video-frames from/to various devices in real-time. So you have to use a third party library with VidGear to deal with Deep Learning operations. But surely VidGear's  high-performance APIs will definitely leverages the overall performance.
+**Answer:** VidGear is a powerful Video Processing library _(similar to OpenCV, FFmpeg, etc.)_ that can read, write, process, send & receive a sequence of video-frames from/to various devices in way easy, flexible, and faster manner. So for Deep Learning or Machine Learning tasks, you have to use a third-party library with VidGear.  Being said that, VidGear's high-performance APIs definitely will leverage the overall performance if you're processing video/audio streams in your application along with Deep Learning tasks.
 
 &nbsp;
 

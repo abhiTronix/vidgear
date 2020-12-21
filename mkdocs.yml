@@ -17,7 +17,7 @@ site_name: VidGear
 site_url: https://github.com/abhiTronix/vidgear
 site_author: Abhishek Thakur
 site_description: >-
-  High-performance cross-platform Video Processing Python framework powerpacked with unique trailblazing features.
+  High-Performance Framework for building complex real-time media applications in python.
 
 # Repository
 repo_name: abhiTronix/vidgear
@@ -33,7 +33,7 @@ copyright: Copyright &copy; 2019 - 2020 Abhishek Thakur(@abhiTronix)
 # Configuration
 theme:
   name: material
-  # custom_dir: docs/overrides disabled
+  custom_dir: docs/overrides
 
   # Don't include MkDocs' JavaScript
   include_search_page: false
@@ -42,11 +42,11 @@ theme:
   # Default values, taken from mkdocs_theme.yml
   language: en
   features:
-    - tabs
+    - navigation.tabs
   palette:
     scheme: default
-    primary: indigo
-    accent: light blue
+    primary: purple
+    accent: dark purple
   font:
     text: Nunito 
     code: IBM Plex
@@ -66,12 +66,13 @@ plugins:
       handlers:
         python:
           rendering:
+            show_root_heading: false
+            show_root_toc_entry: false
             show_source: true
-      watch:
-        - vidgear
+            heading_level: 3
   - exclude:
       glob:
-        - assets/README.md
+        - overrides/assets/README.md
 
 # Customization
 extra:
@@ -90,9 +91,6 @@ extra_css:
     - assets/stylesheets/custom.css
 
 extra_javascript:
-    - assets/javascripts/clappr.min.js
-    - assets/javascripts/clappr-level-selector.min.js
-    - assets/javascripts/dash-shaka-playback.js
     - assets/javascripts/extra.js
 
 # Extensions
@@ -151,35 +149,35 @@ nav:
     - CamGear: 
       - Overview: gears/camgear/overview.md
       - Usage Examples: gears/camgear/usage.md
-      - Advanced Usage:
+      - Advanced:
         - Source Tweak Parameters: gears/camgear/advanced/source_params.md
       - Parameters: gears/camgear/params.md
-      - Reference: bonus/reference/camgear.md
+      - References: bonus/reference/camgear.md
       - FAQs: help/camgear_faqs.md
     - PiGear: 
       - Overview: gears/pigear/overview.md
       - Usage Examples: gears/pigear/usage.md
       - Parameters: gears/pigear/params.md
-      - Reference: bonus/reference/pigear.md
+      - References: bonus/reference/pigear.md
       - FAQs: help/pigear_faqs.md
     - VideoGear: 
       - Overview: gears/videogear/overview.md
       - Usage Examples: gears/videogear/usage.md
       - Parameters: gears/videogear/params.md
-      - Reference: bonus/reference/videogear.md
+      - References: bonus/reference/videogear.md
       - FAQs: help/videogear_faqs.md
     - ScreenGear: 
       - Overview: gears/screengear/overview.md
       - Usage Examples: gears/screengear/usage.md
       - Parameters: gears/screengear/params.md
-      - Reference: bonus/reference/screengear.md
+      - References: bonus/reference/screengear.md
       - FAQs: help/screengear_faqs.md
     - WriteGear:
       - Introduction: gears/writegear/introduction.md
       - Compression Mode:
         - Overview: gears/writegear/compression/overview.md
         - Usage Examples: gears/writegear/compression/usage.md
-        - Advanced Usage: 
+        - Advanced: 
           - Custom FFmpeg Commands: gears/writegear/compression/advanced/cciw.md
           - FFmpeg Installation: gears/writegear/compression/advanced/ffmpeg_install.md
         - Parameters: gears/writegear/compression/params.md
@@ -187,7 +185,7 @@ nav:
         - Overview: gears/writegear/non_compression/overview.md
         - Usage Examples: gears/writegear/non_compression/usage.md
         - Parameters: gears/writegear/non_compression/params.md
-      - Reference: bonus/reference/writegear.md
+      - References: bonus/reference/writegear.md
       - FAQs: help/writegear_faqs.md
     - StreamGear: 
       - Overview: gears/streamgear/overview.md
@@ -195,7 +193,7 @@ nav:
       - Advanced:
           - FFmpeg Installation: gears/streamgear/ffmpeg_install.md
       - Parameters: gears/streamgear/params.md
-      - Reference: bonus/reference/streamgear.md
+      - References: bonus/reference/streamgear.md
       - FAQs: help/streamgear_faqs.md
     - NetGear: 
       - Overview: gears/netgear/overview.md
@@ -207,43 +205,43 @@ nav:
         - Secure Mode: gears/netgear/advanced/secure_mode.md 
         - Frame Compression: gears/netgear/advanced/compression.md 
       - Parameters: gears/netgear/params.md
-      - Reference: bonus/reference/netgear.md
+      - References: bonus/reference/netgear.md
       - FAQs: help/netgear_faqs.md
     - WebGear: 
       - Overview: gears/webgear/overview.md
       - Usage Examples: gears/webgear/usage.md
-      - Advanced Usage: gears/webgear/advanced.md
+      - Advanced Usages: gears/webgear/advanced.md
       - Parameters: gears/webgear/params.md
-      - Reference: bonus/reference/webgear.md
+      - References: bonus/reference/webgear.md
       - FAQs: help/webgear_faqs.md
     - NetGear_Async: 
       - Overview: gears/netgear_async/overview.md
       - Usage Examples: gears/netgear_async/usage.md
       - Parameters: gears/netgear_async/params.md
-      - Reference: bonus/reference/netgear_async.md
+      - References: bonus/reference/netgear_async.md
       - FAQs: help/netgear_async_faqs.md
     - Stabilizer Class: 
       - Overview: gears/stabilizer/overview.md
       - Usage Examples: gears/stabilizer/usage.md
       - Parameters: gears/stabilizer/params.md
-      - Reference: bonus/reference/stabilizer.md
+      - References: bonus/reference/stabilizer.md
       - FAQs: help/stabilizer_faqs.md
   - Bonus:
-    - API Reference:
+    - API References:
       - vidgear.gears: 
-        - camgear.py: bonus/reference/camgear.md
-        - pigear.py: bonus/reference/pigear.md
-        - videogear.py: bonus/reference/videogear.md
-        - screengear.py: bonus/reference/screengear.md
-        - writegear.py: bonus/reference/writegear.md
-        - streamgear.py: bonus/reference/streamgear.md
-        - netgear.py: bonus/reference/netgear.md
-        - stabilizer.py: bonus/reference/stabilizer.md
-        - helper.py: bonus/reference/helper.md
+        - CamGear API: bonus/reference/camgear.md
+        - PiGear API: bonus/reference/pigear.md
+        - VideoGear API: bonus/reference/videogear.md
+        - ScreenGear API: bonus/reference/screengear.md
+        - WriteGear API: bonus/reference/writegear.md
+        - StreamGear API: bonus/reference/streamgear.md
+        - NetGear API: bonus/reference/netgear.md
+        - Stabilizer Class: bonus/reference/stabilizer.md
+        - Helper Methods: bonus/reference/helper.md
       - vidgear.gears.asyncio:
-        - webgear.py: bonus/reference/webgear.md
-        - netgear_async.py: bonus/reference/netgear_async.md
-        - helper.py: bonus/reference/helper_async.md
+        - WebGear API: bonus/reference/webgear.md
+        - NetGear_Async API: bonus/reference/netgear_async.md
+        - Helper Methods: bonus/reference/helper_async.md
     - Colorspace Manipulation: bonus/colorspace_manipulation.md
     - Threaded Queue Mode: bonus/TQM.md
   - Help:
@@ -252,14 +250,13 @@ nav:
       - Getting Help: help/get_help.md
     - Frequently Asked Questions:
       - General FAQs: help/general_faqs.md
+      - Stabilizer Class FAQs: help/stabilizer_faqs.md
       - CamGear FAQs: help/camgear_faqs.md
       - PiGear FAQs: help/pigear_faqs.md
+      - VideoGear FAQs: help/videogear_faqs.md
       - ScreenGear FAQs: help/screengear_faqs.md
-      - StreamGear FAQs: help/streamgear_faqs.md
       - WriteGear FAQs: help/writegear_faqs.md
+      - StreamGear FAQs: help/streamgear_faqs.md
       - NetGear FAQs: help/netgear_faqs.md
       - WebGear FAQs: help/webgear_faqs.md
-      - VideoGear FAQs: help/videogear_faqs.md
-      - Stabilizer Class FAQs: help/stabilizer_faqs.md
       - NetGear_Async FAQs: help/netgear_async_faqs.md
-    - Project Motivation: help/motivation.md

@@ -105,6 +105,19 @@ class NetGear:
         **options
     ):
 
+        """
+        This constructor method initializes the object state and attributes of the NetGear class.
+
+        Parameters:
+            address (str): sets the valid network address of the Server/Client.
+            port (str): sets the valid Network Port of the Server/Client.
+            protocol (str): sets the valid messaging protocol between Server/Client.
+            pattern (int): sets the supported messaging pattern(flow of communication) between Server/Client
+            receive_mode (bool): select the Netgear's Mode of operation.
+            logging (bool): enables/disables logging.
+            options (dict): provides the flexibility to alter various NetGear internal properties.
+        """
+
         try:
             # import PyZMQ library
             import zmq

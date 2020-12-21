@@ -72,6 +72,24 @@ class WebGear:
         **options
     ):
 
+        """
+        This constructor method initializes the object state and attributes of the WebGear class.
+
+        Parameters:
+            enablePiCamera (bool): provide access to PiGear(if True) or CamGear(if False) APIs respectively.
+            stabilize (bool): enable access to Stabilizer Class for stabilizing frames.
+            camera_num (int): selects the camera module index which will be used as Rpi source.
+            resolution (tuple): sets the resolution (i.e. `(width,height)`) of the Rpi source.
+            framerate (int/float): sets the framerate of the Rpi source.
+            source (based on input): defines the source for the input stream.
+            y_tube (bool): controls the exclusive YouTube Mode.
+            backend (int): selects the backend for OpenCV's VideoCapture class.
+            colorspace (str): selects the colorspace of the input stream.
+            logging (bool): enables/disables logging.
+            time_delay (int): time delay (in sec) before start reading the frames.
+            options (dict): provides ability to alter Tweak Parameters of WebGear, CamGear, PiGear & Stabilizer.
+        """
+
         # initialize global params
         self.__jpeg_quality = 90  # 90% quality
         self.__jpeg_optimize = 0  # optimization off

@@ -22,9 +22,9 @@ limitations under the License.
 
 ## **`monitor`**
 
-This parameter activates [`mss`](https://github.com/BoboTiG/python-mss) backend and sets the index of the monitor screen. This parameter is the most suitable for selecting index of multiple monitor screen from where you want get frames from. For example, its value can be assign to `-1`, to fetch frames from all connected multiple monitor screens. More information can be found [here ➶](https://python-mss.readthedocs.io/examples.html#a-screen-shot-to-grab-them-all)
+This parameter enables [`mss`](https://github.com/BoboTiG/python-mss) usage and sets the index of the monitor screen. This parameter is the most suitable for selecting index of multiple monitor screen from where you want get frames from. For example, its value can be assign to `-1`, to fetch frames from all connected multiple monitor screens. More information can be found [here ➶](https://python-mss.readthedocs.io/examples.html#a-screen-shot-to-grab-them-all)
 
-!!! warning "Any value on `monitor` parameter,  will disable the [`backend`](#backend) parameter."
+!!! warning "Any value on `monitor` parameter  will disable the [`backend`](#backend) parameter."
 
 **Data-Type:** Integer
 
@@ -40,15 +40,15 @@ ScreenGear(monitor=-1) # to fetch frames from all connected multiple screens
 
 ## **`backend`**
 
-This parameter activates [`pyscreenshot`](https://github.com/BoboTiG/python-mss) in ScreenGear API that enables us to select any backend _(for extracting frames)_ of our choice. This parameter give us the authority of selecting the best backend which generates best performance as well as the most compatible with our machine. It's possible values/backends are: `default` ,`pil` ,`mss` ,`scrot` ,`maim` ,`imagemagick` ,`pyqt5` ,`pyqt` ,`pyside2` ,`pyside` ,`wx` ,`pygdk3` ,`mac_screencapture` ,`mac_quartz` ,`gnome_dbus` ,`gnome-screenshot` ,`kwin_dbus`. More information on these backends can be found [here ➶](https://github.com/ponty/pyscreenshot)
+This parameter enables [`pyscreenshot`](https://github.com/BoboTiG/python-mss) usage and select suitable backend for extracting frames in ScreenGear. The user have the authority of selecting suitable backend which generates best performance as well as the most compatible with their machines. The possible values are: `default` ,`pil` ,`mss` ,`scrot` ,`maim` ,`imagemagick` ,`pyqt5` ,`pyqt` ,`pyside2` ,`pyside` ,`wx` ,`pygdk3` ,`mac_screencapture` ,`mac_quartz` ,`gnome_dbus` ,`gnome-screenshot` ,`kwin_dbus`. More information on these backends can be found [here ➶](https://github.com/ponty/pyscreenshot)
 
-!!! note "Performance Benchmarking of each backend can be found [here](https://github.com/ponty/pyscreenshot#performance)"
+!!! note "Performance Benchmarking of each backend can be found [here ➶](https://github.com/ponty/pyscreenshot#performance)"
 
 !!! warning "Remember to install backend library and all of its dependencies you're planning to use with ScreenGear API."
 
-!!! error "Any value on [`monitor`](#monitor) parameter,  will disable the `backend` parameter. You cannot use both parameters at same time."
+!!! error "Any value on [`monitor`](#monitor) parameter will disable the `backend` parameter. You cannot use both parameters at same time."
 
-**Data-Type:** string
+**Data-Type:** String
 
 **Default Value:** Its default value is `""` _(i.e. default backend)_.
 
@@ -76,7 +76,7 @@ This parameter selects the colorspace of the source stream.
 ScreenGear(colorspace="COLOR_BGR2HSV")
 ```
 
-Its complete usage example is given [here ➶](../usage/#using-screengear-with-direct-colorspace-manipulation)
+!!! info "Its complete usage example is given [here ➶](../usage/#using-screengear-with-direct-colorspace-manipulation)"
 
 &nbsp;
 
@@ -86,13 +86,13 @@ Its complete usage example is given [here ➶](../usage/#using-screengear-with-d
 This parameter provides the flexibility to manually set the dimensions of capture screen area. 
 
 !!! info "Supported Dimensional Parameters"
-    
-    Supported Dimensional Parameters are as follows: 
-  
-      * **left:** the x-coordinate of the upper-left corner of the region
-      * **top:** the y-coordinate of the upper-left corner of the region
-      * **width:** the width of the region
-      * **height:** the height of the region
+
+	Supported Dimensional Parameters are as follows: 
+
+	* **`left`:** the x-coordinate of the upper-left corner of the region
+	* **`top`:** the y-coordinate of the upper-left corner of the region
+	* **`width`:** the width of the region
+	* **`height`:** the height of the region
 
 
 **Data-Type:** Dictionary

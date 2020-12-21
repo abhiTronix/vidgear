@@ -47,7 +47,7 @@ Its valid input can be one of the following:
     CamGear(source='/home/foo.mp4')
     ```
 
-* **YouTube Video's URL (*string*):** _Valid Youtube video URL as input when YouTube Mode is enabled(*i.e. `y_tube=True`*), for e.g `"https://youtu.be/dQw4w9WgXcQ"` as follows:_
+* **YouTube Video's URL (*string*):** _Valid Youtube video URL as input when YouTube Mode is enabled(*i.e. `y_tube=True`*), for e.g `"https://youtu.be/bvetuLwJIkA"` as follows:_
 
     !!! info "Valid YouTube URL format"
 
@@ -59,7 +59,7 @@ Its valid input can be one of the following:
         * `{video-id}`
 
     ```python
-    CamGear(source='https://youtu.be/dQw4w9WgXcQ', y_tube=True)
+    CamGear(source='https://youtu.be/bvetuLwJIkA', y_tube=True)
     ```
 
 * **Network Address (*string*):** _Valid (`http(s), rtp, rstp, rtmp, mms, etc.`) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
@@ -105,17 +105,17 @@ This parameter controls the YouTube Mode, .i.e if enabled(`y_tube=True`), the Ca
 **Usage:**
 
 ```python
-CamGear(source='https://youtu.be/dQw4w9WgXcQ', y_tube=True)
+CamGear(source='https://youtu.be/bvetuLwJIkA', y_tube=True)
 ```
 
-Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos).
+!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
 
 
 &nbsp;
 
 ## **`colorspace`**
 
-This parameter selects the colorspace of the source stream. 
+This parameter selects the colorspace of the input stream. 
 
 **Data-Type:** String
 
@@ -129,13 +129,13 @@ This parameter selects the colorspace of the source stream.
 CamGear(source=0, colorspace="COLOR_BGR2HSV")
 ```
 
-Its complete usage example is given [here ➶](../usage/#using-camgear-with-direct-colorspace-manipulation)
+!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-direct-colorspace-manipulation)"
 
 &nbsp;
 
 ## **`backend`**
 
-This parameter manually selects the backend of the OpenCV's VideoCapture class _(only if specified)_. 
+This parameter manually selects the backend for OpenCV's VideoCapture class _(only if specified)_. 
 
 **Data-Type:** Integer
 

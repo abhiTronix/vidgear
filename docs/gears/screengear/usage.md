@@ -20,6 +20,8 @@ limitations under the License.
 
 # ScreenGear API Usage Examples:
 
+&nbsp; 
+
 ## Bare-Minimum Usage
 
 Following is the bare-minimum code you need to get started with ScreenGear API:
@@ -42,9 +44,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # Show output window
     cv2.imshow("Output Frame", frame)
@@ -65,7 +65,7 @@ stream.stop()
 
 ## Using ScreenGear with Variable Screen Dimensions
 
-ScreenGear API provides us the flexibility to directly set the dimensions of capture area of the screen. These dimensions can be easily applied to ScreenGear API through its [`options`](../params/#options) dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
+ScreenGear API provides us the flexibility to directly set the dimensions of capturing-area of the screen. These dimensions can be easily applied to ScreenGear API through its [`options`](../params/#options) dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
 
 
 ```python
@@ -74,7 +74,7 @@ from vidgear.gears import ScreenGear
 import cv2
 
 # define dimensions of screen w.r.t to given monitor to be captured
-options = {'top': 40, 'left': 0, 'width': 100, 'height': 100}
+options = {"top": 40, "left": 0, "width": 100, "height": 100}
 
 # open video stream with defined parameters
 stream = ScreenGear(logging=True, **options).start()
@@ -89,9 +89,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # Show output window
     cv2.imshow("Output Frame", frame)
@@ -114,9 +112,9 @@ stream.stop()
 
 ScreenGear API provides us the flexibility to select any connected display for fetching frames, with its [`monitor`](../params/#monitor) parameter:
 
-!!! tip "You can assign `monitor` value to `-1`, to fetch frames from all connected multiple monitor screens."
+!!! tip "You can assign `monitor` value to `-1` to fetch frames from all connected multiple monitor screens."
 
-!!! warning "Any value on `monitor` parameter,  will disable the `backend` parameter."
+!!! warning "Any value on `monitor` parameter will disable the `backend` parameter."
 
 ```python
 # import required libraries
@@ -136,9 +134,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # Show output window
     cv2.imshow("Output Frame", frame)
@@ -161,9 +157,9 @@ stream.stop()
 
 With ScreenGear API, you can select from many different backends that generates best performance as well as the most compatible with our machine by employing its [`backend`](../params/#backend) parameter that supports `pil` ,`mss` ,`scrot` ,`maim` ,`imagemagick` ,`pyqt5` ,`pyqt` ,`pyside2` ,`pyside` ,`wx` ,`pygdk3` ,`mac_screencapture` ,`mac_quartz` ,`gnome_dbus` ,`gnome-screenshot` ,`kwin_dbus` like many different parameters easily:  
 
-!!! warning "Remember to install backend library and all of its dependencies, you're planning to use with ScreenGear API."
+!!! warning "Remember to install backend library and all of its dependencies, you're planning to use with ScreenGear API. More information on these backends can be found [here ➶](https://github.com/ponty/pyscreenshot)"
 
-!!! error "Any value on `monitor` parameter,  will disable the `backend` parameter. You cannot use them simultaneously."
+!!! error "Any value on `monitor` parameter will disable the `backend` parameter. You cannot use them simultaneously."
 
 ```python
 # import required libraries
@@ -183,9 +179,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # Show output window
     cv2.imshow("Output Frame", frame)
@@ -222,11 +216,11 @@ from vidgear.gears import ScreenGear
 import cv2
 
 # Change colorspace to `HSV`
-stream = ScreenGear(colorspace = 'COLOR_BGR2HSV', logging=True).start()
+stream = ScreenGear(colorspace="COLOR_BGR2HSV", logging=True).start()
 
 # loop over
 while True:
-  
+
     # read HSV frames
     frame = stream.read()
 
@@ -234,9 +228,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the HSV frame here}
-
 
     # Show output window
     cv2.imshow("Output Frame", frame)
@@ -246,20 +238,20 @@ while True:
 
     # check if 'w' key is pressed
     if key == ord("w"):
-        #directly change colorspace at any instant
-        stream.color_space = cv2.COLOR_BGR2GRAY #Now colorspace is GRAY
-      
+        # directly change colorspace at any instant
+        stream.color_space = cv2.COLOR_BGR2GRAY  # Now colorspace is GRAY
+
     # check for 'e' key is pressed
     if key == ord("e"):
-        stream.color_space = cv2.COLOR_BGR2LAB  #Now colorspace is CieLAB
-   
+        stream.color_space = cv2.COLOR_BGR2LAB  # Now colorspace is CieLAB
+
     # check for 's' key is pressed
     if key == ord("s"):
-         stream.color_space = None #Now colorspace is default(ie BGR)
+        stream.color_space = None  # Now colorspace is default(ie BGR)
 
     # check for 'q' key is pressed
     if key == ord("q"):
-      break
+        break
 
 # close output window
 cv2.destroyAllWindows()
@@ -283,16 +275,16 @@ import cv2
 
 
 # define dimensions of screen w.r.t to given monitor to be captured
-options = {'top': 40, 'left': 0, 'width': 100, 'height': 100}
+options = {"top": 40, "left": 0, "width": 100, "height": 100}
 
 # define suitable (Codec,CRF,preset) FFmpeg parameters for writer
-output_params = {"-vcodec":"libx264", "-crf": 0, "-preset": "fast"}
+output_params = {"-vcodec": "libx264", "-crf": 0, "-preset": "fast"}
 
 # open video stream with defined parameters
 stream = ScreenGear(monitor=1, logging=True, **options).start()
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename = 'Output.mp4', logging = True, **output_params)
+writer = WriteGear(output_filename="Output.mp4", logging=True, **output_params)
 
 # loop over
 while True:
@@ -303,7 +295,6 @@ while True:
     # check for frame if Nonetype
     if frame is None:
         break
-
 
     # {do something with the frame here}
     # lets convert frame to gray for this example

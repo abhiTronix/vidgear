@@ -25,7 +25,7 @@ The following guidelines tells you how to submit a valid PR for vidGear:
 
 !!! question "Working on your first Pull Request for VidGear?" 
 
-    * If you don't know how to contribute to an Open Source Project on GitHub, then You can learn about it from [here](https://opensource.guide/how-to-contribute/).
+    * If you don't know how to contribute to an Open Source Project on GitHub, then You can learn about it from [here ➶](https://opensource.guide/how-to-contribute/)
 
     * If you're stuck at something, please join our [Gitter community channel](https://gitter.im/vidgear/community). We will help you get started!
 
@@ -34,29 +34,21 @@ The following guidelines tells you how to submit a valid PR for vidGear:
 
 &nbsp; 
 
-## Forking and Cloning
+## Clone Testing branch
 
-??? tip "First fork on GitHub?" 
+!!! warning "All changes **MUST** be pushed against VidGear's [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch only for triggering CI testing. If it is not, then [rebase it ➶](https://git-scm.com/book/en/v2/Git-Branching-Rebasing)"
 
-    You can easily learn about it from [Fork a repo](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) wiki.
-
-
-!!! danger "Pull Request Requirements"
-    
-    **Any Pull Request failed to comply following requirements will be rejected:**
-
-    * The [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch of your Forked repository **MUST** be up-to-date with VidGear, before starting working on Pull Request.
-    * Your new working branch for Pull Request **MUST** be a sub-branch of [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch of your Forked repository only.
-    * All Pull Requests **MUST** be pushed against VidGear's [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch only.
+!!! tip "Make sure the [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch of your Forked repository is up-to-date with VidGear, before starting working on Pull Request."
 
 
-
-You can clone your forked remote git to local, and create your PR working branch as a sub-branch of `testing` branch as follows:
-
+You can clone your Forked remote git to local and create your PR working branch as a sub-branch of latest [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch as follows:
 
 ```sh
 # clone your forked repository(change with your username) and get inside
 git clone https://github.com/{YOUR USERNAME}/vidgear.git && cd vidgear
+
+# pull any recent updates
+git pull
 
 # checkout the latest testing branch
 git checkout testing
@@ -67,46 +59,52 @@ git checkout -b subbranch_of_testing
 
 Now after working with this newly created branch for your Pull Request, you can commit and push or merge it locally or remotely as usual.
 
+&nbsp; 
 
 &nbsp; 
 
-## Submission Checklist
+## PR Submission Checklist
 
 There are some important checks you need to perform while submitting your Pull Request(s) for VidGear library:
 
-- [x] **Submit an issue and Link your Pull Request:**
-
-    !!! tip "For more information on Linking a pull request to an issue, See [this wiki](https://docs.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue) doc"
+- [x] **Submit a Related Issue:**
   
-  * If you would like to implement a new feature/improvement for VidGear, please submit an issue with a [proposal template](https://github.com/abhiTronix/vidgear/issues/new?labels=issue%3A+proposal&template=proposal.md) for your work first and then submit your Pull Request. 
-  * You can link an issue to a pull request manually or using a supported keyword in the pull request description.
-  * When you link a pull request to the issue the pull request addresses, collaborators can see that someone is working on the issue. 
-
-- [x] **Perform PR Integrity Checks:** 
-    
-  * Search GitHub for an open or closed PR that relates to your submission. Duplicate contributions will be rejected.
-  * Submit the pull request from the first day of your development and create it as a draft pull request. Click ready for review when finished and passed all the checks.
-  * Check if your purposed code matches the overall direction, simplicity and structure of the VidGear APIs and improves it.
-  * Make sure your PR must pass through all unit tests including VidGear's [CI tests](#testing-formatting-linting). If it's somehow failing, then ask maintainer for a review.
-  * It is important to state that you retain copyright for your contributions, but also agree to license them for usage by the project and author(s) under the [Apache license](https://github.com/abhiTronix/vidgear/blob/master/LICENSE).
+  * The first thing you do is submit an issue with a [proposal template](https://github.com/abhiTronix/vidgear/issues/new?labels=issue%3A+proposal&template=proposal.md) for your work first and then work on your Pull Request.
 
 - [x] **Test, Format & lint locally:**
 
-  * Make sure to locally test, format and lint the modified code every time you commit. The details are discussed above.
+  * Make sure to test, format, and lint the modified code locally every time you commit. The details are discussed [below ➶](#testing-formatting-linting)
+
+- [x] **Format & Submit your Draft Pull Request:**
+
+  * Submit the pull request from the first day of your development, and create it as a draft pull request. Click "ready for review" when finished and passed all the checks.
+  * Add a brief but descriptive title for your PR.
+  * Explain what the PR adds, fixes, or improves.
+  * In case of bug fixes, add a new unit test case that would fail against your bug fix.
+  * Provide output or screenshots, if you can.
 
 - [x] **Make sensible commit messages:**
 
-  * If your PR fixes a separate issue number, remember to include `"resolves #issue_number"` in the commit message. Learn more about it [here](https://help.github.com/articles/closing-issues-using-keywords/).
-  * Keep commit message concise as much as possible at every submit. You can make a supplement to the previous commit with `git commit --amend` command.
-  * If we suggest changes, make the required updates, rebase your branch and push the changes to your GitHub repository, which will automatically update your PR.
+  * If your PR fixes a separate issue number, remember to include `"resolves #issue_number"` in the commit message. Learn more about it [here ➶](https://help.github.com/articles/closing-issues-using-keywords/).
+  * Keep the commit message concisely as much as possible at every submit. You can make a supplement to the previous commit with `git commit --amend` command.
 
-- [x] **Draft the PR according to template:**
+- [x] **Perform PR Integrity Checks:** 
 
-  * Remember to completely fill the whole template for PR. Incomplete ones will be subjected to re-edit!
-  * Add a brief but descriptive title for your PR.
-  * Explain what the PR adds, fixes or improves.
-  * In case of bug fixes, add new unit test case which would fail against your bug fix.
-  * Provide CLI commands and output or screenshots where you can.
+    !!! warning "Any duplicate PR will be Rejected!"
+
+  * Search GitHub if there's a similar open or closed PR that relates to your submission.
+  * Check if your purpose code matches the overall direction, simplicity, and structure of the VidGear and improves it.
+  * Retain copyright for your contributions, but also agree to license them for usage by the project and author(s) under the [Apache 2.0 license ➶](https://github.com/abhiTronix/vidgear/blob/master/LICENSE).
+  * Make sure your PR must pass through all unit tests including **VidGear's CI tests** _(triggers automatically on pushing commits against testing branch)_. If it's somehow failing, then ask the maintainer for a review.
+
+- [x] **Link your Issues:**
+
+    !!! tip "For more information on Linking a pull request to an issue, See [this wiki doc➶](https://docs.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue)"
+
+  * Finally, when you're confident enough, make your Pull Request public. 
+  * You can link an issue to a pull request manually or using a supported keyword in the pull request description. It helps collaborators see that someone is working on the issue. 
+
+&nbsp; 
 
 &nbsp; 
 
@@ -171,6 +169,7 @@ For formatting and linting, following libraries are used:
 
 &nbsp; 
 
+&nbsp; 
 
 ## Frequently Asked Questions
 
@@ -185,15 +184,7 @@ For formatting and linting, following libraries are used:
 Pull requests will be reviewed by the maintainers and the rationale behind the maintainer’s decision to accept or deny the changes will be posted in the pull request. Please wait for our code review and approval, possibly enhancing your change on request.
 
 
-**Q2. What if I want to submit my Work that is Still In Progress?**
-
-You can do it. But please use one of these two prefixes to let reviewers know about the state of your work:
-
-*  **[WIP]** _(Work in Progress)_: is used when you are not yet finished with your pull request, but you would like it to be reviewed. The pull request won't be merged until you say it is ready.
-*  **[WCM]** _(Waiting Code Merge)_: is used when you're documenting a new feature or change that hasn't been accepted yet into the core code. The pull request will not be merged until it is merged in the core code _(or closed if the change is rejected)_.
-
-
-**Q3. Would you accept a huge Pull Request with Lots of Changes?**
+**Q2. Would you accept a huge Pull Request with Lots of Changes?**
 
 First, make sure that the changes are somewhat related. Otherwise, please create separate pull requests. Anyway, before submitting a huge change, it's probably a good idea to [open an issue](../../contribution/issue) in the VidGear Github repository to ask the maintainers if they agree with your proposed changes. Otherwise, they could refuse your proposal after you put all that hard work into making the changes. We definitely don't want you to waste your time!
 

@@ -23,7 +23,7 @@ limitations under the License.
 
 ## **`address`**
 
-This parameter sets the valid network address of the server/client. Network addresses unique identifiers across the network. 
+This parameter sets the valid network address of the Server/Client. Network addresses unique identifiers across the network. 
 
 **Data-Type:** String
 
@@ -58,7 +58,7 @@ NetGear_Async(port="5575")
 ## **`protocol`** 
 
 
-This parameter sets the valid messaging protocol between server and client. A network protocol is a set of established rules that dictates how to format, transmit and receive data so computer network devices - from servers and routers to endpoints - can communicate regardless of the differences in their underlying infrastructures, designs or standards. Supported protocol are: `'tcp'` and `'ipc'`.
+This parameter sets the valid messaging protocol between Server/Client. A network protocol is a set of established rules that dictates how to format, transmit and receive data so computer network devices - from servers and routers to endpoints - can communicate regardless of the differences in their underlying infrastructures, designs or standards. Supported protocol are: `'tcp'` and `'ipc'`.
 
 **Data-Type:** String
 
@@ -75,7 +75,7 @@ NetGear_Async(protocol="ipc")
 
 ## **`pattern`**
 
-This parameter sets the supported messaging pattern(flow of communication) between server and client. Messaging patterns are the network-oriented architectural pattern that describes the flow of communication between interconnecting systems. NetGear provides access to ZeroMQ's pre-optimized sockets which enables you to take advantage of these patterns.
+This parameter sets the supported messaging pattern(flow of communication) between Server/Client. Messaging patterns are the network-oriented architectural pattern that describes the flow of communication between interconnecting systems. NetGear provides access to ZeroMQ's pre-optimized sockets which enables you to take advantage of these patterns.
 
 **Data-Type:** Integer
 
@@ -115,7 +115,7 @@ NetGear_Async(receive_mode=True) # activates Recieve Mode
 
 ## **`timeout`**
 
-In NetGear_Async, the Receiver-end keeps tracks if frames are received from Server-end within this specified timeout value _(in seconds)_, Otherwise `TimeoutError` will be raised, which helps to close the Receiver-end safely if the Server has lost connection prematurely. This parameter can be used to control that given timeout value , i.e. the maximum waiting time _(in seconds)_ before Client'send exit itself with a `TimeoutError` to save resources. Its minimum value is `0.0` and no maximum value.
+In NetGear_Async, the Receiver-end keeps tracks if frames are received from Server-end within this specified timeout value _(in seconds)_, Otherwise `TimeoutError` will be raised, which helps to close the Receiver-end safely if the Server has lost connection prematurely. This parameter controls that  timeout value _(i.e. the maximum waiting time (in seconds))_ after which Client exit itself with a `TimeoutError` to save resources. Its minimum value is `0.0` but no maximum value.
 
 **Data-Type:** Float/Integer
 
@@ -135,8 +135,7 @@ NetGear_Async(timeout=5.0) # sets 5secs timeout
 
 ### **`enablePiCamera`** 
 
-This parameter select access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) API respectively. This means the if `enablePiCamera` flag is `True`, `PiGear` API will be accessed and if `False`, the `CamGear` API will be accessed. 
-
+This parameter provide access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
 
 **Data-Type:** Boolean
 
@@ -148,18 +147,20 @@ This parameter select access to [PiGear](../../pigear/overview/) or [CamGear](..
 NetGear_Async(enablePiCamera=True) # enable access to PiGear API
 ```
 
+!!! info "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
+
 
 &nbsp; 
 
-&nbsp; 
+&nbsp;
 
 
-## Parameters for Stabilizer backend
+## Parameters for Stabilizer Backend
 
 
 ### **`stabilize`**
 
-This parameter set this flag to enable access to [Stabilizer Class](../../stabilizer/overview/), i.e. flag can be set to `True`(_to enable_) or unset to `False`(_to disable_) this mode. 
+This parameter enable access to [Stabilizer Class](../../stabilizer/overview/) for stabilizing frames, i.e. can be set to `True`(_to enable_) or unset to `False`(_to disable_). 
 
 **Data-Type:** Boolean
 
@@ -171,12 +172,13 @@ This parameter set this flag to enable access to [Stabilizer Class](../../stabil
 NetGear_Async(stabilize=True) # enable stablization
 ```
 
+!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
 
 &nbsp; 
 
 ### **`options`**
 
-This parameter can be used to pass user-defined parameters supported by [Stabilizer Class](../../stabilizer/overview/). These parameters can be passed by formatting them as this parameter's attribute.
+This parameter can be used in addition, to pass user-defined parameters supported by [Stabilizer Class](../../stabilizer/overview/). These parameters can be formatted as this parameter's attribute.
 
 **Supported dictionary attributes for Stabilizer Class are:**
 
@@ -212,11 +214,13 @@ This parameter can be used to pass user-defined parameters supported by [Stabili
 &nbsp; 
 
 
-## Parameters with CamGear backend
+## Parameters for CamGear backend
+
+!!! tip "Enable this backend with [`enablePiCamera=False`](#enablepicamera) on NetGear_Async."
 
 ### **`source`**
 
-!!! warning "CamGear API will throw `RuntimeError` if `source` provided is invalid!"
+!!! warning "NetGear_Async API will throw `RuntimeError` if `source` provided is invalid."
 
 
 This parameter defines the source for the input stream.
@@ -241,7 +245,7 @@ Its valid input can be one of the following:
     NetGear_Async(source='/home/foo.mp4')
     ```
 
-* **YouTube Video's URL (*string*):** _Valid Youtube video URL as input when YouTube Mode is enabled(*i.e. `y_tube=True`*), for e.g `"https://youtu.be/dQw4w9WgXcQ"` as follows:_
+* **YouTube Video's URL (*string*):** _Valid Youtube video URL as input when YouTube Mode is enabled(*i.e. `y_tube=True`*), for e.g `"https://youtu.be/bvetuLwJIkA"` as follows:_
 
     !!! info "Valid YouTube URL format"
 
@@ -253,7 +257,7 @@ Its valid input can be one of the following:
         * `{video-id}`
 
     ```python
-    NetGear_Async(source='https://youtu.be/dQw4w9WgXcQ', y_tube=True)
+    NetGear_Async(source='https://youtu.be/bvetuLwJIkA', y_tube=True)
     ```
 
 * **Network Address (*string*):** _Valid (`http(s), rtp, rstp, rtmp, mms, etc.`) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
@@ -264,7 +268,7 @@ Its valid input can be one of the following:
 
 *  **GStreamer Pipeline:** 
    
-    CamGear API also supports GStreamer Pipeline.
+    NetGear_Async API also supports GStreamer Pipeline.
 
     !!! warning "Requirements for GStreamer Pipelining"
 
@@ -290,7 +294,7 @@ Its valid input can be one of the following:
 
 ### **`y_tube`**
 
-This parameter controls the YouTube Mode, .i.e if enabled(`y_tube=True`), the CamGear API will interpret the given `source` input as YouTube URL address. 
+This parameter controls the YouTube Mode, .i.e if enabled(`y_tube=True`), the NetGear_Async API will interpret the given `source` input as YouTube URL address. 
 
 **Data-Type:** Boolean
 
@@ -299,8 +303,10 @@ This parameter controls the YouTube Mode, .i.e if enabled(`y_tube=True`), the Ca
 **Usage:**
 
 ```python
-NetGear_Async(source='https://youtu.be/dQw4w9WgXcQ', y_tube=True)
+NetGear_Async(source='https://youtu.be/bvetuLwJIkA', y_tube=True)
 ```
+
+!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
 
 
 &nbsp;
@@ -308,7 +314,7 @@ NetGear_Async(source='https://youtu.be/dQw4w9WgXcQ', y_tube=True)
 
 ### **`backend`**
 
-This parameter manually selects the backend of the OpenCV's VideoCapture class _(only if specified)_. 
+This parameter manually selects the backend for OpenCV's VideoCapture class _(only if specified)_. 
 
 **Data-Type:** Integer
 
@@ -337,13 +343,13 @@ This parameter provides the ability to alter various **Source Tweak Parameters**
 
 **Usage:**
 
-!!! tip "All supported parameters are listed [here ➶](../../camgear/advanced/source_params/)"
+!!! tip "All supported parameters are listed [here ➶](../advanced/source_params/)"
 
 The desired parameters can be passed to NetGear_Async API by formatting them as this parameter's attributes, as follows:
 
 ```python
 # formatting parameters as dictionary attributes
-options = {"CAP_PROP_FRAME_WIDTH ":320, "CAP_PROP_FRAME_HEIGHT":240, "CAP_PROP_FPS ":60}
+options = {"CAP_PROP_FRAME_WIDTH":320, "CAP_PROP_FRAME_HEIGHT":240, "CAP_PROP_FPS":60}
 # assigning it
 NetGear_Async(source=0, **options)
 ```
@@ -352,13 +358,15 @@ NetGear_Async(source=0, **options)
 
 &nbsp;
 
-## Parameters with PiGear backend 
+## Parameters for PiGear backend 
+
+!!! tip "Enable this backend with [`enablePiCamera=True`](#enablepicamera) on NetGear_Async."
 
 ### **`camera_num`** 
 
 This parameter selects the camera module index which will be used as source, if you're having multiple camera modules connected. Its value can only be greater than zero, otherwise, it will throw `ValueError` for any negative value.
 
-!!! danger "This parameter shouldn't be altered, until unless you using [Raspberry Pi 3/3+ Compute Module IO Board](https://www.raspberrypi.org/documentation/hardware/computemodule/cmio-camera.md) in your project"
+!!! warning "This parameter shouldn't be altered, until unless you using [Raspberry Pi 3/3+ Compute Module IO Board](https://www.raspberrypi.org/documentation/hardware/computemodule/cmio-camera.md).""
 
 **Data-Type:** Integer
 
@@ -367,7 +375,7 @@ This parameter selects the camera module index which will be used as source, if 
 **Usage:**
 
 ```python
-NetGear_Async(enablePiCamera=True, camera_num=0)
+NetGear_Async(camera_num=0)
 ```
   
 &nbsp;
@@ -387,17 +395,17 @@ This parameter sets the resolution (i.e. `(width,height)`) of the source.
 **Usage:**
 
 ```python
-NetGear_Async(enablePiCamera=True, resolution=(1280,720)) # sets 1280x720 resolution
+NetGear_Async(resolution=(1280,720)) # sets 1280x720 resolution
 ```
 
 &nbsp;
 
 ### **`framerate`** 
 
+This parameter sets the framerate of the source.
+ 
 
-This parameter sets the framerate of the source. 
-
-!!! info "For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.framerate)."
+!!! info "For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.framerate)"
 
 
 **Data-Type:** integer/float
@@ -407,10 +415,8 @@ This parameter sets the framerate of the source.
 **Usage:**
 
 ```python
-NetGear_Async(enablePiCamera=True, framerate=60) # sets 60fps framerate
+NetGear_Async(framerate=60) # sets 60fps framerate
 ```
-
-(*integer*) : sets the framerate.  Its default value is `30`. **For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.framerate)**.
 
 &nbsp;
 
@@ -425,25 +431,32 @@ This parameter provides the ability to alter various **Tweak Parameters** `like 
 
 **Usage:**
 
-!!! tip "All supported parameters are listed in [PiCamera Docs ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html)"
+!!! tip "All supported parameters are listed in [PiCamera Docs](https://picamera.readthedocs.io/en/release-1.13/api_camera.html)"
 
-The desired parameters can be passed to PiGear API by formatting them as this parameter's attributes, as follows:
+The desired parameters can be passed to NetGear_Async API by formatting them as this parameter's attributes, as follows:
 
 ```python
 # formatting parameters as dictionary attributes
-options = {"hflip": True, "exposure_mode": "auto", "iso": 800, "exposure_compensation": 15, "awb_mode": "horizon", "sensor_mode": 0} 
+options = {
+    "hflip": True,
+    "exposure_mode": "auto",
+    "iso": 800,
+    "exposure_compensation": 15,
+    "awb_mode": "horizon",
+    "sensor_mode": 0,
+}
 # assigning it
-NetGear_Async(enablePiCamera=True, **options)
+NetGear_Async(logging=True, **options)
 ```
 
 **User-specific attributes:**
 
-Additionaly, `options` parameter also support some User-specific attributes, which are as follows:
+Additionally, `options` parameter also support some User-specific attributes, which are as follows:
 
-* **`HWFAILURE_TIMEOUT`** (float): PiGear contains a ==Internal Threaded Timer== that keeps active track of the frozen-threads/failures and will exit safely at a particular timeout value. This parameter can be used to control that given timeout value , i.e. the maximum waiting time _(in seconds)_ before the Internal Threaded Timer exits with a `SystemError` to save resources. Its value can only be between `1.0` _(min)_ and `10.0` _(max)_ and its default value is `2.0`. It usage is as follows: 
+* **`HWFAILURE_TIMEOUT`** (float): PiGear contains ==Threaded Internal Timer== - that silently keeps active track of any frozen-threads/hardware-failures and exit safely, if any does occur at a timeout value. This parameter can be used to control that timeout value i.e. the maximum waiting time _(in seconds)_ after which PiGear exits with a `SystemError` to save resources. Its value can only be between `1.0` _(min)_ and `10.0` _(max)_ and its default value is `2.0`. Its usage is as follows: 
 
     ```python
-    options = {"HWFAILURE_TIMEOUT": 2.5} # sets timeout to 2.5 seconds
+    options = {"HWFAILURE_TIMEOUT": 2.5}  # sets timeout to 2.5 seconds
     ```
 
 &nbsp;
@@ -469,6 +482,7 @@ This parameter selects the colorspace of the source stream.
 NetGear_Async(colorspace="COLOR_BGR2HSV")
 ```
 
+!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
 
 &nbsp;
 
@@ -491,7 +505,7 @@ NetGear_Async(logging=True)
 
 ### **`time_delay`** 
 
-This parameter set the time delay _(in seconds)_ before the PiGear API start reading the frames. This delay is only required if the source required some warm-up delay before starting up. 
+This parameter set the time delay _(in seconds)_ before the NetGear_Async API start reading the frames. This delay is only required if the source required some warm-up delay before starting up. 
 
 **Data-Type:** Integer
 
@@ -500,7 +514,7 @@ This parameter set the time delay _(in seconds)_ before the PiGear API start rea
 **Usage:**
 
 ```python
-NetGear_Async(time_delay=1) # set 1 seconds time delay
+NetGear_Async(time_delay=1)  # set 1 seconds time delay
 ```
 
 &nbsp; 

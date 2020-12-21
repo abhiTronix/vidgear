@@ -53,7 +53,7 @@ Its valid input can be one of the following:
 
 ## **`compression_mode`**
 
-This parameter selects the WriteGear's primary [Mode of Operation](../../introduction/#modes-of-operation), i.e. if this parameter is enabled _(.i.e `compression_mode = True`)_ WriteGear will use **FFmpeg** to encode output video, and if disabled _(.i.e `compression_mode = False`)_, the **OpenCV's VideoWriter API** will be used for encoding. 
+This parameter selects the WriteGear's Primary [Mode of Operation](../../introduction/#modes-of-operation), i.e. if this parameter is enabled _(.i.e `compression_mode = True`)_ WriteGear will use **FFmpeg** to encode output video, and if disabled _(.i.e `compression_mode = False`)_, the **OpenCV's VideoWriter API** will be used for encoding files/streams. 
 
 **Data-Type:** Boolean
 
@@ -62,7 +62,7 @@ This parameter selects the WriteGear's primary [Mode of Operation](../../introdu
 **Usage:**
 
 ```python
-WriteGear(output_filename = 'output.mp4', compression_mode=False) #activates non-compression mode
+WriteGear(output_filename = 'output.mp4', compression_mode=False)
 ```
 
 &nbsp;
@@ -79,9 +79,7 @@ WriteGear(output_filename = 'output.mp4', compression_mode=False) #activates non
 This parameter allows us to exploit almost all [**OpenCV's VideoWriter API**](https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) supported parameters effortlessly and flexibly for video-encoding in Non-Compression Mode, by formatting desired FFmpeg Parameters as this parameter's attributes. All supported parameters and FOURCC codecs for compression mode discussed below:
 
 
-!!! info
-
-    Remember, Non-Compression mode lacks the ability to control output quality and other important features like _lossless video compression, audio encoding, etc._, which are available with WriteGear's [Compression Mode](../../compression/overview/) only.
+!!! info "Remember, Non-Compression mode lacks the ability to control output quality and other important features like _lossless video compression, audio encoding, etc._, which are available with WriteGear's [Compression Mode](../../compression/overview/) only."
 
 
 **Data-Type:** Dictionary
@@ -100,12 +98,12 @@ Non-Compression Mode only gives access to a limited number of parameters, which 
 |`-backend`| (optional) _In case of multiple backends, this parameter allows us to specify VideoWriter API's backends to use. Its valid values are `CAP_FFMPEG` or `CAP_GSTREAMER`(if enabled)_  |
 |`-color`| (optional) _If it is not zero(0), the encoder will expect and encode color frames, otherwise it will work with grayscale frames (the flag is currently supported on Windows only)_ |
 
-!!! warning "`-height` and `-width` parameter are no longer supported and are automatically derived from the input data."
+!!! warning "`-height` and `-width` parameter are no longer supported and are automatically derived from the input frames."
 
 
 **Usage:**
 
-To assign desired paramete in Non-Compression Mode, you can format it as dictionary attribute and pass through this(`output_params`) parameter as follows:
+To assign desired parameters in Non-Compression Mode, you can format it as dictionary attribute and pass through this(`output_params`) parameter as follows:
 
 ```python
 # format parameter as dictionary attribute

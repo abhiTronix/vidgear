@@ -55,6 +55,17 @@ class Stabilizer:
         logging=False,
     ):
 
+        """
+        This constructor method initializes the object state and attributes of the Stabilizer class.
+
+        Parameters:
+            smoothing_radius (int): alter averaging window size.
+            border_type (str): changes the extended border type.
+            border_size (int): enables and set the value for extended border size to reduce the black borders.
+            crop_n_zoom (bool): enables croping and zooming of frames(to original size) to reduce the black borders.
+            logging (bool): enables/disables logging.
+        """
+
         # initialize deques for handling input frames and its indexes
         self.__frame_queue = deque(maxlen=smoothing_radius)
         self.__frame_queue_indexes = deque(maxlen=smoothing_radius)

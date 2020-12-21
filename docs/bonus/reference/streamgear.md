@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-!!! info "All StreamGear Class parameters are explained [here ➶](../../../gears/streamgear/params/)"
+!!! info "All StreamGear API parameters are explained [here ➶](../../../gears/streamgear/params/)"
 
 ::: vidgear.gears.StreamGear	
 	
