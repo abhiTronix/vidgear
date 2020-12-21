@@ -1,31 +1,19 @@
-requestInfoReplyComment: >
-  We would appreciate it if you could provide us with more info about this issue/pr!
-  ![Alt Text](https://media.giphy.com/media/pqnY0eDsO7nvgHvjSv/giphy.gif)
-
-requestInfoLabelToAdd: "MISSING : INFORMATION :mag:"
-
-checkIssueTemplate: true
-
-checkPullRequestTemplate: true
-
-requestInfoOn:
-  pullRequest: true
-  issue: true
-
-newPRWelcomeComment: >
+newPRWelcomeComment: |
   Thanks so much for opening your first PR here, a maintainer will get back to you shortly!
-  In the meantime, 
-  - Read our [Pull Request(PR) Guidelines](https://abhitronix.github.io/vidgear/contribution/PR/#submitting-pull-requestpr-guidelines) for submitting a valid PR for VidGear.
-  - Kindly submit [an issue](https://abhitronix.github.io/vidgear/contribution/issue/#submitting-an-issue-guidelines) beforehand for your Pull Request.
-  - Also, go through our [FAQ section](https://abhitronix.github.io/vidgear/contribution/PR/#frequently-asked-questions).
 
-firstPRMergeComment: >
-  Congrats on merging your first pull request here! :tada: How awesome!
+  ### In the meantime:
+  - Read our [Pull Request(PR) Guidelines](https://abhitronix.github.io/vidgear/contribution/PR/#submitting-pull-requestpr-guidelines) for submitting a valid PR for VidGear.
+  - Submit a [issue](https://abhitronix.github.io/vidgear/contribution/issue/#submitting-an-issue-guidelines) beforehand for your Pull Request.
+  - Go briefly through our [PR FAQ section](https://abhitronix.github.io/vidgear/contribution/PR/#frequently-asked-questions).
+
+firstPRMergeComment: |
+  Congrats on merging your first pull request here! :tada: You're awesome!
   ![Alt Text](https://media.giphy.com/media/d2Z9QYzA2aidiWn6/giphy.gif)
 
-newIssueWelcomeComment: >
+newIssueWelcomeComment: |
   Thanks for opening this issue, a maintainer will get back to you shortly!
-  In the meantime, 
+
+  ### In the meantime:
   - Read our [Issue Guidelines](https://abhitronix.github.io/vidgear/contribution/issue/#submitting-an-issue-guidelines), and update your issue accordingly. Please note that your issue will be fixed much faster if you spend about half an hour preparing it, including the exact reproduction steps and a demo. 
-  - For quick questions, please refrain from opening an issue, as you can reach us on [Gitter](https://gitter.im/vidgear/community) community channel.
-  - Also, go comprehensively through our dedicated [FAQ & Troubleshooting section](https://abhitronix.github.io/vidgear/help/get_help/#frequently-asked-questions).
+  - Go comprehensively through our dedicated [FAQ & Troubleshooting section](https://abhitronix.github.io/vidgear/help/get_help/#frequently-asked-questions).
+  - For any quick questions, please refrain from opening an issue, as you can reach us on [Gitter](https://gitter.im/vidgear/community) community channel.
