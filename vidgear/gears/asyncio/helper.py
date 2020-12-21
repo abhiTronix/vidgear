@@ -58,8 +58,23 @@ def logger_handler():
             "CRITICAL": "bold_red,bg_white",
         },
     )
+    # check if VIDGEAR_LOGFILE defined
+    file_mode = os.environ.get("VIDGEAR_LOGFILE", False)
     # define handler
     handler = log.StreamHandler()
+    if file_mode and isinstance(file_mode, str):
+        file_path = os.path.abspath(file_mode)
+        if (os.name == "nt" or os.access in os.supports_effective_ids) and os.access(
+            os.path.dirname(file_path), os.W_OK
+        ):
+            file_path = (
+                os.path.join(file_path, "log.txt")
+                if os.path.isdir(file_path)
+                else file_path
+            )
+            handler = log.FileHandler(file_path, mode="a")
+            formatter = log.Formatter("%(name)s :: %(levelname)s :: %(message)s")
+
     handler.setFormatter(formatter)
     return handler
 
