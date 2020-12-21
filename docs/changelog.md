@@ -113,7 +113,7 @@ limitations under the License.
 - **New `helper.py` methods:** 
     * [X] Added `validate_video` function to validate video_source.
     * [X] Added `extract_time` Extract time from give string value.
-    * [X] Added `get_video_bitrate` to caliculate video birate from resolution, framerate, bits-per-pixels values.
+    * [X] Added `get_video_bitrate` to calculate video birate from resolution, framerate, bits-per-pixels values.
     * [X] Added `delete_safe` to safely delete files of given extension.
     * [X] Added `validate_audio` to validate audio source.
     * [X] Added new Helper CI tests.

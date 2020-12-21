@@ -31,7 +31,7 @@ limitations under the License.
 
     * **DO NOT** provide additional video-source with `-i` FFmpeg parameter in [`output_params`](../params/#output_params), otherwise it will interfere with frame you input later, and it will break things!
 
-    * Heavy resolution multimedia files take time to render which can last up to _~.1-to-1 seconds_. Kindly wait till the WriteGear API terminates itself, and **DO NOT** try to kill the process instead.
+    * Heavy resolution multimedia files take time to render which can last up to _0.1-1 seconds_. Kindly wait till the WriteGear API terminates itself, and **DO NOT** try to kill the process instead.
 
     * Always use `writer.close()` at the very end of the main code. **NEVER USE IT INBETWEEN CODE** to avoid undesired behavior.
 
@@ -48,10 +48,10 @@ from vidgear.gears import WriteGear
 import cv2
 
 # open any valid video stream(for e.g `myvideo.avi` file)
-stream = CamGear(source='myvideo.avi').start() 
+stream = CamGear(source="myvideo.avi").start()
 
 # Define writer with default parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename = 'Output.mp4') 
+writer = WriteGear(output_filename="Output.mp4")
 
 # loop over
 while True:
@@ -63,9 +63,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # write frame to writer
     writer.write(frame)
@@ -92,7 +90,7 @@ writer.close()
 
 ## Using Compression Mode in RGB Mode
 
-For Compression Mode, WriteGear API contains [`rgb_mode`](../../../../bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.write) boolean parameter, which if enabled _(i.e. `rgb_mode=True`)_, specifies that incoming frames are of RGB format _(instead of default BGR format)_, thereby also known as ==RGB Mode==. The complete usage example is as follows:
+In Compression Mode, WriteGear API contains [`rgb_mode`](../../../../bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.write) boolean parameter for RGB Mode, which when enabled _(i.e. `rgb_mode=True`)_, specifies that incoming frames are of RGB format _(instead of default BGR format)_. This mode makes WriteGear directly compatible with libraries that only supports RGB format. The complete usage example is as follows:
 
 ```python
 # import required libraries
@@ -104,7 +102,7 @@ import cv2
 stream = VideoGear(source=0).start()
 
 # Define writer with default parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename = 'Output.mp4') 
+writer = WriteGear(output_filename="Output.mp4")
 
 # loop over
 while True:
@@ -116,13 +114,11 @@ while True:
     if frame is None:
         break
 
-
     # simulating RGB frame for example
-    frame_rgb = frame[:,:,::-1]
-
+    frame_rgb = frame[:, :, ::-1]
 
     # writing RGB frame to writer
-    writer.write(frame_rgb, rgb_mode = True) #activate RGB Mode
+    writer.write(frame_rgb, rgb_mode=True)  # activate RGB Mode
 
     # Show output window
     cv2.imshow("Output Frame", frame)
@@ -174,10 +170,10 @@ import cv2
 stream = CamGear(source=0).start()
 
 # retrieve framerate from CamGear Stream and pass it as `-input_framerate` parameter
-output_params = {"-input_framerate":stream.framerate}
+output_params = {"-input_framerate": stream.framerate}
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename = 'Output.mp4', **output_params)
+writer = WriteGear(output_filename="Output.mp4", **output_params)
 
 # loop over
 while True:
@@ -189,9 +185,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # write frame to writer
     writer.write(frame)
@@ -219,7 +213,7 @@ writer.close()
 
 ## Using Compression Mode for Streaming URLs
 
-In Compression Mode, WriteGear can do any complex jobs with FFmpeg in just few lines of code. WriteGear allows any URLs _(as output)_ for network streaming with its [`source`](../params/#source) parameter.   
+In Compression Mode, WriteGear can make complex job look easy with FFmpeg. It also allows any URLs _(as output)_ for network streaming with its [`output_filename`](../params/#output_filename) parameter.   
 
 _In this example, let's stream Live Camera Feed directly to Twitch!_
 
@@ -245,7 +239,6 @@ output_params = {
     "-bufsize": "2500k",
     "-f": "flv",
 }
-
 
 # [WARNING] Change your Twitch Stream Key here:
 TWITCH_KEY = "live_XXXXXXXXXX~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -326,13 +319,17 @@ from vidgear.gears import WriteGear
 import cv2
 
 # Open live webcam video stream on first index(i.e. 0) device
-stream = CamGear(source=0, logging=True).start() 
+stream = CamGear(source=0, logging=True).start()
 
 # define required FFmpeg parameters for your writer
-output_params = {'-vcodec': 'h264_vaapi', '-vaapi_device':'/dev/dri/renderD128', '-vf':'format=nv12,hwupload'} 
+output_params = {
+    "-vcodec": "h264_vaapi",
+    "-vaapi_device": "/dev/dri/renderD128",
+    "-vf": "format=nv12,hwupload",
+}
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename = 'Output.mp4', **output_params)
+writer = WriteGear(output_filename="Output.mp4", **output_params)
 
 # loop over
 while True:
@@ -344,9 +341,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # write frame to writer
     writer.write(frame)
@@ -381,13 +376,13 @@ from vidgear.gears import WriteGear
 import cv2
 
 # define suitable (Codec,CRF,preset) FFmpeg parameters for writer
-output_params = {"-vcodec":"libx264", "-crf": 0, "-preset": "fast"}
+output_params = {"-vcodec": "libx264", "-crf": 0, "-preset": "fast"}
 
 # Open suitable video stream, such as webcam on first index(i.e. 0)
-stream = cv2.VideoCapture(0) 
+stream = cv2.VideoCapture(0)
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename = 'Output.mp4', logging = True, **output_params)
+writer = WriteGear(output_filename="Output.mp4", logging=True, **output_params)
 
 # loop over
 while True:
@@ -397,7 +392,7 @@ while True:
 
     # check for frame if not grabbed
     if not grabbed:
-      break
+        break
 
     # {do something with the frame here}
     # lets convert frame to gray for this example
@@ -419,68 +414,6 @@ cv2.destroyAllWindows()
 
 # safely close video stream
 stream.release()
-
-# safely close writer
-writer.close()
-```
-
-&nbsp; 
-
-## Using Compression Mode with VideoCapture Gears
-
-WriteGear API can be used in conjunction with any other Gear effortlessly in Compression Mode. The complete usage example is as follows:
-
-```python
-# import required libraries
-from vidgear.gears import VideoGear
-from vidgear.gears import WriteGear
-import cv2
-
-
-# define suitable tweak parameters for your stream.
-options = {"CAP_PROP_FRAME_WIDTH ":320, "CAP_PROP_FRAME_HEIGHT":240, "CAP_PROP_FPS ":60}
-
-# define suitable (Codec,CRF,preset) FFmpeg parameters for writer
-output_params = {"-vcodec":"libx264", "-crf": 0, "-preset": "fast"}
-
-# open live video stream on webcam at first index(i.e. 0) device and apply source tweak parameters
-stream = VideoGear(source=0, logging=True, **options).start()
-
-# Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename = 'Output.mp4', logging = True, **output_params)
-
-
-# loop over
-while True:
-
-    # read frames from stream
-    frame = stream.read()
-
-    # check for frame if Nonetype
-    if frame is None:
-        break
-
-
-    # {do something with the frame here}
-    # lets convert frame to gray for this example
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-    # write gray frame to writer
-    writer.write(gray)
-
-    # Show output window
-    cv2.imshow("Output Gray Frame", gray)
-
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
-
-# close output window
-cv2.destroyAllWindows()
-
-# safely close video stream
-stream.stop()
 
 # safely close writer
 writer.close()
@@ -521,10 +454,16 @@ import cv2
 stream = VideoGear(source=0).start()
 
 # change with your webcam soundcard, plus add additional required FFmpeg parameters for your writer
-output_params = {'-thread_queue_size': '512', '-f': 'alsa', '-ac': '1', '-ar': '48000', '-i': 'plughw:CARD=CAMERA,DEV=0'}  
+output_params = {
+    "-thread_queue_size": "512",
+    "-f": "alsa",
+    "-ac": "1",
+    "-ar": "48000",
+    "-i": "plughw:CARD=CAMERA,DEV=0",
+}
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4
-writer = WriteGear(output_filename = 'Output.mp4', logging = True, **output_params)
+writer = WriteGear(output_filename="Output.mp4", logging=True, **output_params)
 
 # loop over
 while True:
@@ -536,9 +475,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # write frame to writer
     writer.write(frame)

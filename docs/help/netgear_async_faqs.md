@@ -46,9 +46,9 @@ limitations under the License.
 
 * **NetGear:** implements a high-level wrapper around [PyZmQ](https://github.com/zeromq/pyzmq) python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance asynchronous distributed messaging library that provides a message queue, but unlike message-oriented middleware, its system can run without a dedicated message broker. 
 
-* **NetGear_Async:** is an asyncio videoframe messaging framework, built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html), and powered by high-performance asyncio event loop called [**`uvloop`**](https://github.com/MagicStack/uvloop) to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints.
+* **NetGear_Async:** is an asyncio videoframe messaging framework, built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html), and powered by high-performance asyncio event loop called [**`uvloop`**](https://github.com/MagicStack/uvloop) to high-speed and lag-free video streaming over the network with minimal resource constraints.
 
-**Key Difference:** NetGear_Async is way memory efficient and little faster, but has less features as compared to NetGear API. On the other hand, NetGear API provides many powerful [Exclusive Modes](../../gears/netgear/overview/#exclusive-modes), but is way less memory efficient and a bit slower than NetGear_Async API.
+**Key Difference:** NetGear_Async is way memory efficient and little faster, but has less features as compared to NetGear API. On the other hand, NetGear API provides many powerful [Exclusive Modes](../../gears/netgear/overview/#exclusive-modes), but is way less memory efficient and bit slower than NetGear_Async API.
 
 &nbsp;
 

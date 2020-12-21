@@ -47,6 +47,10 @@ th {
   --md-hue: 310; /* [0, 360] */ !important;
 }
 
+.md-typeset .task-list-control .task-list-indicator::before {
+  background-color: #FF0000;
+}
+
 blockquote {
   padding: 0.5em 10px;
   quotes: "\201C""\201D""\2018""\2019";

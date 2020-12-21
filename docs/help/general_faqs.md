@@ -26,35 +26,21 @@ limitations under the License.
 
 ## "I'm new to Python Programming or its usage in Computer Vision", How to use vidgear in my projects?
 
-**Answer:** It's recommended to firstly go through following dedicated tutorials/websites thoroughly, and learn how OpenCV-Python actually works(_with examples_):
+**Answer:** It's recommended to first go through the following dedicated tutorials/websites thoroughly, and learn how OpenCV-Python works _(with examples)_:
 
-- [**PyImageSearch.com** ➶](https://www.pyimagesearch.com/) is the best resource for learning OpenCV and its Python implementation. Adrian Rosebrock provides many practical OpenCV techniques with tutorials, code examples, blogs and books at PyImageSearch.com.  I also learned a lot about computer vision methods, and various useful techniques, when I first started with Computer Vision. Highly recommended!
+- [**PyImageSearch.com** ➶](https://www.pyimagesearch.com/) is the best resource for learning OpenCV and its Python implementation. Adrian Rosebrock provides many practical OpenCV techniques with tutorials, code examples, blogs, and books at PyImageSearch.com. I also learned a lot about computer vision methods and various useful techniques. Highly recommended!
 
-- [**learnopencv.com** ➶](https://www.learnopencv.com)  Maintained by OpenCV CEO Satya Mallick. This blog is for programmers, hackers, engineers, scientists, students and self-starters who are interested in Computer Vision and Machine Learning.
+- [**learnopencv.com** ➶](https://www.learnopencv.com)  Maintained by OpenCV CEO Satya Mallick. This blog is for programmers, hackers, engineers, scientists, students, and self-starters interested in Computer Vision and Machine Learning.
 
 - There's also the official [**OpenCV Tutorials** ➶](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_tutorials.html), provided by the OpenCV folks themselves.
 
-Finally, when you're done, see [Switching from OpenCV ➶](../../switch_from_cv/), and finally go through our [Gears ➶](../../gears/#gears-what-are-these) to see how VidGear works. If you run into any trouble, or have any questions, then see [getting help ➶](../get_help)
-
-&nbsp;
-
-## How to install VidGear python library on my machine?
-
-**Answer:** See [Installation Notes ➶](../../installation/).
+Finally, once done, see [Switching from OpenCV ➶](../../switch_from_cv/) and go through our [Gears ➶](../../gears/#gears-what-are-these) to learn how VidGear works. If you run into any trouble or have any questions, then see [getting help ➶](../get_help)
 
 &nbsp;
 
 ## "VidGear is using Multi-threading, but Python is notorious for its poor performance in multithreading?"
 
-**Answer:** 
-
-Most of the VidGear task are I/O bounded, meaning that the thread spends most of its time handling I/O processes such as performing network requests, pooling frames out of Camera devices etc. It is perfectly fine to use multi-threading for these tasks, as the thread is most of the time being blocked and put into blocked queue by the OS automatically. For further reading, see [Threaded-Queue-Mode ➶](../../bonus/TQM/)
-
-&nbsp;
-
-## Why VidGear APIs not working for me?
-
-**Answer:** VidGear docs contains a lot of detailed information, please take your time to read it. Please see [Getting Help ➶](../../help/get_help/) for troubleshooting your problems.
+**Answer:** See [Threaded-Queue-Mode ➶](../../bonus/TQM/)
 
 &nbsp;
 
@@ -63,6 +49,14 @@ Most of the VidGear task are I/O bounded, meaning that the thread spends most of
 **Answer:** This error means you either have a file named `vidgear.py` in your python path or you've named your python script `vidgear.py`. Replace `vidgear` name with anything else to fix this error.
 
 &nbsp;
+
+
+## How to install VidGear python library on my machine?
+
+**Answer:** See [Installation Notes ➶](../../installation/).
+
+&nbsp;
+
 
 ## How do I report an issue?
 
@@ -100,8 +94,8 @@ Most of the VidGear task are I/O bounded, meaning that the thread spends most of
 
 &nbsp;
 
-## "I Love using VidGear", How can I support it?
+## "I Love using VidGear for my projects", How can I support it?
 
-**Answer:** Thank you! See [Helping VidGear ➶](../../help/#helping-vidgear)  
+**Answer:** See [Helping VidGear ➶](../../help/#helping-vidgear)  
 
 &nbsp;

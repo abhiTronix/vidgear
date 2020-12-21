@@ -64,6 +64,18 @@ class PiGear:
         time_delay=0,
         **options
     ):
+        """
+        This constructor method initializes the object state and attributes of the PiGear class.
+
+        Parameters:
+            camera_num (int): selects the camera module index which will be used as source.
+            resolution (tuple): sets the resolution (i.e. `(width,height)`) of the source..
+            framerate (int/float): sets the framerate of the source.
+            colorspace (str): selects the colorspace of the input stream.
+            logging (bool): enables/disables logging.
+            time_delay (int): time delay (in sec) before start reading the frames.
+            options (dict): provides ability to alter Source Tweak Parameters.
+        """
 
         try:
             import picamera

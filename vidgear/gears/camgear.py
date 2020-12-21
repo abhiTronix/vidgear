@@ -57,6 +57,19 @@ class CamGear:
         **options
     ):
 
+        """
+        This constructor method initializes the object state and attributes of the CamGear class.
+
+        Parameters:
+            source (based on input): defines the source for the input stream.
+            y_tube (bool): controls the exclusive YouTube Mode.
+            backend (int): selects the backend for OpenCV's VideoCapture class.
+            colorspace (str): selects the colorspace of the input stream.
+            logging (bool): enables/disables logging.
+            time_delay (int): time delay (in sec) before start reading the frames.
+            options (dict): provides ability to alter Source Tweak Parameters.
+        """
+
         # enable logging if specified
         self.__logging = False
         if logging:
@@ -81,8 +94,10 @@ class CamGear:
                     vo_source = source_object.getbestvideo("webm", ftypestrict=True)
                     va_source = source_object.getbest("webm", ftypestrict=False)
                     # select the best quality
-                    if vo_source is None or va_mode or (
-                        va_source.dimensions >= vo_source.dimensions
+                    if (
+                        vo_source is None
+                        or va_mode
+                        or (va_source.dimensions >= vo_source.dimensions)
                     ):
                         source = va_source.url
                     else:
@@ -206,7 +221,7 @@ class CamGear:
 
     def start(self):
         """
-        Launches the internal *Threaded Frames Extractor* daemon
+        Launches the internal *Threaded Frames Extractor* daemon.
 
         **Returns:** A reference to the CamGear class object.
         """

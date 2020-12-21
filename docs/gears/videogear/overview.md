@@ -27,14 +27,13 @@ limitations under the License.
 
 ## Overview
 
-> VideoGear provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**](../../stabilizer/overview/) class. 
+> VideoGear API provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**](../../stabilizer/overview/) class. 
 
-VideoGear also act as a Common API, that provides an internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs and their parameters, with a special [`enablePiCamera`](../params/#enablepicamera) boolean flag.
+VideoGear also acts as a Common Video-Capture API that provides internal access for both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs and their parameters with an exclusive [`enablePiCamera`](../params/#enablepicamera) boolean flag.
 
-VideoGear is basically ideal when you need to switch to different video sources without changing your code much. Also, it enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort and using way fewer lines of code.
+VideoGear is ideal when you need to switch to different video sources without changing your code much. Also, it enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort and writing way fewer lines of code.
 
 &thinsp; 
-
 
 !!! tip "Helpful Tips"
 
@@ -42,8 +41,8 @@ VideoGear is basically ideal when you need to switch to different video sources 
 
 	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 
-	* You can use `framerate` class variable to retrieve framerate of the input source.
 
+!!! warning "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using PiGear API, otherwise nothing will work."
 
 &thinsp; 
 
@@ -59,26 +58,26 @@ from vidgear.gears import VideoGear
 
 ## Usage Examples
 
-<div class="zoom">
+<div>
 <a href="../usage/">See here 🚀</a>
 </div>
 
 ## Parameters
 
-<div class="zoom">
+<div>
 <a href="../params/">See here 🚀</a>
 </div>
 
-## Reference
+## References
 
-<div class="zoom">
+<div>
 <a href="../../../bonus/reference/videogear/">See here 🚀</a>
 </div>
 
 
 ## FAQs
 
-<div class="zoom">
+<div>
 <a href="../../../help/videogear_faqs/">See here 🚀</a>
 </div>
 

@@ -23,7 +23,7 @@ limitations under the License.
 <div id="player_stab" align="middle"></div>
 <p align="middle">VidGear's Stabilizer in Action<br><i>(Original Video Courtesy <a href="http://liushuaicheng.org/SIGGRAPH2013/database.html" title="opensourced video samples database">@SIGGRAPH2013</a>)</i></p>
 
-!!! info "This video frames are transcoded with [**StreamGear API**](../../streamgear/overview/) and hosted on [GitHub Repository](https://github.com/abhiTronix/streamgear_chunks) and served with [raw.githack.com](https://raw.githack.com)"
+!!! info "This video is transcoded with [**StreamGear API**](../../streamgear/overview/) and hosted on [GitHub Repository](https://github.com/abhiTronix/streamgear_chunks) and served with [raw.githack.com](https://raw.githack.com)"
 
 
 
@@ -41,7 +41,7 @@ The basic idea behind it is to tracks and save the salient feature array for the
 
 - [x] _Works exceptionally well with low-frequency jitter._
 
-- [x] _Integrated with `VideoGear` API, therefore, can be applied to any incoming stream._
+- [x] _Integrated with [VideoGear](../usage/#using-videogear-with-stabilizer-backend), therefore, can be applied to any incoming stream._
 
 - [x] _Also seamlessly works standalone._
 
@@ -71,27 +71,27 @@ from vidgear.gears.stabilizer import Stabilizer
 
 ## Usage Examples
 
-<div class="zoom">
+<div>
 <a href="../usage/">See here 🚀</a>
 </div>
 
 
 ## Parameters
 
-<div class="zoom">
+<div>
 <a href="../params/">See here 🚀</a>
 </div>
 
-## Reference
+## References
 
-<div class="zoom">
+<div>
 <a href="../../../bonus/reference/stabilizer/">See here 🚀</a>
 </div>
 
 
 ## FAQs
 
-<div class="zoom">
+<div>
 <a href="../../../help/stabilizer_faqs/">See here 🚀</a>
 </div>  
 

@@ -27,12 +27,13 @@ limitations under the License.
 
 ## Overview
 
-> WriteGear provides a complete, flexible and easily-extensible wrapper around [**FFmpeg**](https://ffmpeg.org/) - a leading multimedia framework - for encoding real-time frames into a lossless compressed video-file with any suitable specification (such as `framerate, bitrate, codec, etc.`) while handling all errors robustly, all in just few easy lines of python code.
+> *WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data.*
 
-Best of all, WriteGear grants the complete freedom to play with any FFmpeg parameter with its exclusive ==Custom Commands function== _(see this [doc](../compression/advanced/cciw/))_, without relying on any Third-party library. It's able to perform complex tasks such as [Live-Streaming](../compression/usage/#using-compression-mode-for-streaming-urls) _(such as for Twitch)_, multiplexing video with audio in real-time _(see this [doc](../compression/usage/#using-compression-mode-with-live-audio-input))_.
+WriteGear API provides a complete, flexible, and robust wrapper around [**FFmpeg**](https://ffmpeg.org/), a leading multimedia framework. WriteGear can process real-time frames into a lossless compressed video-file with any suitable specification _(such as`bitrate, codec, framerate, resolution, subtitles,  etc.`)_. It is powerful enough to perform complex tasks such as [Live-Streaming](../compression/usage/#using-compression-mode-for-streaming-urls) _(such as for Twitch)_ and [Multiplexing Video-Audio](../compression/usage/#using-compression-mode-with-live-audio-input) with real-time frames in way fewer lines of code. 
 
-In addition to this, WriteGear also provides flexible access to [**OpenCV's VideoWriter API**](https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html) which provides some basic tools for video frames encoding but without compression.
+Best of all, WriteGear grants users the complete freedom to play with any FFmpeg parameter with its exclusive ==Custom Commands function== _(see this [doc](../compression/advanced/cciw/))_ without relying on any third-party API.
 
+In addition to this, WriteGear also provides flexible access to [**OpenCV's VideoWriter API**](https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html) tools for video-frames encoding without compression.
 
 &thinsp; 
 
@@ -53,9 +54,6 @@ WriteGear primarily operates in following modes:
 	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../switch_from_cv/#switching-videowriter-api)
 
 	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
-
-	* Compression Mode must require FFmpeg, Follow these [Installation Instructions ➶](../compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions) for its installation.
-
 
 &thinsp; 
 

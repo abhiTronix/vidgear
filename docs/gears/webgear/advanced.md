@@ -23,86 +23,6 @@ limitations under the License.
 !!! note "This is a continuation of the [WebGear doc ➶](../overview/#webgear-api). Thereby, It's advised to first get familiarize with this API, and its [requirements](../usage/#requirements)."
 
 
-
-## Performance Enhancements :fire:
-
-Previously, on running [bare-minimum usage example](../usage/#bare-minimum-usage), you will notice a significant performance throttling, lag and frame drop in output Stream on the browser. To cope with this throttling problem, WebGear provides certain performance enhancing attributes for its [`option`](../params/#options) dictionary parameter.
-
-
-??? tip "Performance Enhancing Attributes"
-
-    * **`frame_size_reduction`**: _(int/float)_ _This attribute controls the size reduction(in percentage) of the frame to be streamed on Server._ Its value has the most significant effect on WebGear performance: More its value, smaller will be frame size and faster will be live streaming. The value defaults to `20`, and must be no higher than `90` _(fastest, max compression, Barely Visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40~60`. Its usage is as follows:
-
-        ```python
-        options={"frame_size_reduction": 50} #frame-size will be reduced by 50%
-        ```
-     
-    * **Various Encoding Parameters:**
-
-        In WebGear API, the input video frames are first encoded into [**Motion JPEG (M-JPEG or MJPEG**)](https://en.wikipedia.org/wiki/Motion_JPEG) compression format, in which each video frame or interlaced field of a digital video sequence is compressed separately as a JPEG image, before sending onto a server. Therefore, WebGear API provides various attributes to have full control over JPEG encoding performance and quality, which are as follows:
-
-        *  **`frame_jpeg_quality`**: _(int)_ It controls the JPEG encoder quality. Its value varies from `0` to `100` (the higher is the better quality but performance will be lower). Its default value is `95`. Its usage is as follows:
-
-            ```python
-            options={"frame_jpeg_quality": 80} #JPEG will be encoded at 80% quality.
-            ```
-
-        * **`frame_jpeg_optimize`**: _(bool)_ It enables various JPEG compression optimizations such as Chroma sub-sampling, Quantization table, etc. These optimizations based on JPEG libs which are used while compiling OpenCV binaries, and recent versions of OpenCV uses [**TurboJPEG library**](https://libjpeg-turbo.org/), which is highly recommended for performance. Its default value is `False`. Its usage is as follows:
-
-            ```python
-            options={"frame_jpeg_optimize": True} #JPEG optimizations are enabled.
-            ```
-
-        * **`frame_jpeg_progressive`**: _(bool)_ It enables **Progressive** JPEG encoding instead of the **Baseline**.   Progressive Mode, displays an image in such a way that it shows a blurry/low-quality photo in its entirety, and then becomes clearer as the image downloads, whereas in Baseline Mode, an image created using the JPEG compression algorithm that will start to display the image as the data is made available, line by line. Progressive Mode, can drastically improve the performance in WebGear but at the expense of additional CPU load, thereby suitable for powerful systems only. Its default value is `False` meaning baseline mode is in-use. Its usage is as follows:
-
-            ```python
-            options={"frame_jpeg_progressive": True} #Progressive JPEG encoding enabled.
-            ```
-
-### Bare-Minimum Usage with Performance Enhancements
-
-Let's re-implement our previous Bare-Minimum usage example with these Performance Enhancing Attributes:
-
-#### Running Programmatically
-
-You can access and run WebGear VideoStreamer Server programmatically in your python script in just a few lines of code, as follows:
-
-!!! tip "If you want see output on different machine on the same network, then you need to note down the IP-address of host system, and finally you need to replace this address _(along with selected port)_ on the target machine's browser."
-
-```python
-# import required libraries
-import uvicorn
-from vidgear.gears.asyncio import WebGear
-
-#various performance tweaks
-options={"frame_size_reduction": 40, "frame_jpeg_quality": 80, "frame_jpeg_optimize": True, "frame_jpeg_progressive": False}
-
-#initialize WebGear app  
-web=WebGear(source="foo.mp4", logging=True, **options)
-
-#run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host='localhost', port=8000)
-
-#close app safely
-web.shutdown()
-```
-
-which can be accessed on any browser on the network at http://localhost:8000/.
-
-
-#### Running from Terminal
-
-Now lets, run this same example directly through the terminal commandline:
-
-!!! warning "If you're using `--options/-op` flag, then kindly wrap your dictionary value in single `''` quotes."
-
-
-```sh
-python3 -m vidgear.gears.asyncio --source test.avi --logging True --options '{"frame_size_reduction": 50, "frame_jpeg_quality": 80, "frame_jpeg_optimize": True, "frame_jpeg_progressive": False}'
-```
-
-which can also be accessed on any browser on the network at http://localhost:8000/.
-
 &nbsp;
 
 
@@ -111,25 +31,34 @@ which can also be accessed on any browser on the network at http://localhost:800
 With our highly extensible WebGear API, you can add your own mounting points, where additional files located, as follows:
 
 ```python
-#import libs
+# import libs
 import uvicorn
 from starlette.routing import Mount
 from starlette.staticfiles import StaticFiles
 from vidgear.gears.asyncio import WebGear
 
-#various performance tweaks
-options={"frame_size_reduction": 40, "frame_jpeg_quality": 80, "frame_jpeg_optimize": True, "frame_jpeg_progressive": False}
+# various performance tweaks
+options = {
+    "frame_size_reduction": 40,
+    "frame_jpeg_quality": 80,
+    "frame_jpeg_optimize": True,
+    "frame_jpeg_progressive": False,
+}
 
-#initialize WebGear app  
-web=WebGear(source="foo.mp4", logging=True, **options) #enable source i.e. `test.mp4` and enable `logging` for debugging 
+# initialize WebGear app
+web = WebGear(
+    source="foo.mp4", logging=True, **options
+)  # enable source i.e. `test.mp4` and enable `logging` for debugging
 
-#append new route i.e. mount another folder called `test` located at `/home/foo/.vidgear/test` directory
-web.routes.append(Mount('/test', app=StaticFiles(directory='/home/foo/.vidgear/test'), name="test")) 
+# append new route i.e. mount another folder called `test` located at `/home/foo/.vidgear/test` directory
+web.routes.append(
+    Mount("/test", app=StaticFiles(directory="/home/foo/.vidgear/test"), name="test")
+)
 
-#run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host='localhost', port=8000)
+# run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host="localhost", port=8000)
 
-#close app safely
+# close app safely
 web.shutdown()
 ```
 
@@ -163,34 +92,42 @@ Suppose we want to add a simple **`hello world` webpage** to our WebGear server.
 Then in our application code, we can integrate this webpage route, as follows:
 
 ```python
-#import libs
+# import libs
 import uvicorn, asyncio
 from starlette.templating import Jinja2Templates
 from starlette.routing import Route
 from vidgear.gears.asyncio import WebGear
 
-#Build out Jinja2 template render at `/home/foo/.vidgear/custom_template` path in which our `hello.html` file is located
-template=Jinja2Templates(directory='/home/foo/.vidgear/custom_template')
+# Build out Jinja2 template render at `/home/foo/.vidgear/custom_template` path in which our `hello.html` file is located
+template = Jinja2Templates(directory="/home/foo/.vidgear/custom_template")
 
-#render and return our webpage template
+# render and return our webpage template
 async def hello_world(request):
-    page="hello.html"
-    context={"request": request}
+    page = "hello.html"
+    context = {"request": request}
     return template.TemplateResponse(page, context)
 
-#add various performance tweaks as usual
-options={"frame_size_reduction": 40, "frame_jpeg_quality": 80, "frame_jpeg_optimize": True, "frame_jpeg_progressive": False}
 
-#initialize WebGear app with a valid source
-web=WebGear(source="/home/foo/foo1.mp4", logging=True, **options) #enable source i.e. `test.mp4` and enable `logging` for debugging 
+# add various performance tweaks as usual
+options = {
+    "frame_size_reduction": 40,
+    "frame_jpeg_quality": 80,
+    "frame_jpeg_optimize": True,
+    "frame_jpeg_progressive": False,
+}
 
-#append new route to point our rendered webpage 
-web.routes.append(Route('/hello', endpoint=hello_world)) 
+# initialize WebGear app with a valid source
+web = WebGear(
+    source="/home/foo/foo1.mp4", logging=True, **options
+)  # enable source i.e. `test.mp4` and enable `logging` for debugging
 
-#run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host='localhost', port=8000)
+# append new route to point our rendered webpage
+web.routes.append(Route("/hello", endpoint=hello_world))
 
-#close app safely
+# run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host="localhost", port=8000)
+
+# close app safely
 web.shutdown()
 ```
 **And that's all, Now you can see output at [`http://localhost:8000/hello`](http://localhost:8000/hello) address.**
@@ -225,20 +162,33 @@ Because of WebGear API's flexible internal wapper around [VideoGear](../../video
 Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera module while tweaking its various properties in just one-liner:
 
 ```python
-#import libs
+# import libs
 import uvicorn
 from vidgear.gears.asyncio import WebGear
 
-#various webgear performance and Rasbperry camera tweaks  
-options={"frame_size_reduction": 40, "frame_jpeg_quality": 80, "frame_jpeg_optimize": True, "frame_jpeg_progressive": False, "hflip": True, "exposure_mode": "auto", "iso": 800, "exposure_compensation": 15, "awb_mode": "horizon", "sensor_mode": 0}
+# various webgear performance and Rasbperry camera tweaks
+options = {
+    "frame_size_reduction": 40,
+    "frame_jpeg_quality": 80,
+    "frame_jpeg_optimize": True,
+    "frame_jpeg_progressive": False,
+    "hflip": True,
+    "exposure_mode": "auto",
+    "iso": 800,
+    "exposure_compensation": 15,
+    "awb_mode": "horizon",
+    "sensor_mode": 0,
+}
 
-#initialize WebGear app  
-web=WebGear(enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options)
+# initialize WebGear app
+web = WebGear(
+    enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options
+)
 
-#run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host='localhost', port=8000)
+# run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host="localhost", port=8000)
 
-#close app safely
+# close app safely
 web.shutdown()
 ```
 
@@ -249,20 +199,25 @@ web.shutdown()
 Here's an example of using WebGear API with real-time Video Stabilization enabled:
 
 ```python
-#import libs
+# import libs
 import uvicorn
 from vidgear.gears.asyncio import WebGear
 
-#various webgear performance tweaks  
-options={"frame_size_reduction": 40, "frame_jpeg_quality": 80, "frame_jpeg_optimize": True, "frame_jpeg_progressive": False}
+# various webgear performance tweaks
+options = {
+    "frame_size_reduction": 40,
+    "frame_jpeg_quality": 80,
+    "frame_jpeg_optimize": True,
+    "frame_jpeg_progressive": False,
+}
 
-#initialize WebGear app  with a raw source and enable video stabilization(`stabilize=True`)
-web=WebGear(source="foo.mp4", stabilize=True, logging=True, **options)
+# initialize WebGear app  with a raw source and enable video stabilization(`stabilize=True`)
+web = WebGear(source="foo.mp4", stabilize=True, logging=True, **options)
 
-#run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host='localhost', port=8000)
+# run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host="localhost", port=8000)
 
-#close app safely
+# close app safely
 web.shutdown()
 ```
 

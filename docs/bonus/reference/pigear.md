@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-!!! info "All PiGear Class parameters are explained [here ➶](../../../gears/pigear/params/)"
+!!! info "All PiGear API parameters are explained [here ➶](../../../gears/pigear/params/)"
 
 ::: vidgear.gears.PiGear	
 	

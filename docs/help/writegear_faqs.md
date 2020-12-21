@@ -31,23 +31,19 @@ limitations under the License.
 
 ## I'm only familiar with OpenCV, how to get started with WriteGear API?
 
-**Answer:** First see [Switching from OpenCV](../../switch_from_cv/#switching-videowriter-api), then go through [WriteGear doc](../../gears/writegear/introduction/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, see [Switching from OpenCV](../../switch_from_cv/#switching-the-videowriter-api), then go through [WriteGear doc](../../gears/writegear/introduction/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
 ## Why WriteGear is throwing `ValueError`?
 
-**Answer:** **DO NOT** feed frames to WriteGear with different dimensions or channels!, otherwise WriteGear will exit with `ValueError`.
+**Answer:** WriteGear will exit with `ValueError` if you feed frames of different dimensions or channels.
+
 
 &nbsp;
 
-## Why WriteGear is switching to Non-compression Mode, even if it is not enable?
 
-**Answer:** In case WriteGear API fails to detect valid FFmpeg executables on your system _(even if Compression Mode is enabled)_, it will automatically fallback to Non-Compression Mode. _Follow these [Installation Instructions ➶](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.._
-
-&nbsp;
-
-## How to install and configure FFmpeg correctly for WriteGear?
+## How to install and configure FFmpeg correctly for WriteGear on my machine?
 
 **Answer:** Follow these [Installation Instructions ➶](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
 
@@ -105,18 +101,20 @@ limitations under the License.
 
 &nbsp;
 
-## Can I write frames to the network with WriteGear?
+## Can I live stream with WriteGear API?
 
-**Answer:** No, not yet. Seek [Network gears ➶](../../gears/#c-network-gears) instead.
+**Answer:** Yes, See [this usage example ➶](../../gears/writegear/compression/usage/#using-compression-mode-for-streaming-urls)
 
 &nbsp;
 
-## What FFmpeg parameters is not working for me in compression mode?
+## Why this FFmpeg parameter is not working for me in compression mode?
 
-**Answer:** WriteGear allows us to exploit almost all available parameters(`framerate, bitrate, codecs, format, and size, etc.`) supported by FFmpeg, effortlessly and flexibly with its  `output_param` dictionary parameter. [See its usage example here ➶](../../gears/writegear/compression/usage/#using-compression-mode-with-opencv)
+**Answer:** If some FFmpeg parameter doesn't work for you, then [tell us on Gitter ➶](https://gitter.im/vidgear/community), and if that doesn't help, then finally [report an issue ➶](../../contribution/issue/)
 
-Best of all, WriteGear grants the complete freedom to play with any FFmpeg parameter with its exclusive Custom Commands function _(see this [doc](../../gears/writegear/compression/advanced/cciw/))_, without relying on any Third-party library.
+&nbsp;
 
-Therefore, if some FFmpeg parameter doesn't work for you, then [tell us on Gitter ➶](https://gitter.im/vidgear/community), and if that doesn't help, then finally [report an issue ➶](../../contribution/issue/)
+## Why WriteGear is switching to Non-compression Mode, even if it is not enable?
+
+**Answer:** In case WriteGear API fails to detect valid FFmpeg executables on your system _(even if Compression Mode is enabled)_, it will automatically fallback to Non-Compression Mode. Follow [Installation Instructions ➶](../../gears/writegear/compression/advanced/ffmpeg_install/) for FFmpeg installation.
 
 &nbsp;

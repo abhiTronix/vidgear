@@ -44,30 +44,30 @@ from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
 
 # open any valid video stream(for e.g `test.mp4` file)
-stream = VideoGear(source='test.mp4').start()
+stream = VideoGear(source="test.mp4").start()
 
-#Define Netgear Server with default parameters
-server = NetGear() 
+# Define Netgear Server with default parameters
+server = NetGear()
 
 # loop over until KeyBoard Interrupted
 while True:
 
-  try: 
+    try:
 
-     # read frames from stream
-    frame = stream.read()
+        # read frames from stream
+        frame = stream.read()
 
-    # check for frame if Nonetype
-    if frame is None:
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # send frame to server
+        server.send(frame)
+
+    except KeyboardInterrupt:
         break
-
-    # {do something with the frame here}
-
-    # send frame to server
-    server.send(frame)
-  
-  except KeyboardInterrupt:
-    break
 
 # safely close video stream
 stream.stop()
@@ -88,8 +88,8 @@ from vidgear.gears import NetGear
 import cv2
 
 
-#define Netgear Client with `receive_mode = True` and default parameter
-client = NetGear(receive_mode = True)
+# define Netgear Client with `receive_mode = True` and default parameter
+client = NetGear(receive_mode=True)
 
 # loop over
 while True:
@@ -101,9 +101,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # Show output window
     cv2.imshow("Output Frame", frame)
@@ -138,10 +136,19 @@ from vidgear.gears import NetGear
 import cv2
 
 # define various tweak flags
-options = {'flag' : 0, 'copy' : False, 'track' : False}
+options = {"flag": 0, "copy": False, "track": False}
 
-# Define Netgear Client at given IP address and define parameters (!!! change following IP address '192.168.x.xxx' with yours !!!)
-client = NetGear(address = '192.168.x.xxx', port = '5454', protocol = 'tcp',  pattern = 1, receive_mode = True, logging = True, **options)
+# Define Netgear Client at given IP address and define parameters 
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+client = NetGear(
+    address="192.168.x.xxx",
+    port="5454",
+    protocol="tcp",
+    pattern=1,
+    receive_mode=True,
+    logging=True,
+    **options
+)
 
 # loop over
 while True:
@@ -153,9 +160,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # Show output window
     cv2.imshow("Output Frame", frame)
@@ -186,33 +191,40 @@ from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
 
 # define various tweak flags
-options = {'flag' : 0, 'copy' : False, 'track' : False}
+options = {"flag": 0, "copy": False, "track": False}
 
 # Open live video stream on webcam at first index(i.e. 0) device
 stream = VideoGear(source=0).start()
 
-# Define Netgear server at given IP address and define parameters (!!! change following IP address '192.168.x.xxx' with client's IP address !!!)
-server = NetGear(address = '192.168.x.xxx', port = '5454', protocol = 'tcp',  pattern = 1, logging = True, **options)
+# Define Netgear server at given IP address and define parameters 
+# !!! change following IP address '192.168.x.xxx' with client's IP address !!!
+server = NetGear(
+    address="192.168.x.xxx",
+    port="5454",
+    protocol="tcp",
+    pattern=1,
+    logging=True,
+    **options
+)
 
 # loop over until KeyBoard Interrupted
 while True:
 
-  try: 
+    try:
+        # read frames from stream
+        frame = stream.read()
 
-    # read frames from stream
-    frame = stream.read()
+        # check for frame if Nonetype
+        if frame is None:
+            break
 
-    # check for frame if Nonetype
-    if frame is None:
+        # {do something with the frame here}
+
+        # send frame to server
+        server.send(frame)
+
+    except KeyboardInterrupt:
         break
-
-    # {do something with the frame here}
-
-    # send frame to server
-    server.send(frame)
-  
-  except KeyboardInterrupt:
-    break
 
 # safely close video stream
 stream.stop()
@@ -241,10 +253,19 @@ from vidgear.gears import NetGear
 import cv2
 
 # define tweak flags
-options = {'flag' : 0, 'copy' : False, 'track' : False}
+options = {"flag": 0, "copy": False, "track": False}
 
-# Define Netgear Client at given IP address and define parameters (!!! change following IP address '192.168.x.xxx' with yours !!!)
-client = NetGear(address = '192.168.x.xxx', port = '5454', protocol = 'tcp',  pattern = 0, receive_mode = True, logging = True, **options)
+# Define Netgear Client at given IP address and define parameters 
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+client = NetGear(
+    address="192.168.x.xxx",
+    port="5454",
+    protocol="tcp",
+    pattern=0,
+    receive_mode=True,
+    logging=True,
+    **options
+)
 
 # loop over
 while True:
@@ -256,9 +277,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the received frame here}
-
 
     # Show output window
     cv2.imshow("Output Frame", frame)
@@ -289,33 +308,40 @@ from vidgear.gears import NetGear
 import cv2
 
 # Open suitable video stream, such as webcam on first index(i.e. 0)
-stream = cv2.VideoCapture(0) 
+stream = cv2.VideoCapture(0)
 
 # define tweak flags
-options = {'flag' : 0, 'copy' : False, 'track' : False}
+options = {"flag": 0, "copy": False, "track": False}
 
-# Define Netgear Client at given IP address and define parameters (!!! change following IP address '192.168.x.xxx' with yours !!!)
-client = NetGear(address = '192.168.x.xxx', port = '5454', protocol = 'tcp',  pattern = 0, logging = True, **options)
+# Define Netgear Client at given IP address and define parameters 
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+client = NetGear(
+    address="192.168.x.xxx",
+    port="5454",
+    protocol="tcp",
+    pattern=0,
+    logging=True,
+    **options
+)
 
 # loop over until KeyBoard Interrupted
 while True:
 
-  try: 
+    try:
+        # read frames from stream
+        (grabbed, frame) = stream.read()
 
-    # read frames from stream
-    (grabbed, frame) = stream.read()
+        # check for frame if not grabbed
+        if not grabbed:
+            break
 
-    # check for frame if not grabbed
-    if not grabbed:
-      break
+        # {do something with the frame here}
 
-    # {do something with the frame here}
+        # send frame to server
+        server.send(frame)
 
-    # send frame to server
-    server.send(frame)
-  
-  except KeyboardInterrupt:
-    break
+    except KeyboardInterrupt:
+        break
 
 # safely close video stream
 stream.release()
@@ -344,10 +370,19 @@ from vidgear.gears import NetGear
 import cv2
 
 # define various tweak flags
-options = {'flag' : 0, 'copy' : False, 'track' : False}
+options = {"flag": 0, "copy": False, "track": False}
 
-# Define Netgear Client at given IP address and define parameters (!!! change following IP address '192.168.x.xxx' with yours !!!)
-client = NetGear(address = '192.168.x.xxx', port = '5454', protocol = 'tcp',  pattern = 1, receive_mode = True, logging = True, **options)
+# Define Netgear Client at given IP address and define parameters 
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+client = NetGear(
+    address="192.168.x.xxx",
+    port="5454",
+    protocol="tcp",
+    pattern=1,
+    receive_mode=True,
+    logging=True,
+    **options
+)
 
 # loop over
 while True:
@@ -359,9 +394,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # Show output window
     cv2.imshow("Output Frame", frame)
@@ -392,33 +425,40 @@ from vidgear.gears import ScreenGear
 from vidgear.gears import NetGear
 
 # define various tweak flags
-options = {'flag' : 0, 'copy' : False, 'track' : False}
+options = {"flag": 0, "copy": False, "track": False}
 
 # Start capturing live Monitor screen frames with default settings
 stream = ScreenGear().start()
 
-# Define Netgear server at given IP address and define parameters (!!! change following IP address '192.168.x.xxx' with client's IP address !!!)
-server = NetGear(address = '192.168.x.xxx', port = '5454', protocol = 'tcp',  pattern = 1, logging = True, **options)
+# Define Netgear server at given IP address and define parameters 
+# !!! change following IP address '192.168.x.xxx' with client's IP address !!!
+server = NetGear(
+    address="192.168.x.xxx",
+    port="5454",
+    protocol="tcp",
+    pattern=1,
+    logging=True,
+    **options
+)
 
 # loop over until KeyBoard Interrupted
 while True:
 
-  try: 
+    try:
+        # read frames from stream
+        frame = stream.read()
 
-    # read frames from stream
-    frame = stream.read()
+        # check for frame if Nonetype
+        if frame is None:
+            break
 
-    # check for frame if Nonetype
-    if frame is None:
+        # {do something with the frame here}
+
+        # send frame to server
+        server.send(frame)
+
+    except KeyboardInterrupt:
         break
-
-    # {do something with the frame here}
-
-    # send frame to server
-    server.send(frame)
-  
-  except KeyboardInterrupt:
-    break
 
 # safely close video stream
 stream.stop()

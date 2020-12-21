@@ -30,13 +30,13 @@ limitations under the License.
 
 ## How much latency you would typically expect with Stabilizer Class?
 
-**Answer:** The stabilizer might be slower for High-Quality videos-frames, try reducing frames size before feeding them for reducing latency. Also, see [`smoothing_radius`](../../gears/stabilizer/params/#smoothing_radius) parameter of Stabilizer class that handles the quality of stabilization at the expense of latency and sudden panning. Larger its value, less will be panning, more will be latency and vice-versa.
+**Answer:** The stabilizer will be Slower for High-Quality videos-frames. Try reducing frames size _(Use [`reducer()`](../../bonus/reference/helper/#reducer) method)_ before feeding them for reducing latency. Also, see [`smoothing_radius`](../../gears/stabilizer/params/#smoothing_radius) parameter of Stabilizer class that handles the quality of stabilization at the expense of latency and sudden panning. The larger its value, the less will be panning, more will be latency, and vice-versa.
 
 &nbsp;
 
 ## How to remove black borders in output video after stabilizing it?
 
-**Answer:** See [`crop_n_zoom`](../../gears/stabilizer/params/#crop_n_zoom) parameter of Stabilizer class, that enables the feature, where it crops and zooms frames(to original size) to reduce the black borders from stabilization being too noticeable _(similar to the feature available in Adobe AfterEffects)_. It works in conjunction with the [`border_size`](../../gears/stabilizer/params/#border_size) parameter, i.e. when this parameter is enabled border_size will be used for cropping border instead of making them. Its default value is False.
+**Answer:** See [`crop_n_zoom`](../../gears/stabilizer/params/#crop_n_zoom) parameter of Stabilizer class, that enables the feature, where it crops and zooms frames(to original size) to reduce the black borders from stabilization being too noticeable _(similar to the feature available in Adobe AfterEffects)_. It works in conjunction with the [`border_size`](../../gears/stabilizer/params/#border_size) parameter, i.e. when this parameter is enabled border_size will be used for cropping border instead of making them. Its default value is `False`.
 
 &nbsp;
 
@@ -46,8 +46,8 @@ limitations under the License.
 
 &nbsp;
 
-## Why stabilization is not working for my video?
+## Why stabilization is not working properly for my video?
 
-**Answer:** The Stabilizer may not perform well against High-frequency jitter in video. Use at your own risk! Also, check if increasing [`smoothing_radius`](../../gears/stabilizer/params/#smoothing_radius) parameter value helps, but it will add latency too.
+**Answer:** The Stabilizer may not perform well against High-frequency jitter in video. But,you can check if increasing [`smoothing_radius`](../../gears/stabilizer/params/#smoothing_radius) parameter value helps but it will add latency too.
 
 &nbsp;

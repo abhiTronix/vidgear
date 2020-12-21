@@ -27,21 +27,21 @@ limitations under the License.
   <figcaption>NetGear's Multi-Servers Mode</figcaption>
 </figure>
 
-In this exclusive mode, NetGear API robustly handles Multiple Servers at once, thereby providing seamless access to frames and unidirectional data transfer from multiple Publishers/Servers across the network in real-time. 
+In Multi-Servers Mode, NetGear API robustly handles Multiple Servers at once, thereby providing seamless access to frames and unidirectional data transfer across multiple Publishers/Servers in the network at the same time. Each new server connects to a single client can be identified by its unique port address on the network. 
 
-Each new server connects to a single client, and can be identified by its unique port address on the network. The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`), and it can be easily activated in NetGear API through `multiserver_mode` attribute of its [`option`](../../params/#options) dictionary parameter, during initialization.
+The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`) and can be easily activated in NetGear API through `multiserver_mode` attribute of its [`option`](../../params/#options) dictionary parameter during initialization.
 
 
 &nbsp;
 
 
-!!! warning "Multi-Servers Mode Requirements"
+!!! danger "Multi-Servers Mode Requirements"
 
     * A unique PORT address **MUST** be assigned to each Server on the network using its [`port`](../../params/#port) parameter.
     
     * A list/tuple of PORT addresses of all unique Servers **MUST** be assigned at Client's end using its [`port`](../../params/#port) parameter for a successful connection.
 
-    * `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ and `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ are the only supported pattern values for this Mode. Thereby, calling any other pattern value will result in `ValueError`.
+    * Patterns `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ and `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ are the only supported values for this Mode. Therefore, calling any other pattern value with is mode will result in `ValueError`.
 
     * The [`address`](../../params/#address) parameter value of each Server **MUST** exactly match the Client. 
 
@@ -71,7 +71,7 @@ Each new server connects to a single client, and can be identified by its unique
 ## Usage Examples
 
 
-!!! danger "Important Information"
+!!! info "Important Information"
 
     * For sake of simplicity, in these examples we will use only two unique Servers, but, the number of these Servers can be extended to several numbers depending upon your system hardware limits.
 
@@ -108,10 +108,19 @@ from imutils import build_montages
 import cv2
 
 # activate multiserver_mode
-options = {'multiserver_mode': True}
+options = {"multiserver_mode": True}
 
-# Define NetGear Client at given IP address and assign list/tuple of all unique Server((5566,5567) in our case) and other parameters 
-client = NetGear(address = '192.168.x.x', port = (5566,5567), protocol = 'tcp', pattern = 1, receive_mode = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Client at given IP address and assign list/tuple 
+# of all unique Server((5566,5567) in our case) and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+client = NetGear(
+    address="192.168.x.x",
+    port=(5566, 5567),
+    protocol="tcp",
+    pattern=1,
+    receive_mode=True,
+    **options
+)
 
 # Define received frame dictionary
 frame_dict = {}
@@ -119,8 +128,7 @@ frame_dict = {}
 # loop over until Keyboard Interrupted
 while True:
 
-    try: 
-
+    try:
         # receive data from network
         data = client.recv()
 
@@ -131,19 +139,17 @@ while True:
         # extract unique port address and its respective frame
         unique_address, frame = data
 
-
         # {do something with the extracted frame here}
-
 
         # get extracted frame's shape
         (h, w) = frame.shape[:2]
 
         # update the extracted frame in the received frame dictionary
         frame_dict[unique_address] = frame
-       
+
         # build a montage using data dictionary
         montages = build_montages(frame_dict.values(), (w, h), (2, 1))
-       
+
         # display the montage(s) on the screen
         for (i, montage) in enumerate(montages):
 
@@ -181,31 +187,34 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 from vidgear.gears import NetGear
 from vidgear.gears import CamGear
 
-# Open suitable video stream (webcam on first index in our case) 
-stream = CamGear(source=0).start() 
+# Open suitable video stream (webcam on first index in our case)
+stream = CamGear(source=0).start()
 
 # activate multiserver_mode
-options = {'multiserver_mode': True}
+options = {"multiserver_mode": True}
 
-# Define NetGear Server at Client's IP address and assign a unique port address and other parameters 
-server = NetGear(address = '192.168.x.x', port = '5566', protocol = 'tcp',  pattern = 1, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Server at Client's IP address and assign a unique port address and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+server = NetGear(
+    address="192.168.x.x", port="5566", protocol="tcp", pattern=1, **options
+)
 
 # loop over until Keyboard Interrupted
 while True:
-    try: 
 
+    try:
         # read frames from stream
         frame = stream.read()
 
         # check for frame if not None-type
         if frame is None:
-          break
+            break
 
         # {do something with the frame here}
 
         # send frame to server
         server.send(frame)
-      
+
     except KeyboardInterrupt:
         break
 
@@ -231,31 +240,34 @@ Finally, Open the terminal on another Server System _(also with a webcam connect
 from vidgear.gears import NetGear
 from vidgear.gears import CamGear
 
-# Open suitable video stream (webcam on first index in our case) 
-stream = CamGear(source=0).start() 
+# Open suitable video stream (webcam on first index in our case)
+stream = CamGear(source=0).start()
 
 # activate multiserver_mode
-options = {'multiserver_mode': True}
+options = {"multiserver_mode": True}
 
-# Define NetGear Server at Client's IP address and assign a unique port address and other parameters 
-server = NetGear(address = '192.168.x.x', port = '5567', protocol = 'tcp',  pattern = 1, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Server at Client's IP address and assign a unique port address and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+server = NetGear(
+    address="192.168.x.x", port="5567", protocol="tcp", pattern=1, **options
+)
 
 # loop over until Keyboard Interrupted
 while True:
-    try: 
 
+    try:
         # read frames from stream
         frame = stream.read()
 
         # check for frame if not None-type
         if frame is None:
-          break
+            break
 
         # {do something with the frame here}
 
         # send frame to server
         server.send(frame)
-      
+
     except KeyboardInterrupt:
         break
 
@@ -293,10 +305,19 @@ from imutils import build_montages
 import cv2
 
 # activate multiserver_mode
-options = {'multiserver_mode': True}
+options = {"multiserver_mode": True}
 
-# Define NetGear Client at given IP address and assign list/tuple of all unique Server((5566,5567) in our case) and other parameters 
-client = NetGear(address = '192.168.x.x', port = (5566,5567), protocol = 'tcp', pattern = 2, receive_mode = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Client at given IP address and assign list/tuple of all 
+# unique Server((5566,5567) in our case) and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+client = NetGear(
+    address="192.168.x.x",
+    port=(5566, 5567),
+    protocol="tcp",
+    pattern=2,
+    receive_mode=True,
+    **options
+)
 
 # Define received frame dictionary
 frame_dict = {}
@@ -304,8 +325,7 @@ frame_dict = {}
 # loop over until Keyboard Interrupted
 while True:
 
-    try: 
-
+    try:
         # receive data from network
         data = client.recv()
 
@@ -316,19 +336,17 @@ while True:
         # extract unique port address and its respective frame
         unique_address, frame = data
 
-
         # {do something with the extracted frame here}
-
 
         # get extracted frame's shape
         (h, w) = frame.shape[:2]
 
         # update the extracted frame in the received frame dictionary
         frame_dict[unique_address] = frame
-       
+
         # build a montage using data dictionary
         montages = build_montages(frame_dict.values(), (w, h), (2, 1))
-       
+
         # display the montage(s) on the screen
         for (i, montage) in enumerate(montages):
 
@@ -364,31 +382,34 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 from vidgear.gears import NetGear
 import cv2
 
-# Open suitable video stream (webcam on first index in our case) 
-stream = cv2.VideoCapture(0) 
+# Open suitable video stream (webcam on first index in our case)
+stream = cv2.VideoCapture(0)
 
 # activate multiserver_mode
-options = {'multiserver_mode': True}
+options = {"multiserver_mode": True}
 
-# Define NetGear Server at Client's IP address and assign a unique port address and other parameters 
-server = NetGear(address = '192.168.x.x', port = '5566', protocol = 'tcp',  pattern = 2, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Server at Client's IP address and assign a unique port address and other parameter
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+server = NetGear(
+    address="192.168.x.x", port="5566", protocol="tcp", pattern=2, **options
+)
 
 # loop over until Keyboard Interrupted
 while True:
-    try: 
 
+    try:
         # read frames from stream
         (grabbed, frame) = stream.read()
 
         # check for frame if not grabbed
         if not grabbed:
-          break
+            break
 
         # {do something with the frame here}
 
         # send frame to server
         server.send(frame)
-      
+
     except KeyboardInterrupt:
         break
 
@@ -414,30 +435,34 @@ Finally, Open the terminal on another Server System _(also with a webcam connect
 from vidgear.gears import NetGear
 import cv2
 
-# Open suitable video stream (webcam on first index in our case) 
-stream = cv2.VideoCapture(0) 
+# Open suitable video stream (webcam on first index in our case)
+stream = cv2.VideoCapture(0)
 
 # activate multiserver_mode
-options = {'multiserver_mode': True}
+options = {"multiserver_mode": True}
 
-# Define NetGear Server at Client's IP address and assign a unique port address and other parameters 
-server = NetGear(address = '192.168.x.x', port = '5567', protocol = 'tcp',  pattern = 2, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Server at Client's IP address and assign a unique port address and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+server = NetGear(
+    address="192.168.x.x", port="5567", protocol="tcp", pattern=2, **options
+)
 
 # loop over until Keyboard Interrupted
 while True:
-    try: 
+    
+    try:
         # read frames from stream
         (grabbed, frame) = stream.read()
 
         # check for frame if not grabbed
         if not grabbed:
-          break
+            break
 
         # {do something with the frame here}
 
         # send frame to server
         server.send(frame)
-      
+
     except KeyboardInterrupt:
         break
 
@@ -483,10 +508,18 @@ from imutils import build_montages
 import cv2
 
 # activate multiserver_mode
-options = {'multiserver_mode': True}
+options = {"multiserver_mode": True}
 
-# Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters 
-client = NetGear(address = '192.168.x.x', port = (5577,5578), protocol = 'tcp', pattern = 1, receive_mode = True, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters
+client = NetGear(
+    address="192.168.x.x",
+    port=(5577, 5578),
+    protocol="tcp",
+    pattern=1,
+    receive_mode=True,
+    logging=True,
+    **options
+)  # !!! change following IP address '192.168.x.xxx' with yours !!!
 
 # Define received frame dictionary
 frame_dict = {}
@@ -494,8 +527,7 @@ frame_dict = {}
 # loop over until Keyboard Interrupted
 while True:
 
-    try: 
-
+    try:
         # receive data from network
         data = client.recv()
 
@@ -506,25 +538,31 @@ while True:
         # extract unique port address and its respective frame and received data
         unique_address, extracted_data, frame = data
 
-
         # {do something with the extracted frame and data here}
         # let's display extracted data on our extracted frame
-        cv2.putText(frame, extracted_data, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,255,0),2)
-
+        cv2.putText(
+            frame,
+            extracted_data,
+            (10, frame.shape[0] - 10),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (0, 255, 0),
+            2,
+        )
 
         # get extracted frame's shape
         (h, w) = frame.shape[:2]
 
         # update the extracted frame in the frame dictionary
         frame_dict[unique_address] = frame
-       
+
         # build a montage using data dictionary
         montages = build_montages(frame_dict.values(), (w, h), (2, 1))
-       
+
         # display the montage(s) on the screen
         for (i, montage) in enumerate(montages):
 
-          cv2.imshow("Montage Footage {}".format(i), montage)
+            cv2.imshow("Montage Footage {}".format(i), montage)
 
         # check for 'q' key if pressed
         key = cv2.waitKey(1) & 0xFF
@@ -558,19 +596,27 @@ from vidgear.gears import NetGear
 from vidgear.gears import VideoGear
 import cv2
 
-# Open suitable video stream (webcam on first index in our case) 
+# Open suitable video stream (webcam on first index in our case)
 stream = VideoGear(source=0).start()
 
 # activate multiserver_mode
-options = {'multiserver_mode': True}
+options = {"multiserver_mode": True}
 
-# Define NetGear Server at Client's IP address and assign a unique port address and other parameters 
-server = NetGear(address = '192.168.x.x', port = '5577', protocol = 'tcp',  pattern = 1, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Server at Client's IP address and assign a unique port address and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+server = NetGear(
+    address="192.168.x.x",
+    port="5577",
+    protocol="tcp",
+    pattern=1,
+    logging=True,
+    **options
+)
 
 # loop over until Keyboard Interrupted
 while True:
 
-    try: 
+    try:
         # read frames from stream
         frame = stream.read()
 
@@ -584,8 +630,8 @@ while True:
         text = "I'm Server-1 at Port: 5577"
 
         # send frame and data through server
-        server.send(frame, message = text)
-      
+        server.send(frame, message=text)
+
     except KeyboardInterrupt:
         break
 
@@ -613,21 +659,36 @@ from vidgear.gears import PiGear
 import cv2
 
 # add various Picamera tweak parameters to dictionary
-options = {"hflip": True, "exposure_mode": "auto", "iso": 800, "exposure_compensation": 15, "awb_mode": "horizon", "sensor_mode": 0}
+options = {
+    "hflip": True,
+    "exposure_mode": "auto",
+    "iso": 800,
+    "exposure_compensation": 15,
+    "awb_mode": "horizon",
+    "sensor_mode": 0,
+}
 
 # open pi video stream with defined parameters
-stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start() 
+stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
 
 # activate multiserver_mode
-options = {'multiserver_mode': True}
+options = {"multiserver_mode": True}
 
-# Define NetGear Server at Client's IP address and assign a unique port address and other parameters 
-server = NetGear(address = '192.168.1.xxx', port = '5578', protocol = 'tcp',  pattern = 1, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Server at Client's IP address and assign a unique port address and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+server = NetGear(
+    address="192.168.1.xxx",
+    port="5578",
+    protocol="tcp",
+    pattern=1,
+    logging=True,
+    **options
+)
 
 # loop over until Keyboard Interrupted
 while True:
 
-    try: 
+    try:
         # read frames from stream
         frame = stream.read()
 
@@ -635,15 +696,14 @@ while True:
         if frame is None:
             break
 
-
         # {do something with frame and data(to be sent) here}
 
         # let's prepare a text string as data
         text = "I'm Server-2 at Port: 5578"
 
         # send frame and data through server
-        server.send(frame, message = text)
-      
+        server.send(frame, message=text)
+
     except KeyboardInterrupt:
         break
 

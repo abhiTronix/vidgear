@@ -28,9 +28,9 @@ limitations under the License.
 
 &nbsp;
 
-## I'm only familiar with OpenCV, how to get started with ScreenGear API?
+## I'm only familiar with OpenCV, how to get started with PiGear API?
 
-**Answer:** First see [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis), then go through [ScreenGear doc](../../gears/screengear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, see [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis), then go through [ScreenGear doc](../../gears/screengear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
@@ -46,14 +46,8 @@ limitations under the License.
 
 &nbsp;
 
-## How to change backend with ScreenGear?
-
-**Answer:** See [this usage example ➶](../../gears/screengear/usage/#using-screengear-with-variable-backend)
-
-&nbsp;
-
 ## How to record video from all connected screens?
 
-**Answer:** See [ScreenGear's `monitor` parameter](../../gears/screengear/params/#monitor), that sets the index of the monitor where to grab a frame from. If its value is `-1`, it will record from all monitors. _More information can be found [here  ➶](https://python-mss.readthedocs.io/examples.html#a-screen-shot-to-grab-them-all)_
+**Answer:** See [ScreenGear's `monitor` parameter](../../gears/screengear/params/#monitor) that sets the index of the monitor to grab a frame from. If its value is `-1`, it will record from all monitors. _More information can be found [here  ➶](https://python-mss.readthedocs.io/examples.html#a-screen-shot-to-grab-them-all)_
 
 &nbsp;

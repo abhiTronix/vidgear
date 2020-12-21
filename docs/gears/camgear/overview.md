@@ -31,7 +31,7 @@ limitations under the License.
 
 CamGear API provides a flexible, high-level multi-threaded wrapper around OpenCV's *[VideoCapture API](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80)* with direct access to almost all of its available [*parameters*](../advanced/source_params/) and also internally employs `pafy` with `youtube-dl` backend for seamless live [*YouTube pipelining*](../usage/#using-camgear-with-youtube-videos). 
 
-CamGear relies exclusively on [**Threaded Queue mode**](../../../bonus/TQM/) for threaded, error-free and synchronized frame handling.
+CamGear relies on [**Threaded Queue mode**](../../../bonus/TQM/) for threaded, error-free and synchronized frame handling.
 
 &thinsp; 
 
@@ -58,26 +58,26 @@ from vidgear.gears import CamGear
 
 ## Usage Examples
 
-<div class="zoom">
+<div>
 <a href="../usage/">See here 🚀</a>
 </div>
 
 ## Parameters
 
-<div class="zoom">
+<div>
 <a href="../params/">See here 🚀</a>
 </div>
 
-## Reference
+## References
 
-<div class="zoom">
+<div>
 <a href="../../../bonus/reference/camgear/">See here 🚀</a>
 </div>
 
 
 ## FAQs
 
-<div class="zoom">
+<div>
 <a href="../../../help/camgear_faqs/">See here 🚀</a>
 </div>
 

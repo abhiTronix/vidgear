@@ -38,7 +38,7 @@ Switching OpenCV with VidGear APIs is usually a fairly painless process, and wil
 
 !!! tip "If you're just getting started with OpenCV, then see [here ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)"
 
-VidGear employs OpenCV at its backend and enhances its existing capabilities even furthermore by introducing many new state-of-the-art features on top of it, like real-time Stabilization, and inherit support for screen-casting, live network-streaming, multi-devices, multi-threading, etc., plus [way much more ➶](../gears). While VidGear maintains the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax for all of its APIs. Making it even easier to implement Complex OpenCV applications in just a few lines of code.
+VidGear employs OpenCV at its backend and enhances its existing capabilities even further by introducing many new state-of-the-art features on top of it, like real-time Stabilization, and inherit support for screen-casting, live network-streaming, multiple devices, multi-threading, etc., plus [way much more ➶](../gears). While VidGear maintains the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax for all of its APIs. Making it even easier to implement Complex OpenCV applications in fewer lines of python code.
 
 &nbsp; 
 
@@ -150,7 +150,7 @@ Let's breakdown a few noteworthy difference in both syntaxes:
 
 ## Switching the VideoWriter API
 
-Let's extend previous bare-minimum python code and save those extracted frames to disk as a valid file, with [OpenCV's VideoWriter Class](https://docs.opencv.org/3.4/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) and VidGear's [WriteGear](../gears/writegear/introduction/), compared side-to-side:
+Let's extend previous bare-minimum python code and save those extracted frames to disk as a valid file, with [OpenCV's VideoWriter Class](https://docs.opencv.org/3.4/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) and VidGear's [WriteGear](../gears/writegear/introduction/) _(with FFmpeg backend)_, compared side-to-side:
 
 !!! info "WriteGear API also provides backend for OpenCV's VideoWriter Class. More information [here ➶](../gears/writegear/non_compression/overview/)"
 

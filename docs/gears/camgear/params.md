@@ -108,14 +108,14 @@ This parameter controls the YouTube Mode, .i.e if enabled(`y_tube=True`), the Ca
 CamGear(source='https://youtu.be/bvetuLwJIkA', y_tube=True)
 ```
 
-Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos).
+!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
 
 
 &nbsp;
 
 ## **`colorspace`**
 
-This parameter selects the colorspace of the source stream. 
+This parameter selects the colorspace of the input stream. 
 
 **Data-Type:** String
 
@@ -129,13 +129,13 @@ This parameter selects the colorspace of the source stream.
 CamGear(source=0, colorspace="COLOR_BGR2HSV")
 ```
 
-Its complete usage example is given [here ➶](../usage/#using-camgear-with-direct-colorspace-manipulation)
+!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-direct-colorspace-manipulation)"
 
 &nbsp;
 
 ## **`backend`**
 
-This parameter manually selects the backend of the OpenCV's VideoCapture class _(only if specified)_. 
+This parameter manually selects the backend for OpenCV's VideoCapture class _(only if specified)_. 
 
 **Data-Type:** Integer
 

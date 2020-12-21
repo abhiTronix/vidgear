@@ -29,15 +29,18 @@ limitations under the License.
 
 > PiGear is similar to [CamGear API](../../camgear/overview/) but exclusively made to support various Raspberry Pi Camera Modules _(such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module)_.
 
-PiGear provides a flexible multi-threaded wrapper around complete [picamera](https://picamera.readthedocs.io/en/release-1.13/index.html) python library, and also provides us the ability to exploit almost all of its parameters like _brightness, saturation, sensor_mode, iso, exposure, etc._ effortlessly. Furthermore, PiGear supports multiple camera modules, such as in case of Raspberry Pi Compute module IO boards.
+PiGear provides a flexible multi-threaded framework around complete [picamera](https://picamera.readthedocs.io/en/release-1.13/index.html) python library, and provide us the ability to exploit almost all of its parameters like `brightness, saturation, sensor_mode, iso, exposure, etc.` effortlessly. Furthermore, PiGear also supports multiple camera modules, such as in the case of Raspberry-Pi Compute Module IO boards.
 
-Best of all, PiGear provides excellent error-handling with features like a ==Threaded Internal Timer== - that keeps active track of any frozen-threads/hardware-failures robustly, and exit safely if it does occurs, i.e. If you're running PiGear API in your script, and someone accidentally pulls Camera module cable out, instead of going into possible kernel panic, PiGear will exit safely to save resources. 
+Best of all, PiGear contains ==Threaded Internal Timer== - that silently keeps active track of any frozen-threads/hardware-failures and exit safely, if any does occur. That means that if you're running PiGear API in your script and someone accidentally pulls the Camera-Module cable out, instead of going into possible kernel panic, API will exit safely to save resources.
+
+!!! error "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this API, otherwise nothing will work."
 
 !!! tip "Helpful Tips"
 
 	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../switch_from_cv/#switching-videocapture-apis)
 
 	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
+
 
 &thinsp; 
 
@@ -53,27 +56,27 @@ from vidgear.gears import PiGear
 
 ## Usage Examples
 
-<div class="zoom">
+<div>
 <a href="../usage/">See here 🚀</a>
 </div>
 
 
 ## Parameters
 
-<div class="zoom">
+<div>
 <a href="../params/">See here 🚀</a>
 </div>
 
-## Reference
+## References
 
-<div class="zoom">
+<div>
 <a href="../../../bonus/reference/pigear/">See here 🚀</a>
 </div>
 
 
 ## FAQs
 
-<div class="zoom">
+<div>
 <a href="../../../help/pigear_faqs/">See here 🚀</a>
 </div>  
 

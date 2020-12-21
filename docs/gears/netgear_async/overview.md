@@ -26,11 +26,13 @@ limitations under the License.
 
 ## Overview
 
-> NetGear_Async is an asyncio videoframe messaging framework, built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html), and powered by high-performance asyncio event loop called [**`uvloop`**](https://github.com/MagicStack/uvloop) to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system. 
+> _NetGear_Async can generate the same performance as [NetGear API](../../netgear/overview/) at about one-third the memory consumption, and also provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support any of  yet._
 
-NetGear_Async can generate double performance as compared to [NetGear API](../../netgear/overview/) at about 1/3rd of memory consumption, and also provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support any [NetGear's Exclusive Modes](../../netgear/overview/#exclusive-modes) yet. 
+NetGear_Async is built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html), and powered by a high-performance asyncio event loop called [**`uvloop`**](https://github.com/MagicStack/uvloop) to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. NetGear_Async can transfer thousands of frames in just a few seconds without causing any significant load on your system. 
 
-Furthermore, NetGear_Async allows us to  define our own custom Server Source to manipulate frames easily before sending them across the network(see this [usage example](../usage/#using-netgear_async-with-a-custom-sourceopencv)). In addition to all this, NetGear_Async also **provides a special internal wrapper around [VideoGear API](../../videogear/overview/)**, which itself provides internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs thereby granting it exclusive power for streaming frames incoming from any connected device/source to the network.
+NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to [NetGear API](../../netgear/overview/) but doesn't support any [NetGear's Exclusive Modes](../../netgear/overview/#exclusive-modes) yet. Furthermore, NetGear_Async allows us to define our custom Server as source to manipulate frames easily before sending them across the network(see this [doc](../usage/#using-netgear_async-with-a-custom-sourceopencv) example).
+
+In addition to all this, NetGear_Async also provides internal wrapper around [VideoGear](../../videogear/overview/), which itself provides internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
 
 NetGear_Async as of now supports four ZeroMQ messaging patterns:
 
@@ -58,34 +60,34 @@ Whereas supported protocol are: `tcp` and `ipc`.
 You can import NetGear_Async API in your program as follows:
 
 ```python
-from vidgear.gears import NetGear_Async
+from vidgear.gears.asyncio import NetGear_Async
 ```
 
 &thinsp;
 
 ## Usage Examples
 
-<div class="zoom">
+<div>
 <a href="../usage/">See here 🚀</a>
 </div>
 
 
 ## Parameters
 
-<div class="zoom">
+<div>
 <a href="../params/">See here 🚀</a>
 </div>
 
-## Reference
+## References
 
-<div class="zoom">
+<div>
 <a href="../../../bonus/reference/netgear_async/">See here 🚀</a>
 </div>
 
 
 ## FAQs
 
-<div class="zoom">
+<div>
 <a href="../../../help/netgear_async_faqs/">See here 🚀</a>
 </div> 
 

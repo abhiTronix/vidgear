@@ -63,11 +63,11 @@ NetGear API primarily has two modes of operations:
 
 * **Send Mode:** _which employs `send()` function to send video frames over the network in real-time. **Activate this mode by setting parameter [`receive_mode = True`](../params/#receive_mode).**_
   
-* **Receive Mode:** _which employs `recv()` function to receive frames, sent over the network with *Send Mode* in real-time. The mode sends back confirmation when the frame is received successfully in few patterns. **Activate this mode by setting parameter [`receive_mode = True`](../params/#receive_mode).**_
+* **Receive Mode:** _which employs `recv()` function to receive frames, sent over the network with *Send Mode* in real-time. **Activate this mode by setting parameter [`receive_mode = True`](../params/#receive_mode).**_
 
 ### Exclusive Modes
 
-In addition to these primary modes, NetGear API offers applications-specific Exclusive Modes:
+In addition to the primary modes, NetGear API also offers applications-specific Exclusive Modes:
 
 !!! tip "Also, check this [compatibility chart](../../../help/netgear_faqs/#what-exclusive-modes-are-compatible-with-each-other-in-netgear-api) for these modes interoperability."
 
@@ -119,27 +119,27 @@ from vidgear.gears import NetGear
 
 ## Usage Examples
 
-<div class="zoom">
+<div>
 <a href="../usage/">See here 🚀</a>
 </div>
 
 
 ## Parameters
 
-<div class="zoom">
+<div>
 <a href="../params/">See here 🚀</a>
 </div>
 
-## Reference
+## References
 
-<div class="zoom">
+<div>
 <a href="../../../bonus/reference/netgear/">See here 🚀</a>
 </div>
 
 
 ## FAQs
 
-<div class="zoom">
+<div>
 <a href="../../../help/netgear_faqs/">See here 🚀</a>
 </div> 
 

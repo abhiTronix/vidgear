@@ -28,13 +28,13 @@ limitations under the License.
 
 &thinsp;
 
-> VidGear is a High-Performance Framework that provides an one-stop **Video-Processing** solution for building real-time media applications in python :fire:
+> VidGear is a High-Performance **Video-Processing** Framework for building complex real-time media applications in python :fire:
 
-VidGear provides an easy-to-use, highly extensible, **[Multi-Threaded](https://docs.python.org/3/library/threading.html) + [Asyncio](https://docs.python.org/3/library/asyncio.html) wrapper** around many state-of-the-art specialized libraries like [OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [pafy][pafy], [pyscreenshot][pyscreenshot] and [python-mss][mss] at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance. 
+VidGear provides an easy-to-use, highly extensible, **Multi-Threaded + Asyncio Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [pafy][pafy], [pyscreenshot][pyscreenshot] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance.
 
 > _"Write Less and Accomplish More"_ — VidGear's Motto
 
-VidGear focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks in just few lines of python code.
+VidGear focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks, in just a few lines of code.
 
 &thinsp;
 
@@ -42,9 +42,9 @@ VidGear focuses on simplicity, and thereby lets programmers and software develop
 
 - [x] If this is your first time using VidGear, head straight to the [Installation ➶](installation.md) to install VidGear.
 
-- [x] Once you have VidGear installed, **checkout its well-documented [Gears ➶](gears.md)**
+- [x] Once you have VidGear installed, **Checkout its Function-Specific [Gears ➶](gears.md)**
 
-- [x] Also, if you're already familar with [OpenCV][opencv] library, then see [Switching from OpenCV ➶](switch_from_cv.md)
+- [x] Also, if you're already familar with [OpenCV][opencv] library, then see [Switching from OpenCV Library ➶](switch_from_cv.md)
 
 - [x] Or, if you're just getting started with OpenCV with Python, then see [here ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)
 
@@ -52,33 +52,35 @@ VidGear focuses on simplicity, and thereby lets programmers and software develop
 
 ## Gears
 
-VidGear is built on multiple [Gears ➶](gears) (APIs), which are exclusively designed to handle/control different device-specific video streams, network streams, and powerful media encoders. 
+> VidGear is built with multiple APIs a.k.a [Gears](gears), each with some unique functionality.
+
+Each Gear is designed exclusively to handle/control/process different data-specific & device-specific video streams, network streams, and media encoders/decoders.
 
 These Gears can be classified as follows:
 
 #### VideoCapture Gears
 
-* [CamGear](gears/camgear/overview/): Multi-threaded API targeting various IP-USB-Cameras/Network-Streams/YouTube-Video-URLs.
-* [PiGear](gears/pigear/overview/): Multi-threaded API targeting  various Raspberry Pi Camera Modules.
-* [ScreenGear](gears/screengear/overview/): Multi-threaded ultra-fast Screencasting.    
-* [VideoGear](gears/videogear/overview/): Common API with internal [Video Stabilizer ➶](gears/stabilizer/overview/) wrapper.  
+* [CamGear](gears/camgear/overview/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/YouTube-Video-URLs.
+* [PiGear](gears/pigear/overview/): Multi-Threaded API targeting various Raspberry-Pi Camera Modules.
+* [ScreenGear](gears/screengear/overview/): Multi-Threaded API targeting ultra-fast Screencasting.    
+* [VideoGear](gears/videogear/overview/): Common Video-Capture API with internal [Video Stabilizer](gears/stabilizer/overview/) wrapper.
 
 #### VideoWriter Gears
 
-* [WriteGear](gears/writegear/introduction/): Handles Flexible Lossless Video File Encoding and Compression.
+* [WriteGear](gears/writegear/introduction/): Handles Lossless Video-Writer for file/stream/frames Encoding and Compression.
 
 #### Streaming Gears
 
-* [StreamGear](gears/streamgear/overview/): Handles Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats.
+* [StreamGear](gears/streamgear/overview/): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
 
 #### Network Gears
 
-* [NetGear](gears/netgear/overview/): Handles high-performance video-frames & data transfer between interconnecting systems over the network.
+* [NetGear](gears/netgear/overview/): Handles High-Performance Video-Frames & Data Transfer between interconnecting systems over the network.
 
   * **Asynchronous I/O Network Gears:**
 
-    * [WebGear](gears/webgear/overview/): ASGI Video Server that can send live video-frames to any web browser on the network.
-    * [NetGear_Async](gears/netgear_async/overview/): Immensely Memory-efficient Asyncio video-frames network messaging framework. 
+    * [WebGear](gears/webgear/overview/): ASGI Video-Server that broadcasts Live Video-Frames to any web-browser on the network.
+    * [NetGear_Async](gears/netgear_async/overview/): Immensely Memory-Efficient Asyncio Video-Frames Network Messaging Framework. 
 
 &thinsp;
 
@@ -92,7 +94,7 @@ Please see our [Contribution Guidelines ➶](contribution.md) for more details.
 
 ## Community Channel
 
-If you've come up with some new idea, or looking for the fastest way troubleshoot your problems, then *join our [Gitter community channel ➶][gitter]*
+If you've come up with some new idea, or looking for the fastest way troubleshoot your problems. Please checkout our [Gitter community channel ➶][gitter]
 
 &thinsp; 
 
@@ -106,7 +108,7 @@ You can be a [Stargazer :star2:][stargazer] by starring us on Github, it helps u
 
 > VidGear is free, but rely on your support :heart:
 
-Sending a donation using link below is *extremely* helpful in keeping VidGear development alive:
+Donations help keep VidGear development alive. Small contributions can make a huge difference.
 
 <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#eba100', 'W7W8WTYO');kofiwidget2.draw();</script> 
 

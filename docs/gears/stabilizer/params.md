@@ -42,7 +42,7 @@ Stabilizer(smoothing_radius=30)
 
 ## **`border_size`**
 
-This parameter enables the feature to extend border size that compensates for stabilized output video frames motions. 
+This parameter enables and set the value for extended border size that compensates for reduction of black borders during stabilization. 
 
 **Data-Type:** Integer
 
@@ -61,7 +61,7 @@ Stabilizer(border_size=10)
 
 ## **`crop_n_zoom`**
 
-This parameter enables the feature where it crops and zooms frames(to original size) to reduce the black borders from stabilization being too noticeable _(similar to the Stabilized, cropped and Auto-Scaled feature available in Adobe AfterEffects)_. It simply works in conjunction with the `border_size` parameter, i.e. when this parameter is enabled,  `border_size` will be used for cropping border instead of extending them. 
+This parameter enables cropping and zooming of frames _(to original size)_ to reduce the black borders from being too noticeable _(similar to the Stabilized, cropped and Auto-Scaled feature available in Adobe AfterEffects)_ during stabilization. It simply works in conjunction with the `border_size` parameter, i.e. when this parameter is enabled,  `border_size` will be used for cropping border instead of extending them. 
 
 **Data-Type:** Boolean
 
@@ -80,10 +80,10 @@ Stabilizer(border_size=10, crop_n_zoom=True)
 
 ## **`border_type`**
 
-This parameter can be used to change the extended border style. Valid border types are `'black'`, `'reflect'`, `'reflect_101'`, `'replicate'` and `'wrap'`, learn more about it [here](https://docs.opencv.org/3.1.0/d2/de8/group__core__array.html#ga209f2f4869e304c82d07739337eae7c5). 
+This parameter can be used to change the extended border type. Valid border types are `'black'`, `'reflect'`, `'reflect_101'`, `'replicate'` and `'wrap'`, learn more about it [here](https://docs.opencv.org/3.1.0/d2/de8/group__core__array.html#ga209f2f4869e304c82d07739337eae7c5). 
 
 
-!!! warning "Altering `border_type` parameter is DISABLED while `crop_n_zoom` is enabled!"
+!!! danger "Altering `border_type` parameter is **DISABLED** when `crop_n_zoom` is enabled!"
 
 
 **Data-Type:** String
