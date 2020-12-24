@@ -41,7 +41,73 @@ The following guidelines tells you how to submit a valid PR for vidGear:
 !!! tip "Make sure the [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch of your Forked repository is up-to-date with VidGear, before starting working on Pull Request."
 
 
-You can clone your Forked remote git to local and create your PR working branch as a sub-branch of latest [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch as follows:
+You can clone your [**Forked**](https://docs.github.com/en/free-pro-team@latest/github/getting-started-with-github/fork-a-repo) remote git to local and create your PR working branch as a sub-branch of latest [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch as follows:
+
+??? info "VidGear's Github Branches"
+
+	Following are the base branches for VidGear's code in its Github Repository:
+
+	=== "Master/Main"
+
+		**Branch Features:**
+
+		* Most-Stable 
+		* Includes the latest stable-release. 
+		* Lacks any latest bug-fixes and changes.
+		* Everything CI tested.
+
+		**Cloning:**
+
+		```sh
+		# clone your forked repository and `cd` inside
+		git clone https://github.com/abhiTronix/vidgear.git && cd vidgear
+		```
+
+	=== "Testing"
+
+		**Branch Features:**
+
+		* Stable.
+		* Includes latest stable bug-fixes and changes.
+		* Used for pushing PR commits. 
+		* Everything CI tested.
+
+		**Cloning:**
+
+		```sh
+		# clone your forked repository and `cd` inside
+		git clone https://github.com/abhiTronix/vidgear.git && cd vidgear
+		
+		# checkout the latest testing branch
+		git checkout testing
+		```
+
+	=== "Development"
+
+		**Branch Features:**
+
+		* :warning: Unstable.
+		* Includes latest experimental changes.
+		* Used for pushing experimental commits. 
+		* Nothing CI tested.
+
+		**Cloning:**
+
+		```sh
+		# clone your forked repository and `cd` inside
+		git clone https://github.com/abhiTronix/vidgear.git && cd vidgear
+		
+		# checkout the latest development branch
+		git checkout development
+		```
+
+	**Workflow:** 
+
+	Typically any feature/improvement/bug-fix code flows as follows:
+
+	<figure>
+	<img src='http://www.plantuml.com/plantuml/svg/RKzDYrD143pRlwAFYH1GmKjOmcwoA7jGGh9x4f5sfdmxP3wUFVFKAFvt9s_yUC5SXkcgwghgwrn4on0yvOEBlQW4DbvoVfLYsRlluESl9vIc8LgJD4BvnRC9OV591bzEMsybWFVe4lZXxd_9FRwL6--w610Bc_f0Bnjjaa_AjwA7pL7YH5Cx5_0FMeivT6Eb9jsAnsi58jsefgyDt4CQjavgeR_1Nbti6lulQksh8Lqi-9EefGPeXm_cCJa3lhfgdzMAwD5PC49VZcoHZRg-k1JftTFtl5Yi-1PVu5C_UYxPf11SoJH5g-hSVSdRmVl53fy7vCApxMvEKy6uSL-fUaeLR-wuZBfUSeQTj-WBfhi_yJohfqAZ-3cTztk8kSX73pgpFmsmFFDo2fhJaxzqJNaZbLHUjZXguvBtpQUDOvqTF2I3hX7j4Fml'>
+	</figure>
 
 ```sh
 # clone your forked repository(change with your username) and get inside
@@ -71,37 +137,39 @@ There are some important checks you need to perform while submitting your Pull R
   
   * The first thing you do is submit an issue with a [proposal template](https://github.com/abhiTronix/vidgear/issues/new?labels=issue%3A+proposal&template=proposal.md) for your work first and then work on your Pull Request.
 
-- [x] **Test, Format & lint locally:**
 
-  * Make sure to test, format, and lint the modified code locally every time you commit. The details are discussed [below ➶](#testing-formatting-linting)
+- [x] **Submit a Draft Pull Request:**
 
-- [x] **Format & Submit your Draft Pull Request:**
-
-  * Submit the pull request from the first day of your development, and create it as a draft pull request. Click "ready for review" when finished and passed all the checks.
+  * Submit the [draft pull request](https://github.blog/2019-02-14-introducing-draft-pull-requests/) from the first day of your development.
   * Add a brief but descriptive title for your PR.
   * Explain what the PR adds, fixes, or improves.
   * In case of bug fixes, add a new unit test case that would fail against your bug fix.
   * Provide output or screenshots, if you can.
+  * Make sure your pull request passed all the CI checks _(triggers automatically on pushing commits against testing branch)_. If it's somehow failing, then ask the maintainer for a review.
+  * Click "ready for review" when finished.
+
+- [x] **Test, Format & lint code locally:**
+
+  * Make sure to test, format, and lint the modified code locally before every commit. The details are discussed [below ➶](#testing-formatting-linting)
 
 - [x] **Make sensible commit messages:**
 
-  * If your PR fixes a separate issue number, remember to include `"resolves #issue_number"` in the commit message. Learn more about it [here ➶](https://help.github.com/articles/closing-issues-using-keywords/).
+  * If your pull request fixes a separate issue number, remember to include `"resolves #issue_number"` in the commit message. Learn more about it [here ➶](https://help.github.com/articles/closing-issues-using-keywords/).
   * Keep the commit message concisely as much as possible at every submit. You can make a supplement to the previous commit with `git commit --amend` command.
 
-- [x] **Perform PR Integrity Checks:** 
+- [x] **Perform Integrity Checks:** 
 
-    !!! warning "Any duplicate PR will be Rejected!"
+    !!! warning "Any duplicate pull request will be Rejected!"
 
   * Search GitHub if there's a similar open or closed PR that relates to your submission.
   * Check if your purpose code matches the overall direction, simplicity, and structure of the VidGear and improves it.
   * Retain copyright for your contributions, but also agree to license them for usage by the project and author(s) under the [Apache 2.0 license ➶](https://github.com/abhiTronix/vidgear/blob/master/LICENSE).
-  * Make sure your PR must pass through all unit tests including **VidGear's CI tests** _(triggers automatically on pushing commits against testing branch)_. If it's somehow failing, then ask the maintainer for a review.
 
 - [x] **Link your Issues:**
 
     !!! tip "For more information on Linking a pull request to an issue, See [this wiki doc➶](https://docs.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue)"
 
-  * Finally, when you're confident enough, make your Pull Request public. 
+  * Finally, when you're confident enough, make your pull request public. 
   * You can link an issue to a pull request manually or using a supported keyword in the pull request description. It helps collaborators see that someone is working on the issue. 
 
 &nbsp; 

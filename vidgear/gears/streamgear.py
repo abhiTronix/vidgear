@@ -301,7 +301,7 @@ class StreamGear:
 
         Parameters:
             frame (ndarray): a valid numpy frame
-            rgb_mode (boolean): enable this flag to activate RGB mode _(i.e. specifies that incoming frames are of RGB format(instead of default BGR)_.
+            rgb_mode (boolean): enable this flag to activate RGB mode _(i.e. specifies that incoming frames are of RGB format instead of default BGR)_.
 
         """
         # check if function is called in correct context
