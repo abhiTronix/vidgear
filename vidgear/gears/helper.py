@@ -110,6 +110,43 @@ def check_CV_version():
         return 3
 
 
+def get_supported_quality(value, logging=False):
+    # default to best
+    stream_quality = "best"
+    supported_stream_qualities = [
+        "144p",
+        "240p",
+        "360p",
+        "480p",
+        "720p",
+        "1080p",
+        "1440p",
+        "2160p",
+        "worst",
+        "best",
+    ]
+    if isinstance(value, str):
+        if value.strip().lower() in supported_stream_qualities:
+            stream_quality = value.strip().lower()
+            if logging:
+                logger.debug(
+                    "Selecting `{}` quality for streams.".format(stream_quality)
+                )
+        else:
+            logger.warning(
+                "Specified stream-quality `{}` is not supported. Reverting to `best`!".format(
+                    value
+                )
+            )
+    else:
+        logger.warning(
+            "Specified stream-quality `{}` is Invalid. Reverting to `best`!".format(
+                value
+            )
+        )
+    return stream_quality
+
+
 def is_valid_url(path, url=None, logging=False):
     """
     ### is_valid_url

@@ -19,13 +19,20 @@ limitations under the License.
 """
 # import the necessary packages
 
+import pafy
 import cv2
 import time
 import logging as log
 from threading import Thread
 from pkg_resources import parse_version
 
-from .helper import capPropId, logger_handler, check_CV_version, youtube_url_validator
+from .helper import (
+    capPropId,
+    logger_handler,
+    check_CV_version,
+    youtube_url_validator,
+    get_supported_quality,
+)
 
 # define logger
 logger = log.getLogger("CamGear")
@@ -49,7 +56,7 @@ class CamGear:
     def __init__(
         self,
         source=0,
-        y_tube=False,
+        stream_mode=False,
         backend=0,
         colorspace=None,
         logging=False,
@@ -62,7 +69,7 @@ class CamGear:
 
         Parameters:
             source (based on input): defines the source for the input stream.
-            y_tube (bool): controls the exclusive YouTube Mode.
+            stream_mode (bool): controls the exclusive Streaming Mode for handling streaming URLs.
             backend (int): selects the backend for OpenCV's VideoCapture class.
             colorspace (str): selects the colorspace of the input stream.
             logging (bool): enables/disables logging.
@@ -75,33 +82,58 @@ class CamGear:
         if logging:
             self.__logging = logging
 
-        # handle special y_tube parameter and clear
-        va_mode = options.pop("FORCE_YTUBE_VAMODE", False)
-        if not isinstance(va_mode, bool):
-            # reset improper values
-            va_mode = False
+        # check if Streaming Mode is ON (True)
+        if stream_mode:
+            # handle special parameters and clear
+            stream_quality = get_supported_quality(
+                options.pop("STREAM_QUALITY", "best"), logging=logging
+            )
+            stream_params = options.pop("STREAM_PARAMS", {})
+            if isinstance(stream_params, dict):
+                stream_params = {str(k).strip(): v for k, v in stream_params.items()}
+            else:
+                stream_params = {}
 
-        # check if Youtube Mode is ON (True)
-        if y_tube:
             try:
-                # import pafy and parse youtube stream url
-                import pafy
-
-                # validate
+                # parse if youtube stream url
                 video_url = youtube_url_validator(source)
                 if video_url:
                     source_object = pafy.new(video_url)
-                    vo_source = source_object.getbestvideo("webm", ftypestrict=True)
-                    va_source = source_object.getbest("webm", ftypestrict=False)
-                    # select the best quality
-                    if (
-                        vo_source is None
-                        or va_mode
-                        or (va_source.dimensions >= vo_source.dimensions)
-                    ):
-                        source = va_source.url
-                    else:
-                        source = vo_source.url
+                    valid_streams = [
+                        v_streams
+                        for v_streams in source_object.videostreams
+                        if v_streams.notes != "HLS" and v_streams.extension == "webm"
+                    ] + [
+                        va_streams
+                        for va_streams in source_object.streams
+                        if va_streams.notes != "HLS"
+                    ]
+                    if valid_streams:
+                        valid_stream_qualties = [qs.notes for qs in valid_streams]
+                        if stream_quality in ["best", "worst"] or not (
+                            stream_quality in valid_stream_qualties
+                        ):
+                            if not stream_quality in ["best", "worst"]:
+                                logger.warning(
+                                    "Specified stream-quality `{}` is not available. Reverting to `best`!".format(
+                                        stream_quality
+                                    )
+                                )
+                                stream_quality = "best"
+
+                            valid_streams.sort(
+                                key=lambda x: x.dimensions,
+                                reverse=True if stream_quality == "best" else False,
+                            )
+                            parsed_stream = valid_streams[0]
+                        else:
+                            matched_stream = [
+                                i
+                                for i, s in enumerate(valid_stream_qualties)
+                                if stream_quality in s
+                            ]
+                            parsed_stream = valid_streams[matched_stream[0]]
+                        source = parsed_stream.url
                     if self.__logging:
                         logger.debug(
                             "YouTube source ID: `{}`, Title: `{}`".format(
@@ -116,11 +148,11 @@ class CamGear:
                 if self.__logging:
                     logger.exception(str(e))
                 raise ValueError(
-                    "[CamGear:ERROR] :: YouTube Mode is enabled and the input YouTube URL is incorrect!"
+                    "[CamGear:ERROR] :: Stream Mode is enabled but Input URL is invalid!"
                 )
 
         # youtube mode variable initialization
-        self.__youtube_mode = y_tube
+        self.__youtube_mode = stream_mode
 
         # assigns special parameter to global variable and clear
         self.__threaded_queue_mode = options.pop("THREADED_QUEUE_MODE", True)
@@ -332,7 +364,3 @@ class CamGear:
         # wait until stream resources are released (producer thread might be still grabbing frame)
         if self.__thread is not None:
             self.__thread.join()
-            # properly handle thread exit
-            if self.__youtube_mode:
-                # kill thread-lock in youtube mode
-                self.__thread = None
