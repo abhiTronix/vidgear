@@ -126,8 +126,15 @@ def test_threaded_queue_mode(source, options):
             pytest.fail(str(e))
 
 
-@pytest.mark.parametrize("url", ["https://youtu.be/uCy5OuSQnyA", "im_not_a_url"])
-def test_youtube_playback(url):
+@pytest.mark.parametrize(
+    "url, quality, parameters",
+    [
+        ("https://youtu.be/uCy5OuSQnyA", "best", "invalid"),
+        ("https://youtu.be/NMre6IAAAiU", "invalid", {"nocheckcertificate": True}),
+        ("im_not_a_url", "", {}),
+    ],
+)
+def test_youtube_playback(url, quality, parameters):
     """
     Testing Youtube Video Playback capabilities of VidGear
     """
@@ -135,9 +142,10 @@ def test_youtube_playback(url):
         height = 0
         width = 0
         fps = 0
+        options = {"STREAM_RESOLUTION": quality, "STREAM_PARAMS": parameters}
         # get params
         stream = CamGear(
-            source=url, y_tube=True, logging=True
+            source=url, stream_mode=True, logging=True, **options
         ).start()  # YouTube Video URL as input
         while True:
             frame = stream.read()
@@ -164,10 +172,12 @@ def test_youtube_playback(url):
             and round(true_video_param[2], 1) == round(fps, 1)
         )
     except Exception as e:
-        if isinstance(e, (RuntimeError, ValueError)) and url == "im_not_a_url":
+        if isinstance(e, (RuntimeError, ValueError)) and (
+            url == "im_not_a_url" or platform.system() in ["Windows", "Darwin"]
+        ):
             pass
-        #else:
-        #    pytest.fail(str(e))
+        else:
+            pytest.fail(str(e))
 
 
 def test_network_playback():

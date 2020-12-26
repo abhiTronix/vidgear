@@ -110,9 +110,39 @@ def check_CV_version():
         return 3
 
 
-def get_supported_quality(value, logging=False):
+def check_gstreamer_support():
+    """
+    ### check_gstreamer_support
+
+    Checks whether OpenCV is compiled with Gstreamer(`>=1.0.0`) support.
+
+    **Returns:** A Boolean value
+    """
+    raw = cv2.getBuildInformation()
+    gst = [
+        x.strip()
+        for x in raw.split("\n")
+        if x and re.search(r"GStreamer[,-:]+\s*(?:YES|NO)", x)
+    ][0]
+    if "YES" in gst:
+        version = re.search(r"(\d+\.)?(\d+\.)?(\*|\d+)", gst)
+        return version[0] >= "1.0.0"
+    else:
+        return False
+
+
+def get_supported_resolution(value, logging=False):
+    """
+    ### get_supported_resolution
+
+    Parameters:
+        value (string): value to be validated
+        logging (bool): enables logging for its operations
+
+    **Returns:** Valid stream resolution
+    """
     # default to best
-    stream_quality = "best"
+    stream_resolution = "best"
     supported_stream_qualities = [
         "144p",
         "240p",
@@ -127,24 +157,50 @@ def get_supported_quality(value, logging=False):
     ]
     if isinstance(value, str):
         if value.strip().lower() in supported_stream_qualities:
-            stream_quality = value.strip().lower()
+            stream_resolution = value.strip().lower()
             if logging:
                 logger.debug(
-                    "Selecting `{}` quality for streams.".format(stream_quality)
+                    "Selecting `{}` resolution for streams.".format(stream_resolution)
                 )
         else:
             logger.warning(
-                "Specified stream-quality `{}` is not supported. Reverting to `best`!".format(
+                "Specified stream-resolution `{}` is not supported. Reverting to `best`!".format(
                     value
                 )
             )
     else:
         logger.warning(
-            "Specified stream-quality `{}` is Invalid. Reverting to `best`!".format(
+            "Specified stream-resolution `{}` is Invalid. Reverting to `best`!".format(
                 value
             )
         )
-    return stream_quality
+    return stream_resolution
+
+
+def dimensions_to_resolutions(value):
+    """
+    ### dimensions_to_resolutions
+
+    Parameters:
+        value (list): list of dimensions (e.g. `640x360`)
+
+    **Returns:** list of resolutions (e.g. `360p`)
+    """
+    supported_resolutions = {
+        "256x144": "144p",
+        "426x240": "240p",
+        "640x360": "360p",
+        "854x480": "480p",
+        "1280x720": "720p",
+        "1920x1080": "1080p",
+        "2560x1440": "1440p",
+        "3840x2160": "2160p",
+    }
+    return (
+        list(map(supported_resolutions.get, value, value))
+        if isinstance(value, list)
+        else []
+    )
 
 
 def is_valid_url(path, url=None, logging=False):

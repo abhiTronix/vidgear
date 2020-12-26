@@ -136,7 +136,7 @@ which can also be accessed on any browser on the network at http://localhost:800
 
     ```sh
     usage: python -m vidgear.gears.asyncio [-h] [-s SOURCE] [-ep ENABLEPICAMERA] [-S STABILIZE]
-            [-cn CAMERA_NUM] [-yt Y_TUBE] [-b BACKEND] [-cs COLORSPACE]
+            [-cn CAMERA_NUM] [-yt stream_mode] [-b BACKEND] [-cs COLORSPACE]
             [-r RESOLUTION] [-f FRAMERATE] [-td TIME_DELAY]
             [-ip IPADDRESS] [-pt PORT] [-l LOGGING] [-op OPTIONS]
 
@@ -154,7 +154,7 @@ which can also be accessed on any browser on the network at http://localhost:800
       -cn CAMERA_NUM, --camera_num CAMERA_NUM
                             Sets the camera module index that will be used by
                             PiGear API.
-      -yt Y_TUBE, --y_tube Y_TUBE
+      -yt stream_mode, --stream_mode stream_mode
                             Enables YouTube Mode in CamGear API.
       -b BACKEND, --backend BACKEND
                             Sets the backend of the video source in CamGear API.

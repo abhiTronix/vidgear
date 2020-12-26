@@ -31,7 +31,9 @@ from .helper import (
     logger_handler,
     check_CV_version,
     youtube_url_validator,
-    get_supported_quality,
+    get_supported_resolution,
+    check_gstreamer_support,
+    dimensions_to_resolutions,
 )
 
 # define logger
@@ -69,7 +71,7 @@ class CamGear:
 
         Parameters:
             source (based on input): defines the source for the input stream.
-            stream_mode (bool): controls the exclusive Streaming Mode for handling streaming URLs.
+            stream_mode (bool): controls the exclusive **Stream Mode** for handling streaming URLs.
             backend (int): selects the backend for OpenCV's VideoCapture class.
             colorspace (str): selects the colorspace of the input stream.
             logging (bool): enables/disables logging.
@@ -82,71 +84,107 @@ class CamGear:
         if logging:
             self.__logging = logging
 
-        # check if Streaming Mode is ON (True)
+        # check if Stream-Mode is ON (True)
         if stream_mode:
-            # handle special parameters and clear
-            stream_quality = get_supported_quality(
-                options.pop("STREAM_QUALITY", "best"), logging=logging
+            # check GStreamer backend support
+            gst_support = check_gstreamer_support()
+            # handle special Stream Mode parameters
+            stream_resolution = get_supported_resolution(
+                options.pop("STREAM_RESOLUTION", "best"), logging=logging
             )
             stream_params = options.pop("STREAM_PARAMS", {})
             if isinstance(stream_params, dict):
                 stream_params = {str(k).strip(): v for k, v in stream_params.items()}
             else:
                 stream_params = {}
-
+            # handle Stream-Mode
             try:
-                # parse if youtube stream url
+                # detect whether a YouTube URL
                 video_url = youtube_url_validator(source)
                 if video_url:
-                    source_object = pafy.new(video_url)
+                    # create new pafy object
+                    source_object = pafy.new(video_url, ydl_opts=stream_params)
+                    # extract all valid video-streams
                     valid_streams = [
                         v_streams
                         for v_streams in source_object.videostreams
                         if v_streams.notes != "HLS" and v_streams.extension == "webm"
-                    ] + [
-                        va_streams
-                        for va_streams in source_object.streams
-                        if va_streams.notes != "HLS"
-                    ]
-                    if valid_streams:
-                        valid_stream_qualties = [qs.notes for qs in valid_streams]
-                        if stream_quality in ["best", "worst"] or not (
-                            stream_quality in valid_stream_qualties
+                    ] + [va_streams for va_streams in source_object.streams]
+                    # extract available stream resolutions
+                    available_streams = [qs.notes for qs in valid_streams]
+                    # check whether YouTube-stream is live or not?
+                    is_live = (
+                        all(x == "HLS" or x == "" for x in available_streams)
+                        if available_streams
+                        else False
+                    )
+                    # validate streams
+                    if valid_streams and (not is_live or gst_support):
+                        # handle live-streams
+                        if is_live:
+                            # Enforce GStreamer backend for YouTube-livestreams
+                            if logging:
+                                logger.debug(
+                                    "YouTube livestream URL detected. Enforcing GStreamer backend."
+                                )
+                            backend = cv2.CAP_GSTREAMER
+                            # convert stream dimensions to streams resolutions
+                            available_streams = dimensions_to_resolutions(
+                                [qs.resolution for qs in valid_streams]
+                            )
+                        # check whether stream-resolution was specified and available
+                        if stream_resolution in ["best", "worst"] or not (
+                            stream_resolution in available_streams
                         ):
-                            if not stream_quality in ["best", "worst"]:
+                            # not specified and unavailable
+                            if not stream_resolution in ["best", "worst"]:
                                 logger.warning(
-                                    "Specified stream-quality `{}` is not available. Reverting to `best`!".format(
-                                        stream_quality
+                                    "Specified stream-resolution `{}` is not available. Reverting to `best`!".format(
+                                        stream_resolution
                                     )
                                 )
-                                stream_quality = "best"
-
+                                # revert to best
+                                stream_resolution = "best"
+                            # parse and select best or worst streams
                             valid_streams.sort(
                                 key=lambda x: x.dimensions,
-                                reverse=True if stream_quality == "best" else False,
+                                reverse=True if stream_resolution == "best" else False,
                             )
                             parsed_stream = valid_streams[0]
                         else:
+                            # apply specfied valid stream-resolution
                             matched_stream = [
                                 i
-                                for i, s in enumerate(valid_stream_qualties)
-                                if stream_quality in s
+                                for i, s in enumerate(available_streams)
+                                if stream_resolution in s
                             ]
                             parsed_stream = valid_streams[matched_stream[0]]
+                        # extract stream URL as source
                         source = parsed_stream.url
-                    if self.__logging:
-                        logger.debug(
-                            "YouTube source ID: `{}`, Title: `{}`".format(
-                                video_url, source_object.title
+                        # log progress
+                        if self.__logging:
+                            logger.debug(
+                                "YouTube source ID: `{}`, Title: `{}`, Quality: `{}`".format(
+                                    video_url, source_object.title, stream_resolution
+                                )
+                            )
+                    else:
+                        # raise error if Gstreamer backend unavailable for YouTube live-streams
+                        # see issue: https://github.com/abhiTronix/vidgear/issues/133
+                        raise RuntimeError(
+                            "[CamGear:ERROR] :: Unable to find any OpenCV supported streams in `{}` YouTube URL. Kindly compile OpenCV with GSstreamer(>=v1.0.0) support or Use another URL!".format(
+                                source
                             )
                         )
                 else:
+                    # raise error if something is wrong with Youtube URL.
                     raise RuntimeError(
-                        "Invalid `{}` Youtube URL cannot be processed!".format(source)
+                        "[CamGear:ERROR] :: Invalid `{}` Youtube URL cannot be processed!".format(
+                            source
+                        )
                     )
             except Exception as e:
-                if self.__logging:
-                    logger.exception(str(e))
+                # raise error if something went wrong
                 raise ValueError(
                     "[CamGear:ERROR] :: Stream Mode is enabled but Input URL is invalid!"
                 )

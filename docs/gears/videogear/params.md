@@ -134,7 +134,7 @@ Its valid input can be one of the following:
     VideoGear(source='/home/foo.mp4')
     ```
 
-* **YouTube Video's URL (*string*):** _Valid Youtube video URL as input when YouTube Mode is enabled(*i.e. `y_tube=True`*), for e.g `"https://youtu.be/bvetuLwJIkA"` as follows:_
+* **YouTube Video's URL (*string*):** _Valid Youtube video URL as input when YouTube Mode is enabled(*i.e. `stream_mode=True`*), for e.g `"https://youtu.be/bvetuLwJIkA"` as follows:_
 
     !!! info "Valid YouTube URL format"
 
@@ -146,7 +146,7 @@ Its valid input can be one of the following:
         * `{video-id}`
 
     ```python
-    VideoGear(source='https://youtu.be/bvetuLwJIkA', y_tube=True)
+    VideoGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
     ```
 
 * **Network Address (*string*):** _Valid (`http(s), rtp, rstp, rtmp, mms, etc.`) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
@@ -181,9 +181,15 @@ Its valid input can be one of the following:
 
 &nbsp;
 
-### **`y_tube`**
+### **`stream_mode`**
 
-This parameter controls the YouTube Mode, .i.e if enabled(`y_tube=True`), the VideoGear API will interpret the given `source` input as YouTube URL address. 
+This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), the VideoGear API will interpret the given `source` input as YouTube URL address. 
+
+!!! warning "VideoGear will automatically enforce GStreamer backend _(backend=`cv2.CAP_GSTREAMER`)_ for YouTube-livestreams!"
+
+!!! tip "Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support!"
+
+!!! error "VideoGear will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support!"
 
 **Data-Type:** Boolean
 
@@ -192,11 +198,10 @@ This parameter controls the YouTube Mode, .i.e if enabled(`y_tube=True`), the Vi
 **Usage:**
 
 ```python
-VideoGear(source='https://youtu.be/bvetuLwJIkA', y_tube=True)
+VideoGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
 !!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
-
 
 &nbsp;
 
