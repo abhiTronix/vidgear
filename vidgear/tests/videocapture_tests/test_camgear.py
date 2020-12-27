@@ -118,7 +118,11 @@ def test_threaded_queue_mode(source, options):
             camgear_frames_num += 1
         stream_camgear.stop()
         actual_frame_num = return_total_frame_count()
-        assert camgear_frames_num == actual_frame_num
+        if "THREADED_QUEUE_MODE" in options and not options["THREADED_QUEUE_MODE"]:
+            # emulate frame skipping
+            assert camgear_frames_num < actual_frame_num
+        else:
+            assert camgear_frames_num == actual_frame_num
     except Exception as e:
         if isinstance(e, RuntimeError) and source == "im_not_a_source.mp4":
             pass
