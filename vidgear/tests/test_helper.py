@@ -47,6 +47,8 @@ from vidgear.gears.helper import (
     get_valid_ffmpeg_path,
     download_ffmpeg_binaries,
     generate_auth_certificates,
+    get_supported_resolution,
+    dimensions_to_resolutions,
 )
 from vidgear.gears.asyncio.helper import generate_webdata, validate_webdata
 
@@ -432,6 +434,44 @@ def test_extract_time(value, result):
     try:
         results = extract_time(value)
         assert results == result, "Extract time function test Failed!"
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "value, result",
+    [
+        (["256x144", "1280x720", "3840x2160"], ["144p", "720p", "2160p"]),
+        (["480p", "1920x1080"], ["480p", "1080p"]),
+        ("invalid", []),
+    ],
+)
+def test_dimensions_to_resolutions(value, result):
+    """
+    Testing dimensions_to_resolutions function
+    """
+    try:
+        results = dimensions_to_resolutions(value)
+        assert results == result, "dimensions_to_resolutions function Failed!"
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "value, result",
+    [
+        ("360P", "360p"),
+        ("720p", "720p"),
+        ("invalid", "best"),
+    ],
+)
+def test_get_supported_resolution(value, result):
+    """
+    Testing get_supported_resolution function
+    """
+    try:
+        results = get_supported_resolution(value, logging=True)
+        assert results == result, "get_supported_resolution function Failed!"
     except Exception as e:
         pytest.fail(str(e))
 

@@ -106,6 +106,9 @@ before_script:
     bash scripts/bash/prepare_dataset.sh;
     python -m pip install .;
     fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [[ $TRAVIS_PYTHON_VERSION == 3.7 ]]; then
+    export VIDGEAR_LOGFILE=$HOME
+    fi
 
 script:
   - function keep_alive() { while true; do echo -en "\a"; sleep 60; done }

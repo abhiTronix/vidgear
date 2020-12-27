@@ -89,8 +89,8 @@ test_data = [
         return_testvideo_path(),
         {"CAP_PROP_FRAME_WIDTH ": 320, "CAP_PROP_FRAME_HEIGHT": 240},
     ),
-    (return_testvideo_path(), {"im_wrong": True}),
-    ("im_not_a_source.mp4", {}),
+    (return_testvideo_path(), {"im_wrong": True, "THREADED_QUEUE_MODE": False}),
+    ("im_not_a_source.mp4", {"THREADED_QUEUE_MODE": "invalid"}),
 ]
 
 

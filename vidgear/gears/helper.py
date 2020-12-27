@@ -110,11 +110,14 @@ def check_CV_version():
         return 3
 
 
-def check_gstreamer_support():
+def check_gstreamer_support(logging=False):
     """
     ### check_gstreamer_support
 
     Checks whether OpenCV is compiled with Gstreamer(`>=1.0.0`) support.
+
+    Parameters:
+        logging (bool): enables logging for its operations
 
     **Returns:** A Boolean value
     """
@@ -123,11 +126,14 @@ def check_gstreamer_support():
         x.strip()
         for x in raw.split("\n")
         if x and re.search(r"GStreamer[,-:]+\s*(?:YES|NO)", x)
-    ][0]
-    if "YES" in gst:
-        version = re.search(r"(\d+\.)?(\d+\.)?(\*|\d+)", gst)
+    ]
+    if gst and "YES" in gst[0]:
+        version = re.search(r"(\d+\.)?(\d+\.)?(\*|\d+)", gst[0])
+        if logging:
+            logger.debug("Found GStreamer version:{}".format(version[0]))
         return version[0] >= "1.0.0"
     else:
+        logger.warning("GStreamer not found!")
         return False
 
 

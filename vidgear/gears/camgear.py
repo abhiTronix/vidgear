@@ -87,7 +87,7 @@ class CamGear:
         # check if Stream-Mode is ON (True)
         if stream_mode:
             # check GStreamer backend support
-            gst_support = check_gstreamer_support()
+            gst_support = check_gstreamer_support(logging=logging)
             # handle special Stream Mode parameters
             stream_resolution = get_supported_resolution(
                 options.pop("STREAM_RESOLUTION", "best"), logging=logging
@@ -124,7 +124,7 @@ class CamGear:
                         if is_live:
                             # Enforce GStreamer backend for YouTube-livestreams
                             if logging:
-                                logger.debug(
+                                logger.critical(
                                     "YouTube livestream URL detected. Enforcing GStreamer backend."
                                 )
                             backend = cv2.CAP_GSTREAMER
