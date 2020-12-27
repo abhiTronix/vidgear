@@ -107,7 +107,8 @@ before_script:
     python -m pip install .;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [[ $TRAVIS_PYTHON_VERSION == 3.7 ]]; then
-    export VIDGEAR_LOGFILE=$HOME;
+    mkdir -p $HOME/logs;
+    export VIDGEAR_LOGFILE=$HOME/logs;
     fi
 
 script:

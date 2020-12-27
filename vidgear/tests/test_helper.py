@@ -46,6 +46,7 @@ from vidgear.gears.helper import (
     get_video_bitrate,
     get_valid_ffmpeg_path,
     download_ffmpeg_binaries,
+    check_gstreamer_support,
     generate_auth_certificates,
     get_supported_resolution,
     dimensions_to_resolutions,
@@ -482,6 +483,17 @@ def test_get_video_bitrate():
     """
     try:
         get_video_bitrate(640, 480, 60.0, 0.1)
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+@pytest.mark.skipif(platform.system() in ["Darwin", "Windows"], reason="Not supported")
+def test_check_gstreamer_support():
+    """
+    Testing check_gstreamer_support function
+    """
+    try:
+        assert check_gstreamer_support(), "Test check_gstreamer_support failed!"
     except Exception as e:
         pytest.fail(str(e))
 
