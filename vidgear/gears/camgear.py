@@ -19,7 +19,6 @@ limitations under the License.
 """
 # import the necessary packages
 
-import pafy
 import cv2
 import time
 import logging as log
@@ -30,6 +29,7 @@ from .helper import (
     capPropId,
     logger_handler,
     check_CV_version,
+    restore_levelnames,
     youtube_url_validator,
     get_supported_resolution,
     check_gstreamer_support,
@@ -102,6 +102,10 @@ class CamGear:
                 # detect whether a YouTube URL
                 video_url = youtube_url_validator(source)
                 if video_url:
+                    # import backend library
+                    import pafy
+
+                    logger.info("Using Youtube-dl Backend")
                     # create new pafy object
                     source_object = pafy.new(video_url, ydl_opts=stream_params)
                     # extract all valid video-streams
@@ -177,12 +181,39 @@ class CamGear:
                             )
                         )
                 else:
-                    # raise error if something is wrong with Youtube URL.
-                    raise RuntimeError(
-                        "[CamGear:ERROR] :: Invalid `{}` Youtube URL cannot be processed!".format(
-                            source
+                    # import backend library
+                    from streamlink import Streamlink
+
+                    restore_levelnames()
+                    logger.info("Using Streamlink Backend")
+                    # check session
+                    session = Streamlink()
+                    # extract streams
+                    streams = session.streams(source)
+                    # set parameters
+                    for key, value in stream_params:
+                        session.set_option(key, value)
+                    # select valid stream resolutions
+                    if streams:
+                        # check whether stream-resolution was specified and available
+                        if not stream_resolution in streams.keys():
+                            # if unavailable
+                            logger.warning(
+                                "Specified stream-resolution `{}` is not available. Reverting to `best`!".format(
+                                    stream_resolution
+                                )
+                            )
+                            # revert to best
+                            stream_resolution = "best"
+                        # extract url
+                        source = streams[stream_resolution].url
+                    else:
+                        # raise error if something is wrong with URL.
+                        raise RuntimeError(
+                            "[CamGear:ERROR] :: Invalid `{}` URL cannot be processed!".format(
+                                source
+                            )
                         )
-                    )
             except Exception as e:
                 # raise error if something went wrong
                 raise ValueError(

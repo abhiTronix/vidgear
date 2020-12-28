@@ -135,6 +135,7 @@ def test_threaded_queue_mode(source, options):
     [
         ("https://youtu.be/uCy5OuSQnyA", "best", "invalid"),
         ("https://youtu.be/NMre6IAAAiU", "invalid", {"nocheckcertificate": True}),
+        ("https://www.dailymotion.com/video/x7xsoud", "720p", {"hls-live-edge": 3.0}),
         ("im_not_a_url", "", {}),
     ],
 )

@@ -40,7 +40,7 @@ ScreenGear(monitor=-1) # to fetch frames from all connected multiple screens
 
 ## **`backend`**
 
-This parameter enables [`pyscreenshot`](https://github.com/BoboTiG/python-mss) usage and select suitable backend for extracting frames in ScreenGear. The user have the authority of selecting suitable backend which generates best performance as well as the most compatible with their machines. The possible values are: `default` ,`pil` ,`mss` ,`scrot` ,`maim` ,`imagemagick` ,`pyqt5` ,`pyqt` ,`pyside2` ,`pyside` ,`wx` ,`pygdk3` ,`mac_screencapture` ,`mac_quartz` ,`gnome_dbus` ,`gnome-screenshot` ,`kwin_dbus`. More information on these backends can be found [here ➶](https://github.com/ponty/pyscreenshot)
+This parameter enables [`pyscreenshot`](https://github.com/BoboTiG/python-mss) usage and select suitable backend for extracting frames in ScreenGear. The user have the authority of selecting suitable backend which generates best performance as well as the most compatible with their machines. The possible values are: `pil`, `mss`, `scrot`, `maim`, `imagemagick`, `pyqt5`, `pyqt`, `pyside2`, `pyside`, `wx`, `pygdk3`, `mac_screencapture`, `mac_quartz`, `gnome_dbus`, `gnome-screenshot`, `kwin_dbus`. *More information on these backends can be found [here ➶](https://github.com/ponty/pyscreenshot)*
 
 !!! note "Performance Benchmarking of each backend can be found [here ➶](https://github.com/ponty/pyscreenshot#performance)"
 

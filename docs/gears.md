@@ -39,7 +39,7 @@ These Gears can be classified as follows:
 
 > **Basic Function:** Retrieves [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames from various sources.
 
-* [CamGear](camgear/overview/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/YouTube-Video-URLs.
+* [CamGear](camgear/overview/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
 * [PiGear](pigear/overview/): Multi-Threaded API targeting various Raspberry-Pi Camera Modules.
 * [ScreenGear](screengear/overview/): Multi-Threaded API targeting ultra-fast Screencasting.    
 * [VideoGear](videogear/overview/): Common Video-Capture API with internal [Video Stabilizer](stabilizer/overview/) wrapper. 
@@ -52,9 +52,13 @@ These Gears can be classified as follows:
 
 ### C. Streaming Gears
 
-> **Basic Function:** Transcodes files & [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames for streaming.
+> **Basic Function:** Transcodes/Broadcasts files & [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames for streaming.
 
 * [StreamGear](streamgear/overview/): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
+
+* **Asynchronous I/O Streaming Gear:**
+
+    * [WebGear](webgear/overview/): ASGI Video-Server that broadcasts Live Video-Frames to any web-browser on the network.
 
 ### D. Network Gears
 
@@ -62,9 +66,8 @@ These Gears can be classified as follows:
 
 * [NetGear](netgear/overview/): Handles High-Performance Video-Frames & Data Transfer between interconnecting systems over the network.
 
-* **Asynchronous I/O Network Gears:**
+* **Asynchronous I/O Network Gear:**
 
-    * [WebGear](webgear/overview/): ASGI Video-Server that broadcasts Live Video-Frames to any web-browser on the network.
     * [NetGear_Async](netgear_async/overview/): Immensely Memory-Efficient Asyncio Video-Frames Network Messaging Framework.
 
 &thinsp;

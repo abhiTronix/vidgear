@@ -64,13 +64,68 @@ stream.stop()
 
 &nbsp; 
 
+## Using Camgear with Streaming Websites
+
+CamGear API provides direct support for piping video streams from various big streaming services like [Twitch](https://www.twitch.tv/), [Livestream](https://livestream.com/), [Dailymotion](https://www.dailymotion.com/live), and [many more ➶](https://streamlink.github.io/plugin_matrix.html#plugins). All you have to do is to provide the desired Video's URL to its `source` parameter, and enable the [`stream_mode`](../params/#stream_mode) parameter. The complete usage example is as follows:
+
+!!! bug "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently, You must always use [GStreamer backend _(`backend=cv2.CAP_GSTREAMER`)_](../params/#backend) for  Livestreams _(such as Twitch URLs)_. Checkout [this FAQ ➶](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
+
+!!! info "CamGear also provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(streamlink) parameters)_ with its `option` dictionary parameter. More information can be found [here ➶](../advanced/source_params/#exclusive-camgear-parameters)"
+
+```python
+# import required libraries
+from vidgear.gears import CamGear
+import cv2
+
+# set desired quality as 720p
+options = {"STREAM_RESOLUTION": "720p"}
+
+# Add any desire Video URL as input source
+# for e.g https://www.dailymotion.com/video/x7xsoud
+# and enable Stream Mode (`stream_mode = True`)
+stream = CamGear(
+    source="https://www.dailymotion.com/video/x7xsoud",
+    stream_mode=True,
+    logging=True,
+    **options
+).start()
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # Show output window
+    cv2.imshow("Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+```
+
+&nbsp; 
+
 ## Using Camgear with Youtube Videos
 
 CamGear API provides direct support for **Live _(with GStreamer)_ + Normal YouTube Video frames pipelining**. All you have to do is to provide the desired YouTube Video's URL to its `source` parameter and enable the [`stream_mode`](../params/#stream_mode) parameter. The complete usage example is as follows:
 
-!!! danger "To workaround a [**bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225), CamGear automatically enforces [GStreamer backend](../params/#backend) for YouTube-livestreams! Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
+!!! warning "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225), CamGear automatically enforces [GStreamer backend](../params/#backend) for YouTube-livestreams! Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
 
-!!! info "CamGear also provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API parameters)_ with its `option` dictionary parameter. More information can be found [here ➶](../advanced/source_params/#exclusive-camgear-parameters)"
+!!! info "CamGear also provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(youtube-dl) parameters)_ with its `option` dictionary parameter. More information can be found [here ➶](../advanced/source_params/#exclusive-camgear-parameters)"
 
 
 ```python

@@ -53,14 +53,14 @@ def logger_handler():
     """
     ### logger_handler
 
-    Returns a color formatted logger handler
+    Returns the logger handler
 
     **Returns:** A logger handler
     """
     # logging formatter
     formatter = ColoredFormatter(
-        "%(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
-        datefmt=None,
+        "%(bold_cyan)s%(asctime)s :: %(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
+        datefmt="%H:%M:%S",
         reset=True,
         log_colors={
             "INFO": "bold_green",
@@ -80,12 +80,15 @@ def logger_handler():
             os.path.dirname(file_path), os.W_OK
         ):
             file_path = (
-                os.path.join(file_path, "log.txt")
+                os.path.join(file_path, "vidgear.log")
                 if os.path.isdir(file_path)
                 else file_path
             )
             handler = log.FileHandler(file_path, mode="a")
-            formatter = log.Formatter("%(name)s :: %(levelname)s :: %(message)s")
+            formatter = log.Formatter(
+                "%(asctime)s :: %(name)s :: %(levelname)s :: %(message)s",
+                datefmt="%H:%M:%S",
+            )
 
     handler.setFormatter(formatter)
     return handler
@@ -96,6 +99,23 @@ logger = log.getLogger("Helper")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+
+
+def restore_levelnames():
+    """
+    ### restore_levelnames
+
+    Auxiliary method to restore logger levelnames.
+    """
+    default_levelnames = {
+        log.CRITICAL: "CRITICAL",
+        log.ERROR: "ERROR",
+        log.WARN: "WARN",
+        log.INFO: "INFO",
+        log.DEBUG: "DEBUG",
+    }
+    for level, name in default_levelnames.items():
+        log.addLevelName(level, name)
 
 
 def check_CV_version():

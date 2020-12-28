@@ -34,25 +34,28 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 * **`custom_data_location`** _(string)_ : Can be used to change/alter [*default location*](../overview/#default-location) path to somewhere else. Its usage is as follows:
 
     ```python
-    options = {"custom_data_location": "/home/foo/foo1"} #setdefault location to '/home/foo/foo1'
+    # set default location to '/home/foo/foo1'
+    options = {"custom_data_location": "/home/foo/foo1"}
     # assign it
     WebGear(logging=True, **options)
     ```
 
 * **`overwrite_default_files`** _(boolean)_ : Can be used to force trigger the [Auto-generation process](../overview/#auto-generation-process) to overwrite existing data-files. Its usage is as follows:
 
+    !!! danger "Remember only [downloaded files](../overview/#auto-generation-process) will be overwritten in this process, and any other file/folder will NOT be affected/overwritten."
+
     ```python
-    options = {"overwrite_default_files": True} #force trigger the Auto-generation process
+    # force trigger the Auto-generation process
+    options = {"overwrite_default_files": True}
     # assign it
     WebGear(logging=True, **options)
     ```
-    
-    !!! danger "Remember only [downloaded files](../overview/#auto-generation-process) will be overwritten in this process, and any other file/folder will NOT be affected/overwritten."
 
 * **`frame_size_reduction`** _(int/float)_ : This attribute controls the size reduction _(in percentage)_ of the frame to be streamed on Server._ The value defaults to `20`, and must be no higher than `90` _(fastest, max compression, Barely Visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40-60`. Its usage is as follows:
 
     ```python
-    options = {"frame_size_reduction": 50} #frame-size will be reduced by 50%
+    # frame-size will be reduced by 50%
+    options = {"frame_size_reduction": 50} 
     # assign it
     WebGear(logging=True, **options)
     ```
@@ -65,7 +68,8 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     *  **`frame_jpeg_quality`** _(integer)_ : It controls the JPEG encoder quality and value varies from `0` to `100` (the higher is the better quality but performance will be lower). Its default value is `95`. Its usage is as follows:
 
         ```python
-        options = {"frame_jpeg_quality": 80} #JPEG will be encoded at 80% quality.
+        # JPEG will be encoded at 80% quality
+        options = {"frame_jpeg_quality": 80}
         # assign it
         WebGear(logging=True, **options)
         ```
@@ -73,7 +77,8 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     * **`frame_jpeg_optimize`** _(boolean)_ : It enables various JPEG compression optimizations such as Chroma subsampling, Quantization table, etc. Its default value is `False`. Its usage is as follows:
 
         ```python
-        options = {"frame_jpeg_optimize": True} #JPEG optimizations are enabled.
+        # JPEG optimizations are enabled
+        options = {"frame_jpeg_optimize": True}
         # assign it
         WebGear(logging=True, **options)
         ```
@@ -81,7 +86,8 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     * **`frame_jpeg_progressive`** _(boolean)_ : It enables **Progressive** JPEG encoding instead of the **Baseline**.   Progressive Mode. Its default value is `False` means baseline mode is in-use. Its usage is as follows:
 
         ```python
-        options = {"frame_jpeg_progressive": True} #Progressive JPEG encoding enabled.
+        # Progressive JPEG encoding enabled
+        options = {"frame_jpeg_progressive": True}
         # assign it
         WebGear(logging=True, **options)
         ```
@@ -192,54 +198,67 @@ This parameter defines the source for the input stream.
 
 Its valid input can be one of the following: 
 
-* **Index (*integer*):** _Valid index of the connected video device, for e.g `0`, or `1`, or `2` etc. as follows:_
+- [x] **Index (*integer*):** _Valid index of the connected video device, for e.g `0`, or `1`, or `2` etc. as follows:_
 
     ```python
     WebGear(source=0)
     ```
 
-* **Filepath (*string*):** _Valid path of the video file, for e.g `"/home/foo.mp4"` as follows:_
+- [x] **Filepath (*string*):** _Valid path of the video file, for e.g `"/home/foo.mp4"` as follows:_
 
     ```python
     WebGear(source='/home/foo.mp4')
     ```
 
-* **YouTube Video's URL (*string*):** _Valid Youtube video URL as input when YouTube Mode is enabled(*i.e. `stream_mode=True`*), for e.g `"https://youtu.be/bvetuLwJIkA"` as follows:_
+- [x] **Streaming Services URL Address (*string*):** _Valid Video URL as input when Stream Mode is enabled(*i.e. `stream_mode=True`*)_ 
 
-    !!! info "Valid YouTube URL format"
+    !!! quote "WebGear automatically detects whether `source` belong to YouTube or elsewhere, and handles it with appropriate API."
 
-        All YouTube URLS with following format are supported:
+    * **Youtube URLs:** CamGear utilizes `pafy` with `youtube-dl` backend. For example `"https://youtu.be/bvetuLwJIkA"` as follows:
 
-        * `https://youtu.be/{video-id}`
-        * `http://www.youtube.com/watch?v={video-id}`
-        * `http://www.youtube.com/v/{video-id}`
-        * `{video-id}`
+        ??? info "Valid YouTube URL formats"
 
-    ```python
-    WebGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
-    ```
+            All YouTube URLS with following format are supported:
 
-* **Network Address (*string*):** _Valid (`http(s), rtp, rstp, rtmp, mms, etc.`) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
+            * `https://youtu.be/{video-id}`
+            * `http://www.youtube.com/watch?v={video-id}`
+            * `http://www.youtube.com/v/{video-id}`
+            * `{video-id}`
+
+        ```python
+        WebGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
+        ```
+
+    * **Streaming Websites URLs:** CamGear utilizes `streamlink` backend. For example `"https://www.dailymotion.com/video/x7xsoud"` as follows:
+
+        ??? info "Supported Streaming Websites"
+
+            The list of all supported Streaming Websites URLs can be found [here ➶](https://streamlink.github.io/plugin_matrix.html#plugins)
+
+        ```python
+        WebGear(source='https://www.dailymotion.com/video/x7xsoud', stream_mode=True)
+        ```
+
+- [x] **Network Address (*string*):** _Valid (`http(s)`, `rtp`, `rstp`, `rtmp`, `mms`, etc.) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
 
     ```python
     WebGear(source='rtsp://192.168.31.163:554/')
     ```
 
-*  **GStreamer Pipeline:** 
+- [x] **GStreamer Pipeline:** 
    
-    WebGear API also supports GStreamer Pipeline.
+    CamGear API also supports GStreamer Pipeline.
 
     !!! warning "Requirements for GStreamer Pipelining"
 
-        Successful GStreamer Pipelining needs your OpenCV to be built with GStreamer support. You can easily check it by running `print(cv2.getBuildInformation())` python command and see if output contains something similar as follows:
+        Successful GStreamer Pipelining needs your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
+
+        Thereby, You can easily check GStreamer support by running `print(cv2.getBuildInformation())` python command and see if output contains something similar as follows:
 
          ```sh
          Video I/O:
-          ...
-              GStreamer:                   
-                base:                      YES (ver 1.8.3)
-                video:                     YES (ver 1.8.3)
-                app:                       YES (ver 1.8.3)
+         ...
+              GStreamer:                   YES (ver 1.8.3)
          ...
          ```
 
@@ -255,11 +274,11 @@ Its valid input can be one of the following:
 
 This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), the WebGear API will interpret the given `source` input as YouTube URL address. 
 
-!!! warning "WebGear will automatically enforce GStreamer backend _(backend=`cv2.CAP_GSTREAMER`)_ for YouTube-livestreams!"
+!!! bug "Due to a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend _(`backend=cv2.CAP_GSTREAMER`)_](#backend) for any livestreams _(such as Twitch)_."
 
-!!! tip "Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support!"
+!!! warning "WebGear automatically enforce GStreamer backend _(backend=`cv2.CAP_GSTREAMER`)_ for YouTube-livestreams!"
 
-!!! error "WebGear will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support!"
+!!! error "WebGear will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support. Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
 
 **Data-Type:** Boolean
 
@@ -280,6 +299,8 @@ WebGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ### **`backend`**
 
 This parameter manually selects the backend for OpenCV's VideoCapture class _(only if specified)_. 
+
+!!! warning "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225), WebGear automatically enforce GStreamer backend(`backend=cv2.CAP_GSTREAMER`) for YouTube-livestreams in [Stream Mode](#stream_mode). This behavior discards any `backend` parameter value for those streams."
 
 **Data-Type:** Integer
 
