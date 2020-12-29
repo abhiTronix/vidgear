@@ -61,16 +61,16 @@ jobs:
         shell: bash
       - name: recheck pip_dependencies
         run: pip install .
-      - name: pytest  with_ENV
+      - name: pytest with_ENV
         run: |
           mkdir -p $HOME/logs
           pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         env:
           VIDGEAR_LOGFILE: $HOME/logs
-        if: success() && ${{ matrix.python-version }} == "3.7"
-      - name: pytest  without_ENV
+        if: success() && ${{ matrix.python-version }} == 3.7
+      - name: pytest without_ENV
         run: |
           pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        if: success() && ${{ matrix.python-version }} != "3.7"
+        if: success() && ${{ matrix.python-version }} != 3.7
