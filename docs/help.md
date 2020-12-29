@@ -75,11 +75,11 @@ Let others know how you are using VidGear and why you like it!
 
 ## Help Author
 
-You can financially support the author through ko-fi 🤝:
+Donations help keep VidGear's Development alive and motivate me _(author)_. Giving a little means a lot, even the smallest contribution can make a huge difference. You can financially support through ko-fi 🤝:
 
 <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#eba100', 'W7W8WTYO');kofiwidget2.draw();</script> 
 
-Thanks!
+Thanks a million! :blush:
 
 
 &nbsp; 

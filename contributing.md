@@ -84,9 +84,9 @@ You can be a [**Stargazer 🌟**][stargazer] by starring this framework, it help
 
 ## Love using VidGear? 
 
-> VidGear is free, but rely on your support :heart:
+> VidGear relies on your support :heart:
 
-Donations help keep VidGear development alive. Small contributions can make a huge difference.
+Donations help keep VidGear's Development alive. Giving a little means a lot, even the smallest contribution can make a huge difference.
 
 
 [![ko-fi][kofi-badge]][kofi]
