@@ -193,27 +193,24 @@ class CamGear:
                     # set parameters
                     for key, value in stream_params:
                         session.set_option(key, value)
-                    # select valid stream resolutions
-                    if streams:
-                        # check whether stream-resolution was specified and available
-                        if not stream_resolution in streams.keys():
-                            # if unavailable
-                            logger.warning(
-                                "Specified stream-resolution `{}` is not available. Reverting to `best`!".format(
-                                    stream_resolution
-                                )
-                            )
-                            # revert to best
-                            stream_resolution = "best"
-                        # extract url
-                        source = streams[stream_resolution].url
-                    else:
-                        # raise error if something is wrong with URL.
-                        raise RuntimeError(
-                            "[CamGear:ERROR] :: Invalid `{}` URL cannot be processed!".format(
-                                source
+                    # select streams are available
+                    assert (
+                        streams
+                    ), "[CamGear:ERROR] :: Invalid `{}` URL cannot be processed!".format(
+                        source
+                    )
+                    # check whether stream-resolution was specified and available
+                    if not stream_resolution in streams.keys():
+                        # if unavailable
+                        logger.warning(
+                            "Specified stream-resolution `{}` is not available. Reverting to `best`!".format(
+                                stream_resolution
                             )
                         )
+                        # revert to best
+                        stream_resolution = "best"
+                    # extract url
+                    source = streams[stream_resolution].url
             except Exception as e:
                 # raise error if something went wrong
                 raise ValueError(
