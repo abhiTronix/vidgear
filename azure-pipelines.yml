@@ -1,0 +1,59 @@
+# Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#    http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+trigger:
+- testing
+
+pool:
+  vmImage: 'macOS-10.14'
+strategy:
+  matrix:
+    Python36:
+      python.version: '3.6'
+    Python37:
+      python.version: '3.7'
+    Python38:
+      python.version: '3.8'
+    Python39:
+      python.version: '3.9'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(python.version)'
+  displayName: 'Using Python $(python.version)'
+
+- bash: |
+    brew install swig
+    brew install ffmpeg
+    brew reinstall openssl
+    brew install unzip
+    brew install dos2unix
+    dos2unix scripts/bash/prepare_dataset.sh
+    chmod +x scripts/bash/prepare_dataset.sh
+  displayName: 'Install apt dependencies'
+
+- bash: |
+    bash scripts/bash/prepare_dataset.sh
+  displayName: 'Prepare dataset'
+
+- script: |
+    python -m pip install --upgrade pip wheel
+    pip install --upgrade .[asyncio] six codecov youtube-dl mpegdash
+  displayName: 'Install pip dependencies'
+
+- script: |
+    pip install --upgrade pytest pytest-asyncio pytest-cov pytest-azurepipelines
+    pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/
+  displayName: 'pytest'
