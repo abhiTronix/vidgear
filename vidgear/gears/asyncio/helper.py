@@ -176,11 +176,6 @@ def generate_webdata(path, overwrite_default=False, logging=False):
     mkdir_safe(css_static_dir, logging=logging)
     mkdir_safe(favicon_dir, logging=logging)
 
-    if len(logger.handlers) > 1:
-        logger.handlers.clear()
-        logger.addHandler(logger_handler())
-        logger.setLevel(log.DEBUG)
-
     # check if overwriting is enabled
     if overwrite_default:
         logger.critical(

@@ -20,11 +20,11 @@ limitations under the License.
 
 # Release Notes
 
-## v0.2.0-dev (In Progress)
+## v0.2.0 (In Progress)
 
 ### New Features
 
-- [x] **CamGear API**
+- [x] **CamGear API:**
     * [ ] Support for various Live-Video-Streaming services:
         + Added seamless support for live video streaming sites like Twitch, LiveStream, Dailymotion etc.
         + Implemented flexible framework around `streamlink` python library with easy control over parameters and quality.
@@ -37,7 +37,7 @@ limitations under the License.
         + Implemented new `get_supported_quality` helper method for handling specified qualities
         + Fixed Live-Stream URLs not supported by OpenCV's Videocapture and its FFmpeg.
     * [ ] Added additional `STREAM_QUALITY` and `STREAM_PARAMS` attributes.
-- [x] **ScreenGear API**
+- [x] **ScreenGear API:**
     * [ ] Multiple Backends Support:
         + Added new multiple backend support with new [`pyscreenshot`](https://github.com/ponty/pyscreenshot) python library.
         + Made `pyscreenshot` the default API for ScreenGear, replaces `mss`.
@@ -48,12 +48,12 @@ limitations under the License.
         + Added support all input from all multiple screens.
         + Updated ScreenGear Docs.
         + Updated ScreenGear CI tests.
-- [x] **Stabilizer Class** 
+- [x] **Stabilizer Class:** 
     * [ ] New Robust Error Handling with Blank Frames:
         + Elegantly handles all crashes due to Empty/Blank/Dark frames.
         + Stabilizer throws Warning with this new behavior instead of crashing.
         + Updated CI test for this feature.
-- [x] **Docs**
+- [x] **Docs:**
     * [ ] Automated Docs Versioning:
         + Implemented Docs versioning through `mike` API.
         + Separate new workflow steps to handle different versions.
@@ -79,13 +79,20 @@ limitations under the License.
     * [ ] Added custom HTML pages.
     * [ ] Added `show_root_heading` flag to disable headings in References.
     * [ ] Adjusted hue for dark-theme for better contrast.
-- [x] **Continuous Integration**
+- [x] **Continuous Integration:**
     * [ ] Maintenance Updates:
         + Added support for new `VIDGEAR_LOGFILE` environment variable in Travis CI.
         + Fixed failing CI tests.
         + Added missing CI tests.
         + Added logging for helper functions.
-- [x] **Logging**
+    * [ ] Azure-Pipeline workflow for MacOS envs
+        + Added Azure-Pipeline Workflow for testing MacOS environment.
+        + Added codecov support.
+    * [ ] GitHub Actions workflow for Linux envs
+        + Added GitHub Action work-flow for testing Linux environment (Fixes #180)
+        + Added Python-3.9 matrix to CI Testing envs in appveyor and GitHub Actions (Fixes #179)
+    * [ ] New YAML to implement GitHub Action workflow for python 3.6, 3.7, 3,8 & 3.9 matrices.
+- [x] **Logging:**
     * [ ] Added file support
         + Added `VIDGEAR_LOGFILE` environment variable to manually add file/dir path.
         + Reworked `logger_handler()` Helper methods (in asyncio too).
@@ -119,17 +126,23 @@ limitations under the License.
     * [ ] Fixed context and spellings in Docs files.
     * [ ] Simplified language for easy understanding.
     * [ ] Updated image sizes for better visibility.
+- [x] Bash Script: Updated to Latest OpenCV Binaries version and related changes
 - [x] Re-implemented overridden material theme.
 - [x] Updated docs with all new additions and examples.
+- [x] CamGear: CI Stream Mode test updated.
+- [x] Updated ReadMe.md badges.
 - [x] Updated CI tests. 
 - [x] Updated `setup.py` with new features.
 - [x] Updated `contributing.md` and `ReadMe.md`.
+- [x] Updated OpenCV version to `4.5.1-dev` in bash scripts
+- [x] Updated `changelog.md`.
 - [x] Moved WebGear API to Streaming Gears.
 - [x] Bumped Codecov.
 
 ### Breaking Updates/Changes
 
 - [x] :warning: `y_tube` parameter renamed as `stream_mode` in CamGear API!
+- [x] :warning: Removed Travis support and `travis.yml` deleted.
 
 ### Bug-fixes
 
@@ -142,6 +155,8 @@ limitations under the License.
 - [x] Fixed Missing links in docs and bump up version.
 - [x] ScreenGear BugFix: Fixed Error Handling and updated CI Tests.
 - [x] Fixed improper `mkdocs.yml` variables.
+- Fixed GStreamer plugin support in bash scripts.
+- Fixed typos in YAMLs and docs.
 - [x] Fixed Asset Colors.
 - [x] Fixed Several logging bugs.
 
