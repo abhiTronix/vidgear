@@ -41,15 +41,15 @@ def logger_handler():
     """
     ### logger_handler
 
-    Returns a color formatted logger handler
+    Returns the logger handler
 
-    **Returns:** A asyncio package logger handler
+    **Returns:** A logger handler
     """
     # logging formatter
     formatter = ColoredFormatter(
-        "%(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
-        datefmt=None,
-        reset=True,
+        "%(bold_cyan)s%(asctime)s :: %(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
+        datefmt="%H:%M:%S",
+        reset=False,
         log_colors={
             "INFO": "bold_green",
             "DEBUG": "bold_yellow",
@@ -58,8 +58,26 @@ def logger_handler():
             "CRITICAL": "bold_red,bg_white",
         },
     )
+    # check if VIDGEAR_LOGFILE defined
+    file_mode = os.environ.get("VIDGEAR_LOGFILE", False)
     # define handler
     handler = log.StreamHandler()
+    if file_mode and isinstance(file_mode, str):
+        file_path = os.path.abspath(file_mode)
+        if (os.name == "nt" or os.access in os.supports_effective_ids) and os.access(
+            os.path.dirname(file_path), os.W_OK
+        ):
+            file_path = (
+                os.path.join(file_path, "vidgear.log")
+                if os.path.isdir(file_path)
+                else file_path
+            )
+            handler = log.FileHandler(file_path, mode="a")
+            formatter = log.Formatter(
+                "%(asctime)s :: %(name)s :: %(levelname)s :: %(message)s",
+                datefmt="%H:%M:%S",
+            )
+
     handler.setFormatter(formatter)
     return handler
 

@@ -22,6 +22,7 @@ import platform
 import setuptools
 
 from pkg_resources import parse_version
+from distutils.util import convert_path
 from setuptools import setup
 
 
@@ -47,6 +48,11 @@ def test_opencv():
     return False
 
 
+pkg_version = {}
+ver_path = convert_path("vidgear/version.py")
+with open(ver_path) as ver_file:
+    exec(ver_file.read(), pkg_version)
+
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
     long_description = long_description.replace(  # patch for images
@@ -59,7 +65,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name="vidgear",
     packages=["vidgear", "vidgear.gears", "vidgear.gears.asyncio"],
-    version="0.2.0-dev3",
+    version=pkg_version["__version__"],
     description="High-performance cross-platform Video Processing Python framework powerpacked with unique trailblazing features.",
     license="Apache License 2.0",
     author="Abhishek Thakur",
@@ -68,9 +74,11 @@ setup(
         "mss",
         "numpy",
         "youtube-dl",
+        "streamlink",
         "requests",
         "pyzmq",
         "colorlog",
+        "colorama",
         "tqdm",
         "pyscreenshot",
         "Pillow",

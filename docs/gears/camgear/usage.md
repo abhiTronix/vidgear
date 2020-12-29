@@ -64,23 +64,68 @@ stream.stop()
 
 &nbsp; 
 
+## Using Camgear with Streaming Websites
+
+CamGear API provides direct support for piping video streams from various big streaming services like [Twitch](https://www.twitch.tv/), [Livestream](https://livestream.com/), [Dailymotion](https://www.dailymotion.com/live), and [many more ➶](https://streamlink.github.io/plugin_matrix.html#plugins). All you have to do is to provide the desired Video's URL to its `source` parameter, and enable the [`stream_mode`](../params/#stream_mode) parameter. The complete usage example is as follows:
+
+!!! bug "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently, You must always use [GStreamer backend _(`backend=cv2.CAP_GSTREAMER`)_](../params/#backend) for  Livestreams _(such as Twitch URLs)_. Checkout [this FAQ ➶](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
+
+!!! info "CamGear also provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(streamlink) parameters)_ with its `option` dictionary parameter. More information can be found [here ➶](../advanced/source_params/#exclusive-camgear-parameters)"
+
+```python
+# import required libraries
+from vidgear.gears import CamGear
+import cv2
+
+# set desired quality as 720p
+options = {"STREAM_RESOLUTION": "720p"}
+
+# Add any desire Video URL as input source
+# for e.g https://www.dailymotion.com/video/x7xsoud
+# and enable Stream Mode (`stream_mode = True`)
+stream = CamGear(
+    source="https://www.dailymotion.com/video/x7xsoud",
+    stream_mode=True,
+    logging=True,
+    **options
+).start()
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # Show output window
+    cv2.imshow("Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+```
+
+&nbsp; 
+
 ## Using Camgear with Youtube Videos
 
-CamGear API provides direct support for **Live + Normal YouTube Video frames pipelining**. All you have to do is to provide the desired YouTube Video's URL to its `source` parameter and enable the `y_tube` parameter. The complete usage example is as follows:
+CamGear API provides direct support for **Live _(with GStreamer)_ + Normal YouTube Video frames pipelining**. All you have to do is to provide the desired YouTube Video's URL to its `source` parameter and enable the [`stream_mode`](../params/#stream_mode) parameter. The complete usage example is as follows:
 
-!!! danger "Update Requirements"
+!!! warning "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225), CamGear automatically enforces [GStreamer backend](../params/#backend) for YouTube-livestreams! Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
 
-    If you're using `pip` installed [`opencv-python`](https://pypi.org/project/opencv-python/), then you must need to install the latest `opencv-python` or `opencv-contrib-python` binaries on your machine, along with latest `youtube-dl` and `pafy`. You can do it as follows:
-
-    ```sh
-    pip install -U opencv-python       #or install opencv-contrib-python similarly
-    pip install -U youtube-dl pafy
-    ```
-
-??? bug "Bug in Live YouTube Stream"
-
-    Due to a [**bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) with OpenCV's FFmpeg, some Live Youtube-Stream URLs playback freezes after a few seconds, and CamGear API exit with an error: `/io/opencv/modules/videoio/src/cap_images.cpp:235: error: (-5:Bad argument) CAP_IMAGES: error, expected '0?[1-9][du]' pattern`. This bug occurs with only some live YouTube streams _(not all)_ and hasn't been fixed yet. ***The only workaround for this bug is suggested [here  ➶](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638567443)***
-
+!!! info "CamGear also provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(youtube-dl) parameters)_ with its `option` dictionary parameter. More information can be found [here ➶](../advanced/source_params/#exclusive-camgear-parameters)"
 
 
 ```python
@@ -88,9 +133,11 @@ CamGear API provides direct support for **Live + Normal YouTube Video frames pip
 from vidgear.gears import CamGear
 import cv2
 
-
-# Add YouTube Video URL as input source (for e.g https://youtu.be/bvetuLwJIkA) and enable `y_tube = True`
-stream = CamGear(source="https://youtu.be/bvetuLwJIkA", y_tube=True, logging=True).start()
+# Add YouTube Video URL as input source (for e.g https://youtu.be/bvetuLwJIkA)
+# and enable Stream Mode (`stream_mode = True`)
+stream = CamGear(
+    source="https://youtu.be/bvetuLwJIkA", stream_mode=True, logging=True
+).start()
 
 # loop over
 while True:
@@ -121,46 +168,6 @@ stream.stop()
 
 &nbsp; 
 
-## Using CamGear with Network Streams
-
-You can open any network stream _(such as RTSP)_ just by providing its URL directly to CamGear's [`source`](../params/#source) parameter. The complete usage example is as follows: 
-
-```python
-# import required libraries
-from vidgear.gears import CamGear
-import cv2
-
-# open valid network video-stream
-stream = CamGear(source="rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov").start()
-
-# loop over
-while True:
-
-    # read frames from stream
-    frame = stream.read()
-
-    # check for frame if Nonetype
-    if frame is None:
-        break
-
-    # {do something with the frame here}
-
-    # Show output window
-    cv2.imshow("Output", frame)
-
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
-
-# close output window
-cv2.destroyAllWindows()
-
-# safely close video stream
-stream.stop()
-```
-
-&nbsp; 
 
 ## Using CamGear with Variable Camera Properties
 
@@ -183,7 +190,8 @@ options = {
     "CAP_PROP_FPS": 60,
 }
 
-# To open live video stream on webcam at first index(i.e. 0) device and apply source tweak parameters
+# To open live video stream on webcam at first index(i.e. 0) 
+# device and apply source tweak parameters
 stream = CamGear(source=0, logging=True, **options).start()
 
 # loop over
@@ -232,7 +240,8 @@ In following example code, we will start with [**HSV**](https://en.wikipedia.org
 from vidgear.gears import CamGear
 import cv2
 
-# Open any source of your choice, like Webcam first index(i.e. 0) and change its colorspace to `HSV`
+# Open any source of your choice, like Webcam first index(i.e. 0)
+# and change its colorspace to `HSV`
 stream = CamGear(source=0, colorspace="COLOR_BGR2HSV", logging=True).start()
 
 # loop over

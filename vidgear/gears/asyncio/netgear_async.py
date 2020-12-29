@@ -81,7 +81,7 @@ class NetGear_Async:
         stabilize=False,
         source=0,
         camera_num=0,
-        y_tube=False,
+        stream_mode=False,
         backend=0,
         colorspace=None,
         resolution=(640, 480),
@@ -108,7 +108,7 @@ class NetGear_Async:
             resolution (tuple): sets the resolution (i.e. `(width,height)`) of the Rpi source.
             framerate (int/float): sets the framerate of the Rpi source.
             source (based on input): defines the source for the input stream.
-            y_tube (bool): controls the exclusive YouTube Mode.
+            stream_mode (bool): controls the exclusive YouTube Mode.
             backend (int): selects the backend for OpenCV's VideoCapture class.
             colorspace (str): selects the colorspace of the input stream.
             logging (bool): enables/disables logging.
@@ -197,7 +197,7 @@ class NetGear_Async:
                     stabilize=stabilize,
                     source=source,
                     camera_num=camera_num,
-                    y_tube=y_tube,
+                    stream_mode=stream_mode,
                     backend=backend,
                     colorspace=colorspace,
                     resolution=resolution,

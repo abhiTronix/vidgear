@@ -25,7 +25,6 @@ limitations under the License.
 ### New Features
 
 - **StreamGear API:**
-
     * [X] New API that automates transcoding workflow for generating Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats.
     * [X] Implemented multi-platform , standalone, highly extensible and flexible wrapper around FFmpeg for generating chunked-encoded media segments of the media, and easily accessing almost all of its parameters.
     * [X] API automatically transcodes videos/audio files & real-time frames into a sequence of multiple smaller chunks/segments and also creates a Manifest file.
@@ -72,7 +71,6 @@ limitations under the License.
     * [X] New StreamGear CI tests:
         + Added IO and API initialization CI tests for its Modes.
         + Added various mode Streaming check CI tests.
-
 - **NetGear_Async API:**
     * [X] Added new `send_terminate_signal` internal method.
     * [X] Added `WindowsSelectorEventLoopPolicy()` for windows 3.8+ envs.
@@ -81,9 +79,7 @@ limitations under the License.
     * [X] Added new `timeout` attribute for controlling Timeout in Connections.
     * [X] Added missing termination optimizer (`linger=0`) flag.
     * [X] Several ZMQ Optimizer Flags added to boost performance.
-
 - **WriteGear API:**
-
     * [X] Added support for adding duplicate FFmpeg parameters to `output_params`:
         + Added new `-clones` attribute in `output_params` parameter for handing this behavior..
         + Support to pass FFmpeg parameters as list, while maintaining the exact order it was specified.
@@ -98,18 +94,14 @@ limitations under the License.
         + WriteGear will throw `ValueError` if `-output_filename` is not supported.
         + Added related CI tests and docs.
     * [X] Added `disable_force_termination` attribute in WriteGear to disable force-termination.
-
 - **NetGear API:**
-
     * [X] Added option to completely disable Native Frame-Compression:
         + Checks if any Incorrect/Invalid value is assigned on `compression_format` attribute.
         + Completely disables Native Frame-Compression.
         + Updated docs accordingly.
-
 - **CamGear API:**
     * [X] Added new and robust regex for identifying YouTube URLs.
     * [X] Moved `youtube_url_validator` to Helper.
-
 - **New `helper.py` methods:** 
     * [X] Added `validate_video` function to validate video_source.
     * [X] Added `extract_time` Extract time from give string value.
@@ -119,7 +111,6 @@ limitations under the License.
     * [X] Added new Helper CI tests.
         + Added new `check_valid_mpd` function to test MPD files validity.
         + Added `mpegdash` library to CI requirements.
-
 - **Deployed New Docs Upgrades:**
     * [X] Added new assets like _images, gifs, custom scripts, javascripts fonts etc._ for achieving better visual graphics in docs.
     * [X] Added `clappr.min.js`, `dash-shaka-playback.js`, `clappr-level-selector.min.js` third-party javascripts locally.
@@ -133,11 +124,9 @@ limitations under the License.
     * [X] Reimplemented Admonitions contexts and added new ones.
     * [X] Added StreamGear and its different modes Docs Assets.
     * [X] Added patch for images & unicodes for PiP flavored markdown in `setup.py`.
-
 - **Added `Request Info` and `Welcome` GitHub Apps to automate PR and issue workflow**
     * [X] Added new `config.yml` for customizations.
     * [X] Added various suitable configurations.
-
 - Added new `-clones` attribute to handle FFmpeg parameter clones in StreamGear and WriteGear API.
 - Added new Video-only and Audio-Only sources in bash script.
 - Added new paths in bash script for storing StreamGear & WriteGear assets temporarily.
@@ -197,7 +186,7 @@ limitations under the License.
 
 - [X] :warning: Changed Webgear API default address to `localhost` for cross-compatibility between different platforms.
 - [X] In Netgear_Async API, `source` value can now be NoneType for a custom frame-generator at Server-end only.
-- [X] Temp_(such as `/tmp` in linux)_ is now not a valid directory for WriteGear & StreamGear API outputs.
+- [X] Temp _(such as `/tmp` in linux)_ is now not a valid directory for WriteGear & StreamGear API outputs.
 - [X] Moved vidgear docs assets _(i.e images, gifs, javascripts and stylescripts)_ to `override` directory.
 
 ### Bug-fixes
@@ -213,9 +202,7 @@ limitations under the License.
 - [X] Fixed StreamGear CI bugs for Windows and CI envs.
 - [X] Fixed Typos and Indentation bugs in NetGear API.
 - [X] Fixed ZMQ throwing error on termination if all max-tries exhausted.
-- [X] Fixed `NameError` bug in NetGear API.
-- [X] Fixed `NameError` bugs in StreamGear CI.
-- [X] Fixed `NameError` in CI functions and tests.
+- [X] Fixed `NameError` bug in NetGear API and CI tests.
 - [X] Fixed `TimeoutError` bug in NetGear_Async CI tests.
 - [X] Fixed `get_valid_ffmpeg_path` throwing `TypeError` with non-string values.
 - [X] Fixed broken links in docs. 

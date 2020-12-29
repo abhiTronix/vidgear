@@ -53,14 +53,14 @@ def logger_handler():
     """
     ### logger_handler
 
-    Returns a color formatted logger handler
+    Returns the logger handler
 
     **Returns:** A logger handler
     """
     # logging formatter
     formatter = ColoredFormatter(
-        "%(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
-        datefmt=None,
+        "%(bold_cyan)s%(asctime)s :: %(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
+        datefmt="%H:%M:%S",
         reset=True,
         log_colors={
             "INFO": "bold_green",
@@ -70,8 +70,26 @@ def logger_handler():
             "CRITICAL": "bold_red,bg_white",
         },
     )
+    # check if VIDGEAR_LOGFILE defined
+    file_mode = os.environ.get("VIDGEAR_LOGFILE", False)
     # define handler
     handler = log.StreamHandler()
+    if file_mode and isinstance(file_mode, str):
+        file_path = os.path.abspath(file_mode)
+        if (os.name == "nt" or os.access in os.supports_effective_ids) and os.access(
+            os.path.dirname(file_path), os.W_OK
+        ):
+            file_path = (
+                os.path.join(file_path, "vidgear.log")
+                if os.path.isdir(file_path)
+                else file_path
+            )
+            handler = log.FileHandler(file_path, mode="a")
+            formatter = log.Formatter(
+                "%(asctime)s :: %(name)s :: %(levelname)s :: %(message)s",
+                datefmt="%H:%M:%S",
+            )
+
     handler.setFormatter(formatter)
     return handler
 
@@ -81,6 +99,23 @@ logger = log.getLogger("Helper")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+
+
+def restore_levelnames():
+    """
+    ### restore_levelnames
+
+    Auxiliary method to restore logger levelnames.
+    """
+    default_levelnames = {
+        log.CRITICAL: "CRITICAL",
+        log.ERROR: "ERROR",
+        log.WARN: "WARN",
+        log.INFO: "INFO",
+        log.DEBUG: "DEBUG",
+    }
+    for level, name in default_levelnames.items():
+        log.addLevelName(level, name)
 
 
 def check_CV_version():
@@ -93,6 +128,105 @@ def check_CV_version():
         return 4
     else:
         return 3
+
+
+def check_gstreamer_support(logging=False):
+    """
+    ### check_gstreamer_support
+
+    Checks whether OpenCV is compiled with Gstreamer(`>=1.0.0`) support.
+
+    Parameters:
+        logging (bool): enables logging for its operations
+
+    **Returns:** A Boolean value
+    """
+    raw = cv2.getBuildInformation()
+    gst = [
+        x.strip()
+        for x in raw.split("\n")
+        if x and re.search(r"GStreamer[,-:]+\s*(?:YES|NO)", x)
+    ]
+    if gst and "YES" in gst[0]:
+        version = re.search(r"(\d+\.)?(\d+\.)?(\*|\d+)", gst[0])
+        if logging:
+            logger.debug("Found GStreamer version:{}".format(version[0]))
+        return version[0] >= "1.0.0"
+    else:
+        logger.warning("GStreamer not found!")
+        return False
+
+
+def get_supported_resolution(value, logging=False):
+    """
+    ### get_supported_resolution
+
+    Parameters:
+        value (string): value to be validated
+        logging (bool): enables logging for its operations
+
+    **Returns:** Valid stream resolution
+    """
+    # default to best
+    stream_resolution = "best"
+    supported_stream_qualities = [
+        "144p",
+        "240p",
+        "360p",
+        "480p",
+        "720p",
+        "1080p",
+        "1440p",
+        "2160p",
+        "worst",
+        "best",
+    ]
+    if isinstance(value, str):
+        if value.strip().lower() in supported_stream_qualities:
+            stream_resolution = value.strip().lower()
+            if logging:
+                logger.debug(
+                    "Selecting `{}` resolution for streams.".format(stream_resolution)
+                )
+        else:
+            logger.warning(
+                "Specified stream-resolution `{}` is not supported. Reverting to `best`!".format(
+                    value
+                )
+            )
+    else:
+        logger.warning(
+            "Specified stream-resolution `{}` is Invalid. Reverting to `best`!".format(
+                value
+            )
+        )
+    return stream_resolution
+
+
+def dimensions_to_resolutions(value):
+    """
+    ### dimensions_to_resolutions
+
+    Parameters:
+        value (list): list of dimensions (e.g. `640x360`)
+
+    **Returns:** list of resolutions (e.g. `360p`)
+    """
+    supported_resolutions = {
+        "256x144": "144p",
+        "426x240": "240p",
+        "640x360": "360p",
+        "854x480": "480p",
+        "1280x720": "720p",
+        "1920x1080": "1080p",
+        "2560x1440": "1440p",
+        "3840x2160": "2160p",
+    }
+    return (
+        list(map(supported_resolutions.get, value, value))
+        if isinstance(value, list)
+        else []
+    )
 
 
 def is_valid_url(path, url=None, logging=False):

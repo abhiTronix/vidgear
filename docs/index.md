@@ -30,7 +30,7 @@ limitations under the License.
 
 > VidGear is a High-Performance **Video-Processing** Framework for building complex real-time media applications in python :fire:
 
-VidGear provides an easy-to-use, highly extensible, **Multi-Threaded + Asyncio Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [pafy][pafy], [pyscreenshot][pyscreenshot] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance.
+VidGear provides an easy-to-use, highly extensible, **Multi-Threaded + Asyncio Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance.
 
 > _"Write Less and Accomplish More"_ — VidGear's Motto
 
@@ -60,7 +60,7 @@ These Gears can be classified as follows:
 
 #### VideoCapture Gears
 
-* [CamGear](gears/camgear/overview/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/YouTube-Video-URLs.
+* [CamGear](gears/camgear/overview/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
 * [PiGear](gears/pigear/overview/): Multi-Threaded API targeting various Raspberry-Pi Camera Modules.
 * [ScreenGear](gears/screengear/overview/): Multi-Threaded API targeting ultra-fast Screencasting.    
 * [VideoGear](gears/videogear/overview/): Common Video-Capture API with internal [Video Stabilizer](gears/stabilizer/overview/) wrapper.
@@ -73,13 +73,16 @@ These Gears can be classified as follows:
 
 * [StreamGear](gears/streamgear/overview/): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
 
+* **Asynchronous I/O Streaming Gear:**
+
+    * [WebGear](gears/webgear/overview/): ASGI Video-Server that broadcasts Live Video-Frames to any web-browser on the network.
+
 #### Network Gears
 
 * [NetGear](gears/netgear/overview/): Handles High-Performance Video-Frames & Data Transfer between interconnecting systems over the network.
 
-  * **Asynchronous I/O Network Gears:**
+* **Asynchronous I/O Network Gear:**
 
-    * [WebGear](gears/webgear/overview/): ASGI Video-Server that broadcasts Live Video-Frames to any web-browser on the network.
     * [NetGear_Async](gears/netgear_async/overview/): Immensely Memory-Efficient Asyncio Video-Frames Network Messaging Framework. 
 
 &thinsp;
@@ -144,3 +147,4 @@ External URLs
 [stargazer]: https://github.com/abhiTronix/vidgear/stargazers
 [ffmpeg]:https://www.ffmpeg.org/
 [pyscreenshot]:https://github.com/ponty/pyscreenshot
+[streamlink]:https://streamlink.github.io/

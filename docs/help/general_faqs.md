@@ -8,7 +8,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-   http://www.apache.org/licenses/LICENSE-2.0
+	 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -51,16 +51,44 @@ Finally, once done, see [Switching from OpenCV ➶](../../switch_from_cv/) and g
 &nbsp;
 
 
-## How to install VidGear python library on my machine?
+## How to log to a file in VidGear?
 
-**Answer:** See [Installation Notes ➶](../../installation/).
+**Answer:** VidGear provides exclusive **`VIDGEAR_LOGFILE`** environment variable to enable logging to a file while logging is enabled _(i.e. `logging=True`)_ on respective Gear. You just have to set ==directory pathname _(automatically creates `vidgear.log` file)_== or a ==log file pathname== itself as value for this  environment variable. This can be done on various platfroms/OSes as follows:
 
-&nbsp;
+!!! info "Remember enabling this logging to a file will completely disable any output on the terminal." 
 
+=== "Linux OS"
 
-## How do I report an issue?
+	```sh
+	# path to file
+	export VIDGEAR_LOGFILE="$HOME/foo.log"
 
-**Answer:** See [Reporting an Issue ➶](../../contribution/issue/)
+	# or just directory path 
+	# !!! Make sure `foo` already exists !!!
+	export VIDGEAR_LOGFILE="$HOME/foo"
+	```
+
+=== "Windows OS (Powershell)"
+
+	```powershell
+	# path to file
+	$Env:VIDGEAR_LOGFILE = "D:\foo.log"
+
+	# or just directory path 
+	# !!! Make sure `foo` already exists !!!
+	$Env:VIDGEAR_LOGFILE = "D:\foo"
+	```
+
+=== "OSX/Mac OS"
+	
+	```sh
+	# path to file
+	export VIDGEAR_LOGFILE="$HOME/foo.log"
+	
+	# or just directory path 
+	# !!! Make sure `foo` already exists !!!
+	export VIDGEAR_LOGFILE="$HOME/foo"
+	```
 
 &nbsp;
 

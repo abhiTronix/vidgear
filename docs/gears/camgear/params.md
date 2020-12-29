@@ -35,54 +35,67 @@ This parameter defines the source for the input stream.
 
 Its valid input can be one of the following: 
 
-* **Index (*integer*):** _Valid index of the connected video device, for e.g `0`, or `1`, or `2` etc. as follows:_
+- [x] **Index (*integer*):** _Valid index of the connected video device, for e.g `0`, or `1`, or `2` etc. as follows:_
 
     ```python
     CamGear(source=0)
     ```
 
-* **Filepath (*string*):** _Valid path of the video file, for e.g `"/home/foo.mp4"` as follows:_
+- [x] **Filepath (*string*):** _Valid path of the video file, for e.g `"/home/foo.mp4"` as follows:_
 
     ```python
     CamGear(source='/home/foo.mp4')
     ```
 
-* **YouTube Video's URL (*string*):** _Valid Youtube video URL as input when YouTube Mode is enabled(*i.e. `y_tube=True`*), for e.g `"https://youtu.be/bvetuLwJIkA"` as follows:_
+- [x] **Streaming Services URL Address (*string*):** _Valid Video URL as input when Stream Mode is enabled(*i.e. `stream_mode=True`*)_ 
 
-    !!! info "Valid YouTube URL format"
+    !!! quote "CamGear automatically detects whether `source` belong to YouTube or elsewhere, and handles it with appropriate API."
 
-        All YouTube URLS with following format are supported:
+    * **Youtube URLs:** CamGear utilizes `pafy` with `youtube-dl` backend. For example `"https://youtu.be/bvetuLwJIkA"` as follows:
 
-        * `https://youtu.be/{video-id}`
-        * `http://www.youtube.com/watch?v={video-id}`
-        * `http://www.youtube.com/v/{video-id}`
-        * `{video-id}`
+        ??? info "Valid YouTube URL formats"
 
-    ```python
-    CamGear(source='https://youtu.be/bvetuLwJIkA', y_tube=True)
-    ```
+            All YouTube URLS with following format are supported:
 
-* **Network Address (*string*):** _Valid (`http(s), rtp, rstp, rtmp, mms, etc.`) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
+            * `https://youtu.be/{video-id}`
+            * `http://www.youtube.com/watch?v={video-id}`
+            * `http://www.youtube.com/v/{video-id}`
+            * `{video-id}`
+
+        ```python
+        CamGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
+        ```
+
+    * **Streaming Websites URLs:** CamGear utilizes `streamlink` backend. For example `"https://www.dailymotion.com/video/x7xsoud"` as follows:
+
+        ??? info "Supported Streaming Websites"
+
+            The list of all supported Streaming Websites URLs can be found [here ➶](https://streamlink.github.io/plugin_matrix.html#plugins)
+
+        ```python
+        CamGear(source='https://www.dailymotion.com/video/x7xsoud', stream_mode=True)
+        ```
+
+- [x] **Network Address (*string*):** _Valid (`http(s)`, `rtp`, `rstp`, `rtmp`, `mms`, etc.) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
 
     ```python
     CamGear(source='rtsp://192.168.31.163:554/')
     ```
 
-*  **GStreamer Pipeline:** 
+- [x] **GStreamer Pipeline:** 
    
     CamGear API also supports GStreamer Pipeline.
 
     !!! warning "Requirements for GStreamer Pipelining"
 
-        Successful GStreamer Pipelining needs your OpenCV to be built with GStreamer support. You can easily check it by running `print(cv2.getBuildInformation())` python command and see if output contains something similar as follows:
+        Successful GStreamer Pipelining needs your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
+
+        Thereby, You can easily check GStreamer support by running `print(cv2.getBuildInformation())` python command and see if output contains something similar as follows:
 
          ```sh
          Video I/O:
-          ...
-              GStreamer:                   
-                base:                      YES (ver 1.8.3)
-                video:                     YES (ver 1.8.3)
-                app:                       YES (ver 1.8.3)
+         ...
+              GStreamer:                   YES (ver 1.8.3)
          ...
          ```
 
@@ -94,9 +107,15 @@ Its valid input can be one of the following:
 
 &nbsp;
 
-## **`y_tube`**
+## **`stream_mode`**
 
-This parameter controls the YouTube Mode, .i.e if enabled(`y_tube=True`), the CamGear API will interpret the given `source` input as YouTube URL address. 
+This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), the CamGear API will interpret the given `source` input as YouTube URL address. 
+
+!!! bug "Due to a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend _(`backend=cv2.CAP_GSTREAMER`)_](#backend) for any livestreams _(such as Twitch)_."
+
+!!! warning "CamGear automatically enforce GStreamer backend _(backend=`cv2.CAP_GSTREAMER`)_ for YouTube-livestreams!"
+
+!!! error "CamGear will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support. Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
 
 **Data-Type:** Boolean
 
@@ -105,7 +124,7 @@ This parameter controls the YouTube Mode, .i.e if enabled(`y_tube=True`), the Ca
 **Usage:**
 
 ```python
-CamGear(source='https://youtu.be/bvetuLwJIkA', y_tube=True)
+CamGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
 !!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
@@ -136,6 +155,8 @@ CamGear(source=0, colorspace="COLOR_BGR2HSV")
 ## **`backend`**
 
 This parameter manually selects the backend for OpenCV's VideoCapture class _(only if specified)_. 
+
+!!! warning "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225), CamGear automatically enforce GStreamer backend(`backend=cv2.CAP_GSTREAMER`) for YouTube-livestreams in [Stream Mode](#stream_mode). This behavior discards any `backend` parameter value for those streams."
 
 **Data-Type:** Integer
 

@@ -39,7 +39,7 @@ limitations under the License.
 
 &nbsp;
 
-VidGear is a **High-Performance Video Processing Python Library** that provides an easy-to-use, highly extensible, **Multi-Threaded + Asyncio Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [pafy][pafy], [pyscreenshot][pyscreenshot] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance.
+VidGear is a **High-Performance Video Processing Python Library** that provides an easy-to-use, highly extensible, **Multi-Threaded + Asyncio Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance.
 
 VidGear primarily focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks, in just a few lines of code.
 
@@ -127,7 +127,7 @@ Each API is designed exclusively to handle/control/process different data-specif
 
 **A. Video-Capture Gears:**
 
-  * [**CamGear:**](#camgear) Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/YouTube-Video-URLs.
+  * [**CamGear:**](#camgear) Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
   * [**PiGear:**](#pigear) Multi-Threaded API targeting various Raspberry-Pi Camera Modules.
   * [**ScreenGear:**](#screengear) Multi-Threaded API targeting ultra-fast Screencasting.    
   * [**VideoGear:**](#videogear) Common Video-Capture API with internal [Video Stabilizer](https://abhitronix.github.io/vidgear/gears/stabilizer/overview/) wrapper.
@@ -140,14 +140,16 @@ Each API is designed exclusively to handle/control/process different data-specif
 
   * [**StreamGear**](#streamgear): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
 
+  * **Asynchronous I/O Streaming Gear:**
+
+    * [**WebGear:**](#webgear) ASGI Video-Server that broadcasts Live Video-Frames to any web-browser on the network.
 
 **D. Network Gears:**
 
   * [**NetGear:**](#netgear) Handles High-Performance Video-Frames & Data Transfer between interconnecting systems over the network.
 
-  * **Asynchronous I/O Network Gears:**
+  * **Asynchronous I/O Network Gear:**
 
-    * [**WebGear:**](#webgear) ASGI Video-Server that broadcasts Live Video-Frames to any web-browser on the network.
     * [**NetGear_Async:**](#netgear_async) Immensely Memory-Efficient Asyncio Video-Frames Network Messaging Framework.
 
 
@@ -162,9 +164,9 @@ Each API is designed exclusively to handle/control/process different data-specif
   <img src="docs/overrides/assets/images/camgear.png" alt="CamGear Functional Block Diagram" width="45%"/>
 </p>
 
-> *CamGear can grab ultra-fast frames from a diverse range of file-formats/devices/streams, which includes almost any IP-USB Cameras, multimedia video file-formats ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rstp, rtmp, mms, etc.`, plus support for live GStreamer's and YouTube video/live stream pipeline.*
+> *CamGear can grab ultra-fast frames from a diverse range of file-formats/devices/streams, which includes almost any IP-USB Cameras, multimedia video file-formats ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rstp, rtmp, mms, etc.`, and GStreamer's pipelines, plus direct support for live video streaming sites like YouTube, Twitch, LiveStream, Dailymotion etc.*
 
-CamGear implements a flexible, high-level, multi-threaded framework around `OpenCV's` [VideoCapture class][opencv-vc] with access almost all of its available parameters and also employs [`pafy`][pafy] python APIs for live [YouTube pipelining][youtube-doc]. Furthermore, its framework relies exclusively on [**Threaded Queue mode**][TQM-doc] for ultra-fast, error-free, and synchronized video-frame handling.
+CamGear implements a flexible, high-level, multi-threaded framework around OpenCV's [VideoCapture class][opencv-vc] with access almost all of its available parameters. CamGear also employs [streamlink][streamlink] for [piping live videos][piping-live-videos] from various streaming services and also utilizies [pafy][pafy] with [youtube-dl][youtube-dl] at its backend for [YouTube pipelining][youtube-doc]. Furthermore, its framework relies exclusively on [**Threaded Queue mode**][TQM-doc] for ultra-fast, error-free, and synchronized video-frame handling.
 
 ### CamGear API Guide:
 
@@ -686,6 +688,7 @@ Internal URLs
 [doc-vidgear-purpose]:https://abhitronix.github.io/vidgear/help/motivation/#why-is-vidgear-a-thing
 [live-stream]:https://abhitronix.github.io/vidgear/gears/writegear/compression/usage/#using-compression-mode-for-streaming-urls
 [live-audio-doc]:https://abhitronix.github.io/vidgear/gears/writegear/compression/usage/#using-compression-mode-with-live-audio-input
+[piping-live-videos]:https://abhitronix.github.io/vidgear/gears/camgear/usage/#using-camgear-with-streaming-websites
 [ffmpeg-doc]:https://abhitronix.github.io/vidgear/gears/writegear/compression/advanced/ffmpeg_install/
 [youtube-doc]:https://abhitronix.github.io/vidgear/gears/camgear/usage/#using-camgear-with-youtube-videos
 [TQM-doc]:https://abhitronix.github.io/vidgear/bonus/TQM/#threaded-queue-mode
@@ -725,6 +728,8 @@ External URLs
 -->
 [asyncio-zmq]:https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html
 [uvloop]: https://github.com/MagicStack/uvloop
+[streamlink]:https://streamlink.github.io/
+[youtube-dl]:https://youtube-dl.org/
 [pyscreenshot]:https://github.com/ponty/pyscreenshot
 [uvloop-ns]: https://github.com/MagicStack/uvloop/issues/14
 [ffmpeg]:https://www.ffmpeg.org/

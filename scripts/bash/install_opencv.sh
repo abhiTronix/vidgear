@@ -1,4 +1,3 @@
-
 #!/bin/sh
 
 # Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
@@ -55,20 +54,19 @@ cd $TMPFOLDER
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 
 RETRY=3
-while [ "$RETRY" -gt 0 ] ; do
-  curl -s "https://api.github.com/repos/abhiTronix/OpenCV-Travis-Builds/releases/latest" \
-  | grep "OpenCV-$OPENCV_VERSION-$PYTHONSUFFIX.*.deb" \
-  | cut -d : -f 2,3 \
-  | tr -d \" \
-  | xargs -n 1 curl -O -sSL
-  if [ -f $(find . -name 'OpenCV-*.deb') ];
-    then
-      echo "Downloaded OpenCV binary successfully."
-      break
-    else
-      echo "Retrying!!!"
-      (( RETRY-=1 ))
-      sleep 5
+while [ "$RETRY" -gt 0 ]; do
+  LATEST_VERSION=$(curl -s https://api.github.com/repos/abhiTronix/OpenCV-Travis-Builds/releases |
+    grep "OpenCV-$OPENCV_VERSION-$PYTHONSUFFIX.*.deb" |
+    grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")
+  echo $LATEST_VERSION
+  curl -O -sSL $LATEST_VERSION
+  if [ -f $(find . -name 'OpenCV-*.deb') ]; then
+    echo "Downloaded OpenCV binary successfully."
+    break
+  else
+    echo "Retrying!!!"
+    ((RETRY -= 1))
+    sleep 5
   fi
 done
 

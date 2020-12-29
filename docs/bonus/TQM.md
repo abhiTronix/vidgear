@@ -29,7 +29,7 @@ limitations under the License.
 
 > Threaded Queue Mode is designed exclusively for VidGear's Videocapture Gears _(namely CamGear, ScreenGear, VideoGear)_ and few Network Gears _(such as NetGear(Client's end))_ for achieving high-performance, synchronized, and error-free video-frames handling with their **Internal Multi-Threaded Frame Extractor Daemons**. 
 
-!!! info "Threaded-Queue-Mode is enabled by default, but a user [can disable it](), if extremely necessary."
+!!! info "Threaded-Queue-Mode is enabled by default, but a user [can disable it](#manually-disabling-threaded-queue-mode), if extremely necessary."
 
 &nbsp; 
 
@@ -85,7 +85,7 @@ To manually disable Threaded-Queue-Mode, VidGear provides `THREADED_QUEUE_MODE` 
 **`THREADED_QUEUE_MODE`** _(boolean)_: This attribute can be used to override Threaded-Queue-Mode mode to manually disable it:
 
 ```python
-options = {'THREADED_QUEUE_MODE': False} #to disable Threaded Queue Mode. 
+options = {'THREADED_QUEUE_MODE': False} # to disable Threaded Queue Mode. 
 ```
 
 and you can pass it to `options` dictionary parameter of the respective API.
