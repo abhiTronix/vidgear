@@ -27,7 +27,6 @@ import pytest
 import logging as log
 import platform
 import tempfile
-import youtube_dl
 
 from vidgear.gears import CamGear
 from vidgear.gears.helper import logger_handler
@@ -43,6 +42,8 @@ def return_youtubevideo_params(url):
     """
     returns Youtube Video parameters(FPS, dimensions) directly using Youtube-dl
     """
+    import youtube_dl
+
     ydl = youtube_dl.YoutubeDL(
         {
             "outtmpl": "%(id)s%(ext)s",
@@ -133,15 +134,20 @@ def test_threaded_queue_mode(source, options):
 @pytest.mark.parametrize(
     "url, quality, parameters",
     [
-        ("https://youtu.be/uCy5OuSQnyA", "best", "invalid"),
+        ("https://youtu.be/uCy5OuSQnyA", "2160p", "invalid"),
+        ("https://youtu.be/uCy5OuSQnyA", "720p", "invalid"),
         ("https://youtu.be/NMre6IAAAiU", "invalid", {"nocheckcertificate": True}),
-        ("https://www.dailymotion.com/video/x7xsoud", "invalid", {"hls-live-edge": 3.0}),
+        (
+            "https://www.dailymotion.com/video/x7xsoud",
+            "invalid",
+            {"hls-live-edge": 3.0},
+        ),
         ("im_not_a_url", "", {}),
     ],
 )
-def test_youtube_playback(url, quality, parameters):
+def test_stream_mode(url, quality, parameters):
     """
-    Testing Youtube Video Playback capabilities of VidGear
+    Testing Stream Mode Playback capabilities of CamGear
     """
     try:
         height = 0
@@ -161,21 +167,7 @@ def test_youtube_playback(url, quality, parameters):
                 height, width = frame.shape[:2]
                 break
         stream.stop()
-        # get true params
-        true_video_param = return_youtubevideo_params(url)
-        # log everything
-        logger.debug(
-            "WIDTH: {} HEIGHT: {} FPS: {}".format(
-                true_video_param[0], true_video_param[1], true_video_param[2]
-            )
-        )
         logger.debug("WIDTH: {} HEIGHT: {} FPS: {}".format(width, height, fps))
-        # assert true verses ground results
-        assert (
-            true_video_param[0] == width
-            and true_video_param[1] == height
-            and round(true_video_param[2], 1) == round(fps, 1)
-        )
     except Exception as e:
         if isinstance(e, (RuntimeError, ValueError)) and (
             url == "im_not_a_url" or platform.system() in ["Windows", "Darwin"]
