@@ -20,7 +20,7 @@
 ########################################
 
 #opencv version to install
-OPENCV_VERSION='4.2.0-dev'
+OPENCV_VERSION='4.5.1-pre'
 
 #determining system specific temp directory
 TMPFOLDER=$(python -c 'import tempfile; print(tempfile.gettempdir())')
@@ -72,7 +72,7 @@ done
 
 sudo dpkg -i OpenCV-$OPENCV_VERSION-$PYTHONSUFFIX.*.deb
 
-sudo ln -s /usr/local/lib/python$PYTHONSUFFIX/site-packages/*.so $HOME/virtualenv/python$PYTHONVERSION/lib/python$PYTHONSUFFIX/site-packages
+sudo ln -s /usr/local/lib/python$PYTHONSUFFIX/site-packages/*.so /opt/hostedtoolcache/Python/$PYTHONVERSION/x64/lib/python$PYTHONSUFFIX/site-packages
 
 sudo ldconfig
 
