@@ -89,7 +89,7 @@ jobs:
       - name: Release name_configure
         run: |
           echo "RELEASE_NAME=$(python -c 'import vidgear; print(vidgear.__version__)')" >>$GITHUB_ENV
-          shell: bash
+        shell: bash
         if: success()
       - name: mike deploy docs
         run: |
