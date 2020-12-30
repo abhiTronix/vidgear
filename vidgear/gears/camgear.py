@@ -191,7 +191,7 @@ class CamGear:
                     # extract streams
                     streams = session.streams(source)
                     # set parameters
-                    for key, value in stream_params:
+                    for key, value in stream_params.items():
                         session.set_option(key, value)
                     # select streams are available
                     assert (

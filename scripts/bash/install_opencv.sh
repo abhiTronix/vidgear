@@ -20,7 +20,7 @@
 ########################################
 
 #opencv version to install
-OPENCV_VERSION='4.2.0-dev'
+OPENCV_VERSION='4.5.1-dev'
 
 #determining system specific temp directory
 TMPFOLDER=$(python -c 'import tempfile; print(tempfile.gettempdir())')
@@ -35,17 +35,19 @@ echo $PYTHONVERSION
 echo "Installing OpenCV..."
 echo "Installing OpenCV Dependencies..."
 
-sudo apt-get install -y --allow-unauthenticated build-essential cmake pkg-config gfortran libavutil-dev ffmpeg
+sudo apt-get install -y -qq --allow-unauthenticated build-essential cmake pkg-config gfortran libavutil-dev ffmpeg
 
-sudo apt-get install -y --allow-unauthenticated yasm libv4l-dev libgtk-3-dev libtbb-dev libavresample-dev
+sudo apt-get install -y -qq --allow-unauthenticated yasm libv4l-dev libgtk-3-dev libtbb-dev libavresample-dev
 
-sudo apt-get install -y --allow-unauthenticated libavcodec-dev libavformat-dev libswscale-dev libopenexr-dev
+sudo apt-get install -y -qq --allow-unauthenticated libavcodec-dev libavformat-dev libswscale-dev libopenexr-dev
 
-sudo apt-get install -y --allow-unauthenticated libxvidcore-dev libx264-dev libatlas-base-dev libtiff5-dev python3-dev liblapacke-dev
+sudo apt-get install -y -qq --allow-unauthenticated libxvidcore-dev libx264-dev libatlas-base-dev libtiff5-dev python3-dev liblapacke-dev
 
-sudo apt-get install -y --allow-unauthenticated zlib1g-dev libjpeg-dev checkinstall libwebp-dev libpng-dev libopenblas-dev libopenblas-base
+sudo apt-get install -y -qq --allow-unauthenticated zlib1g-dev libjpeg-dev checkinstall libwebp-dev libpng-dev libopenblas-dev libopenblas-base
 
-sudo apt-get install -y --allow-unauthenticated libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools
+sudo apt-get install -y -qq --allow-unauthenticated libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
+
+sudo apt-get install -y -qq --allow-unauthenticated libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
 
 echo "Installing OpenCV Library"
 
@@ -72,7 +74,7 @@ done
 
 sudo dpkg -i OpenCV-$OPENCV_VERSION-$PYTHONSUFFIX.*.deb
 
-sudo ln -s /usr/local/lib/python$PYTHONSUFFIX/site-packages/*.so $HOME/virtualenv/python$PYTHONVERSION/lib/python$PYTHONSUFFIX/site-packages
+sudo ln -s /usr/local/lib/python$PYTHONSUFFIX/site-packages/*.so /opt/hostedtoolcache/Python/$PYTHONVERSION/x64/lib/python$PYTHONSUFFIX/site-packages
 
 sudo ldconfig
 

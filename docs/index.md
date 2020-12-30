@@ -109,9 +109,9 @@ You can be a [Stargazer :star2:][stargazer] by starring us on Github, it helps u
 
 ## Support Us
 
-> VidGear is free, but rely on your support :heart:
+> VidGear relies on your support :heart:
 
-Donations help keep VidGear development alive. Small contributions can make a huge difference.
+Donations help keep VidGear's Development alive. Giving a little means a lot, even the smallest contribution can make a huge difference.
 
 <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#eba100', 'W7W8WTYO');kofiwidget2.draw();</script> 
 
