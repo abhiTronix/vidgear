@@ -89,9 +89,11 @@ extra:
 
 extra_css:
     - assets/stylesheets/custom.css
-
+    - assets/stylesheets/version-select.css
+  
 extra_javascript:
     - assets/javascripts/extra.js
+    - assets/javascripts/version-select.js
 
 # Extensions
 markdown_extensions:

@@ -93,10 +93,15 @@ jobs:
           echo "RELEASE_NAME=$(python -c 'import vidgear; print(vidgear.__version__)')" >>$GITHUB_ENV
         shell: bash
         if: success()
+      - name: mike prepare docs
+        run: |
+          mike install-extras
+          mv ./docs/js/version-select.js ./docs/overrides/assets/javascripts
+          mv ./docs/css/version-select.css ./docs/overrides/assets/stylesheets
+          mike delete --all #TODO remove it
+        if: success()
       - name: mike deploy docs
         run: |
           echo "${{ env.RELEASE_NAME }}"
-          mike install-extras
-          mike delete --all #TODO remove it
           mike deploy --push --update-aliases ${{ env.RELEASE_NAME }} dev
         if: success()
