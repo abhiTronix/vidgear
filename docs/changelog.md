@@ -153,10 +153,11 @@ limitations under the License.
     * [ ] Updated StreamGear Tests.
     * [ ] Updated StreamGear docs.
 - [x] Fixed Missing links in docs and bump up version.
+- [x] CI: Fixed Appveyor need newer VM image to support Python 3.9.x matrix.
 - [x] ScreenGear BugFix: Fixed Error Handling and updated CI Tests.
 - [x] Fixed improper `mkdocs.yml` variables.
-- Fixed GStreamer plugin support in bash scripts.
-- Fixed typos in YAMLs and docs.
+- [x] Fixed GStreamer plugin support in bash scripts.
+- [x] Fixed typos in YAMLs and docs.
 - [x] Fixed Asset Colors.
 - [x] Fixed Several logging bugs.
 
