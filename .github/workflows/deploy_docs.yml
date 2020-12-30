@@ -86,11 +86,18 @@ jobs:
           git config --global user.email "${GIT_EMAIL}"
           git remote set-url origin ${REMOTE}
         if: success()
+      - name: Release name_configure
+        run: |
+          run: |
+          echo "RELEASE_NAME=$(python -c 'import vidgear; print(vidgear.__version__)')" >> $GITHUB_ENV
+          echo "${{ env.RELEASE_NAME }}"
+        if: success()
       - name: mike deploy docs
         env:
-          RELEASE_NAME: $(python setup.py --version)
+          RELEASE_NAME: python setup.py --version
         run: |
+          echo $RELEASE_NAME
           mike install-extras
           mike delete --all #TODO remove it
-          mike deploy --push --update-aliases $RELEASE_NAME dev
+          mike deploy --push --update-aliases ${{ env.RELEASE_NAME }} dev
         if: success()
