@@ -22,7 +22,7 @@ on:
     types: [published]
       
 env:
-  PYTHON_VERSION: 3.6
+  PYTHON_VERSION: 3.7
   GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
   GIT_NAME: ${{ secrets.GIT_NAME }}
   GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
@@ -103,5 +103,5 @@ jobs:
       - name: mike deploy docs
         run: |
           echo "${{ env.RELEASE_NAME }}"
-          mike deploy --push --update-aliases ${{ env.RELEASE_NAME }} dev
+          mike deploy --push "${{ env.RELEASE_NAME }}" dev
         if: success()
