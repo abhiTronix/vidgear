@@ -64,7 +64,7 @@ limitations under the License.
         + New Updated Assets for dark backgrounds
         + New css, js files/content to implement this behavior.
         + New material icons for button.
-        + Updated scheme to `slate` in mkdocs.yml.
+        + Updated scheme to `slate` in `mkdocs.yml`.
     * [ ] New Theme and assets:
         + New `purple` theme with `dark-purple` accent color.
         + New images assets with updated transparent background.
@@ -79,18 +79,18 @@ limitations under the License.
     * [ ] Added custom HTML pages.
     * [ ] Added `show_root_heading` flag to disable headings in References.
     * [ ] Adjusted hue for dark-theme for better contrast.
+    * [ ] New usage examples and FAQs.
+    * [ ] Added `gitmoji` for commits.
 - [x] **Continuous Integration:**
     * [ ] Maintenance Updates:
         + Added support for new `VIDGEAR_LOGFILE` environment variable in Travis CI.
-        + Fixed failing CI tests.
         + Added missing CI tests.
         + Added logging for helper functions.
     * [ ] Azure-Pipeline workflow for MacOS envs
         + Added Azure-Pipeline Workflow for testing MacOS environment.
         + Added codecov support.
     * [ ] GitHub Actions workflow for Linux envs
-        + Added GitHub Action work-flow for testing Linux environment (Fixes #180)
-        + Added Python-3.9 matrix to CI Testing envs in appveyor and GitHub Actions (Fixes #179)
+        + Added GitHub Action work-flow for testing Linux environment.
     * [ ] New YAML to implement GitHub Action workflow for python 3.6, 3.7, 3,8 & 3.9 matrices.
 - [x] **Logging:**
     * [ ] Added file support
@@ -106,7 +106,7 @@ limitations under the License.
 - [x] Added new FFmpeg test path to Bash-Script and updated README broken links.
 - [x] Asset Cleanup:
     * [ ] Removed all third-party javascripts from projects.
-    * [ ] Implemented all third-party javascript inside libs.
+    * [ ] Linked all third-party javascript directly.
     * [ ] Cleaned up necessary code from CSS and JS files.
     * [ ] Removed any copyrighted material or links.
 - [x] Rewritten Docs from scratch:
@@ -119,9 +119,7 @@ limitations under the License.
     * [ ] Fixed context and grammar.
     * [ ] Removed `motivation.md`.
     * [ ] Renamed many terms.
-    * [ ] Added `gitmoji` for commits.
     * [ ] Fixed hyper-links.
-    * [ ] New usage examples and FAQs.
     * [ ] Reformatted missing or improper information.
     * [ ] Fixed context and spellings in Docs files.
     * [ ] Simplified language for easy understanding.
@@ -159,6 +157,7 @@ limitations under the License.
 - [x] Fixed GStreamer plugin support in bash scripts.
 - [x] Fixed typos in YAMLs and docs.
 - [x] Fixed Asset Colors.
+- [x] Fixed failing CI tests.
 - [x] Fixed Several logging bugs.
 
 ### Pull Requests

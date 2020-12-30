@@ -15,14 +15,14 @@
 name: VidGear Docs Deployer
 
 on:
-  #push:
-  #  branches:
-  #    - testing
+  push:
+    branches:
+      - testing
   release:
     types: [published]
       
 env:
-  PYTHON_VERSION: 3.x
+  PYTHON_VERSION: 3.6
   GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
   GIT_NAME: ${{ secrets.GIT_NAME }}
   GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
@@ -91,5 +91,6 @@ jobs:
           RELEASE_NAME: $(python setup.py --version)
         run: |
           mike install-extras
+          mike delete --all #TODO remove it
           mike deploy --push --update-aliases $RELEASE_NAME dev
         if: success()
