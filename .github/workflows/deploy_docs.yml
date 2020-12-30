@@ -88,7 +88,6 @@ jobs:
         if: success()
       - name: Release name_configure
         run: |
-          run: |
           echo "RELEASE_NAME=$(python -c 'import vidgear; print(vidgear.__version__)')" >> $GITHUB_ENV
           echo "${{ env.RELEASE_NAME }}"
         if: success()
