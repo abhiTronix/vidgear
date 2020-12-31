@@ -18,7 +18,25 @@ limitations under the License.
 ===============================================
 -->
 
+<!--
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
 
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+===============================================
+-->
 
 
 <!doctype html>
@@ -28,14 +46,15 @@ limitations under the License.
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="High-performance cross-platform Video Processing Python framework powerpacked with unique trailblazing features.">
+        <meta name="description" content="High-Performance Framework for building complex real-time media applications in python.">
       
       
       
         <meta name="author" content="Abhishek Thakur">
       
+      
       <link rel="shortcut icon" href="/abhiTronix/vidgear/assets/images/favicon-32.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.12">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.3">
     
     
       
@@ -43,20 +62,27 @@ limitations under the License.
       
     
     
-      <link rel="stylesheet" href="/abhiTronix/vidgear/assets/stylesheets/main.4dd2dd8d.min.css">
-      
-        <link rel="stylesheet" href="/abhiTronix/vidgear/assets/stylesheets/palette.6a5ad368.min.css">
-      
+      <link rel="stylesheet" href="/abhiTronix/vidgear/assets/stylesheets/main.3b61ea93.min.css">
       
         
+        <link rel="stylesheet" href="/abhiTronix/vidgear/assets/stylesheets/palette.39b8e14a.min.css">
         
-        <meta name="theme-color" content="#4051b5">
+          
+          
+          <meta name="theme-color" content="#ab47bd">
+        
       
     
     
+  <script src="/abhiTronix/vidgear/assets/javascripts/dark-material.js" type="text/javascript"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/clappr/clappr-level-selector-plugin@latest/dist/level-selector.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/clappr/dash-shaka-playback@latest/dist/dash-shaka-playback.js"></script>
+
     
       
-        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,700%7CIBM+Plex&display=fallback">
         <style>body,input{font-family:"Nunito",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"IBM Plex",SFMono-Regular,Consolas,Menlo,monospace}</style>
       
@@ -66,6 +92,8 @@ limitations under the License.
     
     
       <link rel="stylesheet" href="/abhiTronix/vidgear/assets/stylesheets/custom.css">
+    
+      <link rel="stylesheet" href="/abhiTronix/vidgear/assets/stylesheets/version-select.css">
     
     
       
@@ -81,7 +109,10 @@ limitations under the License.
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="indigo" data-md-color-accent="light-blue">
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="dark-purple">
+      
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -92,36 +123,31 @@ limitations under the License.
     </div>
     <div data-md-component="announce">
       
-        <aside class="md-announce">
-          <div class="md-announce__inner md-grid md-typeset">
-            
-  <style>
-  /* Add background color transition */
-  .md-announce {
-  transition: background-color 125ms;
-  }
-  /* Change background color on link focus */
-  .md-announce:focus-within {
-  background-color: var(--md-accent-fg-color);
-  }
-  /* Don't wrap name of blog article */
-  .md-announce strong {
-  white-space: nowrap;
-  }
-  </style>
-  <button class="c-smileyButton" onclick="window.open('https://ko-fi.com/W7W8WTYO','_blank');"  type="button">
-  <span style="font-family: inherit !important;">VidGear is free, but rely on your support.</span>&nbsp;Click to Donate&nbsp;
-  <div class="c-smileyButton__hoverListener"></div>
-  <div class="c-smileyButton__hoverListener"></div>
-  <span class="c-smileyButton__face"></span>
-  </button>
-
-          </div>
-        </aside>
-      
     </div>
     
-      <header class="md-header" data-md-component="header">
+      <!--
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
+
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+===============================================
+-->
+
+
+
+<header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid" aria-label="Header">
     <a href="https://github.com/abhiTronix/vidgear" title="VidGear" class="md-header-nav__button md-logo" aria-label="VidGear">
       
@@ -154,7 +180,7 @@ limitations under the License.
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
       <label class="md-search__icon md-icon" for="__search">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
@@ -176,6 +202,35 @@ limitations under the License.
   </div>
 </div>
     
+     <div class="md-header-nav__scheme md-header-nav__button md-icon">
+        <a
+          href="#"
+          onclick="javascript:toggleScheme();"
+          title="Light mode"
+          class="light-mode"
+        >
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.55 18.54l1.41 1.41 1.8-1.79-1.42-1.42M11 22.45h2V19.5h-2m1-14a6 6 0 00-6 6 6 6 0 006 6 6 6 0 006-6c0-3.32-2.69-6-6-6m8 7h3v-2h-3m-2.76 7.66l1.8 1.79 1.41-1.41-1.79-1.8m1.79-12.28l-1.41-1.41-1.8 1.79 1.42 1.42M13 .55h-2V3.5h2m-9 7H1v2h3m2.76-7.66l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42z"/></svg>
+        </a>
+        <a
+          href="#"
+          onclick="javascript:toggleScheme();"
+          title="Dark mode"
+          class="dark-mode"
+        >
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.75 4.09l-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3 3.19.09m3.5 6.91l-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95 2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 008.02 2.89m-1.64 2.02a12.08 12.08 0 01-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31z"/></svg>
+        </a>
+        <a
+          href="#"
+          onclick="javascript:toggleScheme();"
+          title="System preference"
+          class="system-mode"
+        >
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 2c-1.79 1.15-3 3.18-3 5.5s1.21 4.35 3.03 5.5C4.46 13 2 10.54 2 7.5A5.5 5.5 0 017.5 2m11.57 1.5l1.43 1.43L4.93 20.5 3.5 19.07 19.07 3.5m-6.18 2.43L11.41 5 9.97 6l.42-1.7L9 3.24l1.75-.12.58-1.65L12 3.1l1.73.03-1.35 1.13.51 1.67m-3.3 3.61l-1.16-.73-1.12.78.34-1.32-1.09-.83 1.36-.09.45-1.29.51 1.27 1.36.03-1.05.87.4 1.31M19 13.5a5.5 5.5 0 01-5.5 5.5c-1.22 0-2.35-.4-3.26-1.07l7.69-7.69c.67.91 1.07 2.04 1.07 3.26m-4.4 6.58l2.77-1.15-.24 3.35-2.53-2.2m4.33-2.7l1.15-2.77 2.2 2.54-3.35.23m1.15-4.96l-1.14-2.78 3.34.24-2.2 2.54M9.63 18.93l2.77 1.15-2.53 2.19-.24-3.34z"/></svg>
+        </a>
+    </div>
     
       <div class="md-header-nav__source">
         
@@ -195,12 +250,9 @@ limitations under the License.
     
     <div class="md-container" data-md-component="container">
       
-        
-      
       
         
           
-
 <nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-tabs__inner md-grid">
     <ul class="md-tabs__list">
@@ -208,12 +260,15 @@ limitations under the License.
         
   
   
+
+
+  
+  
+  
     <li class="md-tabs__item">
-      
-        <a href="/abhiTronix/vidgear/." class="md-tabs__link">
-          Home
-        </a>
-      
+      <a href="/abhiTronix/vidgear/." class="md-tabs__link">
+        Home
+      </a>
     </li>
   
 
@@ -221,12 +276,15 @@ limitations under the License.
         
   
   
+
+
+  
+  
+  
     <li class="md-tabs__item">
-      
-        <a href="/abhiTronix/vidgear/gears/" class="md-tabs__link">
-          Gears
-        </a>
-      
+      <a href="/abhiTronix/vidgear/gears/" class="md-tabs__link">
+        Gears
+      </a>
     </li>
   
 
@@ -234,20 +292,25 @@ limitations under the License.
         
   
   
-    
-    
+
+
   
   
+  
     
+
+  
+  
+  
     
+
+  
   
   
     <li class="md-tabs__item">
-      
-        <a href="/abhiTronix/vidgear/bonus/reference/camgear/" class="md-tabs__link">
-          Bonus
-        </a>
-      
+      <a href="/abhiTronix/vidgear/bonus/reference/camgear/" class="md-tabs__link">
+        Bonus
+      </a>
     </li>
   
 
@@ -259,16 +322,20 @@ limitations under the License.
         
   
   
+
+
+  
+  
+  
     
-    
+
+  
   
   
     <li class="md-tabs__item">
-      
-        <a href="/abhiTronix/vidgear/help/" class="md-tabs__link">
-          Help
-        </a>
-      
+      <a href="/abhiTronix/vidgear/help/" class="md-tabs__link">
+        Help
+      </a>
     </li>
   
 
@@ -284,10 +351,18 @@ limitations under the License.
         <div class="md-main__inner md-grid">
           
             
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
-                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+                    
+
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="https://github.com/abhiTronix/vidgear" title="VidGear" class="md-nav__button md-logo" aria-label="VidGear">
       
@@ -317,9 +392,12 @@ limitations under the License.
       
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1" >
     
     <label class="md-nav__link" for="nav-1">
       Home
@@ -338,8 +416,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/." title="Overview" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/." class="md-nav__link">
       Overview
     </a>
   </li>
@@ -350,9 +429,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-1-2" type="checkbox" id="nav-1-2">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-1-2" type="checkbox" id="nav-1-2" >
     
     <label class="md-nav__link" for="nav-1-2">
       Installation
@@ -371,8 +453,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/installation/" title="Installation Overview" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/installation/" class="md-nav__link">
       Installation Overview
     </a>
   </li>
@@ -383,8 +466,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/installation/pip_install/" title="Install using pip" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/installation/pip_install/" class="md-nav__link">
       Install using pip
     </a>
   </li>
@@ -395,8 +479,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/installation/source_install/" title="Install from source" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/installation/source_install/" class="md-nav__link">
       Install from source
     </a>
   </li>
@@ -412,8 +497,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/switch_from_cv/" title="Switching from OpenCV" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/switch_from_cv/" class="md-nav__link">
       Switching from OpenCV
     </a>
   </li>
@@ -424,9 +510,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-1-4" type="checkbox" id="nav-1-4">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-1-4" type="checkbox" id="nav-1-4" >
     
     <label class="md-nav__link" for="nav-1-4">
       Contribution Guidelines
@@ -445,8 +534,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/contribution/" title="Contribution Overview" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/contribution/" class="md-nav__link">
       Contribution Overview
     </a>
   </li>
@@ -457,8 +547,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/contribution/issue/" title="Submitting an Issue Guidelines" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/contribution/issue/" class="md-nav__link">
       Submitting an Issue Guidelines
     </a>
   </li>
@@ -469,8 +560,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/contribution/PR/" title="Submitting Pull Request(PR) Guidelines" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/contribution/PR/" class="md-nav__link">
       Submitting Pull Request(PR) Guidelines
     </a>
   </li>
@@ -486,8 +578,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/changelog/" title="Release Notes" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/changelog/" class="md-nav__link">
       Release Notes
     </a>
   </li>
@@ -498,8 +591,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/license/" title="License" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/license/" class="md-nav__link">
       License
     </a>
   </li>
@@ -515,9 +609,12 @@ limitations under the License.
       
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" >
     
     <label class="md-nav__link" for="nav-2">
       Gears
@@ -536,8 +633,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/" title="Introduction" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/" class="md-nav__link">
       Introduction
     </a>
   </li>
@@ -548,9 +646,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-2" type="checkbox" id="nav-2-2" >
     
     <label class="md-nav__link" for="nav-2-2">
       CamGear
@@ -569,8 +670,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/camgear/overview/" title="Overview" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/camgear/overview/" class="md-nav__link">
       Overview
     </a>
   </li>
@@ -581,8 +683,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/camgear/usage/" title="Usage Examples" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/camgear/usage/" class="md-nav__link">
       Usage Examples
     </a>
   </li>
@@ -593,18 +696,21 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-2-3" type="checkbox" id="nav-2-2-3">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-2-3" type="checkbox" id="nav-2-2-3" >
     
     <label class="md-nav__link" for="nav-2-2-3">
-      Advanced Usage
+      Advanced
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Advanced Usage" data-md-level="3">
+    <nav class="md-nav" aria-label="Advanced" data-md-level="3">
       <label class="md-nav__title" for="nav-2-2-3">
         <span class="md-nav__icon md-icon"></span>
-        Advanced Usage
+        Advanced
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -614,8 +720,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/camgear/advanced/source_params/" title="Source Tweak Parameters" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/camgear/advanced/source_params/" class="md-nav__link">
       Source Tweak Parameters
     </a>
   </li>
@@ -631,8 +738,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/camgear/params/" title="Parameters" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/camgear/params/" class="md-nav__link">
       Parameters
     </a>
   </li>
@@ -643,9 +751,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/camgear/" title="Reference" class="md-nav__link">
-      Reference
+    <a href="/abhiTronix/vidgear/bonus/reference/camgear/" class="md-nav__link">
+      References
     </a>
   </li>
 
@@ -655,8 +764,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/camgear_faqs/" title="FAQs" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/help/camgear_faqs/" class="md-nav__link">
       FAQs
     </a>
   </li>
@@ -672,9 +782,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-3" type="checkbox" id="nav-2-3">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-3" type="checkbox" id="nav-2-3" >
     
     <label class="md-nav__link" for="nav-2-3">
       PiGear
@@ -693,8 +806,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/pigear/overview/" title="Overview" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/pigear/overview/" class="md-nav__link">
       Overview
     </a>
   </li>
@@ -705,8 +819,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/pigear/usage/" title="Usage Examples" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/pigear/usage/" class="md-nav__link">
       Usage Examples
     </a>
   </li>
@@ -717,8 +832,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/pigear/params/" title="Parameters" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/pigear/params/" class="md-nav__link">
       Parameters
     </a>
   </li>
@@ -729,9 +845,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/pigear/" title="Reference" class="md-nav__link">
-      Reference
+    <a href="/abhiTronix/vidgear/bonus/reference/pigear/" class="md-nav__link">
+      References
     </a>
   </li>
 
@@ -741,8 +858,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/pigear_faqs/" title="FAQs" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/help/pigear_faqs/" class="md-nav__link">
       FAQs
     </a>
   </li>
@@ -758,9 +876,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-4" type="checkbox" id="nav-2-4">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-4" type="checkbox" id="nav-2-4" >
     
     <label class="md-nav__link" for="nav-2-4">
       VideoGear
@@ -779,8 +900,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/videogear/overview/" title="Overview" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/videogear/overview/" class="md-nav__link">
       Overview
     </a>
   </li>
@@ -791,8 +913,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/videogear/usage/" title="Usage Examples" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/videogear/usage/" class="md-nav__link">
       Usage Examples
     </a>
   </li>
@@ -803,8 +926,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/videogear/params/" title="Parameters" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/videogear/params/" class="md-nav__link">
       Parameters
     </a>
   </li>
@@ -815,9 +939,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/videogear/" title="Reference" class="md-nav__link">
-      Reference
+    <a href="/abhiTronix/vidgear/bonus/reference/videogear/" class="md-nav__link">
+      References
     </a>
   </li>
 
@@ -827,8 +952,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/videogear_faqs/" title="FAQs" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/help/videogear_faqs/" class="md-nav__link">
       FAQs
     </a>
   </li>
@@ -844,9 +970,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-5" type="checkbox" id="nav-2-5">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-5" type="checkbox" id="nav-2-5" >
     
     <label class="md-nav__link" for="nav-2-5">
       ScreenGear
@@ -865,8 +994,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/screengear/overview/" title="Overview" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/screengear/overview/" class="md-nav__link">
       Overview
     </a>
   </li>
@@ -877,8 +1007,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/screengear/usage/" title="Usage Examples" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/screengear/usage/" class="md-nav__link">
       Usage Examples
     </a>
   </li>
@@ -889,8 +1020,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/screengear/params/" title="Parameters" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/screengear/params/" class="md-nav__link">
       Parameters
     </a>
   </li>
@@ -901,9 +1033,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/screengear/" title="Reference" class="md-nav__link">
-      Reference
+    <a href="/abhiTronix/vidgear/bonus/reference/screengear/" class="md-nav__link">
+      References
     </a>
   </li>
 
@@ -913,8 +1046,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/screengear_faqs/" title="FAQs" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/help/screengear_faqs/" class="md-nav__link">
       FAQs
     </a>
   </li>
@@ -930,9 +1064,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-6" type="checkbox" id="nav-2-6">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-6" type="checkbox" id="nav-2-6" >
     
     <label class="md-nav__link" for="nav-2-6">
       WriteGear
@@ -951,8 +1088,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/writegear/introduction/" title="Introduction" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/writegear/introduction/" class="md-nav__link">
       Introduction
     </a>
   </li>
@@ -963,9 +1101,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-6-2" type="checkbox" id="nav-2-6-2">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-6-2" type="checkbox" id="nav-2-6-2" >
     
     <label class="md-nav__link" for="nav-2-6-2">
       Compression Mode
@@ -984,8 +1125,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/writegear/compression/overview/" title="Overview" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/writegear/compression/overview/" class="md-nav__link">
       Overview
     </a>
   </li>
@@ -996,8 +1138,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/writegear/compression/usage/" title="Usage Examples" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/writegear/compression/usage/" class="md-nav__link">
       Usage Examples
     </a>
   </li>
@@ -1008,18 +1151,21 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-6-2-3" type="checkbox" id="nav-2-6-2-3">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-6-2-3" type="checkbox" id="nav-2-6-2-3" >
     
     <label class="md-nav__link" for="nav-2-6-2-3">
-      Advanced Usage
+      Advanced
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Advanced Usage" data-md-level="4">
+    <nav class="md-nav" aria-label="Advanced" data-md-level="4">
       <label class="md-nav__title" for="nav-2-6-2-3">
         <span class="md-nav__icon md-icon"></span>
-        Advanced Usage
+        Advanced
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -1029,8 +1175,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/writegear/compression/advanced/cciw/" title="Custom FFmpeg Commands" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/writegear/compression/advanced/cciw/" class="md-nav__link">
       Custom FFmpeg Commands
     </a>
   </li>
@@ -1041,8 +1188,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/writegear/compression/advanced/ffmpeg_install/" title="FFmpeg Installation" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/writegear/compression/advanced/ffmpeg_install/" class="md-nav__link">
       FFmpeg Installation
     </a>
   </li>
@@ -1058,8 +1206,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/writegear/compression/params/" title="Parameters" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/writegear/compression/params/" class="md-nav__link">
       Parameters
     </a>
   </li>
@@ -1075,9 +1224,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-6-3" type="checkbox" id="nav-2-6-3">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-6-3" type="checkbox" id="nav-2-6-3" >
     
     <label class="md-nav__link" for="nav-2-6-3">
       Non-Compression Mode
@@ -1096,8 +1248,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/writegear/non_compression/overview/" title="Overview" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/writegear/non_compression/overview/" class="md-nav__link">
       Overview
     </a>
   </li>
@@ -1108,8 +1261,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/writegear/non_compression/usage/" title="Usage Examples" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/writegear/non_compression/usage/" class="md-nav__link">
       Usage Examples
     </a>
   </li>
@@ -1120,8 +1274,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/writegear/non_compression/params/" title="Parameters" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/writegear/non_compression/params/" class="md-nav__link">
       Parameters
     </a>
   </li>
@@ -1137,9 +1292,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/writegear/" title="Reference" class="md-nav__link">
-      Reference
+    <a href="/abhiTronix/vidgear/bonus/reference/writegear/" class="md-nav__link">
+      References
     </a>
   </li>
 
@@ -1149,8 +1305,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/writegear_faqs/" title="FAQs" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/help/writegear_faqs/" class="md-nav__link">
       FAQs
     </a>
   </li>
@@ -1166,9 +1323,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-7" type="checkbox" id="nav-2-7">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-7" type="checkbox" id="nav-2-7" >
     
     <label class="md-nav__link" for="nav-2-7">
       StreamGear
@@ -1187,8 +1347,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/streamgear/overview/" title="Overview" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/streamgear/overview/" class="md-nav__link">
       Overview
     </a>
   </li>
@@ -1199,8 +1360,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/streamgear/usage/" title="Usage Examples" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/streamgear/usage/" class="md-nav__link">
       Usage Examples
     </a>
   </li>
@@ -1211,9 +1373,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-7-3" type="checkbox" id="nav-2-7-3">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-7-3" type="checkbox" id="nav-2-7-3" >
     
     <label class="md-nav__link" for="nav-2-7-3">
       Advanced
@@ -1232,8 +1397,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/streamgear/ffmpeg_install/" title="FFmpeg Installation" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/streamgear/ffmpeg_install/" class="md-nav__link">
       FFmpeg Installation
     </a>
   </li>
@@ -1249,8 +1415,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/streamgear/params/" title="Parameters" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/streamgear/params/" class="md-nav__link">
       Parameters
     </a>
   </li>
@@ -1261,9 +1428,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/streamgear/" title="Reference" class="md-nav__link">
-      Reference
+    <a href="/abhiTronix/vidgear/bonus/reference/streamgear/" class="md-nav__link">
+      References
     </a>
   </li>
 
@@ -1273,8 +1441,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/streamgear_faqs/" title="FAQs" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/help/streamgear_faqs/" class="md-nav__link">
       FAQs
     </a>
   </li>
@@ -1290,9 +1459,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-8" type="checkbox" id="nav-2-8">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-8" type="checkbox" id="nav-2-8" >
     
     <label class="md-nav__link" for="nav-2-8">
       NetGear
@@ -1311,8 +1483,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/netgear/overview/" title="Overview" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/netgear/overview/" class="md-nav__link">
       Overview
     </a>
   </li>
@@ -1323,8 +1496,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/netgear/usage/" title="Usage Examples" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/netgear/usage/" class="md-nav__link">
       Usage Examples
     </a>
   </li>
@@ -1335,9 +1509,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-8-3" type="checkbox" id="nav-2-8-3">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-8-3" type="checkbox" id="nav-2-8-3" >
     
     <label class="md-nav__link" for="nav-2-8-3">
       Advanced Usage
@@ -1356,8 +1533,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/netgear/advanced/multi_server/" title="Multi-Servers Mode" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/netgear/advanced/multi_server/" class="md-nav__link">
       Multi-Servers Mode
     </a>
   </li>
@@ -1368,8 +1546,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/netgear/advanced/multi_client/" title="Multi-Clients Mode" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/netgear/advanced/multi_client/" class="md-nav__link">
       Multi-Clients Mode
     </a>
   </li>
@@ -1380,8 +1559,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/netgear/advanced/bidirectional_mode/" title="Bidirectional Mode" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/netgear/advanced/bidirectional_mode/" class="md-nav__link">
       Bidirectional Mode
     </a>
   </li>
@@ -1392,8 +1572,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/netgear/advanced/secure_mode/" title="Secure Mode" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/netgear/advanced/secure_mode/" class="md-nav__link">
       Secure Mode
     </a>
   </li>
@@ -1404,8 +1585,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/netgear/advanced/compression/" title="Frame Compression" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/netgear/advanced/compression/" class="md-nav__link">
       Frame Compression
     </a>
   </li>
@@ -1421,8 +1603,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/netgear/params/" title="Parameters" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/netgear/params/" class="md-nav__link">
       Parameters
     </a>
   </li>
@@ -1433,9 +1616,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/netgear/" title="Reference" class="md-nav__link">
-      Reference
+    <a href="/abhiTronix/vidgear/bonus/reference/netgear/" class="md-nav__link">
+      References
     </a>
   </li>
 
@@ -1445,8 +1629,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/netgear_faqs/" title="FAQs" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/help/netgear_faqs/" class="md-nav__link">
       FAQs
     </a>
   </li>
@@ -1462,9 +1647,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-9" type="checkbox" id="nav-2-9">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-9" type="checkbox" id="nav-2-9" >
     
     <label class="md-nav__link" for="nav-2-9">
       WebGear
@@ -1483,8 +1671,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/webgear/overview/" title="Overview" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/webgear/overview/" class="md-nav__link">
       Overview
     </a>
   </li>
@@ -1495,8 +1684,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/webgear/usage/" title="Usage Examples" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/webgear/usage/" class="md-nav__link">
       Usage Examples
     </a>
   </li>
@@ -1507,9 +1697,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/webgear/advanced/" title="Advanced Usage" class="md-nav__link">
-      Advanced Usage
+    <a href="/abhiTronix/vidgear/gears/webgear/advanced/" class="md-nav__link">
+      Advanced Usages
     </a>
   </li>
 
@@ -1519,8 +1710,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/webgear/params/" title="Parameters" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/webgear/params/" class="md-nav__link">
       Parameters
     </a>
   </li>
@@ -1531,9 +1723,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/webgear/" title="Reference" class="md-nav__link">
-      Reference
+    <a href="/abhiTronix/vidgear/bonus/reference/webgear/" class="md-nav__link">
+      References
     </a>
   </li>
 
@@ -1543,8 +1736,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/webgear_faqs/" title="FAQs" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/help/webgear_faqs/" class="md-nav__link">
       FAQs
     </a>
   </li>
@@ -1560,9 +1754,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-10" type="checkbox" id="nav-2-10">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-10" type="checkbox" id="nav-2-10" >
     
     <label class="md-nav__link" for="nav-2-10">
       NetGear_Async
@@ -1581,8 +1778,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/netgear_async/overview/" title="Overview" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/netgear_async/overview/" class="md-nav__link">
       Overview
     </a>
   </li>
@@ -1593,8 +1791,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/netgear_async/usage/" title="Usage Examples" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/netgear_async/usage/" class="md-nav__link">
       Usage Examples
     </a>
   </li>
@@ -1605,8 +1804,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/netgear_async/params/" title="Parameters" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/netgear_async/params/" class="md-nav__link">
       Parameters
     </a>
   </li>
@@ -1617,9 +1817,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/netgear_async/" title="Reference" class="md-nav__link">
-      Reference
+    <a href="/abhiTronix/vidgear/bonus/reference/netgear_async/" class="md-nav__link">
+      References
     </a>
   </li>
 
@@ -1629,8 +1830,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/netgear_async_faqs/" title="FAQs" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/help/netgear_async_faqs/" class="md-nav__link">
       FAQs
     </a>
   </li>
@@ -1646,9 +1848,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-11" type="checkbox" id="nav-2-11">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2-11" type="checkbox" id="nav-2-11" >
     
     <label class="md-nav__link" for="nav-2-11">
       Stabilizer Class
@@ -1667,8 +1872,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/stabilizer/overview/" title="Overview" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/stabilizer/overview/" class="md-nav__link">
       Overview
     </a>
   </li>
@@ -1679,8 +1885,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/stabilizer/usage/" title="Usage Examples" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/stabilizer/usage/" class="md-nav__link">
       Usage Examples
     </a>
   </li>
@@ -1691,8 +1898,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/gears/stabilizer/params/" title="Parameters" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/gears/stabilizer/params/" class="md-nav__link">
       Parameters
     </a>
   </li>
@@ -1703,9 +1911,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/stabilizer/" title="Reference" class="md-nav__link">
-      Reference
+    <a href="/abhiTronix/vidgear/bonus/reference/stabilizer/" class="md-nav__link">
+      References
     </a>
   </li>
 
@@ -1715,8 +1924,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/stabilizer_faqs/" title="FAQs" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/help/stabilizer_faqs/" class="md-nav__link">
       FAQs
     </a>
   </li>
@@ -1737,9 +1947,12 @@ limitations under the License.
       
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" >
     
     <label class="md-nav__link" for="nav-3">
       Bonus
@@ -1758,18 +1971,21 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1" type="checkbox" id="nav-3-1">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1" type="checkbox" id="nav-3-1" >
     
     <label class="md-nav__link" for="nav-3-1">
-      API Reference
+      API References
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="API Reference" data-md-level="2">
+    <nav class="md-nav" aria-label="API References" data-md-level="2">
       <label class="md-nav__title" for="nav-3-1">
         <span class="md-nav__icon md-icon"></span>
-        API Reference
+        API References
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -1779,9 +1995,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1-1" type="checkbox" id="nav-3-1-1">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1-1" type="checkbox" id="nav-3-1-1" >
     
     <label class="md-nav__link" for="nav-3-1-1">
       vidgear.gears
@@ -1800,9 +2019,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/camgear/" title="camgear.py" class="md-nav__link">
-      camgear.py
+    <a href="/abhiTronix/vidgear/bonus/reference/camgear/" class="md-nav__link">
+      CamGear API
     </a>
   </li>
 
@@ -1812,9 +2032,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/pigear/" title="pigear.py" class="md-nav__link">
-      pigear.py
+    <a href="/abhiTronix/vidgear/bonus/reference/pigear/" class="md-nav__link">
+      PiGear API
     </a>
   </li>
 
@@ -1824,9 +2045,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/videogear/" title="videogear.py" class="md-nav__link">
-      videogear.py
+    <a href="/abhiTronix/vidgear/bonus/reference/videogear/" class="md-nav__link">
+      VideoGear API
     </a>
   </li>
 
@@ -1836,9 +2058,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/screengear/" title="screengear.py" class="md-nav__link">
-      screengear.py
+    <a href="/abhiTronix/vidgear/bonus/reference/screengear/" class="md-nav__link">
+      ScreenGear API
     </a>
   </li>
 
@@ -1848,9 +2071,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/writegear/" title="writegear.py" class="md-nav__link">
-      writegear.py
+    <a href="/abhiTronix/vidgear/bonus/reference/writegear/" class="md-nav__link">
+      WriteGear API
     </a>
   </li>
 
@@ -1860,9 +2084,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/streamgear/" title="streamgear.py" class="md-nav__link">
-      streamgear.py
+    <a href="/abhiTronix/vidgear/bonus/reference/streamgear/" class="md-nav__link">
+      StreamGear API
     </a>
   </li>
 
@@ -1872,9 +2097,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/netgear/" title="netgear.py" class="md-nav__link">
-      netgear.py
+    <a href="/abhiTronix/vidgear/bonus/reference/netgear/" class="md-nav__link">
+      NetGear API
     </a>
   </li>
 
@@ -1884,9 +2110,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/stabilizer/" title="stabilizer.py" class="md-nav__link">
-      stabilizer.py
+    <a href="/abhiTronix/vidgear/bonus/reference/stabilizer/" class="md-nav__link">
+      Stabilizer Class
     </a>
   </li>
 
@@ -1896,9 +2123,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/helper/" title="helper.py" class="md-nav__link">
-      helper.py
+    <a href="/abhiTronix/vidgear/bonus/reference/helper/" class="md-nav__link">
+      Helper Methods
     </a>
   </li>
 
@@ -1913,9 +2141,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1-2" type="checkbox" id="nav-3-1-2">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3-1-2" type="checkbox" id="nav-3-1-2" >
     
     <label class="md-nav__link" for="nav-3-1-2">
       vidgear.gears.asyncio
@@ -1934,9 +2165,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/webgear/" title="webgear.py" class="md-nav__link">
-      webgear.py
+    <a href="/abhiTronix/vidgear/bonus/reference/webgear/" class="md-nav__link">
+      WebGear API
     </a>
   </li>
 
@@ -1946,9 +2178,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/netgear_async/" title="netgear_async.py" class="md-nav__link">
-      netgear_async.py
+    <a href="/abhiTronix/vidgear/bonus/reference/netgear_async/" class="md-nav__link">
+      NetGear_Async API
     </a>
   </li>
 
@@ -1958,9 +2191,10 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/reference/helper_async/" title="helper.py" class="md-nav__link">
-      helper.py
+    <a href="/abhiTronix/vidgear/bonus/reference/helper_async/" class="md-nav__link">
+      Helper Methods
     </a>
   </li>
 
@@ -1980,8 +2214,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/colorspace_manipulation/" title="Colorspace Manipulation" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/bonus/colorspace_manipulation/" class="md-nav__link">
       Colorspace Manipulation
     </a>
   </li>
@@ -1992,8 +2227,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/bonus/TQM/" title="Threaded Queue Mode" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/bonus/TQM/" class="md-nav__link">
       Threaded Queue Mode
     </a>
   </li>
@@ -2009,9 +2245,12 @@ limitations under the License.
       
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" >
     
     <label class="md-nav__link" for="nav-4">
       Help
@@ -2030,9 +2269,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4-1" type="checkbox" id="nav-4-1">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4-1" type="checkbox" id="nav-4-1" >
     
     <label class="md-nav__link" for="nav-4-1">
       Help VidGear 'n' Get Help
@@ -2051,8 +2293,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/" title="Helping VidGear" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/help/" class="md-nav__link">
       Helping VidGear
     </a>
   </li>
@@ -2063,8 +2306,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/get_help/" title="Getting Help" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/help/get_help/" class="md-nav__link">
       Getting Help
     </a>
   </li>
@@ -2080,9 +2324,12 @@ limitations under the License.
           
 
 
+
+  
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4-2" type="checkbox" id="nav-4-2">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4-2" type="checkbox" id="nav-4-2" >
     
     <label class="md-nav__link" for="nav-4-2">
       Frequently Asked Questions
@@ -2101,8 +2348,9 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/general_faqs/" title="General FAQs" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/help/general_faqs/" class="md-nav__link">
       General FAQs
     </a>
   </li>
@@ -2113,104 +2361,9 @@ limitations under the License.
           
 
 
-  <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/camgear_faqs/" title="CamGear FAQs" class="md-nav__link">
-      CamGear FAQs
-    </a>
-  </li>
-
-        
-          
-          
-          
-
 
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/pigear_faqs/" title="PiGear FAQs" class="md-nav__link">
-      PiGear FAQs
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/screengear_faqs/" title="ScreenGear FAQs" class="md-nav__link">
-      ScreenGear FAQs
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/streamgear_faqs/" title="StreamGear FAQs" class="md-nav__link">
-      StreamGear FAQs
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/writegear_faqs/" title="WriteGear FAQs" class="md-nav__link">
-      WriteGear FAQs
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/netgear_faqs/" title="NetGear FAQs" class="md-nav__link">
-      NetGear FAQs
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/webgear_faqs/" title="WebGear FAQs" class="md-nav__link">
-      WebGear FAQs
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/videogear_faqs/" title="VideoGear FAQs" class="md-nav__link">
-      VideoGear FAQs
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/stabilizer_faqs/" title="Stabilizer Class FAQs" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/help/stabilizer_faqs/" class="md-nav__link">
       Stabilizer Class FAQs
     </a>
   </li>
@@ -2221,8 +2374,113 @@ limitations under the License.
           
 
 
+
   <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/netgear_async_faqs/" title="NetGear_Async FAQs" class="md-nav__link">
+    <a href="/abhiTronix/vidgear/help/camgear_faqs/" class="md-nav__link">
+      CamGear FAQs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="/abhiTronix/vidgear/help/pigear_faqs/" class="md-nav__link">
+      PiGear FAQs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="/abhiTronix/vidgear/help/videogear_faqs/" class="md-nav__link">
+      VideoGear FAQs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="/abhiTronix/vidgear/help/screengear_faqs/" class="md-nav__link">
+      ScreenGear FAQs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="/abhiTronix/vidgear/help/writegear_faqs/" class="md-nav__link">
+      WriteGear FAQs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="/abhiTronix/vidgear/help/streamgear_faqs/" class="md-nav__link">
+      StreamGear FAQs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="/abhiTronix/vidgear/help/netgear_faqs/" class="md-nav__link">
+      NetGear FAQs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="/abhiTronix/vidgear/help/webgear_faqs/" class="md-nav__link">
+      WebGear FAQs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+
+  <li class="md-nav__item">
+    <a href="/abhiTronix/vidgear/help/netgear_async_faqs/" class="md-nav__link">
       NetGear_Async FAQs
     </a>
   </li>
@@ -2230,18 +2488,6 @@ limitations under the License.
         
       </ul>
     </nav>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="/abhiTronix/vidgear/help/motivation/" title="Project Motivation" class="md-nav__link">
-      Project Motivation
-    </a>
   </li>
 
         
@@ -2261,7 +2507,14 @@ limitations under the License.
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
-  <h1>404 - Not found</h1>
+<h1>404</h1>
+<figure>
+<img src="https://media.giphy.com/media/A9EcBzd6t8DZe/giphy.gif" loading="lazy" alt="Lost"/>
+</figure>
+<h3>
+Look like you're lost
+</h3>
+<p>the page you are looking for is not available!</p>
 
               
                 
@@ -2281,7 +2534,7 @@ limitations under the License.
       <div class="md-footer-copyright">
         
           <div class="md-footer-copyright__highlight">
-            Copyright &copy; 2019 - 2020 Abhishek Thakur(@abhiTronix)
+            Copyright &copy; 2019 - 2021 Abhishek Thakur(@abhiTronix)
           </div>
         
         Made with
@@ -2336,26 +2589,22 @@ limitations under the License.
       
     </div>
     
-      <script src="/abhiTronix/vidgear/assets/javascripts/vendor.3636a4ec.min.js"></script>
-      <script src="/abhiTronix/vidgear/assets/javascripts/bundle.e9fe3281.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="/abhiTronix/vidgear/assets/javascripts/vendor.08c56446.min.js"></script>
+      <script src="/abhiTronix/vidgear/assets/javascripts/bundle.6ced434e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({
           base: "/abhiTronix/vidgear",
-          features: ["tabs"],
+          features: ['navigation.tabs'],
           search: Object.assign({
-            worker: "/abhiTronix/vidgear/assets/javascripts/worker/search.5eca75d3.min.js"
+            worker: "/abhiTronix/vidgear/assets/javascripts/worker/search.8c7e0a7e.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>
       
-        <script src="/abhiTronix/vidgear/assets/javascripts/clappr.min.js"></script>
-      
-        <script src="/abhiTronix/vidgear/assets/javascripts/clappr-level-selector.min.js"></script>
-      
-        <script src="/abhiTronix/vidgear/assets/javascripts/dash-shaka-playback.js"></script>
-      
         <script src="/abhiTronix/vidgear/assets/javascripts/extra.js"></script>
+      
+        <script src="/abhiTronix/vidgear/assets/javascripts/version-select.js"></script>
       
     
   </body>
