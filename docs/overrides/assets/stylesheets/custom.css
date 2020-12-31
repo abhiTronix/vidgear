@@ -136,3 +136,10 @@ blockquote p {
  body[data-md-prefers-color-scheme="true"] .md-icon .dark-mode, body[data-md-prefers-color-scheme="true"] .md-icon .light-mode, body[data-md-prefers-color-scheme="true"] .md-icon .unknown-mode {
 	 display: none;
 }
+
+#version-selector .form-control {
+	border-radius: 25px;
+	border: .1rem solid currentColor;
+	background-color: var(--md-primary-fg-color);
+	border-color: var(--md-primary-fg-color);
+}

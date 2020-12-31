@@ -98,6 +98,11 @@ jobs:
           echo "RELEASE_NAME=$(python -c 'import vidgear; print(vidgear.__version__)')" >>$GITHUB_ENV
         shell: bash
         if: success()
+      - name: mkdocs deploy docs
+        run: |
+          mkdocs gh-deploy --force
+          mkdocs --version
+        if: success()
       - name: mike deploy docs
         run: |
           echo "${{ env.RELEASE_NAME }}"
