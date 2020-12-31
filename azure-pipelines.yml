@@ -55,5 +55,5 @@ steps:
 
 - script: |
     pip install --upgrade pytest pytest-asyncio pytest-cov pytest-azurepipelines
-    pytest --verbose --cov-report=html --nunitxml term-missing --cov=vidgear vidgear/tests/
+    pytest --verbose --cov=vidgear --cov-report=xml --cov-report=html --cov-report term-missing vidgear/tests/ --nunitxml
   displayName: 'pytest'
