@@ -46,12 +46,11 @@ window.addEventListener("DOMContentLoaded", function() {
 
         var container = document.createElement("div");
         container.id = "version-selector";
-        container.className = "md-nav__item";
         container.appendChild(select);
 
-        var sidebar = document.querySelector(".md-nav--primary > .md-nav__list");
-        // sidebar.parentNode.insertBefore(container, sidebar);
-        insertAfter(sidebar, container);
+        var header = document.querySelector(".md-header-nav");
+        header.parentNode.insertBefore(container, header);
+        //insertAfter(sidebar, container);
     };
     xhr.send();
 });
