@@ -42,7 +42,7 @@ steps:
     brew install dos2unix
     dos2unix scripts/bash/prepare_dataset.sh
     chmod +x scripts/bash/prepare_dataset.sh
-  displayName: 'Install apt dependencies'
+  displayName: 'Install brew dependencies'
 
 - bash: |
     bash scripts/bash/prepare_dataset.sh
@@ -55,5 +55,5 @@ steps:
 
 - script: |
     pip install --upgrade pytest pytest-asyncio pytest-cov pytest-azurepipelines
-    pytest --verbose --cov=vidgear --cov-report=xml --cov-report=html --cov-report term-missing vidgear/tests/ --nunitxml
+    pytest --verbose --cov=vidgear --cov-report=xml --cov-report=html --cov-report term-missing vidgear/tests/
   displayName: 'pytest'
