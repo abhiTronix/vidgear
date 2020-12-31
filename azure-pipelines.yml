@@ -20,6 +20,7 @@ pr:
 
 variables:
   CI: true
+  CODECOV_TOKEN: $(CODECOV)
   PIP_CACHE_DIR: $(Pipeline.Workspace)/.cache/pip
 
 pool:
