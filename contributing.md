@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-<img src="https://abhitronix.github.io/vidgear/assets/images/contribute.webp" alt="VidGear Contribution" loading="lazy" class="center" />
+<img src="docs/overrides/assets/images/contribute.webp" alt="VidGear Contribution" loading="lazy" class="center" />
 
 
 # Contribution Overview
@@ -34,7 +34,7 @@ Contributions are welcome, We'd love your contribution to VidGear in order to fi
 
 ### Got a question or problem?
 
-For quick questions, please refrain from opening an issue, instead read our [FAQ & Troubleshooting](https://abhitronix.github.io/vidgear/help/get_help/#frequently-asked-questions) section or you can reach us on [Gitter](https://gitter.im/vidgear/community) community channel.
+For quick questions, please refrain from opening an issue, instead read our [FAQ & Troubleshooting](https://abhitronix.github.io/vidgear/latest/help/get_help/#frequently-asked-questions) section or you can reach us on [Gitter](https://gitter.im/vidgear/community) community channel.
 
 
 ### Found a typo?
@@ -55,16 +55,16 @@ You can request our GitHub Repository for a new feature/improvement based on the
 
 > Please [submit an issue with a proposal template](https://github.com/abhiTronix/vidgear/issues/new?labels=issue%3A+proposal&template=proposal.md) for your request to explain how it benefits everyone in the community.
 
-* **Major Feature Requests:** If you require a major feature for VidGear, then first [open an issue](https://abhitronix.github.io/vidgear/contribution/issue/) and outline your proposal so that it can be discussed. This will also allow us to better coordinate our efforts, prevent duplication of work, and help you to craft the change so that it is successfully accepted into the project. The purposed feature, if accepted, may take time based on its complexity and availability/time-schedule of our maintainers, but once it's completed, you will be notified right away. Please be patient! 
+* **Major Feature Requests:** If you require a major feature for VidGear, then first [open an issue](https://abhitronix.github.io/vidgear/latest/contribution/issue/) and outline your proposal so that it can be discussed. This will also allow us to better coordinate our efforts, prevent duplication of work, and help you to craft the change so that it is successfully accepted into the project. The purposed feature, if accepted, may take time based on its complexity and availability/time-schedule of our maintainers, but once it's completed, you will be notified right away. Please be patient! 
 
-* **Minor Feature Requests:**  Small features and bugs resolved on priority. You just have to [submit an issue](https://abhitronix.github.io/vidgear/contribution/issue/) to our GitHub Repository.
+* **Minor Feature Requests:**  Small features and bugs resolved on priority. You just have to [submit an issue](https://abhitronix.github.io/vidgear/latest/contribution/issue/) to our GitHub Repository.
 
 &thinsp;
 
 ## Submission Guidelines
 
-- [Submitting an Issue Guidelines](https://abhitronix.github.io/vidgear/contribution/issue/)
-- [Submitting Pull Request(PR) Guidelines](https://abhitronix.github.io/vidgear/contribution/PR/)
+- [Submitting an Issue Guidelines](https://abhitronix.github.io/vidgear/latest/contribution/issue/)
+- [Submitting Pull Request(PR) Guidelines](https://abhitronix.github.io/vidgear/latest/contribution/PR/)
 
 
 &thinsp;

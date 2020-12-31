@@ -110,7 +110,7 @@ Once you have VidGear installed, **Checkout its Well-Documented Function-Specifi
 
 Also, if you're already familiar with [OpenCV][opencv] library, then see [Switching from OpenCV Library ➶][switch_from_cv]
 
-Or, if you're just getting started with OpenCV, then see [here ➶](https://abhitronix.github.io/vidgear/help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)
+Or, if you're just getting started with OpenCV, then see [here ➶](https://abhitronix.github.io/vidgear/latest/help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)
 
 &nbsp;
 
@@ -130,7 +130,7 @@ Each API is designed exclusively to handle/control/process different data-specif
   * [**CamGear:**](#camgear) Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
   * [**PiGear:**](#pigear) Multi-Threaded API targeting various Raspberry-Pi Camera Modules.
   * [**ScreenGear:**](#screengear) Multi-Threaded API targeting ultra-fast Screencasting.    
-  * [**VideoGear:**](#videogear) Common Video-Capture API with internal [Video Stabilizer](https://abhitronix.github.io/vidgear/gears/stabilizer/overview/) wrapper.
+  * [**VideoGear:**](#videogear) Common Video-Capture API with internal [Video Stabilizer](https://abhitronix.github.io/vidgear/latest/gears/stabilizer/overview/) wrapper.
 
 **B. Video-Writer Gears:**
 
@@ -684,43 +684,43 @@ Internal URLs
 [test-4k]:https://github.com/abhiTronix/vidgear/blob/e0843720202b0921d1c26e2ce5b11fadefbec892/vidgear/tests/benchmark_tests/test_benchmark_playback.py#L65
 [bs_script_dataset]:https://github.com/abhiTronix/vidgear/blob/testing/scripts/bash/prepare_dataset.sh
 
-[faq]:https://abhitronix.github.io/vidgear/help/get_help/#frequently-asked-questions
-[doc-vidgear-purpose]:https://abhitronix.github.io/vidgear/help/motivation/#why-is-vidgear-a-thing
-[live-stream]:https://abhitronix.github.io/vidgear/gears/writegear/compression/usage/#using-compression-mode-for-streaming-urls
-[live-audio-doc]:https://abhitronix.github.io/vidgear/gears/writegear/compression/usage/#using-compression-mode-with-live-audio-input
-[piping-live-videos]:https://abhitronix.github.io/vidgear/gears/camgear/usage/#using-camgear-with-streaming-websites
-[ffmpeg-doc]:https://abhitronix.github.io/vidgear/gears/writegear/compression/advanced/ffmpeg_install/
-[youtube-doc]:https://abhitronix.github.io/vidgear/gears/camgear/usage/#using-camgear-with-youtube-videos
-[TQM-doc]:https://abhitronix.github.io/vidgear/bonus/TQM/#threaded-queue-mode
-[camgear-doc]:https://abhitronix.github.io/vidgear/gears/camgear/overview/
-[stablizer-doc]:https://abhitronix.github.io/vidgear/gears/stabilizer/overview/
-[stablizer-doc-ex]:https://abhitronix.github.io/vidgear/gears/videogear/usage/#using-videogear-with-video-stabilizer-backend
-[videogear-doc]:https://abhitronix.github.io/vidgear/gears/videogear/overview/
-[pigear-doc]:https://abhitronix.github.io/vidgear/gears/pigear/overview/
-[cm-writegear-doc]:https://abhitronix.github.io/vidgear/gears/writegear/compression/overview/
-[ncm-writegear-doc]:https://abhitronix.github.io/vidgear/gears/writegear/non_compression/overview/
-[screengear-doc]:https://abhitronix.github.io/vidgear/gears/screengear/overview/
-[streamgear-doc]:https://abhitronix.github.io/vidgear/gears/streamgear/overview/
-[writegear-doc]:https://abhitronix.github.io/vidgear/gears/writegear/introduction/
-[netgear-doc]:https://abhitronix.github.io/vidgear/gears/netgear/overview/
-[webgear-doc]:https://abhitronix.github.io/vidgear/gears/webgear/overview/
-[netgear_async-doc]:https://abhitronix.github.io/vidgear/gears/netgear_async/overview/
+[faq]:https://abhitronix.github.io/vidgear/latest/help/get_help/#frequently-asked-questions
+[doc-vidgear-purpose]:https://abhitronix.github.io/vidgear/latest/help/motivation/#why-is-vidgear-a-thing
+[live-stream]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/usage/#using-compression-mode-for-streaming-urls
+[live-audio-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/usage/#using-compression-mode-with-live-audio-input
+[piping-live-videos]:https://abhitronix.github.io/vidgear/latest/gears/camgear/usage/#using-camgear-with-streaming-websites
+[ffmpeg-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/advanced/ffmpeg_install/
+[youtube-doc]:https://abhitronix.github.io/vidgear/latest/gears/camgear/usage/#using-camgear-with-youtube-videos
+[TQM-doc]:https://abhitronix.github.io/vidgear/latest/bonus/TQM/#threaded-queue-mode
+[camgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/camgear/overview/
+[stablizer-doc]:https://abhitronix.github.io/vidgear/latest/gears/stabilizer/overview/
+[stablizer-doc-ex]:https://abhitronix.github.io/vidgear/latest/gears/videogear/usage/#using-videogear-with-video-stabilizer-backend
+[videogear-doc]:https://abhitronix.github.io/vidgear/latest/gears/videogear/overview/
+[pigear-doc]:https://abhitronix.github.io/vidgear/latest/gears/pigear/overview/
+[cm-writegear-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/overview/
+[ncm-writegear-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/non_compression/overview/
+[screengear-doc]:https://abhitronix.github.io/vidgear/latest/gears/screengear/overview/
+[streamgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/streamgear/overview/
+[writegear-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/introduction/
+[netgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/overview/
+[webgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/webgear/overview/
+[netgear_async-doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear_async/overview/
 [drop35]:https://github.com/abhiTronix/vidgear/issues/99
-[custom-command-doc]:https://abhitronix.github.io/vidgear/gears/writegear/compression/advanced/cciw/
-[advanced-webgear-doc]:https://abhitronix.github.io/vidgear/gears/webgear/advanced/
-[netgear_bidata_doc]:https://abhitronix.github.io/vidgear/gears/netgear/advanced/bidirectional_mode/
-[netgear_compression_doc]:https://abhitronix.github.io/vidgear/gears/netgear/advanced/compression/
-[netgear_security_doc]:https://abhitronix.github.io/vidgear/gears/netgear/advanced/secure_mode/
-[netgear_multi_server_doc]:https://abhitronix.github.io/vidgear/gears/netgear/advanced/multi_server/
-[netgear_multi_client_doc]:https://abhitronix.github.io/vidgear/gears/netgear/advanced/multi_client/
-[netgear-exm]: https://abhitronix.github.io/vidgear/gears/netgear/overview/#modes-of-operation
-[stabilize_webgear_doc]:https://abhitronix.github.io/vidgear/gears/webgear/advanced/#using-webgear-with-real-time-video-stabilization-enabled
-[netgear_Async-cs]: https://abhitronix.github.io/vidgear/gears/netgear_async/usage/#using-netgear_async-with-a-custom-sourceopencv
-[installation]:https://abhitronix.github.io/vidgear/installation/
-[gears]:https://abhitronix.github.io/vidgear/gears
-[switch_from_cv]:https://abhitronix.github.io/vidgear/switch_from_cv/
-[ss-mode-doc]: https://abhitronix.github.io/vidgear/gears/streamgear/usage/#a-single-source-mode
-[rtf-mode-doc]: https://abhitronix.github.io/vidgear/gears/streamgear/usage/#b-real-time-frames-mode
+[custom-command-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/advanced/cciw/
+[advanced-webgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/webgear/advanced/
+[netgear_bidata_doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/bidirectional_mode/
+[netgear_compression_doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/compression/
+[netgear_security_doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/secure_mode/
+[netgear_multi_server_doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/multi_server/
+[netgear_multi_client_doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/multi_client/
+[netgear-exm]: https://abhitronix.github.io/vidgear/latest/gears/netgear/overview/#modes-of-operation
+[stabilize_webgear_doc]:https://abhitronix.github.io/vidgear/latest/gears/webgear/advanced/#using-webgear-with-real-time-video-stabilization-enabled
+[netgear_Async-cs]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/usage/#using-netgear_async-with-a-custom-sourceopencv
+[installation]:https://abhitronix.github.io/vidgear/latest/installation/
+[gears]:https://abhitronix.github.io/vidgear/latest/gears
+[switch_from_cv]:https://abhitronix.github.io/vidgear/latest/switch_from_cv/
+[ss-mode-doc]: https://abhitronix.github.io/vidgear/latest/gears/streamgear/usage/#a-single-source-mode
+[rtf-mode-doc]: https://abhitronix.github.io/vidgear/latest/gears/streamgear/usage/#b-real-time-frames-mode
 [docs]: https://abhitronix.github.io/vidgear
 
 <!--
