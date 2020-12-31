@@ -77,6 +77,6 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
-          env_vars: OS,PYTHON
+          name: ${{ matrix.python-version }}
           fail_ci_if_error: true
           verbose: true
