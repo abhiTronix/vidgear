@@ -138,38 +138,14 @@ blockquote p {
 }
 
 #version-selector .form-control {
-    position: relative;
-    display: flex;
-    width: 20em;
-    height: 3em;
-    line-height: 3;
-    overflow: hidden;
-    border-radius: .25em;
+    border-radius: 2.25em;
 	border: .1rem solid currentColor;
 	background-color: var(--md-primary-fg-color);
 	border-color: var(--md-primary-bg-color);
     color: var(--md-primary-bg-color);
-    font-family: inherit;
-    flex: 1;
     padding: 0 .5em;
-    cursor: pointer;
-}
-
-/* Arrow */
-#version-selector .form-control::after {
-  content: '\25BC';
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0 1em;
-  background: #34495e;
-  cursor: pointer;
-  pointer-events: none;
-  -webkit-transition: .25s all ease;
-  -o-transition: .25s all ease;
-  transition: .25s all ease;
-}
-/* Transition */
-#version-selector .form-control:hover::after {
-  color: #f39c12;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    overflow: hidden;
+    text-overflow: '';
 }
