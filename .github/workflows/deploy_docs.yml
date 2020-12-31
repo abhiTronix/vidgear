@@ -101,5 +101,5 @@ jobs:
         run: |
           echo "${{ env.RELEASE_NAME }}"
           mike deploy --push --update-aliases ${{ env.RELEASE_NAME }} dev
-          mike set-default dev
+          mike set-default --push ${{ env.RELEASE_NAME }} --force
         if: success()
