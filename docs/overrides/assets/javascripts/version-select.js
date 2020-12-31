@@ -48,9 +48,9 @@ window.addEventListener("DOMContentLoaded", function() {
         container.id = "version-selector";
         container.appendChild(select);
 
-        var header = document.querySelector(".md-header-nav");
-        header.parentNode.insertBefore(container, header);
-        //insertAfter(sidebar, container);
+        var header = document.querySelector(".md-header-nav__source");
+        //header.parentNode.insertBefore(container, header);
+        insertAfter(header, container);
     };
     xhr.send();
 });
