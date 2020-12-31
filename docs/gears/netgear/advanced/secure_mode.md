@@ -21,7 +21,7 @@ limitations under the License.
 # Secure Mode for NetGear API 
 
 <figure>
-  <img src="../../../../assets/images/secure_mode.webp" alt="Secure Mode" loading="lazy" title="NetGear's Secure Mode" width="75%"/>
+  <img src="../../../../assets/images/secure_mode.webp" alt="Secure Mode" loading="lazy" title="NetGear's Secure Mode" class="center"/>
 </figure>
 
 

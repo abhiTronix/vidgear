@@ -21,7 +21,7 @@ limitations under the License.
 # Bidirectional Mode for NetGear API 
 
 <h3 align="center">
-  <img src="../../../../assets/images/bidir.png" alt="Bidirectional Mode" loading="lazy" width="85%"/>
+  <img src="../../../../assets/images/bidir.png" alt="Bidirectional Mode" loading="lazy" class="center"/>
   <figcaption>NetGear's Bidirectional Mode</figcaption>
 </h3>
 

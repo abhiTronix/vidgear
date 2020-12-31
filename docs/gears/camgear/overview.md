@@ -21,7 +21,7 @@ limitations under the License.
 # CamGear API 
 
 <figure>
-  <img src="../../../assets/images/camgear.png" alt="CamGear Functional Block Diagram" loading="lazy" width="60%"/>
+  <img src="../../../assets/images/camgear.png" alt="CamGear Functional Block Diagram" loading="lazy" class="center" />
   <figcaption>CamGear API's generalized workflow</figcaption>
 </figure>
 

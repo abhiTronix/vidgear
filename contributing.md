@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-<img src="https://abhitronix.github.io/vidgear/assets/images/contribute.webp" alt="VidGear Contribution" loading="lazy" width="90%" />
+<img src="https://abhitronix.github.io/vidgear/assets/images/contribute.webp" alt="VidGear Contribution" loading="lazy" class="center" />
 
 
 # Contribution Overview

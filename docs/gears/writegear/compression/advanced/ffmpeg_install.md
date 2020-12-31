@@ -21,7 +21,7 @@ limitations under the License.
 # FFmpeg Installation Instructions
 
 <figure>
-  <a href="http://ffmpeg.org/"><img src="../../../../../assets/images/ffmpeg.png" loading="lazy" alt="FFmpeg"/></a>
+  <a href="http://ffmpeg.org/"><img src="../../../../../assets/images/ffmpeg.png" loading="lazy" alt="FFmpeg" class="center" /></a>
 </figure>
 
 WriteGear must requires FFmpeg executables for its Compression capabilities in Compression Mode. You can following machine-specific instructions for its installation:
