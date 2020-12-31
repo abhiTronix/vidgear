@@ -48,6 +48,12 @@ limitations under the License.
         + Added support all input from all multiple screens.
         + Updated ScreenGear Docs.
         + Updated ScreenGear CI tests.
+- [X] **StreamGear API:**
+    * [ ] Changed default behaviour to support complete video transcoding.
+    * [ ] Added `-livestream` attribute to support live-streaming.
+    * [ ] Added additional parameters for `-livestream` attribute functionality.
+    * [ ] Updated StreamGear Tests.
+    * [ ] Updated StreamGear docs.
 - [x] **Stabilizer Class:** 
     * [ ] New Robust Error Handling with Blank Frames:
         + Elegantly handles all crashes due to Empty/Blank/Dark frames.
@@ -59,6 +65,7 @@ limitations under the License.
         + Separate new workflow steps to handle different versions.
         + Updated docs deploy worflow to support `release` and `dev` builds.
         + Added automatic version extraction from github events.
+        + Added `version-select.js` and `version-select.css` files.
     * [ ] Toggleable Dark-White Docs Support:
         + Toggle-button to easily switch dark, white and preferred theme.
         + New Updated Assets for dark backgrounds
@@ -78,6 +85,7 @@ limitations under the License.
         + Improved PR and Issue welcome formatting.
     * [ ] Added custom HTML pages.
     * [ ] Added `show_root_heading` flag to disable headings in References.
+    * [ ] Added new `inserAfter` function to version-select.js.
     * [ ] Adjusted hue for dark-theme for better contrast.
     * [ ] New usage examples and FAQs.
     * [ ] Added `gitmoji` for commits.
@@ -92,6 +100,8 @@ limitations under the License.
     * [ ] GitHub Actions workflow for Linux envs
         + Added GitHub Action work-flow for testing Linux environment.
     * [ ] New YAML to implement GitHub Action workflow for python 3.6, 3.7, 3,8 & 3.9 matrices.
+    * [ ] Added Upload coverage to Codecov GitHub Action workflow.
+    * [ ] New codecov-bash uploader for Azure Pipelines.
 - [x] **Logging:**
     * [ ] Added file support
         + Added `VIDGEAR_LOGFILE` environment variable to manually add file/dir path.
@@ -125,6 +135,8 @@ limitations under the License.
     * [ ] Simplified language for easy understanding.
     * [ ] Updated image sizes for better visibility.
 - [x] Bash Script: Updated to Latest OpenCV Binaries version and related changes
+- [x] Docs: Moved version-selector to header and changed default to alias.
+- [x] Docs: Updated `deploy_docs.yml` for releasing dev, stable, and release versions.
 - [x] Re-implemented overridden material theme.
 - [x] Updated docs with all new additions and examples.
 - [x] CamGear: CI Stream Mode test updated.
@@ -136,6 +148,9 @@ limitations under the License.
 - [x] Updated `changelog.md`.
 - [x] Moved WebGear API to Streaming Gears.
 - [x] Bumped Codecov.
+- [x] UI changes to version-select.js
+- [x] Docs: Retitle the versions and `mkdocs.yml` formatting updated.
+- [x] Docs: Version Selector UI reworked and other minor changes.
 
 ### Breaking Updates/Changes
 
@@ -145,17 +160,23 @@ limitations under the License.
 ### Bug-fixes
 
 - [x] Fixed StreamGear API Limited Segments Bug
-    * [ ] Changed default behaviour to support complete video transcoding.
-    * [ ] Added `-livestream` attribute to support live-streaming.
-    * [ ] Added additional parameters for this functionality.
-    * [ ] Updated StreamGear Tests.
-    * [ ] Updated StreamGear docs.
 - [x] Fixed Missing links in docs and bump up version.
 - [x] CI: Fixed Appveyor need newer VM image to support Python 3.9.x matrix.
 - [x] ScreenGear BugFix: Fixed Error Handling and updated CI Tests.
 - [x] Fixed improper `mkdocs.yml` variables.
 - [x] Fixed GStreamer plugin support in bash scripts.
 - [x] Fixed typos in YAMLs and docs.
+- [x] Docs: Fixed Docs Deployer YAML bug for CI envs.
+- [x] Fixed wrong import in YAML.
+- [x] Fixed visible hyperlink on hover in dark-toggle button.
+- [x] Docs: Deployer YAML bug fixed.
+- [x] Docs YAML: issue jimporter/mike#33 patched and fixed `fetch-depth=0`.
+- [x] Docs: `version-select.js` bug fixed.
+- [x] Docs: UI Bugs Fixed.
+- [x] CI: Codecov bugfixes.
+- [x] Azure-Pipelines Codecov BugFixes.
+- [x] Fixed `version.json` not detecting properly in `version-select.js`.
+- [x] Fixed images not centered inside <figure> tag.
 - [x] Fixed Asset Colors.
 - [x] Fixed failing CI tests.
 - [x] Fixed Several logging bugs.
@@ -173,6 +194,7 @@ limitations under the License.
 &nbsp; 
 
 &nbsp; 
+
 
 ## v0.1.9 (2020-08-31)
 

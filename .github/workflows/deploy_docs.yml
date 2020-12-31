@@ -64,13 +64,24 @@ jobs:
           mkdocs gh-deploy --force
           mkdocs --version
         if: success()
-      - name: mike deploy docs
+      - name: mike deploy docs stable
         run: |
-          echo "vidgear-${{ env.RELEASE_NAME }}"
-          mike deploy --push --update-aliases "vidgear-${{ env.RELEASE_NAME }}" latest
-          mike retitle "vidgear-${{ env.RELEASE_NAME }}" ${{ env.RELEASE_NAME }}
+          echo "${{ env.NAME_STABLE }}"
+          mike deploy --push --update-aliases ${{ env.NAME_STABLE }} latest
+          mike retitle ${{ env.NAME_STABLE }} latest
           mike set-default --push latest --force
+        env:
+          NAME_STABLE: "v${{ env.RELEASE_NAME }}-stable"
         if: success()
+      - name: mike deploy docs release
+        run: |
+          echo "${{ env.NAME_RELEASE }}"
+          mike deploy --push --update-aliases ${{ env.NAME_RELEASE }} ${{ env.RELEASE_NAME }}
+          mike retitle ${{ env.NAME_RELEASE }} ${{ env.RELEASE_NAME }} --push
+        env:
+          NAME_RELEASE: "v${{ env.RELEASE_NAME }}-release"
+        if: success()
+
 
   deploy-docs-dev:
     name: Deploy Development Docs
@@ -109,6 +120,5 @@ jobs:
         run: |
           echo "${{ env.RELEASE_NAME }}"
           mike deploy --push --update-aliases ${{ env.RELEASE_NAME }} dev
-          mike retitle ${{ env.RELEASE_NAME }} dev
-          mike set-default --push dev --force
+          mike retitle ${{ env.RELEASE_NAME }} dev --push
         if: success()
