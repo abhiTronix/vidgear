@@ -1,7 +1,7 @@
 @media only screen and (max-width:76.1875em) {
   #version-selector {
-    padding: .6rem .8rem;
-    border-radius:25px;
+    padding: 1rem .8rem;
+    border-radius:35px;
     border:.1rem solid currentColor;
     background-color: var(--md-primary-fg-color);
   	border-color: var(--md-primary-fg-color);
