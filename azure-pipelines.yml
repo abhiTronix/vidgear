@@ -18,11 +18,6 @@ trigger:
 pr:
   - testing
 
-variables:
-  CI: true
-  CODECOV_TOKEN: $(CODECOV)
-  PIP_CACHE_DIR: $(Pipeline.Workspace)/.cache/pip
-
 pool:
   vmImage: 'macOS-10.14'
 strategy:
