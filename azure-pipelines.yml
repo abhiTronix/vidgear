@@ -13,7 +13,14 @@
 # limitations under the License.
 
 trigger:
-- testing
+  - testing
+
+pr:
+  - testing
+
+variables:
+  CI: true
+  PIP_CACHE_DIR: $(Pipeline.Workspace)/.cache/pip
 
 pool:
   vmImage: 'macOS-10.14'
