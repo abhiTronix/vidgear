@@ -66,9 +66,9 @@ jobs:
         if: success()
       - name: mike deploy docs
         run: |
-          echo "${{ env.RELEASE_NAME }}"
-          mike deploy --push --update-aliases vidgear-${{ env.RELEASE_NAME }} latest
-          mike retitle vidgear-${{ env.RELEASE_NAME }} latest
+          echo "vidgear-${{ env.RELEASE_NAME }}"
+          mike deploy --push --update-aliases "vidgear-${{ env.RELEASE_NAME }}" latest
+          mike retitle "vidgear-${{ env.RELEASE_NAME }}" ${{ env.RELEASE_NAME }}
           mike set-default --push latest --force
         if: success()
 
