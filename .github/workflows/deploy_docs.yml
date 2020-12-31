@@ -61,6 +61,7 @@ jobs:
         run: |
           echo "${{ env.RELEASE_NAME }}"
           mike deploy --push --update-aliases $RELEASE_NAME latest
+          mike retitle ${{ env.RELEASE_NAME }} latest
           mike set-default --push $RELEASE_NAME --force
         if: success()
 
@@ -101,5 +102,6 @@ jobs:
         run: |
           echo "${{ env.RELEASE_NAME }}"
           mike deploy --push --update-aliases ${{ env.RELEASE_NAME }} dev
+          mike retitle ${{ env.RELEASE_NAME }} dev
           mike set-default --push dev --force
         if: success()
