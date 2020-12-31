@@ -36,6 +36,8 @@ jobs:
       RELEASE_NAME: ${{ github.event.release.tag_name }}   
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ env.PYTHON_VERSION }}
@@ -55,19 +57,9 @@ jobs:
           git config --global user.email "${GIT_EMAIL}"
           git remote set-url origin ${REMOTE}
         if: success()
-      - name: mike prepare docs
-        run: |
-          cp mkdocs.yml mkdocs.yml.bak # temporary fix for issue:https://github.com/jimporter/mike/issues/33
-          mike install-extras
-          cp mkdocs.yml.bak mkdocs.yml
-          mv ./docs/js/version-select.js ./docs/overrides/assets/javascripts
-          mv ./docs/css/version-select.css ./docs/overrides/assets/stylesheets
-          rm -r ./docs/js
-          rm -r ./docs/css
-        if: success()
       - name: mike deploy docs
         run: |
-          mike install-extras
+          echo "${{ env.RELEASE_NAME }}"
           mike deploy --push --update-aliases $RELEASE_NAME latest
           mike set-default --push $RELEASE_NAME --force
         if: success()
@@ -78,6 +70,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - run: git checkout testing
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ env.PYTHON_VERSION }}
@@ -101,16 +96,6 @@ jobs:
         run: |
           echo "RELEASE_NAME=$(python -c 'import vidgear; print(vidgear.__version__)')" >>$GITHUB_ENV
         shell: bash
-        if: success()
-      - name: mike prepare docs
-        run: |
-          cp mkdocs.yml mkdocs.yml.bak # temporary fix for issue:https://github.com/jimporter/mike/issues/33
-          mike install-extras
-          cp mkdocs.yml.bak mkdocs.yml
-          mv ./docs/js/version-select.js ./docs/overrides/assets/javascripts
-          mv ./docs/css/version-select.css ./docs/overrides/assets/stylesheets
-          rm -r ./docs/js
-          rm -r ./docs/css
         if: success()
       - name: mike deploy docs
         run: |
