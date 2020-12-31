@@ -18,9 +18,8 @@ on:
   push:
     branches:
       - testing
-  release:
-    types: [published]
-      
+      - master
+
 env:
   PYTHON_VERSION: 3.7
   GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
@@ -28,12 +27,10 @@ env:
   GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
 
 jobs:
-  deploy-docs-release:
-    name: Deploy Release Docs
-    if: github.event_name == 'release' && github.event.action == 'published'
+  deploy-docs-latest:
+    name: Deploy Latest Docs
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
-    env:
-      RELEASE_NAME: ${{ github.event.release.tag_name }}   
     steps:
       - uses: actions/checkout@v2
         with:
@@ -57,16 +54,26 @@ jobs:
           git config --global user.email "${GIT_EMAIL}"
           git remote set-url origin ${REMOTE}
         if: success()
+      - name: Release name_configure
+        run: |
+          echo "RELEASE_NAME=$(python -c 'import vidgear; print(vidgear.__version__)')" >>$GITHUB_ENV
+        shell: bash
+        if: success()
+      - name: mkdocs deploy docs
+        run: |
+          mkdocs gh-deploy --force
+          mkdocs --version
+        if: success()
       - name: mike deploy docs
         run: |
           echo "${{ env.RELEASE_NAME }}"
-          mike deploy --push --update-aliases $RELEASE_NAME latest
-          mike retitle ${{ env.RELEASE_NAME }} latest
-          mike set-default --push $RELEASE_NAME --force
+          mike deploy --push --update-aliases vidgear-${{ env.RELEASE_NAME }} latest
+          mike retitle vidgear-${{ env.RELEASE_NAME }} latest
+          mike set-default --push latest --force
         if: success()
 
-  deploy-docs-latest:
-    name: Deploy Dev Docs
+  deploy-docs-dev:
+    name: Deploy Development Docs
     if: github.event_name == 'push' && github.ref == 'refs/heads/testing'
     runs-on: ubuntu-latest
     steps:
@@ -97,11 +104,6 @@ jobs:
         run: |
           echo "RELEASE_NAME=$(python -c 'import vidgear; print(vidgear.__version__)')" >>$GITHUB_ENV
         shell: bash
-        if: success()
-      - name: mkdocs deploy docs
-        run: |
-          mkdocs gh-deploy --force
-          mkdocs --version
         if: success()
       - name: mike deploy docs
         run: |
