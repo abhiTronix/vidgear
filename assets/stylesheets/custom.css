@@ -138,8 +138,14 @@ blockquote p {
 }
 
 #version-selector .form-control {
-	border-radius: 25px;
+    border-radius: 2.25em;
 	border: .1rem solid currentColor;
 	background-color: var(--md-primary-fg-color);
-	border-color: var(--md-primary-fg-color);
+	border-color: var(--md-primary-bg-color);
+    color: var(--md-primary-bg-color);
+    padding: .5em;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    overflow: hidden;
+    text-overflow: '';
 }
