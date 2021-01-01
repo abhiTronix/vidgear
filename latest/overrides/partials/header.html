@@ -1,0 +1,94 @@
+<!--
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
+
+Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+===============================================
+-->
+
+{% set site_url = config.site_url | default(nav.homepage.url, true) | url %}
+{% if not config.use_directory_urls and site_url[0] == site_url[-1] == "." %}
+  {% set site_url = site_url ~ "/index.html" %}
+{% endif %}
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="{{ lang.t('header.title') }}">
+    <a href="{{ site_url }}" title="{{ config.site_name | e }}" class="md-header-nav__button md-logo" aria-label="{{ config.site_name }}">
+      {% include "partials/logo.html" %}
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      {% include ".icons/material/menu" ~ ".svg" %}
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      {% if config.site_name == page.title %}
+        <div class="md-header-nav__ellipsis md-ellipsis">
+          {{ config.site_name }}
+        </div>
+      {% else %}
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            {{ config.site_name }}
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            {% if page and page.meta and page.meta.title %}
+              {{ page.meta.title }}
+            {% else %}
+              {{ page.title }}
+            {% endif %}
+          </span>
+        </div>
+      {% endif %}
+    </div>
+    {% if "search" in config["plugins"] %}
+      <label class="md-header-nav__button md-icon" for="__search">
+        {% include ".icons/material/magnify.svg" %}
+      </label>
+      {% include "partials/search.html" %}
+    {% endif %}
+     <div class="md-header-nav__scheme md-header-nav__button md-icon">
+        <a
+          href="#"
+          onclick="javascript:toggleScheme();"
+          title="Light mode"
+          class="light-mode"
+        >
+        {% set icon = "material/white-balance-sunny" %}
+        {% include ".icons/" ~ icon ~ ".svg" %}
+        </a>
+        <a
+          href="#"
+          onclick="javascript:toggleScheme();"
+          title="Dark mode"
+          class="dark-mode"
+        >
+        {% set icon = "material/weather-night" %}
+        {% include ".icons/" ~ icon ~ ".svg" %}
+        </a>
+        <a
+          href="#"
+          onclick="javascript:toggleScheme();"
+          title="System preference"
+          class="system-mode"
+        >
+        {% set icon = "material/theme-light-dark" %}
+        {% include ".icons/" ~ icon ~ ".svg" %}
+        </a>
+    </div>
+    {% if config.repo_url %}
+      <div class="md-header-nav__source">
+        {% include "partials/source.html" %}
+      </div>
+    {% endif %}
+  </nav>
+</header>
