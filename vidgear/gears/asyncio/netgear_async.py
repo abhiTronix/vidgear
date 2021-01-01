@@ -81,7 +81,7 @@ class NetGear_Async:
         stabilize=False,
         source=0,
         camera_num=0,
-        y_tube=False,
+        stream_mode=False,
         backend=0,
         colorspace=None,
         resolution=(640, 480),
@@ -91,6 +91,31 @@ class NetGear_Async:
         logging=False,
         **options
     ):
+
+        """
+        This constructor method initializes the object state and attributes of the NetGear_Async class.
+
+        Parameters:
+            address (str): sets the valid network address of the Server/Client.
+            port (str): sets the valid Network Port of the Server/Client.
+            protocol (str): sets the valid messaging protocol between Server/Client.
+            pattern (int): sets the supported messaging pattern(flow of communication) between Server/Client
+            receive_mode (bool): select the Netgear's Mode of operation.
+            timeout (int/float): controls the maximum waiting time(in sec) after which Client throws `TimeoutError`.
+            enablePiCamera (bool): provide access to PiGear(if True) or CamGear(if False) APIs respectively.
+            stabilize (bool): enable access to Stabilizer Class for stabilizing frames.
+            camera_num (int): selects the camera module index which will be used as Rpi source.
+            resolution (tuple): sets the resolution (i.e. `(width,height)`) of the Rpi source.
+            framerate (int/float): sets the framerate of the Rpi source.
+            source (based on input): defines the source for the input stream.
+            stream_mode (bool): controls the exclusive YouTube Mode.
+            backend (int): selects the backend for OpenCV's VideoCapture class.
+            colorspace (str): selects the colorspace of the input stream.
+            logging (bool): enables/disables logging.
+            time_delay (int): time delay (in sec) before start reading the frames.
+            options (dict): provides ability to alter Tweak Parameters of NetGear, CamGear, PiGear & Stabilizer.
+        """
+
         # enable logging if specified
         self.__logging = logging
 
@@ -172,7 +197,7 @@ class NetGear_Async:
                     stabilize=stabilize,
                     source=source,
                     camera_num=camera_num,
-                    y_tube=y_tube,
+                    stream_mode=stream_mode,
                     backend=backend,
                     colorspace=colorspace,
                     resolution=resolution,

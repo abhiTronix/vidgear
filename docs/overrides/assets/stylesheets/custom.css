@@ -31,17 +31,34 @@ th {
 	text-align: center !important;
 }
 
-.zoom {
-  transition: transform .2s ease-in-out;
+.md-nav__item--active > .md-nav__link {
+	 font-weight: bold;
 }
 
-.zoom:hover {
-  transform: scale(1.05);
-  transform-origin: left;
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+}
+
+.md-tabs__link--active {
+    font-weight: bold;
+}
+
+.md-nav__title {
+   font-size: 1rem !important;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-hue: 310; /* [0, 360] */ !important;
+}
+
+.md-typeset .task-list-control .task-list-indicator::before {
+  background-color: #FF0000;
 }
 
 blockquote {
-  background: #f9f9f9;
   padding: 0.5em 10px;
   quotes: "\201C""\201D""\2018""\2019";
 }
@@ -59,69 +76,6 @@ blockquote:after {
 }
 blockquote p {
   display: inline;
-}
-
-.c-smileyButton {
-  font-weight: 600;
-  color: #ffffff;
-  border: 0;
-  outline: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  height: 2.5em;
-  padding: 0.5em 0.75em;
-  border-radius: 0.25em;
-  box-sizing: border-box;
-  background-color: transparent;
-  box-shadow: 0 0.15em 1em rgba(255, 0, 0, 0.2);
-  z-index: 1;
-}
-.c-smileyButton:hover .c-smileyButton__face::before {
-  content: '\1F618';
-  animation: animate 1.05s infinite;
-}
-.c-smileyButton::before {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  z-index: 1;
-}
-
-.c-smileyButton__face::before {
-  content: '\1F496';
-}
-
-.c-smileyButton__hoverListener {
-  position: absolute;
-  cursor: default;
-  z-index: -1;
-}
-.c-smileyButton__hoverListener:hover ~ .c-smileyButton__face::before {
-  animation: none;
-}
-.c-smileyButton__hoverListener:nth-child(1) {
-  width: 290%;
-  height: 550%;
-}
-.c-smileyButton__hoverListener:nth-child(1):hover ~ .c-smileyButton__face::before {
-  content: '\1F60C';
-}
-.c-smileyButton__hoverListener:nth-child(2) {
-  width: 190%;
-  height: 330%;
-}
-.c-smileyButton__hoverListener:nth-child(2):hover ~ .c-smileyButton__face::before {
-  content: '\1F60D';
-}
-
-@keyframes animate {
-  100% {
-    content: '\1F60A';
-  }
 }
 
 /* Fix the player container to take up 100% width and to calculate its height based on its children. */
@@ -153,4 +107,45 @@ blockquote p {
     display: block;
     width: 100%;
     height: auto;
+}
+ footer.sponsorship {
+	 text-align: center;
+}
+ footer.sponsorship hr {
+	 display: inline-block;
+	 width: px2rem(32px);
+	 margin: 0 px2rem(14px);
+	 vertical-align: middle;
+	 border-bottom: 2px solid var(--md-default-fg-color--lighter);
+}
+ footer.sponsorship:hover hr {
+	 border-color: var(--md-accent-fg-color);
+}
+ footer.sponsorship:not(:hover) .twemoji.heart-throb-hover svg {
+	 color: var(--md-default-fg-color--lighter) !important;
+}
+ body:not([data-md-prefers-color-scheme="true"])[data-md-color-scheme="slate"] .md-icon .light-mode, body:not([data-md-prefers-color-scheme="true"])[data-md-color-scheme="slate"] .md-icon .system-mode, body:not([data-md-prefers-color-scheme="true"])[data-md-color-scheme="slate"] .md-icon .unknown-mode {
+	 display: none;
+}
+ body:not([data-md-prefers-color-scheme="true"])[data-md-color-scheme="default"] .md-icon .dark-mode, body:not([data-md-prefers-color-scheme="true"])[data-md-color-scheme="default"] .md-icon .system-mode, body:not([data-md-prefers-color-scheme="true"])[data-md-color-scheme="default"] .md-icon .unknown-mode {
+	 display: none;
+}
+ body:not([data-md-prefers-color-scheme="true"]):not([data-md-color-scheme="default"]):not([data-md-color-scheme="slate"]) .md-icon .dark-mode, body:not([data-md-prefers-color-scheme="true"]):not([data-md-color-scheme="default"]):not([data-md-color-scheme="slate"]) .md-icon .light-mode, body:not([data-md-prefers-color-scheme="true"]):not([data-md-color-scheme="default"]):not([data-md-color-scheme="slate"]) .md-icon .system-mode {
+	 display: none;
+}
+ body[data-md-prefers-color-scheme="true"] .md-icon .dark-mode, body[data-md-prefers-color-scheme="true"] .md-icon .light-mode, body[data-md-prefers-color-scheme="true"] .md-icon .unknown-mode {
+	 display: none;
+}
+
+#version-selector .form-control {
+    border-radius: 2.25em;
+	border: .1rem solid currentColor;
+	background-color: var(--md-primary-fg-color);
+	border-color: var(--md-primary-bg-color);
+    color: var(--md-primary-bg-color);
+    padding: .5em;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    overflow: hidden;
+    text-overflow: '';
 }

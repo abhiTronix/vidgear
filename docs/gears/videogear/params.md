@@ -24,8 +24,7 @@ limitations under the License.
 
 ## **`enablePiCamera`** 
 
-This parameter select access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) API respectively. This means the if `enablePiCamera` flag is `True`, `PiGear` API will be accessed and if `False`, the `CamGear` API will be accessed. 
-
+This parameter provide access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
 
 **Data-Type:** Boolean
 
@@ -37,7 +36,7 @@ This parameter select access to [PiGear](../../pigear/overview/) or [CamGear](..
 VideoGear(enablePiCamera=True) # enable access to PiGear API
 ```
 
-Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend).
+!!! info "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
 
 
 &nbsp; 
@@ -45,12 +44,12 @@ Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with
 &nbsp; 
 
 
-## Parameters for Stabilizer Class
+## Parameters for Stabilizer Backend
 
 
 ### **`stabilize`**
 
-This parameter set this flag to enable access to [Stabilizer Class](../../stabilizer/overview/), i.e. flag can be set to `True`(_to enable_) or unset to `False`(_to disable_) this mode. 
+This parameter enable access to [Stabilizer Class](../../stabilizer/overview/) for stabilizing frames, i.e. can be set to `True`(_to enable_) or unset to `False`(_to disable_). 
 
 **Data-Type:** Boolean
 
@@ -62,13 +61,13 @@ This parameter set this flag to enable access to [Stabilizer Class](../../stabil
 VideoGear(stabilize=True) # enable stablization
 ```
 
-Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend).
+!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
 
 &nbsp; 
 
 ### **`options`**
 
-This parameter can be used in addition, to pass user-defined parameters supported by [Stabilizer Class](../../stabilizer/overview/). These parameters can be passed by formatting them as this parameter's attribute.
+This parameter can be used in addition, to pass user-defined parameters supported by [Stabilizer Class](../../stabilizer/overview/). These parameters can be formatted as this parameter's attribute.
 
 **Supported dictionary attributes for Stabilizer Class are:**
 
@@ -104,11 +103,13 @@ This parameter can be used in addition, to pass user-defined parameters supporte
 &nbsp; 
 
 
-## Parameters with CamGear backend
+## Parameters for CamGear backend
+
+!!! tip "Enable this backend with [`enablePiCamera=False`](#enablepicamera) on VideoGear."
 
 ### **`source`**
 
-!!! warning "CamGear API will throw `RuntimeError` if `source` provided is invalid!"
+!!! warning "VideoGear API will throw `RuntimeError` if `source` provided is invalid."
 
 
 This parameter defines the source for the input stream.
@@ -121,54 +122,67 @@ This parameter defines the source for the input stream.
 
 Its valid input can be one of the following: 
 
-* **Index (*integer*):** _Valid index of the connected video device, for e.g `0`, or `1`, or `2` etc. as follows:_
+- [x] **Index (*integer*):** _Valid index of the connected video device, for e.g `0`, or `1`, or `2` etc. as follows:_
 
     ```python
     VideoGear(source=0)
     ```
 
-* **Filepath (*string*):** _Valid path of the video file, for e.g `"/home/foo.mp4"` as follows:_
+- [x] **Filepath (*string*):** _Valid path of the video file, for e.g `"/home/foo.mp4"` as follows:_
 
     ```python
     VideoGear(source='/home/foo.mp4')
     ```
 
-* **YouTube Video's URL (*string*):** _Valid Youtube video URL as input when YouTube Mode is enabled(*i.e. `y_tube=True`*), for e.g `"https://youtu.be/dQw4w9WgXcQ"` as follows:_
+- [x] **Streaming Services URL Address (*string*):** _Valid Video URL as input when Stream Mode is enabled(*i.e. `stream_mode=True`*)_ 
 
-    !!! info "Valid YouTube URL format"
+    !!! quote "VideoGear automatically detects whether `source` belong to YouTube or elsewhere, and handles it with appropriate API."
 
-        All YouTube URLS with following format are supported:
+    * **Youtube URLs:** CamGear utilizes `pafy` with `youtube-dl` backend. For example `"https://youtu.be/bvetuLwJIkA"` as follows:
 
-        * `https://youtu.be/{video-id}`
-        * `http://www.youtube.com/watch?v={video-id}`
-        * `http://www.youtube.com/v/{video-id}`
-        * `{video-id}`
+        ??? info "Valid YouTube URL formats"
 
-    ```python
-    VideoGear(source='https://youtu.be/dQw4w9WgXcQ', y_tube=True)
-    ```
+            All YouTube URLS with following format are supported:
 
-* **Network Address (*string*):** _Valid (`http(s), rtp, rstp, rtmp, mms, etc.`) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
+            * `https://youtu.be/{video-id}`
+            * `http://www.youtube.com/watch?v={video-id}`
+            * `http://www.youtube.com/v/{video-id}`
+            * `{video-id}`
+
+        ```python
+        VideoGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
+        ```
+
+    * **Streaming Websites URLs:** CamGear utilizes `streamlink` backend. For example `"https://www.dailymotion.com/video/x7xsoud"` as follows:
+
+        ??? info "Supported Streaming Websites"
+
+            The list of all supported Streaming Websites URLs can be found [here ➶](https://streamlink.github.io/plugin_matrix.html#plugins)
+
+        ```python
+        VideoGear(source='https://www.dailymotion.com/video/x7xsoud', stream_mode=True)
+        ```
+
+- [x] **Network Address (*string*):** _Valid (`http(s)`, `rtp`, `rstp`, `rtmp`, `mms`, etc.) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
 
     ```python
     VideoGear(source='rtsp://192.168.31.163:554/')
     ```
 
-*  **GStreamer Pipeline:** 
+- [x] **GStreamer Pipeline:** 
    
     CamGear API also supports GStreamer Pipeline.
 
     !!! warning "Requirements for GStreamer Pipelining"
 
-        Successful GStreamer Pipelining needs your OpenCV to be built with GStreamer support. You can easily check it by running `print(cv2.getBuildInformation())` python command and see if output contains something similar as follows:
+        Successful GStreamer Pipelining needs your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
+
+        Thereby, You can easily check GStreamer support by running `print(cv2.getBuildInformation())` python command and see if output contains something similar as follows:
 
          ```sh
          Video I/O:
-          ...
-              GStreamer:                   
-                base:                      YES (ver 1.8.3)
-                video:                     YES (ver 1.8.3)
-                app:                       YES (ver 1.8.3)
+         ...
+              GStreamer:                   YES (ver 1.8.3)
          ...
          ```
 
@@ -180,9 +194,16 @@ Its valid input can be one of the following:
 
 &nbsp;
 
-### **`y_tube`**
+### **`stream_mode`**
 
-This parameter controls the YouTube Mode, .i.e if enabled(`y_tube=True`), the CamGear API will interpret the given `source` input as YouTube URL address. 
+This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), the VideoGear API will interpret the given `source` input as YouTube URL address. 
+
+!!! bug "Due to a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend _(`backend=cv2.CAP_GSTREAMER`)_](#backend) for any livestreams _(such as Twitch)_."
+
+!!! warning "VideoGear automatically enforce GStreamer backend _(backend=`cv2.CAP_GSTREAMER`)_ for YouTube-livestreams!"
+
+!!! error "VideoGear will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support. Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
+
 
 **Data-Type:** Boolean
 
@@ -191,16 +212,19 @@ This parameter controls the YouTube Mode, .i.e if enabled(`y_tube=True`), the Ca
 **Usage:**
 
 ```python
-VideoGear(source='https://youtu.be/dQw4w9WgXcQ', y_tube=True)
+VideoGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
+!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
 
 &nbsp;
 
 
 ### **`backend`**
 
-This parameter manually selects the backend of the OpenCV's VideoCapture class _(only if specified)_. 
+This parameter manually selects the backend for OpenCV's VideoCapture class _(only if specified)_. 
+
+!!! warning "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225), VideoGear automatically enforce GStreamer backend(`backend=cv2.CAP_GSTREAMER`) for YouTube-livestreams in [Stream Mode](#stream_mode). This behavior discards any `backend` parameter value for those streams."
 
 **Data-Type:** Integer
 
@@ -229,13 +253,13 @@ This parameter provides the ability to alter various **Source Tweak Parameters**
 
 **Usage:**
 
-!!! tip "All supported parameters are listed [here ➶](../../camgear/advanced/source_params/)"
+!!! tip "All supported parameters are listed [here ➶](../advanced/source_params/)"
 
 The desired parameters can be passed to VideoGear API by formatting them as this parameter's attributes, as follows:
 
 ```python
 # formatting parameters as dictionary attributes
-options = {"CAP_PROP_FRAME_WIDTH ":320, "CAP_PROP_FRAME_HEIGHT":240, "CAP_PROP_FPS ":60}
+options = {"CAP_PROP_FRAME_WIDTH":320, "CAP_PROP_FRAME_HEIGHT":240, "CAP_PROP_FPS":60}
 # assigning it
 VideoGear(source=0, **options)
 ```
@@ -244,13 +268,15 @@ VideoGear(source=0, **options)
 
 &nbsp;
 
-## Parameters with PiGear backend 
+## Parameters for PiGear backend 
+
+!!! tip "Enable this backend with [`enablePiCamera=False`](#enablepicamera) on VideoGear."
 
 ### **`camera_num`** 
 
 This parameter selects the camera module index which will be used as source, if you're having multiple camera modules connected. Its value can only be greater than zero, otherwise, it will throw `ValueError` for any negative value.
 
-!!! warning "This parameter shouldn't be altered, until unless you using [Raspberry Pi 3/3+ Compute Module IO Board](https://www.raspberrypi.org/documentation/hardware/computemodule/cmio-camera.md) in your project."
+!!! warning "This parameter shouldn't be altered, until unless you using [Raspberry Pi 3/3+ Compute Module IO Board](https://www.raspberrypi.org/documentation/hardware/computemodule/cmio-camera.md).""
 
 **Data-Type:** Integer
 
@@ -259,7 +285,7 @@ This parameter selects the camera module index which will be used as source, if 
 **Usage:**
 
 ```python
-VideoGear(enablePiCamera=True, camera_num=0)
+VideoGear(camera_num=0)
 ```
   
 &nbsp;
@@ -269,9 +295,7 @@ VideoGear(enablePiCamera=True, camera_num=0)
 
 This parameter sets the resolution (i.e. `(width,height)`) of the source. 
 
-!!! tip "More Information about `resolution` parameter"
-
-    For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.resolution).
+!!! info "For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.resolution)"
 
 
 **Data-Type:** Tuple
@@ -281,17 +305,17 @@ This parameter sets the resolution (i.e. `(width,height)`) of the source.
 **Usage:**
 
 ```python
-VideoGear(enablePiCamera=True, resolution=(1280,720)) # sets 1280x720 resolution
+VideoGear(resolution=(1280,720)) # sets 1280x720 resolution
 ```
 
 &nbsp;
 
 ### **`framerate`** 
 
+This parameter sets the framerate of the source.
+ 
 
-This parameter sets the framerate of the source. 
-
-!!! info "For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.framerate)."
+!!! info "For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.framerate)"
 
 
 **Data-Type:** integer/float
@@ -301,10 +325,8 @@ This parameter sets the framerate of the source.
 **Usage:**
 
 ```python
-VideoGear(enablePiCamera=True, framerate=60) # sets 60fps framerate
+VideoGear(framerate=60) # sets 60fps framerate
 ```
-
-(*integer*) : sets the framerate.  Its default value is `30`. **For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.framerate)**.
 
 &nbsp;
 
@@ -319,25 +341,32 @@ This parameter provides the ability to alter various **Tweak Parameters** `like 
 
 **Usage:**
 
-!!! tip "All supported parameters are listed in [PiCamera Docs ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html)"
+!!! tip "All supported parameters are listed in [PiCamera Docs](https://picamera.readthedocs.io/en/release-1.13/api_camera.html)"
 
-The desired parameters can be passed to PiGear API by formatting them as this parameter's attributes, as follows:
+The desired parameters can be passed to VideoGear API by formatting them as this parameter's attributes, as follows:
 
 ```python
 # formatting parameters as dictionary attributes
-options = {"hflip": True, "exposure_mode": "auto", "iso": 800, "exposure_compensation": 15, "awb_mode": "horizon", "sensor_mode": 0} 
+options = {
+    "hflip": True,
+    "exposure_mode": "auto",
+    "iso": 800,
+    "exposure_compensation": 15,
+    "awb_mode": "horizon",
+    "sensor_mode": 0,
+}
 # assigning it
-VideoGear(enablePiCamera=True, **options)
+VideoGear(logging=True, **options)
 ```
 
 **User-specific attributes:**
 
-Additionaly, `options` parameter also support some User-specific attributes, which are as follows:
+Additionally, `options` parameter also support some User-specific attributes, which are as follows:
 
-* **`HWFAILURE_TIMEOUT`** (float): PiGear contains a ==Internal Threaded Timer== that keeps active track of the frozen-threads/failures and will exit safely at a particular timeout value. This parameter can be used to control that given timeout value , i.e. the maximum waiting time _(in seconds)_ before the Internal Threaded Timer exits with a `SystemError` to save resources. Its value can only be between `1.0` _(min)_ and `10.0` _(max)_ and its default value is `2.0`. It usage is as follows: 
+* **`HWFAILURE_TIMEOUT`** (float): PiGear contains ==Threaded Internal Timer== - that silently keeps active track of any frozen-threads/hardware-failures and exit safely, if any does occur at a timeout value. This parameter can be used to control that timeout value i.e. the maximum waiting time _(in seconds)_ after which PiGear exits with a `SystemError` to save resources. Its value can only be between `1.0` _(min)_ and `10.0` _(max)_ and its default value is `2.0`. Its usage is as follows: 
 
     ```python
-    options = {"HWFAILURE_TIMEOUT": 2.5} # sets timeout to 2.5 seconds
+    options = {"HWFAILURE_TIMEOUT": 2.5}  # sets timeout to 2.5 seconds
     ```
 
 &nbsp;
@@ -363,7 +392,7 @@ This parameter selects the colorspace of the source stream.
 VideoGear(colorspace="COLOR_BGR2HSV")
 ```
 
-Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)
+!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
 
 &nbsp;
 
@@ -386,7 +415,7 @@ VideoGear(logging=True)
 
 ### **`time_delay`** 
 
-This parameter set the time delay _(in seconds)_ before the PiGear API start reading the frames. This delay is only required if the source required some warm-up delay before starting up. 
+This parameter set the time delay _(in seconds)_ before the VideoGear API start reading the frames. This delay is only required if the source required some warm-up delay before starting up. 
 
 **Data-Type:** Integer
 
@@ -395,7 +424,7 @@ This parameter set the time delay _(in seconds)_ before the PiGear API start rea
 **Usage:**
 
 ```python
-VideoGear(time_delay=1) # set 1 seconds time delay
+VideoGear(time_delay=1)  # set 1 seconds time delay
 ```
 
 &nbsp; 

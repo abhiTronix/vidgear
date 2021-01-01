@@ -26,9 +26,7 @@ limitations under the License.
 
 This parameter selects the camera module index which will be used as source, if you're having multiple camera modules connected. Its value can only be greater than zero, otherwise, it will throw `ValueError` for any negative value.
 
-!!! warning "Important Warning"
-
-    This parameter shouldn't be altered, until unless you using [Raspberry Pi 3/3+ Compute Module IO Board](https://www.raspberrypi.org/documentation/hardware/computemodule/cmio-camera.md) in your project.
+!!! warning "This parameter shouldn't be altered, until unless you using [Raspberry Pi 3/3+ Compute Module IO Board](https://www.raspberrypi.org/documentation/hardware/computemodule/cmio-camera.md).""
 
 **Data-Type:** Integer
 
@@ -65,7 +63,8 @@ PiGear(resolution=(1280,720)) # sets 1280x720 resolution
 ## **`framerate`** 
 
 
-This parameter sets the framerate of the source. 
+This parameter sets the framerate of the source.
+ 
 
 !!! info "For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.framerate)"
 
@@ -79,8 +78,6 @@ This parameter sets the framerate of the source.
 ```python
 PiGear(framerate=60) # sets 60fps framerate
 ```
-
-(*integer*) : sets the framerate.  Its default value is `30`. **For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.framerate)**.
 
 &nbsp;
 
@@ -100,7 +97,7 @@ This parameter selects the colorspace of the source stream.
 PiGear(colorspace="COLOR_BGR2HSV")
 ```
 
-Its complete usage example is given [here ➶](../usage/#using-pigear-with-direct-colorspace-manipulation)
+!!! info "Its complete usage example is given [here ➶](../usage/#using-pigear-with-direct-colorspace-manipulation)"
 
 &nbsp;
 
@@ -120,19 +117,26 @@ The desired parameters can be passed to PiGear API by formatting them as this pa
 
 ```python
 # formatting parameters as dictionary attributes
-options = {"hflip": True, "exposure_mode": "auto", "iso": 800, "exposure_compensation": 15, "awb_mode": "horizon", "sensor_mode": 0} 
+options = {
+    "hflip": True,
+    "exposure_mode": "auto",
+    "iso": 800,
+    "exposure_compensation": 15,
+    "awb_mode": "horizon",
+    "sensor_mode": 0,
+}
 # assigning it
 PiGear(logging=True, **options)
 ```
 
 **User-specific attributes:**
 
-Additionaly, `options` parameter also support some User-specific attributes, which are as follows:
+Additionally, `options` parameter also support some User-specific attributes, which are as follows:
 
-* **`HWFAILURE_TIMEOUT`** (float): PiGear contains a ==Internal Threaded Timer== that keeps active track of the frozen-threads/failures and will exit safely at a particular timeout value. This parameter can be used to control that given timeout value , i.e. the maximum waiting time _(in seconds)_ before the Internal Threaded Timer exits with a `SystemError` to save resources. Its value can only be between `1.0` _(min)_ and `10.0` _(max)_ and its default value is `2.0`. It usage is as follows: 
+* **`HWFAILURE_TIMEOUT`** (float): PiGear contains ==Threaded Internal Timer== - that silently keeps active track of any frozen-threads/hardware-failures and exit safely, if any does occur at a timeout value. This parameter can be used to control that timeout value i.e. the maximum waiting time _(in seconds)_ after which PiGear exits with a `SystemError` to save resources. Its value can only be between `1.0` _(min)_ and `10.0` _(max)_ and its default value is `2.0`. Its usage is as follows: 
 
     ```python
-    options = {"HWFAILURE_TIMEOUT": 2.5} # sets timeout to 2.5 seconds
+    options = {"HWFAILURE_TIMEOUT": 2.5}  # sets timeout to 2.5 seconds
     ```
 
 &nbsp;
@@ -164,7 +168,7 @@ This parameter set the time delay _(in seconds)_ before the PiGear API start rea
 **Usage:**
 
 ```python
-PiGear(time_delay=1) # set 1 seconds time delay
+PiGear(time_delay=1)  # set 1 seconds time delay
 ```
 
 &nbsp; 

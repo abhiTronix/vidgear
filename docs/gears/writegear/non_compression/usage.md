@@ -23,7 +23,6 @@ limitations under the License.
 
 !!! warning "Important Information"
 
-    
     * **DO NOT** feed frames to WriteGear with different dimensions or channels, or-else WriteGear API will exit with `ValueError`.
 
     * ==In case WriteGear API fails to detect valid FFmpeg executables on your system, it will auto-switches to this(Non-Compression) Mode.==
@@ -43,10 +42,10 @@ from vidgear.gears import WriteGear
 import cv2
 
 # open any valid video stream(for e.g `myvideo.avi` file)
-stream = CamGear(source='myvideo.avi').start() 
+stream = CamGear(source="myvideo.avi").start()
 
 # Define writer with Non-compression mode and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename = 'Output.mp4', compression_mode=False) 
+writer = WriteGear(output_filename="Output.mp4", compression_mode=False)
 
 # loop over
 while True:
@@ -58,9 +57,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # write frame to writer
     writer.write(frame)
@@ -88,7 +85,7 @@ writer.close()
 ## Using Non-Compression Mode with VideoCapture Gears
 
 
-In WriteGear API, the Non-Compression mode provides flexible control over [**OpenCV's VideoWriter API**](https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) parameters, through its `output_param` dictionary parameter, by formating them as dictionary attributes. Also, WriteGear API can be used in conjunction with any other Gear effortlessly. The complete usage example is as follows:
+In Non-Compression mode, WriteGear API provides flexible control over [**OpenCV's VideoWriter API**](https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) parameters through its `output_param` dictionary parameter by formating them as dictionary attributes. Also, WriteGear API can be used in conjunction with any other Gear effortlessly. The complete usage example is as follows:
 
 ```python
 # import required libraries
@@ -97,13 +94,15 @@ from vidgear.gears import WriteGear
 import cv2
 
 # define suitable tweak parameters for writer
-output_params = {"-fourcc":"MJPG", "-fps": 30}
+output_params = {"-fourcc": "MJPG", "-fps": 30}
 
 # open live video stream on webcam at first index(i.e. 0) device
 stream = VideoGear(source=0, logging=True).start()
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename = 'Output.mp4', compression_mode=False, logging = True, **output_params)
+writer = WriteGear(
+    output_filename="Output.mp4", compression_mode=False, logging=True, **output_params
+)
 
 
 # loop over
@@ -115,7 +114,6 @@ while True:
     # check for frame if Nonetype
     if frame is None:
         break
-
 
     # {do something with the frame here}
     # lets convert frame to gray for this example
@@ -155,13 +153,15 @@ from vidgear.gears import WriteGear
 import cv2
 
 # define suitable tweak parameters for writer
-output_params = {"-fourcc":"MJPG", "-fps": 30}
+output_params = {"-fourcc": "MJPG", "-fps": 30}
 
 # Open suitable video stream, such as webcam on first index(i.e. 0)
-stream = cv2.VideoCapture(0) 
+stream = cv2.VideoCapture(0)
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename = 'Output.mp4', compression_mode=False, logging = True, **output_params)
+writer = WriteGear(
+    output_filename="Output.mp4", compression_mode=False, logging=True, **output_params
+)
 
 # loop over
 while True:
@@ -171,7 +171,7 @@ while True:
 
     # check for frame if not grabbed
     if not grabbed:
-      break
+        break
 
     # {do something with the frame here}
     # lets convert frame to gray for this example

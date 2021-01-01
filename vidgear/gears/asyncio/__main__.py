@@ -34,7 +34,7 @@ if __name__ == "__main__":
 
     # define argument parser and parse command line arguments
     usage = """python -m vidgear.gears.asyncio [-h] [-s SOURCE] [-ep ENABLEPICAMERA] [-S STABILIZE]
-				[-cn CAMERA_NUM] [-yt Y_TUBE] [-b BACKEND] [-cs COLORSPACE]
+				[-cn CAMERA_NUM] [-yt stream_mode] [-b BACKEND] [-cs COLORSPACE]
 				[-r RESOLUTION] [-f FRAMERATE] [-td TIME_DELAY]
 				[-ip IPADDRESS] [-pt PORT] [-l LOGGING] [-op OPTIONS]"""
 
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     )
     ap.add_argument(
         "-yt",
-        "--y_tube",
+        "--stream_mode",
         default=False,
         type=bool,
         help="Enables YouTube Mode in CamGear API.",
@@ -151,7 +151,7 @@ if __name__ == "__main__":
         stabilize=args["stabilize"],
         source=args["source"],
         camera_num=args["camera_num"],
-        y_tube=args["y_tube"],
+        stream_mode=args["stream_mode"],
         backend=args["backend"],
         colorspace=args["colorspace"],
         resolution=args["resolution"],

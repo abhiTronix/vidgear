@@ -34,25 +34,28 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 * **`custom_data_location`** _(string)_ : Can be used to change/alter [*default location*](../overview/#default-location) path to somewhere else. Its usage is as follows:
 
     ```python
-    options = {"custom_data_location": "/home/foo/foo1"} #setdefault location to '/home/foo/foo1'
+    # set default location to '/home/foo/foo1'
+    options = {"custom_data_location": "/home/foo/foo1"}
     # assign it
     WebGear(logging=True, **options)
     ```
 
 * **`overwrite_default_files`** _(boolean)_ : Can be used to force trigger the [Auto-generation process](../overview/#auto-generation-process) to overwrite existing data-files. Its usage is as follows:
 
+    !!! danger "Remember only [downloaded files](../overview/#auto-generation-process) will be overwritten in this process, and any other file/folder will NOT be affected/overwritten."
+
     ```python
-    options = {"overwrite_default_files": True} #force trigger the Auto-generation process
+    # force trigger the Auto-generation process
+    options = {"overwrite_default_files": True}
     # assign it
     WebGear(logging=True, **options)
     ```
-    
-    !!! danger "Remember only [downloaded files](../overview/#auto-generation-process) will be overwritten in this process, and any other file/folder will NOT be affected/overwritten."
 
 * **`frame_size_reduction`** _(int/float)_ : This attribute controls the size reduction _(in percentage)_ of the frame to be streamed on Server._ The value defaults to `20`, and must be no higher than `90` _(fastest, max compression, Barely Visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40-60`. Its usage is as follows:
 
     ```python
-    options = {"frame_size_reduction": 50} #frame-size will be reduced by 50%
+    # frame-size will be reduced by 50%
+    options = {"frame_size_reduction": 50} 
     # assign it
     WebGear(logging=True, **options)
     ```
@@ -65,7 +68,8 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     *  **`frame_jpeg_quality`** _(integer)_ : It controls the JPEG encoder quality and value varies from `0` to `100` (the higher is the better quality but performance will be lower). Its default value is `95`. Its usage is as follows:
 
         ```python
-        options = {"frame_jpeg_quality": 80} #JPEG will be encoded at 80% quality.
+        # JPEG will be encoded at 80% quality
+        options = {"frame_jpeg_quality": 80}
         # assign it
         WebGear(logging=True, **options)
         ```
@@ -73,7 +77,8 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     * **`frame_jpeg_optimize`** _(boolean)_ : It enables various JPEG compression optimizations such as Chroma subsampling, Quantization table, etc. Its default value is `False`. Its usage is as follows:
 
         ```python
-        options = {"frame_jpeg_optimize": True} #JPEG optimizations are enabled.
+        # JPEG optimizations are enabled
+        options = {"frame_jpeg_optimize": True}
         # assign it
         WebGear(logging=True, **options)
         ```
@@ -81,99 +86,21 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     * **`frame_jpeg_progressive`** _(boolean)_ : It enables **Progressive** JPEG encoding instead of the **Baseline**.   Progressive Mode. Its default value is `False` means baseline mode is in-use. Its usage is as follows:
 
         ```python
-        options = {"frame_jpeg_progressive": True} #Progressive JPEG encoding enabled.
+        # Progressive JPEG encoding enabled
+        options = {"frame_jpeg_progressive": True}
         # assign it
         WebGear(logging=True, **options)
         ```
 
-### Stabilizer Specific attributes
-
-* **`SMOOTHING_RADIUS`** (_integer_) : This attribute can be used to alter averaging window size. It basically handles the quality of stabilization at the expense of latency and sudden panning. Larger its value, less will be panning, more will be latency and vice-versa. Its default value is `25`. You can easily pass this attribute as follows:
-
-    ```python
-    # smoothing radius 50
-    options = {'SMOOTHING_RADIUS': 30}
-    # assign it
-    WebGear(**options)
-    ```
-
-* **`BORDER_SIZE`** (_integer_) : This attribute enables the feature to extend border size that compensates for stabilized output video frames motions. Its default value is `0`(no borders). You can easily pass this attribute as follows:
-
-    ```python
-    # bordersize 15px
-    options = {'BORDER_SIZE': 15}
-    # assign it
-    WebGear(**options)
-    ```
-
-* **`CROP_N_ZOOM`**(_boolean_): This attribute enables the feature where it crops and zooms frames(to original size) to reduce the black borders from stabilization being too noticeable _(similar to the Stabilized, cropped and Auto-Scaled feature available in **Adobe AfterEffects**)_. It simply works in conjunction with the `BORDER_SIZE` attribute, i.e. when this attribute is enabled,  `BORDER_SIZE` will be used for cropping border instead of extending them. Its default value is `False`. You can easily pass this attribute as follows:
-
-    ```python
-    # bordersize 10px and crop-zoom enabled
-    options = {'BORDER_SIZE': 10, 'CROP_N_ZOOM' : True} 
-    # assign it
-    WebGear(**options)
-    ```
-
-* **`BORDER_TYPE`** (_string_) : This attribute can be used to change the extended border style. Valid border types are `'black'`, `'reflect'`, `'reflect_101'`, `'replicate'` and `'wrap'`, learn more about it [here ➶](https://docs.opencv.org/3.1.0/d2/de8/group__core__array.html#ga209f2f4869e304c82d07739337eae7c5). Its default value is `'black'`. You can easily pass this attribute as follows:
-
-    !!! warning "Altering `BORDER_TYPE` attribute is **Disabled** while `CROP_N_ZOOM` is enabled."
-
-    ```python
-    # border-type "black"
-    options = {'BORDER_TYPE': 'black'}
-    # assign it
-    WebGear(**options)
-    ```
-
-### CamGear Specific attributes
-
-!!! tip "All supported parameters are listed [here ➶](../../camgear/advanced/source_params/#supported-source-tweak-parameters)"
-
-The desired parameters can be passed to VideoGear API by formatting them as this parameter's attributes, as follows:
-
-```python
-# formatting parameters as dictionary attributes
-options = {"CAP_PROP_FRAME_WIDTH ":320, "CAP_PROP_FRAME_HEIGHT":240, "CAP_PROP_FPS ":60}
-# assigning it
-WebGear(source=0, **options)
-```
-
-### PiGear Specific attributes
-
-!!! tip "All supported parameters are listed in [PiCamera Docs](https://picamera.readthedocs.io/en/release-1.13/api_camera.html)!"
-
-The desired parameters can be passed to PiGear API by formatting them as this parameter's attributes, as follows:
-
-```python
-# formatting parameters as dictionary attributes
-options = {"hflip": True, "exposure_mode": "auto", "iso": 800, "exposure_compensation": 15, "awb_mode": "horizon", "sensor_mode": 0} 
-# assigning it
-WebGear(enablePiCamera=True, **options)
-```
-
-**User-specific attributes:**
-
-Additionaly, `options` parameter also support some User-specific attributes, which are as follows:
-
-* **`HWFAILURE_TIMEOUT`** (float): PiGear contains a ==Internal Threaded Timer== that keeps active track of the frozen-threads/failures and will exit safely at a particular timeout value. This parameter can be used to control that given timeout value , i.e. the maximum waiting time _(in seconds)_ before the Internal Threaded Timer exits with a `SystemError` to save resources. Its value can only be between `1.0` _(min)_ and `10.0` _(max)_ and its default value is `2.0`. It usage is as follows: 
-
-    ```python
-    options = {"HWFAILURE_TIMEOUT": 2.5} # sets timeout to 2.5 seconds
-    # assign it
-    WebGear(enablePiCamera=True, **options)
-    ```
-
 &nbsp; 
 
+&nbsp;
 
 ## Parameters for VideoGear backend
 
-
 ### **`enablePiCamera`** 
 
-This parameter select access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) API respectively. This means the if `enablePiCamera` flag is `True`, `PiGear` API will be accessed and if `False`, the `CamGear` API will be accessed. 
-
+This parameter provide access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
 
 **Data-Type:** Boolean
 
@@ -185,18 +112,20 @@ This parameter select access to [PiGear](../../pigear/overview/) or [CamGear](..
 WebGear(enablePiCamera=True) # enable access to PiGear API
 ```
 
-Its complete usage example is given [here ➶](../advanced/#using-webgear-with-pi-camera-module).
+!!! info "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
 
 
 &nbsp; 
 
+&nbsp;
 
-## Parameters for Stabilizer backend
+
+## Parameters for Stabilizer Backend
 
 
 ### **`stabilize`**
 
-This parameter set this flag to enable access to [Stabilizer Class](../../stabilizer/overview/), i.e. flag can be set to `True`(_to enable_) or unset to `False`(_to disable_) this mode. 
+This parameter enable access to [Stabilizer Class](../../stabilizer/overview/) for stabilizing frames, i.e. can be set to `True`(_to enable_) or unset to `False`(_to disable_). 
 
 **Data-Type:** Boolean
 
@@ -205,20 +134,58 @@ This parameter set this flag to enable access to [Stabilizer Class](../../stabil
 **Usage:**
 
 ```python
-WebGear(stabilize=True) # enable stabilization
+WebGear(stabilize=True) # enable stablization
 ```
 
-Its complete usage example is given [here ➶](../advanced/#using-webgear-with-real-time-video-stabilization-enabled).
+!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
+
+&nbsp; 
+
+### **`options`**
+
+This parameter can be used in addition, to pass user-defined parameters supported by [Stabilizer Class](../../stabilizer/overview/). These parameters can be formatted as this parameter's attribute.
+
+**Supported dictionary attributes for Stabilizer Class are:**
+
+* **`SMOOTHING_RADIUS`** (_integer_) : This attribute can be used to alter averaging window size. It basically handles the quality of stabilization at the expense of latency and sudden panning. Larger its value, less will be panning, more will be latency and vice-versa. Its default value is `25`. You can easily pass this attribute as follows:
+
+    ```python
+    options = {'SMOOTHING_RADIUS': 30}
+    ```
+
+* **`BORDER_SIZE`** (_integer_) : This attribute enables the feature to extend border size that compensates for stabilized output video frames motions. Its default value is `0`(no borders). You can easily pass this attribute as follows:
+
+    ```python
+    options = {'BORDER_SIZE': 10}
+    ```
+
+* **`CROP_N_ZOOM`**(_boolean_): This attribute enables the feature where it crops and zooms frames(to original size) to reduce the black borders from stabilization being too noticeable _(similar to the Stabilized, cropped and Auto-Scaled feature available in Adobe AfterEffects)_. It simply works in conjunction with the `BORDER_SIZE` attribute, i.e. when this attribute is enabled,  `BORDER_SIZE` will be used for cropping border instead of extending them. Its default value is `False`. You can easily pass this attribute as follows:
+
+    ```python
+    options = {'BORDER_SIZE': 10, 'CROP_N_ZOOM' : True}
+    ```
+
+* **`BORDER_TYPE`** (_string_) : This attribute can be used to change the extended border style. Valid border types are `'black'`, `'reflect'`, `'reflect_101'`, `'replicate'` and `'wrap'`, learn more about it [here](https://docs.opencv.org/3.1.0/d2/de8/group__core__array.html#ga209f2f4869e304c82d07739337eae7c5). Its default value is `'black'`. You can easily pass this attribute as follows:
+
+    !!! warning "Altering `BORDER_TYPE` attribute is **Disabled** while `CROP_N_ZOOM` is enabled."
+
+    ```python
+    options = {'BORDER_TYPE': 'black'}
+    ```
 
 
 &nbsp;
 
+&nbsp; 
 
-## Parameters with CamGear backend
+
+## Parameters for CamGear backend
+
+!!! tip "Enable this backend with [`enablePiCamera=False`](#enablepicamera) on WebGear."
 
 ### **`source`**
 
-!!! warning "CamGear API will throw `RuntimeError` if `source` provided is invalid!"
+!!! warning "WebGear API will throw `RuntimeError` if `source` provided is invalid."
 
 
 This parameter defines the source for the input stream.
@@ -231,54 +198,67 @@ This parameter defines the source for the input stream.
 
 Its valid input can be one of the following: 
 
-* **Index (*integer*):** _Valid index of the connected video device, for e.g `0`, or `1`, or `2` etc. as follows:_
+- [x] **Index (*integer*):** _Valid index of the connected video device, for e.g `0`, or `1`, or `2` etc. as follows:_
 
     ```python
     WebGear(source=0)
     ```
 
-* **Filepath (*string*):** _Valid path of the video file, for e.g `"/home/foo.mp4"` as follows:_
+- [x] **Filepath (*string*):** _Valid path of the video file, for e.g `"/home/foo.mp4"` as follows:_
 
     ```python
     WebGear(source='/home/foo.mp4')
     ```
 
-* **YouTube Video's URL (*string*):** _Valid Youtube video URL as input when YouTube Mode is enabled(*i.e. `y_tube=True`*), for e.g `"https://youtu.be/dQw4w9WgXcQ"` as follows:_
+- [x] **Streaming Services URL Address (*string*):** _Valid Video URL as input when Stream Mode is enabled(*i.e. `stream_mode=True`*)_ 
 
-    !!! info "Valid YouTube URL format"
+    !!! quote "WebGear automatically detects whether `source` belong to YouTube or elsewhere, and handles it with appropriate API."
 
-        All YouTube URLS with following format are supported:
+    * **Youtube URLs:** CamGear utilizes `pafy` with `youtube-dl` backend. For example `"https://youtu.be/bvetuLwJIkA"` as follows:
 
-        * `https://youtu.be/{video-id}`
-        * `http://www.youtube.com/watch?v={video-id}`
-        * `http://www.youtube.com/v/{video-id}`
-        * `{video-id}`
+        ??? info "Valid YouTube URL formats"
 
-    ```python
-    WebGear(source='https://youtu.be/dQw4w9WgXcQ', y_tube=True)
-    ```
+            All YouTube URLS with following format are supported:
 
-* **Network Address (*string*):** _Valid (`http(s), rtp, rstp, rtmp, mms, etc.`) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
+            * `https://youtu.be/{video-id}`
+            * `http://www.youtube.com/watch?v={video-id}`
+            * `http://www.youtube.com/v/{video-id}`
+            * `{video-id}`
+
+        ```python
+        WebGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
+        ```
+
+    * **Streaming Websites URLs:** CamGear utilizes `streamlink` backend. For example `"https://www.dailymotion.com/video/x7xsoud"` as follows:
+
+        ??? info "Supported Streaming Websites"
+
+            The list of all supported Streaming Websites URLs can be found [here ➶](https://streamlink.github.io/plugin_matrix.html#plugins)
+
+        ```python
+        WebGear(source='https://www.dailymotion.com/video/x7xsoud', stream_mode=True)
+        ```
+
+- [x] **Network Address (*string*):** _Valid (`http(s)`, `rtp`, `rstp`, `rtmp`, `mms`, etc.) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
 
     ```python
     WebGear(source='rtsp://192.168.31.163:554/')
     ```
 
-*  **GStreamer Pipeline:** 
+- [x] **GStreamer Pipeline:** 
    
     CamGear API also supports GStreamer Pipeline.
 
     !!! warning "Requirements for GStreamer Pipelining"
 
-        Successful GStreamer Pipelining needs your OpenCV to be built with GStreamer support. You can easily check it by running `print(cv2.getBuildInformation())` python command and see if output contains something similar as follows:
+        Successful GStreamer Pipelining needs your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
+
+        Thereby, You can easily check GStreamer support by running `print(cv2.getBuildInformation())` python command and see if output contains something similar as follows:
 
          ```sh
          Video I/O:
-          ...
-              GStreamer:                   
-                base:                      YES (ver 1.8.3)
-                video:                     YES (ver 1.8.3)
-                app:                       YES (ver 1.8.3)
+         ...
+              GStreamer:                   YES (ver 1.8.3)
          ...
          ```
 
@@ -290,9 +270,15 @@ Its valid input can be one of the following:
 
 &nbsp;
 
-### **`y_tube`**
+### **`stream_mode`**
 
-This parameter controls the YouTube Mode, .i.e if enabled(`y_tube=True`), the CamGear API will interpret the given `source` input as YouTube URL address. 
+This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), the WebGear API will interpret the given `source` input as YouTube URL address. 
+
+!!! bug "Due to a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend _(`backend=cv2.CAP_GSTREAMER`)_](#backend) for any livestreams _(such as Twitch)_."
+
+!!! warning "WebGear automatically enforce GStreamer backend _(backend=`cv2.CAP_GSTREAMER`)_ for YouTube-livestreams!"
+
+!!! error "WebGear will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support. Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
 
 **Data-Type:** Boolean
 
@@ -301,8 +287,10 @@ This parameter controls the YouTube Mode, .i.e if enabled(`y_tube=True`), the Ca
 **Usage:**
 
 ```python
-WebGear(source='https://youtu.be/dQw4w9WgXcQ', y_tube=True)
+WebGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
+
+!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
 
 
 &nbsp;
@@ -310,7 +298,9 @@ WebGear(source='https://youtu.be/dQw4w9WgXcQ', y_tube=True)
 
 ### **`backend`**
 
-This parameter manually selects the backend of the OpenCV's VideoCapture class _(only if specified)_. 
+This parameter manually selects the backend for OpenCV's VideoCapture class _(only if specified)_. 
+
+!!! warning "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225), WebGear automatically enforce GStreamer backend(`backend=cv2.CAP_GSTREAMER`) for YouTube-livestreams in [Stream Mode](#stream_mode). This behavior discards any `backend` parameter value for those streams."
 
 **Data-Type:** Integer
 
@@ -319,7 +309,7 @@ This parameter manually selects the backend of the OpenCV's VideoCapture class _
 
 **Usage:**
 
-!!! tip "All supported backends are listed [here ➶](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#ga023786be1ee68a9105bf2e48c700294d)."
+!!! tip "All supported backends are listed [here ➶](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#ga023786be1ee68a9105bf2e48c700294d)"
 
 Its value can be for e.g. `backend = cv2.CAP_DSHOW` for selecting Direct Show as backend:
 
@@ -329,13 +319,40 @@ WebGear(source=0, backend = cv2.CAP_DSHOW)
 
 &nbsp;
 
-## Parameters with PiGear backend 
+### **`options`** 
+
+This parameter provides the ability to alter various **Source Tweak Parameters** available within OpenCV's [VideoCapture API properties](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d). 
+
+**Data-Type:** Dictionary
+
+**Default Value:** Its default value is `{}` 
+
+**Usage:**
+
+!!! tip "All supported parameters are listed [here ➶](../advanced/source_params/)"
+
+The desired parameters can be passed to WebGear API by formatting them as this parameter's attributes, as follows:
+
+```python
+# formatting parameters as dictionary attributes
+options = {"CAP_PROP_FRAME_WIDTH":320, "CAP_PROP_FRAME_HEIGHT":240, "CAP_PROP_FPS":60}
+# assigning it
+WebGear(source=0, **options)
+```
+
+&nbsp; 
+
+&nbsp;
+
+## Parameters for PiGear backend 
+
+!!! tip "Enable this backend with [`enablePiCamera=True`](#enablepicamera) on WebGear."
 
 ### **`camera_num`** 
 
 This parameter selects the camera module index which will be used as source, if you're having multiple camera modules connected. Its value can only be greater than zero, otherwise, it will throw `ValueError` for any negative value.
 
-!!! warning "This parameter shouldn't be altered, until unless you using [Raspberry Pi 3/3+ Compute Module IO Board](https://www.raspberrypi.org/documentation/hardware/computemodule/cmio-camera.md) in your project."
+!!! warning "This parameter shouldn't be altered, until unless you using [Raspberry Pi 3/3+ Compute Module IO Board](https://www.raspberrypi.org/documentation/hardware/computemodule/cmio-camera.md).""
 
 **Data-Type:** Integer
 
@@ -344,7 +361,7 @@ This parameter selects the camera module index which will be used as source, if 
 **Usage:**
 
 ```python
-WebGear(enablePiCamera=True, camera_num=0)
+WebGear(camera_num=0)
 ```
   
 &nbsp;
@@ -354,7 +371,7 @@ WebGear(enablePiCamera=True, camera_num=0)
 
 This parameter sets the resolution (i.e. `(width,height)`) of the source. 
 
-!!! tip "For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.resolution)"
+!!! info "For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.resolution)"
 
 
 **Data-Type:** Tuple
@@ -364,17 +381,17 @@ This parameter sets the resolution (i.e. `(width,height)`) of the source.
 **Usage:**
 
 ```python
-WebGear(enablePiCamera=True, resolution=(1280,720)) # sets 1280x720 resolution
+WebGear(resolution=(1280,720)) # sets 1280x720 resolution
 ```
 
 &nbsp;
 
 ### **`framerate`** 
 
+This parameter sets the framerate of the source.
+ 
 
-This parameter sets the framerate of the source. 
-
-!!! tip "For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.framerate)"
+!!! info "For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.framerate)"
 
 
 **Data-Type:** integer/float
@@ -384,15 +401,56 @@ This parameter sets the framerate of the source.
 **Usage:**
 
 ```python
-WebGear(enablePiCamera=True, framerate=60) # sets 60fps framerate
+WebGear(framerate=60) # sets 60fps framerate
 ```
-
-(*integer*) : sets the framerate.  Its default value is `30`. **For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.framerate)**.
 
 &nbsp;
 
 
+### **`options`** 
+
+This parameter provides the ability to alter various **Tweak Parameters** `like brightness, saturation, senor_mode, resolution, etc.` available within [**Picamera library**](https://picamera.readthedocs.io/en/release-1.13/api_camera.html).
+
+**Data-Type:** Dictionary
+
+**Default Value:** Its default value is `{}` 
+
+**Usage:**
+
+!!! tip "All supported parameters are listed in [PiCamera Docs](https://picamera.readthedocs.io/en/release-1.13/api_camera.html)"
+
+The desired parameters can be passed to WebGear API by formatting them as this parameter's attributes, as follows:
+
+```python
+# formatting parameters as dictionary attributes
+options = {
+    "hflip": True,
+    "exposure_mode": "auto",
+    "iso": 800,
+    "exposure_compensation": 15,
+    "awb_mode": "horizon",
+    "sensor_mode": 0,
+}
+# assigning it
+WebGear(logging=True, **options)
+```
+
+**User-specific attributes:**
+
+Additionally, `options` parameter also support some User-specific attributes, which are as follows:
+
+* **`HWFAILURE_TIMEOUT`** (float): PiGear contains ==Threaded Internal Timer== - that silently keeps active track of any frozen-threads/hardware-failures and exit safely, if any does occur at a timeout value. This parameter can be used to control that timeout value i.e. the maximum waiting time _(in seconds)_ after which PiGear exits with a `SystemError` to save resources. Its value can only be between `1.0` _(min)_ and `10.0` _(max)_ and its default value is `2.0`. Its usage is as follows: 
+
+    ```python
+    options = {"HWFAILURE_TIMEOUT": 2.5}  # sets timeout to 2.5 seconds
+    ```
+
+&nbsp;
+
+&nbsp;
+
 ## Common Parameters
+ 
 
 ### **`colorspace`**
 
@@ -410,6 +468,7 @@ This parameter selects the colorspace of the source stream.
 WebGear(colorspace="COLOR_BGR2HSV")
 ```
 
+!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
 
 &nbsp;
 
@@ -432,7 +491,7 @@ WebGear(logging=True)
 
 ### **`time_delay`** 
 
-This parameter set the time delay _(in seconds)_ before the PiGear API start reading the frames. This delay is only required if the source required some warm-up delay before starting up. 
+This parameter set the time delay _(in seconds)_ before the WebGear API start reading the frames. This delay is only required if the source required some warm-up delay before starting up. 
 
 **Data-Type:** Integer
 
@@ -441,8 +500,7 @@ This parameter set the time delay _(in seconds)_ before the PiGear API start rea
 **Usage:**
 
 ```python
-WebGear(time_delay=1) # set 1 seconds time delay
+WebGear(time_delay=1)  # set 1 seconds time delay
 ```
 
 &nbsp; 
-

@@ -25,7 +25,16 @@ import logging as log
 from threading import Thread
 from pkg_resources import parse_version
 
-from .helper import capPropId, logger_handler, check_CV_version, youtube_url_validator
+from .helper import (
+    capPropId,
+    logger_handler,
+    check_CV_version,
+    restore_levelnames,
+    youtube_url_validator,
+    get_supported_resolution,
+    check_gstreamer_support,
+    dimensions_to_resolutions,
+)
 
 # define logger
 logger = log.getLogger("CamGear")
@@ -49,7 +58,7 @@ class CamGear:
     def __init__(
         self,
         source=0,
-        y_tube=False,
+        stream_mode=False,
         backend=0,
         colorspace=None,
         logging=False,
@@ -57,49 +66,159 @@ class CamGear:
         **options
     ):
 
+        """
+        This constructor method initializes the object state and attributes of the CamGear class.
+
+        Parameters:
+            source (based on input): defines the source for the input stream.
+            stream_mode (bool): controls the exclusive **Stream Mode** for handling streaming URLs.
+            backend (int): selects the backend for OpenCV's VideoCapture class.
+            colorspace (str): selects the colorspace of the input stream.
+            logging (bool): enables/disables logging.
+            time_delay (int): time delay (in sec) before start reading the frames.
+            options (dict): provides ability to alter Source Tweak Parameters.
+        """
+
         # enable logging if specified
         self.__logging = False
         if logging:
             self.__logging = logging
 
-        # check if Youtube Mode is ON (True)
-        if y_tube:
+        # check if Stream-Mode is ON (True)
+        if stream_mode:
+            # check GStreamer backend support
+            gst_support = check_gstreamer_support(logging=logging)
+            # handle special Stream Mode parameters
+            stream_resolution = get_supported_resolution(
+                options.pop("STREAM_RESOLUTION", "best"), logging=logging
+            )
+            stream_params = options.pop("STREAM_PARAMS", {})
+            if isinstance(stream_params, dict):
+                stream_params = {str(k).strip(): v for k, v in stream_params.items()}
+            else:
+                stream_params = {}
+            # handle Stream-Mode
             try:
-                # import pafy and parse youtube stream url
-                import pafy
-
-                # validate
+                # detect whether a YouTube URL
                 video_url = youtube_url_validator(source)
                 if video_url:
-                    source_object = pafy.new(video_url)
-                    vo_source = source_object.getbestvideo("webm", ftypestrict=True)
-                    va_source = source_object.getbest("webm", ftypestrict=False)
-                    # select the best quality
-                    if vo_source is None or (
-                        va_source.dimensions >= vo_source.dimensions
-                    ):
-                        source = va_source.url
+                    # import backend library
+                    import pafy
+
+                    logger.info("Using Youtube-dl Backend")
+                    # create new pafy object
+                    source_object = pafy.new(video_url, ydl_opts=stream_params)
+                    # extract all valid video-streams
+                    valid_streams = [
+                        v_streams
+                        for v_streams in source_object.videostreams
+                        if v_streams.notes != "HLS" and v_streams.extension == "webm"
+                    ] + [va_streams for va_streams in source_object.streams]
+                    # extract available stream resolutions
+                    available_streams = [qs.notes for qs in valid_streams]
+                    # check whether YouTube-stream is live or not?
+                    is_live = (
+                        all(x == "HLS" or x == "" for x in available_streams)
+                        if available_streams
+                        else False
+                    )
+                    # validate streams
+                    if valid_streams and (not is_live or gst_support):
+                        # handle live-streams
+                        if is_live:
+                            # Enforce GStreamer backend for YouTube-livestreams
+                            if logging:
+                                logger.critical(
+                                    "YouTube livestream URL detected. Enforcing GStreamer backend."
+                                )
+                            backend = cv2.CAP_GSTREAMER
+                            # convert stream dimensions to streams resolutions
+                            available_streams = dimensions_to_resolutions(
+                                [qs.resolution for qs in valid_streams]
+                            )
+                        # check whether stream-resolution was specified and available
+                        if stream_resolution in ["best", "worst"] or not (
+                            stream_resolution in available_streams
+                        ):
+                            # not specified and unavailable
+                            if not stream_resolution in ["best", "worst"]:
+                                logger.warning(
+                                    "Specified stream-resolution `{}` is not available. Reverting to `best`!".format(
+                                        stream_resolution
+                                    )
+                                )
+                                # revert to best
+                                stream_resolution = "best"
+                            # parse and select best or worst streams
+                            valid_streams.sort(
+                                key=lambda x: x.dimensions,
+                                reverse=True if stream_resolution == "best" else False,
+                            )
+                            parsed_stream = valid_streams[0]
+                        else:
+                            # apply specfied valid stream-resolution
+                            matched_stream = [
+                                i
+                                for i, s in enumerate(available_streams)
+                                if stream_resolution in s
+                            ]
+                            parsed_stream = valid_streams[matched_stream[0]]
+                        # extract stream URL as source
+                        source = parsed_stream.url
+                        # log progress
+                        if self.__logging:
+                            logger.debug(
+                                "YouTube source ID: `{}`, Title: `{}`, Quality: `{}`".format(
+                                    video_url, source_object.title, stream_resolution
+                                )
+                            )
                     else:
-                        source = vo_source.url
-                    if self.__logging:
-                        logger.debug(
-                            "YouTube source ID: `{}`, Title: `{}`".format(
-                                video_url, source_object.title
+                        # raise error if Gstreamer backend unavailable for YouTube live-streams
+                        # see issue: https://github.com/abhiTronix/vidgear/issues/133
+                        raise RuntimeError(
+                            "[CamGear:ERROR] :: Unable to find any OpenCV supported streams in `{}` YouTube URL. Kindly compile OpenCV with GSstreamer(>=v1.0.0) support or Use another URL!".format(
+                                source
                             )
                         )
                 else:
-                    raise RuntimeError(
-                        "Invalid `{}` Youtube URL cannot be processed!".format(source)
+                    # import backend library
+                    from streamlink import Streamlink
+
+                    restore_levelnames()
+                    logger.info("Using Streamlink Backend")
+                    # check session
+                    session = Streamlink()
+                    # extract streams
+                    streams = session.streams(source)
+                    # set parameters
+                    for key, value in stream_params.items():
+                        session.set_option(key, value)
+                    # select streams are available
+                    assert (
+                        streams
+                    ), "[CamGear:ERROR] :: Invalid `{}` URL cannot be processed!".format(
+                        source
                     )
+                    # check whether stream-resolution was specified and available
+                    if not stream_resolution in streams.keys():
+                        # if unavailable
+                        logger.warning(
+                            "Specified stream-resolution `{}` is not available. Reverting to `best`!".format(
+                                stream_resolution
+                            )
+                        )
+                        # revert to best
+                        stream_resolution = "best"
+                    # extract url
+                    source = streams[stream_resolution].url
             except Exception as e:
-                if self.__logging:
-                    logger.exception(str(e))
+                # raise error if something went wrong
                 raise ValueError(
-                    "[CamGear:ERROR] :: YouTube Mode is enabled and the input YouTube URL is incorrect!"
+                    "[CamGear:ERROR] :: Stream Mode is enabled but Input URL is invalid!"
                 )
 
         # youtube mode variable initialization
-        self.__youtube_mode = y_tube
+        self.__youtube_mode = stream_mode
 
         # assigns special parameter to global variable and clear
         self.__threaded_queue_mode = options.pop("THREADED_QUEUE_MODE", True)
@@ -200,7 +319,7 @@ class CamGear:
 
     def start(self):
         """
-        Launches the internal *Threaded Frames Extractor* daemon
+        Launches the internal *Threaded Frames Extractor* daemon.
 
         **Returns:** A reference to the CamGear class object.
         """
@@ -311,7 +430,3 @@ class CamGear:
         # wait until stream resources are released (producer thread might be still grabbing frame)
         if self.__thread is not None:
             self.__thread.join()
-            # properly handle thread exit
-            if self.__youtube_mode:
-                # kill thread-lock in youtube mode
-                self.__thread = None

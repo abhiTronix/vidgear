@@ -24,21 +24,16 @@ limitations under the License.
 
 ## What is CamGear API and what does it do?
 
-**Answer:** CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format (upto 4k tested), any network stream URL such as http(s), rtp, rstp, rtmp, mms, etc. In addition to this, it also supports live Gstreamer's RAW pipelines and YouTube video/livestreams URLs. _For more info. see [CamGear doc➶](../../gears/camgear/overview/)._
+**Answer:** CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format (upto 4k tested), any network stream URL such as http(s), rtp, rstp, rtmp, mms, etc. In addition to this, it also supports live Gstreamer's RAW pipelines and YouTube video/livestreams URLs. _For more info. see [CamGear doc ➶](../../gears/camgear/overview/)._
 
 &nbsp;
 
 ## I'm only familiar with OpenCV, how to get started with CamGear API?
 
-**Answer:** First see [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis), then go through [CamGear doc](../../gears/camgear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, see [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis), then go through [CamGear doc](../../gears/camgear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
-## Why CamGear is throwing `RuntimeError`?
-
-**Answer:** CamGear API will throw `RuntimeError` if source provided is Invalid. Recheck the `source` parameter value!.
-
-&nbsp;
 
 ## How to change OpenCV source backend in CamGear API?
 
@@ -46,53 +41,128 @@ limitations under the License.
 
 &nbsp;
 
-## How to get framerate of the source?
+## How to get framerate of the source in CamGear API?
 
 **Answer:** CamGear's `framerate` global variable can be used to retrieve framerate of the input video stream.  See [this example ➶](../../gears/writegear/compression/usage/#using-compression-mode-with-controlled-framerate).
 
 &nbsp;
 
-## How to open network streams with VidGear?
+## How to compile OpenCV with GStreamer support?
 
-**Answer:** Just give your stream URL directly to CamGear's [`source`](../../gears/camgear/params/#source) parameter.
+**Answer:** For compiling OpenCV with GSstreamer(`>=v1.0.0`) support, checkout this [tutorial](https://web.archive.org/web/20201225140454/https://medium.com/@galaktyk01/how-to-build-opencv-with-gstreamer-b11668fa09c) for Linux and Windows OSes, and **for MacOS do as follows:**
+
+**Step-1:** First Brew install GStreamer:
+
+```sh
+brew update
+brew install gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav
+```
+
+**Step-2:** Then, Follow [this tutorial ➶](https://www.learnopencv.com/install-opencv-4-on-macos/)
+
 
 &nbsp;
 
-## How to open Gstreamer pipeline in vidgear?
 
-**Answer:** CamGear API supports GStreamer Pipeline. Note ***that needs your OpenCV to have been built with GStreamer support***, you can check this with `print(cv2.getBuildInformation())` python command and check output if contains something similar as follows:
+## How to change quality and parameters of YouTube Streams with CamGear?
 
- ```bash
-   Video I/O:
-  ...
-      GStreamer:                   
-        base:                      YES (ver 1.8.3)
-        video:                     YES (ver 1.8.3)
-        app:                       YES (ver 1.8.3)
- ...
- ```
+CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `youtube-dl`) parameters)_ with its [`option`](../../gears/camgear/params/#options) dictionary parameter. The complete usage example is as follows: 
 
-Also finally, be sure videoconvert outputs into BGR format. For example as follows:
+!!! tip "More information on `STREAM_RESOLUTION` & `STREAM_PARAMS` attributes can be found [here ➶](../../gears/camgear/advanced/source_params/#exclusive-camgear-parameters)"
 
 ```python
-stream = CamGear(source='udpsrc port=5000 ! application/x-rtp,media=video,payload=96,clock-rate=90000,encoding-name=H264, ! rtph264depay ! decodebin ! videoconvert ! video/x-raw, format=BGR ! appsink').start()
+# import required libraries
+from vidgear.gears import CamGear
+import cv2
+
+# specify attributes
+options = {"STREAM_RESOLUTION": "720p", "STREAM_PARAMS": {"nocheckcertificate": True}}
+
+# Add YouTube Video URL as input source (for e.g https://youtu.be/bvetuLwJIkA)
+# and enable Stream Mode (`stream_mode = True`)
+stream = CamGear(
+    source="https://youtu.be/bvetuLwJIkA", stream_mode=True, logging=True, **options
+).start()
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # Show output window
+    cv2.imshow("Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+```
+
+
+&nbsp;
+
+
+## How to open RSTP network streams with CamGear?
+
+You can open any local network stream _(such as RTSP)_ just by providing its URL directly to CamGear's [`source`](../params/#source) parameter. The complete usage example is as follows: 
+
+```python
+# import required libraries
+from vidgear.gears import CamGear
+import cv2
+
+# open valid network video-stream
+stream = CamGear(source="rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov").start()
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # Show output window
+    cv2.imshow("Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
 ```
 
 &nbsp;
 
-## How to set USB camera properties?
+## How to set Camera Settings with CamGear?
 
 **Answer:** See [this usage example ➶](../../gears/camgear/usage/#using-camgear-with-variable-camera-properties).
 
 &nbsp;
 
-## How to play YouTube Live Stream or Video with CamGear API?
-
-**Answer:** See [this usage example ➶](../../gears/camgear/usage/#using-camgear-with-youtube-videos).
-
-&nbsp;
-
-## Can I play 4k video with vidgear?
+## Can I play 4K video with CamGear API?
 
 **Answer:** Yes, you can if your System Hardware supports it. It proven by our [playback benchmarking test](https://github.com/abhiTronix/vidgear/blob/master/vidgear/tests/benchmark_tests/test_benchmark_playback.py).
 
@@ -112,12 +182,12 @@ stream = CamGear(source='udpsrc port=5000 ! application/x-rtp,media=video,payloa
 
 ## Can I perform Deep Learning task with VidGear?
 
-**Answer:** VidGear is a High-performance Video Processing library _(similar to OpenCV, FFmpeg etc.)_, that can read, write, process, send & receive sequence of Video-frames from/to various devices in real-time. So you have to use a third party library with VidGear to deal with Deep Learning operations. But surely VidGear's  high-performance APIs will definitely leverages the overall performance.
+**Answer:** VidGear is a powerful Video Processing library _(similar to OpenCV, FFmpeg, etc.)_ that can read, write, process, send & receive a sequence of video-frames from/to various devices in way easy, flexible, and faster manner. So for Deep Learning or Machine Learning tasks, you have to use a third-party library with VidGear.  Being said that, VidGear's high-performance APIs definitely will leverage the overall performance if you're processing video/audio streams in your application along with Deep Learning tasks.
 
 &nbsp;
 
 ## Why CamGear is throwing warning that Threaded Queue Mode is disabled?
 
-**Answer:** That's a normal behaviour. Please read about [Threaded Queue Mode ➶](../../bonus/TQM/)
+**Answer:** That's a normal behavior. Please read about [Threaded Queue Mode ➶](../../bonus/TQM/)
 
 &nbsp;

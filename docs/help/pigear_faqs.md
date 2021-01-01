@@ -30,13 +30,19 @@ limitations under the License.
 
 ## I'm only familiar with OpenCV, how to get started with PiGear API?
 
-**Answer:** First see [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis), then go through [PiGear doc](../../gears/pigear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, see [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis), then go through [PiGear doc](../../gears/pigear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
 ## Why my camera module is not detected by PiGear?
 
-**Answer:** Make sure to [enable Raspberry Pi hardware-specific settings ➶](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this API. Also recheck/change your Camera Module's ribbon-cable, if it damaged or broken somehow.
+**Answer:** Make sure to [enable Raspberry Pi hardware-specific settings ➶](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) before using PiGear. Also, recheck/change your Camera Module's ribbon-cable and Camera Module itself, if it damaged or got broken somehow.
+
+&nbsp;
+
+## How to select camera index on Pi Compute IO board with two Cameras attached?
+
+**Answer:** See [PiGear's `camera_num` parameter ➶](../../gears/pigear/params/#camera_num)
 
 &nbsp;
 
@@ -54,12 +60,60 @@ limitations under the License.
 
 ## "Video output is too dark with PiGear", Why?
 
-**Answer:** Seems like incorrect settings. Kindly see [picamera docs](https://picamera.readthedocs.io/en/release-1.13/api_camera.html) for available parameters, and look for parameters are `sensor_mode`, `shutter_speed` and `exposure_mode`, try changing those values. Also, maybe your `framerate` value is too high, try lowering it.
+**Answer:** Seems like the settings are wrong. Kindly see [picamera docs](https://picamera.readthedocs.io/en/release-1.13/api_camera.html) for available parameters, and look for parameters are `sensor_mode`, `shutter_speed` and `exposure_mode`, try changing those values. Also, maybe your `framerate` value is too high. Try lowering it.
 
 &nbsp;
 
-## How to select camera index on Pi Compute IO board with two Cameras attached?
 
-**Answer:** See [PiGear's `camera_num` parameter ➶](../../gears/pigear/params/#camera_num)
+## How to change `picamera` settings for Camera Module at runtime?
+
+**Answer:** You can use `stream` global parameter in PiGear to feed any `picamera` setting at runtime. See following sample usage example:
+
+!!! info ""
+    In this example we will set initial Camera Module's `brightness` value `80`, and will change it `50` when **`z` key** is pressed at runtime.
+
+```python
+# import required libraries
+from vidgear.gears import PiGear
+import cv2
+
+# initial parameters
+options = {"brightness": 80} # set brightness to 80
+
+# open pi video stream with default parameters
+stream = PiGear(logging=True, **options).start() 
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+
+    # {do something with the frame here}
+
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+    # check for 'z' key if pressed
+    if key == ord("z"):
+        # change brightness to 50
+        stream.stream.brightness = 50
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+``` 
 
 &nbsp;

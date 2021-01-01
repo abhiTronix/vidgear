@@ -18,40 +18,42 @@ limitations under the License.
 ===============================================
 -->
 
-# Advanced Usage: Multi-Clients Mode for NetGear API 
+# Multi-Clients Mode for NetGear API 
 
 
 ## Overview
 
 <figure>
-  <img src="../../../../assets/images/multi_client.webp" alt="NetGear's Multi-Clients Mode" loading="lazy" width="75%"/>
-  <figcaption>NetGear's Multi-Clients Mode generalised</figcaption>
+  <img src="../../../../assets/images/multi_client.png" alt="NetGear's Multi-Clients Mode" loading="lazy"/>
+  <figcaption>NetGear's Multi-Clients Mode</figcaption>
 </figure>
 
 
-In this exclusive mode, NetGear API robustly handles Multiple Clients at once, thereby providing seamless access to frames and unidirectional data transfer to multiple Clients/Consumers across the network in real-time. This mode works almost contrary to Multi-Servers Mode but data transfer only works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_.
+In Multi-Clients Mode, NetGear robustly handles Multiple Clients at once thereby able to broadcast frames and data across multiple Clients/Consumers in the network at same time. This mode works almost contrary to [Multi-Servers Mode](../multi_server/) but here data transfer works unidirectionally with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ only. Every new Client that connects to single Server can be identified by its unique port address on the network. 
 
-Each new client connects to a single server, and can be identified by its unique port address on the network. The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`), and it can be easily activated in NetGear API through `multiclient_mode` attribute of its [`option`](../../params/#options) dictionary parameter, during initialization.
+The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`) and can be easily activated in NetGear API through `multiclient_mode` attribute of its [`option`](../../params/#options) dictionary parameter during initialization.
 
+
+!!! warning "Multi-Clients is best for tranferring **Data with Video-frames** to specific multiple Clients at the same time. But if you're looking for sheer performance for broadcasting see [WebGear API](../../../webgear/overview/)."
 
 &nbsp;
 
 
-!!! warning "Multi-Clients Mode Requirements"
+!!! danger "Multi-Clients Mode Requirements"
 
     * A unique PORT address **MUST** be assigned to each Client on the network using its [`port`](../../params/#port) parameter.
     
     * A list/tuple of PORT addresses of all unique Cients **MUST** be assigned at Server's end using its [`port`](../../params/#port) parameter for a successful connection.
 
-    * `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ and `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ are the only supported pattern values for this Mode. Thereby, calling any other pattern value will result in `ValueError`.
+    * Patterns `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ and `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ are the only supported pattern values for this Mode. Therefore, calling any other pattern value with is mode will result in `ValueError`.
 
     * The [`address`](../../params/#address) parameter value of each Client **MUST** exactly match the Server. 
 
 &nbsp;
 
-## Key Features
+## Features of Multi-Clients Mode
 
-- [x] Enables Multiple Client(s) connection with a single Client.
+- [x] Enables Multiple Client(s) connection with a single Server.
 
 - [x] Ability to [send any additional data](../../advanced/multi_client/#using-multi-clients-mode-with-custom-data-transfer) of any datatype along with frames in real-time.
 
@@ -73,15 +75,13 @@ Each new client connects to a single server, and can be identified by its unique
 ## Usage Examples
 
 
-!!! danger "Important Information"
+!!! info "Important Information"
 
-    * ==Frame/Data transmission will **NOT START** untill all given Client(s) are connected to the Server.==
+    * ==Frame/Data transmission will **NOT START** until all given Client(s) are connected to the Server.==
 
-    * For sake of simplicity, in these examples we will use only two unique Clients, but, the number of these Clients can be extended to several numbers depending upon your network bandwidth.
+    * Multi-Clients and Multi-Servers exclusive modes **CANNOT** be enabled simultaneously, Otherwise NetGear API will throw `ValueError`.
 
-    * A single Server will be transferring frames to a all Clients at the same time in these usage examples.
-
-    *  Multi-Clients and Multi-Servers exclusive modes **CANNOT** be enabled simultaneously, Otherwise NetGear API will throw `ValueError`.
+    * For sake of simplicity, in these examples we will use only two unique Clients, but the number of these Clients can be extended to **SEVERAL** numbers depending upon your Network bandwidth and System Capabilities.
 
 
 &nbsp;
@@ -89,7 +89,7 @@ Each new client connects to a single server, and can be identified by its unique
 
 ### Bare-Minimum Usage
 
-In this example, we will capturing live video-frames from a source _(a.k.a Servers)_, with a webcam connected to it. Then, those captured frame will be transferred over the network to a two independent system _(a.k.a Client)_ at the same time, and will be displayed in Output Window at real-time. All this by using this Multi-Clients Mode in NetGear API.
+In this example, we will capturing live video-frames from a source _(a.k.a Servers)_ with a webcam connected to it. Afterwards, those captured frame will be transferred over the network to a two independent system _(a.k.a Client)_ at the same time, and will be displayed in Output Window at real-time. All this by using this Multi-Clients Mode in NetGear API.
 
 #### Server's End
 
@@ -110,14 +110,23 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 from vidgear.gears import NetGear
 from vidgear.gears import CamGear
 
-# Open suitable video stream (webcam on first index in our case) 
-stream = CamGear(source=0).start() 
+# Open suitable video stream (webcam on first index in our case)
+stream = CamGear(source=0).start()
 
 # activate multiclient_mode mode
-options = {'multiclient_mode': True} 
+options = {"multiclient_mode": True}
 
-# Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters 
-server = NetGear(address = '192.168.x.x', port = (5567,5577), protocol = 'tcp', pattern = 1, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Client at given IP address and assign list/tuple of
+# all unique Server((5577,5578) in our case) and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+server = NetGear(
+    address="192.168.x.x",
+    port=(5567, 5577),
+    protocol="tcp",
+    pattern=1,
+    logging=True,
+    **options
+)
 
 # Define received data dictionary
 data_dict = {}
@@ -125,36 +134,33 @@ data_dict = {}
 # loop over until KeyBoard Interrupted
 while True:
 
-  try: 
+    try:
+        # read frames from stream
+        frame = stream.read()
 
-    # read frames from stream
-    frame = stream.read()
+        # check for frame if not None-type
+        if frame is None:
+            break
 
-    # check for frame if not None-type
-    if frame is None:
-      break
+        # {do something with the frame here}
 
+        # send frame and also receive data from Client(s)
+        recv_data = server.send(frame)
 
-    # {do something with the frame here}
+        # check if valid data recieved
+        if not (recv_data is None):
+            # extract unique port address and its respective data
+            unique_address, data = recv_data
+            # update the extracted data in the data dictionary
+            data_dict[unique_address] = data
 
+        if data_dict:
+            # print data just received from Client(s)
+            for key, value in data_dict.items():
+                print("Client at port {} said: {}".format(key, value))
 
-    # send frame and also receive data from Client(s)
-    recv_data = server.send(frame)
-
-    # check if valid data recieved
-    if not(recv_data is None):
-      # extract unique port address and its respective data
-      unique_address, data = recv_data
-      # update the extracted data in the data dictionary
-      data_dict[unique_address] = data
-
-    if data_dict:
-      #print data just received from Client(s)
-      for key, value in data_dict.items():
-          print("Client at port {} said: {}".format(key,value))
-  
-  except KeyboardInterrupt:
-    break
+    except KeyboardInterrupt:
+        break
 
 # safely close video stream
 stream.stop()
@@ -178,10 +184,19 @@ from vidgear.gears import NetGear
 import cv2
 
 # activate Multi-Clients mode
-options = {'multiclient_mode': True} 
+options = {"multiclient_mode": True}
 
-# Define NetGear Client at Server's IP address and assign a unique port address and other parameters 
-client = NetGear(address = '192.168.x.x', port = '5567', protocol = 'tcp',  pattern = 1, receive_mode = True, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Client at Server's IP address and assign a unique port address and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+client = NetGear(
+    address="192.168.x.x",
+    port="5567",
+    protocol="tcp",
+    pattern=1,
+    receive_mode=True,
+    logging=True,
+    **options
+) 
 
 # loop over
 while True:
@@ -226,13 +241,23 @@ from vidgear.gears import NetGear
 import cv2
 
 # activate Multi-Clients mode
-options = {'multiclient_mode': True} 
+options = {"multiclient_mode": True}
 
-# Define NetGear Client at Server's IP address and assign a unique port address and other parameters 
-client = NetGear(address = '192.168.x.x', port = '5577', protocol = 'tcp',  pattern = 1, receive_mode = True, logging = True, **options)  # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Client at Server's IP address and assign a unique port address and other parameters
+ # !!! change following IP address '192.168.x.xxx' with yours !!!
+client = NetGear(
+    address="192.168.x.x",
+    port="5577",
+    protocol="tcp",
+    pattern=1,
+    receive_mode=True,
+    logging=True,
+    **options
+)
 
 # loop over
 while True:
+
     # receive data from server
     frame = client.recv()
 
@@ -284,14 +309,22 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 from vidgear.gears import NetGear
 import cv2
 
-# Open suitable video stream (webcam on first index in our case) 
-stream = cv2.VideoCapture(0) 
+# Open suitable video stream (webcam on first index in our case)
+stream = cv2.VideoCapture(0)
 
 # activate multiclient_mode mode
-options = {'multiclient_mode': True} 
+options = {"multiclient_mode": True}
 
-# Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters 
-server = NetGear(address = '192.168.x.x', port = (5567,5577), protocol = 'tcp', pattern = 2, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+server = NetGear(
+    address="192.168.x.x",
+    port=(5567, 5577),
+    protocol="tcp",
+    pattern=2,
+    logging=True,
+    **options
+)
 
 # Define received data dictionary
 data_dict = {}
@@ -299,36 +332,33 @@ data_dict = {}
 # loop over until KeyBoard Interrupted
 while True:
 
-  try: 
+    try:
+        # read frames from stream
+        (grabbed, frame) = stream.read()
 
-    # read frames from stream
-    (grabbed, frame) = stream.read()
+        # check for frame if not grabbed
+        if not grabbed:
+            break
 
-    # check for frame if not grabbed
-    if not grabbed:
-      break
+        # {do something with the frame here}
 
+        # send frame and also receive data from Client(s)
+        recv_data = server.send(frame)
 
-    # {do something with the frame here}
+        # check if valid data recieved
+        if not (recv_data is None):
+            # extract unique port address and its respective data
+            unique_address, data = recv_data
+            # update the extracted data in the data dictionary
+            data_dict[unique_address] = data
 
+        if data_dict:
+            # print data just received from Client(s)
+            for key, value in data_dict.items():
+                print("Client at port {} said: {}".format(key, value))
 
-    # send frame and also receive data from Client(s)
-    recv_data = server.send(frame)
-
-    # check if valid data recieved
-    if not(recv_data is None):
-      # extract unique port address and its respective data
-      unique_address, data = recv_data
-      # update the extracted data in the data dictionary
-      data_dict[unique_address] = data
-
-    if data_dict:
-      #print data just received from Client(s)
-      for key, value in data_dict.items():
-          print("Client at port {} said: {}".format(key,value))
-  
-  except KeyboardInterrupt:
-    break
+    except KeyboardInterrupt:
+        break
 
 # safely close video stream
 stream.release()
@@ -352,10 +382,19 @@ from vidgear.gears import NetGear
 import cv2
 
 # activate Multi-Clients mode
-options = {'multiclient_mode': True} 
+options = {"multiclient_mode": True}
 
-# Define NetGear Client at Server's IP address and assign a unique port address and other parameters 
-client = NetGear(address = '192.168.x.x', port = '5567', protocol = 'tcp',  pattern = 2, receive_mode = True, logging = True, **options)  # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Client at Server's IP address and assign a unique port address and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+client = NetGear(
+    address="192.168.x.x",
+    port="5567",
+    protocol="tcp",
+    pattern=2,
+    receive_mode=True,
+    logging=True,
+    **options
+) 
 
 # loop over
 while True:
@@ -399,10 +438,19 @@ from vidgear.gears import NetGear
 import cv2
 
 # activate Multi-Clients mode
-options = {'multiclient_mode': True} 
+options = {"multiclient_mode": True}
 
-# Define NetGear Client at Server's IP address and assign a unique port address and other parameters 
-client = NetGear(address = '192.168.x.x', port = '5577', protocol = 'tcp',  pattern = 2, receive_mode = True, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Client at Server's IP address and assign a unique port address and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+client = NetGear(
+    address="192.168.x.x",
+    port="5577",
+    protocol="tcp",
+    pattern=2,
+    receive_mode=True,
+    logging=True,
+    **options
+) 
 
 # loop over
 while True:
@@ -465,16 +513,30 @@ from vidgear.gears import PiGear
 from vidgear.gears import NetGear
 
 # add various Picamera tweak parameters to dictionary
-options = {"hflip": True, "exposure_mode": "auto", "iso": 800, "exposure_compensation": 15, "awb_mode": "horizon", "sensor_mode": 0}
+options = {
+    "hflip": True,
+    "exposure_mode": "auto",
+    "iso": 800,
+    "exposure_compensation": 15,
+    "awb_mode": "horizon",
+    "sensor_mode": 0,
+}
 
 # open pi video stream with defined parameters
-stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start() 
+stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
 
 # activate multiclient_mode mode
-options = {'multiclient_mode': True} 
+options = {"multiclient_mode": True}
 
-# Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters 
-server = NetGear(address = '192.168.x.x', port = (5577,5578), protocol = 'tcp', pattern = 1, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters
+server = NetGear(
+    address="192.168.x.x",
+    port=(5577, 5578),
+    protocol="tcp",
+    pattern=1,
+    logging=True,
+    **options
+)  # !!! change following IP address '192.168.x.xxx' with yours !!!
 
 # Define received data dictionary
 data_dict = {}
@@ -482,36 +544,33 @@ data_dict = {}
 # loop over until KeyBoard Interrupted
 while True:
 
-  try: 
+    try:
+        # read frames from stream
+        frame = stream.read()
 
-     # read frames from stream
-    frame = stream.read()
+        # check for frame if Nonetype
+        if frame is None:
+            break
 
-    # check for frame if Nonetype
-    if frame is None:
+        # {do something with the frame here}
+
+        # send frame and also receive data from Client(s)
+        recv_data = server.send(frame)
+
+        # check if valid data recieved
+        if not (recv_data is None):
+            # extract unique port address and its respective data
+            unique_address, data = recv_data
+            # update the extracted data in the data dictionary
+            data_dict[unique_address] = data
+
+        if data_dict:
+            # print data just received from Client(s)
+            for key, value in data_dict.items():
+                print("Client at port {} said: {}".format(key, value))
+
+    except KeyboardInterrupt:
         break
-
-
-    # {do something with the frame here}
-
-
-    # send frame and also receive data from Client(s)
-    recv_data = server.send(frame)
-
-    # check if valid data recieved
-    if not(recv_data is None):
-      # extract unique port address and its respective data
-      unique_address, data = recv_data
-      # update the extracted data in the data dictionary
-      data_dict[unique_address] = data
-
-    if data_dict:
-      #print data just received from Client(s)
-      for key, value in data_dict.items():
-          print("Client at port {} said: {}".format(key,value))
-  
-  except KeyboardInterrupt:
-    break
 
 # safely close video stream
 stream.stop()
@@ -537,19 +596,28 @@ from vidgear.gears import NetGear
 import cv2
 
 # activate Multi-Clients mode
-options = {'multiclient_mode': True} 
+options = {"multiclient_mode": True}
 
-# Define NetGear Client at Server's IP address and assign a unique port address and other parameters 
-client = NetGear(address = '192.168.x.x', port = '5577', protocol = 'tcp',  pattern = 1, receive_mode = True, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Client at Server's IP address and assign a unique port address and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+client = NetGear(
+    address="192.168.x.x",
+    port="5577",
+    protocol="tcp",
+    pattern=1,
+    receive_mode=True,
+    logging=True,
+    **options
+)
 
 # loop over
 while True:
 
-    #prepare data to be sent
+    # prepare data to be sent
     target_data = "Hi, I am 5577 Client here."
 
     # receive data from server and also send our data
-    frame = client.recv(return_data = target_data)
+    frame = client.recv(return_data=target_data)
 
     # check for frame if None
     if frame is None:
@@ -589,19 +657,28 @@ from vidgear.gears import NetGear
 import cv2
 
 # activate Multi-Clients mode
-options = {'multiclient_mode': True} 
+options = {"multiclient_mode": True}
 
-# Define NetGear Client at Server's IP address and assign a unique port address and other parameters 
-client = NetGear(address = '192.168.x.x', port = '5578', protocol = 'tcp',  pattern = 1, receive_mode = True, logging = True, **options) # !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Client at Server's IP address and assign a unique port address and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+client = NetGear(
+    address="192.168.x.x",
+    port="5578",
+    protocol="tcp",
+    pattern=1,
+    receive_mode=True,
+    logging=True,
+    **options
+) 
 
 # loop over
 while True:
 
-    #prepare data to be sent
+    # prepare data to be sent
     target_data = "Hi, I am 5578 Client here."
 
     # receive data from server and also send our data
-    frame = client.recv(return_data = target_data)
+    frame = client.recv(return_data=target_data)
 
     # check for frame if None
     if frame is None:

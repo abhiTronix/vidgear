@@ -26,6 +26,18 @@ limitations under the License.
 
 &nbsp;
 
+::: vidgear.gears.helper.check_gstreamer_support
+
+&nbsp;
+
+::: vidgear.gears.helper.get_supported_resolution
+
+&nbsp;
+
+::: vidgear.gears.helper.dimensions_to_resolutions
+
+&nbsp;
+
 ::: vidgear.gears.helper.mkdir_safe
 
 &nbsp;

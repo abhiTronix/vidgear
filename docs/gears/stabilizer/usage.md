@@ -26,6 +26,10 @@ limitations under the License.
 
 !!! warning "The stabilizer might be slower for High-Quality videos-frames."
 
+!!! tip "It is advised to enable logging on the first run for easily identifying any runtime errors."
+
+&thinsp;
+
 &thinsp;
 
 ## Bare-Minimum Usage with VideoCapture Gears
@@ -40,10 +44,10 @@ from vidgear.gears.stabilizer import Stabilizer
 from vidgear.gears import CamGear
 import cv2
 
-# To open live video stream on webcam at first index(i.e. 0) device 
-stream = CamGear(source=0).start() 
+# To open live video stream on webcam at first index(i.e. 0) device
+stream = CamGear(source=0).start()
 
-#initiate stabilizer object with default parameters
+# initiate stabilizer object with default parameters
 stab = Stabilizer()
 
 # loop over
@@ -56,17 +60,14 @@ while True:
     if frame is None:
         break
 
-
     # send current frame to stabilizer for processing
     stabilized_frame = stab.stabilize(frame)
-    
+
     # wait for stabilizer which still be initializing
     if stabilized_frame is None:
-      continue 
-
+        continue
 
     # {do something with the stabilized_frame frame here}
-
 
     # Show output window
     cv2.imshow("Output Stabilized Frame", stabilized_frame)
@@ -78,6 +79,9 @@ while True:
 
 # close output window
 cv2.destroyAllWindows()
+
+# clear stabilizer resources
+stab.clean()
 
 # safely close video stream
 stream.stop()
@@ -95,9 +99,9 @@ from vidgear.gears.stabilizer import Stabilizer
 import cv2
 
 # Open suitable video stream, such as webcam on first index(i.e. 0)
-stream = cv2.VideoCapture(0) 
+stream = cv2.VideoCapture(0)
 
-#initiate stabilizer object with default parameters
+# initiate stabilizer object with default parameters
 stab = Stabilizer()
 
 # loop over
@@ -108,18 +112,16 @@ while True:
 
     # check for frame if not grabbed
     if not grabbed:
-      break
+        break
 
     # send current frame to stabilizer for processing
     stabilized_frame = stab.stabilize(frame)
-    
+
     # wait for stabilizer which still be initializing
     if stabilized_frame is None:
-      continue 
-
+        continue
 
     # {do something with the frame here}
-     
 
     # Show output window
     cv2.imshow("Stabilized Frame", stabilized_frame)
@@ -127,12 +129,12 @@ while True:
     # check for 'q' key if pressed
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):
-      break
+        break
 
 # close output window
 cv2.destroyAllWindows()
 
-#clear stabilizer resources
+# clear stabilizer resources
 stab.clean()
 
 # safely close video stream
@@ -151,10 +153,10 @@ from vidgear.gears.stabilizer import Stabilizer
 from vidgear.gears import CamGear
 import cv2
 
-# To open live video stream on webcam at first index(i.e. 0) device 
-stream = CamGear(source=0).start() 
+# To open live video stream on webcam at first index(i.e. 0) device
+stream = CamGear(source=0).start()
 
-#initiate stabilizer object with defined parameters
+# initiate stabilizer object with defined parameters
 stab = Stabilizer(smoothing_radius=30, crop_n_zoom=True, border_size=5, logging=True)
 
 # loop over
@@ -167,17 +169,14 @@ while True:
     if frame is None:
         break
 
-
     # send current frame to stabilizer for processing
     stabilized_frame = stab.stabilize(frame)
-    
+
     # wait for stabilizer which still be initializing
     if stabilized_frame is None:
-      continue 
-
+        continue
 
     # {do something with the stabilized_frame frame here}
-
 
     # Show output window
     cv2.imshow("Output Stabilized Frame", stabilized_frame)
@@ -189,6 +188,9 @@ while True:
 
 # close output window
 cv2.destroyAllWindows()
+
+# clear stabilizer resources
+stab.clean()
 
 # safely close video stream
 stream.stop()
@@ -209,13 +211,13 @@ from vidgear.gears import WriteGear
 import cv2
 
 # Open suitable video stream
-stream = CamGear(source="unstabilized_stream.mp4").start() 
+stream = CamGear(source="unstabilized_stream.mp4").start()
 
-#initiate stabilizer object with default parameters
+# initiate stabilizer object with default parameters
 stab = Stabilizer()
 
 # Define writer with default parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename = 'Output.mp4') 
+writer = WriteGear(output_filename="Output.mp4")
 
 # loop over
 while True:
@@ -225,34 +227,32 @@ while True:
 
     # check for frame if not None-type
     if frame is None:
-      break
+        break
 
     # send current frame to stabilizer for processing
     stabilized_frame = stab.stabilize(frame)
-    
+
     # wait for stabilizer which still be initializing
     if stabilized_frame is None:
-      continue 
-
+        continue
 
     # {do something with the frame here}
 
-
     # write stabilized frame to writer
     writer.write(stabilized_frame)
-     
+
     # Show output window
     cv2.imshow("Stabilized Frame", stabilized_frame)
 
     # check for 'q' key if pressed
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):
-      break
+        break
 
 # close output window
 cv2.destroyAllWindows()
 
-#clear stabilizer resources
+# clear stabilizer resources
 stab.clean()
 
 # safely close video stream
@@ -267,9 +267,8 @@ writer.close()
 
 ## Using VideoGear with Stabilizer backend
 
-[VideoGear API](../../videogear/overview/) provides a special internal wrapper around Stabilizer class, that enables easy stabilization for various video-streams _(real-time or not)_ with minimum effort and using just fewer lines of code.
+[VideoGear API](../../videogear/overview/) provides a special internal wrapper around Stabilizer class that enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort and writing way fewer lines of code.
 
-
-!!! tip "The complete usage example can be found [here ➶](../../videogear/usage/#using-videogear-with-video-stabilizer-backend)"
+!!! info "The complete usage example can be found [here ➶](../../videogear/usage/#using-videogear-with-video-stabilizer-backend)"
 
 &nbsp;

@@ -23,7 +23,7 @@ limitations under the License.
 
 ## **`output_filename`**
 
-This parameter sets the valid filename/path for saving the output video.
+This parameter sets the valid filename/path/URL for the video output.
 
 !!! warning
 
@@ -61,7 +61,7 @@ Its valid input can be one of the following:
 
 ## **`compression_mode`**
 
-This parameter selects the WriteGear's primary [Mode of Operation](../../introduction/#modes-of-operation), i.e. if this parameter is enabled _(.i.e `compression_mode = True`)_ WriteGear will use **FFmpeg** to encode output video, and if disabled _(.i.e `compression_mode = False`)_, the **OpenCV's VideoWriter API** will be used for encoding. 
+This parameter selects the WriteGear's Primary [Mode of Operation](../../introduction/#modes-of-operation), i.e. if this parameter is enabled _(.i.e `compression_mode = True`)_ WriteGear will use **FFmpeg** to encode output video, and if disabled _(.i.e `compression_mode = False`)_, the **OpenCV's VideoWriter API** will be used for encoding files/streams. 
 
 **Data-Type:** Boolean
 
@@ -114,7 +114,7 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
 
 * **FFmpeg Parameters:** All parameters based on selected [encoder](#supported-encoders) in use, are supported, and can be passed as dictionary attributes in `output_param`. For example, for using `libx264 encoder` to produce a lossless output video, we can pass required FFmpeg parameters as dictionary attributes, as follows:
 
-    !!! warning "**DO NOT** provide additional video-source with `-i` FFmpeg parameter in `output_params`, otherwise it will interfere with frame you input later, and it will break things!"
+    !!! error "**DO NOT** provide additional video-source with `-i` FFmpeg parameter in `output_params`, otherwise it will interfere with frame you input later and it will break things!"
 
     !!! tip "Kindly check [H.264 docs ➶](https://trac.ffmpeg.org/wiki/Encode/H.264) and other [FFmpeg Docs ➶](https://ffmpeg.org/documentation.html) for more information on these parameters"
 

@@ -18,80 +18,75 @@ limitations under the License.
 ===============================================
 -->
 
+<img src="docs/overrides/assets/images/contribute.webp" alt="VidGear Contribution" loading="lazy" class="center" />
+
+
 # Contribution Overview
 
-Contributions are welcome, We'd love your contribution to VidGear in order to fix bugs or to implement new features! 
 
+Contributions are welcome, We'd love your contribution to VidGear in order to fix bugs or to implement new features!
 
-> If you're looking for something to work on, check for the [PR WELCOMED :mailbox_with_mail:](https://github.com/abhiTronix/vidgear/issues?q=is%3Aissue+is%3Aopen+label%3A%22PR+WELCOMED+%3Amailbox_with_mail%3A%22) labeled issues on our GitHub Repository.
+> 💡 If you're looking for something to work on, check for the [PR WELCOMED :mailbox_with_mail:](https://github.com/abhiTronix/vidgear/issues?q=is%3Aissue+is%3Aopen+label%3A%22PR+WELCOMED+%3Amailbox_with_mail%3A%22) labeled issues on our GitHub Repository.
 
-
-&nbsp;
-
-&nbsp;
+&thinsp;
 
 ## Submission Contexts
 
 ### Got a question or problem?
 
-
-For quick questions, please refrain from opening an issue, instead read our [FAQ & Troubleshooting](https://abhitronix.github.io/vidgear/help/get_help/#frequently-asked-questions) section or you can reach us on [Gitter][gitter] community channel.
+For quick questions, please refrain from opening an issue, instead read our [FAQ & Troubleshooting](https://abhitronix.github.io/vidgear/latest/help/get_help/#frequently-asked-questions) section or you can reach us on [Gitter](https://gitter.im/vidgear/community) community channel.
 
 
 ### Found a typo?
 
-There's no need to contribute for some typos. Just reach us on [Gitter][gitter] community channel, We will correct them in (less than) no time. 
+There's no need to contribute for some typos. Just reach us on [Gitter ➶](https://gitter.im/vidgear/community) community channel, We will correct them in (less than) no time. 
 
 
 ### Found a bug?
 
-If you encountered a bug, you can help us by submitting an issue in our GitHub repository. Even better, you can submit a Pull Request(PR) with a fix, but make sure to read the [guidelines](#submission-guidelines).
+If you encountered a bug, you can help us by submitting an issue in our GitHub repository. Even better, you can submit a Pull Request(PR) with a fix, but make sure to read the [guidelines ➶](#submission-guidelines).
 
 
-### Missing a feature/improvement?
+### Request for a feature/improvement?
 
-> You can [subscribe our GitHub Repository](https://github.com/abhiTronix/vidgear/watchers) to receive notifications through email for new pull requests, commits and issues that are created in VidGear. _Learn more about it [here ➶](https://help.github.com/en/github/managing-subscriptions-and-notifications-on-github/viewing-your-subscriptions)_
+> 💡 You can [subscribe our GitHub Repository](https://github.com/abhiTronix/vidgear/watchers) to receive notifications through email for new pull requests, commits and issues that are created in VidGear. _Learn more about it [here ➶](https://help.github.com/en/github/managing-subscriptions-and-notifications-on-github/viewing-your-subscriptions)_
 
-You can request a new feature by [submitting an issue](https://abhitronix.github.io/vidgear/contribution/issue/) to our GitHub Repository. If you would like to implement a new feature/improvement, please [submit an issue with a proposal template](https://abhitronix.github.io/vidgear/contribution/issue/proposal) for your work first, to be sure that it is benefit for everyone in the community, and then [submit a Pull Request](https://abhitronix.github.io/vidgear/contribution/PR/). Based on the type of request, you can consider following:
+You can request our GitHub Repository for a new feature/improvement based on the type of request:
 
-* **Major Feature Requests:** If you require a major feature for VidGear, then first open an issue and outline your proposal so that it can be discussed. This will also allow us to better coordinate our efforts, prevent duplication of work, and help you to craft the change so that it is successfully accepted into the project. The purposed feature, if accepted, may take time based on its complexity and availability/time-schedule of our maintainers, but once it's completed, you will be notified right away. Please be patient! 
+> Please [submit an issue with a proposal template](https://github.com/abhiTronix/vidgear/issues/new?labels=issue%3A+proposal&template=proposal.md) for your request to explain how it benefits everyone in the community.
 
-* **Minor Feature Requests:**  Small features and bugs resolved on priority and can be directly submitted as a Pull Request. You just have to [submit an issue](https://abhitronix.github.io/vidgear/contribution/issue/) to our GitHub Repository.
+* **Major Feature Requests:** If you require a major feature for VidGear, then first [open an issue](https://abhitronix.github.io/vidgear/latest/contribution/issue/) and outline your proposal so that it can be discussed. This will also allow us to better coordinate our efforts, prevent duplication of work, and help you to craft the change so that it is successfully accepted into the project. The purposed feature, if accepted, may take time based on its complexity and availability/time-schedule of our maintainers, but once it's completed, you will be notified right away. Please be patient! 
 
-&nbsp;
+* **Minor Feature Requests:**  Small features and bugs resolved on priority. You just have to [submit an issue](https://abhitronix.github.io/vidgear/latest/contribution/issue/) to our GitHub Repository.
+
+&thinsp;
 
 ## Submission Guidelines
 
-- [Submitting an Issue Guidelines](https://abhitronix.github.io/vidgear/contribution/issue/)
-- [Submitting Pull Request(PR) Guidelines](https://abhitronix.github.io/vidgear/contribution/PR/)
+- [Submitting an Issue Guidelines](https://abhitronix.github.io/vidgear/latest/contribution/issue/)
+- [Submitting Pull Request(PR) Guidelines](https://abhitronix.github.io/vidgear/latest/contribution/PR/)
 
 
-&nbsp;
-
-&nbsp; 
-
+&thinsp;
 
 ## Community Channel
 
 If you've come up with some new idea, or looking for the fastest way troubleshoot your problems, then please **join our [Gitter community channel][gitter]**.
 
-&nbsp; 
-
-&nbsp; 
+&thinsp;
 
 ## Become a Stargazer
 
-You can be a [**Stargazer**][stargazer] by starring this framework, it helps us a lot and **you're making it easier for others to find & trust this library.** Thanks!
+You can be a [**Stargazer 🌟**][stargazer] by starring this framework, it helps us a lot and **you're making it easier for others to find & trust this library.** Thanks!
 
-&nbsp;
-
-&nbsp; 
+&thinsp;
+ 
 
 ## Love using VidGear? 
 
-**VidGear is free, but rely on your support.** 
+> VidGear relies on your support :heart:
 
-Sending a donation using link below is **extremely** helpful in keeping VidGear development alive:
+Donations help keep VidGear's Development alive. Giving a little means a lot, even the smallest contribution can make a huge difference.
 
 
 [![ko-fi][kofi-badge]][kofi]

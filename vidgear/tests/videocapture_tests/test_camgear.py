@@ -27,7 +27,6 @@ import pytest
 import logging as log
 import platform
 import tempfile
-import youtube_dl
 
 from vidgear.gears import CamGear
 from vidgear.gears.helper import logger_handler
@@ -43,6 +42,8 @@ def return_youtubevideo_params(url):
     """
     returns Youtube Video parameters(FPS, dimensions) directly using Youtube-dl
     """
+    import youtube_dl
+
     ydl = youtube_dl.YoutubeDL(
         {
             "outtmpl": "%(id)s%(ext)s",
@@ -89,8 +90,8 @@ test_data = [
         return_testvideo_path(),
         {"CAP_PROP_FRAME_WIDTH ": 320, "CAP_PROP_FRAME_HEIGHT": 240},
     ),
-    (return_testvideo_path(), {"im_wrong": True}),
-    ("im_not_a_source.mp4", {}),
+    (return_testvideo_path(), {"im_wrong": True, "THREADED_QUEUE_MODE": False}),
+    ("im_not_a_source.mp4", {"THREADED_QUEUE_MODE": "invalid"}),
 ]
 
 
@@ -118,7 +119,11 @@ def test_threaded_queue_mode(source, options):
             camgear_frames_num += 1
         stream_camgear.stop()
         actual_frame_num = return_total_frame_count()
-        assert camgear_frames_num == actual_frame_num
+        if "THREADED_QUEUE_MODE" in options and not options["THREADED_QUEUE_MODE"]:
+            # emulate frame skipping
+            assert camgear_frames_num < actual_frame_num
+        else:
+            assert camgear_frames_num == actual_frame_num
     except Exception as e:
         if isinstance(e, RuntimeError) and source == "im_not_a_source.mp4":
             pass
@@ -126,18 +131,32 @@ def test_threaded_queue_mode(source, options):
             pytest.fail(str(e))
 
 
-@pytest.mark.parametrize("url", ["https://youtu.be/uCy5OuSQnyA", "im_not_a_url"])
-def test_youtube_playback(url):
+@pytest.mark.parametrize(
+    "url, quality, parameters",
+    [
+        ("https://youtu.be/uCy5OuSQnyA", "2160p", "invalid"),
+        ("https://youtu.be/uCy5OuSQnyA", "720p", "invalid"),
+        ("https://youtu.be/NMre6IAAAiU", "invalid", {"nocheckcertificate": True}),
+        (
+            "https://www.dailymotion.com/video/x7xsoud",
+            "invalid",
+            {"hls-live-edge": 3.0},
+        ),
+        ("im_not_a_url", "", {}),
+    ],
+)
+def test_stream_mode(url, quality, parameters):
     """
-    Testing Youtube Video Playback capabilities of VidGear
+    Testing Stream Mode Playback capabilities of CamGear
     """
     try:
         height = 0
         width = 0
         fps = 0
+        options = {"STREAM_RESOLUTION": quality, "STREAM_PARAMS": parameters}
         # get params
         stream = CamGear(
-            source=url, y_tube=True, logging=True
+            source=url, stream_mode=True, logging=True, **options
         ).start()  # YouTube Video URL as input
         while True:
             frame = stream.read()
@@ -148,23 +167,11 @@ def test_youtube_playback(url):
                 height, width = frame.shape[:2]
                 break
         stream.stop()
-        # get true params
-        true_video_param = return_youtubevideo_params(url)
-        # log everything
-        logger.debug(
-            "WIDTH: {} HEIGHT: {} FPS: {}".format(
-                true_video_param[0], true_video_param[1], true_video_param[2]
-            )
-        )
         logger.debug("WIDTH: {} HEIGHT: {} FPS: {}".format(width, height, fps))
-        # assert true verses ground results
-        assert (
-            true_video_param[0] == width
-            and true_video_param[1] == height
-            and round(true_video_param[2], 1) == round(fps, 1)
-        )
     except Exception as e:
-        if isinstance(e, (RuntimeError, ValueError)) and url == "im_not_a_url":
+        if isinstance(e, (RuntimeError, ValueError)) and (
+            url == "im_not_a_url" or platform.system() in ["Windows", "Darwin"]
+        ):
             pass
         else:
             pytest.fail(str(e))

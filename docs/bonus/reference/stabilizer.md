@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-!!! info "All Stabilizer Class parameters are explained [here ➶](../../../gears/stabilizer/params/)"
+!!! info "All Stabilizer API parameters are explained [here ➶](../../../gears/stabilizer/params/)"
 
 ::: vidgear.gears.stabilizer.Stabilizer	
 	

@@ -21,7 +21,7 @@ limitations under the License.
 # PiGear API Usage Examples:
 
 
-!!! warning "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this API, otherwise it won't work."
+!!! warning "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this API, otherwise nothing will work."
 
 
 &thinsp;
@@ -38,7 +38,7 @@ import cv2
 
 
 # open pi video stream with default parameters
-stream = PiGear().start() 
+stream = PiGear().start()
 
 # loop over
 while True:
@@ -50,9 +50,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # Show output window
     cv2.imshow("Output Frame", frame)
@@ -71,9 +69,9 @@ stream.stop()
 
 &nbsp; 
 
-## Using PiGear with Variable Camera Properties
+## Using PiGear with Variable Camera Module Properties
 
-PiGear API supports all tweak parameters and attributes available within [**Picamera library**](https://picamera.readthedocs.io/en/release-1.13/api_camera.html). These parameters can be easily applied to source stream in PiGear API through its [`options`](../params/#options) dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
+PiGear supports almost every parameter available within [**Picamera library**](https://picamera.readthedocs.io/en/release-1.13/api_camera.html). These parameters can be easily applied to the source stream in PiGear API through its [`options`](../params/#options) dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
 
 
 !!! tip "All supported parameters are listed in [PiCamera Docs ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html)"
@@ -85,10 +83,17 @@ from vidgear.gears import PiGear
 import cv2
 
 # add various Picamera tweak parameters to dictionary
-options = {"hflip": True, "exposure_mode": "auto", "iso": 800, "exposure_compensation": 15, "awb_mode": "horizon", "sensor_mode": 0}
+options = {
+    "hflip": True,
+    "exposure_mode": "auto",
+    "iso": 800,
+    "exposure_compensation": 15,
+    "awb_mode": "horizon",
+    "sensor_mode": 0,
+}
 
 # open pi video stream with defined parameters
-stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start() 
+stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
 
 # loop over
 while True:
@@ -100,9 +105,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # Show output window
     cv2.imshow("Output Frame", frame)
@@ -130,7 +133,7 @@ PiGear API also supports **Direct Colorspace Manipulation**, which is ideal for 
 In following example code, we will start with [**HSV**](https://en.wikipedia.org/wiki/HSL_and_HSV) as source colorspace, and then we will switch to [**GRAY**](https://en.wikipedia.org/wiki/Grayscale)  colorspace when `w` key is pressed, and then [**LAB**](https://en.wikipedia.org/wiki/CIELAB_color_space) colorspace when `e` key is pressed, finally default colorspace _(i.e. **BGR**)_ when `s` key is pressed. Also, quit when `q` key is pressed:
 
 
-!!! warning "Any incorrect or None-type value, will immediately revert the colorspace to default i.e. `BGR`."
+!!! warning "Any incorrect or None-Type value will immediately revert the colorspace to default _(i.e. `BGR`)_."
 
 
 ```python
@@ -140,15 +143,28 @@ import cv2
 
 
 # add various Picamera tweak parameters to dictionary
-options = {"hflip": True, "exposure_mode": "auto", "iso": 800, "exposure_compensation": 15, "awb_mode": "horizon", "sensor_mode": 0}
+options = {
+    "hflip": True,
+    "exposure_mode": "auto",
+    "iso": 800,
+    "exposure_compensation": 15,
+    "awb_mode": "horizon",
+    "sensor_mode": 0,
+}
 
 # open pi video stream with defined parameters and change colorspace to `HSV`
-stream = PiGear(resolution=(640, 480), framerate=60, colorspace = 'COLOR_BGR2HSV', logging=True, **options).start() 
+stream = PiGear(
+    resolution=(640, 480),
+    framerate=60,
+    colorspace="COLOR_BGR2HSV",
+    logging=True,
+    **options
+).start()
 
 
 # loop over
 while True:
-  
+
     # read HSV frames
     frame = stream.read()
 
@@ -156,9 +172,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the HSV frame here}
-
 
     # Show output window
     cv2.imshow("Output Frame", frame)
@@ -168,20 +182,20 @@ while True:
 
     # check if 'w' key is pressed
     if key == ord("w"):
-        #directly change colorspace at any instant
-        stream.color_space = cv2.COLOR_BGR2GRAY #Now colorspace is GRAY
-      
+        # directly change colorspace at any instant
+        stream.color_space = cv2.COLOR_BGR2GRAY  # Now colorspace is GRAY
+
     # check for 'e' key is pressed
     if key == ord("e"):
-        stream.color_space = cv2.COLOR_BGR2LAB  #Now colorspace is CieLAB
-   
+        stream.color_space = cv2.COLOR_BGR2LAB  # Now colorspace is CieLAB
+
     # check for 's' key is pressed
     if key == ord("s"):
-         stream.color_space = None #Now colorspace is default(ie BGR)
+        stream.color_space = None  # Now colorspace is default(ie BGR)
 
     # check for 'q' key is pressed
     if key == ord("q"):
-      break
+        break
 
 # close output window
 cv2.destroyAllWindows()

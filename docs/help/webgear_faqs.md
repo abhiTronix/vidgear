@@ -42,7 +42,7 @@ limitations under the License.
 
 ## Can WebGear always need Active Internet Connection?
 
-**Answer:** No, it just need Internet only once, during its [Auto-Generation Process ➶](../../gears/webgear/overview/#auto-generation-process) to download default data-files, and it takes few seconds. _For more information see [Data-Files Auto-Generation WorkFlow ➶](../../gears/webgear/overview/#data-files-auto-generation-workflow)_
+**Answer:** No, it just need internet only once during [Auto-Generation Process ➶](../../gears/webgear/overview/#auto-generation-process) to download default data-files and it takes few seconds. You can also download files manually from [Github Server](https://github.com/abhiTronix/webgear_data) or even add [your own custom files](../../gears/webgear/advanced/#rules-for-altering-webgear-files-and-folders). _For more information see [Data-Files Auto-Generation WorkFlow ➶](../../gears/webgear/overview/#data-files-auto-generation-workflow-for-webgear)_
 
 &nbsp;
 
@@ -52,21 +52,9 @@ limitations under the License.
 
 &nbsp;
 
-## Can I run WebGear from terminal?
-
-**Answer:** Yes, see [this usage example ➶](../../gears/webgear/usage/#running-from-terminal).
-
-&nbsp;
-
 ## How can I add my custom WebPage to WebGear?
 
 **Answer:** See [this usage example ➶](../../gears/webgear/advanced/#using-webgear-with-custom-webpage-routes).
-
-&nbsp;
-
-## Can I re-download default data in WebGear?
-
-**Answer:** Yes, either you can delete default data-files manually, OR, you can force trigger the [Auto-generation process](../../gears/webgear/overview/#auto-generation-process) to overwrite existing data-files using [`overwrite_default_files`](../../gears/webgear/params/#webgear-specific-attributes) attribute of `option` parameter in WebGear API. _Remember only downloaded default data-files will be overwritten in this process, and any other file/folder will **NOT** be affected._
 
 &nbsp;
 
@@ -78,7 +66,13 @@ limitations under the License.
 
 ## Can I delete/rename the WebGear default data?
 
-**Answer:** Yes, WebGear gives us complete freedom of altering data files generated in [Auto-Generation Process](../../gears/webgear/overview/#auto-generation-process), But you've to follow [these rules ➶](../../gears/webgear/advanced/#rules-for-altering-webgear-files-and-folders)
+**Answer:** Yes, but you've to follow [these rules ➶](../../gears/webgear/advanced/#rules-for-altering-webgear-files-and-folders)
+
+&nbsp;
+
+## What Web browser are supported by WebGear API?
+
+**Answer:** All modern browser with Javascript support are supported by WebGear. If not, then discuss with us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
@@ -154,23 +148,5 @@ web.shutdown()
 ```
 
 **Final Step:** Finally, you can run the above python script, and see the desire output at address http://localhost:8000/ on your browser. 
-
-&nbsp;
-
-## Can I also manipulate frames before sending it to Webgear Server?
-
-**Answer:** Yes, see previous answer and [this comment ➶](https://github.com/abhiTronix/vidgear/issues/111#issuecomment-593053564).
-
-&nbsp;
-
-## "WebGear is too slow on my browser", How can I make it run faster?
-
-**Answer:** See [Performance Tweaks doc ➶](../../gears/webgear/advanced/#performance-enhancements).
-
-&nbsp;
-
-## What Web browser are supported by WebGear API?
-
-**Answer:** All modern browser with Javascript support are supported by WebGear. If not, then tell us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;

@@ -37,7 +37,7 @@ There are several ways to get help with VidGear:
 
 > Got a question related to VidGear Working?  
 
-Checkout our Frequently Asked Questions, a curated list of all the questions with answer, that we commonly recieve, for quickly troubleshoot your problems:
+Checkout our Frequently Asked Questions, a curated list of all the questions with answer that we commonly recieve, for quickly troubleshoot your problems:
 
 - [General FAQs ➶](general_faqs.md)
 - [CamGear FAQs ➶](camgear_faqs.md)
@@ -57,7 +57,7 @@ Checkout our Frequently Asked Questions, a curated list of all the questions wit
 
 ## Join our Gitter Community channel
 
-> Have you come up with some new idea, or looking for the fastest way troubleshoot your problems
+> Have you come up with some new idea 💡 or looking for the fastest way troubleshoot your problems
 
 **Join and chat on our Gitter Community channel:** [![Glitter chat](https://img.shields.io/badge/Chat&nbsp;on-Gitter-yellow.svg?style=flat-square&logo=gitter)](https://gitter.im/vidgear/community)
 
@@ -72,7 +72,7 @@ There you can ask quick questions, swiftly troubleshoot your problems, help othe
 - [x] [Got a question or problem?](../../contribution/#got-a-question-or-problem)
 - [x] [Found a typo?](../../contribution/#found-a-typo)
 - [x] [Found a bug?](../../contribution/#found-a-bug)
-- [x] [Missing a feature/improvement?](../../contribution/#missing-a-featureimprovement)
+- [x] [Missing a feature/improvement?](../../contribution/#request-for-a-featureimprovementt)
 
 
 &thinsp;

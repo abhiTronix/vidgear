@@ -19,26 +19,10 @@ limitations under the License.
 -->
 
 {% extends "base.html" %}
-<!-- Announcement bar -->
-{% block announce %}
-  <style>
-  /* Add background color transition */
-  .md-announce {
-  transition: background-color 125ms;
-  }
-  /* Change background color on link focus */
-  .md-announce:focus-within {
-  background-color: var(--md-accent-fg-color);
-  }
-  /* Don't wrap name of blog article */
-  .md-announce strong {
-  white-space: nowrap;
-  }
-  </style>
-  <button class="c-smileyButton" onclick="window.open('https://ko-fi.com/W7W8WTYO','_blank');"  type="button">
-  <span style="font-family: inherit !important;">VidGear is free, but rely on your support.</span>&nbsp;Click to Donate&nbsp;
-  <div class="c-smileyButton__hoverListener"></div>
-  <div class="c-smileyButton__hoverListener"></div>
-  <span class="c-smileyButton__face"></span>
-  </button>
+
+{% block libs %}
+  <script src="{{ 'assets/javascripts/dark-material.js' | url }}" type="text/javascript"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/clappr/clappr-level-selector-plugin@latest/dist/level-selector.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/clappr/dash-shaka-playback@latest/dist/dash-shaka-playback.js"></script>
 {% endblock %}

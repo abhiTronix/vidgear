@@ -22,6 +22,7 @@ import platform
 import setuptools
 
 from pkg_resources import parse_version
+from distutils.util import convert_path
 from setuptools import setup
 
 
@@ -47,6 +48,11 @@ def test_opencv():
     return False
 
 
+pkg_version = {}
+ver_path = convert_path("vidgear/version.py")
+with open(ver_path) as ver_file:
+    exec(ver_file.read(), pkg_version)
+
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
     long_description = long_description.replace(  # patch for images
@@ -59,7 +65,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name="vidgear",
     packages=["vidgear", "vidgear.gears", "vidgear.gears.asyncio"],
-    version="0.1.9",
+    version=pkg_version["__version__"],
     description="High-performance cross-platform Video Processing Python framework powerpacked with unique trailblazing features.",
     license="Apache License 2.0",
     author="Abhishek Thakur",
@@ -68,10 +74,14 @@ setup(
         "mss",
         "numpy",
         "youtube-dl",
+        "streamlink",
         "requests",
         "pyzmq",
         "colorlog",
+        "colorama",
         "tqdm",
+        "pyscreenshot",
+        "Pillow",
     ]
     + (["opencv-python"] if test_opencv() else [])
     + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
@@ -104,12 +114,14 @@ setup(
         "youtube-dl",
         "asyncio",
         "dash",
+        "streamlink",
         "Video Processing",
         "Video Stablization",
         "Computer Vision",
         "Video Streaming",
         "raspberrypi",
         "YouTube",
+        "Twitch",
     ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
@@ -123,6 +135,7 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
     ],
     python_requires=">=3.6",
     scripts=[],

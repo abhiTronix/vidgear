@@ -18,6 +18,12 @@ limitations under the License.
 ===============================================
 -->
 
+<figure>
+  <img src="../assets/images/installation.png" loading="lazy" alt="VidGear Installation" class="center"/>
+</figure>
+
+&emsp; 
+
 # Installation Overview
 
 

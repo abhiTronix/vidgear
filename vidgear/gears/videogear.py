@@ -57,7 +57,7 @@ class VideoGear:
         framerate=30,
         # CamGear parameters
         source=0,
-        y_tube=False,
+        stream_mode=False,
         backend=0,
         # common parameters
         time_delay=0,
@@ -65,6 +65,24 @@ class VideoGear:
         logging=False,
         **options
     ):
+
+        """
+        This constructor method initializes the object state and attributes of the VideoGear class.
+
+        Parameters:
+            enablePiCamera (bool): provide access to PiGear(if True) or CamGear(if False) APIs respectively.
+            stabilize (bool): enable access to Stabilizer Class for stabilizing frames.
+            camera_num (int): selects the camera module index which will be used as Rpi source.
+            resolution (tuple): sets the resolution (i.e. `(width,height)`) of the Rpi source.
+            framerate (int/float): sets the framerate of the Rpi source.
+            source (based on input): defines the source for the input stream.
+            stream_mode (bool): controls the exclusive YouTube Mode.
+            backend (int): selects the backend for OpenCV's VideoCapture class.
+            colorspace (str): selects the colorspace of the input stream.
+            logging (bool): enables/disables logging.
+            time_delay (int): time delay (in sec) before start reading the frames.
+            options (dict): provides ability to alter Tweak Parameters of CamGear, PiGear & Stabilizer.
+        """
 
         # initialize stabilizer
         self.__stablization_mode = stabilize
@@ -127,7 +145,7 @@ class VideoGear:
             # stream by activating CamGear API
             self.stream = CamGear(
                 source=source,
-                y_tube=y_tube,
+                stream_mode=stream_mode,
                 backend=backend,
                 colorspace=colorspace,
                 logging=logging,

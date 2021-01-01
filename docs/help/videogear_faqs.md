@@ -30,7 +30,7 @@ limitations under the License.
 
 ## What's the need of VideoGear API?
 
-**Answer:** VideoGear is basically ideal when you need to switch to different video sources without changing your code much. Also, it enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort and using way fewer lines of code. It also serve as backend for other powerful APIs, such [WebGear](../../gears/webgear/overview/) and [NetGear_Async](../../gears/netgear_async/overview/).
+**Answer:** VideoGear is basically ideal when you need to switch to different video sources without changing your code much. Also, it enables easy stabilization for various video-streams _(real-time or not)_  with minimum efforts and using way fewer lines of code. It also serve as backend for other powerful APIs, such [WebGear](../../gears/webgear/overview/) and [NetGear_Async](../../gears/netgear_async/overview/).
 
 &nbsp;
 
@@ -40,14 +40,14 @@ limitations under the License.
 
 &nbsp;
 
-## Can we access WriteGear API too with VideoGear?
+## Can we access WriteGear API or NetGear API too with VideoGear?
 
-**Answer:** No, only selected VideoCapture gears _(anwsered above)_ are accessible.
+**Answer:** No, only selected VideoCapture APIs _(anwsered above)_ are accessible.
 
 &nbsp;
 
 ## Does using VideoGear instead of CamGear API directly, affects performance?
 
-**Answer:** No, there's no difference, as VideoGear just a high-level wrapper around CamGear API, and that is without any modifications inbetween.
+**Answer:** No, there's no difference, as VideoGear just a high-level wrapper around CamGear API and without any modifications in-between.
 
 &nbsp;

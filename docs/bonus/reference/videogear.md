@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-!!! info "All VideoGear Class parameters are explained [here ➶](../../../gears/videogear/params/)"
+!!! info "All VideoGear API parameters are explained [here ➶](../../../gears/videogear/params/)"
 
 ::: vidgear.gears.VideoGear	
 	

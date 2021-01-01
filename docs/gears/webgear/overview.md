@@ -22,25 +22,26 @@ limitations under the License.
 
 <figure>
   <img src="../../../assets/gifs/webgear.gif" alt="WebGear in action!" loading="lazy" width=120%/>
-  <figcaption>WebGear Video Server at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</figcaption>
+  <figcaption>WebGear API's Video Server running at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</figcaption>
 </figure>
 
 ## Overview
 
-> WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-streamer API, that is built upon [Starlette](https://www.starlette.io/) - a lightweight ASGI framework/toolkit, which is ideal for building high-performance asyncio services.
+> *WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-Broadcaster API ideal for transmitting video-frames from a single source to multiple recipients via the browser.*
 
-WebGear API provides a highly extensible and flexible asyncio wrapper around Starlette ASGI application, and provides easy access to its complete framework. Thereby, WebGear API can flexibly interact with the Starlette's ecosystem of shared middleware and mountable applications, and its various [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
+WebGear API provides a highly extensible and flexible async wrapper around [**Starlette**](https://www.starlette.io/)'s ASGI application and provides easy access to its complete framework. WebGear can flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
 
-In layman's terms, WebGear can acts as powerful **Video Streaming Server** that transfers live video-frames to any web browser on a network. It addition to this, WebGear API also provides a special internal wrapper around [VideoGear API](../../webgear/overview/), which itself provides internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs thereby granting it exclusive power for streaming frames incoming from any device/source, such as streaming [Stabilization enabled Video](../advanced/#using-webgear-with-real-time-video-stabilization-enabled) in real-time.
+In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs, thereby granting it exclusive power of broadcasting frames from any incoming stream.
+
 
 &thinsp;
 
-## Data-Files Auto-Generation WorkFlow
+## Data-Files Auto-Generation WorkFlow for WebGear
 
 On initializing WebGear API, it automatically checks for three critical data-files i.e `index.html`, `404.html` & `500.html` inside `templates` folder at the [*default location*](#default-location), which give rise to possible scenario:
 
-* **If data-files found:** it will proceed normally for instantiating the Starlette application.
-* **If data-files not found:** it will trigger the [**Auto-Generation process**](#auto-generation-process)
+- [x] **If data-files found:** it will proceed normally for instantiating the Starlette application.
+- [ ] **If data-files not found:** it will trigger the [**Auto-Generation process**](#auto-generation-process)
 
 ### Default Location
 
@@ -56,6 +57,13 @@ On initializing WebGear API, it automatically checks for three critical data-fil
 		  ```
 
 ### Auto-Generation process
+
+!!! info
+
+	* You can also force trigger the Auto-generation process to overwrite existing data-files using [`overwrite_default_files`](../params/#webgear-specific-attributes) dictionary attribute. Remember, only downloaded default data files(given above) will be overwritten in this process but any other file/folder will NOT be affected.
+
+	* It is advised to enable logging(`logging=True`) on the first run for easily identifying any runtime errors
+
 
 * On triggering this process, WebGear API creates `templates` and `static` folders along with `js`, `css`, `img` sub-folders at the assigned [*default location*](#default-location).
 * Thereby at this [*default location*](#default-location), the necessary default data files will be downloaded from a dedicated [**Github Server**](https://github.com/abhiTronix/webgear_data) inside respective folders in the following order:
@@ -85,23 +93,19 @@ On initializing WebGear API, it automatically checks for three critical data-fil
 
 &nbsp;
 
-!!! tip "Important Tips"
-
-		* You can also force trigger the Auto-generation process to overwrite existing data-files using [`overwrite_default_files`](../params/#webgear-specific-attributes) dictionary attribute. Remember, only downloaded default data files(given above) will be overwritten in this process, and any other file/folder will NOT be affected.
-
-		* It is advised to enable logging(`logging=True`) on the first run for easily identifying any runtime errors
-
-&thinsp;
+&nbsp;
 
 ## Importing
 
 You can import WebGear API in your program as follows:
 
 ```python
-from vidgear.gears import WebGear
+from vidgear.gears.asyncio import WebGear
 ```
 
 &thinsp;
+
+&nbsp;
 
 ## WebGear's Default Template
 
@@ -139,26 +143,26 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
 
 ## Usage Examples
 
-<div class="zoom">
+<div>
 <a href="../usage/">See here 🚀</a>
 </div>
 
 ## Parameters
 
-<div class="zoom">
+<div>
 <a href="../params/">See here 🚀</a>
 </div>
 
-## Reference
+## References
 
-<div class="zoom">
+<div>
 <a href="../../../bonus/reference/webgear/">See here 🚀</a>
 </div>
 
 
 ## FAQs
 
-<div class="zoom">
+<div>
 <a href="../../../help/webgear_faqs/">See here 🚀</a>
 </div>
 

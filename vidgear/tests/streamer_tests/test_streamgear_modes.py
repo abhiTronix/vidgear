@@ -168,6 +168,24 @@ def test_ss_stream():
         pytest.fail(str(e))
 
 
+def test_ss_livestream():
+    """
+    Testing Single-Source Mode with livestream.
+    """
+    mpd_file_path = os.path.join(return_mpd_path(), "dash_test.mpd")
+    try:
+        stream_params = {
+            "-video_source": return_testvideo_path(),
+            "-livestream": True,
+            "-remove_at_exit": 1,
+        }
+        streamer = StreamGear(output=mpd_file_path, logging=True, **stream_params)
+        streamer.transcode_source()
+        streamer.terminate()
+    except Exception as e:
+        pytest.fail(str(e))
+
+
 @pytest.mark.parametrize("conversion", [None, "COLOR_BGR2GRAY", "COLOR_BGR2BGRA"])
 def test_rtf_stream(conversion):
     """
@@ -200,6 +218,30 @@ def test_rtf_stream(conversion):
         ]
         assert len(mpd_file) == 1, "Failed to create MPD file!"
         assert check_valid_mpd(mpd_file[0])
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+def test_rtf_livestream():
+    """
+    Testing Real-Time Frames Mode with livestream.
+    """
+    mpd_file_path = return_mpd_path()
+    try:
+        # Open stream
+        stream = CamGear(source=return_testvideo_path()).start()
+        stream_params = {
+            "-livestream": True,
+        }
+        streamer = StreamGear(output=mpd_file_path, **stream_params)
+        while True:
+            frame = stream.read()
+            # check if frame is None
+            if frame is None:
+                break
+            streamer.stream(frame)
+        stream.stop()
+        streamer.terminate()
     except Exception as e:
         pytest.fail(str(e))
 

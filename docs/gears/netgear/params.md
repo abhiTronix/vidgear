@@ -42,18 +42,18 @@ NetGear(address="192.168.0.145")
 
 This parameter sets the valid Network Port for Server/Client. Network port is a number that identifies one side of a connection between two devices on the network and is used determine to which process or application a message should be delivered.
 
-!!! danger "Exclusive Mode Exception"
+!!! danger "Exception for Exclusive Modes"
     
     * [**In Multi-Servers Mode**](../advanced/multi_server/):
 
         * A unique port number **MUST** be assigned to each Server on the network using this parameter. 
-        * At Client end, a List/Tuple of all available Server(s) ports **MUST** be assigned, using this same parameter. 
+        * At Client end, a List/Tuple of all available Server(s) ports **MUST** be assigned using this same parameter. 
         * See its usage example [here ➶](../advanced/multi_server/#bare-minimum-usage).
 
     *  [**In Multi-Client Mode**](../advanced/multi_client/):
 
         * A unique port number **MUST** be assigned to each Client on the network using this parameter. 
-        * At Server end, a List/Tuple of all available Client(s) ports **MUST** be assigned, using this same parameter. 
+        * At Server end, a List/Tuple of all available Client(s) ports **MUST** be assigned using this same parameter. 
         * See its usage example [here ➶](../advanced/multi_client/#bare-minimum-usage).
 
 **Data-Type:** String or List/Tuple
@@ -95,11 +95,13 @@ This parameter sets the supported messaging pattern(flow of communication) betwe
 
 **Default Value:** Its default value is `0` (_i.e `zmq.PAIR`_). 
 
-**All supported ZMQ patterns for NetGear are:**
+!!! info "Supported ZMQ patterns"
 
-   * **`0` (_.i.e. zmq.PAIR_):** In this pattern, the communication is bidirectional. There is no specific state stored within the socket. There can only be one connected peer. The server listens on a certain port and a client connects to it.
-   * **`1` (_.i.e. zmq.REQ/zmq.REP_):** In this pattern, it employs `ZMQ REQ` sockets that can connect to many servers. The requests will be interleaved or distributed to both the servers. socket `zmq.REQ` will block send unless it has successfully received a reply back and socket `zmq.REP` will block on recv() unless it has received a request.
-   * **`2` (_.i.e. zmq.PUB/zmq.SUB_):** It is an another classic pattern where senders of messages, called _publishers_, do not program the messages to be sent directly to specific receivers, called _subscribers_. Messages are published without the knowledge of what or if any subscriber of that knowledge exists. A `ZMQ.SUB` can connect to multiple `ZMQ.PUB` (publishers). No single publisher overwhelms the subscriber. The messages from both publishers are interleaved.
+    **All supported ZMQ patterns for NetGear are:**
+
+    * **`0` (_.i.e. zmq.PAIR_):** In this pattern, the communication is bidirectional. There is no specific state stored within the socket. There can only be one connected peer. The server listens on a certain port and a client connects to it.
+    * **`1` (_.i.e. zmq.REQ/zmq.REP_):** In this pattern, it employs `ZMQ REQ` sockets that can connect to many servers. The requests will be interleaved or distributed to both the servers. socket `zmq.REQ` will block send unless it has successfully received a reply back and socket `zmq.REP` will block on recv() unless it has received a request.
+    * **`2` (_.i.e. zmq.PUB/zmq.SUB_):** It is an another classic pattern where senders of messages, called _publishers_, do not program the messages to be sent directly to specific receivers, called _subscribers_. Messages are published without the knowledge of what or if any subscriber of that knowledge exists. A `ZMQ.SUB` can connect to multiple `ZMQ.PUB` (publishers). No single publisher overwhelms the subscriber. The messages from both publishers are interleaved.
 
 **Usage:**
 
@@ -171,9 +173,16 @@ The desired attributes can be passed to NetGear API as follows:
 
 ```python
 # formatting parameters as dictionary attributes
-options = {'secure_mode':2, 'custom_cert_location':'/home/foo/foo1/foo2', 'overwrite_cert':True, "flag": 0, "copy": False, "track": False} 
+options = {
+    "secure_mode": 2,
+    "custom_cert_location": "/home/foo/foo1/foo2",
+    "overwrite_cert": True,
+    "flag": 0,
+    "copy": False,
+    "track": False,
+}
 # assigning it
-NetGear(logging=True,**options)
+NetGear(logging=True, **options)
 ```
 
 &nbsp;

@@ -18,21 +18,21 @@ limitations under the License.
 ===============================================
 -->
 
-# Advanced Usage: Frame Compression for NetGear API 
+# Frame Compression for NetGear API 
 
 
 <figure>
-  <img src="../../../../assets/images/compression.webp" alt="Frame Compression" loading="lazy" width="75%" />
+  <img src="../../../../assets/images/compression.webp" alt="Frame Compression" loading="lazy" title="NetGear's Frame Compression" width="75%" />
 </figure>
 
 
 ## Overview
 
-NetGear API supports real-time Frame Compression _(Encoding/Decoding capabilities)_, for optimizing performance while sending frames over the network. This compression works by encoding the frame before sending it at Server's end, and thereby, smartly decoding it on the Client's end, all in real-time.
+NetGear API supports real-time **Frame Compression** for optimizing performance while sending frames over the network. 
 
-In Frame Compression, NetGear API utilizes OpenCV's [imencode](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e) & [imdecode](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e) methods in conjunction with its flexible APIs at Server and Client end respectively. Furthermore, this aid us to achieve better control over the compression of the frame being sent over the network, and thereby helps in optimizing the performance, but only at the cost of quality. 
+When Frame Compression is enabled, NetGear encodes _(using [imencode](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e))_ video-frames before sending it at Server's end, and cleverly decodes(using [imdecode](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e)) it at the Client's end, thereby leveraging performance in real-time at the cost of quality.
 
-Frame Compression can be easily activated in NetGear API through `compression_format` & `compression_param` attributes of its [`option`](../../params/#options) dictionary parameter, during initialization.
+Frame Compression can be easily activated in NetGear API through `compression_format` & `compression_param` attributes of its [`option`](../../params/#options) dictionary parameter during initialization.
 
 &nbsp;
 
@@ -41,6 +41,8 @@ Frame Compression can be easily activated in NetGear API through `compression_fo
 
     * Frame Compression only supports three `JPG` or `JPEG`, `PNG` & `BMP` encoding formats as of now.
 
+    * Extreme Frame-Compression may be lead to degraded quality of video-frames. User discretion is advised!     
+
     * Any Incorrect/Invalid encoding format will **DISABLE** this Frame Compression!
 
     * Incorrect Format-specific parameters through `compression_param` attribute are skipped automatically.
@@ -48,12 +50,12 @@ Frame Compression can be easily activated in NetGear API through `compression_fo
 
 &nbsp;
 
-## Features
+## Features of Frame Compression
 
 
 - [x] Enables real-time Frame Compression for further optimizing performance.
 
-- [x] Client End intelligently decodes frame only w.r.t the encoding used at Server End.
+- [x] Client's End autonomously decodes frame based on encoding used at Server End.
 
 - [x] Encoding and decoding supports all Format-specific flags.
 
@@ -73,25 +75,35 @@ For implementing Frame Compression, NetGear API currently provide following attr
     !!! warning "Any Incorrect/Invalid encoding format value on `compression_format` attribute will **DISABLE** this Frame Compression!"
 
     !!! info "Even if you assign different `compression_format` value at Client's end, NetGear will auto-select the Server's encoding format instead."
+
+    ??? question "Fastest compression format for NetGear API?"
+
+        See this [FAQ answer ➶](../../../../help/netgear_faqs/#which-compression-format-is-the-fastest-for-netgear-api)
     
     ```python
-    options = {'compression_format': '.jpg'} #activates jpeg encoding
+    # activate jpeg encoding
+    options = {'compression_format': '.jpg'}
     ```
 
 * `compression_param`: This attribute allow us to pass different compression-format specific encoding/decoding flags. Its possible value are as follows:
 
-    * **Encoding**: Assigning Encoding Parameters _(list)_ at Server end only:
+    * **Encoding**: Assigning Encoding List Parameters at Server's end only:
 
         ```python
-        options = {'compression_format': '.jpg', 'compression_param':[cv2.IMWRITE_JPEG_QUALITY, 80]} # activate jpeg encoding optimizations and compression quality 80
+        # activate jpeg encoding and compression quality 80
+        options = {
+            "compression_format": ".jpg",
+            "compression_param": [cv2.IMWRITE_JPEG_QUALITY, 80],
+        }
         ```
 
         !!! tip "All supported Encoding(`Imwrite`) Flags can be found [here ➶](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga292d81be8d76901bff7988d18d2b42ac)"
 
-    * **Decoding**: Assigning Decoding flag _(integer)_ at Client end only:
+    * **Decoding**: Assigning Integer Decoding flag at Client's end only:
 
         ```python
-        options = {'compression_param':cv2.IMREAD_UNCHANGED} # decode image as is with alpha channel
+        # decode image as is with alpha channel
+        options = {"compression_param": cv2.IMREAD_UNCHANGED}
         ```
 
         !!! tip "All supported Decoding(`Imread`) Flags can be found [here ➶](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga61d9b0126a3e57d9277ac48327799c80)"
@@ -120,33 +132,35 @@ from vidgear.gears import NetGear
 import cv2
 
 # open any valid video stream(for e.g `test.mp4` file)
-stream = VideoGear(source='test.mp4').start()
+stream = VideoGear(source="test.mp4").start()
 
 # activate jpeg encoding and specify other related parameters
-options = {'compression_format': '.jpg', 'compression_param':[cv2.IMWRITE_JPEG_QUALITY, 50]} 
+options = {
+    "compression_format": ".jpg",
+    "compression_param": [cv2.IMWRITE_JPEG_QUALITY, 50],
+}
 
-#Define NetGear Server with defined parameters
-server = NetGear(pattern = 1, logging = True, **options) 
+# Define NetGear Server with defined parameters
+server = NetGear(pattern=1, logging=True, **options)
 
 # loop over until KeyBoard Interrupted
 while True:
 
-  try: 
+    try:
+        # read frames from stream
+        frame = stream.read()
 
-     # read frames from stream
-    frame = stream.read()
+        # check for frame if None-type
+        if frame is None:
+            break
 
-    # check for frame if None-type
-    if frame is None:
+        # {do something with the frame here}
+
+        # send frame to server
+        server.send(frame)
+
+    except KeyboardInterrupt:
         break
-
-    # {do something with the frame here}
-
-    # send frame to server
-    server.send(frame)
-  
-  except KeyboardInterrupt:
-    break
 
 # safely close video stream
 stream.stop()
@@ -169,10 +183,10 @@ from vidgear.gears import NetGear
 import cv2
 
 # define decode image as 3 channel BGR color image
-options = {'compression_format': '.jpg', 'compression_param':cv2.IMREAD_COLOR}
+options = {"compression_format": ".jpg", "compression_param": cv2.IMREAD_COLOR}
 
-#define NetGear Client with `receive_mode = True` and defined parameter
-client = NetGear(receive_mode = True, pattern = 1, logging = True, **options)
+# define NetGear Client with `receive_mode = True` and defined parameter
+client = NetGear(receive_mode=True, pattern=1, logging=True, **options)
 
 # loop over
 while True:
@@ -184,9 +198,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # Show output window
     cv2.imshow("Output Frame", frame)
@@ -225,10 +237,29 @@ from vidgear.gears import NetGear
 import cv2
 
 # activate jpeg encoding and specify other related parameters
-options = {'compression_format': '.jpg', 'compression_param':[cv2.IMWRITE_JPEG_QUALITY, 80, cv2.IMWRITE_JPEG_PROGRESSIVE, True, cv2.IMWRITE_JPEG_OPTIMIZE, True,]} 
+options = {
+    "compression_format": ".jpg",
+    "compression_param": [
+        cv2.IMWRITE_JPEG_QUALITY,
+        80,
+        cv2.IMWRITE_JPEG_PROGRESSIVE,
+        True,
+        cv2.IMWRITE_JPEG_OPTIMIZE,
+        True,
+    ],
+}
 
-# Define NetGear Client at given IP address and define parameters (!!! change following IP address '192.168.x.xxx' with yours !!!)
-client = NetGear(address = '192.168.x.xxx', port = '5454', protocol = 'tcp',  pattern = 1, receive_mode = True, logging = True, **options)
+# Define NetGear Client at given IP address and define parameters 
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+client = NetGear(
+    address="192.168.x.xxx",
+    port="5454",
+    protocol="tcp",
+    pattern=1,
+    receive_mode=True,
+    logging=True,
+    **options
+)
 
 #  loop over
 while True:
@@ -240,9 +271,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # Show output window
     cv2.imshow("Output Frame", frame)
@@ -276,33 +305,40 @@ from vidgear.gears import NetGear
 import cv2
 
 # define decode image as 3 channel BGR color image
-options = {'compression_format': '.jpg', 'compression_param':cv2.IMREAD_COLOR}
+options = {"compression_format": ".jpg", "compression_param": cv2.IMREAD_COLOR}
 
 # Open live video stream on webcam at first index(i.e. 0) device
 stream = VideoGear(source=0).start()
 
-# Define NetGear server at given IP address and define parameters (!!! change following IP address '192.168.x.xxx' with client's IP address !!!)
-server = NetGear(address = '192.168.x.xxx', port = '5454', protocol = 'tcp',  pattern = 1, logging = True, **options)
+# Define NetGear server at given IP address and define parameters 
+# !!! change following IP address '192.168.x.xxx' with client's IP address !!!
+server = NetGear(
+    address="192.168.x.xxx",
+    port="5454",
+    protocol="tcp",
+    pattern=1,
+    logging=True,
+    **options
+)
 
 # loop over until KeyBoard Interrupted
 while True:
 
-  try: 
+    try:
+        # read frames from stream
+        frame = stream.read()
 
-    # read frames from stream
-    frame = stream.read()
+        # check for frame if Nonetype
+        if frame is None:
+            break
 
-    # check for frame if Nonetype
-    if frame is None:
+        # {do something with the frame here}
+
+        # send frame to server
+        server.send(frame)
+
+    except KeyboardInterrupt:
         break
-
-    # {do something with the frame here}
-
-    # send frame to server
-    server.send(frame)
-  
-  except KeyboardInterrupt:
-    break
 
 # safely close video stream
 stream.stop()
@@ -313,19 +349,20 @@ server.close()
 
 &nbsp; 
 
+&nbsp; 
+
 ## Using Bidirectional Mode for Video-Frames Transfer with Frame Compression :fire:
 
 
 NetGear now supports ==Dual Frame Compression== for transferring video-frames with its exclusive Bidirectional Mode for achieving unmatchable performance bidirectionally. You can easily pass the required encoding/decoding parameters by formatting them as `tuple` for altering Frame Compression while sending/receiving video-frames at both ends.
 
+In this example we are going to implement a bare-minimum example, where we will be sending video-frames _(3-Dimensional numpy arrays)_ of the same Video bidirectionally at the same time for testing the real-time performance and synchronization between the Server and Client using [**Bidirectional Mode**](../bidirectional_mode). Furthermore, we're going to use optimal Dual Frame Compression Setting for Sending and Receiving frames at both Server and Client end.
 
-In this example we are going to implement a bare-minimum example, where we will be sending video-frames _(3-Dimensional numpy arrays)_ of the same Video bidirectionally at the same time, for testing the real-time performance and synchronization between the Server and the Client using Bidirectional Mode. Furthermore, we're going to use optimal Dual Frame Compression Setting for Sending and Receiving frames at both Server and Client end.
-
-!!! tip "This feature is great for building applications like Real-Time Video Chat."
+!!! success "This feature is great for building applications like **Real-time Video Chat System**."
 
 !!! note "This Dual Frame Compression feature also available for [Multi-Clients](../../advanced/multi_client/) Mode at Client(s) end only."
 
-!!! info "We're also using VidGear's real-time _Frame-Size Reducer_(`reducer`) method for reducing frame-size on-the-go for additional performance."
+!!! info "We're also using [`reducer()`](../../../../../bonus/reference/helper/#reducer) Helper method for reducing frame-size on-the-go for additional performance."
 
 !!! warning "Remember, sending large HQ video-frames may required more network bandwidth and packet size, which may add to video latency!"
 
@@ -345,49 +382,61 @@ import numpy as np
 import cv2
 
 # open any valid video stream(for e.g `test.mp4` file)
-stream = VideoGear(source='test.mp4').start()
+stream = VideoGear(source="test.mp4").start()
 
 # activate Bidirectional mode and Dual Frame Compression
-options = {'bidirectional_mode': True, 'compression_format': '.jpg', 'compression_param': (cv2.IMREAD_COLOR, [cv2.IMWRITE_JPEG_QUALITY, 60, cv2.IMWRITE_JPEG_PROGRESSIVE, False, cv2.IMWRITE_JPEG_OPTIMIZE, True,])} 
+options = {
+    "bidirectional_mode": True,
+    "compression_format": ".jpg",
+    "compression_param": (
+        cv2.IMREAD_COLOR,
+        [
+            cv2.IMWRITE_JPEG_QUALITY,
+            60,
+            cv2.IMWRITE_JPEG_PROGRESSIVE,
+            False,
+            cv2.IMWRITE_JPEG_OPTIMIZE,
+            True,
+        ],
+    ),
+}
 
-
-#Define NetGear Server with defined parameters
-server = NetGear(pattern = 1, logging = True, **options) 
+# Define NetGear Server with defined parameters
+server = NetGear(pattern=1, logging=True, **options)
 
 # loop over until KeyBoard Interrupted
 while True:
 
-  try: 
+    try:
+        # read frames from stream
+        frame = stream.read()
 
-     # read frames from stream
-    frame = stream.read()
+        # check for frame if Nonetype
+        if frame is None:
+            break
 
-    # check for frame if Nonetype
-    if frame is None:
+        # reducer frames size if you want even more performance, otherwise comment this line
+        frame = reducer(frame, percentage=20)  # reduce frame by 20%
+
+        # {do something with the frame here}
+
+        # prepare data to be sent(a simple text in our case)
+        target_data = "Hello, I am a Server."
+
+        # send frame & data and also receive data from Client
+        recv_data = server.send(frame, message=target_data)
+
+        # check data just received from Client is of numpy datatype
+        if not (recv_data is None) and isinstance(recv_data, np.ndarray):
+
+            # {do something with received numpy array here}
+
+            # Let's show it on output window
+            cv2.imshow("Received Frame", recv_data)
+            key = cv2.waitKey(1) & 0xFF
+
+    except KeyboardInterrupt:
         break
-
-    # reducer frames size if you want even more performance, otherwise comment this line
-    frame = reducer(frame, percentage = 20) #reduce frame by 20%
-
-    # {do something with the frame here}
-
-    # prepare data to be sent(a simple text in our case)
-    target_data = 'Hello, I am a Server.'
-
-    # send frame & data and also receive data from Client
-    recv_data = server.send(frame, message = target_data)
-
-    # check data just received from Client is of numpy datatype
-    if not(recv_data is None) and isinstance(recv_data, np.ndarray): 
-
-      # {do something with received numpy array here}
-
-      # Let's show it on output window
-      cv2.imshow("Received Frame", recv_data)
-      key = cv2.waitKey(1) & 0xFF
-  
-  except KeyboardInterrupt:
-    break
 
 # safely close video stream
 stream.stop()
@@ -412,18 +461,32 @@ from vidgear.gears.helper import reducer
 import cv2
 
 # activate Bidirectional mode and Dual Frame Compression
-options = {'bidirectional_mode': True, 'compression_format': '.jpg', 'compression_param': (cv2.IMREAD_COLOR, [cv2.IMWRITE_JPEG_QUALITY, 60, cv2.IMWRITE_JPEG_PROGRESSIVE, False, cv2.IMWRITE_JPEG_OPTIMIZE, True,])} 
+options = {
+    "bidirectional_mode": True,
+    "compression_format": ".jpg",
+    "compression_param": (
+        cv2.IMREAD_COLOR,
+        [
+            cv2.IMWRITE_JPEG_QUALITY,
+            60,
+            cv2.IMWRITE_JPEG_PROGRESSIVE,
+            False,
+            cv2.IMWRITE_JPEG_OPTIMIZE,
+            True,
+        ],
+    ),
+}
 
 # again open the same video stream
-stream = VideoGear(source='test.mp4').start()
+stream = VideoGear(source="test.mp4").start()
 
-#define NetGear Client with `receive_mode = True` and defined parameter
-client = NetGear(receive_mode = True, pattern = 1, logging = True, **options)
+# define NetGear Client with `receive_mode = True` and defined parameter
+client = NetGear(receive_mode=True, pattern=1, logging=True, **options)
 
 # loop over
 while True:
 
-     # read frames from stream
+    # read frames from stream
     frame = stream.read()
 
     # check for frame if Nonetype
@@ -431,10 +494,10 @@ while True:
         break
 
     # reducer frames size if you want even more performance, otherwise comment this line
-    frame = reducer(frame, percentage = 20) #reduce frame by 20%
+    frame = reducer(frame, percentage=20)  # reduce frame by 20%
 
     # receive data from server and also send our data
-    data = client.recv(return_data = frame)
+    data = client.recv(return_data=frame)
 
     # check for data if None
     if data is None:
@@ -450,7 +513,7 @@ while True:
     # {do something with the extracted frame and data here}
 
     # lets print extracted server data
-    if not(server_data is None): 
+    if not (server_data is None):
         print(server_data)
 
     # Show output window

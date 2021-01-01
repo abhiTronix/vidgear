@@ -22,25 +22,57 @@ limitations under the License.
 
 ## Overview
 
-The CamGear API's [`option`](../../params/#options) dictionary parameter, provides the ability to alter various **Source Tweak Parameters** available within [OpenCV's VideoCapture Class](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80). These tweak parameters can be used to manipulate input source Camera-Device properties _(such as its brightness, saturation, size, iso, gain etc.)_ seemlessly. Thereby, All Source Tweak Parameters supported by CamGear API are disscussed in this document.
+The [`option`](../../params/#options) dictionary parameter in CamGear, gives user the ability to alter various **Source Tweak Parameters** available within [OpenCV's VideoCapture Class](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80). These tweak parameters can be used to manipulate input source Camera-Device properties _(such as its brightness, saturation, size, iso, gain etc.)_ seamlessly. Thereby, All Source Tweak Parameters supported by CamGear API are disscussed in this document.
 
+&emsp; 
 
-!!! bug "Remember, Not all parameters are supported by all cameras devices, which is one of the most troublesome thing with OpenCV library. Each camera type, from android cameras, to USB cameras , to professional ones, offers a different interface to modify its parameters. Therefore, there are many branches in OpenCV code to support as many of them, but of course, not all possible devices are covered, and thereby works. Furthermore, OpenCV does not return any helpful error messages regarding this problem, so it’s pretty much based on _trial and error_."
+!!! quote ""
 
+	### Exclusive CamGear Parameters
 
-!!! tip "You can easily check parameter values supported by your webcam, by hooking it to a Linux machine, and using the command `#!sh v4l2-ctl -d 0 --list-formats-ext` _(where 0 is an index of the given camera)_ to list the supported video parameters and their values. If that doesn't works, refer to its datasheet _(if available)_."
+	In addition to Source Tweak Parameters, CamGear also provides some exclusive attributes for its [`option`](../../params/#options) dictionary parameters. These attributes are as follows:
+
+	- `STREAM_RESOLUTION` _(string)_: This attribute can be used in CamGear's Stream Mode (`stream_mode=True`) for specifying supported stream resolution. Its possible values can be: `144p`, `240p`, `360p`, `480p`, `720p`, `1080p`, `1440p`, `2160p`, `worst`, `best`, and its default value is `best`. Its usage is as follows:
+
+		!!! warning "In case specificed `STREAM_RESOLUTION` value is unavailable within Source Stream, it defaults to `best`!"
+
+		```python
+		options = {"STREAM_RESOLUTION": "720p"} # 720p stream will be used. 
+		```
+
+		!!! info "Its complete usage example is given [here ➶](../../../../help/camgear_faqs/#how-to-change-quality-and-parameters-of-youtube-streams-with-camgear)"
+
+	- `STREAM_PARAMS` _(dict)_: This dictionary attribute can be used in CamGear's Stream Mode (`stream_mode=True`) for specifying underlying API(e.g. `youtube-dl`) parameters. Its usage is as follows:
+
+		!!! tip "All supported parameters for Youtube-DL can be found [here ➶](https://github.com/ytdl-org/youtube-dl/blob/0ee78d62d5d98d30f5b26e76504660adae01bd19/youtube_dl/YoutubeDL.py#L119-L316)"
+
+		```python
+		options = {"STREAM_PARAMS": {"nocheckcertificate": True}} # disables verifying SSL certificates in Youtube-DL 
+		```
+
+		!!! info "Its complete usage example is given [here ➶](../../../../help/camgear_faqs/#how-to-change-quality-and-parameters-of-youtube-streams-with-camgear)"
+
+	- `THREADED_QUEUE_MODE` _(boolean)_: This attribute can be used to override Threaded-Queue-Mode mode to manually disable it:
+
+	   	!!! danger "Disabling Threaded-Queue-Mode can be dangerous! Read more [here ➶](../../../../bonus/TQM/#manually-disabling-threaded-queue-mode)"
+
+		```python
+		options = {"THREADED_QUEUE_MODE": False} # disable Threaded Queue Mode. 
+		```
 
 
 &nbsp; 
 
 
-## Supported Source Tweak Parameters
+### Supported Source Tweak Parameters
 
 **All Source Tweak Parameters supported by CamGear API are as follows:**
 
-!!! info "These parameters can be passed to CamGear's [`option`](../../params/#options) dictionary parameter by formatting them as its string attributes."
+!!! bug "Remember, Not all parameters are supported by all cameras devices, which is one of the most troublesome thing with OpenCV library. Each camera type, from android cameras, to USB cameras , to professional ones, offers a different interface to modify its parameters. Therefore, there are many branches in OpenCV code to support as many of them, but of course, not all possible devices are covered, and thereby works. Furthermore, OpenCV does not return any helpful error messages regarding this problem, so it’s pretty much based on _trial and error_."
 
-!!! tip "Its complete usage example is [here ➶](../../usage/#using-camgear-with-variable-camera-properties)"
+!!! tip "You can easily check parameter values supported by your webcam, by hooking it to a Linux machine, and using the command `#!sh v4l2-ctl -d 0 --list-formats-ext` _(where 0 is an index of the given camera)_ to list the supported video parameters and their values. If that doesn't works, refer to its datasheet _(if available)_."
+
+!!! info "These parameters can be passed to CamGear's [`option`](../../params/#options) dictionary parameter by formatting them as its string attributes. Its complete usage example is [here ➶](../../usage/#using-camgear-with-variable-camera-properties)"
 
 &thinsp;
 
@@ -87,7 +119,7 @@ The CamGear API's [`option`](../../params/#options) dictionary parameter, provid
 | CAP_PROP_AUTOFOCUS 	|  	|
 | CAP_PROP_SAR_NUM 	| Sample aspect ratio: num/den (num) 	|
 | CAP_PROP_SAR_DEN 	| Sample aspect ratio: num/den (den) 	|
-| CAP_PROP_BACKEND 	| Current backend (enum VideoCaptureAPIs). Read-only property. 	|
+| CAP_PROP_BACKEND 	| Current backend (enum VideoCapture APIs). Read-only property. 	|
 | CAP_PROP_CHANNEL 	| Video input or Channel Number (only for those cameras that support) 	|
 | CAP_PROP_AUTO_WB 	| enable/ disable auto white-balance 	|
 | CAP_PROP_WB_TEMPERATURE 	| white-balance color temperature 	|
