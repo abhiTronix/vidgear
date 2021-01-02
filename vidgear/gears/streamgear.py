@@ -197,10 +197,10 @@ class StreamGear:
             self.__clear_assets = False
 
         # handle whether to livestream?
-        self.__enable_livestream = self.__params.pop("-livestream", False)
-        if not isinstance(self.__enable_livestream, bool):
+        self.__livestreaming = self.__params.pop("-livestream", False)
+        if not isinstance(self.__livestreaming, bool):
             # reset improper values
-            self.__enable_livestream = False
+            self.__livestreaming = False
 
         # handle Streaming formats
         supported_formats = ["dash"]  # will be extended in future
@@ -689,7 +689,7 @@ class StreamGear:
             ]
 
         # Check if live-streaming or not?
-        if self.__enable_livestream:
+        if self.__livestreaming:
             output_params["-window_size"] = self.__params.pop("-window_size", 5)
             output_params["-extra_window_size"] = self.__params.pop(
                 "-extra_window_size", 5
@@ -747,7 +747,9 @@ class StreamGear:
         # format command
         if self.__video_source:
             ffmpeg_cmd = (
-                [self.__ffmpeg, "-y"]  # overwrite
+                [self.__ffmpeg, "-y"] + ["-re"]  # pseudo live-streaming
+                if self.__livestreaming
+                else []
                 + hide_banner
                 + ["-i", self.__video_source]
                 + input_commands
@@ -757,7 +759,8 @@ class StreamGear:
             )
         else:
             ffmpeg_cmd = (
-                [self.__ffmpeg, "-y"]  # overwrite
+                [self.__ffmpeg, "-y"]
+                + ["-re"]  # pseudo live-streaming
                 + hide_banner
                 + ["-f", "rawvideo", "-vcodec", "rawvideo"]
                 + input_commands

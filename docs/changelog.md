@@ -20,7 +20,7 @@ limitations under the License.
 
 # Release Notes
 
-## v0.2.0 (In Progress)
+## v0.2.0 (2021-01-01)
 
 ### New Features
 
