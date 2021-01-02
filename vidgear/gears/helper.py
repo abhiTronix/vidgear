@@ -292,7 +292,7 @@ def validate_video(path, video_path=None):
     stripped_data = [x.decode("utf-8").strip() for x in metadata.split(b"\n")]
     result = {}
     for data in stripped_data:
-        output_a = re.findall(r"(\d+)x(\d+)", data)
+        output_a = re.findall(r"([1-9]\d+)x([1-9]\d+)", data)
         output_b = re.findall(r"\d+(?:\.\d+)?\sfps", data)
         if len(result) == 2:
             break
