@@ -17,7 +17,7 @@ site_name: VidGear
 site_url: https://abhitronix.github.io/vidgear/
 site_author: Abhishek Thakur
 site_description: >-
-  High-Performance Framework for building complex real-time media applications in python.
+  A High-Performance Video-Processing Python Framework for building complex real-time Media applications 🔥
 
 # Repository
 repo_name: abhiTronix/vidgear

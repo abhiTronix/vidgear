@@ -138,14 +138,20 @@ blockquote p {
 }
 
 #version-selector .form-control {
-    border-radius: 2.25em;
-	border: .1rem solid currentColor;
-	background-color: var(--md-primary-fg-color);
-	border-color: var(--md-primary-bg-color);
-    color: var(--md-primary-bg-color);
-    padding: .5em;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    overflow: hidden;
-    text-overflow: '';
+  border-radius: 1.2em;
+  border: .16rem solid currentColor;
+  background-color: var(--md-primary-fg-color);
+  border-color: var(--md-primary-bg-color);
+  color: var(--md-primary-bg-color);
+  padding: .5em;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  overflow: hidden;
+  background-image: url(data:image/svg+xml,\ <svg version='1.1' xmlns='http://www.w3.org/2000/svg' width='14px'\ height='14px' viewBox='0 0 1200 1000' fill='rgb(255,255,255)'>\ <path d='M1100 411l-198 -199l-353 353l-353 -353l-197 199l551 551z'/>\ </svg>);
+  background-repeat: no-repeat;
+  background-position: 95% 50%;
+  padding-right: .1em;
+  padding-left: .7em;
+  font-weight: bolder;
+  text-transform: uppercase;
 }
