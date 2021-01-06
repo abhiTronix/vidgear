@@ -22,7 +22,7 @@ limitations under the License.
 import cv2
 import time
 import logging as log
-from threading import Thread
+from threading import Thread, Event
 from pkg_resources import parse_version
 
 from .helper import (
@@ -227,13 +227,13 @@ class CamGear:
             self.__threaded_queue_mode = True
 
         self.__queue = None
-        # initialize deque for video files only
+        # initialize queue for video files only
         if self.__threaded_queue_mode and isinstance(source, str):
-            # import deque
-            from collections import deque
+            # import queue
+            import queue
 
-            # define deque and assign it to global var
-            self.__queue = deque(maxlen=96)  # max len 96 to check overflow
+            # define queue and assign it to global var
+            self.__queue = queue.Queue(maxsize=96)  # max len 96 to check overflow
             # log it
             if self.__logging:
                 logger.debug(
@@ -305,7 +305,7 @@ class CamGear:
 
             if self.__threaded_queue_mode:
                 # initialize and append to queue
-                self.__queue.append(self.frame)
+                self.__queue.put(self.frame)
         else:
             raise RuntimeError(
                 "[CamGear:ERROR] :: Source is invalid, CamGear failed to intitialize stream on this source!"
@@ -314,8 +314,8 @@ class CamGear:
         # thread initialization
         self.__thread = None
 
-        # initialize termination flag
-        self.__terminate = False
+        # initialize termination flag event
+        self.__terminate = Event()
 
     def start(self):
         """
@@ -331,21 +331,21 @@ class CamGear:
 
     def __update(self):
         """
-        A **Threaded Frames Extractor**, that keep iterating frames from OpenCV's VideoCapture API to a internal monitored deque,
+        A **Threaded Frames Extractor**, that keep iterating frames from OpenCV's VideoCapture API to a internal monitored queue,
         until the thread is terminated, or frames runs out.
         """
 
         # keep iterating infinitely until the thread is terminated or frames runs out
         while True:
             # if the thread indicator variable is set, stop the thread
-            if self.__terminate:
+            if self.__terminate.is_set():
                 break
 
             if self.__threaded_queue_mode:
                 # check queue buffer for overflow
-                if len(self.__queue) >= 96:
+                if self.__queue.full():
                     # stop iterating if overflowing occurs
-                    time.sleep(0.000001)
+                    self.__terminate.wait(timeout=0.000001)
                     continue
 
             # otherwise, read the next frame from the stream
@@ -355,7 +355,7 @@ class CamGear:
             if not grabbed:
                 # no frames received, then safely exit
                 if self.__threaded_queue_mode:
-                    if len(self.__queue) == 0:
+                    if self.__queue.empty():
                         break
                     else:
                         continue
@@ -391,7 +391,7 @@ class CamGear:
 
             # append to queue
             if self.__threaded_queue_mode:
-                self.__queue.append(self.frame)
+                self.__queue.put(self.frame)
 
         self.__threaded_queue_mode = False
         self.frame = None
@@ -400,15 +400,15 @@ class CamGear:
 
     def read(self):
         """
-        Extracts frames synchronously from monitored deque, while maintaining a fixed-length frame buffer in the memory,
-        and blocks the thread if the deque is full.
+        Extracts frames synchronously from monitored queue, while maintaining a fixed-length frame buffer in the memory,
+        and blocks the thread if the queue is full.
 
         **Returns:** A n-dimensional numpy array.
         """
 
         while self.__threaded_queue_mode:
-            if len(self.__queue) > 0:
-                return self.__queue.popleft()
+            if not self.__queue.empty():
+                return self.__queue.get_nowait()
         return self.frame
 
     def stop(self):
@@ -418,15 +418,20 @@ class CamGear:
         if self.__logging:
             logger.debug("Terminating processes.")
         # terminate Threaded queue mode separately
-        if self.__threaded_queue_mode and not (self.__queue is None):
-            if len(self.__queue) > 0:
-                self.__queue.clear()
+        if self.__threaded_queue_mode:
             self.__threaded_queue_mode = False
             self.frame = None
 
         # indicate that the thread should be terminate
-        self.__terminate = True
+        self.__terminate.set()
 
         # wait until stream resources are released (producer thread might be still grabbing frame)
         if self.__thread is not None:
+            if not (self.__queue is None):
+                while not self.__queue.empty():
+                    try:
+                        self.__queue.get_nowait()
+                    except queue.Empty:
+                        continue
+                    self.__queue.task_done()
             self.__thread.join()
