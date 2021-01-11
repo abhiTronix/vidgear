@@ -341,13 +341,6 @@ class CamGear:
             if self.__terminate.is_set():
                 break
 
-            if self.__threaded_queue_mode:
-                # check queue buffer for overflow
-                if self.__queue.full():
-                    # stop iterating if overflowing occurs
-                    self.__terminate.wait(timeout=0.000001)
-                    continue
-
             # otherwise, read the next frame from the stream
             (grabbed, frame) = self.stream.read()
 
@@ -405,10 +398,8 @@ class CamGear:
 
         **Returns:** A n-dimensional numpy array.
         """
-
         while self.__threaded_queue_mode:
-            if not self.__queue.empty():
-                return self.__queue.get_nowait()
+            return self.__queue.get()
         return self.frame
 
     def stop(self):
