@@ -155,3 +155,7 @@ blockquote p {
   font-weight: bolder;
   text-transform: uppercase;
 }
+
+.doc-heading {
+    padding-top: 50px;
+}
