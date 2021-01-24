@@ -254,6 +254,7 @@ def is_valid_url(path, url=None, logging=False):
     supported_protocols = [
         x.decode("utf-8").strip() for x in splitted[2 : len(splitted) - 1]
     ]
+    supported_protocols+=["rtsp"] #rtsp not included somehow
     # Test and return result whether scheme is supported
     if extracted_scheme_url and extracted_scheme_url in supported_protocols:
         if logging:
