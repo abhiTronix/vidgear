@@ -32,6 +32,7 @@ from .helper import (
     dict2Args,
     is_valid_url,
     logger_handler,
+    check_WriteAccess,
     get_valid_ffmpeg_path,
 )
 
@@ -123,10 +124,7 @@ class WriteGear:
             # validate this class has the access rights to specified directory or not
             abs_path = os.path.abspath(output_filename)
 
-            if (
-                self.__os_windows or os.access in os.supports_effective_ids
-            ) and os.access(os.path.dirname(abs_path), os.W_OK):
-
+            if self.__os_windows or check_WriteAccess(os.path.dirname(abs_path)):
                 if os.path.isdir(abs_path):  # check if given path is directory
                     abs_path = os.path.join(
                         abs_path,

@@ -130,6 +130,24 @@ def check_CV_version():
         return 3
 
 
+def check_WriteAccess(path):
+    # effective_ids unavailable on windows
+    write_accessible = False
+    if not os.access(
+        path, os.W_OK, effective_ids=os.access in os.supports_effective_ids
+    ):
+        return False
+    temp_fname = os.path.join(path, "temp.temp")
+    try:
+        fd = os.open(temp_fname, os.O_WRONLY | os.O_CREAT)
+        os.close(fd)
+        write_accessible = True
+    except Exception:
+        write_accessible = False
+    os.unlink(temp_fname)
+    return write_accessible
+
+
 def check_gstreamer_support(logging=False):
     """
     ### check_gstreamer_support
@@ -254,7 +272,7 @@ def is_valid_url(path, url=None, logging=False):
     supported_protocols = [
         x.decode("utf-8").strip() for x in splitted[2 : len(splitted) - 1]
     ]
-    supported_protocols+=["rtsp"] #rtsp not included somehow
+    supported_protocols += ["rtsp"]  # rtsp not included somehow
     # Test and return result whether scheme is supported
     if extracted_scheme_url and extracted_scheme_url in supported_protocols:
         if logging:
