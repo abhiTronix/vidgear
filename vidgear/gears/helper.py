@@ -26,6 +26,7 @@ import os
 import re
 import sys
 import errno
+import shutil
 import numpy as np
 import logging as log
 import platform
@@ -130,10 +131,20 @@ def check_CV_version():
         return 3
 
 
-def check_WriteAccess(path):
-    # effective_ids unavailable on windows
+def check_WriteAccess(path, is_windows=False):
+    """
+    ### check_WriteAccess
+
+    Checks whether given path directory has Write-Access.
+
+    Parameters:
+        path (string): absolute path of directory
+        is_windows (boolean): is running on Windows OS?
+
+    **Returns:** A boolean value, confirming whether Write-Access available, or not?.
+    """
     write_accessible = False
-    if not os.access(
+    if not is_windows and not os.access(
         path, os.W_OK, effective_ids=os.access in os.supports_effective_ids
     ):
         return False
@@ -673,9 +684,14 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
     final_path = ""
     if os_windows and os_bit:
         # initialize variables
-        file_url = "https://ffmpeg.zeranoe.com/builds/{}/static/ffmpeg-latest-{}-static.zip".format(
-            os_bit, os_bit
-        )
+        if os_bit == "win64":
+            file_url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip".format(
+                os_bit, os_bit
+            )
+        else:
+            file_url = "https://raw.githubusercontent.com/abhiTronix/ffmpeg-static-builds/master/windows/ffmpeg-latest-{}-static.zip".format(
+                os_bit
+            )
         file_name = os.path.join(
             os.path.abspath(path), "ffmpeg-latest-{}-static.zip".format(os_bit)
         )
@@ -711,7 +727,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                     logger.exception(str(e))
                     logger.warning("Downloading Failed. Trying GitHub mirror now!")
                     file_url = "https://raw.githubusercontent.com/abhiTronix/ffmpeg-static-builds/master/windows/ffmpeg-latest-{}-static.zip".format(
-                        os_bit, os_bit
+                        os_bit
                     )
                     response = requests.get(file_url, stream=True, timeout=2)
                     response.raise_for_status()
@@ -727,7 +743,15 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                 bar.close()
             logger.debug("Extracting executables.")
             with zipfile.ZipFile(file_name, "r") as zip_ref:
+                zip_fname = zip_ref.infolist()[0].filename.split("/")[0]
                 zip_ref.extractall(base_path)
+                if zip_fname != "ffmpeg-latest-{}-static".format(os_bit):
+                    shutil.move(
+                        os.path.join(base_path, zip_fname),
+                        os.path.join(
+                            base_path, "ffmpeg-latest-{}-static".format(os_bit)
+                        ),
+                    )
             # perform cleaning
             os.remove(file_name)
             logger.debug("FFmpeg binaries for Windows configured successfully!")
@@ -817,8 +841,7 @@ def generate_auth_certificates(path, overwrite=False, logging=False):
 
     **Returns:** A valid CURVE key-pairs path as string.
     """
-    # import necessary libs
-    import shutil
+    # import necessary lib
     import zmq.auth
 
     # check if path corresponds to vidgear only

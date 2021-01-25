@@ -124,7 +124,9 @@ class WriteGear:
             # validate this class has the access rights to specified directory or not
             abs_path = os.path.abspath(output_filename)
 
-            if self.__os_windows or check_WriteAccess(os.path.dirname(abs_path)):
+            if check_WriteAccess(
+                os.path.dirname(abs_path), is_windows=self.__os_windows
+            ):
                 if os.path.isdir(abs_path):  # check if given path is directory
                     abs_path = os.path.join(
                         abs_path,

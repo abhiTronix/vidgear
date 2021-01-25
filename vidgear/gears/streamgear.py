@@ -39,6 +39,7 @@ from .helper import (
     logger_handler,
     validate_audio,
     validate_video,
+    check_WriteAccess,
     get_video_bitrate,
     get_valid_ffmpeg_path,
 )
@@ -235,9 +236,9 @@ class StreamGear:
             # validate this class has the access rights to specified directory or not
             abs_path = os.path.abspath(output)
 
-            if (
-                self.__os_windows or os.access in os.supports_effective_ids
-            ) and os.access(os.path.dirname(abs_path), os.W_OK):
+            if check_WriteAccess(
+                os.path.dirname(abs_path), is_windows=self.__os_windows
+            ):
                 # check if given path is directory
                 valid_extension = "mpd" if self.__format == "dash" else "m3u8"
                 if os.path.isdir(abs_path):
