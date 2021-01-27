@@ -155,7 +155,9 @@ def check_WriteAccess(path, is_windows=False):
         write_accessible = True
     except Exception:
         write_accessible = False
-    os.unlink(temp_fname)
+    finally:
+        if os.path.exists(temp_fname):
+            os.unlink(temp_fname)
     return write_accessible
 
 
