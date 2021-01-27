@@ -748,9 +748,8 @@ class StreamGear:
         # format command
         if self.__video_source:
             ffmpeg_cmd = (
-                [self.__ffmpeg, "-y"] + ["-re"]  # pseudo live-streaming
-                if self.__livestreaming
-                else []
+                [self.__ffmpeg, "-y"]
+                + (["-re"] if self.__livestreaming else [])  # pseudo live-streaming
                 + hide_banner
                 + ["-i", self.__video_source]
                 + input_commands
