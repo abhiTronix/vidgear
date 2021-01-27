@@ -743,7 +743,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                 bar.close()
             logger.debug("Extracting executables.")
             with zipfile.ZipFile(file_name, "r") as zip_ref:
-                zip_fname = zip_ref.infolist()[0].filename.split("/")[0]
+                zip_fname, _ = os.path.split(zip_ref.infolist()[0].filename)
                 zip_ref.extractall(base_path)
                 if zip_fname != "ffmpeg-latest-{}-static".format(os_bit):
                     shutil.move(
