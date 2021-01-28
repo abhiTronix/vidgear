@@ -687,9 +687,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
     if os_windows and os_bit:
         # initialize variables
         if os_bit == "win64":
-            file_url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip".format(
-                os_bit, os_bit
-            )
+            file_url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
         else:
             file_url = "https://raw.githubusercontent.com/abhiTronix/ffmpeg-static-builds/master/windows/ffmpeg-latest-{}-static.zip".format(
                 os_bit
