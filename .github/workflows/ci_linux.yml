@@ -26,7 +26,6 @@ on:
 jobs:
   test:
     name: CI Test vidgear
-    if: github.ref == 'refs/heads/testing'
     runs-on: ubuntu-latest
     strategy:
       matrix:
