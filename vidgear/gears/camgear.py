@@ -21,6 +21,7 @@ limitations under the License.
 
 import cv2
 import time
+import queue
 import logging as log
 from threading import Thread, Event
 from pkg_resources import parse_version
@@ -229,9 +230,6 @@ class CamGear:
         self.__queue = None
         # initialize queue for video files only
         if self.__threaded_queue_mode and isinstance(source, str):
-            # import queue
-            import queue
-
             # define queue and assign it to global var
             self.__queue = queue.Queue(maxsize=96)  # max len 96 to check overflow
             # log it
