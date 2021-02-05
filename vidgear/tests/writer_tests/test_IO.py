@@ -130,15 +130,15 @@ def test_paths(compression_mode, path):
             writer.close()
 
 
-def test_invalid_params():
+def test_invalid_encoder():
     """
-    Invalid parameter Failure Test - Made to fail by calling invalid parameters
+    Invalid encoder Failure Test
     """
     np.random.seed(0)
     # generate random data for 10 frames
     random_data = np.random.random(size=(480, 640, 3)) * 255
     input_data = random_data.astype(np.uint8)
-    with pytest.raises(ValueError):
+    try:
         output_params = {"-vcodec": "unknown"}
         writer = WriteGear(
             "output.mp4", compression_mode=True, logging=True, **output_params
@@ -146,3 +146,5 @@ def test_invalid_params():
         writer.write(input_data)
         writer.write(input_data)
         writer.close()
+    except Exception as e:
+        pytest.fail(str(e))

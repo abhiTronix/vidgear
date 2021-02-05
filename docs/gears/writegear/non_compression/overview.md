@@ -21,7 +21,7 @@ limitations under the License.
 # WriteGear API: Non-Compression Mode
 
 <figure>
-  <img src="../../../../assets/images/writegear_ncm.png" loading="lazy" alt="Non-Compression Mode" />
+  <img src="../../../../assets/images/writegear_ncm.png" loading="lazy" alt="Non-Compression Mode" class="center-small"/>
   <figcaption>WriteGear API's Non-Compression Mode generalized workflow</figcaption>
 </figure>
 
@@ -41,3 +41,21 @@ This mode provides flexible access to [**OpenCV's VideoWriter API**](https://doc
 	* In case WriteGear API fails to detect valid FFmpeg executables on your system, it will automatically switches to this(Non-Compression) Mode.
 
 	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
+
+
+&thinsp;
+
+## Usage Examples
+
+<div>
+<a href="../usage/">See here 🚀</a>
+</div>
+
+
+## Parameters
+
+<div>
+<a href="../params/">See here 🚀</a>
+</div>
+
+&thinsp; 

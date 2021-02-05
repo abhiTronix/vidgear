@@ -223,7 +223,7 @@ test_data_class = [
     (
         "Output3.mp4",
         return_static_ffmpeg(),
-        {"-vcodec": "libx264", "-crf": 0, "-preset": "fast"},
+        {"-c:v": "libx265", "-vcodec": "libx264", "-crf": 0, "-preset": "veryfast"},
         True,
     ),
 ]

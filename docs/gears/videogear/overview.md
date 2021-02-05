@@ -21,7 +21,7 @@ limitations under the License.
 # VideoGear API 
 
 <figure>
-  <img src="../../../assets/images/videogear_workflow.png" alt="VideoGear Flow Diagram" loading="lazy" />
+  <img src="../../../assets/images/videogear_workflow.png" alt="VideoGear Flow Diagram" loading="lazy" class="center-small"/>
   <figcaption>VideoGear API's generalized workflow</figcaption>
 </figure>
 

@@ -22,7 +22,7 @@ limitations under the License.
 
 
 <figure>
-  <img src="../../../assets/images/streamgear_flow.webp" loading="lazy" alt="StreamGear Flow Diagram"/>
+  <img src="../../../assets/images/streamgear_flow.webp" loading="lazy" alt="StreamGear Flow Diagram" class="center"/>
   <figcaption>StreamGear API's generalized workflow</figcaption>
 </figure>
 

@@ -42,6 +42,13 @@ th {
   width: 80%;
 }
 
+.center-small {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+}
+
 .md-tabs__link--active {
     font-weight: bold;
 }

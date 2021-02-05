@@ -21,7 +21,7 @@ limitations under the License.
 # WriteGear API: Compression Mode
 
 <figure>
-  <img src="../../../../assets/images/writegear_cm.png" loading="lazy" alt="Compression Mode" />
+  <img src="../../../../assets/images/writegear_cm.png" loading="lazy" alt="Compression Mode" class="center-small"/>
   <figcaption>WriteGear API's Compression Mode generalized workflow</figcaption>
 </figure>
 
@@ -59,3 +59,18 @@ This function opens endless possibilities of exploiting any FFmpeg supported par
 
 
 &nbsp;
+
+## Usage Examples
+
+<div>
+<a href="../usage/">See here 🚀</a>
+</div>
+
+
+## Parameters
+
+<div>
+<a href="../params/">See here 🚀</a>
+</div>
+
+&thinsp; 

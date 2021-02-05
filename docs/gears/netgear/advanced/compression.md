@@ -22,7 +22,7 @@ limitations under the License.
 
 
 <figure>
-  <img src="../../../../assets/images/compression.webp" alt="Frame Compression" loading="lazy" title="NetGear's Frame Compression" width="75%" />
+  <img src="../../../../assets/images/compression.webp" alt="Frame Compression" loading="lazy" title="NetGear's Frame Compression" width="75%" class="center" />
 </figure>
 
 
