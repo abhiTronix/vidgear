@@ -217,6 +217,8 @@ In Compression Mode, WriteGear can make complex job look easy with FFmpeg. It al
 
 _In this example, let's stream Live Camera Feed directly to Twitch!_
 
+!!! info "YouTube-Live Streaming example code also available in [WriteGear FAQs ➶](../../../../help/writegear_faqs/#is-youtube-live-streaming-possibe-with-writegear)"
+
 !!! warning "This example assume you already have a [**Twitch Account**](https://www.twitch.tv/) for publishing video."
 
 !!! danger "Make sure to change [_Twitch Stream Key_](https://www.youtube.com/watch?v=xwOtOfPMIIk) with yours in following code before running!"

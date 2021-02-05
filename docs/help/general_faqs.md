@@ -92,6 +92,12 @@ Finally, once done, see [Switching from OpenCV ➶](../../switch_from_cv/) and g
 
 &nbsp;
 
+## Can I perform Deep Learning task with VidGear?
+
+**Answer:** VidGear is a powerful Video Processing library _(similar to OpenCV, FFmpeg, etc.)_ that can read, write, process, send & receive a sequence of video-frames from/to various devices in way easy, flexible, and faster manner. So for Deep Learning or Machine Learning tasks, you have to use a third-party library with VidGear.  Being said that, VidGear's high-performance APIs definitely will leverage the overall performance if you're processing video/audio streams in your application along with Deep Learning tasks.
+
+&nbsp;
+
 ## Can I ask my question directly without raising an issue?
 
 **Answer:** Yes, please join our [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
