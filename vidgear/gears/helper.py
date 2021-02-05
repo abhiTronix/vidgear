@@ -260,6 +260,33 @@ def dimensions_to_resolutions(value):
     )
 
 
+def get_supported_vencoders(path):
+    """
+    ### get_supported_vencoders
+
+    Find and returns FFmpeg's supported video encoders
+
+    Parameters:`
+        path (string): absolute path of FFmpeg binaries
+
+    **Returns:** List of supported encoders.
+    """
+    encoders = check_output([path, "-hide_banner", "-encoders"])
+    splitted = encoders.split(b"\n")
+    # extract video encoders
+    supported_vencoders = [
+        x.decode("utf-8").strip()
+        for x in splitted[2 : len(splitted) - 1]
+        if x.decode("utf-8").strip().startswith("V")
+    ]
+    # compile regex
+    finder = re.compile("\.\.\s[a-z0-9_-]+")
+    # find all outputs
+    outputs = finder.findall("\n".join(supported_vencoders))
+    # return outputs
+    return [s.replace(".. ", "") for s in outputs]
+
+
 def is_valid_url(path, url=None, logging=False):
     """
     ### is_valid_url
@@ -687,7 +714,9 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
     if os_windows and os_bit:
         # initialize variables
         if os_bit == "win64":
-            file_url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
+            file_url = (
+                "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
+            )
         else:
             file_url = "https://raw.githubusercontent.com/abhiTronix/ffmpeg-static-builds/master/windows/ffmpeg-latest-{}-static.zip".format(
                 os_bit

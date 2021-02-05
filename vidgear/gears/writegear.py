@@ -34,6 +34,7 @@ from .helper import (
     logger_handler,
     check_WriteAccess,
     get_valid_ffmpeg_path,
+    get_supported_vencoders,
 )
 
 # define logger
@@ -237,7 +238,7 @@ class WriteGear:
                 ):
                     if self.__logging:
                         logger.debug(
-                            "URL:`{}` is sucessfully configured for streaming.".format(
+                            "URL:`{}` is successfully configured for streaming.".format(
                                 output_filename
                             )
                         )
@@ -399,14 +400,44 @@ class WriteGear:
         # convert input parameters to list
         input_parameters = dict2Args(input_params)
 
-        # pre-assign default encoder parameters (if not assigned by user).
+        # dynamically pre-assign a default video-encoder (if not assigned by user).
+        supported_vcodecs = get_supported_vencoders(self.__ffmpeg)
+        default_vcodec = [
+            vcodec
+            for vcodec in ["libx264", "libx265", "libxvid", "mpeg4"]
+            if vcodec in supported_vcodecs
+        ][0] or "unknown"
+        if "-c:v" in output_params:
+            output_params["-vcodec"] = output_params.pop("-c:v", default_vcodec)
         if not "-vcodec" in output_params:
-            output_params["-vcodec"] = "libx264"
-        if output_params["-vcodec"] in ["libx264", "libx265"]:
-            if not "-crf" in output_params:
-                output_params["-crf"] = "18"
-            if not "-preset" in output_params:
-                output_params["-preset"] = "fast"
+            output_params["-vcodec"] = default_vcodec
+        if (
+            default_vcodec != "unknown"
+            and not output_params["-vcodec"] in supported_vcodecs
+        ):
+            logger.critical(
+                "Provided FFmpeg does not support `{}` video-encoder. Switching to default supported `{}` encoder!".format(
+                    output_params["-vcodec"], default_vcodec
+                )
+            )
+            output_params["-vcodec"] = default_vcodec
+
+        # assign optimizations
+        if output_params["-vcodec"] in supported_vcodecs:
+            if output_params["-vcodec"] in ["libx265", "libx264"]:
+                if not "-crf" in output_params:
+                    output_params["-crf"] = "18"
+                if not "-preset" in output_params:
+                    output_params["-preset"] = "fast"
+            if output_params["-vcodec"] in ["libxvid", "mpeg4"]:
+                if not "-qscale:v" in output_params:
+                    output_params["-qscale:v"] = "3"
+        else:
+            raise RuntimeError(
+                "[WriteGear:ERROR] :: Provided FFmpeg does not support any suitable/usable video-encoders for compression."
+                " Kindly disable compression mode or switch to another FFmpeg(if available)."
+            )
+
         # convert output parameters to list
         output_parameters = dict2Args(output_params)
         # format command
