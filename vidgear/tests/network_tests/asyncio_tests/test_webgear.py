@@ -154,7 +154,6 @@ test_data_class = [
 ]
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize("generator, result", test_data_class)
 async def test_webgear_custom_server_generator(generator, result):
     """
