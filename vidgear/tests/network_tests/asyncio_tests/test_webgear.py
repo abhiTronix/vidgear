@@ -56,6 +56,25 @@ def hello_webpage(request):
     return PlainTextResponse("Hello, world!")
 
 
+# Create a async frame generator as custom source
+async def custom_frame_generator():
+    # Open video stream
+    stream = VideoGear(source=return_testvideo_path()).start()
+    # loop over stream until its terminated
+    while True:
+        # read frames
+        frame = stream.read()
+        # check if frame empty
+        if frame is None:
+            break
+        # yield frame
+        yield frame
+        # sleep for sometime
+        await asyncio.sleep(0.000001)
+    # close stream
+    stream.stop()
+
+
 test_data = [
     (return_testvideo_path(), True, None, 0),
     (return_testvideo_path(), False, "COLOR_BGR2HSV", 10),
@@ -125,6 +144,31 @@ def test_webgear_options(options):
         elif isinstance(e, requests.exceptions.Timeout):
             logger.exceptions(str(e))
         else:
+            pytest.fail(str(e))
+
+
+test_data_class = [
+    (None, False),
+    (custom_frame_generator(), True),
+    ([], False),
+]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("generator, result", test_data_class)
+async def test_webgear_custom_server_generator(generator, result):
+    """
+    Test for WebGear API's custom source
+    """
+    try:
+        web = WebGear(logging=True)
+        web.config["generator"] = generator
+        client = TestClient(web(), raise_server_exceptions=True)
+        response_video = client.get("/video")
+        assert response_video.status_code == 200
+        web.shutdown()
+    except Exception as e:
+        if result:
             pytest.fail(str(e))
 
 

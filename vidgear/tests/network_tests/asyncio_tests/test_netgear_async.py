@@ -120,13 +120,8 @@ test_data_class = [
 @pytest.mark.parametrize("generator, result", test_data_class)
 async def test_netgear_async_custom_server_generator(generator, result):
     try:
-        server = NetGear_Async(
-            source=return_testvideo_path(), protocol="udp", logging=True
-        )  # invalid protocol
-        if generator:
-            server.config["generator"] = generator
-        else:
-            server.config = ["Invalid"]
+        server = NetGear_Async(protocol="udp", logging=True)  # invalid protocol
+        server.config["generator"] = generator
         server.launch()
         # define and launch Client with `receive_mode = True` and timeout = 12.0
         client = NetGear_Async(logging=True, timeout=12.0, receive_mode=True).launch()

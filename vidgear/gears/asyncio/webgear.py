@@ -23,6 +23,7 @@ import os
 import cv2
 import sys
 import asyncio
+import inspect
 import logging as log
 from collections import deque
 from starlette.routing import Mount, Route
@@ -60,7 +61,7 @@ class WebGear:
         self,
         enablePiCamera=False,
         stabilize=False,
-        source=0,
+        source=None,
         camera_num=0,
         stream_mode=False,
         backend=0,
@@ -162,22 +163,6 @@ class WebGear:
                     logger.warning("Skipped invalid `overwrite_default_files` value!")
                 del options["overwrite_default_files"]  # clean
 
-        # define stream with necessary params
-        self.stream = VideoGear(
-            enablePiCamera=enablePiCamera,
-            stabilize=stabilize,
-            source=source,
-            camera_num=camera_num,
-            stream_mode=stream_mode,
-            backend=backend,
-            colorspace=colorspace,
-            resolution=resolution,
-            framerate=framerate,
-            logging=logging,
-            time_delay=time_delay,
-            **options
-        )
-
         # check if custom certificates path is specified
         if custom_data_location:
             data_path = generate_webdata(
@@ -227,6 +212,30 @@ class WebGear:
                 name="static",
             ),
         ]
+        # Handle video source
+        if source is None:
+            self.config = {"generator": None}
+            self.__stream = None
+            if self.__logging:
+                logger.warning("Given source is of NoneType!")
+        else:
+            # define stream with necessary params
+            self.__stream = VideoGear(
+                enablePiCamera=enablePiCamera,
+                stabilize=stabilize,
+                source=source,
+                camera_num=camera_num,
+                stream_mode=stream_mode,
+                backend=backend,
+                colorspace=colorspace,
+                resolution=resolution,
+                framerate=framerate,
+                logging=logging,
+                time_delay=time_delay,
+                **options
+            )
+            # define default frame generator in configuration
+            self.config = {"generator": self.__producer()}
         # copying original routing tables for further validation
         self.__rt_org_copy = self.routes[:]
         # keeps check if producer loop should be running
@@ -241,11 +250,25 @@ class WebGear:
         if not isinstance(self.routes, list) or not all(
             x in self.routes for x in self.__rt_org_copy
         ):
-            raise RuntimeError("Routing tables are not valid!")
+            raise RuntimeError("[WebGear:ERROR] :: Routing tables are not valid!")
+
+        # validate assigned frame generator in WebGear configuration
+        if isinstance(self.config, dict) and "generator" in self.config:
+            # check if its  assigned value is a asynchronous generator
+            if self.config["generator"] is None or not inspect.isasyncgen(
+                self.config["generator"]
+            ):
+                # otherwise raise error
+                raise ValueError(
+                    "[WebGear:ERROR] :: Invalid configuration. Assigned generator must be a asynchronous generator function/method only!"
+                )
+        else:
+            # raise error if validation fails
+            raise RuntimeError("[WebGear:ERROR] :: Assigned configuration is invalid!")
+
         # initiate stream
         if self.__logging:
             logger.debug("Initiating Video Streaming.")
-        self.stream.start()
         # return Starlette application
         if self.__logging:
             logger.debug("Running Starlette application.")
@@ -258,12 +281,14 @@ class WebGear:
 
     async def __producer(self):
         """
-        A asynchronous frame producer/generator for WebGear application.
+        WebGear's default asynchronous frame producer/generator.
         """
+        # start stream
+        self.__stream.start()
         # loop over frames
         while self.__isrunning:
             # read frame
-            frame = self.stream.read()
+            frame = self.__stream.read()
             # break if NoneType
             if frame is None:
                 break
@@ -287,7 +312,7 @@ class WebGear:
             yield (
                 b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n"
             )
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0.00001)
 
     async def __video(self, scope):
         """
@@ -295,7 +320,8 @@ class WebGear:
         """
         assert scope["type"] == "http"
         return StreamingResponse(
-            self.__producer(), media_type="multipart/x-mixed-replace; boundary=frame"
+            self.config["generator"],
+            media_type="multipart/x-mixed-replace; boundary=frame",
         )
 
     async def __homepage(self, request):
@@ -324,12 +350,12 @@ class WebGear:
         """
         Implements a Callable to be run on application shutdown
         """
-        if not (self.stream is None):
+        if not (self.__stream is None):
             if self.__logging:
                 logger.debug("Closing Video Streaming.")
             # stops producer
             self.__isrunning = False
             # stops VideoGear stream
-            self.stream.stop()
+            self.__stream.stop()
             # prevent any re-iteration
-            self.stream = None
+            self.__stream = None

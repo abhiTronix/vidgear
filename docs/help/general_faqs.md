@@ -64,8 +64,11 @@ Finally, once done, see [Switching from OpenCV ➶](../../switch_from_cv/) and g
 	export VIDGEAR_LOGFILE="$HOME/foo.log"
 
 	# or just directory path 
-	# !!! Make sure `foo` already exists !!!
+	# !!! Make sure `foo` path already exists !!!
 	export VIDGEAR_LOGFILE="$HOME/foo"
+
+	# to remove
+	unset VIDGEAR_LOGFILE
 	```
 
 === "Windows OS (Powershell)"
@@ -75,8 +78,11 @@ Finally, once done, see [Switching from OpenCV ➶](../../switch_from_cv/) and g
 	$Env:VIDGEAR_LOGFILE = "D:\foo.log"
 
 	# or just directory path 
-	# !!! Make sure `foo` already exists !!!
+	# !!! Make sure `foo` path already exists !!!
 	$Env:VIDGEAR_LOGFILE = "D:\foo"
+
+	# to remove
+	$Env:VIDGEAR_LOGFILE = ""
 	```
 
 === "OSX/Mac OS"
@@ -86,8 +92,11 @@ Finally, once done, see [Switching from OpenCV ➶](../../switch_from_cv/) and g
 	export VIDGEAR_LOGFILE="$HOME/foo.log"
 	
 	# or just directory path 
-	# !!! Make sure `foo` already exists !!!
+	# !!! Make sure `foo` path already exists !!!
 	export VIDGEAR_LOGFILE="$HOME/foo"
+
+	# to remove
+	unset VIDGEAR_LOGFILE
 	```
 
 &nbsp;

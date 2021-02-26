@@ -712,7 +712,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
     """
     final_path = ""
     if os_windows and os_bit:
-        # initialize variables
+        # initialize with Official available FFmpeg Static Binaries
         if os_bit == "win64":
             file_url = (
                 "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
@@ -754,11 +754,12 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                     response.raise_for_status()
                 except Exception as e:
                     logger.exception(str(e))
-                    logger.warning("Downloading Failed. Trying GitHub mirror now!")
-                    file_url = "https://raw.githubusercontent.com/abhiTronix/ffmpeg-static-builds/master/windows/ffmpeg-latest-{}-static.zip".format(
+                    # reset to default GitHub Server
+                    logger.warning("Downloading Failed. Trying GitHub Mirror now!")
+                    default_file_url = "https://raw.githubusercontent.com/abhiTronix/ffmpeg-static-builds/master/windows/ffmpeg-latest-{}-static.zip".format(
                         os_bit
                     )
-                    response = requests.get(file_url, stream=True, timeout=2)
+                    response = requests.get(default_file_url, stream=True, timeout=2)
                     response.raise_for_status()
                 total_length = response.headers.get("content-length")
                 assert not (

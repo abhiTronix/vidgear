@@ -79,7 +79,7 @@ class NetGear_Async:
         # Videogear parameters
         enablePiCamera=False,
         stabilize=False,
-        source=0,
+        source=None,
         camera_num=0,
         stream_mode=False,
         backend=0,
@@ -185,7 +185,7 @@ class NetGear_Async:
             else:
                 self.__port = port
         else:
-            # Handle video source if not None
+            # Handle video source
             if source is None:
                 self.config = {"generator": None}
                 if self.__logging:
