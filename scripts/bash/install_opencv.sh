@@ -55,8 +55,8 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 RETRY=3
 while [ "$RETRY" -gt 0 ]; do
   LATEST_VERSION=$(curl -s https://api.github.com/repos/abhiTronix/OpenCV-CI-Releases/releases |
-	grep "OpenCV-.*.*-*-3.6.*.deb" |
-	grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")
+    grep "OpenCV-.*.*-*-$PYTHONSUFFIX.*.deb" |
+    grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")
   echo $LATEST_VERSION
   curl -O -sSL $LATEST_VERSION
   if [ -f $(find . -name 'OpenCV-*.deb') ]; then
@@ -70,8 +70,8 @@ while [ "$RETRY" -gt 0 ]; do
 done
 
 if [ -z "${LATEST_VERSION}" ]; then
-    echo "Something is wrong!"
-    exit 1
+  echo "Something is wrong!"
+  exit 1
 fi
 
 #opencv version to install

@@ -115,7 +115,6 @@ def test_input_framerate(c_ffmpeg):
     os.remove(os.path.abspath("Output_tif.mp4"))
 
 
-@pytest.mark.xfail(raises=AssertionError)
 @pytest.mark.parametrize(
     "conversion", ["COLOR_BGR2GRAY", "COLOR_BGR2INVALID", "COLOR_BGR2BGRA"]
 )
@@ -123,56 +122,63 @@ def test_write(conversion):
     """
     Testing WriteGear Compression-Mode(FFmpeg) Writer capabilties in different colorspace with CamGearAPI.
     """
-    # Open stream
-    stream = CamGear(
-        source=return_testvideo_path(), colorspace=conversion, logging=True
-    ).start()
-    writer = WriteGear(
-        output_filename="Output_tw.mp4", custom_ffmpeg=return_static_ffmpeg()
-    )  # Define writer
-    while True:
-        frame = stream.read()
-        # check if frame is None
-        if frame is None:
-            # if True break the infinite loop
-            break
-        if conversion == "COLOR_BGR2RGBA":
-            writer.write(frame, rgb_mode=True)
-        elif conversion == "COLOR_BGR2INVALID":
-            # test invalid color_space value
-            stream.color_space = "wrong_colorspace"
-            conversion = "COLOR_BGR2INVALID2"
-            writer.write(frame)
-        elif conversion == "COLOR_BGR2INVALID2":
-            # test wrong color_space value
-            stream.color_space = 1546755
-            conversion = ""
-            writer.write(frame)
-        else:
-            writer.write(frame)
-    stream.stop()
-    writer.close()
-    basepath, _ = os.path.split(return_static_ffmpeg())
-    ffprobe_path = os.path.join(
-        basepath, "ffprobe.exe" if os.name == "nt" else "ffprobe"
-    )
-    result = check_output(
-        [
-            ffprobe_path,
-            "-v",
-            "error",
-            "-count_frames",
-            "-i",
-            os.path.abspath("Output_tw.mp4"),
-        ]
-    )
-    if result:
-        if not isinstance(result, string_types):
-            result = result.decode()
-        logger.debug("Result: {}".format(result))
-        for i in ["Error", "Invalid", "error", "invalid"]:
-            assert not (i in result)
-    os.remove(os.path.abspath("Output_tw.mp4"))
+    try:
+        # Open stream
+        stream = CamGear(
+            source=return_testvideo_path(), colorspace=conversion, logging=True
+        ).start()
+        writer = WriteGear(
+            output_filename="Output_tw.mp4", custom_ffmpeg=return_static_ffmpeg()
+        )  # Define writer
+        while True:
+            frame = stream.read()
+            # check if frame is None
+            if frame is None:
+                # if True break the infinite loop
+                break
+            if conversion == "COLOR_BGR2RGBA":
+                writer.write(frame, rgb_mode=True)
+            elif conversion == "COLOR_BGR2INVALID":
+                # test invalid color_space value
+                stream.color_space = conversion
+                conversion = "COLOR_BGR2INVALID2"
+                writer.write(frame)
+            elif conversion == "COLOR_BGR2INVALID2":
+                # test wrong color_space value
+                stream.color_space = 1546755546
+                writer.write(frame)
+                conversion = ""
+            else:
+                writer.write(frame)
+        stream.stop()
+        writer.close()
+        basepath, _ = os.path.split(return_static_ffmpeg())
+        ffprobe_path = os.path.join(
+            basepath, "ffprobe.exe" if os.name == "nt" else "ffprobe"
+        )
+        if os.path.isfile(ffprobe_path):
+            result = check_output(
+                [
+                    ffprobe_path,
+                    "-v",
+                    "error",
+                    "-count_frames",
+                    "-i",
+                    os.path.abspath("Output_tw.mp4"),
+                ]
+            )
+            assert result, "FFprobe not working!"
+            if not isinstance(result, string_types):
+                result = result.decode()
+            assert not any(
+                x in result for x in ["Error", "Invalid", "error", "invalid"]
+            ), "Test failed!"
+    except Exception as e:
+        if not isinstance(e, AssertionError):
+            pytest.fail(str(e))
+    finally:
+        if os.path.isfile(os.path.abspath("Output_tw.mp4")):
+            os.remove(os.path.abspath("Output_tw.mp4"))
 
 
 @pytest.mark.xfail(raises=AssertionError)
