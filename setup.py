@@ -19,6 +19,7 @@ limitations under the License.
 """
 # import the necessary packages
 import json
+import sys
 import platform
 import setuptools
 import urllib.request
@@ -111,7 +112,11 @@ setup(
             "uvicorn>={}".format(latest_version("uvicorn")),
             "msgpack_numpy>={}".format(latest_version("msgpack_numpy")),
         ]
-        + (["uvloop"] if (platform.system() != "Windows") else [])
+        + (
+            ["uvloop"]
+            if (platform.system() != "Windows" and sys.version_info[:2] >= (3, 7))
+            else []
+        )
     },
     keywords=[
         "OpenCV",

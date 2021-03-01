@@ -228,7 +228,7 @@ class NetGear_Async:
             # event loop that is not compatible with it. Thereby, we had to set it manually.
             if sys.version_info[:2] >= (3, 8):
                 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        else if sys.version_info[:2] >= (3, 7):
+        elif sys.version_info[:2] >= (3, 7):
             # import library
             import uvloop
 
