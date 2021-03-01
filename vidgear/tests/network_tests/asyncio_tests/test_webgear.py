@@ -29,6 +29,7 @@ from starlette.routing import Route
 from starlette.responses import PlainTextResponse
 from starlette.testclient import TestClient
 
+from vidgear.gears import VideoGear
 from vidgear.gears.asyncio import WebGear
 from vidgear.gears.asyncio.helper import logger_handler
 
