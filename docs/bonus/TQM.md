@@ -44,11 +44,11 @@ In case you don't already know, OpenCV's' [`read()`](https://docs.opencv.org/mas
 
 Threaded-Queue-Mode employs [**Multi-Threading**](https://docs.python.org/3/library/threading.html) to separate frame-decoding like tasks to multiple independent threads in layman's word. Multiple-Threads helps it execute different Video Processing I/O-bound operations all at the same time by overlapping the waiting times. In this way, Threaded-Queue-Mode keeps on processing frames faster in the [background(daemon)](https://en.wikipedia.org/wiki/Daemon_(computing)) without waiting for blocked I/O operations and doesn't get affected by how sluggish our main python thread is.
 
-### B. Monitors Fix-Sized Deques
+### B. Monitors Fix-Sized Queues
 
 > Although Multi-threading is fast & easy, it may lead to undesired effects like _frame-skipping, deadlocks, and race conditions, etc._
 
-Threaded-Queue-Mode utilizes **Monitored, Thread-Safe, Memory-Efficient, and Fixed-Sized [`Deques`](https://docs.python.org/3.8/library/collections.html#collections.deque)** _(with approximately the same O(1) performance in either direction)_, that always maintains a fixed-length of frames buffer in the memory. It blocks the thread if the queue is full or otherwise pops out the frames synchronously and efficiently without any obstructions. Its fixed-length Deques stops multiple threads from accessing the same source simultaneously and thus preventing Global Interpreter Lock _(a.k.a GIL)_.
+Threaded-Queue-Mode utilizes **Monitored, Thread-Safe, Memory-Efficient, and Fixed-Sized [`Synchronized Queues`](https://docs.python.org/3/library/queue.html#module-queue)** _(with approximately the same O(1) performance in either direction)_, that always maintains a fixed-length of frames buffer in the memory. It blocks the thread if the queue is full or otherwise pops out the frames synchronously and efficiently without any obstructions. Its fixed-length queues stops multiple threads from accessing the same source simultaneously and thus preventing Global Interpreter Lock _(a.k.a GIL)_.
 
 
 &nbsp; 
@@ -59,9 +59,9 @@ Threaded-Queue-Mode utilizes **Monitored, Thread-Safe, Memory-Efficient, and Fix
 
 - [x] _Sequentially adds and releases frames to/from `deque` and handles the overflow of this queue._
 
-- [x] _Utilizes thread-safe, memory efficient `deques` that appends and pops frames with same O(1) performance from either side._
+- [x] _Utilizes thread-safe, memory efficient `queues` that appends and pops frames with same O(1) performance from either side._
 
-- [x] _Requires less RAM at due to buffered frames in the `deque`._
+- [x] _Requires less RAM at due to buffered frames in the `queue`._
 
 
 &nbsp;

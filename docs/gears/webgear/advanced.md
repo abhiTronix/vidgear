@@ -27,7 +27,9 @@ limitations under the License.
 
 ## Using WebGear with a Custom Source(OpenCV)
 
-WebGear allows you to easily define your own custom Source that you want to use to manipulate your frames before sending them onto the browser. Let's implement a bare-minimum example with a Custom Source using WebGear API and OpenCV:
+WebGear allows you to easily define your own custom Source that you want to use to manipulate your frames before sending them onto the browser. 
+
+Let's implement a bare-minimum example with a Custom Source using WebGear API and OpenCV:
 
 
 ```python

@@ -21,8 +21,10 @@ limitations under the License.
 {% extends "base.html" %}
 {% block extrahead %}
   {% set title = config.site_name %}
-  {% if page and page.title and not page.is_homepage %}
-    {% set title = config.site_name ~ " - " ~ page.title | striptags %}
+  {% if page and page.meta and page.meta.title %}
+    {% set title = title ~ " - " ~ page.meta.title %}
+  {% elif page and page.title and not page.is_homepage %}
+    {% set title = title ~ " - " ~ page.title | striptags %}
   {% endif %}
   {% set image = config.site_url ~ 'assets/images/banner_link.png' %}
   <meta property="og:type" content="website">

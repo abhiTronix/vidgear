@@ -42,6 +42,7 @@ theme:
   # Default values, taken from mkdocs_theme.yml
   language: en
   features:
+    - header.autohide
     - navigation.tabs
   palette:
     scheme: default
@@ -88,14 +89,15 @@ extra:
     - icon: fontawesome/brands/dev
       link: https://dev.to/abhitronix
   manifest: site.webmanifest
+  version:
+    provider: mike
+
 
 extra_css:
     - assets/stylesheets/custom.css
-    - assets/stylesheets/version-select.css
   
 extra_javascript:
     - assets/javascripts/extra.js
-    - assets/javascripts/version-select.js
 
 # Extensions
 markdown_extensions:
