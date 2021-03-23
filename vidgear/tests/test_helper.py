@@ -177,14 +177,14 @@ def test_dict2Args(dictionary):
 
 test_data = [
     (
-        "wrong_test_path",
-        ("win64" if platform.machine().endswith("64") else "win32") if _windows else "",
+        os.path.join(tempfile.gettempdir(), "temp_ffmpeg"),
+        "win32" if _windows else "",
     ),
     (
-        tempfile.gettempdir(),
-        ("win64" if platform.machine().endswith("64") else "win32") if _windows else "",
+        os.path.join(tempfile.gettempdir(), "temp_ffmpeg"),
+        "win64" if _windows else "",
     ),
-    (os.path.join(tempfile.gettempdir(), "temp_ffmpeg"), "wrong_bit"),
+    ("wrong_test_path", "wrong_bit"),
 ]
 
 
@@ -199,6 +199,7 @@ def test_ffmpeg_binaries_download(paths, os_bit):
             path=paths, os_windows=_windows, os_bit=os_bit
         )
         if file_path:
+            logger.debug("FFmpeg Binary path: {}".format(file_path))
             assert os.path.isfile(file_path), "FFmpeg download failed!"
             shutil.rmtree(os.path.abspath(os.path.join(file_path, "../..")))
     except Exception as e:

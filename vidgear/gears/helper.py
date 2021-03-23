@@ -712,21 +712,17 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
     """
     final_path = ""
     if os_windows and os_bit:
-        # initialize with Official available FFmpeg Static Binaries
-        if os_bit == "win64":
-            file_url = (
-                "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
-            )
-        else:
-            file_url = "https://raw.githubusercontent.com/abhiTronix/ffmpeg-static-builds/master/windows/ffmpeg-latest-{}-static.zip".format(
-                os_bit
-            )
+        # initialize with available FFmpeg Static Binaries GitHub Server
+        file_url = "https://github.com/abhiTronix/FFmpeg-Builds/releases/latest/download/ffmpeg-static-{}-gpl.zip".format(
+            os_bit
+        )
+
         file_name = os.path.join(
-            os.path.abspath(path), "ffmpeg-latest-{}-static.zip".format(os_bit)
+            os.path.abspath(path), "ffmpeg-static-{}-gpl.zip".format(os_bit)
         )
         file_path = os.path.join(
             os.path.abspath(path),
-            "ffmpeg-latest-{}-static/bin/ffmpeg.exe".format(os_bit),
+            "ffmpeg-static-{}-gpl/bin/ffmpeg.exe".format(os_bit),
         )
         base_path, _ = os.path.split(file_name)  # extract file base path
         # check if file already exists
@@ -747,20 +743,10 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
             # download and write file to the given path
             with open(file_name, "wb") as f:
                 logger.debug(
-                    "No Custom FFmpeg path provided. Auto-Installing FFmpeg static binaries now. Please wait..."
+                    "No Custom FFmpeg path provided. Auto-Installing FFmpeg static binaries from GitHub Mirror now. Please wait..."
                 )
-                try:
-                    response = requests.get(file_url, stream=True, timeout=2)
-                    response.raise_for_status()
-                except Exception as e:
-                    logger.exception(str(e))
-                    # reset to default GitHub Server
-                    logger.warning("Downloading Failed. Trying GitHub Mirror now!")
-                    default_file_url = "https://raw.githubusercontent.com/abhiTronix/ffmpeg-static-builds/master/windows/ffmpeg-latest-{}-static.zip".format(
-                        os_bit
-                    )
-                    response = requests.get(default_file_url, stream=True, timeout=2)
-                    response.raise_for_status()
+                response = requests.get(file_url, stream=True, timeout=2)
+                response.raise_for_status()
                 total_length = response.headers.get("content-length")
                 assert not (
                     total_length is None
@@ -775,13 +761,6 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
             with zipfile.ZipFile(file_name, "r") as zip_ref:
                 zip_fname, _ = os.path.split(zip_ref.infolist()[0].filename)
                 zip_ref.extractall(base_path)
-                if zip_fname != "ffmpeg-latest-{}-static".format(os_bit):
-                    shutil.move(
-                        os.path.join(base_path, zip_fname),
-                        os.path.join(
-                            base_path, "ffmpeg-latest-{}-static".format(os_bit)
-                        ),
-                    )
             # perform cleaning
             os.remove(file_name)
             logger.debug("FFmpeg binaries for Windows configured successfully!")
