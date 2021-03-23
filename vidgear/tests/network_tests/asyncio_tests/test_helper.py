@@ -24,7 +24,7 @@ import numpy as np
 import pytest
 import logging as log
 
-from vidgear.gears.asyncio.helper import reducer, logger_handler
+from vidgear.gears.asyncio.helper import reducer, create_blank_frame, logger_handler
 
 # define test logger
 logger = log.getLogger("Test_Asyncio_Helper")
@@ -37,7 +37,7 @@ def getframe():
     """
     returns empty numpy frame/array of dimensions: (500,800,3)
     """
-    return np.zeros([500, 800, 3], dtype=np.uint8)
+    return (np.random.standard_normal([500, 800, 3]) * 255).astype(np.uint8)
 
 
 pytestmark = pytest.mark.asyncio
@@ -72,4 +72,25 @@ async def test_reducer_asyncio(frame, percentage, result):
         if isinstance(e, ValueError) and not (result):
             pass
         else:
+            pytest.fail(str(e))
+
+
+@pytest.mark.skipif(
+    sys.version_info >= (3, 8),
+    reason="python3.8 is not supported yet by pytest-asyncio",
+)
+@pytest.mark.parametrize(
+    "frame , text",
+    [(getframe(), "ok"), (None, ""), (getframe(), 123)],
+)
+async def test_create_blank_frame(frame, text):
+    """
+    Testing frame size reducer function
+    """
+    try:
+        text_frame = create_blank_frame(frame=frame, text=text)
+        logger.debug(text_frame.shape)
+        assert not (text_frame is None)
+    except Exception as e:
+        if not (frame is None):
             pytest.fail(str(e))

@@ -110,6 +110,40 @@ def mkdir_safe(dir, logging=False):
             logger.debug("Directory already exists at `{}`".format(dir))
 
 
+def create_blank_frame(frame=None, text=""):
+    """
+    ### create_blank_frame
+
+    Create blank frames of given frame size with text
+
+    Parameters:
+        frame (numpy.ndarray): inputs numpy array(frame).
+        text (str): Text to be written on frame.
+    **Returns:**  A reduced numpy ndarray array.
+    """
+    # check if frame is valid
+    if frame is None:
+        raise ValueError("[Helper:ERROR] :: Input frame cannot be NoneType!")
+    # grab the frame size
+    (height, width) = frame.shape[:2]
+    # create blank frame
+    blank_frame = np.zeros((height, width, 3), np.uint8)
+    # setup text
+    if text and isinstance(text, str):
+        logger.debug("Adding text: {}".format(text))
+        # setup font
+        font = cv2.FONT_HERSHEY_DUPLEX
+        # get boundary of this text
+        textsize = cv2.getTextSize(text, font, 4, 5)[0]
+        # get coords based on boundary
+        textX = (width - textsize[0]) // 2
+        textY = (height + textsize[1]) // 2
+        # put text
+        cv2.putText(blank_frame, text, (textX, textY), font, 4, (125, 125, 125), 5)
+
+    return blank_frame
+
+
 async def reducer(frame=None, percentage=0):
     """
     ### reducer

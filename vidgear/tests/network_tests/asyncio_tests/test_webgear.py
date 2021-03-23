@@ -20,6 +20,7 @@ limitations under the License.
 # import the necessary packages
 
 import os
+import cv2
 import pytest
 import asyncio
 import logging as log
@@ -68,10 +69,12 @@ async def custom_frame_generator():
         # check if frame empty
         if frame is None:
             break
-        # yield frame
-        yield frame
-        # sleep for sometime
-        await asyncio.sleep(0.000001)
+        # handle JPEG encoding
+        encodedImage = cv2.imencode(".jpg", frame)[1].tobytes()
+        # yield frame in byte format
+        yield (b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n")
+        await asyncio.sleep(0.00001)
+
     # close stream
     stream.stop()
 
@@ -112,6 +115,7 @@ test_data = [
         "frame_jpeg_optimize": True,
         "frame_jpeg_progressive": False,
         "overwrite_default_files": "invalid_value",
+        "enable_infinite_frames": "invalid_value",
         "custom_data_location": True,
     },
     {
@@ -120,6 +124,7 @@ test_data = [
         "frame_jpeg_optimize": "invalid_value",
         "frame_jpeg_progressive": "invalid_value",
         "overwrite_default_files": True,
+        "enable_infinite_frames": False,
         "custom_data_location": "im_wrong",
     },
     {"custom_data_location": tempfile.gettempdir()},
@@ -150,13 +155,13 @@ def test_webgear_options(options):
 
 test_data_class = [
     (None, False),
-    (custom_frame_generator(), True),
+    (custom_frame_generator, True),
     ([], False),
 ]
 
 
 @pytest.mark.parametrize("generator, result", test_data_class)
-async def test_webgear_custom_server_generator(generator, result):
+def test_webgear_custom_server_generator(generator, result):
     """
     Test for WebGear API's custom source
     """

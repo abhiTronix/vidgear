@@ -32,7 +32,7 @@ from starlette.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
 from starlette.applications import Starlette
 
-from .helper import reducer, logger_handler, generate_webdata
+from .helper import reducer, logger_handler, generate_webdata, create_blank_frame
 from ..videogear import VideoGear
 
 # define logger
@@ -101,6 +101,7 @@ class WebGear:
         custom_data_location = ""  # path to save data-files to custom location
         data_path = ""  # path to WebGear data-files
         overwrite_default = False
+        self.__enable_inf = False  # continue frames even when video ends.
 
         # reformat dictionary
         options = {str(k).strip(): v for k, v in options.items()}
@@ -162,6 +163,14 @@ class WebGear:
                 else:
                     logger.warning("Skipped invalid `overwrite_default_files` value!")
                 del options["overwrite_default_files"]  # clean
+
+            if "enable_infinite_frames" in options:
+                value = options["enable_infinite_frames"]
+                if isinstance(value, bool):
+                    self.__enable_inf = value
+                else:
+                    logger.warning("Skipped invalid `enable_infinite_frames` value!")
+                del options["enable_infinite_frames"]  # clean
 
         # check if custom certificates path is specified
         if custom_data_location:
@@ -235,9 +244,11 @@ class WebGear:
                 **options
             )
             # define default frame generator in configuration
-            self.config = {"generator": self.__producer()}
+            self.config = {"generator": self.__producer}
         # copying original routing tables for further validation
         self.__rt_org_copy = self.routes[:]
+        # initialize blank frame
+        self.blank_frame = None
         # keeps check if producer loop should be running
         self.__isrunning = True
 
@@ -256,7 +267,7 @@ class WebGear:
         if isinstance(self.config, dict) and "generator" in self.config:
             # check if its  assigned value is a asynchronous generator
             if self.config["generator"] is None or not inspect.isasyncgen(
-                self.config["generator"]
+                self.config["generator"]()
             ):
                 # otherwise raise error
                 raise ValueError(
@@ -269,6 +280,8 @@ class WebGear:
         # initiate stream
         if self.__logging:
             logger.debug("Initiating Video Streaming.")
+        if not (self.__stream is None):
+            self.__stream.start()
         # return Starlette application
         if self.__logging:
             logger.debug("Running Starlette application.")
@@ -283,15 +296,23 @@ class WebGear:
         """
         WebGear's default asynchronous frame producer/generator.
         """
-        # start stream
-        self.__stream.start()
         # loop over frames
         while self.__isrunning:
             # read frame
             frame = self.__stream.read()
-            # break if NoneType
+
+            # display blank if NoneType
             if frame is None:
-                break
+                frame = self.blank_frame[:]
+                if not self.__enable_inf:
+                    self.__isrunning = False
+
+            # create blank
+            if self.blank_frame is None:
+                self.blank_frame = create_blank_frame(
+                    frame=frame, text="No Input" if self.__enable_inf else "The End"
+                )
+
             # reducer frames size if specified
             if self.__frame_size_reduction:
                 frame = await reducer(frame, percentage=self.__frame_size_reduction)
@@ -310,7 +331,9 @@ class WebGear:
             )[1].tobytes()
             # yield frame in byte format
             yield (
-                b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n"
+                b"--frame\r\nContent-Type:video/jpeg2000\r\n\r\n"
+                + encodedImage
+                + b"\r\n"
             )
             await asyncio.sleep(0.00001)
 
@@ -318,9 +341,10 @@ class WebGear:
         """
         Return a async video streaming response.
         """
-        assert scope["type"] == "http"
+        assert scope["type"] in ["http", "https"]
+        await asyncio.sleep(0.00001)
         return StreamingResponse(
-            self.config["generator"],
+            self.config["generator"](),
             media_type="multipart/x-mixed-replace; boundary=frame",
         )
 

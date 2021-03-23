@@ -62,12 +62,12 @@ async def my_frame_producer():
         # handle JPEG encoding
         encodedImage = cv2.imencode(".jpg", frame)[1].tobytes()
         # yield frame in byte format
-        yield (b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n")
+        yield (b"--frame\r\nContent-Type:video/jpeg2000\r\n\r\n" + encodedImage + b"\r\n")
         await asyncio.sleep(0.00001)
 
 
 # add your custom frame producer to config
-web.config["generator"] = my_frame_producer()
+web.config["generator"] = my_frame_producer
 
 # run this app on Uvicorn server at address http://localhost:8000/
 uvicorn.run(web(), host="localhost", port=8000)

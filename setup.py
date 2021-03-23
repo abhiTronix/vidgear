@@ -19,7 +19,6 @@ limitations under the License.
 """
 # import the necessary packages
 import json
-import sys
 import platform
 import setuptools
 import urllib.request
@@ -56,10 +55,15 @@ def latest_version(package_name):
     Get latest package version from pypi (Hack)
     """
     url = "https://pypi.python.org/pypi/%s/json" % (package_name,)
-    data = json.load(urllib.request.urlopen(urllib.request.Request(url)))
-    versions = data["releases"].keys()
-    versions = sorted(versions)
-    return versions[-1]
+    try:
+        response = urllib.request.urlopen(urllib.request.Request(url), timeout=1)
+        data = json.load(response)
+        versions = data["releases"].keys()
+        versions = sorted(versions)
+        return ">={}".format(versions[-1])
+    except:
+        pass
+    return ""
 
 
 pkg_version = {}
@@ -84,17 +88,17 @@ setup(
     license="Apache License 2.0",
     author="Abhishek Thakur",
     install_requires=[
-        "pafy>={}".format(latest_version("pafy")),
-        "mss>={}".format(latest_version("mss")),
+        "pafy{}".format(latest_version("pafy")),
+        "mss{}".format(latest_version("mss")),
         "numpy",
-        "youtube-dl>={}".format(latest_version("youtube-dl")),
-        "streamlink>={}".format(latest_version("streamlink")),
-        "requests>={}".format(latest_version("requests")),
-        "pyzmq>={}".format(latest_version("pyzmq")),
+        "youtube-dl{}".format(latest_version("youtube-dl")),
+        "streamlink{}".format(latest_version("streamlink")),
+        "requests",
+        "pyzmq{}".format(latest_version("pyzmq")),
         "colorlog",
         "colorama",
         "tqdm",
-        "pyscreenshot>={}".format(latest_version("pyscreenshot")),
+        "pyscreenshot{}".format(latest_version("pyscreenshot")),
         "Pillow",
     ]
     + (["opencv-python"] if test_opencv() else [])
@@ -105,18 +109,14 @@ setup(
     url="https://abhitronix.github.io/vidgear",
     extras_require={
         "asyncio": [
-            "starlette>={}".format(latest_version("starlette")),
+            "starlette{}".format(latest_version("starlette")),
             "aiofiles",
             "jinja2",
             "aiohttp",
-            "uvicorn>={}".format(latest_version("uvicorn")),
-            "msgpack_numpy>={}".format(latest_version("msgpack_numpy")),
+            "uvicorn{}".format(latest_version("uvicorn")),
+            "msgpack_numpy",
         ]
-        + (
-            ["uvloop"]
-            if (platform.system() != "Windows" and sys.version_info[:2] >= (3, 7))
-            else []
-        )
+        + (["uvloop"] if (platform.system() != "Windows") else [])
     },
     keywords=[
         "OpenCV",
