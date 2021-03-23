@@ -57,8 +57,8 @@ steps:
   displayName: 'Install pip dependencies'
 
 - script: |
-    pip install --upgrade pytest pytest-asyncio pytest-cov pytest-azurepipelines
-    pytest --verbose --cov=vidgear --cov-report=xml --cov-report=html --cov-report term-missing vidgear/tests/
+    pip install --upgrade pytest pytest-asyncio pytest-cov pytest-azurepipelines pytest-timeout
+    pytest --verbose --timeout=1800 --cov=vidgear --cov-report=xml --cov-report=html --cov-report term-missing vidgear/tests/
   displayName: 'pytest'
 - bash: bash <(curl -s https://codecov.io/bash) -Z -C $(Build.SourceVersion)
   env:
