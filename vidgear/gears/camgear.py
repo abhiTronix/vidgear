@@ -398,7 +398,7 @@ class CamGear:
         """
         while self.__threaded_queue_mode:
             return self.__queue.get()
-        return self.frame
+        return None
 
     def stop(self):
         """
@@ -409,7 +409,6 @@ class CamGear:
         # terminate Threaded queue mode separately
         if self.__threaded_queue_mode:
             self.__threaded_queue_mode = False
-            self.frame = None
 
         # indicate that the thread should be terminate
         self.__terminate.set()
