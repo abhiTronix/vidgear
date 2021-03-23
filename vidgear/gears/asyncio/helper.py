@@ -211,51 +211,34 @@ def generate_webdata(path, overwrite_default=False, logging=False):
     mkdir_safe(favicon_dir, logging=logging)
 
     # check if overwriting is enabled
-    if overwrite_default:
+    if overwrite_default or not validate_webdata(
+        template_dir, ["index.html", "404.html", "500.html"]
+    ):
         logger.critical(
             "Overwriting existing WebGear data-files with default data-files from the server!"
+            if overwrite_default
+            else "Failed to detect critical WebGear data-files: index.html, 404.html & 500.html!"
         )
+        # download default files
+        if logging:
+            logger.info("Downloading default data-files from the GitHub Server.")
         download_webdata(
             template_dir,
             files=["index.html", "404.html", "500.html", "base.html"],
             logging=logging,
         )
-        download_webdata(
-            css_static_dir, files=["bootstrap.min.css", "cover.css"], logging=logging
-        )
+        download_webdata(css_static_dir, files=["custom.css"], logging=logging)
         download_webdata(
             js_static_dir,
-            files=["bootstrap.min.js", "jquery-3.4.1.slim.min.js", "popper.min.js"],
+            files=["custom.js"],
             logging=logging,
         )
         download_webdata(favicon_dir, files=["favicon-32x32.png"], logging=logging)
     else:
         # validate important data-files
-        if validate_webdata(template_dir, ["index.html", "404.html", "500.html"]):
-            if logging:
-                logger.debug("Found valid WebGear data-files successfully.")
-        else:
-            # otherwise download default files
-            logger.critical(
-                "Failed to detect critical WebGear data-files: index.html, 404.html & 500.html!"
-            )
-            logger.warning("Re-downloading default data-files from the server.")
-            download_webdata(
-                template_dir,
-                files=["index.html", "404.html", "500.html", "base.html"],
-                logging=logging,
-            )
-            download_webdata(
-                css_static_dir,
-                files=["bootstrap.min.css", "cover.css"],
-                logging=logging,
-            )
-            download_webdata(
-                js_static_dir,
-                files=["bootstrap.min.js", "jquery-3.4.1.slim.min.js", "popper.min.js"],
-                logging=logging,
-            )
-            download_webdata(favicon_dir, files=["favicon-32x32.png"], logging=logging)
+        if logging:
+            logger.debug("Found valid WebGear data-files successfully.")
+
     return path
 
 
@@ -280,14 +263,9 @@ def download_webdata(path, files=[], logging=False):
         # get filename
         file_name = os.path.join(path, file)
         # get URL
-        if basename == "templates":
-            file_url = "https://raw.githubusercontent.com/abhiTronix/webgear_data/master/{}/{}".format(
-                basename, file
-            )
-        else:
-            file_url = "https://raw.githubusercontent.com/abhiTronix/webgear_data/master/static/{}/{}".format(
-                basename, file
-            )
+        file_url = "https://raw.githubusercontent.com/abhiTronix/vidgear-vitals/master/webgear{}/{}/{}".format(
+            "/static" if basename != "templates" else "", basename, file
+        )
         # download and write file to the given path
         if logging:
             logger.debug("Downloading {} data-file: {}.".format(basename, file))

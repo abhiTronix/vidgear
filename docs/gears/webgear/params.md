@@ -60,6 +60,15 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     WebGear(logging=True, **options)
     ```
 
+* **`enable_infinite_frames`** _(boolean)_ : Can be used to continue stream with blank frames with text "No Input", even when the input source disconnects. Its usage is as follows:
+
+    ```python
+    # force trigger the Auto-generation process
+    options = {"enable_infinite_frames": True}
+    # assign it
+    WebGear(logging=True, **options)
+
+
 * **Various Encoding Parameters:** 
 
     In WebGear, the input video frames are first encoded into [**Motion JPEG (M-JPEG or MJPEG**)](https://en.wikipedia.org/wiki/Motion_JPEG) video compression format in which each video frame or interlaced field of a digital video sequence is compressed separately as a JPEG image, before sending onto a server. Therefore, WebGear API provides various attributes to have full control over JPEG encoding performance and quality, which are as follows:
