@@ -89,11 +89,25 @@ class ScreenGear:
                 logger.exception(str(e))
                 self.__monitor_instance = None
 
+        # assigns special parameter to global variable and clear
+        # Thread Timeout
+        self.__thread_timeout = options.pop("THREAD_TIMEOUT", None)
+        if self.__thread_timeout and isinstance(self.__thread_timeout, (int, float)):
+            # set values
+            self.__thread_timeout = int(self.__thread_timeout)
+        else:
+            # defaults to 5mins timeout
+            self.__thread_timeout = None
+
         # define deque and assign it to global var
         self.__queue = queue.Queue(maxsize=96)  # max len 96 to check overflow
         # log it
         if logging:
             logger.debug("Enabling Threaded Queue Mode by default for ScreenGear!")
+            if self.__thread_timeout:
+                logger.debug(
+                    "Setting Video-Thread Timeout to {}s.".format(self.__thread_timeout)
+                )
 
         # intiate screen dimension handler
         screen_dims = {}
@@ -274,7 +288,7 @@ class ScreenGear:
         """
         # check whether or not termination flag is enabled
         while not self.__terminate.is_set():
-            return self.__queue.get()
+            return self.__queue.get(timeout=self.__thread_timeout)
         # otherwise return NoneType
         return None
 

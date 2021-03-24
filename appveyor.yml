@@ -57,7 +57,7 @@ install:
   - cmd: bash scripts/bash/prepare_dataset.sh
 
 test_script:
-  - cmd: python -m pytest --verbose --timeout=1800 --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/
+  - cmd: python -m pytest --verbose --timeout=900 --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/
 
 after_test:
   - cmd: python -m codecov 

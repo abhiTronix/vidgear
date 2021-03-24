@@ -39,10 +39,10 @@ test_data = [
     (
         1,
         "mss",
-        {"top": 40, "left": 0, "width": 100, "height": 100},
+        {"top": 40, "left": 0, "width": 100, "height": 100, "THREAD_TIMEOUT":300},
         "COLOR_BGR2INVALID",
     ),
-    (None, "", {}, None),
+    (None, "", {}, None, "THREAD_TIMEOUT":"wrong"),
     (None, "mss", {}, "COLOR_BGR2GRAY"),
     (
         None,

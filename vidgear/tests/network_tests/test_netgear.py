@@ -70,7 +70,10 @@ def test_playback(address, port):
             server.send(frame_server)  # send
             frame_client = client.recv()  # recv
     except Exception as e:
-        if isinstance(e, (ZMQError, ValueError)) or address == "www.idk.com":
+        if (
+            isinstance(e, (ZMQError, ValueError, RuntimeError))
+            or address == "www.idk.com"
+        ):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
@@ -136,7 +139,10 @@ def test_playback(address, port):
             server.send(frame_server)  # send
             frame_client = client.recv()  # recv
     except Exception as e:
-        if isinstance(e, (ZMQError, ValueError)) or address == "www.idk.com":
+        if (
+            isinstance(e, (ZMQError, ValueError, RuntimeError))
+            or address == "www.idk.com"
+        ):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
@@ -183,7 +189,7 @@ def test_patterns(pattern):
         # check if received frame exactly matches input frame
         assert np.array_equal(frame_server, frame_client)
     except Exception as e:
-        if isinstance(e, (ZMQError, ValueError)):
+        if isinstance(e, (ZMQError, ValueError, RuntimeError)):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
@@ -237,7 +243,7 @@ def test_compression(options_client):
             server.send(frame_server)
             frame_client = client.recv()
     except Exception as e:
-        if isinstance(e, (ZMQError, ValueError)):
+        if isinstance(e, (ZMQError, ValueError, RuntimeError)):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
@@ -295,7 +301,7 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
         # check if received frame exactly matches input frame
         assert np.array_equal(frame_server, frame_client)
     except Exception as e:
-        if isinstance(e, (ZMQError, ValueError)):
+        if isinstance(e, (ZMQError, ValueError, RuntimeError)):
             logger.exception(str(e))
         elif (
             isinstance(e, AssertionError)
@@ -384,7 +390,7 @@ def test_bidirectional_mode(pattern, target_data, options):
             logger.debug("Data received at Client-end: {}".format(client_data))
             assert client_data == server_data
     except Exception as e:
-        if isinstance(e, (ZMQError, ValueError)):
+        if isinstance(e, (ZMQError, ValueError, RuntimeError)):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
@@ -465,7 +471,7 @@ def test_multiserver_mode(pattern, options):
             assert np.array_equal(frame_server, client_frame_dict[key])
 
     except Exception as e:
-        if isinstance(e, (ZMQError, ValueError)):
+        if isinstance(e, (ZMQError, ValueError, RuntimeError)):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
@@ -539,7 +545,7 @@ def test_multiclient_mode(pattern):
         assert np.array_equal(frame_3, frame_client)
 
     except Exception as e:
-        if isinstance(e, (ZMQError, ValueError)):
+        if isinstance(e, (ZMQError, ValueError, RuntimeError)):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))

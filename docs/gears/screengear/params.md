@@ -94,6 +94,8 @@ This parameter provides the flexibility to manually set the dimensions of captur
 	* **`width`:** the width of the region
 	* **`height`:** the height of the region
 
+!!! note "Additional Exclusive Attribute such as [`THREAD_TIMEOUT`](../../camgear/advanced/source_params/#exclusive-camgear-parameters) is also supported for this parameter."
+
 
 **Data-Type:** Dictionary
 
