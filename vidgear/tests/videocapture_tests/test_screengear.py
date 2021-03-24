@@ -42,7 +42,7 @@ test_data = [
         {"top": 40, "left": 0, "width": 100, "height": 100, "THREAD_TIMEOUT":300},
         "COLOR_BGR2INVALID",
     ),
-    (None, "", {}, None, "THREAD_TIMEOUT":"wrong"),
+    (None, "", {"THREAD_TIMEOUT":"wrong"}, None),
     (None, "mss", {}, "COLOR_BGR2GRAY"),
     (
         None,
