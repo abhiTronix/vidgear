@@ -59,6 +59,11 @@ The [`option`](../../params/#options) dictionary parameter in CamGear, gives use
 		```python
 		options = {"THREADED_QUEUE_MODE": False} # disable Threaded Queue Mode. 
 		```
+	- `THREAD_TIMEOUT` _(int/float)_: This attribute can be used to override the timeout value(positive number), that blocks the video-thread for at most ==timeout seconds==, and raises the [Empty exception](https://docs.python.org/3/library/queue.html#queue.Empty) if no video-frame was available within that time, to prevent any potiential deadlocks. Its default value is `None`, meaning no timeout.  Its usage is as follows:
+
+		```python
+		options = {"THREAD_TIMEOUT": 300} # set Video-Thread Timeout for 5mins. 
+		```
 
 
 &nbsp; 

@@ -222,10 +222,21 @@ class CamGear:
         self.__youtube_mode = stream_mode
 
         # assigns special parameter to global variable and clear
+        # Threaded Queue Mode
         self.__threaded_queue_mode = options.pop("THREADED_QUEUE_MODE", True)
         if not isinstance(self.__threaded_queue_mode, bool):
             # reset improper values
             self.__threaded_queue_mode = True
+        # Thread Timeout
+        self.__thread_timeout = options.pop("THREAD_TIMEOUT", None)
+        if self.__thread_timeout and isinstance(
+            self.__thread_timeout, (int, float)
+        ):
+            # set values
+            self.__thread_timeout = int(self.__thread_timeout)
+        else:
+            # defaults to 5mins timeout
+            self.__thread_timeout = None
 
         self.__queue = None
         # initialize queue for video files only
@@ -237,6 +248,12 @@ class CamGear:
                 logger.debug(
                     "Enabling Threaded Queue Mode for the current video source!"
                 )
+                if self.__thread_timeout:
+                    logger.debug(
+                        "Setting Video-Thread Timeout to {}s.".format(
+                            self.__thread_timeout
+                        )
+                    )
         else:
             # otherwise disable it
             self.__threaded_queue_mode = False
@@ -353,20 +370,18 @@ class CamGear:
                 else:
                     break
 
+            # apply colorspace to frames if valid
             if not (self.color_space is None):
-                # apply colorspace to frames
                 color_frame = None
                 try:
                     if isinstance(self.color_space, int):
                         color_frame = cv2.cvtColor(frame, self.color_space)
                     else:
-                        if self.__logging:
-                            logger.warning(
-                                "Global color_space parameter value `{}` is not a valid!".format(
-                                    self.color_space
-                                )
+                        raise ValueError(
+                            "Global color_space parameter value `{}` is not a valid!".format(
+                                self.color_space
                             )
-                        self.color_space = None
+                        )
                 except Exception as e:
                     # Catch if any error occurred
                     self.color_space = None
@@ -397,8 +412,8 @@ class CamGear:
         **Returns:** A n-dimensional numpy array.
         """
         while self.__threaded_queue_mode:
-            return self.__queue.get()
-        return None
+            return self.__queue.get(timeout=self.__thread_timeout)
+        return self.frame
 
     def stop(self):
         """

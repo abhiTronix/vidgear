@@ -23,6 +23,7 @@ import os
 import re
 import cv2
 import pytest
+import queue
 import logging as log
 import platform
 import tempfile
@@ -124,8 +125,12 @@ def test_write(conversion):
     """
     try:
         # Open stream
+        options = {"THREAD_TIMEOUT": 300}
         stream = CamGear(
-            source=return_testvideo_path(), colorspace=conversion, logging=True
+            source=return_testvideo_path(),
+            colorspace=conversion,
+            logging=True,
+            **options
         ).start()
         writer = WriteGear(
             output_filename="Output_tw.mp4", custom_ffmpeg=return_static_ffmpeg()
@@ -156,26 +161,28 @@ def test_write(conversion):
         ffprobe_path = os.path.join(
             basepath, "ffprobe.exe" if os.name == "nt" else "ffprobe"
         )
-        if os.path.isfile(ffprobe_path):
-            result = check_output(
-                [
-                    ffprobe_path,
-                    "-v",
-                    "error",
-                    "-count_frames",
-                    "-i",
-                    os.path.abspath("Output_tw.mp4"),
-                ]
-            )
-            assert result, "FFprobe not working!"
+        assert os.path.isfile(ffprobe_path), "FFprobe not Found!"
+        result = check_output(
+            [
+                ffprobe_path,
+                "-v",
+                "error",
+                "-count_frames",
+                "-i",
+                os.path.abspath("Output_tw.mp4"),
+            ]
+        )
+        if result:
             if not isinstance(result, string_types):
                 result = result.decode()
             assert not any(
                 x in result for x in ["Error", "Invalid", "error", "invalid"]
             ), "Test failed!"
     except Exception as e:
-        if not isinstance(e, AssertionError):
+        if not isinstance(e, (AssertionError, queue.Empty)):
             pytest.fail(str(e))
+        else:
+            logger.exception(str(e))
     finally:
         if os.path.isfile(os.path.abspath("Output_tw.mp4")):
             os.remove(os.path.abspath("Output_tw.mp4"))
