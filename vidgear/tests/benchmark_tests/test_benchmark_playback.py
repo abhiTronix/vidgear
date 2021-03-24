@@ -67,7 +67,7 @@ def playback(level):
     logger.info("approx. FPS: {:.2f}".format(fps.average_fps()))
 
 
-@pytest.mark.skipif(platform.system() == "Darwin", reason="Too Slow!")
+@pytest.mark.skipif(platform.system() in ["Darwin", "Windows"], reason="Too Slow!")
 @pytest.mark.parametrize(
     "level",
     [

@@ -21,6 +21,7 @@ limitations under the License.
 
 import os
 import cv2
+import queue
 import pytest
 import logging as log
 import platform
@@ -194,7 +195,10 @@ def test_rtf_stream(conversion):
     mpd_file_path = return_mpd_path()
     try:
         # Open stream
-        stream = CamGear(source=return_testvideo_path(), colorspace=conversion).start()
+        options = {"THREAD_TIMEOUT": 300}
+        stream = CamGear(
+            source=return_testvideo_path(), colorspace=conversion, **options
+        ).start()
         stream_params = {
             "-clear_prev_assets": True,
             "-input_framerate": "invalid",
@@ -219,7 +223,8 @@ def test_rtf_stream(conversion):
         assert len(mpd_file) == 1, "Failed to create MPD file!"
         assert check_valid_mpd(mpd_file[0])
     except Exception as e:
-        pytest.fail(str(e))
+        if not isinstance(e, queue.Empty):
+            pytest.fail(str(e))
 
 
 def test_rtf_livestream():
@@ -229,7 +234,8 @@ def test_rtf_livestream():
     mpd_file_path = return_mpd_path()
     try:
         # Open stream
-        stream = CamGear(source=return_testvideo_path()).start()
+        options = {"THREAD_TIMEOUT": 300}
+        stream = CamGear(source=return_testvideo_path(), **options).start()
         stream_params = {
             "-livestream": True,
         }
@@ -243,7 +249,8 @@ def test_rtf_livestream():
         stream.stop()
         streamer.terminate()
     except Exception as e:
-        pytest.fail(str(e))
+        if not isinstance(e, queue.Empty):
+            pytest.fail(str(e))
 
 
 def test_input_framerate_rtf():

@@ -48,7 +48,6 @@ async def my_frame_producer():
     # Open any video stream such as live webcam 
     # video stream on first index(i.e. 0) device
     stream = cv2.VideoCapture(0)
-
     # loop over frames
     while True:
         # read frame from provided source
@@ -66,6 +65,8 @@ async def my_frame_producer():
         # yield frame in byte format
         yield (b"--frame\r\nContent-Type:video/jpeg2000\r\n\r\n" + encodedImage + b"\r\n")
         await asyncio.sleep(0.00001)
+    # close stream
+    stream.release()
 
 
 # add your custom frame producer to config

@@ -30,7 +30,6 @@ from starlette.routing import Route
 from starlette.responses import PlainTextResponse
 from starlette.testclient import TestClient
 
-from vidgear.gears import VideoGear
 from vidgear.gears.asyncio import WebGear
 from vidgear.gears.asyncio.helper import logger_handler
 
@@ -61,22 +60,21 @@ def hello_webpage(request):
 # Create a async frame generator as custom source
 async def custom_frame_generator():
     # Open video stream
-    stream = VideoGear(source=return_testvideo_path()).start()
+    stream = cv2.VideoCapture(return_testvideo_path())
     # loop over stream until its terminated
     while True:
         # read frames
-        frame = stream.read()
+        (grabbed, frame) = stream.read()
         # check if frame empty
-        if frame is None:
+        if not grabbed:
             break
         # handle JPEG encoding
         encodedImage = cv2.imencode(".jpg", frame)[1].tobytes()
         # yield frame in byte format
         yield (b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n")
         await asyncio.sleep(0.00001)
-
     # close stream
-    stream.stop()
+    stream.release()
 
 
 test_data = [
