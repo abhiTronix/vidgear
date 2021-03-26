@@ -20,7 +20,9 @@ limitations under the License.
 # import the necessary packages
 
 import os
+import cv2
 import sys
+import platform
 import numpy as np
 import pytest
 import asyncio
@@ -137,6 +139,10 @@ async def test_netgear_async_custom_server_generator(generator, result):
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(
+    platform.system() == "Windows",
+    reason="Random Bugs.",
+)
 @pytest.mark.parametrize("address, port", [("www.idk.com", "5555"), (None, "5555")])
 async def test_netgear_async_addresses(address, port):
     try:

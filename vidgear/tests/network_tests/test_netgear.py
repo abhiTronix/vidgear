@@ -545,6 +545,7 @@ def test_client_reliablity(options):
     Testing validation function of WebGear API
     """
     client = None
+    frame_client = None
     try:
         # define params
         client = NetGear(
@@ -584,6 +585,7 @@ def test_server_reliablity(options):
     """
     server = None
     stream = None
+    frame_client = None
     try:
         # define params
         server = NetGear(
@@ -595,7 +597,7 @@ def test_server_reliablity(options):
         stream = cv2.VideoCapture(return_testvideo_path())
         i = 0
         while i < random.randint(10, 100):
-            (grabbed, frame_server) = stream.read()
+            (grabbed, frame_client) = stream.read()
             i += 1
         # check if input frame is valid
         assert not (frame_client is None)
