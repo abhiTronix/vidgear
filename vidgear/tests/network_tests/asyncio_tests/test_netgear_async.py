@@ -22,6 +22,7 @@ limitations under the License.
 import os
 import cv2
 import sys
+import queue
 import platform
 import numpy as np
 import pytest
@@ -97,14 +98,19 @@ async def test_netgear_async_playback(pattern):
         client = NetGear_Async(
             logging=True, pattern=pattern, receive_mode=True
         ).launch()
+        options_gear = {"THREAD_TIMEOUT": 300}
         server = NetGear_Async(
-            source=return_testvideo_path(), pattern=pattern, logging=True
+            source=return_testvideo_path(),
+            pattern=pattern,
+            logging=True,
+            **options_gear
         ).launch()
         # gather and run tasks
         input_coroutines = [server.task, client_iterator(client)]
         res = await asyncio.gather(*input_coroutines, return_exceptions=True)
     except Exception as e:
-        pytest.fail(str(e))
+        if isinstance(e, queue.Empty):
+            pytest.fail(str(e))
     finally:
         server.close(skip_loop=True)
         client.close(skip_loop=True)
@@ -147,8 +153,13 @@ async def test_netgear_async_addresses(address, port):
             address=address, port=port, logging=True, receive_mode=True
         ).launch()
         if address is None:
+            options_gear = {"THREAD_TIMEOUT": 300}
             server = NetGear_Async(
-                source=return_testvideo_path(), address=address, port=port, logging=True
+                source=return_testvideo_path(),
+                address=address,
+                port=port,
+                logging=True,
+                **options_gear
             ).launch()
             # gather and run tasks
             input_coroutines = [server.task, client_iterator(client)]
@@ -156,7 +167,7 @@ async def test_netgear_async_addresses(address, port):
         else:
             await asyncio.ensure_future(client_iterator(client))
     except Exception as e:
-        if address == "172.31.11.15.77":
+        if address == "172.31.11.15.77" or isinstance(e, queue.Empty):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
