@@ -19,6 +19,7 @@ limitations under the License.
 """
 # import the necessary packages
 import json
+import sys
 import platform
 import setuptools
 import urllib.request
