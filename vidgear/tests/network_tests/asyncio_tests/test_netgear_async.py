@@ -139,11 +139,7 @@ async def test_netgear_async_custom_server_generator(generator, result):
 
 
 @pytest.mark.asyncio
-@pytest.mark.skipif(
-    platform.system() == "Windows",
-    reason="Random Bugs.",
-)
-@pytest.mark.parametrize("address, port", [("www.idk.com", "5555"), (None, "5555")])
+@pytest.mark.parametrize("address, port", [("172.31.11.15.77", "5555"), (None, "5555")])
 async def test_netgear_async_addresses(address, port):
     try:
         # define and launch Client with `receive_mode = True`
@@ -160,7 +156,7 @@ async def test_netgear_async_addresses(address, port):
         else:
             await asyncio.ensure_future(client_iterator(client))
     except Exception as e:
-        if address == "www.idk.com":
+        if address == "172.31.11.15.77":
             logger.exception(str(e))
         else:
             pytest.fail(str(e))

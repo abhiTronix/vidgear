@@ -49,7 +49,7 @@ def return_testvideo_path():
     return os.path.abspath(path)
 
 
-@pytest.mark.parametrize("address, port", [("www.idk.com", "5555"), (None, "5555")])
+@pytest.mark.parametrize("address, port", [("172.31.11.15.77", "5555"), (None, "5555")])
 def test_playback(address, port):
     """
     Tests NetGear Bare-minimum network playback capabilities
@@ -73,7 +73,7 @@ def test_playback(address, port):
     except Exception as e:
         if (
             isinstance(e, (ZMQError, ValueError, RuntimeError))
-            or address == "www.idk.com"
+            or address == "172.31.11.15.77"
         ):
             logger.exception(str(e))
         else:
