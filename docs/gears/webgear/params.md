@@ -20,6 +20,30 @@ limitations under the License.
 
 # WebGear API Parameters 
 
+!!! cite "WebGear provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs and their parameters."
+
+&thinsp;
+
+## **`enablePiCamera`** 
+
+This parameter provide direct access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively in WebGear. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
+
+**Data-Type:** Boolean
+
+**Default Value:** Its default value is `False`. 
+
+**Usage:**
+
+```python
+WebGear(enablePiCamera=True) # enable access to PiGear API
+```
+
+!!! info "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
+
+
+&nbsp; 
+
+
 ## **`options`** 
 
 This parameter can be used to pass user-defined parameter to WebGear API by formatting them as this parameter's attribute. 
@@ -62,12 +86,15 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 
 * **`enable_infinite_frames`** _(boolean)_ : Can be used to continue stream with blank frames with text "No Input", even when the input source disconnects. Its usage is as follows:
 
+    !!! new "New in v0.2.1" 
+        `enable_infinite_frames` attribute was added in `v0.2.1`.
+
     ```python
     # force trigger the Auto-generation process
     options = {"enable_infinite_frames": True}
     # assign it
     WebGear(logging=True, **options)
-
+    ```
 
 * **Various Encoding Parameters:** 
 
@@ -105,31 +132,11 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 
 &nbsp;
 
-## Parameters for VideoGear backend
-
-### **`enablePiCamera`** 
-
-This parameter provide access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
-
-**Data-Type:** Boolean
-
-**Default Value:** Its default value is `False`. 
-
-**Usage:**
-
-```python
-WebGear(enablePiCamera=True) # enable access to PiGear API
-```
-
-!!! info "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
-
-
-&nbsp; 
-
-&nbsp;
-
 
 ## Parameters for Stabilizer Backend
+
+
+!!! summary "Enable this backend with [`stabilize=True`](#stabilize) in WebGear."
 
 
 ### **`stabilize`**
@@ -190,12 +197,11 @@ This parameter can be used in addition, to pass user-defined parameters supporte
 
 ## Parameters for CamGear backend
 
-!!! tip "Enable this backend with [`enablePiCamera=False`](#enablepicamera) on WebGear."
+!!! summary "Enable this backend with [`enablePiCamera=False`](#enablepicamera) in WebGear."
 
 ### **`source`**
 
 !!! warning "WebGear API will throw `RuntimeError` if `source` provided is invalid."
-
 
 This parameter defines the source for the input stream.
 
@@ -355,7 +361,7 @@ WebGear(source=0, **options)
 
 ## Parameters for PiGear backend 
 
-!!! tip "Enable this backend with [`enablePiCamera=True`](#enablepicamera) on WebGear."
+!!! summary "Enable this backend with [`enablePiCamera=True`](#enablepicamera) in WebGear."
 
 ### **`camera_num`** 
 
@@ -459,7 +465,8 @@ Additionally, `options` parameter also support some User-specific attributes, wh
 &nbsp;
 
 ## Common Parameters
- 
+
+!!! summary "These are common parameters that works with every backend in WebGear."
 
 ### **`colorspace`**
 

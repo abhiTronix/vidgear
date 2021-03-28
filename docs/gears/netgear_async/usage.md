@@ -36,7 +36,7 @@ NetGear_Async API is the part of `asyncio` package of VidGear, thereby you need 
 pip install vidgear[asyncio]
 ```
 
-&nbsp;
+&thinsp;
 
 
 ## Bare-Minimum Usage

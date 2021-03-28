@@ -285,13 +285,22 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
         (None, True, {"-i": None, "-disable_force_termination": "OK"}),
         ([], False, {"-i": None}),
         (
-            ["wrong_input"],
+            ["wrong_input", "invalid_flag", "break_things"],
             True,
             {"-ffmpeg_download_path": 53}
             if (platform.system() == "Windows")
             else {"-disable_force_termination": "OK"},
         ),
-        (["wrong_input"], True, {"-disable_force_termination": True}),
+        (
+            "wrong_input",
+            True,
+            {"-disable_force_termination": True},
+        ),
+        (
+            "invalid",
+            True,
+            {},
+        ),
     ],
 )
 def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio, logging, output_params):
@@ -303,7 +312,9 @@ def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio, logging, output_pa
         # define writer
         writer = WriteGear(
             output_filename="Output.mp4",
-            compression_mode=(True if ffmpeg_command_to_save_audio else False),
+            compression_mode=(
+                True if ffmpeg_command_to_save_audio != "invalid" else False
+            ),
             logging=logging,
             **output_params
         )  # Define writer

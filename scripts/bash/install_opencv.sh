@@ -29,7 +29,6 @@ PYTHONVERSION=$(python -c 'import platform; print(platform.python_version())')
 echo $PYTHONSUFFIX
 echo $PYTHONVERSION
 
-echo "Installing OpenCV..."
 echo "Installing OpenCV Dependencies..."
 
 sudo apt-get install -y -qq --allow-unauthenticated build-essential cmake pkg-config gfortran libavutil-dev ffmpeg
@@ -54,12 +53,14 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 
 RETRY=3
 while [ "$RETRY" -gt 0 ]; do
-  LATEST_VERSION=$(curl -s https://api.github.com/repos/abhiTronix/OpenCV-CI-Releases/releases |
+  LATEST_VERSION=$(curl -s https://api.github.com/repos/abhiTronix/OpenCV-CI-Releases/releases/latest |
     grep "OpenCV-.*.*-*-$PYTHONSUFFIX.*.deb" |
     grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")
   echo $LATEST_VERSION
-  curl -O -sSL $LATEST_VERSION
-  if [ -f $(find . -name 'OpenCV-*.deb') ]; then
+  curl -O -L $LATEST_VERSION
+  #opencv version to install
+  OPENCV_FILENAME=$(basename $LATEST_VERSION)
+  if [ -f $(find . -name '$OPENCV_FILENAME') ]; then
     echo "Downloaded OpenCV binary successfully."
     break
   else
@@ -74,8 +75,7 @@ if [ -z "${LATEST_VERSION}" ]; then
   exit 1
 fi
 
-#opencv version to install
-OPENCV_FILENAME=$(basename $LATEST_VERSION)
+echo "Installing OpenCV file: $OPENCV_FILENAME"
 
 sudo dpkg -i $OPENCV_FILENAME
 

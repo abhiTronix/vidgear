@@ -30,11 +30,11 @@ limitations under the License.
 
 > VidGear is a High-Performance **Video-Processing** Framework for building complex real-time media applications in python :fire:
 
-VidGear provides an easy-to-use, highly extensible, **Multi-Threaded + Asyncio Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and unparalleled real-time performance.
+VidGear provides an easy-to-use, highly extensible, **Multi-Threaded + Asyncio Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and supercharged⚡️ real-time performance.
 
 > _"Write Less and Accomplish More"_ — VidGear's Motto
 
-VidGear focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks, in just a few lines of code.
+VidGear focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks without going through hefty documentation and in just a few lines of code.
 
 &thinsp;
 
@@ -127,7 +127,7 @@ Here is a Bibtex entry you can use to cite this project in a publication:
     author = {Abhishek Thakur},
     title = {vidgear},
     howpublished = {\url{https://github.com/abhiTronix/vidgear}},
-    year = {2019-2020}
+    year = {2019-2021}
   }
 ```
 

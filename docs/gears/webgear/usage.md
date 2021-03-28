@@ -37,7 +37,7 @@ WebGear API is the part of `asyncio` package of VidGear, thereby you need to ins
 You'll also need to install an ASGI Server to run following WebGear usage examples, and by default WebGear ships the state-of-the-art [**`uvicorn`**](http://www.uvicorn.org/) Server. But you can also use other ASGI server such as [`daphne`](https://github.com/django/daphne/), or [`hypercorn`](https://pgjones.gitlab.io/hypercorn/) with it.
 
 
-&nbsp; 
+&thinsp;
 
 
 ## Performance Enhancements :fire:

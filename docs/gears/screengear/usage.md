@@ -20,7 +20,7 @@ limitations under the License.
 
 # ScreenGear API Usage Examples:
 
-&nbsp; 
+&thinsp;
 
 ## Bare-Minimum Usage
 

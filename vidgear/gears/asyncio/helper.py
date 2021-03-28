@@ -140,7 +140,7 @@ def create_blank_frame(frame=None, text=""):
         textY = (height + textsize[1]) // 2
         # put text
         cv2.putText(blank_frame, text, (textX, textY), font, 4, (125, 125, 125), 5)
-
+    # return frame
     return blank_frame
 
 

@@ -228,24 +228,26 @@ class NetGear_Async:
             # event loop that is not compatible with it. Thereby, we had to set it manually.
             if sys.version_info[:2] >= (3, 8):
                 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        elif sys.version_info[:2] >= (3, 7):
-            # import library
-            import uvloop
-
-            # uvloop eventloop is only available for UNIX machines.
-            asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
         else:
-            pass
+            try:
+                # import library
+                import uvloop
+
+                # Latest uvloop eventloop is only available for UNIX machines & python>=3.7.
+                asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+            except ImportError:
+                pass
 
         # Retrieve event loop and assign it
         self.loop = asyncio.get_event_loop()
 
-        # debugging
-        logger.info(
-            "Using `{}` event loop for this process.".format(
-                self.loop.__class__.__name__
+        if self.__logging:
+            # debugging
+            logger.info(
+                "Using `{}` event loop for this process.".format(
+                    self.loop.__class__.__name__
+                )
             )
-        )
 
     def launch(self):
         """

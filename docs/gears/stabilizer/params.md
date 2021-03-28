@@ -20,6 +20,7 @@ limitations under the License.
 
 # Stabilizer Class Parameters 
 
+&thinsp;
 
 ## **`smoothing_radius`**
 

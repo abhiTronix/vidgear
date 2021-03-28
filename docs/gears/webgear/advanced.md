@@ -23,9 +23,12 @@ limitations under the License.
 !!! note "This is a continuation of the [WebGear doc ➶](../overview/#webgear-api). Thereby, It's advised to first get familiarize with this API, and its [requirements](../usage/#requirements)."
 
 
-&nbsp;
+&thinsp;
 
 ## Using WebGear with a Custom Source(OpenCV)
+
+!!! new "New in v0.2.1" 
+    This example was added in `v0.2.1`.
 
 WebGear allows you to easily define your own custom Source that you want to use to manipulate your frames before sending them onto the browser. 
 

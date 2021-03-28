@@ -118,8 +118,12 @@ setup(
             "msgpack_numpy",
         ]
         + (
-            ["uvloop"]
-            if (platform.system() != "Windows" and sys.version_info[:2] >= (3, 7))
+            (
+                ["uvloop".format(latest_version("uvloop"))]
+                if sys.version_info[:2] >= (3, 7)
+                else ["uvloop==0.14.0"]
+            )
+            if (platform.system() != "Windows")
             else []
         )
     },

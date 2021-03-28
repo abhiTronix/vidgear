@@ -38,6 +38,7 @@ from vidgear.gears.helper import (
     delete_safe,
     check_output,
     extract_time,
+    create_blank_frame,
     is_valid_url,
     logger_handler,
     validate_audio,
@@ -420,6 +421,23 @@ def test_validate_audio(path, result):
             assert results, "Audio path validity test Failed!"
     except Exception as e:
         pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "frame , text",
+    [(getframe(), "ok"), (None, ""), (getframe(), 123)],
+)
+def test_create_blank_frame(frame, text):
+    """
+    Testing frame size reducer function
+    """
+    try:
+        text_frame = create_blank_frame(frame=frame, text=text)
+        logger.debug(text_frame.shape)
+        assert not (text_frame is None)
+    except Exception as e:
+        if not (frame is None):
+            pytest.fail(str(e))
 
 
 @pytest.mark.parametrize(

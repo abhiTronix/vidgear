@@ -20,6 +20,8 @@ limitations under the License.
 
 # ScreenGear API Parameters 
 
+&thinsp;
+
 ## **`monitor`**
 
 This parameter enables [`mss`](https://github.com/BoboTiG/python-mss) usage and sets the index of the monitor screen. This parameter is the most suitable for selecting index of multiple monitor screen from where you want get frames from. For example, its value can be assign to `-1`, to fetch frames from all connected multiple monitor screens. More information can be found [here ➶](https://python-mss.readthedocs.io/examples.html#a-screen-shot-to-grab-them-all)

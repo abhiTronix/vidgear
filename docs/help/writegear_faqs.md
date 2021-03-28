@@ -111,6 +111,9 @@ limitations under the License.
 
 **Answer:** Yes, See example below:
 
+!!! new "New in v0.2.1" 
+    This example was added in `v0.2.1`.
+
 !!! warning "This example assume you already have a [**YouTube Account with Live-Streaming enabled**](https://support.google.com/youtube/answer/2474026#enable) for publishing video."
 
 !!! danger "Make sure to change [_YouTube-Live Stream Key_](https://support.google.com/youtube/answer/2907883#zippy=%2Cstart-live-streaming-now) with yours in following code before running!"

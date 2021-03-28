@@ -20,6 +20,8 @@ limitations under the License.
 
 # StreamGear API Parameters 
 
+&thinsp;
+
 ## **`output`**
 
 This parameter sets the valid filename/path for storing the StreamGear assets _(Manifest file(such as Media Presentation Description(MPD) in-case of DASH) & Transcoded sequence of segments)_.

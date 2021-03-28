@@ -38,7 +38,7 @@ In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that tra
 
 ## Data-Files Auto-Generation WorkFlow for WebGear
 
-On initializing WebGear API, it automatically checks for three critical data-files i.e `index.html`, `404.html` & `500.html` inside `templates` folder at the [*default location*](#default-location), which give rise to possible scenario:
+On initializing WebGear API, it automatically checks for three critical **data-files**(i.e `index.html`, `404.html` & `500.html`) inside `templates` folder at the [*default location*](#default-location), which give rise to following two possible scenario:
 
 - [x] **If data-files found:** it will proceed normally for instantiating the Starlette application.
 - [ ] **If data-files not found:** it will trigger the [**Auto-Generation process**](#auto-generation-process)
@@ -105,6 +105,9 @@ from vidgear.gears.asyncio import WebGear
 &nbsp;
 
 ## WebGear's Default Template
+
+!!! new "New in v0.2.1" 
+	New Standalone **WebGear's Default Theme** was added in `v0.2.1`.
 
 The WebGear API by default uses simple & elegant [**WebGear's Default Theme**](https://github.com/abhiTronix/vidgear-vitals#webgear-default-theme) by [@abhitronix](https://github.com/abhiTronix), which looks like something as follows:
 

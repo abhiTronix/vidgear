@@ -83,7 +83,7 @@ async def test_reducer_asyncio(frame, percentage, result):
     "frame , text",
     [(getframe(), "ok"), (None, ""), (getframe(), 123)],
 )
-async def test_create_blank_frame(frame, text):
+async def test_create_blank_frame_asyncio(frame, text):
     """
     Testing frame size reducer function
     """

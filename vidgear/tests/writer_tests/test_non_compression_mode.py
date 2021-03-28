@@ -122,7 +122,7 @@ test_data_class = [
     ),
     (
         "Output_twc.avi",
-        {"-fourcc": "NULL", "-backend": "INVALID"},
+        {"-fourcc": "NULL", "-backend": "INVALID", "-fps": -11},
         False,
     ),
 ]
