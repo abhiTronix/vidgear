@@ -104,7 +104,7 @@ test_data = [
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(5, timeout_exception=StopIteration)
+@timeout_decorator.timeout(10, timeout_exception=StopIteration)
 @pytest.mark.parametrize("source, options", test_data)
 def test_threaded_queue_mode(source, options):
     """
@@ -142,7 +142,7 @@ def test_threaded_queue_mode(source, options):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(5, timeout_exception=StopIteration)
+@timeout_decorator.timeout(10, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "url, quality, parameters",
     [

@@ -51,7 +51,7 @@ def return_testvideo_path():
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(5, timeout_exception=StopIteration)
+@timeout_decorator.timeout(10, timeout_exception=StopIteration)
 @pytest.mark.parametrize("address, port", [("172.31.11.15.77", "5555"), (None, "5555")])
 def test_playback(address, port):
     """
@@ -92,7 +92,7 @@ def test_playback(address, port):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(5, timeout_exception=StopIteration)
+@timeout_decorator.timeout(10, timeout_exception=StopIteration)
 @pytest.mark.parametrize("receive_mode", [True, False])
 def test_primary_mode(receive_mode):
     """
@@ -127,7 +127,7 @@ def test_primary_mode(receive_mode):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(5, timeout_exception=StopIteration)
+@timeout_decorator.timeout(10, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "pattern", [2, 3]
 )  # 2:(zmq.PUB,zmq.SUB) (#3 is incorrect value)
@@ -176,7 +176,7 @@ def test_patterns(pattern):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(5, timeout_exception=StopIteration)
+@timeout_decorator.timeout(10, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "options_client",
     [
@@ -240,7 +240,7 @@ test_data_class = [
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(5, timeout_exception=StopIteration)
+@timeout_decorator.timeout(10, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "pattern, security_mech, custom_cert_location, overwrite_cert", test_data_class
 )
@@ -298,7 +298,7 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(5, timeout_exception=StopIteration)
+@timeout_decorator.timeout(10, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "pattern, target_data, options",
     [
@@ -385,7 +385,7 @@ def test_bidirectional_mode(pattern, target_data, options):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(5, timeout_exception=StopIteration)
+@timeout_decorator.timeout(10, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "pattern, options",
     [
@@ -472,7 +472,7 @@ def test_multiserver_mode(pattern, options):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(5, timeout_exception=StopIteration)
+@timeout_decorator.timeout(10, timeout_exception=StopIteration)
 @pytest.mark.parametrize("pattern", [0, 1])
 def test_multiclient_mode(pattern):
     """
@@ -549,7 +549,7 @@ def test_multiclient_mode(pattern):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(5, timeout_exception=StopIteration)
+@timeout_decorator.timeout(10, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "options",
     [
@@ -591,7 +591,7 @@ def test_client_reliablity(options):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(5, timeout_exception=StopIteration)
+@timeout_decorator.timeout(10, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "options",
     [
