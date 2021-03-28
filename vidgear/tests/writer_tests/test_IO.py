@@ -64,7 +64,7 @@ def test_failedchannels(size):
     IO Test - made to fail with invalid channel lengths
     """
     np.random.seed(0)
-    if length(size) > 1:
+    if len(size) > 1:
         random_data_1 = np.random.random(size=size[0]) * 255
         input_data_ch1 = random_data_1.astype(np.uint8)
         random_data_2 = np.random.random(size=size[1]) * 255
