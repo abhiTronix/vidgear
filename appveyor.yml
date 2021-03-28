@@ -51,13 +51,13 @@ install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
   - "python -m pip install --upgrade pip wheel"
-  - "python -m pip install --upgrade .[asyncio] six codecov pytest pytest-cov pytest-asyncio pytest-timeout youtube-dl"
+  - "python -m pip install --upgrade .[asyncio] six codecov pytest pytest-cov pytest-asyncio async-timeout timeout-decorator youtube-dl"
   - "python -m pip install https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev/mpegdash-0.3.0.dev0-py3-none-any.whl"
   - cmd: chmod +x scripts/bash/prepare_dataset.sh
   - cmd: bash scripts/bash/prepare_dataset.sh
 
 test_script:
-  - cmd: python -m pytest --verbose --timeout=900 --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/
+  - cmd: python -m pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/
 
 after_test:
   - cmd: python -m codecov 

@@ -107,6 +107,8 @@ limitations under the License.
         * [ ] Moved files and Removed redundant code.
         * [ ] Replaced grayscale frames with color frames for WebGear tests. 
         * [ ] Updated pytest timeout value to 15mins.
+        * [ ] Added `async-timeout` dependency for timeout in asyncio tests.
+        * [ ] Added `timeout-decorator` dependency for timeout in non-asyncio tests.
     - [x] Helper: Added missing RSTP URL scheme to `is_valid_url` method.
     - [x] NetGear_Async: Added fix for uvloop only supporting python>=3.7 legacies.
     - [x] Extended WebGear's Video-Handler scope to `https`.
@@ -118,6 +120,7 @@ limitations under the License.
     - [x] etup: Updated logic to install uvloop-"v0.14.0" for python-3.6 legacies.
     - [x] Removed any redundant code from webgear.
     - [x] Updates to docs and `mkdocs.yml`.
+    - [x] CI: Removed redundant benchmark tests.
     - [x] Reimplemented and updated `changelog.md`.
     - [x] Bumped codecov.
 
@@ -139,6 +142,7 @@ limitations under the License.
         * [ ] Remove redundant mike theme support and its files.
         * [ ] Fixed Incompatible new mkdocs-docs theme.
     - [x] CI: Fixed NetGear Address bug
+    - [x] CI: Fixed random CI test failures and code cleanup.
     - [x] Fixed Typo in bash script.
     - [x] CI: NetGear_Async Tests fixes.
     - [x] Fixed WebGear freeze on reloading bug.

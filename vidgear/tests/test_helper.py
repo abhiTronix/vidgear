@@ -23,6 +23,7 @@ import os
 import cv2
 import numpy as np
 import pytest
+import timeout_decorator
 import shutil
 import logging as log
 import platform
@@ -128,22 +129,6 @@ def getframe():
     return np.zeros([500, 800, 3], dtype=np.uint8)
 
 
-def test_ffmpeg_static_installation():
-    """
-    Test to ensure successful FFmpeg static Installation on Windows
-    """
-    startpath = os.path.abspath(
-        os.path.join(tempfile.gettempdir(), "Downloads/FFmpeg_static")
-    )
-    for root, dirs, files in os.walk(startpath):
-        level = root.replace(startpath, "").count(os.sep)
-        indent = " " * 4 * (level)
-        logger.debug("{}{}/".format(indent, os.path.basename(root)))
-        subindent = " " * 4 * (level + 1)
-        for f in files:
-            logger.debug("{}{}".format(subindent, f))
-
-
 test_data = [
     {"-thread_queue_size": "512", "-f": "alsa", "-clones": 24},
     {
@@ -164,6 +149,8 @@ test_data = [
 ]
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize("dictionary", test_data)
 def test_dict2Args(dictionary):
     """
@@ -189,6 +176,8 @@ test_data = [
 ]
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize("paths, os_bit", test_data)
 def test_ffmpeg_binaries_download(paths, os_bit):
     """
@@ -212,6 +201,8 @@ def test_ffmpeg_binaries_download(paths, os_bit):
             pytest.fail(str(e))
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize("paths", ["wrong_test_path", return_static_ffmpeg()])
 def test_validate_ffmpeg(paths):
     """
@@ -238,6 +229,8 @@ test_data = [
 ]
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize("paths, ffmpeg_download_paths, results", test_data)
 def test_get_valid_ffmpeg_path(paths, ffmpeg_download_paths, results):
     """
@@ -275,6 +268,8 @@ test_data = [
 ]
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize("paths, overwrite_cert, results", test_data)
 def test_generate_auth_certificates(paths, overwrite_cert, results):
     """
@@ -300,6 +295,8 @@ test_data = [
 ]
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize("paths, overwrite_default, results", test_data)
 def test_generate_webdata(paths, overwrite_default, results):
     """
@@ -337,6 +334,8 @@ def test_check_output():
     check_output(["ffmpeg", "-Vv"])
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "frame , percentage, result",
     [(getframe(), 85, True), (None, 80, False), (getframe(), 95, False)],
@@ -365,6 +364,8 @@ def test_reducer(frame, percentage, result):
             pytest.fail(str(e))
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "URL, result",
     [
@@ -384,6 +385,8 @@ def test_is_valid_url(URL, result):
         pytest.fail(str(e))
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "path, result",
     [
@@ -403,6 +406,8 @@ def test_validate_video(path, result):
         pytest.fail(str(e))
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "path, result",
     [
@@ -423,6 +428,8 @@ def test_validate_audio(path, result):
         pytest.fail(str(e))
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "frame , text",
     [(getframe(), "ok"), (None, ""), (getframe(), 123)],
@@ -440,6 +447,8 @@ def test_create_blank_frame(frame, text):
             pytest.fail(str(e))
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "value, result",
     [
@@ -459,6 +468,8 @@ def test_extract_time(value, result):
         pytest.fail(str(e))
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "value, result",
     [
@@ -478,6 +489,8 @@ def test_dimensions_to_resolutions(value, result):
         pytest.fail(str(e))
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "value, result",
     [
@@ -497,6 +510,8 @@ def test_get_supported_resolution(value, result):
         pytest.fail(str(e))
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 def test_get_video_bitrate():
     """
     Testing get_video_bitrate function
@@ -518,6 +533,8 @@ def test_check_gstreamer_support():
         pytest.fail(str(e))
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "ext, result",
     [

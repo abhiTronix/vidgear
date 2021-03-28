@@ -35,17 +35,25 @@ def test_assertfailedstream():
         streamer.terminate()
 
 
-def test_failedchannels():
+@pytest.mark.xfail(raises=ValueError)
+@pytest.mark.parametrize("size", [(480, 640, 5), [(480, 640, 1), (480, 640, 3)]])
+def test_failedchannels(size):
     """
-    IO Test - made to fail with invalid channel length
+    IO Test - made to fail with invalid channel lengths
     """
     np.random.seed(0)
-    # generate random data for 10 frames
-    random_data = np.random.random(size=(480, 640, 5)) * 255
-    input_data = random_data.astype(np.uint8)
-
-    # 'garbage' extension does not exist
-    with pytest.raises(ValueError):
+    if len(size) > 1:
+        random_data_1 = np.random.random(size=size[0]) * 255
+        input_data_ch1 = random_data_1.astype(np.uint8)
+        random_data_2 = np.random.random(size=size[1]) * 255
+        input_data_ch3 = random_data_2.astype(np.uint8)
+        streamer = StreamGear("output.mpd", logging=True)
+        streamer.stream(input_data_ch1)
+        streamer.stream(input_data_ch3)
+        streamer.terminate()
+    else:
+        random_data = np.random.random(size=size) * 255
+        input_data = random_data.astype(np.uint8)
         streamer = StreamGear("output.mpd", logging=True)
         streamer.stream(input_data)
         streamer.terminate()

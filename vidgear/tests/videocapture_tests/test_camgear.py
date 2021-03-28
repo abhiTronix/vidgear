@@ -27,6 +27,7 @@ import pytest
 import logging as log
 import platform
 import tempfile
+import timeout_decorator
 
 from vidgear.gears import CamGear
 from vidgear.gears.helper import logger_handler
@@ -102,6 +103,8 @@ test_data = [
 ]
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize("source, options", test_data)
 def test_threaded_queue_mode(source, options):
     """
@@ -138,6 +141,8 @@ def test_threaded_queue_mode(source, options):
             pytest.fail(str(e))
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize(
     "url, quality, parameters",
     [

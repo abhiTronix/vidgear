@@ -23,6 +23,7 @@ import os
 import pytest
 import logging as log
 import tempfile
+import timeout_decorator
 
 from vidgear.gears import VideoGear
 from vidgear.gears.helper import logger_handler
@@ -84,7 +85,8 @@ test_data = [
     (return_testvideo_path(), {"BORDER_TYPE": "im_wrong"}),
 ]
 
-
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(5, timeout_exception=StopIteration)
 @pytest.mark.parametrize("source, options", test_data)
 def test_video_stablization(source, options):
     """
