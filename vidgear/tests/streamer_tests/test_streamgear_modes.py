@@ -157,7 +157,7 @@ def extract_resolutions(source, streams):
 
 @pytest.mark.xfail(raises=StopIteration)
 @timeout_decorator.timeout(
-    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+    600 if not _windows else None, timeout_exception=StopIteration
 )
 def test_ss_stream():
     """
@@ -180,7 +180,7 @@ def test_ss_stream():
 
 @pytest.mark.xfail(raises=StopIteration)
 @timeout_decorator.timeout(
-    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+    600 if not _windows else None, timeout_exception=StopIteration
 )
 def test_ss_livestream():
     """
@@ -203,7 +203,7 @@ def test_ss_livestream():
 
 @pytest.mark.xfail(raises=StopIteration)
 @timeout_decorator.timeout(
-    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+    600 if not _windows else None, timeout_exception=StopIteration
 )
 @pytest.mark.parametrize("conversion", [None, "COLOR_BGR2GRAY", "COLOR_BGR2BGRA"])
 def test_rtf_stream(conversion):
@@ -247,7 +247,7 @@ def test_rtf_stream(conversion):
 
 @pytest.mark.xfail(raises=StopIteration)
 @timeout_decorator.timeout(
-    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+    600 if not _windows else None, timeout_exception=StopIteration
 )
 def test_rtf_livestream():
     """
@@ -277,7 +277,7 @@ def test_rtf_livestream():
 
 @pytest.mark.xfail(raises=StopIteration)
 @timeout_decorator.timeout(
-    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+    600 if not _windows else None, timeout_exception=StopIteration
 )
 def test_input_framerate_rtf():
     """
@@ -311,7 +311,7 @@ def test_input_framerate_rtf():
 
 @pytest.mark.xfail(raises=StopIteration)
 @timeout_decorator.timeout(
-    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+    600 if not _windows else None, timeout_exception=StopIteration
 )
 @pytest.mark.parametrize(
     "stream_params",
@@ -350,7 +350,7 @@ def test_params(stream_params):
 
 @pytest.mark.xfail(raises=StopIteration)
 @timeout_decorator.timeout(
-    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+    600 if not _windows else None, timeout_exception=StopIteration
 )
 @pytest.mark.parametrize(
     "stream_params",
@@ -389,7 +389,7 @@ def test_audio(stream_params):
 
 @pytest.mark.xfail(raises=StopIteration)
 @timeout_decorator.timeout(
-    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+    600 if not _windows else None, timeout_exception=StopIteration
 )
 @pytest.mark.parametrize(
     "stream_params",

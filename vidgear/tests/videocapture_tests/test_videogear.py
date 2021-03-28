@@ -92,7 +92,7 @@ test_data = [
 
 @pytest.mark.xfail(raises=StopIteration)
 @timeout_decorator.timeout(
-    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+    600 if not _windows else None, timeout_exception=StopIteration
 )
 @pytest.mark.parametrize("source, options", test_data)
 def test_video_stablization(source, options):

@@ -85,7 +85,7 @@ def remove_file_safe(path):
 
 @pytest.mark.xfail(raises=(AssertionError, StopIteration))
 @timeout_decorator.timeout(
-    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+    600 if not _windows else None, timeout_exception=StopIteration
 )
 @pytest.mark.parametrize("conversion", ["COLOR_BGR2GRAY", "COLOR_BGR2YUV"])
 def test_write(conversion):
@@ -149,7 +149,7 @@ test_data_class = [
 
 @pytest.mark.xfail(raises=StopIteration)
 @timeout_decorator.timeout(
-    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+    600 if not _windows else None, timeout_exception=StopIteration
 )
 @pytest.mark.parametrize("f_name, output_params, result", test_data_class)
 def test_WriteGear_compression(f_name, output_params, result):

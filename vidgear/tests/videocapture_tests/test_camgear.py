@@ -108,7 +108,7 @@ test_data = [
 
 @pytest.mark.xfail(raises=StopIteration)
 @timeout_decorator.timeout(
-    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+    600 if not _windows else None, timeout_exception=StopIteration
 )
 @pytest.mark.parametrize("source, options", test_data)
 def test_threaded_queue_mode(source, options):
@@ -138,7 +138,7 @@ def test_threaded_queue_mode(source, options):
             # emulate frame skipping
             assert camgear_frames_num < actual_frame_num
         else:
-            assert camgedr_frames_num == actual_frame_num
+            assert camgear_frames_num == actual_frame_num
     except Exception as e:
         if isinstance(e, RuntimeError) and source == "im_not_a_source.mp4":
             pass
@@ -150,7 +150,7 @@ def test_threaded_queue_mode(source, options):
 
 @pytest.mark.xfail(raises=StopIteration)
 @timeout_decorator.timeout(
-    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+    600 if not _windows else None, timeout_exception=StopIteration
 )
 @pytest.mark.parametrize(
     "url, quality, parameters",
