@@ -39,6 +39,9 @@ logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
+# define machine os
+_windows = True if os.name == "nt" else False
+
 
 def return_testvideo_path():
     """
@@ -51,7 +54,9 @@ def return_testvideo_path():
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize("address, port", [("172.31.11.15.77", "5555"), (None, "5555")])
 def test_playback(address, port):
     """
@@ -75,7 +80,7 @@ def test_playback(address, port):
             frame_client = client.recv()  # recv
     except Exception as e:
         if (
-            isinstance(e, (ZMQError, ValueError, RuntimeError))
+            isinstance(e, (ZMQError, ValueError, RuntimeError, StopIteration))
             or address == "172.31.11.15.77"
         ):
             logger.exception(str(e))
@@ -92,7 +97,9 @@ def test_playback(address, port):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize("receive_mode", [True, False])
 def test_primary_mode(receive_mode):
     """
@@ -114,7 +121,7 @@ def test_primary_mode(receive_mode):
     except Exception as e:
         if isinstance(e, ValueError):
             pytest.xfail("Test Passed!")
-        elif isinstance(e, queue.Empty):
+        elif isinstance(e, (queue.Empty, StopIteration)):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
@@ -127,7 +134,9 @@ def test_primary_mode(receive_mode):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize(
     "pattern", [2, 3]
 )  # 2:(zmq.PUB,zmq.SUB) (#3 is incorrect value)
@@ -161,7 +170,7 @@ def test_patterns(pattern):
         # check if received frame exactly matches input frame
         assert np.array_equal(frame_server, frame_client)
     except Exception as e:
-        if isinstance(e, (ZMQError, ValueError, RuntimeError)):
+        if isinstance(e, (ZMQError, ValueError, RuntimeError, StopIteration)):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
@@ -176,7 +185,9 @@ def test_patterns(pattern):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize(
     "options_client",
     [
@@ -218,7 +229,9 @@ def test_compression(options_client):
             server.send(frame_server)
             frame_client = client.recv()
     except Exception as e:
-        if isinstance(e, (ZMQError, ValueError, RuntimeError, queue.Empty)):
+        if isinstance(
+            e, (ZMQError, ValueError, RuntimeError, queue.Empty, StopIteration)
+        ):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
@@ -240,7 +253,9 @@ test_data_class = [
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize(
     "pattern, security_mech, custom_cert_location, overwrite_cert", test_data_class
 )
@@ -278,7 +293,7 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
         # check if received frame exactly matches input frame
         assert np.array_equal(frame_server, frame_client)
     except Exception as e:
-        if isinstance(e, (ZMQError, ValueError, RuntimeError)):
+        if isinstance(e, (ZMQError, ValueError, RuntimeError, StopIteration)):
             logger.exception(str(e))
         elif (
             isinstance(e, AssertionError)
@@ -298,7 +313,9 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize(
     "pattern, target_data, options",
     [
@@ -370,7 +387,9 @@ def test_bidirectional_mode(pattern, target_data, options):
             logger.debug("Data received at Client-end: {}".format(client_data))
             assert client_data == server_data
     except Exception as e:
-        if isinstance(e, (ZMQError, ValueError, RuntimeError, queue.Empty)):
+        if isinstance(
+            e, (ZMQError, ValueError, RuntimeError, queue.Empty, StopIteration)
+        ):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
@@ -385,7 +404,9 @@ def test_bidirectional_mode(pattern, target_data, options):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize(
     "pattern, options",
     [
@@ -453,7 +474,7 @@ def test_multiserver_mode(pattern, options):
             assert np.array_equal(frame_server, client_frame_dict[key])
 
     except Exception as e:
-        if isinstance(e, (ZMQError, ValueError, RuntimeError)):
+        if isinstance(e, (ZMQError, ValueError, RuntimeError, StopIteration)):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
@@ -472,7 +493,9 @@ def test_multiserver_mode(pattern, options):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize("pattern", [0, 1])
 def test_multiclient_mode(pattern):
     """
@@ -530,7 +553,9 @@ def test_multiclient_mode(pattern):
         assert np.array_equal(frame_3, frame_client)
 
     except Exception as e:
-        if isinstance(e, (ZMQError, ValueError, RuntimeError, queue.Empty)):
+        if isinstance(
+            e, (ZMQError, ValueError, RuntimeError, queue.Empty, StopIteration)
+        ):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
@@ -549,7 +574,9 @@ def test_multiclient_mode(pattern):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize(
     "options",
     [
@@ -591,7 +618,9 @@ def test_client_reliablity(options):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize(
     "options",
     [

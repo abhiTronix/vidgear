@@ -38,6 +38,9 @@ logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
+# define machine os
+_windows = True if os.name == "nt" else False
+
 
 def return_youtubevideo_params(url):
     """
@@ -104,7 +107,9 @@ test_data = [
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize("source, options", test_data)
 def test_threaded_queue_mode(source, options):
     """
@@ -133,16 +138,20 @@ def test_threaded_queue_mode(source, options):
             # emulate frame skipping
             assert camgear_frames_num < actual_frame_num
         else:
-            assert camgear_frames_num == actual_frame_num
+            assert camgedr_frames_num == actual_frame_num
     except Exception as e:
         if isinstance(e, RuntimeError) and source == "im_not_a_source.mp4":
             pass
+        elif isinstance(e, StopIteration):
+            logger.exception(e)
         else:
             pytest.fail(str(e))
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize(
     "url, quality, parameters",
     [
@@ -181,7 +190,7 @@ def test_stream_mode(url, quality, parameters):
         stream.stop()
         logger.debug("WIDTH: {} HEIGHT: {} FPS: {}".format(width, height, fps))
     except Exception as e:
-        if isinstance(e, (RuntimeError, ValueError)) and (
+        if isinstance(e, (RuntimeError, ValueError, StopIteration)) and (
             url == "im_not_a_url" or platform.system() in ["Windows", "Darwin"]
         ):
             pass

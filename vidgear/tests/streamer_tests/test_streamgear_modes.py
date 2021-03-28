@@ -39,6 +39,9 @@ logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
+# define machine os
+_windows = True if os.name == "nt" else False
+
 
 def return_testvideo_path(fmt="av"):
     """
@@ -153,7 +156,9 @@ def extract_resolutions(source, streams):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 def test_ss_stream():
     """
     Testing Single-Source Mode
@@ -169,11 +174,14 @@ def test_ss_stream():
         streamer.terminate()
         assert check_valid_mpd(mpd_file_path)
     except Exception as e:
-        pytest.fail(str(e))
+        if not isinstance(e, StopIteration):
+            pytest.fail(str(e))
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 def test_ss_livestream():
     """
     Testing Single-Source Mode with livestream.
@@ -189,11 +197,14 @@ def test_ss_livestream():
         streamer.transcode_source()
         streamer.terminate()
     except Exception as e:
-        pytest.fail(str(e))
+        if not isinstance(e, StopIteration):
+            pytest.fail(str(e))
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize("conversion", [None, "COLOR_BGR2GRAY", "COLOR_BGR2BGRA"])
 def test_rtf_stream(conversion):
     """
@@ -230,12 +241,14 @@ def test_rtf_stream(conversion):
         assert len(mpd_file) == 1, "Failed to create MPD file!"
         assert check_valid_mpd(mpd_file[0])
     except Exception as e:
-        if not isinstance(e, queue.Empty):
+        if not isinstance(e, (queue.Empty, StopIteration)):
             pytest.fail(str(e))
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 def test_rtf_livestream():
     """
     Testing Real-Time Frames Mode with livestream.
@@ -258,12 +271,14 @@ def test_rtf_livestream():
         stream.stop()
         streamer.terminate()
     except Exception as e:
-        if not isinstance(e, queue.Empty):
+        if not isinstance(e, (queue.Empty, StopIteration)):
             pytest.fail(str(e))
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 def test_input_framerate_rtf():
     """
     Testing "-input_framerate" parameter provided by StreamGear
@@ -290,11 +305,14 @@ def test_input_framerate_rtf():
         assert framerate_mpd > 0.0 and isinstance(framerate_mpd, float), "Test Failed!"
         assert round(framerate_mpd) == round(test_framerate), "Test Failed!"
     except Exception as e:
-        pytest.fail(str(e))
+        if not isinstance(e, StopIteration):
+            pytest.fail(str(e))
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize(
     "stream_params",
     [
@@ -326,11 +344,14 @@ def test_params(stream_params):
         streamer.terminate()
         assert check_valid_mpd(mpd_file_path)
     except Exception as e:
-        pytest.fail(str(e))
+        if not isinstance(e, StopIteration):
+            pytest.fail(str(e))
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize(
     "stream_params",
     [
@@ -362,11 +383,14 @@ def test_audio(stream_params):
         streamer.terminate()
         assert check_valid_mpd(mpd_file_path)
     except Exception as e:
-        pytest.fail(str(e))
+        if not isinstance(e, StopIteration):
+            pytest.fail(str(e))
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize(
     "stream_params",
     [
@@ -443,4 +467,5 @@ def test_multistreams(stream_params):
                 int(s_v["height"]) == results[int(s_v["width"])]
             ), "Height check failed!"
     except Exception as e:
-        pytest.fail(str(e))
+        if not isinstance(e, StopIteration):
+            pytest.fail(str(e))

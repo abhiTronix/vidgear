@@ -35,6 +35,10 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
+# define machine os
+_windows = True if os.name == "nt" else False
+
+
 def return_testvideo_path():
     """
     returns Test video path
@@ -85,8 +89,11 @@ test_data = [
     (return_testvideo_path(), {"BORDER_TYPE": "im_wrong"}),
 ]
 
+
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize("source, options", test_data)
 def test_video_stablization(source, options):
     """
@@ -108,4 +115,5 @@ def test_video_stablization(source, options):
         logger.debug("Input Framerate: {}".format(framerate))
         assert framerate > 0
     except Exception as e:
-        pytest.fail(str(e))
+        if not isinstance(e, StopIteration):
+            pytest.fail(str(e))

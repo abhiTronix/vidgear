@@ -41,6 +41,10 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
+# define machine os
+_windows = True if os.name == "nt" else False
+
+
 def return_static_ffmpeg():
     """
     returns system specific FFmpeg static path
@@ -98,7 +102,9 @@ def getFrameRate(path):
 
 
 @pytest.mark.xfail(raises=(AssertionError, StopIteration))
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize("c_ffmpeg", [return_static_ffmpeg(), "wrong_path"])
 def test_input_framerate(c_ffmpeg):
     """
@@ -130,7 +136,9 @@ def test_input_framerate(c_ffmpeg):
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize(
     "conversion", ["COLOR_BGR2GRAY", "COLOR_BGR2INVALID", "COLOR_BGR2BGRA"]
 )
@@ -194,7 +202,7 @@ def test_write(conversion):
                 x in result for x in ["Error", "Invalid", "error", "invalid"]
             ), "Test failed!"
     except Exception as e:
-        if not isinstance(e, (AssertionError, queue.Empty)):
+        if not isinstance(e, (AssertionError, queue.Empty, StopIteration)):
             pytest.fail(str(e))
         else:
             logger.exception(str(e))
@@ -203,7 +211,9 @@ def test_write(conversion):
 
 
 @pytest.mark.xfail(raises=(AssertionError, StopIteration))
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 def test_output_dimensions():
     """
     Testing "-output_dimensions" special parameter provided by WriteGear(in Compression Mode)
@@ -258,7 +268,9 @@ test_data_class = [
 
 
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize("f_name, c_ffmpeg, output_params, result", test_data_class)
 def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
     """
@@ -278,7 +290,7 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
         writer.close()
         remove_file_safe(f_name)
     except Exception as e:
-        if result:
+        if result and not isinstance(e, StopIteration):
             pytest.fail(str(e))
 
 
@@ -320,7 +332,9 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
     ],
 )
 @pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(300, timeout_exception=StopIteration)
+@timeout_decorator.timeout(
+    600, use_signals =False if _windows else True, timeout_exception=StopIteration
+)
 def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio, logging, output_params):
     """
     Testing WriteGear Compression-Mode(FFmpeg) custom FFmpeg Pipeline by seperating audio from video
@@ -346,7 +360,7 @@ def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio, logging, output_pa
         ):
             assert os.path.isfile("input_audio.aac")
     except Exception as e:
-        if isinstance(e, AssertionError):
+        if isinstance(e, (AssertionError, StopIteration)):
             pytest.fail(str(e))
         elif isinstance(e, ValueError):
             pytest.xfail("Test Passed!")
