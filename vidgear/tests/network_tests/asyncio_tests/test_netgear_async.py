@@ -104,7 +104,7 @@ def event_loop():
 
 @pytest.mark.asyncio
 @pytest.mark.xfail(raises=asyncio.TimeoutError)
-@with_timeout(10)
+@with_timeout(300)
 @pytest.mark.parametrize(
     "pattern",
     [0, 2, 3, 4],
@@ -115,7 +115,7 @@ async def test_netgear_async_playback(pattern):
         client = NetGear_Async(
             logging=True, pattern=pattern, receive_mode=True
         ).launch()
-        options_gear = {"THREAD_TIMEOUT": 3}
+        options_gear = {"THREAD_TIMEOUT": 60}
         server = NetGear_Async(
             source=return_testvideo_path(),
             pattern=pattern,
@@ -142,7 +142,7 @@ test_data_class = [
 
 @pytest.mark.asyncio
 @pytest.mark.xfail(raises=asyncio.TimeoutError)
-@with_timeout(10)
+@with_timeout(300)
 @pytest.mark.parametrize("generator, result", test_data_class)
 async def test_netgear_async_custom_server_generator(generator, result):
     try:
@@ -165,7 +165,7 @@ async def test_netgear_async_custom_server_generator(generator, result):
 
 @pytest.mark.asyncio
 @pytest.mark.xfail(raises=asyncio.TimeoutError)
-@with_timeout(10)
+@with_timeout(300)
 @pytest.mark.parametrize("address, port", [("172.31.11.15.77", "5555"), (None, "5555")])
 async def test_netgear_async_addresses(address, port):
     try:
@@ -174,7 +174,7 @@ async def test_netgear_async_addresses(address, port):
             address=address, port=port, logging=True, receive_mode=True
         ).launch()
         if address is None:
-            options_gear = {"THREAD_TIMEOUT": 3}
+            options_gear = {"THREAD_TIMEOUT": 60}
             server = NetGear_Async(
                 source=return_testvideo_path(),
                 address=address,
@@ -200,7 +200,7 @@ async def test_netgear_async_addresses(address, port):
 
 @pytest.mark.asyncio
 @pytest.mark.xfail(raises=(ValueError, asyncio.TimeoutError))
-@with_timeout(10)
+@with_timeout(300)
 async def test_netgear_async_recv_generator():
     # define and launch server
     server = NetGear_Async(source=return_testvideo_path(), logging=True)
