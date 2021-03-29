@@ -353,19 +353,16 @@ def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio, logging, output_pa
 
         # execute FFmpeg command
         writer.execute_ffmpeg_cmd(ffmpeg_command_to_save_audio)
-
+        writer.close()
         # assert audio file is created successfully
         if ffmpeg_command_to_save_audio and isinstance(
             ffmpeg_command_to_save_audio, list
         ):
             assert os.path.isfile("input_audio.aac")
     except Exception as e:
-        if isinstance(e, (AssertionError, StopIteration)):
+        if isinstance(e, AssertionError):
             pytest.fail(str(e))
         elif isinstance(e, ValueError):
             pytest.xfail("Test Passed!")
         else:
             logger.exception(str(e))
-    finally:
-        if not (writer is None):
-            writer.close()

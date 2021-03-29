@@ -25,14 +25,14 @@ import pytest
 from vidgear.gears import StreamGear
 
 
+@pytest.mark.xfail(raises=ValueError)
 def test_assertfailedstream():
     """
     IO Test - made to fail with Wrong Output file path
     """
-    with pytest.raises(ValueError):
-        # wrong folder path does not exist
-        streamer = StreamGear(output="wrong_path/output.mpd", logging=True)
-        streamer.terminate()
+    # wrong folder path does not exist
+    streamer = StreamGear(output="wrong_path/output.mpd", logging=True)
+    streamer.terminate()
 
 
 @pytest.mark.xfail(raises=ValueError)
@@ -59,6 +59,7 @@ def test_failedchannels(size):
         streamer.terminate()
 
 
+@pytest.mark.xfail(raises=ValueError)
 def test_fail_framedimension():
     """
     IO Test - made to fail with multiple frame dimension
@@ -72,20 +73,11 @@ def test_fail_framedimension():
     random_data2 = np.random.random(size=(580, 640, 3)) * 255
     input_data2 = random_data2.astype(np.uint8)
 
-    streamer = None
-    try:
-        streamer = StreamGear(output="output.mpd")
-        streamer.stream(None)
-        streamer.stream(input_data1)
-        streamer.stream(input_data2)
-    except Exception as e:
-        if isinstance(e, ValueError):
-            pytest.xfail("Test Passed!")
-        else:
-            pytest.fail(str(e))
-    finally:
-        if not streamer is None:
-            streamer.terminate()
+    streamer = StreamGear(output="output.mpd")
+    streamer.stream(None)
+    streamer.stream(input_data1)
+    streamer.stream(input_data2)
+    streamer.terminate()
 
 
 @pytest.mark.xfail(raises=RuntimeError)
@@ -99,6 +91,7 @@ def test_method_call_rtf():
     streamer.terminate()
 
 
+@pytest.mark.xfail(raises=ValueError)
 def test_invalid_params_rtf():
     """
     Invalid parameter Failure Test - Made to fail by calling invalid parameters
@@ -110,7 +103,6 @@ def test_invalid_params_rtf():
 
     stream_params = {"-vcodec": "unknown"}
     streamer = StreamGear(output="output.mpd", logging=True, **stream_params)
-    with pytest.raises(ValueError):
-        streamer.stream(input_data)
-        streamer.stream(input_data)
+    streamer.stream(input_data)
+    streamer.stream(input_data)
     streamer.terminate()
