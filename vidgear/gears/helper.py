@@ -867,7 +867,12 @@ def check_output(*args, **kwargs):
             cmd = args[0]
         error = sp.CalledProcessError(retcode, cmd)
         error.output = output
+        process.wait()
+        process = None
         raise error
+
+    process.wait()
+    process = None
 
     return output if not (retrieve_stderr) else stderr
 
