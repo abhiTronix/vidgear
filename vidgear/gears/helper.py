@@ -148,8 +148,9 @@ def check_WriteAccess(path, is_windows=False):
         path, os.W_OK, effective_ids=os.access in os.supports_effective_ids
     ):
         return False
-    temp_fname = os.path.join(path, "temp.temp")
+    temp_fname = os.path.join(path, "temp.tmp")
     try:
+        mkdir_safe(path)
         fd = os.open(temp_fname, os.O_WRONLY | os.O_CREAT)
         os.close(fd)
         write_accessible = True
@@ -157,7 +158,7 @@ def check_WriteAccess(path, is_windows=False):
         write_accessible = False
     finally:
         if os.path.exists(temp_fname):
-            os.unlink(temp_fname)
+            os.remove(temp_fname)
     return write_accessible
 
 

@@ -25,22 +25,6 @@ import pytest
 from vidgear.gears import WriteGear
 
 
-def test_assertfailedwrite():
-    """
-    IO Test - made to fail with Wrong Output file path
-    """
-    np.random.seed(0)
-    # generate random data for 10 frames
-    random_data = np.random.random(size=(10, 480, 640, 3)) * 255
-    input_data = random_data.astype(np.uint8)
-
-    with pytest.raises((AssertionError, ValueError)):
-        # wrong folder path does not exist
-        writer = WriteGear("wrong_path/output.mp4", logging=True)
-        writer.write(input_data)
-        writer.close()
-
-
 def test_failedextension():
     """
     IO Test - made to fail with filename with wrong extention

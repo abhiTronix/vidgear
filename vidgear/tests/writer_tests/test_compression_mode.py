@@ -101,6 +101,21 @@ def getFrameRate(path):
     return float(match_dict["fps"])
 
 
+def test_download_ffmpeg():
+    """
+    Auxilary test to simply delete old ffmpeg binaries.
+    """
+    try:
+        import glob, shutil
+
+        found = glob.glob(os.path.join(tempfile.gettempdir(), "ffmpeg-static*"))
+        if found and os.path.isdir(found[0]):
+            shutil.rmtree(found[0])
+    except Exception as e:
+        if not isinstance(e, PermissionError):
+            pytest.fail(str(e))
+
+
 @pytest.mark.xfail(raises=(AssertionError, StopIteration))
 @timeout_decorator.timeout(
     600 if not _windows else None, timeout_exception=StopIteration

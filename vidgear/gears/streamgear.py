@@ -125,9 +125,7 @@ class StreamGear:
         else:
             # else raise error
             raise RuntimeError(
-                "[StreamGear:ERROR] :: Failed to find FFmpeg assets on this system. Kindly compile/install FFmpeg or provide a valid custom FFmpeg binary path!".format(
-                    output
-                )
+                "[StreamGear:ERROR] :: Failed to find FFmpeg assets on this system. Kindly compile/install FFmpeg or provide a valid custom FFmpeg binary path!"
             )
 
         # handle Audio-Input

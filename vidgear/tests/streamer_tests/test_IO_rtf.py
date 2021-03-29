@@ -21,18 +21,24 @@ limitations under the License.
 
 import numpy as np
 import pytest
-
+import os
+import tempfile
 from vidgear.gears import StreamGear
 
 
-@pytest.mark.xfail(raises=ValueError)
-def test_assertfailedstream():
+def test_download_ffmpeg():
     """
-    IO Test - made to fail with Wrong Output file path
+    Auxilary test to simply delete old ffmpeg binaries.
     """
-    # wrong folder path does not exist
-    streamer = StreamGear(output="wrong_path/output.mpd", logging=True)
-    streamer.terminate()
+    try:
+        import glob, shutil
+
+        found = glob.glob(os.path.join(tempfile.gettempdir(), "ffmpeg-static*"))
+        if found and os.path.isdir(found[0]):
+            shutil.rmtree(found[0])
+    except Exception as e:
+        if not isinstance(e, PermissionError):
+            pytest.fail(str(e))
 
 
 @pytest.mark.xfail(raises=ValueError)
