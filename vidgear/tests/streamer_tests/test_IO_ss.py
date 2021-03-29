@@ -38,21 +38,6 @@ def return_testvideo_path():
     return os.path.abspath(path)
 
 
-def test_download_ffmpeg():
-    """
-    Auxilary test to simply delete old ffmpeg binaries.
-    """
-    try:
-        import glob, shutil
-
-        found = glob.glob(os.path.join(tempfile.gettempdir(), "ffmpeg-static*"))
-        if found and os.path.isdir(found[0]):
-            shutil.rmtree(found[0])
-    except Exception as e:
-        if not isinstance(e, PermissionError):
-            pytest.fail(str(e))
-
-
 def test_failedextension():
     """
     IO Test - made to fail with filename with wrong extension

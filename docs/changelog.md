@@ -88,9 +88,11 @@ limitations under the License.
         * [ ] Implemented a new robust algorithm to check if given directory has write-access.
         * [ ] Removed old behavior which gives irregular results.
     - [x] Helper: Maintenance Updates
+        * [ ] Added workaround for Python bug.
+        * [ ] Added `safe_mkdir` to `check_WriteAccess` to automatically create non-existential parent folder in path.
         * [ ] Extended `check_WriteAccess` Patch to StreamGear.
         * [ ] Simplified `check_WriteAccess` to handle Windows envs easily.
-        * [ ] Updated FFmpeg Static Download URL for WriteGear in Helper.
+        * [ ] Updated FFmpeg Static Download URL for WriteGear.
     - [x] Docs: General UI Updates
         * [ ] Updated Meta tags for og site and twitter cards.
         * [ ] Updated CSS for version-selector-button.
@@ -109,6 +111,7 @@ limitations under the License.
         * [ ] Updated pytest timeout value to 15mins.
         * [ ] Added `async-timeout` dependency for timeout in asyncio tests.
         * [ ] Added `timeout-decorator` dependency for timeout in non-asyncio tests.
+        * [ ] Incremented timeout to 5 mins.
     - [x] Helper: Added missing RSTP URL scheme to `is_valid_url` method.
     - [x] NetGear_Async: Added fix for uvloop only supporting python>=3.7 legacies.
     - [x] Extended WebGear's Video-Handler scope to `https`.
@@ -121,6 +124,7 @@ limitations under the License.
     - [x] Removed any redundant code from webgear.
     - [x] Updates to docs and `mkdocs.yml`.
     - [x] CI: Removed redundant benchmark tests.
+    - [x] NetGear_Async: Added timeout to client in CI tests.
     - [x] Reimplemented and updated `changelog.md`.
     - [x] Bumped codecov.
 
@@ -128,6 +132,7 @@ limitations under the License.
 ??? danger "Breaking Updates/Changes"
     - [ ] :warning: WriteGear will automatically switch video encoder to default if specified encoder not found.
     - [ ] :warning: WriteGear will throw `RuntimeError` if no suitable default encoder found!
+    - [ ] Non-existent parent folder in `output_filename` value will no longer be considered as invalid in StreamGear and WriteGear APIs.
     - [ ] None-type `source` parameter value is allowed for WebGear and NetGear_Async for defining custom sources.
 
 ??? bug "Bug-fixes"
@@ -136,7 +141,9 @@ limitations under the License.
     - [x] NetGear_Async: Fixed `source` parameter missing `None` as default value.
     - [x] CI: Patched F821 undefined name bug.
     - [x] Fixed uvloops only supporting python>=3.7 in NetGear_Async.
-    - [x] Helper: Fixed regex in `validate_video` method.
+    - [x] Helper:
+        * [ ] Fixed Zombie processes in `check_output` method due a hidden bug in python. For reference: https://bugs.python.org/issue37380
+        * [ ] Fixed regex in `validate_video` method.
     - [x] Docs: 
         * [ ] Invalid `site_url` bug patched in mkdocs.yml
         * [ ] Remove redundant mike theme support and its files.
