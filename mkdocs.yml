@@ -14,10 +14,10 @@
 
 # Project information
 site_name: VidGear
-site_url: https://github.com/abhiTronix/vidgear
+site_url: https://abhitronix.github.io/vidgear/
 site_author: Abhishek Thakur
 site_description: >-
-  High-Performance Framework for building complex real-time media applications in python.
+  A High-Performance Video-Processing Python Framework for building complex real-time media applications. 🔥
 
 # Repository
 repo_name: abhiTronix/vidgear
@@ -42,6 +42,7 @@ theme:
   # Default values, taken from mkdocs_theme.yml
   language: en
   features:
+    - header.autohide
     - navigation.tabs
   palette:
     scheme: default
@@ -85,15 +86,18 @@ extra:
       link: https://twitter.com/abhi_una12
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/abhishek-singh-thakur-a37845a5
+    - icon: fontawesome/brands/dev
+      link: https://dev.to/abhitronix
   manifest: site.webmanifest
+  version:
+    provider: mike
+
 
 extra_css:
     - assets/stylesheets/custom.css
-    - assets/stylesheets/version-select.css
   
 extra_javascript:
     - assets/javascripts/extra.js
-    - assets/javascripts/version-select.js
 
 # Extensions
 markdown_extensions:

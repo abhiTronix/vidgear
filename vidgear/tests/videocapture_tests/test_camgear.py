@@ -27,6 +27,7 @@ import pytest
 import logging as log
 import platform
 import tempfile
+import timeout_decorator
 
 from vidgear.gears import CamGear
 from vidgear.gears.helper import logger_handler
@@ -36,6 +37,9 @@ logger = log.getLogger("Test_camgear")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+
+# define machine os
+_windows = True if os.name == "nt" else False
 
 
 def return_youtubevideo_params(url):
@@ -88,13 +92,24 @@ def return_total_frame_count():
 test_data = [
     (
         return_testvideo_path(),
-        {"CAP_PROP_FRAME_WIDTH ": 320, "CAP_PROP_FRAME_HEIGHT": 240},
+        {
+            "THREAD_TIMEOUT": 300,
+            "CAP_PROP_FRAME_WIDTH ": 320,
+            "CAP_PROP_FRAME_HEIGHT": 240,
+        },
     ),
-    (return_testvideo_path(), {"im_wrong": True, "THREADED_QUEUE_MODE": False}),
+    (
+        return_testvideo_path(),
+        {"THREAD_TIMEOUT": "wrong", "im_wrong": True, "THREADED_QUEUE_MODE": False},
+    ),
     ("im_not_a_source.mp4", {"THREADED_QUEUE_MODE": "invalid"}),
 ]
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(
+    600 if not _windows else None, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize("source, options", test_data)
 def test_threaded_queue_mode(source, options):
     """
@@ -127,14 +142,21 @@ def test_threaded_queue_mode(source, options):
     except Exception as e:
         if isinstance(e, RuntimeError) and source == "im_not_a_source.mp4":
             pass
+        elif isinstance(e, StopIteration):
+            logger.exception(e)
         else:
             pytest.fail(str(e))
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(
+    600 if not _windows else None, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize(
     "url, quality, parameters",
     [
-        ("https://youtu.be/uCy5OuSQnyA", "2160p", "invalid"),
+        ("https://youtu.be/uCy5OuSQnyA", "73p", "invalid"),
+        ("https://www.dailymotion.com/video/x7xsoud", "73p", "invalid"),
         ("https://youtu.be/uCy5OuSQnyA", "720p", "invalid"),
         ("https://youtu.be/NMre6IAAAiU", "invalid", {"nocheckcertificate": True}),
         (
@@ -169,7 +191,7 @@ def test_stream_mode(url, quality, parameters):
         stream.stop()
         logger.debug("WIDTH: {} HEIGHT: {} FPS: {}".format(width, height, fps))
     except Exception as e:
-        if isinstance(e, (RuntimeError, ValueError)) and (
+        if isinstance(e, (RuntimeError, ValueError, StopIteration)) and (
             url == "im_not_a_url" or platform.system() in ["Windows", "Darwin"]
         ):
             pass

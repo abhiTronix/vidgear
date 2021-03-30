@@ -52,6 +52,12 @@ limitations under the License.
 
 &nbsp;
 
+## How to send OpenCV frames directly to Webgear Server?
+
+**Answer:** See [this usage example ➶](../../gears/webgear/advanced/#using-webgear-with-a-custom-sourceopencv).
+
+&nbsp;
+
 ## How can I add my custom WebPage to WebGear?
 
 **Answer:** See [this usage example ➶](../../gears/webgear/advanced/#using-webgear-with-custom-webpage-routes).
@@ -73,80 +79,5 @@ limitations under the License.
 ## What Web browser are supported by WebGear API?
 
 **Answer:** All modern browser with Javascript support are supported by WebGear. If not, then discuss with us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
-
-&nbsp;
-
-## How to send OpenCV frames directly to Webgear Server?
-
-**Answer:** Here's the trick to do it:
-
-**Step-1: Trigger Auto-Generation Process:** Firstly, run any WebGear [usage example](../../gears/webgear/usage/) to trigger the [Auto-generation process](../../gears/webgear/overview/#auto-generation-process). Thereby, the default generated files will be saved at [default location](../../gears/webgear/overview/#default-location) of your machine.
-
-**Step-2: Change Webpage address in your own HTML file:** then, Go inside `templates` directory at [default location](../../gears/webgear/overview/#default-location) of your machine, _and change the line -> `25` on `index.html` file_:
-
-**From:**
-
-`#!html <p class="lead"><img src="/video" class="img-fluid" alt="Feed"></p>`
-
-**To:**
-
-`#!html <p class="lead"><img src="/my_frames" class="img-fluid" alt="Feed"></p>`
-
-**Step-3: Build your own Frame Producer and add it to route:** Now, create a python script code with OpenCV source, as follows:
-
-```python
-# import necessary libs
-import uvicorn, asyncio, cv2
-from starlette.routing import Route
-from vidgear.gears.asyncio import WebGear
-from vidgear.gears.asyncio.helper import reducer
-from starlette.responses import StreamingResponse
-
-# !!! define your own video source here !!!
-stream = cv2.VideoCapture("/home/foo/foo.avi") 
-
-# initialize WebGear app with same source
-web = WebGear(source = "/home/foo/foo.avi", logging = True) # also enable `logging` for debugging 
-
-# create your own frame producer
-async def my_frame_producer():
-  # loop over frames
-  while True:
-    # read frame from provided source
-    (grabbed,  frame) = stream.read()
-    # break if NoneType
-    if not grabbed: break
-
-
-    # do something with frame here
-
-
-    #reducer frames size if you want more performance otherwise comment this line
-    frame = reducer(frame, percentage = 50) #reduce frame by 50%
-    #handle JPEG encoding
-    encodedImage = cv2.imencode('.jpg', frame)[1].tobytes()
-    #yield frame in byte format
-    yield  (b'--frame\r\nContent-Type:image/jpeg\r\n\r\n'+encodedImage+b'\r\n')
-    await asyncio.sleep(0.01)
-
-
-# now create your own streaming response server
-async def video_server(scope):
-  assert scope['type'] == 'http'
-  return StreamingResponse(my_frame_producer(), media_type='multipart/x-mixed-replace; boundary=frame') # add your frame producer
-
-
-
-# append new route to point your own streaming response server created above
-web.routes.append(Route('/my_frames', endpoint=video_server)) #new route for your frames producer will be `{address}/my_frames`
-
-# run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host='localhost', port=8000)
-
-# close app safely
-web.shutdown()
-```
-
-**Final Step:** Finally, you can run the above python script, and see the desire output at address http://localhost:8000/ on your browser. 
 
 &nbsp;

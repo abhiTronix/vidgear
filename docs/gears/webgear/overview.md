@@ -38,7 +38,7 @@ In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that tra
 
 ## Data-Files Auto-Generation WorkFlow for WebGear
 
-On initializing WebGear API, it automatically checks for three critical data-files i.e `index.html`, `404.html` & `500.html` inside `templates` folder at the [*default location*](#default-location), which give rise to possible scenario:
+On initializing WebGear API, it automatically checks for three critical **data-files**(i.e `index.html`, `404.html` & `500.html`) inside `templates` folder at the [*default location*](#default-location), which give rise to following two possible scenario:
 
 - [x] **If data-files found:** it will proceed normally for instantiating the Starlette application.
 - [ ] **If data-files not found:** it will trigger the [**Auto-Generation process**](#auto-generation-process)
@@ -66,26 +66,23 @@ On initializing WebGear API, it automatically checks for three critical data-fil
 
 
 * On triggering this process, WebGear API creates `templates` and `static` folders along with `js`, `css`, `img` sub-folders at the assigned [*default location*](#default-location).
-* Thereby at this [*default location*](#default-location), the necessary default data files will be downloaded from a dedicated [**Github Server**](https://github.com/abhiTronix/webgear_data) inside respective folders in the following order:
+* Thereby at this [*default location*](#default-location), the necessary default data files will be downloaded from a dedicated [**Github Server**](https://github.com/abhiTronix/vidgear-vitals) inside respective folders in the following order:
 
 	```sh
 		.vidgear
 		├── static
-		│   ├── css
-		│   │   ├── bootstrap.min.css
-		│   │   └── cover.css
-		│   ├── img
-		│   │   └── favicon-32x32.png
-		│   └── js
-		│       ├── bootstrap.min.js
-		│       ├── jquery-3.4.1.slim.min.js
-		│       └── popper.min.js
+		│   ├── css
+		│   │   └── custom.css
+		│   ├── img
+		│   │   └── favicon-32x32.png
+		│   └── js
+		│       └── custom.js
 		└── templates
 		    ├── 404.html
 		    ├── 500.html
 		    ├── base.html
 		    └── index.html
-		5 directories, 10 files
+		5 directories, 7 files
 	```
 
 * Finally these downloaded files thereby are verified for errors and API proceeds for instantiating the Starlette application normally.
@@ -109,14 +106,17 @@ from vidgear.gears.asyncio import WebGear
 
 ## WebGear's Default Template
 
-The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](https://github.com/twbs/bootstrap/blob/master/site/content/docs/4.3/examples/cover/index.html), by [@mdo](https://twitter.com/mdo)**, which looks like something as follows:
+!!! new "New in v0.2.1" 
+	New Standalone **WebGear's Default Theme** was added in `v0.2.1`.
+
+The WebGear API by default uses simple & elegant [**WebGear's Default Theme**](https://github.com/abhiTronix/vidgear-vitals#webgear-default-theme) by [@abhitronix](https://github.com/abhiTronix), which looks like something as follows:
 
 ### Index.html
 
 *Can be accessed by visiting WebGear app server, running at http://localhost:8000/:*
 
 <h2 align="center">
-  <img src="../../../assets/images/webgear_temp_index.jpg" loading="lazy" alt="WebGear default Index page"/>
+  <img src="../../../assets/images/webgear_temp_index.png" loading="lazy" alt="WebGear default Index page"/>
 </h2>
 
 
@@ -125,7 +125,7 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
 *Appears when respective URL is not found, for example http://localhost:8000/ok:*
 
 <h2 align="center">
-  <img src="../../../assets/images/webgear_temp_404.jpg" loading="lazy" alt="WebGear default 404 page"/>
+  <img src="../../../assets/images/webgear_temp_404.png" loading="lazy" alt="WebGear default 404 page"/>
 </h2>
 
 
@@ -136,7 +136,7 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
 !!! warning "If [`logging`](../params/#logging) is enabled and an error occurs, then instead of displaying this 500 handler, WebGear will respond with a traceback response."
 
 <h2 align="center">
-  <img src="../../../assets/images/webgear_temp_500.jpg" loading="lazy" alt="WebGear default 500 page"/>
+  <img src="../../../assets/images/webgear_temp_500.png" loading="lazy" alt="WebGear default 500 page"/>
 </h2>
 
 &nbsp;

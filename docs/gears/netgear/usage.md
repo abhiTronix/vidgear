@@ -28,6 +28,10 @@ limitations under the License.
 
     * Only either of two functions (i.e. `send()` and `recv()`) can be accessed at any given instance based on activated [primary mode](../overview/#primary-modes) selected during NetGear API initialization. Trying to access wrong function in incorrect mode (_for e.g using `send()` function in Receive Mode_), will result in `ValueError`.
 
+
+&thinsp;
+
+
 ## Bare-Minimum Usage
 
 Following is the bare-minimum code you need to get started with NetGear API:

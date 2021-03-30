@@ -21,7 +21,7 @@ limitations under the License.
 # WriteGear API 
 
 <figure>
-  <img src="../../../assets/images/writegear.png" alt="WriteGear Functional Block Diagram" loading="lazy" />
+  <img src="../../../assets/images/writegear.png" alt="WriteGear Functional Block Diagram" loading="lazy" class="center-small"/>
   <figcaption>WriteGear API generalized workflow</figcaption>
 </figure>
 
@@ -64,5 +64,13 @@ You can import WriteGear API in your program as follows:
 ```python
 from vidgear.gears import WriteGear
 ```
+
+&thinsp; 
+
+## FAQs
+
+<div>
+<a href="../../../help/writegear_faqs/">See here 🚀</a>
+</div>  
 
 &thinsp; 

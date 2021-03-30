@@ -36,6 +36,8 @@ limitations under the License.
     * Always use `writer.close()` at the very end of the main code. **NEVER USE IT INBETWEEN CODE** to avoid undesired behavior.
 
 
+&thinsp;
+
 
 ## Bare-Minimum Usage
 
@@ -216,6 +218,8 @@ writer.close()
 In Compression Mode, WriteGear can make complex job look easy with FFmpeg. It also allows any URLs _(as output)_ for network streaming with its [`output_filename`](../params/#output_filename) parameter.   
 
 _In this example, let's stream Live Camera Feed directly to Twitch!_
+
+!!! info "YouTube-Live Streaming example code also available in [WriteGear FAQs ➶](../../../../help/writegear_faqs/#is-youtube-live-streaming-possibe-with-writegear)"
 
 !!! warning "This example assume you already have a [**Twitch Account**](https://www.twitch.tv/) for publishing video."
 

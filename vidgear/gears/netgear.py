@@ -29,7 +29,7 @@ from threading import Thread
 from collections import deque
 from pkg_resources import parse_version
 
-from .helper import logger_handler, generate_auth_certificates
+from .helper import logger_handler, generate_auth_certificates, check_WriteAccess
 
 # define logger
 logger = log.getLogger("NetGear")
@@ -286,15 +286,16 @@ class NetGear:
 
             elif key == "custom_cert_location" and isinstance(value, str):
                 # verify custom auth certificates path for secure mode
-                assert os.access(
-                    value, os.W_OK
+                custom_cert_location = os.path.abspath(value)
+                assert os.path.isdir(
+                    custom_cert_location
+                ), "[NetGear:ERROR] :: `custom_cert_location` value must be the path to a valid directory!"
+                assert check_WriteAccess(
+                    custom_cert_location,
+                    is_windows=True if os.name == "nt" else False,
                 ), "[NetGear:ERROR] :: Permission Denied!, cannot write ZMQ authentication certificates to '{}' directory!".format(
                     value
                 )
-                assert os.path.isdir(
-                    os.path.abspath(value)
-                ), "[NetGear:ERROR] :: `custom_cert_location` value must be the path to a valid directory!"
-                custom_cert_location = os.path.abspath(value)
 
             elif key == "overwrite_cert" and isinstance(value, bool):
                 # enable/disable auth certificate overwriting in secure mode

@@ -28,17 +28,19 @@ limitations under the License.
 
 Switching OpenCV with VidGear APIs is usually a fairly painless process, and will just require changing a few lines in your python script. 
 
-!!! quote "This document is intended to software developers who want to migrate their python code from OpenCV Library to VidGear APIs."
+!!! abstract "This document is intended to software developers who want to migrate their python code from OpenCV Library to VidGear APIs."
 
-!!! warning "Prior knowledge of Python and OpenCV won't be covered in this guide. Proficiency with OpenCV is a must in order understand this document."
+!!! warning "Prior knowledge of Python or OpenCV won't be covered in this guide. Proficiency with OpenCV-Python _(Python API for OpenCV)_ is a must in order understand this document."
+
+!!! tip "If you're just getting started with OpenCV-Python, then see [here ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)"
 
 &nbsp; 
 
 ## Why VidGear is better than OpenCV?
 
-!!! tip "If you're just getting started with OpenCV, then see [here ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)"
+!!! info "Learn about OpenCV see [here➶](https://software.intel.com/content/www/us/en/develop/articles/what-is-opencv.html)"
 
-VidGear employs OpenCV at its backend and enhances its existing capabilities even further by introducing many new state-of-the-art features on top of it, like real-time Stabilization, and inherit support for screen-casting, live network-streaming, multiple devices, multi-threading, etc., plus [way much more ➶](../gears). While VidGear maintains the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax for all of its APIs. Making it even easier to implement Complex OpenCV applications in fewer lines of python code.
+VidGear employs OpenCV at its backend and enhances its existing capabilities even further by introducing many new state-of-the-art features on top of it like multi-threading for performance, real-time Stabilization, inherit support for multiple devices and screen-casting, live network-streaming, plus [way much more ➶](../gears). Vidgear offers all this while maintaining the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax for all of its APIs, thereby making it even easier to implement Complex OpenCV applications in fewer lines of python code.
 
 &nbsp; 
 

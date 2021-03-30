@@ -21,7 +21,7 @@ limitations under the License.
 # NetGear API 
 
 <figure>
-  <img src="../../../assets/images/netgear.png" alt="NetGear API" loading="lazy" width="70%"/>
+  <img src="../../../assets/images/netgear.png" alt="NetGear API" loading="lazy" width="70%" class="center"/>
   <figcaption>NetGear API generalized</figcaption>
 </figure>
 
@@ -61,7 +61,7 @@ _whereas the supported protocol are: `tcp` and `ipc`_.
 
 NetGear API primarily has two modes of operations:
 
-* **Send Mode:** _which employs `send()` function to send video frames over the network in real-time. **Activate this mode by setting parameter [`receive_mode = True`](../params/#receive_mode).**_
+* **Send Mode:** _which employs `send()` function to send video frames over the network in real-time. **Activate this mode by setting parameter [`receive_mode = False`](../params/#receive_mode).**_
   
 * **Receive Mode:** _which employs `recv()` function to receive frames, sent over the network with *Send Mode* in real-time. **Activate this mode by setting parameter [`receive_mode = True`](../params/#receive_mode).**_
 

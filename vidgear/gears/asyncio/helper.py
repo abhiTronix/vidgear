@@ -110,6 +110,40 @@ def mkdir_safe(dir, logging=False):
             logger.debug("Directory already exists at `{}`".format(dir))
 
 
+def create_blank_frame(frame=None, text=""):
+    """
+    ### create_blank_frame
+
+    Create blank frames of given frame size with text
+
+    Parameters:
+        frame (numpy.ndarray): inputs numpy array(frame).
+        text (str): Text to be written on frame.
+    **Returns:**  A reduced numpy ndarray array.
+    """
+    # check if frame is valid
+    if frame is None:
+        raise ValueError("[Helper:ERROR] :: Input frame cannot be NoneType!")
+    # grab the frame size
+    (height, width) = frame.shape[:2]
+    # create blank frame
+    blank_frame = np.zeros((height, width, 3), np.uint8)
+    # setup text
+    if text and isinstance(text, str):
+        logger.debug("Adding text: {}".format(text))
+        # setup font
+        font = cv2.FONT_HERSHEY_DUPLEX
+        # get boundary of this text
+        textsize = cv2.getTextSize(text, font, 4, 5)[0]
+        # get coords based on boundary
+        textX = (width - textsize[0]) // 2
+        textY = (height + textsize[1]) // 2
+        # put text
+        cv2.putText(blank_frame, text, (textX, textY), font, 4, (125, 125, 125), 5)
+    # return frame
+    return blank_frame
+
+
 async def reducer(frame=None, percentage=0):
     """
     ### reducer
@@ -177,51 +211,34 @@ def generate_webdata(path, overwrite_default=False, logging=False):
     mkdir_safe(favicon_dir, logging=logging)
 
     # check if overwriting is enabled
-    if overwrite_default:
+    if overwrite_default or not validate_webdata(
+        template_dir, ["index.html", "404.html", "500.html"]
+    ):
         logger.critical(
             "Overwriting existing WebGear data-files with default data-files from the server!"
+            if overwrite_default
+            else "Failed to detect critical WebGear data-files: index.html, 404.html & 500.html!"
         )
+        # download default files
+        if logging:
+            logger.info("Downloading default data-files from the GitHub Server.")
         download_webdata(
             template_dir,
             files=["index.html", "404.html", "500.html", "base.html"],
             logging=logging,
         )
-        download_webdata(
-            css_static_dir, files=["bootstrap.min.css", "cover.css"], logging=logging
-        )
+        download_webdata(css_static_dir, files=["custom.css"], logging=logging)
         download_webdata(
             js_static_dir,
-            files=["bootstrap.min.js", "jquery-3.4.1.slim.min.js", "popper.min.js"],
+            files=["custom.js"],
             logging=logging,
         )
         download_webdata(favicon_dir, files=["favicon-32x32.png"], logging=logging)
     else:
         # validate important data-files
-        if validate_webdata(template_dir, ["index.html", "404.html", "500.html"]):
-            if logging:
-                logger.debug("Found valid WebGear data-files successfully.")
-        else:
-            # otherwise download default files
-            logger.critical(
-                "Failed to detect critical WebGear data-files: index.html, 404.html & 500.html!"
-            )
-            logger.warning("Re-downloading default data-files from the server.")
-            download_webdata(
-                template_dir,
-                files=["index.html", "404.html", "500.html", "base.html"],
-                logging=logging,
-            )
-            download_webdata(
-                css_static_dir,
-                files=["bootstrap.min.css", "cover.css"],
-                logging=logging,
-            )
-            download_webdata(
-                js_static_dir,
-                files=["bootstrap.min.js", "jquery-3.4.1.slim.min.js", "popper.min.js"],
-                logging=logging,
-            )
-            download_webdata(favicon_dir, files=["favicon-32x32.png"], logging=logging)
+        if logging:
+            logger.debug("Found valid WebGear data-files successfully.")
+
     return path
 
 
@@ -246,14 +263,9 @@ def download_webdata(path, files=[], logging=False):
         # get filename
         file_name = os.path.join(path, file)
         # get URL
-        if basename == "templates":
-            file_url = "https://raw.githubusercontent.com/abhiTronix/webgear_data/master/{}/{}".format(
-                basename, file
-            )
-        else:
-            file_url = "https://raw.githubusercontent.com/abhiTronix/webgear_data/master/static/{}/{}".format(
-                basename, file
-            )
+        file_url = "https://raw.githubusercontent.com/abhiTronix/vidgear-vitals/master/webgear{}/{}/{}".format(
+            "/static" if basename != "templates" else "", basename, file
+        )
         # download and write file to the given path
         if logging:
             logger.debug("Downloading {} data-file: {}.".format(basename, file))

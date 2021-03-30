@@ -20,6 +20,8 @@ limitations under the License.
 
 # WriteGear API Parameters: Non-Compression Mode
 
+&thinsp;
+
 ## **`output_filename`**
 
 This parameter sets the valid output Video filename/path for the output video.

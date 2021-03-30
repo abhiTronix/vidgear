@@ -64,8 +64,11 @@ Finally, once done, see [Switching from OpenCV ➶](../../switch_from_cv/) and g
 	export VIDGEAR_LOGFILE="$HOME/foo.log"
 
 	# or just directory path 
-	# !!! Make sure `foo` already exists !!!
+	# !!! Make sure `foo` path already exists !!!
 	export VIDGEAR_LOGFILE="$HOME/foo"
+
+	# to remove
+	unset VIDGEAR_LOGFILE
 	```
 
 === "Windows OS (Powershell)"
@@ -75,8 +78,11 @@ Finally, once done, see [Switching from OpenCV ➶](../../switch_from_cv/) and g
 	$Env:VIDGEAR_LOGFILE = "D:\foo.log"
 
 	# or just directory path 
-	# !!! Make sure `foo` already exists !!!
+	# !!! Make sure `foo` path already exists !!!
 	$Env:VIDGEAR_LOGFILE = "D:\foo"
+
+	# to remove
+	$Env:VIDGEAR_LOGFILE = ""
 	```
 
 === "OSX/Mac OS"
@@ -86,9 +92,18 @@ Finally, once done, see [Switching from OpenCV ➶](../../switch_from_cv/) and g
 	export VIDGEAR_LOGFILE="$HOME/foo.log"
 	
 	# or just directory path 
-	# !!! Make sure `foo` already exists !!!
+	# !!! Make sure `foo` path already exists !!!
 	export VIDGEAR_LOGFILE="$HOME/foo"
+
+	# to remove
+	unset VIDGEAR_LOGFILE
 	```
+
+&nbsp;
+
+## Can I perform Deep Learning task with VidGear?
+
+**Answer:** VidGear is a powerful Video Processing library _(similar to OpenCV, FFmpeg, etc.)_ that can read, write, process, send & receive a sequence of video-frames from/to various devices in way easy, flexible, and faster manner. So for Deep Learning or Machine Learning tasks, you have to use a third-party library with VidGear.  Being said that, VidGear's high-performance APIs definitely will leverage the overall performance if you're processing video/audio streams in your application along with Deep Learning tasks.
 
 &nbsp;
 

@@ -23,10 +23,12 @@ import os
 import re
 import cv2
 import pytest
+import queue
 import logging as log
 import platform
 import tempfile
 import subprocess
+import timeout_decorator
 from six import string_types
 
 from vidgear.gears import CamGear, WriteGear
@@ -37,6 +39,10 @@ logger = log.getLogger("Test_commpression_mode")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+
+
+# define machine os
+_windows = True if os.name == "nt" else False
 
 
 def return_static_ffmpeg():
@@ -69,6 +75,17 @@ def return_testvideo_path():
     return os.path.abspath(path)
 
 
+def remove_file_safe(path):
+    """
+    Remove file safely
+    """
+    try:
+        if path and os.path.isfile(os.path.abspath(path)):
+            os.remove(path)
+    except Exception as e:
+        logger.exception(e)
+
+
 def getFrameRate(path):
     """
     Returns framerate of video(at path provided) using FFmpeg
@@ -84,7 +101,25 @@ def getFrameRate(path):
     return float(match_dict["fps"])
 
 
-@pytest.mark.xfail(raises=AssertionError)
+def test_download_ffmpeg():
+    """
+    Auxilary test to simply delete old ffmpeg binaries.
+    """
+    try:
+        import glob, shutil
+
+        found = glob.glob(os.path.join(tempfile.gettempdir(), "ffmpeg-static*"))
+        if found and os.path.isdir(found[0]):
+            shutil.rmtree(found[0])
+    except Exception as e:
+        if not isinstance(e, PermissionError):
+            pytest.fail(str(e))
+
+
+@pytest.mark.xfail(raises=(AssertionError, StopIteration))
+@timeout_decorator.timeout(
+    600 if not _windows else None, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize("c_ffmpeg", [return_static_ffmpeg(), "wrong_path"])
 def test_input_framerate(c_ffmpeg):
     """
@@ -112,10 +147,13 @@ def test_input_framerate(c_ffmpeg):
     writer.close()
     output_video_framerate = getFrameRate(os.path.abspath("Output_tif.mp4"))
     assert test_video_framerate == output_video_framerate
-    os.remove(os.path.abspath("Output_tif.mp4"))
+    remove_file_safe("Output_tif.mp4")
 
 
-@pytest.mark.xfail(raises=AssertionError)
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(
+    600 if not _windows else None, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize(
     "conversion", ["COLOR_BGR2GRAY", "COLOR_BGR2INVALID", "COLOR_BGR2BGRA"]
 )
@@ -123,59 +161,74 @@ def test_write(conversion):
     """
     Testing WriteGear Compression-Mode(FFmpeg) Writer capabilties in different colorspace with CamGearAPI.
     """
-    # Open stream
-    stream = CamGear(
-        source=return_testvideo_path(), colorspace=conversion, logging=True
-    ).start()
-    writer = WriteGear(
-        output_filename="Output_tw.mp4", custom_ffmpeg=return_static_ffmpeg()
-    )  # Define writer
-    while True:
-        frame = stream.read()
-        # check if frame is None
-        if frame is None:
-            # if True break the infinite loop
-            break
-        if conversion == "COLOR_BGR2RGBA":
-            writer.write(frame, rgb_mode=True)
-        elif conversion == "COLOR_BGR2INVALID":
-            # test invalid color_space value
-            stream.color_space = "wrong_colorspace"
-            conversion = "COLOR_BGR2INVALID2"
-            writer.write(frame)
-        elif conversion == "COLOR_BGR2INVALID2":
-            # test wrong color_space value
-            stream.color_space = 1546755
-            conversion = ""
-            writer.write(frame)
+    try:
+        # Open stream
+        options = {"THREAD_TIMEOUT": 300}
+        stream = CamGear(
+            source=return_testvideo_path(),
+            colorspace=conversion,
+            logging=True,
+            **options
+        ).start()
+        writer = WriteGear(
+            output_filename="Output_tw.mp4", custom_ffmpeg=return_static_ffmpeg()
+        )  # Define writer
+        while True:
+            frame = stream.read()
+            # check if frame is None
+            if frame is None:
+                # if True break the infinite loop
+                break
+            if conversion == "COLOR_BGR2RGBA":
+                writer.write(frame, rgb_mode=True)
+            elif conversion == "COLOR_BGR2INVALID":
+                # test invalid color_space value
+                stream.color_space = conversion
+                conversion = "COLOR_BGR2INVALID2"
+                writer.write(frame)
+            elif conversion == "COLOR_BGR2INVALID2":
+                # test wrong color_space value
+                stream.color_space = 1546755546
+                writer.write(frame)
+                conversion = ""
+            else:
+                writer.write(frame)
+        stream.stop()
+        writer.close()
+        basepath, _ = os.path.split(return_static_ffmpeg())
+        ffprobe_path = os.path.join(
+            basepath, "ffprobe.exe" if os.name == "nt" else "ffprobe"
+        )
+        assert os.path.isfile(ffprobe_path), "FFprobe not Found!"
+        result = check_output(
+            [
+                ffprobe_path,
+                "-v",
+                "error",
+                "-count_frames",
+                "-i",
+                os.path.abspath("Output_tw.mp4"),
+            ]
+        )
+        if result:
+            if not isinstance(result, string_types):
+                result = result.decode()
+            assert not any(
+                x in result for x in ["Error", "Invalid", "error", "invalid"]
+            ), "Test failed!"
+    except Exception as e:
+        if not isinstance(e, (AssertionError, queue.Empty, StopIteration)):
+            pytest.fail(str(e))
         else:
-            writer.write(frame)
-    stream.stop()
-    writer.close()
-    basepath, _ = os.path.split(return_static_ffmpeg())
-    ffprobe_path = os.path.join(
-        basepath, "ffprobe.exe" if os.name == "nt" else "ffprobe"
-    )
-    result = check_output(
-        [
-            ffprobe_path,
-            "-v",
-            "error",
-            "-count_frames",
-            "-i",
-            os.path.abspath("Output_tw.mp4"),
-        ]
-    )
-    if result:
-        if not isinstance(result, string_types):
-            result = result.decode()
-        logger.debug("Result: {}".format(result))
-        for i in ["Error", "Invalid", "error", "invalid"]:
-            assert not (i in result)
-    os.remove(os.path.abspath("Output_tw.mp4"))
+            logger.exception(str(e))
+    finally:
+        remove_file_safe("Output_tw.mp4")
 
 
-@pytest.mark.xfail(raises=AssertionError)
+@pytest.mark.xfail(raises=(AssertionError, StopIteration))
+@timeout_decorator.timeout(
+    600 if not _windows else None, timeout_exception=StopIteration
+)
 def test_output_dimensions():
     """
     Testing "-output_dimensions" special parameter provided by WriteGear(in Compression Mode)
@@ -212,7 +265,7 @@ def test_output_dimensions():
     assert output_dim[0] == 640 and output_dim[1] == 480
     output.release()
 
-    os.remove(os.path.abspath("Output_tod.mp4"))
+    remove_file_safe("Output_tod.mp4")
 
 
 test_data_class = [
@@ -223,12 +276,16 @@ test_data_class = [
     (
         "Output3.mp4",
         return_static_ffmpeg(),
-        {"-vcodec": "libx264", "-crf": 0, "-preset": "fast"},
+        {"-c:v": "libx265", "-vcodec": "libx264", "-crf": 0, "-preset": "veryfast"},
         True,
     ),
 ]
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(
+    600 if not _windows else None, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize("f_name, c_ffmpeg, output_params, result", test_data_class)
 def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
     """
@@ -246,15 +303,14 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
             writer.write(frame)
         stream.release()
         writer.close()
-        if f_name and os.path.isfile(os.path.abspath(f_name)):
-            os.remove(os.path.abspath(f_name))
+        remove_file_safe(f_name)
     except Exception as e:
-        if result:
+        if result and not isinstance(e, StopIteration):
             pytest.fail(str(e))
 
 
 @pytest.mark.parametrize(
-    "ffmpeg_command_to_save_audio, logging, output_params",
+    "ffmpeg_cmd, logging, output_params",
     [
         (
             [
@@ -270,18 +326,31 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
             {"-i": None, "-disable_force_termination": True},
         ),
         (None, True, {"-i": None, "-disable_force_termination": "OK"}),
-        ([], False, {"-i": None}),
+        (["wrong_input", "invalid_flag", "break_things"], False, {}),
         (
-            ["wrong_input"],
+            ["wrong_input", "invalid_flag", "break_things"],
             True,
             {"-ffmpeg_download_path": 53}
             if (platform.system() == "Windows")
             else {"-disable_force_termination": "OK"},
         ),
-        (["wrong_input"], True, {"-disable_force_termination": True}),
+        (
+            "wrong_input",
+            True,
+            {"-disable_force_termination": True},
+        ),
+        (
+            ["invalid"],
+            True,
+            {},
+        ),
     ],
 )
-def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio, logging, output_params):
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(
+    600 if not _windows else None, timeout_exception=StopIteration
+)
+def test_WriteGear_customFFmpeg(ffmpeg_cmd, logging, output_params):
     """
     Testing WriteGear Compression-Mode(FFmpeg) custom FFmpeg Pipeline by seperating audio from video
     """
@@ -290,26 +359,21 @@ def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio, logging, output_pa
         # define writer
         writer = WriteGear(
             output_filename="Output.mp4",
-            compression_mode=(True if ffmpeg_command_to_save_audio else False),
+            compression_mode=(True if ffmpeg_cmd != ["invalid"] else False),
             logging=logging,
             **output_params
         )  # Define writer
 
         # execute FFmpeg command
-        writer.execute_ffmpeg_cmd(ffmpeg_command_to_save_audio)
-
+        writer.execute_ffmpeg_cmd(ffmpeg_cmd)
+        writer.close()
         # assert audio file is created successfully
-        if ffmpeg_command_to_save_audio and isinstance(
-            ffmpeg_command_to_save_audio, list
-        ):
+        if ffmpeg_cmd and isinstance(ffmpeg_cmd, list) and "-acodec" in ffmpeg_cmd:
             assert os.path.isfile("input_audio.aac")
     except Exception as e:
         if isinstance(e, AssertionError):
             pytest.fail(str(e))
-        elif isinstance(e, ValueError):
+        elif isinstance(e, (ValueError, RuntimeError)):
             pytest.xfail("Test Passed!")
         else:
             logger.exception(str(e))
-    finally:
-        if not (writer is None):
-            writer.close()

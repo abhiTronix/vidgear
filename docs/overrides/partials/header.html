@@ -18,29 +18,38 @@ limitations under the License.
 ===============================================
 -->
 
-{% set site_url = config.site_url | default(nav.homepage.url, true) | url %}
-{% if not config.use_directory_urls and site_url[0] == site_url[-1] == "." %}
-  {% set site_url = site_url ~ "/index.html" %}
-{% endif %}
 <header class="md-header" data-md-component="header">
-  <nav class="md-header-nav md-grid" aria-label="{{ lang.t('header.title') }}">
-    <a href="{{ site_url }}" title="{{ config.site_name | e }}" class="md-header-nav__button md-logo" aria-label="{{ config.site_name }}">
+  <nav
+    class="md-header__inner md-grid"
+    aria-label="{{ lang.t('header.title') }}"
+  >
+
+    <!-- Link to home -->
+    <a
+      href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}"
+      title="{{ config.site_name | e }}"
+      class="md-header__button md-logo"
+      aria-label="{{ config.site_name }}"
+      data-md-component="logo"
+    >
       {% include "partials/logo.html" %}
     </a>
-    <label class="md-header-nav__button md-icon" for="__drawer">
+
+    <!-- Button to open drawer -->
+    <label class="md-header__button md-icon" for="__drawer">
       {% include ".icons/material/menu" ~ ".svg" %}
     </label>
-    <div class="md-header-nav__title" data-md-component="header-title">
-      {% if config.site_name == page.title %}
-        <div class="md-header-nav__ellipsis md-ellipsis">
-          {{ config.site_name }}
-        </div>
-      {% else %}
-        <div class="md-header-nav__ellipsis">
-          <span class="md-header-nav__topic md-ellipsis">
+
+    <!-- Header title -->
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
             {{ config.site_name }}
           </span>
-          <span class="md-header-nav__topic md-ellipsis">
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
             {% if page and page.meta and page.meta.title %}
               {{ page.meta.title }}
             {% else %}
@@ -48,45 +57,77 @@ limitations under the License.
             {% endif %}
           </span>
         </div>
+      </div>
+    </div>
+
+    <!-- Header options -->
+    <div class="md-header__options">
+
+      <!-- Switch to toggle language -->
+      {% if config.extra.alternate %}
+        <div class="md-select">
+          {% set icon = config.theme.icon.alternate or "material/translate" %}
+          <span class="md-header__button md-icon">
+            {% include ".icons/" ~ icon ~ ".svg" %}
+          </span>
+          <div class="md-select__inner">
+            <ul class="md-select__list">
+              {% for alt in config.extra.alternate %}
+                <li class="md-select__item">
+                  <a href="{{ alt.link | url }}" class="md-select__link">
+                    {{ alt.name }}
+                  </a>
+                </li>
+                {% endfor %}
+            </ul>
+          </div>
+        </div>
       {% endif %}
     </div>
+
+    <!-- Button to open search modal -->
     {% if "search" in config["plugins"] %}
-      <label class="md-header-nav__button md-icon" for="__search">
+      <label class="md-header__button md-icon" for="__search">
         {% include ".icons/material/magnify.svg" %}
       </label>
+
+      <!-- Search interface -->
       {% include "partials/search.html" %}
     {% endif %}
-     <div class="md-header-nav__scheme md-header-nav__button md-icon">
-        <a
-          href="#"
-          onclick="javascript:toggleScheme();"
-          title="Light mode"
-          class="light-mode"
-        >
-        {% set icon = "material/white-balance-sunny" %}
-        {% include ".icons/" ~ icon ~ ".svg" %}
-        </a>
-        <a
-          href="#"
-          onclick="javascript:toggleScheme();"
-          title="Dark mode"
-          class="dark-mode"
-        >
-        {% set icon = "material/weather-night" %}
-        {% include ".icons/" ~ icon ~ ".svg" %}
-        </a>
-        <a
-          href="#"
-          onclick="javascript:toggleScheme();"
-          title="System preference"
-          class="system-mode"
-        >
-        {% set icon = "material/theme-light-dark" %}
-        {% include ".icons/" ~ icon ~ ".svg" %}
-        </a>
-    </div>
+
+    <div class="md-header__scheme md-header__button md-icon">
+          <a
+            href="#"
+            onclick="javascript:toggleScheme();"
+            title="Light mode"
+            class="light-mode"
+          >
+          {% set icon = "material/white-balance-sunny" %}
+          {% include ".icons/" ~ icon ~ ".svg" %}
+          </a>
+          <a
+            href="#"
+            onclick="javascript:toggleScheme();"
+            title="Dark mode"
+            class="dark-mode"
+          >
+          {% set icon = "material/weather-night" %}
+          {% include ".icons/" ~ icon ~ ".svg" %}
+          </a>
+          <a
+            href="#"
+            onclick="javascript:toggleScheme();"
+            title="System preference"
+            class="system-mode"
+          >
+          {% set icon = "material/theme-light-dark" %}
+          {% include ".icons/" ~ icon ~ ".svg" %}
+          </a>
+      </div>
+
+    <!-- Repository information -->
     {% if config.repo_url %}
-      <div class="md-header-nav__source">
+      <div class="md-header__source">
         {% include "partials/source.html" %}
       </div>
     {% endif %}

@@ -20,6 +20,29 @@ limitations under the License.
 
 # NetGear_Async API Parameters
 
+!!! cite "NetGear_Async provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs and their parameters."
+
+&thinsp;
+
+## **`enablePiCamera`** 
+
+This parameter provide access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
+
+**Data-Type:** Boolean
+
+**Default Value:** Its default value is `False`. 
+
+**Usage:**
+
+```python
+NetGear_Async(enablePiCamera=True) # enable access to PiGear API
+```
+
+!!! info "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
+
+
+&nbsp; 
+
 
 ## **`address`**
 
@@ -131,32 +154,10 @@ NetGear_Async(timeout=5.0) # sets 5secs timeout
 
 &nbsp;
 
-## Parameters for VideoGear backend
-
-### **`enablePiCamera`** 
-
-This parameter provide access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
-
-**Data-Type:** Boolean
-
-**Default Value:** Its default value is `False`. 
-
-**Usage:**
-
-```python
-NetGear_Async(enablePiCamera=True) # enable access to PiGear API
-```
-
-!!! info "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
-
-
-&nbsp; 
-
-&nbsp;
-
 
 ## Parameters for Stabilizer Backend
 
+!!! summary "Enable this backend with [`stabilize=True`](#stabilize) in NetGear_Async."
 
 ### **`stabilize`**
 
@@ -216,7 +217,7 @@ This parameter can be used in addition, to pass user-defined parameters supporte
 
 ## Parameters for CamGear backend
 
-!!! tip "Enable this backend with [`enablePiCamera=False`](#enablepicamera) on NetGear_Async."
+!!! summary "Enable this backend with [`enablePiCamera=False`](#enablepicamera) in NetGear_Async."
 
 ### **`source`**
 
@@ -382,7 +383,7 @@ NetGear_Async(source=0, **options)
 
 ## Parameters for PiGear backend 
 
-!!! tip "Enable this backend with [`enablePiCamera=True`](#enablepicamera) on NetGear_Async."
+!!! summary "Enable this backend with [`enablePiCamera=True`](#enablepicamera) in NetGear_Async."
 
 ### **`camera_num`** 
 
@@ -486,7 +487,8 @@ Additionally, `options` parameter also support some User-specific attributes, wh
 &nbsp;
 
 ## Common Parameters
- 
+
+!!! summary "These are common parameters that works with every backend in NetGear_Async."
 
 ### **`colorspace`**
 

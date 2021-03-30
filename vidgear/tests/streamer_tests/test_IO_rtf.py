@@ -21,36 +21,36 @@ limitations under the License.
 
 import numpy as np
 import pytest
-
+import os
+import tempfile
 from vidgear.gears import StreamGear
 
 
-def test_assertfailedstream():
+@pytest.mark.xfail(raises=ValueError)
+@pytest.mark.parametrize("size", [(480, 640, 5), [(480, 640, 1), (480, 640, 3)]])
+def test_failedchannels(size):
     """
-    IO Test - made to fail with Wrong Output file path
-    """
-    with pytest.raises(ValueError):
-        # wrong folder path does not exist
-        streamer = StreamGear(output="wrong_path/output.mpd", logging=True)
-        streamer.terminate()
-
-
-def test_failedchannels():
-    """
-    IO Test - made to fail with invalid channel length
+    IO Test - made to fail with invalid channel lengths
     """
     np.random.seed(0)
-    # generate random data for 10 frames
-    random_data = np.random.random(size=(480, 640, 5)) * 255
-    input_data = random_data.astype(np.uint8)
-
-    # 'garbage' extension does not exist
-    with pytest.raises(ValueError):
+    if len(size) > 1:
+        random_data_1 = np.random.random(size=size[0]) * 255
+        input_data_ch1 = random_data_1.astype(np.uint8)
+        random_data_2 = np.random.random(size=size[1]) * 255
+        input_data_ch3 = random_data_2.astype(np.uint8)
+        streamer = StreamGear("output.mpd", logging=True)
+        streamer.stream(input_data_ch1)
+        streamer.stream(input_data_ch3)
+        streamer.terminate()
+    else:
+        random_data = np.random.random(size=size) * 255
+        input_data = random_data.astype(np.uint8)
         streamer = StreamGear("output.mpd", logging=True)
         streamer.stream(input_data)
         streamer.terminate()
 
 
+@pytest.mark.xfail(raises=ValueError)
 def test_fail_framedimension():
     """
     IO Test - made to fail with multiple frame dimension
@@ -64,20 +64,11 @@ def test_fail_framedimension():
     random_data2 = np.random.random(size=(580, 640, 3)) * 255
     input_data2 = random_data2.astype(np.uint8)
 
-    streamer = None
-    try:
-        streamer = StreamGear(output="output.mpd")
-        streamer.stream(None)
-        streamer.stream(input_data1)
-        streamer.stream(input_data2)
-    except Exception as e:
-        if isinstance(e, ValueError):
-            pytest.xfail("Test Passed!")
-        else:
-            pytest.fail(str(e))
-    finally:
-        if not streamer is None:
-            streamer.terminate()
+    streamer = StreamGear(output="output.mpd")
+    streamer.stream(None)
+    streamer.stream(input_data1)
+    streamer.stream(input_data2)
+    streamer.terminate()
 
 
 @pytest.mark.xfail(raises=RuntimeError)
@@ -91,6 +82,7 @@ def test_method_call_rtf():
     streamer.terminate()
 
 
+@pytest.mark.xfail(raises=ValueError)
 def test_invalid_params_rtf():
     """
     Invalid parameter Failure Test - Made to fail by calling invalid parameters
@@ -102,7 +94,6 @@ def test_invalid_params_rtf():
 
     stream_params = {"-vcodec": "unknown"}
     streamer = StreamGear(output="output.mpd", logging=True, **stream_params)
-    with pytest.raises(ValueError):
-        streamer.stream(input_data)
-        streamer.stream(input_data)
+    streamer.stream(input_data)
+    streamer.stream(input_data)
     streamer.terminate()

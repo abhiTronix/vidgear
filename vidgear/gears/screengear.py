@@ -21,11 +21,12 @@ limitations under the License.
 
 import cv2
 import time
+import queue
 import numpy as np
 import logging as log
 from mss import mss
 import pyscreenshot as pysct
-from threading import Thread
+from threading import Thread, Event
 from collections import deque, OrderedDict
 from pkg_resources import parse_version
 from mss.exception import ScreenShotError
@@ -88,14 +89,25 @@ class ScreenGear:
                 logger.exception(str(e))
                 self.__monitor_instance = None
 
-        # Initialize Queue
-        self.__queue = None
+        # assigns special parameter to global variable and clear
+        # Thread Timeout
+        self.__thread_timeout = options.pop("THREAD_TIMEOUT", None)
+        if self.__thread_timeout and isinstance(self.__thread_timeout, (int, float)):
+            # set values
+            self.__thread_timeout = int(self.__thread_timeout)
+        else:
+            # defaults to 5mins timeout
+            self.__thread_timeout = None
 
         # define deque and assign it to global var
-        self.__queue = deque(maxlen=96)  # max len 96 to check overflow
+        self.__queue = queue.Queue(maxsize=96)  # max len 96 to check overflow
         # log it
         if logging:
             logger.debug("Enabling Threaded Queue Mode by default for ScreenGear!")
+            if self.__thread_timeout:
+                logger.debug(
+                    "Setting Video-Thread Timeout to {}s.".format(self.__thread_timeout)
+                )
 
         # intiate screen dimension handler
         screen_dims = {}
@@ -157,8 +169,8 @@ class ScreenGear:
                 self.frame = np.asanyarray(
                     self.__capture_object.grab(self.__mss_capture_instance)
                 )
-            # intitialize and append to queue
-            self.__queue.append(self.frame)
+            # initialize and append to queue
+            self.__queue.put(self.frame)
         except Exception as e:
             if isinstance(e, ScreenShotError):
                 # otherwise catch and log errors
@@ -169,7 +181,9 @@ class ScreenGear:
                 )
             elif isinstance(e, KeyError):
                 raise ValueError(
-                    "[ScreenGear:ERROR] :: ScreenShotError caught, Invalid backend: `{}`, Kindly Refer Docs!".format(backend)
+                    "[ScreenGear:ERROR] :: ScreenShotError caught, Invalid backend: `{}`, Kindly Refer Docs!".format(
+                        backend
+                    )
                 )
             else:
                 raise SystemError(
@@ -179,7 +193,7 @@ class ScreenGear:
         # thread initialization
         self.__thread = None
         # initialize termination flag
-        self.__terminate = False
+        self.__terminate = Event()
 
     def start(self):
         """
@@ -200,13 +214,11 @@ class ScreenGear:
         # intialize frame variable
         frame = None
         # keep looping infinitely until the thread is terminated
-        while not (self.__terminate):
+        while True:
 
-            # check queue buffer for overflow
-            if len(self.__queue) >= 96:
-                # stop iterating if overflowing occurs
-                time.sleep(0.000001)
-                continue
+            # if the thread indicator variable is set, stop the thread
+            if self.__terminate.is_set():
+                break
 
             try:
                 if self.__monitor_instance:
@@ -231,7 +243,7 @@ class ScreenGear:
                     raise RuntimeError(self.__capture_object.get_error_details())
                 else:
                     logger.exception(str(e))
-                self.__terminate = True
+                self.__terminate.set()
                 continue
 
             if not (self.color_space is None):
@@ -261,7 +273,7 @@ class ScreenGear:
             else:
                 self.frame = frame
             # append to queue
-            self.__queue.append(self.frame)
+            self.__queue.put(self.frame)
 
         # finally release mss resources
         if self.__monitor_instance:
@@ -275,12 +287,8 @@ class ScreenGear:
         **Returns:** A n-dimensional numpy array.
         """
         # check whether or not termination flag is enabled
-        while not self.__terminate:
-            # check if queue is empty
-            if len(self.__queue) > 0:
-                return self.__queue.popleft()
-            else:
-                continue
+        while not self.__terminate.is_set():
+            return self.__queue.get(timeout=self.__thread_timeout)
         # otherwise return NoneType
         return None
 
@@ -290,12 +298,17 @@ class ScreenGear:
         """
         if self.__logging:
             logger.debug("Terminating ScreenGear Processes.")
-        # indicate that the thread should be terminated
-        self.__terminate = True
-        # terminate Threaded queue mode seperately
-        if not (self.__queue is None):
-            self.__queue.clear()
+
+        # indicate that the thread should be terminate
+        self.__terminate.set()
+
         # wait until stream resources are released (producer thread might be still grabbing frame)
         if self.__thread is not None:
+            if not (self.__queue is None):
+                while not self.__queue.empty():
+                    try:
+                        self.__queue.get_nowait()
+                    except queue.Empty:
+                        continue
+                    self.__queue.task_done()
             self.__thread.join()
-            # properly handle thread exit

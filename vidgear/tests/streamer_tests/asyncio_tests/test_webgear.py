@@ -20,6 +20,7 @@ limitations under the License.
 # import the necessary packages
 
 import os
+import cv2
 import pytest
 import asyncio
 import logging as log
@@ -54,6 +55,26 @@ def hello_webpage(request):
     returns PlainTextResponse callback for hello world webpage
     """
     return PlainTextResponse("Hello, world!")
+
+
+# Create a async frame generator as custom source
+async def custom_frame_generator():
+    # Open video stream
+    stream = cv2.VideoCapture(return_testvideo_path())
+    # loop over stream until its terminated
+    while True:
+        # read frames
+        (grabbed, frame) = stream.read()
+        # check if frame empty
+        if not grabbed:
+            break
+        # handle JPEG encoding
+        encodedImage = cv2.imencode(".jpg", frame)[1].tobytes()
+        # yield frame in byte format
+        yield (b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n")
+        await asyncio.sleep(0.00001)
+    # close stream
+    stream.release()
 
 
 test_data = [
@@ -92,6 +113,7 @@ test_data = [
         "frame_jpeg_optimize": True,
         "frame_jpeg_progressive": False,
         "overwrite_default_files": "invalid_value",
+        "enable_infinite_frames": "invalid_value",
         "custom_data_location": True,
     },
     {
@@ -100,6 +122,7 @@ test_data = [
         "frame_jpeg_optimize": "invalid_value",
         "frame_jpeg_progressive": "invalid_value",
         "overwrite_default_files": True,
+        "enable_infinite_frames": False,
         "custom_data_location": "im_wrong",
     },
     {"custom_data_location": tempfile.gettempdir()},
@@ -125,6 +148,30 @@ def test_webgear_options(options):
         elif isinstance(e, requests.exceptions.Timeout):
             logger.exceptions(str(e))
         else:
+            pytest.fail(str(e))
+
+
+test_data_class = [
+    (None, False),
+    (custom_frame_generator, True),
+    ([], False),
+]
+
+
+@pytest.mark.parametrize("generator, result", test_data_class)
+def test_webgear_custom_server_generator(generator, result):
+    """
+    Test for WebGear API's custom source
+    """
+    try:
+        web = WebGear(logging=True)
+        web.config["generator"] = generator
+        client = TestClient(web(), raise_server_exceptions=True)
+        response_video = client.get("/video")
+        assert response_video.status_code == 200
+        web.shutdown()
+    except Exception as e:
+        if result:
             pytest.fail(str(e))
 
 

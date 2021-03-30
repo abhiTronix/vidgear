@@ -38,6 +38,7 @@ from vidgear.gears.helper import (
     delete_safe,
     check_output,
     extract_time,
+    create_blank_frame,
     is_valid_url,
     logger_handler,
     validate_audio,
@@ -127,22 +128,6 @@ def getframe():
     return np.zeros([500, 800, 3], dtype=np.uint8)
 
 
-def test_ffmpeg_static_installation():
-    """
-    Test to ensure successful FFmpeg static Installation on Windows
-    """
-    startpath = os.path.abspath(
-        os.path.join(tempfile.gettempdir(), "Downloads/FFmpeg_static")
-    )
-    for root, dirs, files in os.walk(startpath):
-        level = root.replace(startpath, "").count(os.sep)
-        indent = " " * 4 * (level)
-        logger.debug("{}{}/".format(indent, os.path.basename(root)))
-        subindent = " " * 4 * (level + 1)
-        for f in files:
-            logger.debug("{}{}".format(subindent, f))
-
-
 test_data = [
     {"-thread_queue_size": "512", "-f": "alsa", "-clones": 24},
     {
@@ -177,14 +162,14 @@ def test_dict2Args(dictionary):
 
 test_data = [
     (
-        "wrong_test_path",
-        ("win64" if platform.machine().endswith("64") else "win32") if _windows else "",
+        os.path.join(tempfile.gettempdir(), "temp_ffmpeg"),
+        "win32" if _windows else "",
     ),
     (
-        tempfile.gettempdir(),
-        ("win64" if platform.machine().endswith("64") else "win32") if _windows else "",
+        os.path.join(tempfile.gettempdir(), "temp_ffmpeg"),
+        "win64" if _windows else "",
     ),
-    (os.path.join(tempfile.gettempdir(), "temp_ffmpeg"), "wrong_bit"),
+    ("wrong_test_path", "wrong_bit"),
 ]
 
 
@@ -199,6 +184,7 @@ def test_ffmpeg_binaries_download(paths, os_bit):
             path=paths, os_windows=_windows, os_bit=os_bit
         )
         if file_path:
+            logger.debug("FFmpeg Binary path: {}".format(file_path))
             assert os.path.isfile(file_path), "FFmpeg download failed!"
             shutil.rmtree(os.path.abspath(os.path.join(file_path, "../..")))
     except Exception as e:
@@ -419,6 +405,23 @@ def test_validate_audio(path, result):
             assert results, "Audio path validity test Failed!"
     except Exception as e:
         pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "frame , text",
+    [(getframe(), "ok"), (None, ""), (getframe(), 123)],
+)
+def test_create_blank_frame(frame, text):
+    """
+    Testing frame size reducer function
+    """
+    try:
+        text_frame = create_blank_frame(frame=frame, text=text)
+        logger.debug(text_frame.shape)
+        assert not (text_frame is None)
+    except Exception as e:
+        if not (frame is None):
+            pytest.fail(str(e))
 
 
 @pytest.mark.parametrize(

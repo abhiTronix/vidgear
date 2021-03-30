@@ -39,6 +39,7 @@ from .helper import (
     logger_handler,
     validate_audio,
     validate_video,
+    check_WriteAccess,
     get_video_bitrate,
     get_valid_ffmpeg_path,
 )
@@ -124,9 +125,7 @@ class StreamGear:
         else:
             # else raise error
             raise RuntimeError(
-                "[StreamGear:ERROR] :: Failed to find FFmpeg assets on this system. Kindly compile/install FFmpeg or provide a valid custom FFmpeg binary path!".format(
-                    output
-                )
+                "[StreamGear:ERROR] :: Failed to find FFmpeg assets on this system. Kindly compile/install FFmpeg or provide a valid custom FFmpeg binary path!"
             )
 
         # handle Audio-Input
@@ -197,10 +196,10 @@ class StreamGear:
             self.__clear_assets = False
 
         # handle whether to livestream?
-        self.__enable_livestream = self.__params.pop("-livestream", False)
-        if not isinstance(self.__enable_livestream, bool):
+        self.__livestreaming = self.__params.pop("-livestream", False)
+        if not isinstance(self.__livestreaming, bool):
             # reset improper values
-            self.__enable_livestream = False
+            self.__livestreaming = False
 
         # handle Streaming formats
         supported_formats = ["dash"]  # will be extended in future
@@ -235,9 +234,9 @@ class StreamGear:
             # validate this class has the access rights to specified directory or not
             abs_path = os.path.abspath(output)
 
-            if (
-                self.__os_windows or os.access in os.supports_effective_ids
-            ) and os.access(os.path.dirname(abs_path), os.W_OK):
+            if check_WriteAccess(
+                os.path.dirname(abs_path), is_windows=self.__os_windows
+            ):
                 # check if given path is directory
                 valid_extension = "mpd" if self.__format == "dash" else "m3u8"
                 if os.path.isdir(abs_path):
@@ -689,7 +688,7 @@ class StreamGear:
             ]
 
         # Check if live-streaming or not?
-        if self.__enable_livestream:
+        if self.__livestreaming:
             output_params["-window_size"] = self.__params.pop("-window_size", 5)
             output_params["-extra_window_size"] = self.__params.pop(
                 "-extra_window_size", 5
@@ -747,7 +746,8 @@ class StreamGear:
         # format command
         if self.__video_source:
             ffmpeg_cmd = (
-                [self.__ffmpeg, "-y"]  # overwrite
+                [self.__ffmpeg, "-y"]
+                + (["-re"] if self.__livestreaming else [])  # pseudo live-streaming
                 + hide_banner
                 + ["-i", self.__video_source]
                 + input_commands
@@ -757,7 +757,8 @@ class StreamGear:
             )
         else:
             ffmpeg_cmd = (
-                [self.__ffmpeg, "-y"]  # overwrite
+                [self.__ffmpeg, "-y"]
+                + ["-re"]  # pseudo live-streaming
                 + hide_banner
                 + ["-f", "rawvideo", "-vcodec", "rawvideo"]
                 + input_commands

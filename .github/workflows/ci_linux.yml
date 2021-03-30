@@ -26,11 +26,11 @@ on:
 jobs:
   test:
     name: CI Test vidgear
-    if: github.ref == 'refs/heads/testing'
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -52,7 +52,7 @@ jobs:
           pip install -U pip wheel numpy
           pip install -U .[asyncio]
           pip uninstall opencv-python -y
-          pip install -U flake8 six codecov pytest pytest-asyncio pytest-cov youtube-dl mpegdash
+          pip install -U flake8 six codecov pytest pytest-asyncio pytest-cov async-timeout timeout-decorator youtube-dl mpegdash
         if: success()
       - name: run prepare_dataset_script
         run: bash scripts/bash/prepare_dataset.sh

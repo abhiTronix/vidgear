@@ -26,6 +26,7 @@ import os
 import re
 import sys
 import errno
+import shutil
 import numpy as np
 import logging as log
 import platform
@@ -130,6 +131,37 @@ def check_CV_version():
         return 3
 
 
+def check_WriteAccess(path, is_windows=False):
+    """
+    ### check_WriteAccess
+
+    Checks whether given path directory has Write-Access.
+
+    Parameters:
+        path (string): absolute path of directory
+        is_windows (boolean): is running on Windows OS?
+
+    **Returns:** A boolean value, confirming whether Write-Access available, or not?.
+    """
+    write_accessible = False
+    if not is_windows and not os.access(
+        path, os.W_OK, effective_ids=os.access in os.supports_effective_ids
+    ):
+        return False
+    temp_fname = os.path.join(path, "temp.tmp")
+    try:
+        mkdir_safe(path)
+        fd = os.open(temp_fname, os.O_WRONLY | os.O_CREAT)
+        os.close(fd)
+        write_accessible = True
+    except Exception:
+        write_accessible = False
+    finally:
+        if os.path.exists(temp_fname):
+            os.remove(temp_fname)
+    return write_accessible
+
+
 def check_gstreamer_support(logging=False):
     """
     ### check_gstreamer_support
@@ -229,6 +261,33 @@ def dimensions_to_resolutions(value):
     )
 
 
+def get_supported_vencoders(path):
+    """
+    ### get_supported_vencoders
+
+    Find and returns FFmpeg's supported video encoders
+
+    Parameters:`
+        path (string): absolute path of FFmpeg binaries
+
+    **Returns:** List of supported encoders.
+    """
+    encoders = check_output([path, "-hide_banner", "-encoders"])
+    splitted = encoders.split(b"\n")
+    # extract video encoders
+    supported_vencoders = [
+        x.decode("utf-8").strip()
+        for x in splitted[2 : len(splitted) - 1]
+        if x.decode("utf-8").strip().startswith("V")
+    ]
+    # compile regex
+    finder = re.compile("\.\.\s[a-z0-9_-]+")
+    # find all outputs
+    outputs = finder.findall("\n".join(supported_vencoders))
+    # return outputs
+    return [s.replace(".. ", "") for s in outputs]
+
+
 def is_valid_url(path, url=None, logging=False):
     """
     ### is_valid_url
@@ -254,6 +313,7 @@ def is_valid_url(path, url=None, logging=False):
     supported_protocols = [
         x.decode("utf-8").strip() for x in splitted[2 : len(splitted) - 1]
     ]
+    supported_protocols += ["rtsp"]  # rtsp not included somehow
     # Test and return result whether scheme is supported
     if extracted_scheme_url and extracted_scheme_url in supported_protocols:
         if logging:
@@ -292,7 +352,7 @@ def validate_video(path, video_path=None):
     stripped_data = [x.decode("utf-8").strip() for x in metadata.split(b"\n")]
     result = {}
     for data in stripped_data:
-        output_a = re.findall(r"(\d+)x(\d+)", data)
+        output_a = re.findall(r"([1-9]\d+)x([1-9]\d+)", data)
         output_b = re.findall(r"\d+(?:\.\d+)?\sfps", data)
         if len(result) == 2:
             break
@@ -303,6 +363,40 @@ def validate_video(path, video_path=None):
 
     # return values
     return result if (len(result) == 2) else None
+
+
+def create_blank_frame(frame=None, text=""):
+    """
+    ### create_blank_frame
+
+    Create blank frames of given frame size with text
+
+    Parameters:
+        frame (numpy.ndarray): inputs numpy array(frame).
+        text (str): Text to be written on frame.
+    **Returns:**  A reduced numpy ndarray array.
+    """
+    # check if frame is valid
+    if frame is None:
+        raise ValueError("[Helper:ERROR] :: Input frame cannot be NoneType!")
+    # grab the frame size
+    (height, width) = frame.shape[:2]
+    # create blank frame
+    blank_frame = np.zeros((height, width, 3), np.uint8)
+    # setup text
+    if text and isinstance(text, str):
+        logger.debug("Adding text: {}".format(text))
+        # setup font
+        font = cv2.FONT_HERSHEY_DUPLEX
+        # get boundary of this text
+        textsize = cv2.getTextSize(text, font, 4, 5)[0]
+        # get coords based on boundary
+        textX = (width - textsize[0]) // 2
+        textY = (height + textsize[1]) // 2
+        # put text
+        cv2.putText(blank_frame, text, (textX, textY), font, 4, (125, 125, 125), 5)
+    # return frame
+    return blank_frame
 
 
 def extract_time(value):
@@ -653,16 +747,17 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
     """
     final_path = ""
     if os_windows and os_bit:
-        # initialize variables
-        file_url = "https://ffmpeg.zeranoe.com/builds/{}/static/ffmpeg-latest-{}-static.zip".format(
-            os_bit, os_bit
+        # initialize with available FFmpeg Static Binaries GitHub Server
+        file_url = "https://github.com/abhiTronix/FFmpeg-Builds/releases/latest/download/ffmpeg-static-{}-gpl.zip".format(
+            os_bit
         )
+
         file_name = os.path.join(
-            os.path.abspath(path), "ffmpeg-latest-{}-static.zip".format(os_bit)
+            os.path.abspath(path), "ffmpeg-static-{}-gpl.zip".format(os_bit)
         )
         file_path = os.path.join(
             os.path.abspath(path),
-            "ffmpeg-latest-{}-static/bin/ffmpeg.exe".format(os_bit),
+            "ffmpeg-static-{}-gpl/bin/ffmpeg.exe".format(os_bit),
         )
         base_path, _ = os.path.split(file_name)  # extract file base path
         # check if file already exists
@@ -683,19 +778,10 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
             # download and write file to the given path
             with open(file_name, "wb") as f:
                 logger.debug(
-                    "No Custom FFmpeg path provided. Auto-Installing FFmpeg static binaries now. Please wait..."
+                    "No Custom FFmpeg path provided. Auto-Installing FFmpeg static binaries from GitHub Mirror now. Please wait..."
                 )
-                try:
-                    response = requests.get(file_url, stream=True, timeout=2)
-                    response.raise_for_status()
-                except Exception as e:
-                    logger.exception(str(e))
-                    logger.warning("Downloading Failed. Trying GitHub mirror now!")
-                    file_url = "https://raw.githubusercontent.com/abhiTronix/ffmpeg-static-builds/master/windows/ffmpeg-latest-{}-static.zip".format(
-                        os_bit, os_bit
-                    )
-                    response = requests.get(file_url, stream=True, timeout=2)
-                    response.raise_for_status()
+                response = requests.get(file_url, stream=True, timeout=2)
+                response.raise_for_status()
                 total_length = response.headers.get("content-length")
                 assert not (
                     total_length is None
@@ -708,6 +794,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                 bar.close()
             logger.debug("Extracting executables.")
             with zipfile.ZipFile(file_name, "r") as zip_ref:
+                zip_fname, _ = os.path.split(zip_ref.infolist()[0].filename)
                 zip_ref.extractall(base_path)
             # perform cleaning
             os.remove(file_name)
@@ -760,6 +847,11 @@ def check_output(*args, **kwargs):
     # import libs
     import subprocess as sp
 
+    # workaround for python bug: https://bugs.python.org/issue37380
+    if platform.system() == "Windows":
+        # see comment https://bugs.python.org/msg370334
+        sp._cleanup = lambda: None
+
     # handle additional params
     retrieve_stderr = kwargs.pop("force_retrieve_stderr", False)
 
@@ -798,8 +890,7 @@ def generate_auth_certificates(path, overwrite=False, logging=False):
 
     **Returns:** A valid CURVE key-pairs path as string.
     """
-    # import necessary libs
-    import shutil
+    # import necessary lib
     import zmq.auth
 
     # check if path corresponds to vidgear only

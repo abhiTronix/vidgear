@@ -79,7 +79,7 @@ class NetGear_Async:
         # Videogear parameters
         enablePiCamera=False,
         stabilize=False,
-        source=0,
+        source=None,
         camera_num=0,
         stream_mode=False,
         backend=0,
@@ -185,7 +185,7 @@ class NetGear_Async:
             else:
                 self.__port = port
         else:
-            # Handle video source if not None
+            # Handle video source
             if source is None:
                 self.config = {"generator": None}
                 if self.__logging:
@@ -229,21 +229,25 @@ class NetGear_Async:
             if sys.version_info[:2] >= (3, 8):
                 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         else:
-            # import library
-            import uvloop
+            try:
+                # import library
+                import uvloop
 
-            # uvloop eventloop is only available for UNIX machines.
-            asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+                # Latest uvloop eventloop is only available for UNIX machines & python>=3.7.
+                asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+            except ImportError:
+                pass
 
         # Retrieve event loop and assign it
         self.loop = asyncio.get_event_loop()
 
-        # debugging
-        logger.info(
-            "Using `{}` event loop for this process.".format(
-                self.loop.__class__.__name__
+        if self.__logging:
+            # debugging
+            logger.info(
+                "Using `{}` event loop for this process.".format(
+                    self.loop.__class__.__name__
+                )
             )
-        )
 
     def launch(self):
         """

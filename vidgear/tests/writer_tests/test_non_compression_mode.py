@@ -25,6 +25,7 @@ import pytest
 import logging as log
 import platform
 import tempfile
+import timeout_decorator
 
 from six import string_types
 from vidgear.gears import WriteGear
@@ -35,6 +36,10 @@ logger = log.getLogger("Test_non_commpression_mode")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+
+
+# define machine os
+_windows = True if os.name == "nt" else False
 
 
 def return_static_ffmpeg():
@@ -67,7 +72,21 @@ def return_testvideo_path():
     return os.path.abspath(path)
 
 
-@pytest.mark.xfail(raises=AssertionError)
+def remove_file_safe(path):
+    """
+    Remove file safely
+    """
+    try:
+        if path and os.path.isfile(os.path.abspath(path)):
+            os.remove(path)
+    except Exception as e:
+        logger.exception(e)
+
+
+@pytest.mark.xfail(raises=(AssertionError, StopIteration))
+@timeout_decorator.timeout(
+    600 if not _windows else None, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize("conversion", ["COLOR_BGR2GRAY", "COLOR_BGR2YUV"])
 def test_write(conversion):
     """
@@ -109,7 +128,7 @@ def test_write(conversion):
         logger.debug("Result: {}".format(result))
         for i in ["Error", "Invalid", "error", "invalid"]:
             assert not (i in result)
-    os.remove(os.path.abspath("Output_twc.avi"))
+    remove_file_safe("Output_twc.avi")
 
 
 test_data_class = [
@@ -122,12 +141,21 @@ test_data_class = [
     ),
     (
         "Output_twc.avi",
-        {"-fourcc": "NULL", "-backend": "INVALID"},
+        {
+            "-fourcc": ["NULL"],
+            "-backend": "INVALID",
+            "-unknown": "INVALID",
+            "-fps": -11,
+        },
         False,
     ),
 ]
 
 
+@pytest.mark.xfail(raises=StopIteration)
+@timeout_decorator.timeout(
+    600 if not _windows else None, timeout_exception=StopIteration
+)
 @pytest.mark.parametrize("f_name, output_params, result", test_data_class)
 def test_WriteGear_compression(f_name, output_params, result):
     """
@@ -148,8 +176,9 @@ def test_WriteGear_compression(f_name, output_params, result):
             writer.write(frame)
         stream.release()
         writer.close()
-        if f_name and os.path.isfile(os.path.abspath(f_name)):
-            os.remove(os.path.abspath(f_name))
+        remove_file_safe(f_name)
     except Exception as e:
-        if result:
+        if result and not isinstance(e, StopIteration):
             pytest.fail(str(e))
+        else:
+            logger.exception(str(e))

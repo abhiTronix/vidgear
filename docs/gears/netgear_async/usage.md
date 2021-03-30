@@ -36,7 +36,7 @@ NetGear_Async API is the part of `asyncio` package of VidGear, thereby you need 
 pip install vidgear[asyncio]
 ```
 
-&nbsp;
+&thinsp;
 
 
 ## Bare-Minimum Usage
@@ -236,13 +236,15 @@ Open your favorite terminal and execute the following python code:
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
 
-# initialize Server
+# initialize Server without any source
 server = NetGear_Async(logging=True)
 
 # Create a async frame generator as custom source
 async def my_frame_generator():
 
-    # Open any video stream such as live webcam video stream on first index(i.e. 0) device
+    # !!! define your own video source here !!!
+    # Open any video stream such as live webcam 
+    # video stream on first index(i.e. 0) device
     stream = cv2.VideoCapture(0)
 
     # loop over stream until its terminated
