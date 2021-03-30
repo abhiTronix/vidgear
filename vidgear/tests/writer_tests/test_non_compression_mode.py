@@ -141,7 +141,12 @@ test_data_class = [
     ),
     (
         "Output_twc.avi",
-        {"-fourcc": "NULL", "-backend": "INVALID", "-fps": -11},
+        {
+            "-fourcc": ["NULL"],
+            "-backend": "INVALID",
+            "-unknown": "INVALID",
+            "-fps": -11,
+        },
         False,
     ),
 ]
@@ -175,3 +180,5 @@ def test_WriteGear_compression(f_name, output_params, result):
     except Exception as e:
         if result and not isinstance(e, StopIteration):
             pytest.fail(str(e))
+        else:
+            logger.exception(str(e))

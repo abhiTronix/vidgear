@@ -155,7 +155,8 @@ def test_threaded_queue_mode(source, options):
 @pytest.mark.parametrize(
     "url, quality, parameters",
     [
-        ("https://youtu.be/uCy5OuSQnyA", "90p", "invalid"),
+        ("https://youtu.be/uCy5OuSQnyA", "73p", "invalid"),
+        ("https://www.dailymotion.com/video/x7xsoud", "73p", "invalid"),
         ("https://youtu.be/uCy5OuSQnyA", "720p", "invalid"),
         ("https://youtu.be/NMre6IAAAiU", "invalid", {"nocheckcertificate": True}),
         (

@@ -81,7 +81,9 @@ def test_fail_framedimension(compression_mode):
 
     writer = None
     try:
-        writer = WriteGear("output.mp4", compression_mode=compression_mode, logging=True)
+        writer = WriteGear(
+            "output.mp4", compression_mode=compression_mode, logging=True
+        )
         writer.write(None)
         writer.write(input_data1)
         writer.write(input_data2)
@@ -122,7 +124,8 @@ def test_paths(compression_mode, path):
             writer.close()
 
 
-def test_invalid_encoder():
+@pytest.mark.parametrize("v_codec", ["unknown", "mpeg4"])
+def test_invalid_encoder(v_codec):
     """
     Invalid encoder Failure Test
     """
@@ -131,7 +134,7 @@ def test_invalid_encoder():
     random_data = np.random.random(size=(480, 640, 3)) * 255
     input_data = random_data.astype(np.uint8)
     try:
-        output_params = {"-vcodec": "unknown"}
+        output_params = {"-vcodec": v_codec}
         writer = WriteGear(
             "output.mp4", compression_mode=True, logging=True, **output_params
         )

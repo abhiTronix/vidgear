@@ -310,7 +310,7 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
 
 
 @pytest.mark.parametrize(
-    "ffmpeg_command_to_save_audio, logging, output_params",
+    "ffmpeg_cmd, logging, output_params",
     [
         (
             [
@@ -326,7 +326,7 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
             {"-i": None, "-disable_force_termination": True},
         ),
         (None, True, {"-i": None, "-disable_force_termination": "OK"}),
-        ([], False, {"-i": None}),
+        (["wrong_input", "invalid_flag", "break_things"], False, {}),
         (
             ["wrong_input", "invalid_flag", "break_things"],
             True,
@@ -340,7 +340,7 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
             {"-disable_force_termination": True},
         ),
         (
-            "invalid",
+            ["invalid"],
             True,
             {},
         ),
@@ -350,7 +350,7 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
 @timeout_decorator.timeout(
     600 if not _windows else None, timeout_exception=StopIteration
 )
-def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio, logging, output_params):
+def test_WriteGear_customFFmpeg(ffmpeg_cmd, logging, output_params):
     """
     Testing WriteGear Compression-Mode(FFmpeg) custom FFmpeg Pipeline by seperating audio from video
     """
@@ -359,25 +359,21 @@ def test_WriteGear_customFFmpeg(ffmpeg_command_to_save_audio, logging, output_pa
         # define writer
         writer = WriteGear(
             output_filename="Output.mp4",
-            compression_mode=(
-                True if ffmpeg_command_to_save_audio != "invalid" else False
-            ),
+            compression_mode=(True if ffmpeg_cmd != ["invalid"] else False),
             logging=logging,
             **output_params
         )  # Define writer
 
         # execute FFmpeg command
-        writer.execute_ffmpeg_cmd(ffmpeg_command_to_save_audio)
+        writer.execute_ffmpeg_cmd(ffmpeg_cmd)
         writer.close()
         # assert audio file is created successfully
-        if ffmpeg_command_to_save_audio and isinstance(
-            ffmpeg_command_to_save_audio, list
-        ):
+        if ffmpeg_cmd and isinstance(ffmpeg_cmd, list) and "-acodec" in ffmpeg_cmd:
             assert os.path.isfile("input_audio.aac")
     except Exception as e:
         if isinstance(e, AssertionError):
             pytest.fail(str(e))
-        elif isinstance(e, ValueError):
+        elif isinstance(e, (ValueError, RuntimeError)):
             pytest.xfail("Test Passed!")
         else:
             logger.exception(str(e))

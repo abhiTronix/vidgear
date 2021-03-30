@@ -248,7 +248,7 @@ def test_compression(options_client):
 test_data_class = [
     (0, 1, tempfile.gettempdir(), True),
     (0, 1, ["invalid"], True),
-    (1, 1, "INVALID_DIRECTORY", False),
+    (1, 1, "unknown://invalid.com/", False),
 ]
 
 
@@ -410,8 +410,8 @@ def test_bidirectional_mode(pattern, target_data, options):
 @pytest.mark.parametrize(
     "pattern, options",
     [
+        (1, {"multiserver_mode": True, "multiclient_mode": True}),
         (0, {"multiserver_mode": True, "multiclient_mode": True}),
-        (0, {"multiserver_mode": True}),
         (1, {"multiserver_mode": True, "bidirectional_mode": True}),
     ],
 )
