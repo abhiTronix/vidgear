@@ -294,7 +294,7 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
         assert np.array_equal(frame_server, frame_client)
     except Exception as e:
         if isinstance(e, (ZMQError, ValueError, RuntimeError, StopIteration, AssertionError)):
-            logger.xfail(str(e))
+            pytest.xfail(str(e))
         else:
             pytest.fail(str(e))
     finally:
@@ -385,7 +385,7 @@ def test_bidirectional_mode(pattern, target_data, options):
         if isinstance(
             e, (ZMQError, ValueError, RuntimeError, queue.Empty, StopIteration)
         ):
-            logger.xfail(str(e))
+            pytest.xfail(str(e))
         else:
             pytest.fail(str(e))
     finally:
@@ -470,7 +470,7 @@ def test_multiserver_mode(pattern, options):
 
     except Exception as e:
         if isinstance(e, (ZMQError, ValueError, RuntimeError, StopIteration)):
-            logger.xfail(str(e))
+            pytest.xfail(str(e))
         else:
             pytest.fail(str(e))
     finally:
@@ -551,7 +551,7 @@ def test_multiclient_mode(pattern):
         if isinstance(
             e, (ZMQError, ValueError, RuntimeError, queue.Empty, StopIteration)
         ):
-            logger.xfail(str(e))
+            pytest.xfail(str(e))
         else:
             pytest.fail(str(e))
     finally:
