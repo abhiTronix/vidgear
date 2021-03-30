@@ -120,7 +120,7 @@ limitations under the License.
         * [ ] More information here: https://help.appveyor.com/discussions/questions/20637-is-it-possible-to-force-running-tests-on-both-32-bit-and-64-bit-windows
     - [x] Setup: Removed `latest_version` behavior from some packages.
     - [x] NetGear_Async: Revised logic for handling uvloop for all platforms and legacies.
-    - [x] etup: Updated logic to install uvloop-"v0.14.0" for python-3.6 legacies.
+    - [x] Setup: Updated logic to install uvloop-"v0.14.0" for python-3.6 legacies.
     - [x] Removed any redundant code from webgear.
     - [x] Updates to docs and `mkdocs.yml`.
     - [x] CI: Removed redundant benchmark tests.
