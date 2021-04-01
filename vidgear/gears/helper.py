@@ -389,12 +389,15 @@ def create_blank_frame(frame=None, text=""):
         # setup font
         font = cv2.FONT_HERSHEY_DUPLEX
         # get boundary of this text
-        textsize = cv2.getTextSize(text, font, 4, 5)[0]
+        fontScale = min(height, width) / (25 / 0.25)
+        textsize = cv2.getTextSize(text, font, fontScale, 5)[0]
         # get coords based on boundary
         textX = (width - textsize[0]) // 2
         textY = (height + textsize[1]) // 2
         # put text
-        cv2.putText(blank_frame, text, (textX, textY), font, 4, (125, 125, 125), 5)
+        cv2.putText(
+            blank_frame, text, (textX, textY), font, fontScale, (125, 125, 125), 5
+        )
     # return frame
     return blank_frame
 
