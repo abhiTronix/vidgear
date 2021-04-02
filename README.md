@@ -631,7 +631,7 @@ Here is a Bibtex entry you can use to cite this project in a publication:
 
 # Copyright
 
-**Copyright © abhiTronix 2019-2020**
+**Copyright © abhiTronix 2019-2021**
 
 This library is released under the **[Apache 2.0 License][license]**.
 

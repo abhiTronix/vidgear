@@ -365,7 +365,7 @@ def validate_video(path, video_path=None):
     return result if (len(result) == 2) else None
 
 
-def create_blank_frame(frame=None, text=""):
+def create_blank_frame(frame=None, text="", logging=False):
     """
     ### create_blank_frame
 
@@ -385,9 +385,10 @@ def create_blank_frame(frame=None, text=""):
     blank_frame = np.zeros((height, width, 3), np.uint8)
     # setup text
     if text and isinstance(text, str):
-        logger.debug("Adding text: {}".format(text))
+        if logging:
+            logger.debug("Adding text: {}".format(text))
         # setup font
-        font = cv2.FONT_HERSHEY_DUPLEX
+        font = cv2.FONT_HERSHEY_SCRIPT_COMPLEX
         # get boundary of this text
         fontScale = min(height, width) / (25 / 0.25)
         textsize = cv2.getTextSize(text, font, fontScale, 5)[0]
@@ -396,7 +397,7 @@ def create_blank_frame(frame=None, text=""):
         textY = (height + textsize[1]) // 2
         # put text
         cv2.putText(
-            blank_frame, text, (textX, textY), font, fontScale, (125, 125, 125), 5
+            blank_frame, text, (textX, textY), font, fontScale, (125, 125, 125), 6
         )
     # return frame
     return blank_frame

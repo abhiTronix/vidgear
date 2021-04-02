@@ -111,6 +111,7 @@ setup(
     extras_require={
         "asyncio": [
             "starlette{}".format(latest_version("starlette")),
+            "aiortc{}".format(latest_version("aiortc")),
             "aiofiles",
             "jinja2",
             "aiohttp",

@@ -196,7 +196,6 @@ class WebGear:
                     data_path
                 )
             )
-        if self.__logging:
             logger.debug(
                 "Setting params:: Size Reduction:{}%, JPEG quality:{}%, JPEG optimizations:{}, JPEG progressive:{}".format(
                     self.__frame_size_reduction,
@@ -303,15 +302,21 @@ class WebGear:
 
             # display blank if NoneType
             if frame is None:
-                frame = self.blank_frame[:]
+                frame = (
+                    self.blank_frame
+                    if self.blank_frame is None
+                    else self.blank_frame[:]
+                )
                 if not self.__enable_inf:
                     self.__isrunning = False
-
-            # create blank
-            if self.blank_frame is None:
-                self.blank_frame = create_blank_frame(
-                    frame=frame, text="No Input" if self.__enable_inf else "The End"
-                )
+            else:
+                # create blank
+                if self.blank_frame is None:
+                    self.blank_frame = create_blank_frame(
+                        frame=frame,
+                        text="No Input" if self.__enable_inf else "The End",
+                        logging=self.__logging,
+                    )
 
             # reducer frames size if specified
             if self.__frame_size_reduction:

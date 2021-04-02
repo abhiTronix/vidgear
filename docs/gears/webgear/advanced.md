@@ -202,13 +202,13 @@ WebGear gives us complete freedom of altering data files generated in [**Auto-Ge
 ### Rules for Altering Data Files
   
 - [x] You allowed to alter/change code in all existing [default downloaded files](../overview/#auto-generation-process) at your convenience without any restrictions.
-- [x] You allowed to delete/rename all existing data files, except remember **NOT** to delete/rename three critical data-files i.e `index.html`, `404.html` & `500.html` present in `templates` folder at the [default location](../overview/#default-location), otherwise, it will trigger [Auto-generation process](../overview/#auto-generation-process), and it will overwrite the existing files with Server ones.
+- [x] You allowed to delete/rename all existing data files, except remember **NOT** to delete/rename three critical data-files (i.e `index.html`, `404.html` & `500.html`) present in `templates` folder inside the `webgear` directory at the [default location](../overview/#default-location), otherwise, it will trigger [Auto-generation process](../overview/#auto-generation-process), and it will overwrite the existing files with Server ones.
 - [x] You're allowed to add your own additional `.html`, `.css`, `.js`, etc. files in the respective folders at the [**default location**](../overview/#default-location) and [custom mounted Data folders](#using-webgear-with-custom-mounting-points).
 
 ### Rules for Altering Data Folders 
   
 - [x] You're allowed to add/mount any number of additional folder as shown in [this example above](#using-webgear-with-custom-mounting-points).
-- [x] You're allowed to delete/rename existing folders at the [**default location**](../overview/#default-location) except remember **NOT** to delete/rename `templates` folder where critical data-files i.e `index.html`, `404.html` & `500.html` are located, otherwise, it will trigger [Auto-generation process](../overview/#auto-generation-process).
+- [x] You're allowed to delete/rename existing folders at the [**default location**](../overview/#default-location) except remember **NOT** to delete/rename `templates` folder in the `webgear` directory where critical data-files (i.e `index.html`, `404.html` & `500.html`) are located, otherwise, it will trigger [Auto-generation process](../overview/#auto-generation-process).
 
 &nbsp;
 

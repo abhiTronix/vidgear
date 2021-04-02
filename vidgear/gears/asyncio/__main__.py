@@ -23,8 +23,6 @@ if __name__ == "__main__":
     import yaml
     import argparse
 
-    from .webgear import WebGear
-
     try:
         import uvicorn
     except ImportError:
@@ -34,12 +32,20 @@ if __name__ == "__main__":
 
     # define argument parser and parse command line arguments
     usage = """python -m vidgear.gears.asyncio [-h] [-s SOURCE] [-ep ENABLEPICAMERA] [-S STABILIZE]
-				[-cn CAMERA_NUM] [-yt stream_mode] [-b BACKEND] [-cs COLORSPACE]
-				[-r RESOLUTION] [-f FRAMERATE] [-td TIME_DELAY]
-				[-ip IPADDRESS] [-pt PORT] [-l LOGGING] [-op OPTIONS]"""
+                [-cn CAMERA_NUM] [-yt stream_mode] [-b BACKEND] [-cs COLORSPACE]
+                [-r RESOLUTION] [-f FRAMERATE] [-td TIME_DELAY]
+                [-ip IPADDRESS] [-pt PORT] [-l LOGGING] [-op OPTIONS]"""
 
     ap = argparse.ArgumentParser(
-        usage=usage, description="Runs WebGear VideoStreaming Server through terminal."
+        usage=usage, description="Runs WebGear/WebGear_RTC Video Server through terminal."
+    )
+    ap.add_argument(
+        "-m",
+        "--mode",
+        type=str,
+        default="mjpeg",
+        choices=["mjpeg", "webrtc"],
+        help='Whether to use "MJPEG" or "WebRTC" mode for streaming.',
     )
     # VideoGear API specific params
     ap.add_argument(
@@ -136,7 +142,7 @@ if __name__ == "__main__":
         "--options",
         type=str,
         help="Sets the parameters supported by APIs(whichever being accessed) to the input videostream, \
-					But make sure to wrap your dict value in single or double quotes.",
+                    But make sure to wrap your dict value in single or double quotes.",
     )
     args = vars(ap.parse_args())
 
@@ -145,22 +151,45 @@ if __name__ == "__main__":
     if not (args["options"] is None):
         options = yaml.safe_load(args["options"])
 
-    # initialize WebGear object
-    web = WebGear(
-        enablePiCamera=args["enablePiCamera"],
-        stabilize=args["stabilize"],
-        source=args["source"],
-        camera_num=args["camera_num"],
-        stream_mode=args["stream_mode"],
-        backend=args["backend"],
-        colorspace=args["colorspace"],
-        resolution=args["resolution"],
-        framerate=args["framerate"],
-        logging=args["logging"],
-        time_delay=args["time_delay"],
-        **options
-    )
+    if args["mode"] == "mjpeg":
+        from .webgear import WebGear
+
+        # initialize WebGear object
+        web = WebGear(
+            enablePiCamera=args["enablePiCamera"],
+            stabilize=args["stabilize"],
+            source=args["source"],
+            camera_num=args["camera_num"],
+            stream_mode=args["stream_mode"],
+            backend=args["backend"],
+            colorspace=args["colorspace"],
+            resolution=args["resolution"],
+            framerate=args["framerate"],
+            logging=args["logging"],
+            time_delay=args["time_delay"],
+            **options
+        )
+    else:
+        from .webgear_rtc import WebGear_RTC
+
+        # initialize WebGear object
+        web = WebGear_RTC(
+            enablePiCamera=args["enablePiCamera"],
+            stabilize=args["stabilize"],
+            source=args["source"],
+            camera_num=args["camera_num"],
+            stream_mode=args["stream_mode"],
+            backend=args["backend"],
+            colorspace=args["colorspace"],
+            resolution=args["resolution"],
+            framerate=args["framerate"],
+            logging=args["logging"],
+            time_delay=args["time_delay"],
+            **options
+        )
     # run this object on Uvicorn server
     uvicorn.run(web(), host=args["ipaddress"], port=args["port"])
-    # close app safely
-    web.shutdown()
+
+    if if args["mode"] == "mjpeg":
+        # close app safely
+        web.shutdown()

@@ -33,12 +33,11 @@ WebGear API provides a highly extensible and flexible async wrapper around [**St
 
 In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs, thereby granting it exclusive power of broadcasting frames from any incoming stream.
 
-
 &thinsp;
 
 ## Data-Files Auto-Generation WorkFlow for WebGear
 
-On initializing WebGear API, it automatically checks for three critical **data-files**(i.e `index.html`, `404.html` & `500.html`) inside `templates` folder at the [*default location*](#default-location), which give rise to following two possible scenario:
+On initializing WebGear API, it automatically checks for three critical **data files**(i.e `index.html`, `404.html` & `500.html`) inside the `templates` folder of the `webgear` directory at the [*default location*](#default-location) which gives rise to the following two possible scenario:
 
 - [x] **If data-files found:** it will proceed normally for instantiating the Starlette application.
 - [ ] **If data-files not found:** it will trigger the [**Auto-Generation process**](#auto-generation-process)
@@ -65,24 +64,25 @@ On initializing WebGear API, it automatically checks for three critical **data-f
 	* It is advised to enable logging(`logging=True`) on the first run for easily identifying any runtime errors
 
 
-* On triggering this process, WebGear API creates `templates` and `static` folders along with `js`, `css`, `img` sub-folders at the assigned [*default location*](#default-location).
+* On triggering this process, WebGear API creates `webgear` directory, and `templates` and `static` folders inside along with `js`, `css`, `img` sub-folders at the assigned [*default location*](#default-location).
 * Thereby at this [*default location*](#default-location), the necessary default data files will be downloaded from a dedicated [**Github Server**](https://github.com/abhiTronix/vidgear-vitals) inside respective folders in the following order:
 
 	```sh
 		.vidgear
-		├── static
-		│   ├── css
-		│   │   └── custom.css
-		│   ├── img
-		│   │   └── favicon-32x32.png
-		│   └── js
-		│       └── custom.js
-		└── templates
-		    ├── 404.html
-		    ├── 500.html
-		    ├── base.html
-		    └── index.html
-		5 directories, 7 files
+		└── webgear
+		    ├── static
+		    │   ├── css
+		    │   │   └── custom.css
+		    │   ├── img
+		    │   │   └── favicon-32x32.png
+		    │   └── js
+		    │       └── custom.js
+		    └── templates
+		        ├── 404.html
+		        ├── 500.html
+		        ├── base.html
+		        └── index.html
+		6 directories, 7 files
 	```
 
 * Finally these downloaded files thereby are verified for errors and API proceeds for instantiating the Starlette application normally.
