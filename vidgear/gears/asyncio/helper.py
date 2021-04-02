@@ -183,7 +183,7 @@ async def reducer(frame=None, percentage=0):
     return cv2.resize(frame, dimensions, interpolation=cv2.INTER_LANCZOS4)
 
 
-def generate_webdata(path, overwrite_default=False, logging=False):
+def generate_webdata(path, c_name="webgear", overwrite_default=False, logging=False):
     """
     ### generate_webdata
 
@@ -191,6 +191,7 @@ def generate_webdata(path, overwrite_default=False, logging=False):
 
     Parameters:
         path (string): path for generating data
+        c_name (string): class name that is generating files.
         overwrite_default (boolean): overwrite existing data or not?
         logging (bool): enables logging for its operations
 
@@ -199,6 +200,10 @@ def generate_webdata(path, overwrite_default=False, logging=False):
     # check if path corresponds to vidgear only
     if os.path.basename(path) != ".vidgear":
         path = os.path.join(path, ".vidgear")
+
+    # generate parent directory
+    path = os.path.join(path, c_name)
+    mkdir_safe(path, logging=logging)
 
     # self-generate dirs
     template_dir = os.path.join(path, "templates")  # generates HTML templates dir
@@ -228,16 +233,22 @@ def generate_webdata(path, overwrite_default=False, logging=False):
             logger.info("Downloading default data-files from the GitHub Server.")
         download_webdata(
             template_dir,
+            c_name=c_name,
             files=["index.html", "404.html", "500.html", "base.html"],
             logging=logging,
         )
-        download_webdata(css_static_dir, files=["custom.css"], logging=logging)
+        download_webdata(
+            css_static_dir, c_name=c_name, files=["custom.css"], logging=logging
+        )
         download_webdata(
             js_static_dir,
+            c_name=c_name,
             files=["custom.js"],
             logging=logging,
         )
-        download_webdata(favicon_dir, files=["favicon-32x32.png"], logging=logging)
+        download_webdata(
+            favicon_dir, c_name=c_name, files=["favicon-32x32.png"], logging=logging
+        )
     else:
         # validate important data-files
         if logging:
@@ -246,7 +257,7 @@ def generate_webdata(path, overwrite_default=False, logging=False):
     return path
 
 
-def download_webdata(path, files=[], logging=False):
+def download_webdata(path, c_name="webgear", files=[], logging=False):
     """
     ### download_webdata
 
@@ -267,8 +278,8 @@ def download_webdata(path, files=[], logging=False):
         # get filename
         file_name = os.path.join(path, file)
         # get URL
-        file_url = "https://raw.githubusercontent.com/abhiTronix/vidgear-vitals/master/webgear{}/{}/{}".format(
-            "/static" if basename != "templates" else "", basename, file
+        file_url = "https://raw.githubusercontent.com/abhiTronix/vidgear-vitals/master/{}{}/{}/{}".format(
+            c_name, "/static" if basename != "templates" else "", basename, file
         )
         # download and write file to the given path
         if logging:

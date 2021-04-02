@@ -54,7 +54,7 @@ logger.setLevel(log.DEBUG)
 
 class RTC_VideoServer(VideoStreamTrack):
     """
-    Default Internal Video-Server for WebGear_RTC, 
+    Default Internal Video-Server for WebGear_RTC,
     a inherit-class to aiortc's VideoStreamTrack API.
     """
 
@@ -296,6 +296,7 @@ class WebGear_RTC:
         if custom_data_location:
             data_path = generate_webdata(
                 custom_data_location,
+                c_name="webgear_rtc",
                 overwrite_default=overwrite_default,
                 logging=logging,
             )
@@ -305,6 +306,7 @@ class WebGear_RTC:
 
             data_path = generate_webdata(
                 os.path.join(expanduser("~"), ".vidgear"),
+                c_name="webgear_rtc",
                 overwrite_default=overwrite_default,
                 logging=logging,
             )

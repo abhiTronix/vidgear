@@ -176,6 +176,7 @@ class WebGear:
         if custom_data_location:
             data_path = generate_webdata(
                 custom_data_location,
+                c_name="webgear",
                 overwrite_default=overwrite_default,
                 logging=logging,
             )
@@ -185,6 +186,7 @@ class WebGear:
 
             data_path = generate_webdata(
                 os.path.join(expanduser("~"), ".vidgear"),
+                c_name="webgear",
                 overwrite_default=overwrite_default,
                 logging=logging,
             )
