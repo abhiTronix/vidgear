@@ -191,7 +191,7 @@ def generate_webdata(path, c_name="webgear", overwrite_default=False, logging=Fa
 
     Parameters:
         path (string): path for generating data
-        c_name (string): class name that is generating files.
+        c_name (string): class name that is generating files
         overwrite_default (boolean): overwrite existing data or not?
         logging (bool): enables logging for its operations
 
@@ -266,6 +266,7 @@ def download_webdata(path, c_name="webgear", files=[], logging=False):
 
     Parameters:
         path (string): path for downloading data
+        c_name (string): class name that is generating files
         files (list): list of files to be downloaded
         logging (bool): enables logging for its operations
 
