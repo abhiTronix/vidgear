@@ -323,7 +323,7 @@ class WebGear_RTC:
         self.__templates = Jinja2Templates(directory="{}/templates".format(data_path))
 
         # define custom exception handlers
-        self.__exception_handlers = {404: self.__server_error, 500: self.__server_error}
+        self.__exception_handlers = {404: self.__not_found, 500: self.__server_error}
         # define routing tables
         self.routes = [
             Route("/", endpoint=self.__homepage),
@@ -381,13 +381,26 @@ class WebGear_RTC:
 
         # validate assigned RTC video-server in WeGear_RTC configuration
         if isinstance(self.config, dict) and "server" in self.config:
-            # check if its  assigned server is inherit from `VideoStreamTrack` API.i
+            # check if assigned RTC server class is inherit from `VideoStreamTrack` API.i
             if self.config["server"] is None or not issubclass(
                 self.config["server"].__class__, VideoStreamTrack
             ):
                 # otherwise raise error
                 raise ValueError(
-                    "[WeGear_RTC:ERROR] :: Invalid configuration. Assigned server must be inherit from aiortc's `VideoStreamTrack` Class only!"
+                    "[WeGear_RTC:ERROR] :: Invalid configuration. {}. Refer Docs for more information!".format(
+                        "Video-Server not assigned"
+                        if self.config["server"] is None
+                        else "Assigned Video-Server class must be inherit from `aiortc.VideoStreamTrack` only"
+                    )
+                )
+            # check if assigned server class has `terminate` function defined and callable
+            if not (
+                hasattr(self.config["server"], "terminate")
+                and callable(self.config["server"].terminate)
+            ):
+                # otherwise raise error
+                raise ValueError(
+                    "[WeGear_RTC:ERROR] :: Invalid configuration. Assigned Video-Server Class must have `terminate` method defined. Refer Docs for more information!"
                 )
         else:
             # raise error if validation fails
@@ -475,12 +488,24 @@ class WebGear_RTC:
         )
 
     async def __on_shutdown(self):
+        """
+        Implements a Callable to be run on application shutdown
+        """
         # close Video Server
-        if not (self.__default_rtc_server is None):
-            if self.__logging:
-                logger.debug("Closing Video Streaming.")
-            self.__default_rtc_server.terminate()
+        self.shutdown()
         # collects peer RTC connections
         coros = [pc.close() for pc in self.__pcs]
         await asyncio.gather(*coros)
         self.__pcs.clear()
+
+    def shutdown(self):
+        """
+        Gracefully shutdown video-server
+        """
+        if not (self.config["server"] is None):
+            if self.__logging:
+                logger.debug("Closing Video Server.")
+            self.config["server"].terminate()
+            self.config["server"] = None
+        # terminate internal server aswell.
+        self.__default_rtc_server = None

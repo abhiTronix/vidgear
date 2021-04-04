@@ -24,5 +24,4 @@ ignore:
   - "vidgear/tests"
   - "vidgear/gears/pigear.py" #CLI hardware emulation limitation
   - "vidgear/gears/asyncio/__main__.py" #trivial
-  - "vidgear/gears/asyncio/webgear_rtc.py" #TODO
   - "setup.py"

@@ -31,7 +31,6 @@ import functools
 import logging as log
 import tempfile
 
-from async_timeout import timeout
 from vidgear.gears.asyncio import NetGear_Async
 from vidgear.gears.asyncio.helper import logger_handler
 
@@ -103,8 +102,6 @@ def event_loop():
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(raises=asyncio.TimeoutError)
-@with_timeout(300)
 @pytest.mark.parametrize(
     "pattern",
     [0, 2, 3, 4],
@@ -141,8 +138,6 @@ test_data_class = [
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(raises=asyncio.TimeoutError)
-@with_timeout(300)
 @pytest.mark.parametrize("generator, result", test_data_class)
 async def test_netgear_async_custom_server_generator(generator, result):
     try:
@@ -164,8 +159,6 @@ async def test_netgear_async_custom_server_generator(generator, result):
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(raises=asyncio.TimeoutError)
-@with_timeout(300)
 @pytest.mark.parametrize("address, port", [("172.31.11.15.77", "5555"), (None, "5555")])
 async def test_netgear_async_addresses(address, port):
     try:
@@ -199,8 +192,7 @@ async def test_netgear_async_addresses(address, port):
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(raises=(ValueError, asyncio.TimeoutError))
-@with_timeout(300)
+@pytest.mark.xfail(raises=ValueError)
 async def test_netgear_async_recv_generator():
     # define and launch server
     server = NetGear_Async(source=return_testvideo_path(), logging=True)

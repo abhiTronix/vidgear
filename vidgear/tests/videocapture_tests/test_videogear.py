@@ -23,7 +23,6 @@ import os
 import pytest
 import logging as log
 import tempfile
-import timeout_decorator
 
 from vidgear.gears import VideoGear
 from vidgear.gears.helper import logger_handler
@@ -90,10 +89,6 @@ test_data = [
 ]
 
 
-@pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(
-    600 if not _windows else None, timeout_exception=StopIteration
-)
 @pytest.mark.parametrize("source, options", test_data)
 def test_video_stablization(source, options):
     """
@@ -115,5 +110,4 @@ def test_video_stablization(source, options):
         logger.debug("Input Framerate: {}".format(framerate))
         assert framerate > 0
     except Exception as e:
-        if not isinstance(e, StopIteration):
-            pytest.fail(str(e))
+        pytest.fail(str(e))

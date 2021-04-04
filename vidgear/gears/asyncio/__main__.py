@@ -27,17 +27,18 @@ if __name__ == "__main__":
         import uvicorn
     except ImportError:
         raise ImportError(
-            "[WebGear:ERROR] :: Failed to detect correct uvicorn executables, install it with `pip3 install uvicorn` command."
+            "[VidGear:ERROR] :: Failed to detect correct uvicorn executables, install it with `pip3 install uvicorn` command."
         )
 
     # define argument parser and parse command line arguments
-    usage = """python -m vidgear.gears.asyncio [-h] [-s SOURCE] [-ep ENABLEPICAMERA] [-S STABILIZE]
+    usage = """python -m vidgear.gears.asyncio [-h] [-m MODE] [-s SOURCE] [-ep ENABLEPICAMERA] [-S STABILIZE]
                 [-cn CAMERA_NUM] [-yt stream_mode] [-b BACKEND] [-cs COLORSPACE]
                 [-r RESOLUTION] [-f FRAMERATE] [-td TIME_DELAY]
                 [-ip IPADDRESS] [-pt PORT] [-l LOGGING] [-op OPTIONS]"""
 
     ap = argparse.ArgumentParser(
-        usage=usage, description="Runs WebGear/WebGear_RTC Video Server through terminal."
+        usage=usage,
+        description="Runs WebGear/WebGear_RTC Video Server through terminal.",
     )
     ap.add_argument(
         "-m",

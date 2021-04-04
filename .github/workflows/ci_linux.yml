@@ -30,7 +30,6 @@ jobs:
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
-    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -52,7 +51,7 @@ jobs:
           pip install -U pip wheel numpy
           pip install -U .[asyncio]
           pip uninstall opencv-python -y
-          pip install -U flake8 six codecov pytest pytest-asyncio pytest-cov async-timeout timeout-decorator youtube-dl mpegdash
+          pip install -U flake8 six codecov pytest pytest-asyncio pytest-cov youtube-dl mpegdash
         if: success()
       - name: run prepare_dataset_script
         run: bash scripts/bash/prepare_dataset.sh
@@ -65,14 +64,14 @@ jobs:
       - name: pytest with_ENV
         run: |
           mkdir -p $HOME/logs
-          pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/
+          timeout 20 pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; fi
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         env:
           VIDGEAR_LOGFILE: $HOME/logs
         if: success() && matrix.python-version == 3.7
       - name: pytest without_ENV
         run: |
-          pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/
+          timeout 20 pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; fi
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         if: success() && matrix.python-version != 3.7
       - name: Upload coverage to Codecov
