@@ -51,19 +51,6 @@ def return_testvideo_path():
     return os.path.abspath(path)
 
 
-def with_timeout(t):
-    def wrapper(corofunc):
-        @functools.wraps(corofunc)
-        async def run(*args, **kwargs):
-            with timeout(t):
-                print(kwargs)
-                return await corofunc(*args, **kwargs)
-
-        return run
-
-    return wrapper
-
-
 # Create a async frame generator as custom source
 async def custom_frame_generator():
     # Open video stream
@@ -110,7 +97,7 @@ async def test_netgear_async_playback(pattern):
     try:
         # define and launch Client with `receive_mode = True`
         client = NetGear_Async(
-            logging=True, pattern=pattern, receive_mode=True, timeout=10.0
+            logging=True, pattern=pattern, receive_mode=True, timeout=7.0
         ).launch()
         options_gear = {"THREAD_TIMEOUT": 60}
         server = NetGear_Async(

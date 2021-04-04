@@ -81,7 +81,7 @@ class Custom_RTCServer(VideoStreamTrack):
         pts, time_base = await self.next_timestamp()
 
         # read video frame
-        (grabbed, frame) = stream.read()
+        (grabbed, frame) = self.stream.read()
 
         # if NoneType
         if not grabbed:
@@ -117,6 +117,7 @@ class Invalid_Custom_RTCServer_1(VideoStreamTrack):
 
         # initialize global params
         self.stream = cv2.VideoCapture(source)
+        self.stream.release()
 
     async def recv(self):
         """
@@ -126,7 +127,7 @@ class Invalid_Custom_RTCServer_1(VideoStreamTrack):
         pts, time_base = await self.next_timestamp()
 
         # read video frame
-        (grabbed, frame) = stream.read()
+        (grabbed, frame) = self.stream.read()
 
         # if NoneType
         if not grabbed:
