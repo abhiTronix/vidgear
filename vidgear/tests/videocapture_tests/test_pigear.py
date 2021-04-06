@@ -29,7 +29,7 @@ import platform
 
 # Faking
 import sys
-from utils import fake_picamera
+from ..utils import fake_picamera
 
 sys.modules["picamera"] = fake_picamera.picamera
 sys.modules["picamera.array"] = fake_picamera.picamera.array
