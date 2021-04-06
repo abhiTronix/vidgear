@@ -64,14 +64,14 @@ jobs:
       - name: pytest with_ENV
         run: |
           mkdir -p $HOME/logs
-          timeout 1200 pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; fi
+          timeout 1200 pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "EXIT_CODE=$code" >>$GITHUB_ENV; fi
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         env:
           VIDGEAR_LOGFILE: $HOME/logs
         if: success() && matrix.python-version == 3.7
       - name: pytest without_ENV
         run: |
-          timeout 1200 pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; fi
+          timeout 1200 pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "EXIT_CODE=$code" >>$GITHUB_ENV; fi
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         if: success() && matrix.python-version != 3.7
       - name: Upload coverage to Codecov
@@ -80,3 +80,4 @@ jobs:
           name: ${{ matrix.python-version }}
           fail_ci_if_error: true
           verbose: true
+        if: ${{ env.EXIT_CODE != '124' }}

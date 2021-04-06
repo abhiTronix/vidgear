@@ -229,9 +229,7 @@ class CamGear:
             self.__threaded_queue_mode = True
         # Thread Timeout
         self.__thread_timeout = options.pop("THREAD_TIMEOUT", None)
-        if self.__thread_timeout and isinstance(
-            self.__thread_timeout, (int, float)
-        ):
+        if self.__thread_timeout and isinstance(self.__thread_timeout, (int, float)):
             # set values
             self.__thread_timeout = int(self.__thread_timeout)
         else:
@@ -306,7 +304,7 @@ class CamGear:
             self.framerate = _fps
 
         # applying time delay to warm-up webcam only if specified
-        if time_delay:
+        if time_delay and isinstance(time_delay, (int, float)):
             time.sleep(time_delay)
 
         # frame variable initialization

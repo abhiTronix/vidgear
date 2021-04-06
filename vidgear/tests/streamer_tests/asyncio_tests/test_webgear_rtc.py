@@ -17,8 +17,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import the necessary packages
 
+# import the necessary packages
 import os
 import cv2
 import pytest
@@ -26,13 +26,17 @@ import asyncio
 import logging as log
 import requests
 import tempfile
+import json, time
 from starlette.routing import Route
 from starlette.responses import PlainTextResponse
 from starlette.testclient import TestClient
-
-from aiortc import RTCPeerConnection, RTCSessionDescription, VideoStreamTrack
+from aiortc import (
+    RTCPeerConnection,
+    VideoStreamTrack,
+    RTCConfiguration,
+    RTCIceServer,
+)
 from av import VideoFrame
-
 from vidgear.gears.asyncio import WebGear_RTC
 from vidgear.gears.asyncio.helper import logger_handler
 
@@ -51,6 +55,30 @@ def return_testvideo_path():
         tempfile.gettempdir()
     )
     return os.path.abspath(path)
+
+
+def run(coro):
+    return asyncio.get_event_loop().run_until_complete(coro)
+
+
+def get_RTCPeer_payload():
+    pc = RTCPeerConnection(
+        RTCConfiguration(iceServers=[RTCIceServer("stun:stun.l.google.com:19302")])
+    )
+
+    @pc.on("track")
+    def on_track(track):
+        logger.debug("Receiving %s" % track.kind)
+
+    @pc.on("iceconnectionstatechange")
+    def on_iceconnectionstatechange():
+        logger.debug("ICE connection state is %s" % pc.iceConnectionState)
+
+    pc.addTransceiver("video", direction="recvonly")
+    offer = run(pc.createOffer())
+    run(pc.setLocalDescription(offer))
+    payload = {"sdp": offer.sdp, "type": offer.type}
+    return json.dumps(payload, separators=(",", ":"))
 
 
 def hello_webpage(request):
@@ -155,7 +183,7 @@ class Invalid_Custom_RTCServer_2:
 
 test_data = [
     (return_testvideo_path(), True, None, 0),
-    (return_testvideo_path(), False, "COLOR_BGR2HSV", 3),
+    (return_testvideo_path(), False, "COLOR_BGR2HSV", 1),
 ]
 
 
@@ -177,6 +205,13 @@ def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
         assert response.status_code == 200
         response_404 = client.get("/test")
         assert response_404.status_code == 404
+        data = get_RTCPeer_payload()
+        response_rtc_offer = client.get(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        assert response_rtc_offer.status_code == 200
         web.shutdown()
     except Exception as e:
         pytest.fail(str(e))
@@ -209,6 +244,13 @@ def test_webgear_rtc_options(options):
         client = TestClient(web(), raise_server_exceptions=True)
         response = client.get("/")
         assert response.status_code == 200
+        data = get_RTCPeer_payload()
+        response_rtc_offer = client.get(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        assert response_rtc_offer.status_code == 200
         web.shutdown()
     except Exception as e:
         if isinstance(e, AssertionError):
@@ -261,6 +303,13 @@ def test_webgear_rtc_routes():
         assert response.status_code == 200
         response_hello = client.get("/hello")
         assert response_hello.status_code == 200
+        data = get_RTCPeer_payload()
+        response_rtc_offer = client.get(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        assert response_rtc_offer.status_code == 200
         web.shutdown()
     except Exception as e:
         pytest.fail(str(e))

@@ -191,7 +191,7 @@ class PiGear:
             raise RuntimeError("[PiGear:ERROR] :: Camera Module failed to initialize!")
 
         # applying time delay to warm-up picamera only if specified
-        if time_delay:
+        if time_delay and isinstance(time_delay, (int, float)):
             time.sleep(time_delay)
 
         # thread initialization

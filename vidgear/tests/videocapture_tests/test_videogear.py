@@ -48,13 +48,13 @@ def return_testvideo_path():
     return os.path.abspath(path)
 
 
+@pytest.mark.xfail(raises=ImportError)
 def test_PiGear_import():
     """
     Testing VideoGear Import -> assign to fail when PiGear class is imported
     """
-    with pytest.raises(ImportError):
-        stream = VideoGear(enablePiCamera=True, logging=True).start()
-        stream.stop()
+    stream = VideoGear(enablePiCamera=True, logging=True).start()
+    stream.stop()
 
 
 # Video credit: http://www.liushuaicheng.org/CVPR2014/index.html
