@@ -77,7 +77,7 @@ class VideoTransformTrack(MediaStreamTrack):
 
     async def recv(self):
         frame = await self.track.recv()
-        return new_frame
+        return frame
 
 
 def track_states(pc):
@@ -122,7 +122,7 @@ def get_RTCPeer_payload():
 
         @track.on("ended")
         def on_ended():
-            log_info("Track %s ended", track.kind)
+            logger.info("Track %s ended", track.kind)
 
     pc.addTransceiver("video", direction="recvonly")
     offer = run(pc.createOffer())
