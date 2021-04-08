@@ -35,6 +35,8 @@ import requests
 from tqdm import tqdm
 from colorlog import ColoredFormatter
 from pkg_resources import parse_version
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 
 def logger_handler():
@@ -87,6 +89,29 @@ logger = log.getLogger("Helper Asyncio")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+
+
+# set default timer for download requests
+DEFAULT_TIMEOUT = 3
+
+
+class TimeoutHTTPAdapter(HTTPAdapter):
+    """
+    A custom Transport Adapter with default timeouts
+    """
+
+    def __init__(self, *args, **kwargs):
+        self.timeout = DEFAULT_TIMEOUT
+        if "timeout" in kwargs:
+            self.timeout = kwargs["timeout"]
+            del kwargs["timeout"]
+        super().__init__(*args, **kwargs)
+
+    def send(self, request, **kwargs):
+        timeout = kwargs.get("timeout")
+        if timeout is None:
+            kwargs["timeout"] = self.timeout
+        return super().send(request, **kwargs)
 
 
 def mkdir_safe(dir, logging=False):
@@ -286,19 +311,30 @@ def download_webdata(path, c_name="webgear", files=[], logging=False):
         if logging:
             logger.debug("Downloading {} data-file: {}.".format(basename, file))
 
-        response = requests.get(file_url, stream=True, timeout=2)
-        response.raise_for_status()
-        total_length = response.headers.get("content-length")
-        assert not (
-            total_length is None
-        ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
-        bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
-        with open(file_name, "wb") as f:
-            for data in response.iter_content(chunk_size=256):
-                f.write(data)
-                if len(data) > 0:
-                    bar.update(len(data))
-        bar.close()
+        # create session
+        with requests.Session() as http:
+            # setup retry strategy
+            retries = Retry(
+                total=3,
+                backoff_factor=1,
+                status_forcelist=[429, 500, 502, 503, 504],
+            )
+            # Mount it for https usage
+            adapter = TimeoutHTTPAdapter(retries, timeout=2.0)
+            http.mount("https://", adapter)
+            response = http.get(file_url, stream=True)
+            response.raise_for_status()
+            total_length = response.headers.get("content-length")
+            assert not (
+                total_length is None
+            ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
+            bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
+            with open(file_name, "wb") as f:
+                for data in response.iter_content(chunk_size=1024):
+                    f.write(data)
+                    if len(data) > 0:
+                        bar.update(len(data))
+            bar.close()
     if logging:
         logger.debug("Verifying downloaded data:")
     if validate_webdata(path, files=files, logging=logging):

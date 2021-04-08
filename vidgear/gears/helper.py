@@ -34,6 +34,8 @@ import requests
 from tqdm import tqdm
 from colorlog import ColoredFormatter
 from pkg_resources import parse_version
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 try:
     # import OpenCV Binaries
@@ -100,6 +102,28 @@ logger = log.getLogger("Helper")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+
+# set default timer for download requests
+DEFAULT_TIMEOUT = 3
+
+
+class TimeoutHTTPAdapter(HTTPAdapter):
+    """
+    A custom Transport Adapter with default timeouts
+    """
+
+    def __init__(self, *args, **kwargs):
+        self.timeout = DEFAULT_TIMEOUT
+        if "timeout" in kwargs:
+            self.timeout = kwargs["timeout"]
+            del kwargs["timeout"]
+        super().__init__(*args, **kwargs)
+
+    def send(self, request, **kwargs):
+        timeout = kwargs.get("timeout")
+        if timeout is None:
+            kwargs["timeout"] = self.timeout
+        return super().send(request, **kwargs)
 
 
 def restore_levelnames():
@@ -784,18 +808,29 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                 logger.debug(
                     "No Custom FFmpeg path provided. Auto-Installing FFmpeg static binaries from GitHub Mirror now. Please wait..."
                 )
-                response = requests.get(file_url, stream=True, timeout=2)
-                response.raise_for_status()
-                total_length = response.headers.get("content-length")
-                assert not (
-                    total_length is None
-                ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
-                bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
-                for data in response.iter_content(chunk_size=4096):
-                    f.write(data)
-                    if len(data) > 0:
-                        bar.update(len(data))
-                bar.close()
+                # create session
+                with requests.Session() as http:
+                    # setup retry strategy
+                    retries = Retry(
+                        total=3,
+                        backoff_factor=1,
+                        status_forcelist=[429, 500, 502, 503, 504],
+                    )
+                    # Mount it for https usage
+                    adapter = TimeoutHTTPAdapter(retries, timeout=2.0)
+                    http.mount("https://", adapter)
+                    response = http.get(file_url, stream=True)
+                    response.raise_for_status()
+                    total_length = response.headers.get("content-length")
+                    assert not (
+                        total_length is None
+                    ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
+                    bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
+                    for data in response.iter_content(chunk_size=4096):
+                        f.write(data)
+                        if len(data) > 0:
+                            bar.update(len(data))
+                    bar.close()
             logger.debug("Extracting executables.")
             with zipfile.ZipFile(file_name, "r") as zip_ref:
                 zip_fname, _ = os.path.split(zip_ref.infolist()[0].filename)
