@@ -714,11 +714,10 @@ def get_valid_ffmpeg_path(
 
             except Exception as e:
                 # log if any error occurred
-                if logging:
-                    logger.exception(str(e))
-                    logger.debug(
-                        "Error in downloading FFmpeg binaries, Check your network and Try again!"
-                    )
+                logger.exception(str(e))
+                logger.error(
+                    "Error in downloading FFmpeg binaries, Check your network and Try again!"
+                )
                 return False
 
         if os.path.isfile(final_path):
