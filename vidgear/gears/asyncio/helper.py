@@ -300,41 +300,42 @@ def download_webdata(path, c_name="webgear", files=[], logging=False):
     basename = os.path.basename(path)
     if logging:
         logger.debug("Downloading {} data-files at `{}`".format(basename, path))
-    for file in files:
-        # get filename
-        file_name = os.path.join(path, file)
-        # get URL
-        file_url = "https://raw.githubusercontent.com/abhiTronix/vidgear-vitals/master/{}{}/{}/{}".format(
-            c_name, "/static" if basename != "templates" else "", basename, file
-        )
-        # download and write file to the given path
-        if logging:
-            logger.debug("Downloading {} data-file: {}.".format(basename, file))
 
-        # create session
-        with requests.Session() as http:
-            # setup retry strategy
-            retries = Retry(
-                total=3,
-                backoff_factor=1,
-                status_forcelist=[429, 500, 502, 503, 504],
+    # create session
+    with requests.Session() as http:
+        for file in files:
+            # get filename
+            file_name = os.path.join(path, file)
+            # get URL
+            file_url = "https://raw.githubusercontent.com/abhiTronix/vidgear-vitals/master/{}{}/{}/{}".format(
+                c_name, "/static" if basename != "templates" else "", basename, file
             )
-            # Mount it for https usage
-            adapter = TimeoutHTTPAdapter(retries, timeout=2.0)
-            http.mount("https://", adapter)
-            response = http.get(file_url, stream=True)
-            response.raise_for_status()
-            total_length = response.headers.get("content-length")
-            assert not (
-                total_length is None
-            ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
-            bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
+            # download and write file to the given path
+            if logging:
+                logger.debug("Downloading {} data-file: {}.".format(basename, file))
+
             with open(file_name, "wb") as f:
-                for data in response.iter_content(chunk_size=1024):
+                # setup retry strategy
+                retries = Retry(
+                    total=3,
+                    backoff_factor=1,
+                    status_forcelist=[429, 500, 502, 503, 504],
+                )
+                # Mount it for https usage
+                adapter = TimeoutHTTPAdapter(timeout=2.0, max_retries=retries)
+                http.mount("https://", adapter)
+                response = http.get(file_url, stream=True)
+                response.raise_for_status()
+                total_length = response.headers.get("content-length")
+                assert not (
+                    total_length is None
+                ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
+                bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
+                for data in response.iter_content(chunk_size=256):
                     f.write(data)
                     if len(data) > 0:
                         bar.update(len(data))
-            bar.close()
+                bar.close()
     if logging:
         logger.debug("Verifying downloaded data:")
     if validate_webdata(path, files=files, logging=logging):

@@ -190,8 +190,6 @@ def test_ffmpeg_binaries_download(paths, os_bit):
     except Exception as e:
         if paths == "wrong_test_path" or os_bit == "wrong_bit":
             pass
-        elif isinstance(e, requests.exceptions.Timeout):
-            logger.exceptions(str(e))
         else:
             pytest.fail(str(e))
 

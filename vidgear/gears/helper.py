@@ -817,7 +817,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                         status_forcelist=[429, 500, 502, 503, 504],
                     )
                     # Mount it for https usage
-                    adapter = TimeoutHTTPAdapter(retries, timeout=2.0)
+                    adapter = TimeoutHTTPAdapter(timeout=2.0, max_retries=retries)
                     http.mount("https://", adapter)
                     response = http.get(file_url, stream=True)
                     response.raise_for_status()
