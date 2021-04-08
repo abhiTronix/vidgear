@@ -31,14 +31,17 @@ from starlette.routing import Route
 from starlette.responses import PlainTextResponse
 from starlette.testclient import TestClient
 from aiortc import (
+    MediaStreamTrack,
     RTCPeerConnection,
     VideoStreamTrack,
     RTCConfiguration,
     RTCIceServer,
+    RTCSessionDescription,
 )
 from av import VideoFrame
 from vidgear.gears.asyncio import WebGear_RTC
 from vidgear.gears.asyncio.helper import logger_handler
+
 
 # define test logger
 logger = log.getLogger("Test_webgear_rtc")
@@ -61,24 +64,72 @@ def run(coro):
     return asyncio.get_event_loop().run_until_complete(coro)
 
 
+class VideoTransformTrack(MediaStreamTrack):
+    """
+    A video stream track that transforms frames from an another track.
+    """
+
+    kind = "video"
+
+    def __init__(self, track):
+        super().__init__()  # don't forget this!
+        self.track = track
+
+    async def recv(self):
+        frame = await self.track.recv()
+        return new_frame
+
+
+def track_states(pc):
+    states = {
+        "connectionState": [pc.connectionState],
+        "iceConnectionState": [pc.iceConnectionState],
+        "iceGatheringState": [pc.iceGatheringState],
+        "signalingState": [pc.signalingState],
+    }
+
+    @pc.on("connectionstatechange")
+    def connectionstatechange():
+        states["connectionState"].append(pc.connectionState)
+
+    @pc.on("iceconnectionstatechange")
+    def iceconnectionstatechange():
+        states["iceConnectionState"].append(pc.iceConnectionState)
+
+    @pc.on("icegatheringstatechange")
+    def icegatheringstatechange():
+        states["iceGatheringState"].append(pc.iceGatheringState)
+
+    @pc.on("signalingstatechange")
+    def signalingstatechange():
+        states["signalingState"].append(pc.signalingState)
+
+    return states
+
+
 def get_RTCPeer_payload():
     pc = RTCPeerConnection(
         RTCConfiguration(iceServers=[RTCIceServer("stun:stun.l.google.com:19302")])
     )
 
+    track_states(pc)
+
     @pc.on("track")
     def on_track(track):
         logger.debug("Receiving %s" % track.kind)
+        if track.kind == "video":
+            pc.addTrack(VideoTransformTrack(track))
 
-    @pc.on("iceconnectionstatechange")
-    def on_iceconnectionstatechange():
-        logger.debug("ICE connection state is %s" % pc.iceConnectionState)
+        @track.on("ended")
+        def on_ended():
+            log_info("Track %s ended", track.kind)
 
     pc.addTransceiver("video", direction="recvonly")
     offer = run(pc.createOffer())
     run(pc.setLocalDescription(offer))
-    payload = {"sdp": offer.sdp, "type": offer.type}
-    return json.dumps(payload, separators=(",", ":"))
+    new_offer = pc.localDescription
+    payload = {"sdp": new_offer.sdp, "type": new_offer.type}
+    return (pc, json.dumps(payload, separators=(",", ":")))
 
 
 def hello_webpage(request):
@@ -205,13 +256,22 @@ def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
         assert response.status_code == 200
         response_404 = client.get("/test")
         assert response_404.status_code == 404
-        data = get_RTCPeer_payload()
+        (offer_pc, data) = get_RTCPeer_payload()
+        response_rtc_answer = client.post(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        params = response_rtc_answer.json()
+        answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+        run(offer_pc.setRemoteDescription(answer))
         response_rtc_offer = client.get(
             "/offer",
             data=data,
             headers={"Content-Type": "application/json"},
         )
         assert response_rtc_offer.status_code == 200
+        run(offer_pc.close())
         web.shutdown()
     except Exception as e:
         pytest.fail(str(e))
@@ -244,13 +304,22 @@ def test_webgear_rtc_options(options):
         client = TestClient(web(), raise_server_exceptions=True)
         response = client.get("/")
         assert response.status_code == 200
-        data = get_RTCPeer_payload()
+        (offer_pc, data) = get_RTCPeer_payload()
+        response_rtc_answer = client.post(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        params = response_rtc_answer.json()
+        answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+        run(offer_pc.setRemoteDescription(answer))
         response_rtc_offer = client.get(
             "/offer",
             data=data,
             headers={"Content-Type": "application/json"},
         )
         assert response_rtc_offer.status_code == 200
+        run(offer_pc.close())
         web.shutdown()
     except Exception as e:
         if isinstance(e, AssertionError):
@@ -263,8 +332,8 @@ def test_webgear_rtc_options(options):
 
 test_data_class = [
     (None, False),
+    ("Invalid", False),
     (Custom_RTCServer(source=return_testvideo_path()), True),
-    ([], False),
     (Invalid_Custom_RTCServer_1(source=return_testvideo_path()), False),
     (Invalid_Custom_RTCServer_2(source=return_testvideo_path()), False),
 ]
@@ -303,13 +372,22 @@ def test_webgear_rtc_routes():
         assert response.status_code == 200
         response_hello = client.get("/hello")
         assert response_hello.status_code == 200
-        data = get_RTCPeer_payload()
+        (offer_pc, data) = get_RTCPeer_payload()
+        response_rtc_answer = client.post(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        params = response_rtc_answer.json()
+        answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+        run(offer_pc.setRemoteDescription(answer))
         response_rtc_offer = client.get(
             "/offer",
             data=data,
             headers={"Content-Type": "application/json"},
         )
         assert response_rtc_offer.status_code == 200
+        run(offer_pc.close())
         web.shutdown()
     except Exception as e:
         pytest.fail(str(e))

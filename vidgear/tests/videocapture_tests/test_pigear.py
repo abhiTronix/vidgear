@@ -70,20 +70,28 @@ def test_pigear_playback():
 
 
 test_data = [
-    ("invalid", None, "", "invalid", {}, None, AssertionError),
+    ("invalid", None, "", 0, {}, None, AssertionError),
     (-1, "invalid", "", 0.1, {}, None, AssertionError),
     (1, None, "invalid", 0.1, {}, None, AssertionError),
     (0, (640, 480), 60, 0, {"HWFAILURE_TIMEOUT": 15.0}, None, ValueError),
-    (0, (640, 480), 60, 0, {}, "COLOR_BGR2INVALID", None),
-    (0, (640, 480), 60, 0, {"create_bug": True}, "None", RuntimeError),
+    (
+        0,
+        (640, 480),
+        60,
+        "invalid",
+        {"HWFAILURE_TIMEOUT": "invalid"},
+        "COLOR_BGR2INVALID",
+        None,
+    ),
+    (0, (640, 480), 60, 1, {"create_bug": True}, "None", RuntimeError),
     (0, (640, 480), 60, 0, {"create_bug": "fail"}, "None", RuntimeError),
-    (0, (640, 480), 60, 0, {"unknown_attr": "fail"}, "None", AttributeError),
+    (0, (640, 480), 60, 0, {"create_bug": ["fail"]}, "None", None),
     (
         0,
         (640, 480),
         60,
         0,
-        {"HWFAILURE_TIMEOUT": 1.5, "create_bug": 10},
+        {"HWFAILURE_TIMEOUT": 1.5, "create_bug": 5},
         "COLOR_BGR2GRAY",
         SystemError,
     ),
@@ -101,6 +109,7 @@ def test_pigear_parameters(
     """
     Tests PiGear's options and colorspace.
     """
+    stream = None
     try:
         from vidgear.gears import PiGear
 
@@ -128,10 +137,12 @@ def test_pigear_parameters(
                     # test invalid colorspace value
                     stream.color_space = "red"
             i += 1
-        # clean resources
-        stream.stop()
     except Exception as e:
         if not (exception_type is None) and isinstance(e, exception_type):
-            logger.exception(e)
+            pytest.xfail(str(e))
         else:
             pytest.fail(str(e))
+    finally:
+        # clean resources
+        if not (stream is None):
+            stream.stop()

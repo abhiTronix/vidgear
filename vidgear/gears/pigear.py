@@ -154,11 +154,12 @@ class PiGear:
         try:
             # apply attributes to source if specified
             for key, value in options.items():
+                if self.__logging:
+                    logger.debug("Setting Parameter: {} = '{}'".format(key, value))
                 setattr(self.__camera, key, value)
         except Exception as e:
             # Catch if any error occurred
-            if self.__logging:
-                logger.exception(str(e))
+            logger.exception(str(e))
 
         # separately handle colorspace value to int conversion
         if not (colorspace is None):
@@ -304,7 +305,6 @@ class PiGear:
             self.__terminate = True
 
         # release picamera resources
-        self.stream.close()
         self.__rawCapture.close()
         self.__camera.close()
 
@@ -351,20 +351,16 @@ class PiGear:
         # stop timer thread
         if not (self.__timer is None):
             self.__timer.join()
+            self.__timer = None
 
         # handle camera thread
         if not (self.__thread is None):
             # check if hardware failure occured
             if not (self.__exceptions is None) and isinstance(self.__exceptions, bool):
                 # force release picamera resources
-                self.stream.close()
                 self.__rawCapture.close()
                 self.__camera.close()
-
-                # properly handle thread exit
-                self.__thread.join()
-                self.__thread.wait()  # wait if still process is still processing some information
-                self.__thread = None
-            else:
-                # properly handle thread exit
-                self.__thread.join()
+            # properly handle thread exit
+            self.__thread.join()  # wait if still process is still processing some information
+            # remove any threads
+            self.__thread = None

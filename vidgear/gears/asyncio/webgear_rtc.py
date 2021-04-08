@@ -97,6 +97,7 @@ class RTC_VideoServer(VideoStreamTrack):
         self.__logging = logging
         self.__enable_inf = False  # continue frames even when video ends.
         self.__frame_size_reduction = 10  # 20% reduction
+        self.is_running = True  # check if running
 
         if options:
             if "frame_size_reduction" in options:
@@ -165,7 +166,7 @@ class RTC_VideoServer(VideoStreamTrack):
 
         # display blank if NoneType
         if f_stream is None:
-            if self.blank_frame is None:
+            if self.blank_frame is None or not self.is_running:
                 return None
             else:
                 f_stream = self.blank_frame[:]
@@ -198,6 +199,8 @@ class RTC_VideoServer(VideoStreamTrack):
         """
         # log
         if not (self.__stream is None):
+            # terminate running flag
+            self.is_running = False
             if self.__logging:
                 logger.debug("Terminating Internal RTC Video-Server")
             # terminate

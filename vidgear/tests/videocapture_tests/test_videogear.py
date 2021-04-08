@@ -20,7 +20,10 @@ limitations under the License.
 # import the necessary packages
 
 import os
+import sys
 import pytest
+import importlib
+import platform
 import logging as log
 import tempfile
 
@@ -48,13 +51,26 @@ def return_testvideo_path():
     return os.path.abspath(path)
 
 
-@pytest.mark.xfail(raises=ImportError)
+@pytest.mark.skipif((platform.system() != "Linux"), reason="Not Implemented")
 def test_PiGear_import():
     """
     Testing VideoGear Import -> assign to fail when PiGear class is imported
     """
-    stream = VideoGear(enablePiCamera=True, logging=True).start()
-    stream.stop()
+    # cleanup environment
+    try:
+        importlib.reload("picamera")
+        importlib.reload("picamera.array")
+    except TypeError:
+        pass
+
+    try:
+        stream = VideoGear(enablePiCamera=True, logging=True).start()
+        stream.stop()
+    except Exception as e:
+        if isinstance(e, ImportError):
+            pytest.xfail(str(e))
+        else:
+            pytest.fail(str(e))
 
 
 # Video credit: http://www.liushuaicheng.org/CVPR2014/index.html

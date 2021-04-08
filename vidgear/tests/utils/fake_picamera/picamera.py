@@ -32,12 +32,18 @@ logger.setLevel(log.DEBUG)
 
 
 class Warn(object):
+    """
+    Throws Warning
+    """
+
     def __init__(self):
         logger.warning("Using fake PiCamera class")
 
 
 class Frame:
-    """Fake frame"""
+    """
+    Fake Frame class
+    """
 
     def __init__(self, frame):
         self.array = frame
@@ -67,6 +73,7 @@ class PiCamera(Warn):
             if isinstance(resolution, (tuple, list)) and len(resolution) == 2
             else (640, 480)
         )
+        # handle fake class parameters
         self.camera_num = camera_num
         self.framerate = framerate
         self.sharpness = 0
@@ -84,15 +91,26 @@ class PiCamera(Warn):
         self.rotation = 0
         self.hflip = self.vflip = False
         self.zoom = (0.0, 0.0, 1.0, 1.0)
+        # create bugs
         self.create_bug = None
+        # check for running
         self.running = True
         logger.debug("Initiating fake camera.")
 
     def __enter__(self):
+        # return class instance
         return self
 
     def __exit__(self, exc_type, exc_value, exc_tb):
+        # close camera
         self.close()
+
+    def __setattr__(self, name, value):
+        # sets parameters
+        logger.debug("Setting {} = '{}'".format(name, value))
+        self.__dict__[name] = value
+        if name == "create_bug" and isinstance(value, list):
+            raise AttributeError("Fake AttributeError")
 
     def close(self):
         # this does nothing
@@ -100,6 +118,9 @@ class PiCamera(Warn):
         self.running = False
 
     def array_data(self, size, frame_num=10):
+        """
+        Generate 10 numpy frames with random pixels
+        """
         np.random.seed(0)
         random_data = np.random.random(size=(frame_num, size[0], size[1], 3)) * 255
         return random_data.astype(np.uint8)
@@ -115,22 +136,31 @@ class PiCamera(Warn):
         bayer=False,
         **options
     ):
+        """
+        Fake `capture_continuous` that yields numpy frames as fake Frame object
+        """
         num = 0
         if not (self.create_bug is None) and isinstance(self.create_bug, str):
-            raise RuntimeError
+            raise RuntimeError("Fake Error")
         while self.running:
+            # generate 10 frames
             frames_data = self.array_data(size=self.resolution[::-1])
             if num > 1 and not (self.create_bug is None):
                 if isinstance(self.create_bug, bool):
+                    # throw fake error
                     raise RuntimeError("PiCamera Class Fake-Error")
-                else:
+                elif isinstance(self.create_bug, int):
+                    # emulates frozen threads
                     logger.debug("Setting sleep for {} seconds".format(self.create_bug))
                     time.sleep(self.create_bug)
                     self.create_bug = 0
+                else:
+                    pass
                 num = 0
             else:
                 num += 1
             for frame in frames_data:
+                # yield frames
                 if not self.running:
                     break
                 yield Frame(frame)
@@ -153,9 +183,11 @@ class PiRGBArray(Warn):
         pass
 
     def truncate(self, size=None):
+        # this does nothing
         pass
 
     def seek(self, value):
+        # this does nothing
         pass
 
 
@@ -165,8 +197,8 @@ class array(object):
     """
 
     @staticmethod
-    def PiRGBArray(cam, size):
+    def PiRGBArray(camera, size):
         """
-        static call to Fake PiRGBArray class
+        Call to Fake PiRGBArray class
         """
-        return PiRGBArray(cam, size)
+        return PiRGBArray(camera, size)
