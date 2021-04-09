@@ -305,7 +305,7 @@ def get_supported_vencoders(path):
         if x.decode("utf-8").strip().startswith("V")
     ]
     # compile regex
-    finder = re.compile("\.\.\s[a-z0-9_-]+")
+    finder = re.compile(r"\.\.\s[a-z0-9_-]+")
     # find all outputs
     outputs = finder.findall("\n".join(supported_vencoders))
     # return outputs
