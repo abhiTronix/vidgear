@@ -43,6 +43,7 @@ steps:
     brew reinstall openssl
     brew install unzip
     brew install dos2unix
+    brew install coreutils
     dos2unix scripts/bash/prepare_dataset.sh
     chmod +x scripts/bash/prepare_dataset.sh
   displayName: 'Install brew dependencies'
@@ -54,11 +55,11 @@ steps:
 - script: |
     python -m pip install --upgrade pip wheel
     pip install --upgrade .[asyncio] six codecov youtube-dl mpegdash
+    pip install --upgrade pytest pytest-asyncio pytest-cov pytest-azurepipelines
   displayName: 'Install pip dependencies'
 
 - script: |
-    pip install --upgrade pytest pytest-asyncio pytest-cov pytest-azurepipelines
-    pytest --verbose --cov=vidgear --cov-report=xml --cov-report=html --cov-report term-missing vidgear/tests/
+    timeout 1200 pytest --verbose --cov=vidgear --cov-report=xml --cov-report=html --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "##vso[task.setvariable variable=EXIT_CODE]$code"; fi
   displayName: 'pytest'
 - bash: bash <(curl -s https://codecov.io/bash) -Z -C $(Build.SourceVersion) -B $(Build.SourceBranch) -b $(Build.BuildNumber)
   env:
@@ -66,3 +67,4 @@ steps:
     VCS_BRANCH_NAME: $(Build.SourceBranchName)
     VCS_COMMIT_ID: $(Build.SourceVersion)
   displayName: Upload coverage to CodeCov
+  condition: and(succeeded(), ne('${{ variables.EXIT_CODE }}', "124"))
