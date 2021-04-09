@@ -67,4 +67,4 @@ steps:
     VCS_BRANCH_NAME: $(Build.SourceBranchName)
     VCS_COMMIT_ID: $(Build.SourceVersion)
   displayName: Upload coverage to CodeCov
-  condition: and(succeeded(), ne('${{ variables.EXIT_CODE }}', "124"))
+  condition: and(succeeded(), ne('${{ variables.EXIT_CODE }}', '124'))
