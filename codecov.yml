@@ -19,7 +19,13 @@ codecov:
 coverage:
   status:
     patch: off
-
+    project:
+      default:
+        threshold: 5%
+        branches: 
+          - testing
+        if_ci_failed: error
+        
 ignore:
   - "vidgear/tests"
   - "vidgear/gears/asyncio/__main__.py" #trivial

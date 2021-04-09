@@ -138,7 +138,7 @@ NetGear_Async(receive_mode=True) # activates Recieve Mode
 
 ## **`timeout`**
 
-In NetGear_Async, the Receiver-end keeps tracks if frames are received from Server-end within this specified timeout value _(in seconds)_, Otherwise `TimeoutError` will be raised, which helps to close the Receiver-end safely if the Server has lost connection prematurely. This parameter controls that  timeout value _(i.e. the maximum waiting time (in seconds))_ after which Client exit itself with a `TimeoutError` to save resources. Its minimum value is `0.0` but no maximum value.
+In NetGear_Async, the Receiver-end keeps tracks if frames are received from Server-end within this specified timeout value _(in seconds)_, Otherwise `TimeoutError` will be raised, which helps to close the Receiver-end safely if the Server has lost connection prematurely. This parameter controls that  timeout value _(i.e. the maximum waiting time (in seconds))_ after which Client exit itself with a `TimeoutError` to save resources. Its minimum value is `0.0` but no max limit.
 
 **Data-Type:** Float/Integer
 
