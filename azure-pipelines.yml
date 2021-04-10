@@ -63,7 +63,7 @@ steps:
     timeout 1200 pytest --verbose --cov=vidgear --cov-report=xml --cov-report=html --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "##vso[task.setvariable variable=exit_code]$code"; fi
   displayName: 'pytest'
   
-- ${{ if ne(variables['exit_code'], '124') }}:
+- ${{ if ne(variables['exit_code'], 124) }}:
   - bash: |
       echo "Exit Code was: $(exit_code)"
       bash <(curl -s https://codecov.io/bash) -C $(Build.SourceVersion) -B $(Build.SourceBranch) -b $(Build.BuildNumber)
