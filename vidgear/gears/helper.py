@@ -291,7 +291,7 @@ def get_supported_vencoders(path):
 
     Find and returns FFmpeg's supported video encoders
 
-    Parameters:`
+    Parameters:
         path (string): absolute path of FFmpeg binaries
 
     **Returns:** List of supported encoders.
@@ -590,7 +590,7 @@ def youtube_url_validator(url):
     """
     youtube_regex = (
         r"(?:http:|https:)*?\/\/(?:www\.|)(?:youtube\.com|m\.youtube\.com|youtu\.|youtube-nocookie\.com).*"
-        "(?:v=|v%3D|v\/|(?:a|p)\/(?:a|u)\/\d.*\/|watch\?|vi(?:=|\/)|\/embed\/|oembed\?|be\/|e\/)([^&?%#\/\n]*)"
+        r"(?:v=|v%3D|v\/|(?:a|p)\/(?:a|u)\/\d.*\/|watch\?|vi(?:=|\/)|\/embed\/|oembed\?|be\/|e\/)([^&?%#\/\n]*)"
     )
     matched = re.search(youtube_regex, url)
     # check for None-type
