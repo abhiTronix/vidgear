@@ -282,12 +282,14 @@ test_data = [
         "frame_size_reduction": 47,
         "overwrite_default_files": "invalid_value",
         "enable_infinite_frames": "invalid_value",
+        "enable_live_broadcast": "invalid_value",
         "custom_data_location": True,
     },
     {
         "frame_size_reduction": "invalid_value",
         "overwrite_default_files": True,
         "enable_infinite_frames": False,
+        "enable_live_broadcast": False,
         "custom_data_location": "im_wrong",
     },
     {"custom_data_location": tempfile.gettempdir()},
@@ -395,6 +397,11 @@ def test_webgear_rtc_routes():
 
 @pytest.mark.xfail(raises=RuntimeError)
 def test_webgear_rtc_routes_validity():
+    # add various tweaks for testing only
+    options = {
+        "enable_infinite_frames": False,
+        "enable_live_broadcast": True,
+    }
     # initialize WebGear_RTC app
     web = WebGear_RTC(source=return_testvideo_path(), logging=True)
     # modify route

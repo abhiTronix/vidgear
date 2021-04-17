@@ -84,13 +84,13 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     WebGear(logging=True, **options)
     ```
 
-* **`enable_infinite_frames`** _(boolean)_ : Can be used to continue stream with blank frames with text "No Input", even when the input source disconnects. Its usage is as follows:
+* **`enable_infinite_frames`** _(boolean)_ : Can be used to continue streaming with emulated blank frames with text "No Input", whenever the input source disconnects prematurely. Its usage is as follows:
 
     !!! new "New in v0.2.1" 
         `enable_infinite_frames` attribute was added in `v0.2.1`.
 
     ```python
-    # force trigger the Auto-generation process
+    # emulate infinite frames
     options = {"enable_infinite_frames": True}
     # assign it
     WebGear(logging=True, **options)

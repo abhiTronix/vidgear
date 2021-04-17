@@ -99,8 +99,8 @@ setup(
         "colorlog",
         "colorama",
         "tqdm",
-        "pyscreenshot{}".format(latest_version("pyscreenshot")),
         "Pillow",
+        "pyscreenshot{}".format(latest_version("pyscreenshot")),
     ]
     + (["opencv-python"] if test_opencv() else [])
     + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),

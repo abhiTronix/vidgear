@@ -59,9 +59,34 @@ Must Required if you're using Raspberry Pi Camera Modules with its [PiGear](../.
   pip install picamera
 ``` 
 
+### Aiortc
+
+Must Required only if you're using the [WebRTC API](../../gears/webgear_rtc/overview/). You can easily install it via pip:
+
+!!! error "error: Microsoft Visual C++ 14.0 is required."
+    
+    Installing `aiortc` on windows requires Microsoft Build Tools installed for Visual C++ libraries to build code. You can easily fix this error by installing any **ONE** of these choices:
+
+      !!! note "While the error is calling for VC++ 14.0 - everything will work with newer versions of Visual C++ libraries as well."
+
+      - [x] Microsoft [Build Tools for Visual Studio](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16).
+      - [x] Alternative link to Microsoft [Build Tools for Visual Studio](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019).
+      - [x] Offline installer: [vs_buildtools.exe](https://aka.ms/vs/16/release/vs_buildtools.exe)
+
+    Afterwards, Select: Workloads → Desktop development with C++, then for Individual Components, select only:
+
+      - Windows 10 SDK
+      - C++ x64/x86 build tools
+
+    Finally, proceed installing `aiortc` via pip.
+
+```sh
+  pip install aiortc
+``` 
+
 ### Uvloop
 
-Must required if you're using the [NetGear_Async](../../gears/netgear_async/overview/) API on UNIX machines for maximum performance. You can easily install it via pip:
+Must required only if you're using the [NetGear_Async](../../gears/netgear_async/overview/) API on UNIX machines for maximum performance. You can easily install it via pip:
 
 !!! error "uvloop is **[NOT yet supported on Windows Machines](https://github.com/MagicStack/uvloop/issues/14).**"
 !!! warning "Python-3.6 legacies support [**dropped in version `>=1.15.0`**](https://github.com/MagicStack/uvloop/releases/tag/v0.15.0). Kindly install previous `0.14.0` version instead."

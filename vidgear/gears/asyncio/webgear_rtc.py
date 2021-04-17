@@ -32,6 +32,7 @@ from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 
 from aiortc import RTCPeerConnection, RTCSessionDescription, VideoStreamTrack
+from aiortc.contrib.media import MediaRelay
 from av import VideoFrame
 
 
@@ -96,7 +97,7 @@ class RTC_VideoServer(VideoStreamTrack):
         # initialize global params
         self.__logging = logging
         self.__enable_inf = False  # continue frames even when video ends.
-        self.__frame_size_reduction = 10  # 20% reduction
+        self.__frame_size_reduction = 20  # 20% reduction
         self.is_running = True  # check if running
 
         if options:
@@ -134,8 +135,9 @@ class RTC_VideoServer(VideoStreamTrack):
         # log it
         if self.__logging:
             logger.debug(
-                "Setting params:: Size Reduction:{}%".format(
+                "Setting params:: Size Reduction:{}%{}".format(
                     self.__frame_size_reduction,
+                    " and emulating infinite frames" if self.__enable_inf else "",
                 )
             )
 
@@ -265,6 +267,7 @@ class WebGear_RTC:
         custom_data_location = ""  # path to save data-files to custom location
         data_path = ""  # path to WeGear_RTC data-files
         overwrite_default = False
+        self.__relay = None  # act as broadcaster
 
         # reformat dictionary
         options = {str(k).strip(): v for k, v in options.items()}
@@ -294,6 +297,23 @@ class WebGear_RTC:
                 else:
                     logger.warning("Skipped invalid `overwrite_default_files` value!")
                 del options["overwrite_default_files"]  # clean
+
+            if "enable_live_broadcast" in options:
+                value = options["enable_live_broadcast"]
+                if isinstance(value, bool):
+                    if value:
+                        self.__relay = MediaRelay()
+                        options[
+                            "enable_infinite_frames"
+                        ] = True  # enforce infinite frames
+                        logger.critical(
+                            "Enabled live broadcasting with emulated infinite frames."
+                        )
+                    else:
+                        None
+                else:
+                    logger.warning("Skipped invalid `enable_live_broadcast` value!")
+                del options["enable_live_broadcast"]  # clean
 
         # check if custom certificates path is specified
         if custom_data_location:
@@ -455,7 +475,11 @@ class WebGear_RTC:
         # retrieve list of RTCRtpTransceiver objects that are currently attached to the connection
         for t in pc.getTransceivers():
             if t.kind == "video":
-                pc.addTrack(self.config["server"])
+                pc.addTrack(
+                    self.__relay.subscribe(self.config["server"])
+                    if not (self.__relay is None)
+                    else self.config["server"]
+                )
 
         # Create an SDP answer to an offer received from a remote peer
         answer = await pc.createAnswer()

@@ -313,7 +313,7 @@ If you want to **Livestream in Real-time Frames Mode** _(chunks will contain inf
 
 !!! warning "All Chunks will be overwritten in this mode after every few Chunks _(equal to the sum of `-window_size` & `-extra_window_size` values)_, Hence Newer Chunks and Manifest contains NO information of any older video-frames."
 
-!!! note "If input video-source _(i.e. `-video_source`)_ contains any audio stream/channel, then it automatically gets mapped to all generated streams without any extra efforts."
+!!! note "In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
 
 ```python
 # import required libraries

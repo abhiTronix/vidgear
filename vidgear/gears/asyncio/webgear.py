@@ -199,11 +199,12 @@ class WebGear:
                 )
             )
             logger.debug(
-                "Setting params:: Size Reduction:{}%, JPEG quality:{}%, JPEG optimizations:{}, JPEG progressive:{}".format(
+                "Setting params:: Size Reduction:{}%, JPEG quality:{}%, JPEG optimizations:{}, JPEG progressive:{}{}.".format(
                     self.__frame_size_reduction,
                     self.__jpeg_quality,
                     bool(self.__jpeg_optimize),
                     bool(self.__jpeg_progressive),
+                    " and emulating infinite frames" if self.__enable_inf else "",
                 )
             )
 
@@ -338,9 +339,7 @@ class WebGear:
             )[1].tobytes()
             # yield frame in byte format
             yield (
-                b"--frame\r\nContent-Type:video/jpeg2000\r\n\r\n"
-                + encodedImage
-                + b"\r\n"
+                b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n"
             )
             await asyncio.sleep(0.00001)
 

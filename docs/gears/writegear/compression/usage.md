@@ -29,7 +29,7 @@ limitations under the License.
 
     * **DO NOT** feed frames with different dimensions or channels to WriteGear, otherwise WriteGear will exit with `ValueError`.
 
-    * **DO NOT** provide additional video-source with `-i` FFmpeg parameter in [`output_params`](../params/#output_params), otherwise it will interfere with frame you input later, and it will break things!
+    * While providing additional av-source with `-i` FFmpeg parameter in `output_params` make sure it don't interfere with WriteGear's frame pipeline otherwise it will break things!
 
     * Heavy resolution multimedia files take time to render which can last up to _0.1-1 seconds_. Kindly wait till the WriteGear API terminates itself, and **DO NOT** try to kill the process instead.
 

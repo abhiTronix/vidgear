@@ -41,9 +41,10 @@ This mode can process real-time video frames into a lossless compressed format w
 
 	* In case WriteGear API fails to detect valid FFmpeg executables on your system _(even if Compression Mode is enabled)_, it automatically fallbacks to [Non-Compression Mode](../../non_compression/overview/).
 
-	* In Compression Mode, you can speed up the execution time by disabling logging (.i.e [`logging = False`](../params/#logging)), and by tweaking [`output_params`](../params/#output_params) parameter values (for e.g. using `'-preset: ultrafast'` in case of 'libx264' encoder). Look into [FFmpeg docs ➶](https://ffmpeg.org/documentation.html) for such hacks.
+	* It is advised to enable logging([`logging = True`](../params/#logging)) to see the FFmpeg command that is being executed in WriteGear's pipeline. This helps you debug any issues/errors easily and make suitable adjustments accordingly. 
 
-	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
+
+!!! tip "You can speed up the execution time by disabling logging (.i.e [`logging = False`](../params/#logging)) for production use, and by tweaking FFmpeg parameters in [`output_params`](../params/#output_params) values. Look into [FFmpeg docs ➶](https://ffmpeg.org/documentation.html) for such hacks."
 
 
 &nbsp;
