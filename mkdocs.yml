@@ -45,9 +45,22 @@ theme:
     - header.autohide
     - navigation.tabs
   palette:
-    scheme: default
-    primary: purple
-    accent: dark purple
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: purple
+      accent: dark purple
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: red
+      accent: red
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
   font:
     text: Nunito 
     code: IBM Plex

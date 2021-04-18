@@ -42,7 +42,7 @@ The [`option`](../../params/#options) dictionary parameter in CamGear, gives use
 		options = {"STREAM_RESOLUTION": "720p"} # 720p stream will be used. 
 		```
 
-		!!! info "Its complete usage example is given [here ➶](../../../../help/camgear_faqs/#how-to-change-quality-and-parameters-of-youtube-streams-with-camgear)"
+		!!! example "Its complete usage example is given [here ➶](../../../../help/camgear_faqs/#how-to-change-quality-and-parameters-of-youtube-streams-with-camgear)"
 
 	- [X] `STREAM_PARAMS` _(dict)_: This dictionary attribute can be used in CamGear's Stream Mode (`stream_mode=True`) for specifying underlying API's(i.e. `streamlink` & `youtube-dl`) internal parameters. Its usage is as follows:
 

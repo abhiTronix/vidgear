@@ -97,7 +97,7 @@ This parameter selects the colorspace of the source stream.
 PiGear(colorspace="COLOR_BGR2HSV")
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-pigear-with-direct-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](../usage/#using-pigear-with-direct-colorspace-manipulation)"
 
 &nbsp;
 

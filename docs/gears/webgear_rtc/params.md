@@ -38,7 +38,7 @@ This parameter provide direct access to [PiGear](../../pigear/overview/) or [Cam
 WebGear_RTC(enablePiCamera=True) # enable access to PiGear API
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
+!!! example "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
 
 
 &nbsp; 
@@ -75,7 +75,7 @@ This parameter can be used to pass user-defined parameter to WebGear_RTC API by 
     WebGear_RTC(logging=True, **options)
     ```
 
-* **`frame_size_reduction`** _(int/float)_ : This attribute controls the size reduction _(in percentage)_ of the frame to be streamed on Server._ The value defaults to `20`, and must be no higher than `90` _(fastest, max compression, Barely Visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40-60`. Its usage is as follows:
+* **`frame_size_reduction`** _(int/float)_ : This attribute controls the size reduction _(in percentage)_ of the frame to be streamed on Server. The value defaults to `20`, and must be no higher than `90` _(fastest, max compression, Barely Visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40-60`. Its usage is as follows:
 
     ```python
     # frame-size will be reduced by 50%
@@ -88,7 +88,7 @@ This parameter can be used to pass user-defined parameter to WebGear_RTC API by 
 
     !!! note "`enable_infinite_frames` is enforced by default when this attribute is enabled(`True`)."
 
-    !!! tip "For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](./../../help/webgear_rtc_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear_rtc)"
+    !!! tip "For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](../../../help/webgear_rtc_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear_rtc)"
 
     ```python
     # enable live boadcast to multiple consumers.
@@ -96,7 +96,8 @@ This parameter can be used to pass user-defined parameter to WebGear_RTC API by 
     # assign it
     WebGear_RTC(logging=True, **options)
     ```
-    !!! info "Its complete usage example is given [here ➶](../advanced/#using-webgear_rtc-as-real-time-broadcaster)."
+
+    !!! example "Its complete usage example is given [here ➶](../advanced/#using-webgear_rtc-as-real-time-broadcaster)."
 
 
 * **`enable_infinite_frames`** _(boolean)_ : Can be used to continue streaming _(instead of terminating immediately)_ with emulated blank frames with text "No Input", whenever the input source disconnects. Its default value is `False`. Its usage is as follows:
@@ -136,7 +137,7 @@ This parameter enable access to [Stabilizer Class](../../stabilizer/overview/) f
 WebGear_RTC(stabilize=True) # enable stablization
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
+!!! example "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
 
 &nbsp; 
 
@@ -288,7 +289,7 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 WebGear_RTC(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
+!!! example "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
 
 
 &nbsp;
@@ -467,7 +468,7 @@ This parameter selects the colorspace of the source stream.
 WebGear_RTC(colorspace="COLOR_BGR2HSV")
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
 
 &nbsp;
 

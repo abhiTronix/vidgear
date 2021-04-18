@@ -51,23 +51,19 @@ logger.setLevel(log.DEBUG)
 
 
 class StreamGear:
-
     """
-    StreamGear is built for _Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH) with FFmpeg_ to generate
-    the chunked-encoded media segments of the content, in just few lines of python code. StreamGear provides a standalone, highly extensible and
-    flexible wrapper around [**FFmpeg**](https://ffmpeg.org/) - a leading multimedia framework and access to almost all of its parameter for
-    seamlessly generating these streams.
+    StreamGear automates transcoding workflow for generating Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH) in just few lines of python code.
+    StreamGear provides a standalone, highly extensible, and flexible wrapper around FFmpeg multimedia framework for generating chunked-encoded media segments of the content.
 
-    SteamGear API ***automatically transcodes source videos/audio files & real-time frames, and breaks them into a sequence of multiple smaller
-    chunks/segments (typically 2-4 seconds in length) at different quality levels (i.e. different bitrates or spatial resolutions)***. It also
-    creates a media presentation description _(MPD in-case of DASH)_ that describes these segment information _(timing, URL, media characteristics
-    like video resolution and bit rates)_, and is provided to the client prior to the streaming session. Thereby, segments are served on a web-server
-    and can be downloaded through HTTP standard compliant GET requests. This makes it possible to stream videos at different quality levels, and to
-    switch in the middle of a video from one quality level to another one.
+    SteamGear easily transcodes source videos/audio files & real-time video-frames and breaks them into a sequence of multiple smaller chunks/segments of fixed length. These segments make it
+    possible to stream videos at different quality levels (different bitrates or spatial resolutions) and can be switched in the middle of a video from one quality level to another – if bandwidth
+    permits – on a per-segment basis. A user can serve these segments on a web server that makes it easier to download them through HTTP standard-compliant GET requests.
 
-    SteamGear currently only supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_,
-    but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming, will be added soon.
+    SteamGear also creates a Manifest file (such as MPD in-case of DASH) besides segments that describe these segment information (timing, URL, media characteristics like video resolution and bit rates)
+     and is provided to the client before the streaming session.
 
+    SteamGear currently only supports MPEG-DASH (Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1) , but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming, will be
+    added soon. Also, Multiple DRM support is yet to be implemented.
     """
 
     def __init__(

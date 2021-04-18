@@ -131,7 +131,7 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 CamGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
+!!! example "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
 
 
 &nbsp;
@@ -152,7 +152,7 @@ This parameter selects the colorspace of the input stream.
 CamGear(source=0, colorspace="COLOR_BGR2HSV")
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-direct-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](../usage/#using-camgear-with-direct-colorspace-manipulation)"
 
 &nbsp;
 

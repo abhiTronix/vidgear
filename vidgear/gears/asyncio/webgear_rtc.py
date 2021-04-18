@@ -211,11 +211,10 @@ class RTC_VideoServer(VideoStreamTrack):
 
 
 class WebGear_RTC:
-
     """
-    WebGear_RTC is similar to WeGear API in many aspects but utilizes **WebRTC** technology under the hood instead 
-    of Motion JPEG, which makes it suitable for building powerful video-streaming solutions for all modern browsers as well as native 
-    clients available on all major platforms.
+    WebGear_RTC is similar to WeGear API in many aspects but utilizes WebRTC technology under the hood instead of Motion JPEG, which 
+    makes it suitable for building powerful video-streaming solutions for all modern browsers as well as native clients available on 
+    all major platforms. 
 
     WebGear_RTC is implemented with the help of aiortc library which is built on top of asynchronous I/O framework for Web Real-Time 
     Communication (WebRTC) and Object Real-Time Communication (ORTC) and supports many features like SDP generation/parsing, Interactive 
@@ -224,14 +223,13 @@ class WebGear_RTC:
     WebGear_RTC can handle multiple consumers seamlessly and provides native support for ICE (Interactive Connectivity Establishment) 
     protocol, STUN (Session Traversal Utilities for NAT), and TURN (Traversal Using Relays around NAT) servers that help us to easily 
     establish direct media connection with the remote peers for uninterrupted data flow. It also allows us to define our custom Server 
-    as a source to manipulate frames easily before sending them across the network.
+    as a source to manipulate frames easily before sending them across the network(see this doc example).
 
-    WebGear_RTC API works in conjunction with Starlette's ASGI application and provides easy access to its complete framework. WebGear_RTC 
-    can also flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, Response classes, Routing tables, 
-    Static Files, Templating engine(with Jinja2), etc.
+    WebGear_RTC API works in conjunction with Starlette ASGI application and can also flexibly interact with Starlette's ecosystem of 
+    shared middleware, mountable applications, Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.
 
-    Additionally, WebGear_RTC API also provides a special internal wrapper around VideoGear, which itself provides internal access to 
-    both CamGear and PiGear APIs, thereby granting it exclusive power of broadcasting frames from any incoming stream.
+    Additionally, WebGear_RTC API also provides internal wrapper around VideoGear, which itself provides internal access to both 
+    CamGear and PiGear APIs.
     """
 
     def __init__(

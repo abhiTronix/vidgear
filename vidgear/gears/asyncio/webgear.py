@@ -43,19 +43,19 @@ logger.setLevel(log.DEBUG)
 
 
 class WebGear:
-
     """
-    WebGear is a powerful ASGI Video-Broadcaster API ideal for transmitting Motion-JPEG-frames from a single source to multiple recipients via 
-    the browser.
+    WebGear is a powerful ASGI Video-Broadcaster API ideal for transmitting Motion-JPEG-frames from a single source to multiple recipients via the browser.
 
-    WebGear API provides a highly extensible and flexible async wrapper around Starlette's ASGI application and provides easy access to its 
-    complete framework. WebGear can flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, Response classes, 
-    Routing tables, Static Files, Templating engine(with Jinja2), etc.
+    WebGear API works on Starlette's ASGI application and provides a highly extensible and flexible async wrapper around its complete framework. WebGear can
+    flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, Response classes, Routing tables, Static Files, Templating
+    engine(with Jinja2), etc.
 
-    In layman's terms, WebGear acts as a powerful Video Broadcaster that transmits live video-frames to any web-browser in the network. Additionally, 
-    WebGear API also provides a special internal wrapper around VideoGear, which itself provides internal access to both CamGear and PiGear APIs, 
-    thereby granting it exclusive power of broadcasting frames from any incoming stream. It also allows us to define our custom Server as source to 
-    manipulate frames easily before sending them across the network.
+    WebGear API uses an intraframe-only compression scheme under the hood where the sequence of video-frames are first encoded as JPEG-DIB (JPEG with Device-Independent Bit compression)
+    and then streamed over HTTP using Starlette's Multipart Streaming Response and a Uvicorn ASGI Server. This method imposes lower processing and memory requirements, but the quality
+    is not the best, since JPEG compression is not very efficient for motion video.
+
+    In layman's terms, WebGear acts as a powerful Video Broadcaster that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides internal
+    wrapper around VideoGear, which itself provides internal access to both CamGear and PiGear APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
     """
 
     def __init__(

@@ -38,7 +38,7 @@ This parameter provide access to [PiGear](../../pigear/overview/) or [CamGear](.
 NetGear_Async(enablePiCamera=True) # enable access to PiGear API
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
+!!! example "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
 
 
 &nbsp; 
@@ -173,7 +173,7 @@ This parameter enable access to [Stabilizer Class](../../stabilizer/overview/) f
 NetGear_Async(stabilize=True) # enable stablization
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
+!!! example "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
 
 &nbsp; 
 
@@ -327,7 +327,7 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 NetGear_Async(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
+!!! example "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
 
 
 &nbsp;
@@ -506,7 +506,7 @@ This parameter selects the colorspace of the source stream.
 NetGear_Async(colorspace="COLOR_BGR2HSV")
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
 
 &nbsp;
 

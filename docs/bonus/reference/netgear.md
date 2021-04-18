@@ -18,7 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-!!! info "All NetGear API parameters are explained [here ➶](../../../gears/netgear/params/)"
+!!! example "NetGear API usage examples can be found [here ➶](../../../gears/netgear/usage/)"
+
+!!! info "NetGear API parameters are explained [here ➶](../../../gears/netgear/params/)"
 
 ::: vidgear.gears.NetGear	
 	

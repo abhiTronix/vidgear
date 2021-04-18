@@ -44,18 +44,18 @@ logger.setLevel(log.DEBUG)
 
 class NetGear_Async:
     """
-    NetGear_Async is an asyncio videoframe messaging framework, built on `zmq.asyncio`, and powered by high-performance asyncio event loop
-    called **`uvloop`** to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints.
-    Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system.
+    NetGear_Async can generate the same performance as NetGear API at about one-third the memory consumption, and also provide complete server-client handling with various
+    options to use variable protocols/patterns similar to NetGear, but it doesn't support any of yet.
 
-    NetGear_Async can generate double performance as compared to [NetGear API](#netgear) at about 1/3rd of memory consumption, and also
-    provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support
-    any NetGear's Exclusive Modes yet.
+    NetGear_Async is built on zmq.asyncio, and powered by a high-performance asyncio event loop called uvloop to achieve unmatchable high-speed and lag-free video streaming
+    over the network with minimal resource constraints. NetGear_Async can transfer thousands of frames in just a few seconds without causing any significant load on your
+    system.
 
-    Furthermore, NetGear_Async allows us to  define our own custom Server Source to manipulate frames easily before sending them across the
-    network. In addition to all this, NetGear_Async also **provides a special internal wrapper around VideoGear API]**, which itself provides
-    internal access to both CamGear and PiGear APIs thereby granting it exclusive power for streaming frames incoming from any connected
-    device/source to the network.
+    NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to NetGear API but doesn't support any NetGear's Exclusive
+    Modes yet. Furthermore, NetGear_Async allows us to define our custom Server as source to manipulate frames easily before sending them across the network.
+
+    In addition to all this, NetGear_Async API also provides internal wrapper around VideoGear, which itself provides internal access to both CamGear and PiGear APIs, thereby
+    granting it exclusive power for transferring frames incoming from any source to the network.
 
     NetGear_Async as of now supports four ZeroMQ messaging patterns:
 

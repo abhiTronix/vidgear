@@ -114,7 +114,7 @@ output_params = {"-fps":30}
 WriteGear(output_filename = 'output.mp4', **output_params)
 ```
 
-!!! info "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-videocapture-gears)."
+!!! example "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-videocapture-gears)."
 
 ### Supported FOURCC Codecs
 
@@ -133,7 +133,7 @@ output_params = {"-fourcc":"MJPG"}
 WriteGear(output_filename = 'output.mp4', **output_params)
 ```
 
-!!! info "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-videocapture-gears)."
+!!! example "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-videocapture-gears)."
 
 &nbsp; 
 

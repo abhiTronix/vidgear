@@ -18,7 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-!!! info "All WebGear API parameters are explained [here ➶](../../../gears/webgear/params/)"
+!!! example "WebGear API usage examples can be found [here ➶](../../../gears/webgear/usage/)"
+
+!!! info "WebGear API parameters are explained [here ➶](../../../gears/webgear/params/)"
 
 ::: vidgear.gears.asyncio.WebGear	
 	
