@@ -29,6 +29,7 @@ import subprocess as sp
 from tqdm import tqdm
 from fractions import Fraction
 from pkg_resources import parse_version
+from collections import OrderedDict
 
 from .helper import (
     capPropId,
@@ -376,8 +377,8 @@ class StreamGear:
         # turn off initiate flag
         self.__initiate_stream = False
         # initialize parameters
-        input_parameters = {}
-        output_parameters = {}
+        input_parameters = OrderedDict()
+        output_parameters = OrderedDict()
         # pre-assign default codec parameters (if not assigned by user).
         default_codec = "libx264rgb" if rgb else "libx264"
         output_parameters["-vcodec"] = self.__params.pop("-vcodec", default_codec)
@@ -415,7 +416,7 @@ class StreamGear:
                     "Detected External Audio Source is valid, and will be used for streams."
                 )
                 # assign audio
-                input_parameters["-i"] = self.__audio
+                output_parameters["-i"] = self.__audio
                 # assign audio codec
                 output_parameters["-acodec"] = self.__params.pop("-acodec", "copy")
                 output_parameters["a_bitrate"] = bitrate  # temporary handler
@@ -445,13 +446,13 @@ class StreamGear:
             output_parameters["-movflags"] = "+faststart"
 
         # set input framerate
-        if self.__inputframerate > 5.0 and not (self.__video_source):
+        if self.__sourceframerate > 5.0 and not (self.__video_source):
             # minimum threshold is 5.0
             if self.__logging:
                 logger.debug(
-                    "Setting Input framerate: {}".format(self.__inputframerate)
+                    "Setting Input framerate: {}".format(self.__sourceframerate)
                 )
-            input_parameters["-framerate"] = str(self.__inputframerate)
+            input_parameters["-framerate"] = str(self.__sourceframerate)
 
         # handle input resolution and pixel format
         if not (self.__video_source):
@@ -716,6 +717,10 @@ class StreamGear:
             input_params (dict): Input FFmpeg parameters
             output_params (dict): Output FFmpeg parameters
         """
+        # finally handle `-i`
+        if "-i" in output_params:
+            output_params.move_to_end("-i", last=False)
+
         # convert input parameters to list
         input_commands = dict2Args(input_params)
         # convert output parameters to list
