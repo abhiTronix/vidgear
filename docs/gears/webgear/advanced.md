@@ -227,7 +227,7 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
 import uvicorn
 from vidgear.gears.asyncio import WebGear
 
-# various webgear performance and Rasbperry camera tweaks
+# various webgear performance and Raspberry Pi camera tweaks
 options = {
     "frame_size_reduction": 40,
     "frame_jpeg_quality": 80,

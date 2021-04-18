@@ -45,16 +45,17 @@ logger.setLevel(log.DEBUG)
 class WebGear:
 
     """
-    WebGear is a powerful ASGI Video-streamer API, that is built upon `Starlette` - a lightweight ASGI python framework/toolkit,
-    which is ideal for building high-performance asyncio services.
+    WebGear is a powerful ASGI Video-Broadcaster API ideal for transmitting Motion-JPEG-frames from a single source to multiple recipients via 
+    the browser.
 
-    WebGear API provides a highly extensible and flexible asyncio wrapper around Starlette ASGI application, and provides easy access to its complete framework.
-    Thereby, WebGear API can flexibly interact with the Starlette's ecosystem of shared middleware and mountable applications, and its various
-    Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.
+    WebGear API provides a highly extensible and flexible async wrapper around Starlette's ASGI application and provides easy access to its 
+    complete framework. WebGear can flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, Response classes, 
+    Routing tables, Static Files, Templating engine(with Jinja2), etc.
 
-    In layman's terms, WebGear can acts as powerful **Video Streaming Server** that transfers live video-frames to any web browser on a network. It addition to this,
-    WebGear API also provides a special internal wrapper around VideoGear API, which itself provides internal access to both CamGear and PiGear APIs thereby granting
-    it exclusive power for streaming frames incoming from any device/source, such as streaming Stabilization enabled Video in real-time.
+    In layman's terms, WebGear acts as a powerful Video Broadcaster that transmits live video-frames to any web-browser in the network. Additionally, 
+    WebGear API also provides a special internal wrapper around VideoGear, which itself provides internal access to both CamGear and PiGear APIs, 
+    thereby granting it exclusive power of broadcasting frames from any incoming stream. It also allows us to define our custom Server as source to 
+    manipulate frames easily before sending them across the network.
     """
 
     def __init__(

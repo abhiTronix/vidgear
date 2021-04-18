@@ -79,13 +79,14 @@ WebGear provides certain performance enhancing attributes for its [`option`](../
 
 ## Bare-Minimum Usage with Performance Enhancements
 
-Let's re-implement our previous Bare-Minimum usage example with these [**Performance Enhancing Attributes** ➶](#performance-enhancements) for speeding up the output.
+Let's implement our Bare-Minimum usage example with these [**Performance Enhancing Attributes** ➶](#performance-enhancements) for speeding up the output.
 
 ### Running Programmatically
 
 You can access and run WebGear VideoStreamer Server programmatically in your python script in just a few lines of code, as follows:
 
-!!! tip "If you want see output on different machine on the same network, then you need to note down the IP-address of host system. Finally you need to replace this address _(along with selected port)_ on the target machine's browser."
+!!! tip "For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](./../../help/webgear_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear)"
+
 
 ```python
 # import required libraries
@@ -130,20 +131,22 @@ which can also be accessed on any browser on the network at http://localhost:800
 
 ??? tip "Advanced Usage from Terminal"
 
-    You can run `#!py3 python3 -m vidgear.gears -h` help command to see all the advanced settings, as follows:
+    You can run `#!py3 python3 -m vidgear.gears.asyncio -h` help command to see all the advanced settings, as follows:
 
-    !!! warning "If you're using `--options/-op` flag, then kindly wrap your dictionary value in single `''` quotes as shown in [this example](../advanced/#running-from-terminal)."
+    !!! warning "If you're using `--options/-op` flag, then kindly wrap your dictionary value in single `''` quotes."
 
     ```sh
-    usage: python -m vidgear.gears.asyncio [-h] [-s SOURCE] [-ep ENABLEPICAMERA] [-S STABILIZE]
-            [-cn CAMERA_NUM] [-yt stream_mode] [-b BACKEND] [-cs COLORSPACE]
-            [-r RESOLUTION] [-f FRAMERATE] [-td TIME_DELAY]
-            [-ip IPADDRESS] [-pt PORT] [-l LOGGING] [-op OPTIONS]
+    usage: python -m vidgear.gears.asyncio [-h] [-m MODE] [-s SOURCE] [-ep ENABLEPICAMERA] [-S STABILIZE]
+                [-cn CAMERA_NUM] [-yt stream_mode] [-b BACKEND] [-cs COLORSPACE]
+                [-r RESOLUTION] [-f FRAMERATE] [-td TIME_DELAY]
+                [-ip IPADDRESS] [-pt PORT] [-l LOGGING] [-op OPTIONS]
 
-    Runs WebGear VideoStreaming Server through terminal.
+    Runs WebGear/WebGear_RTC Video Server through terminal.
 
     optional arguments:
       -h, --help            show this help message and exit
+      -m {mjpeg,webrtc}, --mode {mjpeg,webrtc}
+                            Whether to use "MJPEG" or "WebRTC" mode for streaming.
       -s SOURCE, --source SOURCE
                             Path to input source for CamGear API.
       -ep ENABLEPICAMERA, --enablePiCamera ENABLEPICAMERA
@@ -154,7 +157,7 @@ which can also be accessed on any browser on the network at http://localhost:800
       -cn CAMERA_NUM, --camera_num CAMERA_NUM
                             Sets the camera module index that will be used by
                             PiGear API.
-      -yt stream_mode, --stream_mode stream_mode
+      -yt STREAM_MODE, --stream_mode STREAM_MODE
                             Enables YouTube Mode in CamGear API.
       -b BACKEND, --backend BACKEND
                             Sets the backend of the video source in CamGear API.
@@ -165,7 +168,7 @@ which can also be accessed on any browser on the network at http://localhost:800
                             in PiGear API.
       -f FRAMERATE, --framerate FRAMERATE
                             Sets the framerate for camera module in PiGear API.
-      -td TIME_DELAY, --time_delay TIME_DELAY  
+      -td TIME_DELAY, --time_delay TIME_DELAY
                             Sets the time delay(in seconds) before start reading
                             the frames.
       -ip IPADDRESS, --ipaddress IPADDRESS
@@ -179,6 +182,7 @@ which can also be accessed on any browser on the network at http://localhost:800
                             Sets the parameters supported by APIs(whichever being
                             accessed) to the input videostream, But make sure to
                             wrap your dict value in single or double quotes.
+
     ```
 
 &nbsp; 

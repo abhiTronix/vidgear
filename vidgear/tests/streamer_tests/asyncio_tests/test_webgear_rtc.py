@@ -141,7 +141,7 @@ def hello_webpage(request):
 
 class Custom_RTCServer(VideoStreamTrack):
     """
-    Custom WebGear_RTC Server and inherit-class to aiortc's VideoStreamTrack API.
+    Custom Media Server using OpenCV, an inherit-class to aiortc's VideoStreamTrack API.
     """
 
     def __init__(self, source=None):

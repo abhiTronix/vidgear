@@ -221,6 +221,13 @@ nav:
       - Parameters: gears/webgear/params.md
       - References: bonus/reference/webgear.md
       - FAQs: help/webgear_faqs.md
+    - WebGear_RTC: 
+      - Overview: gears/webgear_rtc/overview.md
+      - Usage Examples: gears/webgear_rtc/usage.md
+      - Advanced Usages: gears/webgear_rtc/advanced.md
+      - Parameters: gears/webgear_rtc/params.md
+      - References: bonus/reference/webgear_rtc.md
+      - FAQs: help/webgear_rtc_faqs.md
     - NetGear_Async: 
       - Overview: gears/netgear_async/overview.md
       - Usage Examples: gears/netgear_async/usage.md
@@ -247,6 +254,7 @@ nav:
         - Helper Methods: bonus/reference/helper.md
       - vidgear.gears.asyncio:
         - WebGear API: bonus/reference/webgear.md
+        - WebGear_RTC API: bonus/reference/webgear_rtc.md
         - NetGear_Async API: bonus/reference/netgear_async.md
         - Helper Methods: bonus/reference/helper_async.md
     - Colorspace Manipulation: bonus/colorspace_manipulation.md
@@ -266,4 +274,5 @@ nav:
       - StreamGear FAQs: help/streamgear_faqs.md
       - NetGear FAQs: help/netgear_faqs.md
       - WebGear FAQs: help/webgear_faqs.md
+      - WebGear_RTC FAQs: help/webgear_rtc_faqs.md
       - NetGear_Async FAQs: help/netgear_async_faqs.md

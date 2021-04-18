@@ -31,7 +31,7 @@ limitations under the License.
 
 [![Build Status][github-cli]][github-flow] [![Codecov branch][codecov]][code] [![Build Status][appveyor]][app]
 
-[![Glitter chat][gitter-bagde]][gitter] [![PyPi version][pypi-badge]][pypi] [![Azure DevOps builds (branch)][azure-badge]][azure-pipeline]
+[![Azure DevOps builds (branch)][azure-badge]][azure-pipeline] [![PyPi version][pypi-badge]][pypi] [![Glitter chat][gitter-bagde]][gitter]
 
 [![Code Style][black-badge]][black]
 </div>
@@ -142,7 +142,7 @@ Each API is designed exclusively to handle/control/process different data-specif
   * **Asynchronous I/O Streaming Gear:**
 
     * [**WebGear:**](#webgear) ASGI Video-Server that broadcasts Live MJPEG-Frames to any web-browser on the network.
-    * [**WebGear_RTC:**](#webgear_rtc) Low-latency WebRTC media server for streaming videos to multiple clients over the network.
+    * [**WebGear_RTC:**](#webgear_rtc) Real-time Asyncio WebRTC media server for streaming directly to peer clients over the network.
 
 **D. Network Gears:**
 
@@ -498,9 +498,11 @@ Whereas supported protocol are: `tcp` and `ipc`.
 
 > *WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-Broadcaster API ideal for transmitting [Motion-JPEG](https://en.wikipedia.org/wiki/Motion_JPEG)-frames from a single source to multiple recipients via the browser.*
 
-WebGear API provides a highly extensible and flexible async wrapper around [**Starlette**][starlette]'s ASGI application and provides easy access to its complete framework. WebGear can flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
+WebGear API works on [**Starlette**](https://www.starlette.io/)'s ASGI application and provides a highly extensible and flexible async wrapper around its complete framework. WebGear can flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
 
-In layman's terms, WebGear acts as a powerful **Video Broadcaster** that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs, thereby granting it exclusive power of broadcasting frames from any incoming stream.
+WebGear API under the hood first encodes and then streams the sequence of independent JPEG frames _(known as [Motion-JPEG](https://en.wikipedia.org/wiki/Motion_JPEG))_ using Starlette's Multipart Streaming Response. This method has low latency, but the quality is not the best, since JPEG compression is not very efficient for motion video.
+
+In layman's terms, WebGear acts as a powerful **Video Broadcaster** that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs, thereby granting it exclusive power of broadcasting frames from any incoming stream. It also allows us to define our custom Server as source to manipulate frames easily before sending them across the network(see this [doc][webgear-cs] example).
 
 **Below is a snapshot of a WebGear Video Server in action on Chrome browser:**
 
@@ -549,11 +551,14 @@ web.shutdown()
 
 > *WebGear_RTC is similar to [WeGear API](#webgear) in many aspects but utilizes [WebRTC][webrtc] technology under the hood instead of Motion JPEG, which makes it suitable for building powerful video-streaming solutions for all modern browsers as well as native clients available on all major platforms.*
 
-WebGear_RTC is implemented with [**aiortc**][aiortc] pythonic asyncio constructs that allows WebRTC connection between the local computer and a remote peer and supports many features like SDP generation / parsing, Interactive Connectivity Establishment, with half-trickle and mDNS support, DTLS key and certificate generation, DTLS handshake etc.
+WebGear_RTC is implemented with the help of [**aiortc**][aiortc] library which is built on top of asynchronous I/O framework for Web Real-Time Communication (WebRTC) and Object Real-Time Communication (ORTC) and supports many features like SDP generation/parsing, Interactive Connectivity Establishment with half-trickle and mDNS support, DTLS key and certificate generation, DTLS handshake, etc.
 
-WebGear API provides a highly extensible and flexible async wrapper around [**Starlette**][starlette]'s ASGI application and provides easy access to its complete framework. WebGear can flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
+WebGear_RTC can handle [multiple consumers][webgear_rtc-mc] seamlessly and provides native support for ICE _(Interactive Connectivity Establishment)_ protocol, STUN _(Session Traversal Utilities for NAT)_, and TURN _(Traversal Using Relays around NAT)_ servers that help us to easily establish direct media connection with the remote peers for uninterrupted data flow. It also allows us to define our custom Server as a source to manipulate frames easily before sending them across the network(see this [doc][webgear_rtc-cs] example).
 
-In layman's terms, WebGear acts as a powerful **Video Broadcaster** that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs, thereby granting it exclusive power of broadcasting frames from any incoming stream.
+WebGear_RTC API works in conjunction with [**Starlette**][starlette]'s ASGI application and provides easy access to its complete framework. WebGear_RTC can also flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
+
+Additionally, WebGear_RTC API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs.
+
 
 **Below is a snapshot of a WebGear_RTC Media Server in action on Chrome browser:**
 
@@ -572,7 +577,7 @@ from vidgear.gears.asyncio import WebGear_RTC
 
 # various performance tweaks
 options = {
-    "frame_size_reduction": 40,
+    "frame_size_reduction": 30,
 }
 
 # initialize WebGear_RTC app
@@ -762,6 +767,9 @@ Internal URLs
 [switch_from_cv]:https://abhitronix.github.io/vidgear/latest/switch_from_cv/
 [ss-mode-doc]: https://abhitronix.github.io/vidgear/latest/gears/streamgear/usage/#a-single-source-mode
 [rtf-mode-doc]: https://abhitronix.github.io/vidgear/latest/gears/streamgear/usage/#b-real-time-frames-mode
+[webgear-cs]: https://abhitronix.github.io/vidgear/latest/gears/webgear/advanced/#using-webgear-with-a-custom-sourceopencv
+[webgear_rtc-cs]: https://abhitronix.github.io/vidgear/latest/gears/webgear_rtc/advanced/#using-webgear_rtc-with-a-custom-sourceopencv
+[webgear_rtc-mc]: https://abhitronix.github.io/vidgear/latest/gears/webgear_rtc/advanced/#using-webgear_rtc-as-real-time-broadcaster
 [docs]: https://abhitronix.github.io/vidgear
 
 <!--

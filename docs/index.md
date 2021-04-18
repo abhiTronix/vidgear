@@ -30,7 +30,7 @@ limitations under the License.
 
 > VidGear is a High-Performance **Video-Processing** Framework for building complex real-time media applications in python :fire:
 
-VidGear provides an easy-to-use, highly extensible, **Multi-Threaded + Asyncio Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and supercharged⚡️ real-time performance.
+VidGear provides an easy-to-use, highly extensible, **Multi-Threaded + Asyncio Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and supercharged⚡️ real-time performance.
 
 > _"Write Less and Accomplish More"_ — VidGear's Motto
 
@@ -75,7 +75,8 @@ These Gears can be classified as follows:
 
 * **Asynchronous I/O Streaming Gear:**
 
-    * [WebGear](gears/webgear/overview/): ASGI Video-Server that broadcasts Live Video-Frames to any web-browser on the network.
+    * [WebGear](gears/webgear/overview/): ASGI Video-Server that broadcasts Live MJPEG-Frames to any web-browser on the network.
+    * [WebGear_RTC](gears/webgear_rtc/overview/): Real-time Asyncio WebRTC media server for streaming directly to peer clients over the network.
 
 #### Network Gears
 
@@ -148,3 +149,4 @@ External URLs
 [ffmpeg]:https://www.ffmpeg.org/
 [pyscreenshot]:https://github.com/ponty/pyscreenshot
 [streamlink]:https://streamlink.github.io/
+[aiortc]:https://aiortc.readthedocs.io/en/latest/

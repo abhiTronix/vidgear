@@ -21,7 +21,7 @@ limitations under the License.
 # WebGear API 
 
 <figure>
-  <img src="../../../assets/gifs/webgear.gif" alt="WebGear in action!" loading="lazy" width=120%/>
+  <img src="../../../assets/gifs/webgear.gif" alt="WebGear in action!" loading="lazy" width=100%/>
   <figcaption>WebGear API's Video Server running at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</figcaption>
 </figure>
 
@@ -29,9 +29,11 @@ limitations under the License.
 
 > *WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-Broadcaster API ideal for transmitting [Motion-JPEG](https://en.wikipedia.org/wiki/Motion_JPEG)-frames from a single source to multiple recipients via the browser.*
 
-WebGear API provides a highly extensible and flexible async wrapper around [**Starlette**](https://www.starlette.io/)'s ASGI application and provides easy access to its complete framework. WebGear can flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
+WebGear API works on [**Starlette**](https://www.starlette.io/)'s ASGI application and provides a highly extensible and flexible async wrapper around its complete framework. WebGear can flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
 
-In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs, thereby granting it exclusive power of broadcasting frames from any incoming stream.
+WebGear API under the hood first encodes and then streams the sequence of independent JPEG frames _(known as [Motion-JPEG](https://en.wikipedia.org/wiki/Motion_JPEG))_ using Starlette's Multipart Streaming Response. This method has low latency, but the quality is not the best, since JPEG compression is not very efficient for motion video.
+
+In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides internal wrapper around [VideoGear](../../videogear/overview/), which itself provides internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
 
 &thinsp;
 

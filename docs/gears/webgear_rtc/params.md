@@ -18,15 +18,15 @@ limitations under the License.
 ===============================================
 -->
 
-# WebGear API Parameters 
+# WebGear_RTC API Parameters 
 
-!!! cite "WebGear provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs and their parameters."
+!!! cite "WebGear_RTC provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs and their parameters."
 
 &thinsp;
 
 ## **`enablePiCamera`** 
 
-This parameter provide direct access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively in WebGear. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
+This parameter provide direct access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively in WebGear_RTC. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
 
 **Data-Type:** Boolean
 
@@ -35,7 +35,7 @@ This parameter provide direct access to [PiGear](../../pigear/overview/) or [Cam
 **Usage:**
 
 ```python
-WebGear(enablePiCamera=True) # enable access to PiGear API
+WebGear_RTC(enablePiCamera=True) # enable access to PiGear API
 ```
 
 !!! info "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
@@ -46,14 +46,14 @@ WebGear(enablePiCamera=True) # enable access to PiGear API
 
 ## **`options`** 
 
-This parameter can be used to pass user-defined parameter to WebGear API by formatting them as this parameter's attribute. 
+This parameter can be used to pass user-defined parameter to WebGear_RTC API by formatting them as this parameter's attribute. 
 
 **Data-Type:** Dictionary
 
 **Default Value:** Its default value is `{}` 
 
 
-### WebGear Specific attributes
+### WebGear_RTC Specific attributes
 
 * **`custom_data_location`** _(string)_ : Can be used to change/alter [*default location*](../overview/#default-location) path to somewhere else. Its usage is as follows:
 
@@ -61,7 +61,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     # set default location to '/home/foo/foo1'
     options = {"custom_data_location": "/home/foo/foo1"}
     # assign it
-    WebGear(logging=True, **options)
+    WebGear_RTC(logging=True, **options)
     ```
 
 * **`overwrite_default_files`** _(boolean)_ : Can be used to force trigger the [Auto-generation process](../overview/#auto-generation-process) to overwrite existing data-files. Its usage is as follows:
@@ -72,7 +72,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     # force trigger the Auto-generation process
     options = {"overwrite_default_files": True}
     # assign it
-    WebGear(logging=True, **options)
+    WebGear_RTC(logging=True, **options)
     ```
 
 * **`frame_size_reduction`** _(int/float)_ : This attribute controls the size reduction _(in percentage)_ of the frame to be streamed on Server._ The value defaults to `20`, and must be no higher than `90` _(fastest, max compression, Barely Visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40-60`. Its usage is as follows:
@@ -81,52 +81,35 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     # frame-size will be reduced by 50%
     options = {"frame_size_reduction": 50} 
     # assign it
-    WebGear(logging=True, **options)
+    WebGear_RTC(logging=True, **options)
     ```
 
-* **`enable_infinite_frames`** _(boolean)_ : Can be used to continue streaming _(instead of terminating immediately)_ with emulated blank frames with text "No Input", whenever the input source disconnects. Its default value is `False`. Its usage is as follows
+* **`enable_live_broadcast`** _(boolean)_ : WebGear_RTC by default only supports one-to-one peer connection with a single consumer/client, Hence this boolean attribute can be used to enable live broadcast to multiple peer consumers/clients at same time. Its default value is `False`. Its usage is as follows:
 
-    !!! new "New in v0.2.1" 
-        `enable_infinite_frames` attribute was added in `v0.2.1`.
+    !!! note "`enable_infinite_frames` is enforced by default when this attribute is enabled(`True`)."
+
+    !!! tip "For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](./../../help/webgear_rtc_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear_rtc)"
+
+    ```python
+    # enable live boadcast to multiple consumers.
+    options = {"enable_live_broadcast": True}
+    # assign it
+    WebGear_RTC(logging=True, **options)
+    ```
+    !!! info "Its complete usage example is given [here ➶](../advanced/#using-webgear_rtc-as-real-time-broadcaster)."
+
+
+* **`enable_infinite_frames`** _(boolean)_ : Can be used to continue streaming _(instead of terminating immediately)_ with emulated blank frames with text "No Input", whenever the input source disconnects. Its default value is `False`. Its usage is as follows:
+
+
+    !!! warning "`enable_infinite_frames` is disabled when `enable_live_broadcast` attribute is enabled(`True`)."
 
     ```python
     # emulate infinite frames
     options = {"enable_infinite_frames": True}
     # assign it
-    WebGear(logging=True, **options)
+    WebGear_RTC(logging=True, **options)
     ```
-
-* **Various Encoding Parameters:** 
-
-    In WebGear, the input video frames are first encoded into [**Motion JPEG (M-JPEG or MJPEG**)](https://en.wikipedia.org/wiki/Motion_JPEG) video compression format in which each video frame or interlaced field of a digital video sequence is compressed separately as a JPEG image, before sending onto a server. Therefore, WebGear API provides various attributes to have full control over JPEG encoding performance and quality, which are as follows:
-
-
-    *  **`frame_jpeg_quality`** _(integer)_ : It controls the JPEG encoder quality and value varies from `0` to `100` (the higher is the better quality but performance will be lower). Its default value is `95`. Its usage is as follows:
-
-        ```python
-        # JPEG will be encoded at 80% quality
-        options = {"frame_jpeg_quality": 80}
-        # assign it
-        WebGear(logging=True, **options)
-        ```
-
-    * **`frame_jpeg_optimize`** _(boolean)_ : It enables various JPEG compression optimizations such as Chroma subsampling, Quantization table, etc. Its default value is `False`. Its usage is as follows:
-
-        ```python
-        # JPEG optimizations are enabled
-        options = {"frame_jpeg_optimize": True}
-        # assign it
-        WebGear(logging=True, **options)
-        ```
-
-    * **`frame_jpeg_progressive`** _(boolean)_ : It enables **Progressive** JPEG encoding instead of the **Baseline**.   Progressive Mode. Its default value is `False` means baseline mode is in-use. Its usage is as follows:
-
-        ```python
-        # Progressive JPEG encoding enabled
-        options = {"frame_jpeg_progressive": True}
-        # assign it
-        WebGear(logging=True, **options)
-        ```
 
 &nbsp; 
 
@@ -136,7 +119,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 ## Parameters for Stabilizer Backend
 
 
-!!! summary "Enable this backend with [`stabilize=True`](#stabilize) in WebGear."
+!!! summary "Enable this backend with [`stabilize=True`](#stabilize) in WebGear_RTC."
 
 
 ### **`stabilize`**
@@ -150,7 +133,7 @@ This parameter enable access to [Stabilizer Class](../../stabilizer/overview/) f
 **Usage:**
 
 ```python
-WebGear(stabilize=True) # enable stablization
+WebGear_RTC(stabilize=True) # enable stablization
 ```
 
 !!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
@@ -197,11 +180,11 @@ This parameter can be used in addition, to pass user-defined parameters supporte
 
 ## Parameters for CamGear backend
 
-!!! summary "Enable this backend with [`enablePiCamera=False`](#enablepicamera) in WebGear."
+!!! summary "Enable this backend with [`enablePiCamera=False`](#enablepicamera) in WebGear_RTC."
 
 ### **`source`**
 
-!!! warning "WebGear API will throw `RuntimeError` if `source` provided is invalid."
+!!! warning "WebGear_RTC API will throw `RuntimeError` if `source` provided is invalid."
 
 This parameter defines the source for the input stream.
 
@@ -216,18 +199,18 @@ Its valid input can be one of the following:
 - [x] **Index (*integer*):** _Valid index of the connected video device, for e.g `0`, or `1`, or `2` etc. as follows:_
 
     ```python
-    WebGear(source=0)
+    WebGear_RTC(source=0)
     ```
 
 - [x] **Filepath (*string*):** _Valid path of the video file, for e.g `"/home/foo.mp4"` as follows:_
 
     ```python
-    WebGear(source='/home/foo.mp4')
+    WebGear_RTC(source='/home/foo.mp4')
     ```
 
 - [x] **Streaming Services URL Address (*string*):** _Valid Video URL as input when Stream Mode is enabled(*i.e. `stream_mode=True`*)_ 
 
-    !!! quote "WebGear automatically detects whether `source` belong to YouTube or elsewhere, and handles it with appropriate API."
+    !!! quote "WebGear_RTC automatically detects whether `source` belong to YouTube or elsewhere, and handles it with appropriate API."
 
     * **Youtube URLs:** CamGear utilizes `pafy` with `youtube-dl` backend. For example `"https://youtu.be/bvetuLwJIkA"` as follows:
 
@@ -241,7 +224,7 @@ Its valid input can be one of the following:
             * `{video-id}`
 
         ```python
-        WebGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
+        WebGear_RTC(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
         ```
 
     * **Streaming Websites URLs:** CamGear utilizes `streamlink` backend. For example `"https://www.dailymotion.com/video/x7xsoud"` as follows:
@@ -251,13 +234,13 @@ Its valid input can be one of the following:
             The list of all supported Streaming Websites URLs can be found [here ➶](https://streamlink.github.io/plugin_matrix.html#plugins)
 
         ```python
-        WebGear(source='https://www.dailymotion.com/video/x7xsoud', stream_mode=True)
+        WebGear_RTC(source='https://www.dailymotion.com/video/x7xsoud', stream_mode=True)
         ```
 
 - [x] **Network Address (*string*):** _Valid (`http(s)`, `rtp`, `rstp`, `rtmp`, `mms`, etc.) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
 
     ```python
-    WebGear(source='rtsp://192.168.31.163:554/')
+    WebGear_RTC(source='rtsp://192.168.31.163:554/')
     ```
 
 - [x] **GStreamer Pipeline:** 
@@ -280,20 +263,20 @@ Its valid input can be one of the following:
     Be sure convert video output into BGR colorspace before pipelining as follows:
 
     ```python
-    WebGear(source='udpsrc port=5000 ! application/x-rtp,media=video,payload=96,clock-rate=90000,encoding-name=H264, ! rtph264depay ! decodebin ! videoconvert ! video/x-raw, format=BGR ! appsink')
+    WebGear_RTC(source='udpsrc port=5000 ! application/x-rtp,media=video,payload=96,clock-rate=90000,encoding-name=H264, ! rtph264depay ! decodebin ! videoconvert ! video/x-raw, format=BGR ! appsink')
     ```
 
 &nbsp;
 
 ### **`stream_mode`**
 
-This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), the WebGear API will interpret the given `source` input as YouTube URL address. 
+This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), the WebGear_RTC API will interpret the given `source` input as YouTube URL address. 
 
 !!! bug "Due to a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend _(`backend=cv2.CAP_GSTREAMER`)_](#backend) for any livestreams _(such as Twitch)_."
 
-!!! warning "WebGear automatically enforce GStreamer backend _(backend=`cv2.CAP_GSTREAMER`)_ for YouTube-livestreams!"
+!!! warning "WebGear_RTC automatically enforce GStreamer backend _(backend=`cv2.CAP_GSTREAMER`)_ for YouTube-livestreams!"
 
-!!! error "WebGear will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support. Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
+!!! error "WebGear_RTC will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support. Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
 
 **Data-Type:** Boolean
 
@@ -302,7 +285,7 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 **Usage:**
 
 ```python
-WebGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
+WebGear_RTC(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
 !!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
@@ -315,7 +298,7 @@ WebGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 
 This parameter manually selects the backend for OpenCV's VideoCapture class _(only if specified)_. 
 
-!!! warning "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225), WebGear automatically enforce GStreamer backend(`backend=cv2.CAP_GSTREAMER`) for YouTube-livestreams in [Stream Mode](#stream_mode). This behavior discards any `backend` parameter value for those streams."
+!!! warning "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225), WebGear_RTC automatically enforce GStreamer backend(`backend=cv2.CAP_GSTREAMER`) for YouTube-livestreams in [Stream Mode](#stream_mode). This behavior discards any `backend` parameter value for those streams."
 
 **Data-Type:** Integer
 
@@ -329,7 +312,7 @@ This parameter manually selects the backend for OpenCV's VideoCapture class _(on
 Its value can be for e.g. `backend = cv2.CAP_DSHOW` for selecting Direct Show as backend:
 
 ```python
-WebGear(source=0, backend = cv2.CAP_DSHOW)
+WebGear_RTC(source=0, backend = cv2.CAP_DSHOW)
 ```
 
 &nbsp;
@@ -346,13 +329,13 @@ This parameter provides the ability to alter various **Source Tweak Parameters**
 
 !!! tip "All supported parameters are listed [here ➶](../advanced/source_params/)"
 
-The desired parameters can be passed to WebGear API by formatting them as this parameter's attributes, as follows:
+The desired parameters can be passed to WebGear_RTC API by formatting them as this parameter's attributes, as follows:
 
 ```python
 # formatting parameters as dictionary attributes
 options = {"CAP_PROP_FRAME_WIDTH":320, "CAP_PROP_FRAME_HEIGHT":240, "CAP_PROP_FPS":60}
 # assigning it
-WebGear(source=0, **options)
+WebGear_RTC(source=0, **options)
 ```
 
 &nbsp; 
@@ -361,7 +344,7 @@ WebGear(source=0, **options)
 
 ## Parameters for PiGear backend 
 
-!!! summary "Enable this backend with [`enablePiCamera=True`](#enablepicamera) in WebGear."
+!!! summary "Enable this backend with [`enablePiCamera=True`](#enablepicamera) in WebGear_RTC."
 
 ### **`camera_num`** 
 
@@ -376,7 +359,7 @@ This parameter selects the camera module index which will be used as source, if 
 **Usage:**
 
 ```python
-WebGear(camera_num=0)
+WebGear_RTC(camera_num=0)
 ```
   
 &nbsp;
@@ -396,7 +379,7 @@ This parameter sets the resolution (i.e. `(width,height)`) of the source.
 **Usage:**
 
 ```python
-WebGear(resolution=(1280,720)) # sets 1280x720 resolution
+WebGear_RTC(resolution=(1280,720)) # sets 1280x720 resolution
 ```
 
 &nbsp;
@@ -416,7 +399,7 @@ This parameter sets the framerate of the source.
 **Usage:**
 
 ```python
-WebGear(framerate=60) # sets 60fps framerate
+WebGear_RTC(framerate=60) # sets 60fps framerate
 ```
 
 &nbsp;
@@ -434,7 +417,7 @@ This parameter provides the ability to alter various **Tweak Parameters** `like 
 
 !!! tip "All supported parameters are listed in [PiCamera Docs](https://picamera.readthedocs.io/en/release-1.13/api_camera.html)"
 
-The desired parameters can be passed to WebGear API by formatting them as this parameter's attributes, as follows:
+The desired parameters can be passed to WebGear_RTC API by formatting them as this parameter's attributes, as follows:
 
 ```python
 # formatting parameters as dictionary attributes
@@ -447,7 +430,7 @@ options = {
     "sensor_mode": 0,
 }
 # assigning it
-WebGear(logging=True, **options)
+WebGear_RTC(logging=True, **options)
 ```
 
 **User-specific attributes:**
@@ -466,7 +449,7 @@ Additionally, `options` parameter also support some User-specific attributes, wh
 
 ## Common Parameters
 
-!!! summary "These are common parameters that works with every backend in WebGear."
+!!! summary "These are common parameters that works with every backend in WebGear_RTC."
 
 ### **`colorspace`**
 
@@ -481,7 +464,7 @@ This parameter selects the colorspace of the source stream.
 !!! tip "All supported `colorspace` values are given [here ➶](../../../bonus/colorspace_manipulation/)"
 
 ```python
-WebGear(colorspace="COLOR_BGR2HSV")
+WebGear_RTC(colorspace="COLOR_BGR2HSV")
 ```
 
 !!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
@@ -500,14 +483,14 @@ This parameter enables logging _(if `True`)_, essential for debugging.
 **Usage:**
 
 ```python
-WebGear(logging=True)
+WebGear_RTC(logging=True)
 ```
 
 &nbsp;
 
 ### **`time_delay`** 
 
-This parameter set the time delay _(in seconds)_ before the WebGear API start reading the frames. This delay is only required if the source required some warm-up delay before starting up. 
+This parameter set the time delay _(in seconds)_ before the WebGear_RTC API start reading the frames. This delay is only required if the source required some warm-up delay before starting up. 
 
 **Data-Type:** Integer
 
@@ -516,7 +499,7 @@ This parameter set the time delay _(in seconds)_ before the WebGear API start re
 **Usage:**
 
 ```python
-WebGear(time_delay=1)  # set 1 seconds time delay
+WebGear_RTC(time_delay=1)  # set 1 seconds time delay
 ```
 
 &nbsp; 
