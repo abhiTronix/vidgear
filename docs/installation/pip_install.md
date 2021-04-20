@@ -42,7 +42,7 @@ Must require OpenCV(3.0+) python binaries installed for its core functions. You 
 
 ### FFmpeg 
 
-Must require for the video compression and encoding compatibilities within [**Compression Mode**](../../gears/writegear/compression/overview/) in [WriteGear](#writegear) API. 
+Must require for the video compression and encoding compatibilities within [StreamGear](#streamgear) and [**Compression Mode**](../../gears/writegear/compression/overview/) in [WriteGear](#writegear) API. 
 
 !!! tip "FFmpeg Installation"
 
@@ -53,15 +53,40 @@ Must require for the video compression and encoding compatibilities within [**Co
 Must Required if you're using Raspberry Pi Camera Modules with its [PiGear](../../gears/pigear/overview/) API. You can easily install it via pip:
 
 
-!!! danger "Make sure to [**enable Raspberry Pi hardware-specific settings**](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior to using this library, otherwise it won't work."
+!!! warning "Make sure to [**enable Raspberry Pi hardware-specific settings**](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior to using this library, otherwise it won't work."
 
 ```sh
   pip install picamera
 ``` 
 
+### Aiortc
+
+Must Required only if you're using the [WebGear_RTC API](../../gears/webgear_rtc/overview/). You can easily install it via pip:
+
+??? error "Microsoft Visual C++ 14.0 is required."
+    
+    Installing `aiortc` on windows requires Microsoft Build Tools for Visual C++ libraries installed. You can easily fix this error by installing any **ONE** of these choices:
+
+    !!! info "While the error is calling for VC++ 14.0 - but newer versions of Visual C++ libraries works as well."
+
+      - Microsoft [Build Tools for Visual Studio](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16).
+      - Alternative link to Microsoft [Build Tools for Visual Studio](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019).
+      - Offline installer: [vs_buildtools.exe](https://aka.ms/vs/16/release/vs_buildtools.exe)
+
+    Afterwards, Select: Workloads → Desktop development with C++, then for Individual Components, select only:
+
+      - [x] Windows 10 SDK
+      - [x] C++ x64/x86 build tools
+
+    Finally, proceed installing `aiortc` via pip.
+
+```sh
+  pip install aiortc
+``` 
+
 ### Uvloop
 
-Must required if you're using the [NetGear_Async](../../gears/netgear_async/overview/) API on UNIX machines for maximum performance. You can easily install it via pip:
+Must required only if you're using the [NetGear_Async](../../gears/netgear_async/overview/) API on UNIX machines for maximum performance. You can easily install it via pip:
 
 !!! error "uvloop is **[NOT yet supported on Windows Machines](https://github.com/MagicStack/uvloop/issues/14).**"
 !!! warning "Python-3.6 legacies support [**dropped in version `>=1.15.0`**](https://github.com/MagicStack/uvloop/releases/tag/v0.15.0). Kindly install previous `0.14.0` version instead."

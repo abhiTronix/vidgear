@@ -32,7 +32,7 @@ NetGear_Async is built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest
 
 NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to [NetGear API](../../netgear/overview/) but doesn't support any [NetGear's Exclusive Modes](../../netgear/overview/#exclusive-modes) yet. Furthermore, NetGear_Async allows us to define our custom Server as source to manipulate frames easily before sending them across the network(see this [doc](../usage/#using-netgear_async-with-a-custom-sourceopencv) example).
 
-In addition to all this, NetGear_Async also provides internal wrapper around [VideoGear](../../videogear/overview/), which itself provides internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
+In addition to all this, NetGear_Async API also provides internal wrapper around [VideoGear](../../videogear/overview/), which itself provides internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
 
 NetGear_Async as of now supports four ZeroMQ messaging patterns:
 

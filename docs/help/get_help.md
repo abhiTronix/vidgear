@@ -47,6 +47,7 @@ Checkout our Frequently Asked Questions, a curated list of all the questions wit
 - [WriteGear FAQs ➶](writegear_faqs.md)
 - [NetGear FAQs ➶](netgear_faqs.md)
 - [WebGear FAQs ➶](webgear_faqs.md)
+- [WebGear_RTC FAQs ➶](webgear_rtc_faqs.md)
 - [VideoGear FAQs ➶](videogear_faqs.md)
 - [Stabilizer Class FAQs ➶](stabilizer_faqs.md)
 - [NetGear_Async FAQs ➶](netgear_async_faqs.md)

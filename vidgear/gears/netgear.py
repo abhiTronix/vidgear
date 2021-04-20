@@ -39,16 +39,14 @@ logger.setLevel(log.DEBUG)
 
 
 class NetGear:
-
     """
     NetGear is exclusively designed to transfer video frames synchronously and asynchronously between interconnecting systems over the network in real-time.
 
-    NetGear implements a high-level wrapper around `PyZmQ` python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance
-    asynchronous distributed messaging library that provides a message queue, but unlike message-oriented middle-ware, its system can run without a dedicated
-    message broker.
+    NetGear implements a high-level wrapper around PyZmQ python library that contains python bindings for ZeroMQ - a high-performance asynchronous distributed messaging library
+    that provides a message queue, but unlike message-oriented middleware, its system can run without a dedicated message broker.
 
-    NetGear also supports real-time *Frame Compression capabilities* for optimizing performance while sending the frames directly over the network, by encoding
-    the frame before sending it and decoding it on the client's end automatically in real-time.
+    NetGear also supports real-time Frame Compression capabilities for optimizing performance while sending the frames directly over the network, by encoding the frame before sending
+    it and decoding it on the client's end automatically in real-time.
 
     !!! info
         NetGear API now internally implements robust *Lazy Pirate pattern* (auto-reconnection) for its synchronous messaging patterns _(i.e. `zmq.PAIR` & `zmq.REQ/zmq.REP`)_

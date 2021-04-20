@@ -42,17 +42,11 @@ logger.setLevel(log.DEBUG)
 
 
 class ScreenGear:
-
     """
+    ScreenGear is designed exclusively for ultra-fast Screencasting, which means it can grab frames from your monitor in real-time, either by defining an area on the computer screen or full-screen,
+    at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors as well as supports multiple backends.
 
-    ScreenGear is designed exclusively for ultra-fast Screencasting, that means it can grab frames from your monitor in real-time, either by define
-     an area on the computer screen, or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing
-     from multiple monitors.
-
-    ScreenGear API implements a multi-threaded wrapper around [`pyscreenshot`](https://github.com/ponty/pyscreenshot) & [`python-mss`](https://python-mss.readthedocs.io/index.html) python library, and also flexibly supports its internal parameter.
-
-    Furthermore, ScreenGear API relies on **Threaded Queue mode** for threaded, error-free and synchronized frame handling.
-
+    ScreenGear API implements a multi-threaded wrapper around pyscreenshot & python-mss python library, and also flexibly supports its internal parameter.
     """
 
     def __init__(

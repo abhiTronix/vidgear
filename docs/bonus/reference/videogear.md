@@ -18,7 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-!!! info "All VideoGear API parameters are explained [here ➶](../../../gears/videogear/params/)"
+!!! example "VideoGear API usage examples can be found [here ➶](../../../gears/videogear/usage/)"
+
+!!! info "VideoGear API parameters are explained [here ➶](../../../gears/videogear/params/)"
 
 ::: vidgear.gears.VideoGear	
 	

@@ -47,16 +47,16 @@ logger.setLevel(log.DEBUG)
 class WriteGear:
 
     """
-    WriteGear API provides a complete, flexible and robust wrapper around [**FFmpeg**](https://ffmpeg.org/), a leading multimedia framework. With WriteGear, we can process
-    real-time frames into a lossless compressed video-file with any suitable specification in just few easy lines of codes.
-    These specifications include setting video/audio properties such as `bitrate, codec, framerate, resolution, subtitles,  etc.`,
-    and also performing complex tasks such as multiplexing video with audio in real-time, while handling all errors robustly.
+    WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data. 
 
-    Best of all, WriteGear grants the complete freedom to play with any FFmpeg parameter with its exclusive **Custom Commands function**,
-    without relying on any Third-party library.
+    WriteGear API provides a complete, flexible, and robust wrapper around FFmpeg, a leading multimedia framework. WriteGear can process real-time frames into a lossless 
+    compressed video-file with any suitable specification (such asbitrate, codec, framerate, resolution, subtitles, etc.). It is powerful enough to perform complex tasks such as 
+    Live-Streaming (such as for Twitch) and Multiplexing Video-Audio with real-time frames in way fewer lines of code.
 
-    In addition to this, WriteGear also provides flexible access to [**OpenCV's VideoWriter API**](https://docs.opencv.org/3.4/dd/d9e/classcv_1_1VideoWriter.html) which provides some basic tools for video
-    frames encoding but without compression.
+    Best of all, WriteGear grants users the complete freedom to play with any FFmpeg parameter with its exclusive Custom Commands function without relying on any 
+    third-party API.
+
+    In addition to this, WriteGear also provides flexible access to OpenCV's VideoWriter API tools for video-frames encoding without compression.
 
     ??? tip "Modes of Operation"
 

@@ -46,14 +46,15 @@ logger.setLevel(log.DEBUG)
 
 class CamGear:
     """
-    CamGear API supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format
-    (_upto 4k tested_), any network stream URL such as *http(s), rtp, rstp, rtmp, mms, etc.* In addition to this, it also supports live Gstreamer's RAW pipelines
-    and YouTube video/livestreams URLs.
+    CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format (upto 4k tested),
+    any network stream URL such as http(s), rtp, rstp, rtmp, mms, etc. In addition to this, it also supports Gstreamer's RAW pipelines and various live video streaming
+    sites like YouTube, Twitch, Dailymotion etc.
 
-    CamGear API provides a flexible, high-level multi-threaded wrapper around [**OpenCV's VideoCapture Class**](https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html) with direct access to almost all of its available parameters,
-    and also internally employs `pafy` with `youtube-dl` backend for enabling seamless live *YouTube streaming*.
+    CamGear API provides a flexible, high-level multi-threaded wrapper around OpenCV's VideoCapture API with direct access to almost all of its available parameters.
+    It relies on Threaded Queue mode for threaded, error-free and synchronized frame handling.
 
-    CamGear relies exclusively on **Threaded Queue mode** for threaded, error-free and synchronized frame handling.
+    CamGear internally employs streamlink for piping live videos from various streaming services like Twitch, Livestream, Dailymotion etc., and also utilizies pafy
+    with youtube-dl at its backend for seamless YouTube pipelining.
     """
 
     def __init__(
@@ -229,9 +230,7 @@ class CamGear:
             self.__threaded_queue_mode = True
         # Thread Timeout
         self.__thread_timeout = options.pop("THREAD_TIMEOUT", None)
-        if self.__thread_timeout and isinstance(
-            self.__thread_timeout, (int, float)
-        ):
+        if self.__thread_timeout and isinstance(self.__thread_timeout, (int, float)):
             # set values
             self.__thread_timeout = int(self.__thread_timeout)
         else:
@@ -306,7 +305,7 @@ class CamGear:
             self.framerate = _fps
 
         # applying time delay to warm-up webcam only if specified
-        if time_delay:
+        if time_delay and isinstance(time_delay, (int, float)):
             time.sleep(time_delay)
 
         # frame variable initialization

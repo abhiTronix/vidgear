@@ -21,12 +21,12 @@ limitations under the License.
 # Install from source
 
 
-> _Best option for trying latest patches(maybe experimental), forking for Pull Requests, or automatically installing all dependencies(except FFmpeg)._
+> _Best option for trying latest patches(maybe experimental), forking for Pull Requests, or automatically installing all dependencies(with a few exceptions)._
 
 
 ## Prerequisites
 
-When installing VidGear from source, FFmpeg is the only dependency you need to install manually:
+When installing VidGear from source, FFmpeg and Aiortc is the only dependency you need to install manually:
 
 !!! question "What about rest of the dependencies?"
 
@@ -34,11 +34,38 @@ When installing VidGear from source, FFmpeg is the only dependency you need to i
 
 ### FFmpeg
 
-Must require for the video compression and encoding compatibilities within [**Compression Mode**](../../gears/writegear/compression/overview/) in [WriteGear](#writegear) API. 
+Must require for the video compression and encoding compatibilities within [StreamGear](#streamgear) and [**Compression Mode**](../../gears/writegear/compression/overview/) in [WriteGear](#writegear) API. 
 
 !!! tip "FFmpeg Installation"
 
     Follow this dedicated [**FFmpeg Installation doc**](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
+
+
+### Aiortc
+
+Must Required only if you're using the [WebGear_RTC API](../../gears/webgear_rtc/overview/). You can easily install it via pip:
+
+??? error "Microsoft Visual C++ 14.0 is required."
+    
+    Installing `aiortc` on windows requires Microsoft Build Tools for Visual C++ libraries installed. You can easily fix this error by installing any **ONE** of these choices:
+
+    !!! info "While the error is calling for VC++ 14.0 - but newer versions of Visual C++ libraries works as well."
+
+      - Microsoft [Build Tools for Visual Studio](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16).
+      - Alternative link to Microsoft [Build Tools for Visual Studio](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019).
+      - Offline installer: [vs_buildtools.exe](https://aka.ms/vs/16/release/vs_buildtools.exe)
+
+    Afterwards, Select: Workloads → Desktop development with C++, then for Individual Components, select only:
+
+      - [x] Windows 10 SDK
+      - [x] C++ x64/x86 build tools
+
+    Finally, proceed installing `aiortc` via pip.
+
+```sh
+  pip install aiortc
+``` 
+
 
 &nbsp;
 

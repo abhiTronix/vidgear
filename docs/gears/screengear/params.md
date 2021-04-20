@@ -78,7 +78,7 @@ This parameter selects the colorspace of the source stream.
 ScreenGear(colorspace="COLOR_BGR2HSV")
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-screengear-with-direct-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](../usage/#using-screengear-with-direct-colorspace-manipulation)"
 
 &nbsp;
 

@@ -38,7 +38,7 @@ This parameter provide direct access to [PiGear](../../pigear/overview/) or [Cam
 WebGear(enablePiCamera=True) # enable access to PiGear API
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
+!!! example "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
 
 
 &nbsp; 
@@ -75,7 +75,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     WebGear(logging=True, **options)
     ```
 
-* **`frame_size_reduction`** _(int/float)_ : This attribute controls the size reduction _(in percentage)_ of the frame to be streamed on Server._ The value defaults to `20`, and must be no higher than `90` _(fastest, max compression, Barely Visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40-60`. Its usage is as follows:
+* **`frame_size_reduction`** _(int/float)_ : This attribute controls the size reduction _(in percentage)_ of the frame to be streamed on Server. The value defaults to `20`, and must be no higher than `90` _(fastest, max compression, Barely Visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40-60`. Its usage is as follows:
 
     ```python
     # frame-size will be reduced by 50%
@@ -84,13 +84,13 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     WebGear(logging=True, **options)
     ```
 
-* **`enable_infinite_frames`** _(boolean)_ : Can be used to continue stream with blank frames with text "No Input", even when the input source disconnects. Its usage is as follows:
+* **`enable_infinite_frames`** _(boolean)_ : Can be used to continue streaming _(instead of terminating immediately)_ with emulated blank frames with text "No Input", whenever the input source disconnects. Its default value is `False`. Its usage is as follows
 
     !!! new "New in v0.2.1" 
         `enable_infinite_frames` attribute was added in `v0.2.1`.
 
     ```python
-    # force trigger the Auto-generation process
+    # emulate infinite frames
     options = {"enable_infinite_frames": True}
     # assign it
     WebGear(logging=True, **options)
@@ -153,7 +153,7 @@ This parameter enable access to [Stabilizer Class](../../stabilizer/overview/) f
 WebGear(stabilize=True) # enable stablization
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
+!!! example "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
 
 &nbsp; 
 
@@ -305,7 +305,7 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 WebGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
+!!! example "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
 
 
 &nbsp;
@@ -484,7 +484,7 @@ This parameter selects the colorspace of the source stream.
 WebGear(colorspace="COLOR_BGR2HSV")
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
 
 &nbsp;
 

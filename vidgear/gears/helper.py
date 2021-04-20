@@ -34,6 +34,8 @@ import requests
 from tqdm import tqdm
 from colorlog import ColoredFormatter
 from pkg_resources import parse_version
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 try:
     # import OpenCV Binaries
@@ -100,6 +102,28 @@ logger = log.getLogger("Helper")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+
+# set default timer for download requests
+DEFAULT_TIMEOUT = 3
+
+
+class TimeoutHTTPAdapter(HTTPAdapter):
+    """
+    A custom Transport Adapter with default timeouts
+    """
+
+    def __init__(self, *args, **kwargs):
+        self.timeout = DEFAULT_TIMEOUT
+        if "timeout" in kwargs:
+            self.timeout = kwargs["timeout"]
+            del kwargs["timeout"]
+        super().__init__(*args, **kwargs)
+
+    def send(self, request, **kwargs):
+        timeout = kwargs.get("timeout")
+        if timeout is None:
+            kwargs["timeout"] = self.timeout
+        return super().send(request, **kwargs)
 
 
 def restore_levelnames():
@@ -267,7 +291,7 @@ def get_supported_vencoders(path):
 
     Find and returns FFmpeg's supported video encoders
 
-    Parameters:`
+    Parameters:
         path (string): absolute path of FFmpeg binaries
 
     **Returns:** List of supported encoders.
@@ -281,7 +305,7 @@ def get_supported_vencoders(path):
         if x.decode("utf-8").strip().startswith("V")
     ]
     # compile regex
-    finder = re.compile("\.\.\s[a-z0-9_-]+")
+    finder = re.compile(r"\.\.\s[a-z0-9_-]+")
     # find all outputs
     outputs = finder.findall("\n".join(supported_vencoders))
     # return outputs
@@ -365,7 +389,7 @@ def validate_video(path, video_path=None):
     return result if (len(result) == 2) else None
 
 
-def create_blank_frame(frame=None, text=""):
+def create_blank_frame(frame=None, text="", logging=False):
     """
     ### create_blank_frame
 
@@ -385,16 +409,20 @@ def create_blank_frame(frame=None, text=""):
     blank_frame = np.zeros((height, width, 3), np.uint8)
     # setup text
     if text and isinstance(text, str):
-        logger.debug("Adding text: {}".format(text))
+        if logging:
+            logger.debug("Adding text: {}".format(text))
         # setup font
-        font = cv2.FONT_HERSHEY_DUPLEX
+        font = cv2.FONT_HERSHEY_SCRIPT_COMPLEX
         # get boundary of this text
-        textsize = cv2.getTextSize(text, font, 4, 5)[0]
+        fontScale = min(height, width) / (25 / 0.25)
+        textsize = cv2.getTextSize(text, font, fontScale, 5)[0]
         # get coords based on boundary
         textX = (width - textsize[0]) // 2
         textY = (height + textsize[1]) // 2
         # put text
-        cv2.putText(blank_frame, text, (textX, textY), font, 4, (125, 125, 125), 5)
+        cv2.putText(
+            blank_frame, text, (textX, textY), font, fontScale, (125, 125, 125), 6
+        )
     # return frame
     return blank_frame
 
@@ -562,7 +590,7 @@ def youtube_url_validator(url):
     """
     youtube_regex = (
         r"(?:http:|https:)*?\/\/(?:www\.|)(?:youtube\.com|m\.youtube\.com|youtu\.|youtube-nocookie\.com).*"
-        "(?:v=|v%3D|v\/|(?:a|p)\/(?:a|u)\/\d.*\/|watch\?|vi(?:=|\/)|\/embed\/|oembed\?|be\/|e\/)([^&?%#\/\n]*)"
+        r"(?:v=|v%3D|v\/|(?:a|p)\/(?:a|u)\/\d.*\/|watch\?|vi(?:=|\/)|\/embed\/|oembed\?|be\/|e\/)([^&?%#\/\n]*)"
     )
     matched = re.search(youtube_regex, url)
     # check for None-type
@@ -686,11 +714,10 @@ def get_valid_ffmpeg_path(
 
             except Exception as e:
                 # log if any error occurred
-                if logging:
-                    logger.exception(str(e))
-                    logger.debug(
-                        "Error in downloading FFmpeg binaries, Check your network and Try again!"
-                    )
+                logger.exception(str(e))
+                logger.error(
+                    "Error in downloading FFmpeg binaries, Check your network and Try again!"
+                )
                 return False
 
         if os.path.isfile(final_path):
@@ -780,18 +807,29 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                 logger.debug(
                     "No Custom FFmpeg path provided. Auto-Installing FFmpeg static binaries from GitHub Mirror now. Please wait..."
                 )
-                response = requests.get(file_url, stream=True, timeout=2)
-                response.raise_for_status()
-                total_length = response.headers.get("content-length")
-                assert not (
-                    total_length is None
-                ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
-                bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
-                for data in response.iter_content(chunk_size=4096):
-                    f.write(data)
-                    if len(data) > 0:
-                        bar.update(len(data))
-                bar.close()
+                # create session
+                with requests.Session() as http:
+                    # setup retry strategy
+                    retries = Retry(
+                        total=3,
+                        backoff_factor=1,
+                        status_forcelist=[429, 500, 502, 503, 504],
+                    )
+                    # Mount it for https usage
+                    adapter = TimeoutHTTPAdapter(timeout=2.0, max_retries=retries)
+                    http.mount("https://", adapter)
+                    response = http.get(file_url, stream=True)
+                    response.raise_for_status()
+                    total_length = response.headers.get("content-length")
+                    assert not (
+                        total_length is None
+                    ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
+                    bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
+                    for data in response.iter_content(chunk_size=4096):
+                        f.write(data)
+                        if len(data) > 0:
+                            bar.update(len(data))
+                    bar.close()
             logger.debug("Extracting executables.")
             with zipfile.ZipFile(file_name, "r") as zip_ref:
                 zip_fname, _ = os.path.split(zip_ref.infolist()[0].filename)

@@ -94,13 +94,13 @@ setup(
         "numpy",
         "youtube-dl{}".format(latest_version("youtube-dl")),
         "streamlink{}".format(latest_version("streamlink")),
-        "requests",
+        "requests{}".format(latest_version("requests")),
         "pyzmq{}".format(latest_version("pyzmq")),
         "colorlog",
         "colorama",
         "tqdm",
-        "pyscreenshot{}".format(latest_version("pyscreenshot")),
         "Pillow",
+        "pyscreenshot{}".format(latest_version("pyscreenshot")),
     ]
     + (["opencv-python"] if test_opencv() else [])
     + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
@@ -118,8 +118,13 @@ setup(
             "msgpack_numpy",
         ]
         + (
+            ["aiortc{}".format(latest_version("aiortc"))]
+            if (platform.system() != "Windows")
+            else []
+        )
+        + (
             (
-                ["uvloop".format(latest_version("uvloop"))]
+                ["uvloop{}".format(latest_version("uvloop"))]
                 if sys.version_info[:2] >= (3, 7)
                 else ["uvloop==0.14.0"]
             )
@@ -135,6 +140,7 @@ setup(
         "starlette",
         "mss",
         "pyzmq",
+        "aiortc",
         "uvicorn",
         "uvloop",
         "pafy",

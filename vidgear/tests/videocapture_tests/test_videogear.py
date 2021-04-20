@@ -20,10 +20,12 @@ limitations under the License.
 # import the necessary packages
 
 import os
+import sys
 import pytest
+import importlib
+import platform
 import logging as log
 import tempfile
-import timeout_decorator
 
 from vidgear.gears import VideoGear
 from vidgear.gears.helper import logger_handler
@@ -49,13 +51,26 @@ def return_testvideo_path():
     return os.path.abspath(path)
 
 
+@pytest.mark.skipif((platform.system() != "Linux"), reason="Not Implemented")
 def test_PiGear_import():
     """
     Testing VideoGear Import -> assign to fail when PiGear class is imported
     """
-    with pytest.raises(ImportError):
+    # cleanup environment
+    try:
+        importlib.reload("picamera")
+        importlib.reload("picamera.array")
+    except TypeError:
+        pass
+
+    try:
         stream = VideoGear(enablePiCamera=True, logging=True).start()
         stream.stop()
+    except Exception as e:
+        if isinstance(e, ImportError):
+            pytest.xfail(str(e))
+        else:
+            pytest.fail(str(e))
 
 
 # Video credit: http://www.liushuaicheng.org/CVPR2014/index.html
@@ -90,10 +105,6 @@ test_data = [
 ]
 
 
-@pytest.mark.xfail(raises=StopIteration)
-@timeout_decorator.timeout(
-    600 if not _windows else None, timeout_exception=StopIteration
-)
 @pytest.mark.parametrize("source, options", test_data)
 def test_video_stablization(source, options):
     """
@@ -115,5 +126,4 @@ def test_video_stablization(source, options):
         logger.debug("Input Framerate: {}".format(framerate))
         assert framerate > 0
     except Exception as e:
-        if not isinstance(e, StopIteration):
-            pytest.fail(str(e))
+        pytest.fail(str(e))

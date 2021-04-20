@@ -42,7 +42,15 @@ limitations under the License.
 
 ## Can WebGear always need Active Internet Connection?
 
-**Answer:** No, it just need internet only once during [Auto-Generation Process ➶](../../gears/webgear/overview/#auto-generation-process) to download default data-files and it takes few seconds. You can also download files manually from [Github Server](https://github.com/abhiTronix/webgear_data) or even add [your own custom files](../../gears/webgear/advanced/#rules-for-altering-webgear-files-and-folders). _For more information see [Data-Files Auto-Generation WorkFlow ➶](../../gears/webgear/overview/#data-files-auto-generation-workflow-for-webgear)_
+**Answer:** No, it just need internet only once during [Auto-Generation Process ➶](../../gears/webgear/overview/#auto-generation-process) to download default data-files and it takes few seconds. You can also download files manually from [**Github Server**](https://github.com/abhiTronix/vidgear-vitals) or even add [your own custom files](../../gears/webgear/advanced/#rules-for-altering-webgear-files-and-folders). _For more information see [Data-Files Auto-Generation WorkFlow ➶](../../gears/webgear/overview/#data-files-auto-generation-workflow-for-webgear)_
+
+&nbsp;
+
+## Is it possible to stream on a different device on the network with WebGear?
+
+!!! note "If you set `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine, then you must still use http://localhost:8000/ to access stream on your host machine browser."
+
+For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. Then type the IP-address of source machine followed by the defined `port` value in your desired Client Device's browser (for e.g. http://192.27.0.101:8000) to access the stream.
 
 &nbsp;
 

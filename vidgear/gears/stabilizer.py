@@ -252,8 +252,8 @@ class Stabilizer:
                     valid_previous_keypoints, valid_curr_kps
                 )[0]
         except cv2.error as e:
-            # catch any OpenCV assertion errors
-            logger.error("Video-Frame is too dark to generate any transformations!")
+            # catch any OpenCV assertion errors and warn user
+            logger.warning("Video-Frame is too dark to generate any transformations!")
             transformation = None
 
         # check if transformation is not None

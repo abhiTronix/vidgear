@@ -18,7 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-!!! info "All CamGear API parameters are explained [here ➶](../../../gears/camgear/params/)"
+!!! example "CamGear API usage examples can be found [here ➶](../../../gears/camgear/usage/)"
+
+!!! info "CamGear API parameters are explained [here ➶](../../../gears/camgear/params/)"
 
 ::: vidgear.gears.CamGear
 

@@ -242,7 +242,10 @@ This mode provide [`stream()`](../../../bonus/reference/streamgear/#vidgear.gear
 
     * **NEVER** assign anything to [`-video_source`](../params/#a-exclusive-parameters) attribute of [`stream_params`](../params/#supported-parameters) dictionary parameter, otherwise [Single-Source Mode](#a-single-source-mode) may get activated, and as a result, using [`stream()`](../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) function will throw **`RuntimeError`**!
 
-    * In this mode, Primary Stream's framerate defaults to [`-input_framerate`](../params/#a-exclusive-parameters) attribute value, if defined, else it will be `25.0` fps.
+    * You **MUST** use [`-input_framerate`](../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in this mode, otherwise audio delay will occur in output streams.
+
+    * Input framerate defaults to `25.0` fps if [`-input_framerate`](../params/#a-exclusive-parameters) attribute value not defined. 
+
 
 
 &thinsp;
@@ -313,7 +316,7 @@ If you want to **Livestream in Real-time Frames Mode** _(chunks will contain inf
 
 !!! warning "All Chunks will be overwritten in this mode after every few Chunks _(equal to the sum of `-window_size` & `-extra_window_size` values)_, Hence Newer Chunks and Manifest contains NO information of any older video-frames."
 
-!!! note "If input video-source _(i.e. `-video_source`)_ contains any audio stream/channel, then it automatically gets mapped to all generated streams without any extra efforts."
+!!! note "In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
 
 ```python
 # import required libraries
@@ -322,10 +325,11 @@ from vidgear.gears import StreamGear
 import cv2
 
 # open any valid video stream(from web-camera attached at index `0`)
-stream = CamGear(source=0).start() 
+stream = CamGear(source=0).start()
 
-# enable livestreaming
-stream_params = {"-livestream": True}
+# enable livestreaming and retrieve framerate from CamGear Stream and
+# pass it as `-input_framerate` parameter for controlled framerate
+stream_params = {"-input_framerate": stream.framerate, "-livestream": True}
 
 # describe a suitable manifest-file location/name
 streamer = StreamGear(output="dash_out.mpd", **stream_params)
@@ -340,9 +344,7 @@ while True:
     if frame is None:
         break
 
-
     # {do something with the frame here}
-
 
     # send frame to streamer
     streamer.stream(frame)
@@ -425,7 +427,7 @@ streamer.terminate()
 
 In Real-time Frames Mode, StreamGear API provides exclusive [`-input_framerate`](../params/#a-exclusive-parameters)  attribute for its `stream_params` dictionary parameter, that allow us to set the assumed constant framerate for incoming frames. In this example, we will retrieve framerate from webcam video-stream, and set it as value for `-input_framerate` attribute in StreamGear:
 
-!!! tip "Remember, the Primary Stream framerate default to `-input_framerate` attribute value _(if defined)_ in Real-time Frames Mode."
+!!! danger "Remember, Input framerate default to `25.0` fps if [`-input_framerate`](../params/#a-exclusive-parameters) attribute value not defined in Real-time Frames mode."
 
 ```python
 # import required libraries
@@ -611,6 +613,8 @@ In Real-time Frames Mode, if you want to add audio to your streams, you've to us
 
 !!! failure "Make sure this `-audio` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
 
+!!! warning "You **MUST** use [`-input_framerate`](../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
+
 !!! tip "You can also assign a valid Audio URL as input, rather than filepath. More details can be found [here ➶](../params/#a-exclusive-parameters)"
 
 ```python
@@ -622,13 +626,14 @@ import cv2
 # open any valid video stream(for e.g `foo1.mp4` file)
 stream = CamGear(source='foo1.mp4').start() 
 
-# activate Single-Source Mode and various streams, along with custom audio
+# add various streams, along with custom audio
 stream_params = {
     "-streams": [
         {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
         {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
         {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps
     ],
+    "-input_framerate": stream.framerate, # controlled framerate for audio-video sync !!! don't forget this line !!!
     "-audio": "/home/foo/foo1.aac" # assigns input audio-source: "/home/foo/foo1.aac"
 }
 
@@ -705,7 +710,7 @@ import cv2
 # Open suitable video stream, such as webcam on first index(i.e. 0)
 stream = VideoGear(source=0).start() 
 
-# activate Single-Source Mode and various streams with custom Video Encoder and optimizations
+# add various streams with custom Video Encoder and optimizations
 stream_params = {
     "-streams": [
         {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
