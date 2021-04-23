@@ -473,7 +473,7 @@ NetGear seamlessly supports [**Bidirectional data transmission**][netgear_bidata
 
 NetGear can also robustly handle [**Multiple Server-Systems**][netgear_multi_server_doc] and [**Multiple Client-Systems**][netgear_multi_client_doc] and at once, thereby providing access to a seamless exchange of video-frames & data between multiple devices across the network at the same time.
 
-NetGear supports real-time [**Frame Compression capabilities**][netgear_compression_doc] for optimizing performance while sending the frames directly over the network by automatic encoding/decoding in real-time. 
+NetGear supports real-time [**JPEG Frame Compression**][netgear_compression_doc] capabilities for optimizing performance while sending the frames directly over the network by automatic encoding/decoding in real-time. 
 
 For security, NetGear implements easy access to ZeroMQ's powerful, smart & secure Security Layers that enable [**Strong encryption on data**][netgear_security_doc] and unbreakable authentication between the Server and the Client with the help of custom certificates/keys.
 

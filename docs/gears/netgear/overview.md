@@ -31,7 +31,7 @@ limitations under the License.
 
 NetGear implements a high-level wrapper around [PyZmQ](https://github.com/zeromq/pyzmq) python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance asynchronous distributed messaging library that provides a message queue, but unlike message-oriented middleware, its system can run without a dedicated message broker. 
 
-NetGear also supports real-time [*Frame Compression capabilities*](../advanced/compression/) for optimizing performance while sending the frames directly over the network, by encoding the frame before sending it and decoding it on the client's end automatically in real-time.
+NetGear also supports real-time [*JPEG Frame Compression*](../advanced/compression/) capabilities for optimizing performance while sending the frames directly over the network, by encoding the frame before sending it and decoding it on the client's end automatically in real-time.
 
 !!! quote "Lazy Pirate pattern in NetGear API"
 

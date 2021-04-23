@@ -310,7 +310,7 @@ class NetGear:
                 self.__jpeg_compression = value
             elif key == "jpeg_compression_quality" and isinstance(value, (int, float)):
                 # set valid jpeg quality
-                if value >= 10 and value <= 95:
+                if value >= 10 and value <= 100:
                     self.__jpeg_compression_quality = int(value)
                 else:
                     logger.warning("Skipped invalid `jpeg_compression_quality` value!")

@@ -45,17 +45,17 @@ This parameter sets the valid Network Port for Server/Client. Network port is a 
 
 !!! danger "Exception for Exclusive Modes"
     
-    * [**In Multi-Servers Mode**](../advanced/multi_server/):
+    [**In Multi-Servers Mode**](../advanced/multi_server/):
 
-        * A unique port number **MUST** be assigned to each Server on the network using this parameter. 
-        * At Client end, a List/Tuple of all available Server(s) ports **MUST** be assigned using this same parameter. 
-        * See its usage example [here ➶](../advanced/multi_server/#bare-minimum-usage).
+      * A unique port number **MUST** be assigned to each Server on the network using this parameter. 
+      * At Client end, a List/Tuple of all available Server(s) ports **MUST** be assigned using this same parameter. 
+      * See its usage example [here ➶](../advanced/multi_server/#bare-minimum-usage).
 
-    *  [**In Multi-Client Mode**](../advanced/multi_client/):
+    [**In Multi-Client Mode**](../advanced/multi_client/):
 
-        * A unique port number **MUST** be assigned to each Client on the network using this parameter. 
-        * At Server end, a List/Tuple of all available Client(s) ports **MUST** be assigned using this same parameter. 
-        * See its usage example [here ➶](../advanced/multi_client/#bare-minimum-usage).
+      * A unique port number **MUST** be assigned to each Client on the network using this parameter. 
+      * At Server end, a List/Tuple of all available Client(s) ports **MUST** be assigned using this same parameter. 
+      * See its usage example [here ➶](../advanced/multi_client/#bare-minimum-usage).
 
 **Data-Type:** String or List/Tuple
 
@@ -153,9 +153,13 @@ This parameter provides the flexibility to alter various NetGear API's internal 
 
     * **`overwrite_cert`** (_boolean_) : In Secure Mode, This internal attribute decides whether to overwrite existing Public+Secret Keypair/Certificates or not, ==at the Server-end only==. More information can be found [here ➶](../advanced/secure_mode/#supported-attributes)
 
-    * **`compression_format`**(_string_): This internal attribute activates frame compression with selected encoding format. The possible values are `.jpg`, `.png`, `.bmp`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
+    * **`jpeg_compression`**(_bool_): This attribute can be used to activate(if True)/deactivate(if False) Frame Compression. Its default value is also `True`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
 
-    * **`compression_param`**(_integer & list/tuple_): This internal attribute allow us to pass different format-specific [Encoding parameters](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga461f9ac09887e47797a54567df3b8b63) and [Decoding flags](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e). More information can be found [here ➶](../advanced/compression/#supported-attributes)
+    * **`jpeg_compression_quality`**(_int/float_): It controls the JPEG quantization factor. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
+
+    * **`jpeg_compression_fastdct`**(_bool_): This attribute if True, use fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
+
+    * **`jpeg_compression_fastupsample`**(_bool_): This attribute if True, use fastest color upsampling method. Its default value is `False`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
 
     * **`max_retries`**(_integer_): This internal attribute controls the maximum retries before Server/Client exit itself, if it's unable to get any response/reply from the socket before a certain amount of time, when synchronous messaging patterns like (`zmq.PAIR` & `zmq.REQ/zmq.REP`) are being used. It's value can anything greater than `0`, and its default value is `3`.
 
