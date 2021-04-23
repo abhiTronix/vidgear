@@ -293,21 +293,12 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
             (np.random.random(size=(480, 640, 3)) * 255).astype(np.uint8),
             {
                 "bidirectional_mode": True,
-                "compression_format": ".jpg",
-                "compression_param": (
-                    cv2.IMREAD_COLOR,
-                    [
-                        cv2.IMWRITE_JPEG_QUALITY,
-                        85,
-                        cv2.IMWRITE_JPEG_PROGRESSIVE,
-                        False,
-                        cv2.IMWRITE_JPEG_OPTIMIZE,
-                        True,
-                    ],
-                ),
+                "jpeg_compression_quality":55.0,
+                "jpeg_compression_fastdct":True,
+                "jpeg_compression_fastupsample":True,
             },
         ),
-        (2, {1: "apple", 2: "cat"}, {"bidirectional_mode": True}),
+        (2, {"jpeg_compression":False, 1: "apple", 2: "cat", "jpeg_compression_quality":5}, {"bidirectional_mode": True}),
     ],
 )
 def test_bidirectional_mode(pattern, target_data, options):

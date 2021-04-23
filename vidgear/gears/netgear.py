@@ -199,7 +199,7 @@ class NetGear:
         self.__jpeg_compression = True  # enabled by default for all connections
         self.__jpeg_compression_quality = 90  # 90% quality
         self.__jpeg_compression_fastdct = True  # fastest DCT on by default
-        self.__jpeg_compression_fastupsample = False # fastupsample off by default
+        self.__jpeg_compression_fastupsample = False  # fastupsample off by default
 
         # defines frame compression on return data
         self.__ex_compression_params = None
@@ -305,11 +305,11 @@ class NetGear:
                         )
                     )
 
-            elif key == "jpeg_compression":
-                if isinstance(value, bool):
-                    # enable frame-compression encoding value
-                    self.__jpeg_compression = value
+            elif key == "jpeg_compression" and isinstance(value, bool):
+                # enable frame-compression encoding value
+                self.__jpeg_compression = value
             elif key == "jpeg_compression_quality" and isinstance(value, (int, float)):
+                # set valid jpeg quality
                 if value >= 10 and value <= 95:
                     self.__jpeg_compression_quality = int(value)
                 else:

@@ -22,7 +22,6 @@ limitations under the License.
 import os
 import sys
 import pytest
-import importlib
 import platform
 import logging as log
 import tempfile
@@ -57,10 +56,11 @@ def test_PiGear_import():
     Testing VideoGear Import -> assign to fail when PiGear class is imported
     """
     # cleanup environment
+
     try:
-        importlib.reload("picamera")
-        importlib.reload("picamera.array")
-    except TypeError:
+        del sys.modules["picamera"]
+        del sys.modules["picamera.array"]
+    except KeyError:
         pass
 
     try:

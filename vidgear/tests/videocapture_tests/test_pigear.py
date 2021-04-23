@@ -85,7 +85,7 @@ test_data = [
     ),
     (0, (640, 480), 60, 1, {"create_bug": True}, "None", RuntimeError),
     (0, (640, 480), 60, 0, {"create_bug": "fail"}, "None", RuntimeError),
-    (0, (640, 480), 60, 0, {"create_bug": ["fail"]}, "None", None),
+    (-1, (640, 480), 60, 0, {"create_bug": ["fail"]}, "None", None),
     (
         0,
         (640, 480),
