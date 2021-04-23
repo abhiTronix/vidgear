@@ -179,6 +179,75 @@ writer.close()
 
 &nbsp;
 
+
+## How to create MP4 segments from a video stream with WriteGear?
+
+**Answer:** See example below:
+
+!!! new "New in v0.2.1" 
+    This example was added in `v0.2.1`.
+
+```python
+# import required libraries
+from vidgear.gears import VideoGear
+from vidgear.gears import WriteGear
+import cv2
+
+# Open any video source `foo.mp4`
+stream = VideoGear(
+    source="foo.mp4", logging=True
+).start()
+
+# define required FFmpeg optimizing parameters for your writer
+output_params = {
+    "-c:v": "libx264",
+    "-crf": 22,
+    "-map": 0,
+    "-segment_time": 9,
+    "-g": 9,
+    "-sc_threshold": 0,
+    "-force_key_frames": "expr:gte(t,n_forced*9)",
+    "-clones": ["-f", "segment"],
+}
+
+# Define writer with defined parameters and
+writer = WriteGear(output_filename="output%03d.mp4", logging=True, **output_params)
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # write frame to writer
+    writer.write(frame)
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+
+# safely close writer
+writer.close()
+```
+
+&nbsp;
+
 ## Why this FFmpeg parameter is not working for me in compression mode?
 
 **Answer:** If some FFmpeg parameter doesn't work for you, then [tell us on Gitter ➶](https://gitter.im/vidgear/community), and if that doesn't help, then finally [report an issue ➶](../../contribution/issue/)

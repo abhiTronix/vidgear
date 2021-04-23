@@ -43,7 +43,7 @@ The following guidelines tells you how to submit a valid PR for vidGear:
 
 You can clone your [**Forked**](https://docs.github.com/en/free-pro-team@latest/github/getting-started-with-github/fork-a-repo) remote git to local and create your PR working branch as a sub-branch of latest [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch as follows:
 
-??? info "VidGear's Github Branches"
+??? info "Functions of different VidGear's Github Branches"
 
 	Following are the base branches for VidGear's code in its Github Repository:
 

@@ -115,6 +115,8 @@ VideoGear API provides a special internal wrapper around VidGear's Exclusive [**
 
 !!! tip "For a more detailed information on Video-Stabilizer Class, Read [here ➶](../../stabilizer/overview/)"
 
+!!! warning "The stabilizer might be slower for High-Quality/Resolution videos-frames."
+
 ```python
 # import required libraries
 from vidgear.gears import VideoGear

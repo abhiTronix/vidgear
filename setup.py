@@ -96,6 +96,7 @@ setup(
         "streamlink{}".format(latest_version("streamlink")),
         "requests{}".format(latest_version("requests")),
         "pyzmq{}".format(latest_version("pyzmq")),
+        "simplejpeg".format(latest_version("simplejpeg")),
         "colorlog",
         "colorama",
         "tqdm",

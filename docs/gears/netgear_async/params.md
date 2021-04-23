@@ -217,7 +217,7 @@ This parameter can be used in addition, to pass user-defined parameters supporte
 
 ## Parameters for CamGear backend
 
-!!! summary "Enable this backend with [`enablePiCamera=False`](#enablepicamera) in NetGear_Async."
+!!! summary "Enable this backend with [`enablePiCamera=False`](#enablepicamera) in NetGear_Async. Default is also `False`."
 
 ### **`source`**
 
@@ -398,7 +398,7 @@ This parameter selects the camera module index which will be used as source, if 
 **Usage:**
 
 ```python
-NetGear_Async(camera_num=0)
+NetGear_Async(enablePiCamera=True, camera_num=0)
 ```
   
 &nbsp;
@@ -418,7 +418,7 @@ This parameter sets the resolution (i.e. `(width,height)`) of the source.
 **Usage:**
 
 ```python
-NetGear_Async(resolution=(1280,720)) # sets 1280x720 resolution
+NetGear_Async(enablePiCamera=True, resolution=(1280,720)) # sets 1280x720 resolution
 ```
 
 &nbsp;
@@ -438,7 +438,7 @@ This parameter sets the framerate of the source.
 **Usage:**
 
 ```python
-NetGear_Async(framerate=60) # sets 60fps framerate
+NetGear_Async(enablePiCamera=True, framerate=60) # sets 60fps framerate
 ```
 
 &nbsp;
@@ -469,7 +469,7 @@ options = {
     "sensor_mode": 0,
 }
 # assigning it
-NetGear_Async(logging=True, **options)
+NetGear_Async(enablePiCamera=True, logging=True, **options)
 ```
 
 **User-specific attributes:**
