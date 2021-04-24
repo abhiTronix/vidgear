@@ -350,7 +350,8 @@ def test_bidirectional_mode(pattern, target_data, options):
             # server receives the data and cycle continues
             client_data = server.send(frame_server, message=target_data)
             # check if received frame exactly matches input frame
-            assert np.array_equal(frame_server, frame_client)
+            if "jpeg_compression" in options and options["jpeg_compression"] == False:
+                assert np.array_equal(frame_server, frame_client)
             # logger.debug data received at client-end and server-end
             logger.debug("Data received at Server-end: {}".format(server_data))
             logger.debug("Data received at Client-end: {}".format(client_data))
@@ -485,6 +486,7 @@ def test_multiclient_mode(pattern):
     options = {
         "multiclient_mode": True,
         "bidirectional_mode": True,
+        "jpeg_compression": False,
     }  # bidirectional_mode is activated for testing only
 
     # initialize
