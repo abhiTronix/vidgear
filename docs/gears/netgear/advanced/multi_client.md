@@ -31,7 +31,7 @@ limitations under the License.
 
 In Multi-Clients Mode, NetGear robustly handles Multiple Clients at once thereby able to broadcast frames and data across multiple Clients/Consumers in the network at same time. This mode works almost contrary to [Multi-Servers Mode](../multi_server/) but here data transfer works unidirectionally with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ only. Every new Client that connects to single Server can be identified by its unique port address on the network. 
 
-The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`) and can be easily activated in NetGear API through `multiclient_mode` attribute of its [`option`](../../params/#options) dictionary parameter during initialization.
+The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`) and can be easily activated in NetGear API through `multiclient_mode` attribute of its [`options`](../../params/#options) dictionary parameter during initialization.
 
 
 !!! warning "Multi-Clients is best for tranferring **Data with Video-frames** to specific multiple Clients at the same time. But if you're looking for sheer performance for broadcasting see [WebGear API](../../../webgear/overview/)."

@@ -24,7 +24,7 @@ limitations under the License.
 
 ## Overview
 
-The [`option`](../../params/#options) dictionary parameter in CamGear, gives user the ability to alter various **Source Tweak Parameters** available within [OpenCV's VideoCapture Class](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80). These tweak parameters can be used to manipulate input source Camera-Device properties _(such as its brightness, saturation, size, iso, gain etc.)_ seamlessly. Thereby, All Source Tweak Parameters supported by CamGear API are disscussed in this document.
+The [`options`](../../params/#options) dictionary parameter in CamGear, gives user the ability to alter various **Source Tweak Parameters** available within [OpenCV's VideoCapture Class](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80). These tweak parameters can be used to manipulate input source Camera-Device properties _(such as its brightness, saturation, size, iso, gain etc.)_ seamlessly. Thereby, All Source Tweak Parameters supported by CamGear API are disscussed in this document.
 
 &emsp; 
 
@@ -32,7 +32,7 @@ The [`option`](../../params/#options) dictionary parameter in CamGear, gives use
 
 	### Exclusive CamGear Parameters
 
-	In addition to Source Tweak Parameters, CamGear also provides some exclusive attributes for its [`option`](../../params/#options) dictionary parameters. These attributes are as follows:
+	In addition to Source Tweak Parameters, CamGear also provides some exclusive attributes for its [`options`](../../params/#options) dictionary parameters. These attributes are as follows:
 
 	- [X] `STREAM_RESOLUTION` _(string)_: This attribute can be used in CamGear's Stream Mode (`stream_mode=True`) for specifying supported stream resolution. Its possible values can be: `144p`, `240p`, `360p`, `480p`, `720p`, `1080p`, `1440p`, `2160p`, `worst`, `best`, and its default value is `best`. Its usage is as follows:
 
@@ -83,7 +83,7 @@ The [`option`](../../params/#options) dictionary parameter in CamGear, gives use
 
 !!! tip "You can easily check parameter values supported by your webcam, by hooking it to a Linux machine, and using the command `#!sh v4l2-ctl -d 0 --list-formats-ext` _(where 0 is an index of the given camera)_ to list the supported video parameters and their values. If that doesn't works, refer to its datasheet _(if available)_."
 
-!!! info "These parameters can be passed to CamGear's [`option`](../../params/#options) dictionary parameter by formatting them as its string attributes. Its complete usage example is [here ➶](../../usage/#using-camgear-with-variable-camera-properties)"
+!!! info "These parameters can be passed to CamGear's [`options`](../../params/#options) dictionary parameter by formatting them as its string attributes. Its complete usage example is [here ➶](../../usage/#using-camgear-with-variable-camera-properties)"
 
 &thinsp;
 

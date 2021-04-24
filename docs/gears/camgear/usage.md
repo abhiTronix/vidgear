@@ -76,7 +76,7 @@ CamGear API provides direct support for piping video streams from various popula
     - `STREAM_RESOLUTION` _(for specifying stream resolution)_
     - `STREAM_PARAMS` _(for specifying underlying API(i.e. [streamlink](https://streamlink.github.io/)) parameters)_ 
     
-    with its [`option`](../params/#options) dictionary parameter. **More information can be found [here ➶](../advanced/source_params/#exclusive-camgear-parameters)**
+    with its [`options`](../params/#options) dictionary parameter. **More information can be found [here ➶](../advanced/source_params/#exclusive-camgear-parameters)**
 
 ```python
 # import required libraries
@@ -137,7 +137,7 @@ CamGear API provides direct support for **Live _(with GStreamer)_ + Normal YouTu
     - `STREAM_RESOLUTION`: _(for specifying stream resolution)_
     - `STREAM_PARAMS`: _(for specifying underlying API(i.e. [youtube-dl](https://youtube-dl.org/)) parameters)_ 
 
-    with its [`option`](../params/#options) dictionary parameter. **More information can be found [here ➶](../advanced/source_params/#exclusive-camgear-parameters)**
+    with its [`options`](../params/#options) dictionary parameter. **More information can be found [here ➶](../advanced/source_params/#exclusive-camgear-parameters)**
 
 
 ```python

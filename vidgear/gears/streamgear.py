@@ -431,7 +431,7 @@ class StreamGear:
             if bitrate:
                 logger.info("Source Audio will be used for streams.")
                 # assign audio codec
-                output_parameters["-acodec"] = "aac"
+                output_parameters["-acodec"] = "copy"
                 output_parameters["a_bitrate"] = bitrate  # temporary handler
             else:
                 logger.warning(

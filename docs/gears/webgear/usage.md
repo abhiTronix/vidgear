@@ -42,7 +42,7 @@ You'll also need to install an ASGI Server to run following WebGear usage exampl
 
 ## Performance Enhancements :fire:
 
-WebGear provides certain performance enhancing attributes for its [`option`](../params/#options) dictionary parameter to cope with performance-throttling.
+WebGear provides certain performance enhancing attributes for its [`options`](../params/#options) dictionary parameter to cope with performance-throttling.
 
 !!! tip "Performance Enhancing Attributes"
 

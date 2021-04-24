@@ -28,30 +28,30 @@ limitations under the License.
 
 ## Overview
 
-NetGear API supports real-time **JPEG Frame Compression** capabilities for optimizing performance significantly while sending frames over the network. 
+NetGear API enables real-time **JPEG Frame Compression** capabilities for optimizing performance significantly while sending frames over the network. 
 
-For enabling Frame Compression, NetGear uses powerful [`simplejpeg`](https://gitlab.com/jfolz/simplejpeg) library at its backend that is based on recent versions of [libjpeg-turbo](https://libjpeg-turbo.org/) JPEG image codec to accelerate baseline JPEG compression and decompression on x86, x86-64, Arm, and PowerPC systems. NetGear API employs its exposed `decode_jpeg` and `encode_jpeg` methods to encode video-frames before sending it at Server's end, and cleverly decode it at the Client's end, thereby leveraging performance in real-time at cost of minor loss in quality.
+For enabling Frame Compression, NetGear uses powerful [`simplejpeg`](https://gitlab.com/jfolz/simplejpeg) library at its backend, which is based on recent versions of [libjpeg-turbo](https://libjpeg-turbo.org/) JPEG image codec, to accelerate baseline JPEG compression and decompression on all modern systems. NetGear API employs its exposed `decode_jpeg` and `encode_jpeg` methods to encode video-frames to [JFIF](https://en.wikipedia.org/wiki/JPEG_File_Interchange_Format) format  before sending it at Server, and cleverly decode it at the Client(s) all in real-time, thereby leveraging performance at cost of minor loss in frame quality.
 
-Frame Compression is enabled by default in NetGear, and can be easily controlled through `jpeg_compression_quality`, `jpeg_compression_fastdct`, `jpeg_compression_fastupsample` like attributes of its [`option`](#supported-attributes) dictionary parameter during initialization.
+Frame Compression is enabled by default in NetGear, and can be easily controlled through `jpeg_compression_quality`, `jpeg_compression_fastdct`, `jpeg_compression_fastupsample` like attributes of its [`options`](../../params/#options) dictionary parameter during initialization.
 
 &nbsp;
 
 
 !!! info "Useful Information about Frame Compression"
     
-    * Attribute `jpeg_compression` can also be used to disable Frame Compression in NetGear.
-    * Frame Compression is enabled by default in NetGear with fast dct and quality at 90%.
-    * Frame Compression can leverage performance up-to 5-10% with `jpeg_compression_fastdct` and `jpeg_compression_fastupsample` attributes.
-    * Frame Compression is compatible with any messaging pattern and exclusive modes.
+    * Frame Compression is enabled by default in NetGear along with fast dct and compression-quality at 90%.
+    * Exclusive [`jpeg_compression`](#supported-attributes) attribute can also be used to disable Frame Compression.
+    * Frame Compression can leverage performance up-to 5-10% with exclusive [performance attributes](#performance-attributes).
+    * Frame Compression is compatible with all messaging pattern and modes.
 
-!!! warning "If Frame Compression is enabled at Server, then Client will automatically enforces Frame Compression even if it is disabled." 
+!!! warning "Frame Compression is primarily controlled by Server end. That means, if Frame Compression is enabled at Server, then Client(s) will automatically enforce the Frame Compression with defined performance attributes. Otherwise if it is disabled, then Client(s) disables it too." 
 
 
 &nbsp;
 
 ## Supported Attributes
 
-For implementing Frame Compression, NetGear API currently provide following attribute for its [`option`](../../params/#options) dictionary parameter to leverage performance with Frame Compression:
+For implementing Frame Compression, NetGear API currently provide following attribute for its [`options`](../../params/#options) dictionary parameter to leverage performance with Frame Compression:
 
 * `jpeg_compression` _(bool)_: This attribute can be used to activate(if True)/deactivate(if False) Frame Compression. Its default value is also `True`, and its usage is as follows:
     
@@ -68,13 +68,13 @@ For implementing Frame Compression, NetGear API currently provide following attr
         # activate jpeg encoding and set quality 95%
         options = {"jpeg_compression": True, "jpeg_compression_quality": 95}
         ```
-    * `jpeg_compression_fastdct` _(bool)_: This attribute if True, use fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`, and its usage is as follows:
+    * `jpeg_compression_fastdct` _(bool)_: This attribute if True, NetGear API uses fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`, and its usage is as follows:
     
         ```python
         # activate jpeg encoding and enable fast dct
         options = {"jpeg_compression": True, "jpeg_compression_fastdct": True}
         ```
-    * `jpeg_compression_fastupsample` _(bool)_: This attribute if True, use fastest color upsampling method. Its default value is `False`, and its usage is as follows:
+    * `jpeg_compression_fastupsample` _(bool)_: This attribute if True, NetGear API use fastest color upsampling method. Its default value is `False`, and its usage is as follows:
     
         ```python
         # activate jpeg encoding and enable fast upsampling
@@ -109,6 +109,7 @@ stream = VideoGear(source="test.mp4").start()
 
 # activate jpeg encoding and specify other related parameters
 options = {
+    "jpeg_compression": True,
     "jpeg_compression_quality": 90,
     "jpeg_compression_fastdct": True,
     "jpeg_compression_fastupsample": True,
@@ -151,7 +152,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-!!! note "If compression is enabled at Server, then Client will automatically enforce Frame Compression and its performance attributes."
+!!! note "If compression is enabled at Server, then Client will automatically enforce Frame Compression with its performance attributes."
 
 ```python
 # import required libraries
@@ -202,7 +203,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! info "Note down the IP-address of this system(required at Server's end) by executing the command: `hostname -I` and also replace it in the following code."
 
-!!! note "If compression is enabled at Server, then Client will automatically enforce Frame Compression and its performance attributes."
+!!! note "If compression is enabled at Server, then Client will automatically enforce Frame Compression with its performance attributes."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -269,6 +270,7 @@ import cv2
 
 # activate jpeg encoding and specify other related parameters
 options = {
+    "jpeg_compression": True,
     "jpeg_compression_quality": 90,
     "jpeg_compression_fastdct": True,
     "jpeg_compression_fastupsample": True,
@@ -321,17 +323,17 @@ server.close()
 ## Using Bidirectional Mode for Video-Frames Transfer with Frame Compression :fire:
 
 
-NetGear now supports ==Dual Frame Compression== for transferring video-frames with its exclusive Bidirectional Mode for achieving unmatchable performance bidirectionally. You can easily pass the required encoding/decoding parameters by formatting them as `tuple` for altering Frame Compression while sending/receiving video-frames at both ends.
+NetGear now supports ==Dual Frame Compression== for transferring video-frames with its exclusive Bidirectional Mode for achieving unmatchable performance bidirectionally. You can easily enable Frame Compression with its performance attributes at both ends to boost performance bidirectionally.
 
 In this example we are going to implement a bare-minimum example, where we will be sending video-frames _(3-Dimensional numpy arrays)_ of the same Video bidirectionally at the same time for testing the real-time performance and synchronization between the Server and Client using [**Bidirectional Mode**](../bidirectional_mode). Furthermore, we're going to use optimal Dual Frame Compression Setting for Sending and Receiving frames at both Server and Client end.
 
-!!! example "This feature is great for building applications like **Real-time Video Chat System**."
+!!! example "This example is great for building applications like **Real-time Video Chat System**."
 
-!!! note "This Dual Frame Compression feature also available for [Multi-Clients](../../advanced/multi_client/) Mode at Client(s) end only."
+!!! note "This Dual Frame Compression feature also available for [Multi-Clients](../../advanced/multi_client/) Mode."
 
 !!! info "We're also using [`reducer()`](../../../../../bonus/reference/helper/#reducer) Helper method for reducing frame-size on-the-go for additional performance."
 
-!!! tip "Remember to enable Frame Compression on both Server and Client end in Dual Frame Compression to boost performance bidirectionally!"
+!!! success "Remember to define Frame Compression's [performance attributes](#performance-attributes) both on Server and Client ends in Dual Frame Compression to boost performance bidirectionally!"
 
 
 #### Server End
@@ -351,10 +353,11 @@ import cv2
 # open any valid video stream(for e.g `test.mp4` file)
 stream = VideoGear(source="test.mp4").start()
 
-# activate Bidirectional mode and Dual Frame Compression
+# activate Bidirectional mode and Frame Compression
 options = {
     "bidirectional_mode": True,
-    "jpeg_compression_quality": 90,
+    "jpeg_compression": True,
+    "jpeg_compression_quality": 95,
     "jpeg_compression_fastdct": True,
     "jpeg_compression_fastupsample": True,
 }
@@ -418,10 +421,11 @@ from vidgear.gears import VideoGear
 from vidgear.gears.helper import reducer
 import cv2
 
-# activate Bidirectional mode and Dual Frame Compression
+# activate Bidirectional mode and Frame Compression
 options = {
     "bidirectional_mode": True,
-    "jpeg_compression_quality": 90,
+    "jpeg_compression": True,
+    "jpeg_compression_quality": 95,
     "jpeg_compression_fastdct": True,
     "jpeg_compression_fastupsample": True,
 }
