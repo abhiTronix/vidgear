@@ -30,7 +30,7 @@ var player = new Clappr.Player({
     // shaka_player.getNetworkingEngine().registerRequestFilter() ...
   },
   width: '100%',
-  height: 'auto',
+  height: '100%',
   parentId: '#player',
   poster: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/674250e6c0387d0d0528406eec35bc580ceafee3/streamgear_video_chunks/hd_thumbnail.jpg',
   preload: 'metadata',
@@ -48,7 +48,7 @@ var player_stab = new Clappr.Player({
     // shaka_player.getNetworkingEngine().registerRequestFilter() ...
   },
   width: '100%',
-  height: 'auto',
+  height: '100%',
   parentId: '#player_stab',
   poster: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/674250e6c0387d0d0528406eec35bc580ceafee3/stabilizer_video_chunks/hd_thumbnail.png',
   preload: 'metadata',
