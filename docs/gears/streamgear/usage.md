@@ -254,7 +254,7 @@ This mode provide [`stream()`](../../../bonus/reference/streamgear/#vidgear.gear
 
 Following is the bare-minimum code you need to get started with StreamGear API in Real-time Frames Mode:
 
-!!! note "We are using [CamGear](../../gears/camgear/overview/) in this Bare-Minimum example, but any [VideoCapture Gear](../../gears/#a-videocapture-gears) will work in the similar manner."
+!!! note "We are using [CamGear](../../camgear/overview/) in this Bare-Minimum example, but any [VideoCapture Gear](../../#a-videocapture-gears) will work in the similar manner."
 
 ```python
 # import required libraries

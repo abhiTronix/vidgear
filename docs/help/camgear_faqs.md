@@ -117,7 +117,22 @@ stream.stop()
 
 ## How to open RSTP network streams with CamGear?
 
-You can open any local network stream _(such as RTSP)_ just by providing its URL directly to CamGear's [`source`](../params/#source) parameter. The complete usage example is as follows: 
+You can open any local network stream _(such as RTSP)_ just by providing its URL directly to CamGear's [`source`](../../gears/camgear/params/#source) parameter. The complete usage example is as follows: 
+
+??? tip "Enforcing UDP stream"
+    
+    You can easily enforce UDP for RSTP streams inplace of default TCP, by putting following lines of code on the top of your existing code:
+
+    ```python
+    # import required libraries
+    import os
+
+    # enforce UDP
+    os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
+    ```
+
+    Finally, use [`backend`](../../gears/camgear/params/#backend) parameter value as `backend="CAP_FFMPEG"` in CamGear.
+
 
 ```python
 # import required libraries
@@ -162,9 +177,9 @@ stream.stop()
 
 &nbsp;
 
-## Can I play 4K video with CamGear API?
+## Can I play 4K/8k video with CamGear API?
 
-**Answer:** Yes, you can if your System Hardware supports it. It proven by our [playback benchmarking test](https://github.com/abhiTronix/vidgear/blob/master/vidgear/tests/benchmark_tests/test_benchmark_playback.py).
+**Answer:** Yes, you can if your System Hardware supports it.
 
 &nbsp;
 

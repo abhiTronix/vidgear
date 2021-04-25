@@ -90,7 +90,7 @@ These Gears can be classified as follows:
 
 ## Contributions
 
-Contributions are welcome, and greatly appreciated!  
+> Contributions are welcome, and greatly appreciated!  
 
 Please see our [Contribution Guidelines ➶](contribution.md) for more details.
 
@@ -104,7 +104,7 @@ If you've come up with some new idea, or looking for the fastest way troubleshoo
 
 ## Become a Stargazer
 
-You can be a [Stargazer :star2:][stargazer] by starring us on Github, it helps us a lot and *you're making it easier for others to find & trust this library.* Thanks!
+You can be a [Stargazer :star2:][stargazer] by starring us on Github, it helps us a lot and you're making it easier for others to find & trust this library. Thanks!
 
 &thinsp;
 
@@ -112,9 +112,9 @@ You can be a [Stargazer :star2:][stargazer] by starring us on Github, it helps u
 
 > VidGear relies on your support :heart:
 
-Donations help keep VidGear's Development alive. Giving a little means a lot, even the smallest contribution can make a huge difference.
+Donations help keep VidGear's Open Source Development alive. No amount is too little, even the smallest contributions can make a huge difference.
 
-<script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#eba100', 'W7W8WTYO');kofiwidget2.draw();</script> 
+<script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Us on Ko-fi', '#eba100', 'W7W8WTYO');kofiwidget2.draw();</script> 
 
 &thinsp;
 

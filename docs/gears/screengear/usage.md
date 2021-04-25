@@ -157,7 +157,7 @@ stream.stop()
 
 With ScreenGear API, you can select from many different backends that generates best performance as well as the most compatible with our machine by employing its [`backend`](../params/#backend) parameter that supports `pil` ,`mss` ,`scrot` ,`maim` ,`imagemagick` ,`pyqt5` ,`pyqt` ,`pyside2` ,`pyside` ,`wx` ,`pygdk3` ,`mac_screencapture` ,`mac_quartz` ,`gnome_dbus` ,`gnome-screenshot` ,`kwin_dbus` like many different parameters easily:  
 
-!!! warning "Remember to install backend library and all of its dependencies, you're planning to use with ScreenGear API. More information on these backends can be found [here ➶](https://github.com/ponty/pyscreenshot)"
+!!! warning "Remember to install backend library and all of its dependencies you're planning to use with ScreenGear API. More information on these backends can be found [here ➶](https://github.com/ponty/pyscreenshot)"
 
 !!! error "Any value on `monitor` parameter will disable the `backend` parameter. You cannot use them simultaneously."
 

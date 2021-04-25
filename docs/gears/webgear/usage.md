@@ -85,7 +85,7 @@ Let's implement our Bare-Minimum usage example with these [**Performance Enhanci
 
 You can access and run WebGear VideoStreamer Server programmatically in your python script in just a few lines of code, as follows:
 
-!!! tip "For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](./../../help/webgear_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear)"
+!!! tip "For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](./../../../help/webgear_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear)"
 
 
 ```python

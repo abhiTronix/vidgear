@@ -28,7 +28,7 @@ limitations under the License.
 
 &nbsp;
 
-## I'm only familiar with OpenCV, how to get started with PiGear API?
+## I'm only familiar with OpenCV, how to get started with ScreenGear API?
 
 **Answer:** First, see [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis), then go through [ScreenGear doc](../../gears/screengear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 

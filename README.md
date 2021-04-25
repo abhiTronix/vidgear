@@ -38,7 +38,7 @@ limitations under the License.
 
 &nbsp;
 
-VidGear is a **High-Performance Video Processing Python Library** that provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and supercharged real-time performance🔥**
+VidGear is a **High-Performance Video Processing Python Library** that provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**
 
 VidGear primarily focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks, in just a few lines of code.
 
@@ -406,7 +406,7 @@ stream.stop()
 
 > *WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data.*
 
-WriteGear API provides a complete, flexible, and robust wrapper around [**FFmpeg**][ffmpeg], a leading multimedia framework. WriteGear can process real-time frames into a lossless compressed video-file with any suitable specification _(such as`bitrate, codec, framerate, resolution, subtitles,  etc.`)_. It is powerful enough to perform complex tasks such as [Live-Streaming][live-stream] _(such as for Twitch)_ and [Multiplexing Video-Audio][live-audio-doc] with real-time frames in way fewer lines of code. 
+WriteGear API provides a complete, flexible, and robust wrapper around [**FFmpeg**][ffmpeg], a leading multimedia framework. WriteGear can process real-time frames into a lossless compressed video-file with any suitable specification _(such as`bitrate, codec, framerate, resolution, subtitles,  etc.`)_. It is powerful enough to perform complex tasks such as [Live-Streaming][live-stream] _(such as for Twitch and YouTube)_ and [Multiplexing Video-Audio][live-audio-doc] with real-time frames in way fewer lines of code. 
 
 Best of all, WriteGear grants users the complete freedom to play with any FFmpeg parameter with its exclusive **Custom Commands function** _(see this [doc][custom-command-doc])_ without relying on any third-party API.
 
@@ -705,7 +705,7 @@ Badges
 [twitter-badge]:https://img.shields.io/badge/Tweet-Now-blue.svg?style=for-the-badge&logo=twitter
 [azure-badge]:https://img.shields.io/azure-devops/build/abhiuna12/942b3b13-d745-49e9-8d7d-b3918ff43ac2/2/testing?logo=azure-pipelines&style=for-the-badge
 [pypi-badge]:https://img.shields.io/pypi/v/vidgear.svg?style=for-the-badge&logo=pypi
-[gitter-bagde]:https://img.shields.io/badge/Chat-Gitter-yellow.svg?style=for-the-badge&logo=gitter
+[gitter-bagde]:https://img.shields.io/badge/Chat-Gitter-blueviolet.svg?style=for-the-badge&logo=gitter
 [Coffee-badge]:https://abhitronix.github.io/img/vidgear/orange_img.png
 [kofi-badge]:https://www.ko-fi.com/img/githubbutton_sm.svg
 [black-badge]:https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge&logo=github

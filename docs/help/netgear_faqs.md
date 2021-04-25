@@ -65,7 +65,7 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
 
 * **Use Wired connection instead of Wireless connection**: Remember typical 802.11g Wireless has a theoretical maximum of 54Mbps. Typical wired 10/100/1000 Ethernet has a theoretical maximum of 100 Gbps. So in theory wired is faster. However, these speeds are only on your local network. So chose your network configuration wisely.
 
-* **Enable Performance Attributes with Frame Compression**: Enable [Frame Compression](../../gears/netgear/advanced/compression/) with [Performance Attributes](../../gears/netgear/advanced/compression/#performance-attributes) for NetGear API .
+* **Enable all Performance Attributes with Frame Compression**: You can also try enabling [Frame Compression](../../gears/netgear/advanced/compression/) with its all [Performance Attributes](../../gears/netgear/advanced/compression/#performance-attributes) for NetGear API.
 
 * **Reduce Frame Size:** Use VidGear's real-time _Frame-Size Reducer_(`reducer`) method for reducing frame-size on-the-go for additional performance _(see [this usage example ➶](../../gears/netgear/advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer-with-frame-compression))_. Remember, sending large HQ video-frames may required more network bandwidth and packet size, which can lead to additional latency!
 

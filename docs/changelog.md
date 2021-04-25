@@ -20,7 +20,7 @@ limitations under the License.
 
 # Release Notes
 
-## v0.2.1-dev (In Progress)
+## v0.2.1 (2021-04-25)
 
 ??? tip "New Features"
     - [x] **WebGear_RTC:**
@@ -108,12 +108,12 @@ limitations under the License.
           - Added auto-font-scaling for `create_blank_frame` method.
         * [ ] Added `c_name` parameter to `generate_webdata` and `download_webdata` to specify class.
         * [ ] A more robust Implementation of Downloading Artifacts:
-            * [ ] Added a custom HTTP `TimeoutHTTPAdapter` Adapter with a default timeout for all HTTP calls based on [this Github comment](psf/requests#3070 (comment)).
+            * [ ] Added a custom HTTP `TimeoutHTTPAdapter` Adapter with a default timeout for all HTTP calls based on [this GitHub comment]().
             * [ ] Implemented http client and the `send()` method to ensure that the default timeout is used if a timeout argument isn't provided.
             * [ ] Implemented Requests session`with` block to exit properly even if there are unhandled exceptions.
             * [ ] Add a retry strategy to custom `TimeoutHTTPAdapter` Adapter with max 3 retries and sleep(`backoff_factor=1`) between failed requests.
         * [ ] Added `create_blank_frame` method to create bland frames with suitable text.
-    - [x] **CI:**
+    - [x] **[CI] Continuous Integration:**
         * [ ] Added new fake frame generated for fake `picamera` class with numpy.
         * [ ] Added new `create_bug` parameter to fake `picamera` class for emulating various artificial bugs.
         * [ ] Added float/int instance check on `time_delay` for camgear and pigear.
@@ -238,6 +238,7 @@ limitations under the License.
         * [ ] Invalid `site_url` bug patched in mkdocs.yml
         * [ ] Remove redundant mike theme support and its files.
         * [ ] Fixed Incompatible new mkdocs-docs theme.
+        * [ ] Fixed missing hyperlinks.
     - [x] CI: 
         * [ ] Fixed NetGear Address bug
         * [ ] Fixed bugs related to termination in WebGear_RTC.
@@ -267,7 +268,7 @@ limitations under the License.
     - [x] Fixed anomalies in `install_opencv` bash script.
     - [x] Helper: Bug Fixed in `download_ffmpeg_binaries` method.
     - [x] Helper: Fixed OSError bug in `check_WriteAccess` method.
-    - [x] Helper: Fixed Input Audio stream bitrate test failing to detect audio bitrate in certain videos with `validate_audio` method.
+    - [x] Helper: Fixed Input Audio stream bitrate test failing to detect audio-bitrate in certain videos with `validate_audio` method.
     - [x] Fixed bugs in `requests` module's function arguments.
     - [x] Fixed None-type stream bug in WebGear.
     - [x] Fixed random crashes in WebGear.
@@ -468,13 +469,13 @@ limitations under the License.
         * [ ] Added [TQDM](https://github.com/tqdm/tqdm) progress bar in non-debugged output for visual representation of internal processes.
         * [ ] Implemented several internal methods for preprocessing FFmpeg and internal parameters for producing streams.
         * [ ] Several standalone internal checks to ensure robust performance.
-        * [ ] New [`terminate()`](../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.terminate) function to terminate StremGear Safely.
+        * [ ] New `terminate()` function to terminate StremGear Safely.
         * [ ] New StreamGear Dual Modes of Operation:
             + Implemented *Single-Source* and *Real-time Frames* like independent Transcoding Modes.
             + Linked `-video_source` attribute for activating these modes
             + **Single-Source Mode**, transcodes entire video/audio file _(as opposed to frames by frame)_ into a sequence of multiple smaller segments for streaming
             + **Real-time Frames Mode**, directly transcodes video-frames _(as opposed to a entire file)_, into a sequence of multiple smaller segments for streaming
-            + Added separate functions, [`stream()`](../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) for Real-time Frame Mode and [`transcode_source()`](../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) for Single-Source Mode for easy transcoding.
+            + Added separate functions, `stream()` for Real-time Frame Mode and `transcode_source()` for Single-Source Mode for easy transcoding.
             + Included auto-colorspace detection and RGB Mode like features _(extracted from WriteGear)_, into StreamGear.  
         * [ ] New StreamGear Parameters:
             + Developed several new parameters such as:
@@ -715,7 +716,7 @@ limitations under the License.
         * [ ] **Auto-Build API Reference with `mkdocstrings:`**
             + Added support for [`mkdocstrings`](https://github.com/pawamoy/mkdocstrings) plugin for auto-building each VidGear's API references.
             + Added python handler for parsing python source-code to `mkdocstrings`.
-        * [ ] **Auto-Deploy Docs with Github Actions:**
+        * [ ] **Auto-Deploy Docs with GitHub Actions:**
             + Implemented Automated Docs Deployment on gh-pages through GitHub Actions workflow.
             + Added new workflow yaml with minimal configuration for automated docs deployment.
             + Added all required  python dependencies and environment for this workflow.

@@ -30,7 +30,7 @@ When installing VidGear with pip, you need to check manually if following depend
 
 ### OpenCV 
 
-Must require OpenCV(3.0+) python binaries installed for its core functions. You install it directly via [pip](https://pip.pypa.io/en/stable/installing/):
+Must require OpenCV(3.0+) python binaries installed for all core functions. You easily install it directly via [pip](https://pip.pypa.io/en/stable/installing/):
 
 ??? tip "OpenCV installation from source"
 
@@ -140,13 +140,13 @@ Installation is as simple as:
   pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[asyncio]
 ```
 
-**Or you can also download its wheel (`.whl`) package from our [releases](https://github.com/abhiTronix/vidgear/releases), and thereby can be installed as follows:**
+**Or you can also download its wheel (`.whl`) package from our repository's [releases](https://github.com/abhiTronix/vidgear/releases) section, and thereby can be installed as follows:**
 
 ```sh
-  pip install vidgear-0.1.7-py3-none-any.whl
+  pip install vidgear-0.2.1-py3-none-any.whl
 
   # or with asyncio support
-  pip install vidgear-0.1.7-py3-none-any.whl[asyncio]
+  pip install vidgear-0.2.1-py3-none-any.whl[asyncio]
 ```
 
 &nbsp;

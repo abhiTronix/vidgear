@@ -117,12 +117,14 @@ After running this script, You will get the final `'output_audio.aac'` audio fil
 
 In this example, we will merge audio with video:
 
+!!! tip "You can also directly add external audio input to video-frames in WriteGear. For more information, See [this FAQ example ➶](../../../../../help/writegear_faqs/#how-add-external-audio-file-input-to-video-frames)"
 
 !!! warning "Example Assumptions"
 
     * You already have a separate video(i.e `'input-video.mp4'`) and audio(i.e `'input-audio.aac'`) files.
 
-    * Both these Audio and Video files are of equal duration.
+    * Both these Audio and Video files are compatible.
+
 
 ```python
 # import required libraries

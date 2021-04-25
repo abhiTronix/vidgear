@@ -34,6 +34,12 @@ limitations under the License.
 
 &nbsp;
 
+## How WebGear_RTC is different to WebGear API, which should I choose?
+
+**Answer:** WebGear_RTC is similar to [WeGear API](../../webgear/overview/) in many aspects but utilizes [WebRTC](https://webrtc.org/) technology under the hood instead of Motion JPEG. You can choose any API according to your application, but the quality would be better on WebGear API, on-the-other-hand latency would be better on WebGear_RTC API. Also, WebRTC protocol accepts a wide range of devices, whereas WebGear is limited only to modern browsers. 
+
+&nbsp;
+
 ## "WebGear_RTC is throwing `ModuleNotFoundError` on importing", Why?
 
 **Answer:** This error means, VidGear is installed **WITHOUT asyncio package support** on your machine. For this support, see [Requirements ➶](../../gears/webgear_rtc/usage/#requirements).
@@ -42,7 +48,7 @@ limitations under the License.
 
 ## Can WebGear_RTC always need Active Internet Connection?
 
-**Answer:** No, it just need internet only once during [Auto-Generation Process ➶](../../gears/webgear_rtc/overview/#auto-generation-process) to download default data-files and it takes few seconds. You can also download files manually from [**Github Server**](https://github.com/abhiTronix/vidgear-vitals) or even add [your own custom files](../../gears/webgear_rtc/advanced/#rules-for-altering-webgear_rtc-files-and-folders). _For more information see [Data-Files Auto-Generation WorkFlow ➶](../../gears/webgear_rtc/overview/#data-files-auto-generation-workflow-for-webgear_rtc)_
+**Answer:** No, it just need internet only once during its [Auto-Generation Process ➶](../../gears/webgear_rtc/overview/#auto-generation-process) to download default data-files and it takes few seconds. You can also download files manually from [**Github Server**](https://github.com/abhiTronix/vidgear-vitals), otherwise you can also add [your own custom files](../../gears/webgear_rtc/advanced/#rules-for-altering-webgear_rtc-files-and-folders). _For more information see [Data-Files Auto-Generation WorkFlow ➶](../../gears/webgear_rtc/overview/#data-files-auto-generation-workflow-for-webgear_rtc)_
 
 &nbsp;
 

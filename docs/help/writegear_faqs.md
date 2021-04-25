@@ -256,6 +256,8 @@ writer.close()
 !!! new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
+!!! failure "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
+
 ```python
 # import required libraries
 from vidgear.gears import CamGear
@@ -263,7 +265,7 @@ from vidgear.gears import WriteGear
 import cv2
 
 # open any valid video stream(for e.g `foo_video.mp4` file)
-stream = CamGear(source="foo_video.mp4.mp4").start()
+stream = CamGear(source="foo_video.mp4").start()
 
 # add various parameters, along with custom audio
 stream_params = {

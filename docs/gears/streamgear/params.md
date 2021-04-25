@@ -85,7 +85,7 @@ This parameter assigns the custom _path/directory_ where the custom/downloaded F
 
 !!! info "Behavior on Windows"
     
-    If a custom FFmpeg executable's path | directory is not provided through `custom_ffmpeg` parameter on Windows machine, then StreamGear API will ==automatically attempt to download and extract suitable Static FFmpeg binaries at suitable location on your windows machine==. More information can be found [here ➶](../advanced/ffmpeg_install/#a-auto-installation).
+    If a custom FFmpeg executable's path | directory is not provided through `custom_ffmpeg` parameter on Windows machine, then StreamGear API will ==automatically attempt to download and extract suitable Static FFmpeg binaries at suitable location on your windows machine==. More information can be found [here ➶](../ffmpeg_install/#a-auto-installation).
 
 **Data-Type:** String
 
@@ -259,7 +259,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
-* **`-ffmpeg_download_path`** _(string)_: ***(optional)*** sets the custom directory for downloading FFmpeg Static Binaries in Compression Mode, during the [Auto-Installation](../advanced/ffmpeg_install/#a-auto-installation) on Windows Machines Only. If this parameter is not altered, then these binaries will auto-save to the default temporary directory (for e.g. `C:/User/temp`) on your windows machine. It can be used as follows: 
+* **`-ffmpeg_download_path`** _(string)_: ***(optional)*** sets the custom directory for downloading FFmpeg Static Binaries in Compression Mode, during the [Auto-Installation](../ffmpeg_install/#a-auto-installation) on Windows Machines Only. If this parameter is not altered, then these binaries will auto-save to the default temporary directory (for e.g. `C:/User/temp`) on your windows machine. It can be used as follows: 
 
     ```python
     stream_params = {"-ffmpeg_download_path": "C:/User/foo/foo1"} # will be saved to "C:/User/foo/foo1"

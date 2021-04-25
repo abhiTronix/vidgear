@@ -24,7 +24,7 @@ limitations under the License.
 
 ## What is WebGear API and what does it do?
 
-**Answer:** WebGear is as powerful **Video Streaming Server** that transfers live video-frames to any web browser on a network. _For more info. see [WebGear doc ➶](../../gears/webgear/overview/)_
+**Answer:** WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-Broadcaster API ideal for transmitting [Motion-JPEG](https://en.wikipedia.org/wiki/Motion_JPEG)-frames from a single source to multiple recipients via the browser. _For more info. see [WebGear doc ➶](../../gears/webgear/overview/)_
 
 &nbsp;
 
@@ -42,7 +42,7 @@ limitations under the License.
 
 ## Can WebGear always need Active Internet Connection?
 
-**Answer:** No, it just need internet only once during [Auto-Generation Process ➶](../../gears/webgear/overview/#auto-generation-process) to download default data-files and it takes few seconds. You can also download files manually from [**Github Server**](https://github.com/abhiTronix/vidgear-vitals) or even add [your own custom files](../../gears/webgear/advanced/#rules-for-altering-webgear-files-and-folders). _For more information see [Data-Files Auto-Generation WorkFlow ➶](../../gears/webgear/overview/#data-files-auto-generation-workflow-for-webgear)_
+**Answer:** No, it just need internet only once during its [Auto-Generation Process ➶](../../gears/webgear/overview/#auto-generation-process) to download default data-files and it takes few seconds. You can also download files manually from [**Github Server**](https://github.com/abhiTronix/vidgear-vitals), otherwise you can also add [your own custom files](../../gears/webgear/advanced/#rules-for-altering-webgear-files-and-folders). _For more information see [Data-Files Auto-Generation WorkFlow ➶](../../gears/webgear/overview/#data-files-auto-generation-workflow-for-webgear)_
 
 &nbsp;
 
