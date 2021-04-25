@@ -132,7 +132,7 @@ def test_patterns(pattern):
     Testing NetGear different messaging patterns
     """
     # define parameters
-    options = {"flag": 0, "copy": False, "track": False}
+    options = {"flag": 0, "copy": False, "track": False, "jpeg_compression": False}
     # initialize
     frame_server = None
     stream = None
@@ -293,21 +293,21 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
             (np.random.random(size=(480, 640, 3)) * 255).astype(np.uint8),
             {
                 "bidirectional_mode": True,
-                "compression_format": ".jpg",
-                "compression_param": (
-                    cv2.IMREAD_COLOR,
-                    [
-                        cv2.IMWRITE_JPEG_QUALITY,
-                        85,
-                        cv2.IMWRITE_JPEG_PROGRESSIVE,
-                        False,
-                        cv2.IMWRITE_JPEG_OPTIMIZE,
-                        True,
-                    ],
-                ),
+                "jpeg_compression_quality": 55.0,
+                "jpeg_compression_fastdct": True,
+                "jpeg_compression_fastupsample": True,
             },
         ),
-        (2, {1: "apple", 2: "cat"}, {"bidirectional_mode": True}),
+        (
+            2,
+            {
+                "jpeg_compression": False,
+                1: "apple",
+                2: "cat",
+                "jpeg_compression_quality": 5,
+            },
+            {"bidirectional_mode": True},
+        ),
     ],
 )
 def test_bidirectional_mode(pattern, target_data, options):
@@ -340,7 +340,8 @@ def test_bidirectional_mode(pattern, target_data, options):
             # logger.debug data received at client-end and server-end
             logger.debug("Data received at Server-end: {}".format(frame_client))
             logger.debug("Data received at Client-end: {}".format(client_data))
-            assert np.array_equal(client_data, frame_client)
+            if "jpeg_compression" in options and options["jpeg_compression"] == False:
+                assert np.array_equal(client_data, frame_client)
         else:
             # sent frame and data from server to client
             server.send(frame_server, message=target_data)
@@ -349,7 +350,8 @@ def test_bidirectional_mode(pattern, target_data, options):
             # server receives the data and cycle continues
             client_data = server.send(frame_server, message=target_data)
             # check if received frame exactly matches input frame
-            assert np.array_equal(frame_server, frame_client)
+            if "jpeg_compression" in options and options["jpeg_compression"] == False:
+                assert np.array_equal(frame_server, frame_client)
             # logger.debug data received at client-end and server-end
             logger.debug("Data received at Server-end: {}".format(server_data))
             logger.debug("Data received at Client-end: {}".format(client_data))
@@ -372,9 +374,30 @@ def test_bidirectional_mode(pattern, target_data, options):
 @pytest.mark.parametrize(
     "pattern, options",
     [
-        (1, {"multiserver_mode": True, "multiclient_mode": True}),
-        (0, {"multiserver_mode": True, "multiclient_mode": True}),
-        (1, {"multiserver_mode": True, "bidirectional_mode": True}),
+        (
+            1,
+            {
+                "jpeg_compression": False,
+                "multiserver_mode": True,
+                "multiclient_mode": True,
+            },
+        ),
+        (
+            0,
+            {
+                "jpeg_compression": False,
+                "multiserver_mode": True,
+                "multiclient_mode": True,
+            },
+        ),
+        (
+            1,
+            {
+                "jpeg_compression": False,
+                "multiserver_mode": True,
+                "bidirectional_mode": True,
+            },
+        ),
     ],
 )
 def test_multiserver_mode(pattern, options):
@@ -463,6 +486,7 @@ def test_multiclient_mode(pattern):
     options = {
         "multiclient_mode": True,
         "bidirectional_mode": True,
+        "jpeg_compression": False,
     }  # bidirectional_mode is activated for testing only
 
     # initialize

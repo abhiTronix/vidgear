@@ -473,9 +473,9 @@ NetGear seamlessly supports [**Bidirectional data transmission**][netgear_bidata
 
 NetGear can also robustly handle [**Multiple Server-Systems**][netgear_multi_server_doc] and [**Multiple Client-Systems**][netgear_multi_client_doc] and at once, thereby providing access to a seamless exchange of video-frames & data between multiple devices across the network at the same time.
 
-NetGear supports real-time [**Frame Compression capabilities**][netgear_compression_doc] for optimizing performance while sending the frames directly over the network by automatic encoding/decoding in real-time. 
+NetGear also enables real-time [**JPEG Frame Compression**][netgear_compression_doc] capabilities for boosting performance significantly while sending video-frames over the network in real-time.
 
-For security, NetGear implements easy access to ZeroMQ's powerful, smart & secure Security Layers that enable [**Strong encryption on data**][netgear_security_doc] and unbreakable authentication between the Server and the Client with the help of custom certificates/keys.
+For security, NetGear implements easy access to ZeroMQ's powerful, smart & secure Security Layers that enable [**Strong encryption on data**][netgear_security_doc] and unbreakable authentication between the Server and the Client with the help of custom certificates.
 
 **NetGear as of now seamlessly supports three ZeroMQ messaging patterns:**
 
@@ -705,7 +705,7 @@ Badges
 [twitter-badge]:https://img.shields.io/badge/Tweet-Now-blue.svg?style=for-the-badge&logo=twitter
 [azure-badge]:https://img.shields.io/azure-devops/build/abhiuna12/942b3b13-d745-49e9-8d7d-b3918ff43ac2/2/testing?logo=azure-pipelines&style=for-the-badge
 [pypi-badge]:https://img.shields.io/pypi/v/vidgear.svg?style=for-the-badge&logo=pypi
-[gitter-bagde]:https://img.shields.io/badge/Chat-Gitter-green.svg?style=for-the-badge&logo=gitter
+[gitter-bagde]:https://img.shields.io/badge/Chat-Gitter-yellow.svg?style=for-the-badge&logo=gitter
 [Coffee-badge]:https://abhitronix.github.io/img/vidgear/orange_img.png
 [kofi-badge]:https://www.ko-fi.com/img/githubbutton_sm.svg
 [black-badge]:https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge&logo=github

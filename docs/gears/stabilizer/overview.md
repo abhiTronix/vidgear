@@ -23,7 +23,7 @@ limitations under the License.
 <div id="player_stab" align="middle"></div>
 <p align="middle">VidGear's Stabilizer in Action<br><i>(Original Video Courtesy <a href="http://liushuaicheng.org/SIGGRAPH2013/database.html" title="opensourced video samples database">@SIGGRAPH2013</a>)</i></p>
 
-!!! info "This video is transcoded with [**StreamGear API**](../../streamgear/overview/) and hosted on [GitHub Repository](https://github.com/abhiTronix/streamgear_chunks) and served with [raw.githack.com](https://raw.githack.com)"
+!!! info "This video is transcoded with [**StreamGear API**](../../streamgear/overview/) and hosted on [GitHub Repository](https://github.com/abhiTronix/vidgear-docs-additionals) and served with [raw.githack.com](https://raw.githack.com)"
 
 
 
@@ -31,7 +31,9 @@ limitations under the License.
 
 > Stabilizer is an auxiliary class that enables Video Stabilization for vidgear with minimalistic latency, and at the expense of little to no additional computational requirements. 
 
-The basic idea behind it is to tracks and save the salient feature array for the given number of frames and then uses these anchor point to cancel out all perturbations relative to it for the incoming frames in the queue. This class relies heavily on [**Threaded Queue mode**](../../../bonus/TQM/) for error-free & ultra-fast frame handling.
+The basic idea behind it is to tracks and save the salient feature array for the given number of frames and then uses these anchor point to cancel out all perturbations relative to it for the incoming frames in the queue. **For more detailed information on its working, see [this blogpost ➶](https://learnopencv.com/video-stabilization-using-point-feature-matching-in-opencv/)**
+
+This class relies heavily on [**Threaded Queue mode**](../../../bonus/TQM/) for error-free & ultra-fast frame handling. 
 
 &thinsp; 
 

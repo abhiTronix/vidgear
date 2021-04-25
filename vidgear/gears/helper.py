@@ -477,6 +477,11 @@ def validate_audio(path, file_path=None):
         [path, "-hide_banner", "-i", file_path], force_retrieve_stderr=True
     )
     audio_bitrate = re.findall(r"fltp,\s[0-9]+\s\w\w[/]s", metadata.decode("utf-8"))
+    audio_sample_rate = [
+        line.strip()
+        for line in metadata.decode("utf-8").split("\n")
+        if all(x in line for x in ["Audio", "Hz", "fltp"])
+    ]
     if audio_bitrate:
         filtered = audio_bitrate[0].split(" ")[1:3]
         final_bitrate = "{}{}".format(
@@ -484,6 +489,13 @@ def validate_audio(path, file_path=None):
             "k" if (filtered[1].strip().startswith("k")) else "M",
         )
         return final_bitrate
+    elif audio_sample_rate:
+        sample_rate = re.findall(r"[0-9]+\sHz", audio_sample_rate[0])[0]
+        sample_rate_value = int(sample_rate.split(" ")[0])
+        samplerate_2_bitrate = int(
+            (sample_rate_value - 44100) * (320 - 96) / (48000 - 44100) + 96
+        )
+        return str(samplerate_2_bitrate) + "k"
     else:
         return ""
 

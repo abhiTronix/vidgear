@@ -110,7 +110,7 @@ This parameter can be used in addition, to pass user-defined parameters supporte
 
 ## Parameters for CamGear backend
 
-!!! summary "Enable this backend with [`enablePiCamera=False`](#enablepicamera) in VideoGear."
+!!! summary "Enable this backend with [`enablePiCamera=False`](#enablepicamera) in VideoGear. Default is also `False`."
 
 ### **`source`**
 
@@ -290,7 +290,7 @@ This parameter selects the camera module index which will be used as source, if 
 **Usage:**
 
 ```python
-VideoGear(camera_num=0)
+VideoGear(enablePiCamera=True, camera_num=0)
 ```
   
 &nbsp;
@@ -310,7 +310,7 @@ This parameter sets the resolution (i.e. `(width,height)`) of the source.
 **Usage:**
 
 ```python
-VideoGear(resolution=(1280,720)) # sets 1280x720 resolution
+VideoGear(enablePiCamera=True, resolution=(1280,720)) # sets 1280x720 resolution
 ```
 
 &nbsp;
@@ -330,7 +330,7 @@ This parameter sets the framerate of the source.
 **Usage:**
 
 ```python
-VideoGear(framerate=60) # sets 60fps framerate
+VideoGear(enablePiCamera=True, framerate=60) # sets 60fps framerate
 ```
 
 &nbsp;
@@ -361,7 +361,7 @@ options = {
     "sensor_mode": 0,
 }
 # assigning it
-VideoGear(logging=True, **options)
+VideoGear(enablePiCamera=True, logging=True, **options)
 ```
 
 **User-specific attributes:**

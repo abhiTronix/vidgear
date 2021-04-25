@@ -26,7 +26,7 @@ limitations under the License.
 
 ## Overview
 
-> _NetGear_Async can generate the same performance as [NetGear API](../../netgear/overview/) at about one-third the memory consumption, and also provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support any of  yet._
+> _NetGear_Async can generate the same performance as [NetGear API](../../netgear/overview/) at about one-third the memory consumption, and also provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support any [NetGear's Exclusive Modes](../../netgear/overview/#exclusive-modes) yet._
 
 NetGear_Async is built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html), and powered by a high-performance asyncio event loop called [**`uvloop`**](https://github.com/MagicStack/uvloop) to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. NetGear_Async can transfer thousands of frames in just a few seconds without causing any significant load on your system. 
 

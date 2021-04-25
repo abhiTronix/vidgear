@@ -31,7 +31,7 @@ Bidirectional Mode enables seamless support for Bidirectional data transmission 
 
 In Bidirectional Mode, we utilizes the NetGear API's [`message`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.send) parameter of `send()` method for sending data from Server-to-Client, and [`return_data`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.recv) parameter of `recv()` method to return data back from Client-to-Server all while transferring frames in real-time. 
 
-This mode can be easily activated in NetGear through `bidirectional_mode` attribute of its [`option`](../../params/#options) dictionary parameter during initialization.
+This mode can be easily activated in NetGear through `bidirectional_mode` attribute of its [`options`](../../params/#options) dictionary parameter during initialization.
 
 &nbsp;
 

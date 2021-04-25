@@ -24,7 +24,7 @@ limitations under the License.
 
 !!! fail "The stabilizer may not perform well against High-frequency jitter in video. Use at your own risk!"
 
-!!! warning "The stabilizer might be slower for High-Quality videos-frames."
+!!! warning "The stabilizer might be slower for High-Quality/Resolution videos-frames."
 
 !!! tip "It is advised to enable logging on the first run for easily identifying any runtime errors."
 
@@ -269,6 +269,6 @@ writer.close()
 
 [VideoGear API](../../videogear/overview/) provides a special internal wrapper around Stabilizer class that enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort and writing way fewer lines of code.
 
-!!! info "The complete usage example can be found [here ➶](../../videogear/usage/#using-videogear-with-video-stabilizer-backend)"
+!!! example "The complete usage example can be found [here ➶](../../videogear/usage/#using-videogear-with-video-stabilizer-backend)"
 
 &nbsp;

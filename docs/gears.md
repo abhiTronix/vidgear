@@ -64,7 +64,7 @@ These Gears can be classified as follows:
 
 ### D. Network Gears
 
-> **Basic Function:** Sends/Receives [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames over the local network.
+> **Basic Function:** Sends/Receives [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames over connected network.
 
 * [NetGear](netgear/overview/): Handles High-Performance Video-Frames & Data Transfer between interconnecting systems over the network.
 

@@ -120,7 +120,7 @@ This parameter can be used to pass user-defined parameter to WebGear_RTC API by 
 ## Parameters for Stabilizer Backend
 
 
-!!! summary "Enable this backend with [`stabilize=True`](#stabilize) in WebGear_RTC."
+!!! summary "Enable this backend with [`stabilize=True`](#stabilize) in WebGear_RTC. Default is also `False`."
 
 
 ### **`stabilize`**
@@ -360,7 +360,7 @@ This parameter selects the camera module index which will be used as source, if 
 **Usage:**
 
 ```python
-WebGear_RTC(camera_num=0)
+WebGear_RTC(enablePiCamera=True, camera_num=0)
 ```
   
 &nbsp;
@@ -380,7 +380,7 @@ This parameter sets the resolution (i.e. `(width,height)`) of the source.
 **Usage:**
 
 ```python
-WebGear_RTC(resolution=(1280,720)) # sets 1280x720 resolution
+WebGear_RTC(enablePiCamera=True, resolution=(1280,720)) # sets 1280x720 resolution
 ```
 
 &nbsp;
@@ -400,7 +400,7 @@ This parameter sets the framerate of the source.
 **Usage:**
 
 ```python
-WebGear_RTC(framerate=60) # sets 60fps framerate
+WebGear_RTC(enablePiCamera=True, framerate=60) # sets 60fps framerate
 ```
 
 &nbsp;
@@ -431,7 +431,7 @@ options = {
     "sensor_mode": 0,
 }
 # assigning it
-WebGear_RTC(logging=True, **options)
+WebGear_RTC(enablePiCamera=True, logging=True, **options)
 ```
 
 **User-specific attributes:**

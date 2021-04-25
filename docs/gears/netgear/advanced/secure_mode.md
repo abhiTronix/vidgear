@@ -31,7 +31,7 @@ Secure Mode provides easy access to powerful, smart & secure ZeroMQ's Security L
 
 Secure Mode uses a new wire protocol, [**ZMTP 3.0**](http://zmtp.org/) that adds a security handshake to all ZeroMQ connections and a new security protocol, [**CurveZMQ**](http://curvezmq.org/), that implements "perfect forward security" between two ZeroMQ peers over a TCP connection. 
 
-Secure Mode can be easily activated in NetGear API through `secure_mode` attribute of its [`option`](../../params/#options) dictionary parameter, during initialization. Furthermore, for managing this mode, NetGear API provides additional `custom_cert_location` & `overwrite_cert` like attribute too.
+Secure Mode can be easily activated in NetGear API through `secure_mode` attribute of its [`options`](../../params/#options) dictionary parameter, during initialization. Furthermore, for managing this mode, NetGear API provides additional `custom_cert_location` & `overwrite_cert` like attribute too.
 
 
 &nbsp;
@@ -85,7 +85,7 @@ Secure mode supports the two most powerful ZMQ security layers:
 
 ## Supported Attributes
 
-For implementing Secure Mode, NetGear API currently provide following attribute for its [`option`](../../params/#options) dictionary parameter:
+For implementing Secure Mode, NetGear API currently provide following attribute for its [`options`](../../params/#options) dictionary parameter:
 
 
 * `secure_mode` (_integer_) : This attribute activates and sets the ZMQ security Mechanism. Its possible values are: `1`(_StoneHouse_) & `2`(_IronHouse_), and its default value is `0`(_Grassland(no security)_). Its usage is as follows:

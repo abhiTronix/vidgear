@@ -50,7 +50,7 @@ You can access and run WebGear_RTC VideoStreamer Server programmatically in your
 
 !!! tip "For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](./../../help/webgear_rtc_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear_rtc)"
 
-!!! info "We are using `frame_size_reduction` attribute for frame size reduction _(in percentage)_ to be streamed with its [`option`](../params/#options) dictionary parameter to cope with performance-throttling in this example."
+!!! info "We are using `frame_size_reduction` attribute for frame size reduction _(in percentage)_ to be streamed with its [`options`](../params/#options) dictionary parameter to cope with performance-throttling in this example."
 
 ```python
 # import required libraries

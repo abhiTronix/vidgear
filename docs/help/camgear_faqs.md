@@ -66,7 +66,7 @@ brew install gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plu
 
 ## How to change quality and parameters of YouTube Streams with CamGear?
 
-CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `youtube-dl`) parameters)_ with its [`option`](../../gears/camgear/params/#options) dictionary parameter. The complete usage example is as follows: 
+CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `youtube-dl`) parameters)_ with its [`options`](../../gears/camgear/params/#options) dictionary parameter. The complete usage example is as follows: 
 
 !!! tip "More information on `STREAM_RESOLUTION` & `STREAM_PARAMS` attributes can be found [here ➶](../../gears/camgear/advanced/source_params/#exclusive-camgear-parameters)"
 

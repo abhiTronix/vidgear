@@ -96,6 +96,7 @@ setup(
         "streamlink{}".format(latest_version("streamlink")),
         "requests{}".format(latest_version("requests")),
         "pyzmq{}".format(latest_version("pyzmq")),
+        "simplejpeg".format(latest_version("simplejpeg")),
         "colorlog",
         "colorama",
         "tqdm",
@@ -155,6 +156,7 @@ setup(
         "raspberrypi",
         "YouTube",
         "Twitch",
+        "WebRTC",
     ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
@@ -164,6 +166,8 @@ setup(
         "Topic :: Multimedia :: Video",
         "Topic :: Scientific/Engineering",
         "Intended Audience :: Developers",
+        'Intended Audience :: Science/Research',
+        'Intended Audience :: Education',
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
@@ -176,5 +180,7 @@ setup(
         "Bug Reports": "https://github.com/abhiTronix/vidgear/issues",
         "Funding": "https://ko-fi.com/W7W8WTYO",
         "Source": "https://github.com/abhiTronix/vidgear",
+        "Documentation": "https://abhitronix.github.io/vidgear",
+        "Changelog": "https://abhitronix.github.io/vidgear/latest/changelog/",
     },
 )

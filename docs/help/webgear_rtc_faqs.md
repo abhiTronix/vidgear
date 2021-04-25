@@ -89,9 +89,3 @@ For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.
 **Answer:** Yes, but you've to follow [these rules ➶](../../gears/webgear_rtc/advanced/#rules-for-altering-webgear_rtc-files-and-folders)
 
 &nbsp;
-
-## What Web browser are supported by WebGear_RTC API?
-
-**Answer:** All modern browser with Javascript support are supported by WebGear_RTC. If not, then discuss with us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
-
-&nbsp;
