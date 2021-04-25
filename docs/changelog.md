@@ -99,6 +99,9 @@ limitations under the License.
         * [ ] Added open-sourced "Tears of Steel" * [ ] project Mango Teaser video chunks.
         * [ ] Added open-sourced "Subspace Video Stabilization" http://web.cecs.pdx.edu/~fliu/project/subspace_stabilization/ video chunks.
         * [ ] Added support for DASH Video Thumbnail preview in Clappr within `custom.js`.
+        * [ ] Added responsive clappr DASH player with bootstrap's `embed-responsive`.
+        * [ ] Added new permalink icon and slugify to toc.
+        * [ ] Added "back-to-top" button for easy navigation.
     - [x] **Helper:**
         * [ ] New GitHub Mirror with latest Auto-built FFmpeg Static Binaries:
             + Replaced new GitHub Mirror `abhiTronix/FFmpeg-Builds` in helper.py
@@ -151,6 +154,7 @@ limitations under the License.
         * [ ] Removed custom `dark-material.js` and `header.html` files from theme.
         * [ ] Added blogpost link for detailed information on Stabilizer Working.
         * [ ] Updated `mkdocs.yml` and `custom.css` configuration.
+        * [ ] Remove old hack to resize clappr DASH player with css.
         * [ ] Updated Admonitions.
         * [ ] Improved docs contexts.
         * [ ] Updated CSS for version-selector-button.
@@ -192,6 +196,7 @@ limitations under the License.
         * [ ] Updated PiGear CI tests to increment codecov.
         * [ ] Update Tests docs and other minor tweaks to increase overall coverage.
         * [ ] Enabled debugging and disabled exit 1 on error in azure pipeline.
+        * [ ] Removed redundant benchmark tests.
     - [x] Helper: Added missing RSTP URL scheme to `is_valid_url` method.
     - [x] NetGear_Async: Added fix for uvloop only supporting python>=3.7 legacies.
     - [x] Extended WebGear's Video-Handler scope to `https`.
@@ -211,8 +216,10 @@ limitations under the License.
     - [x] Updated font to `FONT_HERSHEY_SCRIPT_COMPLEX` and enabled logging in create_blank_frame.
     - [x] Separated channels for downloading and storing theme files for WebGear and WebGear_RTC APIs.
     - [x] Removed `logging` condition to always inform user in a event of FFmpeg binary download failure.
-    - [x] CI: Removed redundant benchmark tests.
-    - [x] Improved auto internal termination in WebGear_RTC.
+    - [x] WebGear_RTC: 
+        * [ ] Improved auto internal termination.
+        * [ ] More Performance updates through `setCodecPreferences`.
+        * [ ] Moved default Video RTC video launcher to `__offer`.
     - [x] NetGear_Async: Added timeout to client in CI tests.
     - [x] Reimplemented and updated `changelog.md`.
     - [x] Updated code comments.
@@ -237,6 +244,7 @@ limitations under the License.
     - [x] Docs: 
         * [ ] Invalid `site_url` bug patched in mkdocs.yml
         * [ ] Remove redundant mike theme support and its files.
+        * [ ] Fixed video not centered when DASH video in fullscreen mode with clappr.
         * [ ] Fixed Incompatible new mkdocs-docs theme.
         * [ ] Fixed missing hyperlinks.
     - [x] CI: 

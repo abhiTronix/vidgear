@@ -44,6 +44,7 @@ theme:
   features:
     - header.autohide
     - navigation.tabs
+    - navigation.top
   palette:
     # Light mode
     - media: "(prefers-color-scheme: light)"
@@ -120,7 +121,8 @@ markdown_extensions:
   - meta
   - md_in_html
   - toc:
-      permalink: true
+      permalink: ⚓
+      slugify: !!python/name:pymdownx.slugs.uslugify
   - codehilite:
       guess_lang: false
   - pymdownx.arithmatex

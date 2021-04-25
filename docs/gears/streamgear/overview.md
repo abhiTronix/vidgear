@@ -70,7 +70,13 @@ When no valid input is received on [`-video_source`](../params/#a-exclusive-para
 
 Watch StreamGear transcoded MPEG-DASH Stream:
 
-<div id="player" align="middle" ></div>
+<div class="container">
+  <div class="video">
+    <div class="embed-responsive embed-responsive-16by9">
+      <div id="player" class="embed-responsive-item"></div>
+    </div>
+  </div>
+</div>
 <p align="middle">Powered by <a href="https://github.com/clappr/clappr" title="clappr">clappr</a> & <a href="https://github.com/google/shaka-player" title="shaka-player">shaka-player</a></p>
 
 !!! info  "This video assets _(Manifest and segments)_ are hosted on [GitHub Repository](https://github.com/abhiTronix/vidgear-docs-additionals) and served with [raw.githack.com](https://raw.githack.com)" 

@@ -20,7 +20,13 @@ limitations under the License.
 
 # Stabilizer Class
 
-<div id="player_stab" align="middle"></div>
+<div class="container">
+  <div class="video">
+    <div class="embed-responsive embed-responsive-16by9">
+      <div id="player_stab" class="embed-responsive-item"></div>
+    </div>
+  </div>
+</div>
 <p align="middle">VidGear's Stabilizer in Action<br><i>(Video Credits <a href="http://liushuaicheng.org/SIGGRAPH2013/database.html" title="opensourced video samples database">@SIGGRAPH2013</a>)</i></p>
 
 !!! info "This video is transcoded with [**StreamGear API**](../../streamgear/overview/) and hosted on [GitHub Repository](https://github.com/abhiTronix/vidgear-docs-additionals) and served with [raw.githack.com](https://raw.githack.com)"

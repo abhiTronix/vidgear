@@ -31,6 +31,7 @@ from starlette.staticfiles import StaticFiles
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 
+from aiortc.rtcrtpsender import RTCRtpSender
 from aiortc import RTCPeerConnection, RTCSessionDescription, VideoStreamTrack
 from aiortc.contrib.media import MediaRelay
 from av import VideoFrame
@@ -99,6 +100,7 @@ class RTC_VideoServer(VideoStreamTrack):
         self.__enable_inf = False  # continue frames even when video ends.
         self.__frame_size_reduction = 20  # 20% reduction
         self.is_running = True  # check if running
+        self.is_launched = False  # check if launched already
 
         if options:
             if "frame_size_reduction" in options:
@@ -150,13 +152,14 @@ class RTC_VideoServer(VideoStreamTrack):
         """
         if self.__logging:
             logger.debug("Launching Internal RTC Video-Server")
+        self.is_launched = True
         self.__stream.start()
 
     async def recv(self):
         """
         A coroutine function that yields `av.frame.Frame`.
         """
-        # get next timestamp
+        # get next time-stamp
         pts, time_base = await self.next_timestamp()
 
         # read video frame
@@ -187,7 +190,7 @@ class RTC_VideoServer(VideoStreamTrack):
         if self.__frame_size_reduction:
             f_stream = await reducer(f_stream, percentage=self.__frame_size_reduction)
 
-        # contruct `av.frame.Frame` from `numpy.nd.array`
+        # construct `av.frame.Frame` from `numpy.nd.array`
         frame = VideoFrame.from_ndarray(f_stream, format="bgr24")
         frame.pts = pts
         frame.time_base = time_base
@@ -203,6 +206,7 @@ class RTC_VideoServer(VideoStreamTrack):
         if not (self.__stream is None):
             # terminate running flag
             self.is_running = False
+            self.is_launched = False
             if self.__logging:
                 logger.debug("Terminating Internal RTC Video-Server")
             # terminate
@@ -212,23 +216,23 @@ class RTC_VideoServer(VideoStreamTrack):
 
 class WebGear_RTC:
     """
-    WebGear_RTC is similar to WeGear API in many aspects but utilizes WebRTC technology under the hood instead of Motion JPEG, which 
-    makes it suitable for building powerful video-streaming solutions for all modern browsers as well as native clients available on 
-    all major platforms. 
+    WebGear_RTC is similar to WeGear API in many aspects but utilizes WebRTC technology under the hood instead of Motion JPEG, which
+    makes it suitable for building powerful video-streaming solutions for all modern browsers as well as native clients available on
+    all major platforms.
 
-    WebGear_RTC is implemented with the help of aiortc library which is built on top of asynchronous I/O framework for Web Real-Time 
-    Communication (WebRTC) and Object Real-Time Communication (ORTC) and supports many features like SDP generation/parsing, Interactive 
+    WebGear_RTC is implemented with the help of aiortc library which is built on top of asynchronous I/O framework for Web Real-Time
+    Communication (WebRTC) and Object Real-Time Communication (ORTC) and supports many features like SDP generation/parsing, Interactive
     Connectivity Establishment with half-trickle and mDNS support, DTLS key and certificate generation, DTLS handshake, etc.
 
-    WebGear_RTC can handle multiple consumers seamlessly and provides native support for ICE (Interactive Connectivity Establishment) 
-    protocol, STUN (Session Traversal Utilities for NAT), and TURN (Traversal Using Relays around NAT) servers that help us to easily 
-    establish direct media connection with the remote peers for uninterrupted data flow. It also allows us to define our custom Server 
+    WebGear_RTC can handle multiple consumers seamlessly and provides native support for ICE (Interactive Connectivity Establishment)
+    protocol, STUN (Session Traversal Utilities for NAT), and TURN (Traversal Using Relays around NAT) servers that help us to easily
+    establish direct media connection with the remote peers for uninterrupted data flow. It also allows us to define our custom Server
     as a source to manipulate frames easily before sending them across the network(see this doc example).
 
-    WebGear_RTC API works in conjunction with Starlette ASGI application and can also flexibly interact with Starlette's ecosystem of 
+    WebGear_RTC API works in conjunction with Starlette ASGI application and can also flexibly interact with Starlette's ecosystem of
     shared middleware, mountable applications, Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.
 
-    Additionally, WebGear_RTC API also provides internal wrapper around VideoGear, which itself provides internal access to both 
+    Additionally, WebGear_RTC API also provides internal wrapper around VideoGear, which itself provides internal access to both
     CamGear and PiGear APIs.
     """
 
@@ -435,12 +439,6 @@ class WebGear_RTC:
             raise RuntimeError(
                 "[WeGear_RTC:ERROR] :: Assigned configuration is invalid!"
             )
-
-        # initiate stream
-        if self.__logging:
-            logger.debug("Initiating Video Streaming.")
-        if not (self.__default_rtc_server is None):
-            self.__default_rtc_server.launch()
         # return Starlette application
         if self.__logging:
             logger.debug("Running Starlette application.")
@@ -458,6 +456,14 @@ class WebGear_RTC:
         # get offer from params
         params = await request.json()
         offer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+
+        # initiate stream
+        if not (self.__default_rtc_server is None) and not (
+            self.__default_rtc_server.is_launched
+        ):
+            if self.__logging:
+                logger.debug("Initiating Video Streaming.")
+            self.__default_rtc_server.launch()
 
         # setup RTC peer connection - interface represents a WebRTC connection
         # between the local computer and a remote peer.
@@ -479,6 +485,11 @@ class WebGear_RTC:
         await pc.setRemoteDescription(offer)
         # retrieve list of RTCRtpTransceiver objects that are currently attached to the connection
         for t in pc.getTransceivers():
+            # Increments performance significantly, IDK why this works as H265 codec is not even supported :D
+            capabilities = RTCRtpSender.getCapabilities("video")
+            preferences = list(filter(lambda x: x.name == "H265", capabilities.codecs))
+            t.setCodecPreferences(preferences)
+            # add video server to peer track
             if t.kind == "video":
                 pc.addTrack(
                     self.__relay.subscribe(self.config["server"])
