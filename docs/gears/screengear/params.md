@@ -20,6 +20,8 @@ limitations under the License.
 
 # ScreenGear API Parameters 
 
+&thinsp;
+
 ## **`monitor`**
 
 This parameter enables [`mss`](https://github.com/BoboTiG/python-mss) usage and sets the index of the monitor screen. This parameter is the most suitable for selecting index of multiple monitor screen from where you want get frames from. For example, its value can be assign to `-1`, to fetch frames from all connected multiple monitor screens. More information can be found [here ➶](https://python-mss.readthedocs.io/examples.html#a-screen-shot-to-grab-them-all)
@@ -76,7 +78,7 @@ This parameter selects the colorspace of the source stream.
 ScreenGear(colorspace="COLOR_BGR2HSV")
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-screengear-with-direct-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](../usage/#using-screengear-with-direct-colorspace-manipulation)"
 
 &nbsp;
 
@@ -93,6 +95,8 @@ This parameter provides the flexibility to manually set the dimensions of captur
 	* **`top`:** the y-coordinate of the upper-left corner of the region
 	* **`width`:** the width of the region
 	* **`height`:** the height of the region
+
+!!! note "Additional Exclusive Attribute such as [`THREAD_TIMEOUT`](../../camgear/advanced/source_params/#exclusive-camgear-parameters) is also supported for this parameter."
 
 
 **Data-Type:** Dictionary

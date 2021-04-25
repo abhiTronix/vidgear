@@ -29,6 +29,7 @@ import subprocess as sp
 from tqdm import tqdm
 from fractions import Fraction
 from pkg_resources import parse_version
+from collections import OrderedDict
 
 from .helper import (
     capPropId,
@@ -39,6 +40,7 @@ from .helper import (
     logger_handler,
     validate_audio,
     validate_video,
+    check_WriteAccess,
     get_video_bitrate,
     get_valid_ffmpeg_path,
 )
@@ -50,23 +52,19 @@ logger.setLevel(log.DEBUG)
 
 
 class StreamGear:
-
     """
-    StreamGear is built for _Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH) with FFmpeg_ to generate
-    the chunked-encoded media segments of the content, in just few lines of python code. StreamGear provides a standalone, highly extensible and
-    flexible wrapper around [**FFmpeg**](https://ffmpeg.org/) - a leading multimedia framework and access to almost all of its parameter for
-    seamlessly generating these streams.
+    StreamGear automates transcoding workflow for generating Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH) in just few lines of python code.
+    StreamGear provides a standalone, highly extensible, and flexible wrapper around FFmpeg multimedia framework for generating chunked-encoded media segments of the content.
 
-    SteamGear API ***automatically transcodes source videos/audio files & real-time frames, and breaks them into a sequence of multiple smaller
-    chunks/segments (typically 2-4 seconds in length) at different quality levels (i.e. different bitrates or spatial resolutions)***. It also
-    creates a media presentation description _(MPD in-case of DASH)_ that describes these segment information _(timing, URL, media characteristics
-    like video resolution and bit rates)_, and is provided to the client prior to the streaming session. Thereby, segments are served on a web-server
-    and can be downloaded through HTTP standard compliant GET requests. This makes it possible to stream videos at different quality levels, and to
-    switch in the middle of a video from one quality level to another one.
+    SteamGear easily transcodes source videos/audio files & real-time video-frames and breaks them into a sequence of multiple smaller chunks/segments of fixed length. These segments make it
+    possible to stream videos at different quality levels (different bitrates or spatial resolutions) and can be switched in the middle of a video from one quality level to another – if bandwidth
+    permits – on a per-segment basis. A user can serve these segments on a web server that makes it easier to download them through HTTP standard-compliant GET requests.
 
-    SteamGear currently only supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_,
-    but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming, will be added soon.
+    SteamGear also creates a Manifest file (such as MPD in-case of DASH) besides segments that describe these segment information (timing, URL, media characteristics like video resolution and bit rates)
+     and is provided to the client before the streaming session.
 
+    SteamGear currently only supports MPEG-DASH (Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1) , but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming, will be
+    added soon. Also, Multiple DRM support is yet to be implemented.
     """
 
     def __init__(
@@ -124,9 +122,7 @@ class StreamGear:
         else:
             # else raise error
             raise RuntimeError(
-                "[StreamGear:ERROR] :: Failed to find FFmpeg assets on this system. Kindly compile/install FFmpeg or provide a valid custom FFmpeg binary path!".format(
-                    output
-                )
+                "[StreamGear:ERROR] :: Failed to find FFmpeg assets on this system. Kindly compile/install FFmpeg or provide a valid custom FFmpeg binary path!"
             )
 
         # handle Audio-Input
@@ -197,10 +193,10 @@ class StreamGear:
             self.__clear_assets = False
 
         # handle whether to livestream?
-        self.__enable_livestream = self.__params.pop("-livestream", False)
-        if not isinstance(self.__enable_livestream, bool):
+        self.__livestreaming = self.__params.pop("-livestream", False)
+        if not isinstance(self.__livestreaming, bool):
             # reset improper values
-            self.__enable_livestream = False
+            self.__livestreaming = False
 
         # handle Streaming formats
         supported_formats = ["dash"]  # will be extended in future
@@ -235,9 +231,9 @@ class StreamGear:
             # validate this class has the access rights to specified directory or not
             abs_path = os.path.abspath(output)
 
-            if (
-                self.__os_windows or os.access in os.supports_effective_ids
-            ) and os.access(os.path.dirname(abs_path), os.W_OK):
+            if check_WriteAccess(
+                os.path.dirname(abs_path), is_windows=self.__os_windows
+            ):
                 # check if given path is directory
                 valid_extension = "mpd" if self.__format == "dash" else "m3u8"
                 if os.path.isdir(abs_path):
@@ -381,8 +377,8 @@ class StreamGear:
         # turn off initiate flag
         self.__initiate_stream = False
         # initialize parameters
-        input_parameters = {}
-        output_parameters = {}
+        input_parameters = OrderedDict()
+        output_parameters = OrderedDict()
         # pre-assign default codec parameters (if not assigned by user).
         default_codec = "libx264rgb" if rgb else "libx264"
         output_parameters["-vcodec"] = self.__params.pop("-vcodec", default_codec)
@@ -420,7 +416,7 @@ class StreamGear:
                     "Detected External Audio Source is valid, and will be used for streams."
                 )
                 # assign audio
-                input_parameters["-i"] = self.__audio
+                output_parameters["-i"] = self.__audio
                 # assign audio codec
                 output_parameters["-acodec"] = self.__params.pop("-acodec", "copy")
                 output_parameters["a_bitrate"] = bitrate  # temporary handler
@@ -435,7 +431,7 @@ class StreamGear:
             if bitrate:
                 logger.info("Source Audio will be used for streams.")
                 # assign audio codec
-                output_parameters["-acodec"] = "aac"
+                output_parameters["-acodec"] = "copy"
                 output_parameters["a_bitrate"] = bitrate  # temporary handler
             else:
                 logger.warning(
@@ -450,13 +446,13 @@ class StreamGear:
             output_parameters["-movflags"] = "+faststart"
 
         # set input framerate
-        if self.__inputframerate > 5.0 and not (self.__video_source):
+        if self.__sourceframerate > 5.0 and not (self.__video_source):
             # minimum threshold is 5.0
             if self.__logging:
                 logger.debug(
-                    "Setting Input framerate: {}".format(self.__inputframerate)
+                    "Setting Input framerate: {}".format(self.__sourceframerate)
                 )
-            input_parameters["-framerate"] = str(self.__inputframerate)
+            input_parameters["-framerate"] = str(self.__sourceframerate)
 
         # handle input resolution and pixel format
         if not (self.__video_source):
@@ -689,7 +685,7 @@ class StreamGear:
             ]
 
         # Check if live-streaming or not?
-        if self.__enable_livestream:
+        if self.__livestreaming:
             output_params["-window_size"] = self.__params.pop("-window_size", 5)
             output_params["-extra_window_size"] = self.__params.pop(
                 "-extra_window_size", 5
@@ -721,6 +717,10 @@ class StreamGear:
             input_params (dict): Input FFmpeg parameters
             output_params (dict): Output FFmpeg parameters
         """
+        # finally handle `-i`
+        if "-i" in output_params:
+            output_params.move_to_end("-i", last=False)
+
         # convert input parameters to list
         input_commands = dict2Args(input_params)
         # convert output parameters to list
@@ -747,7 +747,8 @@ class StreamGear:
         # format command
         if self.__video_source:
             ffmpeg_cmd = (
-                [self.__ffmpeg, "-y"]  # overwrite
+                [self.__ffmpeg, "-y"]
+                + (["-re"] if self.__livestreaming else [])  # pseudo live-streaming
                 + hide_banner
                 + ["-i", self.__video_source]
                 + input_commands
@@ -757,7 +758,8 @@ class StreamGear:
             )
         else:
             ffmpeg_cmd = (
-                [self.__ffmpeg, "-y"]  # overwrite
+                [self.__ffmpeg, "-y"]
+                + ["-re"]  # pseudo live-streaming
                 + hide_banner
                 + ["-f", "rawvideo", "-vcodec", "rawvideo"]
                 + input_commands

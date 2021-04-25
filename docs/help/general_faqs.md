@@ -32,7 +32,7 @@ limitations under the License.
 
 - [**learnopencv.com** ➶](https://www.learnopencv.com)  Maintained by OpenCV CEO Satya Mallick. This blog is for programmers, hackers, engineers, scientists, students, and self-starters interested in Computer Vision and Machine Learning.
 
-- There's also the official [**OpenCV Tutorials** ➶](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_tutorials.html), provided by the OpenCV folks themselves.
+- There's also the official [**OpenCV Tutorials** ➶](https://docs.opencv.org/master/d6/d00/tutorial_py_root.html), provided by the OpenCV folks themselves.
 
 Finally, once done, see [Switching from OpenCV ➶](../../switch_from_cv/) and go through our [Gears ➶](../../gears/#gears-what-are-these) to learn how VidGear works. If you run into any trouble or have any questions, then see [getting help ➶](../get_help)
 
@@ -64,8 +64,11 @@ Finally, once done, see [Switching from OpenCV ➶](../../switch_from_cv/) and g
 	export VIDGEAR_LOGFILE="$HOME/foo.log"
 
 	# or just directory path 
-	# !!! Make sure `foo` already exists !!!
+	# !!! Make sure `foo` path already exists !!!
 	export VIDGEAR_LOGFILE="$HOME/foo"
+
+	# to remove
+	unset VIDGEAR_LOGFILE
 	```
 
 === "Windows OS (Powershell)"
@@ -75,8 +78,11 @@ Finally, once done, see [Switching from OpenCV ➶](../../switch_from_cv/) and g
 	$Env:VIDGEAR_LOGFILE = "D:\foo.log"
 
 	# or just directory path 
-	# !!! Make sure `foo` already exists !!!
+	# !!! Make sure `foo` path already exists !!!
 	$Env:VIDGEAR_LOGFILE = "D:\foo"
+
+	# to remove
+	$Env:VIDGEAR_LOGFILE = ""
 	```
 
 === "OSX/Mac OS"
@@ -86,9 +92,18 @@ Finally, once done, see [Switching from OpenCV ➶](../../switch_from_cv/) and g
 	export VIDGEAR_LOGFILE="$HOME/foo.log"
 	
 	# or just directory path 
-	# !!! Make sure `foo` already exists !!!
+	# !!! Make sure `foo` path already exists !!!
 	export VIDGEAR_LOGFILE="$HOME/foo"
+
+	# to remove
+	unset VIDGEAR_LOGFILE
 	```
+
+&nbsp;
+
+## Can I perform Deep Learning task with VidGear?
+
+**Answer:** VidGear is a powerful Video Processing library _(similar to OpenCV, FFmpeg, etc.)_ that can read, write, process, send & receive a sequence of video-frames in an optimized manner. But for Deep Learning or Machine Learning tasks, you have to use a third-party library. That being said, all VidGear's APIs can be used with any third-party Library(such as PyTorch, Tensorflow, etc.) that can leverage the overall performance if you're processing video/audio streams/frames in your application with Deep Learning tasks. Also, it eases the workflow since you have to write way fewer lines of code to read/store/process output videos.
 
 &nbsp;
 

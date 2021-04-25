@@ -22,91 +22,64 @@ limitations under the License.
 
 
 <figure>
-  <img src="../../../../assets/images/compression.webp" alt="Frame Compression" loading="lazy" title="NetGear's Frame Compression" width="75%" />
+  <img src="../../../../assets/images/compression.webp" alt="Frame Compression" loading="lazy" title="NetGear's Frame Compression" width="75%" class="center" />
 </figure>
 
 
 ## Overview
 
-NetGear API supports real-time **Frame Compression** for optimizing performance while sending frames over the network. 
+NetGear API enables real-time **JPEG Frame Compression** capabilities for optimizing performance significantly while sending frames over the network. 
 
-When Frame Compression is enabled, NetGear encodes _(using [imencode](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e))_ video-frames before sending it at Server's end, and cleverly decodes(using [imdecode](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga26a67788faa58ade337f8d28ba0eb19e)) it at the Client's end, thereby leveraging performance in real-time at the cost of quality.
+For enabling Frame Compression, NetGear uses powerful [`simplejpeg`](https://gitlab.com/jfolz/simplejpeg) library at its backend, which is based on recent versions of [libjpeg-turbo](https://libjpeg-turbo.org/) JPEG image codec, to accelerate baseline JPEG compression and decompression on all modern systems. NetGear API employs its exposed `decode_jpeg` and `encode_jpeg` methods to encode video-frames to [JFIF](https://en.wikipedia.org/wiki/JPEG_File_Interchange_Format) format  before sending it at Server, and cleverly decode it at the Client(s) all in real-time, thereby leveraging performance at cost of minor loss in frame quality.
 
-Frame Compression can be easily activated in NetGear API through `compression_format` & `compression_param` attributes of its [`option`](../../params/#options) dictionary parameter during initialization.
-
-&nbsp;
-
-
-!!! warning "Important Information"
-
-    * Frame Compression only supports three `JPG` or `JPEG`, `PNG` & `BMP` encoding formats as of now.
-
-    * Extreme Frame-Compression may be lead to degraded quality of video-frames. User discretion is advised!     
-
-    * Any Incorrect/Invalid encoding format will **DISABLE** this Frame Compression!
-
-    * Incorrect Format-specific parameters through `compression_param` attribute are skipped automatically.
-
+Frame Compression is enabled by default in NetGear, and can be easily controlled through `jpeg_compression_quality`, `jpeg_compression_fastdct`, `jpeg_compression_fastupsample` like attributes of its [`options`](../../params/#options) dictionary parameter during initialization.
 
 &nbsp;
 
-## Features of Frame Compression
 
+!!! info "Useful Information about Frame Compression"
+    
+    * Frame Compression is enabled by default in NetGear along with fast dct and compression-quality at 90%.
+    * Exclusive [`jpeg_compression`](#supported-attributes) attribute can also be used to disable Frame Compression.
+    * Frame Compression can leverage performance up-to 5-10% with exclusive [performance attributes](#performance-attributes).
+    * Frame Compression is compatible with all messaging pattern and modes.
 
-- [x] Enables real-time Frame Compression for further optimizing performance.
-
-- [x] Client's End autonomously decodes frame based on encoding used at Server End.
-
-- [x] Encoding and decoding supports all Format-specific flags.
-
-- [x] Support for `JPG`, `PNG` & `BMP` encoding formats.
-
-- [x] Compatible with any messaging pattern and exclusive Multi-Server mode.
+!!! warning "Frame Compression is primarily controlled by Server end. That means, if Frame Compression is enabled at Server, then Client(s) will automatically enforce the Frame Compression with defined performance attributes. Otherwise if it is disabled, then Client(s) disables it too." 
 
 
 &nbsp;
 
 ## Supported Attributes
 
-For implementing Frame Compression, NetGear API currently provide following attribute for its [`option`](../../params/#options) dictionary parameter:
+For implementing Frame Compression, NetGear API currently provide following attribute for its [`options`](../../params/#options) dictionary parameter to leverage performance with Frame Compression:
 
-* `compression_format` (_string_): This attribute activates compression with selected encoding format. Its possible valid values are: `'.jpg'`/`'.jpeg'` or `'.png'` or `'.bmp'`, and its usage is as follows:
-
-    !!! warning "Any Incorrect/Invalid encoding format value on `compression_format` attribute will **DISABLE** this Frame Compression!"
-
-    !!! info "Even if you assign different `compression_format` value at Client's end, NetGear will auto-select the Server's encoding format instead."
-
-    ??? question "Fastest compression format for NetGear API?"
-
-        See this [FAQ answer ➶](../../../../help/netgear_faqs/#which-compression-format-is-the-fastest-for-netgear-api)
+* `jpeg_compression` _(bool)_: This attribute can be used to activate(if True)/deactivate(if False) Frame Compression. Its default value is also `True`, and its usage is as follows:
     
     ```python
-    # activate jpeg encoding
-    options = {'compression_format': '.jpg'}
+    # disable jpeg encoding
+    options = {"jpeg_compression": False}
     ```
 
-* `compression_param`: This attribute allow us to pass different compression-format specific encoding/decoding flags. Its possible value are as follows:
+* ### Performance Attributes :zap:
 
-    * **Encoding**: Assigning Encoding List Parameters at Server's end only:
-
-        ```python
-        # activate jpeg encoding and compression quality 80
-        options = {
-            "compression_format": ".jpg",
-            "compression_param": [cv2.IMWRITE_JPEG_QUALITY, 80],
-        }
-        ```
-
-        !!! tip "All supported Encoding(`Imwrite`) Flags can be found [here ➶](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga292d81be8d76901bff7988d18d2b42ac)"
-
-    * **Decoding**: Assigning Integer Decoding flag at Client's end only:
+    * `jpeg_compression_quality`: _(int/float)_ It controls the JPEG quantization factor. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. Its usage is as follows:
 
         ```python
-        # decode image as is with alpha channel
-        options = {"compression_param": cv2.IMREAD_UNCHANGED}
+        # activate jpeg encoding and set quality 95%
+        options = {"jpeg_compression": True, "jpeg_compression_quality": 95}
         ```
-
-        !!! tip "All supported Decoding(`Imread`) Flags can be found [here ➶](https://docs.opencv.org/3.4/d4/da8/group__imgcodecs.html#ga61d9b0126a3e57d9277ac48327799c80)"
+    * `jpeg_compression_fastdct` _(bool)_: This attribute if True, NetGear API uses fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`, and its usage is as follows:
+    
+        ```python
+        # activate jpeg encoding and enable fast dct
+        options = {"jpeg_compression": True, "jpeg_compression_fastdct": True}
+        ```
+    * `jpeg_compression_fastupsample` _(bool)_: This attribute if True, NetGear API use fastest color upsampling method. Its default value is `False`, and its usage is as follows:
+    
+        ```python
+        # activate jpeg encoding and enable fast upsampling
+        options = {"jpeg_compression": True, "jpeg_compression_fastupsample": True}
+        ```
 
 &nbsp;
 
@@ -136,8 +109,10 @@ stream = VideoGear(source="test.mp4").start()
 
 # activate jpeg encoding and specify other related parameters
 options = {
-    "compression_format": ".jpg",
-    "compression_param": [cv2.IMWRITE_JPEG_QUALITY, 50],
+    "jpeg_compression": True,
+    "jpeg_compression_quality": 90,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": True,
 }
 
 # Define NetGear Server with defined parameters
@@ -177,13 +152,12 @@ Then open another terminal on the same system and execute the following python c
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
+!!! note "If compression is enabled at Server, then Client will automatically enforce Frame Compression with its performance attributes."
+
 ```python
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
-
-# define decode image as 3 channel BGR color image
-options = {"compression_format": ".jpg", "compression_param": cv2.IMREAD_COLOR}
 
 # define NetGear Client with `receive_mode = True` and defined parameter
 client = NetGear(receive_mode=True, pattern=1, logging=True, **options)
@@ -229,6 +203,8 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! info "Note down the IP-address of this system(required at Server's end) by executing the command: `hostname -I` and also replace it in the following code."
 
+!!! note "If compression is enabled at Server, then Client will automatically enforce Frame Compression with its performance attributes."
+
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 ```python
@@ -236,18 +212,6 @@ Open a terminal on Client System _(where you want to display the input frames re
 from vidgear.gears import NetGear
 import cv2
 
-# activate jpeg encoding and specify other related parameters
-options = {
-    "compression_format": ".jpg",
-    "compression_param": [
-        cv2.IMWRITE_JPEG_QUALITY,
-        80,
-        cv2.IMWRITE_JPEG_PROGRESSIVE,
-        True,
-        cv2.IMWRITE_JPEG_OPTIMIZE,
-        True,
-    ],
-}
 
 # Define NetGear Client at given IP address and define parameters 
 # !!! change following IP address '192.168.x.xxx' with yours !!!
@@ -304,8 +268,13 @@ from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
 import cv2
 
-# define decode image as 3 channel BGR color image
-options = {"compression_format": ".jpg", "compression_param": cv2.IMREAD_COLOR}
+# activate jpeg encoding and specify other related parameters
+options = {
+    "jpeg_compression": True,
+    "jpeg_compression_quality": 90,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": True,
+}
 
 # Open live video stream on webcam at first index(i.e. 0) device
 stream = VideoGear(source=0).start()
@@ -354,17 +323,17 @@ server.close()
 ## Using Bidirectional Mode for Video-Frames Transfer with Frame Compression :fire:
 
 
-NetGear now supports ==Dual Frame Compression== for transferring video-frames with its exclusive Bidirectional Mode for achieving unmatchable performance bidirectionally. You can easily pass the required encoding/decoding parameters by formatting them as `tuple` for altering Frame Compression while sending/receiving video-frames at both ends.
+NetGear now supports ==Dual Frame Compression== for transferring video-frames with its exclusive Bidirectional Mode for achieving unmatchable performance bidirectionally. You can easily enable Frame Compression with its performance attributes at both ends to boost performance bidirectionally.
 
 In this example we are going to implement a bare-minimum example, where we will be sending video-frames _(3-Dimensional numpy arrays)_ of the same Video bidirectionally at the same time for testing the real-time performance and synchronization between the Server and Client using [**Bidirectional Mode**](../bidirectional_mode). Furthermore, we're going to use optimal Dual Frame Compression Setting for Sending and Receiving frames at both Server and Client end.
 
-!!! success "This feature is great for building applications like **Real-time Video Chat System**."
+!!! example "This example is great for building applications like **Real-time Video Chat System**."
 
-!!! note "This Dual Frame Compression feature also available for [Multi-Clients](../../advanced/multi_client/) Mode at Client(s) end only."
+!!! note "This Dual Frame Compression feature also available for [Multi-Clients](../../advanced/multi_client/) Mode."
 
 !!! info "We're also using [`reducer()`](../../../../../bonus/reference/helper/#reducer) Helper method for reducing frame-size on-the-go for additional performance."
 
-!!! warning "Remember, sending large HQ video-frames may required more network bandwidth and packet size, which may add to video latency!"
+!!! success "Remember to define Frame Compression's [performance attributes](#performance-attributes) both on Server and Client ends in Dual Frame Compression to boost performance bidirectionally!"
 
 
 #### Server End
@@ -384,21 +353,13 @@ import cv2
 # open any valid video stream(for e.g `test.mp4` file)
 stream = VideoGear(source="test.mp4").start()
 
-# activate Bidirectional mode and Dual Frame Compression
+# activate Bidirectional mode and Frame Compression
 options = {
     "bidirectional_mode": True,
-    "compression_format": ".jpg",
-    "compression_param": (
-        cv2.IMREAD_COLOR,
-        [
-            cv2.IMWRITE_JPEG_QUALITY,
-            60,
-            cv2.IMWRITE_JPEG_PROGRESSIVE,
-            False,
-            cv2.IMWRITE_JPEG_OPTIMIZE,
-            True,
-        ],
-    ),
+    "jpeg_compression": True,
+    "jpeg_compression_quality": 95,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": True,
 }
 
 # Define NetGear Server with defined parameters
@@ -460,21 +421,13 @@ from vidgear.gears import VideoGear
 from vidgear.gears.helper import reducer
 import cv2
 
-# activate Bidirectional mode and Dual Frame Compression
+# activate Bidirectional mode and Frame Compression
 options = {
     "bidirectional_mode": True,
-    "compression_format": ".jpg",
-    "compression_param": (
-        cv2.IMREAD_COLOR,
-        [
-            cv2.IMWRITE_JPEG_QUALITY,
-            60,
-            cv2.IMWRITE_JPEG_PROGRESSIVE,
-            False,
-            cv2.IMWRITE_JPEG_OPTIMIZE,
-            True,
-        ],
-    ),
+    "jpeg_compression": True,
+    "jpeg_compression_quality": 95,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": True,
 }
 
 # again open the same video stream

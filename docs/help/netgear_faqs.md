@@ -48,20 +48,6 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
 
 &nbsp;
 
-## Which compression format is the fastest for NetGear API?
-
-**Answer:** According to an [answer](https://answers.opencv.org/question/207286/why-imencode-taking-so-long/?answer=211496#post-id-211496), the time varies differently for different encoding/decoding format as follows:
-
-| Encoding format | Time taken _(in milliseconds)_ |
-| :---------: | :-------: |
-| bmp | 20-40 |
-| jpg | 50-70 |
-| png | 200-250 | 
-
-Despite `bmp` being the fasted, using `jpg` is more suitable for encoding, since highly-optimized [`libjpeg-turbo`](https://libjpeg-turbo.org/) library is now a part of OpenCV binaries. But you can choose whatever suits you.
-
-&nbsp;
-
 
 ## Why NetGear is running slow?
 
@@ -79,7 +65,7 @@ Despite `bmp` being the fasted, using `jpg` is more suitable for encoding, since
 
 * **Use Wired connection instead of Wireless connection**: Remember typical 802.11g Wireless has a theoretical maximum of 54Mbps. Typical wired 10/100/1000 Ethernet has a theoretical maximum of 100 Gbps. So in theory wired is faster. However, these speeds are only on your local network. So chose your network configuration wisely.
 
-* **Compress your image/frame before transmission:** Try [Frame Encoding/Decoding Compression capabilities for NetGear API ➶](../../gears/netgear/advanced/compression/).
+* **Enable all Performance Attributes with Frame Compression**: You can also try enabling [Frame Compression](../../gears/netgear/advanced/compression/) with its all [Performance Attributes](../../gears/netgear/advanced/compression/#performance-attributes) for NetGear API.
 
 * **Reduce Frame Size:** Use VidGear's real-time _Frame-Size Reducer_(`reducer`) method for reducing frame-size on-the-go for additional performance _(see [this usage example ➶](../../gears/netgear/advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer-with-frame-compression))_. Remember, sending large HQ video-frames may required more network bandwidth and packet size, which can lead to additional latency!
 
@@ -113,12 +99,6 @@ Despite `bmp` being the fasted, using `jpg` is more suitable for encoding, since
 
 &nbsp;
 
-
-## How can I compress frames before sending them to Client(s) in NetGear API?
-
-**Answer:** See [Frame Compression doc ➶](../../gears/netgear/advanced/compression/)
-
-&nbsp;
 
 ## Why NetGear API not working correctly?
 

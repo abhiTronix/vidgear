@@ -31,10 +31,7 @@ StreamGear must requires FFmpeg executables for transcoding Media Chunks. You ca
 !!! warning "StreamGear API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system."
 !!! tip "Enable logging _([`logging=True`](../params/#logging))_ for debugging FFmpeg validation process."
 
-&nbsp;
-
-&nbsp;
-
+&thinsp;
 
 ## Linux FFmpeg Installation
 

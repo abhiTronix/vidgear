@@ -62,16 +62,18 @@ def test_custom_ffmpeg(c_ffmpeg):
     """
     Testing custom FFmpeg for StreamGear
     """
-    StreamGear(output="output.mpd", custom_ffmpeg=c_ffmpeg, logging=True)
+    streamer = StreamGear(output="output.mpd", custom_ffmpeg=c_ffmpeg, logging=True)
+    streamer.terminate()
 
 
 @pytest.mark.xfail(raises=ValueError)
-@pytest.mark.parametrize("format", ["dash", "mash", "unknown", 1234, None])
+@pytest.mark.parametrize("format", ["mash", "unknown", 1234, None])
 def test_formats(format):
     """
     Testing different formats for StreamGear
     """
-    StreamGear(output="output.mpd", format=format, logging=True)
+    streamer = StreamGear(output="output.mpd", format=format, logging=True)
+    streamer.terminate()
 
 
 @pytest.mark.parametrize(
@@ -87,7 +89,8 @@ def test_outputs(output):
         else {"-clear_prev_assets": "invalid"}
     )
     try:
-        StreamGear(output=output, logging=True, **stream_params)
+        streamer = StreamGear(output=output, logging=True, **stream_params)
+        streamer.terminate()
     except Exception as e:
         if output is None:
             pytest.xfail(str(e))

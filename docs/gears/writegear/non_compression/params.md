@@ -20,6 +20,8 @@ limitations under the License.
 
 # WriteGear API Parameters: Non-Compression Mode
 
+&thinsp;
+
 ## **`output_filename`**
 
 This parameter sets the valid output Video filename/path for the output video.
@@ -112,7 +114,7 @@ output_params = {"-fps":30}
 WriteGear(output_filename = 'output.mp4', **output_params)
 ```
 
-!!! info "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-videocapture-gears)."
+!!! example "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-videocapture-gears)."
 
 ### Supported FOURCC Codecs
 
@@ -131,7 +133,7 @@ output_params = {"-fourcc":"MJPG"}
 WriteGear(output_filename = 'output.mp4', **output_params)
 ```
 
-!!! info "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-videocapture-gears)."
+!!! example "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-videocapture-gears)."
 
 &nbsp; 
 

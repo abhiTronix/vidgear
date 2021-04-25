@@ -20,6 +20,10 @@ limitations under the License.
 
 # CamGear API Parameters 
 
+
+&thinsp;
+
+
 ## **`source`**
 
 !!! warning "CamGear API will throw `RuntimeError` if `source` provided is invalid."
@@ -115,7 +119,7 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 
 !!! warning "CamGear automatically enforce GStreamer backend _(backend=`cv2.CAP_GSTREAMER`)_ for YouTube-livestreams!"
 
-!!! error "CamGear will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support. Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
+!!! error "CamGear will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
 
 **Data-Type:** Boolean
 
@@ -127,7 +131,7 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 CamGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
+!!! example "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
 
 
 &nbsp;
@@ -148,7 +152,7 @@ This parameter selects the colorspace of the input stream.
 CamGear(source=0, colorspace="COLOR_BGR2HSV")
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-direct-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](../usage/#using-camgear-with-direct-colorspace-manipulation)"
 
 &nbsp;
 

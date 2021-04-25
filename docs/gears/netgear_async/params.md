@@ -20,6 +20,29 @@ limitations under the License.
 
 # NetGear_Async API Parameters
 
+!!! cite "NetGear_Async provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs and their parameters."
+
+&thinsp;
+
+## **`enablePiCamera`** 
+
+This parameter provide access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
+
+**Data-Type:** Boolean
+
+**Default Value:** Its default value is `False`. 
+
+**Usage:**
+
+```python
+NetGear_Async(enablePiCamera=True) # enable access to PiGear API
+```
+
+!!! example "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
+
+
+&nbsp; 
+
 
 ## **`address`**
 
@@ -115,7 +138,7 @@ NetGear_Async(receive_mode=True) # activates Recieve Mode
 
 ## **`timeout`**
 
-In NetGear_Async, the Receiver-end keeps tracks if frames are received from Server-end within this specified timeout value _(in seconds)_, Otherwise `TimeoutError` will be raised, which helps to close the Receiver-end safely if the Server has lost connection prematurely. This parameter controls that  timeout value _(i.e. the maximum waiting time (in seconds))_ after which Client exit itself with a `TimeoutError` to save resources. Its minimum value is `0.0` but no maximum value.
+In NetGear_Async, the Receiver-end keeps tracks if frames are received from Server-end within this specified timeout value _(in seconds)_, Otherwise `TimeoutError` will be raised, which helps to close the Receiver-end safely if the Server has lost connection prematurely. This parameter controls that  timeout value _(i.e. the maximum waiting time (in seconds))_ after which Client exit itself with a `TimeoutError` to save resources. Its minimum value is `0.0` but no max limit.
 
 **Data-Type:** Float/Integer
 
@@ -131,32 +154,10 @@ NetGear_Async(timeout=5.0) # sets 5secs timeout
 
 &nbsp;
 
-## Parameters for VideoGear backend
-
-### **`enablePiCamera`** 
-
-This parameter provide access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
-
-**Data-Type:** Boolean
-
-**Default Value:** Its default value is `False`. 
-
-**Usage:**
-
-```python
-NetGear_Async(enablePiCamera=True) # enable access to PiGear API
-```
-
-!!! info "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
-
-
-&nbsp; 
-
-&nbsp;
-
 
 ## Parameters for Stabilizer Backend
 
+!!! summary "Enable this backend with [`stabilize=True`](#stabilize) in NetGear_Async."
 
 ### **`stabilize`**
 
@@ -172,7 +173,7 @@ This parameter enable access to [Stabilizer Class](../../stabilizer/overview/) f
 NetGear_Async(stabilize=True) # enable stablization
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
+!!! example "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
 
 &nbsp; 
 
@@ -216,7 +217,7 @@ This parameter can be used in addition, to pass user-defined parameters supporte
 
 ## Parameters for CamGear backend
 
-!!! tip "Enable this backend with [`enablePiCamera=False`](#enablepicamera) on NetGear_Async."
+!!! summary "Enable this backend with [`enablePiCamera=False`](#enablepicamera) in NetGear_Async. Default is also `False`."
 
 ### **`source`**
 
@@ -326,7 +327,7 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 NetGear_Async(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
+!!! example "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
 
 
 &nbsp;
@@ -365,7 +366,7 @@ This parameter provides the ability to alter various **Source Tweak Parameters**
 
 **Usage:**
 
-!!! tip "All supported parameters are listed [here ➶](../advanced/source_params/)"
+!!! tip "All supported parameters are listed [here ➶](../../camgear/advanced/source_params/)"
 
 The desired parameters can be passed to NetGear_Async API by formatting them as this parameter's attributes, as follows:
 
@@ -382,7 +383,7 @@ NetGear_Async(source=0, **options)
 
 ## Parameters for PiGear backend 
 
-!!! tip "Enable this backend with [`enablePiCamera=True`](#enablepicamera) on NetGear_Async."
+!!! summary "Enable this backend with [`enablePiCamera=True`](#enablepicamera) in NetGear_Async."
 
 ### **`camera_num`** 
 
@@ -397,7 +398,7 @@ This parameter selects the camera module index which will be used as source, if 
 **Usage:**
 
 ```python
-NetGear_Async(camera_num=0)
+NetGear_Async(enablePiCamera=True, camera_num=0)
 ```
   
 &nbsp;
@@ -417,7 +418,7 @@ This parameter sets the resolution (i.e. `(width,height)`) of the source.
 **Usage:**
 
 ```python
-NetGear_Async(resolution=(1280,720)) # sets 1280x720 resolution
+NetGear_Async(enablePiCamera=True, resolution=(1280,720)) # sets 1280x720 resolution
 ```
 
 &nbsp;
@@ -437,7 +438,7 @@ This parameter sets the framerate of the source.
 **Usage:**
 
 ```python
-NetGear_Async(framerate=60) # sets 60fps framerate
+NetGear_Async(enablePiCamera=True, framerate=60) # sets 60fps framerate
 ```
 
 &nbsp;
@@ -468,7 +469,7 @@ options = {
     "sensor_mode": 0,
 }
 # assigning it
-NetGear_Async(logging=True, **options)
+NetGear_Async(enablePiCamera=True, logging=True, **options)
 ```
 
 **User-specific attributes:**
@@ -486,7 +487,8 @@ Additionally, `options` parameter also support some User-specific attributes, wh
 &nbsp;
 
 ## Common Parameters
- 
+
+!!! summary "These are common parameters that works with every backend in NetGear_Async."
 
 ### **`colorspace`**
 
@@ -504,7 +506,7 @@ This parameter selects the colorspace of the source stream.
 NetGear_Async(colorspace="COLOR_BGR2HSV")
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
 
 &nbsp;
 

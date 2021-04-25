@@ -23,6 +23,7 @@ import os
 import cv2
 import sys
 import asyncio
+import inspect
 import logging as log
 from collections import deque
 from starlette.routing import Mount, Route
@@ -31,7 +32,7 @@ from starlette.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
 from starlette.applications import Starlette
 
-from .helper import reducer, logger_handler, generate_webdata
+from .helper import reducer, logger_handler, generate_webdata, create_blank_frame
 from ..videogear import VideoGear
 
 # define logger
@@ -42,25 +43,26 @@ logger.setLevel(log.DEBUG)
 
 
 class WebGear:
-
     """
-    WebGear is a powerful ASGI Video-streamer API, that is built upon `Starlette` - a lightweight ASGI python framework/toolkit,
-    which is ideal for building high-performance asyncio services.
+    WebGear is a powerful ASGI Video-Broadcaster API ideal for transmitting Motion-JPEG-frames from a single source to multiple recipients via the browser.
 
-    WebGear API provides a highly extensible and flexible asyncio wrapper around Starlette ASGI application, and provides easy access to its complete framework.
-    Thereby, WebGear API can flexibly interact with the Starlette's ecosystem of shared middleware and mountable applications, and its various
-    Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.
+    WebGear API works on Starlette's ASGI application and provides a highly extensible and flexible async wrapper around its complete framework. WebGear can
+    flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, Response classes, Routing tables, Static Files, Templating
+    engine(with Jinja2), etc.
 
-    In layman's terms, WebGear can acts as powerful **Video Streaming Server** that transfers live video-frames to any web browser on a network. It addition to this,
-    WebGear API also provides a special internal wrapper around VideoGear API, which itself provides internal access to both CamGear and PiGear APIs thereby granting
-    it exclusive power for streaming frames incoming from any device/source, such as streaming Stabilization enabled Video in real-time.
+    WebGear API uses an intraframe-only compression scheme under the hood where the sequence of video-frames are first encoded as JPEG-DIB (JPEG with Device-Independent Bit compression)
+    and then streamed over HTTP using Starlette's Multipart Streaming Response and a Uvicorn ASGI Server. This method imposes lower processing and memory requirements, but the quality
+    is not the best, since JPEG compression is not very efficient for motion video.
+
+    In layman's terms, WebGear acts as a powerful Video Broadcaster that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides internal
+    wrapper around VideoGear, which itself provides internal access to both CamGear and PiGear APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
     """
 
     def __init__(
         self,
         enablePiCamera=False,
         stabilize=False,
-        source=0,
+        source=None,
         camera_num=0,
         stream_mode=False,
         backend=0,
@@ -100,6 +102,7 @@ class WebGear:
         custom_data_location = ""  # path to save data-files to custom location
         data_path = ""  # path to WebGear data-files
         overwrite_default = False
+        self.__enable_inf = False  # continue frames even when video ends.
 
         # reformat dictionary
         options = {str(k).strip(): v for k, v in options.items()}
@@ -162,26 +165,19 @@ class WebGear:
                     logger.warning("Skipped invalid `overwrite_default_files` value!")
                 del options["overwrite_default_files"]  # clean
 
-        # define stream with necessary params
-        self.stream = VideoGear(
-            enablePiCamera=enablePiCamera,
-            stabilize=stabilize,
-            source=source,
-            camera_num=camera_num,
-            stream_mode=stream_mode,
-            backend=backend,
-            colorspace=colorspace,
-            resolution=resolution,
-            framerate=framerate,
-            logging=logging,
-            time_delay=time_delay,
-            **options
-        )
+            if "enable_infinite_frames" in options:
+                value = options["enable_infinite_frames"]
+                if isinstance(value, bool):
+                    self.__enable_inf = value
+                else:
+                    logger.warning("Skipped invalid `enable_infinite_frames` value!")
+                del options["enable_infinite_frames"]  # clean
 
         # check if custom certificates path is specified
         if custom_data_location:
             data_path = generate_webdata(
                 custom_data_location,
+                c_name="webgear",
                 overwrite_default=overwrite_default,
                 logging=logging,
             )
@@ -191,6 +187,7 @@ class WebGear:
 
             data_path = generate_webdata(
                 os.path.join(expanduser("~"), ".vidgear"),
+                c_name="webgear",
                 overwrite_default=overwrite_default,
                 logging=logging,
             )
@@ -202,13 +199,13 @@ class WebGear:
                     data_path
                 )
             )
-        if self.__logging:
             logger.debug(
-                "Setting params:: Size Reduction:{}%, JPEG quality:{}%, JPEG optimizations:{}, JPEG progressive:{}".format(
+                "Setting params:: Size Reduction:{}%, JPEG quality:{}%, JPEG optimizations:{}, JPEG progressive:{}{}.".format(
                     self.__frame_size_reduction,
                     self.__jpeg_quality,
                     bool(self.__jpeg_optimize),
                     bool(self.__jpeg_progressive),
+                    " and emulating infinite frames" if self.__enable_inf else "",
                 )
             )
 
@@ -227,8 +224,34 @@ class WebGear:
                 name="static",
             ),
         ]
+        # Handle video source
+        if source is None:
+            self.config = {"generator": None}
+            self.__stream = None
+            if self.__logging:
+                logger.warning("Given source is of NoneType!")
+        else:
+            # define stream with necessary params
+            self.__stream = VideoGear(
+                enablePiCamera=enablePiCamera,
+                stabilize=stabilize,
+                source=source,
+                camera_num=camera_num,
+                stream_mode=stream_mode,
+                backend=backend,
+                colorspace=colorspace,
+                resolution=resolution,
+                framerate=framerate,
+                logging=logging,
+                time_delay=time_delay,
+                **options
+            )
+            # define default frame generator in configuration
+            self.config = {"generator": self.__producer}
         # copying original routing tables for further validation
         self.__rt_org_copy = self.routes[:]
+        # initialize blank frame
+        self.blank_frame = None
         # keeps check if producer loop should be running
         self.__isrunning = True
 
@@ -241,11 +264,27 @@ class WebGear:
         if not isinstance(self.routes, list) or not all(
             x in self.routes for x in self.__rt_org_copy
         ):
-            raise RuntimeError("Routing tables are not valid!")
+            raise RuntimeError("[WebGear:ERROR] :: Routing tables are not valid!")
+
+        # validate assigned frame generator in WebGear configuration
+        if isinstance(self.config, dict) and "generator" in self.config:
+            # check if its  assigned value is a asynchronous generator
+            if self.config["generator"] is None or not inspect.isasyncgen(
+                self.config["generator"]()
+            ):
+                # otherwise raise error
+                raise ValueError(
+                    "[WebGear:ERROR] :: Invalid configuration. Assigned generator must be a asynchronous generator function/method only!"
+                )
+        else:
+            # raise error if validation fails
+            raise RuntimeError("[WebGear:ERROR] :: Assigned configuration is invalid!")
+
         # initiate stream
         if self.__logging:
             logger.debug("Initiating Video Streaming.")
-        self.stream.start()
+        if not (self.__stream is None):
+            self.__stream.start()
         # return Starlette application
         if self.__logging:
             logger.debug("Running Starlette application.")
@@ -258,15 +297,31 @@ class WebGear:
 
     async def __producer(self):
         """
-        A asynchronous frame producer/generator for WebGear application.
+        WebGear's default asynchronous frame producer/generator.
         """
         # loop over frames
         while self.__isrunning:
             # read frame
-            frame = self.stream.read()
-            # break if NoneType
+            frame = self.__stream.read()
+
+            # display blank if NoneType
             if frame is None:
-                break
+                frame = (
+                    self.blank_frame
+                    if self.blank_frame is None
+                    else self.blank_frame[:]
+                )
+                if not self.__enable_inf:
+                    self.__isrunning = False
+            else:
+                # create blank
+                if self.blank_frame is None:
+                    self.blank_frame = create_blank_frame(
+                        frame=frame,
+                        text="No Input" if self.__enable_inf else "The End",
+                        logging=self.__logging,
+                    )
+
             # reducer frames size if specified
             if self.__frame_size_reduction:
                 frame = await reducer(frame, percentage=self.__frame_size_reduction)
@@ -287,15 +342,17 @@ class WebGear:
             yield (
                 b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n"
             )
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0.00001)
 
     async def __video(self, scope):
         """
         Return a async video streaming response.
         """
-        assert scope["type"] == "http"
+        assert scope["type"] in ["http", "https"]
+        await asyncio.sleep(0.00001)
         return StreamingResponse(
-            self.__producer(), media_type="multipart/x-mixed-replace; boundary=frame"
+            self.config["generator"](),
+            media_type="multipart/x-mixed-replace; boundary=frame",
         )
 
     async def __homepage(self, request):
@@ -324,12 +381,12 @@ class WebGear:
         """
         Implements a Callable to be run on application shutdown
         """
-        if not (self.stream is None):
+        if not (self.__stream is None):
             if self.__logging:
                 logger.debug("Closing Video Streaming.")
             # stops producer
             self.__isrunning = False
             # stops VideoGear stream
-            self.stream.stop()
+            self.__stream.stop()
             # prevent any re-iteration
-            self.stream = None
+            self.__stream = None

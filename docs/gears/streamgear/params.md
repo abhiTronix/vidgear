@@ -20,6 +20,8 @@ limitations under the License.
 
 # StreamGear API Parameters 
 
+&thinsp;
+
 ## **`output`**
 
 This parameter sets the valid filename/path for storing the StreamGear assets _(Manifest file(such as Media Presentation Description(MPD) in-case of DASH) & Transcoded sequence of segments)_.
@@ -83,7 +85,7 @@ This parameter assigns the custom _path/directory_ where the custom/downloaded F
 
 !!! info "Behavior on Windows"
     
-    If a custom FFmpeg executable's path | directory is not provided through `custom_ffmpeg` parameter on Windows machine, then StreamGear API will ==automatically attempt to download and extract suitable Static FFmpeg binaries at suitable location on your windows machine==. More information can be found [here ➶](../advanced/ffmpeg_install/#a-auto-installation).
+    If a custom FFmpeg executable's path | directory is not provided through `custom_ffmpeg` parameter on Windows machine, then StreamGear API will ==automatically attempt to download and extract suitable Static FFmpeg binaries at suitable location on your windows machine==. More information can be found [here ➶](../ffmpeg_install/#a-auto-installation).
 
 **Data-Type:** String
 
@@ -123,32 +125,29 @@ StreamGear API provides some exclusive internal parameters to easily generate St
     !!! danger "Important `-streams` attribute facts"
         * ==On top of these additional streams, StreamGear by default, generates a primary stream of same resolution and framerate[^1] as the input Video, at the index `0`.==  
         * You **MUST** need to define `-resolution` value for your stream, otherwise stream will be discarded!
-        * You only need either of `-video_bitrate` or `-framerate` for defining a valid stream. Since with `-framerate` value defined, video-bitrate is calculated automatically.
+        * You only need either of `-video_bitrate` or `-framerate` for defining a valid stream. Since with `-framerate` value defined, video-bitrate is calculated automatically using `-bpps` and `-resolution` values.
         * If you define both `-video_bitrate` and `-framerate` values at the same time, StreamGear will discard the `-framerate` value automatically.
 
 
     **To construct the additional stream dictionaries, you'll will need following sub-attributes:**
 
     * `-resolution` _(string)_: It is **compulsory** to define the required resolution/dimension/size for the stream, otherwise given stream will be rejected. Its value can be a `"{width}x{height}"` as follows: 
+        
         ```python
         "-streams" = [{"-resolution": "1280x720"}] # to produce a 1280x720 resolution/scale 
         ```
 
-    &ensp;
-
     * `-video_bitrate` _(string)_: It is an **optional** _(can be ignored if `-framerate` parameter is defined)_ sub-attribute that generally determines the bandwidth and quality of stream, i.e. the higher the bitrate, the better the quality and the larger will be bandwidth and more will be strain on network. It value is generally in `kbps` _(kilobits per second)_ for OBS (Open Broadcasting Softwares). You can easily define this attribute as follows:
+
         ```python
         "-streams" : [{"-resolution": "1280x720", "-video_bitrate": "2000k"}] # to produce a 1280x720 resolution and 2000kbps bitrate stream
         ```
 
-    &ensp;
+    * `-framerate` _(float/int)_: It is another **optional** _(can be ignored if `-video_bitrate` parameter is defined)_ sub-attribute that defines the assumed framerate for the stream. It's value can be float/integer as follows:
 
-    * `-framerate` _(float/int)_: It is another **optional** _(can be ignored if `-video_bitrate` parameter is defined)_ sub-attribute that defines the assumed framerate for the stream. Thereby, StreamGear _automatically appropriate calculates the suitable video-bitrate using its value along with `-bpps` and `-resolution` values_, so you don't have to. It's value can be float/integer as follows:
         ```python
         "-streams" : [{"-resolution": "1280x720", "-framerate": "60.0"}] # to produce a 1280x720 resolution and 60fps framerate stream
         ```
-
-    &ensp;
 
     **Usage:** You can easily define any number of streams using `-streams` attribute as follows:
 
@@ -162,7 +161,6 @@ StreamGear API provides some exclusive internal parameters to easily generate St
             {"-resolution": "640x360", "-framerate": "60.0"},  # Stream3: 640x360 at 60fps 
             ]}
     ```
-
 
 &ensp;
 
@@ -238,7 +236,9 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
-* **`-gop`** _(float/int)_ : ***(optional)*** specifies the Keyframe interval, also known as GOP length. This attributes manually sets both minimum and maximum distance between I-frames for accurate fixed GOP length. It can be used as follows:
+* **`-gop`** _(float/int)_ : ***(optional)*** specifies the number of frames between two I-frames for accurate GOP length. By increasing the length of the GOP, there will be fewer I-frames per time frame, which minimizes bandwidth consumption. So, for example, with extremely complex subjects such as water sports or action mode, you’ll want to use a shorter GOP length such as 15 or below that results in excellent video quality. For more static video such as talking heads, then much longer GOP sizes are not only sufficient but also more efficient. It can be used as follows:
+
+    !!! tip "The larger the GOP size, the more efficient the compression and the less bandwidth you will need"
 
     !!! info "By default, StreamGear automatically sets recommended fixed GOP value _(i.e. every two seconds)_ w.r.t input framerate and selected encoder."
 
@@ -257,7 +257,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
-* **`-ffmpeg_download_path`** _(string)_: ***(optional)*** sets the custom directory for downloading FFmpeg Static Binaries in Compression Mode, during the [Auto-Installation](../advanced/ffmpeg_install/#a-auto-installation) on Windows Machines Only. If this parameter is not altered, then these binaries will auto-save to the default temporary directory (for e.g. `C:/User/temp`) on your windows machine. It can be used as follows: 
+* **`-ffmpeg_download_path`** _(string)_: ***(optional)*** sets the custom directory for downloading FFmpeg Static Binaries in Compression Mode, during the [Auto-Installation](../ffmpeg_install/#a-auto-installation) on Windows Machines Only. If this parameter is not altered, then these binaries will auto-save to the default temporary directory (for e.g. `C:/User/temp`) on your windows machine. It can be used as follows: 
 
     ```python
     stream_params = {"-ffmpeg_download_path": "C:/User/foo/foo1"} # will be saved to "C:/User/foo/foo1"

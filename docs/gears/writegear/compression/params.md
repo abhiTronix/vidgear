@@ -21,6 +21,8 @@ limitations under the License.
 
 # WriteGear API Parameters: Compression Mode
 
+&thinsp;
+
 ## **`output_filename`**
 
 This parameter sets the valid filename/path/URL for the video output.
@@ -114,7 +116,7 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
 
 * **FFmpeg Parameters:** All parameters based on selected [encoder](#supported-encoders) in use, are supported, and can be passed as dictionary attributes in `output_param`. For example, for using `libx264 encoder` to produce a lossless output video, we can pass required FFmpeg parameters as dictionary attributes, as follows:
 
-    !!! error "**DO NOT** provide additional video-source with `-i` FFmpeg parameter in `output_params`, otherwise it will interfere with frame you input later and it will break things!"
+    !!! warning "While providing additional av-source with `-i` FFmpeg parameter in `output_params` make sure it don't interfere with WriteGear's frame pipeline otherwise it will break things!"
 
     !!! tip "Kindly check [H.264 docs ➶](https://trac.ffmpeg.org/wiki/Encode/H.264) and other [FFmpeg Docs ➶](https://ffmpeg.org/documentation.html) for more information on these parameters"
 
@@ -142,12 +144,23 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
     * **`-output_dimensions`** _(tuple/list)_ : sets the custom dimensions(*size/resolution*) of the output video _(otherwise input video-frame size will be used)_. Its value can either be a **tuple** => `(width,height)` or a **list** => `[width, height]`, Its usage is as follows: 
     
         ```python
-        output_params = {"-output_dimensions": (1280,720)} #to produce a 1280x720 resolution/scale output video
+        output_params = {"-output_dimensions": (1280,720)} # to produce a 1280x720 resolution/scale output video
         ```
-    * **`-clones`** _(list)_: sets the special FFmpeg parameters that are repeated more than once in the command _(For more info., see [this issue](https://github.com/abhiTronix/vidgear/issues/141))_ as **list** only. Its usage is as follows: 
+
+    * **`-clones`** _(list)_: is required to set special FFmpeg parameters that are repeated more than once in the command _(For more info., see [this issue](https://github.com/abhiTronix/vidgear/issues/141))_ or in cases where you want to preserve order of multiple FFmpeg parameters. This attribute only accepts **list** datatype as value. Its usage is as follows:
+
+        !!! tip "Turn on logging([`logging = True`](#logging)) to see the FFmpeg command that is being executed in WriteGear's pipeline. This helps you debug/address any issues and make adjustments accordingly."
+
+        !!! note "WriteGear by automatically applies `-format` or `-f`, `-pix_fmt` and `-vcodec` or `-v:f` like critical input parameters for every stream. Therefore if you need multiple values for these parameter just define them with `-clones` attribute." 
 
         ```python
-        output_params = {"-clones": ['-map', '0:v:0', '-map', '1:a?']}
+        output_params = {
+            "-i": "plug:dsnoopUSB",
+            "-f": "alsa",
+            "-ac": "1",
+            "-ar": "48000",
+            "-clones": ["-vcodec", "mpeg1video", "-f", "mpegts"],
+        }
         ```
 
     * **`-disable_force_termination`** _(bool)_: sets a special flag to disable the default forced-termination behaviour in WriteGear API when `-i` FFmpeg parameter is used _(For more details, see issue: #149)_. Its usage is as follows:

@@ -22,7 +22,7 @@ limitations under the License.
 
 
 <figure>
-  <img src="../../../assets/images/streamgear_flow.webp" loading="lazy" alt="StreamGear Flow Diagram"/>
+  <img src="../../../assets/images/streamgear_flow.webp" loading="lazy" alt="StreamGear Flow Diagram" class="center"/>
   <figcaption>StreamGear API's generalized workflow</figcaption>
 </figure>
 
@@ -66,24 +66,22 @@ When no valid input is received on [`-video_source`](../params/#a-exclusive-para
 
 &thinsp; 
 
-## Importing
-
-You can import StreamGear API in your program as follows:
-
-```python
-from vidgear.gears import StreamGear
-```
-
-&thinsp; 
-
 ## Watch Demo
 
 Watch StreamGear transcoded MPEG-DASH Stream:
 
-<div id="player" align="middle" ></div>
+<div class="container">
+  <div class="video">
+    <div class="embed-responsive embed-responsive-16by9">
+      <div id="player" class="embed-responsive-item"></div>
+    </div>
+  </div>
+</div>
 <p align="middle">Powered by <a href="https://github.com/clappr/clappr" title="clappr">clappr</a> & <a href="https://github.com/google/shaka-player" title="shaka-player">shaka-player</a></p>
 
-!!! info  "This video assets _(Manifest and segments)_ are hosted on [GitHub Repository](https://github.com/abhiTronix/streamgear_chunks) and served with [raw.githack.com](https://raw.githack.com)" 
+!!! info  "This video assets _(Manifest and segments)_ are hosted on [GitHub Repository](https://github.com/abhiTronix/vidgear-docs-additionals) and served with [raw.githack.com](https://raw.githack.com)" 
+
+!!! quote "Video Credits: [**"Tears of Steel"** - Project Mango Teaser](https://mango.blender.org/download/)"
 
 &thinsp;
 
@@ -109,6 +107,16 @@ Watch StreamGear transcoded MPEG-DASH Stream:
 - [x] **[MediaElementPlayer](https://github.com/mediaelement/mediaelement):** MediaElementPlayer is a complete HTML/CSS audio/video player.
 
 &thinsp;
+
+## Importing
+
+You can import StreamGear API in your program as follows:
+
+```python
+from vidgear.gears import StreamGear
+```
+
+&thinsp; 
 
 ## Usage Examples
 

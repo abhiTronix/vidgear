@@ -37,6 +37,10 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
+# define machine os
+_windows = True if os.name == "nt" else False
+
+
 def return_static_ffmpeg():
     """
     returns system specific FFmpeg static path
@@ -65,6 +69,17 @@ def return_testvideo_path():
         tempfile.gettempdir()
     )
     return os.path.abspath(path)
+
+
+def remove_file_safe(path):
+    """
+    Remove file safely
+    """
+    try:
+        if path and os.path.isfile(os.path.abspath(path)):
+            os.remove(path)
+    except Exception as e:
+        logger.exception(e)
 
 
 @pytest.mark.xfail(raises=AssertionError)
@@ -109,7 +124,7 @@ def test_write(conversion):
         logger.debug("Result: {}".format(result))
         for i in ["Error", "Invalid", "error", "invalid"]:
             assert not (i in result)
-    os.remove(os.path.abspath("Output_twc.avi"))
+    remove_file_safe("Output_twc.avi")
 
 
 test_data_class = [
@@ -122,7 +137,12 @@ test_data_class = [
     ),
     (
         "Output_twc.avi",
-        {"-fourcc": "NULL", "-backend": "INVALID"},
+        {
+            "-fourcc": ["NULL"],
+            "-backend": "INVALID",
+            "-unknown": "INVALID",
+            "-fps": -11,
+        },
         False,
     ),
 ]
@@ -148,8 +168,9 @@ def test_WriteGear_compression(f_name, output_params, result):
             writer.write(frame)
         stream.release()
         writer.close()
-        if f_name and os.path.isfile(os.path.abspath(f_name)):
-            os.remove(os.path.abspath(f_name))
+        remove_file_safe(f_name)
     except Exception as e:
         if result:
             pytest.fail(str(e))
+        else:
+            logger.exception(str(e))

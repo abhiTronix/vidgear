@@ -66,7 +66,7 @@ brew install gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plu
 
 ## How to change quality and parameters of YouTube Streams with CamGear?
 
-CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `youtube-dl`) parameters)_ with its [`option`](../../gears/camgear/params/#options) dictionary parameter. The complete usage example is as follows: 
+CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `youtube-dl`) parameters)_ with its [`options`](../../gears/camgear/params/#options) dictionary parameter. The complete usage example is as follows: 
 
 !!! tip "More information on `STREAM_RESOLUTION` & `STREAM_PARAMS` attributes can be found [here ➶](../../gears/camgear/advanced/source_params/#exclusive-camgear-parameters)"
 
@@ -117,7 +117,22 @@ stream.stop()
 
 ## How to open RSTP network streams with CamGear?
 
-You can open any local network stream _(such as RTSP)_ just by providing its URL directly to CamGear's [`source`](../params/#source) parameter. The complete usage example is as follows: 
+You can open any local network stream _(such as RTSP)_ just by providing its URL directly to CamGear's [`source`](../../gears/camgear/params/#source) parameter. The complete usage example is as follows: 
+
+??? tip "Enforcing UDP stream"
+    
+    You can easily enforce UDP for RSTP streams inplace of default TCP, by putting following lines of code on the top of your existing code:
+
+    ```python
+    # import required libraries
+    import os
+
+    # enforce UDP
+    os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
+    ```
+
+    Finally, use [`backend`](../../gears/camgear/params/#backend) parameter value as `backend="CAP_FFMPEG"` in CamGear.
+
 
 ```python
 # import required libraries
@@ -162,9 +177,9 @@ stream.stop()
 
 &nbsp;
 
-## Can I play 4K video with CamGear API?
+## Can I play 4K/8k video with CamGear API?
 
-**Answer:** Yes, you can if your System Hardware supports it. It proven by our [playback benchmarking test](https://github.com/abhiTronix/vidgear/blob/master/vidgear/tests/benchmark_tests/test_benchmark_playback.py).
+**Answer:** Yes, you can if your System Hardware supports it.
 
 &nbsp;
 
@@ -177,12 +192,6 @@ stream.stop()
 ## Can I use GPU to decode the video source?
 
 **Answer:** See [this issue comment ➶](https://github.com/abhiTronix/vidgear/issues/69#issuecomment-551112764).
-
-&nbsp;
-
-## Can I perform Deep Learning task with VidGear?
-
-**Answer:** VidGear is a powerful Video Processing library _(similar to OpenCV, FFmpeg, etc.)_ that can read, write, process, send & receive a sequence of video-frames from/to various devices in way easy, flexible, and faster manner. So for Deep Learning or Machine Learning tasks, you have to use a third-party library with VidGear.  Being said that, VidGear's high-performance APIs definitely will leverage the overall performance if you're processing video/audio streams in your application along with Deep Learning tasks.
 
 &nbsp;
 

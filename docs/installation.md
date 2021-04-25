@@ -49,7 +49,3 @@ VidGear is well-tested and supported on the following systems, with [python 3.6+
 * [Install from source](../installation/source_install/)
 
 &thinsp;
-
-<!--
-External URLs
--->

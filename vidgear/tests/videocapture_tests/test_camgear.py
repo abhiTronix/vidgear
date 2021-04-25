@@ -37,6 +37,9 @@ logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
+# define machine os
+_windows = True if os.name == "nt" else False
+
 
 def return_youtubevideo_params(url):
     """
@@ -88,9 +91,16 @@ def return_total_frame_count():
 test_data = [
     (
         return_testvideo_path(),
-        {"CAP_PROP_FRAME_WIDTH ": 320, "CAP_PROP_FRAME_HEIGHT": 240},
+        {
+            "THREAD_TIMEOUT": 300,
+            "CAP_PROP_FRAME_WIDTH ": 320,
+            "CAP_PROP_FRAME_HEIGHT": 240,
+        },
     ),
-    (return_testvideo_path(), {"im_wrong": True, "THREADED_QUEUE_MODE": False}),
+    (
+        return_testvideo_path(),
+        {"THREAD_TIMEOUT": "wrong", "im_wrong": True, "THREADED_QUEUE_MODE": False},
+    ),
     ("im_not_a_source.mp4", {"THREADED_QUEUE_MODE": "invalid"}),
 ]
 
@@ -134,7 +144,8 @@ def test_threaded_queue_mode(source, options):
 @pytest.mark.parametrize(
     "url, quality, parameters",
     [
-        ("https://youtu.be/uCy5OuSQnyA", "2160p", "invalid"),
+        ("https://youtu.be/uCy5OuSQnyA", "73p", "invalid"),
+        ("https://www.dailymotion.com/video/x7xsoud", "73p", "invalid"),
         ("https://youtu.be/uCy5OuSQnyA", "720p", "invalid"),
         ("https://youtu.be/NMre6IAAAiU", "invalid", {"nocheckcertificate": True}),
         (

@@ -21,7 +21,7 @@ limitations under the License.
 # NetGear API 
 
 <figure>
-  <img src="../../../assets/images/netgear.png" alt="NetGear API" loading="lazy" width="70%"/>
+  <img src="../../../assets/images/netgear.png" alt="NetGear API" loading="lazy" width="70%" class="center"/>
   <figcaption>NetGear API generalized</figcaption>
 </figure>
 
@@ -31,7 +31,7 @@ limitations under the License.
 
 NetGear implements a high-level wrapper around [PyZmQ](https://github.com/zeromq/pyzmq) python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance asynchronous distributed messaging library that provides a message queue, but unlike message-oriented middleware, its system can run without a dedicated message broker. 
 
-NetGear also supports real-time [*Frame Compression capabilities*](../advanced/compression/) for optimizing performance while sending the frames directly over the network, by encoding the frame before sending it and decoding it on the client's end automatically in real-time.
+NetGear also enables real-time [*JPEG Frame Compression*](../advanced/compression/) capabilities for boosting performance significantly while sending video-frames over the network in real-time.
 
 !!! quote "Lazy Pirate pattern in NetGear API"
 
@@ -61,7 +61,7 @@ _whereas the supported protocol are: `tcp` and `ipc`_.
 
 NetGear API primarily has two modes of operations:
 
-* **Send Mode:** _which employs `send()` function to send video frames over the network in real-time. **Activate this mode by setting parameter [`receive_mode = True`](../params/#receive_mode).**_
+* **Send Mode:** _which employs `send()` function to send video frames over the network in real-time. **Activate this mode by setting parameter [`receive_mode = False`](../params/#receive_mode).**_
   
 * **Receive Mode:** _which employs `recv()` function to receive frames, sent over the network with *Send Mode* in real-time. **Activate this mode by setting parameter [`receive_mode = True`](../params/#receive_mode).**_
 
@@ -71,9 +71,9 @@ In addition to the primary modes, NetGear API also offers applications-specific 
 
 !!! tip "Also, check this [compatibility chart](../../../help/netgear_faqs/#what-exclusive-modes-are-compatible-with-each-other-in-netgear-api) for these modes interoperability."
 
-* **Multi-Servers Mode:** _In this exclusive mode, NetGear API robustly ==handles multiple servers at once==, thereby providing seamless access to frames and unidirectional data transfer from multiple Servers/Publishers across the network in real-time. Each new Server on the network can be identified on the client's end by using its unique port address. Also, it exhibits a feature where if all the connected servers on the network get disconnected, the client itself automatically exits to save resources. **You can learn about this mode [here ➶](../advanced/multi_server/).**_
+* **Multi-Servers Mode:** _In this exclusive mode, NetGear API robustly ==handles multiple servers at once==, thereby providing seamless access to frames and unidirectional data transfer from multiple Servers/Publishers across the network in real-time. Each new Server on the network can be identified on the client's end by using its unique port address. **You can learn about this mode [here ➶](../advanced/multi_server/).**_
 
-* **Multi-Clients Mode:** _In this exclusive mode, NetGear API robustly ==handles multiple clients at once==, thereby providing seamless access to frames and unidirectional data transfer to multiple Client/Consumers across the network in real-time. Each Client on the network can be uniquely identified on the Server's end by using its unique port address. This mode is ideal for applications, where broadcasting/streaming video-frames & data from a single broadcaster to multiple connected users is required. **You can learn about this mode [here ➶](../advanced/multi_client/).**_
+* **Multi-Clients Mode:** _In this exclusive mode, NetGear API robustly ==handles multiple clients at once==, thereby providing seamless access to frames and unidirectional data transfer to multiple Client/Consumers across the network in real-time. Each new Client on the network can be uniquely identified on the Server's end by using its unique port address. **You can learn about this mode [here ➶](../advanced/multi_client/).**_
 
 * **Bidirectional Mode:** _This exclusive mode ==provides seamless support for bidirectional data transmission between between Server and Client along with video frames==. Using this mode, the user can now send or receive any data(of any datatype) between Server and Client easily in real-time. **You can learn more about this mode [here ➶](../advanced/bidirectional_mode/).**_
 
@@ -84,7 +84,7 @@ In addition to the primary modes, NetGear API also offers applications-specific 
 
 !!! warning "Important Information"  
 
-	* When compiling/installing pyzmq with pip on Linux, it is generally recommended that zeromq binaries to be installed separately, via `homebrew, apt, yum, etc.` as follows:
+	* When compiling/installing pyzmq on UNIX systems, it is generally recommended that zeromq binaries to be installed separately, via `homebrew, apt, yum, etc.` as follows:
 
 		```sh
 		# Debian-based
@@ -104,6 +104,8 @@ In addition to the primary modes, NetGear API also offers applications-specific 
 	* Kindly go through each given [Usage Examples](../usage/#netgear-api-usage-examples) thoroughly, any incorrect settings/parameter may result in errors or no output at all.
 
 	* Only either of two functions (i.e. `send()` and `recv()`) can be accessed at any given instance based on activated [primary mode](#primary-modes) selected during NetGear API initialization. Trying to access wrong function in incorrect mode _(for e.g using `send()` function in Receive Mode)_, will result in `ValueError`.
+
+	* [Frame Compression](../advanced/compression/) is enabled by default in NetGear along with fast dct and compression-quality at 90% in all connections.
 
 &thinsp;
 

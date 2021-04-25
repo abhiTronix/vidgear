@@ -37,7 +37,7 @@ There are several ways to get help with VidGear:
 
 > Got a question related to VidGear Working?  
 
-Checkout our Frequently Asked Questions, a curated list of all the questions with answer that we commonly recieve, for quickly troubleshoot your problems:
+Checkout our Frequently Asked Questions, a curated list of all the questions with adequate answer that we commonly receive, for quickly troubleshooting your problems:
 
 - [General FAQs ➶](general_faqs.md)
 - [CamGear FAQs ➶](camgear_faqs.md)
@@ -47,6 +47,7 @@ Checkout our Frequently Asked Questions, a curated list of all the questions wit
 - [WriteGear FAQs ➶](writegear_faqs.md)
 - [NetGear FAQs ➶](netgear_faqs.md)
 - [WebGear FAQs ➶](webgear_faqs.md)
+- [WebGear_RTC FAQs ➶](webgear_rtc_faqs.md)
 - [VideoGear FAQs ➶](videogear_faqs.md)
 - [Stabilizer Class FAQs ➶](stabilizer_faqs.md)
 - [NetGear_Async FAQs ➶](netgear_async_faqs.md)

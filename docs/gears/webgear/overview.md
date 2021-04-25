@@ -21,24 +21,25 @@ limitations under the License.
 # WebGear API 
 
 <figure>
-  <img src="../../../assets/gifs/webgear.gif" alt="WebGear in action!" loading="lazy" width=120%/>
+  <img src="../../../assets/gifs/webgear.gif" alt="WebGear in action!" loading="lazy" width=100%/>
   <figcaption>WebGear API's Video Server running at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</figcaption>
 </figure>
 
 ## Overview
 
-> *WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-Broadcaster API ideal for transmitting video-frames from a single source to multiple recipients via the browser.*
+> *WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-Broadcaster API ideal for transmitting [Motion-JPEG](https://en.wikipedia.org/wiki/Motion_JPEG)-frames from a single source to multiple recipients via the browser.*
 
-WebGear API provides a highly extensible and flexible async wrapper around [**Starlette**](https://www.starlette.io/)'s ASGI application and provides easy access to its complete framework. WebGear can flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
+WebGear API works on [**Starlette**](https://www.starlette.io/)'s ASGI application and provides a highly extensible and flexible async wrapper around its complete framework. WebGear can flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
 
-In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs, thereby granting it exclusive power of broadcasting frames from any incoming stream.
+WebGear API uses an intraframe-only compression scheme under the hood where the sequence of video-frames are first encoded as JPEG-DIB (JPEG with Device-Independent Bit compression) and then streamed over HTTP using Starlette's Multipart [Streaming Response](https://www.starlette.io/responses/#streamingresponse) and a [Uvicorn](https://www.uvicorn.org/#quickstart) ASGI Server. This method imposes lower processing and memory requirements, but the quality is not the best, since JPEG compression is not very efficient for motion video.
 
+In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides internal wrapper around [VideoGear](../../videogear/overview/), which itself provides internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
 
 &thinsp;
 
 ## Data-Files Auto-Generation WorkFlow for WebGear
 
-On initializing WebGear API, it automatically checks for three critical data-files i.e `index.html`, `404.html` & `500.html` inside `templates` folder at the [*default location*](#default-location), which give rise to possible scenario:
+On initializing WebGear API, it automatically checks for three critical **data files**(i.e `index.html`, `404.html` & `500.html`) inside the `templates` folder of the `webgear` directory at the [*default location*](#default-location) which gives rise to the following two possible scenario:
 
 - [x] **If data-files found:** it will proceed normally for instantiating the Starlette application.
 - [ ] **If data-files not found:** it will trigger the [**Auto-Generation process**](#auto-generation-process)
@@ -65,27 +66,25 @@ On initializing WebGear API, it automatically checks for three critical data-fil
 	* It is advised to enable logging(`logging=True`) on the first run for easily identifying any runtime errors
 
 
-* On triggering this process, WebGear API creates `templates` and `static` folders along with `js`, `css`, `img` sub-folders at the assigned [*default location*](#default-location).
-* Thereby at this [*default location*](#default-location), the necessary default data files will be downloaded from a dedicated [**Github Server**](https://github.com/abhiTronix/webgear_data) inside respective folders in the following order:
+* On triggering this process, WebGear API creates `webgear` directory, and `templates` and `static` folders inside along with `js`, `css`, `img` sub-folders at the assigned [*default location*](#default-location).
+* Thereby at this [*default location*](#default-location), the necessary default data files will be downloaded from a dedicated [**Github Server**](https://github.com/abhiTronix/vidgear-vitals) inside respective folders in the following order:
 
 	```sh
 		.vidgear
-		├── static
-		│   ├── css
-		│   │   ├── bootstrap.min.css
-		│   │   └── cover.css
-		│   ├── img
-		│   │   └── favicon-32x32.png
-		│   └── js
-		│       ├── bootstrap.min.js
-		│       ├── jquery-3.4.1.slim.min.js
-		│       └── popper.min.js
-		└── templates
-		    ├── 404.html
-		    ├── 500.html
-		    ├── base.html
-		    └── index.html
-		5 directories, 10 files
+		└── webgear
+		    ├── static
+		    │   ├── css
+		    │   │   └── custom.css
+		    │   ├── img
+		    │   │   └── favicon-32x32.png
+		    │   └── js
+		    │       └── custom.js
+		    └── templates
+		        ├── 404.html
+		        ├── 500.html
+		        ├── base.html
+		        └── index.html
+		6 directories, 7 files
 	```
 
 * Finally these downloaded files thereby are verified for errors and API proceeds for instantiating the Starlette application normally.
@@ -109,14 +108,17 @@ from vidgear.gears.asyncio import WebGear
 
 ## WebGear's Default Template
 
-The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](https://github.com/twbs/bootstrap/blob/master/site/content/docs/4.3/examples/cover/index.html), by [@mdo](https://twitter.com/mdo)**, which looks like something as follows:
+!!! new "New in v0.2.1" 
+	New Standalone **WebGear's Default Theme** was added in `v0.2.1`.
+
+The WebGear API by default uses simple & elegant [**WebGear's Default Theme**](https://github.com/abhiTronix/vidgear-vitals#webgear-default-theme) by [@abhitronix](https://github.com/abhiTronix), which looks like something as follows:
 
 ### Index.html
 
 *Can be accessed by visiting WebGear app server, running at http://localhost:8000/:*
 
 <h2 align="center">
-  <img src="../../../assets/images/webgear_temp_index.jpg" loading="lazy" alt="WebGear default Index page"/>
+  <img src="../../../assets/images/webgear_temp_index.png" loading="lazy" alt="WebGear default Index page"/>
 </h2>
 
 
@@ -125,7 +127,7 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
 *Appears when respective URL is not found, for example http://localhost:8000/ok:*
 
 <h2 align="center">
-  <img src="../../../assets/images/webgear_temp_404.jpg" loading="lazy" alt="WebGear default 404 page"/>
+  <img src="../../../assets/images/webgear_temp_404.png" loading="lazy" alt="WebGear default 404 page"/>
 </h2>
 
 
@@ -136,7 +138,7 @@ The WebGear API by default uses simple & elegant **Bootstrap's [Cover template](
 !!! warning "If [`logging`](../params/#logging) is enabled and an error occurs, then instead of displaying this 500 handler, WebGear will respond with a traceback response."
 
 <h2 align="center">
-  <img src="../../../assets/images/webgear_temp_500.jpg" loading="lazy" alt="WebGear default 500 page"/>
+  <img src="../../../assets/images/webgear_temp_500.png" loading="lazy" alt="WebGear default 500 page"/>
 </h2>
 
 &nbsp;

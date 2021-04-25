@@ -20,6 +20,30 @@ limitations under the License.
 
 # WebGear API Parameters 
 
+!!! cite "WebGear provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs and their parameters."
+
+&thinsp;
+
+## **`enablePiCamera`** 
+
+This parameter provide direct access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively in WebGear. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
+
+**Data-Type:** Boolean
+
+**Default Value:** Its default value is `False`. 
+
+**Usage:**
+
+```python
+WebGear(enablePiCamera=True) # enable access to PiGear API
+```
+
+!!! example "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
+
+
+&nbsp; 
+
+
 ## **`options`** 
 
 This parameter can be used to pass user-defined parameter to WebGear API by formatting them as this parameter's attribute. 
@@ -51,11 +75,23 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     WebGear(logging=True, **options)
     ```
 
-* **`frame_size_reduction`** _(int/float)_ : This attribute controls the size reduction _(in percentage)_ of the frame to be streamed on Server._ The value defaults to `20`, and must be no higher than `90` _(fastest, max compression, Barely Visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40-60`. Its usage is as follows:
+* **`frame_size_reduction`** _(int/float)_ : This attribute controls the size reduction _(in percentage)_ of the frame to be streamed on Server. The value defaults to `20`, and must be no higher than `90` _(fastest, max compression, Barely Visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40-60`. Its usage is as follows:
 
     ```python
     # frame-size will be reduced by 50%
     options = {"frame_size_reduction": 50} 
+    # assign it
+    WebGear(logging=True, **options)
+    ```
+
+* **`enable_infinite_frames`** _(boolean)_ : Can be used to continue streaming _(instead of terminating immediately)_ with emulated blank frames with text "No Input", whenever the input source disconnects. Its default value is `False`. Its usage is as follows
+
+    !!! new "New in v0.2.1" 
+        `enable_infinite_frames` attribute was added in `v0.2.1`.
+
+    ```python
+    # emulate infinite frames
+    options = {"enable_infinite_frames": True}
     # assign it
     WebGear(logging=True, **options)
     ```
@@ -96,31 +132,11 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 
 &nbsp;
 
-## Parameters for VideoGear backend
-
-### **`enablePiCamera`** 
-
-This parameter provide access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
-
-**Data-Type:** Boolean
-
-**Default Value:** Its default value is `False`. 
-
-**Usage:**
-
-```python
-WebGear(enablePiCamera=True) # enable access to PiGear API
-```
-
-!!! info "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
-
-
-&nbsp; 
-
-&nbsp;
-
 
 ## Parameters for Stabilizer Backend
+
+
+!!! summary "Enable this backend with [`stabilize=True`](#stabilize) in WebGear."
 
 
 ### **`stabilize`**
@@ -137,7 +153,7 @@ This parameter enable access to [Stabilizer Class](../../stabilizer/overview/) f
 WebGear(stabilize=True) # enable stablization
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
+!!! example "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
 
 &nbsp; 
 
@@ -181,12 +197,11 @@ This parameter can be used in addition, to pass user-defined parameters supporte
 
 ## Parameters for CamGear backend
 
-!!! tip "Enable this backend with [`enablePiCamera=False`](#enablepicamera) on WebGear."
+!!! summary "Enable this backend with [`enablePiCamera=False`](#enablepicamera) in WebGear. Default is also `False`."
 
 ### **`source`**
 
 !!! warning "WebGear API will throw `RuntimeError` if `source` provided is invalid."
-
 
 This parameter defines the source for the input stream.
 
@@ -290,7 +305,7 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 WebGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
+!!! example "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
 
 
 &nbsp;
@@ -329,7 +344,7 @@ This parameter provides the ability to alter various **Source Tweak Parameters**
 
 **Usage:**
 
-!!! tip "All supported parameters are listed [here ➶](../advanced/source_params/)"
+!!! tip "All supported parameters are listed [here ➶](../../camgear/advanced/source_params/)"
 
 The desired parameters can be passed to WebGear API by formatting them as this parameter's attributes, as follows:
 
@@ -346,7 +361,7 @@ WebGear(source=0, **options)
 
 ## Parameters for PiGear backend 
 
-!!! tip "Enable this backend with [`enablePiCamera=True`](#enablepicamera) on WebGear."
+!!! summary "Enable this backend with [`enablePiCamera=True`](#enablepicamera) in WebGear."
 
 ### **`camera_num`** 
 
@@ -361,7 +376,7 @@ This parameter selects the camera module index which will be used as source, if 
 **Usage:**
 
 ```python
-WebGear(camera_num=0)
+WebGear(enablePiCamera=True, camera_num=0)
 ```
   
 &nbsp;
@@ -381,7 +396,7 @@ This parameter sets the resolution (i.e. `(width,height)`) of the source.
 **Usage:**
 
 ```python
-WebGear(resolution=(1280,720)) # sets 1280x720 resolution
+WebGear(enablePiCamera=True, resolution=(1280,720)) # sets 1280x720 resolution
 ```
 
 &nbsp;
@@ -401,7 +416,7 @@ This parameter sets the framerate of the source.
 **Usage:**
 
 ```python
-WebGear(framerate=60) # sets 60fps framerate
+WebGear(enablePiCamera=True, framerate=60) # sets 60fps framerate
 ```
 
 &nbsp;
@@ -432,7 +447,7 @@ options = {
     "sensor_mode": 0,
 }
 # assigning it
-WebGear(logging=True, **options)
+WebGear(enablePiCamera=True, logging=True, **options)
 ```
 
 **User-specific attributes:**
@@ -450,7 +465,8 @@ Additionally, `options` parameter also support some User-specific attributes, wh
 &nbsp;
 
 ## Common Parameters
- 
+
+!!! summary "These are common parameters that works with every backend in WebGear."
 
 ### **`colorspace`**
 
@@ -468,7 +484,7 @@ This parameter selects the colorspace of the source stream.
 WebGear(colorspace="COLOR_BGR2HSV")
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
 
 &nbsp;
 

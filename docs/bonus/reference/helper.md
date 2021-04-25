@@ -54,6 +54,10 @@ limitations under the License.
 
 &nbsp;
 
+::: vidgear.gears.helper.create_blank_frame
+
+&nbsp;
+
 ::: vidgear.gears.helper.dict2Args
 
 &nbsp;

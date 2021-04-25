@@ -38,20 +38,14 @@ logger.setLevel(log.DEBUG)
 
 class PiGear:
     """
+    PiGear is similar to CamGear API but exclusively made to support various Raspberry Pi Camera Modules (such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module).
+    PiGear provides a flexible multi-threaded framework around complete picamera python library, and provide us the ability to exploit almost all of its parameters like brightness,
+    saturation, sensor_mode, iso, exposure, etc. effortlessly. Furthermore, PiGear also supports multiple camera modules, such as in the case of Raspberry-Pi Compute Module IO boards.
 
-    PiGear is similar to CamGear API but exclusively made to support various Raspberry Pi Camera Modules
-    _(such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module)_.
+    Best of all, PiGear contains Threaded Internal Timer - that silently keeps active track of any frozen-threads/hardware-failures and exit safely, if any does occur. That means that
+    if you're running PiGear API in your script and someone accidentally pulls the Camera-Module cable out, instead of going into possible kernel panic, API will exit safely to save resources.
 
-    PiGear provides a flexible multi-threaded wrapper around complete [`picamera`](https://picamera.readthedocs.io/en/release-1.13/index.html) python library,
-    and also provides us the ability to exploit almost all of its parameters like _brightness, saturation,
-    sensor_mode, iso, exposure, etc._ effortlessly. Furthermore, PiGear supports multiple camera modules,
-    such as in case of Raspberry Pi Compute module IO boards.
-
-    Best of all, PiGear provides excellent error-handling with features like a **Threaded Internal Timer** -
-    that keeps active track of any frozen-threads/hardware-failures robustly, and exit safely if it does occurs,
-    _i.e. If you're running PiGear API in your script, and someone accidentally pulls Camera module cable out,
-    instead of going into possible kernel panic, PiGear will exit safely to save resources._
-
+    !!! warning "Make sure to enable [Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this API, otherwise nothing will work."
     """
 
     def __init__(
@@ -154,11 +148,12 @@ class PiGear:
         try:
             # apply attributes to source if specified
             for key, value in options.items():
+                if self.__logging:
+                    logger.debug("Setting Parameter: {} = '{}'".format(key, value))
                 setattr(self.__camera, key, value)
         except Exception as e:
             # Catch if any error occurred
-            if self.__logging:
-                logger.exception(str(e))
+            logger.exception(str(e))
 
         # separately handle colorspace value to int conversion
         if not (colorspace is None):
@@ -191,7 +186,7 @@ class PiGear:
             raise RuntimeError("[PiGear:ERROR] :: Camera Module failed to initialize!")
 
         # applying time delay to warm-up picamera only if specified
-        if time_delay:
+        if time_delay and isinstance(time_delay, (int, float)):
             time.sleep(time_delay)
 
         # thread initialization
@@ -304,7 +299,6 @@ class PiGear:
             self.__terminate = True
 
         # release picamera resources
-        self.stream.close()
         self.__rawCapture.close()
         self.__camera.close()
 
@@ -351,20 +345,16 @@ class PiGear:
         # stop timer thread
         if not (self.__timer is None):
             self.__timer.join()
+            self.__timer = None
 
         # handle camera thread
         if not (self.__thread is None):
             # check if hardware failure occured
             if not (self.__exceptions is None) and isinstance(self.__exceptions, bool):
                 # force release picamera resources
-                self.stream.close()
                 self.__rawCapture.close()
                 self.__camera.close()
-
-                # properly handle thread exit
-                self.__thread.join()
-                self.__thread.wait()  # wait if still process is still processing some information
-                self.__thread = None
-            else:
-                # properly handle thread exit
-                self.__thread.join()
+            # properly handle thread exit
+            self.__thread.join()  # wait if still process is still processing some information
+            # remove any threads
+            self.__thread = None

@@ -21,7 +21,7 @@ limitations under the License.
 # ScreenGear API 
 
 <figure>
-  <img src="../../../assets/gifs/screengear.gif" loading="lazy" alt="ScreenGear in action!"/>
+  <img src="../../../assets/gifs/screengear.gif" loading="lazy" alt="ScreenGear in action!" class="center-small"/>
   <figcaption>ScreenGear API in action</figcaption>
 </figure>
 

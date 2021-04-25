@@ -23,6 +23,67 @@ limitations under the License.
 !!! note "This is a continuation of the [WebGear doc ➶](../overview/#webgear-api). Thereby, It's advised to first get familiarize with this API, and its [requirements](../usage/#requirements)."
 
 
+&thinsp;
+
+## Using WebGear with a Custom Source(OpenCV)
+
+!!! new "New in v0.2.1" 
+    This example was added in `v0.2.1`.
+
+WebGear allows you to easily define your own custom Source that you want to use to manipulate your frames before sending them onto the browser. 
+
+Let's implement a bare-minimum example with a Custom Source using WebGear API and OpenCV:
+
+
+```python
+# import necessary libs
+import uvicorn, asyncio, cv2
+from vidgear.gears.asyncio import WebGear
+from vidgear.gears.asyncio.helper import reducer
+
+# initialize WebGear app without any source
+web = WebGear(logging=True)
+
+# create your own custom frame producer
+async def my_frame_producer():
+
+    # !!! define your own video source here !!!
+    # Open any video stream such as live webcam 
+    # video stream on first index(i.e. 0) device
+    stream = cv2.VideoCapture(0)
+    # loop over frames
+    while True:
+        # read frame from provided source
+        (grabbed, frame) = stream.read()
+        # break if NoneType
+        if not grabbed:
+            break
+
+        # do something with your OpenCV frame here
+
+        # reducer frames size if you want more performance otherwise comment this line
+        frame = await reducer(frame, percentage=30)  # reduce frame by 30%
+        # handle JPEG encoding
+        encodedImage = cv2.imencode(".jpg", frame)[1].tobytes()
+        # yield frame in byte format
+        yield (b"--frame\r\nContent-Type:video/jpeg2000\r\n\r\n" + encodedImage + b"\r\n")
+        await asyncio.sleep(0.00001)
+    # close stream
+    stream.release()
+
+
+# add your custom frame producer to config
+web.config["generator"] = my_frame_producer
+
+# run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host="localhost", port=8000)
+
+# close app safely
+web.shutdown()
+```
+
+**And that's all, Now you can see output at [`http://localhost:8000/`](http://localhost:8000/) address.**
+
 &nbsp;
 
 
@@ -141,13 +202,13 @@ WebGear gives us complete freedom of altering data files generated in [**Auto-Ge
 ### Rules for Altering Data Files
   
 - [x] You allowed to alter/change code in all existing [default downloaded files](../overview/#auto-generation-process) at your convenience without any restrictions.
-- [x] You allowed to delete/rename all existing data files, except remember **NOT** to delete/rename three critical data-files i.e `index.html`, `404.html` & `500.html` present in `templates` folder at the [default location](../overview/#default-location), otherwise, it will trigger [Auto-generation process](../overview/#auto-generation-process), and it will overwrite the existing files with Server ones.
+- [x] You allowed to delete/rename all existing data files, except remember **NOT** to delete/rename three critical data-files (i.e `index.html`, `404.html` & `500.html`) present in `templates` folder inside the `webgear` directory at the [default location](../overview/#default-location), otherwise, it will trigger [Auto-generation process](../overview/#auto-generation-process), and it will overwrite the existing files with Server ones.
 - [x] You're allowed to add your own additional `.html`, `.css`, `.js`, etc. files in the respective folders at the [**default location**](../overview/#default-location) and [custom mounted Data folders](#using-webgear-with-custom-mounting-points).
 
 ### Rules for Altering Data Folders 
   
 - [x] You're allowed to add/mount any number of additional folder as shown in [this example above](#using-webgear-with-custom-mounting-points).
-- [x] You're allowed to delete/rename existing folders at the [**default location**](../overview/#default-location) except remember **NOT** to delete/rename `templates` folder where critical data-files i.e `index.html`, `404.html` & `500.html` are located, otherwise, it will trigger [Auto-generation process](../overview/#auto-generation-process).
+- [x] You're allowed to delete/rename existing folders at the [**default location**](../overview/#default-location) except remember **NOT** to delete/rename `templates` folder in the `webgear` directory where critical data-files (i.e `index.html`, `404.html` & `500.html`) are located, otherwise, it will trigger [Auto-generation process](../overview/#auto-generation-process).
 
 &nbsp;
 
@@ -166,7 +227,7 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
 import uvicorn
 from vidgear.gears.asyncio import WebGear
 
-# various webgear performance and Rasbperry camera tweaks
+# various webgear performance and Raspberry Pi camera tweaks
 options = {
     "frame_size_reduction": 40,
     "frame_jpeg_quality": 80,

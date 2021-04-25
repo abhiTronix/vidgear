@@ -101,9 +101,213 @@ limitations under the License.
 
 &nbsp;
 
-## Can I live stream with WriteGear API?
+## Can I live stream to Twitch with WriteGear API?
 
 **Answer:** Yes, See [this usage example ➶](../../gears/writegear/compression/usage/#using-compression-mode-for-streaming-urls)
+
+&nbsp;
+
+## Is YouTube-Live Streaming possibe with WriteGear?
+
+**Answer:** Yes, See example below:
+
+!!! new "New in v0.2.1" 
+    This example was added in `v0.2.1`.
+
+!!! warning "This example assume you already have a [**YouTube Account with Live-Streaming enabled**](https://support.google.com/youtube/answer/2474026#enable) for publishing video."
+
+!!! danger "Make sure to change [_YouTube-Live Stream Key_](https://support.google.com/youtube/answer/2907883#zippy=%2Cstart-live-streaming-now) with yours in following code before running!"
+
+```python
+# import required libraries
+from vidgear.gears import CamGear
+from vidgear.gears import WriteGear
+import cv2
+
+# define video source
+VIDEO_SOURCE = "/home/foo/foo.mp4"
+
+# Open stream
+stream = CamGear(source=VIDEO_SOURCE, logging=True).start()
+
+# define required FFmpeg optimizing parameters for your writer
+# [NOTE]: Added VIDEO_SOURCE as audio-source, since YouTube rejects audioless streams!
+output_params = {
+    "-i": VIDEO_SOURCE,
+    "-acodec": "aac",
+    "-ar": 44100,
+    "-b:a": 712000,
+    "-vcodec": "libx264",
+    "-preset": "medium",
+    "-b:v": "4500k",
+    "-bufsize": "512k",
+    "-pix_fmt": "yuv420p",
+    "-f": "flv",
+}
+
+# [WARNING] Change your YouTube-Live Stream Key here:
+YOUTUBE_STREAM_KEY = "xxxx-xxxx-xxxx-xxxx-xxxx"
+
+# Define writer with defined parameters and
+writer = WriteGear(
+    output_filename="rtmp://a.rtmp.youtube.com/live2/{}".format(YOUTUBE_STREAM_KEY),
+    logging=True,
+    **output_params
+)
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # write frame to writer
+    writer.write(frame)
+
+# safely close video stream
+stream.stop()
+
+# safely close writer
+writer.close()
+```
+
+&nbsp;
+
+
+## How to create MP4 segments from a video stream with WriteGear?
+
+**Answer:** See example below:
+
+!!! new "New in v0.2.1" 
+    This example was added in `v0.2.1`.
+
+```python
+# import required libraries
+from vidgear.gears import VideoGear
+from vidgear.gears import WriteGear
+import cv2
+
+# Open any video source `foo.mp4`
+stream = VideoGear(
+    source="foo.mp4", logging=True
+).start()
+
+# define required FFmpeg optimizing parameters for your writer
+output_params = {
+    "-c:v": "libx264",
+    "-crf": 22,
+    "-map": 0,
+    "-segment_time": 9,
+    "-g": 9,
+    "-sc_threshold": 0,
+    "-force_key_frames": "expr:gte(t,n_forced*9)",
+    "-clones": ["-f", "segment"],
+}
+
+# Define writer with defined parameters
+writer = WriteGear(output_filename="output%03d.mp4", logging=True, **output_params)
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # write frame to writer
+    writer.write(frame)
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+
+# safely close writer
+writer.close()
+```
+
+&nbsp;
+
+
+## How add external audio file input to video frames?
+
+**Answer:** See example below:
+
+!!! new "New in v0.2.1" 
+    This example was added in `v0.2.1`.
+
+!!! failure "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
+
+```python
+# import required libraries
+from vidgear.gears import CamGear
+from vidgear.gears import WriteGear
+import cv2
+
+# open any valid video stream(for e.g `foo_video.mp4` file)
+stream = CamGear(source="foo_video.mp4").start()
+
+# add various parameters, along with custom audio
+stream_params = {
+    "-input_framerate": stream.framerate,  # controlled framerate for audio-video sync !!! don't forget this line !!!
+    "-i": "foo_audio.aac",  # assigns input audio-source: "foo_audio.aac"
+}
+
+# Define writer with defined parameters
+writer = WriteGear(output_filename="Output.mp4", logging=True, **stream_params)
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # write frame to writer
+    writer.write(frame)
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+
+# safely close writer
+writer.close()
+```
 
 &nbsp;
 

@@ -21,8 +21,9 @@ limitations under the License.
 
 import cv2
 import time
+import queue
 import logging as log
-from threading import Thread
+from threading import Thread, Event
 from pkg_resources import parse_version
 
 from .helper import (
@@ -45,14 +46,15 @@ logger.setLevel(log.DEBUG)
 
 class CamGear:
     """
-    CamGear API supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format
-    (_upto 4k tested_), any network stream URL such as *http(s), rtp, rstp, rtmp, mms, etc.* In addition to this, it also supports live Gstreamer's RAW pipelines
-    and YouTube video/livestreams URLs.
+    CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format (upto 4k tested),
+    any network stream URL such as http(s), rtp, rstp, rtmp, mms, etc. In addition to this, it also supports Gstreamer's RAW pipelines and various live video streaming
+    sites like YouTube, Twitch, Dailymotion etc.
 
-    CamGear API provides a flexible, high-level multi-threaded wrapper around [**OpenCV's VideoCapture Class**](https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html) with direct access to almost all of its available parameters,
-    and also internally employs `pafy` with `youtube-dl` backend for enabling seamless live *YouTube streaming*.
+    CamGear API provides a flexible, high-level multi-threaded wrapper around OpenCV's VideoCapture API with direct access to almost all of its available parameters.
+    It relies on Threaded Queue mode for threaded, error-free and synchronized frame handling.
 
-    CamGear relies exclusively on **Threaded Queue mode** for threaded, error-free and synchronized frame handling.
+    CamGear internally employs streamlink for piping live videos from various streaming services like Twitch, Livestream, Dailymotion etc., and also utilizies pafy
+    with youtube-dl at its backend for seamless YouTube pipelining.
     """
 
     def __init__(
@@ -221,24 +223,36 @@ class CamGear:
         self.__youtube_mode = stream_mode
 
         # assigns special parameter to global variable and clear
+        # Threaded Queue Mode
         self.__threaded_queue_mode = options.pop("THREADED_QUEUE_MODE", True)
         if not isinstance(self.__threaded_queue_mode, bool):
             # reset improper values
             self.__threaded_queue_mode = True
+        # Thread Timeout
+        self.__thread_timeout = options.pop("THREAD_TIMEOUT", None)
+        if self.__thread_timeout and isinstance(self.__thread_timeout, (int, float)):
+            # set values
+            self.__thread_timeout = int(self.__thread_timeout)
+        else:
+            # defaults to 5mins timeout
+            self.__thread_timeout = None
 
         self.__queue = None
-        # initialize deque for video files only
+        # initialize queue for video files only
         if self.__threaded_queue_mode and isinstance(source, str):
-            # import deque
-            from collections import deque
-
-            # define deque and assign it to global var
-            self.__queue = deque(maxlen=96)  # max len 96 to check overflow
+            # define queue and assign it to global var
+            self.__queue = queue.Queue(maxsize=96)  # max len 96 to check overflow
             # log it
             if self.__logging:
                 logger.debug(
                     "Enabling Threaded Queue Mode for the current video source!"
                 )
+                if self.__thread_timeout:
+                    logger.debug(
+                        "Setting Video-Thread Timeout to {}s.".format(
+                            self.__thread_timeout
+                        )
+                    )
         else:
             # otherwise disable it
             self.__threaded_queue_mode = False
@@ -291,7 +305,7 @@ class CamGear:
             self.framerate = _fps
 
         # applying time delay to warm-up webcam only if specified
-        if time_delay:
+        if time_delay and isinstance(time_delay, (int, float)):
             time.sleep(time_delay)
 
         # frame variable initialization
@@ -305,7 +319,7 @@ class CamGear:
 
             if self.__threaded_queue_mode:
                 # initialize and append to queue
-                self.__queue.append(self.frame)
+                self.__queue.put(self.frame)
         else:
             raise RuntimeError(
                 "[CamGear:ERROR] :: Source is invalid, CamGear failed to intitialize stream on this source!"
@@ -314,8 +328,8 @@ class CamGear:
         # thread initialization
         self.__thread = None
 
-        # initialize termination flag
-        self.__terminate = False
+        # initialize termination flag event
+        self.__terminate = Event()
 
     def start(self):
         """
@@ -331,22 +345,15 @@ class CamGear:
 
     def __update(self):
         """
-        A **Threaded Frames Extractor**, that keep iterating frames from OpenCV's VideoCapture API to a internal monitored deque,
+        A **Threaded Frames Extractor**, that keep iterating frames from OpenCV's VideoCapture API to a internal monitored queue,
         until the thread is terminated, or frames runs out.
         """
 
         # keep iterating infinitely until the thread is terminated or frames runs out
         while True:
             # if the thread indicator variable is set, stop the thread
-            if self.__terminate:
+            if self.__terminate.is_set():
                 break
-
-            if self.__threaded_queue_mode:
-                # check queue buffer for overflow
-                if len(self.__queue) >= 96:
-                    # stop iterating if overflowing occurs
-                    time.sleep(0.000001)
-                    continue
 
             # otherwise, read the next frame from the stream
             (grabbed, frame) = self.stream.read()
@@ -355,27 +362,25 @@ class CamGear:
             if not grabbed:
                 # no frames received, then safely exit
                 if self.__threaded_queue_mode:
-                    if len(self.__queue) == 0:
+                    if self.__queue.empty():
                         break
                     else:
                         continue
                 else:
                     break
 
+            # apply colorspace to frames if valid
             if not (self.color_space is None):
-                # apply colorspace to frames
                 color_frame = None
                 try:
                     if isinstance(self.color_space, int):
                         color_frame = cv2.cvtColor(frame, self.color_space)
                     else:
-                        if self.__logging:
-                            logger.warning(
-                                "Global color_space parameter value `{}` is not a valid!".format(
-                                    self.color_space
-                                )
+                        raise ValueError(
+                            "Global color_space parameter value `{}` is not a valid!".format(
+                                self.color_space
                             )
-                        self.color_space = None
+                        )
                 except Exception as e:
                     # Catch if any error occurred
                     self.color_space = None
@@ -391,7 +396,7 @@ class CamGear:
 
             # append to queue
             if self.__threaded_queue_mode:
-                self.__queue.append(self.frame)
+                self.__queue.put(self.frame)
 
         self.__threaded_queue_mode = False
         self.frame = None
@@ -400,15 +405,13 @@ class CamGear:
 
     def read(self):
         """
-        Extracts frames synchronously from monitored deque, while maintaining a fixed-length frame buffer in the memory,
-        and blocks the thread if the deque is full.
+        Extracts frames synchronously from monitored queue, while maintaining a fixed-length frame buffer in the memory,
+        and blocks the thread if the queue is full.
 
         **Returns:** A n-dimensional numpy array.
         """
-
         while self.__threaded_queue_mode:
-            if len(self.__queue) > 0:
-                return self.__queue.popleft()
+            return self.__queue.get(timeout=self.__thread_timeout)
         return self.frame
 
     def stop(self):
@@ -418,15 +421,19 @@ class CamGear:
         if self.__logging:
             logger.debug("Terminating processes.")
         # terminate Threaded queue mode separately
-        if self.__threaded_queue_mode and not (self.__queue is None):
-            if len(self.__queue) > 0:
-                self.__queue.clear()
+        if self.__threaded_queue_mode:
             self.__threaded_queue_mode = False
-            self.frame = None
 
         # indicate that the thread should be terminate
-        self.__terminate = True
+        self.__terminate.set()
 
         # wait until stream resources are released (producer thread might be still grabbing frame)
         if self.__thread is not None:
+            if not (self.__queue is None):
+                while not self.__queue.empty():
+                    try:
+                        self.__queue.get_nowait()
+                    except queue.Empty:
+                        continue
+                    self.__queue.task_done()
             self.__thread.join()

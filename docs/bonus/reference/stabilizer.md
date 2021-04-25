@@ -18,7 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-!!! info "All Stabilizer API parameters are explained [here ➶](../../../gears/stabilizer/params/)"
+!!! example "Stabilizer API usage examples can be found [here ➶](../../../gears/stabilizer/usage/)"
+
+!!! info "Stabilizer API parameters are explained [here ➶](../../../gears/stabilizer/params/)"
 
 ::: vidgear.gears.stabilizer.Stabilizer	
 	

@@ -22,6 +22,7 @@ limitations under the License.
 import os
 import cv2
 import time
+import simplejpeg
 import numpy as np
 import random
 import logging as log
@@ -29,7 +30,7 @@ from threading import Thread
 from collections import deque
 from pkg_resources import parse_version
 
-from .helper import logger_handler, generate_auth_certificates
+from .helper import logger_handler, generate_auth_certificates, check_WriteAccess
 
 # define logger
 logger = log.getLogger("NetGear")
@@ -39,16 +40,14 @@ logger.setLevel(log.DEBUG)
 
 
 class NetGear:
-
     """
     NetGear is exclusively designed to transfer video frames synchronously and asynchronously between interconnecting systems over the network in real-time.
 
-    NetGear implements a high-level wrapper around `PyZmQ` python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance
-    asynchronous distributed messaging library that provides a message queue, but unlike message-oriented middle-ware, its system can run without a dedicated
-    message broker.
+    NetGear implements a high-level wrapper around PyZmQ python library that contains python bindings for ZeroMQ - a high-performance asynchronous distributed messaging library
+    that provides a message queue, but unlike message-oriented middleware, its system can run without a dedicated message broker.
 
-    NetGear also supports real-time *Frame Compression capabilities* for optimizing performance while sending the frames directly over the network, by encoding
-    the frame before sending it and decoding it on the client's end automatically in real-time.
+    NetGear also supports real-time Frame Compression capabilities for optimizing performance while sending the frames directly over the network, by encoding the frame before sending
+    it and decoding it on the client's end automatically in real-time.
 
     !!! info
         NetGear API now internally implements robust *Lazy Pirate pattern* (auto-reconnection) for its synchronous messaging patterns _(i.e. `zmq.PAIR` & `zmq.REQ/zmq.REP`)_
@@ -197,21 +196,11 @@ class NetGear:
         custom_cert_location = ""  # handles custom ZMQ certificates path
 
         # define frame-compression handler
-        self.__compression = (
-            ".jpg" if not (address is None) else None
-        )  # disabled by default for local connections
-        self.__compression_params = (
-            cv2.IMREAD_COLOR
-            if receive_mode
-            else [
-                cv2.IMWRITE_JPEG_QUALITY,
-                85,
-                cv2.IMWRITE_JPEG_PROGRESSIVE,
-                False,
-                cv2.IMWRITE_JPEG_OPTIMIZE,
-                True,
-            ]
-        )
+        self.__jpeg_compression = True  # enabled by default for all connections
+        self.__jpeg_compression_quality = 90  # 90% quality
+        self.__jpeg_compression_fastdct = True  # fastest DCT on by default
+        self.__jpeg_compression_fastupsample = False  # fastupsample off by default
+
         # defines frame compression on return data
         self.__ex_compression_params = None
 
@@ -286,15 +275,16 @@ class NetGear:
 
             elif key == "custom_cert_location" and isinstance(value, str):
                 # verify custom auth certificates path for secure mode
-                assert os.access(
-                    value, os.W_OK
+                custom_cert_location = os.path.abspath(value)
+                assert os.path.isdir(
+                    custom_cert_location
+                ), "[NetGear:ERROR] :: `custom_cert_location` value must be the path to a valid directory!"
+                assert check_WriteAccess(
+                    custom_cert_location,
+                    is_windows=True if os.name == "nt" else False,
                 ), "[NetGear:ERROR] :: Permission Denied!, cannot write ZMQ authentication certificates to '{}' directory!".format(
                     value
                 )
-                assert os.path.isdir(
-                    os.path.abspath(value)
-                ), "[NetGear:ERROR] :: `custom_cert_location` value must be the path to a valid directory!"
-                custom_cert_location = os.path.abspath(value)
 
             elif key == "overwrite_cert" and isinstance(value, bool):
                 # enable/disable auth certificate overwriting in secure mode
@@ -315,47 +305,21 @@ class NetGear:
                         )
                     )
 
-            elif key == "compression_format":
-                if isinstance(value, str) and value.lower().strip() in [
-                    ".jpg",
-                    ".jpeg",
-                    ".bmp",
-                    ".png",
-                ]:
-                    # assign frame-compression encoding value
-                    self.__compression = value.lower().strip()
+            elif key == "jpeg_compression" and isinstance(value, bool):
+                # enable frame-compression encoding value
+                self.__jpeg_compression = value
+            elif key == "jpeg_compression_quality" and isinstance(value, (int, float)):
+                # set valid jpeg quality
+                if value >= 10 and value <= 100:
+                    self.__jpeg_compression_quality = int(value)
                 else:
-                    logger.warning(
-                        "Incorrect encoding format: `{}` skipped. Disabling Frame-Compression!".format(
-                            value
-                        )
-                    )
-                    self.__compression = None
-            elif key == "compression_param":
-                # assign encoding/decoding params/flags for frame-compression if valid
-                if receive_mode and isinstance(value, int):
-                    self.__compression_params = value
-                elif not (receive_mode) and isinstance(value, list):
-                    self.__compression_params = value
-                elif isinstance(value, tuple) and len(value) == 2:
-                    if receive_mode:
-                        self.__compression_params = [
-                            x for x in value if isinstance(x, int)
-                        ][0]
-                        self.__ex_compression_params = [
-                            x for x in value if (value and isinstance(x, list))
-                        ][0]
-                    else:
-                        self.__compression_params = [
-                            x for x in value if (value and isinstance(x, list))
-                        ][0]
-                        self.__ex_compression_params = [
-                            x for x in value if isinstance(x, int)
-                        ][0]
-                else:
-                    logger.warning(
-                        "Invalid compression parameters: {} skipped.".format(value)
-                    )
+                    logger.warning("Skipped invalid `jpeg_compression_quality` value!")
+            elif key == "jpeg_compression_fastdct" and isinstance(value, bool):
+                # enable jpeg fastdct
+                self.__jpeg_compression_fastdct = value
+            elif key == "jpeg_compression_fastupsample" and isinstance(value, bool):
+                # enable jpeg  fastupsample
+                self.__jpeg_compression_fastupsample = value
 
             # assign maximum retries in synchronous patterns
             elif key == "max_retries" and isinstance(value, int) and pattern < 2:
@@ -462,26 +426,6 @@ class NetGear:
                 logger.debug(
                     "Bi-Directional Data Transmission is enabled for this connection!"
                 )
-
-        # handle frame compression on return data
-        if (
-            (self.__bi_mode or self.__multiclient_mode)
-            and not (self.__compression is None)
-            and self.__ex_compression_params is None
-        ):
-            # define exclusive compression params
-            self.__ex_compression_params = (
-                [
-                    cv2.IMWRITE_JPEG_QUALITY,
-                    85,
-                    cv2.IMWRITE_JPEG_PROGRESSIVE,
-                    False,
-                    cv2.IMWRITE_JPEG_OPTIMIZE,
-                    True,
-                ]
-                if receive_mode
-                else cv2.IMREAD_COLOR
-            )
 
         # define messaging context instance
         self.__msg_context = zmq.Context.instance()
@@ -665,10 +609,16 @@ class NetGear:
                         (protocol + "://" + str(address) + ":" + str(port)), pattern
                     )
                 )
-                if not (self.__compression is None):
+                if self.__jpeg_compression:
                     logger.debug(
-                        "Optimized `{}` Frame-Compression is enabled with decoding flag:`{}` for this connection.".format(
-                            self.__compression, self.__compression_params
+                        "JPEG Frame-Compression is activated for this connection with Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                            self.__jpeg_compression_quality,
+                            "enabled"
+                            if self.__jpeg_compression_fastdct
+                            else "disabled",
+                            "enabled"
+                            if self.__jpeg_compression_fastupsample
+                            else "disabled",
                         )
                     )
                 if self.__secure_mode:
@@ -850,10 +800,16 @@ class NetGear:
                         (protocol + "://" + str(address) + ":" + str(port)), pattern
                     )
                 )
-                if not (self.__compression is None):
+                if self.__jpeg_compression:
                     logger.debug(
-                        "Optimized `{}` Frame-Compression is enabled with encoding params:`{}` for this connection.".format(
-                            self.__compression, self.__compression_params
+                        "JPEG Frame-Compression is activated for this connection with Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                            self.__jpeg_compression_quality,
+                            "enabled"
+                            if self.__jpeg_compression_fastdct
+                            else "disabled",
+                            "enabled"
+                            if self.__jpeg_compression_fastupsample
+                            else "disabled",
                         )
                     )
                 if self.__secure_mode:
@@ -986,38 +942,49 @@ class NetGear:
                                 return_data, dtype=return_data.dtype
                             )
 
-                        # handle encoding
-                        if not (self.__compression is None):
-                            retval, return_data = cv2.imencode(
-                                self.__compression,
+                        # handle jpeg-compression encoding
+                        if self.__jpeg_compression:
+                            return_data = simplejpeg.encode_jpeg(
                                 return_data,
-                                self.__ex_compression_params,
+                                quality=self.__jpeg_compression_quality,
+                                colorspace="BGR",
+                                colorsubsampling="422",
+                                fastdct=self.__jpeg_compression_fastdct,
                             )
-                            # check if it works
-                            if not (retval):
-                                # otherwise raise error and exit
-                                self.__terminate = True
-                                raise RuntimeError(
-                                    "[NetGear:ERROR] :: Return frame compression failed with encoding: {} and parameters: {}.".format(
-                                        self.__compression, self.__ex_compression_params
-                                    )
-                                )
 
                         if self.__bi_mode:
                             return_dict = dict(
                                 return_type=(type(return_data).__name__),
-                                compression=str(self.__compression),
-                                array_dtype=str(return_data.dtype),
-                                array_shape=return_data.shape,
+                                compression={
+                                    "dct": self.__jpeg_compression_fastdct,
+                                    "ups": self.__jpeg_compression_fastupsample,
+                                }
+                                if self.__jpeg_compression
+                                else False,
+                                array_dtype=str(return_data.dtype)
+                                if not (self.__jpeg_compression)
+                                else "",
+                                array_shape=return_data.shape
+                                if not (self.__jpeg_compression)
+                                else "",
                                 data=None,
                             )
                         else:
                             return_dict = dict(
                                 port=self.__port,
                                 return_type=(type(return_data).__name__),
-                                compression=str(self.__compression),
-                                array_dtype=str(return_data.dtype),
-                                array_shape=return_data.shape,
+                                compression={
+                                    "dct": self.__jpeg_compression_fastdct,
+                                    "ups": self.__jpeg_compression_fastupsample,
+                                }
+                                if self.__jpeg_compression
+                                else False,
+                                array_dtype=str(return_data.dtype)
+                                if not (self.__jpeg_compression)
+                                else "",
+                                array_shape=return_data.shape
+                                if not (self.__jpeg_compression)
+                                else "",
                                 data=None,
                             )
                         # send the json dict
@@ -1053,22 +1020,28 @@ class NetGear:
                 if self.__return_data and self.__logging:
                     logger.warning("`return_data` is disabled for this pattern!")
 
-            # recover and reshape frame from buffer
-            frame_buffer = np.frombuffer(msg_data, dtype=msg_json["dtype"])
-            frame = frame_buffer.reshape(msg_json["shape"])
-
             # check if encoding was enabled
-            if msg_json["compression"] and not (self.__compression is None):
-                frame = cv2.imdecode(frame, self.__compression_params)
+            if msg_json["compression"]:
+                # decode JPEG frame
+                frame = simplejpeg.decode_jpeg(
+                    msg_data,
+                    colorspace="BGR",
+                    fastdct=self.__jpeg_compression_fastdct
+                    or msg_json["compression"]["dct"],
+                    fastupsample=self.__jpeg_compression_fastupsample
+                    or msg_json["compression"]["ups"],
+                )
                 # check if valid frame returned
                 if frame is None:
                     self.__terminate = True
                     # otherwise raise error and exit
                     raise RuntimeError(
-                        "[NetGear:ERROR] :: Received compressed frame `{}` decoding failed with flag: {}.".format(
-                            msg_json["compression"], self.__compression_params
-                        )
+                        "[NetGear:ERROR] :: Received compressed JPEG frame decoding failed"
                     )
+            else:
+                # recover and reshape frame from buffer
+                frame_buffer = np.frombuffer(msg_data, dtype=msg_json["dtype"])
+                frame = frame_buffer.reshape(msg_json["shape"])
 
             # check if multiserver_mode
             if self.__multiserver_mode:
@@ -1164,46 +1137,47 @@ class NetGear:
             # check whether the incoming frame is contiguous
             frame = np.ascontiguousarray(frame, dtype=frame.dtype)
 
-        # handle encoding
-        if not (self.__compression is None):
-            retval, frame = cv2.imencode(
-                self.__compression, frame, self.__compression_params
+        # handle JPEG compresssion encoding
+        if self.__jpeg_compression:
+            frame = simplejpeg.encode_jpeg(
+                frame,
+                quality=self.__jpeg_compression_quality,
+                colorspace="BGR",
+                colorsubsampling="422",
+                fastdct=self.__jpeg_compression_fastdct,
             )
-            # check if it works
-            if not (retval):
-                # otherwise raise error and exit
-                self.__terminate = True
-                raise ValueError(
-                    "[NetGear:ERROR] :: Frame compression failed with encoding: {} and parameters: {}.".format(
-                        self.__compression, self.__compression_params
-                    )
-                )
 
         # check if multiserver_mode is activated
         if self.__multiserver_mode:
             # prepare the exclusive json dict and assign values with unique port
             msg_dict = dict(
                 terminate_flag=exit_flag,
-                compression=str(self.__compression)
-                if not (self.__compression is None)
-                else "",
+                compression={
+                    "dct": self.__jpeg_compression_fastdct,
+                    "ups": self.__jpeg_compression_fastupsample,
+                }
+                if self.__jpeg_compression
+                else False,
                 port=self.__port,
                 pattern=str(self.__pattern),
                 message=message,
-                dtype=str(frame.dtype),
-                shape=frame.shape,
+                dtype=str(frame.dtype) if not (self.__jpeg_compression) else "",
+                shape=frame.shape if not (self.__jpeg_compression) else "",
             )
         else:
             # otherwise prepare normal json dict and assign values
             msg_dict = dict(
                 terminate_flag=exit_flag,
-                compression=str(self.__compression)
-                if not (self.__compression is None)
-                else "",
+                compression={
+                    "dct": self.__jpeg_compression_fastdct,
+                    "ups": self.__jpeg_compression_fastupsample,
+                }
+                if self.__jpeg_compression
+                else False,
                 message=message,
                 pattern=str(self.__pattern),
-                dtype=str(frame.dtype),
-                shape=frame.shape,
+                dtype=str(frame.dtype) if not (self.__jpeg_compression) else "",
+                shape=frame.shape if not (self.__jpeg_compression) else "",
             )
 
         # send the json dict
@@ -1273,14 +1247,16 @@ class NetGear:
                         copy=self.__msg_copy,
                         track=self.__msg_track,
                     )
-                    recvd_data = np.frombuffer(
-                        recv_array, dtype=recv_json["array_dtype"]
-                    ).reshape(recv_json["array_shape"])
-
                     # check if encoding was enabled
                     if recv_json["compression"]:
-                        recvd_data = cv2.imdecode(
-                            recvd_data, self.__ex_compression_params
+                        # decode JPEG frame
+                        recvd_data = simplejpeg.decode_jpeg(
+                            recv_array,
+                            colorspace="BGR",
+                            fastdct=self.__jpeg_compression_fastdct
+                            or recv_json["compression"]["dct"],
+                            fastupsample=self.__jpeg_compression_fastupsample
+                            or recv_json["compression"]["ups"],
                         )
                         # check if valid frame returned
                         if recvd_data is None:
@@ -1292,6 +1268,10 @@ class NetGear:
                                     self.__ex_compression_params,
                                 )
                             )
+                    else:
+                        recvd_data = np.frombuffer(
+                            recv_array, dtype=recv_json["array_dtype"]
+                        ).reshape(recv_json["array_shape"])
                 else:
                     recvd_data = recv_json["data"]
 

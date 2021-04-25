@@ -20,11 +20,13 @@ limitations under the License.
 
 # VideoGear API Parameters
 
+!!! cite "VideoGear acts as a Common Video-Capture API that provides internal access for both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs and their parameters."
+
 &thinsp;
 
 ## **`enablePiCamera`** 
 
-This parameter provide access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
+This parameter provide direct access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively in VideoGear. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
 
 **Data-Type:** Boolean
 
@@ -36,7 +38,7 @@ This parameter provide access to [PiGear](../../pigear/overview/) or [CamGear](.
 VideoGear(enablePiCamera=True) # enable access to PiGear API
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
+!!! example "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
 
 
 &nbsp; 
@@ -45,6 +47,9 @@ VideoGear(enablePiCamera=True) # enable access to PiGear API
 
 
 ## Parameters for Stabilizer Backend
+
+
+!!! summary "Enable this backend with [`stabilize=True`](#stabilize) in VideoGear."
 
 
 ### **`stabilize`**
@@ -61,7 +66,7 @@ This parameter enable access to [Stabilizer Class](../../stabilizer/overview/) f
 VideoGear(stabilize=True) # enable stablization
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
+!!! example "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
 
 &nbsp; 
 
@@ -105,7 +110,7 @@ This parameter can be used in addition, to pass user-defined parameters supporte
 
 ## Parameters for CamGear backend
 
-!!! tip "Enable this backend with [`enablePiCamera=False`](#enablepicamera) on VideoGear."
+!!! summary "Enable this backend with [`enablePiCamera=False`](#enablepicamera) in VideoGear. Default is also `False`."
 
 ### **`source`**
 
@@ -215,7 +220,7 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 VideoGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
+!!! example "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
 
 &nbsp;
 
@@ -253,7 +258,7 @@ This parameter provides the ability to alter various **Source Tweak Parameters**
 
 **Usage:**
 
-!!! tip "All supported parameters are listed [here ➶](../advanced/source_params/)"
+!!! tip "All supported parameters are listed [here ➶](../../camgear/advanced/source_params/)"
 
 The desired parameters can be passed to VideoGear API by formatting them as this parameter's attributes, as follows:
 
@@ -270,7 +275,7 @@ VideoGear(source=0, **options)
 
 ## Parameters for PiGear backend 
 
-!!! tip "Enable this backend with [`enablePiCamera=False`](#enablepicamera) on VideoGear."
+!!! summary "Enable this backend with [`enablePiCamera=True`](#enablepicamera) in VideoGear."
 
 ### **`camera_num`** 
 
@@ -285,7 +290,7 @@ This parameter selects the camera module index which will be used as source, if 
 **Usage:**
 
 ```python
-VideoGear(camera_num=0)
+VideoGear(enablePiCamera=True, camera_num=0)
 ```
   
 &nbsp;
@@ -305,7 +310,7 @@ This parameter sets the resolution (i.e. `(width,height)`) of the source.
 **Usage:**
 
 ```python
-VideoGear(resolution=(1280,720)) # sets 1280x720 resolution
+VideoGear(enablePiCamera=True, resolution=(1280,720)) # sets 1280x720 resolution
 ```
 
 &nbsp;
@@ -325,7 +330,7 @@ This parameter sets the framerate of the source.
 **Usage:**
 
 ```python
-VideoGear(framerate=60) # sets 60fps framerate
+VideoGear(enablePiCamera=True, framerate=60) # sets 60fps framerate
 ```
 
 &nbsp;
@@ -356,7 +361,7 @@ options = {
     "sensor_mode": 0,
 }
 # assigning it
-VideoGear(logging=True, **options)
+VideoGear(enablePiCamera=True, logging=True, **options)
 ```
 
 **User-specific attributes:**
@@ -374,6 +379,9 @@ Additionally, `options` parameter also support some User-specific attributes, wh
 &nbsp;
 
 ## Common Parameters
+
+
+!!! summary "These are common parameters that works with every backend in VideoGear."
  
 
 ### **`colorspace`**
@@ -392,7 +400,7 @@ This parameter selects the colorspace of the source stream.
 VideoGear(colorspace="COLOR_BGR2HSV")
 ```
 
-!!! info "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
 
 &nbsp;
 

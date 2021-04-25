@@ -46,7 +46,7 @@ These Gears can be classified as follows:
 
 ### B. VideoWriter Gears
 
-> **Basic Function:** Writes [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames to a video file or stream.
+> **Basic Function:** Writes [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames to a video file or network stream.
 
 * [WriteGear](writegear/introduction/): Handles Lossless Video-Writer for file/stream/frames Encoding and Compression.
 
@@ -58,11 +58,13 @@ These Gears can be classified as follows:
 
 * **Asynchronous I/O Streaming Gear:**
 
-    * [WebGear](webgear/overview/): ASGI Video-Server that broadcasts Live Video-Frames to any web-browser on the network.
+    * [WebGear](webgear/overview/): ASGI Video-Server that broadcasts Live MJPEG-Frames to any web-browser on the network.
+
+    * [WebGear_RTC](webgear_rtc/overview/): Real-time Asyncio WebRTC media server for streaming directly to peer clients over the network.
 
 ### D. Network Gears
 
-> **Basic Function:** Sends/Receives [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames over the network.
+> **Basic Function:** Sends/Receives [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames over connected network.
 
 * [NetGear](netgear/overview/): Handles High-Performance Video-Frames & Data Transfer between interconnecting systems over the network.
 

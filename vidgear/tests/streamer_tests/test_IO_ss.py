@@ -98,7 +98,7 @@ def test_method_call_ss():
     streamer.terminate()
 
 
-@pytest.mark.xfail(raises=RuntimeError)
+@pytest.mark.xfail(raises=(AttributeError, RuntimeError))
 def test_method_call_ss():
     """
     Method calling Test - Made to fail by calling method in the wrong context.
@@ -109,12 +109,12 @@ def test_method_call_ss():
     streamer.terminate()
 
 
+@pytest.mark.xfail(raises=subprocess.CalledProcessError)
 def test_invalid_params_ss():
     """
     Method calling Test - Made to fail by calling method in the wrong context.
     """
     stream_params = {"-video_source": return_testvideo_path(), "-vcodec": "unknown"}
     streamer = StreamGear(output="output.mpd", logging=True, **stream_params)
-    with pytest.raises(subprocess.CalledProcessError):
-        streamer.transcode_source()
+    streamer.transcode_source()
     streamer.terminate()

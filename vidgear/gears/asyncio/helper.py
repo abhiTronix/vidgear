@@ -35,6 +35,8 @@ import requests
 from tqdm import tqdm
 from colorlog import ColoredFormatter
 from pkg_resources import parse_version
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 
 def logger_handler():
@@ -89,6 +91,29 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
+# set default timer for download requests
+DEFAULT_TIMEOUT = 3
+
+
+class TimeoutHTTPAdapter(HTTPAdapter):
+    """
+    A custom Transport Adapter with default timeouts
+    """
+
+    def __init__(self, *args, **kwargs):
+        self.timeout = DEFAULT_TIMEOUT
+        if "timeout" in kwargs:
+            self.timeout = kwargs["timeout"]
+            del kwargs["timeout"]
+        super().__init__(*args, **kwargs)
+
+    def send(self, request, **kwargs):
+        timeout = kwargs.get("timeout")
+        if timeout is None:
+            kwargs["timeout"] = self.timeout
+        return super().send(request, **kwargs)
+
+
 def mkdir_safe(dir, logging=False):
     """
     ### mkdir_safe
@@ -108,6 +133,44 @@ def mkdir_safe(dir, logging=False):
             raise
         if logging:
             logger.debug("Directory already exists at `{}`".format(dir))
+
+
+def create_blank_frame(frame=None, text="", logging=False):
+    """
+    ### create_blank_frame
+
+    Create blank frames of given frame size with text
+
+    Parameters:
+        frame (numpy.ndarray): inputs numpy array(frame).
+        text (str): Text to be written on frame.
+    **Returns:**  A reduced numpy ndarray array.
+    """
+    # check if frame is valid
+    if frame is None:
+        raise ValueError("[Helper:ERROR] :: Input frame cannot be NoneType!")
+    # grab the frame size
+    (height, width) = frame.shape[:2]
+    # create blank frame
+    blank_frame = np.zeros((height, width, 3), np.uint8)
+    # setup text
+    if text and isinstance(text, str):
+        if logging:
+            logger.debug("Adding text: {}".format(text))
+        # setup font
+        font = cv2.FONT_HERSHEY_SCRIPT_COMPLEX
+        # get boundary of this text
+        fontScale = min(height, width) / (25 / 0.25)
+        textsize = cv2.getTextSize(text, font, fontScale, 5)[0]
+        # get coords based on boundary
+        textX = (width - textsize[0]) // 2
+        textY = (height + textsize[1]) // 2
+        # put text
+        cv2.putText(
+            blank_frame, text, (textX, textY), font, fontScale, (125, 125, 125), 6
+        )
+    # return frame
+    return blank_frame
 
 
 async def reducer(frame=None, percentage=0):
@@ -145,7 +208,7 @@ async def reducer(frame=None, percentage=0):
     return cv2.resize(frame, dimensions, interpolation=cv2.INTER_LANCZOS4)
 
 
-def generate_webdata(path, overwrite_default=False, logging=False):
+def generate_webdata(path, c_name="webgear", overwrite_default=False, logging=False):
     """
     ### generate_webdata
 
@@ -153,6 +216,7 @@ def generate_webdata(path, overwrite_default=False, logging=False):
 
     Parameters:
         path (string): path for generating data
+        c_name (string): class name that is generating files
         overwrite_default (boolean): overwrite existing data or not?
         logging (bool): enables logging for its operations
 
@@ -161,6 +225,10 @@ def generate_webdata(path, overwrite_default=False, logging=False):
     # check if path corresponds to vidgear only
     if os.path.basename(path) != ".vidgear":
         path = os.path.join(path, ".vidgear")
+
+    # generate parent directory
+    path = os.path.join(path, c_name)
+    mkdir_safe(path, logging=logging)
 
     # self-generate dirs
     template_dir = os.path.join(path, "templates")  # generates HTML templates dir
@@ -177,55 +245,44 @@ def generate_webdata(path, overwrite_default=False, logging=False):
     mkdir_safe(favicon_dir, logging=logging)
 
     # check if overwriting is enabled
-    if overwrite_default:
+    if overwrite_default or not validate_webdata(
+        template_dir, ["index.html", "404.html", "500.html"]
+    ):
         logger.critical(
             "Overwriting existing WebGear data-files with default data-files from the server!"
+            if overwrite_default
+            else "Failed to detect critical WebGear data-files: index.html, 404.html & 500.html!"
         )
+        # download default files
+        if logging:
+            logger.info("Downloading default data-files from the GitHub Server.")
         download_webdata(
             template_dir,
+            c_name=c_name,
             files=["index.html", "404.html", "500.html", "base.html"],
             logging=logging,
         )
         download_webdata(
-            css_static_dir, files=["bootstrap.min.css", "cover.css"], logging=logging
+            css_static_dir, c_name=c_name, files=["custom.css"], logging=logging
         )
         download_webdata(
             js_static_dir,
-            files=["bootstrap.min.js", "jquery-3.4.1.slim.min.js", "popper.min.js"],
+            c_name=c_name,
+            files=["custom.js"],
             logging=logging,
         )
-        download_webdata(favicon_dir, files=["favicon-32x32.png"], logging=logging)
+        download_webdata(
+            favicon_dir, c_name=c_name, files=["favicon-32x32.png"], logging=logging
+        )
     else:
         # validate important data-files
-        if validate_webdata(template_dir, ["index.html", "404.html", "500.html"]):
-            if logging:
-                logger.debug("Found valid WebGear data-files successfully.")
-        else:
-            # otherwise download default files
-            logger.critical(
-                "Failed to detect critical WebGear data-files: index.html, 404.html & 500.html!"
-            )
-            logger.warning("Re-downloading default data-files from the server.")
-            download_webdata(
-                template_dir,
-                files=["index.html", "404.html", "500.html", "base.html"],
-                logging=logging,
-            )
-            download_webdata(
-                css_static_dir,
-                files=["bootstrap.min.css", "cover.css"],
-                logging=logging,
-            )
-            download_webdata(
-                js_static_dir,
-                files=["bootstrap.min.js", "jquery-3.4.1.slim.min.js", "popper.min.js"],
-                logging=logging,
-            )
-            download_webdata(favicon_dir, files=["favicon-32x32.png"], logging=logging)
+        if logging:
+            logger.debug("Found valid WebGear data-files successfully.")
+
     return path
 
 
-def download_webdata(path, files=[], logging=False):
+def download_webdata(path, c_name="webgear", files=[], logging=False):
     """
     ### download_webdata
 
@@ -234,6 +291,7 @@ def download_webdata(path, files=[], logging=False):
 
     Parameters:
         path (string): path for downloading data
+        c_name (string): class name that is generating files
         files (list): list of files to be downloaded
         logging (bool): enables logging for its operations
 
@@ -242,35 +300,42 @@ def download_webdata(path, files=[], logging=False):
     basename = os.path.basename(path)
     if logging:
         logger.debug("Downloading {} data-files at `{}`".format(basename, path))
-    for file in files:
-        # get filename
-        file_name = os.path.join(path, file)
-        # get URL
-        if basename == "templates":
-            file_url = "https://raw.githubusercontent.com/abhiTronix/webgear_data/master/{}/{}".format(
-                basename, file
-            )
-        else:
-            file_url = "https://raw.githubusercontent.com/abhiTronix/webgear_data/master/static/{}/{}".format(
-                basename, file
-            )
-        # download and write file to the given path
-        if logging:
-            logger.debug("Downloading {} data-file: {}.".format(basename, file))
 
-        response = requests.get(file_url, stream=True, timeout=2)
-        response.raise_for_status()
-        total_length = response.headers.get("content-length")
-        assert not (
-            total_length is None
-        ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
-        bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
-        with open(file_name, "wb") as f:
-            for data in response.iter_content(chunk_size=256):
-                f.write(data)
-                if len(data) > 0:
-                    bar.update(len(data))
-        bar.close()
+    # create session
+    with requests.Session() as http:
+        for file in files:
+            # get filename
+            file_name = os.path.join(path, file)
+            # get URL
+            file_url = "https://raw.githubusercontent.com/abhiTronix/vidgear-vitals/master/{}{}/{}/{}".format(
+                c_name, "/static" if basename != "templates" else "", basename, file
+            )
+            # download and write file to the given path
+            if logging:
+                logger.debug("Downloading {} data-file: {}.".format(basename, file))
+
+            with open(file_name, "wb") as f:
+                # setup retry strategy
+                retries = Retry(
+                    total=3,
+                    backoff_factor=1,
+                    status_forcelist=[429, 500, 502, 503, 504],
+                )
+                # Mount it for https usage
+                adapter = TimeoutHTTPAdapter(timeout=2.0, max_retries=retries)
+                http.mount("https://", adapter)
+                response = http.get(file_url, stream=True)
+                response.raise_for_status()
+                total_length = response.headers.get("content-length")
+                assert not (
+                    total_length is None
+                ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
+                bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
+                for data in response.iter_content(chunk_size=256):
+                    f.write(data)
+                    if len(data) > 0:
+                        bar.update(len(data))
+                bar.close()
     if logging:
         logger.debug("Verifying downloaded data:")
     if validate_webdata(path, files=files, logging=logging):

@@ -42,7 +42,7 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: install_vidgear
         run: |
-          python -m pip install --upgrade pip wheel
+          python -m pip install --upgrade pip wheel setuptools
           pip install .[asyncio]
         if: success()
       - name: install_dependencies
@@ -65,7 +65,6 @@ jobs:
         run: |
           echo "${{ env.NAME_RELEASE }}"
           mike deploy --push --update-aliases ${{ env.NAME_RELEASE }} ${{ env.RELEASE_NAME }}
-          mike retitle ${{ env.NAME_RELEASE }} ${{ env.RELEASE_NAME }} --push
         env:
           NAME_RELEASE: "v${{ env.RELEASE_NAME }}-release"
         if: success()
@@ -83,7 +82,7 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: install_vidgear
         run: |
-          python -m pip install --upgrade pip wheel
+          python -m pip install --upgrade pip wheel setuptools
           pip install .[asyncio]
         if: success()
       - name: install_dependencies
@@ -111,8 +110,7 @@ jobs:
         run: |
           echo "${{ env.NAME_STABLE }}"
           mike deploy --push --update-aliases ${{ env.NAME_STABLE }} latest
-          mike retitle ${{ env.NAME_STABLE }} latest
-          mike set-default --push latest --force
+          mike set-default --push latest
         env:
           NAME_STABLE: "v${{ env.RELEASE_NAME }}-stable"
         if: success()
@@ -132,7 +130,7 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: install_vidgear
         run: |
-          python -m pip install --upgrade pip wheel
+          python -m pip install --upgrade pip wheel setuptools
           pip install .[asyncio]
         if: success()
       - name: install_dependencies
@@ -155,7 +153,6 @@ jobs:
         run: |
           echo "${{ env.NAME_DEV }}"
           mike deploy --push --update-aliases ${{ env.NAME_DEV }} dev
-          mike retitle ${{ env.NAME_DEV }} dev --push
         env:
           NAME_DEV: "v${{ env.RELEASE_NAME }}-dev"
         if: success()
