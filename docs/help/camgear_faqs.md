@@ -131,7 +131,7 @@ You can open any local network stream _(such as RTSP)_ just by providing its URL
     os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
     ```
 
-    Finally, use [`backend`](../../gears/camgear/params/#backend) parameter value as `backend="CAP_FFMPEG"` in CamGear.
+    Finally, use [`backend`](../../gears/camgear/params/#backend) parameter value as `backend=cv2.CAP_FFMPEG` in CamGear.
 
 
 ```python

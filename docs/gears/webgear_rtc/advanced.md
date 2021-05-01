@@ -34,7 +34,7 @@ Let's implement a bare-minimum example using WebGear_RTC as Real-time Broadcaste
 
 !!! info "[`enable_infinite_frames`](../params/#webgear_rtc-specific-attributes) is enforced by default with this(`enable_live_broadcast`) attribute."
 
-!!! tip "For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](./../../help/webgear_rtc_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear_rtc)"
+!!! tip "For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](../../../help/webgear_rtc_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear_rtc)"
 
 ```python
 # import required libraries
