@@ -15,6 +15,10 @@
 		    else{
 		      window.location.replace("404");
 		    }
+		window.addEventListener('error', function(e) {
+			console.log("Error: " + e);
+			console.log("Error Target: " + e.target);
+		}, true);
 	</script>
 </head>
 
