@@ -195,6 +195,62 @@ web.shutdown()
 
 &nbsp;
 
+## Using WebGear with MiddleWares
+
+WebGear natively supports ASGI middleware classes with Starlette for implementing behavior that is applied across your entire ASGI application easily.
+
+!!! new "New in v0.2.2" 
+    This example was added in `v0.2.2`.
+
+!!! info "All supported middlewares can be [here ➶](https://www.starlette.io/middleware/)"
+
+For this example, let's use [`CORSMiddleware`](https://www.starlette.io/middleware/#corsmiddleware) for implementing appropriate [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) to outgoing responses in our application in order to allow cross-origin requests from browsers, as follows:
+
+!!! danger "The default parameters used by the CORSMiddleware implementation are restrictive by default, so you'll need to explicitly enable particular origins, methods, or headers, in order for browsers to be permitted to use them in a Cross-Domain context."
+
+!!! tip "Starlette provides several arguments for enabling origins, methods, or headers for CORSMiddleware API. More information can be found [here ➶](https://www.starlette.io/middleware/#corsmiddleware)"
+
+```python
+# import libs
+import uvicorn, asyncio
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
+from vidgear.gears.asyncio import WebGear
+
+# add various performance tweaks as usual
+options = {
+    "frame_size_reduction": 40,
+    "frame_jpeg_quality": 80,
+    "frame_jpeg_optimize": True,
+    "frame_jpeg_progressive": False,
+}
+
+# initialize WebGear app with a valid source
+web = WebGear(
+    source="/home/foo/foo1.mp4", logging=True, **options
+)  # enable source i.e. `test.mp4` and enable `logging` for debugging
+
+# define and assign suitable cors middlewares
+web.middleware = [
+    Middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+]
+
+# run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host="localhost", port=8000)
+
+# close app safely
+web.shutdown()
+```
+**And that's all, Now you can see output at [`http://localhost:8000`](http://localhost:8000) address.**
+
+&nbsp;
+
 ## Rules for Altering WebGear Files and Folders
 
 WebGear gives us complete freedom of altering data files generated in [**Auto-Generation Process**](../overview/#auto-generation-process), But you've to  keep the following rules in mind:

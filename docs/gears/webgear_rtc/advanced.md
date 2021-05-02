@@ -34,7 +34,7 @@ Let's implement a bare-minimum example using WebGear_RTC as Real-time Broadcaste
 
 !!! info "[`enable_infinite_frames`](../params/#webgear_rtc-specific-attributes) is enforced by default with this(`enable_live_broadcast`) attribute."
 
-!!! tip "For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](./../../help/webgear_rtc_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear_rtc)"
+!!! tip "For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](../../../help/webgear_rtc_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear_rtc)"
 
 ```python
 # import required libraries
@@ -252,6 +252,60 @@ uvicorn.run(web(), host="localhost", port=8000)
 web.shutdown()
 ```
 **And that's all, Now you can see output at [`http://localhost:8000/hello`](http://localhost:8000/hello) address.**
+
+&nbsp;
+
+## Using WebGear_RTC with MiddleWares
+
+WebGear_RTC also natively supports ASGI middleware classes with Starlette for implementing behavior that is applied across your entire ASGI application easily.
+
+!!! new "New in v0.2.2" 
+    This example was added in `v0.2.2`.
+
+!!! info "All supported middlewares can be [here ➶](https://www.starlette.io/middleware/)"
+
+For this example, let's use [`CORSMiddleware`](https://www.starlette.io/middleware/#corsmiddleware) for implementing appropriate [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) to outgoing responses in our application in order to allow cross-origin requests from browsers, as follows:
+
+!!! danger "The default parameters used by the CORSMiddleware implementation are restrictive by default, so you'll need to explicitly enable particular origins, methods, or headers, in order for browsers to be permitted to use them in a Cross-Domain context."
+
+!!! tip "Starlette provides several arguments for enabling origins, methods, or headers for CORSMiddleware API. More information can be found [here ➶](https://www.starlette.io/middleware/#corsmiddleware)"
+
+```python
+# import libs
+import uvicorn, asyncio
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
+from vidgear.gears.asyncio import WebGear_RTC
+
+# add various performance tweaks as usual
+options = {
+    "frame_size_reduction": 25,
+}
+
+# initialize WebGear_RTC app with a valid source
+web = WebGear_RTC(
+    source="/home/foo/foo1.mp4", logging=True, **options
+)  # enable source i.e. `test.mp4` and enable `logging` for debugging
+
+# define and assign suitable cors middlewares
+web.middleware = [
+    Middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+]
+
+# run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host="localhost", port=8000)
+
+# close app safely
+web.shutdown()
+```
+
+**And that's all, Now you can see output at [`http://localhost:8000`](http://localhost:8000) address.**
 
 &nbsp;
 

@@ -84,6 +84,13 @@ For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.
 
 &nbsp;
 
+## How can to add CORS headers to WebGear_RTC?
+
+**Answer:** See [this usage example ➶](../../gears/webgear_rtc/advanced/#using-webgear_rtc-with-middlewares).
+
+&nbsp;
+
+
 ## Can I change the default location?
 
 **Answer:** Yes, you can use WebGear_RTC's [`custom_data_location`](../../gears/webgear_rtc/params/#webgear_rtc-specific-attributes) attribute of `option` parameter in WebGear_RTC API, to change [default location](../../gears/webgear_rtc/overview/#default-location) to somewhere else.

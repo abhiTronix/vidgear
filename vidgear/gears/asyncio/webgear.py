@@ -31,6 +31,7 @@ from starlette.responses import StreamingResponse
 from starlette.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
 from starlette.applications import Starlette
+from starlette.middleware import Middleware
 
 from .helper import reducer, logger_handler, generate_webdata, create_blank_frame
 from ..videogear import VideoGear
@@ -224,6 +225,8 @@ class WebGear:
                 name="static",
             ),
         ]
+        # define middleware support
+        self.middleware = []
         # Handle video source
         if source is None:
             self.config = {"generator": None}
@@ -266,6 +269,14 @@ class WebGear:
         ):
             raise RuntimeError("[WebGear:ERROR] :: Routing tables are not valid!")
 
+        # validate middlewares
+        assert not (self.middleware is None), "Middlewares are NoneType!"
+        if self.middleware and (
+            not isinstance(self.middleware, list)
+            or not all(isinstance(x, Middleware) for x in self.middleware)
+        ):
+            raise RuntimeError("[WebGear:ERROR] :: Middlewares are not valid!")
+
         # validate assigned frame generator in WebGear configuration
         if isinstance(self.config, dict) and "generator" in self.config:
             # check if its  assigned value is a asynchronous generator
@@ -291,6 +302,7 @@ class WebGear:
         return Starlette(
             debug=(True if self.__logging else False),
             routes=self.routes,
+            middleware=self.middleware,
             exception_handlers=self.__exception_handlers,
             on_shutdown=[self.shutdown],
         )

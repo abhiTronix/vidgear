@@ -29,6 +29,8 @@ import tempfile
 import json, time
 from starlette.routing import Route
 from starlette.responses import PlainTextResponse
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
 from starlette.testclient import TestClient
 from aiortc import (
     MediaStreamTrack,
@@ -351,6 +353,30 @@ def test_webgear_rtc_custom_server_generator(server, result):
     web.config["server"] = server
     client = TestClient(web(), raise_server_exceptions=True)
     web.shutdown()
+
+
+test_data_class = [
+    (None, False),
+    ([Middleware(CORSMiddleware, allow_origins=["*"])], True),
+    ([Route("/hello", endpoint=hello_webpage)], False),  # invalid value
+]
+
+
+@pytest.mark.parametrize("middleware, result", test_data_class)
+def test_webgear_rtc_custom_middleware(middleware, result):
+    """
+    Test for WebGear_RTC API's custom middleware
+    """
+    try:
+        web = WebGear_RTC(source=return_testvideo_path(), logging=True)
+        web.middleware = middleware
+        client = TestClient(web(), raise_server_exceptions=True)
+        response = client.get("/")
+        assert response.status_code == 200
+        web.shutdown()
+    except Exception as e:
+        if result:
+            pytest.fail(str(e))
 
 
 def test_webgear_rtc_routes():

@@ -29,6 +29,7 @@ from starlette.routing import Mount, Route
 from starlette.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
 from starlette.applications import Starlette
+from starlette.middleware import Middleware
 from starlette.responses import JSONResponse
 
 from aiortc.rtcrtpsender import RTCRtpSender
@@ -367,6 +368,9 @@ class WebGear_RTC:
             ),
         ]
 
+        # define middleware support
+        self.middleware = []
+
         # Handle RTC video server
         if source is None:
             self.config = {"server": None}
@@ -404,12 +408,19 @@ class WebGear_RTC:
         Implements a custom Callable method for WeGear_RTC application.
         """
         # validate routing tables
-        # validate routing tables
         assert not (self.routes is None), "Routing tables are NoneType!"
         if not isinstance(self.routes, list) or not all(
             x in self.routes for x in self.__rt_org_copy
         ):
             raise RuntimeError("[WeGear_RTC:ERROR] :: Routing tables are not valid!")
+
+        # validate middlewares
+        assert not (self.middleware is None), "Middlewares are NoneType!"
+        if self.middleware and (
+            not isinstance(self.middleware, list)
+            or not all(isinstance(x, Middleware) for x in self.middleware)
+        ):
+            raise RuntimeError("[WeGear_RTC:ERROR] :: Middlewares are not valid!")
 
         # validate assigned RTC video-server in WeGear_RTC configuration
         if isinstance(self.config, dict) and "server" in self.config:
@@ -445,6 +456,7 @@ class WebGear_RTC:
         return Starlette(
             debug=(True if self.__logging else False),
             routes=self.routes,
+            middleware=self.middleware,
             exception_handlers=self.__exception_handlers,
             on_shutdown=[self.__on_shutdown],
         )
