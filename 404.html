@@ -8,6 +8,10 @@
 		<meta http-equiv="refresh" content="1; url=404" />
 	</noscript>
 	<script>
+		window.addEventListener('error', function(e) {
+			console.log("Error: " + e);
+			console.log("Error Target: " + e.target);
+		}, true);
 		var cur_url = window.location.href;
 		    if (cur_url.startsWith("https://abhitronix.github.io/vidgear/404", 0)) {
 		      window.location.replace("https://abhitronix.github.io/vidgear");
@@ -15,10 +19,6 @@
 		    else{
 		      window.location.replace("404");
 		    }
-		window.addEventListener('error', function(e) {
-			console.log("Error: " + e);
-			console.log("Error Target: " + e.target);
-		}, true);
 	</script>
 </head>
 
