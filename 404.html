@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="utf-8">
-  <title>Redirecting</title>
-  <noscript>
-    <meta http-equiv="refresh" content="1; url=404" />
-  </noscript>
-  <script>
-    var cur_url = window.location.href;
-    if (cur_url=="https://abhitronix.github.io/vidgear/404") {
-      window.location.replace("https://abhitronix.github.io/vidgear");
-    }
-    else{
-      window.location.replace("404");
-    }
-  </script>
+	<meta charset="utf-8">
+	<title>Redirecting</title>
+	<noscript>
+		<meta http-equiv="refresh" content="1; url=404" />
+	</noscript>
+	<script>
+		var cur_url = window.location.href;
+		    if (cur_url.startsWith("https://abhitronix.github.io/vidgear/404", 0)) {
+		      window.location.replace("https://abhitronix.github.io/vidgear");
+		    }
+		    else{
+		      window.location.replace("404");
+		    }
+	</script>
 </head>
-<body>
-  Redirecting to <a href="404">404</a>...
-</body>
+
+<body>Redirecting to <a href="404">404</a>...</body>
+
 </html>
