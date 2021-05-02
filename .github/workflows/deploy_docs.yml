@@ -63,8 +63,8 @@ jobs:
         if: success()
       - name: mike deploy docs release
         run: |
-          echo "${{ env.NAME_RELEASE }}"
-          mike deploy --push --update-aliases ${{ env.NAME_RELEASE }} ${{ env.RELEASE_NAME }}
+          echo "Releasing ${{ env.NAME_RELEASE }}"
+          mike deploy --push ${{ env.NAME_RELEASE }}
         env:
           NAME_RELEASE: "v${{ env.RELEASE_NAME }}-release"
         if: success()
@@ -101,14 +101,10 @@ jobs:
           echo "RELEASE_NAME=$(python -c 'import vidgear; print(vidgear.__version__)')" >>$GITHUB_ENV
         shell: bash
         if: success()
-      - name: mike remove previous stable
-        run: |
-          mike delete --push latest
-        if: success()
       - name: mike deploy docs stable
         run: |
-          echo "${{ env.NAME_STABLE }}"
-          mike deploy --push --update-aliases ${{ env.NAME_STABLE }} latest
+          echo "Releasing ${{ env.NAME_STABLE }}"
+          mike deploy --push --update-aliases latest
           mike set-default --push latest
         env:
           NAME_STABLE: "v${{ env.RELEASE_NAME }}-stable"
@@ -151,7 +147,7 @@ jobs:
       - name: mike deploy docs dev
         run: |
           echo "Releasing ${{ env.NAME_DEV }}"
-          mike deploy --push dev
+          mike deploy --push --update-aliases dev
         env:
           NAME_DEV: "v${{ env.RELEASE_NAME }}-dev"
         if: success()
