@@ -150,8 +150,8 @@ jobs:
         if: success()
       - name: mike deploy docs dev
         run: |
-          echo "${{ env.NAME_DEV }}"
-          mike deploy --push --update-aliases ${{ env.NAME_DEV }} dev
+          echo "Releasing ${{ env.NAME_DEV }}"
+          mike deploy --push dev
         env:
           NAME_DEV: "v${{ env.RELEASE_NAME }}-dev"
         if: success()

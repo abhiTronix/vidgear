@@ -72,6 +72,12 @@ For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"
 
 &nbsp;
 
+## How can to add CORS headers to WebGear?
+
+**Answer:** See [this usage example ➶](../../gears/webgear/advanced/#using-webgear-with-middlewares).
+
+&nbsp;
+
 ## Can I change the default location?
 
 **Answer:** Yes, you can use WebGear's [`custom_data_location`](../../gears/webgear/params/#webgear-specific-attributes) attribute of `option` parameter in WebGear API, to change [default location](../../gears/webgear/overview/#default-location) to somewhere else.
