@@ -8,12 +8,12 @@
      </noscript>
       <script>
          var cur_url = window.location.href;
-         if (cur_url=="https://abhitronix.github.io/vidgear") {
-            window.location.replace("https://abhitronix.github.io/vidgear");
-          }
-         else{
-            window.location.replace("https://abhitronix.github.io/vidgear/latest/404");
-         }
+		    if (cur_url.startsWith("https://abhitronix.github.io/vidgear/latest/404", 0)) {
+		      window.location.replace("https://abhitronix.github.io/vidgear");
+		    }
+		    else{
+		     window.location.replace("https://abhitronix.github.io/vidgear/latest/404");
+		    }
       </script>
    </head>
    <body>Redirecting to <a href="https://abhitronix.github.io/vidgear/latest/404">404</a>...</body>
