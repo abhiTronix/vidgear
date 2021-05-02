@@ -1,27 +1,39 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-	<meta charset="utf-8">
-	<title>Redirecting</title>
-	<noscript>
-		<meta http-equiv="refresh" content="1; url=404" />
-	</noscript>
-	<script>
-		window.addEventListener('error', function(e) {
-			console.log("Error: " + e);
-			console.log("Error Target: " + e.target);
-		}, true);
-		var cur_url = window.location.href;
-		    if (cur_url.startsWith("https://abhitronix.github.io/vidgear/404", 0)) {
-		      window.location.replace("https://abhitronix.github.io/vidgear");
-		    }
-		    else{
-		      window.location.replace("404");
-		    }
-	</script>
-</head>
-
-<body>Redirecting to <a href="404">404</a>...</body>
-
+   <head>
+      <meta charset="utf-8">
+      <title>Redirecting</title>
+      <noscript>
+         <meta http-equiv="refresh" content="1; url=404" />
+      </noscript>
+      <script>
+         var cur_url = window.location.href;
+         var sub_url = cur_url.substring(0, url.lastIndexOf('/'));
+         
+         function UrlExists(url) {
+             var request;
+         	if(window.XMLHttpRequest)
+         	    request = new XMLHttpRequest();
+         	else
+         	    request = new ActiveXObject("Microsoft.XMLHTTP");
+         	request.open('GET', 'http://www.mozilla.org', false);
+         	request.send(); // there will be a 'pause' here until the response to come.
+         	// the object request will be actually modified
+         	if (request.status === 404) {
+         		return false;
+         	}
+         	else{
+         		return true;
+         	}
+         }
+         
+         if (UrlExists(sub_url+"/404")===true){
+         	window.location.replace("404");
+         }
+         else{
+         	window.location.replace("https://abhitronix.github.io/vidgear");
+         }
+      </script>
+   </head>
+   <body>Redirecting to <a href="404">404</a>...</body>
 </html>
