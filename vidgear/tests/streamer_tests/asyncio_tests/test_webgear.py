@@ -27,6 +27,8 @@ import logging as log
 import requests
 import tempfile
 from starlette.routing import Route
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import PlainTextResponse
 from starlette.testclient import TestClient
 
@@ -169,6 +171,30 @@ def test_webgear_custom_server_generator(generator, result):
         client = TestClient(web(), raise_server_exceptions=True)
         response_video = client.get("/video")
         assert response_video.status_code == 200
+        web.shutdown()
+    except Exception as e:
+        if result:
+            pytest.fail(str(e))
+
+
+test_data_class = [
+    (None, False),
+    ([Middleware(CORSMiddleware, allow_origins=["*"])], True),
+    ([Route("/hello", endpoint=hello_webpage)], False),  # invalid value
+]
+
+
+@pytest.mark.parametrize("middleware, result", test_data_class)
+def test_webgear_custom_middleware(middleware, result):
+    """
+    Test for WebGear API's custom middleware
+    """
+    try:
+        web = WebGear(source=return_testvideo_path(), logging=True)
+        web.middleware = middleware
+        client = TestClient(web(), raise_server_exceptions=True)
+        response = client.get("/")
+        assert response.status_code == 200
         web.shutdown()
     except Exception as e:
         if result:
