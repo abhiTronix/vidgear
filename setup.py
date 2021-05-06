@@ -24,7 +24,7 @@ import platform
 import setuptools
 import urllib.request
 
-from pkg_resources import parse_version
+from distutils.version import LooseVersion
 from distutils.util import convert_path
 from setuptools import setup
 
@@ -40,10 +40,10 @@ def test_opencv():
         import cv2
 
         # check whether OpenCV Binaries are 3.x+
-        if parse_version(cv2.__version__) < parse_version("3"):
+        if LooseVersion(cv2.__version__) < LooseVersion("3"):
             raise ImportError(
                 "Incompatible (< 3.0) OpenCV version-{} Installation found on this machine!".format(
-                    parse_version(cv2.__version__)
+                    LooseVersion(cv2.__version__)
                 )
             )
     except ImportError:

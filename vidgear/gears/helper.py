@@ -33,7 +33,7 @@ import platform
 import requests
 from tqdm import tqdm
 from colorlog import ColoredFormatter
-from pkg_resources import parse_version
+from distutils.version import LooseVersion
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
@@ -42,13 +42,13 @@ try:
     import cv2
 
     # check whether OpenCV Binaries are 3.x+
-    if parse_version(cv2.__version__) < parse_version("3"):
+    if LooseVersion(cv2.__version__) < LooseVersion("3"):
         raise ImportError(
             "[Vidgear:ERROR] :: Installed OpenCV API version(< 3.0) is not supported!"
         )
 except ImportError:
     raise ImportError(
-        "[Vidgear:ERROR] :: Failed to detect correct OpenCV executables, install it with `pip3 install opencv-python` command."
+        "[Vidgear:ERROR] :: Failed to detect correct OpenCV executables, install it with `pip install opencv-python` command."
     )
 
 
@@ -149,7 +149,7 @@ def check_CV_version():
 
     **Returns:** OpenCV's version first bit
     """
-    if parse_version(cv2.__version__) >= parse_version("4"):
+    if LooseVersion(cv2.__version__) >= LooseVersion("4"):
         return 4
     else:
         return 3

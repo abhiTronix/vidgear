@@ -28,7 +28,6 @@ import random
 import logging as log
 from threading import Thread
 from collections import deque
-from pkg_resources import parse_version
 
 from .helper import logger_handler, generate_auth_certificates, check_WriteAccess
 

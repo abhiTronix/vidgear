@@ -25,7 +25,6 @@ import sys
 import time
 import logging as log
 import subprocess as sp
-from pkg_resources import parse_version
 
 from .helper import (
     capPropId,

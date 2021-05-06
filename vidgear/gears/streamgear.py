@@ -28,7 +28,6 @@ import logging as log
 import subprocess as sp
 from tqdm import tqdm
 from fractions import Fraction
-from pkg_resources import parse_version
 from collections import OrderedDict
 
 from .helper import (
