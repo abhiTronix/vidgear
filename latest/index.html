@@ -5,7 +5,7 @@
   <title>Redirecting</title>
   <script>
     var path_name = window.location.pathname;
-    var cur_dir = path_name.substring(0, loc.lastIndexOf('/'));
+    var cur_dir = path_name.substring(0, path_name.lastIndexOf('/'));
     var current_url = window.location.href;
     var new_url = current_url.replace(cur_dir, "/v0.2.1-stable");
     window.location.href = new_url;
