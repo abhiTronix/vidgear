@@ -3,12 +3,11 @@
 <head>
   <meta charset="utf-8">
   <title>Redirecting</title>
+  <noscript>
+    <meta http-equiv="refresh" content="1; url=../v0.2.1-stable/" />
+  </noscript>
   <script>
-    var path_name = window.location.pathname;
-    var cur_dir = path_name.substring(0, path_name.lastIndexOf('/'));
-    var current_url = window.location.href;
-    var new_url = current_url.replace(cur_dir, "/v0.2.1-stable");
-    window.location.href = new_url;
+    window.location.replace("../v0.2.1-stable/");
   </script>
 </head>
 <body>
