@@ -47,7 +47,7 @@
 
 <span class=sd>    **Returns:** OpenCV&#39;s version first bit</span>
 <span class=sd>    &quot;&quot;&quot;</span>
-    <span class=k>if</span> <span class=n>parse_version</span><span class=p>(</span><span class=n>cv2</span><span class=o>.</span><span class=n>__version__</span><span class=p>)</span> <span class=o>&gt;=</span> <span class=n>parse_version</span><span class=p>(</span><span class=s2>&quot;4&quot;</span><span class=p>):</span>
+    <span class=k>if</span> <span class=n>LooseVersion</span><span class=p>(</span><span class=n>cv2</span><span class=o>.</span><span class=n>__version__</span><span class=p>)</span> <span class=o>&gt;=</span> <span class=n>LooseVersion</span><span class=p>(</span><span class=s2>&quot;4&quot;</span><span class=p>):</span>
         <span class=k>return</span> <span class=mi>4</span>
     <span class=k>else</span><span class=p>:</span>
         <span class=k>return</span> <span class=mi>3</span>
