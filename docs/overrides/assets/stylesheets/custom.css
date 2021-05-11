@@ -197,12 +197,12 @@ blockquote p {
 	margin: 5px 0px;
 }
 
-.btn.green {
+.btn.bcolor {
 	border: 4px solid var(--md-typeset-a-color);
 	color: var(--blue);
 }
 
-.btn.green:before {
+.btn.bcolor:before {
 	content: "";
 	position: absolute;
 	left: 0;
@@ -214,13 +214,13 @@ blockquote p {
 	transition: 0.2s ease;
 }
 
-.btn.green:hover {
+.btn.bcolor:hover {
 	color: var(--white);
 	background: var(--md-typeset-a-color);
 	transition: 0.2s ease;
 }
 
-.btn.green:hover:before {
+.btn.bcolor:hover:before {
 	width: 100%;
 }
 
