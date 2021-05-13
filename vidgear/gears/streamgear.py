@@ -69,6 +69,16 @@ class StreamGear:
     def __init__(
         self, output="", format="dash", custom_ffmpeg="", logging=False, **stream_params
     ):
+        """
+        This constructor method initializes the object state and attributes of the StreamGear class.
+
+        Parameters:
+            output (str): sets the valid filename/path for storing the StreamGear assets.
+            format (str): select the adaptive HTTP streaming format.
+            custom_ffmpeg (str): assigns the location of custom path/directory for custom FFmpeg executables.
+            logging (bool): enables/disables logging.
+            stream_params (dict): provides the flexibility to control supported internal parameters and FFmpeg properities.
+        """
 
         # checks if machine in-use is running windows os or not
         self.__os_windows = True if os.name == "nt" else False

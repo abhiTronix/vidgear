@@ -22,7 +22,7 @@ limitations under the License.
 
 !!! info "StreamGear API parameters are explained [here ➶](../../../gears/streamgear/params/)"
 
-::: vidgear.gears.StreamGear	
+::: vidgear.gears.StreamGear
 	
     
 &nbsp;

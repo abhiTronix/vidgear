@@ -75,7 +75,7 @@ with open(ver_path) as ver_file:
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
     long_description = long_description.replace(  # patch for images
-        "docs/overrides/assets", "https://abhitronix.github.io/vidgear/assets"
+        "docs/overrides/assets", "https://abhitronix.github.io/vidgear/latest/assets"
     )
     # patch for unicodes
     long_description = long_description.replace("➶", ">>")

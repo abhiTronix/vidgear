@@ -61,7 +61,7 @@ Its valid input can be one of the following:
 
 &nbsp;
 
-## **`formats`** 
+## **`format`** 
 
 
 This parameter select the adaptive HTTP streaming format. HTTP streaming works by breaking the overall stream into a sequence of small HTTP-based file downloads, each downloading one short chunk of an overall potentially unbounded transport stream. For now, the only supported format is: `'dash'` _(i.e [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/))_, but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming, will be added soon.

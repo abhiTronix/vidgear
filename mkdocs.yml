@@ -53,13 +53,13 @@ theme:
     # Dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: red
-      accent: red
+      primary: deep orange
+      accent: orange
       toggle:
         icon: material/weather-night
         name: Switch to light mode
   font:
-    text: Nunito 
+    text: Source Sans Pro
     code: IBM Plex
   icon:
     logo: logo

@@ -38,9 +38,16 @@ Switching OpenCV with VidGear APIs is usually a fairly painless process, and wil
 
 ## Why VidGear is better than OpenCV?
 
-!!! info "Learn about OpenCV see [here➶](https://software.intel.com/content/www/us/en/develop/articles/what-is-opencv.html)"
+!!! info "Learn more about OpenCV [here ➶](https://software.intel.com/content/www/us/en/develop/articles/what-is-opencv.html)"
 
-VidGear employs OpenCV at its backend and enhances its existing capabilities even further by introducing many new state-of-the-art features on top of it like multi-threading for performance, real-time Stabilization, inherit support for multiple devices and screen-casting, live network-streaming, plus [way much more ➶](../gears). Vidgear offers all this while maintaining the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax for all of its APIs, thereby making it even easier to implement Complex OpenCV applications in fewer lines of python code.
+VidGear employs OpenCV at its backend and enhances its existing capabilities even further by introducing many new state-of-the-art features on top of it like:
+
+- [x] Multi-Threaded Performance.
+- [x] Real-time Stabilization.
+- [x] Inherit support for multiple sources.
+- [x] Screen-casting, live network-streaming, plus [way much more ➶](../gears)
+
+Vidgear offers all this while maintaining the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax for all of its APIs, thereby making it even easier to implement Complex OpenCV applications in fewer lines of python code.
 
 &nbsp; 
 
