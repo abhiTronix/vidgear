@@ -1,6 +1,6 @@
 checkTemplate: true
 miniTitleLength: 8
-labelToAdd: 'MISSING : INFORMATION :mag:'
+labelToAdd: "MISSING : INFORMATION :mag:"
 issue:
   reactions:
     - eyes
