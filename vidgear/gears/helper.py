@@ -31,7 +31,9 @@ import numpy as np
 import logging as log
 import platform
 import requests
+import socket
 from tqdm import tqdm
+from contextlib import closing
 from colorlog import ColoredFormatter
 from distutils.version import LooseVersion
 from requests.adapters import HTTPAdapter
@@ -153,6 +155,27 @@ def check_CV_version():
         return 4
     else:
         return 3
+
+
+def check_open_port(address, port=22):
+    """
+    ### check_open_port
+
+    Checks whether specified port open at given IP address.
+
+    Parameters:
+        address (string): given IP address.
+        port (int): check if port is open at given address.
+
+    **Returns:** A boolean value, confirming whether given port is open at given IP address.
+    """
+    if not address:
+        return False
+    with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
+        if sock.connect_ex((address, port)) == 0:
+            return True
+        else:
+            return False
 
 
 def check_WriteAccess(path, is_windows=False):
