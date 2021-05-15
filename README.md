@@ -668,15 +668,27 @@ If you've come up with some new idea, or looking for the fastest way troubleshoo
 
 # Citation
 
+
+
+
 Here is a Bibtex entry you can use to cite this project in a publication:
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4718616.svg)](https://doi.org/10.5281/zenodo.4718616)
 
 ```BibTeX
-@misc{vidgear,
-    author = {Abhishek Thakur},
-    title = {vidgear},
-    howpublished = {\url{https://github.com/abhiTronix/vidgear}},
-    year = {2019-2021}
+@software{vidgear,
+    author       = {Abhishek Thakur and
+                    Christian Clauss and
+                    Christian Hollinger and
+                    Benjamin Lowe and
+                    Mickaël Schoentgen and
+                    Renaud Bouckenooghe},
+    title        = {abhiTronix/vidgear: VidGear v0.2.2},
+    year         = 2021
+    publisher    = {Zenodo},
+    version      = {vidgear-0.2.2},
+    doi          = {10.5281/zenodo.4718616},
+    url          = {https://doi.org/10.5281/zenodo.4718616}
   }
 ```
 
