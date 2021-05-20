@@ -34,7 +34,7 @@ In Multi-Clients Mode, NetGear robustly handles Multiple Clients at once thereby
 The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`) and can be easily activated in NetGear API through `multiclient_mode` attribute of its [`options`](../../params/#options) dictionary parameter during initialization.
 
 
-!!! warning "Multi-Clients is best for tranferring **Data with Video-frames** to specific multiple Clients at the same time. But if you're looking for sheer performance for broadcasting see [WebGear API](../../../webgear/overview/)."
+!!! tip "Multi-Clients Mode is best for broadcasting **Meta-Data with Video-frames** to specific limited number of clients in real time. But if you're looking to scale broadcast to a very large pool of clients, then see our [WebGear](../../../webgear/overview/) or [WebGear_RTC](../../../webgear_rtc/overview/) APIs."
 
 &nbsp;
 
@@ -43,7 +43,7 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
     * A unique PORT address **MUST** be assigned to each Client on the network using its [`port`](../../params/#port) parameter.
     
-    * A list/tuple of PORT addresses of all unique Cients **MUST** be assigned at Server's end using its [`port`](../../params/#port) parameter for a successful connection.
+    * A list/tuple of PORT addresses of all unique Clients **MUST** be assigned at Server's end using its [`port`](../../params/#port) parameter for a successful connection.
 
     * Patterns `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ and `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ are the only supported pattern values for this Mode. Therefore, calling any other pattern value with is mode will result in `ValueError`.
 

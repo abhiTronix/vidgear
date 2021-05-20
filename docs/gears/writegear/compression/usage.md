@@ -223,7 +223,7 @@ _In this example, let's stream Live Camera Feed directly to Twitch!_
 
 !!! warning "This example assume you already have a [**Twitch Account**](https://www.twitch.tv/) for publishing video."
 
-!!! danger "Make sure to change [_Twitch Stream Key_](https://www.youtube.com/watch?v=xwOtOfPMIIk) with yours in following code before running!"
+!!! alert "Make sure to change [_Twitch Stream Key_](https://www.youtube.com/watch?v=xwOtOfPMIIk) with yours in following code before running!"
 
 ```python
 # import required libraries
@@ -429,7 +429,7 @@ writer.close()
 
 In Compression Mode, WriteGear API allows us to exploit almost all FFmpeg supported parameters that you can think of, in its Compression Mode. Hence, processing, encoding, and combining audio with video is pretty much straightforward.
 
-!!! warning "Example Assumptions"
+!!! alert "Example Assumptions"
 
     * You're running are Linux machine.
     * You already have appropriate audio & video drivers and softwares installed on your machine.

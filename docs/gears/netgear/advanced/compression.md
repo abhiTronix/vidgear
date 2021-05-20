@@ -62,7 +62,7 @@ For implementing Frame Compression, NetGear API currently provide following attr
 
 * ### Performance Attributes :zap:
 
-    * `jpeg_compression_quality`: _(int/float)_ It controls the JPEG quantization factor. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. Its usage is as follows:
+    * `jpeg_compression_quality`: _(int/float)_ This attribute controls the JPEG quantization factor. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. Its usage is as follows:
 
         ```python
         # activate jpeg encoding and set quality 95%

@@ -125,7 +125,7 @@ For implementing Secure Mode, NetGear API currently provide following attribute 
 
 Following is the bare-minimum code you need to get started with Secure Mode in NetGear API:
 
-#### Server End
+#### Server's End
 
 Open your favorite terminal and execute the following python code:
 
@@ -171,7 +171,7 @@ stream.stop()
 server.close()
 ```
 
-#### Client End
+#### Client's End
 
 Then open another terminal on the same system and execute the following python code and see the output:
 
@@ -282,7 +282,7 @@ client.close()
 
 &nbsp;
 
-#### Server End
+#### Server's End
 
 Now, Open the terminal on another Server System _(with a webcam connected to it at index `0`)_, and execute the following python code: 
 

@@ -222,6 +222,7 @@ nav:
         - Multi-Servers Mode: gears/netgear/advanced/multi_server.md
         - Multi-Clients Mode: gears/netgear/advanced/multi_client.md
         - Bidirectional Mode: gears/netgear/advanced/bidirectional_mode.md
+        - SSH Tunneling Mode: gears/netgear/advanced/ssh_tunnel.md
         - Secure Mode: gears/netgear/advanced/secure_mode.md 
         - Frame Compression: gears/netgear/advanced/compression.md 
       - Parameters: gears/netgear/params.md

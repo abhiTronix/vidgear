@@ -77,6 +77,9 @@ In addition to the primary modes, NetGear API also offers applications-specific 
 
 * **Bidirectional Mode:** _This exclusive mode ==provides seamless support for bidirectional data transmission between between Server and Client along with video frames==. Using this mode, the user can now send or receive any data(of any datatype) between Server and Client easily in real-time. **You can learn more about this mode [here ➶](../advanced/bidirectional_mode/).**_
 
+* **SSH Tunneling Mode:** _This exclusive mode ==allows you to connect NetGear client and server via secure SSH connection over the untrusted network== and access its intranet services across firewalls. This mode implements SSH Remote Port Forwarding which enables accessing Host(client) machine outside the network by exposing port to the public Internet. **You can learn more about this mode [here ➶](../advanced/ssh_tunnel/).**_
+
+
 * **Secure Mode:** _In this exclusive mode, NetGear API ==provides easy access to powerful, smart & secure ZeroMQ's Security Layers== that enables strong encryption on data, and unbreakable authentication between the Server and Client with the help of custom certificates/keys that brings cheap, standardized privacy and authentication for distributed systems over the network. **You can learn more about this mode [here ➶](../advanced/secure_mode/).**_
 
 

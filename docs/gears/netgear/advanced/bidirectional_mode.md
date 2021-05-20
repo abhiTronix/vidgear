@@ -36,7 +36,7 @@ This mode can be easily activated in NetGear through `bidirectional_mode` attrib
 &nbsp;
 
 
-!!! danger "Important Information"
+!!! danger "Important"
 
     * In Bidirectional Mode, `zmq.PAIR`(ZMQ Pair) & `zmq.REQ/zmq.REP`(ZMQ Request/Reply) are **ONLY** Supported messaging patterns. Accessing this mode with any other messaging pattern, will result in `ValueError`.
 

@@ -434,8 +434,8 @@ class NetGear:
         if not (self.__ssh_tunnel_mode is None):
             # SSH Tunnel Mode only available for server mode
             if receive_mode:
-                raise ValueError(
-                    "[NetGear:ERROR] :: SSH Tunneling cannot be enabled for Client-end!"
+                logger.error(
+                    "SSH Tunneling cannot be enabled for Client-end!"
                 )
             else:
                 # check if SSH tunneling even possible
@@ -499,8 +499,9 @@ class NetGear:
             # log Bi-directional mode activation
             if self.__logging:
                 logger.debug(
-                    "SSH Tunneling is enabled for host:`{}`!".format(
-                        self.__ssh_tunnel_mode
+                    "SSH Tunneling is enabled for host:`{}` with `{}` back-end.".format(
+                        self.__ssh_tunnel_mode,
+                        "paramiko" if self.__paramiko_present else "pexpect",
                     )
                 )
 
@@ -878,7 +879,9 @@ class NetGear:
                         )
                     if self.__ssh_tunnel_mode:
                         logger.critical(
-                            "Failed to initiate SSH Tunneling Mode for this server!"
+                            "Failed to initiate SSH Tunneling Mode for this server with `{}` back-end!".format(
+                                "paramiko" if self.__paramiko_present else "pexpect"
+                            )
                         )
                     raise RuntimeError(
                         "[NetGear:ERROR] :: Send Mode failed to connect address: {} and pattern: {}! Kindly recheck all parameters.".format(

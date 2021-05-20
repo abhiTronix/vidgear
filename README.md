@@ -473,6 +473,8 @@ NetGear seamlessly supports [**Bidirectional data transmission**][netgear_bidata
 
 NetGear can also robustly handle [**Multiple Server-Systems**][netgear_multi_server_doc] and [**Multiple Client-Systems**][netgear_multi_client_doc] and at once, thereby providing access to a seamless exchange of video-frames & data between multiple devices across the network at the same time.
 
+NetGear allows remote connection over [**SSH Tunnel**][netgear_sshtunnel_doc] that allows us to connect NetGear client and server via secure SSH connection over the untrusted network and access its intranet services across firewalls.
+
 NetGear also enables real-time [**JPEG Frame Compression**][netgear_compression_doc] capabilities for boosting performance significantly while sending video-frames over the network in real-time.
 
 For security, NetGear implements easy access to ZeroMQ's powerful, smart & secure Security Layers that enable [**Strong encryption on data**][netgear_security_doc] and unbreakable authentication between the Server and the Client with the help of custom certificates.
@@ -771,6 +773,7 @@ Internal URLs
 [netgear_security_doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/secure_mode/
 [netgear_multi_server_doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/multi_server/
 [netgear_multi_client_doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/multi_client/
+[netgear_sshtunnel_doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/ssh_tunnel/
 [netgear-exm]: https://abhitronix.github.io/vidgear/latest/gears/netgear/overview/#modes-of-operation
 [stabilize_webgear_doc]:https://abhitronix.github.io/vidgear/latest/gears/webgear/advanced/#using-webgear-with-real-time-video-stabilization-enabled
 [netgear_Async-cs]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/usage/#using-netgear_async-with-a-custom-sourceopencv
