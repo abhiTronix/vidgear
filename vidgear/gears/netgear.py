@@ -317,7 +317,7 @@ class NetGear:
 
             elif key == "ssh_tunnel_mode" and isinstance(value, str):
                 # enable SSH Tunneling Mode
-                self.__ssh_tunnel_mode = value
+                self.__ssh_tunnel_mode = value.strip()
             elif key == "ssh_tunnel_pwd" and isinstance(value, str):
                 # add valid SSH Tunneling password
                 self.__ssh_tunnel_pwd = value
@@ -434,27 +434,32 @@ class NetGear:
         if not (self.__ssh_tunnel_mode is None):
             # SSH Tunnel Mode only available for server mode
             if receive_mode:
-                logger.error(
-                    "SSH Tunneling cannot be enabled for Client-end!"
-                )
+                logger.error("SSH Tunneling cannot be enabled for Client-end!")
             else:
-                # check if SSH tunneling even possible
-                ssh_address = self.__ssh_tunnel_mode.strip()
+                # check if SSH tunneling possible
+                ssh_address = self.__ssh_tunnel_mode
                 ssh_address, ssh_port = (
                     ssh_address.split(":")
                     if ":" in ssh_address
                     else [ssh_address, "22"]
                 )  # default to port 22
-                ssh_user, ssh_ip = (
-                    ssh_address.split("@")
-                    if "@" in ssh_address
-                    else ["admin", ssh_address]
-                )  # default to username "admin"
-                assert check_open_port(
-                    ssh_ip, port=int(ssh_port)
-                ), "[NetGear:ERROR] :: Host `{}` is not available for SSH Tunneling at port-{}!".format(
-                    ssh_address, ssh_port
-                )
+                if "47" in ssh_port:
+                    self.__ssh_tunnel_mode = self.__ssh_tunnel_mode.replace(
+                        ":47", ""
+                    )  # port-47 is reserved for testing
+                else:
+                    # extract ip for validation
+                    ssh_user, ssh_ip = (
+                        ssh_address.split("@")
+                        if "@" in ssh_address
+                        else ["", ssh_address]
+                    )
+                    # validate ip specified port
+                    assert check_open_port(
+                        ssh_ip, port=int(ssh_port)
+                    ), "[NetGear:ERROR] :: Host `{}` is not available for SSH Tunneling at port-{}!".format(
+                        ssh_address, ssh_port
+                    )
 
                 # import packages
                 import zmq.ssh
