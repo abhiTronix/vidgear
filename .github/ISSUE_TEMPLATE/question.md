@@ -1,7 +1,7 @@
 ---
 name: Question
 about: Have any questions regarding VidGear?
-labels: "issue: question"
+labels: 'QUESTION :question:'
 ---
 
 <!--- Add a brief but descriptive title for your issue above -->

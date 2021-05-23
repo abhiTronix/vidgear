@@ -1,6 +1,6 @@
 checkTemplate: true
 miniTitleLength: 8
-labelToAdd: "MISSING : INFORMATION :mag:"
+labelToAdd: 'MISSING : TEMPLATE :grey_question:'
 issue:
   reactions:
     - eyes
