@@ -614,20 +614,21 @@ def test_client_reliablity(options):
         {"max_retries": 2, "request_timeout": 2, "multiserver_mode": True},
         {"max_retries": 2, "request_timeout": 2, "multiclient_mode": True},
         {
-            "max_retries": 2,
-            "request_timeout": 2,
             "ssh_tunnel_mode": "localhost",
+        },
+        {
+            "ssh_tunnel_mode": "localhost:47",
         },
         {
             "max_retries": 2,
             "request_timeout": 2,
             "bidirectional_mode": True,
-            "ssh_tunnel_mode": "localhost:47",
+            "ssh_tunnel_mode": "git@github.com",
         },
         {
             "max_retries": 2,
             "request_timeout": 2,
-            "ssh_tunnel_mode": "localhost:47",
+            "ssh_tunnel_mode": "git@github.com",
         },
     ],
 )
