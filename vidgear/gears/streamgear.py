@@ -33,7 +33,7 @@ from collections import OrderedDict
 from .helper import (
     capPropId,
     dict2Args,
-    delete_safe,
+    delete_ext_safe,
     extract_time,
     is_valid_url,
     logger_handler,
@@ -247,7 +247,7 @@ class StreamGear:
                 valid_extension = "mpd" if self.__format == "dash" else "m3u8"
                 if os.path.isdir(abs_path):
                     if self.__clear_assets:
-                        delete_safe(abs_path, [".m4s", ".mpd"], logging=self.__logging)
+                        delete_ext_safe(abs_path, [".m4s", ".mpd"], logging=self.__logging)
                     abs_path = os.path.join(
                         abs_path,
                         "{}-{}.{}".format(
@@ -257,7 +257,7 @@ class StreamGear:
                         ),
                     )  # auto-assign valid name and adds it to path
                 elif self.__clear_assets and os.path.isfile(abs_path):
-                    delete_safe(
+                    delete_ext_safe(
                         os.path.dirname(abs_path),
                         [".m4s", ".mpd"],
                         logging=self.__logging,

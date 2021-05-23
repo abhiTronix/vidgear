@@ -34,6 +34,7 @@ import requests
 import socket
 from tqdm import tqdm
 from contextlib import closing
+from pathlib import Path
 from colorlog import ColoredFormatter
 from distutils.version import LooseVersion
 from requests.adapters import HTTPAdapter
@@ -205,7 +206,7 @@ def check_WriteAccess(path, is_windows=False):
         write_accessible = False
     finally:
         if os.path.exists(temp_fname):
-            os.remove(temp_fname)
+            delete_file_safe(temp_fname)
     return write_accessible
 
 
@@ -540,6 +541,26 @@ def get_video_bitrate(width, height, fps, bpp):
     return round((width * height * bpp * fps) / 1000)
 
 
+def delete_file_safe(file_path):
+    """
+    ### delete_ext_safe
+
+    Safely deletes files at given path.
+
+    Parameters:
+        file_path (string): path to the file
+    """
+    try:
+        dfile = Path(file_path)
+        if sys.version_info >= (3, 8, 0):
+            dfile.unlink(missing_ok=True)
+        else:
+            if dfile.exists():
+                dfile.unlink()
+    except Exception as e:
+        logger.exception(e)
+
+
 def mkdir_safe(dir_path, logging=False):
     """
     ### mkdir_safe
@@ -562,9 +583,9 @@ def mkdir_safe(dir_path, logging=False):
             logger.debug("Directory already exists at `{}`".format(dir_path))
 
 
-def delete_safe(dir_path, extensions=[], logging=False):
+def delete_ext_safe(dir_path, extensions=[], logging=False):
     """
-    ### delete_safe
+    ### delete_ext_safe
 
     Safely deletes files with given extensions at given path.
 
@@ -586,7 +607,7 @@ def delete_safe(dir_path, extensions=[], logging=False):
             os.path.join(dir_path, f) for f in os.listdir(dir_path) if f.endswith(ext)
         ]
         for file in files_ext:
-            os.remove(file)
+            delete_file_safe(file)
             if logging:
                 logger.debug("Deleted file: `{}`".format(file))
 
@@ -836,7 +857,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
             )
             # remove leftovers if exists
             if os.path.isfile(file_name):
-                os.remove(file_name)
+                delete_file_safe(file_name)
             # download and write file to the given path
             with open(file_name, "wb") as f:
                 logger.debug(
@@ -870,7 +891,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                 zip_fname, _ = os.path.split(zip_ref.infolist()[0].filename)
                 zip_ref.extractall(base_path)
             # perform cleaning
-            os.remove(file_name)
+            delete_file_safe(file_name)
             logger.debug("FFmpeg binaries for Windows configured successfully!")
             final_path += file_path
     # return final path
@@ -1004,7 +1025,7 @@ def generate_auth_certificates(path, overwrite=False, logging=False):
                 # clean redundant keys if present
                 redundant_key = os.path.join(keys_dir, key_file)
                 if os.path.isfile(redundant_key):
-                    os.remove(redundant_key)
+                    delete_file_safe(redundant_key)
     else:
         # otherwise validate available keys
         status_public_keys = validate_auth_keys(public_keys_dir, ".key")
@@ -1044,7 +1065,7 @@ def generate_auth_certificates(path, overwrite=False, logging=False):
                 # clean redundant keys if present
                 redundant_key = os.path.join(keys_dir, key_file)
                 if os.path.isfile(redundant_key):
-                    os.remove(redundant_key)
+                    delete_file_safe(redundant_key)
 
     # validate newly generated keys
     status_public_keys = validate_auth_keys(public_keys_dir, ".key")
@@ -1093,7 +1114,7 @@ def validate_auth_keys(path, extension):
 
     # remove invalid keys if found
     if len(keys_buffer) == 1:
-        os.remove(os.path.join(path, keys_buffer[0]))
+        delete_file_safe(os.path.join(path, keys_buffer[0]))
 
     # return results
     return True if (len(keys_buffer) == 2) else False

@@ -35,7 +35,7 @@ from vidgear.gears.helper import (
     reducer,
     dict2Args,
     mkdir_safe,
-    delete_safe,
+    delete_ext_safe,
     check_output,
     extract_time,
     create_blank_frame,
@@ -507,9 +507,9 @@ def test_check_gstreamer_support():
         ([], False),
     ],
 )
-def test_delete_safe(ext, result):
+def test_delete_ext_safe(ext, result):
     """
-    Testing delete_safe function
+    Testing delete_ext_safe function
     """
     try:
         path = os.path.join(expanduser("~"), "test_mpd")
@@ -527,8 +527,8 @@ def test_delete_safe(ext, result):
             streamer.transcode_source()
             streamer.terminate()
             assert check_valid_mpd(mpd_file_path)
-        delete_safe(path, ext, logging=True)
-        assert not os.listdir(path), "`delete_safe` Test failed!"
+        delete_ext_safe(path, ext, logging=True)
+        assert not os.listdir(path), "`delete_ext_safe` Test failed!"
         # cleanup
         if os.path.isdir(path):
             shutil.rmtree(path)
