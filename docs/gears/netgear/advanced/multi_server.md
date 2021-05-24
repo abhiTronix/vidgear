@@ -65,13 +65,10 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
 &nbsp;
 
-&nbsp;
-
-
 ## Usage Examples
 
 
-!!! info "Important Information"
+!!! alert "Important Information"
 
     * For sake of simplicity, in these examples we will use only two unique Servers, but, the number of these Servers can be extended to several numbers depending upon your system hardware limits.
 

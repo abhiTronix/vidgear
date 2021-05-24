@@ -20,14 +20,12 @@ limitations under the License.
 
 # Multi-Clients Mode for NetGear API 
 
-
-## Overview
-
 <figure>
   <img src="../../../../assets/images/multi_client.png" alt="NetGear's Multi-Clients Mode" loading="lazy"/>
   <figcaption>NetGear's Multi-Clients Mode</figcaption>
 </figure>
 
+## Overview
 
 In Multi-Clients Mode, NetGear robustly handles Multiple Clients at once thereby able to broadcast frames and data across multiple Clients/Consumers in the network at same time. This mode works almost contrary to [Multi-Servers Mode](../multi_server/) but here data transfer works unidirectionally with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ only. Every new Client that connects to single Server can be identified by its unique port address on the network. 
 
@@ -67,15 +65,13 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
 - [x] If the server gets disconnected, all the clients will automatically exit to save resources.
 
-&nbsp;
 
 &nbsp;
-
 
 ## Usage Examples
 
 
-!!! info "Important Information"
+!!! alert "Important Information"
 
     * ==Frame/Data transmission will **NOT START** until all given Client(s) are connected to the Server.==
 
