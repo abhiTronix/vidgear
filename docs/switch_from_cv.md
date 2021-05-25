@@ -42,10 +42,10 @@ Switching OpenCV with VidGear APIs is usually a fairly painless process, and wil
 
 VidGear employs OpenCV at its backend and enhances its existing capabilities even further by introducing many new state-of-the-art features on top of it like:
 
-- [x] Multi-Threaded Performance.
+- [x] [Accerlated Multi-Threaded](../bonus/TQM/#c-accelerates-frame-processing) Performance.
 - [x] Real-time Stabilization.
 - [x] Inherit support for multiple sources.
-- [x] Screen-casting, live network-streaming, plus [way much more ➶](../gears)
+- [x] Screen-casting, Live network-streaming, [plus way much more ➶](../gears)
 
 Vidgear offers all this while maintaining the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax for all of its APIs, thereby making it even easier to implement Complex OpenCV applications in fewer lines of python code.
 

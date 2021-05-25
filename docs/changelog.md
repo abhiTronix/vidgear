@@ -76,14 +76,14 @@ limitations under the License.
         * [ ] Updated mkdocs.yml.
     - [x] Helper: 
         * [ ] Implemented new `delete_file_safe` to safely delete files at given path.
-        * [ ] Renamed `delete_safe` to `delete_ext_safe`.
+        * [ ] Replaced `os.remove` calls with `delete_file_safe`.
     - [x] CI: 
         * [ ] Updated VidGear Docs Deployer Workflow
         * [ ] Updated test
     - [x] Updated issue templates and labels.
 
 ??? danger "Breaking Updates/Changes"
-    - [ ] Replaced `os.remove` calls with `delete_file_safe`.
+    - [ ] Renamed `delete_safe` to `delete_ext_safe`.
 
 
 ??? bug "Bug-fixes"

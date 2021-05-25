@@ -143,10 +143,10 @@ Installation is as simple as:
 **Or you can also download its wheel (`.whl`) package from our repository's [releases](https://github.com/abhiTronix/vidgear/releases) section, and thereby can be installed as follows:**
 
 ```sh
-  pip install vidgear-0.2.1-py3-none-any.whl
+  pip install vidgear-0.2.2-py3-none-any.whl
 
   # or with asyncio support
-  pip install vidgear-0.2.1-py3-none-any.whl[asyncio]
+  pip install vidgear-0.2.2-py3-none-any.whl[asyncio]
 ```
 
 &nbsp;
