@@ -98,7 +98,9 @@ setup(
         "streamlink{}".format(latest_version("streamlink")),
         "requests{}".format(latest_version("requests")),
         "pyzmq{}".format(latest_version("pyzmq")),
-        "simplejpeg",
+        "simplejpeg{}".format(
+            "==1.5.0" if sys.version_info[:2] == (3, 6) else ""
+        ),  # dropped support for 3.6.x legacies
         "colorlog",
         "colorama",
         "tqdm",
