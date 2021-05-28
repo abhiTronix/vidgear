@@ -703,8 +703,8 @@ class StreamGear:
             output_params["-remove_at_exit"] = self.__params.pop("-remove_at_exit", 0)
         else:
             # default behaviour
-            output_params["-min_seg_duration"] = self.__params.pop(
-                "-min_seg_duration", 5000000
+            output_params["-seg_duration"] = self.__params.pop(
+                "-seg_duration", 5000000
             )
 
         # Finally, some hardcoded DASH parameters (Refer FFmpeg docs for more info.)
