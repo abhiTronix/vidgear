@@ -91,7 +91,9 @@ setup(
     install_requires=[
         "pafy{}".format(latest_version("pafy")),
         "mss{}".format(latest_version("mss")),
-        "numpy",
+        "numpy{}".format(
+            "<=1.19.5" if sys.version_info[:2] == (3, 6) else ""
+        ),  # dropped support for 3.6.x legacies
         "youtube-dl{}".format(latest_version("youtube-dl")),
         "streamlink{}".format(latest_version("streamlink")),
         "requests{}".format(latest_version("requests")),
@@ -166,8 +168,8 @@ setup(
         "Topic :: Multimedia :: Video",
         "Topic :: Scientific/Engineering",
         "Intended Audience :: Developers",
-        'Intended Audience :: Science/Research',
-        'Intended Audience :: Education',
+        "Intended Audience :: Science/Research",
+        "Intended Audience :: Education",
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
