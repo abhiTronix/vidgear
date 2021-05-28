@@ -768,7 +768,6 @@ class StreamGear:
         else:
             ffmpeg_cmd = (
                 [self.__ffmpeg, "-y"]
-                + ["-re"]  # pseudo live-streaming
                 + hide_banner
                 + ["-f", "rawvideo", "-vcodec", "rawvideo"]
                 + input_commands
