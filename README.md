@@ -446,9 +446,9 @@ SteamGear currently only supports [**MPEG-DASH**](https://www.encoding.com/mpeg-
 
 **StreamGear primarily works in two Independent Modes for transcoding which serves different purposes:**
 
-  * **Single-Source Mode:** In this mode, StreamGear transcodes entire video/audio file _(as opposed to frames by frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well, when you're transcoding lossless long-duration videos(with audio) for streaming and required no extra efforts or interruptions. But on the downside, the provided source cannot be changed or manipulated before sending onto FFmpeg Pipeline for processing.  This mode can be easily activated by assigning suitable video path as input to `-video_source` attribute, during StreamGear initialization. ***Learn more about this mode [here ➶][ss-mode-doc]***
+  * **Single-Source Mode:** In this mode, StreamGear transcodes entire video/audio file _(as opposed to frames by frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well, when you're transcoding lossless long-duration videos(with audio) for streaming and required no extra efforts or interruptions. But on the downside, the provided source cannot be changed or manipulated before sending onto FFmpeg Pipeline for processing. ***Learn more about this mode [here ➶][ss-mode-doc]***
 
-  * **Real-time Frames Mode:** When no valid input is received on `-video_source` attribute, StreamGear API activates this mode where it directly transcodes video-frames _(as opposed to a entire file)_, into a sequence of multiple smaller chunks/segments for streaming. In this mode, StreamGear supports real-time [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames, and process them over FFmpeg pipeline. But on the downside, audio has to added manually _(as separate source)_ for streams. ***Learn more about this mode [here ➶][rtf-mode-doc]***
+  * **Real-time Frames Mode:** In this mode, StreamGear directly transcodes video-frames _(as opposed to a entire file)_ into a sequence of multiple smaller chunks/segments for streaming. In this mode, StreamGear supports real-time [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames, and process them over FFmpeg pipeline. But on the downside, audio has to added manually _(as separate source)_ for streams. ***Learn more about this mode [here ➶][rtf-mode-doc]***
 
 
 ### StreamGear API Guide:
@@ -760,7 +760,7 @@ Internal URLs
 [cm-writegear-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/overview/
 [ncm-writegear-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/non_compression/overview/
 [screengear-doc]:https://abhitronix.github.io/vidgear/latest/gears/screengear/overview/
-[streamgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/streamgear/overview/
+[streamgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/streamgear/introduction/
 [writegear-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/introduction/
 [netgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/overview/
 [webgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/webgear/overview/
@@ -780,8 +780,8 @@ Internal URLs
 [installation]:https://abhitronix.github.io/vidgear/latest/installation/
 [gears]:https://abhitronix.github.io/vidgear/latest/gears
 [switch_from_cv]:https://abhitronix.github.io/vidgear/latest/switch_from_cv/
-[ss-mode-doc]: https://abhitronix.github.io/vidgear/latest/gears/streamgear/usage/#a-single-source-mode
-[rtf-mode-doc]: https://abhitronix.github.io/vidgear/latest/gears/streamgear/usage/#b-real-time-frames-mode
+[ss-mode-doc]: https://abhitronix.github.io/vidgear/latest/gears/streamgear/ssm/#overview
+[rtf-mode-doc]: https://abhitronix.github.io/vidgear/latest/gears/streamgear/rtfm/#overview
 [webgear-cs]: https://abhitronix.github.io/vidgear/latest/gears/webgear/advanced/#using-webgear-with-a-custom-sourceopencv
 [webgear_rtc-cs]: https://abhitronix.github.io/vidgear/latest/gears/webgear_rtc/advanced/#using-webgear_rtc-with-a-custom-sourceopencv
 [webgear_rtc-mc]: https://abhitronix.github.io/vidgear/latest/gears/webgear_rtc/advanced/#using-webgear_rtc-as-real-time-broadcaster

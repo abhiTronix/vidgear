@@ -208,8 +208,13 @@ nav:
       - References: bonus/reference/writegear.md
       - FAQs: help/writegear_faqs.md
     - StreamGear: 
-      - Overview: gears/streamgear/overview.md
-      - Usage Examples: gears/streamgear/usage.md
+      - Introduction: gears/streamgear/introduction.md
+      - Single-Source Mode:
+        - Overview: gears/streamgear/ssm/overview.md
+        - Usage Examples: gears/streamgear/ssm/usage.md
+      - Real-time Frames Mode: 
+        - Overview: gears/streamgear/rtfm/overview.md
+        - Usage Examples: gears/streamgear/rtfm/usage.md
       - Advanced:
           - FFmpeg Installation: gears/streamgear/ffmpeg_install.md
       - Parameters: gears/streamgear/params.md
