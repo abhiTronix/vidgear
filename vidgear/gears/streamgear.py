@@ -245,9 +245,22 @@ class StreamGear:
             ):
                 # check if given path is directory
                 valid_extension = "mpd" if self.__format == "dash" else "m3u8"
+                # get all assets extensions
+                assets_exts = [
+                    ("chunk-stream", ".m4s"),  # filename prefix, extension
+                    ".{}".format(valid_extension),
+                ]
+                # add source file extension too
+                if self.__video_source:
+                    assets_exts.append(
+                        (
+                            "chunk-stream",
+                            os.path.splitext(self.__video_source)[1],
+                        )  # filename prefix, extension
+                    )
                 if os.path.isdir(abs_path):
                     if self.__clear_assets:
-                        delete_ext_safe(abs_path, [".m4s", ".mpd"], logging=self.__logging)
+                        delete_ext_safe(abs_path, assets_exts, logging=self.__logging)
                     abs_path = os.path.join(
                         abs_path,
                         "{}-{}.{}".format(
@@ -259,7 +272,7 @@ class StreamGear:
                 elif self.__clear_assets and os.path.isfile(abs_path):
                     delete_ext_safe(
                         os.path.dirname(abs_path),
-                        [".m4s", ".mpd"],
+                        assets_exts,
                         logging=self.__logging,
                     )
                 # check if path has valid file extension
@@ -431,7 +444,7 @@ class StreamGear:
                 output_parameters["a_bitrate"] = bitrate  # temporary handler
                 output_parameters["-core_audio"] = ["-map", "1:a:0"]
             else:
-                logger.critical(
+                logger.warning(
                     "Audio source `{}` is not valid, Skipped!".format(self.__audio)
                 )
         elif self.__video_source:
@@ -606,7 +619,7 @@ class StreamGear:
             if self.__logging:
                 logger.debug("All streams processed successfully!")
         else:
-            logger.critical("Invalid `-streams` values skipped!")
+            logger.warning("Invalid `-streams` values skipped!")
 
         return output_params
 
@@ -701,17 +714,20 @@ class StreamGear:
             )
             # clean everything at exit?
             output_params["-remove_at_exit"] = self.__params.pop("-remove_at_exit", 0)
+            # default behaviour
+            output_params["-seg_duration"] = self.__params.pop("-seg_duration", 20)
+            # Disable (0) the use of a SegmentTimline inside a SegmentTemplate.
+            output_params["-use_timeline"] = 0
         else:
             # default behaviour
-            output_params["-seg_duration"] = self.__params.pop(
-                "-seg_duration", 5000000
-            )
+            output_params["-seg_duration"] = self.__params.pop("-seg_duration", 5)
+            # Enable (1) the use of a SegmentTimline inside a SegmentTemplate.
+            output_params["-use_timeline"] = 1
 
         # Finally, some hardcoded DASH parameters (Refer FFmpeg docs for more info.)
-        output_params["-use_timeline"] = 1
         output_params["-use_template"] = 1
-        output_params["-adaptation_sets"] = "id=0,streams=v{}".format(
-            " id=1,streams=a" if ("-acodec" in output_params) else ""
+        output_params["-adaptation_sets"] = "id=0,streams=v {}".format(
+            "id=1,streams=a" if ("-acodec" in output_params) else ""
         )
         # enable dash formatting
         output_params["-f"] = "dash"
@@ -856,7 +872,7 @@ class StreamGear:
         self.__process.wait()
         self.__process = None
         # log it
-        logger.critical(
+        logger.debug(
             "Transcoding Ended. {} Streaming assets are successfully generated at specified path.".format(
                 self.__format.upper()
             )

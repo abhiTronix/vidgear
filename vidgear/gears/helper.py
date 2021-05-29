@@ -599,13 +599,21 @@ def delete_ext_safe(dir_path, extensions=[], logging=False):
         logger.warning("Invalid input provided for deleting!")
         return
 
-    if logging:
-        logger.debug("Clearing Assets at `{}`!".format(dir_path))
+    logger.critical("Clearing Assets at `{}`!".format(dir_path))
 
     for ext in extensions:
-        files_ext = [
-            os.path.join(dir_path, f) for f in os.listdir(dir_path) if f.endswith(ext)
-        ]
+        if len(ext) == 2:
+            files_ext = [
+                os.path.join(dir_path, f)
+                for f in os.listdir(dir_path)
+                if f.startswith(ext[0]) and f.endswith(ext[1])
+            ]
+        else:
+            files_ext = [
+                os.path.join(dir_path, f)
+                for f in os.listdir(dir_path)
+                if f.endswith(ext)
+            ]
         for file in files_ext:
             delete_file_safe(file)
             if logging:
