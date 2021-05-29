@@ -50,6 +50,6 @@ var player_stab = new Clappr.Player({
   width: '100%',
   height: '100%',
   parentId: '#player_stab',
-  poster: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/674250e6c0387d0d0528406eec35bc580ceafee3/stabilizer_video_chunks/hd_thumbnail.png',
+  poster: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/94bf767c28bf2fe61b9c327625af8e22745f9fdf/stabilizer_video_chunks/hd_thumbnail_2.png',
   preload: 'metadata',
 });
