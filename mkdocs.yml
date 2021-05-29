@@ -53,13 +53,13 @@ theme:
     # Dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: red
-      accent: red
+      primary: deep orange
+      accent: orange
       toggle:
         icon: material/weather-night
         name: Switch to light mode
   font:
-    text: Nunito 
+    text: Source Sans Pro
     code: IBM Plex
   icon:
     logo: logo
@@ -208,8 +208,13 @@ nav:
       - References: bonus/reference/writegear.md
       - FAQs: help/writegear_faqs.md
     - StreamGear: 
-      - Overview: gears/streamgear/overview.md
-      - Usage Examples: gears/streamgear/usage.md
+      - Introduction: gears/streamgear/introduction.md
+      - Single-Source Mode:
+        - Overview: gears/streamgear/ssm/overview.md
+        - Usage Examples: gears/streamgear/ssm/usage.md
+      - Real-time Frames Mode: 
+        - Overview: gears/streamgear/rtfm/overview.md
+        - Usage Examples: gears/streamgear/rtfm/usage.md
       - Advanced:
           - FFmpeg Installation: gears/streamgear/ffmpeg_install.md
       - Parameters: gears/streamgear/params.md
@@ -222,6 +227,7 @@ nav:
         - Multi-Servers Mode: gears/netgear/advanced/multi_server.md
         - Multi-Clients Mode: gears/netgear/advanced/multi_client.md
         - Bidirectional Mode: gears/netgear/advanced/bidirectional_mode.md
+        - SSH Tunneling Mode: gears/netgear/advanced/ssh_tunnel.md
         - Secure Mode: gears/netgear/advanced/secure_mode.md 
         - Frame Compression: gears/netgear/advanced/compression.md 
       - Parameters: gears/netgear/params.md

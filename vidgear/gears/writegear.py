@@ -25,7 +25,6 @@ import sys
 import time
 import logging as log
 import subprocess as sp
-from pkg_resources import parse_version
 
 from .helper import (
     capPropId,
@@ -89,7 +88,7 @@ class WriteGear:
             compression_mode (bool): selects the WriteGear's Primary Mode of Operation.
             custom_ffmpeg (str): assigns the location of custom path/directory for custom FFmpeg executables.
             logging (bool): enables/disables logging.
-            output_params (dict): provides the flexibility to control supported internal parameters and properities.
+            output_params (dict): provides the flexibility to control supported internal parameters and FFmpeg properities.
         """
 
         # assign parameter values to class variables

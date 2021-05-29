@@ -24,7 +24,7 @@ import platform
 import setuptools
 import urllib.request
 
-from pkg_resources import parse_version
+from distutils.version import LooseVersion
 from distutils.util import convert_path
 from setuptools import setup
 
@@ -40,10 +40,10 @@ def test_opencv():
         import cv2
 
         # check whether OpenCV Binaries are 3.x+
-        if parse_version(cv2.__version__) < parse_version("3"):
+        if LooseVersion(cv2.__version__) < LooseVersion("3"):
             raise ImportError(
                 "Incompatible (< 3.0) OpenCV version-{} Installation found on this machine!".format(
-                    parse_version(cv2.__version__)
+                    LooseVersion(cv2.__version__)
                 )
             )
     except ImportError:
@@ -75,7 +75,7 @@ with open(ver_path) as ver_file:
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
     long_description = long_description.replace(  # patch for images
-        "docs/overrides/assets", "https://abhitronix.github.io/vidgear/assets"
+        "docs/overrides/assets", "https://abhitronix.github.io/vidgear/latest/assets"
     )
     # patch for unicodes
     long_description = long_description.replace("➶", ">>")
@@ -91,12 +91,16 @@ setup(
     install_requires=[
         "pafy{}".format(latest_version("pafy")),
         "mss{}".format(latest_version("mss")),
-        "numpy",
+        "numpy{}".format(
+            "<=1.19.5" if sys.version_info[:2] == (3, 6) else ""
+        ),  # dropped support for 3.6.x legacies
         "youtube-dl{}".format(latest_version("youtube-dl")),
         "streamlink{}".format(latest_version("streamlink")),
         "requests{}".format(latest_version("requests")),
         "pyzmq{}".format(latest_version("pyzmq")),
-        "simplejpeg",
+        "simplejpeg{}".format(
+            "==1.5.0" if sys.version_info[:2] == (3, 6) else ""
+        ),  # dropped support for 3.6.x legacies
         "colorlog",
         "colorama",
         "tqdm",
@@ -166,8 +170,8 @@ setup(
         "Topic :: Multimedia :: Video",
         "Topic :: Scientific/Engineering",
         "Intended Audience :: Developers",
-        'Intended Audience :: Science/Research',
-        'Intended Audience :: Education',
+        "Intended Audience :: Science/Research",
+        "Intended Audience :: Education",
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",

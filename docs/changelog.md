@@ -20,6 +20,97 @@ limitations under the License.
 
 # Release Notes
 
+## v0.2.2 (In Progress)
+
+??? tip "New Features"
+    - [x] **NetGear:**
+        * [ ] New SSH Tunneling Mode for connecting ZMQ sockets across machines via SSH tunneling.
+        * [ ] Added new `ssh_tunnel_mode` attribute to enable ssh tunneling at provide address at server end only.
+        * [ ] Implemented new `check_open_port` helper method to validate availability of host at given open port.
+        * [ ] Added new attributes `ssh_tunnel_keyfile` and `ssh_tunnel_pwd` to easily validate ssh connection.
+        * [ ] Extended this feature to be compatible with bi-directional mode and auto-reconnection.
+        * [ ] Initially disabled support for exclusive Multi-Server and Multi-Clients modes.
+        * [ ] Implemented logic to automatically enable `paramiko` support if installed.
+        * [ ] Reserved port-47 for testing.
+    - [x] **WebGear_RTC:**
+        * [ ] Added native support for middlewares.
+        * [ ] Added new global `middleware` variable for easily defining Middlewares as list.
+        * [ ] Added validity check for Middlewares.
+        * [ ] Added tests for middlewares support.
+        * [ ] Added example for middlewares support.
+        * [ ] Added related imports.
+    - [x] **CI:**
+         * [ ] Added new `no-response` work-flow for stale issues.
+         * [ ] Added NetGear CI Tests
+         * [ ] Added new CI tests for SSH Tunneling Mode.
+         * [ ] Added "paramiko" to CI dependencies.
+
+    - [x] **Docs:**
+         * [ ] Added Zenodo DOI badge and its reference in BibTex citations.
+         * [ ] Added `pymdownx.striphtml` plugin for stripping comments.
+         * [ ] Added complete docs for SSH Tunneling Mode.
+         * [ ] Added complete docs for NetGear's SSH Tunneling Mode.
+         * [ ] Added new usage example and related information.
+         * [ ] Added new image assets for ssh tunneling example.
+         * [ ] New admonitions and beautified css
+          
+
+??? success "Updates/Improvements"
+    - [x] Added exception for RunTimeErrors in NetGear CI tests.
+    - [x] Extended Middlewares support to WebGear API too.
+    - [x] Docs:
+        * [ ] Added `extra.homepage` parameter, which allows for setting a dedicated URL for `site_url`.
+        * [ ] Re-positioned few docs comments at bottom for easier detection during stripping.
+        * [ ] Updated dark theme to `dark orange`.
+        * [ ] Updated fonts to `Source Sans Pro`.
+        * [ ] Fixed missing heading in VideoGear.
+        * [ ] Update setup.py update link for assets.
+        * [ ] Added missing StreamGear Code docs.
+        * [ ] Several minor tweaks and typos fixed.
+        * [ ] Updated 404 page and workflow.
+        * [ ] Updated README.md and mkdocs.yml  with new additions.
+        * [ ] Re-written Threaded-Queue-Mode from scratch with elaborated functioning.
+        * [ ] Replace Paypal with Liberpay in FUNDING.yml
+        * [ ] Updated FFmpeg Download links.
+        * [ ] Restructured docs.
+        * [ ] Updated mkdocs.yml.
+    - [x] Helper: 
+        * [ ] Implemented new `delete_file_safe` to safely delete files at given path.
+        * [ ] Replaced `os.remove` calls with `delete_file_safe`.
+    - [x] CI: 
+        * [ ] Updated VidGear Docs Deployer Workflow
+        * [ ] Updated test
+    - [x] Updated issue templates and labels.
+
+??? danger "Breaking Updates/Changes"
+    - [ ] Renamed `delete_safe` to `delete_ext_safe`.
+
+
+??? bug "Bug-fixes"
+    - [x] Critical Bugfix related to OpenCV Binaries import.
+        * [ ] Bug fixed for OpenCV import comparsion test failing with Legacy versions and throwing ImportError.
+        * [ ] Replaced `packaging.parse_version` with more robust `distutils.version`.
+        * [ ] Removed redundant imports.
+    - [x] Setup: 
+        * [ ] Removed `latest_version` variable support from `simplejpeg`.
+        * [ ] Fixed minor typos in dependencies.
+    - [x] Setup_cfg: Replaced dashes with underscores to remove warnings.
+    - [x] Docs:
+        * [ ] Fixed 404 page does not work outside the site root with mkdocs.
+        * [ ] Fixed markdown files comments not stripped when converted to HTML.
+        * [ ] Fixed typos
+
+
+??? question "Pull Requests"
+    * PR #210
+    * PR #215
+
+
+&nbsp; 
+
+&nbsp; 
+
+
 ## v0.2.1 (2021-04-25)
 
 ??? tip "New Features"

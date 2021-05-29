@@ -1,7 +1,7 @@
 ---
 name: Proposal
 about: Suggest an idea for improving VidGear
-labels: "issue: proposal"
+labels: 'PROPOSAL :envelope_with_arrow:'
 ---
 
 <!--- Add a brief but descriptive title for your issue above -->

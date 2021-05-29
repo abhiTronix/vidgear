@@ -61,7 +61,7 @@ Its valid input can be one of the following:
 
 &nbsp;
 
-## **`formats`** 
+## **`format`** 
 
 
 This parameter select the adaptive HTTP streaming format. HTTP streaming works by breaking the overall stream into a sequence of small HTTP-based file downloads, each downloading one short chunk of an overall potentially unbounded transport stream. For now, the only supported format is: `'dash'` _(i.e [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/))_, but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming, will be added soon.
@@ -151,7 +151,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
     **Usage:** You can easily define any number of streams using `-streams` attribute as follows:
 
-    !!! tip "Usage example can be found [here ➶](../usage/#a2-usage-with-additional-streams)"
+    !!! tip "Usage example can be found [here ➶](../ssm/usage/#usage-with-additional-streams)"
 
     ```python
     stream_params = 
@@ -164,9 +164,9 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
-* **`-video_source`** _(string)_: This attribute takes valid Video path as input and activates [**Single-Source Mode**](../usage/#a-single-source-mode), for transcoding it into multiple smaller chunks/segments for streaming after successful validation. Its value be one of the following:
+* **`-video_source`** _(string)_: This attribute takes valid Video path as input and activates [**Single-Source Mode**](../ssm/overview), for transcoding it into multiple smaller chunks/segments for streaming after successful validation. Its value be one of the following:
 
-    !!! tip "Usage example can be found [here ➶](../usage/#a1-bare-minimum-usage)"
+    !!! tip "Usage example can be found [here ➶](../ssm/usage/#bare-minimum-usage)"
 
     * **Video Filename**: Valid path to Video file as follows:
         ```python
@@ -187,7 +187,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
     !!! failure "Make sure this audio-source is compatible with provided video -source, otherwise you encounter multiple errors, or even no output at all!"
 
-    !!! tip "Usage example can be found [here ➶](../usage/#a3-usage-with-custom-audio)"
+    !!! tip "Usage example can be found [here ➶](../ssm/usage/#usage-with-custom-audio)"
 
     * **Audio Filename**: Valid path to Audio file as follows:
         ```python
@@ -215,7 +215,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 * **`-input_framerate`** _(float/int)_ :  ***(optional)*** specifies the assumed input video source framerate, and only works in [Real-time Frames Mode](../usage/#b-real-time-frames-mode). It can be used as follows:
 
-    !!! tip "Usage example can be found [here ➶](../usage/#b3-bare-minimum-usage-with-controlled-input-framerate)" 
+    !!! tip "Usage example can be found [here ➶](../rtfm/usage/#bare-minimum-usage-with-controlled-input-framerate)" 
 
     ```python
     stream_params = {"-input_framerate": 60.0} # set input video source framerate to 60fps
@@ -265,7 +265,9 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
-* **`-clear_prev_assets`** _(bool)_: ***(optional)*** specify whether to force-delete any previous copies of StreamGear Assets _(i.e. Manifest files(.mpd) & streaming chunks(.m4s))_ present at path specified by [`output`](#output) parameter. You can easily set it to `True` to enable this feature, and default value is `False`. It can be used as follows: 
+* **`-clear_prev_assets`** _(bool)_: ***(optional)*** specify whether to force-delete any previous copies of StreamGear Assets _(i.e. Manifest files(.mpd) & streaming chunks(.m4s) etc.)_ present at path specified by [`output`](#output) parameter. You can easily set it to `True` to enable this feature, and default value is `False`. It can be used as follows: 
+
+    !!! info "In Single-Source Mode, additional segments _(such as `.webm`, `.mp4` chunks)_ are also cleared automatically."
 
     ```python
     stream_params = {"-clear_prev_assets": True} # will delete all previous assets

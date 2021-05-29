@@ -31,9 +31,12 @@ import numpy as np
 import logging as log
 import platform
 import requests
+import socket
 from tqdm import tqdm
+from contextlib import closing
+from pathlib import Path
 from colorlog import ColoredFormatter
-from pkg_resources import parse_version
+from distutils.version import LooseVersion
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
@@ -42,13 +45,13 @@ try:
     import cv2
 
     # check whether OpenCV Binaries are 3.x+
-    if parse_version(cv2.__version__) < parse_version("3"):
+    if LooseVersion(cv2.__version__) < LooseVersion("3"):
         raise ImportError(
             "[Vidgear:ERROR] :: Installed OpenCV API version(< 3.0) is not supported!"
         )
 except ImportError:
     raise ImportError(
-        "[Vidgear:ERROR] :: Failed to detect correct OpenCV executables, install it with `pip3 install opencv-python` command."
+        "[Vidgear:ERROR] :: Failed to detect correct OpenCV executables, install it with `pip install opencv-python` command."
     )
 
 
@@ -149,10 +152,31 @@ def check_CV_version():
 
     **Returns:** OpenCV's version first bit
     """
-    if parse_version(cv2.__version__) >= parse_version("4"):
+    if LooseVersion(cv2.__version__) >= LooseVersion("4"):
         return 4
     else:
         return 3
+
+
+def check_open_port(address, port=22):
+    """
+    ### check_open_port
+
+    Checks whether specified port open at given IP address.
+
+    Parameters:
+        address (string): given IP address.
+        port (int): check if port is open at given address.
+
+    **Returns:** A boolean value, confirming whether given port is open at given IP address.
+    """
+    if not address:
+        return False
+    with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
+        if sock.connect_ex((address, port)) == 0:
+            return True
+        else:
+            return False
 
 
 def check_WriteAccess(path, is_windows=False):
@@ -182,7 +206,7 @@ def check_WriteAccess(path, is_windows=False):
         write_accessible = False
     finally:
         if os.path.exists(temp_fname):
-            os.remove(temp_fname)
+            delete_file_safe(temp_fname)
     return write_accessible
 
 
@@ -517,6 +541,26 @@ def get_video_bitrate(width, height, fps, bpp):
     return round((width * height * bpp * fps) / 1000)
 
 
+def delete_file_safe(file_path):
+    """
+    ### delete_ext_safe
+
+    Safely deletes files at given path.
+
+    Parameters:
+        file_path (string): path to the file
+    """
+    try:
+        dfile = Path(file_path)
+        if sys.version_info >= (3, 8, 0):
+            dfile.unlink(missing_ok=True)
+        else:
+            if dfile.exists():
+                dfile.unlink()
+    except Exception as e:
+        logger.exception(e)
+
+
 def mkdir_safe(dir_path, logging=False):
     """
     ### mkdir_safe
@@ -539,9 +583,9 @@ def mkdir_safe(dir_path, logging=False):
             logger.debug("Directory already exists at `{}`".format(dir_path))
 
 
-def delete_safe(dir_path, extensions=[], logging=False):
+def delete_ext_safe(dir_path, extensions=[], logging=False):
     """
-    ### delete_safe
+    ### delete_ext_safe
 
     Safely deletes files with given extensions at given path.
 
@@ -555,15 +599,23 @@ def delete_safe(dir_path, extensions=[], logging=False):
         logger.warning("Invalid input provided for deleting!")
         return
 
-    if logging:
-        logger.debug("Clearing Assets at `{}`!".format(dir_path))
+    logger.critical("Clearing Assets at `{}`!".format(dir_path))
 
     for ext in extensions:
-        files_ext = [
-            os.path.join(dir_path, f) for f in os.listdir(dir_path) if f.endswith(ext)
-        ]
+        if len(ext) == 2:
+            files_ext = [
+                os.path.join(dir_path, f)
+                for f in os.listdir(dir_path)
+                if f.startswith(ext[0]) and f.endswith(ext[1])
+            ]
+        else:
+            files_ext = [
+                os.path.join(dir_path, f)
+                for f in os.listdir(dir_path)
+                if f.endswith(ext)
+            ]
         for file in files_ext:
-            os.remove(file)
+            delete_file_safe(file)
             if logging:
                 logger.debug("Deleted file: `{}`".format(file))
 
@@ -813,7 +865,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
             )
             # remove leftovers if exists
             if os.path.isfile(file_name):
-                os.remove(file_name)
+                delete_file_safe(file_name)
             # download and write file to the given path
             with open(file_name, "wb") as f:
                 logger.debug(
@@ -847,7 +899,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                 zip_fname, _ = os.path.split(zip_ref.infolist()[0].filename)
                 zip_ref.extractall(base_path)
             # perform cleaning
-            os.remove(file_name)
+            delete_file_safe(file_name)
             logger.debug("FFmpeg binaries for Windows configured successfully!")
             final_path += file_path
     # return final path
@@ -981,7 +1033,7 @@ def generate_auth_certificates(path, overwrite=False, logging=False):
                 # clean redundant keys if present
                 redundant_key = os.path.join(keys_dir, key_file)
                 if os.path.isfile(redundant_key):
-                    os.remove(redundant_key)
+                    delete_file_safe(redundant_key)
     else:
         # otherwise validate available keys
         status_public_keys = validate_auth_keys(public_keys_dir, ".key")
@@ -1021,7 +1073,7 @@ def generate_auth_certificates(path, overwrite=False, logging=False):
                 # clean redundant keys if present
                 redundant_key = os.path.join(keys_dir, key_file)
                 if os.path.isfile(redundant_key):
-                    os.remove(redundant_key)
+                    delete_file_safe(redundant_key)
 
     # validate newly generated keys
     status_public_keys = validate_auth_keys(public_keys_dir, ".key")
@@ -1070,7 +1122,7 @@ def validate_auth_keys(path, extension):
 
     # remove invalid keys if found
     if len(keys_buffer) == 1:
-        os.remove(os.path.join(path, keys_buffer[0]))
+        delete_file_safe(os.path.join(path, keys_buffer[0]))
 
     # return results
     return True if (len(keys_buffer) == 2) else False

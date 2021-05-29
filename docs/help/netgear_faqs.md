@@ -39,12 +39,13 @@ limitations under the License.
 Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netgear/overview/#exclusive-modes):
 
 
-| Exclusive Modes | Multi-Servers | Multi-Clients | Secure | Bidirectional |
-| :-------------: | :-----------: | :-----------: | :----: | :-----------: |
-| **Multi-Servers** | - | No _(throws error)_ | Yes | No _(disables it)_ |
-| **Multi-Clients** |  No _(throws error)_ | - | Yes | No _(disables it)_ |
-| **Secure** | Yes | Yes | - | Yes |
-| **Bidirectional** | No _(disabled)_ | No _(disabled)_ | Yes | - |
+| Exclusive Modes | Multi-Servers | Multi-Clients | Secure | Bidirectional | SSH Tunneling |
+| :-------------: | :-----------: | :-----------: | :----: | :-----------: | :-----------: |
+| **Multi-Servers** | - | No _(throws error)_ | Yes | No _(disables it)_ | No _(throws error)_ |
+| **Multi-Clients** |  No _(throws error)_ | - | Yes | No _(disables it)_ | No _(throws error)_ |
+| **Secure** | Yes | Yes | - | Yes | Yes |
+| **Bidirectional** | No _(disabled)_ | No _(disabled)_ | Yes | - | Yes |
+| **SSH Tunneling** |  No _(throws error)_ | No _(throws error)_ | Yes | Yes | - |
 
 &nbsp;
 
@@ -90,6 +91,13 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
 ## How to send custom data along with frames bidirectionally in NetGear API?
 
 **Answer:** See its [Bidirectional Mode doc ➶](../../gears/netgear/advanced/bidirectional_mode/).
+
+&nbsp;
+
+
+## How to access NetGear API outside network or remotely?
+
+**Answer:** See its [SSH Tunneling Mode doc ➶](../../gears/netgear/advanced/ssh_tunnel/).
 
 &nbsp;
 

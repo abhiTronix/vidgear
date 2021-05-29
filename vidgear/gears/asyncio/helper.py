@@ -34,7 +34,6 @@ import platform
 import requests
 from tqdm import tqdm
 from colorlog import ColoredFormatter
-from pkg_resources import parse_version
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 

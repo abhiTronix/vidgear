@@ -398,6 +398,13 @@ def test_bidirectional_mode(pattern, target_data, options):
                 "bidirectional_mode": True,
             },
         ),
+        (
+            2,
+            {
+                "multiserver_mode": True,
+                "ssh_tunnel_mode": "new@sdf.org",
+            },
+        ),
     ],
 )
 def test_multiserver_mode(pattern, options):
@@ -556,10 +563,17 @@ def test_multiclient_mode(pattern):
 @pytest.mark.parametrize(
     "options",
     [
-        {"max_retries": -1, "request_timeout": 3},
-        {"max_retries": 2, "request_timeout": 4, "bidirectional_mode": True},
-        {"max_retries": 2, "request_timeout": 4, "multiclient_mode": True},
-        {"max_retries": 2, "request_timeout": 4, "multiserver_mode": True},
+        {"max_retries": -1, "request_timeout": 2},
+        {
+            "max_retries": 2,
+            "request_timeout": 2,
+            "bidirectional_mode": True,
+            "ssh_tunnel_mode": "    new@sdf.org  ",
+            "ssh_tunnel_pwd": "xyz",
+            "ssh_tunnel_keyfile": "ok.txt",
+        },
+        {"max_retries": 2, "request_timeout": 2, "multiclient_mode": True},
+        {"max_retries": 2, "request_timeout": 2, "multiserver_mode": True},
     ],
 )
 def test_client_reliablity(options):
@@ -596,9 +610,26 @@ def test_client_reliablity(options):
 @pytest.mark.parametrize(
     "options",
     [
-        {"max_retries": 2, "request_timeout": 4, "bidirectional_mode": True},
-        {"max_retries": 2, "request_timeout": 4, "multiserver_mode": True},
-        {"max_retries": 2, "request_timeout": 4, "multiclient_mode": True},
+        {"max_retries": 2, "request_timeout": 2, "bidirectional_mode": True},
+        {"max_retries": 2, "request_timeout": 2, "multiserver_mode": True},
+        {"max_retries": 2, "request_timeout": 2, "multiclient_mode": True},
+        {
+            "ssh_tunnel_mode": "localhost",
+        },
+        {
+            "ssh_tunnel_mode": "localhost:47",
+        },
+        {
+            "max_retries": 2,
+            "request_timeout": 2,
+            "bidirectional_mode": True,
+            "ssh_tunnel_mode": "git@github.com",
+        },
+        {
+            "max_retries": 2,
+            "request_timeout": 2,
+            "ssh_tunnel_mode": "git@github.com",
+        },
     ],
 )
 def test_server_reliablity(options):
@@ -611,6 +642,7 @@ def test_server_reliablity(options):
     try:
         # define params
         server = NetGear(
+            address="127.0.0.1" if "ssh_tunnel_mode" in options else None,
             pattern=1,
             port=[5585] if "multiclient_mode" in options.keys() else 6654,
             logging=True,

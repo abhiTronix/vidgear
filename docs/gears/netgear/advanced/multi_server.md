@@ -20,12 +20,12 @@ limitations under the License.
 
 # Multi-Servers Mode for NetGear API 
 
-## Overview
-
 <figure>
   <img src="../../../../assets/images/multi_server.png" alt="NetGear's Multi-Servers Mode" loading="lazy"/>
   <figcaption>NetGear's Multi-Servers Mode</figcaption>
 </figure>
+
+## Overview
 
 In Multi-Servers Mode, NetGear API robustly handles Multiple Servers at once, thereby providing seamless access to frames and unidirectional data transfer across multiple Publishers/Servers in the network at the same time. Each new server connects to a single client can be identified by its unique port address on the network. 
 
@@ -65,13 +65,10 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
 &nbsp;
 
-&nbsp;
-
-
 ## Usage Examples
 
 
-!!! info "Important Information"
+!!! alert "Important Information"
 
     * For sake of simplicity, in these examples we will use only two unique Servers, but, the number of these Servers can be extended to several numbers depending upon your system hardware limits.
 

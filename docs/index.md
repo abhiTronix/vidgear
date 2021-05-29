@@ -30,7 +30,7 @@ limitations under the License.
 
 > VidGear is a High-Performance **Video-Processing** Framework for building complex real-time media applications in python :fire:
 
-VidGear provides an easy-to-use, highly extensible, **Multi-Threaded + Asyncio Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and real-time performance ⚡️.
+VidGear provides an easy-to-use, highly extensible, **[Multi-Threaded](../bonus/TQM/#threaded-queue-mode) + Asyncio Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and real-time performance ⚡️.
 
 > _"Write Less and Accomplish More"_ — VidGear's Motto
 
@@ -71,7 +71,7 @@ These Gears can be classified as follows:
 
 #### Streaming Gears
 
-* [StreamGear](gears/streamgear/overview/): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
+* [StreamGear](gears/streamgear/introduction/): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
 
 * **Asynchronous I/O Streaming Gear:**
 
@@ -122,13 +122,22 @@ Donations help keep VidGear's Open Source Development alive. No amount is too li
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4718616.svg)](https://doi.org/10.5281/zenodo.4718616)
 
 ```BibTeX
-@misc{vidgear,
-    author = {Abhishek Thakur},
-    title = {vidgear},
-    howpublished = {\url{https://github.com/abhiTronix/vidgear}},
-    year = {2019-2021}
+@software{vidgear,
+    author       = {Abhishek Thakur and
+                    Christian Clauss and
+                    Christian Hollinger and
+                    Benjamin Lowe and
+                    Mickaël Schoentgen and
+                    Renaud Bouckenooghe},
+    title        = {abhiTronix/vidgear: VidGear v0.2.2},
+    year         = 2021
+    publisher    = {Zenodo},
+    version      = {vidgear-0.2.2},
+    doi          = {10.5281/zenodo.4718616},
+    url          = {https://doi.org/10.5281/zenodo.4718616}
   }
 ```
 

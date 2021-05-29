@@ -215,15 +215,15 @@ writer.close()
 
 ## Using Compression Mode for Streaming URLs
 
-In Compression Mode, WriteGear can make complex job look easy with FFmpeg. It also allows any URLs _(as output)_ for network streaming with its [`output_filename`](../params/#output_filename) parameter.   
+In Compression Mode, WriteGear also allows URL strings _(as output)_ for network streaming with its [`output_filename`](../params/#output_filename) parameter.   
 
-_In this example, let's stream Live Camera Feed directly to Twitch!_
+In this example, we will stream live camera feed directly to Twitch:
 
 !!! info "YouTube-Live Streaming example code also available in [WriteGear FAQs ➶](../../../../help/writegear_faqs/#is-youtube-live-streaming-possibe-with-writegear)"
 
 !!! warning "This example assume you already have a [**Twitch Account**](https://www.twitch.tv/) for publishing video."
 
-!!! danger "Make sure to change [_Twitch Stream Key_](https://www.youtube.com/watch?v=xwOtOfPMIIk) with yours in following code before running!"
+!!! alert "Make sure to change [_Twitch Stream Key_](https://www.youtube.com/watch?v=xwOtOfPMIIk) with yours in following code before running!"
 
 ```python
 # import required libraries
@@ -292,16 +292,16 @@ writer.close()
 ## Using Compression Mode with Hardware encoders
 
 
-By default, WriteGear API uses *libx264 encoder* for encoding its output files in Compression Mode. But you can easily change encoder to your suitable [supported encoder](../params/#supported-encoders) by passing `-vcodec` FFmpeg parameter as an attribute in its [*output_param*](../params/#output_params) dictionary parameter. In addition to this, you can also specify the additional properties/features of your system's GPU easily. 
+By default, WriteGear API uses `libx264` encoder for encoding output files in Compression Mode. But you can easily change encoder to your suitable [supported encoder](../params/#supported-encoders) by passing `-vcodec` FFmpeg parameter as an attribute with its [*output_param*](../params/#output_params) dictionary parameter. In addition to this, you can also specify the additional properties/features of your system's GPU easily. 
 
 ??? warning "User Discretion Advised"
 
-    This example is just conveying the idea on how to use FFmpeg's hardware encoders with WriteGear API in Compression mode, which **MAY/MAY NOT** suit your system. Kindly use suitable parameters based your supported system and FFmpeg configurations only.
+    This example is just conveying the idea on how to use FFmpeg's hardware encoders with WriteGear API in Compression mode, which **MAY/MAY NOT** suit your system. Kindly use suitable parameters based your system hardware settings only.
 
 
-In this example, we will be using `h264_vaapi` as our hardware encoder and also optionally be specifying our device hardware's location (i.e. `'-vaapi_device':'/dev/dri/renderD128'`) and other features such as `'-vf':'format=nv12,hwupload'` like properties by formatting them as `option` dictionary parameter's attributes, as follows:
+In this example, we will be using `h264_vaapi` as our hardware encoder and also optionally be specifying our device hardware's location (i.e. `'-vaapi_device':'/dev/dri/renderD128'`) and other features such as `'-vf':'format=nv12,hwupload'`:
 
-!!! danger "Check VAAPI support"
+??? alert "Remember to check VAAPI support"
 
     To use `h264_vaapi` encoder, remember to check if its available and your FFmpeg compiled with VAAPI support. You can easily do this by executing following one-liner command in your terminal, and observing if output contains something similar as follows:
 
@@ -429,7 +429,7 @@ writer.close()
 
 In Compression Mode, WriteGear API allows us to exploit almost all FFmpeg supported parameters that you can think of, in its Compression Mode. Hence, processing, encoding, and combining audio with video is pretty much straightforward.
 
-!!! warning "Example Assumptions"
+!!! alert "Example Assumptions"
 
     * You're running are Linux machine.
     * You already have appropriate audio & video drivers and softwares installed on your machine.

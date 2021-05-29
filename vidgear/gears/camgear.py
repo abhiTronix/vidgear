@@ -24,7 +24,6 @@ import time
 import queue
 import logging as log
 from threading import Thread, Event
-from pkg_resources import parse_version
 
 from .helper import (
     capPropId,

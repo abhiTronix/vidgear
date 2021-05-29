@@ -26,6 +26,8 @@ limitations under the License.
 
 ## Bare-Minimum Usage with CamGear backend
 
+!!! abstract "VideoGear by default provides direct internal access to [CamGear API](../../camgear/overview/)."
+
 Following is the bare-minimum code you need to access CamGear API with VideoGear:
 
 ```python
@@ -34,7 +36,7 @@ from vidgear.gears import VideoGear
 import cv2
 
 
-# open any valid video stream(for e.g `myvideo.avi` file
+# open any valid video stream(for e.g `myvideo.avi` file)
 stream = VideoGear(source="myvideo.avi").start()
 
 # loop over
@@ -68,6 +70,8 @@ stream.stop()
 &nbsp; 
 
 ## Bare-Minimum Usage with PiGear backend
+
+!!! abstract "VideoGear contains a special [`enablePiCamera`](../params/#enablepicamera) flag that when `True` provides internal access to [PiGear API](../../pigear/overview/)."
 
 Following is the bare-minimum code you need to access PiGear API with VideoGear:
 
@@ -111,7 +115,9 @@ stream.stop()
 
 ## Using VideoGear with Video Stabilizer backend
 
-VideoGear API provides a special internal wrapper around VidGear's Exclusive [**Video Stabilizer**](../../stabilizer/overview/) class and provides easy way of activating stabilization for various video-streams _(real-time or not)_ with its [`stabilize`](../params/#stabilize) boolean parameter during initialization. The complete usage example is as follows:
+!!! abstract "VideoGear API provides a special internal wrapper around VidGear's Exclusive [**Video Stabilizer**](../../stabilizer/overview/) class and provides easy way of activating stabilization for various video-streams _(real-time or not)_ with its [`stabilize`](../params/#stabilize) boolean parameter during initialization."
+
+The usage example is as follows:
 
 !!! tip "For a more detailed information on Video-Stabilizer Class, Read [here ➶](../../stabilizer/overview/)"
 
@@ -155,7 +161,11 @@ stream_stab.stop()
 
 &nbsp;
 
-VideoGear contains a special [`enablePiCamera`](../params/#enablepicamera) flag that provides internal access to both CamGear and PiGear APIs, and thereby only one of them can be accessed at a given instance. Therefore, the additional parameters of VideoGear API are also based on API _([PiGear API](../params/#parameters-with-pigear-backend) or [CamGear API](../params/#parameters-with-camgear-backend))_ being accessed. The complete usage example of VideoGear API with Variable PiCamera Properties is as follows:
+## Advanced VideoGear usage with PiGear Backend
+
+!!! abstract "VideoGear provides internal access to both CamGear and PiGear APIs, and thereby all additional parameters of [PiGear API](../params/#parameters-with-pigear-backend) or [CamGear API](../params/#parameters-with-camgear-backend) are also easily accessible within VideoGear API."
+
+The usage example of VideoGear API with Variable PiCamera Properties is as follows:
 
 !!! info "This example is basically a VideoGear API implementation of this [PiGear usage example](../../pigear/usage/#using-pigear-with-variable-camera-properties). Thereby, any [CamGear](../../camgear/usage/) or [PiGear](../../pigear/usage/) usage examples can be implemented with VideoGear API in the similar manner."
 
@@ -212,11 +222,11 @@ stream.stop()
 
 ## Using VideoGear with Colorspace Manipulation
 
-VideoGear API also supports **Colorspace Manipulation** but not direct like other VideoCapture Gears. 
+VideoGear API also supports **Colorspace Manipulation** but **NOT Direct** like other VideoCapture Gears. 
 
 !!! danger "Important"
 
-    * `color_space` global variable is **NOT Supported** in VideoGear API, calling it will result in `AttribueError`. More details can be found [here ➶](../../../bonus/colorspace_manipulation/#using-color_space-global-variable)
+    * `color_space` global variable is **NOT Supported** in VideoGear API, calling it will result in `AttribueError`. More details can be found [here ➶](../../../bonus/colorspace_manipulation/#source-colorspace-manipulation)
 
     * Any incorrect or None-type value on [`colorspace`](../params/#colorspace) parameter will be skipped automatically.
 

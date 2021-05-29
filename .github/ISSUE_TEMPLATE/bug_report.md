@@ -1,7 +1,8 @@
 ---
 name: Bug report
 about: Create a bug-report for VidGear
-labels: "issue: bug"
+labels: ':beetle: BUG'
+assignees: 'abhiTronix'
 ---
 
 <!--

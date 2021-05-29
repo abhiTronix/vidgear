@@ -28,9 +28,13 @@ import random
 import logging as log
 from threading import Thread
 from collections import deque
-from pkg_resources import parse_version
 
-from .helper import logger_handler, generate_auth_certificates, check_WriteAccess
+from .helper import (
+    logger_handler,
+    generate_auth_certificates,
+    check_WriteAccess,
+    check_open_port,
+)
 
 # define logger
 logger = log.getLogger("NetGear")
@@ -177,11 +181,17 @@ class NetGear:
 
         # Handle NetGear's internal exclusive modes and params
 
+        # define SSH Tunneling Mode
+        self.__ssh_tunnel_mode = None  # handles ssh_tunneling mode state
+        self.__ssh_tunnel_pwd = None
+        self.__ssh_tunnel_keyfile = None
+        self.__paramiko_present = False
+
         # define Multi-Server mode
-        self.__multiserver_mode = False  # handles multi-server_mode state
+        self.__multiserver_mode = False  # handles multi-server mode state
 
         # define Multi-Client mode
-        self.__multiclient_mode = False  # handles multi-client_mode state
+        self.__multiclient_mode = False  # handles multi-client mode state
 
         # define Bi-directional mode
         self.__bi_mode = False  # handles bi-directional mode state
@@ -305,6 +315,22 @@ class NetGear:
                         )
                     )
 
+            elif key == "ssh_tunnel_mode" and isinstance(value, str):
+                # enable SSH Tunneling Mode
+                self.__ssh_tunnel_mode = value.strip()
+            elif key == "ssh_tunnel_pwd" and isinstance(value, str):
+                # add valid SSH Tunneling password
+                self.__ssh_tunnel_pwd = value
+            elif key == "ssh_tunnel_keyfile" and isinstance(value, str):
+                # add valid SSH Tunneling key-file
+                self.__ssh_tunnel_keyfile = value if os.path.isfile(value) else None
+                if self.__ssh_tunnel_keyfile is None:
+                    logger.warning(
+                        "Discarded invalid or non-existential SSH Tunnel Key-file at {}!".format(
+                            value
+                        )
+                    )
+
             elif key == "jpeg_compression" and isinstance(value, bool):
                 # enable frame-compression encoding value
                 self.__jpeg_compression = value
@@ -404,8 +430,48 @@ class NetGear:
                     "ZMQ Security Mechanism is disabled for this connection due to errors!"
                 )
 
-        # Handle multiple exclusive modes if enabled
+        # Handle ssh tunneling if enabled
+        if not (self.__ssh_tunnel_mode is None):
+            # SSH Tunnel Mode only available for server mode
+            if receive_mode:
+                logger.error("SSH Tunneling cannot be enabled for Client-end!")
+            else:
+                # check if SSH tunneling possible
+                ssh_address = self.__ssh_tunnel_mode
+                ssh_address, ssh_port = (
+                    ssh_address.split(":")
+                    if ":" in ssh_address
+                    else [ssh_address, "22"]
+                )  # default to port 22
+                if "47" in ssh_port:
+                    self.__ssh_tunnel_mode = self.__ssh_tunnel_mode.replace(
+                        ":47", ""
+                    )  # port-47 is reserved for testing
+                else:
+                    # extract ip for validation
+                    ssh_user, ssh_ip = (
+                        ssh_address.split("@")
+                        if "@" in ssh_address
+                        else ["", ssh_address]
+                    )
+                    # validate ip specified port
+                    assert check_open_port(
+                        ssh_ip, port=int(ssh_port)
+                    ), "[NetGear:ERROR] :: Host `{}` is not available for SSH Tunneling at port-{}!".format(
+                        ssh_address, ssh_port
+                    )
 
+                # import packages
+                import zmq.ssh
+                import importlib
+
+                # assign globally
+                self.__zmq_ssh = zmq.ssh
+                self.__paramiko_present = (
+                    True if bool(importlib.util.find_spec("paramiko")) else False
+                )
+
+        # Handle multiple exclusive modes if enabled
         if self.__multiclient_mode and self.__multiserver_mode:
             raise ValueError(
                 "[NetGear:ERROR] :: Multi-Client and Multi-Server Mode cannot be enabled simultaneously!"
@@ -420,11 +486,28 @@ class NetGear:
                         "Multi-Server" if self.__multiserver_mode else "Multi-Client"
                     )
                 )
+            # check if SSH Tunneling Mode also enabled
+            if self.__ssh_tunnel_mode:
+                # raise error
+                raise ValueError(
+                    "[NetGear:ERROR] :: SSH Tunneling and {} Mode cannot be enabled simultaneously. Kindly refer docs!".format(
+                        "Multi-Server" if self.__multiserver_mode else "Multi-Client"
+                    )
+                )
         elif self.__bi_mode:
             # log Bi-directional mode activation
             if self.__logging:
                 logger.debug(
                     "Bi-Directional Data Transmission is enabled for this connection!"
+                )
+        elif self.__ssh_tunnel_mode:
+            # log Bi-directional mode activation
+            if self.__logging:
+                logger.debug(
+                    "SSH Tunneling is enabled for host:`{}` with `{}` back-end.".format(
+                        self.__ssh_tunnel_mode,
+                        "paramiko" if self.__paramiko_present else "pexpect",
+                    )
                 )
 
         # define messaging context instance
@@ -736,10 +819,22 @@ class NetGear:
                             protocol + "://" + str(address) + ":" + str(pt)
                         )
                 else:
-                    # connect socket to given protocol, address and port
-                    self.__msg_socket.connect(
-                        protocol + "://" + str(address) + ":" + str(port)
-                    )
+                    # handle SSH tuneling if enabled
+                    if self.__ssh_tunnel_mode:
+                        # establish tunnel connection
+                        self.__zmq_ssh.tunnel_connection(
+                            self.__msg_socket,
+                            protocol + "://" + str(address) + ":" + str(port),
+                            self.__ssh_tunnel_mode,
+                            keyfile=self.__ssh_tunnel_keyfile,
+                            password=self.__ssh_tunnel_pwd,
+                            paramiko=self.__paramiko_present,
+                        )
+                    else:
+                        # connect socket to given protocol, address and port
+                        self.__msg_socket.connect(
+                            protocol + "://" + str(address) + ":" + str(port)
+                        )
 
                 # additional settings
                 if pattern < 2:
@@ -786,6 +881,12 @@ class NetGear:
                     if self.__bi_mode:
                         logger.critical(
                             "Failed to activate Bi-Directional Mode for this connection!"
+                        )
+                    if self.__ssh_tunnel_mode:
+                        logger.critical(
+                            "Failed to initiate SSH Tunneling Mode for this server with `{}` back-end!".format(
+                                "paramiko" if self.__paramiko_present else "pexpect"
+                            )
                         )
                     raise RuntimeError(
                         "[NetGear:ERROR] :: Send Mode failed to connect address: {} and pattern: {}! Kindly recheck all parameters.".format(
@@ -1137,7 +1238,7 @@ class NetGear:
             # check whether the incoming frame is contiguous
             frame = np.ascontiguousarray(frame, dtype=frame.dtype)
 
-        # handle JPEG compresssion encoding
+        # handle JPEG compression encoding
         if self.__jpeg_compression:
             frame = simplejpeg.encode_jpeg(
                 frame,
@@ -1228,7 +1329,20 @@ class NetGear:
                         for _connection in self.__connection_address:
                             self.__msg_socket.connect(_connection)
                     else:
-                        self.__msg_socket.connect(self.__connection_address)
+                        # handle SSH tunneling if enabled
+                        if self.__ssh_tunnel_mode:
+                            # establish tunnel connection
+                            self.__zmq_ssh.tunnel_connection(
+                                self.__msg_socket,
+                                self.__connection_address,
+                                self.__ssh_tunnel_mode,
+                                keyfile=self.__ssh_tunnel_keyfile,
+                                password=self.__ssh_tunnel_pwd,
+                                paramiko=self.__paramiko_present,
+                            )
+                        else:
+                            # connect normally
+                            self.__msg_socket.connect(self.__connection_address)
 
                     self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
 
@@ -1302,7 +1416,20 @@ class NetGear:
 
                     # Create new connection
                     self.__msg_socket = self.__msg_context.socket(self.__msg_pattern)
-                    self.__msg_socket.connect(self.__connection_address)
+                    # handle SSH tunneling if enabled
+                    if self.__ssh_tunnel_mode:
+                        # establish tunnel connection
+                        self.__zmq_ssh.tunnel_connection(
+                            self.__msg_socket,
+                            self.__connection_address,
+                            self.__ssh_tunnel_mode,
+                            keyfile=self.__ssh_tunnel_keyfile,
+                            password=self.__ssh_tunnel_pwd,
+                            paramiko=self.__paramiko_present,
+                        )
+                    else:
+                        # connect normally
+                        self.__msg_socket.connect(self.__connection_address)
                     self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
 
                     return None

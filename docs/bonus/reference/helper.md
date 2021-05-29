@@ -42,7 +42,7 @@ limitations under the License.
 
 &nbsp;
 
-::: vidgear.gears.helper.delete_safe
+::: vidgear.gears.helper.delete_ext_safe
 
 &nbsp;
 

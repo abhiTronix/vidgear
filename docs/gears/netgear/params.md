@@ -149,23 +149,27 @@ This parameter provides the flexibility to alter various NetGear API's internal 
 
     * **`bidirectional_mode`** (_boolean_) : This internal attribute activates the exclusive [**Bidirectional Mode**](../advanced/bidirectional_mode/), if enabled(`True`).
 
+    * **`ssh_tunnel_mode`** (_string_) : This internal attribute activates the exclusive [**SSH Tunneling Mode**](../advanced/secure_mode/) ==at the Server-end only==.
+
+    * **`ssh_tunnel_pwd`** (_string_): In SSH Tunneling Mode, This internal attribute sets the password required to authorize Host for SSH Connection ==at the Server-end only==. More information can be found [here ➶](../advanced/ssh_tunnel/#supported-attributes)
+
+    * **`ssh_tunnel_keyfile`** (_string_): In SSH Tunneling Mode, This internal attribute sets path to Host key that provide another way to authenticate host for SSH Connection ==at the Server-end only==. More information can be found [here ➶](../advanced/ssh_tunnel/#supported-attributes)
+
     * **`custom_cert_location`** (_string_) : In Secure Mode, This internal attribute assigns user-defined location/path to directory for generating/storing Public+Secret Keypair necessary for encryption. More information can be found [here ➶](../advanced/secure_mode/#supported-attributes)
 
     * **`overwrite_cert`** (_boolean_) : In Secure Mode, This internal attribute decides whether to overwrite existing Public+Secret Keypair/Certificates or not, ==at the Server-end only==. More information can be found [here ➶](../advanced/secure_mode/#supported-attributes)
 
-    * **`jpeg_compression`**(_bool_): This attribute can be used to activate(if True)/deactivate(if False) Frame Compression. Its default value is also `True`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
+    * **`jpeg_compression`**(_bool_): This internal attribute can be used to activate(if True)/deactivate(if False) Frame Compression. Its default value is also `True`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
 
-    * **`jpeg_compression_quality`**(_int/float_): It controls the JPEG quantization factor. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
+    * **`jpeg_compression_quality`**(_int/float_): This internal attribute controls the JPEG quantization factor. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
 
-    * **`jpeg_compression_fastdct`**(_bool_): This attribute if True, use fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
+    * **`jpeg_compression_fastdct`**(_bool_): This internal attributee if True, use fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
 
-    * **`jpeg_compression_fastupsample`**(_bool_): This attribute if True, use fastest color upsampling method. Its default value is `False`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
+    * **`jpeg_compression_fastupsample`**(_bool_): This internal attribute if True, use fastest color upsampling method. Its default value is `False`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
 
     * **`max_retries`**(_integer_): This internal attribute controls the maximum retries before Server/Client exit itself, if it's unable to get any response/reply from the socket before a certain amount of time, when synchronous messaging patterns like (`zmq.PAIR` & `zmq.REQ/zmq.REP`) are being used. It's value can anything greater than `0`, and its default value is `3`.
 
-
     * **`request_timeout`**(_integer_): This internal attribute controls the timeout value _(in seconds)_, after which the Server/Client exit itself if it's unable to get any response/reply from the socket, when synchronous messaging patterns like (`zmq.PAIR` & `zmq.REQ/zmq.REP`) are being used. It's value can anything greater than `0`, and its default value is `10` seconds.
-
 
     * **`flag`**(_integer_): This PyZMQ attribute value can be either `0` or `zmq.NOBLOCK`_( i.e. 1)_. More information can be found [here ➶](https://pyzmq.readthedocs.io/en/latest/api/zmq.html).
 

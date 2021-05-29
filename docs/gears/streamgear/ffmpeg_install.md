@@ -85,7 +85,7 @@ If StreamGear API not receives any input from the user on [**`custom_ffmpeg`**](
 
 * **Download:** You can also manually download the latest Windows Static Binaries(*based on your machine arch(x86/x64)*) from the link below:
    
-      *Windows Static Binaries:* http://ffmpeg.zeranoe.com/builds/
+      *Windows Static Binaries:* https://ffmpeg.org/download.html#build-windows
 
 *  **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'C:/foo/Downloads/ffmpeg/bin'`) or path of `ffmpeg.exe` executable itself to the [**`custom_ffmpeg`**](../params/#custom_ffmpeg) parameter in the StreamGear API.
 
