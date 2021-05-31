@@ -69,7 +69,7 @@ The WriteGear API supports _Auto-Installation_ and _Manual Configuration_ method
 
 !!! quote "This is a recommended approach on Windows Machines"
 
-If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) parameter, then on Windows system WriteGear API **auto-generates** the required FFmpeg Static Binaries, according to your system specifications, into the temporary directory _(for e.g. `C:\Temp`)_ of your machine.
+If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) parameter, then on Windows system WriteGear API **auto-generates** the required FFmpeg Static Binaries from a dedicated [**Github Server**](https://github.com/abhiTronix/FFmpeg-Builds) into the temporary directory _(for e.g. `C:\Temp`)_ of your machine.
 
 !!! warning Important Information
 

@@ -49,17 +49,23 @@ limitations under the License.
 
 ## How to compile OpenCV with GStreamer support?
 
-**Answer:** For compiling OpenCV with GSstreamer(`>=v1.0.0`) support, checkout this [tutorial](https://web.archive.org/web/20201225140454/https://medium.com/@galaktyk01/how-to-build-opencv-with-gstreamer-b11668fa09c) for Linux and Windows OSes, and **for MacOS do as follows:**
+**Answer:** For compiling OpenCV with GSstreamer(`>=v1.0.0`) support:
 
-**Step-1:** First Brew install GStreamer:
+=== "On Linux OSes"
 
-```sh
-brew update
-brew install gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav
-```
+    - [x] **Follow [this tutorial ➶](https://medium.com/@galaktyk01/how-to-build-opencv-with-gstreamer-b11668fa09c)**
 
-**Step-2:** Then, Follow [this tutorial ➶](https://www.learnopencv.com/install-opencv-4-on-macos/)
+=== "On Windows OSes"
 
+    - [x] **Follow [this tutorial ➶](https://medium.com/@galaktyk01/how-to-build-opencv-with-gstreamer-b11668fa09c)**
+
+=== "FOn MAC OSes"
+    
+    - [x] **Follow [this tutorial ➶](https://www.learnopencv.com/install-opencv-4-on-macos/) but make sure to brew install GStreamer as follows:**
+
+        ```sh
+        brew install gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav
+        ```
 
 &nbsp;
 

@@ -53,7 +53,7 @@ streamer.transcode_source()
 streamer.terminate()
 ```
 
-!!! success "After running these bare-minimum commands, StreamGear will produce a Manifest file _(`dash.mpd`)_ with steamable chunks that contains information about a Primary Stream of same resolution and framerate as the input."
+!!! success "After running this bare-minimum example, StreamGear will produce a Manifest file _(`dash.mpd`)_ with streamable chunks that contains information about a Primary Stream of same resolution and framerate as the input."
 
 &thinsp;
 

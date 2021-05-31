@@ -75,6 +75,8 @@ stream.stop()
 
 Following is the bare-minimum code you need to access PiGear API with VideoGear:
 
+!!! warning "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using PiGear Backend, otherwise nothing will work."
+
 ```python
 # import required libraries
 from vidgear.gears import VideoGear
@@ -169,6 +171,7 @@ The usage example of VideoGear API with Variable PiCamera Properties is as follo
 
 !!! info "This example is basically a VideoGear API implementation of this [PiGear usage example](../../pigear/usage/#using-pigear-with-variable-camera-properties). Thereby, any [CamGear](../../camgear/usage/) or [PiGear](../../pigear/usage/) usage examples can be implemented with VideoGear API in the similar manner."
 
+!!! warning "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using PiGear Backend, otherwise nothing will work."
 
 ```python
 # import required libraries

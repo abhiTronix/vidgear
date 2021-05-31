@@ -42,7 +42,7 @@ Must require OpenCV(3.0+) python binaries installed for all core functions. You 
 
 ### FFmpeg 
 
-Must require for the video compression and encoding compatibilities within [StreamGear](#streamgear) and [**Compression Mode**](../../gears/writegear/compression/overview/) in [WriteGear](#writegear) API. 
+Must require for the video compression and encoding compatibilities within [**StreamGear**](#streamgear) and [**WriteGear's Compression Mode**](../../gears/writegear/compression/overview/). 
 
 !!! tip "FFmpeg Installation"
 

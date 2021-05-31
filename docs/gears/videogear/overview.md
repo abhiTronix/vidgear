@@ -41,9 +41,6 @@ VideoGear is ideal when you need to switch to different video sources without ch
 
 	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 
-
-!!! warning "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using PiGear API, otherwise nothing will work."
-
 &thinsp; 
 
 ## Importing
