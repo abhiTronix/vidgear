@@ -30,7 +30,7 @@ from starlette.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, PlainTextResponse
 
 from aiortc.rtcrtpsender import RTCRtpSender
 from aiortc import RTCPeerConnection, RTCSessionDescription, VideoStreamTrack
@@ -371,6 +371,19 @@ class WebGear_RTC:
         # define middleware support
         self.middleware = []
 
+        self.enablePiCamera = enablePiCamera
+        self.stabilize = stabilize
+        self.source = source
+        self.camera_num = camera_num
+        self.stream_mode = stream_mode
+        self.backend = backend
+        self.colorspace = colorspace
+        self.resolution = resolution
+        self.framerate = framerate
+        self.logging = logging
+        self.time_delay = time_delay
+        self.options = options
+
         # Handle RTC video server
         if source is None:
             self.config = {"server": None}
@@ -379,22 +392,7 @@ class WebGear_RTC:
                 logger.warning("Given source is of NoneType!")
         else:
             # Handle video source
-            self.__default_rtc_server = RTC_VideoServer(
-                enablePiCamera=enablePiCamera,
-                stabilize=stabilize,
-                source=source,
-                camera_num=camera_num,
-                stream_mode=stream_mode,
-                backend=backend,
-                colorspace=colorspace,
-                resolution=resolution,
-                framerate=framerate,
-                logging=logging,
-                time_delay=time_delay,
-                **options
-            )
-            # define default frame generator in configuration
-            self.config = {"server": self.__default_rtc_server}
+            self.create_video_server()
 
         # copying original routing tables for further validation
         self.__rt_org_copy = self.routes[:]
@@ -402,6 +400,27 @@ class WebGear_RTC:
         self.__isrunning = True
         # collects peer RTC connections
         self.__pcs = set()
+
+    def create_video_server(self):
+        """
+        Creates videoserver instance
+        """
+        self.__default_rtc_server = RTC_VideoServer(
+            enablePiCamera=self.enablePiCamera,
+            stabilize=self.stabilize,
+            source=self.source,
+            camera_num=self.camera_num,
+            stream_mode=self.stream_mode,
+            backend=self.backend,
+            colorspace=self.colorspace,
+            resolution=self.resolution,
+            framerate=self.framerate,
+            logging=self.logging,
+            time_delay=self.time_delay,
+            **self.options
+        )
+        # define default frame generator in configuration
+        self.config = {"server": self.__default_rtc_server}
 
     def __call__(self):
         """
@@ -519,6 +538,21 @@ class WebGear_RTC:
         return JSONResponse(
             {"sdp": pc.localDescription.sdp, "type": pc.localDescription.type}
         )
+
+    async def __close_connection(self, request):
+        """
+        Closes all connections and recreates videoserver
+        """
+        logger.info("Request for ICE connection closing")
+        coros = [pc.close() for pc in self.__pcs]
+        await asyncio.gather(*coros)
+        self.__pcs.clear()
+
+        # Restarting videoserver
+        self.shutdown()
+        self.create_video_server()
+
+        return PlainTextResponse("OK")
 
     async def __homepage(self, request):
         """
