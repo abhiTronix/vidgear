@@ -46,7 +46,7 @@ VidGear focuses on simplicity, and thereby lets programmers and software develop
 
 - [x] Also, if you're already familar with [OpenCV][opencv] library, then see [Switching from OpenCV Library ➶](switch_from_cv.md)
 
-- [x] Or, if you're just getting started with OpenCV with Python, then see [here ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)
+- [x] Or, if you're just getting started with OpenCV with Python, then see [here ➶](help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)
 
 &thinsp;
 
