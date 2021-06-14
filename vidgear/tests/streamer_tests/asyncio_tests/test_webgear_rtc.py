@@ -289,12 +289,18 @@ test_data = [
     },
     {
         "frame_size_reduction": "invalid_value",
-        "overwrite_default_files": True,
-        "enable_infinite_frames": False,
         "enable_live_broadcast": False,
         "custom_data_location": "im_wrong",
     },
-    {"custom_data_location": tempfile.gettempdir()},
+    {
+        "custom_data_location": tempfile.gettempdir(),
+        "enable_infinite_frames": False,
+    },
+    {
+        "overwrite_default_files": True,
+        "enable_live_broadcast": True,
+        "frame_size_reduction": 99,
+    },
 ]
 
 
@@ -434,4 +440,5 @@ def test_webgear_rtc_routes_validity():
     web.routes.clear()
     # test
     client = TestClient(web(), raise_server_exceptions=True)
+    # close
     web.shutdown()
