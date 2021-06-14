@@ -289,12 +289,18 @@ test_data = [
     },
     {
         "frame_size_reduction": "invalid_value",
-        "overwrite_default_files": True,
-        "enable_infinite_frames": False,
         "enable_live_broadcast": False,
         "custom_data_location": "im_wrong",
     },
-    {"custom_data_location": tempfile.gettempdir()},
+    {
+        "custom_data_location": tempfile.gettempdir(),
+        "enable_infinite_frames": False,
+    },
+    {
+        "overwrite_default_files": True,
+        "enable_live_broadcast": True,
+        "frame_size_reduction": 99,
+    },
 ]
 
 
@@ -308,22 +314,26 @@ def test_webgear_rtc_options(options):
         client = TestClient(web(), raise_server_exceptions=True)
         response = client.get("/")
         assert response.status_code == 200
-        (offer_pc, data) = get_RTCPeer_payload()
-        response_rtc_answer = client.post(
-            "/offer",
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        params = response_rtc_answer.json()
-        answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
-        run(offer_pc.setRemoteDescription(answer))
-        response_rtc_offer = client.get(
-            "/offer",
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        assert response_rtc_offer.status_code == 200
-        run(offer_pc.close())
+        if (
+            not "enable_live_broadcast" in options
+            or options["enable_live_broadcast"] == False
+        ):
+            (offer_pc, data) = get_RTCPeer_payload()
+            response_rtc_answer = client.post(
+                "/offer",
+                data=data,
+                headers={"Content-Type": "application/json"},
+            )
+            params = response_rtc_answer.json()
+            answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+            run(offer_pc.setRemoteDescription(answer))
+            response_rtc_offer = client.get(
+                "/offer",
+                data=data,
+                headers={"Content-Type": "application/json"},
+            )
+            assert response_rtc_offer.status_code == 200
+            run(offer_pc.close())
         web.shutdown()
     except Exception as e:
         if isinstance(e, AssertionError):
@@ -434,4 +444,5 @@ def test_webgear_rtc_routes_validity():
     web.routes.clear()
     # test
     client = TestClient(web(), raise_server_exceptions=True)
+    # close
     web.shutdown()

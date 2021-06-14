@@ -92,14 +92,16 @@ setup(
         "pafy{}".format(latest_version("pafy")),
         "mss{}".format(latest_version("mss")),
         "numpy{}".format(
-            "<=1.19.5" if sys.version_info[:2] == (3, 6) else ""
+            "<=1.19.5" if sys.version_info[:2] < (3, 7) else ""
         ),  # dropped support for 3.6.x legacies
         "youtube-dl{}".format(latest_version("youtube-dl")),
         "streamlink{}".format(latest_version("streamlink")),
         "requests{}".format(latest_version("requests")),
         "pyzmq{}".format(latest_version("pyzmq")),
         "simplejpeg{}".format(
-            "==1.5.0" if sys.version_info[:2] == (3, 6) else ""
+            latest_version("simplejpeg")
+            if sys.version_info[:2] >= (3, 7)
+            else "==1.5.0"
         ),  # dropped support for 3.6.x legacies
         "colorlog",
         "colorama",
@@ -130,7 +132,7 @@ setup(
         + (
             (
                 ["uvloop{}".format(latest_version("uvloop"))]
-                if sys.version_info[:2] >= (3, 7)
+                if sys.version_info[:2] >= (3, 7)  # dropped support for 3.6.x legacies
                 else ["uvloop==0.14.0"]
             )
             if (platform.system() != "Windows")

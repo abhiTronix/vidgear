@@ -329,11 +329,11 @@ def get_supported_vencoders(path):
         if x.decode("utf-8").strip().startswith("V")
     ]
     # compile regex
-    finder = re.compile(r"\.\.\s[a-z0-9_-]+")
+    finder = re.compile(r"[A-Z]*[\.]+[A-Z]*\s[a-z0-9_-]*")
     # find all outputs
     outputs = finder.findall("\n".join(supported_vencoders))
     # return outputs
-    return [s.replace(".. ", "") for s in outputs]
+    return [[s for s in o.split(" ")][-1] for o in outputs]
 
 
 def is_valid_url(path, url=None, logging=False):
@@ -357,10 +357,8 @@ def is_valid_url(path, url=None, logging=False):
     extracted_scheme_url = url.split("://", 1)[0]
     # extract all FFmpeg supported protocols
     protocols = check_output([path, "-hide_banner", "-protocols"])
-    splitted = protocols.split(b"\n")
-    supported_protocols = [
-        x.decode("utf-8").strip() for x in splitted[2 : len(splitted) - 1]
-    ]
+    splitted = [x.decode("utf-8").strip() for x in protocols.split(b"\n")]
+    supported_protocols = splitted[splitted.index("Output:") + 1 : len(splitted) - 1]
     supported_protocols += ["rtsp"]  # rtsp not included somehow
     # Test and return result whether scheme is supported
     if extracted_scheme_url and extracted_scheme_url in supported_protocols:

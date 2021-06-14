@@ -513,9 +513,7 @@ client.close()
 
 ## Using Bidirectional Mode for Video-Frames Transfer with Frame Compression :fire:
 
-
-See complete usage example [here ➶](../../advanced/compression/#using-bidirectional-mode-for-video-frames-transfer-with-frame-compression)
-
+!!! example "This usage examples can be found [here ➶](../../advanced/compression/#using-bidirectional-mode-for-video-frames-transfer-with-frame-compression)"
 
 &nbsp;
 

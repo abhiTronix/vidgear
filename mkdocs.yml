@@ -215,8 +215,7 @@ nav:
       - Real-time Frames Mode: 
         - Overview: gears/streamgear/rtfm/overview.md
         - Usage Examples: gears/streamgear/rtfm/usage.md
-      - Advanced:
-          - FFmpeg Installation: gears/streamgear/ffmpeg_install.md
+      - FFmpeg Installation: gears/streamgear/ffmpeg_install.md
       - Parameters: gears/streamgear/params.md
       - References: bonus/reference/streamgear.md
       - FAQs: help/streamgear_faqs.md

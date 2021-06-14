@@ -246,12 +246,6 @@ class CamGear:
                 logger.debug(
                     "Enabling Threaded Queue Mode for the current video source!"
                 )
-                if self.__thread_timeout:
-                    logger.debug(
-                        "Setting Video-Thread Timeout to {}s.".format(
-                            self.__thread_timeout
-                        )
-                    )
         else:
             # otherwise disable it
             self.__threaded_queue_mode = False
@@ -260,6 +254,11 @@ class CamGear:
                 logger.warning(
                     "Threaded Queue Mode is disabled for the current video source!"
                 )
+
+        if self.__thread_timeout:
+            logger.debug(
+                "Setting Video-Thread Timeout to {}s.".format(self.__thread_timeout)
+            )
 
         # stream variable initialization
         self.stream = None
@@ -321,7 +320,7 @@ class CamGear:
                 self.__queue.put(self.frame)
         else:
             raise RuntimeError(
-                "[CamGear:ERROR] :: Source is invalid, CamGear failed to intitialize stream on this source!"
+                "[CamGear:ERROR] :: Source is invalid, CamGear failed to initialize stream on this source!"
             )
 
         # thread initialization
@@ -329,6 +328,9 @@ class CamGear:
 
         # initialize termination flag event
         self.__terminate = Event()
+
+        # initialize stream read flag event
+        self.__stream_read = Event()
 
     def start(self):
         """
@@ -348,16 +350,24 @@ class CamGear:
         until the thread is terminated, or frames runs out.
         """
 
-        # keep iterating infinitely until the thread is terminated or frames runs out
+        # keep iterating infinitely
+        # until the thread is terminated
+        # or frames runs out
         while True:
             # if the thread indicator variable is set, stop the thread
             if self.__terminate.is_set():
                 break
 
+            # stream not read yet
+            self.__stream_read.clear()
+
             # otherwise, read the next frame from the stream
             (grabbed, frame) = self.stream.read()
 
-            # check for valid frames
+            # stream read completed
+            self.__stream_read.set()
+
+            # check for valid frame if received
             if not grabbed:
                 # no frames received, then safely exit
                 if self.__threaded_queue_mode:
@@ -397,8 +407,10 @@ class CamGear:
             if self.__threaded_queue_mode:
                 self.__queue.put(self.frame)
 
+        # indicate immediate termination
         self.__threaded_queue_mode = False
-        self.frame = None
+        self.__terminate.set()
+        self.__stream_read.set()
         # release resources
         self.stream.release()
 
@@ -411,7 +423,14 @@ class CamGear:
         """
         while self.__threaded_queue_mode:
             return self.__queue.get(timeout=self.__thread_timeout)
-        return self.frame
+        # return current frame
+        # only after stream is read
+        return (
+            self.frame
+            if not self.__terminate.is_set()  # check if already terminated
+            and self.__stream_read.wait(timeout=self.__thread_timeout)  # wait for it
+            else None
+        )
 
     def stop(self):
         """
@@ -423,8 +442,10 @@ class CamGear:
         if self.__threaded_queue_mode:
             self.__threaded_queue_mode = False
 
-        # indicate that the thread should be terminate
+        # indicate that the thread 
+        # should be terminated immediately
         self.__terminate.set()
+        self.__stream_read.set()
 
         # wait until stream resources are released (producer thread might be still grabbing frame)
         if self.__thread is not None:

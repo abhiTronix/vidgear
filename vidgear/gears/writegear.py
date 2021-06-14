@@ -230,7 +230,7 @@ class WriteGear:
 
         # display confirmation if logging is enabled/disabled
         if self.__compression and self.__ffmpeg:
-            # check whether is valid url instead
+            # check whether url is valid instead
             if self.__out_file is None:
                 if is_valid_url(
                     self.__ffmpeg, url=output_filename, logging=self.__logging

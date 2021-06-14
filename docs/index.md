@@ -30,7 +30,7 @@ limitations under the License.
 
 > VidGear is a High-Performance **Video-Processing** Framework for building complex real-time media applications in python :fire:
 
-VidGear provides an easy-to-use, highly extensible, **[Multi-Threaded](../bonus/TQM/#threaded-queue-mode) + Asyncio Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and real-time performance ⚡️.
+VidGear provides an easy-to-use, highly extensible, **[Multi-Threaded](bonus/TQM/#threaded-queue-mode) + [Asyncio](https://docs.python.org/3/library/asyncio.html) Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and real-time performance ⚡️.
 
 > _"Write Less and Accomplish More"_ — VidGear's Motto
 
@@ -46,7 +46,7 @@ VidGear focuses on simplicity, and thereby lets programmers and software develop
 
 - [x] Also, if you're already familar with [OpenCV][opencv] library, then see [Switching from OpenCV Library ➶](switch_from_cv.md)
 
-- [x] Or, if you're just getting started with OpenCV with Python, then see [here ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)
+- [x] Or, if you're just getting started with OpenCV with Python, then see [here ➶](help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)
 
 &thinsp;
 

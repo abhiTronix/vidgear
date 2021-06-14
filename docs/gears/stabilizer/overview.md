@@ -37,7 +37,7 @@ limitations under the License.
 
 > Stabilizer is an auxiliary class that enables Video Stabilization for vidgear with minimalistic latency, and at the expense of little to no additional computational requirements. 
 
-The basic idea behind it is to tracks and save the salient feature array for the given number of frames and then uses these anchor point to cancel out all perturbations relative to it for the incoming frames in the queue. This class relies heavily on [**Threaded Queue mode**](../../../bonus/TQM/) for error-free & ultra-fast frame handling. 
+The basic idea behind it is to tracks and save the salient feature array for the given number of frames and then uses these anchor point to cancel out all perturbations relative to it for the incoming frames in the queue. This class relies on [**Fixed-Size Python Queues**](../../../bonus/TQM/#b-utilizes-fixed-size-queues) for error-free & ultra-fast frame handling. 
 
 !!! tip "For more detailed information on Stabilizer working, See [this blogpost ➶](https://learnopencv.com/video-stabilization-using-point-feature-matching-in-opencv/)"
 

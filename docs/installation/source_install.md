@@ -34,7 +34,7 @@ When installing VidGear from source, FFmpeg and Aiortc is the only dependency yo
 
 ### FFmpeg
 
-Must require for the video compression and encoding compatibilities within [StreamGear](#streamgear) and [**Compression Mode**](../../gears/writegear/compression/overview/) in [WriteGear](#writegear) API. 
+Must require for the video compression and encoding compatibilities within [**StreamGear**](#streamgear) and [**WriteGear's Compression Mode**](../../gears/writegear/compression/overview/). 
 
 !!! tip "FFmpeg Installation"
 

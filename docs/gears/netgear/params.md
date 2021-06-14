@@ -149,7 +149,7 @@ This parameter provides the flexibility to alter various NetGear API's internal 
 
     * **`bidirectional_mode`** (_boolean_) : This internal attribute activates the exclusive [**Bidirectional Mode**](../advanced/bidirectional_mode/), if enabled(`True`).
 
-    * **`ssh_tunnel_mode`** (_string_) : This internal attribute activates the exclusive [**SSH Tunneling Mode**](../advanced/secure_mode/) ==at the Server-end only==.
+    * **`ssh_tunnel_mode`** (_string_) : This internal attribute activates the exclusive [**SSH Tunneling Mode**](../advanced/ssh_tunnel/) ==at the Server-end only==.
 
     * **`ssh_tunnel_pwd`** (_string_): In SSH Tunneling Mode, This internal attribute sets the password required to authorize Host for SSH Connection ==at the Server-end only==. More information can be found [here ➶](../advanced/ssh_tunnel/#supported-attributes)
 
