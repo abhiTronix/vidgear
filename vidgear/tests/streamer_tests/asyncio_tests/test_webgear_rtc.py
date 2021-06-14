@@ -314,7 +314,10 @@ def test_webgear_rtc_options(options):
         client = TestClient(web(), raise_server_exceptions=True)
         response = client.get("/")
         assert response.status_code == 200
-        if not "enable_live_broadcast" in options:
+        if (
+            not "enable_live_broadcast" in options
+            or options["enable_live_broadcast"] == False
+        ):
             (offer_pc, data) = get_RTCPeer_payload()
             response_rtc_answer = client.post(
                 "/offer",
