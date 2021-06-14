@@ -314,22 +314,23 @@ def test_webgear_rtc_options(options):
         client = TestClient(web(), raise_server_exceptions=True)
         response = client.get("/")
         assert response.status_code == 200
-        (offer_pc, data) = get_RTCPeer_payload()
-        response_rtc_answer = client.post(
-            "/offer",
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        params = response_rtc_answer.json()
-        answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
-        run(offer_pc.setRemoteDescription(answer))
-        response_rtc_offer = client.get(
-            "/offer",
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        assert response_rtc_offer.status_code == 200
-        run(offer_pc.close())
+        if not "enable_live_broadcast" in options:
+            (offer_pc, data) = get_RTCPeer_payload()
+            response_rtc_answer = client.post(
+                "/offer",
+                data=data,
+                headers={"Content-Type": "application/json"},
+            )
+            params = response_rtc_answer.json()
+            answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+            run(offer_pc.setRemoteDescription(answer))
+            response_rtc_offer = client.get(
+                "/offer",
+                data=data,
+                headers={"Content-Type": "application/json"},
+            )
+            assert response_rtc_offer.status_code == 200
+            run(offer_pc.close())
         web.shutdown()
     except Exception as e:
         if isinstance(e, AssertionError):
