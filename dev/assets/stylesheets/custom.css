@@ -196,6 +196,8 @@ th {
 }
 .md-typeset .task-list-control .task-list-indicator::before {
 	background-color: #FF0000;
+    -webkit-mask-image: var(--md-admonition-icon--failure);
+    mask-image: var(--md-admonition-icon--failure);
 }
 blockquote {
 	padding: 0.5em 10px;
