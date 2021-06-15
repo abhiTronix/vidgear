@@ -19,7 +19,7 @@ _Kindly describe the issue here._
 
 - [ ] I have searched the [issues](https://github.com/abhiTronix/vidgear/issues) for my issue and found nothing related or helpful.
 - [ ] I have read the [FAQs](https://abhitronix.github.io/vidgear/latest/help/get_help/#frequently-asked-questions).
-- [ ] I have read the [Documentation](https://abhitronix.github.io/vidgear).
+- [ ] I have read the [Documentation](https://abhitronix.github.io/vidgear/latest).
 
 
 

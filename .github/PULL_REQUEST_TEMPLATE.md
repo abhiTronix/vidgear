@@ -11,8 +11,8 @@ _Kindly explain the changes you made here._
 
 <!--- By pushing this PR you acknowledge the following: Put an `x` in all the boxes that apply(important): -->
 
-- [ ] I have read the [PR Guidelines](https://abhitronix.github.io/vidgear/contribution/PR/#submitting-pull-requestpr-guidelines).
-- [ ] I have read the [Documentation](https://abhitronix.github.io/vidgear).
+- [ ] I have read the [PR Guidelines](https://abhitronix.github.io/vidgear/latest/contribution/PR/#submitting-pull-requestpr-guidelines).
+- [ ] I have read the [Documentation](https://abhitronix.github.io/vidgear/latest).
 - [ ] I have updated the documentation accordingly(if required).
 
 
