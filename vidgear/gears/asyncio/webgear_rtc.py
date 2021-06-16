@@ -595,7 +595,7 @@ class WebGear_RTC:
         """
         Resets all connections and recreates VideoServer timestamps
         """
-        # check if `enable_infinite_frames` is enabled
+        # check if Live Broadcasting is enabled
         if self.__relay is None:
             logger.critical("Resetting Server")
             # collects peer RTC connections
@@ -605,6 +605,7 @@ class WebGear_RTC:
             await self.__default_rtc_server.reset()
             return PlainTextResponse("OK")
         else:
+            # if does, then do nothing
             return PlainTextResponse("DISABLED")
 
     async def __on_shutdown(self):
