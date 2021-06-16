@@ -595,13 +595,17 @@ class WebGear_RTC:
         """
         Resets all connections and recreates VideoServer timestamps
         """
-        logger.critical("Resetting Server")
-        # collects peer RTC connections
-        coros = [pc.close() for pc in self.__pcs]
-        await asyncio.gather(*coros)
-        self.__pcs.clear()
-        await self.__default_rtc_server.reset()
-        return PlainTextResponse("OK")
+        # check if `enable_infinite_frames` is enabled
+        if self.__relay is None:
+            logger.critical("Resetting Server")
+            # collects peer RTC connections
+            coros = [pc.close() for pc in self.__pcs]
+            await asyncio.gather(*coros)
+            self.__pcs.clear()
+            await self.__default_rtc_server.reset()
+            return PlainTextResponse("OK")
+        else:
+            return PlainTextResponse("DISABLED")
 
     async def __on_shutdown(self):
         """

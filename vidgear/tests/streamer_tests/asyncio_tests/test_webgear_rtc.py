@@ -344,14 +344,26 @@ def test_webgear_rtc_options(options):
             pytest.fail(str(e))
 
 
-def test_webpage_reload():
+test_data = [
+    {
+        "frame_size_reduction": 40,
+    },
+    {
+        "enable_live_broadcast": True,
+        "frame_size_reduction": 40,
+    },
+]
+
+
+@pytest.mark.parametrize("options", test_data)
+def test_webpage_reload(options):
     """
     Test for testing WebGear_RTC API against Webpage reload
     disruptions
     """
+    web = WebGear_RTC(source=return_testvideo_path(), logging=True, **options)
     try:
-        # initialize webgear_rtc
-        web = WebGear_RTC(source=return_testvideo_path(), logging=True)
+        # run webgear_rtc
         client = TestClient(web(), raise_server_exceptions=True)
         response = client.get("/")
         assert response.status_code == 200
@@ -378,12 +390,13 @@ def test_webpage_reload():
             "/close_connection",
             data="1",
         )
-        logger.debug(response_rtc_reload.text)
-        assert response_rtc_reload.text == "OK", "Test Failed!"
         # close offer
         run(offer_pc.close())
         offer_pc = None
         data = None
+        # verify response
+        logger.debug(response_rtc_reload.text)
+        assert response_rtc_reload.text == "OK", "Test Failed!"
 
         # recreate offer and continue receive
         (offer_pc, data) = get_RTCPeer_payload()
@@ -404,9 +417,13 @@ def test_webpage_reload():
 
         # shutdown
         run(offer_pc.close())
-        web.shutdown()
     except Exception as e:
-        pytest.fail(str(e))
+        if "enable_live_broadcast" in options and isinstance(e, AssertionError):
+            pytest.xfail("Test Passed")
+        else:
+            pytest.fail(str(e))
+    finally:
+        web.shutdown()
 
 
 test_data_class = [
