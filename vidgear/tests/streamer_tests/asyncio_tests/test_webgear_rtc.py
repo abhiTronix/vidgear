@@ -344,6 +344,71 @@ def test_webgear_rtc_options(options):
             pytest.fail(str(e))
 
 
+def test_webpage_reload():
+    """
+    Test for testing WebGear_RTC API against Webpage reload
+    disruptions
+    """
+    try:
+        # initialize webgear_rtc
+        web = WebGear_RTC(source=return_testvideo_path(), logging=True)
+        client = TestClient(web(), raise_server_exceptions=True)
+        response = client.get("/")
+        assert response.status_code == 200
+
+        # create offer and receive
+        (offer_pc, data) = get_RTCPeer_payload()
+        response_rtc_answer = client.post(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        params = response_rtc_answer.json()
+        answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+        run(offer_pc.setRemoteDescription(answer))
+        response_rtc_offer = client.get(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        assert response_rtc_offer.status_code == 200
+
+        # simulate webpage reload
+        response_rtc_reload = client.post(
+            "/close_connection",
+            data="1",
+        )
+        logger.debug(response_rtc_reload.text)
+        assert response_rtc_reload.text == "OK", "Test Failed!"
+        # close offer
+        run(offer_pc.close())
+        offer_pc = None
+        data = None
+
+        # recreate offer and continue receive
+        (offer_pc, data) = get_RTCPeer_payload()
+        response_rtc_answer = client.post(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        params = response_rtc_answer.json()
+        answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+        run(offer_pc.setRemoteDescription(answer))
+        response_rtc_offer = client.get(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        assert response_rtc_offer.status_code == 200
+
+        # shutdown
+        run(offer_pc.close())
+        web.shutdown()
+    except Exception as e:
+        pytest.fail(str(e))
+
+
 test_data_class = [
     (None, False),
     ("Invalid", False),
