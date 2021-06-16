@@ -85,7 +85,7 @@ Let's implement our Bare-Minimum usage example with these [**Performance Enhanci
 
 You can access and run WebGear VideoStreamer Server programmatically in your python script in just a few lines of code, as follows:
 
-!!! tip "For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](../../../../help/webgear_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear)"
+!!! tip "For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](../../../help/webgear_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear)"
 
 
 ```python
@@ -132,8 +132,6 @@ which can also be accessed on any browser on the network at http://localhost:800
 ??? tip "Advanced Usage from Terminal"
 
     You can run `#!py3 python3 -m vidgear.gears.asyncio -h` help command to see all the advanced settings, as follows:
-
-    !!! warning "If you're using `--options/-op` flag, then kindly wrap your dictionary value in single `''` quotes."
 
     ```sh
     usage: python -m vidgear.gears.asyncio [-h] [-m MODE] [-s SOURCE] [-ep ENABLEPICAMERA] [-S STABILIZE]

@@ -538,9 +538,8 @@ class WebGear_RTC:
         async def on_iceconnectionstatechange():
             logger.debug("ICE connection state is %s" % pc.iceConnectionState)
             if pc.iceConnectionState == "failed":
-                logger.error("ICE connection state failed!")
-                await pc.close()
-                self.__pcs.discard(pc)
+                logger.error("ICE connection failed. Exiting!")
+                await self.__on_shutdown()
 
         # Change the remote description associated with the connection.
         await pc.setRemoteDescription(offer)
