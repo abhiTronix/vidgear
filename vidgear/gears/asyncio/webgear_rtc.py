@@ -113,7 +113,7 @@ class RTC_VideoServer(VideoStreamTrack):
         self.__enable_inf = False  # continue frames even when video ends.
         self.__frame_size_reduction = 20  # 20% reduction
         self.is_launched = False  # check if launched already
-        self.__is_running = False  # check if running
+        self.is_running = False  # check if running
 
         if options:
             if "frame_size_reduction" in options:
@@ -169,7 +169,7 @@ class RTC_VideoServer(VideoStreamTrack):
         if self.__logging:
             logger.debug("Launching Internal RTC Video-Server")
         self.is_launched = True
-        self.__is_running = True
+        self.is_running = True
         self.__stream.start()
 
     async def next_timestamp(self):
@@ -193,7 +193,9 @@ class RTC_VideoServer(VideoStreamTrack):
                 )
             self._start = time.time()
             self._timestamp = 0
-            self.__reset_enabled = False
+            if self.__reset_enabled:
+                self.__reset_enabled = False
+                self.is_running = True
         return self._timestamp, VIDEO_TIME_BASE
 
     async def recv(self):
@@ -212,7 +214,7 @@ class RTC_VideoServer(VideoStreamTrack):
 
         # display blank if NoneType
         if f_stream is None:
-            if self.blank_frame is None or not self.__is_running:
+            if self.blank_frame is None or not self.is_running:
                 return None
             else:
                 f_stream = self.blank_frame[:]
@@ -246,7 +248,7 @@ class RTC_VideoServer(VideoStreamTrack):
         Resets timestamp clock
         """
         self.__reset_enabled = True
-        self.__is_running = False
+        self.is_running = False
 
     def terminate(self):
         """
@@ -254,8 +256,7 @@ class RTC_VideoServer(VideoStreamTrack):
         """
         if not (self.__stream is None):
             # terminate running flag
-            self.__is_running = False
-            self.is_launched = False
+            self.is_running = False
             if self.__logging:
                 logger.debug("Terminating Internal RTC Video-Server")
             # terminate
@@ -365,7 +366,7 @@ class WebGear_RTC:
                             "enable_infinite_frames"
                         ] = True  # enforce infinite frames
                         logger.critical(
-                            "Enabled live broadcasting with emulated infinite frames."
+                            "Enabled live broadcasting for Peer connection(s)."
                         )
                     else:
                         None
@@ -538,8 +539,12 @@ class WebGear_RTC:
         async def on_iceconnectionstatechange():
             logger.debug("ICE connection state is %s" % pc.iceConnectionState)
             if pc.iceConnectionState == "failed":
-                logger.error("ICE connection failed. Exiting!")
-                await self.__on_shutdown()
+                logger.error("ICE connection state failed.")
+                # check if Live Broadcasting is enabled
+                if self.__relay is None:
+                    # if not, close connection.
+                    await pc.close()
+                    self.__pcs.discard(pc)
 
         # Change the remote description associated with the connection.
         await pc.setRemoteDescription(offer)
@@ -595,7 +600,11 @@ class WebGear_RTC:
         Resets all connections and recreates VideoServer timestamps
         """
         # check if Live Broadcasting is enabled
-        if self.__relay is None:
+        if (
+            self.__relay is None
+            and not (self.__default_rtc_server is None)
+            and (self.__default_rtc_server.is_running)
+        ):
             logger.critical("Resetting Server")
             # collects peer RTC connections
             coros = [pc.close() for pc in self.__pcs]

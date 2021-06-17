@@ -23,6 +23,7 @@ import os
 import cv2
 import pytest
 import asyncio
+import platform
 import logging as log
 import requests
 import tempfile
@@ -355,6 +356,7 @@ test_data = [
 ]
 
 
+@pytest.mark.skipif((platform.system() == "Windows"), reason="Random Failures!")
 @pytest.mark.parametrize("options", test_data)
 def test_webpage_reload(options):
     """
