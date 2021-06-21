@@ -54,7 +54,7 @@ There's no need to contribute for some typos. Just reach us on [Gitter ➶](http
 
 ### Found a bug?
 
-If you encountered a bug, you can help us by submitting an issue in our GitHub repository. Even better, you can submit a Pull Request(PR) with a fix, but make sure to read the [guidelines ➶](#submission-guidelines).
+If you encountered a bug, you can help us by [submitting an issue](../contribution/issue/) in our GitHub repository. Even better, you can submit a Pull Request(PR) with a fix, but make sure to read the [guidelines ➶](#submission-guidelines).
 
 
 ### Request for a feature/improvement?

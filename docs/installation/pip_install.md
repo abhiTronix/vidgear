@@ -37,7 +37,7 @@ Must require OpenCV(3.0+) python binaries installed for all core functions. You 
     You can also follow online tutorials for building & installing OpenCV on [Windows](https://www.learnopencv.com/install-opencv3-on-windows/), [Linux](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) and [Raspberry Pi](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/) machines manually from its source. 
 
 ```sh
-  pip install -U opencv-python       
+pip install opencv-python       
 ```
 
 ### FFmpeg 
@@ -56,7 +56,7 @@ Must Required if you're using Raspberry Pi Camera Modules with its [PiGear](../.
 !!! warning "Make sure to [**enable Raspberry Pi hardware-specific settings**](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior to using this library, otherwise it won't work."
 
 ```sh
-  pip install picamera
+pip install picamera
 ``` 
 
 ### Aiortc
@@ -81,7 +81,7 @@ Must Required only if you're using the [WebGear_RTC API](../../gears/webgear_rtc
     Finally, proceed installing `aiortc` via pip.
 
 ```sh
-  pip install aiortc
+pip install aiortc
 ``` 
 
 ### Uvloop
@@ -92,7 +92,7 @@ Must required only if you're using the [NetGear_Async](../../gears/netgear_async
 !!! warning "Python-3.6 legacies support [**dropped in version `>=1.15.0`**](https://github.com/MagicStack/uvloop/releases/tag/v0.15.0). Kindly install previous `0.14.0` version instead."
 
 ```sh
-  pip install uvloop
+pip install uvloop
 ```
 
 &nbsp;
@@ -108,45 +108,45 @@ Installation is as simple as:
     A quick solution may be to preface every Python command with `python -m` like this:
 
     ```sh
-      python -m pip install vidgear
+    python -m pip install vidgear
 
-      # or with asyncio support
-      python -m pip install vidgear[asyncio]
+    # or with asyncio support
+    python -m pip install vidgear[asyncio]
     ```
 
     If you don't have the privileges to the directory you're installing package. Then use `--user` flag, that makes pip install packages in your home directory instead:
 
     ``` sh
-      python -m pip install --user vidgear
+    python -m pip install --user vidgear
 
-      # or with asyncio support
-      python -m pip install --user vidgear[asyncio]
+    # or with asyncio support
+    python -m pip install --user vidgear[asyncio]
     ```
 
 ```sh
-  # Install stable release
-  pip install vidgear
+# Install stable release
+pip install vidgear
 
-  # Or Install stable release with Asyncio support
-  pip install vidgear[asyncio]
+# Or Install stable release with Asyncio support
+pip install vidgear[asyncio]
 ```
 
 **And if you prefer to install VidGear directly from the repository:**
 
 ```sh
-  pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear
+pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear
 
-  # or with asyncio support
-  pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[asyncio]
+# or with asyncio support
+pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[asyncio]
 ```
 
 **Or you can also download its wheel (`.whl`) package from our repository's [releases](https://github.com/abhiTronix/vidgear/releases) section, and thereby can be installed as follows:**
 
 ```sh
-  pip install vidgear-0.2.2-py3-none-any.whl
+pip install vidgear-0.2.2-py3-none-any.whl
 
-  # or with asyncio support
-  pip install vidgear-0.2.2-py3-none-any.whl[asyncio]
+# or with asyncio support
+pip install vidgear-0.2.2-py3-none-any.whl[asyncio]
 ```
 
 &nbsp;

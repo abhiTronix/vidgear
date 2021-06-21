@@ -35,7 +35,7 @@ StreamGear provides a standalone, highly extensible, and flexible wrapper around
 
 SteamGear easily transcodes source videos/audio files & real-time video-frames and breaks them into a sequence of multiple smaller chunks/segments of fixed length. These segments make it possible to stream videos at different quality levels _(different bitrates or spatial resolutions)_ and can be switched in the middle of a video from one quality level to another – if bandwidth permits – on a per-segment basis. A user can serve these segments on a web server that makes it easier to download them through HTTP standard-compliant GET requests.
 
-SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ besides segments that describe these segment information _(timing, URL, media characteristics like video resolution and bit rates)_ and is provided to the client before the streaming session.
+SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ besides segments that describe these segment information _(timing, URL, media characteristics like video resolution and adaptive bit rates)_ and is provided to the client before the streaming session.
 
 SteamGear currently only supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_ , but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming, will be added soon. Also, Multiple DRM support is yet to be implemented.
 
@@ -54,6 +54,12 @@ SteamGear currently only supports [**MPEG-DASH**](https://www.encoding.com/mpeg-
 ## Mode of Operations
 
 StreamGear primarily operates in following independent modes for transcoding:
+
+
+??? warning "Real-time Frames Mode is NOT Live-Streaming."
+
+    You can enable live-streaming in Real-time Frames Mode by using using exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of stream_params dictionary parameter in WebGear_RTC API. Checkout [this usage example](../rtfm/usage/#bare-minimum-usage-with-live-streaming) for more information.
+
 
 - [**Single-Source Mode**](../ssm/overview): In this mode, StreamGear transcodes entire video/audio file _(as opposed to frames by frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well, when you're transcoding lossless long-duration videos(with audio) for streaming and required no extra efforts or interruptions. But on the downside, the provided source cannot be changed or manipulated before sending onto FFmpeg Pipeline for processing. 
 
@@ -93,6 +99,8 @@ Watch StreamGear transcoded MPEG-DASH Stream:
 
 ## Recommended Players
 
+!!! tip "Checkout out [this detailed blogpost](https://ottverse.com/mpeg-dash-video-streaming-the-complete-guide/) on how MPEG-DASH works"
+
 === "GUI Players"
     - [x] **[MPV Player](https://mpv.io/):** _(recommended)_ MPV is a free, open source, and cross-platform media player. It supports a wide variety of media file formats, audio and video codecs, and subtitle types. 
     - [x] **[VLC Player](https://www.videolan.org/vlc/releases/3.0.0.html):** VLC is a free and open source cross-platform multimedia player and framework that plays most multimedia files as well as DVDs, Audio CDs, VCDs, and various streaming protocols.
@@ -108,6 +116,7 @@ Watch StreamGear transcoded MPEG-DASH Stream:
     - [x] **[Clapper](https://github.com/clappr/clappr):** Clappr is an extensible media player for the web.
     - [x] **[Shaka Player](https://github.com/google/shaka-player):** Shaka Player is an open-source JavaScript library for playing adaptive media in a browser.
     - [x] **[MediaElementPlayer](https://github.com/mediaelement/mediaelement):** MediaElementPlayer is a complete HTML/CSS audio/video player.
+    - [x] **[Native MPEG-Dash + HLS Playback](https://chrome.google.com/webstore/detail/native-mpeg-dash-%20-hls-pl/cjfbmleiaobegagekpmlhmaadepdeedn?hl=en)(Chrome Extension):** Allow the browser to play HLS (m3u8) or MPEG-Dash (mpd) video urls 'natively' on chrome browsers.
 
 &thinsp;
 

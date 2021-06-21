@@ -68,7 +68,10 @@ stream.stop()
 
 CamGear API provides direct support for piping video streams from various popular streaming services like [Twitch](https://www.twitch.tv/), [Livestream](https://livestream.com/), [Dailymotion](https://www.dailymotion.com/live), and [many more ➶](https://streamlink.github.io/plugin_matrix.html#plugins). All you have to do is to provide the desired Video's URL to its `source` parameter, and enable the [`stream_mode`](../params/#stream_mode) parameter. The complete usage example is as follows:
 
-!!! bug "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently, You must always use [GStreamer backend _(`backend=cv2.CAP_GSTREAMER`)_](../params/#backend) for  Livestreams _(such as Twitch URLs)_. Checkout [this FAQ ➶](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
+!!! bug "Bug in OpenCV's FFmpeg"
+    To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently, You must always use [GStreamer backend](../params/#backend) for  Livestreams _(such as Twitch URLs)_. 
+
+    **Checkout [this FAQ ➶](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.**
 
 ???+ info "Exclusive CamGear Attributes"
     CamGear also provides exclusive attributes: 

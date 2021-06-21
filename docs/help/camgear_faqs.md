@@ -59,7 +59,7 @@ limitations under the License.
 
     - [x] **Follow [this tutorial ➶](https://medium.com/@galaktyk01/how-to-build-opencv-with-gstreamer-b11668fa09c)**
 
-=== "FOn MAC OSes"
+=== "On MAC OSes"
     
     - [x] **Follow [this tutorial ➶](https://www.learnopencv.com/install-opencv-4-on-macos/) but make sure to brew install GStreamer as follows:**
 

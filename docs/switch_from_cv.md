@@ -42,7 +42,7 @@ Switching OpenCV with VidGear APIs is usually a fairly painless process, and wil
 
 VidGear employs OpenCV at its backend and enhances its existing capabilities even further by introducing many new state-of-the-art features on top of it like:
 
-- [x] [Accerlated Multi-Threaded](../bonus/TQM/#c-accelerates-frame-processing) Performance.
+- [x] Accelerated [Multi-Threaded](../bonus/TQM/#c-accelerates-frame-processing) Performance.
 - [x] Real-time Stabilization.
 - [x] Inherit support for multiple sources.
 - [x] Screen-casting, Live network-streaming, [plus way much more ➶](../gears)

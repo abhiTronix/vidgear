@@ -36,7 +36,7 @@ In this mode, StreamGear **DOES NOT** automatically maps video-source audio to g
 This mode provide [`stream()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) function for directly trancoding video-frames into streamable chunks over the FFmpeg pipeline. 
 
 
-!!! warning 
+!!! danger 
 
     * Using [`transcode_source()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) function instead of [`stream()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) in Real-time Frames Mode will instantly result in **`RuntimeError`**!
 
@@ -45,6 +45,11 @@ This mode provide [`stream()`](../../../../bonus/reference/streamgear/#vidgear.g
     * You **MUST** use [`-input_framerate`](../../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in this mode, otherwise audio delay will occur in output streams.
 
     * Input framerate defaults to `25.0` fps if [`-input_framerate`](../../params/#a-exclusive-parameters) attribute value not defined. 
+
+
+??? warning "Real-time Frames Mode is NOT Live-Streaming."
+
+    You can enable live-streaming in Real-time Frames Mode by using using exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of stream_params dictionary parameter in WebGear_RTC API. Checkout [this usage example](../usage/#bare-minimum-usage-with-live-streaming) for more information.
 
 
 &thinsp;

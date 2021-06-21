@@ -441,9 +441,56 @@ In Compression Mode, WriteGear API allows us to exploit almost all FFmpeg suppor
     * Note down the Sound Card value using `arecord -L` command on the your Linux terminal. 
     * It may be similar to this  `plughw:CARD=CAMERA,DEV=0`
 
-??? tips
+??? tip "Tip for Windows"
 
-    The useful audio input options for ALSA input are `-ar` (_audio sample rate_) and `-ac` (_audio channels_). Specifying audio sampling rate/frequency will force the audio card to record the audio at that specified rate. Usually the default value is `"44100"` (Hz) but `"48000"`(Hz) works, so chose wisely. Specifying audio channels will force the audio card to record the audio as mono, stereo or even 2.1, and 5.1(_if supported by your audio card_). Usually the default value is `"1"` (mono) for Mic input and `"2"` (stereo) for Line-In input. Kindly go through [FFmpeg docs](https://ffmpeg.org/ffmpeg.html) for more of such options.
+    - [x] **Enable sound card(if disabled):** First enable your Stereo Mix by opening the "Sound" window and select the "Recording" tab, then right click on the window and select "Show Disabled Devices" to toggle the Stereo Mix device visibility. **Follow this [post ➶](https://forums.tomshardware.com/threads/no-sound-through-stereo-mix-realtek-hd-audio.1716182/) for more details.**
+
+    - [x] **Locate Sound Card:** Then, You can locate your soundcard on windows using ffmpeg's [`directshow`](https://trac.ffmpeg.org/wiki/DirectShow) backend:
+
+        ```sh
+        ffmpeg -list_devices true -f dshow -i dummy   
+        ```
+
+        which will result in something similar output as following:
+
+        ```sh
+        c:\> ffmpeg -list_devices true -f dshow -i dummy
+        ffmpeg version N-45279-g6b86dd5... --enable-runtime-cpudetect
+          libavutil      51. 74.100 / 51. 74.100
+          libavcodec     54. 65.100 / 54. 65.100
+          libavformat    54. 31.100 / 54. 31.100
+          libavdevice    54.  3.100 / 54.  3.100
+          libavfilter     3. 19.102 /  3. 19.102
+          libswscale      2.  1.101 /  2.  1.101
+          libswresample   0. 16.100 /  0. 16.100
+        [dshow @ 03ACF580] DirectShow video devices
+        [dshow @ 03ACF580]  "Integrated Camera"
+        [dshow @ 03ACF580]  "screen-capture-recorder"
+        [dshow @ 03ACF580] DirectShow audio devices
+        [dshow @ 03ACF580]  "Microphone (Realtek High Definition Audio)"
+        [dshow @ 03ACF580]  "virtual-audio-capturer"
+        dummy: Immediate exit requested
+        ```
+
+
+    - [x] **Specify Sound Card:** Then, you can specify your located soundcard in WriteGear as follows:
+
+        ```python
+        # change with your webcam soundcard, plus add additional required FFmpeg parameters for your writer
+        output_params = {
+            "-i": "audio=Microphone (Realtek High Definition Audio)",
+            "-thread_queue_size": "512",
+            "-f": "dshow",
+            "-ac": "2",
+            "-acodec": "aac",
+            "-ar": "44100",
+        }
+
+        # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4
+        writer = WriteGear(output_filename="Output.mp4", logging=True, **output_params)
+        ```
+
+    !!! fail "If audio still doesn't work then [checkout this troubleshooting guide ➶](https://www.maketecheasier.com/fix-microphone-not-working-windows10/) or reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
 In this example code, we will merge the audio from a Audio Source _(for e.g. Webcam inbuilt mic)_ to the frames of a Video Source _(for e.g external webcam)_, and save this data as a compressed video file, all in real time:
