@@ -57,7 +57,7 @@ uvicorn.run(web(), host="0.0.0.0", port=8000)
 web.shutdown()
 ```
 
-**And that's all, Now you can see output at [`http://localhost:8000/`](http://localhost:8000/) address.**
+**And that's all, Now you can see output at [`http://localhost:8000/`](http://localhost:8000/) address on your local machine.**
 
 &nbsp;
 

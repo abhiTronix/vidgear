@@ -96,7 +96,7 @@ uvicorn.run(web(), host="localhost", port=8000)
 web.shutdown()
 ```
 
-which can be accessed on any browser on the network at http://localhost:8000/.
+which can be accessed on any browser on your machine at http://localhost:8000/.
 
 
 ### Running from Terminal
