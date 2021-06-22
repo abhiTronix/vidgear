@@ -215,7 +215,8 @@ nav:
       - Real-time Frames Mode: 
         - Overview: gears/streamgear/rtfm/overview.md
         - Usage Examples: gears/streamgear/rtfm/usage.md
-      - FFmpeg Installation: gears/streamgear/ffmpeg_install.md
+      - Extras:
+        - FFmpeg Installation: gears/streamgear/ffmpeg_install.md
       - Parameters: gears/streamgear/params.md
       - References: bonus/reference/streamgear.md
       - FAQs: help/streamgear_faqs.md
@@ -283,7 +284,6 @@ nav:
       - Getting Help: help/get_help.md
     - Frequently Asked Questions:
       - General FAQs: help/general_faqs.md
-      - Stabilizer Class FAQs: help/stabilizer_faqs.md
       - CamGear FAQs: help/camgear_faqs.md
       - PiGear FAQs: help/pigear_faqs.md
       - VideoGear FAQs: help/videogear_faqs.md
@@ -294,3 +294,4 @@ nav:
       - WebGear FAQs: help/webgear_faqs.md
       - WebGear_RTC FAQs: help/webgear_rtc_faqs.md
       - NetGear_Async FAQs: help/netgear_async_faqs.md
+      - Stabilizer Class FAQs: help/stabilizer_faqs.md

@@ -23,6 +23,7 @@ import os
 import cv2
 import pytest
 import asyncio
+import platform
 import logging as log
 import requests
 import tempfile
@@ -342,6 +343,89 @@ def test_webgear_rtc_options(options):
             logger.exceptions(str(e))
         else:
             pytest.fail(str(e))
+
+
+test_data = [
+    {
+        "frame_size_reduction": 40,
+    },
+    {
+        "enable_live_broadcast": True,
+        "frame_size_reduction": 40,
+    },
+]
+
+
+@pytest.mark.skipif((platform.system() == "Windows"), reason="Random Failures!")
+@pytest.mark.parametrize("options", test_data)
+def test_webpage_reload(options):
+    """
+    Test for testing WebGear_RTC API against Webpage reload
+    disruptions
+    """
+    web = WebGear_RTC(source=return_testvideo_path(), logging=True, **options)
+    try:
+        # run webgear_rtc
+        client = TestClient(web(), raise_server_exceptions=True)
+        response = client.get("/")
+        assert response.status_code == 200
+
+        # create offer and receive
+        (offer_pc, data) = get_RTCPeer_payload()
+        response_rtc_answer = client.post(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        params = response_rtc_answer.json()
+        answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+        run(offer_pc.setRemoteDescription(answer))
+        response_rtc_offer = client.get(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        assert response_rtc_offer.status_code == 200
+
+        # simulate webpage reload
+        response_rtc_reload = client.post(
+            "/close_connection",
+            data="1",
+        )
+        # close offer
+        run(offer_pc.close())
+        offer_pc = None
+        data = None
+        # verify response
+        logger.debug(response_rtc_reload.text)
+        assert response_rtc_reload.text == "OK", "Test Failed!"
+
+        # recreate offer and continue receive
+        (offer_pc, data) = get_RTCPeer_payload()
+        response_rtc_answer = client.post(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        params = response_rtc_answer.json()
+        answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+        run(offer_pc.setRemoteDescription(answer))
+        response_rtc_offer = client.get(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        assert response_rtc_offer.status_code == 200
+
+        # shutdown
+        run(offer_pc.close())
+    except Exception as e:
+        if "enable_live_broadcast" in options and isinstance(e, AssertionError):
+            pytest.xfail("Test Passed")
+        else:
+            pytest.fail(str(e))
+    finally:
+        web.shutdown()
 
 
 test_data_class = [

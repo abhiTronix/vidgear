@@ -75,7 +75,7 @@ execute_ffmpeg_cmd(ffmpeg_command)
 
 ## Usage Examples
 
-!!! tip "Following usage examples is just an idea of what can be done with this powerful function. So just Tinker with various FFmpeg parameters/commands yourself and see it working. Also, if you're unable to run any terminal FFmpeg command, then [report an issue](../../../../../contribution/issue/)."
+!!! abstract "Following usage examples is just an idea of what can be done with this powerful function. So just Tinker with various FFmpeg parameters/commands yourself and see it working. Also, if you're unable to run any terminal FFmpeg command, then [report an issue](../../../../../contribution/issue/)."
 
 
 ### Using WriteGear to separate Audio from Video
