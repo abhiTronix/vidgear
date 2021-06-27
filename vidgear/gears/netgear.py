@@ -1025,15 +1025,14 @@ class NetGear:
                 track=self.__msg_track,
             )
 
+            # handle data transfer in synchronous modes.
             if self.__pattern < 2:
-
                 if self.__bi_mode or self.__multiclient_mode:
-
+                    # check if we are returning `ndarray` frames
                     if not (self.__return_data is None) and isinstance(
                         self.__return_data, np.ndarray
                     ):
-
-                        # handle return data
+                        # handle return data for compression
                         return_data = self.__return_data[:]
 
                         # check whether exit_flag is False
@@ -1053,41 +1052,29 @@ class NetGear:
                                 fastdct=self.__jpeg_compression_fastdct,
                             )
 
-                        if self.__bi_mode:
-                            return_dict = dict(
-                                return_type=(type(return_data).__name__),
+                        return_dict = (
+                            dict() if self.__bi_mode else dict(port=self.__port)
+                        )
+
+                        return_dict.update(
+                            dict(
+                                return_type=(type(self.__return_data).__name__),
                                 compression={
                                     "dct": self.__jpeg_compression_fastdct,
                                     "ups": self.__jpeg_compression_fastupsample,
                                 }
                                 if self.__jpeg_compression
                                 else False,
-                                array_dtype=str(return_data.dtype)
+                                array_dtype=str(self.__return_data.dtype)
                                 if not (self.__jpeg_compression)
                                 else "",
-                                array_shape=return_data.shape
-                                if not (self.__jpeg_compression)
-                                else "",
-                                data=None,
-                            )
-                        else:
-                            return_dict = dict(
-                                port=self.__port,
-                                return_type=(type(return_data).__name__),
-                                compression={
-                                    "dct": self.__jpeg_compression_fastdct,
-                                    "ups": self.__jpeg_compression_fastupsample,
-                                }
-                                if self.__jpeg_compression
-                                else False,
-                                array_dtype=str(return_data.dtype)
-                                if not (self.__jpeg_compression)
-                                else "",
-                                array_shape=return_data.shape
+                                array_shape=self.__return_data.shape
                                 if not (self.__jpeg_compression)
                                 else "",
                                 data=None,
                             )
+                        )
+
                         # send the json dict
                         self.__msg_socket.send_json(
                             return_dict, self.__msg_flag | self.__zmq.SNDMORE
@@ -1100,17 +1087,15 @@ class NetGear:
                             track=self.__msg_track,
                         )
                     else:
-                        if self.__bi_mode:
-                            return_dict = dict(
+                        return_dict = (
+                            dict() if self.__bi_mode else dict(port=self.__port)
+                        )
+                        return_dict.update(
+                            dict(
                                 return_type=(type(self.__return_data).__name__),
                                 data=self.__return_data,
                             )
-                        else:
-                            return_dict = dict(
-                                port=self.__port,
-                                return_type=(type(self.__return_data).__name__),
-                                data=self.__return_data,
-                            )
+                        )
                         self.__msg_socket.send_json(return_dict, self.__msg_flag)
                 else:
                     # send confirmation message to server
@@ -1118,7 +1103,8 @@ class NetGear:
                         "Data received on device: {} !".format(self.__id)
                     )
             else:
-                if self.__return_data and self.__logging:
+                # else raise warning
+                if self.__return_data:
                     logger.warning("`return_data` is disabled for this pattern!")
 
             # check if encoding was enabled
@@ -1248,26 +1234,12 @@ class NetGear:
                 fastdct=self.__jpeg_compression_fastdct,
             )
 
-        # check if multiserver_mode is activated
-        if self.__multiserver_mode:
-            # prepare the exclusive json dict and assign values with unique port
-            msg_dict = dict(
-                terminate_flag=exit_flag,
-                compression={
-                    "dct": self.__jpeg_compression_fastdct,
-                    "ups": self.__jpeg_compression_fastupsample,
-                }
-                if self.__jpeg_compression
-                else False,
-                port=self.__port,
-                pattern=str(self.__pattern),
-                message=message,
-                dtype=str(frame.dtype) if not (self.__jpeg_compression) else "",
-                shape=frame.shape if not (self.__jpeg_compression) else "",
-            )
-        else:
-            # otherwise prepare normal json dict and assign values
-            msg_dict = dict(
+        # check if multiserver_mode is activated and assign values with unique port
+        msg_dict = dict(port=self.__port) if self.__multiserver_mode else dict()
+
+        # prepare the exclusive json dict
+        msg_dict.update(
+            dict(
                 terminate_flag=exit_flag,
                 compression={
                     "dct": self.__jpeg_compression_fastdct,
@@ -1280,6 +1252,7 @@ class NetGear:
                 dtype=str(frame.dtype) if not (self.__jpeg_compression) else "",
                 shape=frame.shape if not (self.__jpeg_compression) else "",
             )
+        )
 
         # send the json dict
         self.__msg_socket.send_json(msg_dict, self.__msg_flag | self.__zmq.SNDMORE)
@@ -1324,7 +1297,6 @@ class NetGear:
 
                     # Create new connection
                     self.__msg_socket = self.__msg_context.socket(self.__msg_pattern)
-
                     if isinstance(self.__connection_address, list):
                         for _connection in self.__connection_address:
                             self.__msg_socket.connect(_connection)
@@ -1343,9 +1315,8 @@ class NetGear:
                         else:
                             # connect normally
                             self.__msg_socket.connect(self.__connection_address)
-
                     self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
-
+                    # return None for mean-time
                     return None
 
                 # save the unique port addresses
@@ -1483,6 +1454,7 @@ class NetGear:
                 except self.__ZMQError:
                     pass
                 finally:
+                    # exit
                     return
 
             if self.__multiserver_mode:
@@ -1495,29 +1467,19 @@ class NetGear:
 
             try:
                 if self.__multiclient_mode:
-                    if self.__port_buffer:
-                        for _ in self.__port_buffer:
-                            self.__msg_socket.send_json(term_dict)
-
-                        # check for confirmation if available within half timeout
-                        if self.__pattern < 2:
-                            if self.__logging:
-                                logger.debug("Terminating. Please wait...")
-                            if self.__msg_socket.poll(
-                                self.__request_timeout // 5, self.__zmq.POLLIN
-                            ):
-                                self.__msg_socket.recv()
+                    for _ in self.__port_buffer:
+                        self.__msg_socket.send_json(term_dict)
                 else:
                     self.__msg_socket.send_json(term_dict)
 
-                    # check for confirmation if available within half timeout
-                    if self.__pattern < 2:
-                        if self.__logging:
-                            logger.debug("Terminating. Please wait...")
-                        if self.__msg_socket.poll(
-                            self.__request_timeout // 5, self.__zmq.POLLIN
-                        ):
-                            self.__msg_socket.recv()
+                # check for confirmation if available within 1/5 timeout
+                if self.__pattern < 2:
+                    if self.__logging:
+                        logger.debug("Terminating. Please wait...")
+                    if self.__msg_socket.poll(
+                        self.__request_timeout // 5, self.__zmq.POLLIN
+                    ):
+                        self.__msg_socket.recv()
             except Exception as e:
                 if not isinstance(e, self.__ZMQError):
                     logger.exception(str(e))
