@@ -59,8 +59,8 @@ def latest_version(package_name):
     try:
         response = urllib.request.urlopen(urllib.request.Request(url), timeout=1)
         data = json.load(response)
-        versions = data["releases"].keys()
-        versions = sorted(versions)
+        versions = list(data["releases"].keys())
+        versions.sort(key=LooseVersion)
         return ">={}".format(versions[-1])
     except:
         pass
