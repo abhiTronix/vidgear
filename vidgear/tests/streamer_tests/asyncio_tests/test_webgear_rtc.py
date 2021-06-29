@@ -390,7 +390,7 @@ def test_webpage_reload(options):
         # simulate webpage reload
         response_rtc_reload = client.post(
             "/close_connection",
-            data="1",
+            data="0",
         )
         # close offer
         run(offer_pc.close())
@@ -515,7 +515,6 @@ def test_webgear_rtc_routes():
         pytest.fail(str(e))
 
 
-@pytest.mark.xfail(raises=RuntimeError)
 def test_webgear_rtc_routes_validity():
     # add various tweaks for testing only
     options = {
@@ -524,9 +523,16 @@ def test_webgear_rtc_routes_validity():
     }
     # initialize WebGear_RTC app
     web = WebGear_RTC(source=return_testvideo_path(), logging=True)
-    # modify route
-    web.routes.clear()
-    # test
-    client = TestClient(web(), raise_server_exceptions=True)
-    # close
-    web.shutdown()
+    try:
+        # modify route
+        web.routes.clear()
+        # test
+        client = TestClient(web(), raise_server_exceptions=True)
+    except Exception as e:
+        if isinstance(e, RuntimeError):
+            pytest.xfail(str(e))
+        else:
+            pytest.fail(str(e))
+    finally:
+        # close
+        web.shutdown()
