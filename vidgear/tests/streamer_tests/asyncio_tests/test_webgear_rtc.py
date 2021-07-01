@@ -21,6 +21,7 @@ limitations under the License.
 # import the necessary packages
 import os
 import cv2
+import sys
 import pytest
 import asyncio
 import platform
@@ -51,6 +52,14 @@ logger = log.getLogger("Test_webgear_rtc")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+
+# Setup and assign event loop policy
+if platform.system() == "Windows":
+    # On Windows, VidGear requires the ``WindowsSelectorEventLoop``, and this is
+    # the default in Python 3.7 and older, but new Python 3.8, defaults to an
+    # event loop that is not compatible with it. Thereby, we had to set it manually.
+    if sys.version_info[:2] >= (3, 8):
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 
 def return_testvideo_path():
