@@ -291,7 +291,12 @@ def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
         params = response_rtc_answer.json()
         answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
         run(offer_pc.setRemoteDescription(answer))
-        assert offer_pc.iceConnectionState == "checking"
+        response_rtc_offer = client.get(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        assert response_rtc_offer.status_code == 200
         run(offer_pc.close())
         web.shutdown()
     except Exception as e:
@@ -346,7 +351,12 @@ def test_webgear_rtc_options(options):
             params = response_rtc_answer.json()
             answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
             run(offer_pc.setRemoteDescription(answer))
-            assert offer_pc.iceConnectionState == "checking"
+            response_rtc_offer = client.get(
+                "/offer",
+                data=data,
+                headers={"Content-Type": "application/json"},
+            )
+            assert response_rtc_offer.status_code == 200
             run(offer_pc.close())
         web.shutdown()
     except Exception as e:
@@ -392,7 +402,12 @@ def test_webpage_reload(options):
         params = response_rtc_answer.json()
         answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
         run(offer_pc.setRemoteDescription(answer))
-        assert offer_pc.iceConnectionState == "checking"
+        response_rtc_offer = client.get(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        assert response_rtc_offer.status_code == 200
         # simulate webpage reload
         response_rtc_reload = client.post(
             "/close_connection",
@@ -416,7 +431,12 @@ def test_webpage_reload(options):
         params = response_rtc_answer.json()
         answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
         run(offer_pc.setRemoteDescription(answer))
-        assert offer_pc.iceConnectionState == "checking"
+        response_rtc_offer = client.get(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        assert response_rtc_offer.status_code == 200
         # shutdown
         run(offer_pc.close())
     except Exception as e:
@@ -503,7 +523,12 @@ def test_webgear_rtc_routes():
         params = response_rtc_answer.json()
         answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
         run(offer_pc.setRemoteDescription(answer))
-        assert offer_pc.iceConnectionState == "checking"
+        response_rtc_offer = client.get(
+            "/offer",
+            data=data,
+            headers={"Content-Type": "application/json"},
+        )
+        assert response_rtc_offer.status_code == 200
         # shutdown
         run(offer_pc.close())
         web.shutdown()
