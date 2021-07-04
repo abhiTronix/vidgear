@@ -61,8 +61,6 @@ if platform.system() == "Windows":
     # event loop that is not compatible with it. Thereby, we had to set it manually.
     if sys.version_info[:2] >= (3, 8):
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-# Retrieve event loop and assign it
-loop = asyncio.get_event_loop()
 
 
 def return_testvideo_path():
@@ -76,6 +74,8 @@ def return_testvideo_path():
 
 
 def run(coro):
+    # Retrieve event loop and assign it
+    loop = asyncio.get_event_loop()
     logger.debug(
         "Using `{}` event loop for this process.".format(loop.__class__.__name__)
     )
