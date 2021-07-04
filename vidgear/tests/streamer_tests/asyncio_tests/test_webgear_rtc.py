@@ -53,6 +53,7 @@ logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
+
 # handles event loop
 # Setup and assign event loop policy
 if platform.system() == "Windows":
@@ -60,6 +61,7 @@ if platform.system() == "Windows":
     # the default in Python 3.7 and older, but new Python 3.8, defaults to an
     # event loop that is not compatible with it. Thereby, we had to set it manually.
     if sys.version_info[:2] >= (3, 8):
+        logger.info("Setting Event loop policy for windows.")
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 
@@ -75,6 +77,12 @@ def return_testvideo_path():
 
 def run(coro):
     # Retrieve event loop and assign it
+    if platform.system() == "Windows":
+        if sys.version_info[:2] >= (3, 8) and not isinstance(
+            asyncio.get_event_loop_policy(), asyncio.WindowsSelectorEventLoopPolicy
+        ):
+            logger.info("Resetting Event loop policy for windows.")
+            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     loop = asyncio.get_event_loop()
     logger.debug(
         "Using `{}` event loop for this process.".format(loop.__class__.__name__)
