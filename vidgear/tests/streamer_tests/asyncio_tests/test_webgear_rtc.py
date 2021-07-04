@@ -53,6 +53,7 @@ logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
+# handles event loop
 # Setup and assign event loop policy
 if platform.system() == "Windows":
     # On Windows, VidGear requires the ``WindowsSelectorEventLoop``, and this is
@@ -60,6 +61,8 @@ if platform.system() == "Windows":
     # event loop that is not compatible with it. Thereby, we had to set it manually.
     if sys.version_info[:2] >= (3, 8):
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+# Retrieve event loop and assign it
+loop = asyncio.get_event_loop()
 
 
 def return_testvideo_path():
@@ -73,7 +76,10 @@ def return_testvideo_path():
 
 
 def run(coro):
-    return asyncio.get_event_loop().run_until_complete(coro)
+    logger.debug(
+        "Using `{}` event loop for this process.".format(loop.__class__.__name__)
+    )
+    return loop.run_until_complete(coro)
 
 
 class VideoTransformTrack(MediaStreamTrack):
@@ -277,12 +283,7 @@ def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
         params = response_rtc_answer.json()
         answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
         run(offer_pc.setRemoteDescription(answer))
-        response_rtc_offer = client.get(
-            "/offer",
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        assert response_rtc_offer.status_code == 200
+        assert offer_pc.iceConnectionState == "checking"
         run(offer_pc.close())
         web.shutdown()
     except Exception as e:
@@ -337,12 +338,7 @@ def test_webgear_rtc_options(options):
             params = response_rtc_answer.json()
             answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
             run(offer_pc.setRemoteDescription(answer))
-            response_rtc_offer = client.get(
-                "/offer",
-                data=data,
-                headers={"Content-Type": "application/json"},
-            )
-            assert response_rtc_offer.status_code == 200
+            assert offer_pc.iceConnectionState == "checking"
             run(offer_pc.close())
         web.shutdown()
     except Exception as e:
@@ -365,7 +361,6 @@ test_data = [
 ]
 
 
-@pytest.mark.skipif((platform.system() == "Windows"), reason="Random Failures!")
 @pytest.mark.parametrize("options", test_data)
 def test_webpage_reload(options):
     """
@@ -389,13 +384,7 @@ def test_webpage_reload(options):
         params = response_rtc_answer.json()
         answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
         run(offer_pc.setRemoteDescription(answer))
-        response_rtc_offer = client.get(
-            "/offer",
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        assert response_rtc_offer.status_code == 200
-
+        assert offer_pc.iceConnectionState == "checking"
         # simulate webpage reload
         response_rtc_reload = client.post(
             "/close_connection",
@@ -419,13 +408,7 @@ def test_webpage_reload(options):
         params = response_rtc_answer.json()
         answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
         run(offer_pc.setRemoteDescription(answer))
-        response_rtc_offer = client.get(
-            "/offer",
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        assert response_rtc_offer.status_code == 200
-
+        assert offer_pc.iceConnectionState == "checking"
         # shutdown
         run(offer_pc.close())
     except Exception as e:
@@ -512,12 +495,8 @@ def test_webgear_rtc_routes():
         params = response_rtc_answer.json()
         answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
         run(offer_pc.setRemoteDescription(answer))
-        response_rtc_offer = client.get(
-            "/offer",
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        assert response_rtc_offer.status_code == 200
+        assert offer_pc.iceConnectionState == "checking"
+        # shutdown
         run(offer_pc.close())
         web.shutdown()
     except Exception as e:
