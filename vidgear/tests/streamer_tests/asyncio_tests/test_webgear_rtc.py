@@ -243,7 +243,7 @@ async def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
     """
     Test for various WebGear_RTC API parameters
     """
-    patch_eventloop()
+    patch_eventlooppolicy()
     try:
         web = WebGear_RTC(
             source=source,
@@ -309,7 +309,7 @@ async def test_webgear_rtc_options(options):
     """
     Test for various WebGear_RTC API internal options
     """
-    patch_eventloop()
+    patch_eventlooppolicy()
     web = None
     try:
         web = WebGear_RTC(source=return_testvideo_path(), logging=True, **options)
@@ -365,7 +365,7 @@ async def test_webpage_reload(options):
     Test for testing WebGear_RTC API against Webpage reload
     disruptions
     """
-    patch_eventloop()
+    patch_eventlooppolicy()
     web = WebGear_RTC(source=return_testvideo_path(), logging=True, **options)
     try:
         # run webgear_rtc
@@ -445,7 +445,7 @@ async def test_webgear_rtc_custom_server_generator(server, result):
     """
     Test for WebGear_RTC API's custom source
     """
-    patch_eventloop()
+    patch_eventlooppolicy()
     web = WebGear_RTC(logging=True)
     web.config["server"] = server
     async with TestClient(web()) as client:
@@ -466,7 +466,7 @@ async def test_webgear_rtc_custom_middleware(middleware, result):
     """
     Test for WebGear_RTC API's custom middleware
     """
-    patch_eventloop()
+    patch_eventlooppolicy()
     try:
         web = WebGear_RTC(source=return_testvideo_path(), logging=True)
         web.middleware = middleware
@@ -484,7 +484,7 @@ async def test_webgear_rtc_routes():
     """
     Test for WebGear_RTC API's custom routes
     """
-    patch_eventloop()
+    patch_eventlooppolicy()
     try:
         # add various performance tweaks as usual
         options = {
@@ -527,7 +527,7 @@ async def test_webgear_rtc_routes():
 @pytest.mark.asyncio
 async def test_webgear_rtc_routes_validity():
     # add various tweaks for testing only
-    patch_eventloop()
+    patch_eventlooppolicy()
     options = {
         "enable_infinite_frames": False,
         "enable_live_broadcast": True,
