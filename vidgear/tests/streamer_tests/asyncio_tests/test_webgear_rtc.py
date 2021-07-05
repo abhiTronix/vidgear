@@ -75,6 +75,23 @@ def return_testvideo_path():
     return os.path.abspath(path)
 
 
+def patch_eventlooppolicy():
+    """
+    Fixes event loop policy on newer python versions
+    """
+    # Retrieve event loop and assign it
+    if platform.system() == "Windows":
+        if sys.version_info[:2] >= (3, 8) and not isinstance(
+            asyncio.get_event_loop_policy(), asyncio.WindowsSelectorEventLoopPolicy
+        ):
+            logger.info("Resetting Event loop policy for windows.")
+            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    loop = asyncio.get_event_loop()
+    logger.debug(
+        "Using `{}` event loop for this process.".format(loop.__class__.__name__)
+    )
+
+
 class VideoTransformTrack(MediaStreamTrack):
     """
     A video stream track that transforms frames from an another track.
@@ -226,6 +243,7 @@ async def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
     """
     Test for various WebGear_RTC API parameters
     """
+    patch_eventloop()
     try:
         web = WebGear_RTC(
             source=source,
@@ -285,13 +303,13 @@ test_data = [
 ]
 
 
-@pytest.mark.skipif((platform.system() == "Windows"), reason="Random Failures!")
 @pytest.mark.asyncio
 @pytest.mark.parametrize("options", test_data)
 async def test_webgear_rtc_options(options):
     """
     Test for various WebGear_RTC API internal options
     """
+    patch_eventloop()
     web = None
     try:
         web = WebGear_RTC(source=return_testvideo_path(), logging=True, **options)
@@ -347,6 +365,7 @@ async def test_webpage_reload(options):
     Test for testing WebGear_RTC API against Webpage reload
     disruptions
     """
+    patch_eventloop()
     web = WebGear_RTC(source=return_testvideo_path(), logging=True, **options)
     try:
         # run webgear_rtc
@@ -426,6 +445,7 @@ async def test_webgear_rtc_custom_server_generator(server, result):
     """
     Test for WebGear_RTC API's custom source
     """
+    patch_eventloop()
     web = WebGear_RTC(logging=True)
     web.config["server"] = server
     async with TestClient(web()) as client:
@@ -446,6 +466,7 @@ async def test_webgear_rtc_custom_middleware(middleware, result):
     """
     Test for WebGear_RTC API's custom middleware
     """
+    patch_eventloop()
     try:
         web = WebGear_RTC(source=return_testvideo_path(), logging=True)
         web.middleware = middleware
@@ -463,6 +484,7 @@ async def test_webgear_rtc_routes():
     """
     Test for WebGear_RTC API's custom routes
     """
+    patch_eventloop()
     try:
         # add various performance tweaks as usual
         options = {
@@ -505,6 +527,7 @@ async def test_webgear_rtc_routes():
 @pytest.mark.asyncio
 async def test_webgear_rtc_routes_validity():
     # add various tweaks for testing only
+    patch_eventloop()
     options = {
         "enable_infinite_frames": False,
         "enable_live_broadcast": True,
