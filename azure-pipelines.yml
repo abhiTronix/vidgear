@@ -55,8 +55,8 @@ steps:
 
 - script: |
     python -m pip install --upgrade pip wheel
-    pip install --upgrade .[asyncio] six codecov youtube-dl mpegdash paramiko
-    pip install --upgrade pytest pytest-asyncio pytest-cov pytest-azurepipelines
+    pip install --upgrade .[asyncio] six codecov youtube-dl mpegdash paramiko async-asgi-testclient
+    pip install --upgrade pytest pytest-asyncio pytest-cov pytest-azurepipelines 
   displayName: 'Install pip dependencies'
 
 - script: |

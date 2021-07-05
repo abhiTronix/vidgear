@@ -609,7 +609,7 @@ class WebGear_RTC:
         ):
             logger.critical("Resetting Server")
             # close old peer connections
-            if parameter != 0:  # disabled for testing
+            if parameter != 0:  # disable if specified explicitly
                 coros = [pc.close() for pc in self.__pcs]
                 await asyncio.gather(*coros)
                 self.__pcs.clear()
