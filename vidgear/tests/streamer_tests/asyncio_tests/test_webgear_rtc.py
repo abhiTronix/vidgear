@@ -22,6 +22,7 @@ limitations under the License.
 import os
 import cv2
 import pytest
+import sys
 import asyncio
 import platform
 import logging as log
@@ -32,7 +33,7 @@ from starlette.routing import Route
 from starlette.responses import PlainTextResponse
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
-from starlette.testclient import TestClient
+from async_asgi_testclient import TestClient
 from aiortc import (
     MediaStreamTrack,
     RTCPeerConnection,
@@ -53,6 +54,17 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
+# handles event loop
+# Setup and assign event loop policy
+if platform.system() == "Windows":
+    # On Windows, VidGear requires the ``WindowsSelectorEventLoop``, and this is
+    # the default in Python 3.7 and older, but new Python 3.8, defaults to an
+    # event loop that is not compatible with it. Thereby, we had to set it manually.
+    if sys.version_info[:2] >= (3, 8):
+        logger.info("Setting Event loop policy for windows.")
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+
 def return_testvideo_path():
     """
     returns Test Video path
@@ -63,8 +75,21 @@ def return_testvideo_path():
     return os.path.abspath(path)
 
 
-def run(coro):
-    return asyncio.get_event_loop().run_until_complete(coro)
+def patch_eventlooppolicy():
+    """
+    Fixes event loop policy on newer python versions
+    """
+    # Retrieve event loop and assign it
+    if platform.system() == "Windows":
+        if sys.version_info[:2] >= (3, 8) and not isinstance(
+            asyncio.get_event_loop_policy(), asyncio.WindowsSelectorEventLoopPolicy
+        ):
+            logger.info("Resetting Event loop policy for windows.")
+            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    loop = asyncio.get_event_loop()
+    logger.debug(
+        "Using `{}` event loop for this process.".format(loop.__class__.__name__)
+    )
 
 
 class VideoTransformTrack(MediaStreamTrack):
@@ -83,53 +108,24 @@ class VideoTransformTrack(MediaStreamTrack):
         return frame
 
 
-def track_states(pc):
-    states = {
-        "connectionState": [pc.connectionState],
-        "iceConnectionState": [pc.iceConnectionState],
-        "iceGatheringState": [pc.iceGatheringState],
-        "signalingState": [pc.signalingState],
-    }
-
-    @pc.on("connectionstatechange")
-    def connectionstatechange():
-        states["connectionState"].append(pc.connectionState)
-
-    @pc.on("iceconnectionstatechange")
-    def iceconnectionstatechange():
-        states["iceConnectionState"].append(pc.iceConnectionState)
-
-    @pc.on("icegatheringstatechange")
-    def icegatheringstatechange():
-        states["iceGatheringState"].append(pc.iceGatheringState)
-
-    @pc.on("signalingstatechange")
-    def signalingstatechange():
-        states["signalingState"].append(pc.signalingState)
-
-    return states
-
-
-def get_RTCPeer_payload():
+async def get_RTCPeer_payload():
     pc = RTCPeerConnection(
         RTCConfiguration(iceServers=[RTCIceServer("stun:stun.l.google.com:19302")])
     )
 
-    track_states(pc)
-
     @pc.on("track")
-    def on_track(track):
+    async def on_track(track):
         logger.debug("Receiving %s" % track.kind)
         if track.kind == "video":
             pc.addTrack(VideoTransformTrack(track))
 
         @track.on("ended")
-        def on_ended():
+        async def on_ended():
             logger.info("Track %s ended", track.kind)
 
     pc.addTransceiver("video", direction="recvonly")
-    offer = run(pc.createOffer())
-    run(pc.setLocalDescription(offer))
+    offer = await pc.createOffer()
+    await pc.setLocalDescription(offer)
     new_offer = pc.localDescription
     payload = {"sdp": new_offer.sdp, "type": new_offer.type}
     return (pc, json.dumps(payload, separators=(",", ":")))
@@ -241,11 +237,13 @@ test_data = [
 ]
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize("source, stabilize, colorspace, time_delay", test_data)
-def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
+async def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
     """
     Test for various WebGear_RTC API parameters
     """
+    patch_eventlooppolicy()
     try:
         web = WebGear_RTC(
             source=source,
@@ -254,27 +252,27 @@ def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
             time_delay=time_delay,
             logging=True,
         )
-        client = TestClient(web(), raise_server_exceptions=True)
-        response = client.get("/")
-        assert response.status_code == 200
-        response_404 = client.get("/test")
-        assert response_404.status_code == 404
-        (offer_pc, data) = get_RTCPeer_payload()
-        response_rtc_answer = client.post(
-            "/offer",
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        params = response_rtc_answer.json()
-        answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
-        run(offer_pc.setRemoteDescription(answer))
-        response_rtc_offer = client.get(
-            "/offer",
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        assert response_rtc_offer.status_code == 200
-        run(offer_pc.close())
+        async with TestClient(web()) as client:
+            response = await client.get("/")
+            assert response.status_code == 200
+            response_404 = await client.get("/test")
+            assert response_404.status_code == 404
+            (offer_pc, data) = await get_RTCPeer_payload()
+            response_rtc_answer = await client.post(
+                "/offer",
+                data=data,
+                headers={"Content-Type": "application/json"},
+            )
+            params = response_rtc_answer.json()
+            answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+            await offer_pc.setRemoteDescription(answer)
+            response_rtc_offer = await client.get(
+                "/offer",
+                data=data,
+                headers={"Content-Type": "application/json"},
+            )
+            assert response_rtc_offer.status_code == 200
+            await offer_pc.close()
         web.shutdown()
     except Exception as e:
         pytest.fail(str(e))
@@ -305,36 +303,39 @@ test_data = [
 ]
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize("options", test_data)
-def test_webgear_rtc_options(options):
+async def test_webgear_rtc_options(options):
     """
     Test for various WebGear_RTC API internal options
     """
+    patch_eventlooppolicy()
+    web = None
     try:
         web = WebGear_RTC(source=return_testvideo_path(), logging=True, **options)
-        client = TestClient(web(), raise_server_exceptions=True)
-        response = client.get("/")
-        assert response.status_code == 200
-        if (
-            not "enable_live_broadcast" in options
-            or options["enable_live_broadcast"] == False
-        ):
-            (offer_pc, data) = get_RTCPeer_payload()
-            response_rtc_answer = client.post(
-                "/offer",
-                data=data,
-                headers={"Content-Type": "application/json"},
-            )
-            params = response_rtc_answer.json()
-            answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
-            run(offer_pc.setRemoteDescription(answer))
-            response_rtc_offer = client.get(
-                "/offer",
-                data=data,
-                headers={"Content-Type": "application/json"},
-            )
-            assert response_rtc_offer.status_code == 200
-            run(offer_pc.close())
+        async with TestClient(web()) as client:
+            response = await client.get("/")
+            assert response.status_code == 200
+            if (
+                not "enable_live_broadcast" in options
+                or options["enable_live_broadcast"] == False
+            ):
+                (offer_pc, data) = await get_RTCPeer_payload()
+                response_rtc_answer = await client.post(
+                    "/offer",
+                    data=data,
+                    headers={"Content-Type": "application/json"},
+                )
+                params = response_rtc_answer.json()
+                answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+                await offer_pc.setRemoteDescription(answer)
+                response_rtc_offer = await client.get(
+                    "/offer",
+                    data=data,
+                    headers={"Content-Type": "application/json"},
+                )
+                assert response_rtc_offer.status_code == 200
+                await offer_pc.close()
         web.shutdown()
     except Exception as e:
         if isinstance(e, AssertionError):
@@ -357,68 +358,68 @@ test_data = [
 
 
 @pytest.mark.skipif((platform.system() == "Windows"), reason="Random Failures!")
+@pytest.mark.asyncio
 @pytest.mark.parametrize("options", test_data)
-def test_webpage_reload(options):
+async def test_webpage_reload(options):
     """
     Test for testing WebGear_RTC API against Webpage reload
     disruptions
     """
+    patch_eventlooppolicy()
     web = WebGear_RTC(source=return_testvideo_path(), logging=True, **options)
     try:
         # run webgear_rtc
-        client = TestClient(web(), raise_server_exceptions=True)
-        response = client.get("/")
-        assert response.status_code == 200
+        async with TestClient(web()) as client:
+            response = await client.get("/")
+            assert response.status_code == 200
 
-        # create offer and receive
-        (offer_pc, data) = get_RTCPeer_payload()
-        response_rtc_answer = client.post(
-            "/offer",
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        params = response_rtc_answer.json()
-        answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
-        run(offer_pc.setRemoteDescription(answer))
-        response_rtc_offer = client.get(
-            "/offer",
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        assert response_rtc_offer.status_code == 200
+            # create offer and receive
+            (offer_pc, data) = await get_RTCPeer_payload()
+            response_rtc_answer = await client.post(
+                "/offer",
+                data=data,
+                headers={"Content-Type": "application/json"},
+            )
+            params = response_rtc_answer.json()
+            answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+            await offer_pc.setRemoteDescription(answer)
+            response_rtc_offer = await client.get(
+                "/offer",
+                data=data,
+                headers={"Content-Type": "application/json"},
+            )
+            assert response_rtc_offer.status_code == 200
+            # simulate webpage reload
+            response_rtc_reload = await client.post(
+                "/close_connection",
+                data="0",
+            )
+            # close offer
+            await offer_pc.close()
+            offer_pc = None
+            data = None
+            # verify response
+            logger.debug(response_rtc_reload.text)
+            assert response_rtc_reload.text == "OK", "Test Failed!"
 
-        # simulate webpage reload
-        response_rtc_reload = client.post(
-            "/close_connection",
-            data="1",
-        )
-        # close offer
-        run(offer_pc.close())
-        offer_pc = None
-        data = None
-        # verify response
-        logger.debug(response_rtc_reload.text)
-        assert response_rtc_reload.text == "OK", "Test Failed!"
-
-        # recreate offer and continue receive
-        (offer_pc, data) = get_RTCPeer_payload()
-        response_rtc_answer = client.post(
-            "/offer",
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        params = response_rtc_answer.json()
-        answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
-        run(offer_pc.setRemoteDescription(answer))
-        response_rtc_offer = client.get(
-            "/offer",
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        assert response_rtc_offer.status_code == 200
-
-        # shutdown
-        run(offer_pc.close())
+            # recreate offer and continue receive
+            (offer_pc, data) = await get_RTCPeer_payload()
+            response_rtc_answer = await client.post(
+                "/offer",
+                data=data,
+                headers={"Content-Type": "application/json"},
+            )
+            params = response_rtc_answer.json()
+            answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+            await offer_pc.setRemoteDescription(answer)
+            response_rtc_offer = await client.get(
+                "/offer",
+                data=data,
+                headers={"Content-Type": "application/json"},
+            )
+            assert response_rtc_offer.status_code == 200
+            # shutdown
+            await offer_pc.close()
     except Exception as e:
         if "enable_live_broadcast" in options and isinstance(e, AssertionError):
             pytest.xfail("Test Passed")
@@ -437,15 +438,18 @@ test_data_class = [
 ]
 
 
+@pytest.mark.asyncio
 @pytest.mark.xfail(raises=ValueError)
 @pytest.mark.parametrize("server, result", test_data_class)
-def test_webgear_rtc_custom_server_generator(server, result):
+async def test_webgear_rtc_custom_server_generator(server, result):
     """
     Test for WebGear_RTC API's custom source
     """
+    patch_eventlooppolicy()
     web = WebGear_RTC(logging=True)
     web.config["server"] = server
-    client = TestClient(web(), raise_server_exceptions=True)
+    async with TestClient(web()) as client:
+        pass
     web.shutdown()
 
 
@@ -456,27 +460,31 @@ test_data_class = [
 ]
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize("middleware, result", test_data_class)
-def test_webgear_rtc_custom_middleware(middleware, result):
+async def test_webgear_rtc_custom_middleware(middleware, result):
     """
     Test for WebGear_RTC API's custom middleware
     """
+    patch_eventlooppolicy()
     try:
         web = WebGear_RTC(source=return_testvideo_path(), logging=True)
         web.middleware = middleware
-        client = TestClient(web(), raise_server_exceptions=True)
-        response = client.get("/")
-        assert response.status_code == 200
+        async with TestClient(web()) as client:
+            response = await client.get("/")
+            assert response.status_code == 200
         web.shutdown()
     except Exception as e:
         if result:
             pytest.fail(str(e))
 
 
-def test_webgear_rtc_routes():
+@pytest.mark.asyncio
+async def test_webgear_rtc_routes():
     """
     Test for WebGear_RTC API's custom routes
     """
+    patch_eventlooppolicy()
     try:
         # add various performance tweaks as usual
         options = {
@@ -489,44 +497,54 @@ def test_webgear_rtc_routes():
         web.routes.append(Route("/hello", endpoint=hello_webpage))
 
         # test
-        client = TestClient(web(), raise_server_exceptions=True)
-        response = client.get("/")
-        assert response.status_code == 200
-        response_hello = client.get("/hello")
-        assert response_hello.status_code == 200
-        (offer_pc, data) = get_RTCPeer_payload()
-        response_rtc_answer = client.post(
-            "/offer",
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        params = response_rtc_answer.json()
-        answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
-        run(offer_pc.setRemoteDescription(answer))
-        response_rtc_offer = client.get(
-            "/offer",
-            data=data,
-            headers={"Content-Type": "application/json"},
-        )
-        assert response_rtc_offer.status_code == 200
-        run(offer_pc.close())
+        async with TestClient(web()) as client:
+            response = await client.get("/")
+            assert response.status_code == 200
+            response_hello = await client.get("/hello")
+            assert response_hello.status_code == 200
+            (offer_pc, data) = await get_RTCPeer_payload()
+            response_rtc_answer = await client.post(
+                "/offer",
+                data=data,
+                headers={"Content-Type": "application/json"},
+            )
+            params = response_rtc_answer.json()
+            answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+            await offer_pc.setRemoteDescription(answer)
+            response_rtc_offer = await client.get(
+                "/offer",
+                data=data,
+                headers={"Content-Type": "application/json"},
+            )
+            assert response_rtc_offer.status_code == 200
+            # shutdown
+            await offer_pc.close()
         web.shutdown()
     except Exception as e:
         pytest.fail(str(e))
 
 
-@pytest.mark.xfail(raises=RuntimeError)
-def test_webgear_rtc_routes_validity():
+@pytest.mark.asyncio
+async def test_webgear_rtc_routes_validity():
     # add various tweaks for testing only
+    patch_eventlooppolicy()
     options = {
         "enable_infinite_frames": False,
         "enable_live_broadcast": True,
     }
     # initialize WebGear_RTC app
     web = WebGear_RTC(source=return_testvideo_path(), logging=True)
-    # modify route
-    web.routes.clear()
-    # test
-    client = TestClient(web(), raise_server_exceptions=True)
-    # close
-    web.shutdown()
+    try:
+        # modify route
+        web.routes.clear()
+        # test
+        async with TestClient(web()) as client:
+            pass
+    except Exception as e:
+        if isinstance(e, RuntimeError):
+            pytest.xfail(str(e))
+        else:
+            pytest.fail(str(e))
+    finally:
+        # close
+        web.shutdown()

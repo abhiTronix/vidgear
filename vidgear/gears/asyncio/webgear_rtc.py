@@ -599,6 +599,8 @@ class WebGear_RTC:
         """
         Resets all connections and recreates VideoServer timestamps
         """
+        # get additional parameter
+        parameter = await request.json()
         # check if Live Broadcasting is enabled
         if (
             self.__relay is None
@@ -606,10 +608,11 @@ class WebGear_RTC:
             and (self.__default_rtc_server.is_running)
         ):
             logger.critical("Resetting Server")
-            # collects peer RTC connections
-            coros = [pc.close() for pc in self.__pcs]
-            await asyncio.gather(*coros)
-            self.__pcs.clear()
+            # close old peer connections
+            if parameter != 0:  # disable if specified explicitly
+                coros = [pc.close() for pc in self.__pcs]
+                await asyncio.gather(*coros)
+                self.__pcs.clear()
             await self.__default_rtc_server.reset()
             return PlainTextResponse("OK")
         else:
