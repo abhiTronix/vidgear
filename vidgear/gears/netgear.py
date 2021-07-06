@@ -210,6 +210,7 @@ class NetGear:
         self.__jpeg_compression_quality = 90  # 90% quality
         self.__jpeg_compression_fastdct = True  # fastest DCT on by default
         self.__jpeg_compression_fastupsample = False  # fastupsample off by default
+        self.__jpeg_compression_colorspace = "BGR"  # use BGR colorspace by default
 
         # defines frame compression on return data
         self.__ex_compression_params = None
@@ -331,9 +332,28 @@ class NetGear:
                         )
                     )
 
-            elif key == "jpeg_compression" and isinstance(value, bool):
-                # enable frame-compression encoding value
-                self.__jpeg_compression = value
+            elif key == "jpeg_compression" and isinstance(value, (bool, str)):
+                if isinstance(value, str) and value.strip().upper() in [
+                    "RGB",
+                    "BGR",
+                    "RGBX",
+                    "BGRX",
+                    "XBGR",
+                    "XRGB",
+                    "GRAY",
+                    "RGBA",
+                    "BGRA",
+                    "ABGR",
+                    "ARGB",
+                    "CMYK",
+                ]:
+                    # set encoding colorspace
+                    self.__jpeg_compression_colorspace = value.strip().upper()
+                    # enable frame-compression encoding value
+                    self.__jpeg_compression = True
+                else:
+                    # enable frame-compression encoding value
+                    self.__jpeg_compression = value
             elif key == "jpeg_compression_quality" and isinstance(value, (int, float)):
                 # set valid jpeg quality
                 if value >= 10 and value <= 100:
@@ -694,7 +714,8 @@ class NetGear:
                 )
                 if self.__jpeg_compression:
                     logger.debug(
-                        "JPEG Frame-Compression is activated for this connection with Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                        "JPEG Frame-Compression is activated for this connection with Colorspace:`{}`, Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                            self.__jpeg_compression_colorspace,
                             self.__jpeg_compression_quality,
                             "enabled"
                             if self.__jpeg_compression_fastdct
@@ -903,7 +924,8 @@ class NetGear:
                 )
                 if self.__jpeg_compression:
                     logger.debug(
-                        "JPEG Frame-Compression is activated for this connection with Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                        "JPEG Frame-Compression is activated for this connection with Colorspace:`{}`, Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                            self.__jpeg_compression_colorspace,
                             self.__jpeg_compression_quality,
                             "enabled"
                             if self.__jpeg_compression_fastdct
@@ -1044,13 +1066,21 @@ class NetGear:
 
                         # handle jpeg-compression encoding
                         if self.__jpeg_compression:
-                            return_data = simplejpeg.encode_jpeg(
-                                return_data,
-                                quality=self.__jpeg_compression_quality,
-                                colorspace="BGR",
-                                colorsubsampling="422",
-                                fastdct=self.__jpeg_compression_fastdct,
-                            )
+                            if self.__jpeg_compression_colorspace == "GRAY":
+                                return_data = simplejpeg.encode_jpeg(
+                                    return_data,
+                                    quality=self.__jpeg_compression_quality,
+                                    colorspace=self.__jpeg_compression_colorspace,
+                                    fastdct=self.__jpeg_compression_fastdct,
+                                )
+                            else:
+                                return_data = simplejpeg.encode_jpeg(
+                                    return_data,
+                                    quality=self.__jpeg_compression_quality,
+                                    colorspace=self.__jpeg_compression_colorspace,
+                                    colorsubsampling="422",
+                                    fastdct=self.__jpeg_compression_fastdct,
+                                )
 
                         return_dict = (
                             dict() if self.__bi_mode else dict(port=self.__port)
@@ -1062,6 +1092,7 @@ class NetGear:
                                 compression={
                                     "dct": self.__jpeg_compression_fastdct,
                                     "ups": self.__jpeg_compression_fastupsample,
+                                    "colorspace": self.__jpeg_compression_colorspace,
                                 }
                                 if self.__jpeg_compression
                                 else False,
@@ -1112,7 +1143,7 @@ class NetGear:
                 # decode JPEG frame
                 frame = simplejpeg.decode_jpeg(
                     msg_data,
-                    colorspace="BGR",
+                    colorspace=msg_json["compression"]["colorspace"],
                     fastdct=self.__jpeg_compression_fastdct
                     or msg_json["compression"]["dct"],
                     fastupsample=self.__jpeg_compression_fastupsample
@@ -1226,13 +1257,21 @@ class NetGear:
 
         # handle JPEG compression encoding
         if self.__jpeg_compression:
-            frame = simplejpeg.encode_jpeg(
-                frame,
-                quality=self.__jpeg_compression_quality,
-                colorspace="BGR",
-                colorsubsampling="422",
-                fastdct=self.__jpeg_compression_fastdct,
-            )
+            if self.__jpeg_compression_colorspace == "GRAY":
+                frame = simplejpeg.encode_jpeg(
+                    frame,
+                    quality=self.__jpeg_compression_quality,
+                    colorspace=self.__jpeg_compression_colorspace,
+                    fastdct=self.__jpeg_compression_fastdct,
+                )
+            else:
+                frame = simplejpeg.encode_jpeg(
+                    frame,
+                    quality=self.__jpeg_compression_quality,
+                    colorspace=self.__jpeg_compression_colorspace,
+                    colorsubsampling="422",
+                    fastdct=self.__jpeg_compression_fastdct,
+                )
 
         # check if multiserver_mode is activated and assign values with unique port
         msg_dict = dict(port=self.__port) if self.__multiserver_mode else dict()
@@ -1244,6 +1283,7 @@ class NetGear:
                 compression={
                     "dct": self.__jpeg_compression_fastdct,
                     "ups": self.__jpeg_compression_fastupsample,
+                    "colorspace": self.__jpeg_compression_colorspace,
                 }
                 if self.__jpeg_compression
                 else False,
@@ -1337,7 +1377,7 @@ class NetGear:
                         # decode JPEG frame
                         recvd_data = simplejpeg.decode_jpeg(
                             recv_array,
-                            colorspace="BGR",
+                            colorspace=recv_json["compression"]["colorspace"],
                             fastdct=self.__jpeg_compression_fastdct
                             or recv_json["compression"]["dct"],
                             fastupsample=self.__jpeg_compression_fastupsample
