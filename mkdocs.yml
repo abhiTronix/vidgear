@@ -24,9 +24,6 @@ repo_name: abhiTronix/vidgear
 repo_url: https://github.com/abhiTronix/vidgear
 edit_uri: ""
 
-# Google analytics
-google_analytics: ['UA-131929464-1', 'abhitronix.github.io']
-
 # Copyright
 copyright: Copyright &copy; 2019 - 2021 Abhishek Thakur(@abhiTronix)
 
@@ -99,6 +96,9 @@ extra:
   manifest: site.webmanifest
   version:
     provider: mike
+  analytics: # Google analytics
+    provider: google
+    property: UA-131929464-1 
 
 
 extra_css:

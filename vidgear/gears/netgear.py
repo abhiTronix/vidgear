@@ -1067,6 +1067,9 @@ class NetGear:
                         # handle jpeg-compression encoding
                         if self.__jpeg_compression:
                             if self.__jpeg_compression_colorspace == "GRAY":
+                                if return_data.ndim == 2:
+                                    # patch for https://gitlab.com/jfolz/simplejpeg/-/issues/11
+                                    return_data = return_data[:, :, np.newaxis]
                                 return_data = simplejpeg.encode_jpeg(
                                     return_data,
                                     quality=self.__jpeg_compression_quality,
@@ -1258,6 +1261,9 @@ class NetGear:
         # handle JPEG compression encoding
         if self.__jpeg_compression:
             if self.__jpeg_compression_colorspace == "GRAY":
+                if frame.ndim == 2:
+                    # patch for https://gitlab.com/jfolz/simplejpeg/-/issues/11
+                    frame = frame[:, :, np.newaxis]
                 frame = simplejpeg.encode_jpeg(
                     frame,
                     quality=self.__jpeg_compression_quality,
