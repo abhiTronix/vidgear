@@ -172,28 +172,30 @@ def test_patterns(pattern):
 
 
 @pytest.mark.parametrize(
-    "options_client",
+    "options_server",
     [
-        {"compression_format": None, "compression_param": cv2.IMREAD_UNCHANGED},
         {
-            "compression_format": ".jpg",
-            "compression_param": [cv2.IMWRITE_JPEG_QUALITY, 80],
+            "jpeg_compression": "invalid",
+            "jpeg_compression_quality": 5,
+        },
+        {
+            "jpeg_compression": " gray  ",
+            "jpeg_compression_quality": 50,
+            "jpeg_compression_fastdct": True,
+            "jpeg_compression_fastupsample": True,
+        },
+        {
+            "jpeg_compression": True,
+            "jpeg_compression_quality": 55.55,
+            "jpeg_compression_fastdct": True,
+            "jpeg_compression_fastupsample": True,
         },
     ],
 )
-def test_compression(options_client):
+def test_compression(options_server):
     """
     Testing NetGear's real-time frame compression capabilities
     """
-    options = {
-        "compression_format": ".jpg",
-        "compression_param": [
-            cv2.IMWRITE_JPEG_QUALITY,
-            20,
-            cv2.IMWRITE_JPEG_OPTIMIZE,
-            True,
-        ],
-    }  # JPEG compression
     # initialize
     stream = None
     server = None
@@ -201,9 +203,17 @@ def test_compression(options_client):
     try:
         # open streams
         options_gear = {"THREAD_TIMEOUT": 60}
-        stream = VideoGear(source=return_testvideo_path(), **options_gear).start()
-        client = NetGear(pattern=0, receive_mode=True, logging=True, **options_client)
-        server = NetGear(pattern=0, logging=True, **options)
+        colorspace = (
+            "COLOR_BGR2GRAY"
+            if isinstance(options_server["jpeg_compression"], str)
+            and options_server["jpeg_compression"].strip().upper() == "GRAY"
+            else None
+        )
+        stream = VideoGear(
+            source=return_testvideo_path(), colorspace=colorspace, **options_gear
+        ).start()
+        client = NetGear(pattern=0, receive_mode=True, logging=True)
+        server = NetGear(pattern=0, logging=True, **options_server)
         # send over network
         while True:
             frame_server = stream.read()
@@ -211,6 +221,13 @@ def test_compression(options_client):
                 break
             server.send(frame_server)
             frame_client = client.recv()
+            if (
+                isinstance(options_server["jpeg_compression"], str)
+                and options_server["jpeg_compression"].strip().upper() == "GRAY"
+            ):
+                assert (
+                    frame_server.ndim == frame_client.ndim
+                ), "Grayscale frame Test Failed!"
     except Exception as e:
         if isinstance(e, (ZMQError, ValueError, RuntimeError, queue.Empty)):
             logger.exception(str(e))
@@ -287,26 +304,40 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
 @pytest.mark.parametrize(
     "pattern, target_data, options",
     [
-        (0, [1, "string", ["list"]], {"bidirectional_mode": True}),
+        (
+            0,
+            [1, "string", ["list"]],
+            {
+                "bidirectional_mode": True,
+                "jpeg_compression": ["invalid"],
+            },
+        ),
         (
             1,
             (np.random.random(size=(480, 640, 3)) * 255).astype(np.uint8),
             {
                 "bidirectional_mode": True,
-                "jpeg_compression_quality": 55.0,
-                "jpeg_compression_fastdct": True,
-                "jpeg_compression_fastupsample": True,
+                "jpeg_compression": False,
+                "jpeg_compression_quality": 55,
+                "jpeg_compression_fastdct": False,
+                "jpeg_compression_fastupsample": False,
             },
         ),
         (
-            2,
+            1,
             {
-                "jpeg_compression": False,
                 1: "apple",
                 2: "cat",
-                "jpeg_compression_quality": 5,
             },
-            {"bidirectional_mode": True},
+            {"bidirectional_mode": True, "jpeg_compression": "GRAY"},
+        ),
+        (
+            2,
+            (np.random.random(size=(480, 640, 3)) * 255).astype(np.uint8),
+            {
+                "bidirectional_mode": True,
+                "jpeg_compression": True,
+            },
         ),
     ],
 )
@@ -322,7 +353,15 @@ def test_bidirectional_mode(pattern, target_data, options):
         logger.debug("Given Input Data: {}".format(target_data))
         # open stream
         options_gear = {"THREAD_TIMEOUT": 60}
-        stream = VideoGear(source=return_testvideo_path(), **options_gear).start()
+        colorspace = (
+            "COLOR_BGR2GRAY"
+            if isinstance(options["jpeg_compression"], str)
+            and options["jpeg_compression"].strip().upper() == "GRAY"
+            else None
+        )
+        stream = VideoGear(
+            source=return_testvideo_path(), colorspace=colorspace, **options_gear
+        ).start()
         # define params
         client = NetGear(pattern=pattern, receive_mode=True, **options)
         server = NetGear(pattern=pattern, **options)
@@ -340,8 +379,6 @@ def test_bidirectional_mode(pattern, target_data, options):
             # logger.debug data received at client-end and server-end
             logger.debug("Data received at Server-end: {}".format(frame_client))
             logger.debug("Data received at Client-end: {}".format(client_data))
-            if "jpeg_compression" in options and options["jpeg_compression"] == False:
-                assert np.array_equal(client_data, frame_client)
         else:
             # sent frame and data from server to client
             server.send(frame_server, message=target_data)
@@ -350,7 +387,7 @@ def test_bidirectional_mode(pattern, target_data, options):
             # server receives the data and cycle continues
             client_data = server.send(frame_server, message=target_data)
             # check if received frame exactly matches input frame
-            if "jpeg_compression" in options and options["jpeg_compression"] == False:
+            if not options["jpeg_compression"] in [True, "GRAY", ["invalid"]]:
                 assert np.array_equal(frame_server, frame_client)
             # logger.debug data received at client-end and server-end
             logger.debug("Data received at Server-end: {}".format(server_data))

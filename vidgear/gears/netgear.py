@@ -1159,6 +1159,9 @@ class NetGear:
                     raise RuntimeError(
                         "[NetGear:ERROR] :: Received compressed JPEG frame decoding failed"
                     )
+                if msg_json["compression"]["colorspace"] == "GRAY" and frame.ndim == 3:
+                    # patch for https://gitlab.com/jfolz/simplejpeg/-/issues/11
+                    frame = np.squeeze(frame, axis=2)
             else:
                 # recover and reshape frame from buffer
                 frame_buffer = np.frombuffer(msg_data, dtype=msg_json["dtype"])
@@ -1263,7 +1266,7 @@ class NetGear:
             if self.__jpeg_compression_colorspace == "GRAY":
                 if frame.ndim == 2:
                     # patch for https://gitlab.com/jfolz/simplejpeg/-/issues/11
-                    frame = frame[:, :, np.newaxis]
+                    frame = np.expand_dims(frame, axis=2)
                 frame = simplejpeg.encode_jpeg(
                     frame,
                     quality=self.__jpeg_compression_quality,
@@ -1399,6 +1402,13 @@ class NetGear:
                                     self.__ex_compression_params,
                                 )
                             )
+
+                        if (
+                            recv_json["compression"]["colorspace"] == "GRAY"
+                            and recvd_data.ndim == 3
+                        ):
+                            # patch for https://gitlab.com/jfolz/simplejpeg/-/issues/11
+                            recvd_data = np.squeeze(recvd_data, axis=2)
                     else:
                         recvd_data = np.frombuffer(
                             recv_array, dtype=recv_json["array_dtype"]
