@@ -30,6 +30,9 @@ import simplejpeg
 import numpy as np
 import logging as log
 
+from zmq import ssh
+from zmq import auth
+from zmq.auth.thread import ThreadAuthenticator
 from zmq.error import ZMQError
 from threading import Thread
 from collections import deque
@@ -383,10 +386,6 @@ class NetGear:
         # Handle Secure mode
         if self.__secure_mode:
 
-            # import required libs
-            import zmq.auth
-            from zmq.auth.thread import ThreadAuthenticator
-
             # activate and log if overwriting is enabled
             if overwrite_cert:
                 if not receive_mode:
@@ -472,11 +471,8 @@ class NetGear:
                     )
 
                 # import packages
-                import zmq.ssh
                 import importlib
 
-                # assign globally
-                self.__zmq_ssh = zmq.ssh
                 self.__paramiko_present = (
                     True if bool(importlib.util.find_spec("paramiko")) else False
                 )
@@ -574,20 +570,20 @@ class NetGear:
                 # activate secure_mode threaded authenticator
                 if self.__secure_mode > 0:
                     # start an authenticator for this context
-                    auth = ThreadAuthenticator(self.__msg_context)
-                    auth.start()
-                    auth.allow(str(address))  # allow current address
+                    z_auth = ThreadAuthenticator(self.__msg_context)
+                    z_auth.start()
+                    z_auth.allow(str(address))  # allow current address
 
                     # check if `IronHouse` is activated
                     if self.__secure_mode == 2:
                         # tell authenticator to use the certificate from given valid dir
-                        auth.configure_curve(
+                        z_auth.configure_curve(
                             domain="*", location=self.__auth_publickeys_dir
                         )
                     else:
                         # otherwise tell the authenticator how to handle the CURVE requests, if `StoneHouse` is activated
-                        auth.configure_curve(
-                            domain="*", location=zmq.auth.CURVE_ALLOW_ANY
+                        z_auth.configure_curve(
+                            domain="*", location=auth.CURVE_ALLOW_ANY
                         )
 
                 # define thread-safe messaging socket
@@ -603,7 +599,7 @@ class NetGear:
                     server_secret_file = os.path.join(
                         self.__auth_secretkeys_dir, "server.key_secret"
                     )
-                    server_public, server_secret = zmq.auth.load_certificate(
+                    server_public, server_secret = auth.load_certificate(
                         server_secret_file
                     )
                     # load  all CURVE keys
@@ -774,20 +770,20 @@ class NetGear:
                 # activate secure_mode threaded authenticator
                 if self.__secure_mode > 0:
                     # start an authenticator for this context
-                    auth = ThreadAuthenticator(self.__msg_context)
-                    auth.start()
-                    auth.allow(str(address))  # allow current address
+                    z_auth = ThreadAuthenticator(self.__msg_context)
+                    z_auth.start()
+                    z_auth.allow(str(address))  # allow current address
 
                     # check if `IronHouse` is activated
                     if self.__secure_mode == 2:
                         # tell authenticator to use the certificate from given valid dir
-                        auth.configure_curve(
+                        z_auth.configure_curve(
                             domain="*", location=self.__auth_publickeys_dir
                         )
                     else:
                         # otherwise tell the authenticator how to handle the CURVE requests, if `StoneHouse` is activated
-                        auth.configure_curve(
-                            domain="*", location=zmq.auth.CURVE_ALLOW_ANY
+                        z_auth.configure_curve(
+                            domain="*", location=auth.CURVE_ALLOW_ANY
                         )
 
                 # define thread-safe messaging socket
@@ -808,7 +804,7 @@ class NetGear:
                     client_secret_file = os.path.join(
                         self.__auth_secretkeys_dir, "client.key_secret"
                     )
-                    client_public, client_secret = zmq.auth.load_certificate(
+                    client_public, client_secret = auth.load_certificate(
                         client_secret_file
                     )
                     # load  all CURVE keys
@@ -818,7 +814,7 @@ class NetGear:
                     server_public_file = os.path.join(
                         self.__auth_publickeys_dir, "server.key"
                     )
-                    server_public, _ = zmq.auth.load_certificate(server_public_file)
+                    server_public, _ = auth.load_certificate(server_public_file)
                     # inject public key to make a CURVE connection.
                     self.__msg_socket.curve_serverkey = server_public
 
@@ -833,7 +829,7 @@ class NetGear:
                     # handle SSH tuneling if enabled
                     if self.__ssh_tunnel_mode:
                         # establish tunnel connection
-                        self.__zmq_ssh.tunnel_connection(
+                        ssh.tunnel_connection(
                             self.__msg_socket,
                             protocol + "://" + str(address) + ":" + str(port),
                             self.__ssh_tunnel_mode,
@@ -1343,7 +1339,7 @@ class NetGear:
                         # handle SSH tunneling if enabled
                         if self.__ssh_tunnel_mode:
                             # establish tunnel connection
-                            self.__zmq_ssh.tunnel_connection(
+                            ssh.tunnel_connection(
                                 self.__msg_socket,
                                 self.__connection_address,
                                 self.__ssh_tunnel_mode,
@@ -1436,7 +1432,7 @@ class NetGear:
                     # handle SSH tunneling if enabled
                     if self.__ssh_tunnel_mode:
                         # establish tunnel connection
-                        self.__zmq_ssh.tunnel_connection(
+                        ssh.tunnel_connection(
                             self.__msg_socket,
                             self.__connection_address,
                             self.__ssh_tunnel_mode,
