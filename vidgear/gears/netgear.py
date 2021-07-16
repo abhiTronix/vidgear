@@ -21,14 +21,18 @@ limitations under the License.
 
 import os
 import cv2
+import zmq
 import time
+import string
+import secrets
 import simplejpeg
+
 import numpy as np
-import random
 import logging as log
+
+from zmq.error import ZMQError
 from threading import Thread
 from collections import deque
-
 from .helper import (
     logger_handler,
     generate_auth_certificates,
@@ -120,22 +124,6 @@ class NetGear:
             logging (bool): enables/disables logging.
             options (dict): provides the flexibility to alter various NetGear internal properties.
         """
-
-        try:
-            # import PyZMQ library
-            import zmq
-            from zmq.error import ZMQError
-
-            # assign values to global variable for further use
-            self.__zmq = zmq
-            self.__ZMQError = ZMQError
-
-        except ImportError as error:
-            # raise error
-            raise ImportError(
-                "[NetGear:ERROR] :: pyzmq python library not installed. Kindly install it with `pip install pyzmq` command."
-            )
-
         # enable logging if specified
         self.__logging = True if logging else False
 
@@ -218,8 +206,10 @@ class NetGear:
         # define receiver return data handler
         self.__return_data = None
 
-        # generate random system id
-        self.__id = "".join(random.choice("0123456789ABCDEF") for i in range(5))
+        # generate 8-digit random system id
+        self.__id = "".join(
+            secrets.choice(string.ascii_uppercase + string.digits) for i in range(8)
+        )
 
         # define termination flag
         self.__terminate = False
@@ -966,9 +956,9 @@ class NetGear:
 
             if self.__pattern < 2:
                 socks = dict(self.__poll.poll(self.__request_timeout * 3))
-                if socks.get(self.__msg_socket) == self.__zmq.POLLIN:
+                if socks.get(self.__msg_socket) == zmq.POLLIN:
                     msg_json = self.__msg_socket.recv_json(
-                        flags=self.__msg_flag | self.__zmq.DONTWAIT
+                        flags=self.__msg_flag | zmq.DONTWAIT
                     )
                 else:
                     logger.critical("No response from Server(s), Reconnecting again...")
@@ -998,7 +988,7 @@ class NetGear:
                         logger.exception(str(e))
                         self.__terminate = True
                         raise RuntimeError("API failed to restart the Client-end!")
-                    self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
+                    self.__poll.register(self.__msg_socket, zmq.POLLIN)
 
                     continue
             else:
@@ -1042,7 +1032,7 @@ class NetGear:
                 continue
 
             msg_data = self.__msg_socket.recv(
-                flags=self.__msg_flag | self.__zmq.DONTWAIT,
+                flags=self.__msg_flag | zmq.DONTWAIT,
                 copy=self.__msg_copy,
                 track=self.__msg_track,
             )
@@ -1111,7 +1101,7 @@ class NetGear:
 
                         # send the json dict
                         self.__msg_socket.send_json(
-                            return_dict, self.__msg_flag | self.__zmq.SNDMORE
+                            return_dict, self.__msg_flag | zmq.SNDMORE
                         )
                         # send the array with correct flags
                         self.__msg_socket.send(
@@ -1304,7 +1294,7 @@ class NetGear:
         )
 
         # send the json dict
-        self.__msg_socket.send_json(msg_dict, self.__msg_flag | self.__zmq.SNDMORE)
+        self.__msg_socket.send_json(msg_dict, self.__msg_flag | zmq.SNDMORE)
         # send the frame array with correct flags
         self.__msg_socket.send(
             frame, flags=self.__msg_flag, copy=self.__msg_copy, track=self.__msg_track
@@ -1319,13 +1309,13 @@ class NetGear:
                 recvd_data = None
 
                 socks = dict(self.__poll.poll(self.__request_timeout))
-                if socks.get(self.__msg_socket) == self.__zmq.POLLIN:
+                if socks.get(self.__msg_socket) == zmq.POLLIN:
                     # handle return data
                     recv_json = self.__msg_socket.recv_json(flags=self.__msg_flag)
                 else:
                     logger.critical("No response from Client, Reconnecting again...")
                     # Socket is confused. Close and remove it.
-                    self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
+                    self.__msg_socket.setsockopt(zmq.LINGER, 0)
                     self.__msg_socket.close()
                     self.__poll.unregister(self.__msg_socket)
                     self.__max_retries -= 1
@@ -1364,7 +1354,7 @@ class NetGear:
                         else:
                             # connect normally
                             self.__msg_socket.connect(self.__connection_address)
-                    self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
+                    self.__poll.register(self.__msg_socket, zmq.POLLIN)
                     # return None for mean-time
                     return None
 
@@ -1424,12 +1414,12 @@ class NetGear:
             else:
                 # otherwise log normally
                 socks = dict(self.__poll.poll(self.__request_timeout))
-                if socks.get(self.__msg_socket) == self.__zmq.POLLIN:
+                if socks.get(self.__msg_socket) == zmq.POLLIN:
                     recv_confirmation = self.__msg_socket.recv()
                 else:
                     logger.critical("No response from Client, Reconnecting again...")
                     # Socket is confused. Close and remove it.
-                    self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
+                    self.__msg_socket.setsockopt(zmq.LINGER, 0)
                     self.__msg_socket.close()
                     self.__poll.unregister(self.__msg_socket)
                     self.__max_retries -= 1
@@ -1457,7 +1447,7 @@ class NetGear:
                     else:
                         # connect normally
                         self.__msg_socket.connect(self.__connection_address)
-                    self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
+                    self.__poll.register(self.__msg_socket, zmq.POLLIN)
 
                     return None
 
@@ -1505,9 +1495,9 @@ class NetGear:
             ):
                 try:
                     # properly close the socket
-                    self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
+                    self.__msg_socket.setsockopt(zmq.LINGER, 0)
                     self.__msg_socket.close()
-                except self.__ZMQError:
+                except ZMQError:
                     pass
                 finally:
                     # exit
@@ -1532,16 +1522,14 @@ class NetGear:
                 if self.__pattern < 2:
                     if self.__logging:
                         logger.debug("Terminating. Please wait...")
-                    if self.__msg_socket.poll(
-                        self.__request_timeout // 5, self.__zmq.POLLIN
-                    ):
+                    if self.__msg_socket.poll(self.__request_timeout // 5, zmq.POLLIN):
                         self.__msg_socket.recv()
             except Exception as e:
-                if not isinstance(e, self.__ZMQError):
+                if not isinstance(e, ZMQError):
                     logger.exception(str(e))
             finally:
                 # properly close the socket
-                self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
+                self.__msg_socket.setsockopt(zmq.LINGER, 0)
                 self.__msg_socket.close()
                 if self.__logging:
                     logger.debug("Terminated Successfully!")

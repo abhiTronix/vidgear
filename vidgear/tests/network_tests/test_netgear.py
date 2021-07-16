@@ -314,7 +314,10 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
         ),
         (
             1,
-            (np.random.random(size=(480, 640, 3)) * 255).astype(np.uint8),
+            {
+                1: "apple",
+                2: "cat",
+            },
             {
                 "bidirectional_mode": True,
                 "jpeg_compression": False,
@@ -325,10 +328,7 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
         ),
         (
             1,
-            {
-                1: "apple",
-                2: "cat",
-            },
+            (np.random.random(size=(480, 640, 3)) * 255).astype(np.uint8),
             {"bidirectional_mode": True, "jpeg_compression": "GRAY"},
         ),
         (
