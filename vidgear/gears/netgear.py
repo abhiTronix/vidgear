@@ -21,14 +21,21 @@ limitations under the License.
 
 import os
 import cv2
+import zmq
 import time
+import string
+import secrets
 import simplejpeg
+
 import numpy as np
-import random
 import logging as log
+
+from zmq import ssh
+from zmq import auth
+from zmq.auth.thread import ThreadAuthenticator
+from zmq.error import ZMQError
 from threading import Thread
 from collections import deque
-
 from .helper import (
     logger_handler,
     generate_auth_certificates,
@@ -120,22 +127,6 @@ class NetGear:
             logging (bool): enables/disables logging.
             options (dict): provides the flexibility to alter various NetGear internal properties.
         """
-
-        try:
-            # import PyZMQ library
-            import zmq
-            from zmq.error import ZMQError
-
-            # assign values to global variable for further use
-            self.__zmq = zmq
-            self.__ZMQError = ZMQError
-
-        except ImportError as error:
-            # raise error
-            raise ImportError(
-                "[NetGear:ERROR] :: pyzmq python library not installed. Kindly install it with `pip install pyzmq` command."
-            )
-
         # enable logging if specified
         self.__logging = True if logging else False
 
@@ -210,6 +201,7 @@ class NetGear:
         self.__jpeg_compression_quality = 90  # 90% quality
         self.__jpeg_compression_fastdct = True  # fastest DCT on by default
         self.__jpeg_compression_fastupsample = False  # fastupsample off by default
+        self.__jpeg_compression_colorspace = "BGR"  # use BGR colorspace by default
 
         # defines frame compression on return data
         self.__ex_compression_params = None
@@ -217,8 +209,10 @@ class NetGear:
         # define receiver return data handler
         self.__return_data = None
 
-        # generate random system id
-        self.__id = "".join(random.choice("0123456789ABCDEF") for i in range(5))
+        # generate 8-digit random system id
+        self.__id = "".join(
+            secrets.choice(string.ascii_uppercase + string.digits) for i in range(8)
+        )
 
         # define termination flag
         self.__terminate = False
@@ -331,9 +325,28 @@ class NetGear:
                         )
                     )
 
-            elif key == "jpeg_compression" and isinstance(value, bool):
-                # enable frame-compression encoding value
-                self.__jpeg_compression = value
+            elif key == "jpeg_compression" and isinstance(value, (bool, str)):
+                if isinstance(value, str) and value.strip().upper() in [
+                    "RGB",
+                    "BGR",
+                    "RGBX",
+                    "BGRX",
+                    "XBGR",
+                    "XRGB",
+                    "GRAY",
+                    "RGBA",
+                    "BGRA",
+                    "ABGR",
+                    "ARGB",
+                    "CMYK",
+                ]:
+                    # set encoding colorspace
+                    self.__jpeg_compression_colorspace = value.strip().upper()
+                    # enable frame-compression encoding value
+                    self.__jpeg_compression = True
+                else:
+                    # enable frame-compression encoding value
+                    self.__jpeg_compression = value
             elif key == "jpeg_compression_quality" and isinstance(value, (int, float)):
                 # set valid jpeg quality
                 if value >= 10 and value <= 100:
@@ -372,10 +385,6 @@ class NetGear:
 
         # Handle Secure mode
         if self.__secure_mode:
-
-            # import required libs
-            import zmq.auth
-            from zmq.auth.thread import ThreadAuthenticator
 
             # activate and log if overwriting is enabled
             if overwrite_cert:
@@ -462,11 +471,8 @@ class NetGear:
                     )
 
                 # import packages
-                import zmq.ssh
                 import importlib
 
-                # assign globally
-                self.__zmq_ssh = zmq.ssh
                 self.__paramiko_present = (
                     True if bool(importlib.util.find_spec("paramiko")) else False
                 )
@@ -564,20 +570,20 @@ class NetGear:
                 # activate secure_mode threaded authenticator
                 if self.__secure_mode > 0:
                     # start an authenticator for this context
-                    auth = ThreadAuthenticator(self.__msg_context)
-                    auth.start()
-                    auth.allow(str(address))  # allow current address
+                    z_auth = ThreadAuthenticator(self.__msg_context)
+                    z_auth.start()
+                    z_auth.allow(str(address))  # allow current address
 
                     # check if `IronHouse` is activated
                     if self.__secure_mode == 2:
                         # tell authenticator to use the certificate from given valid dir
-                        auth.configure_curve(
+                        z_auth.configure_curve(
                             domain="*", location=self.__auth_publickeys_dir
                         )
                     else:
                         # otherwise tell the authenticator how to handle the CURVE requests, if `StoneHouse` is activated
-                        auth.configure_curve(
-                            domain="*", location=zmq.auth.CURVE_ALLOW_ANY
+                        z_auth.configure_curve(
+                            domain="*", location=auth.CURVE_ALLOW_ANY
                         )
 
                 # define thread-safe messaging socket
@@ -593,7 +599,7 @@ class NetGear:
                     server_secret_file = os.path.join(
                         self.__auth_secretkeys_dir, "server.key_secret"
                     )
-                    server_public, server_secret = zmq.auth.load_certificate(
+                    server_public, server_secret = auth.load_certificate(
                         server_secret_file
                     )
                     # load  all CURVE keys
@@ -694,7 +700,8 @@ class NetGear:
                 )
                 if self.__jpeg_compression:
                     logger.debug(
-                        "JPEG Frame-Compression is activated for this connection with Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                        "JPEG Frame-Compression is activated for this connection with Colorspace:`{}`, Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                            self.__jpeg_compression_colorspace,
                             self.__jpeg_compression_quality,
                             "enabled"
                             if self.__jpeg_compression_fastdct
@@ -763,20 +770,20 @@ class NetGear:
                 # activate secure_mode threaded authenticator
                 if self.__secure_mode > 0:
                     # start an authenticator for this context
-                    auth = ThreadAuthenticator(self.__msg_context)
-                    auth.start()
-                    auth.allow(str(address))  # allow current address
+                    z_auth = ThreadAuthenticator(self.__msg_context)
+                    z_auth.start()
+                    z_auth.allow(str(address))  # allow current address
 
                     # check if `IronHouse` is activated
                     if self.__secure_mode == 2:
                         # tell authenticator to use the certificate from given valid dir
-                        auth.configure_curve(
+                        z_auth.configure_curve(
                             domain="*", location=self.__auth_publickeys_dir
                         )
                     else:
                         # otherwise tell the authenticator how to handle the CURVE requests, if `StoneHouse` is activated
-                        auth.configure_curve(
-                            domain="*", location=zmq.auth.CURVE_ALLOW_ANY
+                        z_auth.configure_curve(
+                            domain="*", location=auth.CURVE_ALLOW_ANY
                         )
 
                 # define thread-safe messaging socket
@@ -797,7 +804,7 @@ class NetGear:
                     client_secret_file = os.path.join(
                         self.__auth_secretkeys_dir, "client.key_secret"
                     )
-                    client_public, client_secret = zmq.auth.load_certificate(
+                    client_public, client_secret = auth.load_certificate(
                         client_secret_file
                     )
                     # load  all CURVE keys
@@ -807,7 +814,7 @@ class NetGear:
                     server_public_file = os.path.join(
                         self.__auth_publickeys_dir, "server.key"
                     )
-                    server_public, _ = zmq.auth.load_certificate(server_public_file)
+                    server_public, _ = auth.load_certificate(server_public_file)
                     # inject public key to make a CURVE connection.
                     self.__msg_socket.curve_serverkey = server_public
 
@@ -822,7 +829,7 @@ class NetGear:
                     # handle SSH tuneling if enabled
                     if self.__ssh_tunnel_mode:
                         # establish tunnel connection
-                        self.__zmq_ssh.tunnel_connection(
+                        ssh.tunnel_connection(
                             self.__msg_socket,
                             protocol + "://" + str(address) + ":" + str(port),
                             self.__ssh_tunnel_mode,
@@ -903,7 +910,8 @@ class NetGear:
                 )
                 if self.__jpeg_compression:
                     logger.debug(
-                        "JPEG Frame-Compression is activated for this connection with Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                        "JPEG Frame-Compression is activated for this connection with Colorspace:`{}`, Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                            self.__jpeg_compression_colorspace,
                             self.__jpeg_compression_quality,
                             "enabled"
                             if self.__jpeg_compression_fastdct
@@ -944,9 +952,9 @@ class NetGear:
 
             if self.__pattern < 2:
                 socks = dict(self.__poll.poll(self.__request_timeout * 3))
-                if socks.get(self.__msg_socket) == self.__zmq.POLLIN:
+                if socks.get(self.__msg_socket) == zmq.POLLIN:
                     msg_json = self.__msg_socket.recv_json(
-                        flags=self.__msg_flag | self.__zmq.DONTWAIT
+                        flags=self.__msg_flag | zmq.DONTWAIT
                     )
                 else:
                     logger.critical("No response from Server(s), Reconnecting again...")
@@ -976,7 +984,7 @@ class NetGear:
                         logger.exception(str(e))
                         self.__terminate = True
                         raise RuntimeError("API failed to restart the Client-end!")
-                    self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
+                    self.__poll.register(self.__msg_socket, zmq.POLLIN)
 
                     continue
             else:
@@ -1020,7 +1028,7 @@ class NetGear:
                 continue
 
             msg_data = self.__msg_socket.recv(
-                flags=self.__msg_flag | self.__zmq.DONTWAIT,
+                flags=self.__msg_flag | zmq.DONTWAIT,
                 copy=self.__msg_copy,
                 track=self.__msg_track,
             )
@@ -1044,13 +1052,24 @@ class NetGear:
 
                         # handle jpeg-compression encoding
                         if self.__jpeg_compression:
-                            return_data = simplejpeg.encode_jpeg(
-                                return_data,
-                                quality=self.__jpeg_compression_quality,
-                                colorspace="BGR",
-                                colorsubsampling="422",
-                                fastdct=self.__jpeg_compression_fastdct,
-                            )
+                            if self.__jpeg_compression_colorspace == "GRAY":
+                                if return_data.ndim == 2:
+                                    # patch for https://gitlab.com/jfolz/simplejpeg/-/issues/11
+                                    return_data = return_data[:, :, np.newaxis]
+                                return_data = simplejpeg.encode_jpeg(
+                                    return_data,
+                                    quality=self.__jpeg_compression_quality,
+                                    colorspace=self.__jpeg_compression_colorspace,
+                                    fastdct=self.__jpeg_compression_fastdct,
+                                )
+                            else:
+                                return_data = simplejpeg.encode_jpeg(
+                                    return_data,
+                                    quality=self.__jpeg_compression_quality,
+                                    colorspace=self.__jpeg_compression_colorspace,
+                                    colorsubsampling="422",
+                                    fastdct=self.__jpeg_compression_fastdct,
+                                )
 
                         return_dict = (
                             dict() if self.__bi_mode else dict(port=self.__port)
@@ -1062,6 +1081,7 @@ class NetGear:
                                 compression={
                                     "dct": self.__jpeg_compression_fastdct,
                                     "ups": self.__jpeg_compression_fastupsample,
+                                    "colorspace": self.__jpeg_compression_colorspace,
                                 }
                                 if self.__jpeg_compression
                                 else False,
@@ -1077,7 +1097,7 @@ class NetGear:
 
                         # send the json dict
                         self.__msg_socket.send_json(
-                            return_dict, self.__msg_flag | self.__zmq.SNDMORE
+                            return_dict, self.__msg_flag | zmq.SNDMORE
                         )
                         # send the array with correct flags
                         self.__msg_socket.send(
@@ -1112,7 +1132,7 @@ class NetGear:
                 # decode JPEG frame
                 frame = simplejpeg.decode_jpeg(
                     msg_data,
-                    colorspace="BGR",
+                    colorspace=msg_json["compression"]["colorspace"],
                     fastdct=self.__jpeg_compression_fastdct
                     or msg_json["compression"]["dct"],
                     fastupsample=self.__jpeg_compression_fastupsample
@@ -1125,6 +1145,9 @@ class NetGear:
                     raise RuntimeError(
                         "[NetGear:ERROR] :: Received compressed JPEG frame decoding failed"
                     )
+                if msg_json["compression"]["colorspace"] == "GRAY" and frame.ndim == 3:
+                    # patch for https://gitlab.com/jfolz/simplejpeg/-/issues/11
+                    frame = np.squeeze(frame, axis=2)
             else:
                 # recover and reshape frame from buffer
                 frame_buffer = np.frombuffer(msg_data, dtype=msg_json["dtype"])
@@ -1226,13 +1249,24 @@ class NetGear:
 
         # handle JPEG compression encoding
         if self.__jpeg_compression:
-            frame = simplejpeg.encode_jpeg(
-                frame,
-                quality=self.__jpeg_compression_quality,
-                colorspace="BGR",
-                colorsubsampling="422",
-                fastdct=self.__jpeg_compression_fastdct,
-            )
+            if self.__jpeg_compression_colorspace == "GRAY":
+                if frame.ndim == 2:
+                    # patch for https://gitlab.com/jfolz/simplejpeg/-/issues/11
+                    frame = np.expand_dims(frame, axis=2)
+                frame = simplejpeg.encode_jpeg(
+                    frame,
+                    quality=self.__jpeg_compression_quality,
+                    colorspace=self.__jpeg_compression_colorspace,
+                    fastdct=self.__jpeg_compression_fastdct,
+                )
+            else:
+                frame = simplejpeg.encode_jpeg(
+                    frame,
+                    quality=self.__jpeg_compression_quality,
+                    colorspace=self.__jpeg_compression_colorspace,
+                    colorsubsampling="422",
+                    fastdct=self.__jpeg_compression_fastdct,
+                )
 
         # check if multiserver_mode is activated and assign values with unique port
         msg_dict = dict(port=self.__port) if self.__multiserver_mode else dict()
@@ -1244,6 +1278,7 @@ class NetGear:
                 compression={
                     "dct": self.__jpeg_compression_fastdct,
                     "ups": self.__jpeg_compression_fastupsample,
+                    "colorspace": self.__jpeg_compression_colorspace,
                 }
                 if self.__jpeg_compression
                 else False,
@@ -1255,7 +1290,7 @@ class NetGear:
         )
 
         # send the json dict
-        self.__msg_socket.send_json(msg_dict, self.__msg_flag | self.__zmq.SNDMORE)
+        self.__msg_socket.send_json(msg_dict, self.__msg_flag | zmq.SNDMORE)
         # send the frame array with correct flags
         self.__msg_socket.send(
             frame, flags=self.__msg_flag, copy=self.__msg_copy, track=self.__msg_track
@@ -1270,13 +1305,13 @@ class NetGear:
                 recvd_data = None
 
                 socks = dict(self.__poll.poll(self.__request_timeout))
-                if socks.get(self.__msg_socket) == self.__zmq.POLLIN:
+                if socks.get(self.__msg_socket) == zmq.POLLIN:
                     # handle return data
                     recv_json = self.__msg_socket.recv_json(flags=self.__msg_flag)
                 else:
                     logger.critical("No response from Client, Reconnecting again...")
                     # Socket is confused. Close and remove it.
-                    self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
+                    self.__msg_socket.setsockopt(zmq.LINGER, 0)
                     self.__msg_socket.close()
                     self.__poll.unregister(self.__msg_socket)
                     self.__max_retries -= 1
@@ -1304,7 +1339,7 @@ class NetGear:
                         # handle SSH tunneling if enabled
                         if self.__ssh_tunnel_mode:
                             # establish tunnel connection
-                            self.__zmq_ssh.tunnel_connection(
+                            ssh.tunnel_connection(
                                 self.__msg_socket,
                                 self.__connection_address,
                                 self.__ssh_tunnel_mode,
@@ -1315,7 +1350,7 @@ class NetGear:
                         else:
                             # connect normally
                             self.__msg_socket.connect(self.__connection_address)
-                    self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
+                    self.__poll.register(self.__msg_socket, zmq.POLLIN)
                     # return None for mean-time
                     return None
 
@@ -1337,7 +1372,7 @@ class NetGear:
                         # decode JPEG frame
                         recvd_data = simplejpeg.decode_jpeg(
                             recv_array,
-                            colorspace="BGR",
+                            colorspace=recv_json["compression"]["colorspace"],
                             fastdct=self.__jpeg_compression_fastdct
                             or recv_json["compression"]["dct"],
                             fastupsample=self.__jpeg_compression_fastupsample
@@ -1353,6 +1388,13 @@ class NetGear:
                                     self.__ex_compression_params,
                                 )
                             )
+
+                        if (
+                            recv_json["compression"]["colorspace"] == "GRAY"
+                            and recvd_data.ndim == 3
+                        ):
+                            # patch for https://gitlab.com/jfolz/simplejpeg/-/issues/11
+                            recvd_data = np.squeeze(recvd_data, axis=2)
                     else:
                         recvd_data = np.frombuffer(
                             recv_array, dtype=recv_json["array_dtype"]
@@ -1368,12 +1410,12 @@ class NetGear:
             else:
                 # otherwise log normally
                 socks = dict(self.__poll.poll(self.__request_timeout))
-                if socks.get(self.__msg_socket) == self.__zmq.POLLIN:
+                if socks.get(self.__msg_socket) == zmq.POLLIN:
                     recv_confirmation = self.__msg_socket.recv()
                 else:
                     logger.critical("No response from Client, Reconnecting again...")
                     # Socket is confused. Close and remove it.
-                    self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
+                    self.__msg_socket.setsockopt(zmq.LINGER, 0)
                     self.__msg_socket.close()
                     self.__poll.unregister(self.__msg_socket)
                     self.__max_retries -= 1
@@ -1390,7 +1432,7 @@ class NetGear:
                     # handle SSH tunneling if enabled
                     if self.__ssh_tunnel_mode:
                         # establish tunnel connection
-                        self.__zmq_ssh.tunnel_connection(
+                        ssh.tunnel_connection(
                             self.__msg_socket,
                             self.__connection_address,
                             self.__ssh_tunnel_mode,
@@ -1401,7 +1443,7 @@ class NetGear:
                     else:
                         # connect normally
                         self.__msg_socket.connect(self.__connection_address)
-                    self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
+                    self.__poll.register(self.__msg_socket, zmq.POLLIN)
 
                     return None
 
@@ -1449,9 +1491,9 @@ class NetGear:
             ):
                 try:
                     # properly close the socket
-                    self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
+                    self.__msg_socket.setsockopt(zmq.LINGER, 0)
                     self.__msg_socket.close()
-                except self.__ZMQError:
+                except ZMQError:
                     pass
                 finally:
                     # exit
@@ -1476,16 +1518,14 @@ class NetGear:
                 if self.__pattern < 2:
                     if self.__logging:
                         logger.debug("Terminating. Please wait...")
-                    if self.__msg_socket.poll(
-                        self.__request_timeout // 5, self.__zmq.POLLIN
-                    ):
+                    if self.__msg_socket.poll(self.__request_timeout // 5, zmq.POLLIN):
                         self.__msg_socket.recv()
             except Exception as e:
-                if not isinstance(e, self.__ZMQError):
+                if not isinstance(e, ZMQError):
                     logger.exception(str(e))
             finally:
                 # properly close the socket
-                self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
+                self.__msg_socket.setsockopt(zmq.LINGER, 0)
                 self.__msg_socket.close()
                 if self.__logging:
                     logger.debug("Terminated Successfully!")

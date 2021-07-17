@@ -159,11 +159,11 @@ This parameter provides the flexibility to alter various NetGear API's internal 
 
     * **`overwrite_cert`** (_boolean_) : In Secure Mode, This internal attribute decides whether to overwrite existing Public+Secret Keypair/Certificates or not, ==at the Server-end only==. More information can be found [here ➶](../advanced/secure_mode/#supported-attributes)
 
-    * **`jpeg_compression`**(_bool_): This internal attribute can be used to activate(if True)/deactivate(if False) Frame Compression. Its default value is also `True`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
+    * **`jpeg_compression`**(_bool/str_): This internal attribute is used to activate(if `True`)/deactivate(if `False`) JPEG Frame Compression as well as to specify incoming frames colorspace with compression. By default colorspace is `BGR` and compression is enabled(`True`). More information can be found [here ➶](../advanced/compression/#supported-attributes)
 
-    * **`jpeg_compression_quality`**(_int/float_): This internal attribute controls the JPEG quantization factor. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
+    * **`jpeg_compression_quality`**(_int/float_): This internal attribute controls the JPEG quantization factor in JPEG Frame Compression. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
 
-    * **`jpeg_compression_fastdct`**(_bool_): This internal attributee if True, use fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
+    * **`jpeg_compression_fastdct`**(_bool_): This internal attributee if True, use fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality in JPEG Frame Compression. Its default value is also `True`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
 
     * **`jpeg_compression_fastupsample`**(_bool_): This internal attribute if True, use fastest color upsampling method. Its default value is `False`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
 

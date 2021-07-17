@@ -53,12 +53,29 @@ Frame Compression is enabled by default in NetGear, and can be easily controlled
 
 For implementing Frame Compression, NetGear API currently provide following attribute for its [`options`](../../params/#options) dictionary parameter to leverage performance with Frame Compression:
 
-* `jpeg_compression` _(bool)_: This attribute can be used to activate(if True)/deactivate(if False) Frame Compression. Its default value is also `True`, and its usage is as follows:
+* `jpeg_compression` _(bool/str)_:  This internal attribute is used to activate/deactivate JPEG Frame Compression as well as to specify incoming frames colorspace with compression. Its usage is as follows:
+
+    - [x] **For activating JPEG Frame Compression _(Boolean)_:**
     
-    ```python
-    # disable jpeg encoding
-    options = {"jpeg_compression": False}
-    ```
+        !!! alert "In this case, colorspace will default to `BGR`."
+
+        !!! note "You can set `jpeg_compression` value to `False` at Server end to completely disable Frame Compression."
+
+        ```python
+        # enable jpeg encoding
+        options = {"jpeg_compression": True}
+        ```
+
+    - [x] **For specifying Input frames colorspace _(String)_:**
+
+        !!! alert "In this case, JPEG Frame Compression is activated automatically."
+
+        !!! info "Supported colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
+    
+        ```python
+        # Specify incoming frames are `grayscale`
+        options = {"jpeg_compression": "GRAY"}
+        ```
 
 * ### Performance Attributes :zap:
 
@@ -160,7 +177,7 @@ from vidgear.gears import NetGear
 import cv2
 
 # define NetGear Client with `receive_mode = True` and defined parameter
-client = NetGear(receive_mode=True, pattern=1, logging=True, **options)
+client = NetGear(receive_mode=True, pattern=1, logging=True)
 
 # loop over
 while True:
@@ -193,6 +210,120 @@ client.close()
 
 &nbsp;
 
+
+### Bare-Minimum Usage with Variable Colorspace
+
+Frame Compression also supports specify incoming frames colorspace with compression. In following bare-minimum code, we will be sending [**GRAY**](https://en.wikipedia.org/wiki/Grayscale) frames from Server to Client:
+
+!!! new "New in v0.2.2" 
+    This example was added in `v0.2.2`.
+
+!!! example "This example works in conjunction with [Source ColorSpace manipulation for VideoCapture Gears ➶](../../../../../bonus/colorspace_manipulation/#source-colorspace-manipulation)"
+
+!!! info "Supported colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
+
+#### Server End
+
+Open your favorite terminal and execute the following python code:
+
+!!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard!"
+
+```python
+# import required libraries
+from vidgear.gears import VideoGear
+from vidgear.gears import NetGear
+import cv2
+
+# open any valid video stream(for e.g `test.mp4` file) and change its colorspace to `GRAY`
+stream = VideoGear(source="test.mp4", colorspace="COLOR_BGR2GRAY").start()
+
+# activate jpeg encoding and specify other related parameters
+options = {
+    "jpeg_compression": "GRAY", # grayscale
+    "jpeg_compression_quality": 90,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": True,
+}
+
+# Define NetGear Server with defined parameters
+server = NetGear(pattern=1, logging=True, **options)
+
+# loop over until KeyBoard Interrupted
+while True:
+
+    try:
+        # read grayscale frames from stream
+        frame = stream.read()
+
+        # check for frame if None-type
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # send grayscale frame to server
+        server.send(frame)
+
+    except KeyboardInterrupt:
+        break
+
+# safely close video stream
+stream.stop()
+
+# safely close server
+server.close()
+```
+
+&nbsp;
+
+#### Client End
+
+Then open another terminal on the same system and execute the following python code and see the output:
+
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
+
+!!! note "If compression is enabled at Server, then Client will automatically enforce Frame Compression with its performance attributes."
+
+!!! info "Client's end also automatically enforces Server's colorspace, there's no need to define it again."
+
+```python
+# import required libraries
+from vidgear.gears import NetGear
+import cv2
+
+# define NetGear Client with `receive_mode = True` and defined parameter
+client = NetGear(receive_mode=True, pattern=1, logging=True)
+
+# loop over
+while True:
+
+    # receive grayscale frames from network
+    frame = client.recv()
+
+    # check for received frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # Show output window
+    cv2.imshow("Output Grayscale Frame", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close client
+client.close()
+```
+
+&nbsp; 
+
+&nbsp;
 
 ### Using Frame Compression with Variable Parameters
 

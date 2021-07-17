@@ -191,6 +191,5 @@ if __name__ == "__main__":
     # run this object on Uvicorn server
     uvicorn.run(web(), host=args["ipaddress"], port=args["port"])
 
-    if args["mode"] == "mjpeg":
-        # close app safely
-        web.shutdown()
+    # close app safely
+    web.shutdown()
