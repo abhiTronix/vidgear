@@ -20,6 +20,7 @@ limitations under the License.
 # import the necessary packages
 
 import os
+import platform
 import queue
 import cv2
 import numpy as np
@@ -153,7 +154,7 @@ def test_patterns(pattern):
         assert not (frame_server is None)
         # send frame over network
         server.send(frame_server)
-        frame_client = client.recv()
+        frame_client = client.recv(return_data=[1, 2, 3] if pattern == 2 else None)
         # check if received frame exactly matches input frame
         assert np.array_equal(frame_server, frame_client)
     except Exception as e:
@@ -246,7 +247,14 @@ def test_compression(options_server):
 test_data_class = [
     (0, 1, tempfile.gettempdir(), True),
     (0, 1, ["invalid"], True),
-    (1, 1, "unknown://invalid.com/", False),
+    (
+        1,
+        2,
+        os.path.abspath(os.sep)
+        if platform.system() == "Linux"
+        else "unknown://invalid.com/",
+        False,
+    ),
 ]
 
 
@@ -350,24 +358,29 @@ def test_bidirectional_mode(pattern, target_data, options):
     server = None
     client = None
     try:
-        logger.debug("Given Input Data: {}".format(target_data))
+        logger.debug(
+            "Given Input Data: {}".format(
+                target_data if not isinstance(target_data, np.ndarray) else "IMAGE"
+            )
+        )
         # open stream
         options_gear = {"THREAD_TIMEOUT": 60}
+        # change colorspace
         colorspace = (
             "COLOR_BGR2GRAY"
             if isinstance(options["jpeg_compression"], str)
             and options["jpeg_compression"].strip().upper() == "GRAY"
             else None
         )
+        if colorspace == "COLOR_BGR2GRAY" and isinstance(target_data, np.ndarray):
+            target_data = cv2.cvtColor(target_data, cv2.COLOR_BGR2GRAY)
+
         stream = VideoGear(
             source=return_testvideo_path(), colorspace=colorspace, **options_gear
         ).start()
         # define params
-        client = NetGear(pattern=pattern, receive_mode=True, **options)
-        server = NetGear(pattern=pattern, **options)
-        # get frame from stream
-        frame_server = stream.read()
-        assert not (frame_server is None)
+        client = NetGear(pattern=pattern, receive_mode=True, logging=True, **options)
+        server = NetGear(pattern=pattern, logging=True, **options)
         # check if target data is numpy ndarray
         if isinstance(target_data, np.ndarray):
             # sent frame and data from server to client
@@ -375,11 +388,13 @@ def test_bidirectional_mode(pattern, target_data, options):
             # client receives the data and frame and send its data
             server_data, frame_client = client.recv(return_data=target_data)
             # server receives the data and cycle continues
-            client_data = server.send(target_data, message=target_data)
-            # logger.debug data received at client-end and server-end
-            logger.debug("Data received at Server-end: {}".format(frame_client))
-            logger.debug("Data received at Client-end: {}".format(client_data))
+            client_data = server.send(target_data)
+            # test if recieved successfully
+            assert not (client_data is None), "Test Failed!"
         else:
+            # get frame from stream
+            frame_server = stream.read()
+            assert not (frame_server is None)
             # sent frame and data from server to client
             server.send(frame_server, message=target_data)
             # client receives the data and frame and send its data
@@ -609,13 +624,13 @@ def test_multiclient_mode(pattern):
             "ssh_tunnel_pwd": "xyz",
             "ssh_tunnel_keyfile": "ok.txt",
         },
-        {"max_retries": 2, "request_timeout": 2, "multiclient_mode": True},
-        {"max_retries": 2, "request_timeout": 2, "multiserver_mode": True},
+        {"max_retries": 2, "request_timeout": 4, "multiclient_mode": True},
+        {"max_retries": 2, "request_timeout": -1, "multiserver_mode": True},
     ],
 )
 def test_client_reliablity(options):
     """
-    Testing validation function of WebGear API
+    Testing validation function of NetGear API
     """
     client = None
     frame_client = None
@@ -671,7 +686,7 @@ def test_client_reliablity(options):
 )
 def test_server_reliablity(options):
     """
-    Testing validation function of WebGear API
+    Testing validation function of NetGear API
     """
     server = None
     stream = None
@@ -706,3 +721,25 @@ def test_server_reliablity(options):
             stream.release()
         if not (server is None):
             server.close()
+
+
+@pytest.mark.parametrize(
+    "server_ports, client_ports, options",
+    [
+        (0, 5555, {"multiserver_mode": True}),
+        (5555, 0, {"multiclient_mode": True}),
+    ],
+)
+@pytest.mark.xfail(raises=ValueError)
+def test_ports(server_ports, client_ports, options):
+    """
+    Test made to fail on wrong port values
+    """
+    if server_ports:
+        server = NetGear(pattern=1, port=server_ports, logging=True, **options)
+        server.close()
+    else:
+        client = NetGear(
+            port=client_ports, pattern=1, receive_mode=True, logging=True, **options
+        )
+        client.close()
