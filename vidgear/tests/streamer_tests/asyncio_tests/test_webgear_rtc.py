@@ -54,15 +54,12 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
-# handles event loop
-# Setup and assign event loop policy
-if platform.system() == "Windows":
-    # On Windows, VidGear requires the ``WindowsSelectorEventLoop``, and this is
-    # the default in Python 3.7 and older, but new Python 3.8, defaults to an
-    # event loop that is not compatible with it. Thereby, we had to set it manually.
-    if sys.version_info[:2] >= (3, 8):
-        logger.info("Setting Event loop policy for windows.")
-        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+@pytest.fixture
+def event_loop():
+    """Create an instance of the default event loop for each test case."""
+    loop = asyncio.SelectorEventLoop()
+    yield loop
+    loop.close()
 
 
 def return_testvideo_path():
@@ -73,23 +70,6 @@ def return_testvideo_path():
         tempfile.gettempdir()
     )
     return os.path.abspath(path)
-
-
-def patch_eventlooppolicy():
-    """
-    Fixes event loop policy on newer python versions
-    """
-    # Retrieve event loop and assign it
-    if platform.system() == "Windows":
-        if sys.version_info[:2] >= (3, 8) and not isinstance(
-            asyncio.get_event_loop_policy(), asyncio.WindowsSelectorEventLoopPolicy
-        ):
-            logger.info("Resetting Event loop policy for windows.")
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    loop = asyncio.get_event_loop()
-    logger.debug(
-        "Using `{}` event loop for this process.".format(loop.__class__.__name__)
-    )
 
 
 class VideoTransformTrack(MediaStreamTrack):
@@ -144,7 +124,6 @@ class Custom_RTCServer(VideoStreamTrack):
     """
 
     def __init__(self, source=None):
-
         # don't forget this line!
         super().__init__()
 
@@ -189,7 +168,6 @@ class Invalid_Custom_RTCServer_1(VideoStreamTrack):
     """
 
     def __init__(self, source=None):
-
         # don't forget this line!
         super().__init__()
 
@@ -243,7 +221,6 @@ async def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
     """
     Test for various WebGear_RTC API parameters
     """
-    patch_eventlooppolicy()
     try:
         web = WebGear_RTC(
             source=source,
@@ -309,7 +286,6 @@ async def test_webgear_rtc_options(options):
     """
     Test for various WebGear_RTC API internal options
     """
-    patch_eventlooppolicy()
     web = None
     try:
         web = WebGear_RTC(source=return_testvideo_path(), logging=True, **options)
@@ -365,7 +341,6 @@ async def test_webpage_reload(options):
     Test for testing WebGear_RTC API against Webpage reload
     disruptions
     """
-    patch_eventlooppolicy()
     web = WebGear_RTC(source=return_testvideo_path(), logging=True, **options)
     try:
         # run webgear_rtc
@@ -445,7 +420,6 @@ async def test_webgear_rtc_custom_server_generator(server, result):
     """
     Test for WebGear_RTC API's custom source
     """
-    patch_eventlooppolicy()
     web = WebGear_RTC(logging=True)
     web.config["server"] = server
     async with TestClient(web()) as client:
@@ -466,7 +440,6 @@ async def test_webgear_rtc_custom_middleware(middleware, result):
     """
     Test for WebGear_RTC API's custom middleware
     """
-    patch_eventlooppolicy()
     try:
         web = WebGear_RTC(source=return_testvideo_path(), logging=True)
         web.middleware = middleware
@@ -484,7 +457,6 @@ async def test_webgear_rtc_routes():
     """
     Test for WebGear_RTC API's custom routes
     """
-    patch_eventlooppolicy()
     try:
         # add various performance tweaks as usual
         options = {
@@ -526,8 +498,10 @@ async def test_webgear_rtc_routes():
 
 @pytest.mark.asyncio
 async def test_webgear_rtc_routes_validity():
+    """
+    Test WebGear_RTC Routes
+    """
     # add various tweaks for testing only
-    patch_eventlooppolicy()
     options = {
         "enable_infinite_frames": False,
         "enable_live_broadcast": True,
