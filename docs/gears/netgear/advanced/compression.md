@@ -462,7 +462,7 @@ In this example we are going to implement a bare-minimum example, where we will 
 
 !!! note "This Dual Frame Compression feature also available for [Multi-Clients](../../advanced/multi_client/) Mode."
 
-!!! info "We're also using [`reducer()`](../../../../../bonus/reference/helper/#reducer) Helper method for reducing frame-size on-the-go for additional performance."
+!!! info "We're also using [`reducer()`](../../../../../bonus/reference/helper/#vidgear.gears.helper.reducer--reducer) Helper method for reducing frame-size on-the-go for additional performance."
 
 !!! success "Remember to define Frame Compression's [performance attributes](#performance-attributes) both on Server and Client ends in Dual Frame Compression to boost performance bidirectionally!"
 

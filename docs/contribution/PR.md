@@ -184,22 +184,22 @@ All Pull Request(s) must be tested, formatted & linted against our library stand
 
 Testing VidGear requires additional test dependencies and dataset, which can be handled manually as follows:
 
-* **Install additional python libraries:**
+- [x] **Install additional python libraries:**
   
     You can easily install these dependencies via pip:
 
-    ??? warning "Note for Windows"
-        The [`mpegdash`](https://github.com/sangwonl/python-mpegdash) library has not yet been updated and bugs on windows machines. Kindly instead try the forked [DEV-version of `mpegdash`](https://github.com/abhiTronix/python-mpegdash) as follows:
+    ??? info "MPEGDASH for Windows"
+        The [`mpegdash`](https://github.com/sangwonl/python-mpegdash) library has not yet been updated and bugs on windows machines. Therefore install the forked [DEV-version of `mpegdash`](https://github.com/abhiTronix/python-mpegdash) as follows:
         
         ```sh
         python -m pip install https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev/mpegdash-0.3.0.dev0-py3-none-any.whl
         ```
 
     ```sh
-    pip install --upgrade six, flake8, black, pytest, pytest-asyncio, mpegdash
+    pip install --upgrade six flake8 black pytest pytest-asyncio mpegdash paramiko async-asgi-testclient
     ```
 
-* **Download Tests Dataset:** 
+- [x] **Download Tests Dataset:** 
 
     To perform tests, you also need to download additional dataset *(to your temp dir)* by running [`prepare_dataset.sh`](https://github.com/abhiTronix/vidgear/blob/master/scripts/bash/prepare_dataset.sh)  bash script as follows:
 
@@ -223,13 +223,13 @@ All tests can be run with [`pytest`](https://docs.pytest.org/en/stable/)(*in Vid
 
 For formatting and linting, following libraries are used:
 
-* **Flake8:** You must run [`flake8`](https://flake8.pycqa.org/en/latest/manpage.html) linting for checking the code base against the coding style (PEP8), programming errors and other cyclomatic complexity:
+- [x] **Flake8:** You must run [`flake8`](https://flake8.pycqa.org/en/latest/manpage.html) linting for checking the code base against the coding style (PEP8), programming errors and other cyclomatic complexity:
 
     ```sh
-    flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+    flake8 {source_file_or_directory} --count --select=E9,F63,F7,F82 --show-source --statistics
     ```
 
-* **Black:**  Vidgear follows [`black`](https://github.com/psf/black) formatting to make code review faster by producing the smallest diffs possible. You must run it with sensible defaults as follows: 
+- [x] **Black:**  Vidgear follows [`black`](https://github.com/psf/black) formatting to make code review faster by producing the smallest diffs possible. You must run it with sensible defaults as follows: 
 
     ```sh
     black {source_file_or_directory}

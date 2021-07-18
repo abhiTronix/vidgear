@@ -29,9 +29,9 @@ limitations under the License.
 
 [Releases][release]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Gears][gears]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Documentation][docs]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Installation][installation]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[License](#license)
 
-[![Build Status][github-cli]][github-flow] [![Codecov branch][codecov]][code] [![Build Status][appveyor]][app]
+[![Build Status][github-cli]][github-flow]  [![Build Status][appveyor]][app] [![Azure DevOps builds (branch)][azure-badge]][azure-pipeline]
 
-[![Azure DevOps builds (branch)][azure-badge]][azure-pipeline] [![PyPi version][pypi-badge]][pypi] [![Glitter chat][gitter-bagde]][gitter]
+[![PyPi version][pypi-badge]][pypi] [![Codecov branch][codecov]][code] [![Glitter chat][gitter-bagde]][gitter]
 
 [![Code Style][black-badge]][black]
 </div>
@@ -67,10 +67,10 @@ The following **functional block diagram** clearly depicts the generalized funct
   * [**WebGear**](#webgear)
   * [**WebGear_RTC**](#webgear_rtc)
   * [**NetGear_Async**](#netgear_async)
-* [**Community Channel**](#community-channel)
-* [**Contributions & Support**](#contributions--support)
-  * [**Support**](#support)
+* [**Contributions & Community Support**](#contributions--community-support)
+  * [**Community Support**](community-support)
   * [**Contributors**](#contributors)
+* [**Donations**](#donations)
 * [**Citation**](#citation)
 * [**Copyright**](#copyright)
 
@@ -631,19 +631,17 @@ Whereas supported protocol are: `tcp` and `ipc`.
 
 &nbsp;
 
-# Contributions & Support
+# Contributions & Community Support
 
-Contributions are welcome. We'd love to have your contributions to VidGear to fix bugs or to implement new features!  
+> Contributions are welcome. We'd love to have your contributions to fix bugs or to implement new features!  
 
 Please see our **[Contribution Guidelines](contributing.md)** for more details.
 
-### Support
+### Community Support
 
-<img src="docs/overrides/assets/images/help_us.png" alt="PiGear" width="50%" />
+We ask contributors to join the Gitter community channel for quick discussions:
 
-Donations help keep VidGear's Development alive. Giving a little means a lot, even the smallest contribution can make a huge difference.
-
-[![ko-fi][kofi-badge]][kofi]
+[![Gitter](https://badges.gitter.im/vidgear/community.svg)](https://gitter.im/vidgear/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ### Contributors
 
@@ -657,9 +655,15 @@ Donations help keep VidGear's Development alive. Giving a little means a lot, ev
 &nbsp;
 
 
-# Community Channel
+# Donations
 
-If you've come up with some new idea, or looking for the fastest way troubleshoot your problems, then *join our [Gitter community channel ➶][gitter]*
+<img src="docs/overrides/assets/images/help_us.png" alt="PiGear" width="50%" />
+
+> VidGear is free and open source and will always remain so. :heart:
+
+It is (like all open source software) a labour of love and something I am doing with my own free time. If you would like to say thanks, please feel free to make a donation:
+
+[![ko-fi][kofi-badge]][kofi]
 
 
 &nbsp;

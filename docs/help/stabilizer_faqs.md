@@ -30,7 +30,7 @@ limitations under the License.
 
 ## How much latency you would typically expect with Stabilizer Class?
 
-**Answer:** The stabilizer will be Slower for High-Quality videos-frames. Try reducing frames size _(Use [`reducer()`](../../bonus/reference/helper/#reducer) method)_ before feeding them for reducing latency. Also, see [`smoothing_radius`](../../gears/stabilizer/params/#smoothing_radius) parameter of Stabilizer class that handles the quality of stabilization at the expense of latency and sudden panning. The larger its value, the less will be panning, more will be latency, and vice-versa.
+**Answer:** The stabilizer will be Slower for High-Quality videos-frames. Try reducing frames size _(Use [`reducer()`](../../bonus/reference/helper/#vidgear.gears.helper.reducer--reducer) method)_ before feeding them for reducing latency. Also, see [`smoothing_radius`](../../gears/stabilizer/params/#smoothing_radius) parameter of Stabilizer class that handles the quality of stabilization at the expense of latency and sudden panning. The larger its value, the less will be panning, more will be latency, and vice-versa.
 
 &nbsp;
 

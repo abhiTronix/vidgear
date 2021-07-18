@@ -365,7 +365,7 @@ In this example we are going to implement a bare-minimum example, where we will 
 
 !!! tip "This feature is great for building applications like Real-Time Video Chat."
 
-!!! info "We're also using [`reducer()`](../../../../../bonus/reference/helper/#reducer) method for reducing frame-size on-the-go for additional performance."
+!!! info "We're also using [`reducer()`](../../../../../bonus/reference/helper/#vidgear.gears.helper.reducer--reducer) method for reducing frame-size on-the-go for additional performance."
 
 !!! warning "Remember, Sending large HQ video-frames may required more network bandwidth and packet size which may lead to video latency!"
 
