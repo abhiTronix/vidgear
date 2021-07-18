@@ -68,7 +68,7 @@ The following **functional block diagram** clearly depicts the generalized funct
   * [**WebGear_RTC**](#webgear_rtc)
   * [**NetGear_Async**](#netgear_async)
 * [**Contributions & Community Support**](#contributions--community-support)
-  * [**Community Support**](community-support)
+  * [**Community Support**](#community-support)
   * [**Contributors**](#contributors)
 * [**Donations**](#donations)
 * [**Citation**](#citation)
