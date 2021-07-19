@@ -370,11 +370,31 @@ class WebGear:
             if self.__frame_size_reduction:
                 frame = await reducer(frame, percentage=self.__frame_size_reduction)
 
+            # handle JPEG encoding
+            if self.__jpeg_compression_colorspace == "GRAY":
+                if frame.ndim == 2:
+                    # patch for https://gitlab.com/jfolz/simplejpeg/-/issues/11
+                    frame = np.expand_dims(frame, axis=2)
+                encodedImage = simplejpeg.encode_jpeg(
+                    frame,
+                    quality=self.__jpeg_compression_quality,
+                    colorspace=self.__jpeg_compression_colorspace,
+                    fastdct=self.__jpeg_compression_fastdct,
+                )
+            else:
+                encodedImage = simplejpeg.encode_jpeg(
+                    frame,
+                    quality=self.__jpeg_compression_quality,
+                    colorspace=self.__jpeg_compression_colorspace,
+                    colorsubsampling="422",
+                    fastdct=self.__jpeg_compression_fastdct,
+                )
+
             # yield frame in byte format
             yield (
                 b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n"
             )
-            #await asyncio.sleep(0.00000001)
+            # await asyncio.sleep(0.00000001)
 
     async def __video(self, scope):
         """

@@ -445,6 +445,15 @@ def create_blank_frame(frame=None, text="", logging=False):
         cv2.putText(
             blank_frame, text, (textX, textY), font, fontScale, (125, 125, 125), 6
         )
+
+    # correct channels
+    if frame.ndim == 2:
+        blank_frame = cv2.cvtColor(blank_frame, cv2.COLOR_BGR2GRAY)
+    elif frame.ndim == 3 and frame.shape[-1] == 4:
+        blank_frame = cv2.cvtColor(blank_frame, cv2.COLOR_BGR2BGRA)
+    else:
+        pass
+
     # return frame
     return blank_frame
 
