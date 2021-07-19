@@ -50,6 +50,7 @@ from .helper import (
     logger_handler,
     generate_webdata,
     create_blank_frame,
+    retrieve_best_interpolation,
 )
 from ..videogear import VideoGear
 
@@ -111,9 +112,14 @@ class RTC_VideoServer(VideoStreamTrack):
         # initialize global params
         self.__logging = logging
         self.__enable_inf = False  # continue frames even when video ends.
-        self.__frame_size_reduction = 20  # 20% reduction
         self.is_launched = False  # check if launched already
         self.is_running = False  # check if running
+
+        self.__frame_size_reduction = 20  # 20% reduction
+        # retrieve interpolation for reduction
+        self.__interpolation = retrieve_best_interpolation(
+            ["INTER_LINEAR_EXACT", "INTER_LINEAR", "INTER_AREA"]
+        )
 
         if options:
             if "frame_size_reduction" in options:
@@ -233,7 +239,11 @@ class RTC_VideoServer(VideoStreamTrack):
 
         # reducer frames size if specified
         if self.__frame_size_reduction:
-            f_stream = await reducer(f_stream, percentage=self.__frame_size_reduction)
+            f_stream = await reducer(
+                f_stream,
+                percentage=self.__frame_size_reduction,
+                interpolation=self.__interpolation,
+            )
 
         # construct `av.frame.Frame` from `numpy.nd.array`
         frame = VideoFrame.from_ndarray(f_stream, format="bgr24")

@@ -35,7 +35,13 @@ from starlette.staticfiles import StaticFiles
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 
-from .helper import reducer, logger_handler, generate_webdata, create_blank_frame
+from .helper import (
+    reducer,
+    logger_handler,
+    generate_webdata,
+    create_blank_frame,
+    retrieve_best_interpolation,
+)
 from ..videogear import VideoGear
 
 # define logger
@@ -101,8 +107,12 @@ class WebGear:
         self.__jpeg_compression_fastdct = True  # fastest DCT on by default
         self.__jpeg_compression_fastupsample = False  # fastupsample off by default
         self.__jpeg_compression_colorspace = "BGR"  # use BGR colorspace by default
-        self.__frame_size_reduction = 25  # use 25% reduction
         self.__logging = logging
+        self.__frame_size_reduction = 25  # use 25% reduction
+        # retrieve interpolation for reduction
+        self.__interpolation = retrieve_best_interpolation(
+            ["INTER_LINEAR_EXACT", "INTER_LINEAR", "INTER_AREA"]
+        )
 
         custom_data_location = ""  # path to save data-files to custom location
         data_path = ""  # path to WebGear data-files
@@ -368,7 +378,11 @@ class WebGear:
 
             # reducer frames size if specified
             if self.__frame_size_reduction:
-                frame = await reducer(frame, percentage=self.__frame_size_reduction)
+                frame = await reducer(
+                    frame,
+                    percentage=self.__frame_size_reduction,
+                    interpolation=self.__interpolation,
+                )
 
             # handle JPEG encoding
             if self.__jpeg_compression_colorspace == "GRAY":
