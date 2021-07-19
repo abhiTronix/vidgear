@@ -24,6 +24,8 @@ import cv2
 import sys
 import asyncio
 import inspect
+import simplejpeg
+import numpy as np
 import logging as log
 from collections import deque
 from starlette.routing import Mount, Route
@@ -94,10 +96,12 @@ class WebGear:
         """
 
         # initialize global params
-        self.__jpeg_quality = 90  # 90% quality
-        self.__jpeg_optimize = 0  # optimization off
-        self.__jpeg_progressive = 0  # jpeg will be baseline instead
-        self.__frame_size_reduction = 20  # 20% reduction
+        # define frame-compression handler
+        self.__jpeg_compression_quality = 90  # 90% quality
+        self.__jpeg_compression_fastdct = True  # fastest DCT on by default
+        self.__jpeg_compression_fastupsample = False  # fastupsample off by default
+        self.__jpeg_compression_colorspace = "BGR"  # use BGR colorspace by default
+        self.__frame_size_reduction = 25  # use 25% reduction
         self.__logging = logging
 
         custom_data_location = ""  # path to save data-files to custom location
@@ -110,6 +114,59 @@ class WebGear:
 
         # assign values to global variables if specified and valid
         if options:
+            if "jpeg_compression_colorspace" in options:
+                value = options["jpeg_compression_colorspace"]
+                if isinstance(value, str) and value.strip().upper() in [
+                    "RGB",
+                    "BGR",
+                    "RGBX",
+                    "BGRX",
+                    "XBGR",
+                    "XRGB",
+                    "GRAY",
+                    "RGBA",
+                    "BGRA",
+                    "ABGR",
+                    "ARGB",
+                    "CMYK",
+                ]:
+                    # set encoding colorspace
+                    self.__jpeg_compression_colorspace = value.strip().upper()
+                else:
+                    logger.warning(
+                        "Skipped invalid `jpeg_compression_colorspace` value!"
+                    )
+                del options["jpeg_compression_colorspace"]  # clean
+
+            if "jpeg_compression_quality" in options:
+                value = options["jpeg_compression_quality"]
+                # set valid jpeg quality
+                if isinstance(value, (int, float)) and value >= 10 and value <= 100:
+                    self.__jpeg_compression_quality = int(value)
+                else:
+                    logger.warning("Skipped invalid `jpeg_compression_quality` value!")
+                del options["jpeg_compression_quality"]  # clean
+
+            if "jpeg_compression_fastdct" in options:
+                value = options["jpeg_compression_fastdct"]
+                # enable jpeg fastdct
+                if isinstance(value, bool):
+                    self.__jpeg_compression_fastdct = value
+                else:
+                    logger.warning("Skipped invalid `jpeg_compression_fastdct` value!")
+                del options["jpeg_compression_fastdct"]  # clean
+
+            if "jpeg_compression_fastupsample" in options:
+                value = options["jpeg_compression_fastupsample"]
+                # enable jpeg  fastupsample
+                if isinstance(value, bool):
+                    self.__jpeg_compression_fastupsample = value
+                else:
+                    logger.warning(
+                        "Skipped invalid `jpeg_compression_fastupsample` value!"
+                    )
+                del options["jpeg_compression_fastupsample"]  # clean
+
             if "frame_size_reduction" in options:
                 value = options["frame_size_reduction"]
                 if isinstance(value, (int, float)) and value >= 0 and value <= 90:
@@ -117,30 +174,6 @@ class WebGear:
                 else:
                     logger.warning("Skipped invalid `frame_size_reduction` value!")
                 del options["frame_size_reduction"]  # clean
-
-            if "frame_jpeg_quality" in options:
-                value = options["frame_jpeg_quality"]
-                if isinstance(value, (int, float)) and value >= 10 and value <= 95:
-                    self.__jpeg_quality = int(value)
-                else:
-                    logger.warning("Skipped invalid `frame_jpeg_quality` value!")
-                del options["frame_jpeg_quality"]  # clean
-
-            if "frame_jpeg_optimize" in options:
-                value = options["frame_jpeg_optimize"]
-                if isinstance(value, bool):
-                    self.__jpeg_optimize = int(value)
-                else:
-                    logger.warning("Skipped invalid `frame_jpeg_optimize` value!")
-                del options["frame_jpeg_optimize"]  # clean
-
-            if "frame_jpeg_progressive" in options:
-                value = options["frame_jpeg_progressive"]
-                if isinstance(value, bool):
-                    self.__jpeg_progressive = int(value)
-                else:
-                    logger.warning("Skipped invalid `frame_jpeg_progressive` value!")
-                del options["frame_jpeg_progressive"]  # clean
 
             if "custom_data_location" in options:
                 value = options["custom_data_location"]
@@ -201,12 +234,11 @@ class WebGear:
                 )
             )
             logger.debug(
-                "Setting params:: Size Reduction:{}%, JPEG quality:{}%, JPEG optimizations:{}, JPEG progressive:{}{}.".format(
-                    self.__frame_size_reduction,
-                    self.__jpeg_quality,
-                    bool(self.__jpeg_optimize),
-                    bool(self.__jpeg_progressive),
-                    " and emulating infinite frames" if self.__enable_inf else "",
+                "Enabling JPEG Frame-Compression with Colorspace:`{}`, Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                    self.__jpeg_compression_colorspace,
+                    self.__jpeg_compression_quality,
+                    "enabled" if self.__jpeg_compression_fastdct else "disabled",
+                    "enabled" if self.__jpeg_compression_fastupsample else "disabled",
                 )
             )
 
@@ -337,31 +369,18 @@ class WebGear:
             # reducer frames size if specified
             if self.__frame_size_reduction:
                 frame = await reducer(frame, percentage=self.__frame_size_reduction)
-            # handle JPEG encoding
-            encodedImage = cv2.imencode(
-                ".jpg",
-                frame,
-                [
-                    cv2.IMWRITE_JPEG_QUALITY,
-                    self.__jpeg_quality,
-                    cv2.IMWRITE_JPEG_PROGRESSIVE,
-                    self.__jpeg_progressive,
-                    cv2.IMWRITE_JPEG_OPTIMIZE,
-                    self.__jpeg_optimize,
-                ],
-            )[1].tobytes()
+
             # yield frame in byte format
             yield (
                 b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n"
             )
-            await asyncio.sleep(0.00001)
+            #await asyncio.sleep(0.00000001)
 
     async def __video(self, scope):
         """
         Return a async video streaming response.
         """
         assert scope["type"] in ["http", "https"]
-        await asyncio.sleep(0.00001)
         return StreamingResponse(
             self.config["generator"](),
             media_type="multipart/x-mixed-replace; boundary=frame",
