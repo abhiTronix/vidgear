@@ -53,7 +53,7 @@ Frame Compression is enabled by default in NetGear, and can be easily controlled
 
 For implementing Frame Compression, NetGear API currently provide following attribute for its [`options`](../../params/#options) dictionary parameter to leverage performance with Frame Compression:
 
-* `jpeg_compression` _(bool/str)_:  This internal attribute is used to activate/deactivate JPEG Frame Compression as well as to specify incoming frames colorspace with compression. Its usage is as follows:
+* `jpeg_compression`:  _(bool/str)_ This internal attribute is used to activate/deactivate JPEG Frame Compression as well as to specify incoming frames colorspace with compression. Its usage is as follows:
 
     - [x] **For activating JPEG Frame Compression _(Boolean)_:**
     
@@ -85,13 +85,13 @@ For implementing Frame Compression, NetGear API currently provide following attr
         # activate jpeg encoding and set quality 95%
         options = {"jpeg_compression": True, "jpeg_compression_quality": 95}
         ```
-    * `jpeg_compression_fastdct` _(bool)_: This attribute if True, NetGear API uses fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`, and its usage is as follows:
+    * `jpeg_compression_fastdct`: _(bool)_ This attribute if True, NetGear API uses fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`, and its usage is as follows:
     
         ```python
         # activate jpeg encoding and enable fast dct
         options = {"jpeg_compression": True, "jpeg_compression_fastdct": True}
         ```
-    * `jpeg_compression_fastupsample` _(bool)_: This attribute if True, NetGear API use fastest color upsampling method. Its default value is `False`, and its usage is as follows:
+    * `jpeg_compression_fastupsample`: _(bool)_ This attribute if True, NetGear API use fastest color upsampling method. Its default value is `False`, and its usage is as follows:
     
         ```python
         # activate jpeg encoding and enable fast upsampling
@@ -234,12 +234,12 @@ from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
 import cv2
 
-# open any valid video stream(for e.g `test.mp4` file) and change its colorspace to `GRAY`
+# open any valid video stream(for e.g `test.mp4` file) and change its colorspace to grayscale
 stream = VideoGear(source="test.mp4", colorspace="COLOR_BGR2GRAY").start()
 
 # activate jpeg encoding and specify other related parameters
 options = {
-    "jpeg_compression": "GRAY", # grayscale
+    "jpeg_compression": "GRAY", # set grayscale
     "jpeg_compression_quality": 90,
     "jpeg_compression_fastdct": True,
     "jpeg_compression_fastupsample": True,
@@ -304,7 +304,7 @@ while True:
     if frame is None:
         break
 
-    # {do something with the frame here}
+    # {do something with the grayscale frame here}
 
     # Show output window
     cv2.imshow("Output Grayscale Frame", frame)

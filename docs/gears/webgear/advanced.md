@@ -25,6 +25,50 @@ limitations under the License.
 
 &thinsp;
 
+
+### Using WebGear with Variable Colorspace
+
+WebGear by default only supports "BGR" colorspace with consumer or client. But you can use [`jpeg_compression_colorspace`](../params/#webgear_rtc-specific-attributes) string attribute through its options dictionary parameter to specify incoming frames colorspace. 
+
+Let's implement a bare-minimum example using WebGear, where we will be sending [**GRAY**](https://en.wikipedia.org/wiki/Grayscale) frames to client browser:
+
+!!! new "New in v0.2.2" 
+    This example was added in `v0.2.2`.
+
+!!! example "This example works in conjunction with [Source ColorSpace manipulation for VideoCapture Gears ➶](../../../../bonus/colorspace_manipulation/#source-colorspace-manipulation)"
+
+!!! info "Supported colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
+
+```python
+# import required libraries
+import uvicorn
+from vidgear.gears.asyncio import WebGear_RTC
+
+# various performance tweaks and enable grayscale input
+options = {
+    "frame_size_reduction": 25,
+    "jpeg_compression_colorspace": "GRAY",  # set grayscale
+    "jpeg_compression_quality": 90,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": True,
+}
+
+# initialize WebGear_RTC app and change its colorspace to grayscale
+web = WebGear_RTC(
+    source="foo.mp4", colorspace="COLOR_BGR2GRAY", logging=True, **options
+)
+
+# run this app on Uvicorn server at address http://0.0.0.0:8000/
+uvicorn.run(web(), host="0.0.0.0", port=8000)
+
+# close app safely
+web.shutdown()
+```
+
+**And that's all, Now you can see output at [`http://localhost:8000/`](http://localhost:8000/) address on your local machine.**
+
+&thinsp;
+
 ## Using WebGear with a Custom Source(OpenCV)
 
 !!! new "New in v0.2.1" 
@@ -62,12 +106,12 @@ async def my_frame_producer():
         # do something with your OpenCV frame here
 
         # reducer frames size if you want more performance otherwise comment this line
-        frame = await reducer(frame, percentage=30)  # reduce frame by 30%
+        frame = await reducer(frame, percentage=30, interpolation=cv2.INTER_LINEAR)  # reduce frame by 30%
         # handle JPEG encoding
         encodedImage = cv2.imencode(".jpg", frame)[1].tobytes()
         # yield frame in byte format
-        yield (b"--frame\r\nContent-Type:video/jpeg2000\r\n\r\n" + encodedImage + b"\r\n")
-        await asyncio.sleep(0.00001)
+        yield (b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n")
+        await asyncio.sleep(0.0000001)
     # close stream
     stream.release()
 
@@ -101,9 +145,9 @@ from vidgear.gears.asyncio import WebGear
 # various performance tweaks
 options = {
     "frame_size_reduction": 40,
-    "frame_jpeg_quality": 80,
-    "frame_jpeg_optimize": True,
-    "frame_jpeg_progressive": False,
+    "jpeg_compression_quality": 80,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": False,
 }
 
 # initialize WebGear app
@@ -172,9 +216,9 @@ async def hello_world(request):
 # add various performance tweaks as usual
 options = {
     "frame_size_reduction": 40,
-    "frame_jpeg_quality": 80,
-    "frame_jpeg_optimize": True,
-    "frame_jpeg_progressive": False,
+    "jpeg_compression_quality": 80,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": False,
 }
 
 # initialize WebGear app with a valid source
@@ -220,9 +264,9 @@ from vidgear.gears.asyncio import WebGear
 # add various performance tweaks as usual
 options = {
     "frame_size_reduction": 40,
-    "frame_jpeg_quality": 80,
-    "frame_jpeg_optimize": True,
-    "frame_jpeg_progressive": False,
+    "jpeg_compression_quality": 80,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": False,
 }
 
 # initialize WebGear app with a valid source
@@ -286,9 +330,9 @@ from vidgear.gears.asyncio import WebGear
 # various webgear performance and Raspberry Pi camera tweaks
 options = {
     "frame_size_reduction": 40,
-    "frame_jpeg_quality": 80,
-    "frame_jpeg_optimize": True,
-    "frame_jpeg_progressive": False,
+    "jpeg_compression_quality": 80,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": False,
     "hflip": True,
     "exposure_mode": "auto",
     "iso": 800,
@@ -323,9 +367,9 @@ from vidgear.gears.asyncio import WebGear
 # various webgear performance tweaks
 options = {
     "frame_size_reduction": 40,
-    "frame_jpeg_quality": 80,
-    "frame_jpeg_optimize": True,
-    "frame_jpeg_progressive": False,
+    "jpeg_compression_quality": 80,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": False,
 }
 
 # initialize WebGear app  with a raw source and enable video stabilization(`stabilize=True`)
