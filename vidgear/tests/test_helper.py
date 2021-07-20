@@ -41,6 +41,7 @@ from vidgear.gears.helper import (
     create_blank_frame,
     is_valid_url,
     logger_handler,
+    delete_file_safe,
     validate_audio,
     validate_video,
     validate_ffmpeg,
@@ -326,6 +327,7 @@ def test_check_output():
         (getframe(), 85, cv2.INTER_AREA, True),
         (None, 80, cv2.INTER_AREA, False),
         (getframe(), 95, cv2.INTER_AREA, False),
+        (getframe(), 80, "invalid", False),
         (getframe(), 80, 797, False),
     ],
 )
@@ -413,14 +415,19 @@ def test_validate_audio(path, result):
 
 @pytest.mark.parametrize(
     "frame , text",
-    [(getframe(), "ok"), (None, ""), (getframe(), 123)],
+    [
+        (getframe(), "ok"),
+        (cv2.cvtColor(getframe(), cv2.COLOR_BGR2BGRA), "ok"),
+        (None, ""),
+        (cv2.cvtColor(getframe(), cv2.COLOR_BGR2GRAY), 123),
+    ],
 )
 def test_create_blank_frame(frame, text):
     """
     Testing create_blank_frame function
     """
     try:
-        text_frame = create_blank_frame(frame=frame, text=text)
+        text_frame = create_blank_frame(frame=frame, text=text, logging=True)
         logger.debug(text_frame.shape)
         assert not (text_frame is None)
     except Exception as e:
@@ -559,5 +566,15 @@ def test_retrieve_best_interpolation(interpolations):
         output = retrieve_best_interpolation(interpolations)
         if interpolations != "invalid":
             assert output, "Test failed"
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+def test_delete_file_safe():
+    """
+    Testing delete_file_safe method
+    """
+    try:
+        delete_file_safe(os.path.join(expanduser("~"), "invalid"))
     except Exception as e:
         pytest.fail(str(e))

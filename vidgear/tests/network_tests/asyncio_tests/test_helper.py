@@ -62,6 +62,7 @@ def getframe():
         (getframe(), 85, cv2.INTER_AREA, True),
         (None, 80, cv2.INTER_AREA, False),
         (getframe(), 95, cv2.INTER_AREA, False),
+        (getframe(), 80, "invalid", False),
         (getframe(), 80, 797, False),
     ],
 )
@@ -92,14 +93,19 @@ async def test_reducer_asyncio(frame, percentage, interpolation, result):
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "frame , text",
-    [(getframe(), "ok"), (None, ""), (getframe(), 123)],
+    [
+        (getframe(), "ok"),
+        (cv2.cvtColor(getframe(), cv2.COLOR_BGR2BGRA), "ok"),
+        (None, ""),
+        (getframe(), 123),
+    ],
 )
 async def test_create_blank_frame_asyncio(frame, text):
     """
     Testing create_blank_frame function
     """
     try:
-        text_frame = create_blank_frame(frame=frame, text=text)
+        text_frame = create_blank_frame(frame=frame, text=text, logging=True)
         logger.debug(text_frame.shape)
         assert not (text_frame is None)
     except Exception as e:
