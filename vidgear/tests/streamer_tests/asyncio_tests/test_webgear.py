@@ -122,7 +122,7 @@ def test_webgear_class(source, stabilize, colorspace, time_delay):
             "enable_infinite_frames": "invalid",
         },
         {
-            "jpeg_compression": " gray  ",
+            "jpeg_compression_colorspace": " gray  ",
             "jpeg_compression_quality": 50,
             "jpeg_compression_fastdct": True,
             "jpeg_compression_fastupsample": True,
