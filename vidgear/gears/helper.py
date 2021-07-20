@@ -423,12 +423,12 @@ def create_blank_frame(frame=None, text="", logging=False):
     **Returns:**  A reduced numpy ndarray array.
     """
     # check if frame is valid
-    if frame is None:
-        raise ValueError("[Helper:ERROR] :: Input frame cannot be NoneType!")
+    if frame is None or not (isinstance(frame, np.ndarray)):
+        raise ValueError("[Helper:ERROR] :: Input frame is invalid!")
     # grab the frame size
     (height, width) = frame.shape[:2]
     # create blank frame
-    blank_frame = np.zeros((height, width, 3), np.uint8)
+    blank_frame = np.zeros(frame.shape, frame.dtype)
     # setup text
     if text and isinstance(text, str):
         if logging:
@@ -445,6 +445,7 @@ def create_blank_frame(frame=None, text="", logging=False):
         cv2.putText(
             blank_frame, text, (textX, textY), font, fontScale, (125, 125, 125), 6
         )
+
     # return frame
     return blank_frame
 
@@ -618,7 +619,7 @@ def delete_ext_safe(dir_path, extensions=[], logging=False):
                 logger.debug("Deleted file: `{}`".format(file))
 
 
-def capPropId(property):
+def capPropId(property, logging=True):
     """
     ### capPropId
 
@@ -626,6 +627,7 @@ def capPropId(property):
 
     Parameters:
         property (string): inputs OpenCV property as string.
+        logging (bool): enables logging for its operations
 
     **Returns:** Resultant integer value.
     """
@@ -633,10 +635,28 @@ def capPropId(property):
     try:
         integer_value = getattr(cv2, property)
     except Exception as e:
-        logger.exception(str(e))
-        logger.critical("`{}` is not a valid OpenCV property!".format(property))
+        if logging:
+            logger.exception(str(e))
+            logger.critical("`{}` is not a valid OpenCV property!".format(property))
         return None
     return integer_value
+
+
+def retrieve_best_interpolation(interpolations):
+    """
+    ### retrieve_best_interpolation
+    Retrieves best interpolation for resizing
+
+    Parameters:
+        interpolations (list): list of interpolations as string.
+    **Returns:**  Resultant integer value of found interpolation.
+    """
+    if isinstance(interpolations, list):
+        for intp in interpolations:
+            interpolation = capPropId(intp, logging=False)
+            if not (interpolation is None):
+                return interpolation
+    return None
 
 
 def youtube_url_validator(url):
@@ -662,7 +682,7 @@ def youtube_url_validator(url):
         return ""
 
 
-def reducer(frame=None, percentage=0):
+def reducer(frame=None, percentage=0, interpolation=cv2.INTER_LANCZOS4):
     """
     ### reducer
 
@@ -671,6 +691,7 @@ def reducer(frame=None, percentage=0):
     Parameters:
         frame (numpy.ndarray): inputs numpy array(frame).
         percentage (int/float): inputs size-reduction percentage.
+        interpolation (int): Change resize interpolation.
 
     **Returns:**  A reduced numpy ndarray array.
     """
@@ -684,6 +705,11 @@ def reducer(frame=None, percentage=0):
             "[Helper:ERROR] :: Given frame-size reduction percentage is invalid, Kindly refer docs."
         )
 
+    if not (isinstance(interpolation, int)):
+        raise ValueError(
+            "[Helper:ERROR] :: Given interpolation is invalid, Kindly refer docs."
+        )
+
     # grab the frame size
     (height, width) = frame.shape[:2]
 
@@ -694,7 +720,7 @@ def reducer(frame=None, percentage=0):
     dimensions = (int(reduction), int(height * ratio))
 
     # return the resized frame
-    return cv2.resize(frame, dimensions, interpolation=cv2.INTER_LANCZOS4)
+    return cv2.resize(frame, dimensions, interpolation=interpolation)
 
 
 def dict2Args(param_dict):

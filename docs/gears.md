@@ -29,7 +29,7 @@ limitations under the License.
 
 VidGear is built on Standalone APIs - also known as **Gears**, each with some unique functionality. Each Gears is designed exclusively to handle/control/process different data-specific & device-specific video streams, network streams, and media encoders/decoders. 
 
-These Gears allows users to work with an inherently optimized, easy-to-use, extensible, and exposed API Framework over many state-of-the-art libraries, while silently delivering robust error handling and unmatched real-time performance.
+Gears allows users to work with an inherently optimized, easy-to-use, extensible, and exposed API Framework on top of many state-of-the-art libraries, while silently delivering robust error handling and unmatched real-time performance.
 
 ## Gears Classification
 

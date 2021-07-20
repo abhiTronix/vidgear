@@ -75,13 +75,43 @@ This parameter can be used to pass user-defined parameter to WebGear_RTC API by 
     WebGear_RTC(logging=True, **options)
     ```
 
-* **`frame_size_reduction`** _(int/float)_ : This attribute controls the size reduction _(in percentage)_ of the frame to be streamed on Server. The value defaults to `20`, and must be no higher than `90` _(fastest, max compression, Barely Visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40-60`. Its usage is as follows:
+* **`frame_size_reduction`** _(int/float)_ : This attribute controls the size reduction _(in percentage)_ of the frame to be streamed on Server and it has the  most significant effect on performance. The value defaults to `20`, and must be no higher than `90` _(fastest, max compression, Barely Visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40-60`. Its usage is as follows:
 
     ```python
     # frame-size will be reduced by 50%
     options = {"frame_size_reduction": 50} 
     # assign it
     WebGear_RTC(logging=True, **options)
+    ```
+
+* **`jpeg_compression_quality`** _(int/float)_ : This attribute controls the JPEG quantization factor. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. Its usage is as follows:
+
+    ```python
+    # activate jpeg encoding and set quality 95%
+    options = {"jpeg_compression": True, "jpeg_compression_quality": 95}
+    ```
+
+* **`jpeg_compression_fastdct`** _(bool)_ : This attribute if True, WebGear API uses fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`, and its usage is as follows:
+
+    ```python
+    # activate jpeg encoding and enable fast dct
+    options = {"jpeg_compression": True, "jpeg_compression_fastdct": True}
+    ```
+
+* **`jpeg_compression_fastupsample`** _(bool)_ : This attribute if True, WebGear API use fastest color upsampling method. Its default value is `False`, and its usage is as follows:
+
+    ```python
+    # activate jpeg encoding and enable fast upsampling
+    options = {"jpeg_compression": True, "jpeg_compression_fastupsample": True}
+    ```
+
+* **`jpeg_compression_colorspace`** _(str)_ :  This internal attribute is used to specify incoming frames colorspace with compression. Its usage is as follows:
+
+    !!! info "Supported colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
+
+    ```python
+    # Specify incoming frames are `grayscale`
+    options = {"jpeg_compression": "GRAY"}
     ```
 
 * **`enable_live_broadcast`** _(boolean)_ : WebGear_RTC by default only supports one-to-one peer connection with a single consumer/client, Hence this boolean attribute can be used to enable live broadcast to multiple peer consumers/clients at same time. Its default value is `False`. Its usage is as follows:

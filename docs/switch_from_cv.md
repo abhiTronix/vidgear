@@ -40,14 +40,14 @@ Switching OpenCV with VidGear APIs is usually a fairly painless process, and wil
 
 !!! info "Learn more about OpenCV [here ➶](https://software.intel.com/content/www/us/en/develop/articles/what-is-opencv.html)"
 
-VidGear employs OpenCV at its backend and enhances its existing capabilities even further by introducing many new state-of-the-art features on top of it like:
+VidGear employs OpenCV at its backend and enhances its existing capabilities even further by introducing many new state-of-the-art functionalities such as:
 
 - [x] Accelerated [Multi-Threaded](../bonus/TQM/#c-accelerates-frame-processing) Performance.
 - [x] Real-time Stabilization.
 - [x] Inherit support for multiple sources.
 - [x] Screen-casting, Live network-streaming, [plus way much more ➶](../gears)
 
-Vidgear offers all this while maintaining the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax for all of its APIs, thereby making it even easier to implement Complex OpenCV applications in fewer lines of python code.
+Vidgear offers all this at once while maintaining the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax for all of its APIs, thereby making it even easier to implement complex OpenCV applications in way fewer lines and without changing your python code much.
 
 &nbsp; 
 
@@ -150,7 +150,7 @@ Let's breakdown a few noteworthy difference in both syntaxes:
 | Terminating | `#!python stream.release()` | `#!python stream.stop()` |
 
 
-!!! success "Now, checkout other [VideoCapture Gears ➶](../gears/#a-videocapture-gears)"
+!!! success "Now checkout other [VideoCapture Gears ➶](../gears/#a-videocapture-gears)"
 
 
 &nbsp; 
@@ -274,6 +274,6 @@ Let's breakdown a few noteworthy difference in both syntaxes:
 | Writing frames | `#!python writer.write(frame)` | `#!python writer.write(frame)` |
 | Terminating | `#!python writer.release()` | `#!python writer.close()` |
 
-!!! success "Now, checkout more examples of WriteGear API _(with FFmpeg backend)_ [here ➶](../gears/writegear/compression/usage/)"
+!!! success "Now checkout more about WriteGear API [here ➶](../gears/writegear/introduction/)"
 
 &thinsp; 

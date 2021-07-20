@@ -20,10 +20,11 @@ limitations under the License.
 
 # SSH Tunneling Mode for NetGear API 
 
-<figure>
-  <img src="../../../../assets/images/ssh_tunnel.png" alt="NetGear's SSH Tunneling Mode" loading="lazy"/>
-  <figcaption>NetGear's SSH Tunneling Mode</figcaption>
-</figure>
+<h3 align="center">
+  <img src="../../../../assets/images/ssh_tunnel.png" alt="NetGear's SSH Tunneling Mode" loading="lazy" class="center"/>
+  <figcaption>NetGear's Bidirectional Mode</figcaption>
+</h3>
+
 
 ## Overview
 

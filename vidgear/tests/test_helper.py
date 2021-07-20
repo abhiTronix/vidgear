@@ -41,6 +41,7 @@ from vidgear.gears.helper import (
     create_blank_frame,
     is_valid_url,
     logger_handler,
+    delete_file_safe,
     validate_audio,
     validate_video,
     validate_ffmpeg,
@@ -52,6 +53,7 @@ from vidgear.gears.helper import (
     generate_auth_certificates,
     get_supported_resolution,
     dimensions_to_resolutions,
+    retrieve_best_interpolation,
 )
 from vidgear.gears.asyncio.helper import generate_webdata, validate_webdata
 
@@ -320,17 +322,23 @@ def test_check_output():
 
 
 @pytest.mark.parametrize(
-    "frame , percentage, result",
-    [(getframe(), 85, True), (None, 80, False), (getframe(), 95, False)],
+    "frame , percentage, interpolation, result",
+    [
+        (getframe(), 85, cv2.INTER_AREA, True),
+        (None, 80, cv2.INTER_AREA, False),
+        (getframe(), 95, cv2.INTER_AREA, False),
+        (getframe(), 80, "invalid", False),
+        (getframe(), 80, 797, False),
+    ],
 )
-def test_reducer(frame, percentage, result):
+def test_reducer(frame, percentage, interpolation, result):
     """
     Testing frame size reducer function
     """
     if not (frame is None):
         org_size = frame.shape[:2]
     try:
-        reduced_frame = reducer(frame, percentage)
+        reduced_frame = reducer(frame, percentage, interpolation)
         logger.debug(reduced_frame.shape)
         assert not (reduced_frame is None)
         reduced_frame_size = reduced_frame.shape[:2]
@@ -341,8 +349,8 @@ def test_reducer(frame, percentage, result):
             100 * reduced_frame_size[1] // (100 - percentage) == org_size[1]
         )  # cross-check height
     except Exception as e:
-        if isinstance(e, ValueError) and not (result):
-            pass
+        if not (result):
+            pytest.xfail(str(e))
         else:
             pytest.fail(str(e))
 
@@ -407,14 +415,19 @@ def test_validate_audio(path, result):
 
 @pytest.mark.parametrize(
     "frame , text",
-    [(getframe(), "ok"), (None, ""), (getframe(), 123)],
+    [
+        (getframe(), "ok"),
+        (cv2.cvtColor(getframe(), cv2.COLOR_BGR2BGRA), "ok"),
+        (None, ""),
+        (cv2.cvtColor(getframe(), cv2.COLOR_BGR2GRAY), 123),
+    ],
 )
 def test_create_blank_frame(frame, text):
     """
-    Testing frame size reducer function
+    Testing create_blank_frame function
     """
     try:
-        text_frame = create_blank_frame(frame=frame, text=text)
+        text_frame = create_blank_frame(frame=frame, text=text, logging=True)
         logger.debug(text_frame.shape)
         assert not (text_frame is None)
     except Exception as e:
@@ -535,3 +548,33 @@ def test_delete_ext_safe(ext, result):
     except Exception as e:
         if result:
             pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "interpolations",
+    [
+        "invalid",
+        ["invalid", "invalid2", "INTER_LANCZOS4"],
+        ["INTER_NEAREST_EXACT", "INTER_LINEAR_EXACT", "INTER_LANCZOS4"],
+    ],
+)
+def test_retrieve_best_interpolation(interpolations):
+    """
+    Testing retrieve_best_interpolation method
+    """
+    try:
+        output = retrieve_best_interpolation(interpolations)
+        if interpolations != "invalid":
+            assert output, "Test failed"
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+def test_delete_file_safe():
+    """
+    Testing delete_file_safe method
+    """
+    try:
+        delete_file_safe(os.path.join(expanduser("~"), "invalid"))
+    except Exception as e:
+        pytest.fail(str(e))

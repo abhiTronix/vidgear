@@ -40,13 +40,17 @@ VidGear focuses on simplicity, and thereby lets programmers and software develop
 
 ## Getting Started
 
-- [x] If this is your first time using VidGear, head straight to the [Installation ➶](installation.md) to install VidGear.
+!!! tip "In case you're run into any problems, consult the [Help](help/get_help) section."
 
-- [x] Once you have VidGear installed, **Checkout its Function-Specific [Gears ➶](gears.md)**
+- [x] If this is your first time using VidGear, head straight to the [**Installation**](installation.md) to install VidGear.
 
-- [x] Also, if you're already familar with [OpenCV][opencv] library, then see [Switching from OpenCV Library ➶](switch_from_cv.md)
+- [x] Once you have VidGear installed, Checkout its **[Function-Specific Gears](gears.md)**.
 
-- [x] Or, if you're just getting started with OpenCV with Python, then see [here ➶](help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)
+- [x] Also, if you're already familar with [**OpenCV**][opencv] library, then see **[Switching from OpenCV Library](switch_from_cv.md)**.
+
+!!! alert "If you're just getting started with OpenCV-Python, then see [here ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)"
+
+
 
 &thinsp;
 
@@ -63,7 +67,7 @@ These Gears can be classified as follows:
 * [CamGear](gears/camgear/overview/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
 * [PiGear](gears/pigear/overview/): Multi-Threaded API targeting various Raspberry-Pi Camera Modules.
 * [ScreenGear](gears/screengear/overview/): Multi-Threaded API targeting ultra-fast Screencasting.    
-* [VideoGear](gears/videogear/overview/): Common Video-Capture API with internal [Video Stabilizer](gears/stabilizer/overview/) wrapper.
+* [VideoGear](gears/videogear/overview/): Common Video-Capture API with internal [_Video Stabilizer_](gears/stabilizer/overview/) wrapper.
 
 #### VideoWriter Gears
 
@@ -92,29 +96,29 @@ These Gears can be classified as follows:
 
 > Contributions are welcome, and greatly appreciated!  
 
-Please see our [Contribution Guidelines ➶](contribution.md) for more details.
+Please see our [**Contribution Guidelines**](contribution.md) for more details.
 
 &thinsp;
 
 ## Community Channel
 
-If you've come up with some new idea, or looking for the fastest way troubleshoot your problems. Please checkout our [Gitter community channel ➶][gitter]
+If you've come up with some new idea, or looking for the fastest way troubleshoot your problems. Please checkout our [**Gitter community channel ➶**][gitter]
 
 &thinsp; 
 
 ## Become a Stargazer
 
-You can be a [Stargazer :star2:][stargazer] by starring us on Github, it helps us a lot and you're making it easier for others to find & trust this library. Thanks!
+You can be a [**Stargazer :star2:**][stargazer] by starring us on Github, it helps us a lot and you're making it easier for others to find & trust this library. Thanks!
 
 &thinsp;
 
-## Support Us
+## Donations
 
-> VidGear relies on your support :heart:
+> VidGear is free and open source and will always remain so. :heart:
 
-Donations help keep VidGear's Open Source Development alive. No amount is too little, even the smallest contributions can make a huge difference.
+It is (like all open source software) a labour of love and something I am doing with my own free time. If you would like to say thanks, please feel free to make a donation:
 
-<script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Us on Ko-fi', '#eba100', 'W7W8WTYO');kofiwidget2.draw();</script> 
+<script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#eba100', 'W7W8WTYO');kofiwidget2.draw();</script> 
 
 &thinsp;
 

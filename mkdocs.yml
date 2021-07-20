@@ -56,8 +56,8 @@ theme:
         icon: material/weather-night
         name: Switch to light mode
   font:
-    text: Source Sans Pro
-    code: IBM Plex
+    text: Muli
+    code: Fira Code
   icon:
     logo: logo
   logo: assets/images/logo.svg
