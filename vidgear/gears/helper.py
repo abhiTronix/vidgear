@@ -423,12 +423,12 @@ def create_blank_frame(frame=None, text="", logging=False):
     **Returns:**  A reduced numpy ndarray array.
     """
     # check if frame is valid
-    if frame is None:
-        raise ValueError("[Helper:ERROR] :: Input frame cannot be NoneType!")
+    if frame is None or not (isinstance(frame, np.ndarray)):
+        raise ValueError("[Helper:ERROR] :: Input frame is invalid!")
     # grab the frame size
     (height, width) = frame.shape[:2]
     # create blank frame
-    blank_frame = np.zeros((height, width, 3), np.uint8)
+    blank_frame = np.zeros(frame.shape, frame.dtype)
     # setup text
     if text and isinstance(text, str):
         if logging:
@@ -445,14 +445,6 @@ def create_blank_frame(frame=None, text="", logging=False):
         cv2.putText(
             blank_frame, text, (textX, textY), font, fontScale, (125, 125, 125), 6
         )
-
-    # correct channels
-    if frame.ndim == 2:
-        blank_frame = cv2.cvtColor(blank_frame, cv2.COLOR_BGR2GRAY)
-    elif frame.ndim == 3 and frame.shape[-1] == 4:
-        blank_frame = cv2.cvtColor(blank_frame, cv2.COLOR_BGR2BGRA)
-    else:
-        pass
 
     # return frame
     return blank_frame
