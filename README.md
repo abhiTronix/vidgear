@@ -29,9 +29,9 @@ limitations under the License.
 
 [Releases][release]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Gears][gears]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Documentation][docs]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Installation][installation]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[License](#license)
 
-[![Build Status][github-cli]][github-flow]  [![Build Status][appveyor]][app] [![Azure DevOps builds (branch)][azure-badge]][azure-pipeline]
+[![Build Status][github-cli]][github-flow] [![Codecov branch][codecov]][code]  [![Azure DevOps builds (branch)][azure-badge]][azure-pipeline]
 
-[![PyPi version][pypi-badge]][pypi] [![Codecov branch][codecov]][code] [![Glitter chat][gitter-bagde]][gitter]
+[![Glitter chat][gitter-bagde]][gitter] [![Build Status][appveyor]][app] [![PyPi version][pypi-badge]][pypi] 
 
 [![Code Style][black-badge]][black]
 </div>

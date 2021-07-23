@@ -192,7 +192,7 @@ Testing VidGear requires additional test dependencies and dataset, which can be 
         The [`mpegdash`](https://github.com/sangwonl/python-mpegdash) library has not yet been updated and bugs on windows machines. Therefore install the forked [DEV-version of `mpegdash`](https://github.com/abhiTronix/python-mpegdash) as follows:
         
         ```sh
-        python -m pip install https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev/mpegdash-0.3.0.dev0-py3-none-any.whl
+        python -m pip install https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev2/mpegdash-0.3.0.dev2-py3-none-any.whl
         ```
 
     ```sh

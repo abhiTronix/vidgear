@@ -39,7 +39,7 @@ If you've found a new bug or you've come up with some new feature which can impr
 
 * All VidGear APIs provides a `logging` boolean flag in parameters, to log debugged output to terminal. Kindly turn this parameter `True` in the respective API for getting debug output, and paste it with your Issue. 
 * In order to reproduce bugs we will systematically ask you to provide a minimal reproduction code for your report. 
-* Check and paste, exact VidGear version by running command `python -c "import vidgear; print(vidgear.__version__)"`.
+* Check and paste, exact VidGear version by running command `#!python python -c "import vidgear; print(vidgear.__version__)"`.
 
 ### Follow the Issue Template
 

@@ -26,7 +26,7 @@ limitations under the License.
 
 # Switching from OpenCV Library
 
-Switching OpenCV with VidGear APIs is usually a fairly painless process, and will just require changing a few lines in your python script. 
+Switching OpenCV with VidGear APIs is fairly painless process, and will just require changing a few lines in your python script. 
 
 !!! abstract "This document is intended to software developers who want to migrate their python code from OpenCV Library to VidGear APIs."
 
@@ -42,12 +42,12 @@ Switching OpenCV with VidGear APIs is usually a fairly painless process, and wil
 
 VidGear employs OpenCV at its backend and enhances its existing capabilities even further by introducing many new state-of-the-art functionalities such as:
 
-- [x] Accelerated [Multi-Threaded](../bonus/TQM/#c-accelerates-frame-processing) Performance.
-- [x] Real-time Stabilization.
-- [x] Inherit support for multiple sources.
-- [x] Screen-casting, Live network-streaming, [plus way much more ➶](../gears)
+- [x] Accelerated [Multi-Threaded](../bonus/TQM/#what-does-threaded-queue-mode-exactly-do) Performance.
+- [x] Real-time [Stabilization](../gears/stabilizer/overview/).
+- [x] Inherit support for multiple video sources and formats.
+- [x] Screen-casting, Live network-streaming, and [way much more ➶](../gears)
 
-Vidgear offers all this at once while maintaining the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax for all of its APIs, thereby making it even easier to implement complex OpenCV applications in way fewer lines and without changing your python code much.
+Vidgear offers all this at once while maintaining the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax for all of its APIs, thereby making it even easier to implement complex real-time OpenCV applications in python code without changing things much.
 
 &nbsp; 
 
