@@ -96,7 +96,7 @@ setup(
         ),  # dropped support for 3.6.x legacies
         "youtube-dl{}".format(latest_version("youtube-dl")),
         "streamlink{}".format(latest_version("streamlink")),
-        "requests{}".format(latest_version("requests")),
+        "requests",
         "pyzmq{}".format(latest_version("pyzmq")),
         "simplejpeg{}".format(latest_version("simplejpeg")),
         "colorlog",

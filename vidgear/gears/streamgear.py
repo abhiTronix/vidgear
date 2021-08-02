@@ -449,7 +449,7 @@ class StreamGear:
                 # assign audio codec
                 output_parameters["-acodec"] = self.__params.pop("-acodec", "copy")
                 output_parameters["a_bitrate"] = bitrate  # temporary handler
-                output_parameters["-core_audio"] = ["-map", "1:a:0"]
+                output_parameters["-core_audio"] = ["-map", "a:0"]
             else:
                 logger.warning(
                     "Audio source `{}` is not valid, Skipped!".format(self.__audio)
@@ -544,7 +544,12 @@ class StreamGear:
             logger.debug("Setting GOP: {} for this stream.".format(gop))
 
         # define and map default stream
-        output_params["-map"] = 0
+        if self.__format != "hls":
+            output_params["-map"] = 0
+        else:
+            output_params["-corev0"] = ["-map", "0:v"]
+            if "-acodec" in output_params:
+                output_params["-corea0"] = ["-map", "0:a"]
         # assign resolution
         if "-s:v:0" in self.__params:
             # prevent duplicates
@@ -616,16 +621,19 @@ class StreamGear:
 
         Parameters:
             streams (dict): Indivisual streams formatted as list of dict.
-            rgb_mode (boolean): activates RGB mode _(if enabled)_.
+            output_params (dict): Output FFmpeg parameters
         """
+        # temporary streams count variable
+        output_params["stream_count"] = 0  # default is 0
+
         # check if streams are empty
         if not streams:
             logger.warning("No `-streams` are provided!")
             return output_params
 
-        # check if data is valid
+        # check if streams are valid
         if isinstance(streams, list) and all(isinstance(x, dict) for x in streams):
-            stream_num = 1  # keep track of streams
+            stream_count = 1  # keep track of streams
             # calculate source aspect-ratio
             source_aspect_ratio = self.__inputwidth / self.__inputheight
             # log the process
@@ -637,7 +645,15 @@ class StreamGear:
                 intermediate_dict = {}  # handles intermediate stream data as dictionary
 
                 # define and map stream to intermediate dict
-                intermediate_dict["-core{}".format(stream_num)] = ["-map", "0"]
+                if self.__format != "hls":
+                    intermediate_dict["-core{}".format(stream_count)] = ["-map", "0"]
+                else:
+                    intermediate_dict["-corev{}".format(stream_count)] = ["-map", "0:v"]
+                    if "-acodec" in output_params:
+                        intermediate_dict["-corea{}".format(stream_count)] = [
+                            "-map",
+                            "0:a",
+                        ]
 
                 # extract resolution & indivisual dimension of stream
                 resolution = stream.pop("-resolution", "")
@@ -663,7 +679,7 @@ class StreamGear:
                             )
                         )
                     # assign stream resolution to intermediate dict
-                    intermediate_dict["-s:v:{}".format(stream_num)] = resolution
+                    intermediate_dict["-s:v:{}".format(stream_count)] = resolution
                 else:
                     # otherwise log error and skip stream
                     logger.error(
@@ -681,12 +697,14 @@ class StreamGear:
                     and video_bitrate.endswith(("k", "M"))
                 ):
                     # assign it
-                    intermediate_dict["-b:v:{}".format(stream_num)] = video_bitrate
+                    intermediate_dict["-b:v:{}".format(stream_count)] = video_bitrate
                 else:
                     # otherwise calculate video-bitrate
                     fps = stream.pop("-framerate", 0.0)
                     if dimensions and isinstance(fps, (float, int)) and fps > 0:
-                        intermediate_dict["-b:v:{}".format(stream_num)] = "{}k".format(
+                        intermediate_dict[
+                            "-b:v:{}".format(stream_count)
+                        ] = "{}k".format(
                             get_video_bitrate(
                                 int(dimensions[0]), int(dimensions[1]), fps, bpp
                             )
@@ -703,13 +721,15 @@ class StreamGear:
                 audio_bitrate = stream.pop("-audio_bitrate", "")
                 if "-acodec" in output_params:
                     if audio_bitrate and audio_bitrate.endswith(("k", "M")):
-                        intermediate_dict["-b:a:{}".format(stream_num)] = audio_bitrate
+                        intermediate_dict[
+                            "-b:a:{}".format(stream_count)
+                        ] = audio_bitrate
                     else:
                         # otherwise calculate audio-bitrate
                         if dimensions:
                             aspect_width = int(dimensions[0])
                             intermediate_dict[
-                                "-b:a:{}".format(stream_num)
+                                "-b:a:{}".format(stream_count)
                             ] = "{}k".format(128 if (aspect_width > 800) else 96)
                 # update output parameters
                 output_params.update(intermediate_dict)
@@ -718,11 +738,12 @@ class StreamGear:
                 # clear stream copy
                 stream_copy.clear()
                 # increment to next stream
-                stream_num += 1
+                stream_count += 1
+            output_params["stream_count"] = stream_count
             if self.__logging:
                 logger.debug("All streams processed successfully!")
         else:
-            logger.warning("Invalid `-streams` values skipped!")
+            logger.warning("Invalid type `-streams` skipped!")
 
         return output_params
 
@@ -771,7 +792,7 @@ class StreamGear:
         # Finally, some hardcoded HLS parameters (Refer FFmpeg docs for more info.)
         output_params["-allowed_extensions"] = "ALL"
         output_params["-hls_segment_filename"] = "{}-stream%v-%03d.{}".format(
-            os.path.join(os.path.dirname(self.__out_file), "chunk"),
+            os.path.join(*[os.path.dirname(self.__out_file), "chunk"]),
             "m4s" if output_params["-hls_segment_type"] == "fmp4" else "ts",
         )
         output_params["-hls_allow_cache"] = 0
@@ -829,13 +850,32 @@ class StreamGear:
         if "-i" in output_params:
             output_params.move_to_end("-i", last=False)
 
+        # copy streams count
+        stream_count = output_params.pop("stream_count", 0)
+
         # convert input parameters to list
         input_commands = dict2Args(input_params)
         # convert output parameters to list
         output_commands = dict2Args(output_params)
         # convert any additional parameters to list
         stream_commands = dict2Args(self.__params)
-        # log it
+
+        # create exclusive HLS params
+        hls_commands = []
+        # handle HLS multi-bitrate according to stream count
+        if self.__format == "hls" and stream_count > 0:
+            stream_map = ""
+            for count in range(0, stream_count):
+                stream_map += "v:{},a:{} ".format(count, count)
+            hls_commands += [
+                "-master_pl_name",
+                os.path.basename(self.__out_file),
+                "-var_stream_map",
+                stream_map.strip(),
+                os.path.join(os.path.dirname(self.__out_file), "stream_%v.m3u8"),
+            ]
+
+        # log it if enabled
         if self.__logging:
             logger.debug(
                 "User-Defined Output parameters: `{}`".format(
@@ -851,8 +891,8 @@ class StreamGear:
         ffmpeg_cmd = None
         hide_banner = (
             [] if self.__logging else ["-hide_banner"]
-        )  # ensure less cluterring
-        # format command
+        )  # ensuring less cluterring if specified
+        # format commands
         if self.__video_source:
             ffmpeg_cmd = (
                 [self.__ffmpeg, "-y"]
@@ -862,7 +902,6 @@ class StreamGear:
                 + input_commands
                 + output_commands
                 + stream_commands
-                + [self.__out_file]
             )
         else:
             ffmpeg_cmd = (
@@ -873,8 +912,9 @@ class StreamGear:
                 + ["-i", "-"]
                 + output_commands
                 + stream_commands
-                + [self.__out_file]
             )
+        # format outputs
+        ffmpeg_cmd.extend([self.__out_file] if not (hls_commands) else hls_commands)
         # Launch the FFmpeg pipeline with built command
         logger.critical("Transcoding streaming chunks. Please wait...")  # log it
         self.__process = sp.Popen(
