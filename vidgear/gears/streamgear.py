@@ -791,8 +791,9 @@ class StreamGear:
 
         # Finally, some hardcoded HLS parameters (Refer FFmpeg docs for more info.)
         output_params["-allowed_extensions"] = "ALL"
+        output_params["-hls_base_url"] = self.__params.pop("-hls_base_url", "")
         output_params["-hls_segment_filename"] = "{}-stream%v-%03d.{}".format(
-            os.path.join(*[os.path.dirname(self.__out_file), "chunk"]),
+            os.path.join(os.path.dirname(self.__out_file), "chunk"),
             "m4s" if output_params["-hls_segment_type"] == "fmp4" else "ts",
         )
         output_params["-hls_allow_cache"] = 0
@@ -915,6 +916,7 @@ class StreamGear:
             )
         # format outputs
         ffmpeg_cmd.extend([self.__out_file] if not (hls_commands) else hls_commands)
+        print(ffmpeg_cmd)
         # Launch the FFmpeg pipeline with built command
         logger.critical("Transcoding streaming chunks. Please wait...")  # log it
         self.__process = sp.Popen(
