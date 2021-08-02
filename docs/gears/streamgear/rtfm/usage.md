@@ -21,6 +21,10 @@ limitations under the License.
 # StreamGear API Usage Examples: Real-time Frames Mode
 
 
+!!! alert "Real-time Frames Mode is NOT Live-Streaming."
+
+    Rather you can easily enable live-streaming in Real-time Frames Mode by using StreamGear API's exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. Checkout following [usage example](#bare-minimum-usage-with-live-streaming).
+
 !!! warning "Important Information"
     
     * StreamGear **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../../ffmpeg_install/) for its installation.
