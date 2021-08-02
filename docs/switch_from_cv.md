@@ -32,7 +32,7 @@ Switching OpenCV with VidGear APIs is fairly painless process, and will just req
 
 !!! warning "Prior knowledge of Python or OpenCV won't be covered in this guide. Proficiency with OpenCV-Python _(Python API for OpenCV)_ is a must in order understand this document."
 
-!!! tip "If you're just getting started with OpenCV-Python, then see [here ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)"
+!!! tip "If you're just getting started with OpenCV-Python programming, then refer this [FAQ ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-opencv-library-how-to-use-vidgear-in-my-projects)"
 
 &nbsp; 
 

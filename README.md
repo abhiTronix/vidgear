@@ -89,13 +89,13 @@ The following **functional block diagram** clearly depicts the generalized funct
 
 #### What does it do?
 
-> *"VidGear can read, write, process, send & receive video files/frames/streams from/to various devices in real-time, and faster than underline libraries."*
+> *"VidGear can read, write, process, send & receive video files/frames/streams from/to various devices in real-time, and [**faster**][TQM-doc]  than underline libraries."*
 
 #### What is its purpose?
 
 > *"Write Less and Accomplish More"* — **VidGear's Motto**
 
-> *"Built with simplicity in mind, VidGear lets programmers and software developers to easily integrate and perform **Complex Video-Processing Tasks** in their existing or newer applications without going through hefty documentation and in just a [few lines of code][switch_from_cv]. Beneficial for both, if you're new to programming with Python language or already a pro at it."*
+> *"Built with simplicity in mind, VidGear lets programmers and software developers to easily integrate and perform **Complex Video-Processing Tasks** in their existing or newer applications without going through hefty documentation and in just a [**few lines of code**][switch_from_cv]. Beneficial for both, if you're new to programming with Python language or already a pro at it."*
 
 &nbsp;
 
@@ -105,11 +105,11 @@ The following **functional block diagram** clearly depicts the generalized funct
 
 If this is your first time using VidGear, head straight to the [Installation ➶][installation] to install VidGear.
 
-Once you have VidGear installed, **Checkout its Well-Documented Function-Specific [Gears ➶][gears]** 
+Once you have VidGear installed, **Checkout its Well-Documented [Function-Specific Gears ➶][gears]** 
 
 Also, if you're already familiar with [OpenCV][opencv] library, then see [Switching from OpenCV Library ➶][switch_from_cv]
 
-Or, if you're just getting started with OpenCV, then see [here ➶](https://abhitronix.github.io/vidgear/latest/help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)
+Or, if you're just getting started with OpenCV-Python programming, then refer this [FAQ ➶](https://abhitronix.github.io/vidgear/latest/help/general_faqs/#im-new-to-python-programming-or-its-usage-in-opencv-library-how-to-use-vidgear-in-my-projects)
 
 &nbsp;
 
