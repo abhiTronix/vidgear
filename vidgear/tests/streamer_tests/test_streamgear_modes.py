@@ -106,10 +106,19 @@ def extract_meta_video(file):
     Extracts metadata from a valid video file
     """
     logger.debug("Extracting Metadata from {}".format(file))
-    if not os.path.isfile(file):
-        logger.warning("Unable to find file!")
-        time.sleep(1)
-    return validate_video(return_static_ffmpeg(), file)
+    meta = validate_video(return_static_ffmpeg(), file)
+    if meta is None:
+        # debug content
+        logger.error("Unable to extract metadata!")
+        with open(file, "r") as f_in:
+            lines = list(line for line in (l.strip() for l in f_in) if line)
+            logger.debug(lines)
+        dir_name = os.path.dirname(file)
+        listfiles = [
+            f for f in os.listdir(dir_name) if os.path.isfile(os.path.join(dir_name, f))
+        ]
+        logger.debug(listfiles)
+    return meta
 
 
 def check_valid_m3u8(file=""):
