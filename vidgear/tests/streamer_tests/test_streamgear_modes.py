@@ -22,6 +22,7 @@ limitations under the License.
 import os
 import cv2
 import queue
+import time
 import pytest
 import m3u8
 import logging as log
@@ -100,6 +101,14 @@ def check_valid_mpd(file="", exp_reps=1):
     return (all_adapts, all_reprs) if (len(all_reprs) >= exp_reps) else False
 
 
+def extract_meta_video(file):
+    """
+    Extracts metadata from a valid video file
+    """
+    logger.debug("Extracting Metadata from {}".format(file))
+    return validate_video(return_static_ffmpeg(), file)
+
+
 def check_valid_m3u8(file=""):
     """
     checks if given file is a valid M3U8 file
@@ -122,13 +131,6 @@ def check_valid_m3u8(file=""):
         logger.error(str(e))
         return False
     return metas
-
-
-def extract_meta_video(file):
-    """
-    Extracts metadata from a valid video file
-    """
-    return validate_video(return_static_ffmpeg(), file)
 
 
 def extract_meta_mpd(file):
@@ -227,7 +229,7 @@ def test_ss_stream(format):
         if format == "dash":
             assert check_valid_mpd(assets_file_path), "Test Failed!"
         else:
-            assert extract_meta_video(assets_file_path), "Test Failed!"
+            assert check_valid_m3u8(assets_file_path), "Test Failed!"
     except Exception as e:
         pytest.fail(str(e))
 
@@ -297,7 +299,7 @@ def test_rtf_stream(conversion, format):
         if format == "dash":
             assert check_valid_mpd(asset_file[0]), "Test Failed!"
         else:
-            assert extract_meta_video(asset_file[0]), "Test Failed!"
+            assert check_valid_m3u8(asset_file[0]), "Test Failed!"
     except Exception as e:
         if not isinstance(e, queue.Empty):
             pytest.fail(str(e))
@@ -445,7 +447,7 @@ def test_params(stream_params, format):
         if format == "dash":
             assert check_valid_mpd(assets_file_path), "Test Failed!"
         else:
-            assert extract_meta_video(assets_file_path), "Test Failed!"
+            assert check_valid_m3u8(assets_file_path), "Test Failed!"
     except Exception as e:
         pytest.fail(str(e))
 
@@ -520,7 +522,7 @@ def test_audio(stream_params, format):
         if format == "dash":
             assert check_valid_mpd(assets_file_path), "Test Failed!"
         else:
-            assert extract_meta_video(assets_file_path), "Test Failed!"
+            assert check_valid_m3u8(assets_file_path), "Test Failed!"
     except Exception as e:
         pytest.fail(str(e))
 
