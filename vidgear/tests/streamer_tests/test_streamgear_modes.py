@@ -163,7 +163,7 @@ def return_assets_path(hls=False):
     """
     returns assets temp path
     """
-    return os.path.abspath("temp_m3u8" if hls else "temp_mpd")
+    return os.path.join(tempfile.gettempdir(), "temp_m3u8" if hls else "temp_mpd")
 
 
 def string_to_float(value):
