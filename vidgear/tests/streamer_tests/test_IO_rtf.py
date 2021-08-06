@@ -83,7 +83,8 @@ def test_method_call_rtf():
 
 
 @pytest.mark.xfail(raises=ValueError)
-def test_invalid_params_rtf():
+@pytest.mark.parametrize("format", ["dash", "hls"])
+def test_invalid_params_rtf(format):
     """
     Invalid parameter Failure Test - Made to fail by calling invalid parameters
     """
@@ -93,7 +94,12 @@ def test_invalid_params_rtf():
     input_data = random_data.astype(np.uint8)
 
     stream_params = {"-vcodec": "unknown"}
-    streamer = StreamGear(output="output.mpd", logging=True, **stream_params)
+    streamer = StreamGear(
+        output="output{}".format(".mpd" if format == "dash" else ".m3u8"),
+        format=format,
+        logging=True,
+        **stream_params
+    )
     streamer.stream(input_data)
     streamer.stream(input_data)
     streamer.terminate()

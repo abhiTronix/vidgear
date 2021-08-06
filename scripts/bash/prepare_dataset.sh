@@ -19,6 +19,7 @@ TMPFOLDER=$(python -c 'import tempfile; print(tempfile.gettempdir())')
 
 # Creating necessary directories
 mkdir -p "$TMPFOLDER"/temp_mpd    # MPD assets temp path
+mkdir -p "$TMPFOLDER"/temp_m3u8   # M3U8 assets temp path
 mkdir -p "$TMPFOLDER"/temp_write  # For testing WriteGear Assets.
 mkdir -p "$TMPFOLDER"/temp_ffmpeg # For downloading FFmpeg Static Binary Assets.
 mkdir -p "$TMPFOLDER"/Downloads

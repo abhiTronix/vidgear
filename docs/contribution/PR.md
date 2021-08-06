@@ -196,7 +196,7 @@ Testing VidGear requires additional test dependencies and dataset, which can be 
         ```
 
     ```sh
-    pip install --upgrade six flake8 black pytest pytest-asyncio mpegdash paramiko async-asgi-testclient
+    pip install --upgrade six flake8 black pytest pytest-asyncio mpegdash paramiko m3u8 async-asgi-testclient
     ```
 
 - [x] **Download Tests Dataset:** 

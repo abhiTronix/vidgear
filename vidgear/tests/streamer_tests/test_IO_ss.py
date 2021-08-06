@@ -38,16 +38,16 @@ def return_testvideo_path():
     return os.path.abspath(path)
 
 
-def test_failedextension():
+@pytest.mark.xfail(raises=(AssertionError, ValueError))
+@pytest.mark.parametrize("output", ["garbage.garbage", "output.m3u8"])
+def test_failedextension(output):
     """
     IO Test - made to fail with filename with wrong extension
     """
-    # 'garbage' extension does not exist
-    with pytest.raises(AssertionError):
-        stream_params = {"-video_source": return_testvideo_path()}
-        streamer = StreamGear(output="garbage.garbage", logging=True, **stream_params)
-        streamer.transcode_source()
-        streamer.terminate()
+    stream_params = {"-video_source": return_testvideo_path()}
+    streamer = StreamGear(output=output, logging=True, **stream_params)
+    streamer.transcode_source()
+    streamer.terminate()
 
 
 def test_failedextensionsource():
@@ -63,20 +63,21 @@ def test_failedextensionsource():
 
 
 @pytest.mark.parametrize(
-    "path",
+    "path, format",
     [
-        "rtmp://live.twitch.tv/output.mpd",
-        "unknown://invalid.com/output.mpd",
+        ("rtmp://live.twitch.tv/output.mpd", "dash"),
+        ("rtmp://live.twitch.tv/output.m3u8", "hls"),
+        ("unknown://invalid.com/output.mpd", "dash"),
     ],
 )
-def test_paths_ss(path):
+def test_paths_ss(path, format):
     """
     Paths Test - Test various paths/urls supported by StreamGear.
     """
     streamer = None
     try:
         stream_params = {"-video_source": return_testvideo_path()}
-        streamer = StreamGear(output=path, logging=True, **stream_params)
+        streamer = StreamGear(output=path, format=format, logging=True, **stream_params)
     except Exception as e:
         if isinstance(e, ValueError):
             pytest.xfail("Test Passed!")
@@ -110,11 +111,17 @@ def test_method_call_ss():
 
 
 @pytest.mark.xfail(raises=subprocess.CalledProcessError)
-def test_invalid_params_ss():
+@pytest.mark.parametrize("format", ["dash", "hls"])
+def test_invalid_params_ss(format):
     """
     Method calling Test - Made to fail by calling method in the wrong context.
     """
     stream_params = {"-video_source": return_testvideo_path(), "-vcodec": "unknown"}
-    streamer = StreamGear(output="output.mpd", logging=True, **stream_params)
+    streamer = StreamGear(
+        output="output{}".format(".mpd" if format == "dash" else ".m3u8"),
+        format=format,
+        logging=True,
+        **stream_params
+    )
     streamer.transcode_source()
     streamer.terminate()

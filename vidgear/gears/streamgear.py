@@ -449,7 +449,9 @@ class StreamGear:
                 # assign audio codec
                 output_parameters["-acodec"] = self.__params.pop("-acodec", "copy")
                 output_parameters["a_bitrate"] = bitrate  # temporary handler
-                output_parameters["-core_audio"] = ["-map", "a:0"]
+                output_parameters["-core_audio"] = (
+                    ["-map", "1:a:0"] if self.__format == "dash" else []
+                )
             else:
                 logger.warning(
                     "Audio source `{}` is not valid, Skipped!".format(self.__audio)
@@ -549,7 +551,10 @@ class StreamGear:
         else:
             output_params["-corev0"] = ["-map", "0:v"]
             if "-acodec" in output_params:
-                output_params["-corea0"] = ["-map", "0:a"]
+                output_params["-corea0"] = [
+                    "-map",
+                    "{}:a".format(1 if "-core_audio" in output_params else 0),
+                ]
         # assign resolution
         if "-s:v:0" in self.__params:
             # prevent duplicates
@@ -652,7 +657,7 @@ class StreamGear:
                     if "-acodec" in output_params:
                         intermediate_dict["-corea{}".format(stream_count)] = [
                             "-map",
-                            "0:a",
+                            "{}:a".format(1 if "-core_audio" in output_params else 0),
                         ]
 
                 # extract resolution & indivisual dimension of stream
@@ -869,7 +874,9 @@ class StreamGear:
         if self.__format == "hls" and stream_count > 0:
             stream_map = ""
             for count in range(0, stream_count):
-                stream_map += "v:{},a:{} ".format(count, count)
+                stream_map += "v:{}{} ".format(
+                    count, ",a:{}".format(count) if "-acodec" in output_params else ","
+                )
             hls_commands += [
                 "-master_pl_name",
                 os.path.basename(self.__out_file),
