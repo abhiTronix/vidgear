@@ -374,7 +374,7 @@ def is_valid_url(path, url=None, logging=False):
         return False
 
 
-def validate_video(path, video_path=None):
+def validate_video(path, video_path=None, logging=False):
     """
     ### validate_video
 
@@ -396,6 +396,8 @@ def validate_video(path, video_path=None):
     )
     # clean and search
     stripped_data = [x.decode("utf-8").strip() for x in metadata.split(b"\n")]
+    if logging:
+        logger.debug(stripped_data)
     result = {}
     for data in stripped_data:
         output_a = re.findall(r"([1-9]\d+)x([1-9]\d+)", data)
