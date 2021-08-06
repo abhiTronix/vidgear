@@ -106,6 +106,9 @@ def extract_meta_video(file):
     Extracts metadata from a valid video file
     """
     logger.debug("Extracting Metadata from {}".format(file))
+    if not os.path.isfile(file):
+        logger.warning("Unable to find file!")
+        time.sleep(1)
     return validate_video(return_static_ffmpeg(), file)
 
 
@@ -229,7 +232,7 @@ def test_ss_stream(format):
         if format == "dash":
             assert check_valid_mpd(assets_file_path), "Test Failed!"
         else:
-            assert check_valid_m3u8(assets_file_path), "Test Failed!"
+            assert extract_meta_video(assets_file_path), "Test Failed!"
     except Exception as e:
         pytest.fail(str(e))
 
@@ -299,7 +302,7 @@ def test_rtf_stream(conversion, format):
         if format == "dash":
             assert check_valid_mpd(asset_file[0]), "Test Failed!"
         else:
-            assert check_valid_m3u8(asset_file[0]), "Test Failed!"
+            assert extract_meta_video(asset_file[0]), "Test Failed!"
     except Exception as e:
         if not isinstance(e, queue.Empty):
             pytest.fail(str(e))
@@ -447,7 +450,7 @@ def test_params(stream_params, format):
         if format == "dash":
             assert check_valid_mpd(assets_file_path), "Test Failed!"
         else:
-            assert check_valid_m3u8(assets_file_path), "Test Failed!"
+            assert extract_meta_video(assets_file_path), "Test Failed!"
     except Exception as e:
         pytest.fail(str(e))
 
@@ -522,7 +525,7 @@ def test_audio(stream_params, format):
         if format == "dash":
             assert check_valid_mpd(assets_file_path), "Test Failed!"
         else:
-            assert check_valid_m3u8(assets_file_path), "Test Failed!"
+            assert extract_meta_video(assets_file_path), "Test Failed!"
     except Exception as e:
         pytest.fail(str(e))
 
