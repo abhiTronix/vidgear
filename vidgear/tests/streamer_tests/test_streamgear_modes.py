@@ -222,6 +222,15 @@ def test_ss_stream(format):
             "-video_source": return_testvideo_path(),
             "-clear_prev_assets": True,
         }
+        if format == "hls":
+            stream_params.update(
+                {
+                    "-hls_base_url": return_assets_path(
+                        False if format == "dash" else True
+                    )
+                    + os.sep
+                }
+            )
         streamer = StreamGear(
             output=assets_file_path, format=format, logging=True, **stream_params
         )
@@ -279,6 +288,15 @@ def test_rtf_stream(conversion, format):
             "-clear_prev_assets": True,
             "-input_framerate": "invalid",
         }
+        if format == "hls":
+            stream_params.update(
+                {
+                    "-hls_base_url": return_assets_path(
+                        False if format == "dash" else True
+                    )
+                    + os.sep
+                }
+            )
         streamer = StreamGear(output=assets_file_path, format=format, **stream_params)
         while True:
             frame = stream.read()
@@ -434,6 +452,15 @@ def test_params(stream_params, format):
             return_assets_path(False if format == "dash" else True),
             "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
         )
+        if format == "hls":
+            stream_params.update(
+                {
+                    "-hls_base_url": return_assets_path(
+                        False if format == "dash" else True
+                    )
+                    + os.sep
+                }
+            )
         stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
         streamer = StreamGear(
             output=assets_file_path, format=format, logging=True, **stream_params
@@ -515,6 +542,15 @@ def test_audio(stream_params, format):
         "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
     )
     try:
+        if format == "hls":
+            stream_params.update(
+                {
+                    "-hls_base_url": return_assets_path(
+                        False if format == "dash" else True
+                    )
+                    + os.sep
+                }
+            )
         streamer = StreamGear(
             output=assets_file_path, format=format, logging=True, **stream_params
         )
