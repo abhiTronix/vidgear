@@ -368,6 +368,15 @@ def test_input_framerate_rtf(format):
             "-clear_prev_assets": True,
             "-input_framerate": test_framerate,
         }
+        if format == "hls":
+            stream_params.update(
+                {
+                    "-hls_base_url": return_assets_path(
+                        False if format == "dash" else True
+                    )
+                    + os.sep
+                }
+            )
         streamer = StreamGear(
             output=assets_file_path, format=format, logging=True, **stream_params
         )
