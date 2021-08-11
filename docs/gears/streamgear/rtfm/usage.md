@@ -396,9 +396,9 @@ streamer.terminate()
 
 &thinsp;
 
-## Usage with Audio-Input
+## Usage with File Audio-Input
 
-In Real-time Frames Mode, if you want to add audio to your streams, you've to use exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. You need to input the path of your audio to this attribute as string value, and StreamGear API will automatically validate and map it to all generated streams. The complete example is as follows:
+In Real-time Frames Mode, if you want to add audio to your streams, you've to use exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. You need to input the path of your audio file to this attribute as `string` value, and StreamGear API will automatically validate and map it to all generated streams. The complete example is as follows:
 
 !!! failure "Make sure this `-audio` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
 
@@ -424,6 +424,197 @@ stream_params = {
     ],
     "-input_framerate": stream.framerate, # controlled framerate for audio-video sync !!! don't forget this line !!!
     "-audio": "/home/foo/foo1.aac" # assigns input audio-source: "/home/foo/foo1.aac"
+}
+
+# describe a suitable manifest-file location/name and assign params
+streamer = StreamGear(output="dash_out.mpd", **stream_params)
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+
+    # {do something with the frame here}
+
+
+    # send frame to streamer
+    streamer.stream(frame)
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+
+# safely close streamer
+streamer.terminate()
+```
+
+&thinsp;
+
+## Usage with Device Audio-Input
+
+In Real-time Frames Mode, you've can also use exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter for streaming live audio from external device. You need to format your audio device name and suitable decoder as `list` and assign to this attribute, and StreamGear API will automatically validate and map it to all generated streams. The complete example is as follows:
+
+
+!!! alert "Example Assumptions"
+
+    * You're running are Windows machine.
+    * You already have appropriate audio drivers and software installed on your machine.
+
+
+??? tip "Using `-audio` attribute on different OS platforms"
+    
+    === "On Windows"
+
+        Windows OS users can use the [dshow](https://trac.ffmpeg.org/wiki/DirectShow) (DirectShow) to list audio input device which is the preferred option for Windows users. You can refer following steps to identify and specify your sound card:
+
+        - [x] **[OPTIONAL] Enable sound card(if disabled):** First enable your Stereo Mix by opening the "Sound" window and select the "Recording" tab, then right click on the window and select "Show Disabled Devices" to toggle the Stereo Mix device visibility. **Follow this [post ➶](https://forums.tomshardware.com/threads/no-sound-through-stereo-mix-realtek-hd-audio.1716182/) for more details.**
+
+        - [x] **Identify Sound Card:** Then, You can locate your soundcard using `dshow` as follows:
+
+            ```sh
+            c:\> ffmpeg -list_devices true -f dshow -i dummy
+            ffmpeg version N-45279-g6b86dd5... --enable-runtime-cpudetect
+              libavutil      51. 74.100 / 51. 74.100
+              libavcodec     54. 65.100 / 54. 65.100
+              libavformat    54. 31.100 / 54. 31.100
+              libavdevice    54.  3.100 / 54.  3.100
+              libavfilter     3. 19.102 /  3. 19.102
+              libswscale      2.  1.101 /  2.  1.101
+              libswresample   0. 16.100 /  0. 16.100
+            [dshow @ 03ACF580] DirectShow video devices
+            [dshow @ 03ACF580]  "Integrated Camera"
+            [dshow @ 03ACF580]  "USB2.0 Camera"
+            [dshow @ 03ACF580] DirectShow audio devices
+            [dshow @ 03ACF580]  "Microphone (Realtek High Definition Audio)"
+            [dshow @ 03ACF580]  "Microphone (USB2.0 Camera)"
+            dummy: Immediate exit requested
+            ```
+
+
+        - [x] **Specify Sound Card:** Then, you can specify your located soundcard in StreamGear as follows:
+
+            ```python
+            # assign appropriate input audio-source
+            stream_params = {"-audio": ["-f","dshow", "-i", "audio=Microphone (USB2.0 Camera)"]}
+            ```
+
+        !!! fail "If audio still doesn't work then [checkout this troubleshooting guide ➶](https://www.maketecheasier.com/fix-microphone-not-working-windows10/) or reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
+
+
+    === "On Linux"
+
+        Linux OS users can use the [alsa](https://ffmpeg.org/ffmpeg-all.html#alsa) to list input device to capture live audio input such as from a webcam. You can refer following steps to identify and specify your sound card:
+
+        - [x] **Identify Sound Card:** To get the list of all installed cards on your machine, you can type `arecord -l` or `arecord -L` _(longer output)_.
+
+            ```sh
+            arecord -l
+
+            **** List of CAPTURE Hardware Devices ****
+            card 0: ICH5 [Intel ICH5], device 0: Intel ICH [Intel ICH5]
+              Subdevices: 1/1
+              Subdevice #0: subdevice #0
+            card 0: ICH5 [Intel ICH5], device 1: Intel ICH - MIC ADC [Intel ICH5 - MIC ADC]
+              Subdevices: 1/1
+              Subdevice #0: subdevice #0
+            card 0: ICH5 [Intel ICH5], device 2: Intel ICH - MIC2 ADC [Intel ICH5 - MIC2 ADC]
+              Subdevices: 1/1
+              Subdevice #0: subdevice #0
+            card 0: ICH5 [Intel ICH5], device 3: Intel ICH - ADC2 [Intel ICH5 - ADC2]
+              Subdevices: 1/1
+              Subdevice #0: subdevice #0
+            card 1: U0x46d0x809 [USB Device 0x46d:0x809], device 0: USB Audio [USB Audio]
+              Subdevices: 1/1
+              Subdevice #0: subdevice #0
+            ```
+
+
+        - [x] **Specify Sound Card:** Then, you can specify your located soundcard in WriteGear as follows:
+
+            !!! info "The easiest thing to do is to reference sound card directly, namely "card 0" (Intel ICH5) and "card 1" (Microphone on the USB web cam), as `hw:0` or `hw:1`"
+
+            ```python
+            # assign appropriate input audio-source "card 1" (Microphone on the USB web cam)
+            stream_params = {"-audio": ["-f","alsa", "-i", "hw:1"]}
+            ```
+
+        !!! fail "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
+
+
+    === "On MacOS"
+
+        MAC OS users can use the [avfoundation](https://ffmpeg.org/ffmpeg-devices.html#avfoundation) to list input devices for grabbing audio from integrated iSight cameras as well as cameras connected via USB or FireWire. You can refer following steps to identify and specify your sound card on MacOS/OSX machines:
+
+
+        - [x] **Identify Sound Card:** Then, You can locate your soundcard using `avfoundation` as follows:
+
+            ```sh
+            ffmpeg -f qtkit -list_devices true -i ""
+            ffmpeg version N-45279-g6b86dd5... --enable-runtime-cpudetect
+              libavutil      51. 74.100 / 51. 74.100
+              libavcodec     54. 65.100 / 54. 65.100
+              libavformat    54. 31.100 / 54. 31.100
+              libavdevice    54.  3.100 / 54.  3.100
+              libavfilter     3. 19.102 /  3. 19.102
+              libswscale      2.  1.101 /  2.  1.101
+              libswresample   0. 16.100 /  0. 16.100
+            [AVFoundation input device @ 0x7f8e2540ef20] AVFoundation video devices:
+            [AVFoundation input device @ 0x7f8e2540ef20] [0] FaceTime HD camera (built-in)
+            [AVFoundation input device @ 0x7f8e2540ef20] [1] Capture screen 0
+            [AVFoundation input device @ 0x7f8e2540ef20] AVFoundation audio devices:
+            [AVFoundation input device @ 0x7f8e2540ef20] [0] Blackmagic Audio
+            [AVFoundation input device @ 0x7f8e2540ef20] [1] Built-in Microphone
+            ```
+
+
+        - [x] **Specify Sound Card:** Then, you can specify your located soundcard in StreamGear as follows:
+
+            ```python
+            # assign appropriate input audio-source
+            stream_params = {"-audio": ["-f","avfoundation", "-audio_device_index", "0"]}
+            ```
+
+        !!! fail "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
+
+
+!!! danger "Make sure this `-audio` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
+
+!!! warning "You **MUST** use [`-input_framerate`](../../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
+
+
+```python
+# import required libraries
+from vidgear.gears import CamGear
+from vidgear.gears import StreamGear
+import cv2
+
+# open any valid video stream(for e.g `foo1.mp4` file)
+stream = CamGear(source='foo1.mp4').start() 
+
+# add various streams, along with custom audio
+stream_params = {
+    "-streams": [
+        {"-resolution": "1280x720", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
+        {"-resolution": "640x360", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
+    ],
+    "-input_framerate": stream.framerate, # controlled framerate for audio-video sync !!! don't forget this line !!!
+    stream_params = {"-audio": ["-f","dshow", "-i", "audio=Microphone (USB2.0 Camera)"]} # assign appropriate input audio-source
 }
 
 # describe a suitable manifest-file location/name and assign params

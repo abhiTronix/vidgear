@@ -43,7 +43,7 @@ If you've found a new bug or you've come up with some new feature which can impr
 
 ### Follow the Issue Template
 
-* Please format your issue by choosing the appropriate templates. 
+* Please format your issue by choosing the appropriate template. 
 * Any improper/insufficient reports will be marked with **MISSING : INFORMATION :mag:** and **MISSING : TEMPLATE :grey_question:** like labels, and if we don't hear back from you we may close the issue.
 
 ### Raise the Issue

@@ -39,6 +39,8 @@ SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ besides s
 
 SteamGear currently only supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_ , but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming, will be added soon. Also, Multiple DRM support is yet to be implemented.
 
+!!! tip "For streaming with traditional protocols such as RTMP, RTSP/RTP you can use [WriteGear](../../writegear/introduction/) API instead."
+
 &thinsp;
 
 !!! danger "Important"

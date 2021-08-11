@@ -22,7 +22,7 @@ limitations under the License.
 
 <figure>
   <img src="../assets/images/gears_fbd.png" loading="lazy" alt="@Vidgear Functional Block Diagram"/>
-  <figcaption>Gears: generalized workflow diagram</figcaption>
+  <figcaption>Gears: generalized workflow</figcaption>
 </figure>
 
 ## Gears, What are these?
@@ -53,6 +53,8 @@ These Gears can be classified as follows:
 ### C. Streaming Gears
 
 > **Basic Function:** Transcodes/Broadcasts files & [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames for streaming.
+
+!!! tip "You can also use [WriteGear](writegear/introduction/) for streaming with traditional protocols such as RTMP, RTSP/RTP."
 
 * [StreamGear](streamgear/introduction/): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
 

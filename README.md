@@ -406,7 +406,9 @@ stream.stop()
 
 > *WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data.*
 
-WriteGear API provides a complete, flexible, and robust wrapper around [**FFmpeg**][ffmpeg], a leading multimedia framework. WriteGear can process real-time frames into a lossless compressed video-file with any suitable specification _(such as`bitrate, codec, framerate, resolution, subtitles,  etc.`)_. It is powerful enough to perform complex tasks such as [Live-Streaming][live-stream] _(such as for Twitch and YouTube)_ and [Multiplexing Video-Audio][live-audio-doc] with real-time frames in way fewer lines of code. 
+WriteGear API provides a complete, flexible, and robust wrapper around [**FFmpeg**][ffmpeg], a leading multimedia framework. WriteGear can process real-time frames into a lossless compressed video-file with any suitable specifications _(such as`bitrate, codec, framerate, resolution, subtitles,  etc.`)_. 
+
+WriteGear also supports streaming with traditional protocols such as RTMP, RTSP/RTP. It is powerful enough to perform complex tasks such as [Live-Streaming][live-stream] _(such as for Twitch, YouTube etc.)_ and [Multiplexing Video-Audio][live-audio-doc] with real-time frames in just few lines of code. 
 
 Best of all, WriteGear grants users the complete freedom to play with any FFmpeg parameter with its exclusive **Custom Commands function** _(see this [doc][custom-command-doc])_ without relying on any third-party API.
 
@@ -442,7 +444,7 @@ SteamGear easily transcodes source videos/audio files & real-time video-frames a
 
 SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ besides segments that describe these segment information _(timing, URL, media characteristics like video resolution and bit rates)_ and is provided to the client before the streaming session.
 
-SteamGear currently only supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_ but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming will be added soon.
+SteamGear currently supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_ but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming will be added soon.
 
 **StreamGear primarily works in two Independent Modes for transcoding which serves different purposes:**
 
