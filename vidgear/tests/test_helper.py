@@ -406,7 +406,7 @@ def test_validate_audio(path, result):
     Testing validate_audio function
     """
     try:
-        results = validate_audio(return_static_ffmpeg(), file_path=path)
+        results = validate_audio(return_static_ffmpeg(), source=path)
         if result:
             assert results, "Audio path validity test Failed!"
     except Exception as e:

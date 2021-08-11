@@ -144,6 +144,8 @@ class StreamGear:
                 self.__audio = audio
             else:
                 self.__audio = ""
+        elif audio and isinstance(audio, list):
+            self.__audio = audio
         else:
             self.__audio = ""
 
@@ -439,15 +441,23 @@ class StreamGear:
         # enable audio (if present)
         if self.__audio:
             # validate audio source
-            bitrate = validate_audio(self.__ffmpeg, file_path=self.__audio)
+            bitrate = validate_audio(self.__ffmpeg, source=self.__audio)
             if bitrate:
                 logger.info(
                     "Detected External Audio Source is valid, and will be used for streams."
                 )
-                # assign audio
-                output_parameters["-i"] = self.__audio
+
+                # assign audio source
+                output_parameters[
+                    "{}".format(
+                        "-core_asource" if isinstance(self.__audio, list) else "-i"
+                    )
+                ] = self.__audio
+
                 # assign audio codec
-                output_parameters["-acodec"] = self.__params.pop("-acodec", "copy")
+                output_parameters["-acodec"] = self.__params.pop(
+                    "-acodec", "aac" if isinstance(self.__audio, list) else "copy"
+                )
                 output_parameters["a_bitrate"] = bitrate  # temporary handler
                 output_parameters["-core_audio"] = (
                     ["-map", "1:a:0"] if self.__format == "dash" else []
@@ -458,7 +468,7 @@ class StreamGear:
                 )
         elif self.__video_source:
             # validate audio source
-            bitrate = validate_audio(self.__ffmpeg, file_path=self.__video_source)
+            bitrate = validate_audio(self.__ffmpeg, source=self.__video_source)
             if bitrate:
                 logger.info("Source Audio will be used for streams.")
                 # assign audio codec
@@ -854,6 +864,10 @@ class StreamGear:
             input_params (dict): Input FFmpeg parameters
             output_params (dict): Output FFmpeg parameters
         """
+        # handle audio source if present
+        if "-core_asource" in output_params:
+            output_params.move_to_end("-core_asource", last=False)
+
         # finally handle `-i`
         if "-i" in output_params:
             output_params.move_to_end("-i", last=False)
@@ -925,6 +939,7 @@ class StreamGear:
             )
         # format outputs
         ffmpeg_cmd.extend([self.__out_file] if not (hls_commands) else hls_commands)
+        logger.debug(ffmpeg_cmd)
         # Launch the FFmpeg pipeline with built command
         logger.critical("Transcoding streaming chunks. Please wait...")  # log it
         self.__process = sp.Popen(
@@ -1001,6 +1016,9 @@ class StreamGear:
         # close `stdin` output
         if self.__process.stdin:
             self.__process.stdin.close()
+        # force terminate if external audio source
+        if isinstance(self.__audio, list):
+            self.__process.terminate()
         # wait if still process is still processing some information
         self.__process.wait()
         self.__process = None

@@ -37,7 +37,7 @@ VideoGear is ideal when you need to switch to different video sources without ch
 
 !!! tip "Helpful Tips"
 
-	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../switch_from_cv/#switching-videocapture-apis)
+	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../../switch_from_cv/#switching-videocapture-apis)
 
 	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 

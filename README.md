@@ -81,7 +81,7 @@ The following **functional block diagram** clearly depicts the generalized funct
 
 
 
-# TL;DR
+## TL;DR
   
 #### What is vidgear?
 
