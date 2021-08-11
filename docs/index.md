@@ -75,8 +75,6 @@ These Gears can be classified as follows:
 
 #### Streaming Gears
 
-!!! tip "You can also use [WriteGear](gears/writegear/introduction/) for streaming with traditional protocols such as RTMP, RTSP/RTP."
-
 * [StreamGear](gears/streamgear/introduction/): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
 
 * **Asynchronous I/O Streaming Gear:**

@@ -173,6 +173,8 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
 
 All the encoders that are compiled with FFmpeg in use, are supported by WriteGear API. You can easily check the compiled encoders by running following command in your terminal:
 
+!!! info "Similarily, supported demuxers and filters depends upons compiled FFmpeg in use."
+
 ```sh
 ffmpeg -encoders           # use `ffmpeg.exe -encoders` on windows
 ``` 

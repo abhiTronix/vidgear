@@ -437,15 +437,15 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 
 
 
-> *StreamGear automates transcoding workflow for generating Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH) in just few lines of python code.*
+> *StreamGear automates transcoding workflow for generating Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH and Apple HLS) in just few lines of python code.*
 
 StreamGear provides a standalone, highly extensible, and flexible wrapper around [**FFmpeg**][ffmpeg] multimedia framework for generating chunked-encoded media segments of the content.
 
-SteamGear easily transcodes source videos/audio files & real-time video-frames and breaks them into a sequence of multiple smaller chunks/segments of fixed length. These segments make it possible to stream videos at different quality levels _(different bitrates or spatial resolutions)_ and can be switched in the middle of a video from one quality level to another – if bandwidth permits – on a per-segment basis. A user can serve these segments on a web server that makes it easier to download them through HTTP standard-compliant GET requests.
+SteamGear is an out-of-the-box solution for transcoding source videos/audio files & real-time video frames and breaking them into a sequence of multiple smaller chunks/segments of suitable lengths. These segments make it possible to stream videos at different quality levels _(different bitrates or spatial resolutions)_ and can be switched in the middle of a video from one quality level to another – if bandwidth permits – on a per-segment basis. A user can serve these segments on a web server that makes it easier to download them through HTTP standard-compliant GET requests.
 
-SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ besides segments that describe these segment information _(timing, URL, media characteristics like video resolution and bit rates)_ and is provided to the client before the streaming session.
+SteamGear currently supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_  and [**Apple HLS**](https://developer.apple.com/documentation/http_live_streaming) _(HTTP Live Streaming)_. But, Multiple DRM support is yet to be implemented.
 
-SteamGear currently supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_ but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming will be added soon.
+SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ or a Master Playlist _(such as M3U8 in-case of Apple HLS)_ besides segments that describe these segment information _(timing, URL, media characteristics like video resolution and bit rates)_ and is provided to the client before the streaming session.
 
 **StreamGear primarily works in two Independent Modes for transcoding which serves different purposes:**
 

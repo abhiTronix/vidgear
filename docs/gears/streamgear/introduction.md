@@ -29,17 +29,17 @@ limitations under the License.
 
 ## Overview
 
-> StreamGear automates transcoding workflow for generating _Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH)_ in just few lines of python code. 
+> StreamGear automates transcoding workflow for generating _Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH and Apple HLS)_ in just few lines of python code. 
 
 StreamGear provides a standalone, highly extensible, and flexible wrapper around [**FFmpeg**](https://ffmpeg.org/) multimedia framework for generating chunked-encoded media segments of the content.
 
-SteamGear easily transcodes source videos/audio files & real-time video-frames and breaks them into a sequence of multiple smaller chunks/segments of fixed length. These segments make it possible to stream videos at different quality levels _(different bitrates or spatial resolutions)_ and can be switched in the middle of a video from one quality level to another – if bandwidth permits – on a per-segment basis. A user can serve these segments on a web server that makes it easier to download them through HTTP standard-compliant GET requests.
+SteamGear is an out-of-the-box solution for transcoding source videos/audio files & real-time video frames and breaking them into a sequence of multiple smaller chunks/segments of suitable lengths. These segments make it possible to stream videos at different quality levels _(different bitrates or spatial resolutions)_ and can be switched in the middle of a video from one quality level to another – if bandwidth permits – on a per-segment basis. A user can serve these segments on a web server that makes it easier to download them through HTTP standard-compliant GET requests.
 
-SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ besides segments that describe these segment information _(timing, URL, media characteristics like video resolution and adaptive bit rates)_ and is provided to the client before the streaming session.
+SteamGear currently supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_  and [**Apple HLS**](https://developer.apple.com/documentation/http_live_streaming) _(HTTP Live Streaming)_. 
 
-SteamGear currently only supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_ , but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming, will be added soon. Also, Multiple DRM support is yet to be implemented.
+SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ or a Master Playlist _(such as M3U8 in-case of Apple HLS)_ besides segments that describe these segment information _(timing, URL, media characteristics like video resolution and adaptive bit rates)_ and is provided to the client before the streaming session.
 
-!!! tip "For streaming with traditional protocols such as RTMP, RTSP/RTP you can use [WriteGear](../../writegear/introduction/) API instead."
+!!! tip "For streaming with older traditional protocols such as RTMP, RTSP/RTP you could use [WriteGear](../../writegear/introduction/) API instead."
 
 &thinsp;
 
@@ -60,7 +60,7 @@ StreamGear primarily operates in following independent modes for transcoding:
 
 ??? warning "Real-time Frames Mode is NOT Live-Streaming."
 
-    You can enable live-streaming in Real-time Frames Mode by using using exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of stream_params dictionary parameter in WebGear_RTC API. Checkout [this usage example](../rtfm/usage/#bare-minimum-usage-with-live-streaming) for more information.
+    Rather, you can enable live-streaming in Real-time Frames Mode by using using exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter in StreamGear API. Checkout [this usage example](../rtfm/usage/#bare-minimum-usage-with-live-streaming) for more information.
 
 
 - [**Single-Source Mode**](../ssm/overview): In this mode, StreamGear transcodes entire video/audio file _(as opposed to frames by frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well, when you're transcoding lossless long-duration videos(with audio) for streaming and required no extra efforts or interruptions. But on the downside, the provided source cannot be changed or manipulated before sending onto FFmpeg Pipeline for processing. 
@@ -82,20 +82,39 @@ from vidgear.gears import StreamGear
 
 ## Watch Demo
 
-Watch StreamGear transcoded MPEG-DASH Stream:
+=== "Watch MPEG-DASH Stream"
 
-<div class="container">
-  <div class="video">
-    <div class="embed-responsive embed-responsive-16by9">
-      <div id="player" class="embed-responsive-item"></div>
+    Watch StreamGear transcoded MPEG-DASH Stream:
+
+    <div class="container">
+      <div class="video">
+        <div class="embed-responsive embed-responsive-16by9">
+          <div id="player_dash" class="embed-responsive-item"></div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-<p align="middle">Powered by <a href="https://github.com/clappr/clappr" title="clappr">clappr</a> & <a href="https://github.com/google/shaka-player" title="shaka-player">shaka-player</a></p>
+    <p align="middle">Powered by <a href="https://github.com/clappr/clappr" title="clappr">clappr</a> & <a href="https://github.com/google/shaka-player" title="shaka-player">shaka-player</a></p>
 
-!!! info  "This video assets _(Manifest and segments)_ are hosted on [GitHub Repository](https://github.com/abhiTronix/vidgear-docs-additionals) and served with [raw.githack.com](https://raw.githack.com)" 
+    !!! info  "This video assets _(Manifest and segments)_ are hosted on [GitHub Repository](https://github.com/abhiTronix/vidgear-docs-additionals) and served with [raw.githack.com](https://raw.githack.com)" 
 
-!!! quote "Video Credits: [**"Tears of Steel"** - Project Mango Teaser](https://mango.blender.org/download/)"
+    !!! quote "Video Credits: [**"Tears of Steel"** - Project Mango Teaser](https://mango.blender.org/download/)"
+
+=== "Watch APPLE HLS Stream"
+
+    Watch StreamGear transcoded APPLE HLS Stream:
+
+    <div class="container">
+      <div class="video">
+        <div class="embed-responsive embed-responsive-16by9">
+          <div id="player_hls" class="embed-responsive-item"></div>
+        </div>
+      </div>
+    </div>
+    <p align="middle">Powered by <a href="https://github.com/clappr/clappr" title="clappr">clappr</a> & <a href="https://github.com/clappr/hlsjs-playback" title="hlsjs-playback">HlsjsPlayback</a></p>
+
+    !!! info  "This video assets _(Playlist and segments)_ are hosted on [GitHub Repository](https://github.com/abhiTronix/vidgear-docs-additionals) and served with [raw.githack.com](https://raw.githack.com)" 
+
+    !!! quote "Video Credits: [**"Sintel"** - Project Durian Teaser](https://durian.blender.org/download/)"
 
 &thinsp;
 

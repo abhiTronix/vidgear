@@ -45,52 +45,104 @@ Following is the bare-minimum code you need to get started with StreamGear API i
 
 !!! note "We are using [CamGear](../../../camgear/overview/) in this Bare-Minimum example, but any [VideoCapture Gear](../../../#a-videocapture-gears) will work in the similar manner."
 
-```python
-# import required libraries
-from vidgear.gears import CamGear
-from vidgear.gears import StreamGear
-import cv2
 
-# open any valid video stream(for e.g `foo1.mp4` file)
-stream = CamGear(source='foo1.mp4').start() 
+=== "DASH"
 
-# describe a suitable manifest-file location/name
-streamer = StreamGear(output="dash_out.mpd")
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import StreamGear
+    import cv2
 
-# loop over
-while True:
+    # open any valid video stream(for e.g `foo1.mp4` file)
+    stream = CamGear(source='foo1.mp4').start() 
 
-    # read frames from stream
-    frame = stream.read()
+    # describe a suitable manifest-file location/name
+    streamer = StreamGear(output="dash_out.mpd")
 
-    # check for frame if Nonetype
-    if frame is None:
-        break
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
 
 
-    # {do something with the frame here}
+        # {do something with the frame here}
 
 
-    # send frame to streamer
-    streamer.stream(frame)
+        # send frame to streamer
+        streamer.stream(frame)
 
-    # Show output window
-    cv2.imshow("Output Frame", frame)
+        # Show output window
+        cv2.imshow("Output Frame", frame)
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
 
-# close output window
-cv2.destroyAllWindows()
+    # close output window
+    cv2.destroyAllWindows()
 
-# safely close video stream
-stream.stop()
+    # safely close video stream
+    stream.stop()
 
-# safely close streamer
-streamer.terminate()
-```
+    # safely close streamer
+    streamer.terminate()
+    ```
+
+=== "HLS"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import StreamGear
+    import cv2
+
+    # open any valid video stream(for e.g `foo1.mp4` file)
+    stream = CamGear(source='foo1.mp4').start() 
+
+    # describe a suitable manifest-file location/name
+    streamer = StreamGear(output="hls_out.m3u8", format = "hls")
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+
+        # {do something with the frame here}
+
+
+        # send frame to streamer
+        streamer.stream(frame)
+
+        # Show output window
+        cv2.imshow("Output Frame", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close streamer
+    streamer.terminate()
+    ```
 
 !!! success "After running this bare-minimum example, StreamGear will produce a Manifest file _(`dash.mpd`)_ with streamable chunks that contains information about a Primary Stream of same resolution and framerate[^1] as input _(without any audio)_."
 
@@ -107,54 +159,108 @@ You can easily activate ==Low-latency Livestreaming in Real-time Frames Mode==, 
 
 !!! note "In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
 
-```python
-# import required libraries
-from vidgear.gears import CamGear
-from vidgear.gears import StreamGear
-import cv2
+=== "DASH"
 
-# open any valid video stream(from web-camera attached at index `0`)
-stream = CamGear(source=0).start()
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import StreamGear
+    import cv2
 
-# enable livestreaming and retrieve framerate from CamGear Stream and
-# pass it as `-input_framerate` parameter for controlled framerate
-stream_params = {"-input_framerate": stream.framerate, "-livestream": True}
+    # open any valid video stream(from web-camera attached at index `0`)
+    stream = CamGear(source=0).start()
 
-# describe a suitable manifest-file location/name
-streamer = StreamGear(output="dash_out.mpd", **stream_params)
+    # enable livestreaming and retrieve framerate from CamGear Stream and
+    # pass it as `-input_framerate` parameter for controlled framerate
+    stream_params = {"-input_framerate": stream.framerate, "-livestream": True}
 
-# loop over
-while True:
+    # describe a suitable manifest-file location/name
+    streamer = StreamGear(output="dash_out.mpd", **stream_params)
 
-    # read frames from stream
-    frame = stream.read()
+    # loop over
+    while True:
 
-    # check for frame if Nonetype
-    if frame is None:
-        break
+        # read frames from stream
+        frame = stream.read()
 
-    # {do something with the frame here}
+        # check for frame if Nonetype
+        if frame is None:
+            break
 
-    # send frame to streamer
-    streamer.stream(frame)
+        # {do something with the frame here}
 
-    # Show output window
-    cv2.imshow("Output Frame", frame)
+        # send frame to streamer
+        streamer.stream(frame)
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+        # Show output window
+        cv2.imshow("Output Frame", frame)
 
-# close output window
-cv2.destroyAllWindows()
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
 
-# safely close video stream
-stream.stop()
+    # close output window
+    cv2.destroyAllWindows()
 
-# safely close streamer
-streamer.terminate()
-```
+    # safely close video stream
+    stream.stop()
+
+    # safely close streamer
+    streamer.terminate()
+    ```
+
+=== "HLS"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import StreamGear
+    import cv2
+
+    # open any valid video stream(from web-camera attached at index `0`)
+    stream = CamGear(source=0).start()
+
+    # enable livestreaming and retrieve framerate from CamGear Stream and
+    # pass it as `-input_framerate` parameter for controlled framerate
+    stream_params = {"-input_framerate": stream.framerate, "-livestream": True}
+
+    # describe a suitable manifest-file location/name
+    streamer = StreamGear(output="hls_out.m3u8", format = "hls", **stream_params)
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # send frame to streamer
+        streamer.stream(frame)
+
+        # Show output window
+        cv2.imshow("Output Frame", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close streamer
+    streamer.terminate()
+    ```
+
 
 &thinsp;
 
@@ -162,53 +268,106 @@ streamer.terminate()
 
 In Real-time Frames Mode, StreamGear API provide [`rgb_mode`](../../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) boolean parameter with its `stream()` function, which if enabled _(i.e. `rgb_mode=True`)_, specifies that incoming frames are of RGB format _(instead of default BGR format)_, thereby also known as ==RGB Mode==. The complete usage example is as follows:
 
-```python
-# import required libraries
-from vidgear.gears import CamGear
-from vidgear.gears import StreamGear
-import cv2
+=== "DASH"
 
-# open any valid video stream(for e.g `foo1.mp4` file)
-stream = CamGear(source='foo1.mp4').start() 
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import StreamGear
+    import cv2
 
-# describe a suitable manifest-file location/name
-streamer = StreamGear(output="dash_out.mpd")
+    # open any valid video stream(for e.g `foo1.mp4` file)
+    stream = CamGear(source='foo1.mp4').start() 
 
-# loop over
-while True:
+    # describe a suitable manifest-file location/name
+    streamer = StreamGear(output="dash_out.mpd")
 
-    # read frames from stream
-    frame = stream.read()
+    # loop over
+    while True:
 
-    # check for frame if Nonetype
-    if frame is None:
-        break
+        # read frames from stream
+        frame = stream.read()
 
-
-    # {simulating RGB frame for this example}
-    frame_rgb = frame[:,:,::-1]
+        # check for frame if Nonetype
+        if frame is None:
+            break
 
 
-    # send frame to streamer
-    streamer.stream(frame_rgb, rgb_mode = True) #activate RGB Mode
+        # {simulating RGB frame for this example}
+        frame_rgb = frame[:,:,::-1]
 
-    # Show output window
-    cv2.imshow("Output Frame", frame)
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+        # send frame to streamer
+        streamer.stream(frame_rgb, rgb_mode = True) #activate RGB Mode
 
-# close output window
-cv2.destroyAllWindows()
+        # Show output window
+        cv2.imshow("Output Frame", frame)
 
-# safely close video stream
-stream.stop()
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
 
-# safely close streamer
-streamer.terminate()
-```
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close streamer
+    streamer.terminate()
+    ```
+
+=== "HLS"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import StreamGear
+    import cv2
+
+    # open any valid video stream(for e.g `foo1.mp4` file)
+    stream = CamGear(source='foo1.mp4').start() 
+
+    # describe a suitable manifest-file location/name
+    streamer = StreamGear(output="hls_out.m3u8", format = "hls")
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+
+        # {simulating RGB frame for this example}
+        frame_rgb = frame[:,:,::-1]
+
+
+        # send frame to streamer
+        streamer.stream(frame_rgb, rgb_mode = True) #activate RGB Mode
+
+        # Show output window
+        cv2.imshow("Output Frame", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close streamer
+    streamer.terminate()
+    ```
+
 
 &thinsp;
 
@@ -218,55 +377,110 @@ In Real-time Frames Mode, StreamGear API provides exclusive [`-input_framerate`]
 
 !!! danger "Remember, Input framerate default to `25.0` fps if [`-input_framerate`](../../params/#a-exclusive-parameters) attribute value not defined in Real-time Frames mode."
 
-```python
-# import required libraries
-from vidgear.gears import CamGear
-from vidgear.gears import StreamGear
-import cv2
 
-# Open live video stream on webcam at first index(i.e. 0) device
-stream = CamGear(source=0).start()
+=== "DASH"
 
-# retrieve framerate from CamGear Stream and pass it as `-input_framerate` value
-stream_params = {"-input_framerate":stream.framerate}
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import StreamGear
+    import cv2
 
-# describe a suitable manifest-file location/name and assign params
-streamer = StreamGear(output="dash_out.mpd", **stream_params)
+    # Open live video stream on webcam at first index(i.e. 0) device
+    stream = CamGear(source=0).start()
 
-# loop over
-while True:
+    # retrieve framerate from CamGear Stream and pass it as `-input_framerate` value
+    stream_params = {"-input_framerate":stream.framerate}
 
-    # read frames from stream
-    frame = stream.read()
+    # describe a suitable manifest-file location/name and assign params
+    streamer = StreamGear(output="dash_out.mpd", **stream_params)
 
-    # check for frame if Nonetype
-    if frame is None:
-        break
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
 
 
-    # {do something with the frame here}
+        # {do something with the frame here}
 
 
-    # send frame to streamer
-    streamer.stream(frame)
+        # send frame to streamer
+        streamer.stream(frame)
 
-    # Show output window
-    cv2.imshow("Output Frame", frame)
+        # Show output window
+        cv2.imshow("Output Frame", frame)
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
 
-# close output window
-cv2.destroyAllWindows()
+    # close output window
+    cv2.destroyAllWindows()
 
-# safely close video stream
-stream.stop()
+    # safely close video stream
+    stream.stop()
 
-# safely close streamer
-streamer.terminate()
-```
+    # safely close streamer
+    streamer.terminate()
+    ```
+
+=== "HLS"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import StreamGear
+    import cv2
+
+    # Open live video stream on webcam at first index(i.e. 0) device
+    stream = CamGear(source=0).start()
+
+    # retrieve framerate from CamGear Stream and pass it as `-input_framerate` value
+    stream_params = {"-input_framerate":stream.framerate}
+
+    # describe a suitable manifest-file location/name and assign params
+    streamer = StreamGear(output="hls_out.m3u8", format = "hls", **stream_params)
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+
+        # {do something with the frame here}
+
+
+        # send frame to streamer
+        streamer.stream(frame)
+
+        # Show output window
+        cv2.imshow("Output Frame", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close streamer
+    streamer.terminate()
+    ```
 
 &thinsp;
 
@@ -276,52 +490,104 @@ You can easily use StreamGear API directly with any other Video Processing libra
 
 !!! tip "This just a bare-minimum example with OpenCV, but any other Real-time Frames Mode feature/example will work in the similar manner."
 
-```python
-# import required libraries
-from vidgear.gears import StreamGear
-import cv2
+=== "DASH"
 
-# Open suitable video stream, such as webcam on first index(i.e. 0)
-stream = cv2.VideoCapture(0) 
+    ```python
+    # import required libraries
+    from vidgear.gears import StreamGear
+    import cv2
 
-# describe a suitable manifest-file location/name
-streamer = StreamGear(output="dash_out.mpd")
+    # Open suitable video stream, such as webcam on first index(i.e. 0)
+    stream = cv2.VideoCapture(0) 
 
-# loop over
-while True:
+    # describe a suitable manifest-file location/name
+    streamer = StreamGear(output="dash_out.mpd")
 
-    # read frames from stream
-    (grabbed, frame) = stream.read()
+    # loop over
+    while True:
 
-    # check for frame if not grabbed
-    if not grabbed:
-      break
+        # read frames from stream
+        (grabbed, frame) = stream.read()
 
-    # {do something with the frame here}
-    # lets convert frame to gray for this example
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        # check for frame if not grabbed
+        if not grabbed:
+          break
+
+        # {do something with the frame here}
+        # lets convert frame to gray for this example
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 
-    # send frame to streamer
-    streamer.stream(gray)
+        # send frame to streamer
+        streamer.stream(gray)
 
-    # Show output window
-    cv2.imshow("Output Gray Frame", gray)
+        # Show output window
+        cv2.imshow("Output Gray Frame", gray)
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
 
-# close output window
-cv2.destroyAllWindows()
+    # close output window
+    cv2.destroyAllWindows()
 
-# safely close video stream
-stream.release()
+    # safely close video stream
+    stream.release()
 
-# safely close streamer
-streamer.terminate()
-```
+    # safely close streamer
+    streamer.terminate()
+    ```
+
+=== "HLS"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import StreamGear
+    import cv2
+
+    # Open suitable video stream, such as webcam on first index(i.e. 0)
+    stream = cv2.VideoCapture(0) 
+
+    # describe a suitable manifest-file location/name
+    streamer = StreamGear(output="hls_out.m3u8", format = "hls")
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        (grabbed, frame) = stream.read()
+
+        # check for frame if not grabbed
+        if not grabbed:
+          break
+
+        # {do something with the frame here}
+        # lets convert frame to gray for this example
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+
+        # send frame to streamer
+        streamer.stream(gray)
+
+        # Show output window
+        cv2.imshow("Output Gray Frame", gray)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.release()
+
+    # safely close streamer
+    streamer.terminate()
+    ```
+
 
 &thinsp;
 
@@ -338,61 +604,122 @@ Similar to Single-Source Mode, you can easily generate any number of additional 
 
 !!! fail "Always use `-stream` attribute to define additional streams safely, any duplicate or incorrect definition can break things!"
 
-```python
-# import required libraries
-from vidgear.gears import CamGear
-from vidgear.gears import StreamGear
-import cv2
 
-# Open suitable video stream, such as webcam on first index(i.e. 0)
-stream = CamGear(source=0).start() 
+=== "DASH"
 
-# define various streams
-stream_params = {
-    "-streams": [
-        {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps framerate
-        {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps framerate
-        {"-resolution": "320x240", "-video_bitrate": "500k"},  # Stream3: 320x240 at 500kbs bitrate
-    ],
-}
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import StreamGear
+    import cv2
 
-# describe a suitable manifest-file location/name and assign params
-streamer = StreamGear(output="dash_out.mpd")
+    # Open suitable video stream, such as webcam on first index(i.e. 0)
+    stream = CamGear(source=0).start() 
 
-# loop over
-while True:
+    # define various streams
+    stream_params = {
+        "-streams": [
+            {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps framerate
+            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps framerate
+            {"-resolution": "320x240", "-video_bitrate": "500k"},  # Stream3: 320x240 at 500kbs bitrate
+        ],
+    }
 
-    # read frames from stream
-    frame = stream.read()
+    # describe a suitable manifest-file location/name and assign params
+    streamer = StreamGear(output="dash_out.mpd")
 
-    # check for frame if Nonetype
-    if frame is None:
-        break
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
 
 
-    # {do something with the frame here}
+        # {do something with the frame here}
 
 
-    # send frame to streamer
-    streamer.stream(frame)
+        # send frame to streamer
+        streamer.stream(frame)
 
-    # Show output window
-    cv2.imshow("Output Frame", frame)
+        # Show output window
+        cv2.imshow("Output Frame", frame)
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
 
-# close output window
-cv2.destroyAllWindows()
+    # close output window
+    cv2.destroyAllWindows()
 
-# safely close video stream
-stream.stop()
+    # safely close video stream
+    stream.stop()
 
-# safely close streamer
-streamer.terminate()
-```
+    # safely close streamer
+    streamer.terminate()
+    ```
+
+=== "HLS"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import StreamGear
+    import cv2
+
+    # Open suitable video stream, such as webcam on first index(i.e. 0)
+    stream = CamGear(source=0).start() 
+
+    # define various streams
+    stream_params = {
+        "-streams": [
+            {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps framerate
+            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps framerate
+            {"-resolution": "320x240", "-video_bitrate": "500k"},  # Stream3: 320x240 at 500kbs bitrate
+        ],
+    }
+
+    # describe a suitable manifest-file location/name and assign params
+    streamer = StreamGear(output="hls_out.m3u8", format = "hls")
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+
+        # {do something with the frame here}
+
+
+        # send frame to streamer
+        streamer.stream(frame)
+
+        # Show output window
+        cv2.imshow("Output Frame", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close streamer
+    streamer.terminate()
+    ```
 
 &thinsp;
 
@@ -406,75 +733,138 @@ In Real-time Frames Mode, if you want to add audio to your streams, you've to us
 
 !!! tip "You can also assign a valid Audio URL as input, rather than filepath. More details can be found [here ➶](../../params/#a-exclusive-parameters)"
 
-```python
-# import required libraries
-from vidgear.gears import CamGear
-from vidgear.gears import StreamGear
-import cv2
 
-# open any valid video stream(for e.g `foo1.mp4` file)
-stream = CamGear(source='foo1.mp4').start() 
+=== "DASH"
 
-# add various streams, along with custom audio
-stream_params = {
-    "-streams": [
-        {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
-        {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
-        {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps
-    ],
-    "-input_framerate": stream.framerate, # controlled framerate for audio-video sync !!! don't forget this line !!!
-    "-audio": "/home/foo/foo1.aac" # assigns input audio-source: "/home/foo/foo1.aac"
-}
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import StreamGear
+    import cv2
 
-# describe a suitable manifest-file location/name and assign params
-streamer = StreamGear(output="dash_out.mpd", **stream_params)
+    # open any valid video stream(for e.g `foo1.mp4` file)
+    stream = CamGear(source='foo1.mp4').start() 
 
-# loop over
-while True:
+    # add various streams, along with custom audio
+    stream_params = {
+        "-streams": [
+            {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
+            {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
+            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps
+        ],
+        "-input_framerate": stream.framerate, # controlled framerate for audio-video sync !!! don't forget this line !!!
+        "-audio": "/home/foo/foo1.aac" # assigns input audio-source: "/home/foo/foo1.aac"
+    }
 
-    # read frames from stream
-    frame = stream.read()
+    # describe a suitable manifest-file location/name and assign params
+    streamer = StreamGear(output="dash_out.mpd", **stream_params)
 
-    # check for frame if Nonetype
-    if frame is None:
-        break
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
 
 
-    # {do something with the frame here}
+        # {do something with the frame here}
 
 
-    # send frame to streamer
-    streamer.stream(frame)
+        # send frame to streamer
+        streamer.stream(frame)
 
-    # Show output window
-    cv2.imshow("Output Frame", frame)
+        # Show output window
+        cv2.imshow("Output Frame", frame)
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
 
-# close output window
-cv2.destroyAllWindows()
+    # close output window
+    cv2.destroyAllWindows()
 
-# safely close video stream
-stream.stop()
+    # safely close video stream
+    stream.stop()
 
-# safely close streamer
-streamer.terminate()
-```
+    # safely close streamer
+    streamer.terminate()
+    ```
+
+=== "HLS"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import StreamGear
+    import cv2
+
+    # open any valid video stream(for e.g `foo1.mp4` file)
+    stream = CamGear(source='foo1.mp4').start() 
+
+    # add various streams, along with custom audio
+    stream_params = {
+        "-streams": [
+            {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
+            {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
+            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps
+        ],
+        "-input_framerate": stream.framerate, # controlled framerate for audio-video sync !!! don't forget this line !!!
+        "-audio": "/home/foo/foo1.aac" # assigns input audio-source: "/home/foo/foo1.aac"
+    }
+
+    # describe a suitable manifest-file location/name and assign params
+    streamer = StreamGear(output="hls_out.m3u8", format = "hls", **stream_params)
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+
+        # {do something with the frame here}
+
+
+        # send frame to streamer
+        streamer.stream(frame)
+
+        # Show output window
+        cv2.imshow("Output Frame", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close streamer
+    streamer.terminate()
+    ```
 
 &thinsp;
 
 ## Usage with Device Audio-Input
 
-In Real-time Frames Mode, you've can also use exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter for streaming live audio from external device. You need to format your audio device name and suitable decoder as `list` and assign to this attribute, and StreamGear API will automatically validate and map it to all generated streams. The complete example is as follows:
+In Real-time Frames Mode, you've can also use exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter for streaming live audio from external device. You need to format your audio device name followed by suitable demuxer as `list` and assign to this attribute, and StreamGear API will automatically validate and map it to all generated streams. The complete example is as follows:
 
 
 !!! alert "Example Assumptions"
 
-    * You're running are Windows machine.
-    * You already have appropriate audio drivers and software installed on your machine.
+    * You're running are Windows machine with all neccessary audio drivers and software installed.
+    * There's a audio device with named `"Microphone (USB2.0 Camera)"` connected to your windows machine.
 
 
 ??? tip "Using `-audio` attribute on different OS platforms"
@@ -510,7 +900,7 @@ In Real-time Frames Mode, you've can also use exclusive [`-audio`](../../params/
         - [x] **Specify Sound Card:** Then, you can specify your located soundcard in StreamGear as follows:
 
             ```python
-            # assign appropriate input audio-source
+            # assign appropriate input audio-source device and demuxer device and demuxer
             stream_params = {"-audio": ["-f","dshow", "-i", "audio=Microphone (USB2.0 Camera)"]}
             ```
 
@@ -550,7 +940,7 @@ In Real-time Frames Mode, you've can also use exclusive [`-audio`](../../params/
             !!! info "The easiest thing to do is to reference sound card directly, namely "card 0" (Intel ICH5) and "card 1" (Microphone on the USB web cam), as `hw:0` or `hw:1`"
 
             ```python
-            # assign appropriate input audio-source "card 1" (Microphone on the USB web cam)
+            # assign appropriate input audio-source device and demuxer device and demuxer 
             stream_params = {"-audio": ["-f","alsa", "-i", "hw:1"]}
             ```
 
@@ -586,7 +976,7 @@ In Real-time Frames Mode, you've can also use exclusive [`-audio`](../../params/
         - [x] **Specify Sound Card:** Then, you can specify your located soundcard in StreamGear as follows:
 
             ```python
-            # assign appropriate input audio-source
+            # assign appropriate input audio-source device and demuxer
             stream_params = {"-audio": ["-f","avfoundation", "-audio_device_index", "0"]}
             ```
 
@@ -597,63 +987,138 @@ In Real-time Frames Mode, you've can also use exclusive [`-audio`](../../params/
 
 !!! warning "You **MUST** use [`-input_framerate`](../../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
-
-```python
-# import required libraries
-from vidgear.gears import CamGear
-from vidgear.gears import StreamGear
-import cv2
-
-# open any valid video stream(for e.g `foo1.mp4` file)
-stream = CamGear(source='foo1.mp4').start() 
-
-# add various streams, along with custom audio
-stream_params = {
-    "-streams": [
-        {"-resolution": "1280x720", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
-        {"-resolution": "640x360", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
-    ],
-    "-input_framerate": stream.framerate, # controlled framerate for audio-video sync !!! don't forget this line !!!
-    stream_params = {"-audio": ["-f","dshow", "-i", "audio=Microphone (USB2.0 Camera)"]} # assign appropriate input audio-source
-}
-
-# describe a suitable manifest-file location/name and assign params
-streamer = StreamGear(output="dash_out.mpd", **stream_params)
-
-# loop over
-while True:
-
-    # read frames from stream
-    frame = stream.read()
-
-    # check for frame if Nonetype
-    if frame is None:
-        break
+!!! note "It is advised to use this example with live-streaming enabled(True) by using StreamGear API's exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
 
 
-    # {do something with the frame here}
+=== "DASH"
 
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import StreamGear
+    import cv2
 
-    # send frame to streamer
-    streamer.stream(frame)
+    # open any valid video stream(for e.g `foo1.mp4` file)
+    stream = CamGear(source="foo1.mp4").start()
 
-    # Show output window
-    cv2.imshow("Output Frame", frame)
+    # add various streams, along with custom audio
+    stream_params = {
+        "-streams": [
+            {
+                "-resolution": "1280x720",
+                "-video_bitrate": "4000k",
+            },  # Stream1: 1920x1080 at 4000kbs bitrate
+            {"-resolution": "640x360", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
+        ],
+        "-input_framerate": stream.framerate,  # controlled framerate for audio-video sync !!! don't forget this line !!!
+        "-audio": [
+            "-f",
+            "dshow",
+            "-i",
+            "audio=Microphone (USB2.0 Camera)",
+        ],  # assign appropriate input audio-source device and demuxer
+    }
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+    # describe a suitable manifest-file location/name and assign params
+    streamer = StreamGear(output="dash_out.mpd", **stream_params)
 
-# close output window
-cv2.destroyAllWindows()
+    # loop over
+    while True:
 
-# safely close video stream
-stream.stop()
+        # read frames from stream
+        frame = stream.read()
 
-# safely close streamer
-streamer.terminate()
-```
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # send frame to streamer
+        streamer.stream(frame)
+
+        # Show output window
+        cv2.imshow("Output Frame", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close streamer
+    streamer.terminate()
+    ```
+
+=== "HLS"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import StreamGear
+    import cv2
+
+    # open any valid video stream(for e.g `foo1.mp4` file)
+    stream = CamGear(source="foo1.mp4").start()
+
+    # add various streams, along with custom audio
+    stream_params = {
+        "-streams": [
+            {
+                "-resolution": "1280x720",
+                "-video_bitrate": "4000k",
+            },  # Stream1: 1920x1080 at 4000kbs bitrate
+            {"-resolution": "640x360", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
+        ],
+        "-input_framerate": stream.framerate,  # controlled framerate for audio-video sync !!! don't forget this line !!!
+        "-audio": [
+            "-f",
+            "dshow",
+            "-i",
+            "audio=Microphone (USB2.0 Camera)",
+        ],  # assign appropriate input audio-source device and demuxer
+    }
+
+    # describe a suitable manifest-file location/name and assign params
+    streamer = StreamGear(output="dash_out.m3u8", format="hls", **stream_params)
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # send frame to streamer
+        streamer.stream(frame)
+
+        # Show output window
+        cv2.imshow("Output Frame", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close streamer
+    streamer.terminate()
+    ```
 
 &thinsp;
 
@@ -681,64 +1146,127 @@ In this example, we will be using `h264_vaapi` as our hardware encoder and also 
     ```
 
 
-```python
-# import required libraries
-from vidgear.gears import VideoGear
-from vidgear.gears import StreamGear
-import cv2
+=== "DASH"
 
-# Open suitable video stream, such as webcam on first index(i.e. 0)
-stream = VideoGear(source=0).start() 
+    ```python
+    # import required libraries
+    from vidgear.gears import VideoGear
+    from vidgear.gears import StreamGear
+    import cv2
 
-# add various streams with custom Video Encoder and optimizations
-stream_params = {
-    "-streams": [
-        {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
-        {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
-        {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps
-    ],
-    "-vcodec": "h264_vaapi", # define custom Video encoder
-    "-vaapi_device": "/dev/dri/renderD128", # define device location
-    "-vf": "format=nv12,hwupload",  # define video pixformat
-}
+    # Open suitable video stream, such as webcam on first index(i.e. 0)
+    stream = VideoGear(source=0).start() 
 
-# describe a suitable manifest-file location/name and assign params
-streamer = StreamGear(output="dash_out.mpd", **stream_params)
+    # add various streams with custom Video Encoder and optimizations
+    stream_params = {
+        "-streams": [
+            {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
+            {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
+            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps
+        ],
+        "-vcodec": "h264_vaapi", # define custom Video encoder
+        "-vaapi_device": "/dev/dri/renderD128", # define device location
+        "-vf": "format=nv12,hwupload",  # define video pixformat
+    }
 
-# loop over
-while True:
+    # describe a suitable manifest-file location/name and assign params
+    streamer = StreamGear(output="dash_out.mpd", **stream_params)
 
-    # read frames from stream
-    frame = stream.read()
+    # loop over
+    while True:
 
-    # check for frame if Nonetype
-    if frame is None:
-        break
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
 
 
-    # {do something with the frame here}
+        # {do something with the frame here}
 
 
-    # send frame to streamer
-    streamer.stream(frame)
+        # send frame to streamer
+        streamer.stream(frame)
 
-    # Show output window
-    cv2.imshow("Output Frame", frame)
+        # Show output window
+        cv2.imshow("Output Frame", frame)
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
 
-# close output window
-cv2.destroyAllWindows()
+    # close output window
+    cv2.destroyAllWindows()
 
-# safely close video stream
-stream.stop()
+    # safely close video stream
+    stream.stop()
 
-# safely close streamer
-streamer.terminate()
-```
+    # safely close streamer
+    streamer.terminate()
+    ```
+
+=== "HLS"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import VideoGear
+    from vidgear.gears import StreamGear
+    import cv2
+
+    # Open suitable video stream, such as webcam on first index(i.e. 0)
+    stream = VideoGear(source=0).start() 
+
+    # add various streams with custom Video Encoder and optimizations
+    stream_params = {
+        "-streams": [
+            {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
+            {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
+            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps
+        ],
+        "-vcodec": "h264_vaapi", # define custom Video encoder
+        "-vaapi_device": "/dev/dri/renderD128", # define device location
+        "-vf": "format=nv12,hwupload",  # define video pixformat
+    }
+
+    # describe a suitable manifest-file location/name and assign params
+    streamer = StreamGear(output="hls_out.m3u8", format = "hls", **stream_params)
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+
+        # {do something with the frame here}
+
+
+        # send frame to streamer
+        streamer.stream(frame)
+
+        # Show output window
+        cv2.imshow("Output Frame", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close streamer
+    streamer.terminate()
+    ```
 
 &nbsp;
 

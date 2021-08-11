@@ -24,9 +24,11 @@ limitations under the License.
 
 ## **`output`**
 
-This parameter sets the valid filename/path for storing the StreamGear assets _(Manifest file(such as Media Presentation Description(MPD) in-case of DASH) & Transcoded sequence of segments)_.
+This parameter sets the valid filename/path for storing the StreamGear assets _(Manifest file (such as MPD in-case of DASH) or a Master Playlist (such as M3U8 in-case of Apple HLS) & Transcoded sequence of segments)_.
 
 !!! warning "StreamGear API will throw `ValueError` if `output` provided is empty or invalid."
+
+!!! error "Make sure to provide _valid filename with valid file-extension_ for selected [`format`](#format) value _(such as `.mpd` in case of MPEG-DASH and `.m3u8` in case of APPLE-HLS)_, otherwise StreamGear will throw `AssertionError`."
 
 !!! note "StreamGear generated sequence of multiple chunks/segments are also stored in the same directory."
 
@@ -40,41 +42,77 @@ Its valid input can be one of the following:
 
 * **Path to directory**: Valid path of the directory. In this case, StreamGear API will automatically assign a unique filename for Manifest file. This can be defined as follows:
 
-    ```python
-    streamer = StreamGear(output = '/home/foo/foo1') # Define streamer with manifest saving directory path 
-    ```
+    === "DASH"
+
+        ```python
+        streamer = StreamGear(output = "/home/foo/foo1") # Define streamer with manifest saving directory path 
+        ```
+
+    === "HLS"
+
+        ```python
+        streamer = StreamGear(output = "/home/foo/foo1", format="hls") # Define streamer with playlist saving directory path 
+        ```
 
 * **Filename** _(with/without path)_: Valid filename(_with valid extension_) of the output Manifest file. In case filename is provided without path, then current working directory will be used.
 
-    ```python
-    streamer = StreamGear(output = 'output_foo.mpd') # Define streamer with manifest file name
-    ```
+    === "DASH"
 
-    !!! warning "Make sure to provide _valid filename with valid file-extension_ for selected [format](#format) value _(such as `output.mpd` in case of MPEG-DASH)_, otherwise StreamGear will throw `AssertionError`."
+        ```python
+        streamer = StreamGear(output = "output_foo.mpd") # Define streamer with manifest file name
+        ```
 
+    === "HLS"
+
+        ```python
+        streamer = StreamGear(output = "output_foo.m3u8", format="hls") # Define streamer with playlist file name
+        ```
 
 * **URL**: Valid URL of a network stream with a protocol supported by installed FFmpeg _(verify with command `ffmpeg -protocols`)_ only. This is useful for directly storing assets to a network server. For example, you can use a `http` protocol URL as follows:
 
-    ```python
-    streamer = StreamGear(output = 'http://195.167.1.101/live/test.mpd') #Define streamer 
-    ```
+    
+    === "DASH"
+
+        ```python
+        streamer = StreamGear(output = "http://195.167.1.101/live/test.mpd") #Define streamer 
+        ```
+
+    === "HLS"
+
+        ```python
+        streamer = StreamGear(output = "http://195.167.1.101/live/test.m3u8", format="hls") #Define streamer 
+        ```
 
 &nbsp;
 
 ## **`format`** 
 
 
-This parameter select the adaptive HTTP streaming format. HTTP streaming works by breaking the overall stream into a sequence of small HTTP-based file downloads, each downloading one short chunk of an overall potentially unbounded transport stream. For now, the only supported format is: `'dash'` _(i.e [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/))_, but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming, will be added soon.
+This parameter select the adaptive HTTP streaming formats. For now, the supported format are: `dash` _(i.e [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/))_ and  `hls` _(i.e [**Apple HLS**](https://developer.apple.com/documentation/http_live_streaming))_.
+
+!!! warning "Any invalid value to `format` parameter will result in ValueError!"
+
+!!! error "Make sure to provide _valid filename with valid file-extension_ in [`output`](#output) for selected `format` value _(such as `.mpd` in case of MPEG-DASH and `.m3u8` in case of APPLE-HLS)_, otherwise StreamGear will throw `AssertionError`."
+
 
 **Data-Type:** String
 
-**Default Value:** Its default value is `'dash'`
+**Default Value:** Its default value is `dash`
 
 **Usage:**
 
-```python
-StreamGear(output = 'output_foo.mpd', format="dash")
-```
+=== "DASH"
+
+    ```python
+    StreamGear(output = "output_foo.mpd", format="dash")
+    ```
+
+=== "HLS"
+
+    ```python
+    StreamGear(output = "output_foo.m3u8", format="hls")
+    ```
+
 
 &nbsp; 
 
@@ -183,23 +221,32 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 &ensp;
 
 
-* **`-audio`** _(dict)_: This attribute takes external custom audio path as audio-input for all StreamGear streams. Its value be one of the following:
+* **`-audio`** _(string/list)_: This attribute takes external custom audio path _(as `string`)_ or audio device name followed by suitable demuxer _(as `list`)_ as audio source input for all StreamGear streams. Its value be one of the following:
 
     !!! failure "Make sure this audio-source is compatible with provided video -source, otherwise you encounter multiple errors, or even no output at all!"
 
-    !!! tip "Usage example can be found [here ➶](../ssm/usage/#usage-with-custom-audio)"
-
-    * **Audio Filename**: Valid path to Audio file as follows:
+    * **Audio Filename** _(string)_: Valid path to Audio file as follows:
         ```python
         stream_params = {"-audio": "/home/foo/foo1.aac"} # set input audio source: /home/foo/foo1.aac
         ```
-    * **Audio URL**: Valid URL of a network audio stream as follows:
+        !!! tip "Usage example can be found [here ➶](../ssm/usage/#usage-with-custom-audio)"
+
+    * **Audio URL** _(string)_: Valid URL of a network audio stream as follows:
 
         !!! danger "Make sure given Video URL has protocol that is supported by installed FFmpeg. _(verify with `ffmpeg -protocols` terminal command)_"
         
         ```python
         stream_params = {"-audio": "https://exampleaudio.org/example-160.mp3"} # set input audio source: https://exampleaudio.org/example-160.mp3
         ``` 
+
+    * **Device name and Demuxer** _(list)_: Valid audio device name followed by suitable demuxer as follows:
+        
+        ```python
+        stream_params = {"-audio": "https://exampleaudio.org/example-160.mp3"} # set input audio source: https://exampleaudio.org/example-160.mp3
+        ``` 
+        !!! tip "Usage example can be found [here ➶](../rtfm/usage/#usage-with-device-audio--input)"
+
+
 
 &ensp;
 
@@ -292,6 +339,8 @@ stream_params = {"-vcodec":"libx264", "-crf": 0, "-preset": "fast", "-tune": "ze
 ### Supported Encoders and Decoders
 
 All the encoders and decoders that are compiled with FFmpeg in use, are supported by WriteGear API. You can easily check the compiled encoders by running following command in your terminal:
+
+!!! info "Similarily, supported demuxers and filters depends upons compiled FFmpeg in use."
 
 ```sh
 # for checking encoder

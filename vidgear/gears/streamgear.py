@@ -56,15 +56,14 @@ class StreamGear:
     StreamGear automates transcoding workflow for generating Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH and HLS) in just few lines of python code.
     StreamGear provides a standalone, highly extensible, and flexible wrapper around FFmpeg multimedia framework for generating chunked-encoded media segments of the content.
 
-    SteamGear easily transcodes source videos/audio files & real-time video-frames and breaks them into a sequence of multiple smaller chunks/segments of fixed length. These segments make it
+    SteamGear easily transcodes source videos/audio files & real-time video-frames and breaks them into a sequence of multiple smaller chunks/segments of suitable length. These segments make it
     possible to stream videos at different quality levels (different bitrates or spatial resolutions) and can be switched in the middle of a video from one quality level to another – if bandwidth
     permits – on a per-segment basis. A user can serve these segments on a web server that makes it easier to download them through HTTP standard-compliant GET requests.
 
-    SteamGear also creates a Manifest file (such as MPD in-case of DASH, M3U8 in-case of HLS) besides segments that describe these segment information (timing, URL, media characteristics like video resolution and bit rates)
+    SteamGear also creates a Manifest/Playlist file (such as MPD in-case of DASH and M3U8 in-case of HLS) besides segments that describe these segment information (timing, URL, media characteristics like video resolution and bit rates)
      and is provided to the client before the streaming session.
 
-    SteamGear currently only supports MPEG-DASH (Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1) and Apple HLS (HTTP live streaming), but other adaptive streaming technologies such as Microsoft Smooth Streaming, will be
-    added soon. Also, Multiple DRM support is yet to be implemented.
+    SteamGear currently supports MPEG-DASH (Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1) and Apple HLS (HTTP live streaming).
     """
 
     def __init__(
@@ -472,7 +471,9 @@ class StreamGear:
             if bitrate:
                 logger.info("Source Audio will be used for streams.")
                 # assign audio codec
-                output_parameters["-acodec"] = "copy"
+                output_parameters["-acodec"] = (
+                    "aac" if self.__format == "hls" else "copy"
+                )
                 output_parameters["a_bitrate"] = bitrate  # temporary handler
             else:
                 logger.warning(
@@ -939,7 +940,6 @@ class StreamGear:
             )
         # format outputs
         ffmpeg_cmd.extend([self.__out_file] if not (hls_commands) else hls_commands)
-        logger.debug(ffmpeg_cmd)
         # Launch the FFmpeg pipeline with built command
         logger.critical("Transcoding streaming chunks. Please wait...")  # log it
         self.__process = sp.Popen(

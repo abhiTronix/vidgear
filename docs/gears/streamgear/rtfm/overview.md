@@ -31,15 +31,17 @@ limitations under the License.
 
 When no valid input is received on [`-video_source`](../../params/#a-exclusive-parameters) attribute of [`stream_params`](../../params/#supported-parameters) dictionary parameter, StreamGear API activates this mode where it directly transcodes real-time [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) video-frames _(as opposed to a entire file)_ into a sequence of multiple smaller chunks/segments for streaming. 
 
+SteamGear supports both [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_  and [**Apple HLS**](https://developer.apple.com/documentation/http_live_streaming) _(HTTP Live Streaming)_ with this mode.
+
 In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter.
 
 This mode provide [`stream()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) function for directly trancoding video-frames into streamable chunks over the FFmpeg pipeline. 
 
-
+&emsp;
 
 !!! alert "Real-time Frames Mode is NOT Live-Streaming."
 
-    Rather you can easily enable live-streaming in Real-time Frames Mode by using StreamGear API's exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. Checkout its [usage example here](../usage/#bare-minimum-usage-with-live-streaming).
+    Rather, you can easily enable live-streaming in Real-time Frames Mode by using StreamGear API's exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. Checkout its [usage example here](../usage/#bare-minimum-usage-with-live-streaming).
 
 
 !!! danger 
@@ -59,6 +61,25 @@ This mode provide [`stream()`](../../../../bonus/reference/streamgear/#vidgear.g
 
 <div>
 <a href="../usage/">See here 🚀</a>
+</div>
+
+## Parameters
+
+<div>
+<a href="../../params/">See here 🚀</a>
+</div>
+
+## References
+
+<div>
+<a href="../../../../bonus/reference/streamgear/">See here 🚀</a>
+</div>
+
+
+## FAQs
+
+<div>
+<a href="../../../../help/streamgear_faqs/">See here 🚀</a>
 </div>
 
 &thinsp;
