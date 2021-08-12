@@ -21,7 +21,7 @@ limitations under the License.
 # FFmpeg Installation Instructions
 
 <figure>
-  <a href="http://ffmpeg.org/"><img src="../../../assets/images/ffmpeg.png" loading="lazy" alt="FFmpeg" class="center" /></a>
+  <a href="http://ffmpeg.org/"><img src="../../../assets/images/ffmpeg.png" loading="lazy" alt="FFmpeg"/></a>
 </figure>
 
 

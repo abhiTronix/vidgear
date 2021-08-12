@@ -122,7 +122,11 @@ You can easily activate ==Low-latency Livestreaming in Single-Source Mode==, whe
 
 ## Usage with Additional Streams
 
-In addition to Primary Stream, you can easily generate any number of additional Secondary Streams of variable bitrates or spatial resolutions, using exclusive [`-streams`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. You just need to add each resolution and bitrate/framerate as list of dictionaries to this attribute, and rest is done automatically _(More detailed information can be found [here ➶](../../params/#a-exclusive-parameters))_. The complete example is as follows:
+In addition to Primary Stream, you can easily generate any number of additional Secondary Streams of variable bitrates or spatial resolutions, using exclusive [`-streams`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. You just need to add each resolution and bitrate/framerate as list of dictionaries to this attribute, and rest is done automatically.
+
+!!! info "A more detailed information on `-streams` attribute can be found [here ➶](../../params/#a-exclusive-parameters)" 
+
+The complete example is as follows:
 
 !!! note "If input video-source contains any audio stream/channel, then it automatically gets assigned to all generated streams without any extra efforts."
 
@@ -188,7 +192,9 @@ In addition to Primary Stream, you can easily generate any number of additional 
 
 ## Usage with Custom Audio
 
-By default, if input video-source _(i.e. `-video_source`)_ contains any audio, then it gets automatically mapped to all generated streams. But, if you want to add any custom audio, you can easily do it by using exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. You just need to input the path of your audio file to this attribute as string, and StreamGear API will automatically validate and map it to all generated streams. The complete example is as follows:
+By default, if input video-source _(i.e. `-video_source`)_ contains any audio, then it gets automatically mapped to all generated streams. But, if you want to add any custom audio, you can easily do it by using exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. You just need to input the path of your audio file to this attribute as `string`, and the API will automatically validate as well as map it to all generated streams. 
+
+The complete example is as follows:
 
 !!! failure "Make sure this `-audio` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
 
@@ -249,7 +255,7 @@ By default, if input video-source _(i.e. `-video_source`)_ contains any audio, t
 
 ## Usage with Variable FFmpeg Parameters
 
-For seamlessly generating these streaming assets, StreamGear provides a highly extensible and flexible wrapper around [**FFmpeg**](https://ffmpeg.org/), and access to almost all of its parameter. Hence, you can access almost any parameter available with FFmpeg itself as dictionary attributes in [`stream_params` dictionary parameter](../../params/#stream_params), and use it to manipulate transcoding as you like. 
+For seamlessly generating these streaming assets, StreamGear provides a highly extensible and flexible wrapper around [**FFmpeg**](https://ffmpeg.org/) and access to almost all of its parameter. Thereby, you can access almost any parameter available with FFmpeg itself as dictionary attributes in [`stream_params` dictionary parameter](../../params/#stream_params), and use it to manipulate transcoding as you like. 
 
 For this example, let us use our own [H.265/HEVC](https://trac.ffmpeg.org/wiki/Encode/H.265) video and [AAC](https://trac.ffmpeg.org/wiki/Encode/AAC) audio encoder, and set custom audio bitrate, and various other optimizations:
 
