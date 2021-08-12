@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,9 +31,17 @@ limitations under the License.
 
 When no valid input is received on [`-video_source`](../../params/#a-exclusive-parameters) attribute of [`stream_params`](../../params/#supported-parameters) dictionary parameter, StreamGear API activates this mode where it directly transcodes real-time [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) video-frames _(as opposed to a entire file)_ into a sequence of multiple smaller chunks/segments for streaming. 
 
+SteamGear supports both [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_  and [**Apple HLS**](https://developer.apple.com/documentation/http_live_streaming) _(HTTP Live Streaming)_ with this mode.
+
 In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter.
 
 This mode provide [`stream()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) function for directly trancoding video-frames into streamable chunks over the FFmpeg pipeline. 
+
+&emsp;
+
+!!! alert "Real-time Frames Mode is NOT Live-Streaming."
+
+    Rather, you can easily enable live-streaming in Real-time Frames Mode by using StreamGear API's exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. Checkout its [usage example here](../usage/#bare-minimum-usage-with-live-streaming).
 
 
 !!! danger 
@@ -47,17 +55,31 @@ This mode provide [`stream()`](../../../../bonus/reference/streamgear/#vidgear.g
     * Input framerate defaults to `25.0` fps if [`-input_framerate`](../../params/#a-exclusive-parameters) attribute value not defined. 
 
 
-??? warning "Real-time Frames Mode is NOT Live-Streaming."
-
-    You can enable live-streaming in Real-time Frames Mode by using using exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of stream_params dictionary parameter in WebGear_RTC API. Checkout [this usage example](../usage/#bare-minimum-usage-with-live-streaming) for more information.
-
-
 &thinsp;
 
 ## Usage Examples
 
 <div>
 <a href="../usage/">See here 🚀</a>
+</div>
+
+## Parameters
+
+<div>
+<a href="../../params/">See here 🚀</a>
+</div>
+
+## References
+
+<div>
+<a href="../../../../bonus/reference/streamgear/">See here 🚀</a>
+</div>
+
+
+## FAQs
+
+<div>
+<a href="../../../../help/streamgear_faqs/">See here 🚀</a>
 </div>
 
 &thinsp;

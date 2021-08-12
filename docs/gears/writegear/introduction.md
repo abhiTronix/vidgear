@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,7 +29,9 @@ limitations under the License.
 
 > *WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data.*
 
-WriteGear API provides a complete, flexible, and robust wrapper around [**FFmpeg**](https://ffmpeg.org/), a leading multimedia framework. WriteGear can process real-time frames into a lossless compressed video-file with any suitable specification _(such as`bitrate, codec, framerate, resolution, subtitles,  etc.`)_. It is powerful enough to perform complex tasks such as [Live-Streaming](../compression/usage/#using-compression-mode-for-streaming-urls) _(such as for Twitch)_ and [Multiplexing Video-Audio](../compression/usage/#using-compression-mode-with-live-audio-input) with real-time frames in way fewer lines of code. 
+WriteGear API provides a complete, flexible, and robust wrapper around [**FFmpeg**](https://ffmpeg.org/), a leading multimedia framework. WriteGear can process real-time frames into a lossless compressed video-file with any suitable specifications _(such as`bitrate, codec, framerate, resolution, subtitles,  etc.`)_. 
+
+WriteGear also supports streaming with traditional protocols such as RTMP, RTSP/RTP. It is powerful enough to perform complex tasks such as [Live-Streaming](../compression/usage/#using-compression-mode-for-streaming-urls) _(such as for Twitch, YouTube etc.)_ and [Multiplexing Video-Audio](../compression/usage/#using-compression-mode-with-live-audio-input) with real-time frames in just few lines of code.
 
 Best of all, WriteGear grants users the complete freedom to play with any FFmpeg parameter with its exclusive ==Custom Commands function== _(see this [doc](../compression/advanced/cciw/))_ without relying on any third-party API.
 

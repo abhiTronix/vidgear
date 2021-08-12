@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -406,7 +406,7 @@ def test_validate_audio(path, result):
     Testing validate_audio function
     """
     try:
-        results = validate_audio(return_static_ffmpeg(), file_path=path)
+        results = validate_audio(return_static_ffmpeg(), source=path)
         if result:
             assert results, "Audio path validity test Failed!"
     except Exception as e:

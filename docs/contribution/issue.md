@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,11 +39,11 @@ If you've found a new bug or you've come up with some new feature which can impr
 
 * All VidGear APIs provides a `logging` boolean flag in parameters, to log debugged output to terminal. Kindly turn this parameter `True` in the respective API for getting debug output, and paste it with your Issue. 
 * In order to reproduce bugs we will systematically ask you to provide a minimal reproduction code for your report. 
-* Check and paste, exact VidGear version by running command `python -c "import vidgear; print(vidgear.__version__)"`.
+* Check and paste, exact VidGear version by running command `#!python python -c "import vidgear; print(vidgear.__version__)"`.
 
 ### Follow the Issue Template
 
-* Please stick to the issue template. 
+* Please format your issue by choosing the appropriate template. 
 * Any improper/insufficient reports will be marked with **MISSING : INFORMATION :mag:** and **MISSING : TEMPLATE :grey_question:** like labels, and if we don't hear back from you we may close the issue.
 
 ### Raise the Issue

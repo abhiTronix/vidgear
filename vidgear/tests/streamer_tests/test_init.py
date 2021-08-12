@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -66,8 +66,8 @@ def test_custom_ffmpeg(c_ffmpeg):
     streamer.terminate()
 
 
-@pytest.mark.xfail(raises=ValueError)
-@pytest.mark.parametrize("format", ["mash", "unknown", 1234, None])
+@pytest.mark.xfail(raises=(AssertionError, ValueError))
+@pytest.mark.parametrize("format", ["hls", "mash", 1234, None])
 def test_formats(format):
     """
     Testing different formats for StreamGear
@@ -77,7 +77,8 @@ def test_formats(format):
 
 
 @pytest.mark.parametrize(
-    "output", [None, "output.mpd", os.path.join(expanduser("~"), "test_mpd")]
+    "output",
+    [None, "output.mpd", "output.m3u8"],
 )
 def test_outputs(output):
     """
@@ -89,10 +90,15 @@ def test_outputs(output):
         else {"-clear_prev_assets": "invalid"}
     )
     try:
-        streamer = StreamGear(output=output, logging=True, **stream_params)
+        streamer = StreamGear(
+            output=output,
+            format="hls" if output == "output.m3u8" else "dash",
+            logging=True,
+            **stream_params
+        )
         streamer.terminate()
     except Exception as e:
-        if output is None:
+        if output is None or output.endswith("m3u8"):
             pytest.xfail(str(e))
         else:
             pytest.fail(str(e))

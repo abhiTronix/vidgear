@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ VidGear focuses on simplicity, and thereby lets programmers and software develop
 
 - [x] Also, if you're already familar with [**OpenCV**][opencv] library, then see **[Switching from OpenCV Library](switch_from_cv.md)**.
 
-!!! alert "If you're just getting started with OpenCV-Python, then see [here ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)"
+!!! alert "If you're just getting started with OpenCV-Python programming, then refer this [FAQ ➶](help/general_faqs/#im-new-to-python-programming-or-its-usage-in-opencv-library-how-to-use-vidgear-in-my-projects)"
 
 
 

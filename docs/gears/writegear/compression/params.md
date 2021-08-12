@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -172,6 +172,8 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
 ### Supported Encoders
 
 All the encoders that are compiled with FFmpeg in use, are supported by WriteGear API. You can easily check the compiled encoders by running following command in your terminal:
+
+!!! info "Similarily, supported demuxers and filters depends upons compiled FFmpeg in use."
 
 ```sh
 ffmpeg -encoders           # use `ffmpeg.exe -encoders` on windows

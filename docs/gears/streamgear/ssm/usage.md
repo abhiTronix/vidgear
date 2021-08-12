@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,19 +39,38 @@ Following is the bare-minimum code you need to get started with StreamGear API i
 
 !!! note "If input video-source _(i.e. `-video_source`)_ contains any audio stream/channel, then it automatically gets mapped to all generated streams without any extra efforts."
 
-```python
-# import required libraries
-from vidgear.gears import StreamGear
+=== "DASH"
 
-# activate Single-Source Mode with valid video input
-stream_params = {"-video_source": "foo.mp4"}
-# describe a suitable manifest-file location/name and assign params
-streamer = StreamGear(output="dash_out.mpd", **stream_params)
-# trancode source
-streamer.transcode_source()
-# terminate
-streamer.terminate()
-```
+    ```python
+    # import required libraries
+    from vidgear.gears import StreamGear
+
+    # activate Single-Source Mode with valid video input
+    stream_params = {"-video_source": "foo.mp4"}
+    # describe a suitable manifest-file location/name and assign params
+    streamer = StreamGear(output="dash_out.mpd", **stream_params)
+    # trancode source
+    streamer.transcode_source()
+    # terminate
+    streamer.terminate()
+    ```
+
+=== "HLS"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import StreamGear
+
+    # activate Single-Source Mode with valid video input
+    stream_params = {"-video_source": "foo.mp4"}
+    # describe a suitable master playlist location/name and assign params
+    streamer = StreamGear(output="hls_out.m3u8", format = "hls", **stream_params)
+    # trancode source
+    streamer.transcode_source()
+    # terminate
+    streamer.terminate()
+    ```
+
 
 !!! success "After running this bare-minimum example, StreamGear will produce a Manifest file _(`dash.mpd`)_ with streamable chunks that contains information about a Primary Stream of same resolution and framerate as the input."
 
@@ -67,19 +86,37 @@ You can easily activate ==Low-latency Livestreaming in Single-Source Mode==, whe
 
 !!! note "If input video-source _(i.e. `-video_source`)_ contains any audio stream/channel, then it automatically gets mapped to all generated streams without any extra efforts."
 
-```python
-# import required libraries
-from vidgear.gears import StreamGear
+=== "DASH"
 
-# activate Single-Source Mode with valid video input and enable livestreaming
-stream_params = {"-video_source": 0, "-livestream": True}
-# describe a suitable manifest-file location/name and assign params
-streamer = StreamGear(output="dash_out.mpd", **stream_params)
-# trancode source
-streamer.transcode_source()
-# terminate
-streamer.terminate()
-```
+    ```python
+    # import required libraries
+    from vidgear.gears import StreamGear
+
+    # activate Single-Source Mode with valid video input and enable livestreaming
+    stream_params = {"-video_source": 0, "-livestream": True}
+    # describe a suitable manifest-file location/name and assign params
+    streamer = StreamGear(output="dash_out.mpd", **stream_params)
+    # trancode source
+    streamer.transcode_source()
+    # terminate
+    streamer.terminate()
+    ```
+
+=== "HLS"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import StreamGear
+
+    # activate Single-Source Mode with valid video input and enable livestreaming
+    stream_params = {"-video_source": 0, "-livestream": True}
+    # describe a suitable master playlist location/name and assign params
+    streamer = StreamGear(output="hls_out.m3u8", format = "hls", **stream_params)
+    # trancode source
+    streamer.transcode_source()
+    # terminate
+    streamer.terminate()
+    ```
 
 &thinsp;
 
@@ -98,27 +135,54 @@ In addition to Primary Stream, you can easily generate any number of additional 
 
 !!! fail "Always use `-stream` attribute to define additional streams safely, any duplicate or incorrect definition can break things!"
 
-```python
-# import required libraries
-from vidgear.gears import StreamGear
 
-# activate Single-Source Mode and also define various streams
-stream_params = {
-    "-video_source": "foo.mp4",
-    "-streams": [
-        {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
-        {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps framerate
-        {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps framerate
-        {"-resolution": "320x240", "-video_bitrate": "500k"},  # Stream3: 320x240 at 500kbs bitrate
-    ],
-}
-# describe a suitable manifest-file location/name and assign params
-streamer = StreamGear(output="dash_out.mpd", **stream_params)
-# trancode source
-streamer.transcode_source()
-# terminate
-streamer.terminate()
-```
+=== "DASH"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import StreamGear
+
+    # activate Single-Source Mode and also define various streams
+    stream_params = {
+        "-video_source": "foo.mp4",
+        "-streams": [
+            {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
+            {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps framerate
+            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps framerate
+            {"-resolution": "320x240", "-video_bitrate": "500k"},  # Stream3: 320x240 at 500kbs bitrate
+        ],
+    }
+    # describe a suitable manifest-file location/name and assign params
+    streamer = StreamGear(output="dash_out.mpd", **stream_params)
+    # trancode source
+    streamer.transcode_source()
+    # terminate
+    streamer.terminate()
+    ```
+
+=== "HLS"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import StreamGear
+
+    # activate Single-Source Mode and also define various streams
+    stream_params = {
+        "-video_source": "foo.mp4",
+        "-streams": [
+            {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
+            {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps framerate
+            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps framerate
+            {"-resolution": "320x240", "-video_bitrate": "500k"},  # Stream3: 320x240 at 500kbs bitrate
+        ],
+    }
+    # describe a suitable master playlist location/name and assign params
+    streamer = StreamGear(output="hls_out.m3u8", format = "hls", **stream_params)
+    # trancode source
+    streamer.transcode_source()
+    # terminate
+    streamer.terminate()
+    ```
 
 &thinsp;
 
@@ -130,27 +194,55 @@ By default, if input video-source _(i.e. `-video_source`)_ contains any audio, t
 
 !!! tip "You can also assign a valid Audio URL as input, rather than filepath. More details can be found [here ➶](../../params/#a-exclusive-parameters)"
 
-```python
-# import required libraries
-from vidgear.gears import StreamGear
 
-# activate Single-Source Mode and various streams, along with custom audio
-stream_params = {
-    "-video_source": "foo.mp4",
-    "-streams": [
-        {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
-        {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
-        {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps
-    ],
-    "-audio": "/home/foo/foo1.aac" # assigns input audio-source: "/home/foo/foo1.aac"
-}
-# describe a suitable manifest-file location/name and assign params
-streamer = StreamGear(output="dash_out.mpd", **stream_params)
-# trancode source
-streamer.transcode_source()
-# terminate
-streamer.terminate()
-```
+=== "DASH"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import StreamGear
+
+    # activate Single-Source Mode and various streams, along with custom audio
+    stream_params = {
+        "-video_source": "foo.mp4",
+        "-streams": [
+            {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
+            {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
+            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps
+        ],
+        "-audio": "/home/foo/foo1.aac" # assigns input audio-source: "/home/foo/foo1.aac"
+    }
+    # describe a suitable manifest-file location/name and assign params
+    streamer = StreamGear(output="dash_out.mpd", **stream_params)
+    # trancode source
+    streamer.transcode_source()
+    # terminate
+    streamer.terminate()
+    ```
+
+=== "HLS"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import StreamGear
+
+    # activate Single-Source Mode and various streams, along with custom audio
+    stream_params = {
+        "-video_source": "foo.mp4",
+        "-streams": [
+            {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
+            {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
+            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps
+        ],
+        "-audio": "/home/foo/foo1.aac" # assigns input audio-source: "/home/foo/foo1.aac"
+    }
+    # describe a suitable master playlist location/name and assign params
+    streamer = StreamGear(output="hls_out.m3u8", format = "hls", **stream_params)
+    # trancode source
+    streamer.transcode_source()
+    # terminate
+    streamer.terminate()
+    ```
+
 
 &thinsp;
 
@@ -168,34 +260,65 @@ For this example, let us use our own [H.265/HEVC](https://trac.ffmpeg.org/wiki/E
 
 !!! fail "Always use `-streams` attribute to define additional streams safely, any duplicate or incorrect stream definition can break things!"
 
+=== "DASH"
 
-```python
-# import required libraries
-from vidgear.gears import StreamGear
+    ```python
+    # import required libraries
+    from vidgear.gears import StreamGear
 
-# activate Single-Source Mode and various other parameters
-stream_params = {
-    "-video_source": "foo.mp4", # define Video-Source
-    "-vcodec": "libx265", # assigns H.265/HEVC video encoder
-    "-x265-params": "lossless=1", # enables Lossless encoding
-    "-crf": 25, # Constant Rate Factor: 25
-    "-bpp": "0.15", # Bits-Per-Pixel(BPP), an Internal StreamGear parameter to ensure good quality of high motion scenes
-    "-streams": [
-        {"-resolution": "1280x720", "-video_bitrate": "4000k"}, # Stream1: 1280x720 at 4000kbs bitrate
-        {"-resolution": "640x360", "-framerate": 60.0},  # Stream2: 640x360 at 60fps
-    ],
-    "-audio": "/home/foo/foo1.aac",  # define input audio-source: "/home/foo/foo1.aac",
-    "-acodec": "libfdk_aac", # assign lossless AAC audio encoder
-    "-vbr": 4, # Variable Bit Rate: `4`
-}
+    # activate Single-Source Mode and various other parameters
+    stream_params = {
+        "-video_source": "foo.mp4", # define Video-Source
+        "-vcodec": "libx265", # assigns H.265/HEVC video encoder
+        "-x265-params": "lossless=1", # enables Lossless encoding
+        "-crf": 25, # Constant Rate Factor: 25
+        "-bpp": "0.15", # Bits-Per-Pixel(BPP), an Internal StreamGear parameter to ensure good quality of high motion scenes
+        "-streams": [
+            {"-resolution": "1280x720", "-video_bitrate": "4000k"}, # Stream1: 1280x720 at 4000kbs bitrate
+            {"-resolution": "640x360", "-framerate": 60.0},  # Stream2: 640x360 at 60fps
+        ],
+        "-audio": "/home/foo/foo1.aac",  # define input audio-source: "/home/foo/foo1.aac",
+        "-acodec": "libfdk_aac", # assign lossless AAC audio encoder
+        "-vbr": 4, # Variable Bit Rate: `4`
+    }
 
-# describe a suitable manifest-file location/name and assign params
-streamer = StreamGear(output="dash_out.mpd", logging=True, **stream_params)
-# trancode source
-streamer.transcode_source()
-# terminate
-streamer.terminate()
-```
+    # describe a suitable manifest-file location/name and assign params
+    streamer = StreamGear(output="dash_out.mpd", logging=True, **stream_params)
+    # trancode source
+    streamer.transcode_source()
+    # terminate
+    streamer.terminate()
+    ```
+
+=== "HLS"
+
+    ```python
+    # import required libraries
+    from vidgear.gears import StreamGear
+
+    # activate Single-Source Mode and various other parameters
+    stream_params = {
+        "-video_source": "foo.mp4", # define Video-Source
+        "-vcodec": "libx265", # assigns H.265/HEVC video encoder
+        "-x265-params": "lossless=1", # enables Lossless encoding
+        "-crf": 25, # Constant Rate Factor: 25
+        "-bpp": "0.15", # Bits-Per-Pixel(BPP), an Internal StreamGear parameter to ensure good quality of high motion scenes
+        "-streams": [
+            {"-resolution": "1280x720", "-video_bitrate": "4000k"}, # Stream1: 1280x720 at 4000kbs bitrate
+            {"-resolution": "640x360", "-framerate": 60.0},  # Stream2: 640x360 at 60fps
+        ],
+        "-audio": "/home/foo/foo1.aac",  # define input audio-source: "/home/foo/foo1.aac",
+        "-acodec": "libfdk_aac", # assign lossless AAC audio encoder
+        "-vbr": 4, # Variable Bit Rate: `4`
+    }
+
+    # describe a suitable master playlist file location/name and assign params
+    streamer = StreamGear(output="hls_out.m3u8", format = "hls", logging=True, **stream_params)
+    # trancode source
+    streamer.transcode_source()
+    # terminate
+    streamer.terminate()
+    ```
 
 &nbsp;
 

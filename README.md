@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,9 +29,9 @@ limitations under the License.
 
 [Releases][release]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Gears][gears]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Documentation][docs]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Installation][installation]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[License](#license)
 
-[![Build Status][github-cli]][github-flow]  [![Build Status][appveyor]][app] [![Azure DevOps builds (branch)][azure-badge]][azure-pipeline]
+[![Build Status][github-cli]][github-flow] [![Codecov branch][codecov]][code]  [![Azure DevOps builds (branch)][azure-badge]][azure-pipeline]
 
-[![PyPi version][pypi-badge]][pypi] [![Codecov branch][codecov]][code] [![Glitter chat][gitter-bagde]][gitter]
+[![Glitter chat][gitter-bagde]][gitter] [![Build Status][appveyor]][app] [![PyPi version][pypi-badge]][pypi] 
 
 [![Code Style][black-badge]][black]
 </div>
@@ -81,7 +81,7 @@ The following **functional block diagram** clearly depicts the generalized funct
 
 
 
-# TL;DR
+## TL;DR
   
 #### What is vidgear?
 
@@ -89,13 +89,13 @@ The following **functional block diagram** clearly depicts the generalized funct
 
 #### What does it do?
 
-> *"VidGear can read, write, process, send & receive video files/frames/streams from/to various devices in real-time, and faster than underline libraries."*
+> *"VidGear can read, write, process, send & receive video files/frames/streams from/to various devices in real-time, and [**faster**][TQM-doc]  than underline libraries."*
 
 #### What is its purpose?
 
 > *"Write Less and Accomplish More"* — **VidGear's Motto**
 
-> *"Built with simplicity in mind, VidGear lets programmers and software developers to easily integrate and perform **Complex Video-Processing Tasks** in their existing or newer applications without going through hefty documentation and in just a [few lines of code][switch_from_cv]. Beneficial for both, if you're new to programming with Python language or already a pro at it."*
+> *"Built with simplicity in mind, VidGear lets programmers and software developers to easily integrate and perform **Complex Video-Processing Tasks** in their existing or newer applications without going through hefty documentation and in just a [**few lines of code**][switch_from_cv]. Beneficial for both, if you're new to programming with Python language or already a pro at it."*
 
 &nbsp;
 
@@ -105,11 +105,11 @@ The following **functional block diagram** clearly depicts the generalized funct
 
 If this is your first time using VidGear, head straight to the [Installation ➶][installation] to install VidGear.
 
-Once you have VidGear installed, **Checkout its Well-Documented Function-Specific [Gears ➶][gears]** 
+Once you have VidGear installed, **Checkout its Well-Documented [Function-Specific Gears ➶][gears]** 
 
 Also, if you're already familiar with [OpenCV][opencv] library, then see [Switching from OpenCV Library ➶][switch_from_cv]
 
-Or, if you're just getting started with OpenCV, then see [here ➶](https://abhitronix.github.io/vidgear/latest/help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)
+Or, if you're just getting started with OpenCV-Python programming, then refer this [FAQ ➶](https://abhitronix.github.io/vidgear/latest/help/general_faqs/#im-new-to-python-programming-or-its-usage-in-opencv-library-how-to-use-vidgear-in-my-projects)
 
 &nbsp;
 
@@ -406,7 +406,9 @@ stream.stop()
 
 > *WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data.*
 
-WriteGear API provides a complete, flexible, and robust wrapper around [**FFmpeg**][ffmpeg], a leading multimedia framework. WriteGear can process real-time frames into a lossless compressed video-file with any suitable specification _(such as`bitrate, codec, framerate, resolution, subtitles,  etc.`)_. It is powerful enough to perform complex tasks such as [Live-Streaming][live-stream] _(such as for Twitch and YouTube)_ and [Multiplexing Video-Audio][live-audio-doc] with real-time frames in way fewer lines of code. 
+WriteGear API provides a complete, flexible, and robust wrapper around [**FFmpeg**][ffmpeg], a leading multimedia framework. WriteGear can process real-time frames into a lossless compressed video-file with any suitable specifications _(such as`bitrate, codec, framerate, resolution, subtitles,  etc.`)_. 
+
+WriteGear also supports streaming with traditional protocols such as RTMP, RTSP/RTP. It is powerful enough to perform complex tasks such as [Live-Streaming][live-stream] _(such as for Twitch, YouTube etc.)_ and [Multiplexing Video-Audio][live-audio-doc] with real-time frames in just few lines of code. 
 
 Best of all, WriteGear grants users the complete freedom to play with any FFmpeg parameter with its exclusive **Custom Commands function** _(see this [doc][custom-command-doc])_ without relying on any third-party API.
 
@@ -434,15 +436,16 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 </p>
 
 
-> *StreamGear automates transcoding workflow for generating Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH) in just few lines of python code.*
+
+> *StreamGear automates transcoding workflow for generating Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH and Apple HLS) in just few lines of python code.*
 
 StreamGear provides a standalone, highly extensible, and flexible wrapper around [**FFmpeg**][ffmpeg] multimedia framework for generating chunked-encoded media segments of the content.
 
-SteamGear easily transcodes source videos/audio files & real-time video-frames and breaks them into a sequence of multiple smaller chunks/segments of fixed length. These segments make it possible to stream videos at different quality levels _(different bitrates or spatial resolutions)_ and can be switched in the middle of a video from one quality level to another – if bandwidth permits – on a per-segment basis. A user can serve these segments on a web server that makes it easier to download them through HTTP standard-compliant GET requests.
+SteamGear is an out-of-the-box solution for transcoding source videos/audio files & real-time video frames and breaking them into a sequence of multiple smaller chunks/segments of suitable lengths. These segments make it possible to stream videos at different quality levels _(different bitrates or spatial resolutions)_ and can be switched in the middle of a video from one quality level to another – if bandwidth permits – on a per-segment basis. A user can serve these segments on a web server that makes it easier to download them through HTTP standard-compliant GET requests.
 
-SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ besides segments that describe these segment information _(timing, URL, media characteristics like video resolution and bit rates)_ and is provided to the client before the streaming session.
+SteamGear currently supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_  and [**Apple HLS**](https://developer.apple.com/documentation/http_live_streaming) _(HTTP Live Streaming)_. But, Multiple DRM support is yet to be implemented.
 
-SteamGear currently only supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_ but other adaptive streaming technologies such as Apple HLS, Microsoft Smooth Streaming will be added soon.
+SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ or a Master Playlist _(such as M3U8 in-case of Apple HLS)_ besides segments that describe these segment information _(timing, URL, media characteristics like video resolution and bit rates)_ and is provided to the client before the streaming session.
 
 **StreamGear primarily works in two Independent Modes for transcoding which serves different purposes:**
 

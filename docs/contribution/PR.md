@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -192,11 +192,11 @@ Testing VidGear requires additional test dependencies and dataset, which can be 
         The [`mpegdash`](https://github.com/sangwonl/python-mpegdash) library has not yet been updated and bugs on windows machines. Therefore install the forked [DEV-version of `mpegdash`](https://github.com/abhiTronix/python-mpegdash) as follows:
         
         ```sh
-        python -m pip install https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev/mpegdash-0.3.0.dev0-py3-none-any.whl
+        python -m pip install https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev2/mpegdash-0.3.0.dev2-py3-none-any.whl
         ```
 
     ```sh
-    pip install --upgrade six flake8 black pytest pytest-asyncio mpegdash paramiko async-asgi-testclient
+    pip install --upgrade six flake8 black pytest pytest-asyncio mpegdash paramiko m3u8 async-asgi-testclient
     ```
 
 - [x] **Download Tests Dataset:** 

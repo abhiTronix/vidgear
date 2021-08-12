@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,7 +22,9 @@ limitations under the License.
 import os
 import cv2
 import queue
+import time
 import pytest
+import m3u8
 import logging as log
 import platform
 import tempfile
@@ -30,7 +32,7 @@ import subprocess
 from mpegdash.parser import MPEGDASHParser
 
 from vidgear.gears import CamGear, StreamGear
-from vidgear.gears.helper import logger_handler
+from vidgear.gears.helper import logger_handler, validate_video
 
 # define test logger
 logger = log.getLogger("Test_Streamgear")
@@ -58,6 +60,26 @@ def return_testvideo_path(fmt="av"):
     return os.path.abspath(path)
 
 
+def return_static_ffmpeg():
+    """
+    returns system specific FFmpeg static path
+    """
+    path = ""
+    if platform.system() == "Windows":
+        path += os.path.join(
+            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe"
+        )
+    elif platform.system() == "Darwin":
+        path += os.path.join(
+            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg"
+        )
+    else:
+        path += os.path.join(
+            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/ffmpeg"
+        )
+    return os.path.abspath(path)
+
+
 def check_valid_mpd(file="", exp_reps=1):
     """
     checks if given file is a valid MPD(MPEG-DASH Manifest file)
@@ -77,6 +99,39 @@ def check_valid_mpd(file="", exp_reps=1):
         logger.error(str(e))
         return False
     return (all_adapts, all_reprs) if (len(all_reprs) >= exp_reps) else False
+
+
+def extract_meta_video(file):
+    """
+    Extracts metadata from a valid video file
+    """
+    logger.debug("Extracting Metadata from {}".format(file))
+    meta = validate_video(return_static_ffmpeg(), file, logging=True)
+    return meta
+
+
+def check_valid_m3u8(file=""):
+    """
+    checks if given file is a valid M3U8 file
+    """
+    if not file or not os.path.isfile(file):
+        return False
+    metas = []
+    try:
+        playlist = m3u8.load(file)
+        if playlist.is_variant:
+            for pl in playlist.playlists:
+                meta = {}
+                meta["resolution"] = pl.stream_info.resolution
+                meta["framerate"] = pl.stream_info.frame_rate
+                metas.append(meta)
+        else:
+            for seg in playlist.segments:
+                metas.append(extract_meta_video(seg))
+    except Exception as e:
+        logger.error(str(e))
+        return False
+    return metas
 
 
 def extract_meta_mpd(file):
@@ -107,11 +162,11 @@ def extract_meta_mpd(file):
         return []
 
 
-def return_mpd_path():
+def return_assets_path(hls=False):
     """
-    returns MPD assets temp path
+    returns assets temp path
     """
-    return os.path.join(tempfile.gettempdir(), "temp_mpd")
+    return os.path.join(tempfile.gettempdir(), "temp_m3u8" if hls else "temp_mpd")
 
 
 def string_to_float(value):
@@ -134,10 +189,8 @@ def extract_resolutions(source, streams):
         return {}
     results = {}
     assert os.path.isfile(source), "Not a valid source"
-    s_cv = cv2.VideoCapture(source)
-    results[int(s_cv.get(cv2.CAP_PROP_FRAME_WIDTH))] = int(
-        s_cv.get(cv2.CAP_PROP_FRAME_HEIGHT)
-    )
+    results["source"] = extract_meta_video(source)
+    num = 0
     for stream in streams:
         if "-resolution" in stream:
             try:
@@ -145,7 +198,8 @@ def extract_resolutions(source, streams):
                 assert len(res) == 2
                 width, height = (res[0].strip(), res[1].strip())
                 assert width.isnumeric() and height.isnumeric()
-                results[int(width)] = int(height)
+                results["streams{}".format(num)] = {"resolution": (width, height)}
+                num += 1
             except Exception as e:
                 logger.error(str(e))
                 continue
@@ -154,48 +208,76 @@ def extract_resolutions(source, streams):
     return results
 
 
-def test_ss_stream():
+@pytest.mark.parametrize("format", ["dash", "hls"])
+def test_ss_stream(format):
     """
     Testing Single-Source Mode
     """
-    mpd_file_path = os.path.join(return_mpd_path(), "dash_test.mpd")
+    assets_file_path = os.path.join(
+        return_assets_path(False if format == "dash" else True),
+        "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
+    )
     try:
         stream_params = {
             "-video_source": return_testvideo_path(),
             "-clear_prev_assets": True,
         }
-        streamer = StreamGear(output=mpd_file_path, logging=True, **stream_params)
+        if format == "hls":
+            stream_params.update(
+                {
+                    "-hls_base_url": return_assets_path(
+                        False if format == "dash" else True
+                    )
+                    + os.sep
+                }
+            )
+        streamer = StreamGear(
+            output=assets_file_path, format=format, logging=True, **stream_params
+        )
         streamer.transcode_source()
         streamer.terminate()
-        assert check_valid_mpd(mpd_file_path)
+        if format == "dash":
+            assert check_valid_mpd(assets_file_path), "Test Failed!"
+        else:
+            assert extract_meta_video(assets_file_path), "Test Failed!"
     except Exception as e:
         pytest.fail(str(e))
 
 
-def test_ss_livestream():
+@pytest.mark.parametrize("format", ["dash", "hls"])
+def test_ss_livestream(format):
     """
     Testing Single-Source Mode with livestream.
     """
-    mpd_file_path = os.path.join(return_mpd_path(), "dash_test.mpd")
+    assets_file_path = os.path.join(
+        return_assets_path(False if format == "dash" else True),
+        "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
+    )
     try:
         stream_params = {
             "-video_source": return_testvideo_path(),
             "-livestream": True,
             "-remove_at_exit": 1,
         }
-        streamer = StreamGear(output=mpd_file_path, logging=True, **stream_params)
+        streamer = StreamGear(
+            output=assets_file_path, format=format, logging=True, **stream_params
+        )
         streamer.transcode_source()
         streamer.terminate()
     except Exception as e:
         pytest.fail(str(e))
 
 
-@pytest.mark.parametrize("conversion", [None, "COLOR_BGR2GRAY", "COLOR_BGR2BGRA"])
-def test_rtf_stream(conversion):
+@pytest.mark.parametrize(
+    "conversion, format",
+    [(None, "dash"), ("COLOR_BGR2GRAY", "hls"), ("COLOR_BGR2BGRA", "dash")],
+)
+def test_rtf_stream(conversion, format):
     """
     Testing Real-Time Frames Mode
     """
-    mpd_file_path = return_mpd_path()
+    assets_file_path = return_assets_path(False if format == "dash" else True)
+
     try:
         # Open stream
         options = {"THREAD_TIMEOUT": 300}
@@ -206,7 +288,16 @@ def test_rtf_stream(conversion):
             "-clear_prev_assets": True,
             "-input_framerate": "invalid",
         }
-        streamer = StreamGear(output=mpd_file_path, **stream_params)
+        if format == "hls":
+            stream_params.update(
+                {
+                    "-hls_base_url": return_assets_path(
+                        False if format == "dash" else True
+                    )
+                    + os.sep
+                }
+            )
+        streamer = StreamGear(output=assets_file_path, format=format, **stream_params)
         while True:
             frame = stream.read()
             # check if frame is None
@@ -218,23 +309,28 @@ def test_rtf_stream(conversion):
                 streamer.stream(frame)
         stream.stop()
         streamer.terminate()
-        mpd_file = [
-            os.path.join(mpd_file_path, f)
-            for f in os.listdir(mpd_file_path)
-            if f.endswith(".mpd")
+        asset_file = [
+            os.path.join(assets_file_path, f)
+            for f in os.listdir(assets_file_path)
+            if f.endswith(".mpd" if format == "dash" else ".m3u8")
         ]
-        assert len(mpd_file) == 1, "Failed to create MPD file!"
-        assert check_valid_mpd(mpd_file[0])
+        assert len(asset_file) == 1, "Failed to create asset file!"
+        if format == "dash":
+            assert check_valid_mpd(asset_file[0]), "Test Failed!"
+        else:
+            assert extract_meta_video(asset_file[0]), "Test Failed!"
     except Exception as e:
         if not isinstance(e, queue.Empty):
             pytest.fail(str(e))
 
 
-def test_rtf_livestream():
+@pytest.mark.parametrize("format", ["dash", "hls"])
+def test_rtf_livestream(format):
     """
     Testing Real-Time Frames Mode with livestream.
     """
-    mpd_file_path = return_mpd_path()
+    assets_file_path = return_assets_path(False if format == "dash" else True)
+
     try:
         # Open stream
         options = {"THREAD_TIMEOUT": 300}
@@ -242,7 +338,7 @@ def test_rtf_livestream():
         stream_params = {
             "-livestream": True,
         }
-        streamer = StreamGear(output=mpd_file_path, **stream_params)
+        streamer = StreamGear(output=assets_file_path, format=format, **stream_params)
         while True:
             frame = stream.read()
             # check if frame is None
@@ -256,19 +352,34 @@ def test_rtf_livestream():
             pytest.fail(str(e))
 
 
-def test_input_framerate_rtf():
+@pytest.mark.parametrize("format", ["dash", "hls"])
+def test_input_framerate_rtf(format):
     """
     Testing "-input_framerate" parameter provided by StreamGear
     """
     try:
-        mpd_file_path = os.path.join(return_mpd_path(), "dash_test.mpd")
+        assets_file_path = os.path.join(
+            return_assets_path(False if format == "dash" else True),
+            "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
+        )
         stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
         test_framerate = stream.get(cv2.CAP_PROP_FPS)
         stream_params = {
             "-clear_prev_assets": True,
             "-input_framerate": test_framerate,
         }
-        streamer = StreamGear(output=mpd_file_path, logging=True, **stream_params)
+        if format == "hls":
+            stream_params.update(
+                {
+                    "-hls_base_url": return_assets_path(
+                        False if format == "dash" else True
+                    )
+                    + os.sep
+                }
+            )
+        streamer = StreamGear(
+            output=assets_file_path, format=format, logging=True, **stream_params
+        )
         while True:
             (grabbed, frame) = stream.read()
             if not grabbed:
@@ -276,37 +387,93 @@ def test_input_framerate_rtf():
             streamer.stream(frame)
         stream.release()
         streamer.terminate()
-        meta_data = extract_meta_mpd(mpd_file_path)
-        assert meta_data and len(meta_data) > 0, "Test Failed!"
-        framerate_mpd = string_to_float(meta_data[0]["framerate"])
-        assert framerate_mpd > 0.0 and isinstance(framerate_mpd, float), "Test Failed!"
-        assert round(framerate_mpd) == round(test_framerate), "Test Failed!"
+        if format == "dash":
+            meta_data = extract_meta_mpd(assets_file_path)
+            assert meta_data and len(meta_data) > 0, "Test Failed!"
+            framerate_mpd = string_to_float(meta_data[0]["framerate"])
+            assert framerate_mpd > 0.0 and isinstance(
+                framerate_mpd, float
+            ), "Test Failed!"
+            assert round(framerate_mpd) == round(test_framerate), "Test Failed!"
+        else:
+            meta_data = extract_meta_video(assets_file_path)
+            assert meta_data and "framerate" in meta_data, "Test Failed!"
+            framerate_m3u8 = float(meta_data["framerate"])
+            assert framerate_m3u8 > 0.0 and isinstance(
+                framerate_m3u8, float
+            ), "Test Failed!"
+            assert round(framerate_m3u8) == round(test_framerate), "Test Failed!"
     except Exception as e:
         pytest.fail(str(e))
 
 
 @pytest.mark.parametrize(
-    "stream_params",
+    "stream_params, format",
     [
-        {"-clear_prev_assets": True, "-bpp": 0.2000, "-gop": 125, "-vcodec": "libx265"},
-        {
-            "-clear_prev_assets": True,
-            "-bpp": "unknown",
-            "-gop": "unknown",
-            "-s:v:0": "unknown",
-            "-b:v:0": "unknown",
-            "-b:a:0": "unknown",
-        },
+        (
+            {
+                "-clear_prev_assets": True,
+                "-bpp": 0.2000,
+                "-gop": 125,
+                "-vcodec": "libx265",
+            },
+            "hls",
+        ),
+        (
+            {
+                "-clear_prev_assets": True,
+                "-bpp": "unknown",
+                "-gop": "unknown",
+                "-s:v:0": "unknown",
+                "-b:v:0": "unknown",
+                "-b:a:0": "unknown",
+            },
+            "hls",
+        ),
+        (
+            {
+                "-clear_prev_assets": True,
+                "-bpp": 0.2000,
+                "-gop": 125,
+                "-vcodec": "libx265",
+            },
+            "dash",
+        ),
+        (
+            {
+                "-clear_prev_assets": True,
+                "-bpp": "unknown",
+                "-gop": "unknown",
+                "-s:v:0": "unknown",
+                "-b:v:0": "unknown",
+                "-b:a:0": "unknown",
+            },
+            "dash",
+        ),
     ],
 )
-def test_params(stream_params):
+def test_params(stream_params, format):
     """
-    Testing "-input_framerate" parameter provided by StreamGear
+    Testing "-stream_params" parameters by StreamGear
     """
     try:
-        mpd_file_path = os.path.join(return_mpd_path(), "dash_test.mpd")
+        assets_file_path = os.path.join(
+            return_assets_path(False if format == "dash" else True),
+            "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
+        )
+        if format == "hls":
+            stream_params.update(
+                {
+                    "-hls_base_url": return_assets_path(
+                        False if format == "dash" else True
+                    )
+                    + os.sep
+                }
+            )
         stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
-        streamer = StreamGear(output=mpd_file_path, logging=True, **stream_params)
+        streamer = StreamGear(
+            output=assets_file_path, format=format, logging=True, **stream_params
+        )
         while True:
             (grabbed, frame) = stream.read()
             if not grabbed:
@@ -314,119 +481,280 @@ def test_params(stream_params):
             streamer.stream(frame)
         stream.release()
         streamer.terminate()
-        assert check_valid_mpd(mpd_file_path)
+        if format == "dash":
+            assert check_valid_mpd(assets_file_path), "Test Failed!"
+        else:
+            assert extract_meta_video(assets_file_path), "Test Failed!"
     except Exception as e:
         pytest.fail(str(e))
 
 
 @pytest.mark.parametrize(
-    "stream_params",
+    "stream_params, format",
     [
-        {
-            "-clear_prev_assets": True,
-            "-video_source": return_testvideo_path(fmt="vo"),
-            "-audio": "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/invalid.aac",
-        },
-        {
-            "-clear_prev_assets": True,
-            "-video_source": return_testvideo_path(fmt="vo"),
-            "-audio": return_testvideo_path(fmt="ao"),
-        },
-        {
-            "-clear_prev_assets": True,
-            "-video_source": return_testvideo_path(fmt="vo"),
-            "-audio": "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/big_buck_bunny_720p_1mb_ao.aac",
-        },
+        (
+            {
+                "-clear_prev_assets": True,
+                "-video_source": return_testvideo_path(fmt="vo"),
+                "-audio": "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/invalid.aac",
+            },
+            "dash",
+        ),
+        (
+            {
+                "-clear_prev_assets": True,
+                "-video_source": return_testvideo_path(fmt="vo"),
+                "-audio": return_testvideo_path(fmt="ao"),
+            },
+            "dash",
+        ),
+        (
+            {
+                "-clear_prev_assets": True,
+                "-video_source": return_testvideo_path(fmt="vo"),
+                "-audio": "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/big_buck_bunny_720p_1mb_ao.aac",
+            },
+            "dash",
+        ),
+        (
+            {
+                "-clear_prev_assets": True,
+                "-video_source": return_testvideo_path(fmt="vo"),
+                "-audio": "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/invalid.aac",
+            },
+            "hls",
+        ),
+        (
+            {
+                "-clear_prev_assets": True,
+                "-video_source": return_testvideo_path(fmt="vo"),
+                "-audio": return_testvideo_path(fmt="ao"),
+            },
+            "hls",
+        ),
+        (
+            {
+                "-clear_prev_assets": True,
+                "-video_source": return_testvideo_path(fmt="vo"),
+                "-audio": "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/big_buck_bunny_720p_1mb_ao.aac",
+            },
+            "hls",
+        ),
     ],
 )
-def test_audio(stream_params):
+def test_audio(stream_params, format):
     """
-    Testing Single-Source Mode
+    Testing external and audio audio for stream.
     """
-    mpd_file_path = os.path.join(return_mpd_path(), "dash_test.mpd")
+    assets_file_path = os.path.join(
+        return_assets_path(False if format == "dash" else True),
+        "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
+    )
     try:
-        streamer = StreamGear(output=mpd_file_path, logging=True, **stream_params)
+        if format == "hls":
+            stream_params.update(
+                {
+                    "-hls_base_url": return_assets_path(
+                        False if format == "dash" else True
+                    )
+                    + os.sep
+                }
+            )
+        streamer = StreamGear(
+            output=assets_file_path, format=format, logging=True, **stream_params
+        )
         streamer.transcode_source()
         streamer.terminate()
-        assert check_valid_mpd(mpd_file_path)
+        if format == "dash":
+            assert check_valid_mpd(assets_file_path), "Test Failed!"
+        else:
+            assert extract_meta_video(assets_file_path), "Test Failed!"
     except Exception as e:
         pytest.fail(str(e))
 
 
 @pytest.mark.parametrize(
-    "stream_params",
+    "format, stream_params",
     [
-        {
-            "-clear_prev_assets": True,
-            "-video_source": return_testvideo_path(fmt="vo"),
-            "-streams": [
-                {
-                    "-video_bitrate": "unknown",
-                },  # Invalid Stream 1
-                {
-                    "-resolution": "unxun",
-                },  # Invalid Stream 2
-                {
-                    "-resolution": "640x480",
-                    "-video_bitrate": "unknown",
-                },  # Invalid Stream 3
-                {
-                    "-resolution": "640x480",
-                    "-framerate": "unknown",
-                },  # Invalid Stream 4
-                {
-                    "-resolution": "320x240",
-                    "-framerate": 20.0,
-                },  # Stream: 320x240 at 20fps framerate
-            ],
-        },
-        {
-            "-clear_prev_assets": True,
-            "-video_source": return_testvideo_path(fmt="vo"),
-            "-audio": return_testvideo_path(fmt="ao"),
-            "-streams": [
-                {
-                    "-resolution": "640x480",
-                    "-video_bitrate": "850k",
-                    "-audio_bitrate": "128k",
-                },  # Stream1: 640x480 at 850kbps bitrate
-                {
-                    "-resolution": "320x240",
-                    "-framerate": 20.0,
-                },  # Stream2: 320x240 at 20fps framerate
-            ],
-        },
-        {
-            "-clear_prev_assets": True,
-            "-video_source": return_testvideo_path(),
-            "-streams": [
-                {
-                    "-resolution": "960x540",
-                    "-video_bitrate": "1350k",
-                },  # Stream1: 960x540 at 1350kbps bitrate
-            ],
-        },
+        (
+            "dash",
+            {
+                "-clear_prev_assets": True,
+                "-video_source": return_testvideo_path(fmt="vo"),
+                "-streams": [
+                    {
+                        "-video_bitrate": "unknown",
+                    },  # Invalid Stream 1
+                    {
+                        "-resolution": "unxun",
+                    },  # Invalid Stream 2
+                    {
+                        "-resolution": "640x480",
+                        "-video_bitrate": "unknown",
+                    },  # Invalid Stream 3
+                    {
+                        "-resolution": "640x480",
+                        "-framerate": "unknown",
+                    },  # Invalid Stream 4
+                    {
+                        "-resolution": "320x240",
+                        "-framerate": 20.0,
+                    },  # Stream: 320x240 at 20fps framerate
+                ],
+            },
+        ),
+        (
+            "hls",
+            {
+                "-clear_prev_assets": True,
+                "-video_source": return_testvideo_path(fmt="vo"),
+                "-streams": [
+                    {
+                        "-video_bitrate": "unknown",
+                    },  # Invalid Stream 1
+                    {
+                        "-resolution": "unxun",
+                    },  # Invalid Stream 2
+                    {
+                        "-resolution": "640x480",
+                        "-video_bitrate": "unknown",
+                    },  # Invalid Stream 3
+                    {
+                        "-resolution": "640x480",
+                        "-framerate": "unknown",
+                    },  # Invalid Stream 4
+                    {
+                        "-resolution": "320x240",
+                        "-framerate": 20.0,
+                    },  # Stream: 320x240 at 20fps framerate
+                ],
+            },
+        ),
+        (
+            "dash",
+            {
+                "-clear_prev_assets": True,
+                "-video_source": return_testvideo_path(fmt="vo"),
+                "-audio": return_testvideo_path(fmt="ao"),
+                "-streams": [
+                    {
+                        "-resolution": "640x480",
+                        "-video_bitrate": "850k",
+                        "-audio_bitrate": "128k",
+                    },  # Stream1: 640x480 at 850kbps bitrate
+                    {
+                        "-resolution": "320x240",
+                        "-framerate": 20.0,
+                    },  # Stream2: 320x240 at 20fps framerate
+                ],
+            },
+        ),
+        (
+            "hls",
+            {
+                "-clear_prev_assets": True,
+                "-video_source": return_testvideo_path(fmt="vo"),
+                "-audio": return_testvideo_path(fmt="ao"),
+                "-streams": [
+                    {
+                        "-resolution": "640x480",
+                        "-video_bitrate": "850k",
+                        "-audio_bitrate": "128k",
+                    },  # Stream1: 640x480 at 850kbps bitrate
+                    {
+                        "-resolution": "320x240",
+                        "-framerate": 20.0,
+                    },  # Stream2: 320x240 at 20fps framerate
+                ],
+            },
+        ),
+        (
+            "dash",
+            {
+                "-clear_prev_assets": True,
+                "-video_source": return_testvideo_path(),
+                "-streams": [
+                    {
+                        "-resolution": "960x540",
+                        "-video_bitrate": "1350k",
+                    },  # Stream1: 960x540 at 1350kbps bitrate
+                ],
+            },
+        ),
+        (
+            "hls",
+            {
+                "-clear_prev_assets": True,
+                "-video_source": return_testvideo_path(),
+                "-streams": [
+                    {
+                        "-resolution": "960x540",
+                        "-video_bitrate": "1350k",
+                    },  # Stream1: 960x540 at 1350kbps bitrate
+                ],
+            },
+        ),
     ],
 )
-def test_multistreams(stream_params):
+def test_multistreams(format, stream_params):
     """
     Testing Support for additional Secondary Streams of variable bitrates or spatial resolutions.
     """
-    mpd_file_path = os.path.join(return_mpd_path(), "dash_test.mpd")
+    assets_file_path = os.path.join(
+        return_assets_path(False if format == "dash" else True),
+        "asset_test.{}".format("mpd" if format == "dash" else "m3u8"),
+    )
     results = extract_resolutions(
         stream_params["-video_source"], stream_params["-streams"]
     )
     try:
-        streamer = StreamGear(output=mpd_file_path, logging=True, **stream_params)
+        streamer = StreamGear(
+            output=assets_file_path, format=format, logging=True, **stream_params
+        )
         streamer.transcode_source()
         streamer.terminate()
-        metadata = extract_meta_mpd(mpd_file_path)
-        meta_videos = [x for x in metadata if x["mime_type"].startswith("video")]
-        assert meta_videos and (len(meta_videos) <= len(results)), "Test Failed!"
-        for s_v in meta_videos:
-            assert int(s_v["width"]) in results, "Width check failed!"
-            assert (
-                int(s_v["height"]) == results[int(s_v["width"])]
-            ), "Height check failed!"
+        if format == "dash":
+            metadata = extract_meta_mpd(assets_file_path)
+            meta_videos = [x for x in metadata if x["mime_type"].startswith("video")]
+            assert meta_videos and (len(meta_videos) <= len(results)), "Test Failed!"
+            if len(meta_videos) == len(results):
+                for m_v, s_v in zip(meta_videos, list(results.values())):
+                    assert int(m_v["width"]) == int(
+                        s_v["resolution"][0]
+                    ), "Width check failed!"
+                    assert int(m_v["height"]) == int(
+                        s_v["resolution"][1]
+                    ), "Height check failed!"
+            else:
+                valid_widths = [int(x["resolution"][0]) for x in list(results.values())]
+                valid_heights = [
+                    int(x["resolution"][1]) for x in list(results.values())
+                ]
+                for m_v in meta_videos:
+                    assert int(m_v["width"]) in valid_widths, "Width check failed!"
+                    assert int(m_v["height"]) in valid_heights, "Height check failed!"
+        else:
+            meta_videos = check_valid_m3u8(assets_file_path)
+            assert meta_videos and (len(meta_videos) <= len(results)), "Test Failed!"
+            if len(meta_videos) == len(results):
+                for m_v, s_v in zip(meta_videos, list(results.values())):
+                    assert int(m_v["resolution"][0]) == int(
+                        s_v["resolution"][0]
+                    ), "Width check failed!"
+                    assert int(m_v["resolution"][1]) == int(
+                        s_v["resolution"][1]
+                    ), "Height check failed!"
+            else:
+                valid_widths = [int(x["resolution"][0]) for x in list(results.values())]
+                valid_heights = [
+                    int(x["resolution"][1]) for x in list(results.values())
+                ]
+                for m_v in meta_videos:
+                    assert (
+                        int(m_v["resolution"][0]) in valid_widths
+                    ), "Width check failed!"
+                    assert (
+                        int(m_v["resolution"][1]) in valid_heights
+                    ), "Height check failed!"
     except Exception as e:
         pytest.fail(str(e))

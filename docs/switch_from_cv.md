@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,13 +26,13 @@ limitations under the License.
 
 # Switching from OpenCV Library
 
-Switching OpenCV with VidGear APIs is usually a fairly painless process, and will just require changing a few lines in your python script. 
+Switching OpenCV with VidGear APIs is fairly painless process, and will just require changing a few lines in your python script. 
 
 !!! abstract "This document is intended to software developers who want to migrate their python code from OpenCV Library to VidGear APIs."
 
 !!! warning "Prior knowledge of Python or OpenCV won't be covered in this guide. Proficiency with OpenCV-Python _(Python API for OpenCV)_ is a must in order understand this document."
 
-!!! tip "If you're just getting started with OpenCV-Python, then see [here ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)"
+!!! tip "If you're just getting started with OpenCV-Python programming, then refer this [FAQ ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-opencv-library-how-to-use-vidgear-in-my-projects)"
 
 &nbsp; 
 
@@ -42,12 +42,12 @@ Switching OpenCV with VidGear APIs is usually a fairly painless process, and wil
 
 VidGear employs OpenCV at its backend and enhances its existing capabilities even further by introducing many new state-of-the-art functionalities such as:
 
-- [x] Accelerated [Multi-Threaded](../bonus/TQM/#c-accelerates-frame-processing) Performance.
-- [x] Real-time Stabilization.
-- [x] Inherit support for multiple sources.
-- [x] Screen-casting, Live network-streaming, [plus way much more ➶](../gears)
+- [x] Accelerated [Multi-Threaded](../bonus/TQM/#what-does-threaded-queue-mode-exactly-do) Performance.
+- [x] Real-time [Stabilization](../gears/stabilizer/overview/).
+- [x] Inherit support for multiple video sources and formats.
+- [x] Screen-casting, Live network-streaming, and [way much more ➶](../gears)
 
-Vidgear offers all this at once while maintaining the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax for all of its APIs, thereby making it even easier to implement complex OpenCV applications in way fewer lines and without changing your python code much.
+Vidgear offers all this at once while maintaining the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax for all of its APIs, thereby making it even easier to implement complex real-time OpenCV applications in python code without changing things much.
 
 &nbsp; 
 

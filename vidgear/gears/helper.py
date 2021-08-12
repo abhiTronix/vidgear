@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -374,7 +374,7 @@ def is_valid_url(path, url=None, logging=False):
         return False
 
 
-def validate_video(path, video_path=None):
+def validate_video(path, video_path=None, logging=False):
     """
     ### validate_video
 
@@ -396,6 +396,8 @@ def validate_video(path, video_path=None):
     )
     # clean and search
     stripped_data = [x.decode("utf-8").strip() for x in metadata.split(b"\n")]
+    if logging:
+        logger.debug(stripped_data)
     result = {}
     for data in stripped_data:
         output_a = re.findall(r"([1-9]\d+)x([1-9]\d+)", data)
@@ -479,7 +481,7 @@ def extract_time(value):
         )
 
 
-def validate_audio(path, file_path=None):
+def validate_audio(path, source=None):
     """
     ### validate_audio
 
@@ -487,23 +489,28 @@ def validate_audio(path, file_path=None):
 
     Parameters:
         path (string): absolute path of FFmpeg binaries
-        file_path (string): absolute path to file to be validated.
+        source (string/list): source to be validated.
 
     **Returns:** A string value, confirming whether audio is present, or not?.
     """
-    if file_path is None or not (file_path):
-        logger.warning("File path is empty!")
+    if source is None or not (source):
+        logger.warning("Audio input source is empty!")
         return ""
 
-    # extract audio sample-rate from metadata
-    metadata = check_output(
-        [path, "-hide_banner", "-i", file_path], force_retrieve_stderr=True
+    # create ffmpeg command
+    cmd = [path, "-hide_banner"] + (
+        source if isinstance(source, list) else ["-i", source]
     )
+    # extract audio sample-rate from metadata
+    metadata = check_output(cmd, force_retrieve_stderr=True)
     audio_bitrate = re.findall(r"fltp,\s[0-9]+\s\w\w[/]s", metadata.decode("utf-8"))
+    sample_rate_identifiers = ["Audio", "Hz"] + (
+        ["fltp"] if isinstance(source, str) else []
+    )
     audio_sample_rate = [
         line.strip()
         for line in metadata.decode("utf-8").split("\n")
-        if all(x in line for x in ["Audio", "Hz", "fltp"])
+        if all(x in line for x in sample_rate_identifiers)
     ]
     if audio_bitrate:
         filtered = audio_bitrate[0].split(" ")[1:3]
