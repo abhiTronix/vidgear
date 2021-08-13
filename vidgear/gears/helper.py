@@ -301,6 +301,7 @@ def dimensions_to_resolutions(value):
         "1920x1080": "1080p",
         "2560x1440": "1440p",
         "3840x2160": "2160p",
+        "7680x4320": "4320p",
     }
     return (
         list(map(supported_resolutions.get, value, value))
@@ -332,8 +333,30 @@ def get_supported_vencoders(path):
     finder = re.compile(r"[A-Z]*[\.]+[A-Z]*\s[a-z0-9_-]*")
     # find all outputs
     outputs = finder.findall("\n".join(supported_vencoders))
-    # return outputs
+    # return output findings
     return [[s for s in o.split(" ")][-1] for o in outputs]
+
+
+def get_supported_demuxers(path):
+    """
+    ### get_supported_demuxers
+
+    Find and returns FFmpeg's supported demuxers
+
+    Parameters:
+        path (string): absolute path of FFmpeg binaries
+
+    **Returns:** List of supported demuxers.
+    """
+    demuxers = check_output([path, "-hide_banner", "-demuxers"])
+    splitted = [x.decode("utf-8").strip() for x in demuxers.split(b"\n")]
+    supported_demuxers = splitted[splitted.index("--") + 1 : len(splitted) - 1]
+    # compile regex
+    finder = re.compile(r"\s\s[a-z0-9_,-]+\s+")
+    # find all outputs
+    outputs = finder.findall("\n".join(supported_demuxers))
+    # return output findings
+    return [o.strip() for o in outputs]
 
 
 def is_valid_url(path, url=None, logging=False):
@@ -359,7 +382,8 @@ def is_valid_url(path, url=None, logging=False):
     protocols = check_output([path, "-hide_banner", "-protocols"])
     splitted = [x.decode("utf-8").strip() for x in protocols.split(b"\n")]
     supported_protocols = splitted[splitted.index("Output:") + 1 : len(splitted) - 1]
-    supported_protocols += ["rtsp"]  # rtsp not included somehow
+    # rtsp is a demuxer somehow
+    supported_protocols += ["rtsp"] if "rtsp" in get_supported_demuxers(path) else []
     # Test and return result whether scheme is supported
     if extracted_scheme_url and extracted_scheme_url in supported_protocols:
         if logging:
