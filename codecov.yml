@@ -28,5 +28,7 @@ coverage:
         
 ignore:
   - "vidgear/tests"
+  - "docs"
+  - "scripts"
   - "vidgear/gears/asyncio/__main__.py" #trivial
   - "setup.py"
