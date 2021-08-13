@@ -4,6 +4,7 @@ labelToAdd: 'MISSING : TEMPLATE :grey_question:'
 issue:
   reactions:
     - eyes
+    - '-1'
   badTitles:
     - update
     - updates
@@ -12,6 +13,7 @@ issue:
     - debug
     - demo
     - new
+    - help
   badTitleComment: >
     @{{ author }} Please re-edit this issue title to provide more relevant info.
 
