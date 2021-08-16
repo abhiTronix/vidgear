@@ -43,6 +43,11 @@ SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ or a Mast
 
 &thinsp;
 
+!!! new "New in v0.2.2" 
+
+    Apple HLS support was added in `v0.2.2`.
+
+
 !!! danger "Important"
 	
 	* StreamGear **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../ffmpeg_install/) for its installation.
@@ -120,7 +125,14 @@ from vidgear.gears import StreamGear
 
 ## Recommended Players
 
-!!! tip "Checkout out [this detailed blogpost](https://ottverse.com/mpeg-dash-video-streaming-the-complete-guide/) on how MPEG-DASH works"
+!!! tip "Useful Links"
+    
+    - Checkout [this detailed blogpost](https://ottverse.com/mpeg-dash-video-streaming-the-complete-guide/) on how MPEG-DASH works.
+
+    - Checkout [this detailed blogpost](https://ottverse.com/hls-http-live-streaming-how-does-it-work/) on how HLS works.
+
+    - Checkout [this detailed blogpost](https://ottverse.com/hls-http-live-streaming-how-does-it-work/) for HLS vs. MPEG-DASH comparsion.
+    
 
 === "GUI Players"
     - [x] **[MPV Player](https://mpv.io/):** _(recommended)_ MPV is a free, open source, and cross-platform media player. It supports a wide variety of media file formats, audio and video codecs, and subtitle types. 
@@ -132,7 +144,7 @@ from vidgear.gears import StreamGear
     - [x] **[ffplay](https://ffmpeg.org/ffplay.html):** FFplay is a very simple and portable media player using the FFmpeg libraries and the SDL library. It is mostly used as a testbed for the various FFmpeg APIs. 
 
 === "Online Players"
-    !!! tip "To run Online players locally, you'll need a HTTP server. For creating one yourself, See [this well-curated list  ➶](https://gist.github.com/abhiTronix/7d2798bc9bc62e9e8f1e88fb601d7e7b)"
+    !!! alert "To run Online players locally, you'll need a HTTP server. For creating one yourself, See [this well-curated list  ➶](https://gist.github.com/abhiTronix/7d2798bc9bc62e9e8f1e88fb601d7e7b)"
 
     - [x] **[Clapper](https://github.com/clappr/clappr):** Clappr is an extensible media player for the web.
     - [x] **[Shaka Player](https://github.com/google/shaka-player):** Shaka Player is an open-source JavaScript library for playing adaptive media in a browser.

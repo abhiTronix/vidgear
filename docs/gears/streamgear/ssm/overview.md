@@ -36,6 +36,13 @@ This mode provide [`transcode_source()`](../../../../bonus/reference/streamgear/
 
 This mode can be easily activated by assigning suitable video path as input to [`-video_source`](../../params/#a-exclusive-parameters) attribute of [`stream_params`](../../params/#stream_params) dictionary parameter, during StreamGear initialization.
 
+&emsp;
+
+!!! new "New in v0.2.2" 
+
+    Apple HLS support was added in `v0.2.2`.
+
+
 !!! warning 
 
     * Using [`stream()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) function instead of [`transcode_source()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) in Single-Source Mode will instantly result in **`RuntimeError`**!

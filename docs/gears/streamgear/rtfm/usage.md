@@ -881,7 +881,7 @@ The complete example is as follows:
     * There's a audio device with named `"Microphone (USB2.0 Camera)"` connected to your windows machine.
 
 
-??? tip "Using `-audio` attribute on different OS platforms"
+??? tip "Using devices with `-audio` attribute on different OS platforms"
     
     === "On Windows"
 
