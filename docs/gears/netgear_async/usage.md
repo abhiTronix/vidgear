@@ -100,7 +100,7 @@ async def main():
         key = cv2.waitKey(1) & 0xFF
 
         # await before continuing
-        await asyncio.sleep(0.00001)
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
@@ -162,7 +162,7 @@ async def main():
         key = cv2.waitKey(1) & 0xFF
 
         # await before continuing
-        await asyncio.sleep(0.00001)
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
@@ -263,7 +263,7 @@ async def my_frame_generator():
         # yield frame
         yield frame
         # sleep for sometime
-        await asyncio.sleep(0.00001)
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
@@ -313,7 +313,7 @@ async def main():
         key = cv2.waitKey(1) & 0xFF
 
         # await before continuing
-        await asyncio.sleep(0.01)
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
@@ -404,7 +404,7 @@ async def main():
         key = cv2.waitKey(1) & 0xFF
 
         # await before continuing
-        await asyncio.sleep(0.00001)
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":

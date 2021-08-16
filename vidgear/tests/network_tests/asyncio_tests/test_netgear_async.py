@@ -65,7 +65,7 @@ async def custom_frame_generator():
         # yield frame
         yield frame
         # sleep for sometime
-        await asyncio.sleep(0.000001)
+        await asyncio.sleep(0)
     # close stream
     stream.release()
 
@@ -77,7 +77,7 @@ async def client_iterator(client):
         # test frame validity
         assert not (frame is None or np.shape(frame) == ()), "Failed Test"
         # await before continuing
-        await asyncio.sleep(0.000001)
+        await asyncio.sleep(0)
 
 
 @pytest.fixture

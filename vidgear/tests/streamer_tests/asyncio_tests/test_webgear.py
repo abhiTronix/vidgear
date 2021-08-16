@@ -74,7 +74,7 @@ async def custom_frame_generator():
         encodedImage = cv2.imencode(".jpg", frame)[1].tobytes()
         # yield frame in byte format
         yield (b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n")
-        await asyncio.sleep(0.00001)
+        await asyncio.sleep(0)
     # close stream
     stream.release()
 

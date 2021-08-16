@@ -631,10 +631,10 @@ class NetGear_Async:
                             "Data received on device: {} !".format(self.__id), "utf-8"
                         )
                     )
-            # yield received tuple(data-frame) if birectional mode or else just frame
+            # yield received tuple(data-frame) if bidirectional mode or else just frame
             yield (data["data"], frame) if self.__bi_mode else frame
             # sleep for sometime
-            await asyncio.sleep(0.00001)
+            await asyncio.sleep(0)
 
     async def __frame_generator(self):
         """
@@ -652,7 +652,7 @@ class NetGear_Async:
             # yield frame
             yield frame
             # sleep for sometime
-            await asyncio.sleep(0.00001)
+            await asyncio.sleep(0)
 
     async def transceive_data(self, data=None):
         """
