@@ -226,7 +226,7 @@ class NetGear_Async:
 
         # check whether `Receive Mode` is enabled
         if receive_mode:
-            # assign local ip address if None
+            # assign local IP address if None
             if address is None:
                 self.__address = "*"  # define address
             else:
@@ -293,7 +293,7 @@ class NetGear_Async:
         # Retrieve event loop and assign it
         self.loop = asyncio.get_event_loop()
         # create asyncio queue if bidirectional mode activated
-        self.__queue = asyncio.Queue(loop=self.loop) if self.__bi_mode else None
+        self.__queue = asyncio.Queue() if self.__bi_mode else None
         # log eventloop for debugging
         if self.__logging:
             # debugging
@@ -318,7 +318,7 @@ class NetGear_Async:
             if self.__logging:
                 logger.debug("Creating NetGear_Async asynchronous server handler!")
             # create task for Server Handler
-            self.task = asyncio.ensure_future(self.__server_handler(), loop=self.loop)
+            self.task = asyncio.ensure_future(self.__server_handler())
         # return instance
         return self
 
@@ -398,7 +398,7 @@ class NetGear_Async:
 
         # loop over our Asynchronous frame generator
         async for dataframe in self.config["generator"]:
-            # extract data if Bidirection mode
+            # extract data if bidirectional mode
             if self.__bi_mode and len(dataframe) == 2:
                 (data, frame) = dataframe
                 if not (data is None) and isinstance(data, np.ndarray):
@@ -410,9 +410,9 @@ class NetGear_Async:
                     data = None
                 assert isinstance(
                     frame, np.ndarray
-                ), "[NetGear_Async:ERROR] :: Invalid data recieved from server end!"
+                ), "[NetGear_Async:ERROR] :: Invalid data received from server end!"
             elif self.__bi_mode:
-                # raise error for invaid data
+                # raise error for invalid data
                 raise ValueError(
                     "[NetGear_Async:ERROR] :: Send Mode only accepts tuple(data, frame) as input in Bidirectional Mode. \
                     Kindly refer vidgear docs!"
@@ -420,6 +420,7 @@ class NetGear_Async:
             else:
                 # otherwise just make a copy of frame
                 frame = np.copy(dataframe)
+                data = None
 
             # check if retrieved frame is `CONTIGUOUS`
             if not (frame.flags["C_CONTIGUOUS"]):
@@ -444,33 +445,37 @@ class NetGear_Async:
 
             # check if bidirectional patterns used
             if self.__msg_pattern < 2:
-                # handle birectional data transfer if enabled
+                # handle bidirectional data transfer if enabled
                 if self.__bi_mode:
-                    # get reciever encoded message withing timeout limit
+                    # get receiver encoded message withing timeout limit
                     recvdmsg_encoded = await asyncio.wait_for(
                         self.__msg_socket.recv(), timeout=self.__timeout
                     )
-                    # retrieve reciever data from encoded message
+                    # retrieve receiver data from encoded message
                     recvd_data = msgpack.unpackb(recvdmsg_encoded, use_list=False)
                     # check message type
-                    if recvd_data["return_type"] == "ndarray":  # nummpy.ndarray
-                        # get encoded frame from reciever
-                        recvdframe_encooded = await asyncio.wait_for(
+                    if recvd_data["return_type"] == "ndarray":  # numpy.ndarray
+                        # get encoded frame from receiver
+                        recvdframe_encoded = await asyncio.wait_for(
                             self.__msg_socket.recv_multipart(), timeout=self.__timeout
                         )
                         # retrieve frame and put in queue
                         await self.__queue.put(
                             msgpack.unpackb(
-                                recvdframe_encooded[0],
+                                recvdframe_encoded[0],
                                 use_list=False,
                                 object_hook=m.decode,
                             )
                         )
                     else:
                         # otherwise put data directly in queue
-                        await self.__queue.put(recvd_data["return_data"])
+                        await self.__queue.put(
+                            recvd_data["return_data"]
+                            if recvd_data["return_data"]
+                            else None
+                        )
                 else:
-                    # otherwise log recieved confirmation
+                    # otherwise log received confirmation
                     recv_confirmation = await asyncio.wait_for(
                         self.__msg_socket.recv(), timeout=self.__timeout
                     )
@@ -505,7 +510,7 @@ class NetGear_Async:
             # finally log progress
             if self.__logging:
                 logger.debug(
-                    "Successfully Binded to address: {} with pattern: {}.".format(
+                    "Successfully binded to address: {} with pattern: {}.".format(
                         (
                             self.__protocol
                             + "://"
@@ -519,12 +524,8 @@ class NetGear_Async:
             logger.critical("Receive Mode is activated successfully!")
         except Exception as e:
             logger.exception(str(e))
-            if self.__bi_mode:
-                logger.error(
-                    "Failed to activate Bidirectional Mode for this connection!"
-                )
             raise RuntimeError(
-                "[NetGear_Async:ERROR] :: Failed to bind address: {} and pattern: {}!".format(
+                "[NetGear_Async:ERROR] :: Failed to bind address: {} and pattern: {}{}!".format(
                     (
                         self.__protocol
                         + "://"
@@ -533,6 +534,7 @@ class NetGear_Async:
                         + str(self.__port)
                     ),
                     self.__msg_pattern,
+                    " and Bidirectional Mode enabled" if self.__bi_mode else "",
                 )
             )
 
@@ -544,14 +546,13 @@ class NetGear_Async:
             )
             # retrieve data from message
             data = msgpack.unpackb(datamsg_encoded, use_list=False)
-
             # terminate if exit` flag received from server
             if data["terminate"]:
-                # send confirmation message to server if birectional patterns
+                # send confirmation message to server if bidirectional patterns
                 if self.__msg_pattern < 2:
                     # create termination confirmation message
                     return_dict = dict(
-                        terminated="Device-`{}` successfully terminated!".format(
+                        terminated="Client-`{}` successfully terminated!".format(
                             self.__id
                         ),
                     )
@@ -559,9 +560,11 @@ class NetGear_Async:
                     retdata_enc = msgpack.packb(return_dict)
                     # send message back to server
                     await self.__msg_socket.send(retdata_enc)
-                # break loop
+                if self.__logging:
+                    logger.info("Termination signal received from server!")
+                # break loop and terminate
+                self.__terminate = True
                 break
-
             # get encoded frame message from server withing timeout limit
             framemsg_encoded = await asyncio.wait_for(
                 self.__msg_socket.recv_multipart(), timeout=self.__timeout
@@ -573,7 +576,7 @@ class NetGear_Async:
 
             # check if bidirectional patterns
             if self.__msg_pattern < 2:
-                # handle birectional data transfer if enabled
+                # handle bidirectional data transfer if enabled
                 if self.__bi_mode and data["bi_mode"]:
                     # handle empty queue
                     if not self.__queue.empty():
@@ -628,11 +631,14 @@ class NetGear_Async:
                     # otherwise just send confirmation message to server
                     await self.__msg_socket.send(
                         bytes(
-                            "Data received on device: {} !".format(self.__id), "utf-8"
+                            "Data received on client: {} !".format(self.__id), "utf-8"
                         )
                     )
             # yield received tuple(data-frame) if bidirectional mode or else just frame
-            yield (data["data"], frame) if self.__bi_mode else frame
+            if self.__bi_mode:
+                yield (data["data"], frame) if data["data"] else (None, frame)
+            else:
+                yield frame
             # sleep for sometime
             await asyncio.sleep(0)
 
@@ -656,7 +662,7 @@ class NetGear_Async:
 
     async def transceive_data(self, data=None):
         """
-        Bidirectional Mode exculsive method to Transmit _(in Recieve mode)_ and Receive _(in Send mode)_ data in real-time.
+        Bidirectional Mode exclusive method to Transmit _(in Receive mode)_ and Receive _(in Send mode)_ data in real-time.
 
         Parameters:
             data (any): inputs data _(of any datatype)_ for sending back to Server.
@@ -677,10 +683,21 @@ class NetGear_Async:
                 )
         return recvd_data
 
-    async def __terminate_connection(self):
+    async def __terminate_connection(self, disable_confirmation=False):
         """
         Internal asyncio method to safely terminate ZMQ connection and queues
+
+        Parameters:
+            disable_confirmation (boolean): Force disable termination confirmation from client in bidirectional patterns.
         """
+        # log termination
+        if self.__logging:
+            logger.debug(
+                "Terminating various {} Processes. Please wait.".format(
+                    "Receive Mode" if self.__receive_mode else "Send Mode"
+                )
+            )
+
         # check whether `receive_mode` is enabled or not
         if self.__receive_mode:
             # indicate that process should be terminated
@@ -691,21 +708,20 @@ class NetGear_Async:
             # terminate stream
             if not (self.__stream is None):
                 self.__stream.stop()
-
             # signal `exit` flag for termination!
             data_dict = dict(terminate=True)
             data_enc = msgpack.packb(data_dict)
             await self.__msg_socket.send(data_enc)
             # check if bidirectional patterns
-            if self.__msg_pattern < 2:
+            if self.__msg_pattern < 2 and not disable_confirmation:
                 # then receive and log confirmation
-                recv_confirmation = await asyncio.wait_for(
-                    self.__msg_socket.recv(), timeout=self.__timeout
-                )
+                recv_confirmation = await self.__msg_socket.recv()
                 recvd_conf = msgpack.unpackb(recv_confirmation, use_list=False)
                 if self.__logging and "terminated" in recvd_conf:
                     logger.debug(recvd_conf["terminated"])
-
+        # close socket
+        self.__msg_socket.setsockopt(zmq.LINGER, 0)
+        self.__msg_socket.close()
         # handle asyncio queues in bidirectional mode
         if self.__bi_mode:
             # empty queue if not
@@ -729,19 +745,13 @@ class NetGear_Async:
         Terminates all NetGear_Async Asynchronous processes gracefully.
 
         Parameters:
-            skip_loop (Boolean): (optional)used only if closing executor loop throws an error.
+            skip_loop (Boolean): (optional)used only if don't want to close eventloop(required in pytest).
         """
-        # log termination
-        if self.__logging:
-            logger.debug(
-                "Terminating various {} Processes. Please wait...".format(
-                    "Receive Mode" if self.__receive_mode else "Send Mode"
-                )
-            )
-
-        # close connection gracefully
-        self.loop.run_until_complete(self.__terminate_connection())
-
         # close event loop if specified
         if not (skip_loop):
+            # close connection gracefully
+            self.loop.run_until_complete(self.__terminate_connection())
             self.loop.close()
+        else:
+            # otherwise create a task
+            asyncio.create_task(self.__terminate_connection(disable_confirmation=True))

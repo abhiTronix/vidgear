@@ -255,7 +255,6 @@ async def my_frame_generator():
 
         # check if frame empty
         if not grabbed:
-            # if True break the infinite loop
             break
 
         # do something with the frame to be sent here
@@ -264,6 +263,9 @@ async def my_frame_generator():
         yield frame
         # sleep for sometime
         await asyncio.sleep(0)
+        
+    # close stream
+    stream.release()
 
 
 if __name__ == "__main__":

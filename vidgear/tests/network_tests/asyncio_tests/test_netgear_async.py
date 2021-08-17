@@ -41,6 +41,14 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
+@pytest.fixture(scope="module")
+def event_loop():
+    """Create an instance of the default event loop for each test case."""
+    loop = asyncio.SelectorEventLoop()
+    yield loop
+    loop.close()
+
+
 def return_testvideo_path():
     """
     returns Test Video path
@@ -66,8 +74,51 @@ async def custom_frame_generator():
         yield frame
         # sleep for sometime
         await asyncio.sleep(0)
+
     # close stream
     stream.release()
+
+
+class Custom_Generator:
+    """
+    Custom Generator using OpenCV, for testing bidirectional mode.
+    """
+
+    def __init__(self, server=None, data=""):
+        # initialize global params
+        assert not (server is None), "Invalid Value"
+        # assign server
+        self.server = server
+        # data
+        self.data = data
+
+    # Create a async data and frame generator as custom source
+    async def custom_dataframe_generator(self):
+        # loop over stream until its terminated
+        stream = cv2.VideoCapture(return_testvideo_path())
+        while True:
+            # read frames
+            (grabbed, frame) = stream.read()
+
+            # check if frame empty
+            if not grabbed:
+                break
+
+            # recieve client's data
+            recv_data = await self.server.transceive_data()
+            if not (recv_data is None):
+                if isinstance(recv_data, np.ndarray):
+                    assert not (
+                        recv_data is None or np.shape(recv_data) == ()
+                    ), "Failed Test"
+                else:
+                    logger.debug(recv_data)
+
+            # yield data and frame
+            yield (self.data, frame)
+            # sleep for sometime
+            await asyncio.sleep(0)
+        stream.release()
 
 
 # Create a async function where you want to show/manipulate your received frames
@@ -80,12 +131,22 @@ async def client_iterator(client):
         await asyncio.sleep(0)
 
 
-@pytest.fixture
-def event_loop():
-    """Create an instance of the default event loop for each test case."""
-    loop = asyncio.SelectorEventLoop()
-    yield loop
-    loop.close()
+# Create a async function made to test bidirectional mode
+async def client_dataframe_iterator(client, data=""):
+    # loop over Client's Asynchronous Data and Frame Generator
+    async for (recvd_data, frame) in client.recv_generator():
+        if not (recvd_data is None):
+            # {do something with received server recv_data here}
+            logger.debug(recvd_data)
+
+        # {do something with received frames here}
+
+        # test frame validity
+        assert not (frame is None or np.shape(frame) == ()), "Failed Test"
+        # send data
+        await client.transceive_data(data=data)
+        # await before continuing
+        await asyncio.sleep(0)
 
 
 @pytest.mark.asyncio
@@ -103,6 +164,7 @@ async def test_netgear_async_playback(pattern):
         server = NetGear_Async(
             source=return_testvideo_path(),
             pattern=pattern,
+            timeout=7.0,
             logging=True,
             **options_gear
         ).launch()
@@ -128,7 +190,9 @@ test_data_class = [
 @pytest.mark.parametrize("generator, result", test_data_class)
 async def test_netgear_async_custom_server_generator(generator, result):
     try:
-        server = NetGear_Async(protocol="udp", logging=True)  # invalid protocol
+        server = NetGear_Async(
+            protocol="udp", timeout=5.0, logging=True
+        )  # invalid protocol
         server.config["generator"] = generator
         server.launch()
         # define and launch Client with `receive_mode = True` and timeout = 5.0
@@ -139,10 +203,75 @@ async def test_netgear_async_custom_server_generator(generator, result):
     except Exception as e:
         if result:
             pytest.fail(str(e))
+        else:
+            pytest.xfail(str(e))
     finally:
+        server.close(skip_loop=True)
+        client.close(skip_loop=True)
+
+
+test_data_class = [
+    (
+        custom_frame_generator(),
+        "Hi",
+        {"bidirectional_mode": True},
+        {"bidirectional_mode": True},
+        False,
+    ),
+    (
+        [],
+        444404444,
+        {"bidirectional_mode": True},
+        {"bidirectional_mode": False},
+        False,
+    ),
+    (
+        [],
+        [1, "string", ["list"]],
+        {"bidirectional_mode": True},
+        {"bidirectional_mode": True},
+        True,
+    ),
+    (
+        [],
+        (np.random.random(size=(480, 640, 3)) * 255).astype(np.uint8),
+        {"bidirectional_mode": True},
+        {"bidirectional_mode": True},
+        True,
+    ),
+]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "generator, data, options_server, options_client, result",
+    test_data_class,
+)
+async def test_netgear_async_bidirectionalmode(
+    generator, data, options_server, options_client, result
+):
+    try:
+        server = NetGear_Async(logging=True, timeout=5.0, **options_server)
+        if not generator:
+            cg = Custom_Generator(server, data=data)
+            generator = cg.custom_dataframe_generator()
+        server.config["generator"] = generator
+        server.launch()
+        # define and launch Client with `receive_mode = True` and timeout = 5.0
+        client = NetGear_Async(
+            logging=True, receive_mode=True, timeout=5.0, **options_client
+        ).launch()
+        # gather and run tasks
+        input_coroutines = [server.task, client_dataframe_iterator(client, data=data)]
+        res = await asyncio.gather(*input_coroutines, return_exceptions=True)
+    except Exception as e:
         if result:
-            server.close(skip_loop=True)
-            client.close(skip_loop=True)
+            pytest.fail(str(e))
+        else:
+            pytest.xfail(str(e))
+    finally:
+        server.close(skip_loop=True)
+        client.close(skip_loop=True)
 
 
 @pytest.mark.asyncio
@@ -159,6 +288,7 @@ async def test_netgear_async_addresses(address, port):
                 source=return_testvideo_path(),
                 address=address,
                 port=port,
+                timeout=5.0,
                 logging=True,
                 **options_gear
             ).launch()
@@ -179,10 +309,61 @@ async def test_netgear_async_addresses(address, port):
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(raises=ValueError)
 async def test_netgear_async_recv_generator():
-    # define and launch server
-    server = NetGear_Async(source=return_testvideo_path(), logging=True)
-    async for frame in server.recv_generator():
-        logger.error("Failed")
-    server.close(skip_loop=True)
+    server = None
+    try:
+        # define and launch server
+        server = NetGear_Async(
+            source=return_testvideo_path(), timeout=5.0, logging=True
+        )
+        async for frame in server.recv_generator():
+            logger.warning("Failed")
+    except Exception as e:
+        if isinstance(e, (ValueError, asyncio.exceptions.TimeoutError)):
+            pytest.xfail(str(e))
+        else:
+            pytest.fail(str(e))
+    finally:
+        if not (server is None):
+            server.close(skip_loop=True)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "pattern, options",
+    [
+        (0, {"bidirectional_mode": True}),
+        (0, {"bidirectional_mode": False}),
+        (1, {"bidirectional_mode": "invalid"}),
+        (2, {"bidirectional_mode": True}),
+    ],
+)
+async def test_netgear_async_options(pattern, options):
+    client = None
+    try:
+        # define and launch server
+        client = NetGear_Async(
+            source=None
+            if options["bidirectional_mode"] != True
+            else return_testvideo_path(),
+            receive_mode=True,
+            timeout=5.0,
+            pattern=pattern,
+            logging=True,
+            **options
+        )
+        async for frame in client.recv_generator():
+            if not options["bidirectional_mode"]:
+                # create target data
+                target_data = "Client here."
+                # send it
+                await client.transceive_data(data=target_data)
+            logger.warning("Failed")
+    except Exception as e:
+        if isinstance(e, (ValueError, asyncio.exceptions.TimeoutError)):
+            pytest.xfail(str(e))
+        else:
+            pytest.fail(str(e))
+    finally:
+        if not (client is None):
+            client.close(skip_loop=True)
