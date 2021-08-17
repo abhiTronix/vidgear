@@ -754,4 +754,4 @@ class NetGear_Async:
             self.loop.close()
         else:
             # otherwise create a task
-            asyncio.create_task(self.__terminate_connection(disable_confirmation=True))
+            asyncio.ensure_future(self.__terminate_connection(disable_confirmation=True))
