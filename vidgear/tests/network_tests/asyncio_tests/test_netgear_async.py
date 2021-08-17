@@ -319,7 +319,7 @@ async def test_netgear_async_recv_generator():
         async for frame in server.recv_generator():
             logger.warning("Failed")
     except Exception as e:
-        if isinstance(e, (ValueError, asyncio.exceptions.TimeoutError)):
+        if isinstance(e, (ValueError, asyncio.TimeoutError)):
             pytest.xfail(str(e))
         else:
             pytest.fail(str(e))
@@ -360,7 +360,7 @@ async def test_netgear_async_options(pattern, options):
                 await client.transceive_data(data=target_data)
             logger.warning("Failed")
     except Exception as e:
-        if isinstance(e, (ValueError, asyncio.exceptions.TimeoutError)):
+        if isinstance(e, (ValueError, asyncio.TimeoutError)):
             pytest.xfail(str(e))
         else:
             pytest.fail(str(e))
