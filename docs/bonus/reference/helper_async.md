@@ -41,3 +41,7 @@ limitations under the License.
 ::: vidgear.gears.asyncio.helper.download_webdata
 
 &nbsp;
+
+::: vidgear.gears.asyncio.helper.validate_webdata
+
+&nbsp;

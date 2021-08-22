@@ -472,7 +472,7 @@ SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ or a Mast
 
 NetGear implements a high-level wrapper around [**PyZmQ**][pyzmq] python library that contains python bindings for [**ZeroMQ**][zmq] - a high-performance asynchronous distributed messaging library.
 
-NetGear seamlessly supports [**Bidirectional data transmission**][netgear_bidata_doc] along with video-frames between receiver(client) and sender(server). 
+NetGear seamlessly supports additional [**bidirectional data transmission**][netgear_bidata_doc] between receiver(client) and sender(server) while transferring video-frames all in real-time. 
 
 NetGear can also robustly handle [**Multiple Server-Systems**][netgear_multi_server_doc] and [**Multiple Client-Systems**][netgear_multi_client_doc] and at once, thereby providing access to a seamless exchange of video-frames & data between multiple devices across the network at the same time.
 
@@ -611,11 +611,13 @@ web.shutdown()
 </p>
 .
 
-> _NetGear_Async can generate the same performance as [NetGear API](#netgear) at about one-third the memory consumption, and also provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but it doesn't support any of [NetGear's Exclusive Modes][netgear-exm] yet._
+> _NetGear_Async can generate the same performance as [NetGear API](#netgear) at about one-third the memory consumption, and also provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but lacks in term of flexibility as it supports only a few [NetGear's Exclusive Modes][netgear-exm]._
 
 NetGear_Async is built on [`zmq.asyncio`][asyncio-zmq], and powered by a high-performance asyncio event loop called [**`uvloop`**][uvloop] to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. NetGear_Async can transfer thousands of frames in just a few seconds without causing any significant load on your system. 
 
-NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to [NetGear API](#netgear) but doesn't support any [NetGear Exclusive modes][netgear-exm] yet. Furthermore, NetGear_Async allows us to define our custom Server as source to manipulate frames easily before sending them across the network(see this [doc][netgear_Async-cs] example).
+NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to [NetGear API](#netgear). Furthermore, NetGear_Async allows us to define our custom Server as source to manipulate frames easily before sending them across the network(see this [doc][netgear_Async-cs] example).
+
+NetGear_Async now supports additional [**bidirectional data transmission**][btm_netgear_async] between receiver(client) and sender(server) while transferring video-frames. Users can easily build complex applications such as like [Real-Time Video Chat][rtvc] in just few lines of code.
 
 NetGear_Async as of now supports [all four ZeroMQ messaging patterns](#attributes-and-parameters-wrench):
 * [**`zmq.PAIR`**][zmq-pair] _(ZMQ Pair Pattern)_ 
@@ -708,7 +710,7 @@ Here is a Bibtex entry you can use to cite this project in a publication:
 
 # Copyright
 
-**Copyright © abhiTronix 2019-2021**
+**Copyright © abhiTronix 2019**
 
 This library is released under the **[Apache 2.0 License][license]**.
 
@@ -747,6 +749,8 @@ Internal URLs
 [azure-pipeline]:https://dev.azure.com/abhiuna12/public/_build?definitionId=2
 [app]:https://ci.appveyor.com/project/abhiTronix/vidgear
 [code]:https://codecov.io/gh/abhiTronix/vidgear
+[btm_netgear_async]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/advanced/bidirectional_mode/
+[rtvc]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer
 
 [test-4k]:https://github.com/abhiTronix/vidgear/blob/e0843720202b0921d1c26e2ce5b11fadefbec892/vidgear/tests/benchmark_tests/test_benchmark_playback.py#L65
 [bs_script_dataset]:https://github.com/abhiTronix/vidgear/blob/testing/scripts/bash/prepare_dataset.sh

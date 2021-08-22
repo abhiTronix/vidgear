@@ -25,7 +25,7 @@ repo_url: https://github.com/abhiTronix/vidgear
 edit_uri: ""
 
 # Copyright
-copyright: Copyright &copy; 2019 - 2021 Abhishek Thakur(@abhiTronix)
+copyright: Copyright &copy; 2019 Abhishek Thakur(@abhiTronix)
 
 # Configuration
 theme:
@@ -40,6 +40,7 @@ theme:
     - navigation.top
     - search.suggest
     - search.highlight
+    - search.share
   palette:
     # Light mode
     - media: "(prefers-color-scheme: light)"
@@ -68,7 +69,6 @@ theme:
 # Plugins
 plugins:
   - search
-      prebuild_index: true
   - git-revision-date-localized
   - minify:
       minify_html: true
@@ -225,7 +225,7 @@ nav:
     - NetGear: 
       - Overview: gears/netgear/overview.md
       - Usage Examples: gears/netgear/usage.md
-      - Advanced Usage:
+      - Advanced Usages: 
         - Multi-Servers Mode: gears/netgear/advanced/multi_server.md
         - Multi-Clients Mode: gears/netgear/advanced/multi_client.md
         - Bidirectional Mode: gears/netgear/advanced/bidirectional_mode.md
@@ -252,6 +252,8 @@ nav:
     - NetGear_Async: 
       - Overview: gears/netgear_async/overview.md
       - Usage Examples: gears/netgear_async/usage.md
+      - Advanced Usages:
+        - Bidirectional Mode: gears/netgear_async/advanced/bidirectional_mode.md
       - Parameters: gears/netgear_async/params.md
       - References: bonus/reference/netgear_async.md
       - FAQs: help/netgear_async_faqs.md
@@ -261,7 +263,7 @@ nav:
       - Parameters: gears/stabilizer/params.md
       - References: bonus/reference/stabilizer.md
       - FAQs: help/stabilizer_faqs.md
-  - Bonus:
+  - References: 
     - API References:
       - vidgear.gears: 
         - CamGear API: bonus/reference/camgear.md

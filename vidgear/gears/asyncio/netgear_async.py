@@ -47,14 +47,17 @@ logger.setLevel(log.DEBUG)
 class NetGear_Async:
     """
     NetGear_Async can generate the same performance as NetGear API at about one-third the memory consumption, and also provide complete server-client handling with various
-    options to use variable protocols/patterns similar to NetGear, but only support bidirectional data transmission exclusive mode.
+    options to use variable protocols/patterns similar to NetGear, but lacks in term of flexibility as it supports only a few NetGear's Exclusive Modes.
 
     NetGear_Async is built on `zmq.asyncio`, and powered by a high-performance asyncio event loop called uvloop to achieve unwatchable high-speed and lag-free video streaming
     over the network with minimal resource constraints. NetGear_Async can transfer thousands of frames in just a few seconds without causing any significant load on your
     system.
 
-    NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to NetGear API but doesn't support any NetGear's Exclusive
-    Modes yet. Furthermore, NetGear_Async allows us to define our custom Server as source to manipulate frames easily before sending them across the network.
+    NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to NetGear API. Furthermore, NetGear_Async allows us to define
+     our custom Server as source to manipulate frames easily before sending them across the network.
+
+    NetGear_Async now supports additional [**bidirectional data transmission**](../advanced/bidirectional_mode) between receiver(client) and sender(server) while transferring frames.
+    Users can easily build complex applications such as like [Real-Time Video Chat](../advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer) in just few lines of code.
 
     In addition to all this, NetGear_Async API also provides internal wrapper around VideoGear, which itself provides internal access to both CamGear and PiGear APIs, thereby
     granting it exclusive power for transferring frames incoming from any source to the network.
@@ -171,7 +174,7 @@ class NetGear_Async:
         self.__bi_mode = False  # handles Bidirectional mode state
 
         # assign timeout for Receiver end
-        if timeout > 0 and isinstance(timeout, (int, float)):
+        if timeout and isinstance(timeout, (int, float)):
             self.__timeout = float(timeout)
         else:
             self.__timeout = 15.0
@@ -662,7 +665,7 @@ class NetGear_Async:
 
     async def transceive_data(self, data=None):
         """
-        Bidirectional Mode exclusive method to Transmit _(in Receive mode)_ and Receive _(in Send mode)_ data in real-time.
+        Bidirectional Mode exclusive method to Transmit data _(in Receive mode)_ and Receive data _(in Send mode)_.
 
         Parameters:
             data (any): inputs data _(of any datatype)_ for sending back to Server.
@@ -672,11 +675,10 @@ class NetGear_Async:
             if self.__bi_mode:
                 if self.__receive_mode:
                     await self.__queue.put(data)
-                elif not self.__receive_mode and not self.__queue.empty():
-                    recvd_data = await self.__queue.get()
-                    self.__queue.task_done()
                 else:
-                    pass
+                    if not self.__queue.empty():
+                        recvd_data = await self.__queue.get()
+                        self.__queue.task_done()
             else:
                 logger.error(
                     "`transceive_data()` function cannot be used when Bidirectional Mode is disabled."
@@ -754,4 +756,6 @@ class NetGear_Async:
             self.loop.close()
         else:
             # otherwise create a task
-            asyncio.ensure_future(self.__terminate_connection(disable_confirmation=True))
+            asyncio.ensure_future(
+                self.__terminate_connection(disable_confirmation=True)
+            )

@@ -122,11 +122,14 @@ class Custom_Generator:
 
 
 # Create a async function where you want to show/manipulate your received frames
-async def client_iterator(client):
+async def client_iterator(client, data=False):
     # loop over Client's Asynchronous Frame Generator
     async for frame in client.recv_generator():
         # test frame validity
         assert not (frame is None or np.shape(frame) == ()), "Failed Test"
+        if data:
+            # send data
+            await client.transceive_data(data="invalid")
         # await before continuing
         await asyncio.sleep(0)
 
@@ -152,7 +155,7 @@ async def client_dataframe_iterator(client, data=""):
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "pattern",
-    [0, 2, 3, 4],
+    [1, 2, 3, 4],
 )
 async def test_netgear_async_playback(pattern):
     try:
@@ -164,12 +167,15 @@ async def test_netgear_async_playback(pattern):
         server = NetGear_Async(
             source=return_testvideo_path(),
             pattern=pattern,
-            timeout=7.0,
+            timeout=7.0 if pattern == 4 else 0,
             logging=True,
             **options_gear
         ).launch()
         # gather and run tasks
-        input_coroutines = [server.task, client_iterator(client)]
+        input_coroutines = [
+            server.task,
+            client_iterator(client, data=True if pattern == 4 else False),
+        ]
         res = await asyncio.gather(*input_coroutines, return_exceptions=True)
     except Exception as e:
         if isinstance(e, queue.Empty):
@@ -275,15 +281,19 @@ async def test_netgear_async_bidirectionalmode(
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("address, port", [("172.31.11.15.77", "5555"), (None, "5555")])
+@pytest.mark.parametrize(
+    "address, port",
+    [("172.31.11.15.77", "5555"), ("172.31.11.33.44", "5555"), (None, "5555")],
+)
 async def test_netgear_async_addresses(address, port):
+    server = None
     try:
         # define and launch Client with `receive_mode = True`
         client = NetGear_Async(
             address=address, port=port, logging=True, timeout=5.0, receive_mode=True
         ).launch()
+        options_gear = {"THREAD_TIMEOUT": 60}
         if address is None:
-            options_gear = {"THREAD_TIMEOUT": 60}
             server = NetGear_Async(
                 source=return_testvideo_path(),
                 address=address,
@@ -295,15 +305,28 @@ async def test_netgear_async_addresses(address, port):
             # gather and run tasks
             input_coroutines = [server.task, client_iterator(client)]
             await asyncio.gather(*input_coroutines, return_exceptions=True)
+        elif address == "172.31.11.33.44":
+            options_gear["bidirectional_mode"] = True
+            server = NetGear_Async(
+                source=return_testvideo_path(),
+                address=address,
+                port=port,
+                logging=True,
+                timeout=5.0,
+                **options_gear
+            ).launch()
+            await asyncio.ensure_future(server.task)
         else:
             await asyncio.ensure_future(client_iterator(client))
     except Exception as e:
-        if address == "172.31.11.15.77" or isinstance(e, queue.Empty):
+        if address in ["172.31.11.15.77", "172.31.11.33.44"] or isinstance(
+            e, queue.Empty
+        ):
             logger.exception(str(e))
         else:
             pytest.fail(str(e))
     finally:
-        if address is None:
+        if (address is None or address == "172.31.11.33.44") and not (server is None):
             server.close(skip_loop=True)
         client.close(skip_loop=True)
 

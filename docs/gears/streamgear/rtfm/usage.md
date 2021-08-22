@@ -1021,8 +1021,8 @@ The complete example is as follows:
             {
                 "-resolution": "1280x720",
                 "-video_bitrate": "4000k",
-            },  # Stream1: 1920x1080 at 4000kbs bitrate
-            {"-resolution": "640x360", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
+            },  # Stream1: 1280x720 at 4000kbs bitrate
+            {"-resolution": "640x360", "-framerate": 30.0},  # Stream2: 640x360 at 30fps
         ],
         "-input_framerate": stream.framerate,  # controlled framerate for audio-video sync !!! don't forget this line !!!
         "-audio": [
@@ -1086,8 +1086,8 @@ The complete example is as follows:
             {
                 "-resolution": "1280x720",
                 "-video_bitrate": "4000k",
-            },  # Stream1: 1920x1080 at 4000kbs bitrate
-            {"-resolution": "640x360", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
+            },  # Stream1: 1280x720 at 4000kbs bitrate
+            {"-resolution": "640x360", "-framerate": 30.0},  # Stream2: 640x360 at 30fps
         ],
         "-input_framerate": stream.framerate,  # controlled framerate for audio-video sync !!! don't forget this line !!!
         "-audio": [

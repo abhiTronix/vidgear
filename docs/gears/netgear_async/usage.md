@@ -223,7 +223,9 @@ if __name__ == "__main__":
 
 ## Using NetGear_Async with a Custom Source(OpenCV)
 
-NetGear_Async allows you to easily define your own custom Source at Server-end that you want to use to manipulate your frames before sending them onto the network. Let's implement a bare-minimum example with a Custom Source using NetGear_Async API and OpenCV:
+NetGear_Async allows you to easily define your own custom Source at Server-end that you want to use to manipulate your frames before sending them onto the network. 
+
+Let's implement a bare-minimum example with a Custom Source using NetGear_Async API and OpenCV:
 
 ### Server's End
 
@@ -237,7 +239,7 @@ from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
 
 # initialize Server without any source
-server = NetGear_Async(logging=True)
+server = NetGear_Async(source=None, logging=True)
 
 # Create a async frame generator as custom source
 async def my_frame_generator():

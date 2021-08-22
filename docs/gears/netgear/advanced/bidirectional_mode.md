@@ -291,6 +291,7 @@ Now, Open the terminal on another Server System _(a Raspberry Pi with Camera Mod
 ```python
 # import required libraries
 from vidgear.gears import VideoGear
+from vidgear.gears import NetGear
 from vidgear.gears import PiGear
 
 # add various Picamera tweak parameters to dictionary
