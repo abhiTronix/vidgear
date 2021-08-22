@@ -92,7 +92,9 @@ writer.close()
 
 ## Using Compression Mode in RGB Mode
 
-In Compression Mode, WriteGear API contains [`rgb_mode`](../../../../bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.write) boolean parameter for RGB Mode, which when enabled _(i.e. `rgb_mode=True`)_, specifies that incoming frames are of RGB format _(instead of default BGR format)_. This mode makes WriteGear directly compatible with libraries that only supports RGB format. The complete usage example is as follows:
+In Compression Mode, WriteGear API contains [`rgb_mode`](../../../../bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.write) boolean parameter for RGB Mode, which when enabled _(i.e. `rgb_mode=True`)_, specifies that incoming frames are of RGB format _(instead of default BGR format)_. This mode makes WriteGear directly compatible with libraries that only supports RGB format. 
+
+The complete usage example is as follows:
 
 ```python
 # import required libraries
@@ -429,6 +431,8 @@ writer.close()
 
 In Compression Mode, WriteGear API allows us to exploit almost all FFmpeg supported parameters that you can think of in its Compression Mode. Hence, combining audio with live video frames is pretty easy. 
 
+In this example code, we will merging the audio from a Audio Device _(for e.g. Webcam inbuilt mic)_ to live frames incoming from the Video Source _(for e.g external webcam)_, and save the output as a compressed video file, all in real time:
+
 !!! alert "Example Assumptions"
 
     * You're running are Linux machine.
@@ -575,9 +579,6 @@ In Compression Mode, WriteGear API allows us to exploit almost all FFmpeg suppor
 !!! danger "Make sure this `-audio` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
 
 !!! warning "You **MUST** use [`-input_framerate`](../../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
-
-
-In this example code, we will merge the audio from a Audio Source _(for e.g. Webcam inbuilt mic)_ to the frames of a Video Source _(for e.g external webcam)_, and save this data as a compressed video file, all in real time:
 
 ```python
 # import required libraries

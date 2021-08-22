@@ -106,7 +106,7 @@ You can clone your [**Forked**](https://docs.github.com/en/free-pro-team@latest/
 	Typically any feature/improvement/bug-fix code flows as follows:
 
 	<figure>
-	<img src='http://www.plantuml.com/plantuml/svg/RKzDYrD143pRlwAFYH1GmKjOmcwoA7jGGh9x4f5sfdmxP3wUFVFKAFvt9s_yUC5SXkcgwghgwrn4on0yvOEBlQW4DbvoVfLYsRlluESl9vIc8LgJD4BvnRC9OV591bzEMsybWFVe4lZXxd_9FRwL6--w610Bc_f0Bnjjaa_AjwA7pL7YH5Cx5_0FMeivT6Eb9jsAnsi58jsefgyDt4CQjavgeR_1Nbti6lulQksh8Lqi-9EefGPeXm_cCJa3lhfgdzMAwD5PC49VZcoHZRg-k1JftTFtl5Yi-1PVu5C_UYxPf11SoJH5g-hSVSdRmVl53fy7vCApxMvEKy6uSL-fUaeLR-wuZBfUSeQTj-WBfhi_yJohfqAZ-3cTztk8kSX73pgpFmsmFFDo2fhJaxzqJNaZbLHUjZXguvBtpQUDOvqTF2I3hX7j4Fml'>
+	<img src='../../assets/images/branch_flow.svg'>
 	</figure>
 
 ```sh

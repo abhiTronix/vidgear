@@ -243,14 +243,6 @@ class WebGear:
                     data_path
                 )
             )
-            logger.debug(
-                "Enabling JPEG Frame-Compression with Colorspace:`{}`, Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
-                    self.__jpeg_compression_colorspace,
-                    self.__jpeg_compression_quality,
-                    "enabled" if self.__jpeg_compression_fastdct else "disabled",
-                    "enabled" if self.__jpeg_compression_fastupsample else "disabled",
-                )
-            )
 
         # define Jinja2 templates handler
         self.__templates = Jinja2Templates(directory="{}/templates".format(data_path))
@@ -273,8 +265,6 @@ class WebGear:
         if source is None:
             self.config = {"generator": None}
             self.__stream = None
-            if self.__logging:
-                logger.warning("Given source is of NoneType!")
         else:
             # define stream with necessary params
             self.__stream = VideoGear(
@@ -293,6 +283,25 @@ class WebGear:
             )
             # define default frame generator in configuration
             self.config = {"generator": self.__producer}
+
+        # log if specified
+        if self.__logging:
+            if source is None:
+                logger.warning(
+                    "Given source is of NoneType. Therefore, JPEG Frame-Compression is disabled!"
+                )
+            else:
+                logger.debug(
+                    "Enabling JPEG Frame-Compression with Colorspace:`{}`, Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                        self.__jpeg_compression_colorspace,
+                        self.__jpeg_compression_quality,
+                        "enabled" if self.__jpeg_compression_fastdct else "disabled",
+                        "enabled"
+                        if self.__jpeg_compression_fastupsample
+                        else "disabled",
+                    )
+                )
+
         # copying original routing tables for further validation
         self.__rt_org_copy = self.routes[:]
         # initialize blank frame
@@ -408,7 +417,8 @@ class WebGear:
             yield (
                 b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n"
             )
-            # await asyncio.sleep(0.00000001)
+            # sleep for sometime.
+            await asyncio.sleep(0)
 
     async def __video(self, scope):
         """

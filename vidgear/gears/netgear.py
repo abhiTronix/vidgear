@@ -184,8 +184,8 @@ class NetGear:
         # define Multi-Client mode
         self.__multiclient_mode = False  # handles multi-client mode state
 
-        # define Bi-directional mode
-        self.__bi_mode = False  # handles bi-directional mode state
+        # define Bidirectional mode
+        self.__bi_mode = False  # handles Bidirectional mode state
 
         # define Secure mode
         valid_security_mech = {0: "Grasslands", 1: "StoneHouse", 2: "IronHouse"}
@@ -227,13 +227,12 @@ class NetGear:
             self.__request_timeout = 4000  # 4 secs
 
         # Handle user-defined options dictionary values
-
         # reformat dictionary
         options = {str(k).strip(): v for k, v in options.items()}
 
         # loop over dictionary key & values and assign to global variables if valid
         for key, value in options.items():
-
+            # handle multi-server mode
             if key == "multiserver_mode" and isinstance(value, bool):
                 # check if valid pattern assigned
                 if pattern > 0:
@@ -249,7 +248,8 @@ class NetGear:
                         )
                     )
 
-            if key == "multiclient_mode" and isinstance(value, bool):
+            # handle multi-client mode
+            elif key == "multiclient_mode" and isinstance(value, bool):
                 # check if valid pattern assigned
                 if pattern > 0:
                     # activate Multi-client mode
@@ -264,6 +264,23 @@ class NetGear:
                         )
                     )
 
+            # handle bidirectional mode
+            elif key == "bidirectional_mode" and isinstance(value, bool):
+                # check if pattern is valid
+                if pattern < 2:
+                    # activate Bidirectional mode if specified
+                    self.__bi_mode = value
+                else:
+                    # otherwise disable it and raise error
+                    self.__bi_mode = False
+                    logger.warning("Bidirectional data transmission is disabled!")
+                    raise ValueError(
+                        "[NetGear:ERROR] :: `{}` pattern is not valid when Bidirectional Mode is enabled. Kindly refer Docs for more Information!".format(
+                            pattern
+                        )
+                    )
+
+            # handle secure mode
             elif (
                 key == "secure_mode"
                 and isinstance(value, int)
@@ -289,26 +306,11 @@ class NetGear:
                 ), "[NetGear:ERROR] :: Permission Denied!, cannot write ZMQ authentication certificates to '{}' directory!".format(
                     value
                 )
-
             elif key == "overwrite_cert" and isinstance(value, bool):
                 # enable/disable auth certificate overwriting in secure mode
                 overwrite_cert = value
 
-            elif key == "bidirectional_mode" and isinstance(value, bool):
-                # check if pattern is valid
-                if pattern < 2:
-                    # activate bi-directional mode if specified
-                    self.__bi_mode = value
-                else:
-                    # otherwise disable it and raise error
-                    self.__bi_mode = False
-                    logger.critical("Bi-Directional data transmission is disabled!")
-                    raise ValueError(
-                        "[NetGear:ERROR] :: `{}` pattern is not valid when Bi-Directional Mode is enabled. Kindly refer Docs for more Information!".format(
-                            pattern
-                        )
-                    )
-
+            # handle ssh-tunneling mode
             elif key == "ssh_tunnel_mode" and isinstance(value, str):
                 # enable SSH Tunneling Mode
                 self.__ssh_tunnel_mode = value.strip()
@@ -325,6 +327,7 @@ class NetGear:
                         )
                     )
 
+            # handle jpeg compression
             elif key == "jpeg_compression" and isinstance(value, (bool, str)):
                 if isinstance(value, str) and value.strip().upper() in [
                     "RGB",
@@ -373,7 +376,7 @@ class NetGear:
                 else:
                     logger.warning("Invalid `request_timeout` value skipped!")
 
-            # assign ZMQ flags
+            # handle ZMQ flags
             elif key == "flag" and isinstance(value, int):
                 self.__msg_flag = value
             elif key == "copy" and isinstance(value, bool):
@@ -483,12 +486,12 @@ class NetGear:
                 "[NetGear:ERROR] :: Multi-Client and Multi-Server Mode cannot be enabled simultaneously!"
             )
         elif self.__multiserver_mode or self.__multiclient_mode:
-            # check if Bi-directional Mode also enabled
+            # check if Bidirectional Mode also enabled
             if self.__bi_mode:
                 # disable bi_mode if enabled
                 self.__bi_mode = False
                 logger.warning(
-                    "Bi-Directional Data Transmission is disabled when {} Mode is Enabled due to incompatibility!".format(
+                    "Bidirectional Data Transmission is disabled when {} Mode is Enabled due to incompatibility!".format(
                         "Multi-Server" if self.__multiserver_mode else "Multi-Client"
                     )
                 )
@@ -501,13 +504,13 @@ class NetGear:
                     )
                 )
         elif self.__bi_mode:
-            # log Bi-directional mode activation
+            # log Bidirectional mode activation
             if self.__logging:
                 logger.debug(
-                    "Bi-Directional Data Transmission is enabled for this connection!"
+                    "Bidirectional Data Transmission is enabled for this connection!"
                 )
         elif self.__ssh_tunnel_mode:
-            # log Bi-directional mode activation
+            # log Bidirectional mode activation
             if self.__logging:
                 logger.debug(
                     "SSH Tunneling is enabled for host:`{}` with `{}` back-end.".format(
@@ -669,7 +672,7 @@ class NetGear:
                 else:
                     if self.__bi_mode:
                         logger.critical(
-                            "Failed to activate Bi-Directional Mode for this connection!"
+                            "Failed to activate Bidirectional Mode for this connection!"
                         )
                     raise RuntimeError(
                         "[NetGear:ERROR] :: Receive Mode failed to bind address: {} and pattern: {}! Kindly recheck all parameters.".format(
@@ -887,7 +890,7 @@ class NetGear:
                 else:
                     if self.__bi_mode:
                         logger.critical(
-                            "Failed to activate Bi-Directional Mode for this connection!"
+                            "Failed to activate Bidirectional Mode for this connection!"
                         )
                     if self.__ssh_tunnel_mode:
                         logger.critical(
@@ -1041,7 +1044,7 @@ class NetGear:
                         self.__return_data, np.ndarray
                     ):
                         # handle return data for compression
-                        return_data = self.__return_data[:]
+                        return_data = np.copy(self.__return_data)
 
                         # check whether exit_flag is False
                         if not (return_data.flags["C_CONTIGUOUS"]):
@@ -1164,7 +1167,7 @@ class NetGear:
                 else:
                     # append recovered unique port and frame to queue
                     self.__queue.append((msg_json["port"], frame))
-            # extract if any message from server if Bi-Directional Mode is enabled
+            # extract if any message from server if Bidirectional Mode is enabled
             elif self.__bi_mode:
                 if msg_json["message"]:
                     # append grouped frame and data to queue
@@ -1193,7 +1196,7 @@ class NetGear:
                 "[NetGear:ERROR] :: `recv()` function cannot be used while receive_mode is disabled. Kindly refer vidgear docs!"
             )
 
-        # handle bi-directional return data
+        # handle Bidirectional return data
         if (self.__bi_mode or self.__multiclient_mode) and not (return_data is None):
             self.__return_data = return_data
 
@@ -1298,7 +1301,7 @@ class NetGear:
 
         # check if synchronous patterns, then wait for confirmation
         if self.__pattern < 2:
-            # check if bi-directional data transmission is enabled
+            # check if Bidirectional data transmission is enabled
             if self.__bi_mode or self.__multiclient_mode:
 
                 # handles return data

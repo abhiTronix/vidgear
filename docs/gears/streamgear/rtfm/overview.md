@@ -39,6 +39,11 @@ This mode provide [`stream()`](../../../../bonus/reference/streamgear/#vidgear.g
 
 &emsp;
 
+!!! new "New in v0.2.2" 
+
+    Apple HLS support was added in `v0.2.2`.
+
+
 !!! alert "Real-time Frames Mode is NOT Live-Streaming."
 
     Rather, you can easily enable live-streaming in Real-time Frames Mode by using StreamGear API's exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. Checkout its [usage example here](../usage/#bare-minimum-usage-with-live-streaming).

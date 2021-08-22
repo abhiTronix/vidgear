@@ -40,7 +40,7 @@ from requests.packages.urllib3.util.retry import Retry
 
 def logger_handler():
     """
-    ### logger_handler
+    ## logger_handler
 
     Returns the logger handler
 
@@ -115,7 +115,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 
 def mkdir_safe(dir, logging=False):
     """
-    ### mkdir_safe
+    ## mkdir_safe
 
     Safely creates directory at given path.
 
@@ -136,7 +136,7 @@ def mkdir_safe(dir, logging=False):
 
 def capPropId(property, logging=True):
     """
-    ### capPropId
+    ## capPropId
 
     Retrieves the OpenCV property's Integer(Actual) value from string.
 
@@ -159,7 +159,7 @@ def capPropId(property, logging=True):
 
 def retrieve_best_interpolation(interpolations):
     """
-    ### retrieve_best_interpolation
+    ## retrieve_best_interpolation
     Retrieves best interpolation for resizing
 
     Parameters:
@@ -176,7 +176,7 @@ def retrieve_best_interpolation(interpolations):
 
 def create_blank_frame(frame=None, text="", logging=False):
     """
-    ### create_blank_frame
+    ## create_blank_frame
 
     Create blank frames of given frame size with text
 
@@ -215,7 +215,7 @@ def create_blank_frame(frame=None, text="", logging=False):
 
 async def reducer(frame=None, percentage=0, interpolation=cv2.INTER_LANCZOS4):
     """
-    ### reducer
+    ## reducer
 
     Asynchronous method that reduces frame size by given percentage.
 
@@ -256,7 +256,7 @@ async def reducer(frame=None, percentage=0, interpolation=cv2.INTER_LANCZOS4):
 
 def generate_webdata(path, c_name="webgear", overwrite_default=False, logging=False):
     """
-    ### generate_webdata
+    ## generate_webdata
 
     Auto-Generates, and Auto-validates default data for WebGear API.
 
@@ -330,7 +330,7 @@ def generate_webdata(path, c_name="webgear", overwrite_default=False, logging=Fa
 
 def download_webdata(path, c_name="webgear", files=[], logging=False):
     """
-    ### download_webdata
+    ## download_webdata
 
     Downloads given list of files for WebGear API(if not available) from GitHub Server,
     and also Validates them.
@@ -398,7 +398,7 @@ def download_webdata(path, c_name="webgear", files=[], logging=False):
 
 def validate_webdata(path, files=[], logging=False):
     """
-    ### validate_auth_keys
+    ## validate_auth_keys
 
     Validates, and also maintains downloaded list of files.
 

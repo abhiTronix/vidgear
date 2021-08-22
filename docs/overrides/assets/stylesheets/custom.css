@@ -156,11 +156,9 @@ limitations under the License.
 }
 
 
-code {
-	word-break: keep-all !important;
-}
 td {
 	vertical-align: middle !important;
+	text-align: center !important;
 }
 th {
 	font-weight: bold !important;
@@ -191,7 +189,6 @@ th {
 	overflow: hidden;
 }
 .md-version__current {
-	text-transform: uppercase;
 	font-weight: bolder;
 }
 .md-typeset .task-list-control .task-list-indicator::before {

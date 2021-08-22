@@ -101,3 +101,32 @@ limitations under the License.
 ::: vidgear.gears.helper.get_video_bitrate
 
 &nbsp;
+
+::: vidgear.gears.helper.check_WriteAccess
+
+&nbsp;
+
+::: vidgear.gears.helper.check_open_port
+
+&nbsp;
+
+::: vidgear.gears.helper.delete_file_safe
+
+&nbsp;
+
+::: vidgear.gears.helper.get_supported_demuxers
+
+&nbsp;
+
+::: vidgear.gears.helper.get_supported_vencoders
+
+&nbsp;
+
+::: vidgear.gears.helper.youtube_url_validator
+
+&nbsp;
+
+
+::: vidgear.gears.helper.validate_auth_keys
+
+&nbsp;

@@ -118,6 +118,8 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
 
     !!! warning "While providing additional av-source with `-i` FFmpeg parameter in `output_params` make sure it don't interfere with WriteGear's frame pipeline otherwise it will break things!"
 
+    !!! error "All ffmpeg parameters are case-sensitive. Remember to double check every parameter if any error occurs."
+
     !!! tip "Kindly check [H.264 docs ➶](https://trac.ffmpeg.org/wiki/Encode/H.264) and other [FFmpeg Docs ➶](https://ffmpeg.org/documentation.html) for more information on these parameters"
 
     ```python

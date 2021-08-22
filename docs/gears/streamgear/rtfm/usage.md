@@ -266,7 +266,9 @@ You can easily activate ==Low-latency Livestreaming in Real-time Frames Mode==, 
 
 ## Bare-Minimum Usage with RGB Mode
 
-In Real-time Frames Mode, StreamGear API provide [`rgb_mode`](../../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) boolean parameter with its `stream()` function, which if enabled _(i.e. `rgb_mode=True`)_, specifies that incoming frames are of RGB format _(instead of default BGR format)_, thereby also known as ==RGB Mode==. The complete usage example is as follows:
+In Real-time Frames Mode, StreamGear API provide [`rgb_mode`](../../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) boolean parameter with its `stream()` function, which if enabled _(i.e. `rgb_mode=True`)_, specifies that incoming frames are of RGB format _(instead of default BGR format)_, thereby also known as ==RGB Mode==.
+
+The complete usage example is as follows:
 
 === "DASH"
 
@@ -373,7 +375,9 @@ In Real-time Frames Mode, StreamGear API provide [`rgb_mode`](../../../../../bon
 
 ## Bare-Minimum Usage with controlled Input-framerate
 
-In Real-time Frames Mode, StreamGear API provides exclusive [`-input_framerate`](../../params/#a-exclusive-parameters)  attribute for its `stream_params` dictionary parameter, that allow us to set the assumed constant framerate for incoming frames. In this example, we will retrieve framerate from webcam video-stream, and set it as value for `-input_framerate` attribute in StreamGear:
+In Real-time Frames Mode, StreamGear API provides exclusive [`-input_framerate`](../../params/#a-exclusive-parameters)  attribute for its `stream_params` dictionary parameter, that allow us to set the assumed constant framerate for incoming frames. 
+
+In this example, we will retrieve framerate from webcam video-stream, and set it as value for `-input_framerate` attribute in StreamGear:
 
 !!! danger "Remember, Input framerate default to `25.0` fps if [`-input_framerate`](../../params/#a-exclusive-parameters) attribute value not defined in Real-time Frames mode."
 
@@ -486,7 +490,9 @@ In Real-time Frames Mode, StreamGear API provides exclusive [`-input_framerate`]
 
 ## Bare-Minimum Usage with OpenCV
 
-You can easily use StreamGear API directly with any other Video Processing library(_For e.g. [OpenCV](https://github.com/opencv/opencv) itself_) in Real-time Frames Mode. The complete usage example is as follows:
+You can easily use StreamGear API directly with any other Video Processing library(_For e.g. [OpenCV](https://github.com/opencv/opencv) itself_) in Real-time Frames Mode. 
+
+The complete usage example is as follows:
 
 !!! tip "This just a bare-minimum example with OpenCV, but any other Real-time Frames Mode feature/example will work in the similar manner."
 
@@ -593,7 +599,11 @@ You can easily use StreamGear API directly with any other Video Processing libra
 
 ## Usage with Additional Streams
 
-Similar to Single-Source Mode, you can easily generate any number of additional Secondary Streams of variable bitrates or spatial resolutions, using exclusive [`-streams`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter _(More detailed information can be found [here ➶](../../params/#a-exclusive-parameters))_ in Real-time Frames Mode. The complete example is as follows:
+Similar to Single-Source Mode, you can easily generate any number of additional Secondary Streams of variable bitrates or spatial resolutions, using exclusive [`-streams`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. You just need to add each resolution and bitrate/framerate as list of dictionaries to this attribute, and rest is done automatically.
+
+!!! info "A more detailed information on `-streams` attribute can be found [here ➶](../../params/#a-exclusive-parameters)" 
+
+The complete example is as follows:
 
 !!! danger "Important `-streams` attribute Information"
     * On top of these additional streams, StreamGear by default, generates a primary stream of same resolution and framerate[^1] as the input, at the index `0`.
@@ -725,7 +735,9 @@ Similar to Single-Source Mode, you can easily generate any number of additional 
 
 ## Usage with File Audio-Input
 
-In Real-time Frames Mode, if you want to add audio to your streams, you've to use exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. You need to input the path of your audio file to this attribute as `string` value, and StreamGear API will automatically validate and map it to all generated streams. The complete example is as follows:
+In Real-time Frames Mode, if you want to add audio to your streams, you've to use exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. You just need to input the path of your audio file to this attribute as `string` value, and the API will automatically validate as well as maps it to all generated streams. 
+
+The complete example is as follows:
 
 !!! failure "Make sure this `-audio` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
 
@@ -858,7 +870,9 @@ In Real-time Frames Mode, if you want to add audio to your streams, you've to us
 
 ## Usage with Device Audio-Input
 
-In Real-time Frames Mode, you've can also use exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter for streaming live audio from external device. You need to format your audio device name followed by suitable demuxer as `list` and assign to this attribute, and StreamGear API will automatically validate and map it to all generated streams. The complete example is as follows:
+In Real-time Frames Mode, you've can also use exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter for streaming live audio from external device. You just need to format your audio device name followed by suitable demuxer as `list` and assign to this attribute, and the API will automatically validate as well as map it to all generated streams. 
+
+The complete example is as follows:
 
 
 !!! alert "Example Assumptions"
@@ -867,7 +881,7 @@ In Real-time Frames Mode, you've can also use exclusive [`-audio`](../../params/
     * There's a audio device with named `"Microphone (USB2.0 Camera)"` connected to your windows machine.
 
 
-??? tip "Using `-audio` attribute on different OS platforms"
+??? tip "Using devices with `-audio` attribute on different OS platforms"
     
     === "On Windows"
 
@@ -1007,8 +1021,8 @@ In Real-time Frames Mode, you've can also use exclusive [`-audio`](../../params/
             {
                 "-resolution": "1280x720",
                 "-video_bitrate": "4000k",
-            },  # Stream1: 1920x1080 at 4000kbs bitrate
-            {"-resolution": "640x360", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
+            },  # Stream1: 1280x720 at 4000kbs bitrate
+            {"-resolution": "640x360", "-framerate": 30.0},  # Stream2: 640x360 at 30fps
         ],
         "-input_framerate": stream.framerate,  # controlled framerate for audio-video sync !!! don't forget this line !!!
         "-audio": [
@@ -1072,8 +1086,8 @@ In Real-time Frames Mode, you've can also use exclusive [`-audio`](../../params/
             {
                 "-resolution": "1280x720",
                 "-video_bitrate": "4000k",
-            },  # Stream1: 1920x1080 at 4000kbs bitrate
-            {"-resolution": "640x360", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
+            },  # Stream1: 1280x720 at 4000kbs bitrate
+            {"-resolution": "640x360", "-framerate": 30.0},  # Stream2: 640x360 at 30fps
         ],
         "-input_framerate": stream.framerate,  # controlled framerate for audio-video sync !!! don't forget this line !!!
         "-audio": [

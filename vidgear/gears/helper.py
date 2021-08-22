@@ -57,7 +57,7 @@ except ImportError:
 
 def logger_handler():
     """
-    ### logger_handler
+    ## logger_handler
 
     Returns the logger handler
 
@@ -131,7 +131,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 
 def restore_levelnames():
     """
-    ### restore_levelnames
+    ## restore_levelnames
 
     Auxiliary method to restore logger levelnames.
     """
@@ -148,7 +148,7 @@ def restore_levelnames():
 
 def check_CV_version():
     """
-    ### check_CV_version
+    ## check_CV_version
 
     **Returns:** OpenCV's version first bit
     """
@@ -160,7 +160,7 @@ def check_CV_version():
 
 def check_open_port(address, port=22):
     """
-    ### check_open_port
+    ## check_open_port
 
     Checks whether specified port open at given IP address.
 
@@ -181,7 +181,7 @@ def check_open_port(address, port=22):
 
 def check_WriteAccess(path, is_windows=False):
     """
-    ### check_WriteAccess
+    ## check_WriteAccess
 
     Checks whether given path directory has Write-Access.
 
@@ -212,7 +212,7 @@ def check_WriteAccess(path, is_windows=False):
 
 def check_gstreamer_support(logging=False):
     """
-    ### check_gstreamer_support
+    ## check_gstreamer_support
 
     Checks whether OpenCV is compiled with Gstreamer(`>=1.0.0`) support.
 
@@ -239,7 +239,7 @@ def check_gstreamer_support(logging=False):
 
 def get_supported_resolution(value, logging=False):
     """
-    ### get_supported_resolution
+    ## get_supported_resolution
 
     Parameters:
         value (string): value to be validated
@@ -285,7 +285,7 @@ def get_supported_resolution(value, logging=False):
 
 def dimensions_to_resolutions(value):
     """
-    ### dimensions_to_resolutions
+    ## dimensions_to_resolutions
 
     Parameters:
         value (list): list of dimensions (e.g. `640x360`)
@@ -301,6 +301,7 @@ def dimensions_to_resolutions(value):
         "1920x1080": "1080p",
         "2560x1440": "1440p",
         "3840x2160": "2160p",
+        "7680x4320": "4320p",
     }
     return (
         list(map(supported_resolutions.get, value, value))
@@ -311,7 +312,7 @@ def dimensions_to_resolutions(value):
 
 def get_supported_vencoders(path):
     """
-    ### get_supported_vencoders
+    ## get_supported_vencoders
 
     Find and returns FFmpeg's supported video encoders
 
@@ -332,13 +333,35 @@ def get_supported_vencoders(path):
     finder = re.compile(r"[A-Z]*[\.]+[A-Z]*\s[a-z0-9_-]*")
     # find all outputs
     outputs = finder.findall("\n".join(supported_vencoders))
-    # return outputs
+    # return output findings
     return [[s for s in o.split(" ")][-1] for o in outputs]
+
+
+def get_supported_demuxers(path):
+    """
+    ## get_supported_demuxers
+
+    Find and returns FFmpeg's supported demuxers
+
+    Parameters:
+        path (string): absolute path of FFmpeg binaries
+
+    **Returns:** List of supported demuxers.
+    """
+    demuxers = check_output([path, "-hide_banner", "-demuxers"])
+    splitted = [x.decode("utf-8").strip() for x in demuxers.split(b"\n")]
+    supported_demuxers = splitted[splitted.index("--") + 1 : len(splitted) - 1]
+    # compile regex
+    finder = re.compile(r"\s\s[a-z0-9_,-]+\s+")
+    # find all outputs
+    outputs = finder.findall("\n".join(supported_demuxers))
+    # return output findings
+    return [o.strip() for o in outputs]
 
 
 def is_valid_url(path, url=None, logging=False):
     """
-    ### is_valid_url
+    ## is_valid_url
 
     Checks URL validity by testing its scheme against
     FFmpeg's supported protocols
@@ -359,7 +382,8 @@ def is_valid_url(path, url=None, logging=False):
     protocols = check_output([path, "-hide_banner", "-protocols"])
     splitted = [x.decode("utf-8").strip() for x in protocols.split(b"\n")]
     supported_protocols = splitted[splitted.index("Output:") + 1 : len(splitted) - 1]
-    supported_protocols += ["rtsp"]  # rtsp not included somehow
+    # rtsp is a demuxer somehow
+    supported_protocols += ["rtsp"] if "rtsp" in get_supported_demuxers(path) else []
     # Test and return result whether scheme is supported
     if extracted_scheme_url and extracted_scheme_url in supported_protocols:
         if logging:
@@ -376,7 +400,7 @@ def is_valid_url(path, url=None, logging=False):
 
 def validate_video(path, video_path=None, logging=False):
     """
-    ### validate_video
+    ## validate_video
 
     Validates video by retrieving resolution/size and framerate from file.
 
@@ -415,7 +439,7 @@ def validate_video(path, video_path=None, logging=False):
 
 def create_blank_frame(frame=None, text="", logging=False):
     """
-    ### create_blank_frame
+    ## create_blank_frame
 
     Create blank frames of given frame size with text
 
@@ -454,7 +478,7 @@ def create_blank_frame(frame=None, text="", logging=False):
 
 def extract_time(value):
     """
-    ### extract_time
+    ## extract_time
 
     Extract time from give string value.
 
@@ -483,7 +507,7 @@ def extract_time(value):
 
 def validate_audio(path, source=None):
     """
-    ### validate_audio
+    ## validate_audio
 
     Validates audio by retrieving audio-bitrate from file.
 
@@ -532,7 +556,7 @@ def validate_audio(path, source=None):
 
 def get_video_bitrate(width, height, fps, bpp):
     """
-    ### get_video_bitrate
+    ## get_video_bitrate
 
     Calculate optimum Bitrate from resolution, framerate, bits-per-pixels values
 
@@ -549,7 +573,7 @@ def get_video_bitrate(width, height, fps, bpp):
 
 def delete_file_safe(file_path):
     """
-    ### delete_ext_safe
+    ## delete_ext_safe
 
     Safely deletes files at given path.
 
@@ -569,7 +593,7 @@ def delete_file_safe(file_path):
 
 def mkdir_safe(dir_path, logging=False):
     """
-    ### mkdir_safe
+    ## mkdir_safe
 
     Safely creates directory at given path.
 
@@ -591,7 +615,7 @@ def mkdir_safe(dir_path, logging=False):
 
 def delete_ext_safe(dir_path, extensions=[], logging=False):
     """
-    ### delete_ext_safe
+    ## delete_ext_safe
 
     Safely deletes files with given extensions at given path.
 
@@ -628,7 +652,7 @@ def delete_ext_safe(dir_path, extensions=[], logging=False):
 
 def capPropId(property, logging=True):
     """
-    ### capPropId
+    ## capPropId
 
     Retrieves the OpenCV property's Integer(Actual) value from string.
 
@@ -651,7 +675,7 @@ def capPropId(property, logging=True):
 
 def retrieve_best_interpolation(interpolations):
     """
-    ### retrieve_best_interpolation
+    ## retrieve_best_interpolation
     Retrieves best interpolation for resizing
 
     Parameters:
@@ -668,7 +692,7 @@ def retrieve_best_interpolation(interpolations):
 
 def youtube_url_validator(url):
     """
-    ### youtube_url_validator
+    ## youtube_url_validator
 
     Validates & extracts Youtube video ID from URL.
 
@@ -691,7 +715,7 @@ def youtube_url_validator(url):
 
 def reducer(frame=None, percentage=0, interpolation=cv2.INTER_LANCZOS4):
     """
-    ### reducer
+    ## reducer
 
     Reduces frame size by given percentage
 
@@ -732,7 +756,7 @@ def reducer(frame=None, percentage=0, interpolation=cv2.INTER_LANCZOS4):
 
 def dict2Args(param_dict):
     """
-    ### dict2Args
+    ## dict2Args
 
     Converts dictionary attributes to list(args)
 
@@ -763,7 +787,7 @@ def get_valid_ffmpeg_path(
     custom_ffmpeg="", is_windows=False, ffmpeg_download_path="", logging=False
 ):
     """
-    ### get_valid_ffmpeg_path
+    ## get_valid_ffmpeg_path
 
     Validate the given FFmpeg path/binaries, and returns a valid FFmpeg executable path.
 
@@ -856,7 +880,7 @@ def get_valid_ffmpeg_path(
 
 def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
     """
-    ### download_ffmpeg_binaries
+    ## download_ffmpeg_binaries
 
     Generates FFmpeg Static Binaries for windows(if not available)
 
@@ -939,7 +963,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
 
 def validate_ffmpeg(path, logging=False):
     """
-    ### validate_ffmpeg
+    ## validate_ffmpeg
 
     Validate FFmeg Binaries. returns `True` if tests are passed.
 
@@ -973,7 +997,7 @@ def validate_ffmpeg(path, logging=False):
 
 def check_output(*args, **kwargs):
     """
-    ### check_output
+    ## check_output
 
     Returns stdin output from subprocess module
     """
@@ -1012,7 +1036,7 @@ def check_output(*args, **kwargs):
 
 def generate_auth_certificates(path, overwrite=False, logging=False):
     """
-    ### generate_auth_certificates
+    ## generate_auth_certificates
 
     Auto-Generates, and Auto-validates CURVE ZMQ key-pairs for NetGear API's Secure Mode.
 
@@ -1124,7 +1148,7 @@ def generate_auth_certificates(path, overwrite=False, logging=False):
 
 def validate_auth_keys(path, extension):
     """
-    ### validate_auth_keys
+    ## validate_auth_keys
 
     Validates, and also maintains generated ZMQ CURVE Key-pairs.
 

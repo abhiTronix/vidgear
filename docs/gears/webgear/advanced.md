@@ -28,7 +28,7 @@ limitations under the License.
 
 ### Using WebGear with Variable Colorspace
 
-WebGear by default only supports "BGR" colorspace with consumer or client. But you can use [`jpeg_compression_colorspace`](../params/#webgear_rtc-specific-attributes) string attribute through its options dictionary parameter to specify incoming frames colorspace. 
+WebGear by default only supports "BGR" colorspace frames as input, but you can use [`jpeg_compression_colorspace`](../params/#webgear-specific-attributes) string attribute through its options dictionary parameter to specify incoming frames colorspace. 
 
 Let's implement a bare-minimum example using WebGear, where we will be sending [**GRAY**](https://en.wikipedia.org/wiki/Grayscale) frames to client browser:
 
@@ -37,7 +37,7 @@ Let's implement a bare-minimum example using WebGear, where we will be sending [
 
 !!! example "This example works in conjunction with [Source ColorSpace manipulation for VideoCapture Gears ➶](../../../../bonus/colorspace_manipulation/#source-colorspace-manipulation)"
 
-!!! info "Supported colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
+!!! info "Supported `jpeg_compression_colorspace` colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
 
 ```python
 # import required libraries
@@ -76,6 +76,8 @@ web.shutdown()
 
 WebGear allows you to easily define your own custom Source that you want to use to manipulate your frames before sending them onto the browser. 
 
+!!! warning "JPEG Frame-Compression and all of its [performance enhancing attributes](../usage/#performance-enhancements) are disabled with a Custom Source!"
+
 Let's implement a bare-minimum example with a Custom Source using WebGear API and OpenCV:
 
 
@@ -111,7 +113,7 @@ async def my_frame_producer():
         encodedImage = cv2.imencode(".jpg", frame)[1].tobytes()
         # yield frame in byte format
         yield (b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n")
-        await asyncio.sleep(0.0000001)
+        await asyncio.sleep(0)
     # close stream
     stream.release()
 

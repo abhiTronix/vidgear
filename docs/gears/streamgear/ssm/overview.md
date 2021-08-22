@@ -21,7 +21,7 @@ limitations under the License.
 # StreamGear API: Single-Source Mode
 
 <figure>
-  <img src="../../../../assets/images/streamgear_flow.webp" loading="lazy" alt="StreamGear Flow Diagram" class="center"/>
+  <img src="../../../../assets/images/streamgear_flow.webp" loading="lazy" alt="StreamGear Flow Diagram" />
   <figcaption>StreamGear API's generalized workflow</figcaption>
 </figure>
 
@@ -35,6 +35,13 @@ SteamGear supports both [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(D
 This mode provide [`transcode_source()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) function to process audio-video files into streamable chunks.
 
 This mode can be easily activated by assigning suitable video path as input to [`-video_source`](../../params/#a-exclusive-parameters) attribute of [`stream_params`](../../params/#stream_params) dictionary parameter, during StreamGear initialization.
+
+&emsp;
+
+!!! new "New in v0.2.2" 
+
+    Apple HLS support was added in `v0.2.2`.
+
 
 !!! warning 
 

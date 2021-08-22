@@ -328,6 +328,10 @@ Almost all FFmpeg parameter can be passed as dictionary attributes in `stream_pa
 
 !!! tip "Kindly check [H.264 docs ➶](https://trac.ffmpeg.org/wiki/Encode/H.264) and other [FFmpeg Docs ➶](https://ffmpeg.org/documentation.html) for more information on these parameters"
 
+
+!!! error "All ffmpeg parameters are case-sensitive. Remember to double check every parameter if any error occurs."
+
+
 !!! note "In addition to these parameters, almost any FFmpeg parameter _(supported by installed FFmpeg)_ is also supported. But make sure to read [**FFmpeg Docs**](https://ffmpeg.org/documentation.html) carefully first."
 
 ```python

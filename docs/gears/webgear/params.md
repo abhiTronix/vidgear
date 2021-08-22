@@ -122,7 +122,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 
  * **`jpeg_compression_colorspace`**: _(str)_ This internal attribute is used to specify incoming frames colorspace with compression. Its usage is as follows:
 
-    !!! info "Supported colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
+    !!! info "Supported `jpeg_compression_colorspace` colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
 
     !!! new "New in v0.2.2" 
         `enable_infinite_frames` attribute was added in `v0.2.2`.

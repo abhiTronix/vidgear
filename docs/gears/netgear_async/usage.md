@@ -100,7 +100,7 @@ async def main():
         key = cv2.waitKey(1) & 0xFF
 
         # await before continuing
-        await asyncio.sleep(0.00001)
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
@@ -162,7 +162,7 @@ async def main():
         key = cv2.waitKey(1) & 0xFF
 
         # await before continuing
-        await asyncio.sleep(0.00001)
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
@@ -223,7 +223,9 @@ if __name__ == "__main__":
 
 ## Using NetGear_Async with a Custom Source(OpenCV)
 
-NetGear_Async allows you to easily define your own custom Source at Server-end that you want to use to manipulate your frames before sending them onto the network. Let's implement a bare-minimum example with a Custom Source using NetGear_Async API and OpenCV:
+NetGear_Async allows you to easily define your own custom Source at Server-end that you want to use to manipulate your frames before sending them onto the network. 
+
+Let's implement a bare-minimum example with a Custom Source using NetGear_Async API and OpenCV:
 
 ### Server's End
 
@@ -237,7 +239,7 @@ from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
 
 # initialize Server without any source
-server = NetGear_Async(logging=True)
+server = NetGear_Async(source=None, logging=True)
 
 # Create a async frame generator as custom source
 async def my_frame_generator():
@@ -255,7 +257,6 @@ async def my_frame_generator():
 
         # check if frame empty
         if not grabbed:
-            # if True break the infinite loop
             break
 
         # do something with the frame to be sent here
@@ -263,7 +264,10 @@ async def my_frame_generator():
         # yield frame
         yield frame
         # sleep for sometime
-        await asyncio.sleep(0.00001)
+        await asyncio.sleep(0)
+        
+    # close stream
+    stream.release()
 
 
 if __name__ == "__main__":
@@ -313,7 +317,7 @@ async def main():
         key = cv2.waitKey(1) & 0xFF
 
         # await before continuing
-        await asyncio.sleep(0.01)
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
@@ -404,7 +408,7 @@ async def main():
         key = cv2.waitKey(1) & 0xFF
 
         # await before continuing
-        await asyncio.sleep(0.00001)
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
