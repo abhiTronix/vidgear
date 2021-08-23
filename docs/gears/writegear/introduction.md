@@ -45,7 +45,7 @@ WriteGear primarily operates in following modes:
 
 * [**Compression Mode**](../compression/overview/): In this mode, WriteGear utilizes powerful **FFmpeg** inbuilt encoders to encode lossless multimedia files. This mode provides us the ability to exploit almost any parameter available within FFmpeg, effortlessly and flexibly, and while doing that it robustly handles all errors/warnings quietly.
 
-* [**Non-Compression Mode**](../non_compression/overview/): In this mode, WriteGear utilizes basic **OpenCV's inbuilt VideoWriter API** tools. This mode also supports all parameters manipulation available within VideoWriter API, but it lacks the ability to manipulate encoding parameters and other important features like video compression, audio encoding, etc.
+* [**Non-Compression Mode**](../non_compression/overview/): In this mode, WriteGear utilizes basic **OpenCV's inbuilt VideoWriter API** tools. This mode also supports all parameter transformations available within OpenCV's VideoWriter API, but it lacks the ability to manipulate encoding parameters and other important features like video compression, audio encoding, etc.
 
 
 &thinsp; 

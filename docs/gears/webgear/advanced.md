@@ -74,7 +74,7 @@ web.shutdown()
 !!! new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
-WebGear allows you to easily define your own custom Source that you want to use to manipulate your frames before sending them onto the browser. 
+WebGear allows you to easily define your own custom Source that you want to use to transform your frames before sending them onto the browser. 
 
 !!! warning "JPEG Frame-Compression and all of its [performance enhancing attributes](../usage/#performance-enhancements) are disabled with a Custom Source!"
 

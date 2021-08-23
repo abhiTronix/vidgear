@@ -20,17 +20,22 @@ limitations under the License.
 
 # Source Tweak Parameters for CamGear API 
 
-&thinsp;
+<figure>
+  <img src="../../../../assets/images/stream_tweak.png" loading="lazy" alt="Source Tweak Parameters" />
+</figure>
 
 ## Overview
 
-The [`options`](../../params/#options) dictionary parameter in CamGear, gives user the ability to alter various **Source Tweak Parameters** available within [OpenCV's VideoCapture Class](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80). These tweak parameters can be used to manipulate input source Camera-Device properties _(such as its brightness, saturation, size, iso, gain etc.)_ seamlessly. Thereby, All Source Tweak Parameters supported by CamGear API are disscussed in this document.
+The [`options`](../../params/#options) dictionary parameter in CamGear gives user the ability to alter various parameters available within [OpenCV's VideoCapture Class](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80). 
+
+These tweak parameters can be used to transform input Camera-Source properties _(such as its brightness, saturation, size, iso, gain etc.)_ seamlessly. All parameters supported by CamGear API are disscussed in this document.
 
 &emsp; 
 
-!!! quote ""
 
-	### Exclusive CamGear Parameters
+### Exclusive CamGear Parameters
+
+!!! quote ""
 
 	In addition to Source Tweak Parameters, CamGear also provides some exclusive attributes for its [`options`](../../params/#options) dictionary parameters. These attributes are as follows:
 

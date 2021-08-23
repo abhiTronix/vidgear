@@ -186,7 +186,7 @@ stream.stop()
 
 ## Using CamGear with Variable Camera Properties
 
-CamGear API also flexibly support various **Source Tweak Parameters** available within [OpenCV's VideoCapture API](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d). These tweak parameters can be used to manipulate input source Camera-Device properties _(such as its brightness, saturation, size, iso, gain etc.)_ seamlessly, and can be easily applied in CamGear API through its `options` dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
+CamGear API also flexibly support various **Source Tweak Parameters** available within [OpenCV's VideoCapture API](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d). These tweak parameters can be used to transform input source Camera-Device properties _(such as its brightness, saturation, size, iso, gain etc.)_ seamlessly, and can be easily applied in CamGear API through its `options` dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
 
 
 !!! tip "All the supported Source Tweak Parameters can be found [here ➶](../advanced/source_params/#source-tweak-parameters-for-camgear-api)"

@@ -64,7 +64,7 @@ web.shutdown()
 
 ## Using WebGear_RTC with a Custom Source(OpenCV)
 
-WebGear_RTC allows you to easily define your own Custom Media Server with a custom source that you want to use to manipulate your frames before sending them onto the browser. 
+WebGear_RTC allows you to easily define your own Custom Media Server with a custom source that you want to use to transform your frames before sending them onto the browser. 
 
 Let's implement a bare-minimum example with a Custom Source using WebGear_RTC API and OpenCV:
 

@@ -223,7 +223,7 @@ if __name__ == "__main__":
 
 ## Using NetGear_Async with a Custom Source(OpenCV)
 
-NetGear_Async allows you to easily define your own custom Source at Server-end that you want to use to manipulate your frames before sending them onto the network. 
+NetGear_Async allows you to easily define your own custom Source at Server-end that you want to use to transform your frames before sending them onto the network. 
 
 Let's implement a bare-minimum example with a Custom Source using NetGear_Async API and OpenCV:
 

@@ -54,7 +54,7 @@ class NetGear_Async:
     system.
 
     NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to NetGear API. Furthermore, NetGear_Async allows us to define
-     our custom Server as source to manipulate frames easily before sending them across the network.
+     our custom Server as source to transform frames easily before sending them across the network.
 
     NetGear_Async now supports additional [**bidirectional data transmission**](../advanced/bidirectional_mode) between receiver(client) and sender(server) while transferring frames.
     Users can easily build complex applications such as like [Real-Time Video Chat](../advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer) in just few lines of code.

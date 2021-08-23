@@ -39,7 +39,7 @@ SteamGear currently supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/
 
 SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ or a Master Playlist _(such as M3U8 in-case of Apple HLS)_ besides segments that describe these segment information _(timing, URL, media characteristics like video resolution and adaptive bit rates)_ and is provided to the client before the streaming session.
 
-!!! tip "For streaming with older traditional protocols such as RTMP, RTSP/RTP you could use [WriteGear](../../writegear/introduction/) API instead."
+!!! alert "For streaming with older traditional protocols such as RTMP, RTSP/RTP you could use [WriteGear](../../writegear/introduction/) API instead."
 
 &thinsp;
 
@@ -52,9 +52,16 @@ SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ or a Mast
 	
 	* StreamGear **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../ffmpeg_install/) for its installation.
 
-	* :warning: StreamGear API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system.
+	* :warning: StreamGear API will throw **RuntimeError**, if it fails to detect valid FFmpeg executable on your system.
 
 	* It is advised to enable logging _([`logging=True`](../params/#logging))_ on the first run for easily identifying any runtime errors.
+
+!!! tip "Useful Links"
+    
+    - Checkout [this detailed blogpost](https://ottverse.com/mpeg-dash-video-streaming-the-complete-guide/) on how MPEG-DASH works.
+    - Checkout [this detailed blogpost](https://ottverse.com/hls-http-live-streaming-how-does-it-work/) on how HLS works.
+    - Checkout [this detailed blogpost](https://ottverse.com/hls-http-live-streaming-how-does-it-work/) for HLS vs. MPEG-DASH comparison.
+
 
 &thinsp; 
 
@@ -68,9 +75,9 @@ StreamGear primarily operates in following independent modes for transcoding:
     Rather, you can enable live-streaming in Real-time Frames Mode by using using exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter in StreamGear API. Checkout [this usage example](../rtfm/usage/#bare-minimum-usage-with-live-streaming) for more information.
 
 
-- [**Single-Source Mode**](../ssm/overview): In this mode, StreamGear transcodes entire video/audio file _(as opposed to frames by frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well, when you're transcoding lossless long-duration videos(with audio) for streaming and required no extra efforts or interruptions. But on the downside, the provided source cannot be changed or manipulated before sending onto FFmpeg Pipeline for processing. 
+- [**Single-Source Mode**](../ssm/overview): In this mode, StreamGear **transcodes entire video file** _(as opposed to frame-by-frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well when you're transcoding long-duration lossless videos(with audio) for streaming that required no interruptions. But on the downside, the provided source cannot be flexibly manipulated or transformed before sending onto FFmpeg Pipeline for processing. 
 
-- [**Real-time Frames Mode**](../rtfm/overview): In this mode, StreamGear directly transcodes video-frames _(as opposed to a entire file)_, into a sequence of multiple smaller chunks/segments for streaming. In this mode, StreamGear supports real-time [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames, and process them over FFmpeg pipeline. But on the downside, audio has to added manually _(as separate source)_ for streams. 
+- [**Real-time Frames Mode**](../rtfm/overview): In this mode, StreamGear directly **transcodes frame-by-frame** _(as opposed to a entire video file)_, into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well when you desire to flexibility manipulate or transform [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames in real-time before sending them onto FFmpeg Pipeline for processing. But on the downside, audio has to added manually _(as separate source)_ for streams. 
 
 &thinsp; 
 
@@ -124,15 +131,6 @@ from vidgear.gears import StreamGear
 &thinsp;
 
 ## Recommended Players
-
-!!! tip "Useful Links"
-    
-    - Checkout [this detailed blogpost](https://ottverse.com/mpeg-dash-video-streaming-the-complete-guide/) on how MPEG-DASH works.
-
-    - Checkout [this detailed blogpost](https://ottverse.com/hls-http-live-streaming-how-does-it-work/) on how HLS works.
-
-    - Checkout [this detailed blogpost](https://ottverse.com/hls-http-live-streaming-how-does-it-work/) for HLS vs. MPEG-DASH comparsion.
-    
 
 === "GUI Players"
     - [x] **[MPV Player](https://mpv.io/):** _(recommended)_ MPV is a free, open source, and cross-platform media player. It supports a wide variety of media file formats, audio and video codecs, and subtitle types. 

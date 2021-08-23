@@ -287,7 +287,7 @@ class WebGear_RTC:
     WebGear_RTC can handle multiple consumers seamlessly and provides native support for ICE (Interactive Connectivity Establishment)
     protocol, STUN (Session Traversal Utilities for NAT), and TURN (Traversal Using Relays around NAT) servers that help us to easily
     establish direct media connection with the remote peers for uninterrupted data flow. It also allows us to define our custom Server
-    as a source to manipulate frames easily before sending them across the network(see this doc example).
+    as a source to transform frames easily before sending them across the network(see this doc example).
 
     WebGear_RTC API works in conjunction with Starlette ASGI application and can also flexibly interact with Starlette's ecosystem of
     shared middleware, mountable applications, Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.

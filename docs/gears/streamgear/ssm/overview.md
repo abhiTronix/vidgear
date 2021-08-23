@@ -21,18 +21,20 @@ limitations under the License.
 # StreamGear API: Single-Source Mode
 
 <figure>
-  <img src="../../../../assets/images/streamgear_flow.webp" loading="lazy" alt="StreamGear Flow Diagram" />
-  <figcaption>StreamGear API's generalized workflow</figcaption>
+  <img src="../../../../assets/images/streamgear_file.webp" loading="lazy" alt="Single-Source Mode Flow Diagram" />
+  <figcaption>Single-Source Mode generalized workflow</figcaption>
 </figure>
 
 
 ## Overview
 
-In this mode, StreamGear transcodes entire video/audio file _(as opposed to frames by frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well, when you're transcoding lossless long-duration videos(with audio) for streaming and required no extra efforts or interruptions. But on the downside, the provided source cannot be changed or manipulated before sending onto FFmpeg Pipeline for processing.
+In this mode, StreamGear transcodes entire audio-video file _(as opposed to frames-by-frame)_ into a sequence of multiple smaller chunks/segments for adaptive streaming. 
+
+This mode works exceptionally well when you're transcoding long-duration lossless videos(with audio) files for streaming that requires no interruptions. But on the downside, the provided source cannot be flexibly manipulated or transformed before sending onto FFmpeg Pipeline for processing.
 
 SteamGear supports both [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_  and [**Apple HLS**](https://developer.apple.com/documentation/http_live_streaming) _(HTTP Live Streaming)_ with this mode.
 
-This mode provide [`transcode_source()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) function to process audio-video files into streamable chunks.
+For this mode, StreamGear API provides exclusive [`transcode_source()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) method to easily process audio-video files into streamable chunks.
 
 This mode can be easily activated by assigning suitable video path as input to [`-video_source`](../../params/#a-exclusive-parameters) attribute of [`stream_params`](../../params/#stream_params) dictionary parameter, during StreamGear initialization.
 
