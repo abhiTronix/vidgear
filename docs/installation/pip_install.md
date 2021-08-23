@@ -29,6 +29,32 @@ limitations under the License.
 When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), you need to check manually if following dependencies are installed:
 
 
+??? alert "Latest `pip` Recommended"
+
+    It advised to install latest `pip` version before installing vidgear to avoid any undesired errors. Python comes with an [`ensurepip`](https://docs.python.org/3/library/ensurepip.html#module-ensurepip) module[^1], which can easily install `pip` in any Python environment.
+
+    === "Linux"
+
+        ```sh
+        python -m ensurepip --upgrade
+        
+        ```
+
+    === "MacOS"
+
+        ```sh
+        python -m ensurepip --upgrade
+        
+        ```
+
+    === "Windows"
+
+        ```sh
+        py -m ensurepip --upgrade
+        
+        ```
+
+
 ### Core Prerequisites
 
 * #### OpenCV 
@@ -49,6 +75,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
     ```sh
     pip install opencv-python       
     ```
+
 
 ### API Specific Prerequisites
 
@@ -162,3 +189,5 @@ pip install vidgear-0.2.2-py3-none-any.whl[asyncio]
 ```
 
 &nbsp;
+
+[^1]: The `ensurepip` module was added to the Python standard library in Python 3.4.

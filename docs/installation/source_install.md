@@ -31,6 +31,32 @@ When installing VidGear from source, FFmpeg and Aiortc are the only two API spec
 !!! question "What about rest of the dependencies?"
 
     Any other python dependencies _(Core/API specific)_ will be automatically installed based on your OS specifications.
+    
+
+??? alert "Latest `pip` Recommended"
+
+    It advised to install latest `pip` version before installing vidgear to avoid any undesired errors. Python comes with an [`ensurepip`](https://docs.python.org/3/library/ensurepip.html#module-ensurepip) module[^1], which can easily install `pip` in any Python environment.
+
+    === "Linux"
+
+        ```sh
+        python -m ensurepip --upgrade
+        
+        ```
+
+    === "MacOS"
+
+        ```sh
+        python -m ensurepip --upgrade
+        
+        ```
+
+    === "Windows"
+
+        ```sh
+        py -m ensurepip --upgrade
+        
+        ```
 
 
 ### API Specific Prerequisites
@@ -123,3 +149,6 @@ pip install git+git://github.com/abhiTronix/vidgear@testing#egg=vidgear[asyncio]
 ```
 
 &nbsp;
+
+
+[^1]: The `ensurepip` module was added to the Python standard library in Python 3.4.
