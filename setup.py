@@ -91,6 +91,7 @@ setup(
     install_requires=[
         "pafy{}".format(latest_version("pafy")),
         "mss{}".format(latest_version("mss")),
+        "cython",
         "numpy",
         "youtube-dl{}".format(latest_version("youtube-dl")),
         "streamlink",
@@ -98,7 +99,6 @@ setup(
         "pyzmq{}".format(latest_version("pyzmq")),
         "simplejpeg{}".format(latest_version("simplejpeg")),
         "colorlog",
-        "colorama",
         "tqdm",
         "Pillow",
         "pyscreenshot{}".format(latest_version("pyscreenshot")),
@@ -112,11 +112,10 @@ setup(
     extras_require={
         "asyncio": [
             "starlette{}".format(latest_version("starlette")),
-            "aiofiles",
             "jinja2",
-            "aiohttp",
             "uvicorn{}".format(latest_version("uvicorn")),
-            "msgpack_numpy",
+            "msgpack{}".format(latest_version("msgpack")),
+            "msgpack_numpy{}".format(latest_version("msgpack_numpy")),
             "aiortc{}".format(latest_version("aiortc")),
         ]
         + (

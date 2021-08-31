@@ -39,7 +39,7 @@ from .helper import (
 )
 
 # safe import critical Class modules
-zmq = import_dependency_safe("zmq", error="silent", min_version="4.0")
+zmq = import_dependency_safe("zmq", pkg_name="pyzmq", error="silent", min_version="4.0")
 if not (zmq is None):
     from zmq import ssh
     from zmq import auth

@@ -53,7 +53,7 @@ def logger_handler():
     """
     # logging formatter
     formatter = ColoredFormatter(
-        "%(bold_cyan)s%(asctime)s :: %(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
+        "%(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
         datefmt="%H:%M:%S",
         reset=True,
         log_colors={

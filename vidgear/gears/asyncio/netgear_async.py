@@ -36,7 +36,7 @@ from ..helper import logger_handler, import_dependency_safe
 from ..videogear import VideoGear
 
 # safe import critical Class modules
-zmq = import_dependency_safe("zmq", error="silent", min_version="4.0")
+zmq = import_dependency_safe("zmq", pkg_name="pyzmq", error="silent", min_version="4.0")
 if not (zmq is None):
     import zmq.asyncio
 msgpack = import_dependency_safe("msgpack", error="silent")

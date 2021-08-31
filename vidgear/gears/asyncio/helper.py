@@ -26,7 +26,6 @@ import cv2
 import sys
 import errno
 import numpy as np
-import aiohttp
 import asyncio
 import logging as log
 import platform
