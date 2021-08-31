@@ -18,24 +18,30 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-
 import cv2
 import sys
-import zmq
 import numpy as np
 import asyncio
 import inspect
 import logging as log
-import msgpack
 import string
 import secrets
 import platform
-import zmq.asyncio
-import msgpack_numpy as m
 from collections import deque
 
-from .helper import logger_handler
+# import helper packages
+from ..helper import logger_handler, import_dependency_safe
+
+# import additional API(s)
 from ..videogear import VideoGear
+
+# safe import critical Class modules
+zmq = import_dependency_safe("zmq", error="silent", min_version="4.0")
+if not (zmq is None):
+    import zmq.asyncio
+msgpack = import_dependency_safe("msgpack", error="silent")
+m = import_dependency_safe("msgpack_numpy", error="silent")
+uvloop = import_dependency_safe("uvloop", error="silent")
 
 # define logger
 logger = log.getLogger("NetGear_Async")
@@ -120,6 +126,10 @@ class NetGear_Async:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Tweak Parameters of NetGear_Async, CamGear, PiGear & Stabilizer.
         """
+        # raise error(s) for critical Class imports
+        import_dependency_safe("zmq" if zmq is None else "", min_version="4.0")
+        import_dependency_safe("msgpack" if msgpack is None else "")
+        import_dependency_safe("msgpack_numpy" if m is None else "")
 
         # enable logging if specified
         self.__logging = logging
@@ -284,14 +294,12 @@ class NetGear_Async:
             if sys.version_info[:2] >= (3, 8):
                 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         else:
-            try:
-                # import library
-                import uvloop
-
-                # Latest uvloop eventloop is only available for UNIX machines & python>=3.7.
+            if not (uvloop is None):
+                # Latest uvloop eventloop is only available for UNIX machines.
                 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-            except ImportError:
-                pass
+            else:
+                # log if not present
+                import_dependency_safe("uvloop", error="log")
 
         # Retrieve event loop and assign it
         self.loop = asyncio.get_event_loop()

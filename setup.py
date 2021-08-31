@@ -91,11 +91,9 @@ setup(
     install_requires=[
         "pafy{}".format(latest_version("pafy")),
         "mss{}".format(latest_version("mss")),
-        "numpy{}".format(
-            "<=1.19.5" if sys.version_info[:2] < (3, 7) else ""
-        ),  # dropped support for 3.6.x legacies
+        "numpy",
         "youtube-dl{}".format(latest_version("youtube-dl")),
-        "streamlink{}".format(latest_version("streamlink")),
+        "streamlink",
         "requests",
         "pyzmq{}".format(latest_version("pyzmq")),
         "simplejpeg{}".format(latest_version("simplejpeg")),
@@ -119,12 +117,8 @@ setup(
             "aiohttp",
             "uvicorn{}".format(latest_version("uvicorn")),
             "msgpack_numpy",
+            "aiortc{}".format(latest_version("aiortc")),
         ]
-        + (
-            ["aiortc{}".format(latest_version("aiortc"))]
-            if (platform.system() != "Windows")
-            else []
-        )
         + (
             (
                 ["uvloop{}".format(latest_version("uvloop"))]

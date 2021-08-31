@@ -33,7 +33,7 @@ from starlette.responses import PlainTextResponse
 from starlette.testclient import TestClient
 
 from vidgear.gears.asyncio import WebGear
-from vidgear.gears.asyncio.helper import logger_handler
+from vidgear.gears.helper import logger_handler
 
 # define test logger
 logger = log.getLogger("Test_webgear")

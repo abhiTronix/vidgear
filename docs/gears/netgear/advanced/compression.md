@@ -49,9 +49,9 @@ Frame Compression is enabled by default in NetGear, and can be easily controlled
 
 &nbsp;
 
-## Supported Attributes
+## Exclusive Attributes
 
-For implementing Frame Compression, NetGear API currently provide following attribute for its [`options`](../../params/#options) dictionary parameter to leverage performance with Frame Compression:
+For implementing Frame Compression, NetGear API currently provide following exclusive attribute for its [`options`](../../params/#options) dictionary parameter to leverage performance with Frame Compression:
 
 * `jpeg_compression`:  _(bool/str)_ This internal attribute is used to activate/deactivate JPEG Frame Compression as well as to specify incoming frames colorspace with compression. Its usage is as follows:
 

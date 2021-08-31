@@ -18,7 +18,6 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-
 import os
 import cv2
 import sys
@@ -26,6 +25,7 @@ import time
 import logging as log
 import subprocess as sp
 
+# import helper packages
 from .helper import (
     capPropId,
     dict2Args,
@@ -46,13 +46,13 @@ logger.setLevel(log.DEBUG)
 class WriteGear:
 
     """
-    WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data. 
+    WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data.
 
-    WriteGear API provides a complete, flexible, and robust wrapper around FFmpeg, a leading multimedia framework. WriteGear can process real-time frames into a lossless 
-    compressed video-file with any suitable specification (such asbitrate, codec, framerate, resolution, subtitles, etc.). It is powerful enough to perform complex tasks such as 
+    WriteGear API provides a complete, flexible, and robust wrapper around FFmpeg, a leading multimedia framework. WriteGear can process real-time frames into a lossless
+    compressed video-file with any suitable specification (such asbitrate, codec, framerate, resolution, subtitles, etc.). It is powerful enough to perform complex tasks such as
     Live-Streaming (such as for Twitch) and Multiplexing Video-Audio with real-time frames in way fewer lines of code.
 
-    Best of all, WriteGear grants users the complete freedom to play with any FFmpeg parameter with its exclusive Custom Commands function without relying on any 
+    Best of all, WriteGear grants users the complete freedom to play with any FFmpeg parameter with its exclusive Custom Commands function without relying on any
     third-party API.
 
     In addition to this, WriteGear also provides flexible access to OpenCV's VideoWriter API tools for video-frames encoding without compression.

@@ -21,16 +21,18 @@ limitations under the License.
 # Contains all the support functions/modules required by Vidgear packages
 
 # import the necessary packages
-
 import os
 import re
 import sys
+import cv2
+import types
 import errno
 import shutil
+import importlib
+import requests
 import numpy as np
 import logging as log
 import platform
-import requests
 import socket
 from tqdm import tqdm
 from contextlib import closing
@@ -39,20 +41,6 @@ from colorlog import ColoredFormatter
 from distutils.version import LooseVersion
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
-
-try:
-    # import OpenCV Binaries
-    import cv2
-
-    # check whether OpenCV Binaries are 3.x+
-    if LooseVersion(cv2.__version__) < LooseVersion("3"):
-        raise ImportError(
-            "[Vidgear:ERROR] :: Installed OpenCV API version(< 3.0) is not supported!"
-        )
-except ImportError:
-    raise ImportError(
-        "[Vidgear:ERROR] :: Failed to detect correct OpenCV executables, install it with `pip install opencv-python` command."
-    )
 
 
 def logger_handler():
@@ -105,6 +93,134 @@ logger = log.getLogger("Helper")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+
+
+def get_module_version(module=None):
+    """
+    ## get_module_version
+
+    Retrieves version of specified module
+
+    Parameters:
+        name (ModuleType): module of datatype `ModuleType`.
+
+    **Returns:** version of specified module as string
+    """
+    # check if module type is valid
+    assert not (module is None) and isinstance(
+        module, types.ModuleType
+    ), "[Vidgear:ERROR] :: Invalid module!"
+
+    # get version from attribute
+    version = getattr(module, "__version__", None)
+    # retry if failed
+    if version is None:
+        # some modules uses a capitalized attribute name
+        version = getattr(module, "__VERSION__", None)
+    # raise if still failed
+    if version is None:
+        raise ImportError(
+            "[Vidgear:ERROR] ::  Can't determine version for module: `{}`!".format(
+                module.__name__
+            )
+        )
+    return str(version)
+
+
+def import_dependency_safe(
+    name,
+    error="raise",
+    pkg_name=None,
+    min_version=None,
+    custom_message=None,
+):
+    """
+    ## import_dependency_safe
+
+    Imports specified dependency safely. By default(`error = raise`), if a dependency is missing,
+    an ImportError with a meaningful message will be raised. Otherwise if `error = log` a warning
+    will be logged and on `error = silent` everything will be quit. But If a dependency is present,
+    but older than specified, an error is raised if specified.
+
+    Parameters:
+        name (string): name of dependency to be imported.
+        error (string): raise or Log or silence ImportError. Possible values are `"raise"`, `"log"` and `silent`. Default is `"raise"`.
+        pkg_name (string): (Optional) package name of dependency(if different `pip` name). Otherwise `name` will be used.
+        min_version(string): (Optional) required minimum version of the dependency to be imported.
+        custom_message (string): (Optional) custom Import error message to be raised or logged.
+
+    **Returns:** The imported module, when found and the version is correct(if specified). Otherwise `None`.
+    """
+    # check specified parameters
+    sub_class = ""
+    if not name or not isinstance(name, str):
+        return None
+    else:
+        # extract name in case of relative import
+        name = name.strip()
+        if name.startswith("from"):
+            name = name.split(" ")
+            name, sub_class = (name[1].strip(), name[-1].strip())
+
+    assert error in [
+        "raise",
+        "log",
+        "silent",
+    ], "[Vidgear:ERROR] :: Invalid value at `error` parameter."
+
+    # specify package name of dependency(if defined). Otherwise use name
+    install_name = pkg_name if not (pkg_name is None) else name
+
+    # create message
+    msg = (
+        custom_message
+        if not (custom_message is None)
+        else "Failed to find required dependency '{}'. Install it with  `pip install {}` command.".format(
+            name, install_name
+        )
+    )
+    # try importing dependency
+    try:
+        module = importlib.import_module(name)
+        if sub_class:
+            module = getattr(module, sub_class)
+    except Exception:
+        # handle errors.
+        if error == "raise":
+            raise ImportError(msg) from None
+        elif error == "log":
+            logger.error(msg)
+            return None
+        else:
+            return None
+
+    # check if minimum required version
+    if not (min_version) is None:
+        # Handle submodules
+        parent_module = name.split(".")[0]
+        if parent_module != name:
+            # grab parent module
+            module_to_get = sys.modules[parent_module]
+        else:
+            module_to_get = module
+        # extract version
+        version = get_module_version(module_to_get)
+        # verify
+        if LooseVersion(version) < LooseVersion(min_version):
+            # create message
+            msg = """Unsupported version '{}' found. Vidgear requires '{}' dependency installed with version '{}' or greater. 
+            Update it with  `pip install -U {}` command.""".format(
+                parent_module, min_version, version, install_name
+            )
+            # handle errors.
+            if error == "silent":
+                return None
+            else:
+                # raise
+                raise ImportError(msg)
+
+    return module
+
 
 # set default timer for download requests
 DEFAULT_TIMEOUT = 3
@@ -1017,7 +1133,7 @@ def check_output(*args, **kwargs):
         stdout=sp.PIPE,
         stderr=sp.DEVNULL if not (retrieve_stderr) else sp.PIPE,
         *args,
-        **kwargs
+        **kwargs,
     )
     output, stderr = process.communicate()
     retcode = process.poll()

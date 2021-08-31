@@ -48,7 +48,7 @@ Secure mode supports the two most powerful ZMQ security layers:
 &nbsp;
 
 
-!!! danger "Secure Mode Requirements"
+!!! danger "Important Information regarding Secure Mode"
 
     * The `secure_mode` attribute value at the Client's end **MUST** match exactly the Server's end _(i.e. **IronHouse** security layer is only compatible with **IronHouse**, and **NOT** with **StoneHouse**)_.
 
@@ -83,9 +83,9 @@ Secure mode supports the two most powerful ZMQ security layers:
 
 &nbsp;
 
-## Supported Attributes
+## Exclusive Attributes
 
-For implementing Secure Mode, NetGear API currently provide following attribute for its [`options`](../../params/#options) dictionary parameter:
+For implementing Secure Mode, NetGear API currently provide following exclusive attribute for its [`options`](../../params/#options) dictionary parameter:
 
 
 * `secure_mode` (_integer_) : This attribute activates and sets the ZMQ security Mechanism. Its possible values are: `1`(_StoneHouse_) & `2`(_IronHouse_), and its default value is `0`(_Grassland(no security)_). Its usage is as follows:

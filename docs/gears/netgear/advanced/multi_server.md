@@ -35,13 +35,15 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 &nbsp;
 
 
-!!! danger "Multi-Servers Mode Requirements"
+!!! danger "Important Information regarding Multi-Servers Mode"
 
     * A unique PORT address **MUST** be assigned to each Server on the network using its [`port`](../../params/#port) parameter.
     
     * A list/tuple of PORT addresses of all unique Servers **MUST** be assigned at Client's end using its [`port`](../../params/#port) parameter for a successful connection.
 
     * Patterns `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ and `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ are the only supported values for this Mode. Therefore, calling any other pattern value with is mode will result in `ValueError`.
+
+    * Multi-Servers and Multi-Clients exclusive modes **CANNOT** be enabled simultaneously, Otherwise NetGear API will throw `ValueError`.
 
     * The [`address`](../../params/#address) parameter value of each Server **MUST** exactly match the Client. 
 
@@ -68,15 +70,13 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 ## Usage Examples
 
 
-!!! alert "Important Information"
+!!! alert "Example Assumptions"
 
     * For sake of simplicity, in these examples we will use only two unique Servers, but, the number of these Servers can be extended to several numbers depending upon your system hardware limits.
 
-    * All of Servers will be transferring frames to a single Client system at the same time, which will be displaying received frames as a montage _(multiple frames concatenated together)_.
+    * All of Servers will be transferring frames to a single Client system at the same time, which will be displaying received frames as a live montage _(multiple frames concatenated together)_.
 
     * For building Frames Montage at Client's end, We are going to use `imutils` python library function to build montages, by concatenating  together frames recieved from different servers. Therefore, Kindly install this library with `pip install imutils` terminal command.
-
-    * Multi-Servers and Multi-Clients exclusive modes **CANNOT** be enabled simultaneously, Otherwise NetGear API will throw `ValueError`.
 
 
 &nbsp;
@@ -84,7 +84,10 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
 ### Bare-Minimum Usage
 
-In this example, we will capturing live video-frames on two independent sources _(a.k.a Servers)_, each with a webcam connected to it. Then, those frames will be transferred over the network to a single system _(a.k.a Client)_ at the same time, and will be displayed as a real-time montage. All this by using this Multi-Servers Mode in NetGear API.
+In this example, we will capturing live video-frames on two independent sources _(a.k.a Servers)_, each with a webcam connected to it. Afterwards, these frames will be sent over the network to a single system _(a.k.a Client)_ using this Multi-Servers Mode in NetGear API in real time, and will be displayed as a live montage.
+
+
+!!! tip "This example is useful for building applications like Real-Time Security System with multiple cameras."
 
 
 #### Client's End

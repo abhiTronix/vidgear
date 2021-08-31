@@ -21,12 +21,12 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-
 import cv2
 import numpy as np
 import logging as log
 from collections import deque
 
+# import helper packages
 from .helper import logger_handler, check_CV_version, retrieve_best_interpolation
 
 # define logger
@@ -140,7 +140,7 @@ class Stabilizer:
 
         # retrieve best interpolation
         self.__interpolation = retrieve_best_interpolation(
-            ["INTER_LINEAR_EXACT", "INTER_LINEAR", "INTER_CUBIC"]
+            ["INTER_LINEAR_EXACT", "INTER_LINEAR", "INTER_AREA"]
         )
 
         # define normalized box filter

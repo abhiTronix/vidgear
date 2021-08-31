@@ -262,7 +262,7 @@ WebGear_RTC also natively supports ASGI middleware classes with Starlette for im
 !!! new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
-!!! info "All supported middlewares can be [here ➶](https://www.starlette.io/middleware/)"
+!!! info "All supported middlewares can be found [here ➶](https://www.starlette.io/middleware/)"
 
 For this example, let's use [`CORSMiddleware`](https://www.starlette.io/middleware/#corsmiddleware) for implementing appropriate [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) to outgoing responses in our application in order to allow cross-origin requests from browsers, as follows:
 

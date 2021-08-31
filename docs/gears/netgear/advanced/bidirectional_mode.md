@@ -36,7 +36,7 @@ This mode can be easily activated in NetGear through `bidirectional_mode` attrib
 &nbsp;
 
 
-!!! danger "Important"
+!!! danger "Important Information regarding Bidirectional Mode"
 
     * In Bidirectional Mode, `zmq.PAIR`(ZMQ Pair) & `zmq.REQ/zmq.REP`(ZMQ Request/Reply) are **ONLY** Supported messaging patterns. Accessing this mode with any other messaging pattern, will result in `ValueError`.
 
@@ -69,7 +69,7 @@ This mode can be easily activated in NetGear through `bidirectional_mode` attrib
 &nbsp;
 
 
-## Method Parameters
+## Exclusive Parameters
 
 To send data bidirectionally, NetGear API provides two exclusive parameters for its methods:
 
@@ -364,7 +364,7 @@ server.close()
 
 In this example we are going to implement a bare-minimum example, where we will be sending video-frames _(3-Dimensional numpy arrays)_ of the same Video bidirectionally at the same time, for testing the real-time performance and synchronization between the Server and the Client using this(Bidirectional) Mode. 
 
-!!! tip "This feature is great for building applications like Real-Time Video Chat."
+!!! tip "This example is useful for building applications like Real-Time Video Chat."
 
 !!! info "We're also using [`reducer()`](../../../../../bonus/reference/helper/#vidgear.gears.helper.reducer--reducer) method for reducing frame-size on-the-go for additional performance."
 

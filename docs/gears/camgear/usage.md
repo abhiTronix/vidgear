@@ -66,7 +66,7 @@ stream.stop()
 
 ## Using Camgear with Streaming Websites
 
-CamGear API provides direct support for piping video streams from various popular streaming services like [Twitch](https://www.twitch.tv/), [Livestream](https://livestream.com/), [Dailymotion](https://www.dailymotion.com/live), and [many more ➶](https://streamlink.github.io/plugin_matrix.html#plugins). All you have to do is to provide the desired Video's URL to its `source` parameter, and enable the [`stream_mode`](../params/#stream_mode) parameter. The complete usage example is as follows:
+CamGear API provides direct support for piping video streams from various popular streaming services like [Twitch](https://www.twitch.tv/), [Vimeo](https://vimeo.com/), [Dailymotion](https://www.dailymotion.com), and [many more ➶](https://streamlink.github.io/plugin_matrix.html#plugins). All you have to do is to provide the desired Video's URL to its `source` parameter, and enable the [`stream_mode`](../params/#stream_mode) parameter. The complete usage example is as follows:
 
 !!! bug "Bug in OpenCV's FFmpeg"
     To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently, You must always use [GStreamer backend](../params/#backend) for  Livestreams _(such as Twitch URLs)_. 
@@ -90,10 +90,10 @@ import cv2
 options = {"STREAM_RESOLUTION": "720p"}
 
 # Add any desire Video URL as input source
-# for e.g https://www.dailymotion.com/video/x7xsoud
+# for e.g https://vimeo.com/151666798
 # and enable Stream Mode (`stream_mode = True`)
 stream = CamGear(
-    source="https://www.dailymotion.com/video/x7xsoud",
+    source="https://vimeo.com/151666798",
     stream_mode=True,
     logging=True,
     **options

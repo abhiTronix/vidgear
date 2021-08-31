@@ -42,7 +42,7 @@ Let's implement a bare-minimum example using WebGear, where we will be sending [
 ```python
 # import required libraries
 import uvicorn
-from vidgear.gears.asyncio import WebGear_RTC
+from vidgear.gears.asyncio import WebGear
 
 # various performance tweaks and enable grayscale input
 options = {
@@ -53,8 +53,8 @@ options = {
     "jpeg_compression_fastupsample": True,
 }
 
-# initialize WebGear_RTC app and change its colorspace to grayscale
-web = WebGear_RTC(
+# initialize WebGear app and change its colorspace to grayscale
+web = WebGear(
     source="foo.mp4", colorspace="COLOR_BGR2GRAY", logging=True, **options
 )
 
@@ -248,7 +248,7 @@ WebGear natively supports ASGI middleware classes with Starlette for implementin
 !!! new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
-!!! info "All supported middlewares can be [here ➶](https://www.starlette.io/middleware/)"
+!!! info "All supported middlewares can be found [here ➶](https://www.starlette.io/middleware/)"
 
 For this example, let's use [`CORSMiddleware`](https://www.starlette.io/middleware/#corsmiddleware) for implementing appropriate [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) to outgoing responses in our application in order to allow cross-origin requests from browsers, as follows:
 

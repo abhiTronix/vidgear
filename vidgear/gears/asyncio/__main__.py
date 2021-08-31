@@ -19,7 +19,7 @@ limitations under the License.
 """
 
 if __name__ == "__main__":
-    # import libs
+    # import neccessary libs
     import yaml
     import argparse
 

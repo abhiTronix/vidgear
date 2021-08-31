@@ -18,7 +18,6 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-
 import os
 import cv2
 import sys
@@ -31,6 +30,7 @@ from tqdm import tqdm
 from fractions import Fraction
 from collections import OrderedDict
 
+# import helper packages
 from .helper import (
     capPropId,
     dict2Args,
@@ -47,6 +47,7 @@ from .helper import (
 
 # define logger
 logger = log.getLogger("StreamGear")
+logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
@@ -79,7 +80,6 @@ class StreamGear:
             logging (bool): enables/disables logging.
             stream_params (dict): provides the flexibility to control supported internal parameters and FFmpeg properities.
         """
-
         # checks if machine in-use is running windows os or not
         self.__os_windows = True if os.name == "nt" else False
         # enable logging if specified

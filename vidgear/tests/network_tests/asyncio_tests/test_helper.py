@@ -29,9 +29,9 @@ import logging as log
 from vidgear.gears.asyncio.helper import (
     reducer,
     create_blank_frame,
-    logger_handler,
     retrieve_best_interpolation,
 )
+from vidgear.gears.helper import logger_handler
 
 # define test logger
 logger = log.getLogger("Test_Asyncio_Helper")
