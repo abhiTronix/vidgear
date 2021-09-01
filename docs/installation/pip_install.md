@@ -29,31 +29,61 @@ limitations under the License.
 When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), you need to check manually if following dependencies are installed:
 
 
-!!! alert "Upgrade your `pip`"
+???+ alert "Upgrade your `pip`"
 
-    It strongly advised to upgrade to latest `pip` before installing vidgear to avoid any undesired installation error(s). Python comes with an [`ensurepip`](https://docs.python.org/3/library/ensurepip.html#module-ensurepip) module[^1], which can easily install `pip` in any Python environment.
+    It strongly advised to upgrade to latest `pip` before installing vidgear to avoid any undesired installation error(s).  There are two mechanisms to upgrade `pip`:
 
-    === "Linux"
+    1. **`ensurepip`:** Python comes with an [`ensurepip`](https://docs.python.org/3/library/ensurepip.html#module-ensurepip) module[^1], which can easily upgrade/install `pip` in any Python environment.
 
-        ```sh
-        python -m ensurepip --upgrade
-        
-        ```
+        === "Linux/MacOS"
 
-    === "MacOS"
+            ```sh
+            python -m ensurepip --upgrade
+            
+            ```
 
-        ```sh
-        python -m ensurepip --upgrade
-        
-        ```
+        === "Windows"
 
-    === "Windows"
+            ```sh
+            py -m ensurepip --upgrade
+            
+            ```
+    2. **`pip`:** Use can also use existing `pip` to upgrade itself:
 
-        ```sh
-        py -m ensurepip --upgrade
-        
-        ```
+        ??? info "Install `pip` if not present"
 
+            * Download the script, from https://bootstrap.pypa.io/get-pip.py.
+            * Open a terminal/command prompt, `cd` to the folder containing the `get-pip.py` file and run:
+
+            === "Linux/MacOS"
+
+                ```sh
+                python get-pip.py
+                
+                ```
+
+            === "Windows"
+
+                ```sh
+                py get-pip.py
+                
+                ```
+            More details about this script can be found in [pypa/get-pip’s README](https://github.com/pypa/get-pip).
+
+
+        === "Linux/MacOS"
+
+            ```sh
+            python -m pip install pip --upgrade
+            
+            ```
+
+        === "Windows"
+
+            ```sh
+            py -m pip install pip --upgrade
+            
+            ```
 
 ### Core Prerequisites
 
@@ -244,4 +274,4 @@ pip install vidgear-0.2.2-py3-none-any.whl[asyncio]
 
 &nbsp;
 
-[^1]: The `ensurepip` module was added to the Python standard library in Python 3.4.
+[^1]: :warning: The `ensurepip` module is missing/disabled on Ubuntu. Use second method.

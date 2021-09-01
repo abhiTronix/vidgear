@@ -17,18 +17,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
 # import the packages
 import time
 import numpy as np
-import logging as log
-from vidgear.gears.helper import logger_handler
+import logging
 
-# define test logger
-logger = log.getLogger("Fake_Picamera")
+# define custom logger
+FORMAT = "%(name)s :: %(levelname)s :: %(message)s"
+logging.basicConfig(format=FORMAT)
+logger = logging.getLogger("Fake_Picamera")
 logger.propagate = False
-logger.addHandler(logger_handler())
-logger.setLevel(log.DEBUG)
+logger.setLevel(logging.DEBUG)
 
 
 class Warn(object):

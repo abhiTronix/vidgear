@@ -33,31 +33,61 @@ When installing VidGear from source, FFmpeg and Aiortc are the only two API spec
     Any other python dependencies _(Core/API specific)_ will be automatically installed based on your OS specifications.
     
 
-!!! alert "Upgrade your `pip`"
+???+ alert "Upgrade your `pip`"
 
-    It strongly advised to upgrade to latest `pip` before installing vidgear to avoid any undesired installation error(s). Python comes with an [`ensurepip`](https://docs.python.org/3/library/ensurepip.html#module-ensurepip) module[^1], which can easily install `pip` in any Python environment.
+    It strongly advised to upgrade to latest `pip` before installing vidgear to avoid any undesired installation error(s).  There are two mechanisms to upgrade `pip`:
 
-    === "Linux"
+    1. **`ensurepip`:** Python comes with an [`ensurepip`](https://docs.python.org/3/library/ensurepip.html#module-ensurepip) module[^1], which can easily upgrade/install `pip` in any Python environment.
 
-        ```sh
-        python -m ensurepip --upgrade
-        
-        ```
+        === "Linux/MacOS"
 
-    === "MacOS"
+            ```sh
+            python -m ensurepip --upgrade
+            
+            ```
 
-        ```sh
-        python -m ensurepip --upgrade
-        
-        ```
+        === "Windows"
 
-    === "Windows"
+            ```sh
+            py -m ensurepip --upgrade
+            
+            ```
+    2. **`pip`:** Use can also use existing `pip` to upgrade itself:
 
-        ```sh
-        py -m ensurepip --upgrade
-        
-        ```
+        ??? info "Install `pip` if not present"
 
+            * Download the script, from https://bootstrap.pypa.io/get-pip.py.
+            * Open a terminal/command prompt, `cd` to the folder containing the `get-pip.py` file and run:
+
+            === "Linux/MacOS"
+
+                ```sh
+                python get-pip.py
+                
+                ```
+
+            === "Windows"
+
+                ```sh
+                py get-pip.py
+                
+                ```
+            More details about this script can be found in [pypa/get-pip’s README](https://github.com/pypa/get-pip).
+
+
+        === "Linux/MacOS"
+
+            ```sh
+            python -m pip install pip --upgrade
+            
+            ```
+
+        === "Windows"
+
+            ```sh
+            py -m pip install pip --upgrade
+            
+            ```
 
 ### API Specific Prerequisites
 
