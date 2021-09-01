@@ -223,14 +223,14 @@ class RTC_VideoServer(VideoStreamTrack):
         # read video frame
         f_stream = None
         if self.__stream is None:
-            return None
+            raise MediaStreamError
         else:
             f_stream = self.__stream.read()
 
         # display blank if NoneType
         if f_stream is None:
             if self.blank_frame is None or not self.is_running:
-                return None
+                raise MediaStreamError
             else:
                 f_stream = self.blank_frame[:]
             if not self.__enable_inf and not self.__reset_enabled:

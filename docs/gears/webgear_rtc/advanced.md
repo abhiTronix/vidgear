@@ -77,6 +77,7 @@ Let's implement a bare-minimum example with a Custom Source using WebGear_RTC AP
 import uvicorn, asyncio, cv2
 from av import VideoFrame
 from aiortc import VideoStreamTrack
+from aiortc.mediastreams import MediaStreamError
 from vidgear.gears.asyncio import WebGear_RTC
 from vidgear.gears.asyncio.helper import reducer
 
@@ -112,7 +113,7 @@ class Custom_RTCServer(VideoStreamTrack):
 
         # if NoneType
         if not grabbed:
-            return None
+            return MediaStreamError
 
         # reducer frames size if you want more performance otherwise comment this line
         frame = await reducer(frame, percentage=30)  # reduce frame by 30%
@@ -145,7 +146,6 @@ uvicorn.run(web(), host="localhost", port=8000)
 
 # close app safely
 web.shutdown()
-
 ```
 
 **And that's all, Now you can see output at [`http://localhost:8000/`](http://localhost:8000/) address.**
