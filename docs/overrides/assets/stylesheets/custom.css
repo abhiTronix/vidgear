@@ -207,6 +207,13 @@ limitations under the License.
 	width: 80%;
 }
 
+/* Handles Gitter Sidecard UI */
+.gitter-open-chat-button {
+    background-color: var(--md-primary-fg-color) !important;
+    font-family: inherit !important;
+    font-size: 12px;
+}
+
 .center-small {
 	display: block;
 	margin-left: auto;

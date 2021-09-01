@@ -146,7 +146,7 @@ def import_dependency_safe(
         name (string): name of dependency to be imported.
         error (string): raise or Log or silence ImportError. Possible values are `"raise"`, `"log"` and `silent`. Default is `"raise"`.
         pkg_name (string): (Optional) package name of dependency(if different `pip` name). Otherwise `name` will be used.
-        min_version(string): (Optional) required minimum version of the dependency to be imported.
+        min_version (string): (Optional) required minimum version of the dependency to be imported.
         custom_message (string): (Optional) custom Import error message to be raised or logged.
 
     **Returns:** The imported module, when found and the version is correct(if specified). Otherwise `None`.

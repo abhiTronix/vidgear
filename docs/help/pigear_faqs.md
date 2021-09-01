@@ -67,6 +67,6 @@ limitations under the License.
 
 ## How to change `picamera` settings for Camera Module at runtime?
 
-**Answer:** You can use `stream` global parameter in PiGear to feed any `picamera` setting at runtime. See [this bonus example ➶](../pigear_ex/#setting-variable-picamera-parameters-for-camera-module-at-runtime).
+**Answer:** You can use `stream` global parameter in PiGear to feed any `picamera` setting at runtime. See [this bonus example ➶](../pigear_ex/#setting-variable-picamera-parameters-for-camera-module-at-runtime)
 
 &nbsp;

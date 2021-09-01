@@ -72,9 +72,7 @@ limitations under the License.
 
 ## How to change quality and parameters of YouTube Streams with CamGear?
 
-CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `youtube-dl`) parameters)_ with its [`options`](../../gears/camgear/params/#options) dictionary parameter. The complete usage example is as follows: 
-
-**Answer:** See [this bonus example ➶](../camgear_ex/#using-variable-youtube-dl-parameters-in-camgear).
+**Answer:** CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `youtube-dl`) parameters)_ with its [`options`](../../gears/camgear/params/#options) dictionary parameter. See [this bonus example ➶](../camgear_ex/#using-variable-youtube-dl-parameters-in-camgear).
 
 
 &nbsp;
@@ -82,9 +80,7 @@ CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying strea
 
 ## How to open RSTP network streams with CamGear?
 
-You can open any local network stream _(such as RTSP)_ just by providing its URL directly to CamGear's [`source`](../../gears/camgear/params/#source) parameter. The complete usage example is as follows: 
-
-**Answer:** See [this bonus example ➶](../camgear_ex/#using-camgear-for-capturing-rstprtmp-urls).
+**Answer:** You can open any local network stream _(such as RTSP)_ just by providing its URL directly to CamGear's [`source`](../../gears/camgear/params/#source) parameter. See [this bonus example ➶](../camgear_ex/#using-camgear-for-capturing-rstprtmp-urls).
 
 &nbsp;
 
@@ -102,7 +98,7 @@ You can open any local network stream _(such as RTSP)_ just by providing its URL
 
 ## How to synchronize between two cameras?
 
-**Answer:** See [this issue comment ➶](https://github.com/abhiTronix/vidgear/issues/1#issuecomment-473943037).
+**Answer:** See [this bonus example ➶](../camgear_ex/#synchronizing-two-sources-in-camgear).
 
 &nbsp;
 

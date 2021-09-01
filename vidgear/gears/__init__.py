@@ -58,8 +58,8 @@ def import_core_dependency(
         name (string): name of dependency to be imported.
         pkg_name (string): (Optional) package name of dependency(if different `pip` name). Otherwise `name` will be used.
         custom_message (string): (Optional) custom Import error message to be raised or logged.
-        version(string): (Optional) required minimum/maximum version of the dependency to be imported.
-        mode(boolean): (Optional) Possible values "gte"(greater then equal), "lte"(less then equal), "exact"(exact). Default is "gte".
+        version (string): (Optional) required minimum/maximum version of the dependency to be imported.
+        mode (boolean): (Optional) Possible values "gte"(greater then equal), "lte"(less then equal), "exact"(exact). Default is "gte".
 
     **Returns:** `None`
     """
