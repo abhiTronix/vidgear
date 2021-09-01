@@ -67,7 +67,7 @@ while True:
     if stabilized_frame is None:
         continue
 
-    # {do something with the stabilized_frame frame here}
+    # {do something with the stabilized frame here}
 
     # Show output window
     cv2.imshow("Output Stabilized Frame", stabilized_frame)
@@ -121,7 +121,7 @@ while True:
     if stabilized_frame is None:
         continue
 
-    # {do something with the frame here}
+    # {do something with the stabilized frame here}
 
     # Show output window
     cv2.imshow("Stabilized Frame", stabilized_frame)
@@ -176,7 +176,7 @@ while True:
     if stabilized_frame is None:
         continue
 
-    # {do something with the stabilized_frame frame here}
+    # {do something with the stabilized frame here}
 
     # Show output window
     cv2.imshow("Output Stabilized Frame", stabilized_frame)
@@ -202,6 +202,8 @@ stream.stop()
 ## Using Stabilizer with WriteGear
 
 VideoGear's stabilizer can be used in conjunction with WriteGear API directly without any compatibility issues. The complete usage example is as follows:
+
+!!! tip "You can also add live audio input to WriteGear pipeline. See this [bonus example](../../../help)"
 
 ```python
 # import required libraries
@@ -236,7 +238,7 @@ while True:
     if stabilized_frame is None:
         continue
 
-    # {do something with the frame here}
+    # {do something with the stabilized frame here}
 
     # write stabilized frame to writer
     writer.write(stabilized_frame)
@@ -270,5 +272,11 @@ writer.close()
 [VideoGear API](../../videogear/overview/) provides a special internal wrapper around Stabilizer class that enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort and writing way fewer lines of code.
 
 !!! example "The complete usage example can be found [here ➶](../../videogear/usage/#using-videogear-with-video-stabilizer-backend)"
+
+&nbsp;
+
+## Bonus Examples
+
+!!! example "Checkout more advanced Stabilizer examples with unusual configuration [here ➶](../../../help/stabilizer_ex/)"
 
 &nbsp;

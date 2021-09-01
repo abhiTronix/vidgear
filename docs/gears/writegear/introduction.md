@@ -76,3 +76,9 @@ from vidgear.gears import WriteGear
 </div>  
 
 &thinsp; 
+
+## Bonus Examples
+
+!!! example "Checkout more advanced WriteGear examples with unusual configuration [here ➶](../../../help/writegear_ex/)"
+
+&nbsp;

@@ -35,176 +35,213 @@ limitations under the License.
 	--md-admonition-icon--xinfo: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23000000' d='M18 2H12V9L9.5 7.5L7 9V2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V4C20 2.89 19.1 2 18 2M17.68 18.41C17.57 18.5 16.47 19.25 16.05 19.5C15.63 19.79 14 20.72 14.26 18.92C14.89 15.28 16.11 13.12 14.65 14.06C14.27 14.29 14.05 14.43 13.91 14.5C13.78 14.61 13.79 14.6 13.68 14.41S13.53 14.23 13.67 14.13C13.67 14.13 15.9 12.34 16.72 12.28C17.5 12.21 17.31 13.17 17.24 13.61C16.78 15.46 15.94 18.15 16.07 18.54C16.18 18.93 17 18.31 17.44 18C17.44 18 17.5 17.93 17.61 18.05C17.72 18.22 17.83 18.3 17.68 18.41M16.97 11.06C16.4 11.06 15.94 10.6 15.94 10.03C15.94 9.46 16.4 9 16.97 9C17.54 9 18 9.46 18 10.03C18 10.6 17.54 11.06 16.97 11.06Z' /%3E%3C/svg%3E");
 	--md-admonition-icon--xadvance: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M7,2V4H8V18A4,4 0 0,0 12,22A4,4 0 0,0 16,18V4H17V2H7M11,16C10.4,16 10,15.6 10,15C10,14.4 10.4,14 11,14C11.6,14 12,14.4 12,15C12,15.6 11.6,16 11,16M13,12C12.4,12 12,11.6 12,11C12,10.4 12.4,10 13,10C13.6,10 14,10.4 14,11C14,11.6 13.6,12 13,12M14,7H10V4H14V7Z' /%3E%3C/svg%3E");
 }
+
 .md-typeset .admonition.advance,
 .md-typeset details.advance {
-	border-color: rgb(27,77,62);
+	border-color: rgb(27, 77, 62);
 }
+
 .md-typeset .admonition.new,
 .md-typeset details.new {
-	border-color: rgb(43, 155, 70);
+	border-color: rgb(57,255,20);
 }
-.md-typeset .new > .admonition-title,
-.md-typeset .new > summary {
-	background-color: rgba(43, 155, 70, 0.1);
-	border-color: rgb(43, 155, 70);
-}
-.md-typeset .new > .admonition-title::before,
-.md-typeset .new > summary::before {
-	background-color: rgb(228,24,30);
-	-webkit-mask-image: var(--md-admonition-icon--new);
-	mask-image: var(--md-admonition-icon--new);
-}
+
 .md-typeset .admonition.alert,
 .md-typeset details.alert {
 	border-color: rgb(255, 0, 255);
 }
+
+.md-typeset .new > .admonition-title,
+.md-typeset .new > summary {
+	background-color: rgb(57,255,20,0.1);
+	border-color: rgb(57,255,20);
+}
+
+.md-typeset .new > .admonition-title::before,
+.md-typeset .new > summary::before {
+	background-color: rgb(57,255,20);
+	-webkit-mask-image: var(--md-admonition-icon--new);
+	mask-image: var(--md-admonition-icon--new);
+}
+
 .md-typeset .alert > .admonition-title,
 .md-typeset .alert > summary {
 	background-color: rgba(255, 0, 255, 0.1);
 	border-color: rgb(255, 0, 255);
 }
+
 .md-typeset .alert > .admonition-title::before,
 .md-typeset .alert > summary::before {
 	background-color: rgb(255, 0, 255);
 	-webkit-mask-image: var(--md-admonition-icon--alert);
 	mask-image: var(--md-admonition-icon--alert);
 }
-.md-typeset .attention>.admonition-title::before,
-.md-typeset .attention>summary::before,
-.md-typeset .caution>.admonition-title::before,
-.md-typeset .caution>summary::before,
-.md-typeset .warning>.admonition-title::before,
-.md-typeset .warning>summary::before {
+
+.md-typeset .advance > .admonition-title,
+.md-typeset .advance > summary,
+.md-typeset .experiment > .admonition-title,
+.md-typeset .experiment > summary {
+	background-color: rgba(0, 57, 166, 0.1);
+	border-color: rgb(0, 57, 166);
+}
+
+.md-typeset .advance > .admonition-title::before,
+.md-typeset .advance > summary::before,
+.md-typeset .experiment > .admonition-title::before,
+.md-typeset .experiment > summary::before {
+	background-color: rgb(0, 57, 166);
+	-webkit-mask-image: var(--md-admonition-icon--xadvance);
+	mask-image: var(--md-admonition-icon--xadvance);
+}
+
+.md-typeset .attention > .admonition-title::before,
+.md-typeset .attention > summary::before,
+.md-typeset .caution > .admonition-title::before,
+.md-typeset .caution > summary::before,
+.md-typeset .warning > .admonition-title::before,
+.md-typeset .warning > summary::before {
 	-webkit-mask-image: var(--md-admonition-icon--xwarning);
 	mask-image: var(--md-admonition-icon--xwarning);
 }
-.md-typeset .hint>.admonition-title::before,
-.md-typeset .hint>summary::before,
-.md-typeset .important>.admonition-title::before,
-.md-typeset .important>summary::before,
-.md-typeset .tip>.admonition-title::before,
-.md-typeset .tip>summary::before {
+
+.md-typeset .hint > .admonition-title::before,
+.md-typeset .hint > summary::before,
+.md-typeset .important > .admonition-title::before,
+.md-typeset .important > summary::before,
+.md-typeset .tip > .admonition-title::before,
+.md-typeset .tip > summary::before {
 	-webkit-mask-image: var(--md-admonition-icon--xtip) !important;
 	mask-image: var(--md-admonition-icon--xtip) !important;
 }
-.md-typeset .info>.admonition-title::before,
-.md-typeset .info>summary::before,
-.md-typeset .todo>.admonition-title::before,
-.md-typeset .todo>summary::before {
+
+.md-typeset .info > .admonition-title::before,
+.md-typeset .info > summary::before,
+.md-typeset .todo > .admonition-title::before,
+.md-typeset .todo > summary::before {
 	-webkit-mask-image: var(--md-admonition-icon--xinfo);
 	mask-image: var(--md-admonition-icon--xinfo);
 }
-.md-typeset .danger>.admonition-title::before,
-.md-typeset .danger>summary::before,
-.md-typeset .error>.admonition-title::before,
-.md-typeset .error>summary::before {
+
+.md-typeset .danger > .admonition-title::before,
+.md-typeset .danger > summary::before,
+.md-typeset .error > .admonition-title::before,
+.md-typeset .error > summary::before {
 	-webkit-mask-image: var(--md-admonition-icon--xdanger);
 	mask-image: var(--md-admonition-icon--xdanger);
 }
-.md-typeset .note>.admonition-title::before,
-.md-typeset .note>summary::before {
+
+.md-typeset .note > .admonition-title::before,
+.md-typeset .note > summary::before {
 	-webkit-mask-image: var(--md-admonition-icon--xnote);
 	mask-image: var(--md-admonition-icon--xnote);
 }
-.md-typeset .abstract>.admonition-title::before,
-.md-typeset .abstract>summary::before,
-.md-typeset .summary>.admonition-title::before,
-.md-typeset .summary>summary::before,
-.md-typeset .tldr>.admonition-title::before,
-.md-typeset .tldr>summary::before {
+
+.md-typeset .abstract > .admonition-title::before,
+.md-typeset .abstract > summary::before,
+.md-typeset .summary > .admonition-title::before,
+.md-typeset .summary > summary::before,
+.md-typeset .tldr > .admonition-title::before,
+.md-typeset .tldr > summary::before {
 	-webkit-mask-image: var(--md-admonition-icon--xabstract);
 	mask-image: var(--md-admonition-icon--xabstract);
 }
-.md-typeset .faq>.admonition-title::before,
-.md-typeset .faq>summary::before,
-.md-typeset .help>.admonition-title::before,
-.md-typeset .help>summary::before,
-.md-typeset .question>.admonition-title::before,
-.md-typeset .question>summary::before {
+
+.md-typeset .faq > .admonition-title::before,
+.md-typeset .faq > summary::before,
+.md-typeset .help > .admonition-title::before,
+.md-typeset .help > summary::before,
+.md-typeset .question > .admonition-title::before,
+.md-typeset .question > summary::before {
 	-webkit-mask-image: var(--md-admonition-icon--xquestion);
 	mask-image: var(--md-admonition-icon--xquestion);
 }
-.md-typeset .check>.admonition-title::before,
-.md-typeset .check>summary::before,
-.md-typeset .done>.admonition-title::before,
-.md-typeset .done>summary::before,
-.md-typeset .success>.admonition-title::before,
-.md-typeset .success>summary::before {
+
+.md-typeset .check > .admonition-title::before,
+.md-typeset .check > summary::before,
+.md-typeset .done > .admonition-title::before,
+.md-typeset .done > summary::before,
+.md-typeset .success > .admonition-title::before,
+.md-typeset .success > summary::before {
 	-webkit-mask-image: var(--md-admonition-icon--xsuccess);
 	mask-image: var(--md-admonition-icon--xsuccess);
 }
-.md-typeset .fail>.admonition-title::before,
-.md-typeset .fail>summary::before,
-.md-typeset .failure>.admonition-title::before,
-.md-typeset .failure>summary::before,
-.md-typeset .missing>.admonition-title::before,
-.md-typeset .missing>summary::before {
+
+.md-typeset .fail > .admonition-title::before,
+.md-typeset .fail > summary::before,
+.md-typeset .failure > .admonition-title::before,
+.md-typeset .failure > summary::before,
+.md-typeset .missing > .admonition-title::before,
+.md-typeset .missing > summary::before {
 	-webkit-mask-image: var(--md-admonition-icon--xfail);
 	mask-image: var(--md-admonition-icon--xfail);
 }
-.md-typeset .bug>.admonition-title::before,
-.md-typeset .bug>summary::before {
+
+.md-typeset .bug > .admonition-title::before,
+.md-typeset .bug > summary::before {
 	-webkit-mask-image: var(--md-admonition-icon--xbug);
 	mask-image: var(--md-admonition-icon--xbug);
 }
-.md-typeset .example>.admonition-title::before,
-.md-typeset .example>summary::before {
+
+.md-typeset .example > .admonition-title::before,
+.md-typeset .example > summary::before {
 	-webkit-mask-image: var(--md-admonition-icon--xexample);
 	mask-image: var(--md-admonition-icon--xexample);
 }
-.md-typeset .cite>.admonition-title::before,
-.md-typeset .cite>summary::before,
-.md-typeset .quote>.admonition-title::before,
-.md-typeset .quote>summary::before {
+
+.md-typeset .cite > .admonition-title::before,
+.md-typeset .cite > summary::before,
+.md-typeset .quote > .admonition-title::before,
+.md-typeset .quote > summary::before {
 	-webkit-mask-image: var(--md-admonition-icon--xquote);
 	mask-image: var(--md-admonition-icon--xquote);
-}
-.md-typeset .advance>.admonition-title::before,
-.md-typeset .advance>summary::before,
-.md-typeset .experiment>.admonition-title::before,
-.md-typeset .experiment>summary::before {
-	background-color: rgb(0,57,166);
-	-webkit-mask-image: var(--md-admonition-icon--xadvance);
-	mask-image: var(--md-admonition-icon--xadvance);
 }
 
 .md-nav__item--active > .md-nav__link {
 	font-weight: bold;
 }
+
 .center {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
 	width: 80%;
 }
+
 .center-small {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
 	width: 90%;
 }
+
 .md-tabs__link--active {
 	font-weight: bold;
 }
+
 .md-nav__title {
 	font-size: 1rem !important;
 }
+
 .md-version__link {
 	overflow: hidden;
 }
+
 .md-version__current {
 	text-transform: uppercase;
 	font-weight: bolder;
 }
+
 .md-typeset .task-list-control .task-list-indicator::before {
-	background-color: #FF0000;
-    -webkit-mask-image: var(--md-admonition-icon--failure);
-    mask-image: var(--md-admonition-icon--failure);
+	background-color: #ff0000;
+	-webkit-mask-image: var(--md-admonition-icon--failure);
+	mask-image: var(--md-admonition-icon--failure);
 }
+
 blockquote {
 	padding: 0.5em 10px;
 	quotes: "\201C""\201D""\2018""\2019";
 }
+
 blockquote:before {
 	color: #ccc;
 	content: open-quote;
@@ -213,10 +250,12 @@ blockquote:before {
 	margin-right: 0.25em;
 	vertical-align: -0.4em;
 }
+
 blockquote:after {
 	visibility: hidden;
 	content: close-quote;
 }
+
 blockquote p {
 	display: inline;
 }
@@ -229,6 +268,7 @@ blockquote p {
 	display: flex;
 	justify-content: center;
 }
+
 .embed-responsive {
 	position: relative;
 	display: block;
@@ -236,10 +276,12 @@ blockquote p {
 	padding: 0;
 	overflow: hidden;
 }
+
 .embed-responsive::before {
 	display: block;
 	content: "";
 }
+
 .embed-responsive .embed-responsive-item,
 .embed-responsive iframe,
 .embed-responsive embed,
@@ -253,15 +295,19 @@ blockquote p {
 	height: 100%;
 	border: 0;
 }
+
 .embed-responsive-21by9::before {
 	padding-top: 42.857143%;
 }
+
 .embed-responsive-16by9::before {
 	padding-top: 56.25%;
 }
+
 .embed-responsive-4by3::before {
 	padding-top: 75%;
 }
+
 .embed-responsive-1by1::before {
 	padding-top: 100%;
 }
@@ -270,6 +316,7 @@ blockquote p {
 footer.sponsorship {
 	text-align: center;
 }
+
 footer.sponsorship hr {
 	display: inline-block;
 	width: 2rem;
@@ -277,15 +324,19 @@ footer.sponsorship hr {
 	vertical-align: middle;
 	border-bottom: 2px solid var(--md-default-fg-color--lighter);
 }
+
 footer.sponsorship:hover hr {
 	border-color: var(--md-accent-fg-color);
 }
+
 footer.sponsorship:not(:hover) .twemoji.heart-throb-hover svg {
 	color: var(--md-default-fg-color--lighter) !important;
 }
+
 .doc-heading {
 	padding-top: 50px;
 }
+
 .btn {
 	z-index: 1;
 	overflow: hidden;
@@ -300,10 +351,12 @@ footer.sponsorship:not(:hover) .twemoji.heart-throb-hover svg {
 	font-weight: bold;
 	margin: 5px 0px;
 }
+
 .btn.bcolor {
 	border: 4px solid var(--md-typeset-a-color);
 	color: var(--blue);
 }
+
 .btn.bcolor:before {
 	content: "";
 	position: absolute;
@@ -315,52 +368,67 @@ footer.sponsorship:not(:hover) .twemoji.heart-throb-hover svg {
 	z-index: -1;
 	transition: 0.2s ease;
 }
+
 .btn.bcolor:hover {
 	color: var(--white);
 	background: var(--md-typeset-a-color);
 	transition: 0.2s ease;
 }
+
 .btn.bcolor:hover:before {
 	width: 100%;
 }
+
 main #g6219 {
 	transform-origin: 85px 4px;
-	animation: an1 12s .5s infinite ease-out;
+	animation: an1 12s 0.5s infinite ease-out;
 }
+
 @keyframes an1 {
 	0% {
 		transform: rotate(0);
 	}
+
 	5% {
 		transform: rotate(3deg);
 	}
+
 	15% {
 		transform: rotate(-2.5deg);
 	}
+
 	25% {
 		transform: rotate(2deg);
 	}
+
 	35% {
 		transform: rotate(-1.5deg);
 	}
+
 	45% {
 		transform: rotate(1deg);
 	}
+
 	55% {
 		transform: rotate(-1.5deg);
 	}
+
 	65% {
 		transform: rotate(2deg);
 	}
+
 	75% {
 		transform: rotate(-2deg);
 	}
+
 	85% {
 		transform: rotate(2.5deg);
 	}
+
 	95% {
 		transform: rotate(-3deg);
 	}
+
 	100% {
 		transform: rotate(0);
 	}

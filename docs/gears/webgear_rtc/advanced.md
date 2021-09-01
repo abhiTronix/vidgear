@@ -326,69 +326,8 @@ WebGear_RTC gives us complete freedom of altering data files generated in [**Aut
 
 &nbsp;
 
-## Bonus Usage Examples
+## Bonus Examples
 
-Because of WebGear_RTC API's flexible internal wapper around [VideoGear](../../videogear/overview/), it can easily access any parameter of [CamGear](#camgear) and [PiGear](#pigear) videocapture APIs.
-
-!!! info "Following usage examples are just an idea of what can be done with WebGear_RTC API, you can try various [VideoGear](../../videogear/params/), [CamGear](../../camgear/params/) and [PiGear](../../pigear/params/) parameters directly in WebGear_RTC API in the similar manner."
-
-### Using WebGear_RTC with Pi Camera Module
- 
-Here's a bare-minimum example of using WebGear_RTC API with the Raspberry Pi camera module while tweaking its various properties in just one-liner:
-
-```python
-# import libs
-import uvicorn
-from vidgear.gears.asyncio import WebGear_RTC
-
-# various webgear_rtc performance and Raspberry Pi camera tweaks
-options = {
-    "frame_size_reduction": 25,
-    "hflip": True,
-    "exposure_mode": "auto",
-    "iso": 800,
-    "exposure_compensation": 15,
-    "awb_mode": "horizon",
-    "sensor_mode": 0,
-}
-
-# initialize WebGear_RTC app
-web = WebGear_RTC(
-    enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options
-)
-
-# run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host="localhost", port=8000)
-
-# close app safely
-web.shutdown()
-```
+!!! example "Checkout more advanced WebGear_RTC examples with unusual configuration [here ➶](../../../help/webgear_rtc_ex/)"
 
 &nbsp;
-
-### Using WebGear_RTC with real-time Video Stabilization enabled
- 
-Here's an example of using WebGear_RTC API with real-time Video Stabilization enabled:
-
-```python
-# import libs
-import uvicorn
-from vidgear.gears.asyncio import WebGear_RTC
-
-# various webgear_rtc performance tweaks
-options = {
-    "frame_size_reduction": 25,
-}
-
-# initialize WebGear_RTC app  with a raw source and enable video stabilization(`stabilize=True`)
-web = WebGear_RTC(source="foo.mp4", stabilize=True, logging=True, **options)
-
-# run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host="localhost", port=8000)
-
-# close app safely
-web.shutdown()
-```
-
-&nbsp;
- 

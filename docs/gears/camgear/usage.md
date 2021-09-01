@@ -301,4 +301,10 @@ cv2.destroyAllWindows()
 stream.stop()
 ```
 
+&nbsp; 
+
+## Bonus Examples
+
+!!! example "Checkout more advanced CamGear examples with unusual configuration [here ➶](../../../help/camgear_ex/)"
+
 &nbsp;

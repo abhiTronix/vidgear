@@ -322,3 +322,9 @@ writer.close()
 ``` 
 
 &nbsp; 
+
+## Bonus Examples
+
+!!! example "Checkout more advanced NetGear examples with unusual configuration [here ➶](../../../help/screengear_ex/)"
+
+&nbsp;

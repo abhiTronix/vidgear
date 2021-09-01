@@ -67,53 +67,6 @@ limitations under the License.
 
 ## How to change `picamera` settings for Camera Module at runtime?
 
-**Answer:** You can use `stream` global parameter in PiGear to feed any `picamera` setting at runtime. See following sample usage example:
-
-!!! info ""
-    In this example we will set initial Camera Module's `brightness` value `80`, and will change it `50` when **`z` key** is pressed at runtime.
-
-```python
-# import required libraries
-from vidgear.gears import PiGear
-import cv2
-
-# initial parameters
-options = {"brightness": 80} # set brightness to 80
-
-# open pi video stream with default parameters
-stream = PiGear(logging=True, **options).start() 
-
-# loop over
-while True:
-
-    # read frames from stream
-    frame = stream.read()
-
-    # check for frame if Nonetype
-    if frame is None:
-        break
-
-
-    # {do something with the frame here}
-
-
-    # Show output window
-    cv2.imshow("Output Frame", frame)
-
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
-    # check for 'z' key if pressed
-    if key == ord("z"):
-        # change brightness to 50
-        stream.stream.brightness = 50
-
-# close output window
-cv2.destroyAllWindows()
-
-# safely close video stream
-stream.stop()
-``` 
+**Answer:** You can use `stream` global parameter in PiGear to feed any `picamera` setting at runtime. See [this bonus example ➶](../pigear_ex/#setting-variable-picamera-parameters-for-camera-module-at-runtime).
 
 &nbsp;

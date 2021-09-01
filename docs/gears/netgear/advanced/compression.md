@@ -475,14 +475,13 @@ Open your favorite terminal and execute the following python code:
 
 ```python
 # import required libraries
-from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
 from vidgear.gears.helper import reducer
 import numpy as np
 import cv2
 
 # open any valid video stream(for e.g `test.mp4` file)
-stream = VideoGear(source="test.mp4").start()
+stream = cv2.VideoCapture("test.mp4")
 
 # activate Bidirectional mode and Frame Compression
 options = {
@@ -501,10 +500,10 @@ while True:
 
     try:
         # read frames from stream
-        frame = stream.read()
+        (grabbed, frame) = stream.read()
 
-        # check for frame if Nonetype
-        if frame is None:
+        # check for frame if not grabbed
+        if not grabbed:
             break
 
         # reducer frames size if you want even more performance, otherwise comment this line
@@ -531,7 +530,7 @@ while True:
         break
 
 # safely close video stream
-stream.stop()
+stream.release()
 
 # safely close server
 server.close()
@@ -548,7 +547,6 @@ Then open another terminal on the same system and execute the following python c
 ```python
 # import required libraries
 from vidgear.gears import NetGear
-from vidgear.gears import VideoGear
 from vidgear.gears.helper import reducer
 import cv2
 
@@ -562,7 +560,7 @@ options = {
 }
 
 # again open the same video stream
-stream = VideoGear(source="test.mp4").start()
+stream = cv2.VideoCapture("test.mp4")
 
 # define NetGear Client with `receive_mode = True` and defined parameter
 client = NetGear(receive_mode=True, pattern=1, logging=True, **options)
@@ -571,10 +569,10 @@ client = NetGear(receive_mode=True, pattern=1, logging=True, **options)
 while True:
 
     # read frames from stream
-    frame = stream.read()
+    (grabbed, frame) = stream.read()
 
-    # check for frame if Nonetype
-    if frame is None:
+    # check for frame if not grabbed
+    if not grabbed:
         break
 
     # reducer frames size if you want even more performance, otherwise comment this line
@@ -612,7 +610,7 @@ while True:
 cv2.destroyAllWindows()
 
 # safely close video stream
-stream.stop()
+stream.release()
 
 # safely close client
 client.close()

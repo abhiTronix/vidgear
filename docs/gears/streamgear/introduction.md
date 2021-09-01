@@ -171,3 +171,9 @@ from vidgear.gears import StreamGear
 </div>
 
 &thinsp;
+
+## Bonus Examples
+
+!!! example "Checkout more advanced StreamGear examples with unusual configuration [here ➶](../../../help/streamgear_ex/)"
+
+&nbsp;
