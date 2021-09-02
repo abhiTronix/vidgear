@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,19 +18,35 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-
 import os
 import cv2
 import time
-import simplejpeg
+import string
+import secrets
 import numpy as np
-import random
 import logging as log
 from threading import Thread
 from collections import deque
-from pkg_resources import parse_version
+from os.path import expanduser
 
-from .helper import logger_handler, generate_auth_certificates, check_WriteAccess
+# import helper packages
+from .helper import (
+    logger_handler,
+    generate_auth_certificates,
+    check_WriteAccess,
+    check_open_port,
+    import_dependency_safe,
+)
+
+# safe import critical Class modules
+zmq = import_dependency_safe("zmq", pkg_name="pyzmq", error="silent", min_version="4.0")
+if not (zmq is None):
+    from zmq import ssh
+    from zmq import auth
+    from zmq.auth.thread import ThreadAuthenticator
+    from zmq.error import ZMQError
+simplejpeg = import_dependency_safe("simplejpeg", error="silent", min_version="1.6.1")
+paramiko = import_dependency_safe("paramiko", error="silent")
 
 # define logger
 logger = log.getLogger("NetGear")
@@ -116,21 +132,11 @@ class NetGear:
             logging (bool): enables/disables logging.
             options (dict): provides the flexibility to alter various NetGear internal properties.
         """
-
-        try:
-            # import PyZMQ library
-            import zmq
-            from zmq.error import ZMQError
-
-            # assign values to global variable for further use
-            self.__zmq = zmq
-            self.__ZMQError = ZMQError
-
-        except ImportError as error:
-            # raise error
-            raise ImportError(
-                "[NetGear:ERROR] :: pyzmq python library not installed. Kindly install it with `pip install pyzmq` command."
-            )
+        # raise error(s) for critical Class imports
+        import_dependency_safe("zmq" if zmq is None else "", min_version="4.0")
+        import_dependency_safe(
+            "simplejpeg" if simplejpeg is None else "", error="log", min_version="1.6.1"
+        )
 
         # enable logging if specified
         self.__logging = True if logging else False
@@ -177,14 +183,20 @@ class NetGear:
 
         # Handle NetGear's internal exclusive modes and params
 
+        # define SSH Tunneling Mode
+        self.__ssh_tunnel_mode = None  # handles ssh_tunneling mode state
+        self.__ssh_tunnel_pwd = None
+        self.__ssh_tunnel_keyfile = None
+        self.__paramiko_present = False if paramiko is None else True
+
         # define Multi-Server mode
-        self.__multiserver_mode = False  # handles multi-server_mode state
+        self.__multiserver_mode = False  # handles multi-server mode state
 
         # define Multi-Client mode
-        self.__multiclient_mode = False  # handles multi-client_mode state
+        self.__multiclient_mode = False  # handles multi-client mode state
 
-        # define Bi-directional mode
-        self.__bi_mode = False  # handles bi-directional mode state
+        # define Bidirectional mode
+        self.__bi_mode = False  # handles Bidirectional mode state
 
         # define Secure mode
         valid_security_mech = {0: "Grasslands", 1: "StoneHouse", 2: "IronHouse"}
@@ -196,10 +208,13 @@ class NetGear:
         custom_cert_location = ""  # handles custom ZMQ certificates path
 
         # define frame-compression handler
-        self.__jpeg_compression = True  # enabled by default for all connections
+        self.__jpeg_compression = (
+            True if not (simplejpeg is None) else False
+        )  # enabled by default for all connections if simplejpeg is installed
         self.__jpeg_compression_quality = 90  # 90% quality
         self.__jpeg_compression_fastdct = True  # fastest DCT on by default
         self.__jpeg_compression_fastupsample = False  # fastupsample off by default
+        self.__jpeg_compression_colorspace = "BGR"  # use BGR colorspace by default
 
         # defines frame compression on return data
         self.__ex_compression_params = None
@@ -207,8 +222,10 @@ class NetGear:
         # define receiver return data handler
         self.__return_data = None
 
-        # generate random system id
-        self.__id = "".join(random.choice("0123456789ABCDEF") for i in range(5))
+        # generate 8-digit random system id
+        self.__id = "".join(
+            secrets.choice(string.ascii_uppercase + string.digits) for i in range(8)
+        )
 
         # define termination flag
         self.__terminate = False
@@ -223,13 +240,12 @@ class NetGear:
             self.__request_timeout = 4000  # 4 secs
 
         # Handle user-defined options dictionary values
-
         # reformat dictionary
         options = {str(k).strip(): v for k, v in options.items()}
 
         # loop over dictionary key & values and assign to global variables if valid
         for key, value in options.items():
-
+            # handle multi-server mode
             if key == "multiserver_mode" and isinstance(value, bool):
                 # check if valid pattern assigned
                 if pattern > 0:
@@ -245,7 +261,8 @@ class NetGear:
                         )
                     )
 
-            if key == "multiclient_mode" and isinstance(value, bool):
+            # handle multi-client mode
+            elif key == "multiclient_mode" and isinstance(value, bool):
                 # check if valid pattern assigned
                 if pattern > 0:
                     # activate Multi-client mode
@@ -260,17 +277,28 @@ class NetGear:
                         )
                     )
 
+            # handle bidirectional mode
+            elif key == "bidirectional_mode" and isinstance(value, bool):
+                # check if pattern is valid
+                if pattern < 2:
+                    # activate Bidirectional mode if specified
+                    self.__bi_mode = value
+                else:
+                    # otherwise disable it and raise error
+                    self.__bi_mode = False
+                    logger.warning("Bidirectional data transmission is disabled!")
+                    raise ValueError(
+                        "[NetGear:ERROR] :: `{}` pattern is not valid when Bidirectional Mode is enabled. Kindly refer Docs for more Information!".format(
+                            pattern
+                        )
+                    )
+
+            # handle secure mode
             elif (
                 key == "secure_mode"
                 and isinstance(value, int)
                 and (value in valid_security_mech)
             ):
-                # check if installed libzmq version is valid
-                assert zmq.zmq_version_info() >= (
-                    4,
-                    0,
-                ), "[NetGear:ERROR] :: ZMQ Security feature is not supported in libzmq version < 4.0."
-                # assign valid mode
                 self.__secure_mode = value
 
             elif key == "custom_cert_location" and isinstance(value, str):
@@ -285,29 +313,54 @@ class NetGear:
                 ), "[NetGear:ERROR] :: Permission Denied!, cannot write ZMQ authentication certificates to '{}' directory!".format(
                     value
                 )
-
             elif key == "overwrite_cert" and isinstance(value, bool):
                 # enable/disable auth certificate overwriting in secure mode
                 overwrite_cert = value
 
-            elif key == "bidirectional_mode" and isinstance(value, bool):
-                # check if pattern is valid
-                if pattern < 2:
-                    # activate bi-directional mode if specified
-                    self.__bi_mode = value
-                else:
-                    # otherwise disable it and raise error
-                    self.__bi_mode = False
-                    logger.critical("Bi-Directional data transmission is disabled!")
-                    raise ValueError(
-                        "[NetGear:ERROR] :: `{}` pattern is not valid when Bi-Directional Mode is enabled. Kindly refer Docs for more Information!".format(
-                            pattern
+            # handle ssh-tunneling mode
+            elif key == "ssh_tunnel_mode" and isinstance(value, str):
+                # enable SSH Tunneling Mode
+                self.__ssh_tunnel_mode = value.strip()
+            elif key == "ssh_tunnel_pwd" and isinstance(value, str):
+                # add valid SSH Tunneling password
+                self.__ssh_tunnel_pwd = value
+            elif key == "ssh_tunnel_keyfile" and isinstance(value, str):
+                # add valid SSH Tunneling key-file
+                self.__ssh_tunnel_keyfile = value if os.path.isfile(value) else None
+                if self.__ssh_tunnel_keyfile is None:
+                    logger.warning(
+                        "Discarded invalid or non-existential SSH Tunnel Key-file at {}!".format(
+                            value
                         )
                     )
 
-            elif key == "jpeg_compression" and isinstance(value, bool):
-                # enable frame-compression encoding value
-                self.__jpeg_compression = value
+            # handle jpeg compression
+            elif (
+                key == "jpeg_compression"
+                and not (simplejpeg is None)
+                and isinstance(value, (bool, str))
+            ):
+                if isinstance(value, str) and value.strip().upper() in [
+                    "RGB",
+                    "BGR",
+                    "RGBX",
+                    "BGRX",
+                    "XBGR",
+                    "XRGB",
+                    "GRAY",
+                    "RGBA",
+                    "BGRA",
+                    "ABGR",
+                    "ARGB",
+                    "CMYK",
+                ]:
+                    # set encoding colorspace
+                    self.__jpeg_compression_colorspace = value.strip().upper()
+                    # enable frame-compression encoding value
+                    self.__jpeg_compression = True
+                else:
+                    # enable frame-compression encoding value
+                    self.__jpeg_compression = value
             elif key == "jpeg_compression_quality" and isinstance(value, (int, float)):
                 # set valid jpeg quality
                 if value >= 10 and value <= 100:
@@ -334,7 +387,7 @@ class NetGear:
                 else:
                     logger.warning("Invalid `request_timeout` value skipped!")
 
-            # assign ZMQ flags
+            # handle ZMQ flags
             elif key == "flag" and isinstance(value, int):
                 self.__msg_flag = value
             elif key == "copy" and isinstance(value, bool):
@@ -346,10 +399,6 @@ class NetGear:
 
         # Handle Secure mode
         if self.__secure_mode:
-
-            # import required libs
-            import zmq.auth
-            from zmq.auth.thread import ThreadAuthenticator
 
             # activate and log if overwriting is enabled
             if overwrite_cert:
@@ -378,8 +427,6 @@ class NetGear:
                     )
                 else:
                     # otherwise auto-generate suitable path
-                    from os.path import expanduser
-
                     (
                         auth_cert_dir,
                         self.__auth_secretkeys_dir,
@@ -404,27 +451,74 @@ class NetGear:
                     "ZMQ Security Mechanism is disabled for this connection due to errors!"
                 )
 
-        # Handle multiple exclusive modes if enabled
+        # Handle ssh tunneling if enabled
+        if not (self.__ssh_tunnel_mode is None):
+            # SSH Tunnel Mode only available for server mode
+            if receive_mode:
+                logger.error("SSH Tunneling cannot be enabled for Client-end!")
+            else:
+                # check if SSH tunneling possible
+                ssh_address = self.__ssh_tunnel_mode
+                ssh_address, ssh_port = (
+                    ssh_address.split(":")
+                    if ":" in ssh_address
+                    else [ssh_address, "22"]
+                )  # default to port 22
+                if "47" in ssh_port:
+                    self.__ssh_tunnel_mode = self.__ssh_tunnel_mode.replace(
+                        ":47", ""
+                    )  # port-47 is reserved for testing
+                else:
+                    # extract ip for validation
+                    ssh_user, ssh_ip = (
+                        ssh_address.split("@")
+                        if "@" in ssh_address
+                        else ["", ssh_address]
+                    )
+                    # validate ip specified port
+                    assert check_open_port(
+                        ssh_ip, port=int(ssh_port)
+                    ), "[NetGear:ERROR] :: Host `{}` is not available for SSH Tunneling at port-{}!".format(
+                        ssh_address, ssh_port
+                    )
 
+        # Handle multiple exclusive modes if enabled
         if self.__multiclient_mode and self.__multiserver_mode:
             raise ValueError(
                 "[NetGear:ERROR] :: Multi-Client and Multi-Server Mode cannot be enabled simultaneously!"
             )
         elif self.__multiserver_mode or self.__multiclient_mode:
-            # check if Bi-directional Mode also enabled
+            # check if Bidirectional Mode also enabled
             if self.__bi_mode:
                 # disable bi_mode if enabled
                 self.__bi_mode = False
                 logger.warning(
-                    "Bi-Directional Data Transmission is disabled when {} Mode is Enabled due to incompatibility!".format(
+                    "Bidirectional Data Transmission is disabled when {} Mode is Enabled due to incompatibility!".format(
+                        "Multi-Server" if self.__multiserver_mode else "Multi-Client"
+                    )
+                )
+            # check if SSH Tunneling Mode also enabled
+            if self.__ssh_tunnel_mode:
+                # raise error
+                raise ValueError(
+                    "[NetGear:ERROR] :: SSH Tunneling and {} Mode cannot be enabled simultaneously. Kindly refer docs!".format(
                         "Multi-Server" if self.__multiserver_mode else "Multi-Client"
                     )
                 )
         elif self.__bi_mode:
-            # log Bi-directional mode activation
+            # log Bidirectional mode activation
             if self.__logging:
                 logger.debug(
-                    "Bi-Directional Data Transmission is enabled for this connection!"
+                    "Bidirectional Data Transmission is enabled for this connection!"
+                )
+        elif self.__ssh_tunnel_mode:
+            # log Bidirectional mode activation
+            if self.__logging:
+                logger.debug(
+                    "SSH Tunneling is enabled for host:`{}` with `{}` back-end.".format(
+                        self.__ssh_tunnel_mode,
+                        "paramiko" if self.__paramiko_present else "pexpect",
+                    )
                 )
 
         # define messaging context instance
@@ -481,20 +575,20 @@ class NetGear:
                 # activate secure_mode threaded authenticator
                 if self.__secure_mode > 0:
                     # start an authenticator for this context
-                    auth = ThreadAuthenticator(self.__msg_context)
-                    auth.start()
-                    auth.allow(str(address))  # allow current address
+                    z_auth = ThreadAuthenticator(self.__msg_context)
+                    z_auth.start()
+                    z_auth.allow(str(address))  # allow current address
 
                     # check if `IronHouse` is activated
                     if self.__secure_mode == 2:
                         # tell authenticator to use the certificate from given valid dir
-                        auth.configure_curve(
+                        z_auth.configure_curve(
                             domain="*", location=self.__auth_publickeys_dir
                         )
                     else:
                         # otherwise tell the authenticator how to handle the CURVE requests, if `StoneHouse` is activated
-                        auth.configure_curve(
-                            domain="*", location=zmq.auth.CURVE_ALLOW_ANY
+                        z_auth.configure_curve(
+                            domain="*", location=auth.CURVE_ALLOW_ANY
                         )
 
                 # define thread-safe messaging socket
@@ -510,7 +604,7 @@ class NetGear:
                     server_secret_file = os.path.join(
                         self.__auth_secretkeys_dir, "server.key_secret"
                     )
-                    server_public, server_secret = zmq.auth.load_certificate(
+                    server_public, server_secret = auth.load_certificate(
                         server_secret_file
                     )
                     # load  all CURVE keys
@@ -580,7 +674,7 @@ class NetGear:
                 else:
                     if self.__bi_mode:
                         logger.critical(
-                            "Failed to activate Bi-Directional Mode for this connection!"
+                            "Failed to activate Bidirectional Mode for this connection!"
                         )
                     raise RuntimeError(
                         "[NetGear:ERROR] :: Receive Mode failed to bind address: {} and pattern: {}! Kindly recheck all parameters.".format(
@@ -611,7 +705,8 @@ class NetGear:
                 )
                 if self.__jpeg_compression:
                     logger.debug(
-                        "JPEG Frame-Compression is activated for this connection with Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                        "JPEG Frame-Compression is activated for this connection with Colorspace:`{}`, Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                            self.__jpeg_compression_colorspace,
                             self.__jpeg_compression_quality,
                             "enabled"
                             if self.__jpeg_compression_fastdct
@@ -680,20 +775,20 @@ class NetGear:
                 # activate secure_mode threaded authenticator
                 if self.__secure_mode > 0:
                     # start an authenticator for this context
-                    auth = ThreadAuthenticator(self.__msg_context)
-                    auth.start()
-                    auth.allow(str(address))  # allow current address
+                    z_auth = ThreadAuthenticator(self.__msg_context)
+                    z_auth.start()
+                    z_auth.allow(str(address))  # allow current address
 
                     # check if `IronHouse` is activated
                     if self.__secure_mode == 2:
                         # tell authenticator to use the certificate from given valid dir
-                        auth.configure_curve(
+                        z_auth.configure_curve(
                             domain="*", location=self.__auth_publickeys_dir
                         )
                     else:
                         # otherwise tell the authenticator how to handle the CURVE requests, if `StoneHouse` is activated
-                        auth.configure_curve(
-                            domain="*", location=zmq.auth.CURVE_ALLOW_ANY
+                        z_auth.configure_curve(
+                            domain="*", location=auth.CURVE_ALLOW_ANY
                         )
 
                 # define thread-safe messaging socket
@@ -714,7 +809,7 @@ class NetGear:
                     client_secret_file = os.path.join(
                         self.__auth_secretkeys_dir, "client.key_secret"
                     )
-                    client_public, client_secret = zmq.auth.load_certificate(
+                    client_public, client_secret = auth.load_certificate(
                         client_secret_file
                     )
                     # load  all CURVE keys
@@ -724,7 +819,7 @@ class NetGear:
                     server_public_file = os.path.join(
                         self.__auth_publickeys_dir, "server.key"
                     )
-                    server_public, _ = zmq.auth.load_certificate(server_public_file)
+                    server_public, _ = auth.load_certificate(server_public_file)
                     # inject public key to make a CURVE connection.
                     self.__msg_socket.curve_serverkey = server_public
 
@@ -736,10 +831,22 @@ class NetGear:
                             protocol + "://" + str(address) + ":" + str(pt)
                         )
                 else:
-                    # connect socket to given protocol, address and port
-                    self.__msg_socket.connect(
-                        protocol + "://" + str(address) + ":" + str(port)
-                    )
+                    # handle SSH tuneling if enabled
+                    if self.__ssh_tunnel_mode:
+                        # establish tunnel connection
+                        ssh.tunnel_connection(
+                            self.__msg_socket,
+                            protocol + "://" + str(address) + ":" + str(port),
+                            self.__ssh_tunnel_mode,
+                            keyfile=self.__ssh_tunnel_keyfile,
+                            password=self.__ssh_tunnel_pwd,
+                            paramiko=self.__paramiko_present,
+                        )
+                    else:
+                        # connect socket to given protocol, address and port
+                        self.__msg_socket.connect(
+                            protocol + "://" + str(address) + ":" + str(port)
+                        )
 
                 # additional settings
                 if pattern < 2:
@@ -785,7 +892,13 @@ class NetGear:
                 else:
                     if self.__bi_mode:
                         logger.critical(
-                            "Failed to activate Bi-Directional Mode for this connection!"
+                            "Failed to activate Bidirectional Mode for this connection!"
+                        )
+                    if self.__ssh_tunnel_mode:
+                        logger.critical(
+                            "Failed to initiate SSH Tunneling Mode for this server with `{}` back-end!".format(
+                                "paramiko" if self.__paramiko_present else "pexpect"
+                            )
                         )
                     raise RuntimeError(
                         "[NetGear:ERROR] :: Send Mode failed to connect address: {} and pattern: {}! Kindly recheck all parameters.".format(
@@ -802,7 +915,8 @@ class NetGear:
                 )
                 if self.__jpeg_compression:
                     logger.debug(
-                        "JPEG Frame-Compression is activated for this connection with Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                        "JPEG Frame-Compression is activated for this connection with Colorspace:`{}`, Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                            self.__jpeg_compression_colorspace,
                             self.__jpeg_compression_quality,
                             "enabled"
                             if self.__jpeg_compression_fastdct
@@ -843,9 +957,9 @@ class NetGear:
 
             if self.__pattern < 2:
                 socks = dict(self.__poll.poll(self.__request_timeout * 3))
-                if socks.get(self.__msg_socket) == self.__zmq.POLLIN:
+                if socks.get(self.__msg_socket) == zmq.POLLIN:
                     msg_json = self.__msg_socket.recv_json(
-                        flags=self.__msg_flag | self.__zmq.DONTWAIT
+                        flags=self.__msg_flag | zmq.DONTWAIT
                     )
                 else:
                     logger.critical("No response from Server(s), Reconnecting again...")
@@ -875,7 +989,7 @@ class NetGear:
                         logger.exception(str(e))
                         self.__terminate = True
                         raise RuntimeError("API failed to restart the Client-end!")
-                    self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
+                    self.__poll.register(self.__msg_socket, zmq.POLLIN)
 
                     continue
             else:
@@ -919,21 +1033,20 @@ class NetGear:
                 continue
 
             msg_data = self.__msg_socket.recv(
-                flags=self.__msg_flag | self.__zmq.DONTWAIT,
+                flags=self.__msg_flag | zmq.DONTWAIT,
                 copy=self.__msg_copy,
                 track=self.__msg_track,
             )
 
+            # handle data transfer in synchronous modes.
             if self.__pattern < 2:
-
                 if self.__bi_mode or self.__multiclient_mode:
-
+                    # check if we are returning `ndarray` frames
                     if not (self.__return_data is None) and isinstance(
                         self.__return_data, np.ndarray
                     ):
-
-                        # handle return data
-                        return_data = self.__return_data[:]
+                        # handle return data for compression
+                        return_data = np.copy(self.__return_data)
 
                         # check whether exit_flag is False
                         if not (return_data.flags["C_CONTIGUOUS"]):
@@ -944,52 +1057,52 @@ class NetGear:
 
                         # handle jpeg-compression encoding
                         if self.__jpeg_compression:
-                            return_data = simplejpeg.encode_jpeg(
-                                return_data,
-                                quality=self.__jpeg_compression_quality,
-                                colorspace="BGR",
-                                colorsubsampling="422",
-                                fastdct=self.__jpeg_compression_fastdct,
-                            )
+                            if self.__jpeg_compression_colorspace == "GRAY":
+                                if return_data.ndim == 2:
+                                    # patch for https://gitlab.com/jfolz/simplejpeg/-/issues/11
+                                    return_data = return_data[:, :, np.newaxis]
+                                return_data = simplejpeg.encode_jpeg(
+                                    return_data,
+                                    quality=self.__jpeg_compression_quality,
+                                    colorspace=self.__jpeg_compression_colorspace,
+                                    fastdct=self.__jpeg_compression_fastdct,
+                                )
+                            else:
+                                return_data = simplejpeg.encode_jpeg(
+                                    return_data,
+                                    quality=self.__jpeg_compression_quality,
+                                    colorspace=self.__jpeg_compression_colorspace,
+                                    colorsubsampling="422",
+                                    fastdct=self.__jpeg_compression_fastdct,
+                                )
 
-                        if self.__bi_mode:
-                            return_dict = dict(
-                                return_type=(type(return_data).__name__),
+                        return_dict = (
+                            dict() if self.__bi_mode else dict(port=self.__port)
+                        )
+
+                        return_dict.update(
+                            dict(
+                                return_type=(type(self.__return_data).__name__),
                                 compression={
                                     "dct": self.__jpeg_compression_fastdct,
                                     "ups": self.__jpeg_compression_fastupsample,
+                                    "colorspace": self.__jpeg_compression_colorspace,
                                 }
                                 if self.__jpeg_compression
                                 else False,
-                                array_dtype=str(return_data.dtype)
+                                array_dtype=str(self.__return_data.dtype)
                                 if not (self.__jpeg_compression)
                                 else "",
-                                array_shape=return_data.shape
+                                array_shape=self.__return_data.shape
                                 if not (self.__jpeg_compression)
                                 else "",
                                 data=None,
                             )
-                        else:
-                            return_dict = dict(
-                                port=self.__port,
-                                return_type=(type(return_data).__name__),
-                                compression={
-                                    "dct": self.__jpeg_compression_fastdct,
-                                    "ups": self.__jpeg_compression_fastupsample,
-                                }
-                                if self.__jpeg_compression
-                                else False,
-                                array_dtype=str(return_data.dtype)
-                                if not (self.__jpeg_compression)
-                                else "",
-                                array_shape=return_data.shape
-                                if not (self.__jpeg_compression)
-                                else "",
-                                data=None,
-                            )
+                        )
+
                         # send the json dict
                         self.__msg_socket.send_json(
-                            return_dict, self.__msg_flag | self.__zmq.SNDMORE
+                            return_dict, self.__msg_flag | zmq.SNDMORE
                         )
                         # send the array with correct flags
                         self.__msg_socket.send(
@@ -999,17 +1112,15 @@ class NetGear:
                             track=self.__msg_track,
                         )
                     else:
-                        if self.__bi_mode:
-                            return_dict = dict(
+                        return_dict = (
+                            dict() if self.__bi_mode else dict(port=self.__port)
+                        )
+                        return_dict.update(
+                            dict(
                                 return_type=(type(self.__return_data).__name__),
                                 data=self.__return_data,
                             )
-                        else:
-                            return_dict = dict(
-                                port=self.__port,
-                                return_type=(type(self.__return_data).__name__),
-                                data=self.__return_data,
-                            )
+                        )
                         self.__msg_socket.send_json(return_dict, self.__msg_flag)
                 else:
                     # send confirmation message to server
@@ -1017,7 +1128,8 @@ class NetGear:
                         "Data received on device: {} !".format(self.__id)
                     )
             else:
-                if self.__return_data and self.__logging:
+                # else raise warning
+                if self.__return_data:
                     logger.warning("`return_data` is disabled for this pattern!")
 
             # check if encoding was enabled
@@ -1025,7 +1137,7 @@ class NetGear:
                 # decode JPEG frame
                 frame = simplejpeg.decode_jpeg(
                     msg_data,
-                    colorspace="BGR",
+                    colorspace=msg_json["compression"]["colorspace"],
                     fastdct=self.__jpeg_compression_fastdct
                     or msg_json["compression"]["dct"],
                     fastupsample=self.__jpeg_compression_fastupsample
@@ -1038,6 +1150,9 @@ class NetGear:
                     raise RuntimeError(
                         "[NetGear:ERROR] :: Received compressed JPEG frame decoding failed"
                     )
+                if msg_json["compression"]["colorspace"] == "GRAY" and frame.ndim == 3:
+                    # patch for https://gitlab.com/jfolz/simplejpeg/-/issues/11
+                    frame = np.squeeze(frame, axis=2)
             else:
                 # recover and reshape frame from buffer
                 frame_buffer = np.frombuffer(msg_data, dtype=msg_json["dtype"])
@@ -1054,7 +1169,7 @@ class NetGear:
                 else:
                     # append recovered unique port and frame to queue
                     self.__queue.append((msg_json["port"], frame))
-            # extract if any message from server if Bi-Directional Mode is enabled
+            # extract if any message from server if Bidirectional Mode is enabled
             elif self.__bi_mode:
                 if msg_json["message"]:
                     # append grouped frame and data to queue
@@ -1083,7 +1198,7 @@ class NetGear:
                 "[NetGear:ERROR] :: `recv()` function cannot be used while receive_mode is disabled. Kindly refer vidgear docs!"
             )
 
-        # handle bi-directional return data
+        # handle Bidirectional return data
         if (self.__bi_mode or self.__multiclient_mode) and not (return_data is None):
             self.__return_data = return_data
 
@@ -1137,40 +1252,38 @@ class NetGear:
             # check whether the incoming frame is contiguous
             frame = np.ascontiguousarray(frame, dtype=frame.dtype)
 
-        # handle JPEG compresssion encoding
+        # handle JPEG compression encoding
         if self.__jpeg_compression:
-            frame = simplejpeg.encode_jpeg(
-                frame,
-                quality=self.__jpeg_compression_quality,
-                colorspace="BGR",
-                colorsubsampling="422",
-                fastdct=self.__jpeg_compression_fastdct,
-            )
+            if self.__jpeg_compression_colorspace == "GRAY":
+                if frame.ndim == 2:
+                    # patch for https://gitlab.com/jfolz/simplejpeg/-/issues/11
+                    frame = np.expand_dims(frame, axis=2)
+                frame = simplejpeg.encode_jpeg(
+                    frame,
+                    quality=self.__jpeg_compression_quality,
+                    colorspace=self.__jpeg_compression_colorspace,
+                    fastdct=self.__jpeg_compression_fastdct,
+                )
+            else:
+                frame = simplejpeg.encode_jpeg(
+                    frame,
+                    quality=self.__jpeg_compression_quality,
+                    colorspace=self.__jpeg_compression_colorspace,
+                    colorsubsampling="422",
+                    fastdct=self.__jpeg_compression_fastdct,
+                )
 
-        # check if multiserver_mode is activated
-        if self.__multiserver_mode:
-            # prepare the exclusive json dict and assign values with unique port
-            msg_dict = dict(
+        # check if multiserver_mode is activated and assign values with unique port
+        msg_dict = dict(port=self.__port) if self.__multiserver_mode else dict()
+
+        # prepare the exclusive json dict
+        msg_dict.update(
+            dict(
                 terminate_flag=exit_flag,
                 compression={
                     "dct": self.__jpeg_compression_fastdct,
                     "ups": self.__jpeg_compression_fastupsample,
-                }
-                if self.__jpeg_compression
-                else False,
-                port=self.__port,
-                pattern=str(self.__pattern),
-                message=message,
-                dtype=str(frame.dtype) if not (self.__jpeg_compression) else "",
-                shape=frame.shape if not (self.__jpeg_compression) else "",
-            )
-        else:
-            # otherwise prepare normal json dict and assign values
-            msg_dict = dict(
-                terminate_flag=exit_flag,
-                compression={
-                    "dct": self.__jpeg_compression_fastdct,
-                    "ups": self.__jpeg_compression_fastupsample,
+                    "colorspace": self.__jpeg_compression_colorspace,
                 }
                 if self.__jpeg_compression
                 else False,
@@ -1179,9 +1292,10 @@ class NetGear:
                 dtype=str(frame.dtype) if not (self.__jpeg_compression) else "",
                 shape=frame.shape if not (self.__jpeg_compression) else "",
             )
+        )
 
         # send the json dict
-        self.__msg_socket.send_json(msg_dict, self.__msg_flag | self.__zmq.SNDMORE)
+        self.__msg_socket.send_json(msg_dict, self.__msg_flag | zmq.SNDMORE)
         # send the frame array with correct flags
         self.__msg_socket.send(
             frame, flags=self.__msg_flag, copy=self.__msg_copy, track=self.__msg_track
@@ -1189,20 +1303,20 @@ class NetGear:
 
         # check if synchronous patterns, then wait for confirmation
         if self.__pattern < 2:
-            # check if bi-directional data transmission is enabled
+            # check if Bidirectional data transmission is enabled
             if self.__bi_mode or self.__multiclient_mode:
 
                 # handles return data
                 recvd_data = None
 
                 socks = dict(self.__poll.poll(self.__request_timeout))
-                if socks.get(self.__msg_socket) == self.__zmq.POLLIN:
+                if socks.get(self.__msg_socket) == zmq.POLLIN:
                     # handle return data
                     recv_json = self.__msg_socket.recv_json(flags=self.__msg_flag)
                 else:
                     logger.critical("No response from Client, Reconnecting again...")
                     # Socket is confused. Close and remove it.
-                    self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
+                    self.__msg_socket.setsockopt(zmq.LINGER, 0)
                     self.__msg_socket.close()
                     self.__poll.unregister(self.__msg_socket)
                     self.__max_retries -= 1
@@ -1223,15 +1337,26 @@ class NetGear:
 
                     # Create new connection
                     self.__msg_socket = self.__msg_context.socket(self.__msg_pattern)
-
                     if isinstance(self.__connection_address, list):
                         for _connection in self.__connection_address:
                             self.__msg_socket.connect(_connection)
                     else:
-                        self.__msg_socket.connect(self.__connection_address)
-
-                    self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
-
+                        # handle SSH tunneling if enabled
+                        if self.__ssh_tunnel_mode:
+                            # establish tunnel connection
+                            ssh.tunnel_connection(
+                                self.__msg_socket,
+                                self.__connection_address,
+                                self.__ssh_tunnel_mode,
+                                keyfile=self.__ssh_tunnel_keyfile,
+                                password=self.__ssh_tunnel_pwd,
+                                paramiko=self.__paramiko_present,
+                            )
+                        else:
+                            # connect normally
+                            self.__msg_socket.connect(self.__connection_address)
+                    self.__poll.register(self.__msg_socket, zmq.POLLIN)
+                    # return None for mean-time
                     return None
 
                 # save the unique port addresses
@@ -1252,7 +1377,7 @@ class NetGear:
                         # decode JPEG frame
                         recvd_data = simplejpeg.decode_jpeg(
                             recv_array,
-                            colorspace="BGR",
+                            colorspace=recv_json["compression"]["colorspace"],
                             fastdct=self.__jpeg_compression_fastdct
                             or recv_json["compression"]["dct"],
                             fastupsample=self.__jpeg_compression_fastupsample
@@ -1268,6 +1393,13 @@ class NetGear:
                                     self.__ex_compression_params,
                                 )
                             )
+
+                        if (
+                            recv_json["compression"]["colorspace"] == "GRAY"
+                            and recvd_data.ndim == 3
+                        ):
+                            # patch for https://gitlab.com/jfolz/simplejpeg/-/issues/11
+                            recvd_data = np.squeeze(recvd_data, axis=2)
                     else:
                         recvd_data = np.frombuffer(
                             recv_array, dtype=recv_json["array_dtype"]
@@ -1283,12 +1415,12 @@ class NetGear:
             else:
                 # otherwise log normally
                 socks = dict(self.__poll.poll(self.__request_timeout))
-                if socks.get(self.__msg_socket) == self.__zmq.POLLIN:
+                if socks.get(self.__msg_socket) == zmq.POLLIN:
                     recv_confirmation = self.__msg_socket.recv()
                 else:
                     logger.critical("No response from Client, Reconnecting again...")
                     # Socket is confused. Close and remove it.
-                    self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
+                    self.__msg_socket.setsockopt(zmq.LINGER, 0)
                     self.__msg_socket.close()
                     self.__poll.unregister(self.__msg_socket)
                     self.__max_retries -= 1
@@ -1302,8 +1434,21 @@ class NetGear:
 
                     # Create new connection
                     self.__msg_socket = self.__msg_context.socket(self.__msg_pattern)
-                    self.__msg_socket.connect(self.__connection_address)
-                    self.__poll.register(self.__msg_socket, self.__zmq.POLLIN)
+                    # handle SSH tunneling if enabled
+                    if self.__ssh_tunnel_mode:
+                        # establish tunnel connection
+                        ssh.tunnel_connection(
+                            self.__msg_socket,
+                            self.__connection_address,
+                            self.__ssh_tunnel_mode,
+                            keyfile=self.__ssh_tunnel_keyfile,
+                            password=self.__ssh_tunnel_pwd,
+                            paramiko=self.__paramiko_present,
+                        )
+                    else:
+                        # connect normally
+                        self.__msg_socket.connect(self.__connection_address)
+                    self.__poll.register(self.__msg_socket, zmq.POLLIN)
 
                     return None
 
@@ -1351,11 +1496,12 @@ class NetGear:
             ):
                 try:
                     # properly close the socket
-                    self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
+                    self.__msg_socket.setsockopt(zmq.LINGER, 0)
                     self.__msg_socket.close()
-                except self.__ZMQError:
+                except ZMQError:
                     pass
                 finally:
+                    # exit
                     return
 
             if self.__multiserver_mode:
@@ -1368,35 +1514,23 @@ class NetGear:
 
             try:
                 if self.__multiclient_mode:
-                    if self.__port_buffer:
-                        for _ in self.__port_buffer:
-                            self.__msg_socket.send_json(term_dict)
-
-                        # check for confirmation if available within half timeout
-                        if self.__pattern < 2:
-                            if self.__logging:
-                                logger.debug("Terminating. Please wait...")
-                            if self.__msg_socket.poll(
-                                self.__request_timeout // 5, self.__zmq.POLLIN
-                            ):
-                                self.__msg_socket.recv()
+                    for _ in self.__port_buffer:
+                        self.__msg_socket.send_json(term_dict)
                 else:
                     self.__msg_socket.send_json(term_dict)
 
-                    # check for confirmation if available within half timeout
-                    if self.__pattern < 2:
-                        if self.__logging:
-                            logger.debug("Terminating. Please wait...")
-                        if self.__msg_socket.poll(
-                            self.__request_timeout // 5, self.__zmq.POLLIN
-                        ):
-                            self.__msg_socket.recv()
+                # check for confirmation if available within 1/5 timeout
+                if self.__pattern < 2:
+                    if self.__logging:
+                        logger.debug("Terminating. Please wait...")
+                    if self.__msg_socket.poll(self.__request_timeout // 5, zmq.POLLIN):
+                        self.__msg_socket.recv()
             except Exception as e:
-                if not isinstance(e, self.__ZMQError):
+                if not isinstance(e, ZMQError):
                     logger.exception(str(e))
             finally:
                 # properly close the socket
-                self.__msg_socket.setsockopt(self.__zmq.LINGER, 0)
+                self.__msg_socket.setsockopt(zmq.LINGER, 0)
                 self.__msg_socket.close()
                 if self.__logging:
                     logger.debug("Terminated Successfully!")

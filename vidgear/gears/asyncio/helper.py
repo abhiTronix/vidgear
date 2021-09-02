@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,68 +21,22 @@ limitations under the License.
 # Contains all the support functions/modules required by Vidgear Asyncio packages
 
 # import the necessary packages
-
 import os
 import cv2
 import sys
 import errno
 import numpy as np
-import aiohttp
 import asyncio
 import logging as log
 import platform
 import requests
 from tqdm import tqdm
 from colorlog import ColoredFormatter
-from pkg_resources import parse_version
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
-
-def logger_handler():
-    """
-    ### logger_handler
-
-    Returns the logger handler
-
-    **Returns:** A logger handler
-    """
-    # logging formatter
-    formatter = ColoredFormatter(
-        "%(bold_cyan)s%(asctime)s :: %(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
-        datefmt="%H:%M:%S",
-        reset=False,
-        log_colors={
-            "INFO": "bold_green",
-            "DEBUG": "bold_yellow",
-            "WARNING": "bold_purple",
-            "ERROR": "bold_red",
-            "CRITICAL": "bold_red,bg_white",
-        },
-    )
-    # check if VIDGEAR_LOGFILE defined
-    file_mode = os.environ.get("VIDGEAR_LOGFILE", False)
-    # define handler
-    handler = log.StreamHandler()
-    if file_mode and isinstance(file_mode, str):
-        file_path = os.path.abspath(file_mode)
-        if (os.name == "nt" or os.access in os.supports_effective_ids) and os.access(
-            os.path.dirname(file_path), os.W_OK
-        ):
-            file_path = (
-                os.path.join(file_path, "vidgear.log")
-                if os.path.isdir(file_path)
-                else file_path
-            )
-            handler = log.FileHandler(file_path, mode="a")
-            formatter = log.Formatter(
-                "%(asctime)s :: %(name)s :: %(levelname)s :: %(message)s",
-                datefmt="%H:%M:%S",
-            )
-
-    handler.setFormatter(formatter)
-    return handler
-
+# import helper packages
+from ..helper import logger_handler, mkdir_safe
 
 # define logger
 logger = log.getLogger("Helper Asyncio")
@@ -114,30 +68,9 @@ class TimeoutHTTPAdapter(HTTPAdapter):
         return super().send(request, **kwargs)
 
 
-def mkdir_safe(dir, logging=False):
-    """
-    ### mkdir_safe
-
-    Safely creates directory at given path.
-
-    Parameters:
-        logging (bool): enables logging for its operations
-
-    """
-    try:
-        os.makedirs(dir)
-        if logging:
-            logger.debug("Created directory at `{}`".format(dir))
-    except OSError as e:
-        if e.errno != errno.EEXIST:
-            raise
-        if logging:
-            logger.debug("Directory already exists at `{}`".format(dir))
-
-
 def create_blank_frame(frame=None, text="", logging=False):
     """
-    ### create_blank_frame
+    ## create_blank_frame
 
     Create blank frames of given frame size with text
 
@@ -147,12 +80,12 @@ def create_blank_frame(frame=None, text="", logging=False):
     **Returns:**  A reduced numpy ndarray array.
     """
     # check if frame is valid
-    if frame is None:
-        raise ValueError("[Helper:ERROR] :: Input frame cannot be NoneType!")
+    if frame is None or not (isinstance(frame, np.ndarray)):
+        raise ValueError("[Helper:ERROR] :: Input frame is invalid!")
     # grab the frame size
     (height, width) = frame.shape[:2]
     # create blank frame
-    blank_frame = np.zeros((height, width, 3), np.uint8)
+    blank_frame = np.zeros(frame.shape, frame.dtype)
     # setup text
     if text and isinstance(text, str):
         if logging:
@@ -169,19 +102,21 @@ def create_blank_frame(frame=None, text="", logging=False):
         cv2.putText(
             blank_frame, text, (textX, textY), font, fontScale, (125, 125, 125), 6
         )
+
     # return frame
     return blank_frame
 
 
-async def reducer(frame=None, percentage=0):
+async def reducer(frame=None, percentage=0, interpolation=cv2.INTER_LANCZOS4):
     """
-    ### reducer
+    ## reducer
 
     Asynchronous method that reduces frame size by given percentage.
 
     Parameters:
         frame (numpy.ndarray): inputs numpy array(frame).
         percentage (int/float): inputs size-reduction percentage.
+        interpolation (int): Change resize interpolation.
 
     **Returns:**  A reduced numpy ndarray array.
     """
@@ -195,6 +130,11 @@ async def reducer(frame=None, percentage=0):
             "[Helper:ERROR] :: Given frame-size reduction percentage is invalid, Kindly refer docs."
         )
 
+    if not (isinstance(interpolation, int)):
+        raise ValueError(
+            "[Helper:ERROR] :: Given interpolation is invalid, Kindly refer docs."
+        )
+
     # grab the frame size
     (height, width) = frame.shape[:2]
 
@@ -205,12 +145,12 @@ async def reducer(frame=None, percentage=0):
     dimensions = (int(reduction), int(height * ratio))
 
     # return the resized frame
-    return cv2.resize(frame, dimensions, interpolation=cv2.INTER_LANCZOS4)
+    return cv2.resize(frame, dimensions, interpolation=interpolation)
 
 
 def generate_webdata(path, c_name="webgear", overwrite_default=False, logging=False):
     """
-    ### generate_webdata
+    ## generate_webdata
 
     Auto-Generates, and Auto-validates default data for WebGear API.
 
@@ -284,7 +224,7 @@ def generate_webdata(path, c_name="webgear", overwrite_default=False, logging=Fa
 
 def download_webdata(path, c_name="webgear", files=[], logging=False):
     """
-    ### download_webdata
+    ## download_webdata
 
     Downloads given list of files for WebGear API(if not available) from GitHub Server,
     and also Validates them.
@@ -352,7 +292,7 @@ def download_webdata(path, c_name="webgear", files=[], logging=False):
 
 def validate_webdata(path, files=[], logging=False):
     """
-    ### validate_auth_keys
+    ## validate_auth_keys
 
     Validates, and also maintains downloaded list of files.
 

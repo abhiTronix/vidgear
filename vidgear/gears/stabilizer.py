@@ -5,7 +5,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,13 +21,13 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-
 import cv2
 import numpy as np
 import logging as log
 from collections import deque
 
-from .helper import logger_handler, check_CV_version
+# import helper packages
+from .helper import logger_handler, check_CV_version, retrieve_best_interpolation
 
 # define logger
 logger = log.getLogger("Stabilizer")
@@ -137,6 +137,11 @@ class Stabilizer:
 
         # define OpenCV version
         self.__cv2_version = check_CV_version()
+
+        # retrieve best interpolation
+        self.__interpolation = retrieve_best_interpolation(
+            ["INTER_LINEAR_EXACT", "INTER_LINEAR", "INTER_AREA"]
+        )
 
         # define normalized box filter
         self.__box_filter = np.ones(smoothing_radius) / smoothing_radius
@@ -374,11 +379,10 @@ class Stabilizer:
                 self.__crop_n_zoom : -self.__crop_n_zoom,
             ]
             # zoom stabilized frame
-            interpolation = (
-                cv2.INTER_CUBIC if (self.__cv2_version < 4) else cv2.INTER_LINEAR_EXACT
-            )
             frame_stabilized = cv2.resize(
-                frame_cropped, self.__frame_size[::-1], interpolation=interpolation
+                frame_cropped,
+                self.__frame_size[::-1],
+                interpolation=self.__interpolation,
             )
 
         # finally return stabilized frame

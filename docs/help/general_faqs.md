@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,23 +24,25 @@ limitations under the License.
 &nbsp;
 
 
-## "I'm new to Python Programming or its usage in Computer Vision", How to use vidgear in my projects?
+## "I'm new to Python Programming or its usage in OpenCV Library", How to use vidgear in my projects?
 
-**Answer:** It's recommended to first go through the following dedicated tutorials/websites thoroughly, and learn how OpenCV-Python works _(with examples)_:
+**Answer:** Before using vidgear, It's recommended to first go through the following dedicated blog sites and learn how OpenCV-Python syntax works _(with examples)_:
 
-- [**PyImageSearch.com** ➶](https://www.pyimagesearch.com/) is the best resource for learning OpenCV and its Python implementation. Adrian Rosebrock provides many practical OpenCV techniques with tutorials, code examples, blogs, and books at PyImageSearch.com. I also learned a lot about computer vision methods and various useful techniques. Highly recommended!
+- [**PyImageSearch.com** ➶](https://www.pyimagesearch.com/) is the best resource for learning OpenCV and its Python implementation. Adrian Rosebrock provides many practical OpenCV techniques with tutorials, code examples, blogs, and books at PyImageSearch.com. Highly recommended!
 
 - [**learnopencv.com** ➶](https://www.learnopencv.com)  Maintained by OpenCV CEO Satya Mallick. This blog is for programmers, hackers, engineers, scientists, students, and self-starters interested in Computer Vision and Machine Learning.
 
-- There's also the official [**OpenCV Tutorials** ➶](https://docs.opencv.org/master/d6/d00/tutorial_py_root.html), provided by the OpenCV folks themselves.
+- There's also the official [**OpenCV Tutorials** ➶](https://docs.opencv.org/master/d6/d00/tutorial_py_root.html) curated by the OpenCV developers.
 
-Finally, once done, see [Switching from OpenCV ➶](../../switch_from_cv/) and go through our [Gears ➶](../../gears/#gears-what-are-these) to learn how VidGear works. If you run into any trouble or have any questions, then see [getting help ➶](../get_help)
+Once done, visit [Switching from OpenCV ➶](../../switch_from_cv/) to easily replace OpenCV APIs with suitable [Gears ➶](../../gears/#gears-what-are-these) in your project. All the best! :smiley:
+
+!!! tip "If you run into any trouble or have any questions, then refer our [**Help**](../get_help) section."
 
 &nbsp;
 
 ## "VidGear is using Multi-threading, but Python is notorious for its poor performance in multithreading?"
 
-**Answer:** See [Threaded-Queue-Mode ➶](../../bonus/TQM/)
+**Answer:** Refer vidgear's [Threaded-Queue-Mode ➶](../../bonus/TQM/)
 
 &nbsp;
 

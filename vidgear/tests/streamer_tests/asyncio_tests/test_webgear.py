@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,11 +27,13 @@ import logging as log
 import requests
 import tempfile
 from starlette.routing import Route
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import PlainTextResponse
 from starlette.testclient import TestClient
 
 from vidgear.gears.asyncio import WebGear
-from vidgear.gears.asyncio.helper import logger_handler
+from vidgear.gears.helper import logger_handler
 
 # define test logger
 logger = log.getLogger("Test_webgear")
@@ -72,7 +74,7 @@ async def custom_frame_generator():
         encodedImage = cv2.imencode(".jpg", frame)[1].tobytes()
         # yield frame in byte format
         yield (b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n")
-        await asyncio.sleep(0.00001)
+        await asyncio.sleep(0)
     # close stream
     stream.release()
 
@@ -106,36 +108,58 @@ def test_webgear_class(source, stabilize, colorspace, time_delay):
         pytest.fail(str(e))
 
 
-test_data = [
-    {
-        "frame_size_reduction": 47,
-        "frame_jpeg_quality": 88,
-        "frame_jpeg_optimize": True,
-        "frame_jpeg_progressive": False,
-        "overwrite_default_files": "invalid_value",
-        "enable_infinite_frames": "invalid_value",
-        "custom_data_location": True,
-    },
-    {
-        "frame_size_reduction": "invalid_value",
-        "frame_jpeg_quality": "invalid_value",
-        "frame_jpeg_optimize": "invalid_value",
-        "frame_jpeg_progressive": "invalid_value",
-        "overwrite_default_files": True,
-        "enable_infinite_frames": False,
-        "custom_data_location": "im_wrong",
-    },
-    {"custom_data_location": tempfile.gettempdir()},
-]
-
-
-@pytest.mark.parametrize("options", test_data)
+@pytest.mark.parametrize(
+    "options",
+    [
+        {
+            "jpeg_compression_colorspace": "invalid",
+            "jpeg_compression_quality": 5,
+            "custom_data_location": True,
+            "jpeg_compression_fastdct": "invalid",
+            "jpeg_compression_fastupsample": "invalid",
+            "frame_size_reduction": "invalid",
+            "overwrite_default_files": "invalid",
+            "enable_infinite_frames": "invalid",
+        },
+        {
+            "jpeg_compression_colorspace": " gray  ",
+            "jpeg_compression_quality": 50,
+            "jpeg_compression_fastdct": True,
+            "jpeg_compression_fastupsample": True,
+            "overwrite_default_files": True,
+            "enable_infinite_frames": False,
+            "custom_data_location": tempfile.gettempdir(),
+        },
+        {
+            "jpeg_compression_quality": 55.55,
+            "jpeg_compression_fastdct": True,
+            "jpeg_compression_fastupsample": True,
+            "custom_data_location": "im_wrong",
+        },
+        {
+            "enable_infinite_frames": True,
+            "custom_data_location": return_testvideo_path(),
+        },
+    ],
+)
 def test_webgear_options(options):
     """
     Test for various WebGear API internal options
     """
     try:
-        web = WebGear(source=return_testvideo_path(), logging=True, **options)
+        colorspace = (
+            "COLOR_BGR2GRAY"
+            if "jpeg_compression_colorspace" in options
+            and isinstance(options["jpeg_compression_colorspace"], str)
+            and options["jpeg_compression_colorspace"].strip().upper() == "GRAY"
+            else None
+        )
+        web = WebGear(
+            source=return_testvideo_path(),
+            colorspace=colorspace,
+            logging=True,
+            **options
+        )
         client = TestClient(web(), raise_server_exceptions=True)
         response = client.get("/")
         assert response.status_code == 200
@@ -143,8 +167,8 @@ def test_webgear_options(options):
         assert response_video.status_code == 200
         web.shutdown()
     except Exception as e:
-        if isinstance(e, AssertionError):
-            logger.exception(str(e))
+        if isinstance(e, AssertionError) or isinstance(e, os.access):
+            pytest.xfail(str(e))
         elif isinstance(e, requests.exceptions.Timeout):
             logger.exceptions(str(e))
         else:
@@ -175,6 +199,30 @@ def test_webgear_custom_server_generator(generator, result):
             pytest.fail(str(e))
 
 
+test_data_class = [
+    (None, False),
+    ([Middleware(CORSMiddleware, allow_origins=["*"])], True),
+    ([Route("/hello", endpoint=hello_webpage)], False),  # invalid value
+]
+
+
+@pytest.mark.parametrize("middleware, result", test_data_class)
+def test_webgear_custom_middleware(middleware, result):
+    """
+    Test for WebGear API's custom middleware
+    """
+    try:
+        web = WebGear(source=return_testvideo_path(), logging=True)
+        web.middleware = middleware
+        client = TestClient(web(), raise_server_exceptions=True)
+        response = client.get("/")
+        assert response.status_code == 200
+        web.shutdown()
+    except Exception as e:
+        if result:
+            pytest.fail(str(e))
+
+
 def test_webgear_routes():
     """
     Test for WebGear API's custom routes
@@ -183,9 +231,9 @@ def test_webgear_routes():
         # add various performance tweaks as usual
         options = {
             "frame_size_reduction": 40,
-            "frame_jpeg_quality": 80,
-            "frame_jpeg_optimize": True,
-            "frame_jpeg_progressive": False,
+            "jpeg_compression_quality": 80,
+            "jpeg_compression_fastdct": True,
+            "jpeg_compression_fastupsample": False,
         }
         # initialize WebGear app
         web = WebGear(source=return_testvideo_path(), logging=True, **options)

@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,22 +18,37 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-
 import os
 import cv2
 import sys
 import asyncio
 import inspect
+import numpy as np
 import logging as log
 from collections import deque
-from starlette.routing import Mount, Route
-from starlette.responses import StreamingResponse
-from starlette.templating import Jinja2Templates
-from starlette.staticfiles import StaticFiles
-from starlette.applications import Starlette
+from os.path import expanduser
 
-from .helper import reducer, logger_handler, generate_webdata, create_blank_frame
+# import helper packages
+from .helper import (
+    reducer,
+    generate_webdata,
+    create_blank_frame,
+)
+from ..helper import logger_handler, retrieve_best_interpolation, import_dependency_safe
+
+# import additional API(s)
 from ..videogear import VideoGear
+
+# safe import critical Class modules
+starlette = import_dependency_safe("starlette", error="silent")
+if not (starlette is None):
+    from starlette.routing import Mount, Route
+    from starlette.responses import StreamingResponse
+    from starlette.templating import Jinja2Templates
+    from starlette.staticfiles import StaticFiles
+    from starlette.applications import Starlette
+    from starlette.middleware import Middleware
+simplejpeg = import_dependency_safe("simplejpeg", error="silent", min_version="1.6.1")
 
 # define logger
 logger = log.getLogger("WebGear")
@@ -91,13 +106,24 @@ class WebGear:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Tweak Parameters of WebGear, CamGear, PiGear & Stabilizer.
         """
+        # raise error(s) for critical Class imports
+        import_dependency_safe("starlette" if starlette is None else "")
+        import_dependency_safe(
+            "simplejpeg" if simplejpeg is None else "", min_version="1.6.1"
+        )
 
         # initialize global params
-        self.__jpeg_quality = 90  # 90% quality
-        self.__jpeg_optimize = 0  # optimization off
-        self.__jpeg_progressive = 0  # jpeg will be baseline instead
-        self.__frame_size_reduction = 20  # 20% reduction
+        # define frame-compression handler
+        self.__jpeg_compression_quality = 90  # 90% quality
+        self.__jpeg_compression_fastdct = True  # fastest DCT on by default
+        self.__jpeg_compression_fastupsample = False  # fastupsample off by default
+        self.__jpeg_compression_colorspace = "BGR"  # use BGR colorspace by default
         self.__logging = logging
+        self.__frame_size_reduction = 25  # use 25% reduction
+        # retrieve interpolation for reduction
+        self.__interpolation = retrieve_best_interpolation(
+            ["INTER_LINEAR_EXACT", "INTER_LINEAR", "INTER_AREA"]
+        )
 
         custom_data_location = ""  # path to save data-files to custom location
         data_path = ""  # path to WebGear data-files
@@ -109,6 +135,59 @@ class WebGear:
 
         # assign values to global variables if specified and valid
         if options:
+            if "jpeg_compression_colorspace" in options:
+                value = options["jpeg_compression_colorspace"]
+                if isinstance(value, str) and value.strip().upper() in [
+                    "RGB",
+                    "BGR",
+                    "RGBX",
+                    "BGRX",
+                    "XBGR",
+                    "XRGB",
+                    "GRAY",
+                    "RGBA",
+                    "BGRA",
+                    "ABGR",
+                    "ARGB",
+                    "CMYK",
+                ]:
+                    # set encoding colorspace
+                    self.__jpeg_compression_colorspace = value.strip().upper()
+                else:
+                    logger.warning(
+                        "Skipped invalid `jpeg_compression_colorspace` value!"
+                    )
+                del options["jpeg_compression_colorspace"]  # clean
+
+            if "jpeg_compression_quality" in options:
+                value = options["jpeg_compression_quality"]
+                # set valid jpeg quality
+                if isinstance(value, (int, float)) and value >= 10 and value <= 100:
+                    self.__jpeg_compression_quality = int(value)
+                else:
+                    logger.warning("Skipped invalid `jpeg_compression_quality` value!")
+                del options["jpeg_compression_quality"]  # clean
+
+            if "jpeg_compression_fastdct" in options:
+                value = options["jpeg_compression_fastdct"]
+                # enable jpeg fastdct
+                if isinstance(value, bool):
+                    self.__jpeg_compression_fastdct = value
+                else:
+                    logger.warning("Skipped invalid `jpeg_compression_fastdct` value!")
+                del options["jpeg_compression_fastdct"]  # clean
+
+            if "jpeg_compression_fastupsample" in options:
+                value = options["jpeg_compression_fastupsample"]
+                # enable jpeg  fastupsample
+                if isinstance(value, bool):
+                    self.__jpeg_compression_fastupsample = value
+                else:
+                    logger.warning(
+                        "Skipped invalid `jpeg_compression_fastupsample` value!"
+                    )
+                del options["jpeg_compression_fastupsample"]  # clean
+
             if "frame_size_reduction" in options:
                 value = options["frame_size_reduction"]
                 if isinstance(value, (int, float)) and value >= 0 and value <= 90:
@@ -116,30 +195,6 @@ class WebGear:
                 else:
                     logger.warning("Skipped invalid `frame_size_reduction` value!")
                 del options["frame_size_reduction"]  # clean
-
-            if "frame_jpeg_quality" in options:
-                value = options["frame_jpeg_quality"]
-                if isinstance(value, (int, float)) and value >= 10 and value <= 95:
-                    self.__jpeg_quality = int(value)
-                else:
-                    logger.warning("Skipped invalid `frame_jpeg_quality` value!")
-                del options["frame_jpeg_quality"]  # clean
-
-            if "frame_jpeg_optimize" in options:
-                value = options["frame_jpeg_optimize"]
-                if isinstance(value, bool):
-                    self.__jpeg_optimize = int(value)
-                else:
-                    logger.warning("Skipped invalid `frame_jpeg_optimize` value!")
-                del options["frame_jpeg_optimize"]  # clean
-
-            if "frame_jpeg_progressive" in options:
-                value = options["frame_jpeg_progressive"]
-                if isinstance(value, bool):
-                    self.__jpeg_progressive = int(value)
-                else:
-                    logger.warning("Skipped invalid `frame_jpeg_progressive` value!")
-                del options["frame_jpeg_progressive"]  # clean
 
             if "custom_data_location" in options:
                 value = options["custom_data_location"]
@@ -183,8 +238,6 @@ class WebGear:
             )
         else:
             # otherwise generate suitable path
-            from os.path import expanduser
-
             data_path = generate_webdata(
                 os.path.join(expanduser("~"), ".vidgear"),
                 c_name="webgear",
@@ -197,15 +250,6 @@ class WebGear:
             logger.debug(
                 "`{}` is the default location for saving WebGear data-files.".format(
                     data_path
-                )
-            )
-            logger.debug(
-                "Setting params:: Size Reduction:{}%, JPEG quality:{}%, JPEG optimizations:{}, JPEG progressive:{}{}.".format(
-                    self.__frame_size_reduction,
-                    self.__jpeg_quality,
-                    bool(self.__jpeg_optimize),
-                    bool(self.__jpeg_progressive),
-                    " and emulating infinite frames" if self.__enable_inf else "",
                 )
             )
 
@@ -224,12 +268,12 @@ class WebGear:
                 name="static",
             ),
         ]
+        # define middleware support
+        self.middleware = []
         # Handle video source
         if source is None:
             self.config = {"generator": None}
             self.__stream = None
-            if self.__logging:
-                logger.warning("Given source is of NoneType!")
         else:
             # define stream with necessary params
             self.__stream = VideoGear(
@@ -248,6 +292,25 @@ class WebGear:
             )
             # define default frame generator in configuration
             self.config = {"generator": self.__producer}
+
+        # log if specified
+        if self.__logging:
+            if source is None:
+                logger.warning(
+                    "Given source is of NoneType. Therefore, JPEG Frame-Compression is disabled!"
+                )
+            else:
+                logger.debug(
+                    "Enabling JPEG Frame-Compression with Colorspace:`{}`, Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                        self.__jpeg_compression_colorspace,
+                        self.__jpeg_compression_quality,
+                        "enabled" if self.__jpeg_compression_fastdct else "disabled",
+                        "enabled"
+                        if self.__jpeg_compression_fastupsample
+                        else "disabled",
+                    )
+                )
+
         # copying original routing tables for further validation
         self.__rt_org_copy = self.routes[:]
         # initialize blank frame
@@ -265,6 +328,14 @@ class WebGear:
             x in self.routes for x in self.__rt_org_copy
         ):
             raise RuntimeError("[WebGear:ERROR] :: Routing tables are not valid!")
+
+        # validate middlewares
+        assert not (self.middleware is None), "Middlewares are NoneType!"
+        if self.middleware and (
+            not isinstance(self.middleware, list)
+            or not all(isinstance(x, Middleware) for x in self.middleware)
+        ):
+            raise RuntimeError("[WebGear:ERROR] :: Middlewares are not valid!")
 
         # validate assigned frame generator in WebGear configuration
         if isinstance(self.config, dict) and "generator" in self.config:
@@ -291,6 +362,7 @@ class WebGear:
         return Starlette(
             debug=(True if self.__logging else False),
             routes=self.routes,
+            middleware=self.middleware,
             exception_handlers=self.__exception_handlers,
             on_shutdown=[self.shutdown],
         )
@@ -324,32 +396,44 @@ class WebGear:
 
             # reducer frames size if specified
             if self.__frame_size_reduction:
-                frame = await reducer(frame, percentage=self.__frame_size_reduction)
+                frame = await reducer(
+                    frame,
+                    percentage=self.__frame_size_reduction,
+                    interpolation=self.__interpolation,
+                )
+
             # handle JPEG encoding
-            encodedImage = cv2.imencode(
-                ".jpg",
-                frame,
-                [
-                    cv2.IMWRITE_JPEG_QUALITY,
-                    self.__jpeg_quality,
-                    cv2.IMWRITE_JPEG_PROGRESSIVE,
-                    self.__jpeg_progressive,
-                    cv2.IMWRITE_JPEG_OPTIMIZE,
-                    self.__jpeg_optimize,
-                ],
-            )[1].tobytes()
+            if self.__jpeg_compression_colorspace == "GRAY":
+                if frame.ndim == 2:
+                    # patch for https://gitlab.com/jfolz/simplejpeg/-/issues/11
+                    frame = np.expand_dims(frame, axis=2)
+                encodedImage = simplejpeg.encode_jpeg(
+                    frame,
+                    quality=self.__jpeg_compression_quality,
+                    colorspace=self.__jpeg_compression_colorspace,
+                    fastdct=self.__jpeg_compression_fastdct,
+                )
+            else:
+                encodedImage = simplejpeg.encode_jpeg(
+                    frame,
+                    quality=self.__jpeg_compression_quality,
+                    colorspace=self.__jpeg_compression_colorspace,
+                    colorsubsampling="422",
+                    fastdct=self.__jpeg_compression_fastdct,
+                )
+
             # yield frame in byte format
             yield (
                 b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n"
             )
-            await asyncio.sleep(0.00001)
+            # sleep for sometime.
+            await asyncio.sleep(0)
 
     async def __video(self, scope):
         """
         Return a async video streaming response.
         """
         assert scope["type"] in ["http", "https"]
-        await asyncio.sleep(0.00001)
         return StreamingResponse(
             self.config["generator"](),
             media_type="multipart/x-mixed-replace; boundary=frame",

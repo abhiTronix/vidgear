@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,32 +20,32 @@ limitations under the License.
 
 # Multi-Clients Mode for NetGear API 
 
-
-## Overview
-
 <figure>
   <img src="../../../../assets/images/multi_client.png" alt="NetGear's Multi-Clients Mode" loading="lazy"/>
   <figcaption>NetGear's Multi-Clients Mode</figcaption>
 </figure>
 
+## Overview
 
 In Multi-Clients Mode, NetGear robustly handles Multiple Clients at once thereby able to broadcast frames and data across multiple Clients/Consumers in the network at same time. This mode works almost contrary to [Multi-Servers Mode](../multi_server/) but here data transfer works unidirectionally with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ only. Every new Client that connects to single Server can be identified by its unique port address on the network. 
 
 The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`) and can be easily activated in NetGear API through `multiclient_mode` attribute of its [`options`](../../params/#options) dictionary parameter during initialization.
 
 
-!!! warning "Multi-Clients is best for tranferring **Data with Video-frames** to specific multiple Clients at the same time. But if you're looking for sheer performance for broadcasting see [WebGear API](../../../webgear/overview/)."
+!!! tip "Multi-Clients Mode is best for broadcasting **Meta-Data with Video-frames** to specific limited number of clients in real time. But if you're looking to scale broadcast to a very large pool of clients, then see our [WebGear](../../../webgear/overview/) or [WebGear_RTC](../../../webgear_rtc/overview/) APIs."
 
 &nbsp;
 
 
-!!! danger "Multi-Clients Mode Requirements"
+!!! danger "Important Information regarding Multi-Clients Mode"
 
     * A unique PORT address **MUST** be assigned to each Client on the network using its [`port`](../../params/#port) parameter.
     
-    * A list/tuple of PORT addresses of all unique Cients **MUST** be assigned at Server's end using its [`port`](../../params/#port) parameter for a successful connection.
+    * A list/tuple of PORT addresses of all unique Clients **MUST** be assigned at Server's end using its [`port`](../../params/#port) parameter for a successful connection.
 
     * Patterns `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ and `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ are the only supported pattern values for this Mode. Therefore, calling any other pattern value with is mode will result in `ValueError`.
+
+    * Multi-Clients and Multi-Servers exclusive modes **CANNOT** be enabled simultaneously, Otherwise NetGear API will throw `ValueError`.
 
     * The [`address`](../../params/#address) parameter value of each Client **MUST** exactly match the Server. 
 
@@ -67,19 +67,15 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
 - [x] If the server gets disconnected, all the clients will automatically exit to save resources.
 
-&nbsp;
 
 &nbsp;
-
 
 ## Usage Examples
 
 
-!!! info "Important Information"
+!!! alert "Important"
 
     * ==Frame/Data transmission will **NOT START** until all given Client(s) are connected to the Server.==
-
-    * Multi-Clients and Multi-Servers exclusive modes **CANNOT** be enabled simultaneously, Otherwise NetGear API will throw `ValueError`.
 
     * For sake of simplicity, in these examples we will use only two unique Clients, but the number of these Clients can be extended to **SEVERAL** numbers depending upon your Network bandwidth and System Capabilities.
 
@@ -89,7 +85,9 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
 ### Bare-Minimum Usage
 
-In this example, we will capturing live video-frames from a source _(a.k.a Servers)_ with a webcam connected to it. Afterwards, those captured frame will be transferred over the network to a two independent system _(a.k.a Client)_ at the same time, and will be displayed in Output Window at real-time. All this by using this Multi-Clients Mode in NetGear API.
+In this example, we will capturing live video-frames from a source _(a.k.a Server)_ with a webcam connected to it. Afterwards, those captured frame will be sent over the network to two independent system _(a.k.a Clients)_ using this Multi-Clients Mode in NetGear API. Finally, both Clients will be displaying recieved frames in Output Windows in real time.
+
+!!! tip "This example is useful for building applications like Real-Time Video Broadcasting to multiple clients in local network."
 
 #### Server's End
 

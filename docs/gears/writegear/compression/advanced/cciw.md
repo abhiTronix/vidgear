@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ execute_ffmpeg_cmd(ffmpeg_command)
 
 ## Usage Examples
 
-!!! tip "Following usage examples is just an idea of what can be done with this powerful function. So just Tinker with various FFmpeg parameters/commands yourself and see it working. Also, if you're unable to run any terminal FFmpeg command, then [report an issue](../../../../../contribution/issue/)."
+!!! abstract "Following usage examples is just an idea of what can be done with this powerful function. So just Tinker with various FFmpeg parameters/commands yourself and see it working. Also, if you're unable to run any terminal FFmpeg command, then [report an issue](../../../../../contribution/issue/)."
 
 
 ### Using WriteGear to separate Audio from Video
@@ -119,7 +119,7 @@ In this example, we will merge audio with video:
 
 !!! tip "You can also directly add external audio input to video-frames in WriteGear. For more information, See [this FAQ example ➶](../../../../../help/writegear_faqs/#how-add-external-audio-file-input-to-video-frames)"
 
-!!! warning "Example Assumptions"
+!!! alert "Example Assumptions"
 
     * You already have a separate video(i.e `'input-video.mp4'`) and audio(i.e `'input-audio.aac'`) files.
 

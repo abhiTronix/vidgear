@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ limitations under the License.
 ===============================================
 -->
 
-!!! example "StreamGear API usage examples can be found [here ➶](../../../gears/streamgear/usage/)"
+!!! example "StreamGear API usage examples for: [Single-Source Mode ➶](../../../gears/streamgear/ssm/usage/) and [Real-time Frames Mode ➶](../../../gears/streamgear/rtfm/usage/)"
 
 !!! info "StreamGear API parameters are explained [here ➶](../../../gears/streamgear/params/)"
 
-::: vidgear.gears.StreamGear	
+::: vidgear.gears.StreamGear
 	
     
 &nbsp;

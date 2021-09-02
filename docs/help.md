@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -73,9 +73,11 @@ Let others know how you are using VidGear and why you like it!
 &nbsp; 
 
 
-## Help Author
+## Helping Author
 
-Donations help keep VidGear's Development alive and motivate me _(author)_. Giving a little means a lot, even the smallest contribution can make a huge difference. You can financially support through ko-fi 🤝:
+> Donations help keep VidGear's development alive and motivate me _(as author)_. :heart:
+
+It is (like all open source software) a labour of love and something I am doing with my own free time. If you would like to say thanks, please feel free to make a donation through ko-fi:
 
 <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#eba100', 'W7W8WTYO');kofiwidget2.draw();</script> 
 

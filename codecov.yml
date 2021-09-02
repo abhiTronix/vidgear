@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+# Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,5 +28,8 @@ coverage:
         
 ignore:
   - "vidgear/tests"
+  - "docs"
+  - "scripts"
+  - "vidgear/gears/__init__.py" #trivial
   - "vidgear/gears/asyncio/__main__.py" #trivial
   - "setup.py"

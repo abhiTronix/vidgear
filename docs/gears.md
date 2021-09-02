@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,14 +22,14 @@ limitations under the License.
 
 <figure>
   <img src="../assets/images/gears_fbd.png" loading="lazy" alt="@Vidgear Functional Block Diagram"/>
-  <figcaption>Gears: generalized workflow diagram</figcaption>
+  <figcaption>Gears: generalized workflow</figcaption>
 </figure>
 
 ## Gears, What are these?
 
 VidGear is built on Standalone APIs - also known as **Gears**, each with some unique functionality. Each Gears is designed exclusively to handle/control/process different data-specific & device-specific video streams, network streams, and media encoders/decoders. 
 
-These Gears provides the user an easy-to-use, dynamic, extensible, and exposed Multi-Threaded + Asyncio optimized internal layer above state-of-the-art libraries to work with, while silently delivering robust error-handling. 
+Gears allows users to work with an inherently optimized, easy-to-use, extensible, and exposed API Framework on top of many state-of-the-art libraries, while silently delivering robust error handling and unmatched real-time performance.
 
 ## Gears Classification
 
@@ -54,7 +54,9 @@ These Gears can be classified as follows:
 
 > **Basic Function:** Transcodes/Broadcasts files & [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames for streaming.
 
-* [StreamGear](streamgear/overview/): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
+!!! tip "You can also use [WriteGear](writegear/introduction/) for streaming with traditional protocols such as RTMP, RTSP/RTP."
+
+* [StreamGear](streamgear/introduction/): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
 
 * **Asynchronous I/O Streaming Gear:**
 
@@ -64,7 +66,7 @@ These Gears can be classified as follows:
 
 ### D. Network Gears
 
-> **Basic Function:** Sends/Receives [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames over connected network.
+> **Basic Function:** Sends/Receives [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames over connected networks.
 
 * [NetGear](netgear/overview/): Handles High-Performance Video-Frames & Data Transfer between interconnecting systems over the network.
 

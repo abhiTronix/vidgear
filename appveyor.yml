@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+# Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -51,8 +51,8 @@ install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
   - "python -m pip install --upgrade pip wheel"
-  - "python -m pip install --upgrade .[asyncio] six codecov pytest pytest-cov pytest-asyncio youtube-dl aiortc"
-  - "python -m pip install https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev/mpegdash-0.3.0.dev0-py3-none-any.whl"
+  - "python -m pip install --upgrade .[asyncio] six codecov pytest pytest-cov pytest-asyncio youtube-dl aiortc paramiko m3u8 async-asgi-testclient"
+  - "python -m pip install https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev2/mpegdash-0.3.0.dev2-py3-none-any.whl"
   - cmd: chmod +x scripts/bash/prepare_dataset.sh
   - cmd: bash scripts/bash/prepare_dataset.sh
 

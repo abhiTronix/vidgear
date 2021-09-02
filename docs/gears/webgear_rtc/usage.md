@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,6 +31,30 @@ WebGear_RTC API is the part of `asyncio` package of VidGear, thereby you need to
   pip install vidgear[asyncio]
   ```
 
+### Aiortc
+
+Must Required only if you're using [WebGear_RTC API](../../gears/webgear_rtc/overview/). You can easily install it via pip:
+
+??? error "Microsoft Visual C++ 14.0 is required."
+    
+    Installing `aiortc` on windows requires Microsoft Build Tools for Visual C++ libraries installed. You can easily fix this error by installing any **ONE** of these choices:
+
+    !!! info "While the error is calling for VC++ 14.0 - but newer versions of Visual C++ libraries works as well."
+
+      - Microsoft [Build Tools for Visual Studio](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16).
+      - Alternative link to Microsoft [Build Tools for Visual Studio](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019).
+      - Offline installer: [vs_buildtools.exe](https://aka.ms/vs/16/release/vs_buildtools.exe)
+
+    Afterwards, Select: Workloads → Desktop development with C++, then for Individual Components, select only:
+
+      - [x] Windows 10 SDK
+      - [x] C++ x64/x86 build tools
+
+    Finally, proceed installing `aiortc` via pip.
+
+```sh
+  pip install aiortc
+``` 
 
 ### ASGI Server
 
@@ -48,7 +72,7 @@ Let's implement a Bare-Minimum usage example:
 
 You can access and run WebGear_RTC VideoStreamer Server programmatically in your python script in just a few lines of code, as follows:
 
-!!! tip "For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](./../../../help/webgear_rtc_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear_rtc)"
+!!! tip "For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](../../../help/webgear_rtc_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear_rtc)"
 
 !!! info "We are using `frame_size_reduction` attribute for frame size reduction _(in percentage)_ to be streamed with its [`options`](../params/#options) dictionary parameter to cope with performance-throttling in this example."
 
@@ -72,7 +96,7 @@ uvicorn.run(web(), host="localhost", port=8000)
 web.shutdown()
 ```
 
-which can be accessed on any browser on the network at http://localhost:8000/.
+which can be accessed on any browser on your machine at http://localhost:8000/.
 
 
 ### Running from Terminal
@@ -93,8 +117,6 @@ which can also be accessed on any browser on the network at http://localhost:800
 ??? tip "Advanced Usage from Terminal"
 
     You can run `#!py3 python3 -m vidgear.gears.asyncio -h` help command to see all the advanced settings, as follows:
-
-    !!! warning "If you're using `--options/-op` flag, then kindly wrap your dictionary value in single `''` quotes."
 
     ```sh
     usage: python -m vidgear.gears.asyncio [-h] [-m MODE] [-s SOURCE] [-ep ENABLEPICAMERA] [-S STABILIZE]

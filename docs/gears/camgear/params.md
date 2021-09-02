@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -115,9 +115,9 @@ Its valid input can be one of the following:
 
 This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), the CamGear API will interpret the given `source` input as YouTube URL address. 
 
-!!! bug "Due to a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend _(`backend=cv2.CAP_GSTREAMER`)_](#backend) for any livestreams _(such as Twitch)_."
+!!! bug "Due to a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend](#backend) for any livestreams _(such as Twitch)_."
 
-!!! warning "CamGear automatically enforce GStreamer backend _(backend=`cv2.CAP_GSTREAMER`)_ for YouTube-livestreams!"
+!!! warning "CamGear automatically enforce [GStreamer backend](#backend) for YouTube-livestreams!"
 
 !!! error "CamGear will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
 
@@ -160,7 +160,7 @@ CamGear(source=0, colorspace="COLOR_BGR2HSV")
 
 This parameter manually selects the backend for OpenCV's VideoCapture class _(only if specified)_. 
 
-!!! warning "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225), CamGear automatically enforce GStreamer backend(`backend=cv2.CAP_GSTREAMER`) for YouTube-livestreams in [Stream Mode](#stream_mode). This behavior discards any `backend` parameter value for those streams."
+!!! warning "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225), CamGear automatically enforce GStreamer backend for YouTube-livestreams in [Stream Mode](#stream_mode). This behavior discards any `backend` parameter value for those streams."
 
 **Data-Type:** Integer
 

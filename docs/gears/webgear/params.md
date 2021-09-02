@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -75,11 +75,61 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     WebGear(logging=True, **options)
     ```
 
-* **`frame_size_reduction`** _(int/float)_ : This attribute controls the size reduction _(in percentage)_ of the frame to be streamed on Server. The value defaults to `20`, and must be no higher than `90` _(fastest, max compression, Barely Visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40-60`. Its usage is as follows:
+* **`frame_size_reduction`** _(int/float)_ : This attribute controls the size reduction _(in percentage)_ of the frame to be streamed on Server and it has the  most significant effect on performance. The value defaults to `25`, and must be no higher than `90` _(fastest, max compression, Barely Visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40-60`. Its usage is as follows:
 
     ```python
     # frame-size will be reduced by 50%
     options = {"frame_size_reduction": 50} 
+    # assign it
+    WebGear(logging=True, **options)
+    ```
+
+* **`jpeg_compression_quality`**: _(int/float)_ This attribute controls the JPEG quantization factor. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. Its usage is as follows:
+
+    !!! new "New in v0.2.2" 
+        `enable_infinite_frames` attribute was added in `v0.2.2`.
+
+    ```python
+    # activate jpeg encoding and set quality 95%
+    options = {"jpeg_compression_quality": 95}
+    # assign it
+    WebGear(logging=True, **options)
+    ```
+
+* **`jpeg_compression_fastdct`**: _(bool)_ This attribute if True, WebGear API uses fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`, and its usage is as follows:
+
+    !!! new "New in v0.2.2" 
+        `enable_infinite_frames` attribute was added in `v0.2.2`.
+
+    ```python
+    # activate jpeg encoding and enable fast dct
+    options = {"jpeg_compression_fastdct": True}
+    # assign it
+    WebGear(logging=True, **options)
+    ```
+
+* **`jpeg_compression_fastupsample`**: _(bool)_ This attribute if True, WebGear API use fastest color upsampling method. Its default value is `False`, and its usage is as follows:
+
+    !!! new "New in v0.2.2" 
+        `enable_infinite_frames` attribute was added in `v0.2.2`.
+
+    ```python
+    # activate jpeg encoding and enable fast upsampling
+    options = {"jpeg_compression_fastupsample": True}
+    # assign it
+    WebGear(logging=True, **options)
+    ```
+
+ * **`jpeg_compression_colorspace`**: _(str)_ This internal attribute is used to specify incoming frames colorspace with compression. Its usage is as follows:
+
+    !!! info "Supported `jpeg_compression_colorspace` colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
+
+    !!! new "New in v0.2.2" 
+        `enable_infinite_frames` attribute was added in `v0.2.2`.
+
+    ```python
+    # Specify incoming frames are `grayscale`
+    options = {"jpeg_compression": "GRAY"}
     # assign it
     WebGear(logging=True, **options)
     ```
@@ -95,38 +145,6 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     # assign it
     WebGear(logging=True, **options)
     ```
-
-* **Various Encoding Parameters:** 
-
-    In WebGear, the input video frames are first encoded into [**Motion JPEG (M-JPEG or MJPEG**)](https://en.wikipedia.org/wiki/Motion_JPEG) video compression format in which each video frame or interlaced field of a digital video sequence is compressed separately as a JPEG image, before sending onto a server. Therefore, WebGear API provides various attributes to have full control over JPEG encoding performance and quality, which are as follows:
-
-
-    *  **`frame_jpeg_quality`** _(integer)_ : It controls the JPEG encoder quality and value varies from `0` to `100` (the higher is the better quality but performance will be lower). Its default value is `95`. Its usage is as follows:
-
-        ```python
-        # JPEG will be encoded at 80% quality
-        options = {"frame_jpeg_quality": 80}
-        # assign it
-        WebGear(logging=True, **options)
-        ```
-
-    * **`frame_jpeg_optimize`** _(boolean)_ : It enables various JPEG compression optimizations such as Chroma subsampling, Quantization table, etc. Its default value is `False`. Its usage is as follows:
-
-        ```python
-        # JPEG optimizations are enabled
-        options = {"frame_jpeg_optimize": True}
-        # assign it
-        WebGear(logging=True, **options)
-        ```
-
-    * **`frame_jpeg_progressive`** _(boolean)_ : It enables **Progressive** JPEG encoding instead of the **Baseline**.   Progressive Mode. Its default value is `False` means baseline mode is in-use. Its usage is as follows:
-
-        ```python
-        # Progressive JPEG encoding enabled
-        options = {"frame_jpeg_progressive": True}
-        # assign it
-        WebGear(logging=True, **options)
-        ```
 
 &nbsp; 
 

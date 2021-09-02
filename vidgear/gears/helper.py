@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,40 +21,31 @@ limitations under the License.
 # Contains all the support functions/modules required by Vidgear packages
 
 # import the necessary packages
-
 import os
 import re
 import sys
+import cv2
+import types
 import errno
 import shutil
+import importlib
+import requests
 import numpy as np
 import logging as log
 import platform
-import requests
+import socket
 from tqdm import tqdm
+from contextlib import closing
+from pathlib import Path
 from colorlog import ColoredFormatter
-from pkg_resources import parse_version
+from distutils.version import LooseVersion
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
-
-try:
-    # import OpenCV Binaries
-    import cv2
-
-    # check whether OpenCV Binaries are 3.x+
-    if parse_version(cv2.__version__) < parse_version("3"):
-        raise ImportError(
-            "[Vidgear:ERROR] :: Installed OpenCV API version(< 3.0) is not supported!"
-        )
-except ImportError:
-    raise ImportError(
-        "[Vidgear:ERROR] :: Failed to detect correct OpenCV executables, install it with `pip3 install opencv-python` command."
-    )
 
 
 def logger_handler():
     """
-    ### logger_handler
+    ## logger_handler
 
     Returns the logger handler
 
@@ -62,7 +53,7 @@ def logger_handler():
     """
     # logging formatter
     formatter = ColoredFormatter(
-        "%(bold_cyan)s%(asctime)s :: %(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
+        "%(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
         datefmt="%H:%M:%S",
         reset=True,
         log_colors={
@@ -103,6 +94,134 @@ logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
+
+def get_module_version(module=None):
+    """
+    ## get_module_version
+
+    Retrieves version of specified module
+
+    Parameters:
+        name (ModuleType): module of datatype `ModuleType`.
+
+    **Returns:** version of specified module as string
+    """
+    # check if module type is valid
+    assert not (module is None) and isinstance(
+        module, types.ModuleType
+    ), "[Vidgear:ERROR] :: Invalid module!"
+
+    # get version from attribute
+    version = getattr(module, "__version__", None)
+    # retry if failed
+    if version is None:
+        # some modules uses a capitalized attribute name
+        version = getattr(module, "__VERSION__", None)
+    # raise if still failed
+    if version is None:
+        raise ImportError(
+            "[Vidgear:ERROR] ::  Can't determine version for module: `{}`!".format(
+                module.__name__
+            )
+        )
+    return str(version)
+
+
+def import_dependency_safe(
+    name,
+    error="raise",
+    pkg_name=None,
+    min_version=None,
+    custom_message=None,
+):
+    """
+    ## import_dependency_safe
+
+    Imports specified dependency safely. By default(`error = raise`), if a dependency is missing,
+    an ImportError with a meaningful message will be raised. Otherwise if `error = log` a warning
+    will be logged and on `error = silent` everything will be quit. But If a dependency is present,
+    but older than specified, an error is raised if specified.
+
+    Parameters:
+        name (string): name of dependency to be imported.
+        error (string): raise or Log or silence ImportError. Possible values are `"raise"`, `"log"` and `silent`. Default is `"raise"`.
+        pkg_name (string): (Optional) package name of dependency(if different `pip` name). Otherwise `name` will be used.
+        min_version (string): (Optional) required minimum version of the dependency to be imported.
+        custom_message (string): (Optional) custom Import error message to be raised or logged.
+
+    **Returns:** The imported module, when found and the version is correct(if specified). Otherwise `None`.
+    """
+    # check specified parameters
+    sub_class = ""
+    if not name or not isinstance(name, str):
+        return None
+    else:
+        # extract name in case of relative import
+        name = name.strip()
+        if name.startswith("from"):
+            name = name.split(" ")
+            name, sub_class = (name[1].strip(), name[-1].strip())
+
+    assert error in [
+        "raise",
+        "log",
+        "silent",
+    ], "[Vidgear:ERROR] :: Invalid value at `error` parameter."
+
+    # specify package name of dependency(if defined). Otherwise use name
+    install_name = pkg_name if not (pkg_name is None) else name
+
+    # create message
+    msg = (
+        custom_message
+        if not (custom_message is None)
+        else "Failed to find required dependency '{}'. Install it with  `pip install {}` command.".format(
+            name, install_name
+        )
+    )
+    # try importing dependency
+    try:
+        module = importlib.import_module(name)
+        if sub_class:
+            module = getattr(module, sub_class)
+    except Exception:
+        # handle errors.
+        if error == "raise":
+            raise ImportError(msg) from None
+        elif error == "log":
+            logger.error(msg)
+            return None
+        else:
+            return None
+
+    # check if minimum required version
+    if not (min_version) is None:
+        # Handle submodules
+        parent_module = name.split(".")[0]
+        if parent_module != name:
+            # grab parent module
+            module_to_get = sys.modules[parent_module]
+        else:
+            module_to_get = module
+        # extract version
+        version = get_module_version(module_to_get)
+        # verify
+        if LooseVersion(version) < LooseVersion(min_version):
+            # create message
+            msg = """Unsupported version '{}' found. Vidgear requires '{}' dependency installed with version '{}' or greater. 
+            Update it with  `pip install -U {}` command.""".format(
+                parent_module, min_version, version, install_name
+            )
+            # handle errors.
+            if error == "silent":
+                return None
+            else:
+                # raise
+                raise ImportError(msg)
+
+    return module
+
+
 # set default timer for download requests
 DEFAULT_TIMEOUT = 3
 
@@ -128,7 +247,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 
 def restore_levelnames():
     """
-    ### restore_levelnames
+    ## restore_levelnames
 
     Auxiliary method to restore logger levelnames.
     """
@@ -145,19 +264,40 @@ def restore_levelnames():
 
 def check_CV_version():
     """
-    ### check_CV_version
+    ## check_CV_version
 
     **Returns:** OpenCV's version first bit
     """
-    if parse_version(cv2.__version__) >= parse_version("4"):
+    if LooseVersion(cv2.__version__) >= LooseVersion("4"):
         return 4
     else:
         return 3
 
 
+def check_open_port(address, port=22):
+    """
+    ## check_open_port
+
+    Checks whether specified port open at given IP address.
+
+    Parameters:
+        address (string): given IP address.
+        port (int): check if port is open at given address.
+
+    **Returns:** A boolean value, confirming whether given port is open at given IP address.
+    """
+    if not address:
+        return False
+    with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
+        if sock.connect_ex((address, port)) == 0:
+            return True
+        else:
+            return False
+
+
 def check_WriteAccess(path, is_windows=False):
     """
-    ### check_WriteAccess
+    ## check_WriteAccess
 
     Checks whether given path directory has Write-Access.
 
@@ -182,13 +322,13 @@ def check_WriteAccess(path, is_windows=False):
         write_accessible = False
     finally:
         if os.path.exists(temp_fname):
-            os.remove(temp_fname)
+            delete_file_safe(temp_fname)
     return write_accessible
 
 
 def check_gstreamer_support(logging=False):
     """
-    ### check_gstreamer_support
+    ## check_gstreamer_support
 
     Checks whether OpenCV is compiled with Gstreamer(`>=1.0.0`) support.
 
@@ -215,7 +355,7 @@ def check_gstreamer_support(logging=False):
 
 def get_supported_resolution(value, logging=False):
     """
-    ### get_supported_resolution
+    ## get_supported_resolution
 
     Parameters:
         value (string): value to be validated
@@ -261,7 +401,7 @@ def get_supported_resolution(value, logging=False):
 
 def dimensions_to_resolutions(value):
     """
-    ### dimensions_to_resolutions
+    ## dimensions_to_resolutions
 
     Parameters:
         value (list): list of dimensions (e.g. `640x360`)
@@ -277,6 +417,7 @@ def dimensions_to_resolutions(value):
         "1920x1080": "1080p",
         "2560x1440": "1440p",
         "3840x2160": "2160p",
+        "7680x4320": "4320p",
     }
     return (
         list(map(supported_resolutions.get, value, value))
@@ -287,7 +428,7 @@ def dimensions_to_resolutions(value):
 
 def get_supported_vencoders(path):
     """
-    ### get_supported_vencoders
+    ## get_supported_vencoders
 
     Find and returns FFmpeg's supported video encoders
 
@@ -305,16 +446,38 @@ def get_supported_vencoders(path):
         if x.decode("utf-8").strip().startswith("V")
     ]
     # compile regex
-    finder = re.compile(r"\.\.\s[a-z0-9_-]+")
+    finder = re.compile(r"[A-Z]*[\.]+[A-Z]*\s[a-z0-9_-]*")
     # find all outputs
     outputs = finder.findall("\n".join(supported_vencoders))
-    # return outputs
-    return [s.replace(".. ", "") for s in outputs]
+    # return output findings
+    return [[s for s in o.split(" ")][-1] for o in outputs]
+
+
+def get_supported_demuxers(path):
+    """
+    ## get_supported_demuxers
+
+    Find and returns FFmpeg's supported demuxers
+
+    Parameters:
+        path (string): absolute path of FFmpeg binaries
+
+    **Returns:** List of supported demuxers.
+    """
+    demuxers = check_output([path, "-hide_banner", "-demuxers"])
+    splitted = [x.decode("utf-8").strip() for x in demuxers.split(b"\n")]
+    supported_demuxers = splitted[splitted.index("--") + 1 : len(splitted) - 1]
+    # compile regex
+    finder = re.compile(r"\s\s[a-z0-9_,-]+\s+")
+    # find all outputs
+    outputs = finder.findall("\n".join(supported_demuxers))
+    # return output findings
+    return [o.strip() for o in outputs]
 
 
 def is_valid_url(path, url=None, logging=False):
     """
-    ### is_valid_url
+    ## is_valid_url
 
     Checks URL validity by testing its scheme against
     FFmpeg's supported protocols
@@ -333,11 +496,10 @@ def is_valid_url(path, url=None, logging=False):
     extracted_scheme_url = url.split("://", 1)[0]
     # extract all FFmpeg supported protocols
     protocols = check_output([path, "-hide_banner", "-protocols"])
-    splitted = protocols.split(b"\n")
-    supported_protocols = [
-        x.decode("utf-8").strip() for x in splitted[2 : len(splitted) - 1]
-    ]
-    supported_protocols += ["rtsp"]  # rtsp not included somehow
+    splitted = [x.decode("utf-8").strip() for x in protocols.split(b"\n")]
+    supported_protocols = splitted[splitted.index("Output:") + 1 : len(splitted) - 1]
+    # rtsp is a demuxer somehow
+    supported_protocols += ["rtsp"] if "rtsp" in get_supported_demuxers(path) else []
     # Test and return result whether scheme is supported
     if extracted_scheme_url and extracted_scheme_url in supported_protocols:
         if logging:
@@ -352,9 +514,9 @@ def is_valid_url(path, url=None, logging=False):
         return False
 
 
-def validate_video(path, video_path=None):
+def validate_video(path, video_path=None, logging=False):
     """
-    ### validate_video
+    ## validate_video
 
     Validates video by retrieving resolution/size and framerate from file.
 
@@ -374,6 +536,8 @@ def validate_video(path, video_path=None):
     )
     # clean and search
     stripped_data = [x.decode("utf-8").strip() for x in metadata.split(b"\n")]
+    if logging:
+        logger.debug(stripped_data)
     result = {}
     for data in stripped_data:
         output_a = re.findall(r"([1-9]\d+)x([1-9]\d+)", data)
@@ -391,7 +555,7 @@ def validate_video(path, video_path=None):
 
 def create_blank_frame(frame=None, text="", logging=False):
     """
-    ### create_blank_frame
+    ## create_blank_frame
 
     Create blank frames of given frame size with text
 
@@ -401,12 +565,12 @@ def create_blank_frame(frame=None, text="", logging=False):
     **Returns:**  A reduced numpy ndarray array.
     """
     # check if frame is valid
-    if frame is None:
-        raise ValueError("[Helper:ERROR] :: Input frame cannot be NoneType!")
+    if frame is None or not (isinstance(frame, np.ndarray)):
+        raise ValueError("[Helper:ERROR] :: Input frame is invalid!")
     # grab the frame size
     (height, width) = frame.shape[:2]
     # create blank frame
-    blank_frame = np.zeros((height, width, 3), np.uint8)
+    blank_frame = np.zeros(frame.shape, frame.dtype)
     # setup text
     if text and isinstance(text, str):
         if logging:
@@ -423,13 +587,14 @@ def create_blank_frame(frame=None, text="", logging=False):
         cv2.putText(
             blank_frame, text, (textX, textY), font, fontScale, (125, 125, 125), 6
         )
+
     # return frame
     return blank_frame
 
 
 def extract_time(value):
     """
-    ### extract_time
+    ## extract_time
 
     Extract time from give string value.
 
@@ -456,31 +621,36 @@ def extract_time(value):
         )
 
 
-def validate_audio(path, file_path=None):
+def validate_audio(path, source=None):
     """
-    ### validate_audio
+    ## validate_audio
 
     Validates audio by retrieving audio-bitrate from file.
 
     Parameters:
         path (string): absolute path of FFmpeg binaries
-        file_path (string): absolute path to file to be validated.
+        source (string/list): source to be validated.
 
     **Returns:** A string value, confirming whether audio is present, or not?.
     """
-    if file_path is None or not (file_path):
-        logger.warning("File path is empty!")
+    if source is None or not (source):
+        logger.warning("Audio input source is empty!")
         return ""
 
-    # extract audio sample-rate from metadata
-    metadata = check_output(
-        [path, "-hide_banner", "-i", file_path], force_retrieve_stderr=True
+    # create ffmpeg command
+    cmd = [path, "-hide_banner"] + (
+        source if isinstance(source, list) else ["-i", source]
     )
+    # extract audio sample-rate from metadata
+    metadata = check_output(cmd, force_retrieve_stderr=True)
     audio_bitrate = re.findall(r"fltp,\s[0-9]+\s\w\w[/]s", metadata.decode("utf-8"))
+    sample_rate_identifiers = ["Audio", "Hz"] + (
+        ["fltp"] if isinstance(source, str) else []
+    )
     audio_sample_rate = [
         line.strip()
         for line in metadata.decode("utf-8").split("\n")
-        if all(x in line for x in ["Audio", "Hz", "fltp"])
+        if all(x in line for x in sample_rate_identifiers)
     ]
     if audio_bitrate:
         filtered = audio_bitrate[0].split(" ")[1:3]
@@ -502,7 +672,7 @@ def validate_audio(path, file_path=None):
 
 def get_video_bitrate(width, height, fps, bpp):
     """
-    ### get_video_bitrate
+    ## get_video_bitrate
 
     Calculate optimum Bitrate from resolution, framerate, bits-per-pixels values
 
@@ -517,9 +687,29 @@ def get_video_bitrate(width, height, fps, bpp):
     return round((width * height * bpp * fps) / 1000)
 
 
+def delete_file_safe(file_path):
+    """
+    ## delete_ext_safe
+
+    Safely deletes files at given path.
+
+    Parameters:
+        file_path (string): path to the file
+    """
+    try:
+        dfile = Path(file_path)
+        if sys.version_info >= (3, 8, 0):
+            dfile.unlink(missing_ok=True)
+        else:
+            if dfile.exists():
+                dfile.unlink()
+    except Exception as e:
+        logger.exception(e)
+
+
 def mkdir_safe(dir_path, logging=False):
     """
-    ### mkdir_safe
+    ## mkdir_safe
 
     Safely creates directory at given path.
 
@@ -539,9 +729,9 @@ def mkdir_safe(dir_path, logging=False):
             logger.debug("Directory already exists at `{}`".format(dir_path))
 
 
-def delete_safe(dir_path, extensions=[], logging=False):
+def delete_ext_safe(dir_path, extensions=[], logging=False):
     """
-    ### delete_safe
+    ## delete_ext_safe
 
     Safely deletes files with given extensions at given path.
 
@@ -555,27 +745,36 @@ def delete_safe(dir_path, extensions=[], logging=False):
         logger.warning("Invalid input provided for deleting!")
         return
 
-    if logging:
-        logger.debug("Clearing Assets at `{}`!".format(dir_path))
+    logger.critical("Clearing Assets at `{}`!".format(dir_path))
 
     for ext in extensions:
-        files_ext = [
-            os.path.join(dir_path, f) for f in os.listdir(dir_path) if f.endswith(ext)
-        ]
+        if len(ext) == 2:
+            files_ext = [
+                os.path.join(dir_path, f)
+                for f in os.listdir(dir_path)
+                if f.startswith(ext[0]) and f.endswith(ext[1])
+            ]
+        else:
+            files_ext = [
+                os.path.join(dir_path, f)
+                for f in os.listdir(dir_path)
+                if f.endswith(ext)
+            ]
         for file in files_ext:
-            os.remove(file)
+            delete_file_safe(file)
             if logging:
                 logger.debug("Deleted file: `{}`".format(file))
 
 
-def capPropId(property):
+def capPropId(property, logging=True):
     """
-    ### capPropId
+    ## capPropId
 
     Retrieves the OpenCV property's Integer(Actual) value from string.
 
     Parameters:
         property (string): inputs OpenCV property as string.
+        logging (bool): enables logging for its operations
 
     **Returns:** Resultant integer value.
     """
@@ -583,15 +782,33 @@ def capPropId(property):
     try:
         integer_value = getattr(cv2, property)
     except Exception as e:
-        logger.exception(str(e))
-        logger.critical("`{}` is not a valid OpenCV property!".format(property))
+        if logging:
+            logger.exception(str(e))
+            logger.critical("`{}` is not a valid OpenCV property!".format(property))
         return None
     return integer_value
 
 
+def retrieve_best_interpolation(interpolations):
+    """
+    ## retrieve_best_interpolation
+    Retrieves best interpolation for resizing
+
+    Parameters:
+        interpolations (list): list of interpolations as string.
+    **Returns:**  Resultant integer value of found interpolation.
+    """
+    if isinstance(interpolations, list):
+        for intp in interpolations:
+            interpolation = capPropId(intp, logging=False)
+            if not (interpolation is None):
+                return interpolation
+    return None
+
+
 def youtube_url_validator(url):
     """
-    ### youtube_url_validator
+    ## youtube_url_validator
 
     Validates & extracts Youtube video ID from URL.
 
@@ -612,15 +829,16 @@ def youtube_url_validator(url):
         return ""
 
 
-def reducer(frame=None, percentage=0):
+def reducer(frame=None, percentage=0, interpolation=cv2.INTER_LANCZOS4):
     """
-    ### reducer
+    ## reducer
 
     Reduces frame size by given percentage
 
     Parameters:
         frame (numpy.ndarray): inputs numpy array(frame).
         percentage (int/float): inputs size-reduction percentage.
+        interpolation (int): Change resize interpolation.
 
     **Returns:**  A reduced numpy ndarray array.
     """
@@ -634,6 +852,11 @@ def reducer(frame=None, percentage=0):
             "[Helper:ERROR] :: Given frame-size reduction percentage is invalid, Kindly refer docs."
         )
 
+    if not (isinstance(interpolation, int)):
+        raise ValueError(
+            "[Helper:ERROR] :: Given interpolation is invalid, Kindly refer docs."
+        )
+
     # grab the frame size
     (height, width) = frame.shape[:2]
 
@@ -644,12 +867,12 @@ def reducer(frame=None, percentage=0):
     dimensions = (int(reduction), int(height * ratio))
 
     # return the resized frame
-    return cv2.resize(frame, dimensions, interpolation=cv2.INTER_LANCZOS4)
+    return cv2.resize(frame, dimensions, interpolation=interpolation)
 
 
 def dict2Args(param_dict):
     """
-    ### dict2Args
+    ## dict2Args
 
     Converts dictionary attributes to list(args)
 
@@ -680,7 +903,7 @@ def get_valid_ffmpeg_path(
     custom_ffmpeg="", is_windows=False, ffmpeg_download_path="", logging=False
 ):
     """
-    ### get_valid_ffmpeg_path
+    ## get_valid_ffmpeg_path
 
     Validate the given FFmpeg path/binaries, and returns a valid FFmpeg executable path.
 
@@ -773,7 +996,7 @@ def get_valid_ffmpeg_path(
 
 def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
     """
-    ### download_ffmpeg_binaries
+    ## download_ffmpeg_binaries
 
     Generates FFmpeg Static Binaries for windows(if not available)
 
@@ -813,7 +1036,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
             )
             # remove leftovers if exists
             if os.path.isfile(file_name):
-                os.remove(file_name)
+                delete_file_safe(file_name)
             # download and write file to the given path
             with open(file_name, "wb") as f:
                 logger.debug(
@@ -847,7 +1070,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                 zip_fname, _ = os.path.split(zip_ref.infolist()[0].filename)
                 zip_ref.extractall(base_path)
             # perform cleaning
-            os.remove(file_name)
+            delete_file_safe(file_name)
             logger.debug("FFmpeg binaries for Windows configured successfully!")
             final_path += file_path
     # return final path
@@ -856,7 +1079,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
 
 def validate_ffmpeg(path, logging=False):
     """
-    ### validate_ffmpeg
+    ## validate_ffmpeg
 
     Validate FFmeg Binaries. returns `True` if tests are passed.
 
@@ -890,7 +1113,7 @@ def validate_ffmpeg(path, logging=False):
 
 def check_output(*args, **kwargs):
     """
-    ### check_output
+    ## check_output
 
     Returns stdin output from subprocess module
     """
@@ -910,7 +1133,7 @@ def check_output(*args, **kwargs):
         stdout=sp.PIPE,
         stderr=sp.DEVNULL if not (retrieve_stderr) else sp.PIPE,
         *args,
-        **kwargs
+        **kwargs,
     )
     output, stderr = process.communicate()
     retcode = process.poll()
@@ -929,7 +1152,7 @@ def check_output(*args, **kwargs):
 
 def generate_auth_certificates(path, overwrite=False, logging=False):
     """
-    ### generate_auth_certificates
+    ## generate_auth_certificates
 
     Auto-Generates, and Auto-validates CURVE ZMQ key-pairs for NetGear API's Secure Mode.
 
@@ -981,7 +1204,7 @@ def generate_auth_certificates(path, overwrite=False, logging=False):
                 # clean redundant keys if present
                 redundant_key = os.path.join(keys_dir, key_file)
                 if os.path.isfile(redundant_key):
-                    os.remove(redundant_key)
+                    delete_file_safe(redundant_key)
     else:
         # otherwise validate available keys
         status_public_keys = validate_auth_keys(public_keys_dir, ".key")
@@ -1021,7 +1244,7 @@ def generate_auth_certificates(path, overwrite=False, logging=False):
                 # clean redundant keys if present
                 redundant_key = os.path.join(keys_dir, key_file)
                 if os.path.isfile(redundant_key):
-                    os.remove(redundant_key)
+                    delete_file_safe(redundant_key)
 
     # validate newly generated keys
     status_public_keys = validate_auth_keys(public_keys_dir, ".key")
@@ -1041,7 +1264,7 @@ def generate_auth_certificates(path, overwrite=False, logging=False):
 
 def validate_auth_keys(path, extension):
     """
-    ### validate_auth_keys
+    ## validate_auth_keys
 
     Validates, and also maintains generated ZMQ CURVE Key-pairs.
 
@@ -1070,7 +1293,7 @@ def validate_auth_keys(path, extension):
 
     # remove invalid keys if found
     if len(keys_buffer) == 1:
-        os.remove(os.path.join(path, keys_buffer[0]))
+        delete_file_safe(os.path.join(path, keys_buffer[0]))
 
     # return results
     return True if (len(keys_buffer) == 2) else False

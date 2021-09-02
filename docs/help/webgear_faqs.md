@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ limitations under the License.
 
 ## Is it possible to stream on a different device on the network with WebGear?
 
-!!! note "If you set `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine, then you must still use http://localhost:8000/ to access stream on your host machine browser."
+!!! alert "If you set `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine, then you must still use http://localhost:8000/ to access stream on that same host machine browser."
 
 For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. Then type the IP-address of source machine followed by the defined `port` value in your desired Client Device's browser (for e.g. http://192.27.0.101:8000) to access the stream.
 
@@ -69,6 +69,12 @@ For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"
 ## How can I add my custom WebPage to WebGear?
 
 **Answer:** See [this usage example ➶](../../gears/webgear/advanced/#using-webgear-with-custom-webpage-routes).
+
+&nbsp;
+
+## How can to add CORS headers to WebGear?
+
+**Answer:** See [this usage example ➶](../../gears/webgear/advanced/#using-webgear-with-middlewares).
 
 &nbsp;
 

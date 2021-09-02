@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ limitations under the License.
 
 ## Source ColorSpace manipulation
 
-> All VidGear's Videocapture Gears _(namely CamGear, ScreenGear, VideoGear)_ and some Streaming Gears _(WebGear)_ and Network Gears _(Client's end)_ - provides exclusive internal support for ==Source [Color Space](https://en.wikipedia.org/wiki/Color_space) manipulation==. 
+> All VidGear's Videocapture Gears _(namely CamGear, ScreenGear, VideoGear)_ and some Streaming Gears _(namely WebGear, WebGear_RTC)_ and Network Gears _(Client's end)_ - provides exclusive internal support for ==Source [Color Space](https://en.wikipedia.org/wiki/Color_space) manipulation==. 
 
 **There are two ways to alter source colorspace:**
 

@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ limitations under the License.
 
 &thinsp;
 
-> VidGear is a High-Performance **Video-Processing** Framework for building complex real-time media applications in python :fire:
+> VidGear is a cross-platform High-Performance **Video-Processing** Framework for building complex real-time media applications in python :fire:
 
-VidGear provides an easy-to-use, highly extensible, **Multi-Threaded + Asyncio Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and real-time performance ⚡️.
+VidGear provides an easy-to-use, highly extensible, **[Multi-Threaded](bonus/TQM/#threaded-queue-mode) + [Asyncio](https://docs.python.org/3/library/asyncio.html) API Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and real-time performance ⚡️.
 
 > _"Write Less and Accomplish More"_ — VidGear's Motto
 
@@ -40,13 +40,17 @@ VidGear focuses on simplicity, and thereby lets programmers and software develop
 
 ## Getting Started
 
-- [x] If this is your first time using VidGear, head straight to the [Installation ➶](installation.md) to install VidGear.
+!!! tip "In case you're run into any problems, consult the [Help](help/get_help) section."
 
-- [x] Once you have VidGear installed, **Checkout its Function-Specific [Gears ➶](gears.md)**
+- [x] If this is your first time using VidGear, head straight to the [**Installation**](installation.md) to install VidGear.
 
-- [x] Also, if you're already familar with [OpenCV][opencv] library, then see [Switching from OpenCV Library ➶](switch_from_cv.md)
+- [x] Once you have VidGear installed, Checkout its **[Function-Specific Gears](gears.md)**.
 
-- [x] Or, if you're just getting started with OpenCV with Python, then see [here ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)
+- [x] Also, if you're already familar with [**OpenCV**][opencv] library, then see **[Switching from OpenCV Library](switch_from_cv.md)**.
+
+!!! alert "If you're just getting started with OpenCV-Python programming, then refer this [FAQ ➶](help/general_faqs/#im-new-to-python-programming-or-its-usage-in-opencv-library-how-to-use-vidgear-in-my-projects)"
+
+
 
 &thinsp;
 
@@ -63,7 +67,7 @@ These Gears can be classified as follows:
 * [CamGear](gears/camgear/overview/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
 * [PiGear](gears/pigear/overview/): Multi-Threaded API targeting various Raspberry-Pi Camera Modules.
 * [ScreenGear](gears/screengear/overview/): Multi-Threaded API targeting ultra-fast Screencasting.    
-* [VideoGear](gears/videogear/overview/): Common Video-Capture API with internal [Video Stabilizer](gears/stabilizer/overview/) wrapper.
+* [VideoGear](gears/videogear/overview/): Common Video-Capture API with internal [_Video Stabilizer_](gears/stabilizer/overview/) wrapper.
 
 #### VideoWriter Gears
 
@@ -71,7 +75,7 @@ These Gears can be classified as follows:
 
 #### Streaming Gears
 
-* [StreamGear](gears/streamgear/overview/): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
+* [StreamGear](gears/streamgear/introduction/): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
 
 * **Asynchronous I/O Streaming Gear:**
 
@@ -92,29 +96,29 @@ These Gears can be classified as follows:
 
 > Contributions are welcome, and greatly appreciated!  
 
-Please see our [Contribution Guidelines ➶](contribution.md) for more details.
+Please see our [**Contribution Guidelines**](contribution.md) for more details.
 
 &thinsp;
 
 ## Community Channel
 
-If you've come up with some new idea, or looking for the fastest way troubleshoot your problems. Please checkout our [Gitter community channel ➶][gitter]
+If you've come up with some new idea, or looking for the fastest way troubleshoot your problems. Please checkout our [**Gitter community channel ➶**][gitter]
 
 &thinsp; 
 
 ## Become a Stargazer
 
-You can be a [Stargazer :star2:][stargazer] by starring us on Github, it helps us a lot and you're making it easier for others to find & trust this library. Thanks!
+You can be a [**Stargazer :star2:**][stargazer] by starring us on Github, it helps us a lot and you're making it easier for others to find & trust this library. Thanks!
 
 &thinsp;
 
-## Support Us
+## Donations
 
-> VidGear relies on your support :heart:
+> VidGear is free and open source and will always remain so. :heart:
 
-Donations help keep VidGear's Open Source Development alive. No amount is too little, even the smallest contributions can make a huge difference.
+It is (like all open source software) a labour of love and something I am doing with my own free time. If you would like to say thanks, please feel free to make a donation:
 
-<script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Us on Ko-fi', '#eba100', 'W7W8WTYO');kofiwidget2.draw();</script> 
+<script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#eba100', 'W7W8WTYO');kofiwidget2.draw();</script> 
 
 &thinsp;
 
@@ -122,13 +126,22 @@ Donations help keep VidGear's Open Source Development alive. No amount is too li
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4718616.svg)](https://doi.org/10.5281/zenodo.4718616)
 
 ```BibTeX
-@misc{vidgear,
-    author = {Abhishek Thakur},
-    title = {vidgear},
-    howpublished = {\url{https://github.com/abhiTronix/vidgear}},
-    year = {2019-2021}
+@software{vidgear,
+    author       = {Abhishek Thakur and
+                    Christian Clauss and
+                    Christian Hollinger and
+                    Benjamin Lowe and
+                    Mickaël Schoentgen and
+                    Renaud Bouckenooghe},
+    title        = {abhiTronix/vidgear: VidGear v0.2.2},
+    year         = 2021
+    publisher    = {Zenodo},
+    version      = {vidgear-0.2.2},
+    doi          = {10.5281/zenodo.4718616},
+    url          = {https://doi.org/10.5281/zenodo.4718616}
   }
 ```
 

@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,15 +17,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import the necessary packages
 
+# import the necessary packages
 import cv2
 import time
 import queue
 import logging as log
 from threading import Thread, Event
-from pkg_resources import parse_version
 
+# import helper packages
 from .helper import (
     capPropId,
     logger_handler,
@@ -35,6 +35,7 @@ from .helper import (
     get_supported_resolution,
     check_gstreamer_support,
     dimensions_to_resolutions,
+    import_dependency_safe,
 )
 
 # define logger
@@ -105,8 +106,7 @@ class CamGear:
                 video_url = youtube_url_validator(source)
                 if video_url:
                     # import backend library
-                    import pafy
-
+                    pafy = import_dependency_safe("pafy")
                     logger.info("Using Youtube-dl Backend")
                     # create new pafy object
                     source_object = pafy.new(video_url, ydl_opts=stream_params)
@@ -129,10 +129,9 @@ class CamGear:
                         # handle live-streams
                         if is_live:
                             # Enforce GStreamer backend for YouTube-livestreams
-                            if logging:
-                                logger.critical(
-                                    "YouTube livestream URL detected. Enforcing GStreamer backend."
-                                )
+                            logger.critical(
+                                "YouTube livestream URL detected. Enforcing GStreamer backend."
+                            )
                             backend = cv2.CAP_GSTREAMER
                             # convert stream dimensions to streams resolutions
                             available_streams = dimensions_to_resolutions(
@@ -184,8 +183,9 @@ class CamGear:
                         )
                 else:
                     # import backend library
-                    from streamlink import Streamlink
-
+                    Streamlink = import_dependency_safe(
+                        "from streamlink import Streamlink"
+                    )
                     restore_levelnames()
                     logger.info("Using Streamlink Backend")
                     # check session
@@ -247,12 +247,6 @@ class CamGear:
                 logger.debug(
                     "Enabling Threaded Queue Mode for the current video source!"
                 )
-                if self.__thread_timeout:
-                    logger.debug(
-                        "Setting Video-Thread Timeout to {}s.".format(
-                            self.__thread_timeout
-                        )
-                    )
         else:
             # otherwise disable it
             self.__threaded_queue_mode = False
@@ -261,6 +255,11 @@ class CamGear:
                 logger.warning(
                     "Threaded Queue Mode is disabled for the current video source!"
                 )
+
+        if self.__thread_timeout:
+            logger.debug(
+                "Setting Video-Thread Timeout to {}s.".format(self.__thread_timeout)
+            )
 
         # stream variable initialization
         self.stream = None
@@ -322,7 +321,7 @@ class CamGear:
                 self.__queue.put(self.frame)
         else:
             raise RuntimeError(
-                "[CamGear:ERROR] :: Source is invalid, CamGear failed to intitialize stream on this source!"
+                "[CamGear:ERROR] :: Source is invalid, CamGear failed to initialize stream on this source!"
             )
 
         # thread initialization
@@ -330,6 +329,9 @@ class CamGear:
 
         # initialize termination flag event
         self.__terminate = Event()
+
+        # initialize stream read flag event
+        self.__stream_read = Event()
 
     def start(self):
         """
@@ -349,16 +351,24 @@ class CamGear:
         until the thread is terminated, or frames runs out.
         """
 
-        # keep iterating infinitely until the thread is terminated or frames runs out
+        # keep iterating infinitely
+        # until the thread is terminated
+        # or frames runs out
         while True:
             # if the thread indicator variable is set, stop the thread
             if self.__terminate.is_set():
                 break
 
+            # stream not read yet
+            self.__stream_read.clear()
+
             # otherwise, read the next frame from the stream
             (grabbed, frame) = self.stream.read()
 
-            # check for valid frames
+            # stream read completed
+            self.__stream_read.set()
+
+            # check for valid frame if received
             if not grabbed:
                 # no frames received, then safely exit
                 if self.__threaded_queue_mode:
@@ -398,8 +408,10 @@ class CamGear:
             if self.__threaded_queue_mode:
                 self.__queue.put(self.frame)
 
+        # indicate immediate termination
         self.__threaded_queue_mode = False
-        self.frame = None
+        self.__terminate.set()
+        self.__stream_read.set()
         # release resources
         self.stream.release()
 
@@ -412,7 +424,14 @@ class CamGear:
         """
         while self.__threaded_queue_mode:
             return self.__queue.get(timeout=self.__thread_timeout)
-        return self.frame
+        # return current frame
+        # only after stream is read
+        return (
+            self.frame
+            if not self.__terminate.is_set()  # check if already terminated
+            and self.__stream_read.wait(timeout=self.__thread_timeout)  # wait for it
+            else None
+        )
 
     def stop(self):
         """
@@ -424,8 +443,10 @@ class CamGear:
         if self.__threaded_queue_mode:
             self.__threaded_queue_mode = False
 
-        # indicate that the thread should be terminate
+        # indicate that the thread
+        # should be terminated immediately
         self.__terminate.set()
+        self.__stream_read.set()
 
         # wait until stream resources are released (producer thread might be still grabbing frame)
         if self.__thread is not None:

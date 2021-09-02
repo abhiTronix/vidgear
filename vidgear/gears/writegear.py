@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,15 +18,14 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-
 import os
 import cv2
 import sys
 import time
 import logging as log
 import subprocess as sp
-from pkg_resources import parse_version
 
+# import helper packages
 from .helper import (
     capPropId,
     dict2Args,
@@ -47,13 +46,13 @@ logger.setLevel(log.DEBUG)
 class WriteGear:
 
     """
-    WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data. 
+    WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data.
 
-    WriteGear API provides a complete, flexible, and robust wrapper around FFmpeg, a leading multimedia framework. WriteGear can process real-time frames into a lossless 
-    compressed video-file with any suitable specification (such asbitrate, codec, framerate, resolution, subtitles, etc.). It is powerful enough to perform complex tasks such as 
+    WriteGear API provides a complete, flexible, and robust wrapper around FFmpeg, a leading multimedia framework. WriteGear can process real-time frames into a lossless
+    compressed video-file with any suitable specification (such asbitrate, codec, framerate, resolution, subtitles, etc.). It is powerful enough to perform complex tasks such as
     Live-Streaming (such as for Twitch) and Multiplexing Video-Audio with real-time frames in way fewer lines of code.
 
-    Best of all, WriteGear grants users the complete freedom to play with any FFmpeg parameter with its exclusive Custom Commands function without relying on any 
+    Best of all, WriteGear grants users the complete freedom to play with any FFmpeg parameter with its exclusive Custom Commands function without relying on any
     third-party API.
 
     In addition to this, WriteGear also provides flexible access to OpenCV's VideoWriter API tools for video-frames encoding without compression.
@@ -89,7 +88,7 @@ class WriteGear:
             compression_mode (bool): selects the WriteGear's Primary Mode of Operation.
             custom_ffmpeg (str): assigns the location of custom path/directory for custom FFmpeg executables.
             logging (bool): enables/disables logging.
-            output_params (dict): provides the flexibility to control supported internal parameters and properities.
+            output_params (dict): provides the flexibility to control supported internal parameters and FFmpeg properities.
         """
 
         # assign parameter values to class variables
@@ -231,7 +230,7 @@ class WriteGear:
 
         # display confirmation if logging is enabled/disabled
         if self.__compression and self.__ffmpeg:
-            # check whether is valid url instead
+            # check whether url is valid instead
             if self.__out_file is None:
                 if is_valid_url(
                     self.__ffmpeg, url=output_filename, logging=self.__logging

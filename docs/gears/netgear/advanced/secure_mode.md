@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ Secure mode supports the two most powerful ZMQ security layers:
 &nbsp;
 
 
-!!! danger "Secure Mode Requirements"
+!!! danger "Important Information regarding Secure Mode"
 
     * The `secure_mode` attribute value at the Client's end **MUST** match exactly the Server's end _(i.e. **IronHouse** security layer is only compatible with **IronHouse**, and **NOT** with **StoneHouse**)_.
 
@@ -83,9 +83,9 @@ Secure mode supports the two most powerful ZMQ security layers:
 
 &nbsp;
 
-## Supported Attributes
+## Exclusive Attributes
 
-For implementing Secure Mode, NetGear API currently provide following attribute for its [`options`](../../params/#options) dictionary parameter:
+For implementing Secure Mode, NetGear API currently provide following exclusive attribute for its [`options`](../../params/#options) dictionary parameter:
 
 
 * `secure_mode` (_integer_) : This attribute activates and sets the ZMQ security Mechanism. Its possible values are: `1`(_StoneHouse_) & `2`(_IronHouse_), and its default value is `0`(_Grassland(no security)_). Its usage is as follows:
@@ -125,7 +125,7 @@ For implementing Secure Mode, NetGear API currently provide following attribute 
 
 Following is the bare-minimum code you need to get started with Secure Mode in NetGear API:
 
-#### Server End
+#### Server's End
 
 Open your favorite terminal and execute the following python code:
 
@@ -171,7 +171,7 @@ stream.stop()
 server.close()
 ```
 
-#### Client End
+#### Client's End
 
 Then open another terminal on the same system and execute the following python code and see the output:
 
@@ -282,7 +282,7 @@ client.close()
 
 &nbsp;
 
-#### Server End
+#### Server's End
 
 Now, Open the terminal on another Server System _(with a webcam connected to it at index `0`)_, and execute the following python code: 
 

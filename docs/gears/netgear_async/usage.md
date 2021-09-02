@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ async def main():
         key = cv2.waitKey(1) & 0xFF
 
         # await before continuing
-        await asyncio.sleep(0.00001)
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
@@ -162,7 +162,7 @@ async def main():
         key = cv2.waitKey(1) & 0xFF
 
         # await before continuing
-        await asyncio.sleep(0.00001)
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
@@ -223,7 +223,9 @@ if __name__ == "__main__":
 
 ## Using NetGear_Async with a Custom Source(OpenCV)
 
-NetGear_Async allows you to easily define your own custom Source at Server-end that you want to use to manipulate your frames before sending them onto the network. Let's implement a bare-minimum example with a Custom Source using NetGear_Async API and OpenCV:
+NetGear_Async allows you to easily define your own custom Source at Server-end that you want to use to transform your frames before sending them onto the network. 
+
+Let's implement a bare-minimum example with a Custom Source using NetGear_Async API and OpenCV:
 
 ### Server's End
 
@@ -237,15 +239,15 @@ from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
 
 # initialize Server without any source
-server = NetGear_Async(logging=True)
+server = NetGear_Async(source=None, logging=True)
+
+# !!! define your own video source here !!!
+# Open any video stream such as live webcam
+# video stream on first index(i.e. 0) device
+stream = cv2.VideoCapture(0)
 
 # Create a async frame generator as custom source
 async def my_frame_generator():
-
-    # !!! define your own video source here !!!
-    # Open any video stream such as live webcam 
-    # video stream on first index(i.e. 0) device
-    stream = cv2.VideoCapture(0)
 
     # loop over stream until its terminated
     while True:
@@ -255,7 +257,6 @@ async def my_frame_generator():
 
         # check if frame empty
         if not grabbed:
-            # if True break the infinite loop
             break
 
         # do something with the frame to be sent here
@@ -263,7 +264,7 @@ async def my_frame_generator():
         # yield frame
         yield frame
         # sleep for sometime
-        await asyncio.sleep(0.00001)
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
@@ -280,6 +281,8 @@ if __name__ == "__main__":
         # wait for interrupts
         pass
     finally:
+        # close stream
+        stream.release()
         # finally close the server
         server.close()
 ```
@@ -313,7 +316,7 @@ async def main():
         key = cv2.waitKey(1) & 0xFF
 
         # await before continuing
-        await asyncio.sleep(0.01)
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
@@ -371,6 +374,7 @@ if __name__ == "__main__":
 ```
 
 ### Client's End
+
 Then open another terminal on the same system and execute the following python code and see the output:
 
 !!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
@@ -404,7 +408,7 @@ async def main():
         key = cv2.waitKey(1) & 0xFF
 
         # await before continuing
-        await asyncio.sleep(0.00001)
+        await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
@@ -426,3 +430,9 @@ if __name__ == "__main__":
 ```
 
 &nbsp; 
+
+## Bonus Examples
+
+!!! example "Checkout more advanced NetGear_Async examples with unusual configuration [here ➶](../../../help/netgear_async_ex/)"
+
+&nbsp;

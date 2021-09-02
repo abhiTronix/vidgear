@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ limitations under the License.
 # FFmpeg Installation Instructions
 
 <figure>
-  <a href="http://ffmpeg.org/"><img src="../../../../../assets/images/ffmpeg.png" loading="lazy" alt="FFmpeg" class="center" /></a>
+  <a href="http://ffmpeg.org/"><img src="../../../../../assets/images/ffmpeg.png" loading="lazy" alt="FFmpeg"  /></a>
 </figure>
 
 WriteGear must requires FFmpeg executables for its Compression capabilities in Compression Mode. You can following machine-specific instructions for its installation:
@@ -69,7 +69,7 @@ The WriteGear API supports _Auto-Installation_ and _Manual Configuration_ method
 
 !!! quote "This is a recommended approach on Windows Machines"
 
-If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) parameter, then on Windows system WriteGear API **auto-generates** the required FFmpeg Static Binaries, according to your system specifications, into the temporary directory _(for e.g. `C:\Temp`)_ of your machine.
+If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) parameter, then on Windows system WriteGear API **auto-generates** the required FFmpeg Static Binaries from a dedicated [**Github Server**](https://github.com/abhiTronix/FFmpeg-Builds) into the temporary directory _(for e.g. `C:\Temp`)_ of your machine.
 
 !!! warning Important Information
 
@@ -86,7 +86,7 @@ If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](.
 
 * **Download:** You can also manually download the latest Windows Static Binaries(*based on your machine arch(x86/x64)*) from the link below:
    
-      *Windows Static Binaries:* http://ffmpeg.zeranoe.com/builds/
+      *Windows Static Binaries:* https://ffmpeg.org/download.html#build-windows
 
 *  **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'C:/foo/Downloads/ffmpeg/bin'`) or path of `ffmpeg.exe` executable itself to the [**`custom_ffmpeg`**](../../params/#custom_ffmpeg) parameter in the WriteGear API.
 

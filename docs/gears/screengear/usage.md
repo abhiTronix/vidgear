@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -122,7 +122,7 @@ from vidgear.gears import ScreenGear
 import cv2
 
 # open video stream with defined parameters with monitor at index `1` selected
-stream = ScreenGear(monitor=1, logging=True, **options).start()
+stream = ScreenGear(monitor=1, logging=True).start()
 
 # loop over
 while True:
@@ -167,7 +167,7 @@ from vidgear.gears import ScreenGear
 import cv2
 
 # open video stream with defined parameters and `mss` backend for extracting frames.
-stream = ScreenGear(backend="mss", logging=True, **options).start()
+stream = ScreenGear(backend="mss", logging=True).start()
 
 # loop over
 while True:
@@ -322,3 +322,9 @@ writer.close()
 ``` 
 
 &nbsp; 
+
+## Bonus Examples
+
+!!! example "Checkout more advanced NetGear examples with unusual configuration [here ➶](../../../help/screengear_ex/)"
+
+&nbsp;

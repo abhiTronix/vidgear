@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ There are several ways to get help with VidGear:
 
 > Got a question related to VidGear Working?  
 
-Checkout our Frequently Asked Questions, a curated list of all the questions with adequate answer that we commonly receive, for quickly troubleshooting your problems:
+Checkout the Frequently Asked Questions, a curated list of all the questions with adequate answer that we commonly receive, for quickly troubleshooting your problems:
 
 - [General FAQs ➶](general_faqs.md)
 - [CamGear FAQs ➶](camgear_faqs.md)
@@ -56,6 +56,26 @@ Checkout our Frequently Asked Questions, a curated list of all the questions wit
 &thinsp;
 
 
+## Bonus Examples
+
+> How we do this with that API?  
+
+Checkout the Bonus Examples, a curated list of all advanced examples with unusual configuration, which isn't available in Vidgear API's usage examples:
+
+- [CamGear FAQs ➶](camgear_ex.md)
+- [PiGear FAQs ➶](pigear_ex.md)
+- [ScreenGear FAQs ➶](screengear_ex.md)
+- [StreamGear FAQs ➶](streamgear_ex.md)
+- [WriteGear FAQs ➶](writegear_ex.md)
+- [NetGear FAQs ➶](netgear_ex.md)
+- [WebGear FAQs ➶](webgear_ex.md)
+- [WebGear_RTC FAQs ➶](webgear_rtc_ex.md)
+- [VideoGear FAQs ➶](videogear_ex.md)
+- [Stabilizer Class FAQs ➶](stabilizer_ex.md)
+- [NetGear_Async FAQs ➶](netgear_async_ex.md)
+
+&thinsp;
+
 ## Join our Gitter Community channel
 
 > Have you come up with some new idea 💡 or looking for the fastest way troubleshoot your problems
@@ -73,7 +93,7 @@ There you can ask quick questions, swiftly troubleshoot your problems, help othe
 - [x] [Got a question or problem?](../../contribution/#got-a-question-or-problem)
 - [x] [Found a typo?](../../contribution/#found-a-typo)
 - [x] [Found a bug?](../../contribution/#found-a-bug)
-- [x] [Missing a feature/improvement?](../../contribution/#request-for-a-featureimprovementt)
+- [x] [Missing a feature/improvement?](../../contribution/#request-for-a-featureimprovement)
 
 
 &thinsp;

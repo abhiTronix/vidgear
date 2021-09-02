@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -54,24 +54,27 @@ WebGear provides certain performance enhancing attributes for its [`options`](..
      
     * **Various Encoding Parameters:**
 
-        In WebGear API, the input video frames are first encoded into [**Motion JPEG (M-JPEG or MJPEG**)](https://en.wikipedia.org/wiki/Motion_JPEG) compression format, in which each video frame or interlaced field of a digital video sequence is compressed separately as a JPEG image, before sending onto a server. Therefore, WebGear API provides various attributes to have full control over JPEG encoding performance and quality, which are as follows:
+        In WebGear API, the input video frames are first encoded into [**Motion JPEG (M-JPEG or MJPEG**)](https://en.wikipedia.org/wiki/Motion_JPEG) compression format, in which each video frame or interlaced field of a digital video sequence is compressed separately as a JPEG image using [`simplejpeg`](https://gitlab.com/jfolz/simplejpeg) library, before sending onto a server. Therefore, WebGear API provides various attributes to have full control over JPEG encoding performance and quality, which are as follows:
 
-        *  **`frame_jpeg_quality`**: _(int)_ It controls the JPEG encoder quality. Its value varies from `0` to `100` (the higher is the better quality but performance will be lower). Its default value is `95`. Its usage is as follows:
+        * **`jpeg_compression_quality`**: _(int/float)_ This attribute controls the JPEG quantization factor. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. Its usage is as follows:
 
             ```python
-            options={"frame_jpeg_quality": 80} #JPEG will be encoded at 80% quality.
+            # activate jpeg encoding and set quality 95%
+            options = {"jpeg_compression_quality": 95}
             ```
 
-        * **`frame_jpeg_optimize`**: _(bool)_ It enables various JPEG compression optimizations such as Chroma sub-sampling, Quantization table, etc. These optimizations based on JPEG libs which are used while compiling OpenCV binaries, and recent versions of OpenCV uses [**TurboJPEG library**](https://libjpeg-turbo.org/), which is highly recommended for performance. Its default value is `False`. Its usage is as follows:
-
+        * **`jpeg_compression_fastdct`**: _(bool)_ This attribute if True, WebGear API uses fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`, and its usage is as follows:
+        
             ```python
-            options={"frame_jpeg_optimize": True} #JPEG optimizations are enabled.
+            # activate jpeg encoding and enable fast dct
+            options = {"jpeg_compression_fastdct": True}
             ```
 
-        * **`frame_jpeg_progressive`**: _(bool)_ It enables **Progressive** JPEG encoding instead of the **Baseline**.   Progressive Mode, displays an image in such a way that it shows a blurry/low-quality photo in its entirety, and then becomes clearer as the image downloads, whereas in Baseline Mode, an image created using the JPEG compression algorithm that will start to display the image as the data is made available, line by line. Progressive Mode, can drastically improve the performance in WebGear but at the expense of additional CPU load, thereby suitable for powerful systems only. Its default value is `False` meaning baseline mode is in-use. Its usage is as follows:
-
+        * **`jpeg_compression_fastupsample`**: _(bool)_ This attribute if True, WebGear API use fastest color upsampling method. Its default value is `False`, and its usage is as follows:
+        
             ```python
-            options={"frame_jpeg_progressive": True} #Progressive JPEG encoding enabled.
+            # activate jpeg encoding and enable fast upsampling
+            options = {"jpeg_compression_fastupsample": True}
             ```
 
 &nbsp; 
@@ -85,7 +88,7 @@ Let's implement our Bare-Minimum usage example with these [**Performance Enhanci
 
 You can access and run WebGear VideoStreamer Server programmatically in your python script in just a few lines of code, as follows:
 
-!!! tip "For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](./../../../help/webgear_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear)"
+!!! tip "For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](../../../help/webgear_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear)"
 
 
 ```python
@@ -96,9 +99,9 @@ from vidgear.gears.asyncio import WebGear
 # various performance tweaks
 options = {
     "frame_size_reduction": 40,
-    "frame_jpeg_quality": 80,
-    "frame_jpeg_optimize": True,
-    "frame_jpeg_progressive": False,
+    "jpeg_compression_quality": 80,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": False,
 }
 
 # initialize WebGear app
@@ -111,7 +114,7 @@ uvicorn.run(web(), host="localhost", port=8000)
 web.shutdown()
 ```
 
-which can be accessed on any browser on the network at http://localhost:8000/.
+which can be accessed on any browser on your machine at http://localhost:8000/.
 
 
 ### Running from Terminal
@@ -123,7 +126,7 @@ You can also access and run WebGear Server directly from the terminal commandlin
 !!! warning "If you're using `--options/-op` flag, then kindly wrap your dictionary value in single `''` quotes."
 
 ```sh
-python3 -m vidgear.gears.asyncio --source test.avi --logging True --options '{"frame_size_reduction": 50, "frame_jpeg_quality": 80, "frame_jpeg_optimize": True, "frame_jpeg_progressive": False}'
+python3 -m vidgear.gears.asyncio --source test.avi --logging True --options '{"frame_size_reduction": 50, "jpeg_compression_quality": 80, "jpeg_compression_fastdct": True, "jpeg_compression_fastupsample": False}'
 ```
 
 which can also be accessed on any browser on the network at http://localhost:8000/.
@@ -132,8 +135,6 @@ which can also be accessed on any browser on the network at http://localhost:800
 ??? tip "Advanced Usage from Terminal"
 
     You can run `#!py3 python3 -m vidgear.gears.asyncio -h` help command to see all the advanced settings, as follows:
-
-    !!! warning "If you're using `--options/-op` flag, then kindly wrap your dictionary value in single `''` quotes."
 
     ```sh
     usage: python -m vidgear.gears.asyncio [-h] [-m MODE] [-s SOURCE] [-ep ENABLEPICAMERA] [-S STABILIZE]

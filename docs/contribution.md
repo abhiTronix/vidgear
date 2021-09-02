@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ There's no need to contribute for some typos. Just reach us on [Gitter ➶](http
 
 ### Found a bug?
 
-If you encountered a bug, you can help us by submitting an issue in our GitHub repository. Even better, you can submit a Pull Request(PR) with a fix, but make sure to read the [guidelines ➶](#submission-guidelines).
+If you encountered a bug, you can help us by [submitting an issue](../contribution/issue/) in our GitHub repository. Even better, you can submit a Pull Request(PR) with a fix, but make sure to read the [guidelines ➶](#submission-guidelines).
 
 
 ### Request for a feature/improvement?

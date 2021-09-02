@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+# Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ jobs:
           pip install -U pip wheel numpy
           pip install -U .[asyncio]
           pip uninstall opencv-python -y
-          pip install -U flake8 six codecov pytest pytest-asyncio pytest-cov youtube-dl mpegdash
+          pip install -U flake8 six codecov pytest pytest-asyncio pytest-cov youtube-dl mpegdash paramiko m3u8 async-asgi-testclient
         if: success()
       - name: run prepare_dataset_script
         run: bash scripts/bash/prepare_dataset.sh

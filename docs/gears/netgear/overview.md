@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -76,6 +76,9 @@ In addition to the primary modes, NetGear API also offers applications-specific 
 * **Multi-Clients Mode:** _In this exclusive mode, NetGear API robustly ==handles multiple clients at once==, thereby providing seamless access to frames and unidirectional data transfer to multiple Client/Consumers across the network in real-time. Each new Client on the network can be uniquely identified on the Server's end by using its unique port address. **You can learn about this mode [here ➶](../advanced/multi_client/).**_
 
 * **Bidirectional Mode:** _This exclusive mode ==provides seamless support for bidirectional data transmission between between Server and Client along with video frames==. Using this mode, the user can now send or receive any data(of any datatype) between Server and Client easily in real-time. **You can learn more about this mode [here ➶](../advanced/bidirectional_mode/).**_
+
+* **SSH Tunneling Mode:** _This exclusive mode ==allows you to connect NetGear client and server via secure SSH connection over the untrusted network== and access its intranet services across firewalls. This mode implements SSH Remote Port Forwarding which enables accessing Host(client) machine outside the network by exposing port to the public Internet. **You can learn more about this mode [here ➶](../advanced/ssh_tunnel/).**_
+
 
 * **Secure Mode:** _In this exclusive mode, NetGear API ==provides easy access to powerful, smart & secure ZeroMQ's Security Layers== that enables strong encryption on data, and unbreakable authentication between the Server and Client with the help of custom certificates/keys that brings cheap, standardized privacy and authentication for distributed systems over the network. **You can learn more about this mode [here ➶](../advanced/secure_mode/).**_
 

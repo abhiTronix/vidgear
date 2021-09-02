@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,21 +26,30 @@ limitations under the License.
 
 # Switching from OpenCV Library
 
-Switching OpenCV with VidGear APIs is usually a fairly painless process, and will just require changing a few lines in your python script. 
+Switching OpenCV with VidGear APIs is fairly painless process, and will just require changing a few lines in your python script. 
 
 !!! abstract "This document is intended to software developers who want to migrate their python code from OpenCV Library to VidGear APIs."
 
 !!! warning "Prior knowledge of Python or OpenCV won't be covered in this guide. Proficiency with OpenCV-Python _(Python API for OpenCV)_ is a must in order understand this document."
 
-!!! tip "If you're just getting started with OpenCV-Python, then see [here ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-computer-vision-how-to-use-vidgear-in-my-projects)"
+!!! tip "If you're just getting started with OpenCV-Python programming, then refer this [FAQ ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-opencv-library-how-to-use-vidgear-in-my-projects)"
 
 &nbsp; 
 
 ## Why VidGear is better than OpenCV?
 
-!!! info "Learn about OpenCV see [here➶](https://software.intel.com/content/www/us/en/develop/articles/what-is-opencv.html)"
+!!! info "Learn more about OpenCV [here ➶](https://software.intel.com/content/www/us/en/develop/articles/what-is-opencv.html)"
 
-VidGear employs OpenCV at its backend and enhances its existing capabilities even further by introducing many new state-of-the-art features on top of it like multi-threading for performance, real-time Stabilization, inherit support for multiple devices and screen-casting, live network-streaming, plus [way much more ➶](../gears). Vidgear offers all this while maintaining the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax for all of its APIs, thereby making it even easier to implement Complex OpenCV applications in fewer lines of python code.
+VidGear employs OpenCV at its backend and enhances its existing capabilities even further by introducing many new state-of-the-art functionalities such as:
+
+- [x] Accelerated [Multi-Threaded](../bonus/TQM/#what-does-threaded-queue-mode-exactly-do) Performance.
+- [x] Out-of-the-box support for OpenCV APIs.
+- [x] Real-time [Stabilization](../gears/stabilizer/overview/) ready.
+- [x] Lossless hardware enabled video [encoding](../gears/writegear/compression/usage/#using-compression-mode-with-hardware-encoders) and [transcoding](../gears/streamgear/rtfm/usage/#usage-with-hardware-video-encoder).
+- [x] Inherited multi-backend support for various video sources and devices.
+- [x] Screen-casting, Multi-bitrate network-streaming, and [way much more ➶](../gears)
+
+Vidgear offers all this at once while maintaining the same standard OpenCV-Python _(Python API for OpenCV)_ coding syntax for all of its APIs, thereby making it even easier to implement complex real-time OpenCV applications in python code without changing things much.
 
 &nbsp; 
 
@@ -143,7 +152,7 @@ Let's breakdown a few noteworthy difference in both syntaxes:
 | Terminating | `#!python stream.release()` | `#!python stream.stop()` |
 
 
-!!! success "Now, checkout other [VideoCapture Gears ➶](../gears/#a-videocapture-gears)"
+!!! success "Now checkout other [VideoCapture Gears ➶](../gears/#a-videocapture-gears)"
 
 
 &nbsp; 
@@ -267,6 +276,6 @@ Let's breakdown a few noteworthy difference in both syntaxes:
 | Writing frames | `#!python writer.write(frame)` | `#!python writer.write(frame)` |
 | Terminating | `#!python writer.release()` | `#!python writer.close()` |
 
-!!! success "Now, checkout more examples of WriteGear API _(with FFmpeg backend)_ [here ➶](../gears/writegear/compression/usage/)"
+!!! success "Now checkout more about WriteGear API [here ➶](../gears/writegear/introduction/)"
 
 &thinsp; 

@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+# Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,20 +24,13 @@ repo_name: abhiTronix/vidgear
 repo_url: https://github.com/abhiTronix/vidgear
 edit_uri: ""
 
-# Google analytics
-google_analytics: ['UA-131929464-1', 'abhitronix.github.io']
-
 # Copyright
-copyright: Copyright &copy; 2019 - 2021 Abhishek Thakur(@abhiTronix)
+copyright: Copyright &copy; 2019 Abhishek Thakur(@abhiTronix)
 
 # Configuration
 theme:
   name: material
   custom_dir: docs/overrides
-
-  # Don't include MkDocs' JavaScript
-  include_search_page: false
-  search_index_only: true
 
   # Default values, taken from mkdocs_theme.yml
   language: en
@@ -45,6 +38,9 @@ theme:
     - header.autohide
     - navigation.tabs
     - navigation.top
+    - search.suggest
+    - search.highlight
+    - search.share
   palette:
     # Light mode
     - media: "(prefers-color-scheme: light)"
@@ -57,14 +53,14 @@ theme:
     # Dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: red
-      accent: red
+      primary: deep orange
+      accent: orange
       toggle:
         icon: material/weather-night
         name: Switch to light mode
   font:
-    text: Nunito 
-    code: IBM Plex
+    text: Muli
+    code: Fira Code
   icon:
     logo: logo
   logo: assets/images/logo.svg
@@ -103,7 +99,9 @@ extra:
   manifest: site.webmanifest
   version:
     provider: mike
-
+  analytics: # Google analytics
+    provider: google
+    property: UA-131929464-1
 
 extra_css:
     - assets/stylesheets/custom.css
@@ -118,8 +116,8 @@ markdown_extensions:
   - attr_list
   - def_list
   - footnotes
-  - meta
   - md_in_html
+  - meta
   - toc:
       permalink: ⚓
       slugify: !!python/name:pymdownx.slugs.uslugify
@@ -150,6 +148,8 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde
+  - pymdownx.striphtml:
+      strip_comments: true
 
 # Page tree
 nav:
@@ -210,20 +210,26 @@ nav:
       - References: bonus/reference/writegear.md
       - FAQs: help/writegear_faqs.md
     - StreamGear: 
-      - Overview: gears/streamgear/overview.md
-      - Usage Examples: gears/streamgear/usage.md
-      - Advanced:
-          - FFmpeg Installation: gears/streamgear/ffmpeg_install.md
+      - Introduction: gears/streamgear/introduction.md
+      - Single-Source Mode:
+        - Overview: gears/streamgear/ssm/overview.md
+        - Usage Examples: gears/streamgear/ssm/usage.md
+      - Real-time Frames Mode: 
+        - Overview: gears/streamgear/rtfm/overview.md
+        - Usage Examples: gears/streamgear/rtfm/usage.md
+      - Extras:
+        - FFmpeg Installation: gears/streamgear/ffmpeg_install.md
       - Parameters: gears/streamgear/params.md
       - References: bonus/reference/streamgear.md
       - FAQs: help/streamgear_faqs.md
     - NetGear: 
       - Overview: gears/netgear/overview.md
       - Usage Examples: gears/netgear/usage.md
-      - Advanced Usage:
+      - Advanced Usages: 
         - Multi-Servers Mode: gears/netgear/advanced/multi_server.md
         - Multi-Clients Mode: gears/netgear/advanced/multi_client.md
         - Bidirectional Mode: gears/netgear/advanced/bidirectional_mode.md
+        - SSH Tunneling Mode: gears/netgear/advanced/ssh_tunnel.md
         - Secure Mode: gears/netgear/advanced/secure_mode.md 
         - Frame Compression: gears/netgear/advanced/compression.md 
       - Parameters: gears/netgear/params.md
@@ -246,6 +252,8 @@ nav:
     - NetGear_Async: 
       - Overview: gears/netgear_async/overview.md
       - Usage Examples: gears/netgear_async/usage.md
+      - Advanced Usages:
+        - Bidirectional Mode: gears/netgear_async/advanced/bidirectional_mode.md
       - Parameters: gears/netgear_async/params.md
       - References: bonus/reference/netgear_async.md
       - FAQs: help/netgear_async_faqs.md
@@ -255,7 +263,7 @@ nav:
       - Parameters: gears/stabilizer/params.md
       - References: bonus/reference/stabilizer.md
       - FAQs: help/stabilizer_faqs.md
-  - Bonus:
+  - References: 
     - API References:
       - vidgear.gears: 
         - CamGear API: bonus/reference/camgear.md
@@ -280,7 +288,6 @@ nav:
       - Getting Help: help/get_help.md
     - Frequently Asked Questions:
       - General FAQs: help/general_faqs.md
-      - Stabilizer Class FAQs: help/stabilizer_faqs.md
       - CamGear FAQs: help/camgear_faqs.md
       - PiGear FAQs: help/pigear_faqs.md
       - VideoGear FAQs: help/videogear_faqs.md
@@ -291,3 +298,16 @@ nav:
       - WebGear FAQs: help/webgear_faqs.md
       - WebGear_RTC FAQs: help/webgear_rtc_faqs.md
       - NetGear_Async FAQs: help/netgear_async_faqs.md
+      - Stabilizer Class FAQs: help/stabilizer_faqs.md
+    - Bonus Examples:
+      - CamGear Examples: help/camgear_ex.md
+      - PiGear Examples: help/pigear_ex.md
+      - VideoGear Examples: help/videogear_ex.md
+      - ScreenGear Examples: help/screengear_ex.md
+      - WriteGear Examples: help/writegear_ex.md
+      - StreamGear Examples: help/streamgear_ex.md
+      - NetGear Examples: help/netgear_ex.md
+      - WebGear Examples: help/webgear_ex.md
+      - WebGear_RTC Examples: help/webgear_rtc_ex.md
+      - NetGear_Async Examples: help/netgear_async_ex.md
+      - Stabilizer Class Examples: help/stabilizer_ex.md

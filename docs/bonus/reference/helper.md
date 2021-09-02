@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ limitations under the License.
 
 &nbsp;
 
-::: vidgear.gears.helper.delete_safe
+::: vidgear.gears.helper.delete_ext_safe
 
 &nbsp;
 
@@ -98,6 +98,39 @@ limitations under the License.
 
 &nbsp;
 
+::: vidgear.gears.helper.import_dependency_safe
+
+&nbsp;
+
 ::: vidgear.gears.helper.get_video_bitrate
+
+&nbsp;
+
+::: vidgear.gears.helper.check_WriteAccess
+
+&nbsp;
+
+::: vidgear.gears.helper.check_open_port
+
+&nbsp;
+
+::: vidgear.gears.helper.delete_file_safe
+
+&nbsp;
+
+::: vidgear.gears.helper.get_supported_demuxers
+
+&nbsp;
+
+::: vidgear.gears.helper.get_supported_vencoders
+
+&nbsp;
+
+::: vidgear.gears.helper.youtube_url_validator
+
+&nbsp;
+
+
+::: vidgear.gears.helper.validate_auth_keys
 
 &nbsp;

@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+# Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ pr:
   - testing
 
 pool:
-  vmImage: 'macOS-10.14'
+  vmImage: 'macOS-latest'
 
 strategy:
   matrix:
@@ -55,8 +55,8 @@ steps:
 
 - script: |
     python -m pip install --upgrade pip wheel
-    pip install --upgrade .[asyncio] six codecov youtube-dl mpegdash
-    pip install --upgrade pytest pytest-asyncio pytest-cov pytest-azurepipelines
+    pip install --upgrade .[asyncio] six codecov youtube-dl mpegdash paramiko m3u8 async-asgi-testclient
+    pip install --upgrade pytest pytest-asyncio pytest-cov pytest-azurepipelines 
   displayName: 'Install pip dependencies'
 
 - script: |

@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -66,9 +66,12 @@ stream.stop()
 
 ## Using Camgear with Streaming Websites
 
-CamGear API provides direct support for piping video streams from various popular streaming services like [Twitch](https://www.twitch.tv/), [Livestream](https://livestream.com/), [Dailymotion](https://www.dailymotion.com/live), and [many more ➶](https://streamlink.github.io/plugin_matrix.html#plugins). All you have to do is to provide the desired Video's URL to its `source` parameter, and enable the [`stream_mode`](../params/#stream_mode) parameter. The complete usage example is as follows:
+CamGear API provides direct support for piping video streams from various popular streaming services like [Twitch](https://www.twitch.tv/), [Vimeo](https://vimeo.com/), [Dailymotion](https://www.dailymotion.com), and [many more ➶](https://streamlink.github.io/plugin_matrix.html#plugins). All you have to do is to provide the desired Video's URL to its `source` parameter, and enable the [`stream_mode`](../params/#stream_mode) parameter. The complete usage example is as follows:
 
-!!! bug "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently, You must always use [GStreamer backend _(`backend=cv2.CAP_GSTREAMER`)_](../params/#backend) for  Livestreams _(such as Twitch URLs)_. Checkout [this FAQ ➶](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
+!!! bug "Bug in OpenCV's FFmpeg"
+    To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently, You must always use [GStreamer backend](../params/#backend) for  Livestreams _(such as Twitch URLs)_. 
+
+    **Checkout [this FAQ ➶](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.**
 
 ???+ info "Exclusive CamGear Attributes"
     CamGear also provides exclusive attributes: 
@@ -87,10 +90,10 @@ import cv2
 options = {"STREAM_RESOLUTION": "720p"}
 
 # Add any desire Video URL as input source
-# for e.g https://www.dailymotion.com/video/x7xsoud
+# for e.g https://vimeo.com/151666798
 # and enable Stream Mode (`stream_mode = True`)
 stream = CamGear(
-    source="https://www.dailymotion.com/video/x7xsoud",
+    source="https://vimeo.com/151666798",
     stream_mode=True,
     logging=True,
     **options
@@ -183,7 +186,7 @@ stream.stop()
 
 ## Using CamGear with Variable Camera Properties
 
-CamGear API also flexibly support various **Source Tweak Parameters** available within [OpenCV's VideoCapture API](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d). These tweak parameters can be used to manipulate input source Camera-Device properties _(such as its brightness, saturation, size, iso, gain etc.)_ seamlessly, and can be easily applied in CamGear API through its `options` dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
+CamGear API also flexibly support various **Source Tweak Parameters** available within [OpenCV's VideoCapture API](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d). These tweak parameters can be used to transform input source Camera-Device properties _(such as its brightness, saturation, size, iso, gain etc.)_ seamlessly, and can be easily applied in CamGear API through its `options` dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
 
 
 !!! tip "All the supported Source Tweak Parameters can be found [here ➶](../advanced/source_params/#source-tweak-parameters-for-camgear-api)"
@@ -297,5 +300,11 @@ cv2.destroyAllWindows()
 # safely close video stream
 stream.stop()
 ```
+
+&nbsp; 
+
+## Bonus Examples
+
+!!! example "Checkout more advanced CamGear examples with unusual configuration [here ➶](../../../help/camgear_ex/)"
 
 &nbsp;

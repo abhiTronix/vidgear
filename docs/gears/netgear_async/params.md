@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -149,6 +149,34 @@ In NetGear_Async, the Receiver-end keeps tracks if frames are received from Serv
 ```python
 NetGear_Async(timeout=5.0) # sets 5secs timeout
 ```
+
+## **`options`** 
+
+This parameter provides the flexibility to alter various NetGear_Async API's internal properties and modes.
+
+**Data-Type:** Dictionary
+
+**Default Value:** Its default value is `{}`
+
+**Usage:**
+
+
+!!! abstract "Supported dictionary attributes for NetGear_Async API"
+
+    * **`bidirectional_mode`** (_boolean_) : This internal attribute activates the exclusive [**Bidirectional Mode**](../advanced/bidirectional_mode/), if enabled(`True`).
+
+
+The desired attributes can be passed to NetGear_Async API as follows:
+
+```python
+# formatting parameters as dictionary attributes
+options = {
+    "bidirectional_mode": True,
+}
+# assigning it
+NetGear_Async(logging=True, **options)
+```
+
 
 &nbsp; 
 

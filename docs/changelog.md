@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,46 +20,459 @@ limitations under the License.
 
 # Release Notes
 
+## v0.2.2 (2021-09-02)
+
+??? tip "New Features"
+    - [x] **StreamGear:** 
+        * Native Support for Apple HLS Multi-Bitrate Streaming format:
+            + Added support for new [Apple HLS](https://developer.apple.com/documentation/http_live_streaming) _(HTTP Live Streaming)_ HTTP streaming format in StreamGear.
+            + Implemented default workflow for auto-generating primary HLS stream of same resolution and framerate as source.
+            + Added HLS support in *Single-Source* and *Real-time Frames* Modes.
+            + Implemented inherit support for `fmp4` and `mpegts` HLS segment types.
+            + Added adequate default parameters required for trans-coding HLS streams.
+            + Added native support for HLS live-streaming.
+            + Added `"hls"` value to `format` parameter for easily selecting HLS format.
+            + Added HLS support in `-streams` attribute for transcoding additional streams.
+            + Added support for `.m3u8` and `.ts` extensions in `clear_prev_assets` workflow.
+            + Added validity check for `.m3u8` extension in output when HLS format is used.
+            + Separated DASH and HLS command handlers.
+            + Created HLS format exclusive parameters.
+            + Implemented `-hls_base_url` FFMpeg parameter support.
+        * Added support for audio input from external device:
+            + Implemented support for audio input from external device.
+            + Users can now easily add audio device and decoder by formatting them as python list.
+            + Modified `-audio` parameter to support `list` data type as value.
+            + Modified `validate_audio` helper function to validate external audio devices.
+        * Added `-seg_duration` to control segment duration.
+    - [x] **NetGear:**
+        * New SSH Tunneling Mode for remote connection:
+            + New SSH Tunneling Mode for connecting ZMQ sockets across machines via SSH tunneling.
+            + Added new `ssh_tunnel_mode` attribute to enable ssh tunneling at provide address at server end only.
+            + Implemented new `check_open_port` helper method to validate availability of host at given open port.
+            + Added new attributes `ssh_tunnel_keyfile` and `ssh_tunnel_pwd` to easily validate ssh connection.
+            + Extended this feature to be compatible with bi-directional mode and auto-reconnection.
+            + Disabled support for exclusive Multi-Server and Multi-Clients modes.
+            + Implemented logic to automatically enable `paramiko` support if installed.
+            + Reserved port-`47` for testing.
+        * Additional colorspace support for input frames with Frame-Compression enabled:
+            + Allowed to manually select colorspace on-the-fly with JPEG frame compression.
+            + Updated `jpeg_compression` dict parameter to support colorspace string values.
+            + Added all supported colorspace values by underline `simplejpeg` library.
+            + Server enforced frame-compression colorspace on client(s).
+            + Enable "BGR" colorspace by default.
+            + Added Example for changing incoming frames colorspace with NetGear's Frame Compression.
+            + Updated Frame Compression parameters in NetGear docs.
+            + Updated existing CI tests to cover new frame compression functionality.
+    - [x] **NetGear_Async:**
+        * New exclusive Bidirectional Mode for bidirectional data transfer:
+            + NetGear_Async's first-ever exclusive Bidirectional mode with pure asyncio implementation.
+            + :warning: Bidirectional mode is only available with User-defined Custom Source(i.e. `source=None`)
+            + Added support for `PAIR` & `REQ/REP` bidirectional patterns for this mode.
+            + Added powerful `asyncio.Queues` for handling user data and frames in real-time.
+            + Implemented new `transceive_data` method  to Transmit _(in Recieve mode)_ and Receive _(in Send mode)_ data in real-time.
+            + Implemented `terminate_connection` internal asyncio method to safely terminate ZMQ connection and queues.
+            + Added `msgpack` automatic compression encoding and decoding of data and frames in bidirectional mode.
+            + Added support for `np.ndarray` video frames.
+            + Added new `bidirectional_mode` attribute for enabling this mode.
+            + Added 8-digit random alphanumeric id generator for each device.
+            + :warning: NetGear_Async will throw `RuntimeError` if bidirectional mode is disabled at server or client but not both.
+        * Added new `disable_confirmation` used to force disable termination confirmation from client in `terminate_connection`.
+        * Added `task_done()` method after every `get()` call to gracefully terminate queues.
+        * Added new `secrets` and `string` imports.
+    - [x] **WebGear:** 
+        * Updated JPEG Frame compression with `simplejpeg`:
+            + Implemented JPEG compression algorithm for 4-5% performance boost at cost of minor loss in quality.
+            + Utilized `encode_jpeg` and `decode_jpeg` methods to implement turbo-JPEG transcoding with `simplejpeg`.
+            + Added new options to control JPEG frames *quality*, enable fastest *dct*, fast *upsampling*  to boost performance.
+            + Added new `jpeg_compression`, `jpeg_compression_quality`, `jpeg_compression_fastdct`, `jpeg_compression_fastupsample` attributes.
+            + Enabled fast dct by default with JPEG frames at `90%`.
+            + Incremented default frame reduction to `25%`.
+            + Implemented automated grayscale colorspace frames handling.
+            + Updated old and added new usage examples.
+            + Dropped support for depreciated attributes from WebGear and added new attributes.
+        * Added new WebGear Theme: _(Checkout at https://github.com/abhiTronix/vidgear-vitals)_
+            - Added responsive image scaling according to screen aspect ratios.
+            - Added responsive text scaling.
+            - Added rounded border and auto-center to image tag.
+            - Added bootstrap css properties to implement auto-scaling.
+            - Removed old `resize()` hack.
+            - Improved text spacing and weight.
+            - Integrated toggle full-screen to new implementation.
+            - Hide Scrollbar both in WebGear_RTC and WebGear Themes.
+            - Beautify files syntax and updated files checksum.
+            - Refactor files and removed redundant code.
+            - Bumped theme version to `v0.1.2`.
+    - [x] **WebGear_RTC:**
+        * Added native support for middlewares:
+            + Added new global `middleware` variable for easily defining Middlewares as list.
+            + Added validity check for Middlewares.
+            + Added tests for middlewares support.
+            + Added example for middlewares support.
+            + Extended middlewares support to WebGear API too.
+            + Added related imports.
+        * Added new WebGear_RTC Theme:  _(Checkout at https://github.com/abhiTronix/vidgear-vitals)_
+            + Implemented new responsive video scaling according to screen aspect ratios.
+            + Added bootstrap CSS properties to implement auto-scaling.
+            + Removed old `resize()` hack.
+            + Beautify files syntax and updated files checksum.
+            + Refactored files and removed redundant code.
+            + Bumped theme version to `v0.1.2`
+    - [x] **Helper:** 
+        * New automated interpolation selection for gears:
+            + Implemented `retrieve_best_interpolation` method to automatically select best available interpolation within OpenCV.
+            + Added support for this method in WebGear, WebGear_RTC and Stabilizer Classes/APIs.
+            + Added new CI tests for this feature.
+        * Implemented `get_supported_demuxers` method to get list of supported demuxers.
+    - [x] **CI:**
+        * Added new `no-response` work-flow for stale issues.
+        * Added new CI tests for SSH Tunneling Mode.
+        * Added `paramiko` to CI dependencies.
+        * Added support for `"hls"` format in existing CI tests.
+        * Added new functions `check_valid_m3u8` and `extract_meta_video` for validating HLS files.
+        * Added new `m3u8` dependency to CI workflows.
+        * Added complete CI tests for NetGear_Async's new Bidirectional Mode:
+            + Implemented new exclusive `Custom_Generator` class for testing bidirectional data dynamically on server-end.
+            + Implemented new exclusive `client_dataframe_iterator` method for testing bidirectional data on client-end.
+            + Implemented `test_netgear_async_options` and `test_netgear_async_bidirectionalmode` two new tests.
+            + Added `timeout` value on server end in CI tests.
+    - [x] **Setup.py:**
+        * Added new `cython` and `msgpack` dependency.
+        * Added `msgpack` and `msgpack_numpy` to auto-install latest.
+    - [x] **BASH:** 
+        * Added new `temp_m3u8` folder for generating M3U8 assets in CI tests.
+    - [x] **Docs:**
+        * Added docs for new Apple HLS StreamGear format:
+            + Added StreamGear HLS transcoding examples for both StreamGear modes.
+            + Updated StreamGear parameters to w.r.t new HLS configurations.
+            + Added open-sourced *"Sintel" - project Durian Teaser Demo* with StreamGear's HLS stream using `Clappr` and raw.githack.com.
+            + Added new HLS chunks at https://github.com/abhiTronix/vidgear-docs-additionals for StreamGear
+            + Added support for HLS video in Clappr within `custom.js` using HlsjsPlayback plugin.
+            + Added support for Video Thumbnail preview for HLS video in Clappr within `custom.js`
+            + Added `hlsjs-playback.min.js` JS script and suitable configuration for HlsjsPlayback plugin.
+            + Added custom labels for quality levels selector in `custom.js`.
+            + Added new docs content related to new Apple HLS format.
+            + Updated DASH chunk folder at https://github.com/abhiTronix/vidgear-docs-additionals.
+            + Added example for audio input support from external device in StreamGear.
+            + Added steps for using `-audio` attribute on different OS platforms in StreamGear.
+        * Added usage examples for NetGear_Async's Bidirectional Mode:
+            + Added new Usage examples and Reference doc for NetGear_Async's Bidirectional Mode.
+            + Added new image asset for NetGear_Async's Bidirectional Mode.
+            + Added NetGear_Async's `option` parameter reference.
+            + Updated NetGear_Async definition in docs.
+            + Changed font size for Helper methods.
+            + Renamed `Bonus` section to `References` in `mkdocs.yml`.
+        * Added Gitter sidecard embed widget:
+            + Imported gitter-sidecar script to `main.html`.
+            + Updated `custom.js` to set global window option.
+            + Updated Sidecard UI in `custom.css`.
+        * Added bonus examples to help section:
+            + Implemented a curated list of more advanced examples with unusual configuration for each API.
+        * Added several new contents and updated context.
+        * Added support for search suggestions, search highlighting and search sharing _(i.e. deep linking)_
+        * Added more content to docs to make it more user-friendly.
+        * Added warning that JPEG Frame-Compression is disabled with Custom Source in WebGear.
+        * Added steps for identifying and specifying sound card on different OS platforms in WriteGear.
+        * Added Zenodo DOI badge and its reference in BibTex citations.
+        * Added `extra.homepage` parameter, which allows for setting a dedicated URL for `site_url`.
+        * Added `pymdownx.striphtml` plugin for stripping comments.
+        * Added complete docs for SSH Tunneling Mode.
+        * Added complete docs for NetGear's SSH Tunneling Mode.
+        * Added `pip` upgrade related docs.
+        * Added docs for installing vidgear with only selective dependencies
+        * Added new `advance`/`experiment` admonition with new background color.
+        * Added new icons SVGs for `advance` and `warning` admonition.
+        * Added new usage example and related information.
+        * Added new image assets for ssh tunneling example.
+        * Added new admonitions
+        * Added new FAQs.
+          
+
+??? success "Updates/Improvements"
+    - [x] VidGear Core: 
+        * New behavior to virtually isolate optional API specific dependencies by silencing `ImportError` on all VidGear's APIs import.
+        * Implemented algorithm to cache all imports on startup but silence any `ImportError` on missing optional dependency.
+        * :warning: Now `ImportError` will be raised only any certain API specific dependency is missing during given API's initialization.
+        * New `import_dependency_safe` to imports specified dependency safely with `importlib` module.
+        * Replaced all APIs imports with `import_dependency_safe`.
+        * Added support for relative imports in `import_dependency_safe`.
+        * Implemented `error` parameter to by default `ImportError` with a meaningful message if a dependency is missing, Otherwise if `error = log` a warning will be logged and on `error = silent` everything will be quit. But If a dependency is present, but older than specified, an error is raised if specified.
+        * Implemented behavior that if a dependency is present, but older than `min_version` specified, an error is raised always.
+        * Implemented `custom_message` to display custom message on error instead of default one.
+        * Implemented separate `import_core_dependency` function to import and check for specified core dependency. 
+        * `ImportError` will be raised immediately if core dependency not found.
+    - [x] StreamGear: 
+        * Replaced depreciated `-min_seg_duration` flag with `-seg_duration`.
+        * Removed redundant `-re` flag from RTFM.
+        * Improved Live-Streaming performance by disabling SegmentTimline
+        * Improved DASH assets detection for removal by using filename prefixes.
+    - [x] NetGear:
+        * Replaced `np.newaxis` with `np.expand_dims`.
+        * Replaced `random` module with `secrets` while generating system ID.
+        * Update array indexing with `np.copy`.
+    - [x] NetGear_Async:
+        * Improved custom source handling.
+        * Removed deprecated `loop` parameter from asyncio methods.
+        * Re-implemented `skip_loop` parameter in `close()` method.
+        * :warning: `run_until_complete` will not used if `skip_loop` is enabled.
+        * :warning: `skip_loop` now will create asyncio task instead and will enable `disable_confirmation` by default.
+        * Replaced `create_task` with `ensure_future` to ensure backward compatibility with python-3.6 legacies.
+        * Simplified code for `transceive_data` method.
+    - [x] WebGear_RTC: 
+        * Improved handling of failed ICE connection.
+        * Made `is_running` variable globally available for internal use.
+    - [x] Helper: 
+        * Added `4320p` resolution support to `dimensions_to_resolutions` method.
+        * Implemented new `delete_file_safe` to safely delete files at given path.
+        * Replaced `os.remove` calls with `delete_file_safe`.
+        * Added support for filename prefixes in `delete_ext_safe` method.
+        * Improved and simplified `create_blank_frame` functions frame channels detection.
+        * Added `logging` parameter to capPropId function to forcefully discard any error(if required).
+    - [x] Setup.py: 
+        * Added patch for `numpy` dependency, `numpy` recently dropped support for python 3.6.x legacies. See https://github.com/numpy/numpy/releases/tag/v1.20.0
+        * Removed version check on certain dependencies.
+        * Re-added `aiortc` to auto-install latest version.
+    - [x] Asyncio: 
+        * Changed `asyncio.sleep` value to `0`.
+            + The amount of time sleep is irrelevant; the only purpose await asyncio.sleep() serves is to force asyncio to suspend execution to the event loop, and give other tasks a chance to run. Also, `await asyncio.sleep(0)` will achieve the same effect. https://stackoverflow.com/a/55782965/10158117
+    - [x] License: 
+        * Dropped publication year range to avoid confusion. _(Signed and Approved by @abhiTronix)_
+        * Updated Vidgear license's year of first publication of the work in accordance with US copyright notices defined by Title 17, Chapter 4(Visually perceptible copies): https://www.copyright.gov/title17/92chap4.html
+        * Reflected changes in all copyright notices.
+    - [x] CI: 
+        * Updated macOS VM Image to latest in azure devops.
+        * Updated VidGear Docs Deployer Workflow.
+        * Updated WebGear_RTC CI tests.
+        * Removed redundant code from CI tests.
+        * Updated tests to increase coverage.
+        * Enabled Helper tests for python 3.8+ legacies.
+        * Enabled logging in `validate_video` method.
+        * Added `-hls_base_url` to streamgear tests.
+        * Update `mpegdash` dependency to `0.3.0-dev2` version in Appveyor.
+        * Updated CI tests for new HLS support
+        * Updated CI tests from scratch for new native HLS support in StreamGear.
+        * Updated test patch for StreamGear.
+        * Added exception for RunTimeErrors in NetGear CI tests.
+        * Added more directories to Codecov ignore list.
+        * Imported relative `logger_handler` for asyncio tests.
+    - [x] Docs:
+        * Re-positioned few docs comments at bottom for easier detection during stripping.
+        * Updated to new extra `analytics` parameter in Material Mkdocs.
+        * Updated dark theme to `dark orange`.
+        * Changed fonts => text: `Muli` & code: `Fira Code`
+        * Updated fonts to `Source Sans Pro`.
+        * Updated `setup.py` update-link for modules.
+        * Re-added missing StreamGear Code docs.
+        * Several minor tweaks and typos fixed.
+        * Updated `404.html` page.
+        * Updated admonitions colors and beautified `custom.css`.
+        * Replaced VideoGear & CamGear with OpenCV in CPU intensive examples.
+        * Updated `mkdocs.yml` with new changes and URLs.
+        * Moved FAQ examples to bonus examples.
+        * Moved StreamGear primary modes to separate sections for better readability.
+        * Implemented separate overview and usage example pages for StreamGear primary modes.
+        * Improved StreamGear docs context and simplified language.
+        * Renamed StreamGear `overview` page to `introduction`.
+        * Re-written Threaded-Queue-Mode from scratch with elaborated functioning.
+        * Replace *Paypal* with *Liberpay* in `FUNDING.yml`.
+        * Updated FFmpeg Download links.
+        * Reverted UI change in CSS.
+        * Updated `changelog.md` and fixed clutter.
+        * Updated `README.md` and `mkdocs.yml` with new additions
+        * Updated context for CamGear example.
+        * Restructured and added more content to docs.
+        * Updated comments in source code.
+        * Removed redundant data table tweaks from `custom.css`.
+        * Re-aligned badges in README.md.
+        * Beautify `custom.css`.
+        * Updated `mkdocs.yml`.
+        * Updated context and fixed typos.
+        * Added missing helper methods in Reference.
+        * Updated Admonitions.
+        * Updates images assets.
+        * Bumped CodeCov.
+    - [x] Logging:
+        * Improved logging level-names.
+        * Updated logging messages.
+    - [x] Minor tweaks to `needs-more-info` template.
+    - [x] Updated issue templates and labels.
+    - [x] Removed redundant imports.
+
+??? danger "Breaking Updates/Changes"
+    - [ ] Virtually isolated all API specific dependencies, Now `ImportError` for API-specific dependencies will be raised only when any of them is missing at API's initialization.
+    - [ ] Renamed `delete_safe` to `delete_ext_safe`.
+    - [ ] Dropped support for `frame_jpeg_quality`, `frame_jpeg_optimize`, `frame_jpeg_progressive` attributes from WebGear.
+
+??? bug "Bug-fixes"
+    - [x] CamGear:
+        * Hot-fix for Live Camera Streams:
+            + Added new event flag to keep check on stream read.
+            + Implemented event wait for  `read()` to block it when source stream is busy.
+            + Added and Linked `THREAD_TIMEOUT` with event wait timout.
+            + Improved backward compatibility of new additions.
+        * Enforced logging for YouTube live.
+    - [x] NetGear: 
+        * Fixed Bidirectional Video-Frame Transfer broken with frame-compression:
+            + Fixed `return_data` interfering with return JSON-data in receive mode.
+            + Fixed logic.
+        * Fixed color-subsampling interfering with colorspace.
+        * Patched external `simplejpeg` bug. Issue: https://gitlab.com/jfolz/simplejpeg/-/issues/11
+            + Added `np.squeeze` to drop grayscale frame's 3rd dimension on Client's end.
+        * Fixed bug that cause server end frame dimensions differ from client's end when frame compression enabled.
+    - [X] NetGear_Async: 
+        * Fixed bug related asyncio queue freezing on calling `join()`.
+        * Fixed ZMQ connection bugs in bidirectional mode.
+        * Fixed several critical bugs in event loop handling.
+        * Fixed several bugs in bidirectional mode implementation.
+        * Fixed missing socket termination in both server and client end.
+        * Fixed `timeout` parameter logic.
+        * Fixed typos in error messages.
+    - [x] WebGear_RTC: 
+        * Fixed stream freezes after web-page reloading:
+            + Implemented new algorithm to continue stream even when webpage is reloaded.
+            + Inherit and modified `next_timestamp` VideoStreamTrack method for generating accurate timestamps.
+            + Implemented `reset_connections` callable to reset all peer connections and recreate Video-Server timestamps. (Implemented by @kpetrykin)
+            + Added `close_connection` endpoint in JavaScript to inform server page refreshing.(Thanks to @kpetrykin)
+            + Added exclusive reset connection node `/close_connection` in routes.
+            + Added `reset()` method to Video-Server class for manually resetting timestamp clock.
+            + Added `reset_enabled` flag to keep check on reloads.
+            + Fixed premature webpage auto-reloading.
+            + Added additional related imports.
+        * Fixed web-page reloading bug after stream ended:
+            + Disable webpage reload behavior handling for Live broadcasting.
+            + Disable reload CI test on Windows machines due to random failures.
+            + Improved handling of failed ICE connection.
+        * Fixed Assertion error bug:
+            + Source must raise MediaStreamError when stream ends instead of returning None-type.
+    - [x] WebGear
+        * Removed format specific OpenCV decoding and encoding support for WebGear.
+    - [x] Helper: 
+        * Regex bugs fixed:
+            + New improved regex for discovering supported encoders in `get_supported_vencoders`.
+            + Re-implemented check for extracting only valid output protocols in `is_valid_url`.
+            + Minor tweaks for better regex compatibility.
+        * Bugfix related to OpenCV import:
+            + Bug fixed for OpenCV import comparison test failing with Legacy versions and throwing `ImportError`.
+            + Replaced `packaging.parse_version` with more robust `distutils.version`.
+        * Fixed bug with `create_blank_frame` that throws error with gray frames:
+            + Implemented automatic output channel correction inside `create_blank_frame` function.
+            + Extended automatic output channel correction support to asyncio package.
+        * Implemented `RSTP` protocol validation as _demuxer_, since it's not a protocol but a demuxer.
+        * Removed redundant `logger_handler`, `mkdir_safe`, `retrieve_best_interpolation`, `capPropId` helper functions from asyncio package. Relatively imported helper functions from non-asyncio package.
+        * Removed unused `aiohttp` dependency.
+        * Removed `asctime` formatting from logging.
+    - [x] StreamGear: 
+        * Fixed Multi-Bitrate HLS VOD streams:
+            + Re-implemented complete workflow for Multi-Bitrate HLS VOD streams.
+            + Extended support to both *Single-Source* and *Real-time Frames* Modes.
+        * Fixed bugs with audio-video mapping.
+        * Fixed master playlist not generating in output.
+        * Fixed improper `-seg_duration` value resulting in broken pipeline.
+        * Fixed expected aspect ratio not calculated correctly for additional streams.
+        * Fixed stream not terminating when provided input from external audio device.
+        * Fixed bugs related to external audio not mapped correctly in HLS format.
+        * Fixed OPUS audio fragments not supported with MP4 video in HLS.
+        * Fixed unsupported high audio bit-rate bug.
+    - [x] Setup.py: 
+        * Fixed `latest_version` returning incorrect version for some PYPI packages.
+        * Removed `latest_version` variable support from `simplejpeg`.
+        * Fixed `streamlink` only supporting requests==2.25.1 on Windows.
+        * Removed all redundant dependencies like `colorama`, `aiofiles`, `aiohttp`.
+        * Fixed typos in dependencies.
+    - [x] Setup.cfg: 
+        * Replaced dashes with underscores to remove warnings.
+    - [x] CI:
+        * Replaced buggy `starlette.TestClient` with `async-asgi-testclient` in WebGear_RTC
+        * Removed `run()` method and replaced with pure asyncio implementation.
+        * Added new `async-asgi-testclient` CI dependency.
+        * Fixed `fake_picamera` class logger calling `vidgear` imports prematurely before importing `picamera` class in tests.
+            + Implemented new `fake_picamera` class logger inherently with `logging` module.
+            + Moved `sys.module` logic for faking to `init.py`.
+            + Added `__init__.py` to ignore in Codecov.
+        * Fixed event loop closing prematurely while reloading:
+            + Internally disabled suspending event loop while reloading.
+        * Event Policy Loop patcher added for WebGear_RTC tests.
+        * Fixed `return_assets_path` path bug.
+        * Fixed typo in `TimeoutError` exception import.
+        * Fixed eventloop is already closed bug.
+        * Fixed eventloop bugs in Helper CI tests.
+        * Fixed several minor bugs related to new CI tests.
+        * Fixed bug in PiGear tests. 
+    - [x] Docs:
+        * Fixed 404 page does not work outside the site root with mkdocs.
+        * Fixed markdown files comments not stripped when converted to HTML.
+        * Fixed missing heading in VideoGear.
+        * Typos in links and code comments fixed.
+        * Several minor tweaks and typos fixed.
+        * Fixed improper URLs/Hyperlinks and related typos.
+        * Fixed typos in usage examples.
+        * Fixed redundant properties in CSS.
+        * Fixed bugs in `mkdocs.yml`.
+        * Fixed docs contexts and typos.
+        * Fixed `stream.release()` missing in docs.
+        * Fixed several typos in code comments.
+        * Removed dead code from docs.
+    - [x] Refactored Code and reduced redundancy.
+    - [x] Fixed shutdown in `main.py`.
+    - [x] Fixed logging comments.
+
+??? question "Pull Requests"
+    * PR #210
+    * PR #215
+    * PR #222
+    * PR #223
+    * PR #227
+    * PR #231
+    * PR #233
+    * PR #237  
+    * PR #239 
+    * PR #243 
+
+
+&nbsp; 
+
+&nbsp; 
+
+
 ## v0.2.1 (2021-04-25)
 
 ??? tip "New Features"
     - [x] **WebGear_RTC:**
-        * [ ] A new API that is similar to WeGear API in all aspects but utilizes WebRTC standard instead of Motion JPEG for streaming.
-        * [ ] Now it is possible to share data and perform teleconferencing peer-to-peer, without requiring that the user install plugins or any other third-party software.
-        * [ ] Added a flexible backend for `aiortc` - a python library for Web Real-Time Communication (WebRTC).
-        * [ ] Integrated all functionality and parameters of WebGear into WebGear_RTC API.
-        * [ ] Implemented JSON Response with a WebRTC Peer Connection of Video Server.
-        * [ ] Added a internal `RTC_VideoServer` server on WebGear_RTC, a inherit-class to aiortc's VideoStreamTrack API.
-        * [ ] New Standalone UI Default theme v0.1.1 for WebGear_RTC from scratch without using 3rd-party assets. (by @abhiTronix)
-        * [ ] New `custom.js` and `custom.css` for custom responsive behavior.
-        * [ ] Added WebRTC support to `custom.js` and ensured compatibility with WebGear_RTC.
-        * [ ] Added example support for ICE framework and STUN protocol like WebRTC features to `custom.js`.
-        * [ ] Added `resize()` function to `custom.js` to automatically adjust `video` & `img` tags for smaller screens.
-        * [ ] Added WebGear_RTC support in main.py for easy access through terminal using `--mode` flag.
-        * [ ] Integrated all WebGear_RTC enhancements to WebGear Themes.
-        * [ ] Added CI test for WebGear_RTC.
-        * [ ] Added complete docs for WebGear_RTC API.
-        * [ ] Added bare-minimum as well as advanced examples usage code.
-        * [ ] Added new theme images.
-        * [ ] Added Reference and FAQs.
+        * A new API that is similar to WeGear API in all aspects but utilizes WebRTC standard instead of Motion JPEG for streaming.
+        * Now it is possible to share data and perform teleconferencing peer-to-peer, without requiring that the user install plugins or any other third-party software.
+        * Added a flexible backend for `aiortc` - a python library for Web Real-Time Communication (WebRTC).
+        * Integrated all functionality and parameters of WebGear into WebGear_RTC API.
+        * Implemented JSON Response with a WebRTC Peer Connection of Video Server.
+        * Added a internal `RTC_VideoServer` server on WebGear_RTC, a inherit-class to aiortc's VideoStreamTrack API.
+        * New Standalone UI Default theme v0.1.1 for WebGear_RTC from scratch without using 3rd-party assets. (by @abhiTronix)
+        * New `custom.js` and `custom.css` for custom responsive behavior.
+        * Added WebRTC support to `custom.js` and ensured compatibility with WebGear_RTC.
+        * Added example support for ICE framework and STUN protocol like WebRTC features to `custom.js`.
+        * Added `resize()` function to `custom.js` to automatically adjust `video` & `img` tags for smaller screens.
+        * Added WebGear_RTC support in main.py for easy access through terminal using `--mode` flag.
+        * Integrated all WebGear_RTC enhancements to WebGear Themes.
+        * Added CI test for WebGear_RTC.
+        * Added complete docs for WebGear_RTC API.
+        * Added bare-minimum as well as advanced examples usage code.
+        * Added new theme images.
+        * Added Reference and FAQs.
     - [x] **CamGear API:**
-        * [ ] New Improved Pure-Python Multiple-Threaded Implementation:
+        * New Improved Pure-Python Multiple-Threaded Implementation:
             + Optimized Threaded-Queue-Mode Performance. (PR by @bml1g12)
             + Replaced regular `queue.full` checks followed by sleep with implicit sleep with blocking `queue.put`.
             + Replaced regular `queue.empty` checks followed by queue.
             + Replaced `nowait_get` with a blocking `queue.get` natural empty check.
             + Up-to 2x performance boost than previous implementations. 
-        * [ ] New `THREAD_TIMEOUT` attribute to prevent deadlocks:
+        * New `THREAD_TIMEOUT` attribute to prevent deadlocks:
             + Added support for `THREAD_TIMEOUT` attribute to its `options` parameter.
             + Updated CI Tests and docs.
     - [x] **WriteGear API:**
-        * [ ] New more robust handling of default video-encoder in compression mode:
+        * New more robust handling of default video-encoder in compression mode:
             + Implemented auto-switching of default video-encoder automatically based on availability.
             + API now selects Default encoder based on priority: `"libx264" > "libx265" > "libxvid" > "mpeg4"`.
             + Added `get_supported_vencoders` Helper method to enumerate Supported Video Encoders.
             + Added common handler for `-c:v` and `-vcodec` flags.
     - [x] **NetGear API:**
-        * [ ] New Turbo-JPEG compression with simplejpeg
+        * New Turbo-JPEG compression with simplejpeg
             + Implemented JPEG compression algorithm for 4-5% performance boost at cost of minor loss in quality.
             + Utilized `encode_jpeg` and `decode_jpeg` methods to implement turbo-JPEG transcoding with `simplejpeg`.
             + Added options to control JPEG frames quality, enable fastest dct, fast upsampling  to boost performance.
@@ -67,13 +480,13 @@ limitations under the License.
             + Enabled fast dct by default with JPEG frames at 90%.
             + Added Docs for JPEG Frame Compression.
     - [x] **WebGear API:** 
-        * [ ] New modular and flexible configuration for Custom Sources:
+        * New modular and flexible configuration for Custom Sources:
             + Implemented more convenient approach for handling custom source configuration.
             + Added new `config` global variable for this new behavior.
             + Now None-type `source` parameter value is allowed for defining own custom sources.
             + Added new Example case and Updates Docs for this feature.
             + Added new CI Tests.
-        * [ ] New Browser UI Updates:
+        * New Browser UI Updates:
             + New Standalone UI Default theme v0.1.0 for browser (by @abhiTronix)
             + Completely rewritten theme from scratch with only local resources.
             + New `custom.js` and `custom.css` for custom responsive behavior.
@@ -82,144 +495,144 @@ limitations under the License.
             + Removed all third-party theme dependencies.
             + Update links to new github server `abhiTronix/vidgear-vitals`
             + Updated docs with new theme's screenshots.
-        * [ ] Added `enable_infinite_frames` attribute for enabling infinite frames.
-        * [ ] Added New modular and flexible configuration for Custom Sources.
-        * [ ] Bumped WebGear Theme Version to v0.1.1.
-        * [ ] Updated Docs and CI tests.
+        * Added `enable_infinite_frames` attribute for enabling infinite frames.
+        * Added New modular and flexible configuration for Custom Sources.
+        * Bumped WebGear Theme Version to v0.1.1.
+        * Updated Docs and CI tests.
     - [x] **ScreenGear API:**
-        * [ ] Implemented Improved Pure-Python Multiple-Threaded like CamGear.
-        * [ ] Added support for `THREAD_TIMEOUT` attribute to its `options` parameter.
+        * Implemented Improved Pure-Python Multiple-Threaded like CamGear.
+        * Added support for `THREAD_TIMEOUT` attribute to its `options` parameter.
     - [X] **StreamGear API:**
-        * [ ] Enabled pseudo live-streaming flag `re` for live content.
+        * Enabled pseudo live-streaming flag `re` for live content.
     - [x] **Docs:**
-        * [ ] Added new native docs versioning to mkdocs-material.
-        * [ ] Added new examples and few visual tweaks.
-        * [ ] Updated Stylesheet for versioning.
-        * [ ] Added new DASH video chunks at https://github.com/abhiTronix/vidgear-docs-additionals for StreamGear and Stabilizer streams.
-        * [ ] Added open-sourced "Tears of Steel" * [ ] project Mango Teaser video chunks.
-        * [ ] Added open-sourced "Subspace Video Stabilization" http://web.cecs.pdx.edu/~fliu/project/subspace_stabilization/ video chunks.
-        * [ ] Added support for DASH Video Thumbnail preview in Clappr within `custom.js`.
-        * [ ] Added responsive clappr DASH player with bootstrap's `embed-responsive`.
-        * [ ] Added new permalink icon and slugify to toc.
-        * [ ] Added "back-to-top" button for easy navigation.
+        * Added new native docs versioning to mkdocs-material.
+        * Added new examples and few visual tweaks.
+        * Updated Stylesheet for versioning.
+        * Added new DASH video chunks at https://github.com/abhiTronix/vidgear-docs-additionals for StreamGear and Stabilizer streams.
+        * Added open-sourced "Tears of Steel" * project Mango Teaser video chunks.
+        * Added open-sourced "Subspace Video Stabilization" http://web.cecs.pdx.edu/~fliu/project/subspace_stabilization/ video chunks.
+        * Added support for DASH Video Thumbnail preview in Clappr within `custom.js`.
+        * Added responsive clappr DASH player with bootstrap's `embed-responsive`.
+        * Added new permalink icon and slugify to toc.
+        * Added "back-to-top" button for easy navigation.
     - [x] **Helper:**
-        * [ ] New GitHub Mirror with latest Auto-built FFmpeg Static Binaries:
+        * New GitHub Mirror with latest Auto-built FFmpeg Static Binaries:
             + Replaced new GitHub Mirror `abhiTronix/FFmpeg-Builds` in helper.py
             + New CI maintained Auto-built FFmpeg Static Binaries.
             + Removed all 3rd-party and old links for better compatibility and Open-Source reliability.
             + Updated Related CI tests.
-          - Added auto-font-scaling for `create_blank_frame` method.
-        * [ ] Added `c_name` parameter to `generate_webdata` and `download_webdata` to specify class.
-        * [ ] A more robust Implementation of Downloading Artifacts:
-            * [ ] Added a custom HTTP `TimeoutHTTPAdapter` Adapter with a default timeout for all HTTP calls based on [this GitHub comment]().
-            * [ ] Implemented http client and the `send()` method to ensure that the default timeout is used if a timeout argument isn't provided.
-            * [ ] Implemented Requests session`with` block to exit properly even if there are unhandled exceptions.
-            * [ ] Add a retry strategy to custom `TimeoutHTTPAdapter` Adapter with max 3 retries and sleep(`backoff_factor=1`) between failed requests.
-        * [ ] Added `create_blank_frame` method to create bland frames with suitable text.
+        * Added auto-font-scaling for `create_blank_frame` method.
+        * Added `c_name` parameter to `generate_webdata` and `download_webdata` to specify class.
+        * A more robust Implementation of Downloading Artifacts:
+            + Added a custom HTTP `TimeoutHTTPAdapter` Adapter with a default timeout for all HTTP calls based on [this GitHub comment]().
+            + Implemented http client and the `send()` method to ensure that the default timeout is used if a timeout argument isn't provided.
+            + Implemented Requests session`with` block to exit properly even if there are unhandled exceptions.
+            + Add a retry strategy to custom `TimeoutHTTPAdapter` Adapter with max 3 retries and sleep(`backoff_factor=1`) between failed requests.
+        * Added `create_blank_frame` method to create bland frames with suitable text.
     - [x] **[CI] Continuous Integration:**
-        * [ ] Added new fake frame generated for fake `picamera` class with numpy.
-        * [ ] Added new `create_bug` parameter to fake `picamera` class for emulating various artificial bugs.
-        * [ ] Added float/int instance check on `time_delay` for camgear and pigear.
-        * [ ] Added `EXIT_CODE` to new timeout implementation for pytests to upload codecov report when no timeout.
-        * [ ] Added auxiliary classes to  fake `picamera` for facilitating the emulation.
-        * [ ] Added new CI tests for PiGear Class for testing on all platforms.
-        * [ ] Added `shutdown()` function to gracefully terminate WebGear_RTC API.
-        * [ ] Added new `coreutils` brew dependency.
-        * [ ] Added handler for variable check on exit and codecov upload.
-        * [ ] Added `is_running` flag to WebGear_RTC to exit safely.    
+        * Added new fake frame generated for fake `picamera` class with numpy.
+        * Added new `create_bug` parameter to fake `picamera` class for emulating various artificial bugs.
+        * Added float/int instance check on `time_delay` for camgear and pigear.
+        * Added `EXIT_CODE` to new timeout implementation for pytests to upload codecov report when no timeout.
+        * Added auxiliary classes to  fake `picamera` for facilitating the emulation.
+        * Added new CI tests for PiGear Class for testing on all platforms.
+        * Added `shutdown()` function to gracefully terminate WebGear_RTC API.
+        * Added new `coreutils` brew dependency.
+        * Added handler for variable check on exit and codecov upload.
+        * Added `is_running` flag to WebGear_RTC to exit safely.    
     - [x] **Setup:**
-        * [ ] New automated latest version retriever for packages:
+        * New automated latest version retriever for packages:
             + Implemented new `latest_version` method to automatically retrieve latest version for packages.
             + Added Some Dependencies.
-        * [ ] Added `simplejpeg` package for all platforms.
+        * Added `simplejpeg` package for all platforms.
 
 ??? success "Updates/Improvements"
     - [x] Added exception for RunTimeErrors in NetGear CI tests.
     - [x] WriteGear: Critical file write access checking method:
-        * [ ] Added new `check_WriteAccess` Helper method.
-        * [ ] Implemented a new robust algorithm to check if given directory has write-access.
-        * [ ] Removed old behavior which gives irregular results.
+        * Added new `check_WriteAccess` Helper method.
+        * Implemented a new robust algorithm to check if given directory has write-access.
+        * Removed old behavior which gives irregular results.
     - [x] Helper: Maintenance Updates
-        * [ ] Added workaround for Python bug.
-        * [ ] Added `safe_mkdir` to `check_WriteAccess` to automatically create non-existential parent folder in path.
-        * [ ] Extended `check_WriteAccess` Patch to StreamGear.
-        * [ ] Simplified `check_WriteAccess` to handle Windows envs easily.
-        * [ ] Updated FFmpeg Static Download URL for WriteGear.
-        * [ ] Implemented fallback option for auto-calculating bitrate from extracted audio sample-rate in `validate_audio` method.
+        * Added workaround for Python bug.
+        * Added `safe_mkdir` to `check_WriteAccess` to automatically create non-existential parent folder in path.
+        * Extended `check_WriteAccess` Patch to StreamGear.
+        * Simplified `check_WriteAccess` to handle Windows envs easily.
+        * Updated FFmpeg Static Download URL for WriteGear.
+        * Implemented fallback option for auto-calculating bitrate from extracted audio sample-rate in `validate_audio` method.
     - [x] Docs: General UI Updates
-        * [ ] Updated Meta tags for og site and twitter cards.
-        * [ ] Replaced Custom dark theme toggle with mkdocs-material's official Color palette toggle
-        * [ ] Added example for external audio input and creating segmented MP4 video in WriteGear FAQ.
-        * [ ] Added example for YouTube streaming with WriteGear.
-        * [ ] Removed custom `dark-material.js` and `header.html` files from theme.
-        * [ ] Added blogpost link for detailed information on Stabilizer Working.
-        * [ ] Updated `mkdocs.yml` and `custom.css` configuration.
-        * [ ] Remove old hack to resize clappr DASH player with css.
-        * [ ] Updated Admonitions.
-        * [ ] Improved docs contexts.
-        * [ ] Updated CSS for version-selector-button.
-        * [ ] Adjusted files to match new themes.
-        * [ ] Updated welcome-bot message for typos.
-        * [ ] Removed redundant FAQs from NetGear Docs.
-        * [ ] Updated Assets Images.
-        * [ ] Updated spacing.
+        * Updated Meta tags for og site and twitter cards.
+        * Replaced Custom dark theme toggle with mkdocs-material's official Color palette toggle
+        * Added example for external audio input and creating segmented MP4 video in WriteGear FAQ.
+        * Added example for YouTube streaming with WriteGear.
+        * Removed custom `dark-material.js` and `header.html` files from theme.
+        * Added blogpost link for detailed information on Stabilizer Working.
+        * Updated `mkdocs.yml` and `custom.css` configuration.
+        * Remove old hack to resize clappr DASH player with css.
+        * Updated Admonitions.
+        * Improved docs contexts.
+        * Updated CSS for version-selector-button.
+        * Adjusted files to match new themes.
+        * Updated welcome-bot message for typos.
+        * Removed redundant FAQs from NetGear Docs.
+        * Updated Assets Images.
+        * Updated spacing.
     - [x] CI:
-        * [ ] Removed unused `github.ref` from yaml.
-        * [ ] Updated OpenCV Bash Script for Linux envs.
-        * [ ] Added `timeout-minutes` flag to github-actions workflow.
-        * [ ] Added `timeout` flag to pytest.
-        * [ ] Replaced Threaded Gears with OpenCV VideoCapture API.
-        * [ ] Moved files and Removed redundant code.
-        * [ ] Replaced grayscale frames with color frames for WebGear tests. 
-        * [ ] Updated pytest timeout value to 15mins.
-        * [ ] Removed `aiortc` automated install on Windows platform within setup.py.
-        * [ ] Added new timeout logic to continue to run on external timeout for GitHub Actions Workflows.
-        * [ ] Removed unreliable old timeout solution from WebGear_RTC.
-        * [ ] Removed `timeout_decorator` and `asyncio_timeout` dependencies for CI.
-        * [ ] Removed WebGear_RTC API exception from codecov.
-        * [ ] Implemented new fake `picamera` class to CI utils for emulating RPi Camera-Module Real-time capabilities.
-        * [ ] Implemented new `get_RTCPeer_payload` method to receive WebGear_RTC peer payload.
-        * [ ] Removed PiGear from Codecov exceptions.
-        * [ ] Disable Frame Compression in few NetGear tests failing on frame matching.
-        * [ ] Updated NetGear CI  tests to support new attributes
-        * [ ] Removed warnings and updated yaml
-            * [ ] Added `pytest.ini` to address multiple warnings.
-            * [ ] Updated azure workflow condition syntax.
-        * [ ] Update `mike` settings for mkdocs versioning.
-        * [ ] Updated codecov configurations.
-        * [ ] Minor logging and docs updates.
-        * [ ] Implemented pytest timeout for azure pipelines for macOS envs.
-        * [ ] Added `aiortc` as external dependency in `appveyor.yml`.
-        * [ ] Re-implemented WebGear_RTC improper offer-answer handshake in CI tests.
-        * [ ] WebGear_RTC CI Updated with `VideoTransformTrack` to test stream play.
-        * [ ] Implemented fake `AttributeError` for fake picamera class.
-        * [ ] Updated PiGear CI tests to increment codecov.
-        * [ ] Update Tests docs and other minor tweaks to increase overall coverage.
-        * [ ] Enabled debugging and disabled exit 1 on error in azure pipeline.
-        * [ ] Removed redundant benchmark tests.
+        * Removed unused `github.ref` from yaml.
+        * Updated OpenCV Bash Script for Linux envs.
+        * Added `timeout-minutes` flag to github-actions workflow.
+        * Added `timeout` flag to pytest.
+        * Replaced Threaded Gears with OpenCV VideoCapture API.
+        * Moved files and Removed redundant code.
+        * Replaced grayscale frames with color frames for WebGear tests. 
+        * Updated pytest timeout value to 15mins.
+        * Removed `aiortc` automated install on Windows platform within setup.py.
+        * Added new timeout logic to continue to run on external timeout for GitHub Actions Workflows.
+        * Removed unreliable old timeout solution from WebGear_RTC.
+        * Removed `timeout_decorator` and `asyncio_timeout` dependencies for CI.
+        * Removed WebGear_RTC API exception from codecov.
+        * Implemented new fake `picamera` class to CI utils for emulating RPi Camera-Module Real-time capabilities.
+        * Implemented new `get_RTCPeer_payload` method to receive WebGear_RTC peer payload.
+        * Removed PiGear from Codecov exceptions.
+        * Disable Frame Compression in few NetGear tests failing on frame matching.
+        * Updated NetGear CI  tests to support new attributes
+        * Removed warnings and updated yaml
+            + Added `pytest.ini` to address multiple warnings.
+            + Updated azure workflow condition syntax.
+        * Update `mike` settings for mkdocs versioning.
+        * Updated codecov configurations.
+        * Minor logging and docs updates.
+        * Implemented pytest timeout for azure pipelines for macOS envs.
+        * Added `aiortc` as external dependency in `appveyor.yml`.
+        * Re-implemented WebGear_RTC improper offer-answer handshake in CI tests.
+        * WebGear_RTC CI Updated with `VideoTransformTrack` to test stream play.
+        * Implemented fake `AttributeError` for fake picamera class.
+        * Updated PiGear CI tests to increment codecov.
+        * Update Tests docs and other minor tweaks to increase overall coverage.
+        * Enabled debugging and disabled exit 1 on error in azure pipeline.
+        * Removed redundant benchmark tests.
     - [x] Helper: Added missing RSTP URL scheme to `is_valid_url` method.
     - [x] NetGear_Async: Added fix for uvloop only supporting python>=3.7 legacies.
     - [x] Extended WebGear's Video-Handler scope to `https`.
     - [x] CI: Remove all redundant 32-bit Tests from Appveyor:
-        * [ ] Appveyor 32-bit Windows envs are actually running on 64-bit machines.
-        * [ ] More information here: https://help.appveyor.com/discussions/questions/20637-is-it-possible-to-force-running-tests-on-both-32-bit-and-64-bit-windows
+        * Appveyor 32-bit Windows envs are actually running on 64-bit machines.
+        * More information here: https://help.appveyor.com/discussions/questions/20637-is-it-possible-to-force-running-tests-on-both-32-bit-and-64-bit-windows
     - [x] Setup: Removed `latest_version` behavior from some packages.
     - [x] NetGear_Async: Revised logic for handling uvloop for all platforms and legacies.
     - [x] Setup: Updated logic to install uvloop-"v0.14.0" for python-3.6 legacies.
     - [x] Removed any redundant code from webgear.
     - [x] StreamGear:
-        * [ ] Replaced Ordinary dict with Ordered Dict to use `move_to_end` method.
-        * [ ] Moved external audio input to output parameters dict.
-        * [ ] Added additional imports.
-        * [ ] Updated docs to reflect changes.
+        * Replaced Ordinary dict with Ordered Dict to use `move_to_end` method.
+        * Moved external audio input to output parameters dict.
+        * Added additional imports.
+        * Updated docs to reflect changes.
     - [x] Numerous Updates to Readme and `mkdocs.yml`.
     - [x] Updated font to `FONT_HERSHEY_SCRIPT_COMPLEX` and enabled logging in create_blank_frame.
     - [x] Separated channels for downloading and storing theme files for WebGear and WebGear_RTC APIs.
     - [x] Removed `logging` condition to always inform user in a event of FFmpeg binary download failure.
     - [x] WebGear_RTC: 
-        * [ ] Improved auto internal termination.
-        * [ ] More Performance updates through `setCodecPreferences`.
-        * [ ] Moved default Video RTC video launcher to `__offer`.
+        * Improved auto internal termination.
+        * More Performance updates through `setCodecPreferences`.
+        * Moved default Video RTC video launcher to `__offer`.
     - [x] NetGear_Async: Added timeout to client in CI tests.
     - [x] Reimplemented and updated `changelog.md`.
     - [x] Updated code comments.
@@ -239,37 +652,37 @@ limitations under the License.
     - [x] NetGear_Async: Fixed `source` parameter missing `None` as default value.
     - [x] Fixed uvloops only supporting python>=3.7 in NetGear_Async.
     - [x] Helper:
-        * [ ] Fixed Zombie processes in `check_output` method due a hidden bug in python. For reference: https://bugs.python.org/issue37380
-        * [ ] Fixed regex in `validate_video` method.
+        * Fixed Zombie processes in `check_output` method due a hidden bug in python. For reference: https://bugs.python.org/issue37380
+        * Fixed regex in `validate_video` method.
     - [x] Docs: 
-        * [ ] Invalid `site_url` bug patched in mkdocs.yml
-        * [ ] Remove redundant mike theme support and its files.
-        * [ ] Fixed video not centered when DASH video in fullscreen mode with clappr.
-        * [ ] Fixed Incompatible new mkdocs-docs theme.
-        * [ ] Fixed missing hyperlinks.
+        * Invalid `site_url` bug patched in mkdocs.yml
+        * Remove redundant mike theme support and its files.
+        * Fixed video not centered when DASH video in fullscreen mode with clappr.
+        * Fixed Incompatible new mkdocs-docs theme.
+        * Fixed missing hyperlinks.
     - [x] CI: 
-        * [ ] Fixed NetGear Address bug
-        * [ ] Fixed bugs related to termination in WebGear_RTC.
-        * [ ] Fixed random CI test failures and code cleanup.
-        * [ ] Fixed string formating bug in Helper.py.
-        * [ ] Fixed F821 undefined name bugs in WebGear_RTC tests.
-        * [ ] NetGear_Async Tests fixes.
-        * [ ] Fixed F821 undefined name bugs.
-        * [ ] Fixed typo bugs in `main.py`.
-        * [ ] Fixed Relative import bug in PiGear.
-        * [ ] Fixed regex bug in warning filter.
-        * [ ] Fixed WebGear_RTC frozen threads on exit.
-        * [ ] Fixed bugs in codecov bash uploader setting for azure pipelines.
-        * [ ] Fixed False-positive `picamera` import due to improper sys.module settings.
-        * [ ] Fixed Frozen Threads on exit in WebGear_RTC API.
-        * [ ] Fixed deploy error in `VidGear Docs Deployer` workflow
-        * [ ] Fixed low timeout bug.
-        * [ ] Fixed bugs in PiGear tests.
-        * [ ] Patched F821 undefined name bug.
+        * Fixed NetGear Address bug
+        * Fixed bugs related to termination in WebGear_RTC.
+        * Fixed random CI test failures and code cleanup.
+        * Fixed string formating bug in Helper.py.
+        * Fixed F821 undefined name bugs in WebGear_RTC tests.
+        * NetGear_Async Tests fixes.
+        * Fixed F821 undefined name bugs.
+        * Fixed typo bugs in `main.py`.
+        * Fixed Relative import bug in PiGear.
+        * Fixed regex bug in warning filter.
+        * Fixed WebGear_RTC frozen threads on exit.
+        * Fixed bugs in codecov bash uploader setting for azure pipelines.
+        * Fixed False-positive `picamera` import due to improper sys.module settings.
+        * Fixed Frozen Threads on exit in WebGear_RTC API.
+        * Fixed deploy error in `VidGear Docs Deployer` workflow
+        * Fixed low timeout bug.
+        * Fixed bugs in PiGear tests.
+        * Patched F821 undefined name bug.
     - [x] StreamGear:
-        * [ ] Fixed StreamGear throwing `Picture size 0x0 is invalid` bug with external audio.
-        * [ ] Fixed default input framerate value getting discarded in Real-time Frame Mode.
-        * [ ] Fixed internal list-formatting bug.
+        * Fixed StreamGear throwing `Picture size 0x0 is invalid` bug with external audio.
+        * Fixed default input framerate value getting discarded in Real-time Frame Mode.
+        * Fixed internal list-formatting bug.
     - [x] Fixed E999 SyntaxError bug in `main.py`.
     - [x] Fixed Typo in bash script.
     - [x] Fixed WebGear freeze on reloading bug.
@@ -298,20 +711,20 @@ limitations under the License.
 
 ??? tip "New Features"
     - [x] **CamGear API:**
-        * [ ] Support for various Live-Video-Streaming services:
+        * Support for various Live-Video-Streaming services:
             + Added seamless support for live video streaming sites like Twitch, LiveStream, Dailymotion etc.
             + Implemented flexible framework around `streamlink` python library with easy control over parameters and quality.
             + Stream Mode can now automatically detects whether `source` belong to YouTube or elsewhere, and handles it with appropriate API.
-        * [ ] Re-implemented YouTube URLs Handler:
+        * Re-implemented YouTube URLs Handler:
             + Re-implemented CamGear's YouTube URLs Handler completely from scratch.
             + New Robust Logic to flexibly handing video and video-audio streams.
             + Intelligent stream selector for selecting best possible stream compatible with OpenCV.
             + Added support for selecting stream qualities and parameters.
             + Implemented new `get_supported_quality` helper method for handling specified qualities
             + Fixed Live-Stream URLs not supported by OpenCV's Videocapture and its FFmpeg.
-        * [ ] Added additional `STREAM_QUALITY` and `STREAM_PARAMS` attributes.
+        * Added additional `STREAM_QUALITY` and `STREAM_PARAMS` attributes.
     - [x] **ScreenGear API:**
-        * [ ] Multiple Backends Support:
+        * Multiple Backends Support:
             + Added new multiple backend support with new [`pyscreenshot`](https://github.com/ponty/pyscreenshot) python library.
             + Made `pyscreenshot` the default API for ScreenGear, replaces `mss`.
             + Added new `backend` parameter for this feature while retaining previous behavior.
@@ -322,90 +735,90 @@ limitations under the License.
             + Updated ScreenGear Docs.
             + Updated ScreenGear CI tests.
     - [X] **StreamGear API:**
-        * [ ] Changed default behaviour to support complete video transcoding.
-        * [ ] Added `-livestream` attribute to support live-streaming.
-        * [ ] Added additional parameters for `-livestream` attribute functionality.
-        * [ ] Updated StreamGear Tests.
-        * [ ] Updated StreamGear docs.
+        * Changed default behaviour to support complete video transcoding.
+        * Added `-livestream` attribute to support live-streaming.
+        * Added additional parameters for `-livestream` attribute functionality.
+        * Updated StreamGear Tests.
+        * Updated StreamGear docs.
     - [x] **Stabilizer Class:** 
-        * [ ] New Robust Error Handling with Blank Frames:
+        * New Robust Error Handling with Blank Frames:
             + Elegantly handles all crashes due to Empty/Blank/Dark frames.
             + Stabilizer throws Warning with this new behavior instead of crashing.
             + Updated CI test for this feature.
     - [x] **Docs:**
-        * [ ] Automated Docs Versioning:
+        * Automated Docs Versioning:
             + Implemented Docs versioning through `mike` API.
             + Separate new workflow steps to handle different versions.
             + Updated docs deploy worflow to support `release` and `dev` builds.
             + Added automatic version extraction from github events.
             + Added `version-select.js` and `version-select.css` files.
-        * [ ] Toggleable Dark-White Docs Support:
+        * Toggleable Dark-White Docs Support:
             + Toggle-button to easily switch dark, white and preferred theme.
             + New Updated Assets for dark backgrounds
             + New css, js files/content to implement this behavior.
             + New material icons for button.
             + Updated scheme to `slate` in `mkdocs.yml`.
-        * [ ] New Theme and assets:
+        * New Theme and assets:
             + New `purple` theme with `dark-purple` accent color.
             + New images assets with updated transparent background.
             + Support for both dark and white theme.
             + Increased `rebufferingGoal` for dash videos.
             + New updated custom 404 page for docs.
-        * [ ] Issue and PR automated-bots changes
+        * Issue and PR automated-bots changes
             + New `need_info.yml` YAML Workflow.
             + New `needs-more-info.yml` Request-Info template.
             + Replaced Request-Info templates.
             + Improved PR and Issue welcome formatting.
-        * [ ] Added custom HTML pages.
-        * [ ] Added `show_root_heading` flag to disable headings in References.
-        * [ ] Added new `inserAfter` function to version-select.js.
-        * [ ] Adjusted hue for dark-theme for better contrast.
-        * [ ] New usage examples and FAQs.
-        * [ ] Added `gitmoji` for commits.
+        * Added custom HTML pages.
+        * Added `show_root_heading` flag to disable headings in References.
+        * Added new `inserAfter` function to version-select.js.
+        * Adjusted hue for dark-theme for better contrast.
+        * New usage examples and FAQs.
+        * Added `gitmoji` for commits.
     - [x] **Continuous Integration:**
-        * [ ] Maintenance Updates:
+        * Maintenance Updates:
             + Added support for new `VIDGEAR_LOGFILE` environment variable in Travis CI.
             + Added missing CI tests.
             + Added logging for helper functions.
-        * [ ] Azure-Pipeline workflow for MacOS envs
+        * Azure-Pipeline workflow for MacOS envs
             + Added Azure-Pipeline Workflow for testing MacOS environment.
             + Added codecov support.
-        * [ ] GitHub Actions workflow for Linux envs
+        * GitHub Actions workflow for Linux envs
             + Added GitHub Action work-flow for testing Linux environment.
-        * [ ] New YAML to implement GitHub Action workflow for python 3.6, 3.7, 3,8 & 3.9 matrices.
-        * [ ] Added Upload coverage to Codecov GitHub Action workflow.
-        * [ ] New codecov-bash uploader for Azure Pipelines.
+        * New YAML to implement GitHub Action workflow for python 3.6, 3.7, 3,8 & 3.9 matrices.
+        * Added Upload coverage to Codecov GitHub Action workflow.
+        * New codecov-bash uploader for Azure Pipelines.
     - [x] **Logging:**
-        * [ ] Added file support
+        * Added file support
             + Added `VIDGEAR_LOGFILE` environment variable to manually add file/dir path.
             + Reworked `logger_handler()` Helper methods (in asyncio too).
             + Added new formatter and Filehandler for handling logger files.
-        * [ ] Added `restore_levelnames` auxiliary method for restoring logging levelnames.
+        * Added `restore_levelnames` auxiliary method for restoring logging levelnames.
     - [x] Added auto version extraction from package `version.py` in setup.py.
 
 ??? success "Updates/Improvements"
     - [x] Added missing Lazy-pirate auto-reconnection support for Multi-Servers and Multi-Clients Mode in NetGear API.
     - [x] Added new FFmpeg test path to Bash-Script and updated README broken links.
     - [x] Asset Cleanup:
-        * [ ] Removed all third-party javascripts from projects.
-        * [ ] Linked all third-party javascript directly.
-        * [ ] Cleaned up necessary code from CSS and JS files.
-        * [ ] Removed any copyrighted material or links.
+        * Removed all third-party javascripts from projects.
+        * Linked all third-party javascript directly.
+        * Cleaned up necessary code from CSS and JS files.
+        * Removed any copyrighted material or links.
     - [x] Rewritten Docs from scratch:
-        * [ ] Improved complete docs formatting.
-        * [ ] Simplified language for easier understanding.
-        * [ ] Fixed `mkdocstrings` showing root headings.
-        * [ ] Included all APIs methods to `mkdocstrings` docs.
-        * [ ] Removed unnecessary information from docs.
-        * [ ] Corrected Spelling and typos.
-        * [ ] Fixed context and grammar.
-        * [ ] Removed `motivation.md`.
-        * [ ] Renamed many terms.
-        * [ ] Fixed hyper-links.
-        * [ ] Reformatted missing or improper information.
-        * [ ] Fixed context and spellings in Docs files.
-        * [ ] Simplified language for easy understanding.
-        * [ ] Updated image sizes for better visibility.
+        * Improved complete docs formatting.
+        * Simplified language for easier understanding.
+        * Fixed `mkdocstrings` showing root headings.
+        * Included all APIs methods to `mkdocstrings` docs.
+        * Removed unnecessary information from docs.
+        * Corrected Spelling and typos.
+        * Fixed context and grammar.
+        * Removed `motivation.md`.
+        * Renamed many terms.
+        * Fixed hyper-links.
+        * Reformatted missing or improper information.
+        * Fixed context and spellings in Docs files.
+        * Simplified language for easy understanding.
+        * Updated image sizes for better visibility.
     - [x] Bash Script: Updated to Latest OpenCV Binaries version and related changes
     - [x] Docs: Moved version-selector to header and changed default to alias.
     - [x] Docs: Updated `deploy_docs.yml` for releasing dev, stable, and release versions.
@@ -425,8 +838,8 @@ limitations under the License.
     - [x] Docs: Version Selector UI reworked and other minor changes.
 
 ??? danger "Breaking Updates/Changes"
-        - [ ] :warning: `y_tube` parameter renamed as `stream_mode` in CamGear API!
-        - [ ] :warning: Removed Travis support and `travis.yml` deleted.
+    - [ ] :warning: `y_tube` parameter renamed as `stream_mode` in CamGear API!
+    - [ ] :warning: Removed Travis support and `travis.yml` deleted.
 
 ??? bug "Bug-fixes"
     - [x] Fixed StreamGear API Limited Segments Bug
@@ -446,7 +859,7 @@ limitations under the License.
     - [x] CI: Codecov bugfixes.
     - [x] Azure-Pipelines Codecov BugFixes.
     - [x] Fixed `version.json` not detecting properly in `version-select.js`.
-    - [x] Fixed images not centered inside <figure> tag.
+    - [x] Fixed images not centered inside `<figure>` tag.
     - [x] Fixed Asset Colors.
     - [x] Fixed failing CI tests.
     - [x] Fixed Several logging bugs.
@@ -469,23 +882,23 @@ limitations under the License.
 
 ??? tip "New Features"
     - [x] **StreamGear API:**
-        * [ ] New API that automates transcoding workflow for generating Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats.
-        * [ ] Implemented multi-platform , standalone, highly extensible and flexible wrapper around FFmpeg for generating chunked-encoded media segments of the media, and easily accessing almost all of its parameters.
-        * [ ] API automatically transcodes videos/audio files & real-time frames into a sequence of multiple smaller chunks/segments and also creates a Manifest file.
-        * [ ] Added initial support for [MPEG-DASH](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_.
-        * [ ] Constructed default behavior in StreamGear, for auto-creating a Primary Stream of same resolution and framerate as source.
-        * [ ] Added [TQDM](https://github.com/tqdm/tqdm) progress bar in non-debugged output for visual representation of internal processes.
-        * [ ] Implemented several internal methods for preprocessing FFmpeg and internal parameters for producing streams.
-        * [ ] Several standalone internal checks to ensure robust performance.
-        * [ ] New `terminate()` function to terminate StremGear Safely.
-        * [ ] New StreamGear Dual Modes of Operation:
+        * New API that automates transcoding workflow for generating Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats.
+        * Implemented multi-platform , standalone, highly extensible and flexible wrapper around FFmpeg for generating chunked-encoded media segments of the media, and easily accessing almost all of its parameters.
+        * API automatically transcodes videos/audio files & real-time frames into a sequence of multiple smaller chunks/segments and also creates a Manifest file.
+        * Added initial support for [MPEG-DASH](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_.
+        * Constructed default behavior in StreamGear, for auto-creating a Primary Stream of same resolution and framerate as source.
+        * Added [TQDM](https://github.com/tqdm/tqdm) progress bar in non-debugged output for visual representation of internal processes.
+        * Implemented several internal methods for preprocessing FFmpeg and internal parameters for producing streams.
+        * Several standalone internal checks to ensure robust performance.
+        * New `terminate()` function to terminate StremGear Safely.
+        * New StreamGear Dual Modes of Operation:
             + Implemented *Single-Source* and *Real-time Frames* like independent Transcoding Modes.
             + Linked `-video_source` attribute for activating these modes
             + **Single-Source Mode**, transcodes entire video/audio file _(as opposed to frames by frame)_ into a sequence of multiple smaller segments for streaming
             + **Real-time Frames Mode**, directly transcodes video-frames _(as opposed to a entire file)_, into a sequence of multiple smaller segments for streaming
             + Added separate functions, `stream()` for Real-time Frame Mode and `transcode_source()` for Single-Source Mode for easy transcoding.
             + Included auto-colorspace detection and RGB Mode like features _(extracted from WriteGear)_, into StreamGear.  
-        * [ ] New StreamGear Parameters:
+        * New StreamGear Parameters:
             + Developed several new parameters such as:
                 + `output`: handles assets directory
                 + `formats`: handles adaptive HTTP streaming format.
@@ -501,7 +914,7 @@ limitations under the License.
                 + `-gop` to manually specify GOP length.
                 + `-ffmpeg_download_path` to handle custom FFmpeg download path on windows.
                 + `-clear_prev_assets` to remove any previous copies of SteamGear Assets.
-        * [ ] New StreamGear docs, MPEG-DASH demo, and recommended DASH players list:
+        * New StreamGear docs, MPEG-DASH demo, and recommended DASH players list:
             + Added new StreamGear docs, usage examples, parameters, references, new FAQs.
             + Added Several StreamGear usage examples w.r.t Mode of Operation.
             + Implemented [**Clappr**](https://github.com/clappr/clappr) based on [**Shaka-Player**](https://github.com/google/shaka-player), as Demo Player.
@@ -512,65 +925,65 @@ limitations under the License.
             + Recommended tested Online, Command-line and GUI Adaptive Stream players.
             + Implemented separate FFmpeg installation doc for StreamGear API.
             + Reduced `rebufferingGoal` for faster response.
-        * [ ] New StreamGear CI tests:
+        * New StreamGear CI tests:
             + Added IO and API initialization CI tests for its Modes.
             + Added various mode Streaming check CI tests.
     - [x] **NetGear_Async API:**
-        * [ ] Added new `send_terminate_signal` internal method.
-        * [ ] Added `WindowsSelectorEventLoopPolicy()` for windows 3.8+ envs.
-        * [ ] Moved Client auto-termination to separate method.
-        * [ ] Implemented graceful termination with `signal` API on UNIX machines.
-        * [ ] Added new `timeout` attribute for controlling Timeout in Connections.
-        * [ ] Added missing termination optimizer (`linger=0`) flag.
-        * [ ] Several ZMQ Optimizer Flags added to boost performance.
+        * Added new `send_terminate_signal` internal method.
+        * Added `WindowsSelectorEventLoopPolicy()` for windows 3.8+ envs.
+        * Moved Client auto-termination to separate method.
+        * Implemented graceful termination with `signal` API on UNIX machines.
+        * Added new `timeout` attribute for controlling Timeout in Connections.
+        * Added missing termination optimizer (`linger=0`) flag.
+        * Several ZMQ Optimizer Flags added to boost performance.
     - [x] **WriteGear API:**
-        * [ ] Added support for adding duplicate FFmpeg parameters to `output_params`:
+        * Added support for adding duplicate FFmpeg parameters to `output_params`:
             + Added new `-clones` attribute in `output_params` parameter for handing this behavior..
             + Support to pass FFmpeg parameters as list, while maintaining the exact order it was specified.
             + Built support for `zmq.REQ/zmq.REP` and `zmq.PUB/zmq.SUB` patterns in this mode.
             + Added new CI tests debugging this behavior.
             + Updated docs accordingly.
-        * [ ] Added support for Networks URLs in Compression Mode:
+        * Added support for Networks URLs in Compression Mode:
             + `output_filename` parameter supports Networks URLs in compression modes only
             + Added automated handling of non path/file Networks URLs as input.
             + Implemented new `is_valid_url` helper method to easily validate assigned URLs value.
             + Validates whether the given URL value has scheme/protocol supported by assigned/installed ffmpeg or not. 
             + WriteGear will throw `ValueError` if `-output_filename` is not supported.
             + Added related CI tests and docs.
-        * [ ] Added `disable_force_termination` attribute in WriteGear to disable force-termination.
+        * Added `disable_force_termination` attribute in WriteGear to disable force-termination.
     - [x] **NetGear API:**
-        * [ ] Added option to completely disable Native Frame-Compression:
+        * Added option to completely disable Native Frame-Compression:
             + Checks if any Incorrect/Invalid value is assigned on `compression_format` attribute.
             + Completely disables Native Frame-Compression.
             + Updated docs accordingly.
     - [x] **CamGear API:**
-        * [ ] Added new and robust regex for identifying YouTube URLs.
-        * [ ] Moved `youtube_url_validator` to Helper.
+        * Added new and robust regex for identifying YouTube URLs.
+        * Moved `youtube_url_validator` to Helper.
     - [x] **New `helper.py` methods:** 
-        * [ ] Added `validate_video` function to validate video_source.
-        * [ ] Added `extract_time` Extract time from give string value.
-        * [ ] Added `get_video_bitrate` to calculate video birate from resolution, framerate, bits-per-pixels values.
-        * [ ] Added `delete_safe` to safely delete files of given extension.
-        * [ ] Added `validate_audio` to validate audio source.
-        * [ ] Added new Helper CI tests.
+        * Added `validate_video` function to validate video_source.
+        * Added `extract_time` Extract time from give string value.
+        * Added `get_video_bitrate` to calculate video birate from resolution, framerate, bits-per-pixels values.
+        * Added `delete_safe` to safely delete files of given extension.
+        * Added `validate_audio` to validate audio source.
+        * Added new Helper CI tests.
             + Added new `check_valid_mpd` function to test MPD files validity.
             + Added `mpegdash` library to CI requirements.
     - [x] **Deployed New Docs Upgrades:**
-        * [ ] Added new assets like _images, gifs, custom scripts, javascripts fonts etc._ for achieving better visual graphics in docs.
-        * [ ] Added `clappr.min.js`, `dash-shaka-playback.js`, `clappr-level-selector.min.js` third-party javascripts locally.
-        * [ ] Extended Overview docs Hyperlinks to include all major sub-pages _(such as Usage Examples, Reference, FAQs etc.)_.
-        * [ ] Replaced GIF with interactive MPEG-DASH Video Example in Stabilizer Docs. 
-        * [ ] Added new `pymdownx.keys` to replace `[Ctrl+C]/[⌘+C]` formats.
-        * [ ] Added new `custom.css` stylescripts variables for fluid animations in docs.
-        * [ ] Overridden announce bar and added donation button. 
-        * [ ] Lossless WEBP compressed all PNG assets for faster loading.
-        * [ ] Enabled lazy-loading for GIFS and Images for performance.
-        * [ ] Reimplemented Admonitions contexts and added new ones.
-        * [ ] Added StreamGear and its different modes Docs Assets.
-        * [ ] Added patch for images & unicodes for PiP flavored markdown in `setup.py`.
+        * Added new assets like _images, gifs, custom scripts, javascripts fonts etc._ for achieving better visual graphics in docs.
+        * Added `clappr.min.js`, `dash-shaka-playback.js`, `clappr-level-selector.min.js` third-party javascripts locally.
+        * Extended Overview docs Hyperlinks to include all major sub-pages _(such as Usage Examples, Reference, FAQs etc.)_.
+        * Replaced GIF with interactive MPEG-DASH Video Example in Stabilizer Docs. 
+        * Added new `pymdownx.keys` to replace `[Ctrl+C]/[⌘+C]` formats.
+        * Added new `custom.css` stylescripts variables for fluid animations in docs.
+        * Overridden announce bar and added donation button. 
+        * Lossless WEBP compressed all PNG assets for faster loading.
+        * Enabled lazy-loading for GIFS and Images for performance.
+        * Reimplemented Admonitions contexts and added new ones.
+        * Added StreamGear and its different modes Docs Assets.
+        * Added patch for images & unicodes for PiP flavored markdown in `setup.py`.
     - [x] **Added `Request Info` and `Welcome` GitHub Apps to automate PR and issue workflow**
-        * [ ] Added new `config.yml` for customizations.
-        * [ ] Added various suitable configurations.
+        * Added new `config.yml` for customizations.
+        * Added various suitable configurations.
     - [x] Added new `-clones` attribute to handle FFmpeg parameter clones in StreamGear and WriteGear API.
     - [x] Added new Video-only and Audio-Only sources in bash script.
     - [x] Added new paths in bash script for storing StreamGear & WriteGear assets temporarily.
@@ -684,47 +1097,48 @@ limitations under the License.
 ## v0.1.8 (2020-06-12)
 
 ??? tip "New Features"
-    - [x] **Multiple Clients support in NetGear API:**
-        * [ ] Implemented support for handling any number of Clients simultaneously with a single Server in this mode.
-        * [ ] Added new `multiclient_mode` attribute for enabling this mode easily.
-        * [ ] Built support for `zmq.REQ/zmq.REP` and `zmq.PUB/zmq.SUB` patterns in this mode.
-        * [ ] Implemented ability to receive data from all Client(s) along with frames with `zmq.REQ/zmq.REP` pattern only.
-        * [ ] Updated related CI tests
-    - [x] **Support for robust Lazy Pirate pattern(auto-reconnection) in NetGear API for both server and client ends:**
-        * [ ] Implemented a algorithm where NetGear rather than doing a blocking receive, will now:
-            + Poll the socket and receive from it only when it's sure a reply has arrived.
-            + Attempt to reconnect, if no reply has arrived within a timeout period.
-            + Abandon the connection if there is still no reply after several requests.
-        * [ ] Implemented its default support for `REQ/REP` and `PAIR` messaging patterns internally.
-        * [ ] Added new `max_retries` and `request_timeout`(in seconds) for handling polling.
-        * [ ] Added `DONTWAIT` flag for interruption-free data receiving.
-        * [ ] Both Server and Client can now reconnect even after a premature termination.
-    - [x] **Performance Updates for NetGear API:**
-        * [ ] Added default Frame Compression support for Bidirectional frame transmission in Bidirectional mode.
-        * [ ] Added support for `Reducer()` function in Helper.py to aid reducing frame-size on-the-go for more performance.
-        * [ ] Added small delay in `recv()` function at client's end to reduce system load. 
-        * [ ] Reworked and Optimized NetGear termination, and also removed/changed redundant definitions and flags.
-    - [x] **Docs Migration to Mkdocs:**
-        * [ ] Implemented a beautiful, static documentation site based on [MkDocs](https://www.mkdocs.org/) which will then be hosted on GitHub Pages.
-        * [ ] Crafted base mkdocs with third-party elegant & simplistic [`mkdocs-material`](https://squidfunk.github.io/mkdocs-material/) theme.
-        * [ ] Implemented new `mkdocs.yml` for Mkdocs with relevant data.
-        * [ ] Added new `docs` folder to handle markdown pages and its assets.
-        * [ ] Added new Markdown pages(`.md`) to docs folder, which are carefully crafted documents - [x] based on previous Wiki's docs, and some completely new additions.
-        * [ ] Added navigation under tabs for easily accessing each document.
-        * [ ] **New Assets:**
+    - [x] **NetGear API:**
+        * Multiple Clients support:
+            + Implemented support for handling any number of Clients simultaneously with a single Server in this mode.
+            + Added new `multiclient_mode` attribute for enabling this mode easily.
+            + Built support for `zmq.REQ/zmq.REP` and `zmq.PUB/zmq.SUB` patterns in this mode.
+            + Implemented ability to receive data from all Client(s) along with frames with `zmq.REQ/zmq.REP` pattern only.
+            + Updated related CI tests
+        * Support for robust Lazy Pirate pattern(auto-reconnection) in NetGear API for both server and client ends:
+            + Implemented a algorithm where NetGear rather than doing a blocking receive, will now:
+                + Poll the socket and receive from it only when it's sure a reply has arrived.
+                + Attempt to reconnect, if no reply has arrived within a timeout period.
+                + Abandon the connection if there is still no reply after several requests.
+            + Implemented its default support for `REQ/REP` and `PAIR` messaging patterns internally.
+            + Added new `max_retries` and `request_timeout`(in seconds) for handling polling.
+            + Added `DONTWAIT` flag for interruption-free data receiving.
+            + Both Server and Client can now reconnect even after a premature termination.
+        * Performance Updates:
+            + Added default Frame Compression support for Bidirectional frame transmission in Bidirectional mode.
+            + Added support for `Reducer()` function in Helper.py to aid reducing frame-size on-the-go for more performance.
+            + Added small delay in `recv()` function at client's end to reduce system load. 
+            + Reworked and Optimized NetGear termination, and also removed/changed redundant definitions and flags.
+    - [x] **Docs: Migration to Mkdocs**
+        * Implemented a beautiful, static documentation site based on [MkDocs](https://www.mkdocs.org/) which will then be hosted on GitHub Pages.
+        * Crafted base mkdocs with third-party elegant & simplistic [`mkdocs-material`](https://squidfunk.github.io/mkdocs-material/) theme.
+        * Implemented new `mkdocs.yml` for Mkdocs with relevant data.
+        * Added new `docs` folder to handle markdown pages and its assets.
+        * Added new Markdown pages(`.md`) to docs folder, which are carefully crafted documents - [x] based on previous Wiki's docs, and some completely new additions.
+        * Added navigation under tabs for easily accessing each document.
+        * New Assets:
             + Added new assets like _gifs, images, custom scripts, favicons, site.webmanifest etc._ for bringing standard and quality to docs visual design.
             + Designed brand new logo and banner for VidGear Documents.
             + Deployed all assets under separate [*Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License*](https://creativecommons.org/licenses/by-nc-sa/4.0/).
-        * [ ] **Added Required Plugins and Extensions:**
+        * Added Required Plugins and Extensions:
             + Added support for all [pymarkdown-extensions](https://facelessuser.github.io/pymdown-extensions/).
             + Added support for some important `admonition`, `attr_list`, `codehilite`, `def_list`, `footnotes`, `meta`, and `toc` like Mkdocs extensions.
             + Enabled `search`, `minify` and `git-revision-date-localized` plugins support.
             + Added various VidGear's social links to yaml.
             + Added support for `en` _(English)_ language.
-        * [ ] **Auto-Build API Reference with `mkdocstrings:`**
+        * Auto-Build API Reference with `mkdocstrings:`
             + Added support for [`mkdocstrings`](https://github.com/pawamoy/mkdocstrings) plugin for auto-building each VidGear's API references.
             + Added python handler for parsing python source-code to `mkdocstrings`.
-        * [ ] **Auto-Deploy Docs with GitHub Actions:**
+        * Auto-Deploy Docs with GitHub Actions:
             + Implemented Automated Docs Deployment on gh-pages through GitHub Actions workflow.
             + Added new workflow yaml with minimal configuration for automated docs deployment.
             + Added all required  python dependencies and environment for this workflow.
@@ -793,38 +1207,38 @@ limitations under the License.
 
 ??? tip "New Features"
     - [x] **WebGear API:**
-        * [ ] Added a robust Live Video Server API that can transfer live video frames to any web browser on the network in real-time.
-        * [ ] Implemented a flexible asyncio wrapper around [`starlette`](https://www.starlette.io/) ASGI Application Server.
-        * [ ] Added seamless access to various starlette's Response classes, Routing tables, Static Files, Template engine(with Jinja2), etc.
-        * [ ] Added a special internal access to VideoGear API and all its parameters.
-        * [ ] Implemented a new Auto-Generation Work-flow to generate/download & thereby validate WebGear API data files from its GitHub server automatically.
-        * [ ] Added on-the-go dictionary parameter in WebGear to tweak performance, Route Tables and other internal properties easily.
-        * [ ] Added new simple & elegant default Bootstrap Cover Template for WebGear Server.
-        * [ ] Added `__main__.py` to directly run WebGear Server through the terminal.
-        * [ ] Added new gif and related docs for WebGear API.
-        * [ ] Added and Updated various CI tests for this API.
+        * Added a robust Live Video Server API that can transfer live video frames to any web browser on the network in real-time.
+        * Implemented a flexible asyncio wrapper around [`starlette`](https://www.starlette.io/) ASGI Application Server.
+        * Added seamless access to various starlette's Response classes, Routing tables, Static Files, Template engine(with Jinja2), etc.
+        * Added a special internal access to VideoGear API and all its parameters.
+        * Implemented a new Auto-Generation Work-flow to generate/download & thereby validate WebGear API data files from its GitHub server automatically.
+        * Added on-the-go dictionary parameter in WebGear to tweak performance, Route Tables and other internal properties easily.
+        * Added new simple & elegant default Bootstrap Cover Template for WebGear Server.
+        * Added `__main__.py` to directly run WebGear Server through the terminal.
+        * Added new gif and related docs for WebGear API.
+        * Added and Updated various CI tests for this API.
     - [x] **NetGear_Async API:** 
-        * [ ] Designed NetGear_Async asynchronous network API built upon ZeroMQ's asyncio API.
-        * [ ] Implemented support for state-of-the-art asyncio event loop [`uvloop`](https://github.com/MagicStack/uvloop) at its backend.
-        * [ ] Achieved Unmatchable high-speed and lag-free video streaming over the network with minimal resource constraint.
-        * [ ] Added exclusive internal wrapper around VideoGear API for this API.
-        * [ ] Implemented complete server-client handling and options to use variable protocols/patterns for this API.
-        * [ ] Implemented support for  all four ZeroMQ messaging patterns: i.e `zmq.PAIR`, `zmq.REQ/zmq.REP`, `zmq.PUB/zmq.SUB`, and `zmq.PUSH/zmq.PULL`.
-        * [ ] Implemented initial support for `tcp` and `ipc` protocols.
-        * [ ] Added new Coverage CI tests for NetGear_Async Network Gear.
-        * [ ] Added new Benchmark tests for benchmarking NetGear_Async against NetGear.
+        * Designed NetGear_Async asynchronous network API built upon ZeroMQ's asyncio API.
+        * Implemented support for state-of-the-art asyncio event loop [`uvloop`](https://github.com/MagicStack/uvloop) at its backend.
+        * Achieved Unmatchable high-speed and lag-free video streaming over the network with minimal resource constraint.
+        * Added exclusive internal wrapper around VideoGear API for this API.
+        * Implemented complete server-client handling and options to use variable protocols/patterns for this API.
+        * Implemented support for  all four ZeroMQ messaging patterns: i.e `zmq.PAIR`, `zmq.REQ/zmq.REP`, `zmq.PUB/zmq.SUB`, and `zmq.PUSH/zmq.PULL`.
+        * Implemented initial support for `tcp` and `ipc` protocols.
+        * Added new Coverage CI tests for NetGear_Async Network Gear.
+        * Added new Benchmark tests for benchmarking NetGear_Async against NetGear.
     - [x] **Asynchronous Enhancements:** 
-        * [ ] Added `asyncio` package to for handling asynchronous APIs.
-        * [ ] Moved WebGear API(webgear.py) to `asyncio` and created separate asyncio `helper.py` for it.
-        * [ ] Various Performance tweaks for Asyncio APIs with concurrency within a single thread.
-        * [ ] Moved `__main__.py` to asyncio for easier access to WebGear API through the terminal.
-        * [ ] Updated `setup.py` with new dependencies and separated asyncio dependencies.
+        * Added `asyncio` package to for handling asynchronous APIs.
+        * Moved WebGear API(webgear.py) to `asyncio` and created separate asyncio `helper.py` for it.
+        * Various Performance tweaks for Asyncio APIs with concurrency within a single thread.
+        * Moved `__main__.py` to asyncio for easier access to WebGear API through the terminal.
+        * Updated `setup.py` with new dependencies and separated asyncio dependencies.
     - [x] **General Enhancements:**
-        * [ ] Added new highly-precise Threaded FPS class for accurate benchmarking with `time.perf_counter` python module.
-        * [ ] Added a new [Gitter](https://gitter.im/vidgear/community) community channel.
-        * [ ] Added a new *Reducer* function to reduce the frame size on-the-go.
-        * [ ] Add *Flake8* tests to Travis CI to find undefined names. (PR by @cclauss)
-        * [ ] Added a new unified `logging handler` helper function for vidgear.
+        * Added new highly-precise Threaded FPS class for accurate benchmarking with `time.perf_counter` python module.
+        * Added a new [Gitter](https://gitter.im/vidgear/community) community channel.
+        * Added a new *Reducer* function to reduce the frame size on-the-go.
+        * Add *Flake8* tests to Travis CI to find undefined names. (PR by @cclauss)
+        * Added a new unified `logging handler` helper function for vidgear.
 
 ??? success "Updates/Improvements"
     - [x] Re-implemented and simplified logic for NetGear Async server-end.
@@ -898,49 +1312,49 @@ limitations under the License.
 
 ??? tip "New Features"
     - [x] **NetGear API:**
-        * [ ] **Added powerful ZMQ Authentication & Data Encryption features for NetGear API:**
+        * Added powerful ZMQ Authentication & Data Encryption features for NetGear API:
             + Added exclusive `secure_mode` param for enabling it.
             + Added support for two most powerful `Stonehouse` & `Ironhouse` ZMQ security mechanisms.
             + Added smart auth-certificates/key generation and validation features.
-        * [ ] **Implemented Robust Multi-Servers support for NetGear API:**
+        * Implemented Robust Multi-Servers support for NetGear API:
             + Enables Multiple Servers messaging support with a single client.
             + Added exclusive `multiserver_mode` param for enabling it.
             + Added support for `REQ/REP` &  `PUB/SUB` patterns for this mode.
             + Added ability to send additional data of any datatype along with the frame in realtime in this mode.
-        * [ ] **Introducing exclusive Bidirectional Mode for bidirectional data transmission:**
+        * Introducing exclusive Bidirectional Mode for bidirectional data transmission:
             + Added new `return_data` parameter to `recv()` function.
             + Added new `bidirectional_mode` attribute for enabling this mode.
             + Added support for `PAIR` & `REQ/REP` patterns for this mode
             + Added support for sending data of any python datatype.
             + Added support for `message` parameter for non-exclusive primary modes for this mode.
-        * [ ] **Implemented compression support with on-the-fly flexible frame encoding for the Server-end:**
+        * Implemented compression support with on-the-fly flexible frame encoding for the Server-end:
             + Added initial support for `JPEG`, `PNG` & `BMP` encoding formats .
             + Added exclusive options attribute `compression_format` & `compression_param` to tweak this feature.
             + Client-end will now decode frame automatically based on the encoding as well as support decoding flags.
-        * [ ] Added `force_terminate` attribute flag for handling force socket termination at the Server-end if there's latency in the network. 
-        * [ ] Implemented new *Publish/Subscribe(`zmq.PUB/zmq.SUB`)* pattern for seamless Live Streaming in NetGear API.
+        * Added `force_terminate` attribute flag for handling force socket termination at the Server-end if there's latency in the network. 
+        * Implemented new *Publish/Subscribe(`zmq.PUB/zmq.SUB`)* pattern for seamless Live Streaming in NetGear API.
     - [x] **PiGear API:**
-        * [ ] Added new threaded internal timing function for PiGear to handle any hardware failures/frozen threads.
-        * [ ] PiGear will not exit safely with `SystemError` if Picamera ribbon cable is pulled out to save resources.
-        * [ ] Added support for new user-defined `HWFAILURE_TIMEOUT` options attribute to alter timeout.
+        * Added new threaded internal timing function for PiGear to handle any hardware failures/frozen threads.
+        * PiGear will not exit safely with `SystemError` if Picamera ribbon cable is pulled out to save resources.
+        * Added support for new user-defined `HWFAILURE_TIMEOUT` options attribute to alter timeout.
     - [x] **VideoGear API:** 
-        * [ ] Added `framerate` global variable and removed redundant function.
-        * [ ] Added `CROP_N_ZOOM` attribute in Videogear API for supporting Crop and Zoom stabilizer feature.
+        * Added `framerate` global variable and removed redundant function.
+        * Added `CROP_N_ZOOM` attribute in Videogear API for supporting Crop and Zoom stabilizer feature.
     - [x] **WriteGear API:** 
-        * [ ] Added new `execute_ffmpeg_cmd` function to pass a custom command to its FFmpeg pipeline.
+        * Added new `execute_ffmpeg_cmd` function to pass a custom command to its FFmpeg pipeline.
     - [x] **Stabilizer class:** 
-        * [ ] Added new Crop and Zoom feature.
+        * Added new Crop and Zoom feature.
             + Added `crop_n_zoom` param for enabling this feature.
-        * [ ] Updated docs.
+        * Updated docs.
     - [x] **CI & Tests updates:**
-        * [ ] Replaced python 3.5 matrices with latest python 3.8 matrices in Linux environment.
-        * [ ] Added full support for **Codecov** in all CI environments.
-        * [ ] Updated OpenCV to v4.2.0-pre(master branch). 
-        * [ ] Added various Netgear API tests.
-        * [ ] Added initial Screengear API test.
-        * [ ] More test RTSP feeds added with better error handling in CamGear network test.
-        * [ ] Added tests for ZMQ authentication certificate generation.
-        * [ ] Added badge and Minor doc updates.
+        * Replaced python 3.5 matrices with latest python 3.8 matrices in Linux environment.
+        * Added full support for **Codecov** in all CI environments.
+        * Updated OpenCV to v4.2.0-pre(master branch). 
+        * Added various Netgear API tests.
+        * Added initial Screengear API test.
+        * More test RTSP feeds added with better error handling in CamGear network test.
+        * Added tests for ZMQ authentication certificate generation.
+        * Added badge and Minor doc updates.
     - [x] Added VidGear's official native support for MacOS environments.
     
 
@@ -1138,7 +1552,7 @@ limitations under the License.
 
 ??? bug "Bug-fixes"
     - [x] Patched Major PiGear Bug: Incorrect import of PiRGBArray function in PiGear Class
-    - [x] Several Fixes** for backend `picamera` API handling during frame capture(PiGear)
+    - [x] Several Fixes for backend `picamera` API handling during frame capture(PiGear)
     - [x] Fixed missing frame variable initialization.
     - [x] Fixed minor typos
 

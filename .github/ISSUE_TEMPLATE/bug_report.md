@@ -1,7 +1,8 @@
 ---
 name: Bug report
 about: Create a bug-report for VidGear
-labels: "issue: bug"
+labels: ':beetle: BUG'
+assignees: 'abhiTronix'
 ---
 
 <!--
@@ -26,8 +27,8 @@ _Kindly explain the issue here._
 <!-- By posting an issue you acknowledge the following: (Put an `x` in all the boxes that apply(important)) -->
 
 - [ ] I have searched the [issues](https://github.com/abhiTronix/vidgear/issues) for my issue and found nothing related or helpful.
-- [ ] I have read the [Documentation](https://abhitronix.github.io/vidgear).
-- [ ] I have read the [Issue Guidelines](https://abhitronix.github.io/vidgear/contribution/issue/#submitting-an-issue-guidelines).
+- [ ] I have read the [Documentation](https://abhitronix.github.io/vidgear/latest).
+- [ ] I have read the [Issue Guidelines](https://abhitronix.github.io/vidgear/latest/contribution/issue/#submitting-an-issue-guidelines).
 
 
 ### Environment

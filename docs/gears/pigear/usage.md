@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -203,5 +203,77 @@ cv2.destroyAllWindows()
 # safely close video stream
 stream.stop()
 ```
+
+&nbsp;
+
+## Using PiGear with WriteGear API
+
+PiGear can be easily used with WriteGear API directly without any compatibility issues. The suitable example is as follows:
+
+```python
+# import required libraries
+from vidgear.gears import PiGear
+from vidgear.gears import WriteGear
+import cv2
+
+# add various Picamera tweak parameters to dictionary
+options = {
+    "hflip": True,
+    "exposure_mode": "auto",
+    "iso": 800,
+    "exposure_compensation": 15,
+    "awb_mode": "horizon",
+    "sensor_mode": 0,
+}
+
+# define suitable (Codec,CRF,preset) FFmpeg parameters for writer
+output_params = {"-vcodec": "libx264", "-crf": 0, "-preset": "fast"}
+
+# open pi video stream with defined parameters
+stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
+
+# Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
+writer = WriteGear(output_filename="Output.mp4", logging=True, **output_params)
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+    # lets convert frame to gray for this example
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    # write gray frame to writer
+    writer.write(gray)
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+
+# safely close writer
+writer.close()
+``` 
+
+&nbsp; 
+
+## Bonus Examples
+
+!!! example "Checkout more advanced PiGear examples with unusual configuration [here ➶](../../../help/pigear_ex/)"
 
 &nbsp;

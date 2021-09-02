@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import platform
 import setuptools
 import urllib.request
 
-from pkg_resources import parse_version
+from distutils.version import LooseVersion
 from distutils.util import convert_path
 from setuptools import setup
 
@@ -40,10 +40,10 @@ def test_opencv():
         import cv2
 
         # check whether OpenCV Binaries are 3.x+
-        if parse_version(cv2.__version__) < parse_version("3"):
+        if LooseVersion(cv2.__version__) < LooseVersion("3"):
             raise ImportError(
                 "Incompatible (< 3.0) OpenCV version-{} Installation found on this machine!".format(
-                    parse_version(cv2.__version__)
+                    LooseVersion(cv2.__version__)
                 )
             )
     except ImportError:
@@ -59,8 +59,8 @@ def latest_version(package_name):
     try:
         response = urllib.request.urlopen(urllib.request.Request(url), timeout=1)
         data = json.load(response)
-        versions = data["releases"].keys()
-        versions = sorted(versions)
+        versions = list(data["releases"].keys())
+        versions.sort(key=LooseVersion)
         return ">={}".format(versions[-1])
     except:
         pass
@@ -75,7 +75,7 @@ with open(ver_path) as ver_file:
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
     long_description = long_description.replace(  # patch for images
-        "docs/overrides/assets", "https://abhitronix.github.io/vidgear/assets"
+        "docs/overrides/assets", "https://abhitronix.github.io/vidgear/latest/assets"
     )
     # patch for unicodes
     long_description = long_description.replace("➶", ">>")
@@ -90,15 +90,15 @@ setup(
     author="Abhishek Thakur",
     install_requires=[
         "pafy{}".format(latest_version("pafy")),
+        "youtube-dl{}".format(latest_version("youtube-dl")),  # pafy backend
         "mss{}".format(latest_version("mss")),
+        "cython",  # helper for numpy install
         "numpy",
-        "youtube-dl{}".format(latest_version("youtube-dl")),
-        "streamlink{}".format(latest_version("streamlink")),
-        "requests{}".format(latest_version("requests")),
+        "streamlink",
+        "requests",
         "pyzmq{}".format(latest_version("pyzmq")),
-        "simplejpeg".format(latest_version("simplejpeg")),
+        "simplejpeg{}".format(latest_version("simplejpeg")),
         "colorlog",
-        "colorama",
         "tqdm",
         "Pillow",
         "pyscreenshot{}".format(latest_version("pyscreenshot")),
@@ -112,21 +112,16 @@ setup(
     extras_require={
         "asyncio": [
             "starlette{}".format(latest_version("starlette")),
-            "aiofiles",
             "jinja2",
-            "aiohttp",
             "uvicorn{}".format(latest_version("uvicorn")),
-            "msgpack_numpy",
+            "msgpack{}".format(latest_version("msgpack")),
+            "msgpack_numpy{}".format(latest_version("msgpack_numpy")),
+            "aiortc{}".format(latest_version("aiortc")),
         ]
-        + (
-            ["aiortc{}".format(latest_version("aiortc"))]
-            if (platform.system() != "Windows")
-            else []
-        )
         + (
             (
                 ["uvloop{}".format(latest_version("uvloop"))]
-                if sys.version_info[:2] >= (3, 7)
+                if sys.version_info[:2] >= (3, 7)  # dropped support for 3.6.x legacies
                 else ["uvloop==0.14.0"]
             )
             if (platform.system() != "Windows")
@@ -166,8 +161,8 @@ setup(
         "Topic :: Multimedia :: Video",
         "Topic :: Scientific/Engineering",
         "Intended Audience :: Developers",
-        'Intended Audience :: Science/Research',
-        'Intended Audience :: Education',
+        "Intended Audience :: Science/Research",
+        "Intended Audience :: Education",
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",

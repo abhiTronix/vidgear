@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,12 +25,58 @@ limitations under the License.
 
 &thinsp;
 
+
+### Using WebGear with Variable Colorspace
+
+WebGear by default only supports "BGR" colorspace frames as input, but you can use [`jpeg_compression_colorspace`](../params/#webgear-specific-attributes) string attribute through its options dictionary parameter to specify incoming frames colorspace. 
+
+Let's implement a bare-minimum example using WebGear, where we will be sending [**GRAY**](https://en.wikipedia.org/wiki/Grayscale) frames to client browser:
+
+!!! new "New in v0.2.2" 
+    This example was added in `v0.2.2`.
+
+!!! example "This example works in conjunction with [Source ColorSpace manipulation for VideoCapture Gears ➶](../../../../bonus/colorspace_manipulation/#source-colorspace-manipulation)"
+
+!!! info "Supported `jpeg_compression_colorspace` colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
+
+```python
+# import required libraries
+import uvicorn
+from vidgear.gears.asyncio import WebGear
+
+# various performance tweaks and enable grayscale input
+options = {
+    "frame_size_reduction": 25,
+    "jpeg_compression_colorspace": "GRAY",  # set grayscale
+    "jpeg_compression_quality": 90,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": True,
+}
+
+# initialize WebGear app and change its colorspace to grayscale
+web = WebGear(
+    source="foo.mp4", colorspace="COLOR_BGR2GRAY", logging=True, **options
+)
+
+# run this app on Uvicorn server at address http://0.0.0.0:8000/
+uvicorn.run(web(), host="0.0.0.0", port=8000)
+
+# close app safely
+web.shutdown()
+```
+
+**And that's all, Now you can see output at [`http://localhost:8000/`](http://localhost:8000/) address on your local machine.**
+
+&thinsp;
+
 ## Using WebGear with a Custom Source(OpenCV)
 
 !!! new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
-WebGear allows you to easily define your own custom Source that you want to use to manipulate your frames before sending them onto the browser. 
+WebGear allows you to easily define your own custom Source that you want to use to transform your frames before sending them onto the browser. 
+
+!!! warning "JPEG Frame-Compression and all of its [performance enhancing attributes](../usage/#performance-enhancements) are disabled with a Custom Source!"
 
 Let's implement a bare-minimum example with a Custom Source using WebGear API and OpenCV:
 
@@ -62,12 +108,12 @@ async def my_frame_producer():
         # do something with your OpenCV frame here
 
         # reducer frames size if you want more performance otherwise comment this line
-        frame = await reducer(frame, percentage=30)  # reduce frame by 30%
+        frame = await reducer(frame, percentage=30, interpolation=cv2.INTER_AREA)  # reduce frame by 30%
         # handle JPEG encoding
         encodedImage = cv2.imencode(".jpg", frame)[1].tobytes()
         # yield frame in byte format
-        yield (b"--frame\r\nContent-Type:video/jpeg2000\r\n\r\n" + encodedImage + b"\r\n")
-        await asyncio.sleep(0.00001)
+        yield (b"--frame\r\nContent-Type:image/jpeg\r\n\r\n" + encodedImage + b"\r\n")
+        await asyncio.sleep(0)
     # close stream
     stream.release()
 
@@ -101,9 +147,9 @@ from vidgear.gears.asyncio import WebGear
 # various performance tweaks
 options = {
     "frame_size_reduction": 40,
-    "frame_jpeg_quality": 80,
-    "frame_jpeg_optimize": True,
-    "frame_jpeg_progressive": False,
+    "jpeg_compression_quality": 80,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": False,
 }
 
 # initialize WebGear app
@@ -172,9 +218,9 @@ async def hello_world(request):
 # add various performance tweaks as usual
 options = {
     "frame_size_reduction": 40,
-    "frame_jpeg_quality": 80,
-    "frame_jpeg_optimize": True,
-    "frame_jpeg_progressive": False,
+    "jpeg_compression_quality": 80,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": False,
 }
 
 # initialize WebGear app with a valid source
@@ -195,6 +241,62 @@ web.shutdown()
 
 &nbsp;
 
+## Using WebGear with MiddleWares
+
+WebGear natively supports ASGI middleware classes with Starlette for implementing behavior that is applied across your entire ASGI application easily.
+
+!!! new "New in v0.2.2" 
+    This example was added in `v0.2.2`.
+
+!!! info "All supported middlewares can be found [here ➶](https://www.starlette.io/middleware/)"
+
+For this example, let's use [`CORSMiddleware`](https://www.starlette.io/middleware/#corsmiddleware) for implementing appropriate [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) to outgoing responses in our application in order to allow cross-origin requests from browsers, as follows:
+
+!!! danger "The default parameters used by the CORSMiddleware implementation are restrictive by default, so you'll need to explicitly enable particular origins, methods, or headers, in order for browsers to be permitted to use them in a Cross-Domain context."
+
+!!! tip "Starlette provides several arguments for enabling origins, methods, or headers for CORSMiddleware API. More information can be found [here ➶](https://www.starlette.io/middleware/#corsmiddleware)"
+
+```python
+# import libs
+import uvicorn, asyncio
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
+from vidgear.gears.asyncio import WebGear
+
+# add various performance tweaks as usual
+options = {
+    "frame_size_reduction": 40,
+    "jpeg_compression_quality": 80,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": False,
+}
+
+# initialize WebGear app with a valid source
+web = WebGear(
+    source="/home/foo/foo1.mp4", logging=True, **options
+)  # enable source i.e. `test.mp4` and enable `logging` for debugging
+
+# define and assign suitable cors middlewares
+web.middleware = [
+    Middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+]
+
+# run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host="localhost", port=8000)
+
+# close app safely
+web.shutdown()
+```
+**And that's all, Now you can see output at [`http://localhost:8000`](http://localhost:8000) address.**
+
+&nbsp;
+
 ## Rules for Altering WebGear Files and Folders
 
 WebGear gives us complete freedom of altering data files generated in [**Auto-Generation Process**](../overview/#auto-generation-process), But you've to  keep the following rules in mind:
@@ -212,75 +314,8 @@ WebGear gives us complete freedom of altering data files generated in [**Auto-Ge
 
 &nbsp;
 
-## Bonus Usage Examples
+## Bonus Examples
 
-Because of WebGear API's flexible internal wapper around [VideoGear](../../videogear/overview/), it can easily access any parameter of [CamGear](#camgear) and [PiGear](#pigear) videocapture APIs.
-
-!!! info "Following usage examples are just an idea of what can be done with WebGear API, you can try various [VideoGear](../../videogear/params/), [CamGear](../../camgear/params/) and [PiGear](../../pigear/params/) parameters directly in WebGear API in the similar manner."
-
-### Using WebGear with Pi Camera Module
- 
-Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera module while tweaking its various properties in just one-liner:
-
-```python
-# import libs
-import uvicorn
-from vidgear.gears.asyncio import WebGear
-
-# various webgear performance and Raspberry Pi camera tweaks
-options = {
-    "frame_size_reduction": 40,
-    "frame_jpeg_quality": 80,
-    "frame_jpeg_optimize": True,
-    "frame_jpeg_progressive": False,
-    "hflip": True,
-    "exposure_mode": "auto",
-    "iso": 800,
-    "exposure_compensation": 15,
-    "awb_mode": "horizon",
-    "sensor_mode": 0,
-}
-
-# initialize WebGear app
-web = WebGear(
-    enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options
-)
-
-# run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host="localhost", port=8000)
-
-# close app safely
-web.shutdown()
-```
+!!! example "Checkout more advanced WebGear examples with unusual configuration [here ➶](../../../help/webgear_ex/)"
 
 &nbsp;
-
-### Using WebGear with real-time Video Stabilization enabled
- 
-Here's an example of using WebGear API with real-time Video Stabilization enabled:
-
-```python
-# import libs
-import uvicorn
-from vidgear.gears.asyncio import WebGear
-
-# various webgear performance tweaks
-options = {
-    "frame_size_reduction": 40,
-    "frame_jpeg_quality": 80,
-    "frame_jpeg_optimize": True,
-    "frame_jpeg_progressive": False,
-}
-
-# initialize WebGear app  with a raw source and enable video stabilization(`stabilize=True`)
-web = WebGear(source="foo.mp4", stabilize=True, logging=True, **options)
-
-# run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host="localhost", port=8000)
-
-# close app safely
-web.shutdown()
-```
-
-&nbsp;
- 
