@@ -2,7 +2,7 @@
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
-Copyright (c) 2019-2020 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,8 +18,9 @@ limitations under the License.
 ===============================================
 */
 
-var player = new Clappr.Player({
-  source: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/fbcf0377b171b777db5e0b3b939138df35a90676/streamgear_video_chunks/streamgear_dash.mpd',
+// DASH StreamGear demo
+var player_dash = new Clappr.Player({
+  source: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/dca65250d95eeeb87d594686c2f2c2208a015486/streamgear_video_segments/DASH/streamgear_dash.mpd',
   plugins: [DashShakaPlayback, LevelSelector],
   shakaConfiguration: {
     streaming: {
@@ -29,13 +30,61 @@ var player = new Clappr.Player({
   shakaOnBeforeLoad: function(shaka_player) {
     // shaka_player.getNetworkingEngine().registerRequestFilter() ...
   },
+  levelSelectorConfig: {
+    title: 'Quality',
+    labels: {
+      2: 'High', // 500kbps
+      1: 'Med', // 240kbps
+      0: 'Low', // 120kbps
+    },
+    labelCallback: function(playbackLevel, customLabel) {
+      return customLabel; // High 720p
+    }
+  },
   width: '100%',
   height: '100%',
-  parentId: '#player',
-  poster: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/674250e6c0387d0d0528406eec35bc580ceafee3/streamgear_video_chunks/hd_thumbnail.jpg',
+  parentId: '#player_dash',
+  poster: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/dca65250d95eeeb87d594686c2f2c2208a015486/streamgear_video_segments/DASH/hd_thumbnail.jpg',
   preload: 'metadata',
 });
 
+// HLS StremGear demo
+var player_hls = new Clappr.Player({
+  source: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/abc0c193ab26e21f97fa30c9267de6beb8a72295/streamgear_video_segments/HLS/streamgear_hls.m3u8',
+  plugins: [HlsjsPlayback, LevelSelector],
+  hlsUseNextLevel: false,
+  hlsMinimumDvrSize: 60,
+  hlsRecoverAttempts: 16,
+  hlsPlayback: {
+    preload: true,
+    customListeners: [],
+  },
+  playback: {
+    extrapolatedWindowNumSegments: 2,
+    triggerFatalErrorOnResourceDenied: false,
+    hlsjsConfig: {
+      // hls.js specific options
+    },
+  },
+  levelSelectorConfig: {
+    title: 'Quality',
+    labels: {
+      2: 'High', // 500kbps
+      1: 'Med', // 240kbps
+      0: 'Low', // 120kbps
+    },
+    labelCallback: function(playbackLevel, customLabel) {
+      return customLabel; // High 720p
+    }
+  },
+  width: '100%',
+  height: '100%',
+  parentId: '#player_hls',
+  poster: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/abc0c193ab26e21f97fa30c9267de6beb8a72295/streamgear_video_segments/HLS/hd_thumbnail.jpg',
+  preload: 'metadata',
+});
+
+// DASH Stabilizer demo
 var player_stab = new Clappr.Player({
   source: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/fbcf0377b171b777db5e0b3b939138df35a90676/stabilizer_video_chunks/stabilizer_dash.mpd',
   plugins: [DashShakaPlayback],
@@ -50,6 +99,11 @@ var player_stab = new Clappr.Player({
   width: '100%',
   height: '100%',
   parentId: '#player_stab',
-  poster: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/674250e6c0387d0d0528406eec35bc580ceafee3/stabilizer_video_chunks/hd_thumbnail.png',
+  poster: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/94bf767c28bf2fe61b9c327625af8e22745f9fdf/stabilizer_video_chunks/hd_thumbnail_2.png',
   preload: 'metadata',
 });
+
+// gitter sidecard
+((window.gitter = {}).chat = {}).options = {
+  room: 'vidgear/community'
+};
