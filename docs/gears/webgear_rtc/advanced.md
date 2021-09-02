@@ -64,7 +64,7 @@ web.shutdown()
 
 ## Using WebGear_RTC with a Custom Source(OpenCV)
 
-WebGear_RTC allows you to easily define your own Custom Media Server with a custom source that you want to use to manipulate your frames before sending them onto the browser. 
+WebGear_RTC allows you to easily define your own Custom Media Server with a custom source that you want to use to transform your frames before sending them onto the browser. 
 
 Let's implement a bare-minimum example with a Custom Source using WebGear_RTC API and OpenCV:
 
@@ -77,6 +77,7 @@ Let's implement a bare-minimum example with a Custom Source using WebGear_RTC AP
 import uvicorn, asyncio, cv2
 from av import VideoFrame
 from aiortc import VideoStreamTrack
+from aiortc.mediastreams import MediaStreamError
 from vidgear.gears.asyncio import WebGear_RTC
 from vidgear.gears.asyncio.helper import reducer
 
@@ -112,7 +113,7 @@ class Custom_RTCServer(VideoStreamTrack):
 
         # if NoneType
         if not grabbed:
-            return None
+            return MediaStreamError
 
         # reducer frames size if you want more performance otherwise comment this line
         frame = await reducer(frame, percentage=30)  # reduce frame by 30%
@@ -145,7 +146,6 @@ uvicorn.run(web(), host="localhost", port=8000)
 
 # close app safely
 web.shutdown()
-
 ```
 
 **And that's all, Now you can see output at [`http://localhost:8000/`](http://localhost:8000/) address.**
@@ -262,7 +262,7 @@ WebGear_RTC also natively supports ASGI middleware classes with Starlette for im
 !!! new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
-!!! info "All supported middlewares can be [here ➶](https://www.starlette.io/middleware/)"
+!!! info "All supported middlewares can be found [here ➶](https://www.starlette.io/middleware/)"
 
 For this example, let's use [`CORSMiddleware`](https://www.starlette.io/middleware/#corsmiddleware) for implementing appropriate [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) to outgoing responses in our application in order to allow cross-origin requests from browsers, as follows:
 
@@ -326,69 +326,8 @@ WebGear_RTC gives us complete freedom of altering data files generated in [**Aut
 
 &nbsp;
 
-## Bonus Usage Examples
+## Bonus Examples
 
-Because of WebGear_RTC API's flexible internal wapper around [VideoGear](../../videogear/overview/), it can easily access any parameter of [CamGear](#camgear) and [PiGear](#pigear) videocapture APIs.
-
-!!! info "Following usage examples are just an idea of what can be done with WebGear_RTC API, you can try various [VideoGear](../../videogear/params/), [CamGear](../../camgear/params/) and [PiGear](../../pigear/params/) parameters directly in WebGear_RTC API in the similar manner."
-
-### Using WebGear_RTC with Pi Camera Module
- 
-Here's a bare-minimum example of using WebGear_RTC API with the Raspberry Pi camera module while tweaking its various properties in just one-liner:
-
-```python
-# import libs
-import uvicorn
-from vidgear.gears.asyncio import WebGear_RTC
-
-# various webgear_rtc performance and Raspberry Pi camera tweaks
-options = {
-    "frame_size_reduction": 25,
-    "hflip": True,
-    "exposure_mode": "auto",
-    "iso": 800,
-    "exposure_compensation": 15,
-    "awb_mode": "horizon",
-    "sensor_mode": 0,
-}
-
-# initialize WebGear_RTC app
-web = WebGear_RTC(
-    enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options
-)
-
-# run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host="localhost", port=8000)
-
-# close app safely
-web.shutdown()
-```
+!!! example "Checkout more advanced WebGear_RTC examples with unusual configuration [here ➶](../../../help/webgear_rtc_ex/)"
 
 &nbsp;
-
-### Using WebGear_RTC with real-time Video Stabilization enabled
- 
-Here's an example of using WebGear_RTC API with real-time Video Stabilization enabled:
-
-```python
-# import libs
-import uvicorn
-from vidgear.gears.asyncio import WebGear_RTC
-
-# various webgear_rtc performance tweaks
-options = {
-    "frame_size_reduction": 25,
-}
-
-# initialize WebGear_RTC app  with a raw source and enable video stabilization(`stabilize=True`)
-web = WebGear_RTC(source="foo.mp4", stabilize=True, logging=True, **options)
-
-# run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host="localhost", port=8000)
-
-# close app safely
-web.shutdown()
-```
-
-&nbsp;
- 

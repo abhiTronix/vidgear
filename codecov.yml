@@ -30,5 +30,6 @@ ignore:
   - "vidgear/tests"
   - "docs"
   - "scripts"
+  - "vidgear/gears/__init__.py" #trivial
   - "vidgear/gears/asyncio/__main__.py" #trivial
   - "setup.py"

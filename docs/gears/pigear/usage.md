@@ -271,3 +271,9 @@ writer.close()
 ``` 
 
 &nbsp; 
+
+## Bonus Examples
+
+!!! example "Checkout more advanced PiGear examples with unusual configuration [here ➶](../../../help/pigear_ex/)"
+
+&nbsp;

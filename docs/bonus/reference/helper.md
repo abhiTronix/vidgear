@@ -98,6 +98,10 @@ limitations under the License.
 
 &nbsp;
 
+::: vidgear.gears.helper.import_dependency_safe
+
+&nbsp;
+
 ::: vidgear.gears.helper.get_video_bitrate
 
 &nbsp;

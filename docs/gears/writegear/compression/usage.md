@@ -221,7 +221,7 @@ In Compression Mode, WriteGear also allows URL strings _(as output)_ for network
 
 In this example, we will stream live camera feed directly to Twitch:
 
-!!! info "YouTube-Live Streaming example code also available in [WriteGear FAQs ➶](../../../../help/writegear_faqs/#is-youtube-live-streaming-possibe-with-writegear)"
+!!! info "YouTube-Live Streaming example code also available in [WriteGear FAQs ➶](../../../../help/writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming)"
 
 !!! warning "This example assume you already have a [**Twitch Account**](https://www.twitch.tv/) for publishing video."
 
@@ -576,7 +576,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
         !!! fail "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
-!!! danger "Make sure this `-audio` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
+!!! danger "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
 
 !!! warning "You **MUST** use [`-input_framerate`](../../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 

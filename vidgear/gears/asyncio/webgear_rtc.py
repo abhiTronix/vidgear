@@ -18,7 +18,6 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-
 import os
 import cv2
 import sys
@@ -27,32 +26,39 @@ import fractions
 import asyncio
 import logging as log
 from collections import deque
-from starlette.routing import Mount, Route
-from starlette.templating import Jinja2Templates
-from starlette.staticfiles import StaticFiles
-from starlette.applications import Starlette
-from starlette.middleware import Middleware
-from starlette.responses import JSONResponse, PlainTextResponse
+from os.path import expanduser
 
-from aiortc.rtcrtpsender import RTCRtpSender
-from aiortc import (
-    RTCPeerConnection,
-    RTCSessionDescription,
-    VideoStreamTrack,
-)
-from aiortc.contrib.media import MediaRelay
-from aiortc.mediastreams import MediaStreamError
-from av import VideoFrame
-
-
+# import helper packages
 from .helper import (
     reducer,
-    logger_handler,
     generate_webdata,
     create_blank_frame,
-    retrieve_best_interpolation,
 )
+from ..helper import logger_handler, retrieve_best_interpolation, import_dependency_safe
+
+# import additional API(s)
 from ..videogear import VideoGear
+
+# safe import critical Class modules
+starlette = import_dependency_safe("starlette", error="silent")
+if not (starlette is None):
+    from starlette.routing import Mount, Route
+    from starlette.templating import Jinja2Templates
+    from starlette.staticfiles import StaticFiles
+    from starlette.applications import Starlette
+    from starlette.middleware import Middleware
+    from starlette.responses import JSONResponse, PlainTextResponse
+aiortc = import_dependency_safe("aiortc", error="silent")
+if not (aiortc is None):
+    from aiortc.rtcrtpsender import RTCRtpSender
+    from aiortc import (
+        RTCPeerConnection,
+        RTCSessionDescription,
+        VideoStreamTrack,
+    )
+    from aiortc.contrib.media import MediaRelay
+    from aiortc.mediastreams import MediaStreamError
+    from av import VideoFrame  # aiortc dependency
 
 # define logger
 logger = log.getLogger("WebGear_RTC")
@@ -108,6 +114,9 @@ class RTC_VideoServer(VideoStreamTrack):
         """
 
         super().__init__()  # don't forget this!
+
+        # raise error(s) for critical Class import
+        import_dependency_safe("aiortc" if aiortc is None else "")
 
         # initialize global params
         self.__logging = logging
@@ -214,14 +223,14 @@ class RTC_VideoServer(VideoStreamTrack):
         # read video frame
         f_stream = None
         if self.__stream is None:
-            return None
+            raise MediaStreamError
         else:
             f_stream = self.__stream.read()
 
         # display blank if NoneType
         if f_stream is None:
             if self.blank_frame is None or not self.is_running:
-                return None
+                raise MediaStreamError
             else:
                 f_stream = self.blank_frame[:]
             if not self.__enable_inf and not self.__reset_enabled:
@@ -287,7 +296,7 @@ class WebGear_RTC:
     WebGear_RTC can handle multiple consumers seamlessly and provides native support for ICE (Interactive Connectivity Establishment)
     protocol, STUN (Session Traversal Utilities for NAT), and TURN (Traversal Using Relays around NAT) servers that help us to easily
     establish direct media connection with the remote peers for uninterrupted data flow. It also allows us to define our custom Server
-    as a source to manipulate frames easily before sending them across the network(see this doc example).
+    as a source to transform frames easily before sending them across the network(see this doc example).
 
     WebGear_RTC API works in conjunction with Starlette ASGI application and can also flexibly interact with Starlette's ecosystem of
     shared middleware, mountable applications, Response classes, Routing tables, Static Files, Templating engine(with Jinja2), etc.
@@ -329,6 +338,9 @@ class WebGear_RTC:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Tweak Parameters of WebGear_RTC, CamGear, PiGear & Stabilizer.
         """
+        # raise error(s) for critical Class imports
+        import_dependency_safe("starlette" if starlette is None else "")
+        import_dependency_safe("aiortc" if aiortc is None else "")
 
         # initialize global params
         self.__logging = logging
@@ -394,8 +406,6 @@ class WebGear_RTC:
             )
         else:
             # otherwise generate suitable path
-            from os.path import expanduser
-
             data_path = generate_webdata(
                 os.path.join(expanduser("~"), ".vidgear"),
                 c_name="webgear_rtc",

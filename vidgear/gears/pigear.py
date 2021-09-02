@@ -17,16 +17,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-
-# import the packages
-
+# import the necessary packages
 import cv2
 import sys
 import time
 import logging as log
 from threading import Thread
 
-from .helper import capPropId, logger_handler
+# import helper packages
+from .helper import capPropId, logger_handler, import_dependency_safe
+
+# safe import critical Class modules
+picamera = import_dependency_safe("picamera", error="silent")
+if not (picamera is None):
+    from picamera import PiCamera
+    from picamera.array import PiRGBArray
 
 # define logger
 logger = log.getLogger("PiGear")
@@ -69,22 +74,10 @@ class PiGear:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Source Tweak Parameters.
         """
-
-        try:
-            import picamera
-            from picamera import PiCamera
-            from picamera.array import PiRGBArray
-        except Exception as error:
-            if isinstance(error, ImportError):
-                # Output expected ImportErrors.
-                raise ImportError(
-                    '[PiGear:ERROR] :: Failed to detect Picamera executables, install it with "pip3 install picamera" command.'
-                )
-            else:
-                # Handle any API errors
-                raise RuntimeError(
-                    "[PiGear:ERROR] :: Picamera API failure: {}".format(error)
-                )
+        # raise error(s) for critical Class imports
+        import_dependency_safe(
+            "picamera" if picamera is None else "",
+        )
 
         # enable logging if specified
         self.__logging = False

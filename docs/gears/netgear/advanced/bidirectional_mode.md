@@ -36,7 +36,7 @@ This mode can be easily activated in NetGear through `bidirectional_mode` attrib
 &nbsp;
 
 
-!!! danger "Important"
+!!! danger "Important Information regarding Bidirectional Mode"
 
     * In Bidirectional Mode, `zmq.PAIR`(ZMQ Pair) & `zmq.REQ/zmq.REP`(ZMQ Request/Reply) are **ONLY** Supported messaging patterns. Accessing this mode with any other messaging pattern, will result in `ValueError`.
 
@@ -69,7 +69,7 @@ This mode can be easily activated in NetGear through `bidirectional_mode` attrib
 &nbsp;
 
 
-## Method Parameters
+## Exclusive Parameters
 
 To send data bidirectionally, NetGear API provides two exclusive parameters for its methods:
 
@@ -364,7 +364,7 @@ server.close()
 
 In this example we are going to implement a bare-minimum example, where we will be sending video-frames _(3-Dimensional numpy arrays)_ of the same Video bidirectionally at the same time, for testing the real-time performance and synchronization between the Server and the Client using this(Bidirectional) Mode. 
 
-!!! tip "This feature is great for building applications like Real-Time Video Chat."
+!!! tip "This example is useful for building applications like Real-Time Video Chat."
 
 !!! info "We're also using [`reducer()`](../../../../../bonus/reference/helper/#vidgear.gears.helper.reducer--reducer) method for reducing frame-size on-the-go for additional performance."
 
@@ -378,14 +378,13 @@ Open your favorite terminal and execute the following python code:
 
 ```python
 # import required libraries
-from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
 from vidgear.gears.helper import reducer
 import numpy as np
 import cv2
 
 # open any valid video stream(for e.g `test.mp4` file)
-stream = VideoGear(source="test.mp4").start()
+stream = cv2.VideoCapture("test.mp4")
 
 # activate Bidirectional mode
 options = {"bidirectional_mode": True}
@@ -398,10 +397,10 @@ while True:
 
     try:
         # read frames from stream
-        frame = stream.read()
+        (grabbed, frame) = stream.read()
 
-        # check for frame if Nonetype
-        if frame is None:
+        # check for frame if not grabbed
+        if not grabbed:
             break
 
         # reducer frames size if you want more performance, otherwise comment this line
@@ -428,7 +427,7 @@ while True:
         break
 
 # safely close video stream
-stream.stop()
+stream.release()
 
 # safely close server
 server.close()
@@ -445,7 +444,6 @@ Then open another terminal on the same system and execute the following python c
 ```python
 # import required libraries
 from vidgear.gears import NetGear
-from vidgear.gears import VideoGear
 from vidgear.gears.helper import reducer
 import cv2
 
@@ -453,7 +451,7 @@ import cv2
 options = {"bidirectional_mode": True}
 
 # again open the same video stream
-stream = VideoGear(source="test.mp4").start()
+stream = cv2.VideoCapture("test.mp4")
 
 # define NetGear Client with `receive_mode = True` and defined parameter
 client = NetGear(receive_mode=True, pattern=1, logging=True, **options)
@@ -462,10 +460,10 @@ client = NetGear(receive_mode=True, pattern=1, logging=True, **options)
 while True:
 
     # read frames from stream
-    frame = stream.read()
+    (grabbed, frame) = stream.read()
 
-    # check for frame if Nonetype
-    if frame is None:
+    # check for frame if not grabbed
+    if not grabbed:
         break
 
     # reducer frames size if you want more performance, otherwise comment this line
@@ -503,7 +501,7 @@ while True:
 cv2.destroyAllWindows()
 
 # safely close video stream
-stream.stop()
+stream.release()
 
 # safely close client
 client.close()

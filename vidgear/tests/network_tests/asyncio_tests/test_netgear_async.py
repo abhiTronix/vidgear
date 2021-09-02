@@ -32,7 +32,7 @@ import logging as log
 import tempfile
 
 from vidgear.gears.asyncio import NetGear_Async
-from vidgear.gears.asyncio.helper import logger_handler
+from vidgear.gears.helper import logger_handler
 
 # define test logger
 logger = log.getLogger("Test_NetGear_Async")

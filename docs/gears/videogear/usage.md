@@ -275,3 +275,9 @@ stream.stop()
 ```
 
 &nbsp;
+
+## Bonus Examples
+
+!!! example "Checkout more advanced VideoGear examples with unusual configuration [here ➶](../../../help/videogear_ex/)"
+
+&nbsp;

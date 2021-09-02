@@ -48,7 +48,7 @@ limitations under the License.
 
 ## Is it possible to stream on a different device on the network with WebGear?
 
-!!! note "If you set `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine, then you must still use http://localhost:8000/ to access stream on your host machine browser."
+!!! alert "If you set `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine, then you must still use http://localhost:8000/ to access stream on that same host machine browser."
 
 For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. Then type the IP-address of source machine followed by the defined `port` value in your desired Client Device's browser (for e.g. http://192.27.0.101:8000) to access the stream.
 

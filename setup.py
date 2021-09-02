@@ -90,17 +90,15 @@ setup(
     author="Abhishek Thakur",
     install_requires=[
         "pafy{}".format(latest_version("pafy")),
+        "youtube-dl{}".format(latest_version("youtube-dl")),  # pafy backend
         "mss{}".format(latest_version("mss")),
-        "numpy{}".format(
-            "<=1.19.5" if sys.version_info[:2] < (3, 7) else ""
-        ),  # dropped support for 3.6.x legacies
-        "youtube-dl{}".format(latest_version("youtube-dl")),
-        "streamlink{}".format(latest_version("streamlink")),
+        "cython",  # helper for numpy install
+        "numpy",
+        "streamlink",
         "requests",
         "pyzmq{}".format(latest_version("pyzmq")),
         "simplejpeg{}".format(latest_version("simplejpeg")),
         "colorlog",
-        "colorama",
         "tqdm",
         "Pillow",
         "pyscreenshot{}".format(latest_version("pyscreenshot")),
@@ -114,17 +112,12 @@ setup(
     extras_require={
         "asyncio": [
             "starlette{}".format(latest_version("starlette")),
-            "aiofiles",
             "jinja2",
-            "aiohttp",
             "uvicorn{}".format(latest_version("uvicorn")),
-            "msgpack_numpy",
+            "msgpack{}".format(latest_version("msgpack")),
+            "msgpack_numpy{}".format(latest_version("msgpack_numpy")),
+            "aiortc{}".format(latest_version("aiortc")),
         ]
-        + (
-            ["aiortc{}".format(latest_version("aiortc"))]
-            if (platform.system() != "Windows")
-            else []
-        )
         + (
             (
                 ["uvloop{}".format(latest_version("uvloop"))]

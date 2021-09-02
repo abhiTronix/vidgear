@@ -472,3 +472,9 @@ server.close()
 ```
 
 &nbsp; 
+
+## Bonus Examples
+
+!!! example "Checkout more advanced NetGear examples with unusual configuration [here ➶](../../../help/netgear_ex/)"
+
+&nbsp;

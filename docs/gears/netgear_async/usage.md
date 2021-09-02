@@ -223,7 +223,7 @@ if __name__ == "__main__":
 
 ## Using NetGear_Async with a Custom Source(OpenCV)
 
-NetGear_Async allows you to easily define your own custom Source at Server-end that you want to use to manipulate your frames before sending them onto the network. 
+NetGear_Async allows you to easily define your own custom Source at Server-end that you want to use to transform your frames before sending them onto the network. 
 
 Let's implement a bare-minimum example with a Custom Source using NetGear_Async API and OpenCV:
 
@@ -241,13 +241,13 @@ import cv2, asyncio
 # initialize Server without any source
 server = NetGear_Async(source=None, logging=True)
 
+# !!! define your own video source here !!!
+# Open any video stream such as live webcam
+# video stream on first index(i.e. 0) device
+stream = cv2.VideoCapture(0)
+
 # Create a async frame generator as custom source
 async def my_frame_generator():
-
-    # !!! define your own video source here !!!
-    # Open any video stream such as live webcam 
-    # video stream on first index(i.e. 0) device
-    stream = cv2.VideoCapture(0)
 
     # loop over stream until its terminated
     while True:
@@ -265,9 +265,6 @@ async def my_frame_generator():
         yield frame
         # sleep for sometime
         await asyncio.sleep(0)
-        
-    # close stream
-    stream.release()
 
 
 if __name__ == "__main__":
@@ -284,6 +281,8 @@ if __name__ == "__main__":
         # wait for interrupts
         pass
     finally:
+        # close stream
+        stream.release()
         # finally close the server
         server.close()
 ```
@@ -375,6 +374,7 @@ if __name__ == "__main__":
 ```
 
 ### Client's End
+
 Then open another terminal on the same system and execute the following python code and see the output:
 
 !!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
@@ -430,3 +430,9 @@ if __name__ == "__main__":
 ```
 
 &nbsp; 
+
+## Bonus Examples
+
+!!! example "Checkout more advanced NetGear_Async examples with unusual configuration [here ➶](../../../help/netgear_async_ex/)"
+
+&nbsp;

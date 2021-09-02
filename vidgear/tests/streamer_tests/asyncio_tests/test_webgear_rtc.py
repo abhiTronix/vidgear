@@ -43,8 +43,9 @@ from aiortc import (
     RTCSessionDescription,
 )
 from av import VideoFrame
+from aiortc.mediastreams import MediaStreamError
 from vidgear.gears.asyncio import WebGear_RTC
-from vidgear.gears.asyncio.helper import logger_handler
+from vidgear.gears.helper import logger_handler
 
 
 # define test logger
@@ -142,7 +143,7 @@ class Custom_RTCServer(VideoStreamTrack):
 
         # if NoneType
         if not grabbed:
-            return None
+            raise MediaStreamError
 
         # contruct `av.frame.Frame` from `numpy.nd.array`
         av_frame = VideoFrame.from_ndarray(frame, format="bgr24")
@@ -187,7 +188,7 @@ class Invalid_Custom_RTCServer_1(VideoStreamTrack):
 
         # if NoneType
         if not grabbed:
-            return None
+            raise MediaStreamError
 
         # contruct `av.frame.Frame` from `numpy.nd.array`
         av_frame = VideoFrame.from_ndarray(frame, format="bgr24")
@@ -252,7 +253,8 @@ async def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
             await offer_pc.close()
         web.shutdown()
     except Exception as e:
-        pytest.fail(str(e))
+        if not isinstance(e, MediaStreamError):
+            pytest.fail(str(e))
 
 
 test_data = [
@@ -314,7 +316,7 @@ async def test_webgear_rtc_options(options):
                 await offer_pc.close()
         web.shutdown()
     except Exception as e:
-        if isinstance(e, AssertionError):
+        if isinstance(e, (AssertionError, MediaStreamError)):
             logger.exception(str(e))
         elif isinstance(e, requests.exceptions.Timeout):
             logger.exceptions(str(e))
@@ -396,7 +398,7 @@ async def test_webpage_reload(options):
             # shutdown
             await offer_pc.close()
     except Exception as e:
-        if "enable_live_broadcast" in options and isinstance(e, AssertionError):
+        if "enable_live_broadcast" in options and isinstance(e, (AssertionError, MediaStreamError)):
             pytest.xfail("Test Passed")
         else:
             pytest.fail(str(e))
@@ -414,7 +416,7 @@ test_data_class = [
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(raises=ValueError)
+@pytest.mark.xfail(raises=(ValueError, MediaStreamError))
 @pytest.mark.parametrize("server, result", test_data_class)
 async def test_webgear_rtc_custom_server_generator(server, result):
     """
@@ -448,7 +450,7 @@ async def test_webgear_rtc_custom_middleware(middleware, result):
             assert response.status_code == 200
         web.shutdown()
     except Exception as e:
-        if result:
+        if result and not isinstance(e, MediaStreamError):
             pytest.fail(str(e))
 
 
@@ -493,7 +495,8 @@ async def test_webgear_rtc_routes():
             await offer_pc.close()
         web.shutdown()
     except Exception as e:
-        pytest.fail(str(e))
+        if not isinstance(e, MediaStreamError):
+            pytest.fail(str(e))
 
 
 @pytest.mark.asyncio
@@ -515,7 +518,7 @@ async def test_webgear_rtc_routes_validity():
         async with TestClient(web()) as client:
             pass
     except Exception as e:
-        if isinstance(e, RuntimeError):
+        if isinstance(e, (RuntimeError, MediaStreamError)):
             pytest.xfail(str(e))
         else:
             pytest.fail(str(e))

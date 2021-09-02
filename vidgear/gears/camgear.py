@@ -17,14 +17,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import the necessary packages
 
+# import the necessary packages
 import cv2
 import time
 import queue
 import logging as log
 from threading import Thread, Event
 
+# import helper packages
 from .helper import (
     capPropId,
     logger_handler,
@@ -34,6 +35,7 @@ from .helper import (
     get_supported_resolution,
     check_gstreamer_support,
     dimensions_to_resolutions,
+    import_dependency_safe,
 )
 
 # define logger
@@ -104,8 +106,7 @@ class CamGear:
                 video_url = youtube_url_validator(source)
                 if video_url:
                     # import backend library
-                    import pafy
-
+                    pafy = import_dependency_safe("pafy")
                     logger.info("Using Youtube-dl Backend")
                     # create new pafy object
                     source_object = pafy.new(video_url, ydl_opts=stream_params)
@@ -128,10 +129,9 @@ class CamGear:
                         # handle live-streams
                         if is_live:
                             # Enforce GStreamer backend for YouTube-livestreams
-                            if logging:
-                                logger.critical(
-                                    "YouTube livestream URL detected. Enforcing GStreamer backend."
-                                )
+                            logger.critical(
+                                "YouTube livestream URL detected. Enforcing GStreamer backend."
+                            )
                             backend = cv2.CAP_GSTREAMER
                             # convert stream dimensions to streams resolutions
                             available_streams = dimensions_to_resolutions(
@@ -183,8 +183,9 @@ class CamGear:
                         )
                 else:
                     # import backend library
-                    from streamlink import Streamlink
-
+                    Streamlink = import_dependency_safe(
+                        "from streamlink import Streamlink"
+                    )
                     restore_levelnames()
                     logger.info("Using Streamlink Backend")
                     # check session
@@ -442,7 +443,7 @@ class CamGear:
         if self.__threaded_queue_mode:
             self.__threaded_queue_mode = False
 
-        # indicate that the thread 
+        # indicate that the thread
         # should be terminated immediately
         self.__terminate.set()
         self.__stream_read.set()

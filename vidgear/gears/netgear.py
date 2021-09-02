@@ -18,30 +18,35 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-
 import os
 import cv2
-import zmq
 import time
 import string
 import secrets
-import simplejpeg
-
 import numpy as np
 import logging as log
-
-from zmq import ssh
-from zmq import auth
-from zmq.auth.thread import ThreadAuthenticator
-from zmq.error import ZMQError
 from threading import Thread
 from collections import deque
+from os.path import expanduser
+
+# import helper packages
 from .helper import (
     logger_handler,
     generate_auth_certificates,
     check_WriteAccess,
     check_open_port,
+    import_dependency_safe,
 )
+
+# safe import critical Class modules
+zmq = import_dependency_safe("zmq", pkg_name="pyzmq", error="silent", min_version="4.0")
+if not (zmq is None):
+    from zmq import ssh
+    from zmq import auth
+    from zmq.auth.thread import ThreadAuthenticator
+    from zmq.error import ZMQError
+simplejpeg = import_dependency_safe("simplejpeg", error="silent", min_version="1.6.1")
+paramiko = import_dependency_safe("paramiko", error="silent")
 
 # define logger
 logger = log.getLogger("NetGear")
@@ -127,6 +132,12 @@ class NetGear:
             logging (bool): enables/disables logging.
             options (dict): provides the flexibility to alter various NetGear internal properties.
         """
+        # raise error(s) for critical Class imports
+        import_dependency_safe("zmq" if zmq is None else "", min_version="4.0")
+        import_dependency_safe(
+            "simplejpeg" if simplejpeg is None else "", error="log", min_version="1.6.1"
+        )
+
         # enable logging if specified
         self.__logging = True if logging else False
 
@@ -176,7 +187,7 @@ class NetGear:
         self.__ssh_tunnel_mode = None  # handles ssh_tunneling mode state
         self.__ssh_tunnel_pwd = None
         self.__ssh_tunnel_keyfile = None
-        self.__paramiko_present = False
+        self.__paramiko_present = False if paramiko is None else True
 
         # define Multi-Server mode
         self.__multiserver_mode = False  # handles multi-server mode state
@@ -197,7 +208,9 @@ class NetGear:
         custom_cert_location = ""  # handles custom ZMQ certificates path
 
         # define frame-compression handler
-        self.__jpeg_compression = True  # enabled by default for all connections
+        self.__jpeg_compression = (
+            True if not (simplejpeg is None) else False
+        )  # enabled by default for all connections if simplejpeg is installed
         self.__jpeg_compression_quality = 90  # 90% quality
         self.__jpeg_compression_fastdct = True  # fastest DCT on by default
         self.__jpeg_compression_fastupsample = False  # fastupsample off by default
@@ -286,12 +299,6 @@ class NetGear:
                 and isinstance(value, int)
                 and (value in valid_security_mech)
             ):
-                # check if installed libzmq version is valid
-                assert zmq.zmq_version_info() >= (
-                    4,
-                    0,
-                ), "[NetGear:ERROR] :: ZMQ Security feature is not supported in libzmq version < 4.0."
-                # assign valid mode
                 self.__secure_mode = value
 
             elif key == "custom_cert_location" and isinstance(value, str):
@@ -328,7 +335,11 @@ class NetGear:
                     )
 
             # handle jpeg compression
-            elif key == "jpeg_compression" and isinstance(value, (bool, str)):
+            elif (
+                key == "jpeg_compression"
+                and not (simplejpeg is None)
+                and isinstance(value, (bool, str))
+            ):
                 if isinstance(value, str) and value.strip().upper() in [
                     "RGB",
                     "BGR",
@@ -416,8 +427,6 @@ class NetGear:
                     )
                 else:
                     # otherwise auto-generate suitable path
-                    from os.path import expanduser
-
                     (
                         auth_cert_dir,
                         self.__auth_secretkeys_dir,
@@ -472,13 +481,6 @@ class NetGear:
                     ), "[NetGear:ERROR] :: Host `{}` is not available for SSH Tunneling at port-{}!".format(
                         ssh_address, ssh_port
                     )
-
-                # import packages
-                import importlib
-
-                self.__paramiko_present = (
-                    True if bool(importlib.util.find_spec("paramiko")) else False
-                )
 
         # Handle multiple exclusive modes if enabled
         if self.__multiclient_mode and self.__multiserver_mode:

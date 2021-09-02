@@ -18,14 +18,6 @@ limitations under the License.
 ===============================================
 -->
 
-::: vidgear.gears.asyncio.helper.logger_handler
-
-&nbsp;
-
-::: vidgear.gears.asyncio.helper.mkdir_safe
-
-&nbsp;
-
 ::: vidgear.gears.asyncio.helper.reducer
 
 &nbsp;

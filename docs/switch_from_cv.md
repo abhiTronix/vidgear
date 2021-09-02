@@ -43,7 +43,7 @@ Switching OpenCV with VidGear APIs is fairly painless process, and will just req
 VidGear employs OpenCV at its backend and enhances its existing capabilities even further by introducing many new state-of-the-art functionalities such as:
 
 - [x] Accelerated [Multi-Threaded](../bonus/TQM/#what-does-threaded-queue-mode-exactly-do) Performance.
-- [x] Out-of-the-box support for OpenCV API.
+- [x] Out-of-the-box support for OpenCV APIs.
 - [x] Real-time [Stabilization](../gears/stabilizer/overview/) ready.
 - [x] Lossless hardware enabled video [encoding](../gears/writegear/compression/usage/#using-compression-mode-with-hardware-encoders) and [transcoding](../gears/streamgear/rtfm/usage/#usage-with-hardware-video-encoder).
 - [x] Inherited multi-backend support for various video sources and devices.

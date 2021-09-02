@@ -26,14 +26,6 @@ import numpy as np
 import pytest
 import logging as log
 import platform
-
-# Faking
-import sys
-from ..utils import fake_picamera
-
-sys.modules["picamera"] = fake_picamera.picamera
-sys.modules["picamera.array"] = fake_picamera.picamera.array
-
 from vidgear.gears.helper import logger_handler
 
 # define test logger

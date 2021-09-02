@@ -18,20 +18,24 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-
 import cv2
 import time
 import queue
 import numpy as np
 import logging as log
-from mss import mss
-import pyscreenshot as pysct
 from threading import Thread, Event
 from collections import deque, OrderedDict
-from mss.exception import ScreenShotError
-from pyscreenshot.err import FailedBackendError
 
-from .helper import capPropId, logger_handler
+# import helper packages
+from .helper import import_dependency_safe, capPropId, logger_handler
+
+# safe import critical Class modules
+mss = import_dependency_safe("from mss import mss", error="silent")
+if not (mss is None):
+    from mss.exception import ScreenShotError
+pysct = import_dependency_safe("pyscreenshot", error="silent")
+if not (pysct is None):
+    from pyscreenshot.err import FailedBackendError
 
 # define logger
 logger = log.getLogger("ScreenGear")
@@ -61,6 +65,10 @@ class ScreenGear:
             logging (bool): enables/disables logging.
             options (dict): provides the flexibility to manually set the dimensions of capture screen area.
         """
+        # raise error(s) for critical Class imports
+        import_dependency_safe("mss.mss" if mss is None else "")
+        import_dependency_safe("pyscreenshot" if pysct is None else "")
+
         # enable logging if specified:
         self.__logging = logging if isinstance(logging, bool) else False
 

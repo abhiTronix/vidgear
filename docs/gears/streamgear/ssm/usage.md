@@ -82,7 +82,7 @@ You can easily activate ==Low-latency Livestreaming in Single-Source Mode==, whe
 
 !!! tip "Use `-window_size` & `-extra_window_size` FFmpeg parameters for controlling number of frames to be kept in Chunks. Less these value, less will be latency."
 
-!!! warning "All Chunks will be overwritten in this mode after every few Chunks _(equal to the sum of `-window_size` & `-extra_window_size` values)_, Hence Newer Chunks and Manifest contains NO information of any older video-frames."
+!!! alert "After every few chunks _(equal to the sum of `-window_size` & `-extra_window_size` values)_, all chunks will be overwritten in Live-Streaming. Thereby, since newer chunks in manifest/playlist will contain NO information of any older ones, and therefore resultant DASH/HLS stream will play only the most recent frames."
 
 !!! note "If input video-source _(i.e. `-video_source`)_ contains any audio stream/channel, then it automatically gets mapped to all generated streams without any extra efforts."
 

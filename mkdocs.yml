@@ -299,3 +299,15 @@ nav:
       - WebGear_RTC FAQs: help/webgear_rtc_faqs.md
       - NetGear_Async FAQs: help/netgear_async_faqs.md
       - Stabilizer Class FAQs: help/stabilizer_faqs.md
+    - Bonus Examples:
+      - CamGear Examples: help/camgear_ex.md
+      - PiGear Examples: help/pigear_ex.md
+      - VideoGear Examples: help/videogear_ex.md
+      - ScreenGear Examples: help/screengear_ex.md
+      - WriteGear Examples: help/writegear_ex.md
+      - StreamGear Examples: help/streamgear_ex.md
+      - NetGear Examples: help/netgear_ex.md
+      - WebGear Examples: help/webgear_ex.md
+      - WebGear_RTC Examples: help/webgear_rtc_ex.md
+      - NetGear_Async Examples: help/netgear_async_ex.md
+      - Stabilizer Class Examples: help/stabilizer_ex.md

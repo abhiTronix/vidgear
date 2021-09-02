@@ -80,12 +80,12 @@ SSH Tunnel Mode requires [`pexpect`](http://www.noah.org/wiki/pexpect) or [`para
 
 &nbsp;
 
-## Supported Attributes
 
+## Exclusive Attributes
 
 !!! warning "All these attributes will work on Server end only whereas Client end will simply discard them."
 
-For implementing SSH Tunneling Mode, NetGear API currently provide following attribute for its [`options`](../../params/#options) dictionary parameter:
+For implementing SSH Tunneling Mode, NetGear API currently provide following exclusive attribute for its [`options`](../../params/#options) dictionary parameter:
 
 * **`ssh_tunnel_mode`** (_string_) : This attribute activates SSH Tunneling Mode and sets the fully specified `"<ssh-username>@<client-public-ip>:<forwarded-port>"` SSH URL for tunneling at Server end. Its usage is as follows:
   
@@ -138,7 +138,7 @@ For implementing SSH Tunneling Mode, NetGear API currently provide following att
 ## Usage Example
 
 
-??? alert "Assumptions for this Example"
+???+ alert "Assumptions for this Example"
     
     In this particular example, we assume that:
 
