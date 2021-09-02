@@ -90,10 +90,10 @@ setup(
     author="Abhishek Thakur",
     install_requires=[
         "pafy{}".format(latest_version("pafy")),
+        "youtube-dl{}".format(latest_version("youtube-dl")),  # pafy backend
         "mss{}".format(latest_version("mss")),
-        "cython",
+        "cython",  # helper for numpy install
         "numpy",
-        "youtube-dl{}".format(latest_version("youtube-dl")),
         "streamlink",
         "requests",
         "pyzmq{}".format(latest_version("pyzmq")),

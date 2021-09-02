@@ -129,10 +129,9 @@ class CamGear:
                         # handle live-streams
                         if is_live:
                             # Enforce GStreamer backend for YouTube-livestreams
-                            if logging:
-                                logger.critical(
-                                    "YouTube livestream URL detected. Enforcing GStreamer backend."
-                                )
+                            logger.critical(
+                                "YouTube livestream URL detected. Enforcing GStreamer backend."
+                            )
                             backend = cv2.CAP_GSTREAMER
                             # convert stream dimensions to streams resolutions
                             available_streams = dimensions_to_resolutions(
