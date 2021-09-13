@@ -22,6 +22,13 @@
   <meta name="twitter:description" content="{{ config.site_description }}">
   <meta name="twitter:image" content="{{ image }}">
 {% endblock %}
+{% block outdated %}
+  You're not viewing the latest version.
+  <a href="{{ '../' ~ base_url }}"> 
+
+    <strong>Click here to go to latest.</strong>
+  </a>
+{% endblock %}
 {% block libs %}
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/clappr/clappr-level-selector-plugin@latest/dist/level-selector.min.js"></script>
