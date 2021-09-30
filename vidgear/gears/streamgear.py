@@ -810,7 +810,7 @@ class StreamGear:
 
         # Finally, some hardcoded HLS parameters (Refer FFmpeg docs for more info.)
         output_params["-allowed_extensions"] = "ALL"
-        output_params["-hls_segment_filename"] = "{}-stream%v-%03d.{}".format(
+        output_params["-hls_segment_filename"] = "{}-stream-%03d.{}".format(
             os.path.join(os.path.dirname(self.__out_file), "chunk"),
             "m4s" if output_params["-hls_segment_type"] == "fmp4" else "ts",
         )
