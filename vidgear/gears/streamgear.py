@@ -640,7 +640,7 @@ class StreamGear:
             output_params (dict): Output FFmpeg parameters
         """
         # temporary streams count variable
-        output_params["stream_count"] = 0  # default is 0
+        output_params["stream_count"] = 1  # default is 1
 
         # check if streams are empty
         if not streams:
@@ -810,9 +810,14 @@ class StreamGear:
 
         # Finally, some hardcoded HLS parameters (Refer FFmpeg docs for more info.)
         output_params["-allowed_extensions"] = "ALL"
-        # Normally output_params.get("stream_count", 0) would be used to access a dict variable,
-        # but in this case stream_count is always defined by default with 0
-        segment_template = "{}-stream%v-%03d.{}" if output_params["stream_count"] > 1 else "{}-stream-%03d.{}"
+        # Handling <hls_segment_filename>
+        # Here filenname will be based on `stream_count` dict parameter that
+        # would be used to check whether stream is multivariant(>1) or single(0-1)
+        segment_template = (
+            "{}-stream%v-%03d.{}"
+            if output_params["stream_count"] > 1
+            else "{}-stream-%03d.{}"
+        )
         output_params["-hls_segment_filename"] = segment_template.format(
             os.path.join(os.path.dirname(self.__out_file), "chunk"),
             "m4s" if output_params["-hls_segment_type"] == "fmp4" else "ts",
@@ -877,7 +882,7 @@ class StreamGear:
             output_params.move_to_end("-i", last=False)
 
         # copy streams count
-        stream_count = output_params.pop("stream_count", 0)
+        stream_count = output_params.pop("stream_count", 1)
 
         # convert input parameters to list
         input_commands = dict2Args(input_params)
@@ -888,8 +893,8 @@ class StreamGear:
 
         # create exclusive HLS params
         hls_commands = []
-        # handle HLS multi-bitrate according to stream count
-        if self.__format == "hls" and stream_count > 0:
+        # handle HLS multi-variant streams
+        if self.__format == "hls" and stream_count > 1:
             stream_map = ""
             for count in range(0, stream_count):
                 stream_map += "v:{}{} ".format(

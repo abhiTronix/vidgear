@@ -66,8 +66,6 @@ def latest_version(package_name):
     except Exception as e:
         if versions and isinstance(e, TypeError):
             return ">={}".format(versions[-1])
-        else:
-            pass
     return ""
 
 
