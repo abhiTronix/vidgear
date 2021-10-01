@@ -56,7 +56,7 @@ class image_publisher:
         # define publisher topic
         self.image_pub = rospy.Publisher("image_topic_pub", Image)
         # open stream with given parameters
-        self.stream_stab = VideoGear(source=source, logging=logging).start()
+        self.stream = VideoGear(source=source, logging=logging).start()
         # define publisher topic
         rospy.Subscriber("image_topic_sub", Image, self.callback)
 
@@ -80,7 +80,7 @@ class image_publisher:
 
     def close(self):
         # stop stream
-        self.stream_stab.stop()
+        self.stream.stop()
 
 
 def main(args):

@@ -221,7 +221,7 @@ In Compression Mode, WriteGear also allows URL strings _(as output)_ for network
 
 In this example, we will stream live camera feed directly to Twitch:
 
-!!! info "YouTube-Live Streaming example code also available in [WriteGear FAQs ➶](../../../../help/writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming)"
+!!! info "YouTube-Live Streaming example code also available in [WriteGear's Bonus Examples ➶](../../../../help/writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming)"
 
 !!! warning "This example assume you already have a [**Twitch Account**](https://www.twitch.tv/) for publishing video."
 

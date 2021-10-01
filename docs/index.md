@@ -126,7 +126,7 @@ It is (like all open source software) a labour of love and something I am doing 
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4718616.svg)](https://doi.org/10.5281/zenodo.4718616)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5389830.svg)](https://doi.org/10.5281/zenodo.5389830)
 
 ```BibTeX
 @software{vidgear,
@@ -140,8 +140,8 @@ Here is a Bibtex entry you can use to cite this project in a publication:
     year         = 2021
     publisher    = {Zenodo},
     version      = {vidgear-0.2.2},
-    doi          = {10.5281/zenodo.4718616},
-    url          = {https://doi.org/10.5281/zenodo.4718616}
+    doi          = {10.5281/zenodo.5389830},
+    url          = {https://doi.org/10.5281/zenodo.5389830}
   }
 ```
 

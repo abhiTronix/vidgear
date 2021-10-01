@@ -111,7 +111,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
 * #### FFmpeg 
 
-    Require only for the video compression and encoding compatibility within [**StreamGear API**](../../gears/streamgear/overview/) API and [**WriteGear API's Compression Mode**](../../gears/writegear/compression/overview/). 
+    Require only for the video compression and encoding compatibility within [**StreamGear API**](../../gears/streamgear/introduction/) API and [**WriteGear API's Compression Mode**](../../gears/writegear/compression/overview/). 
 
     !!! tip "FFmpeg Installation"
 
