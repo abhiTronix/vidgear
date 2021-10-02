@@ -60,7 +60,7 @@ steps:
   displayName: 'Install pip dependencies'
 
 - script: |
-    timeout 1200 pytest --verbose --cov=vidgear --cov-report=xml --cov-report=html --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "##vso[task.setvariable variable=exit_code]$code"; fi
+    timeout 1500 pytest --verbose --cov=vidgear --cov-report=xml --cov-report=html --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "##vso[task.setvariable variable=exit_code]$code"; fi
   displayName: 'pytest'
   
 - bash: |
@@ -73,12 +73,8 @@ steps:
     shasum -a 256 -c codecov.SHA256SUM
     chmod +x codecov
     if [ "$(exit_code)" != "124" ]; then
-      ./codecov -C $(Build.SourceVersion) -B $(Build.SourceBranch) -b $(Build.BuildNumber);
+      ./codecov -f coverage.xml;
     else
       echo "Timeout test - Skipped Codecov!"; 
     fi
-  env:
-    CI_BUILD_ID: $(Build.BuildNumber)-$(Agent.OS)
-    VCS_BRANCH_NAME: $(Build.SourceBranchName)
-    VCS_COMMIT_ID: $(Build.SourceVersion)
   displayName: Upload coverage to CodeCov
