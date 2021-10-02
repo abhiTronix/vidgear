@@ -73,8 +73,11 @@ steps:
     shasum -a 256 -c codecov.SHA256SUM
     chmod +x codecov
     if [ "$(exit_code)" != "124" ]; then
-      ./codecov -f coverage.xml;
+      ./codecov -t $CODECOV_TOKEN -f coverage.xml -C $(Build.SourceVersion) -B $(Build.SourceBranch) -b $(Build.BuildNumber);
     else
       echo "Timeout test - Skipped Codecov!"; 
     fi
+  env:
+    CODECOV_TOKEN: $(TOKEN)
   displayName: Upload coverage to CodeCov
+  
