@@ -33,7 +33,7 @@ WebGear_RTC API is the part of `asyncio` package of VidGear, thereby you need to
 
 ### Aiortc
 
-Must Required only if you're using [WebGear_RTC API](../../gears/webgear_rtc/overview/). You can easily install it via pip:
+Must Required with WebGear_RTC API. You can easily install it via pip:
 
 ??? error "Microsoft Visual C++ 14.0 is required."
     

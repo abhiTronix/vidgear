@@ -29,7 +29,7 @@ limitations under the License.
 
 > *WebGear_RTC is similar to [WeGear API](../../webgear/overview/) in many aspects but utilizes [WebRTC](https://webrtc.org/) technology under the hood instead of Motion JPEG, which makes it suitable for building powerful video-streaming solutions for all modern browsers as well as native clients available on all major platforms.*
 
-!!! new "New in v0.2.1" 
+??? new "New in v0.2.1" 
 	WebGear_RTC API was added in `v0.2.1`.
 
 WebGear_RTC is implemented with the help of [**aiortc**](https://aiortc.readthedocs.io/en/latest/) library which is built on top of asynchronous I/O framework for Web Real-Time Communication (WebRTC) and Object Real-Time Communication (ORTC) and supports many features like SDP generation/parsing, Interactive Connectivity Establishment with half-trickle and mDNS support, DTLS key and certificate generation, DTLS handshake, etc.

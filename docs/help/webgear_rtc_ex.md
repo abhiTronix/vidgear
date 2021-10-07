@@ -90,7 +90,7 @@ web.shutdown()
 
 In this example, we'll be displaying two video feeds side-by-side simultaneously on browser using WebGear_RTC API by simply concatenating frames in real-time: 
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
 ```python

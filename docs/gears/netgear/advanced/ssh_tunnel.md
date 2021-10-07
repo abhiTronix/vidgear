@@ -28,7 +28,7 @@ limitations under the License.
 
 ## Overview
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This document was added in `v0.2.2`.
 
 

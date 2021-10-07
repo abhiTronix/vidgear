@@ -67,7 +67,7 @@ limitations under the License.
 
 ## How to use StreamGear API with OpenCV?
 
-**Answer:** [See this example ➶](../../gears/streamgear/rtfm/usage/bare-minimum-usage-with-opencv)
+**Answer:** [See this example ➶](../../gears/streamgear/rtfm/usage/#bare-minimum-usage-with-opencv)
 
 &thinsp;
 
@@ -81,9 +81,9 @@ limitations under the License.
 
 **Answer:** Real-time Frame Modes and Live-Streaming are completely different terms and not directly related. 
 
-- **Real-time Frame Mode** is one of [primary mode](./../gears/streamgear/introduction/#mode-of-operations) for directly transcoding real-time [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) video-frames _(as opposed to a entire file)_ into a sequence of multiple smaller chunks/segments for streaming. 
+- **Real-time Frame Mode** is one of [primary mode](../../gears/streamgear/introduction/#mode-of-operations) for directly transcoding real-time [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) video-frames _(as opposed to a entire file)_ into a sequence of multiple smaller chunks/segments for streaming. 
 
-- **Live-Streaming** is feature of StreamGear's primary modes that activates behaviour where chunks will contain information for few new frames only and forgets all previous ones for low latency streaming. It can be activated for any primary mode using exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter.
+- **Live-Streaming** is feature of StreamGear's primary modes that activates behaviour where chunks will contain information for few new frames only and forgets all previous ones for low latency streaming. It can be activated for any primary mode using exclusive [`-livestream`](../../gears/streamgear/params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter.
 
 
 ## How to use Hardware/GPU encoder for StreamGear trancoding?

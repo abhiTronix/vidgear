@@ -110,6 +110,6 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
 
 ## Why NetGear API not working correctly?
 
-**Answer:** First, carefully go through [NetGear doc ➶](../../gears/netgear/overview/) that contains detailed information. Also, checkout [PyZmq Docs ➶](https://zeromq.github.io/pyzmq/) for its various settings/parameters. If still it doesn't work for you, then let us know on [Gitter ➶](https://gitter.im/vidgear/community)
+**Answer:** First, carefully go through [NetGear doc ➶](../../gears/netgear/overview/) that contains detailed information. Also, checkout [PyZmq Docs ➶](https://pyzmq.readthedocs.io/en/latest/) for its various settings/parameters. If still it doesn't work for you, then let us know on [Gitter ➶](https://gitter.im/vidgear/community)
 
 &nbsp;

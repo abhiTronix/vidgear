@@ -12,8 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# specific path build
 trigger:
-  - testing
+ branches:
+   include:
+   - testing
+ paths:
+   exclude:
+   - docs
+   - README.md
 
 pr:
   - testing

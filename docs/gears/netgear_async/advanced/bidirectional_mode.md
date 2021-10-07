@@ -27,12 +27,12 @@ limitations under the License.
 
 ## Overview
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This document was added in `v0.2.2`.
 
 Bidirectional Mode enables seamless support for Bidirectional data transmission between Client and Sender along with video-frames through its synchronous messaging patterns such as `zmq.PAIR` (ZMQ Pair Pattern) & `zmq.REQ/zmq.REP` (ZMQ Request/Reply Pattern) in NetGear_Async API.
 
-In Bidirectional Mode, we utilizes the NetGear_Async API's [`transceive_data`](../../../../bonus/reference/NetGear_Async/#vidgear.gears.asyncio.netgear_async.NetGear_Async.transceive_data) method for transmitting data _(at Client's end)_ and receiving data _(in Server's end)_  all while transferring frames in real-time. 
+In Bidirectional Mode, we utilizes the NetGear_Async API's [`transceive_data`](../../../../bonus/reference/netgear_async/#vidgear.gears.asyncio.netgear_async.NetGear_Async.transceive_data) method for transmitting data _(at Client's end)_ and receiving data _(in Server's end)_  all while transferring frames in real-time. 
 
 This mode can be easily activated in NetGear_Async through `bidirectional_mode` attribute of its [`options`](../../params/#options) dictionary parameter during initialization.
 
@@ -403,7 +403,7 @@ In this example we are going to implement a bare-minimum example, where we will 
 
 !!! tip "This feature is great for building applications like Real-Time Video Chat."
 
-!!! info "We're also using [`reducer()`](../../../../../bonus/reference/helper/#vidgear.gears.helper.reducer--reducer) method for reducing frame-size on-the-go for additional performance."
+!!! info "We're also using [`reducer()`](../../../../bonus/reference/helper/#vidgear.gears.helper.reducer--reducer) method for reducing frame-size on-the-go for additional performance."
 
 !!! warning "Remember, Sending large HQ video-frames may required more network bandwidth and packet size which may lead to video latency!"
 

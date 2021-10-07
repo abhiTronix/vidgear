@@ -114,7 +114,12 @@ ScreenGear API provides us the flexibility to select any connected display for f
 
 !!! tip "You can assign `monitor` value to `-1` to fetch frames from all connected multiple monitor screens."
 
-!!! warning "Any value on `monitor` parameter will disable the `backend` parameter."
+!!! warning "Implication of using `monitor` parameter"
+    Any value on `monitor` parameter other than `None` in ScreenGear API: 
+    
+    * Will force `mss` library backend.
+    * Will output [`BGRA`](https://en.wikipedia.org/wiki/RGBA_color_model) colorspace frames instead of default `BGR`. 
+    * Will disable the [`backend`](../params/#backend) parameter.
 
 ```python
 # import required libraries

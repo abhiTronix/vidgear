@@ -26,7 +26,7 @@ limitations under the License.
 
 In this example, we will be Live-Streaming video-frames from Raspberry Pi _(with Camera Module connected)_  using PiGear API and StreamGear API's Real-time Frames Mode:
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
 !!! tip "Use `-window_size` & `-extra_window_size` FFmpeg parameters for controlling number of frames to be kept in Chunks. Less these value, less will be latency."

@@ -26,7 +26,7 @@ limitations under the License.
 
 In this example code, we will merging the audio from a Audio Device _(for e.g. Webcam inbuilt mic input)_ with Stablized frames incoming from the Stabilizer Class _(which is also using same Webcam video input through OpenCV)_, and save the final output as a compressed video file, all in real time:
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
 !!! alert "Example Assumptions"

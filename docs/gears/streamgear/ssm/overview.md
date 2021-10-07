@@ -40,7 +40,7 @@ This mode can be easily activated by assigning suitable video path as input to [
 
 &emsp;
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
 
     Apple HLS support was added in `v0.2.2`.
 

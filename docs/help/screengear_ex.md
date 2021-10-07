@@ -26,7 +26,7 @@ limitations under the License.
 
 The complete usage example is as follows: 
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
 ### Client + WriteGear
@@ -145,5 +145,94 @@ stream.stop()
 server.close()
 ```
 
-&nbsp; 
+&nbsp;
 
+## Using ScreenGear with WebGear_RTC
+
+The complete usage example is as follows: 
+
+??? new "New in v0.2.3" 
+    This example was added in `v0.2.3`.
+
+```python
+# import necessary libs
+import uvicorn, asyncio, cv2
+from av import VideoFrame
+from aiortc import VideoStreamTrack
+from aiortc.mediastreams import MediaStreamError
+from vidgear.gears import ScreenGear
+from vidgear.gears.asyncio import WebGear_RTC
+from vidgear.gears.asyncio.helper import reducer
+
+# initialize WebGear_RTC app without any source
+web = WebGear_RTC(logging=True)
+
+# create your own Bare-Minimum Custom Media Server with ScreenGear source
+class Custom_RTCScreenGearServer(VideoStreamTrack):
+    """
+    Custom Media Server using OpenCV, an inherit-class
+    to aiortc's VideoStreamTrack.
+    """
+
+    def __init__(self, monitor=None, logging=False):
+
+        # don't forget this line!
+        super().__init__()
+
+        # initialize global params
+        self.stream = ScreenGear(monitor=monitor, logging=logging).start()
+
+    async def recv(self):
+        """
+        A coroutine function that yields `av.frame.Frame`.
+        """
+        # don't forget this function!!!
+
+        # get next timestamp
+        pts, time_base = await self.next_timestamp()
+
+        # read video frame
+        frame = self.stream.read()
+
+        # if NoneType
+        if frame is None:
+            return MediaStreamError
+
+        # reducer frames size if you want more performance otherwise comment this line
+        frame = await reducer(frame, percentage=20)  # reduce frame by 20%
+
+        # contruct `av.frame.Frame` from `numpy.nd.array`
+        if frame.shape[-1] == 4:
+            # hack: handles `mss` backend that outputs BGRA frames
+            av_frame = VideoFrame.from_ndarray(frame, format="bgra")
+        else:
+            av_frame = VideoFrame.from_ndarray(frame, format="bgr24")
+        av_frame.pts = pts
+        av_frame.time_base = time_base
+
+        # return `av.frame.Frame`
+        return av_frame
+
+    def terminate(self):
+        """
+        Gracefully terminates VideoGear stream
+        """
+        # don't forget this function!!!
+
+        # terminate
+        if not (self.stream is None):
+            self.stream.stop()
+            self.stream = None
+
+
+# assign your custom media server to config with ScreenGear source
+web.config["server"] = Custom_RTCScreenGearServer(logging=True)
+
+# run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host="localhost", port=8000)
+
+# close app safely
+web.shutdown()
+```
+
+&nbsp; 

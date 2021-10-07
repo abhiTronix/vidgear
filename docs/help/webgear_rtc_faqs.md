@@ -36,7 +36,7 @@ limitations under the License.
 
 ## How WebGear_RTC is different to WebGear API, which should I choose?
 
-**Answer:** WebGear_RTC is similar to [WeGear API](../../webgear/overview/) in many aspects but utilizes [WebRTC](https://webrtc.org/) technology under the hood instead of Motion JPEG. You can choose any API according to your application, but the quality would be better on WebGear API, on-the-other-hand latency would be better on WebGear_RTC API. Also, WebRTC protocol accepts a wide range of devices, whereas WebGear is limited only to modern browsers. 
+**Answer:** WebGear_RTC is similar to [WeGear API](../../gears/webgear/overview/) in many aspects but utilizes [WebRTC](https://webrtc.org/) technology under the hood instead of Motion JPEG. You can choose any API according to your application, but the quality would be better on WebGear API, on-the-other-hand latency would be better on WebGear_RTC API. Also, WebRTC protocol accepts a wide range of devices, whereas WebGear is limited only to modern browsers. 
 
 &nbsp;
 

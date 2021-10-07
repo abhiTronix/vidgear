@@ -24,9 +24,17 @@ limitations under the License.
 
 ## **`monitor`**
 
-This parameter enables [`mss`](https://github.com/BoboTiG/python-mss) usage and sets the index of the monitor screen. This parameter is the most suitable for selecting index of multiple monitor screen from where you want get frames from. For example, its value can be assign to `-1`, to fetch frames from all connected multiple monitor screens. More information can be found [here ➶](https://python-mss.readthedocs.io/examples.html#a-screen-shot-to-grab-them-all)
+This parameter enables [`mss`](https://github.com/BoboTiG/python-mss) usage and is most suitable for selecting index of a specific screen _(from where you want retrieve frames)_ in multi-monitor setup. For example, its value can be assign to `2`, to fetch frames from a secondary monitor screen. More information can be found [here ➶](https://python-mss.readthedocs.io/api.html#mss.tools.mss.base.MSSBase.monitors)
 
-!!! warning "Any value on `monitor` parameter  will disable the [`backend`](#backend) parameter."
+!!! tip "You can assign `monitor` value to `-1` to fetch frames from all connected multiple monitor screens."
+
+!!! warning "Implication of using `monitor` parameter"
+    Any value on `monitor` parameter other than `None` in ScreenGear API: 
+    
+    * Will force `mss` library backend.
+    * Will output [`BGRA`](https://en.wikipedia.org/wiki/RGBA_color_model) colorspace frames instead of default `BGR`. 
+    * Will disable the [`backend`](../params/#backend) parameter.
+
 
 **Data-Type:** Integer
 

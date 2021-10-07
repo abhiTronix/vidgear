@@ -56,7 +56,7 @@ VidGear focuses on simplicity, and thereby lets programmers and software develop
 
 ## Gears
 
-> VidGear is built with multiple APIs a.k.a [Gears](gears), each with some unique functionality.
+> VidGear is built with multiple [Gears](gears) each with some unique functionality.
 
 Each Gear is designed exclusively to handle/control/process different data-specific & device-specific video streams, network streams, and media encoders/decoders.
 

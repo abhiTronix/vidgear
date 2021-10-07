@@ -146,7 +146,7 @@ writer.close()
 
 ## Using Compression Mode with controlled FrameRate
 
-WriteGear API provides [`-input_framerate`](../params/#supported-parameters)  attribute for its `options` dictionary parameter in Compression Mode, which allow us to control/set the constant framerate of the output video. 
+WriteGear API provides [`-input_framerate`](../../params/#supported-parameters)  attribute for its `options` dictionary parameter in Compression Mode, which allow us to control/set the constant framerate of the output video. 
 
 ??? tip "Advanced Tip for setting constant framerate"
 
@@ -217,7 +217,7 @@ writer.close()
 
 ## Using Compression Mode for Streaming URLs
 
-In Compression Mode, WriteGear also allows URL strings _(as output)_ for network streaming with its [`output_filename`](../params/#output_filename) parameter.   
+In Compression Mode, WriteGear also allows URL strings _(as output)_ for network streaming with its [`output_filename`](../../params/#output_filename) parameter.   
 
 In this example, we will stream live camera feed directly to Twitch:
 
@@ -294,7 +294,7 @@ writer.close()
 ## Using Compression Mode with Hardware encoders
 
 
-By default, WriteGear API uses `libx264` encoder for encoding output files in Compression Mode. But you can easily change encoder to your suitable [supported encoder](../params/#supported-encoders) by passing `-vcodec` FFmpeg parameter as an attribute with its [*output_param*](../params/#output_params) dictionary parameter. In addition to this, you can also specify the additional properties/features of your system's GPU easily. 
+By default, WriteGear API uses `libx264` encoder for encoding output files in Compression Mode. But you can easily change encoder to your suitable [supported encoder](../../params/#supported-encoders) by passing `-vcodec` FFmpeg parameter as an attribute with its [*output_param*](../../params/#output_params) dictionary parameter. In addition to this, you can also specify the additional properties/features of your system's GPU easily. 
 
 ??? warning "User Discretion Advised"
 

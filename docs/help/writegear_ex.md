@@ -25,7 +25,7 @@ limitations under the License.
 
 ## Using WriteGear's Compression Mode for YouTube-Live Streaming
 
-!!! new "New in v0.2.1" 
+??? new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
 !!! alert "This example assume you already have a [**YouTube Account with Live-Streaming enabled**](https://support.google.com/youtube/answer/2474026#enable) for publishing video."
@@ -96,7 +96,7 @@ writer.close()
 
 ## Using WriteGear's Compression Mode creating MP4 segments from a video stream
 
-!!! new "New in v0.2.1" 
+??? new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
 ```python
@@ -163,7 +163,7 @@ writer.close()
 
 ## Using WriteGear's Compression Mode to add external audio file input to video frames
 
-!!! new "New in v0.2.1" 
+??? new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
 !!! failure "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
@@ -228,7 +228,7 @@ We will be using [`cv_bridge`](http://wiki.ros.org/cv_bridge/Tutorials/Convertin
 
 In this example, we'll create a node that listens to a ROS image message topic, converts the recieved images messages into OpenCV frames, draws a circle on it, and then process these frames into a lossless compressed file format in real-time.
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
 !!! note "This example is vidgear implementation of this [wiki example](http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython)." 

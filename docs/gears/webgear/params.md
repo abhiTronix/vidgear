@@ -86,7 +86,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 
 * **`jpeg_compression_quality`**: _(int/float)_ This attribute controls the JPEG quantization factor. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. Its usage is as follows:
 
-    !!! new "New in v0.2.2" 
+    ??? new "New in v0.2.2" 
         `enable_infinite_frames` attribute was added in `v0.2.2`.
 
     ```python
@@ -98,7 +98,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 
 * **`jpeg_compression_fastdct`**: _(bool)_ This attribute if True, WebGear API uses fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`, and its usage is as follows:
 
-    !!! new "New in v0.2.2" 
+    ??? new "New in v0.2.2" 
         `enable_infinite_frames` attribute was added in `v0.2.2`.
 
     ```python
@@ -110,7 +110,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 
 * **`jpeg_compression_fastupsample`**: _(bool)_ This attribute if True, WebGear API use fastest color upsampling method. Its default value is `False`, and its usage is as follows:
 
-    !!! new "New in v0.2.2" 
+    ??? new "New in v0.2.2" 
         `enable_infinite_frames` attribute was added in `v0.2.2`.
 
     ```python
@@ -124,7 +124,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 
     !!! info "Supported `jpeg_compression_colorspace` colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
 
-    !!! new "New in v0.2.2" 
+    ??? new "New in v0.2.2" 
         `enable_infinite_frames` attribute was added in `v0.2.2`.
 
     ```python
@@ -136,7 +136,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 
 * **`enable_infinite_frames`** _(boolean)_ : Can be used to continue streaming _(instead of terminating immediately)_ with emulated blank frames with text "No Input", whenever the input source disconnects. Its default value is `False`. Its usage is as follows
 
-    !!! new "New in v0.2.1" 
+    ??? new "New in v0.2.1" 
         `enable_infinite_frames` attribute was added in `v0.2.1`.
 
     ```python
@@ -311,7 +311,7 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 
 !!! warning "WebGear automatically enforce GStreamer backend _(backend=`cv2.CAP_GSTREAMER`)_ for YouTube-livestreams!"
 
-!!! error "WebGear will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support. Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
+!!! error "WebGear will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
 
 **Data-Type:** Boolean
 

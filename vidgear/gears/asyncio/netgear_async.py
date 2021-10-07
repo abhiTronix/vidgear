@@ -62,8 +62,8 @@ class NetGear_Async:
     NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to NetGear API. Furthermore, NetGear_Async allows us to define
      our custom Server as source to transform frames easily before sending them across the network.
 
-    NetGear_Async now supports additional [**bidirectional data transmission**](../advanced/bidirectional_mode) between receiver(client) and sender(server) while transferring frames.
-    Users can easily build complex applications such as like [Real-Time Video Chat](../advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer) in just few lines of code.
+    NetGear_Async now supports additional **bidirectional data transmission** between receiver(client) and sender(server) while transferring frames.
+    Users can easily build complex applications such as like _Real-Time Video Chat_ in just few lines of code.
 
     In addition to all this, NetGear_Async API also provides internal wrapper around VideoGear, which itself provides internal access to both CamGear and PiGear APIs, thereby
     granting it exclusive power for transferring frames incoming from any source to the network.

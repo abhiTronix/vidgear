@@ -140,7 +140,7 @@ You can open any network stream _(such as RTSP/RTMP)_ just by providing its URL 
 
 Here's a high-level wrapper code around CamGear API to enable auto-reconnection during capturing: 
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
 ??? tip "Enforcing UDP stream"

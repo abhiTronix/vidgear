@@ -22,7 +22,7 @@ limitations under the License.
 
 !!! warning "Important Information"
     
-    * StreamGear **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../../../ffmpeg_install/) for its installation.
+    * StreamGear **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../../ffmpeg_install/) for its installation.
 
     * StreamGear API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system.
 

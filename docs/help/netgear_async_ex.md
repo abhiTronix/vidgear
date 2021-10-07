@@ -26,7 +26,7 @@ limitations under the License.
 
 The complete usage example is as follows: 
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
 ### Client + WebGear Server

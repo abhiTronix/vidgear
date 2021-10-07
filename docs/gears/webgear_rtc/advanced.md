@@ -1,4 +1,4 @@
-<!--
+s<!--
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
@@ -259,7 +259,7 @@ web.shutdown()
 
 WebGear_RTC also natively supports ASGI middleware classes with Starlette for implementing behavior that is applied across your entire ASGI application easily.
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
 !!! info "All supported middlewares can be found [here ➶](https://www.starlette.io/middleware/)"

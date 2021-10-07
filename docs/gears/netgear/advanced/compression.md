@@ -215,10 +215,10 @@ client.close()
 
 Frame Compression also supports specify incoming frames colorspace with compression. In following bare-minimum code, we will be sending [**GRAY**](https://en.wikipedia.org/wiki/Grayscale) frames from Server to Client:
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
-!!! example "This example works in conjunction with [Source ColorSpace manipulation for VideoCapture Gears ➶](../../../../../bonus/colorspace_manipulation/#source-colorspace-manipulation)"
+!!! example "This example works in conjunction with [Source ColorSpace manipulation for VideoCapture Gears ➶](../../../../bonus/colorspace_manipulation/#source-colorspace-manipulation)"
 
 !!! info "Supported colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
 
@@ -462,7 +462,7 @@ In this example we are going to implement a bare-minimum example, where we will 
 
 !!! note "This Dual Frame Compression feature also available for [Multi-Clients](../../advanced/multi_client/) Mode."
 
-!!! info "We're also using [`reducer()`](../../../../../bonus/reference/helper/#vidgear.gears.helper.reducer--reducer) Helper method for reducing frame-size on-the-go for additional performance."
+!!! info "We're also using [`reducer()`](../../../../bonus/reference/helper/#vidgear.gears.helper.reducer--reducer) Helper method for reducing frame-size on-the-go for additional performance."
 
 !!! success "Remember to define Frame Compression's [performance attributes](#performance-attributes) both on Server and Client ends in Dual Frame Compression to boost performance bidirectionally!"
 

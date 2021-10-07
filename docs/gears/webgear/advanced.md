@@ -32,10 +32,10 @@ WebGear by default only supports "BGR" colorspace frames as input, but you can u
 
 Let's implement a bare-minimum example using WebGear, where we will be sending [**GRAY**](https://en.wikipedia.org/wiki/Grayscale) frames to client browser:
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
-!!! example "This example works in conjunction with [Source ColorSpace manipulation for VideoCapture Gears ➶](../../../../bonus/colorspace_manipulation/#source-colorspace-manipulation)"
+!!! example "This example works in conjunction with [Source ColorSpace manipulation for VideoCapture Gears ➶](../../../bonus/colorspace_manipulation/#source-colorspace-manipulation)"
 
 !!! info "Supported `jpeg_compression_colorspace` colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
 
@@ -71,7 +71,7 @@ web.shutdown()
 
 ## Using WebGear with a Custom Source(OpenCV)
 
-!!! new "New in v0.2.1" 
+??? new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
 WebGear allows you to easily define your own custom Source that you want to use to transform your frames before sending them onto the browser. 
@@ -245,7 +245,7 @@ web.shutdown()
 
 WebGear natively supports ASGI middleware classes with Starlette for implementing behavior that is applied across your entire ASGI application easily.
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
 !!! info "All supported middlewares can be found [here ➶](https://www.starlette.io/middleware/)"

@@ -69,7 +69,7 @@ These tweak parameters can be used to transform input Camera-Source properties _
 
 	- [X] `THREAD_TIMEOUT` _(int/float)_: This attribute can be used to override the timeout value(positive number), that blocks the video-thread for at most ==timeout seconds== if no video-frame was available within that time, and otherwise raises the [Empty exception](https://docs.python.org/3/library/queue.html#queue.Empty) to prevent any never-ending deadlocks. Its default value is `None`, meaning no timeout at all.  Its usage is as follows:
 
-		!!! new "New in v0.2.1" 
+		??? new "New in v0.2.1" 
 			`THREAD_TIMEOUT` attribute added in `v0.2.1`.
 
 		```python
