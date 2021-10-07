@@ -48,17 +48,6 @@ if not (starlette is None):
     from starlette.applications import Starlette
     from starlette.middleware import Middleware
     from starlette.responses import JSONResponse, PlainTextResponse
-aiortc = import_dependency_safe("aiortc", error="silent")
-if not (aiortc is None):
-    from aiortc.rtcrtpsender import RTCRtpSender
-    from aiortc import (
-        RTCPeerConnection,
-        RTCSessionDescription,
-        VideoStreamTrack,
-    )
-    from aiortc.contrib.media import MediaRelay
-    from aiortc.mediastreams import MediaStreamError
-    from av import VideoFrame  # aiortc dependency
 
 # define logger
 logger = log.getLogger("WebGear_RTC")
@@ -73,214 +62,224 @@ VIDEO_CLOCK_RATE = 90000
 VIDEO_PTIME = 1 / 30  # 30fps
 VIDEO_TIME_BASE = fractions.Fraction(1, VIDEO_CLOCK_RATE)
 
+aiortc = import_dependency_safe("aiortc", error="silent")
+if not (aiortc is None):
+    from aiortc.rtcrtpsender import RTCRtpSender
+    from aiortc import (
+        RTCPeerConnection,
+        RTCSessionDescription,
+        VideoStreamTrack,
+    )
+    from aiortc.contrib.media import MediaRelay
+    from aiortc.mediastreams import MediaStreamError
+    from av import VideoFrame  # aiortc dependency
 
-class RTC_VideoServer(VideoStreamTrack):
-    """
-    Default Internal Video-Server for WebGear_RTC,
-    a inherit-class to aiortc's VideoStreamTrack API.
-    """
-
-    def __init__(
-        self,
-        enablePiCamera=False,
-        stabilize=False,
-        source=None,
-        camera_num=0,
-        stream_mode=False,
-        backend=0,
-        colorspace=None,
-        resolution=(640, 480),
-        framerate=25,
-        logging=False,
-        time_delay=0,
-        **options
-    ):
+    class RTC_VideoServer(VideoStreamTrack):
         """
-        This constructor method initializes the object state and attributes of the RTC_VideoServer class.
-
-        Parameters:
-            enablePiCamera (bool): provide access to PiGear(if True) or CamGear(if False) APIs respectively.
-            stabilize (bool): enable access to Stabilizer Class for stabilizing frames.
-            camera_num (int): selects the camera module index which will be used as Rpi source.
-            resolution (tuple): sets the resolution (i.e. `(width,height)`) of the Rpi source.
-            framerate (int/float): sets the framerate of the Rpi source.
-            source (based on input): defines the source for the input stream.
-            stream_mode (bool): controls the exclusive YouTube Mode.
-            backend (int): selects the backend for OpenCV's VideoCapture class.
-            colorspace (str): selects the colorspace of the input stream.
-            logging (bool): enables/disables logging.
-            time_delay (int): time delay (in sec) before start reading the frames.
-            options (dict): provides ability to alter Tweak Parameters of WebGear_RTC, CamGear, PiGear & Stabilizer.
+        Default Internal Video-Server for WebGear_RTC,
+        a inherit-class to aiortc's VideoStreamTrack API.
         """
 
-        super().__init__()  # don't forget this!
-
-        # raise error(s) for critical Class import
-        import_dependency_safe("aiortc" if aiortc is None else "")
-
-        # initialize global params
-        self.__logging = logging
-        self.__enable_inf = False  # continue frames even when video ends.
-        self.is_launched = False  # check if launched already
-        self.is_running = False  # check if running
-
-        self.__frame_size_reduction = 20  # 20% reduction
-        # retrieve interpolation for reduction
-        self.__interpolation = retrieve_best_interpolation(
-            ["INTER_LINEAR_EXACT", "INTER_LINEAR", "INTER_AREA"]
-        )
-
-        if options:
-            if "frame_size_reduction" in options:
-                value = options["frame_size_reduction"]
-                if isinstance(value, (int, float)) and value >= 0 and value <= 90:
-                    self.__frame_size_reduction = value
-                else:
-                    logger.warning("Skipped invalid `frame_size_reduction` value!")
-                del options["frame_size_reduction"]  # clean
-            if "enable_infinite_frames" in options:
-                value = options["enable_infinite_frames"]
-                if isinstance(value, bool):
-                    self.__enable_inf = value
-                else:
-                    logger.warning("Skipped invalid `enable_infinite_frames` value!")
-                del options["enable_infinite_frames"]  # clean
-
-        # define VideoGear stream.
-        self.__stream = VideoGear(
-            enablePiCamera=enablePiCamera,
-            stabilize=stabilize,
-            source=source,
-            camera_num=camera_num,
-            stream_mode=stream_mode,
-            backend=backend,
-            colorspace=colorspace,
-            resolution=resolution,
-            framerate=framerate,
-            logging=logging,
-            time_delay=time_delay,
+        def __init__(
+            self,
+            enablePiCamera=False,
+            stabilize=False,
+            source=None,
+            camera_num=0,
+            stream_mode=False,
+            backend=0,
+            colorspace=None,
+            resolution=(640, 480),
+            framerate=25,
+            logging=False,
+            time_delay=0,
             **options
-        )
+        ):
+            """
+            This constructor method initializes the object state and attributes of the RTC_VideoServer class.
 
-        # log it
-        if self.__logging:
-            logger.debug(
-                "Setting params:: Size Reduction:{}%{}".format(
-                    self.__frame_size_reduction,
-                    " and emulating infinite frames" if self.__enable_inf else "",
-                )
+            Parameters:
+                enablePiCamera (bool): provide access to PiGear(if True) or CamGear(if False) APIs respectively.
+                stabilize (bool): enable access to Stabilizer Class for stabilizing frames.
+                camera_num (int): selects the camera module index which will be used as Rpi source.
+                resolution (tuple): sets the resolution (i.e. `(width,height)`) of the Rpi source.
+                framerate (int/float): sets the framerate of the Rpi source.
+                source (based on input): defines the source for the input stream.
+                stream_mode (bool): controls the exclusive YouTube Mode.
+                backend (int): selects the backend for OpenCV's VideoCapture class.
+                colorspace (str): selects the colorspace of the input stream.
+                logging (bool): enables/disables logging.
+                time_delay (int): time delay (in sec) before start reading the frames.
+                options (dict): provides ability to alter Tweak Parameters of WebGear_RTC, CamGear, PiGear & Stabilizer.
+            """
+
+            super().__init__()  # don't forget this!
+
+            # initialize global params
+            self.__logging = logging
+            self.__enable_inf = False  # continue frames even when video ends.
+            self.is_launched = False  # check if launched already
+            self.is_running = False  # check if running
+
+            self.__frame_size_reduction = 20  # 20% reduction
+            # retrieve interpolation for reduction
+            self.__interpolation = retrieve_best_interpolation(
+                ["INTER_LINEAR_EXACT", "INTER_LINEAR", "INTER_AREA"]
             )
 
-        # initialize blank frame
-        self.blank_frame = None
+            if options:
+                if "frame_size_reduction" in options:
+                    value = options["frame_size_reduction"]
+                    if isinstance(value, (int, float)) and value >= 0 and value <= 90:
+                        self.__frame_size_reduction = value
+                    else:
+                        logger.warning("Skipped invalid `frame_size_reduction` value!")
+                    del options["frame_size_reduction"]  # clean
+                if "enable_infinite_frames" in options:
+                    value = options["enable_infinite_frames"]
+                    if isinstance(value, bool):
+                        self.__enable_inf = value
+                    else:
+                        logger.warning(
+                            "Skipped invalid `enable_infinite_frames` value!"
+                        )
+                    del options["enable_infinite_frames"]  # clean
 
-        # handles reset signal
-        self.__reset_enabled = False
+            # define VideoGear stream.
+            self.__stream = VideoGear(
+                enablePiCamera=enablePiCamera,
+                stabilize=stabilize,
+                source=source,
+                camera_num=camera_num,
+                stream_mode=stream_mode,
+                backend=backend,
+                colorspace=colorspace,
+                resolution=resolution,
+                framerate=framerate,
+                logging=logging,
+                time_delay=time_delay,
+                **options
+            )
 
-    def launch(self):
-        """
-        Launches VideoGear stream
-        """
-        if self.__logging:
-            logger.debug("Launching Internal RTC Video-Server")
-        self.is_launched = True
-        self.is_running = True
-        self.__stream.start()
-
-    async def next_timestamp(self):
-        """
-        VideoStreamTrack internal method for generating accurate timestamp.
-        """
-        # check if ready state not live
-        if self.readyState != "live":
-            # otherwise reset
-            self.stop()
-        if hasattr(self, "_timestamp") and not self.__reset_enabled:
-            self._timestamp += int(VIDEO_PTIME * VIDEO_CLOCK_RATE)
-            wait = self._start + (self._timestamp / VIDEO_CLOCK_RATE) - time.time()
-            await asyncio.sleep(wait)
-        else:
+            # log it
             if self.__logging:
                 logger.debug(
-                    "{} timestamps".format(
-                        "Resetting" if self.__reset_enabled else "Setting"
+                    "Setting params:: Size Reduction:{}%{}".format(
+                        self.__frame_size_reduction,
+                        " and emulating infinite frames" if self.__enable_inf else "",
                     )
                 )
-            self._start = time.time()
-            self._timestamp = 0
-            if self.__reset_enabled:
-                self.__reset_enabled = False
-                self.is_running = True
-        return self._timestamp, VIDEO_TIME_BASE
 
-    async def recv(self):
-        """
-        A coroutine function that yields `av.frame.Frame`.
-        """
-        # get next time-stamp
-        pts, time_base = await self.next_timestamp()
+            # initialize blank frame
+            self.blank_frame = None
 
-        # read video frame
-        f_stream = None
-        if self.__stream is None:
-            raise MediaStreamError
-        else:
-            f_stream = self.__stream.read()
+            # handles reset signal
+            self.__reset_enabled = False
 
-        # display blank if NoneType
-        if f_stream is None:
-            if self.blank_frame is None or not self.is_running:
+        def launch(self):
+            """
+            Launches VideoGear stream
+            """
+            if self.__logging:
+                logger.debug("Launching Internal RTC Video-Server")
+            self.is_launched = True
+            self.is_running = True
+            self.__stream.start()
+
+        async def next_timestamp(self):
+            """
+            VideoStreamTrack internal method for generating accurate timestamp.
+            """
+            # check if ready state not live
+            if self.readyState != "live":
+                # otherwise reset
+                self.stop()
+            if hasattr(self, "_timestamp") and not self.__reset_enabled:
+                self._timestamp += int(VIDEO_PTIME * VIDEO_CLOCK_RATE)
+                wait = self._start + (self._timestamp / VIDEO_CLOCK_RATE) - time.time()
+                await asyncio.sleep(wait)
+            else:
+                if self.__logging:
+                    logger.debug(
+                        "{} timestamps".format(
+                            "Resetting" if self.__reset_enabled else "Setting"
+                        )
+                    )
+                self._start = time.time()
+                self._timestamp = 0
+                if self.__reset_enabled:
+                    self.__reset_enabled = False
+                    self.is_running = True
+            return self._timestamp, VIDEO_TIME_BASE
+
+        async def recv(self):
+            """
+            A coroutine function that yields `av.frame.Frame`.
+            """
+            # get next time-stamp
+            pts, time_base = await self.next_timestamp()
+
+            # read video frame
+            f_stream = None
+            if self.__stream is None:
                 raise MediaStreamError
             else:
-                f_stream = self.blank_frame[:]
-            if not self.__enable_inf and not self.__reset_enabled:
-                if self.__logging:
-                    logger.debug("Video-Stream Ended.")
-                self.terminate()
-        else:
-            # create blank
-            if self.blank_frame is None:
-                self.blank_frame = create_blank_frame(
-                    frame=f_stream,
-                    text="No Input" if self.__enable_inf else "The End",
-                    logging=self.__logging,
+                f_stream = self.__stream.read()
+
+            # display blank if NoneType
+            if f_stream is None:
+                if self.blank_frame is None or not self.is_running:
+                    raise MediaStreamError
+                else:
+                    f_stream = self.blank_frame[:]
+                if not self.__enable_inf and not self.__reset_enabled:
+                    if self.__logging:
+                        logger.debug("Video-Stream Ended.")
+                    self.terminate()
+            else:
+                # create blank
+                if self.blank_frame is None:
+                    self.blank_frame = create_blank_frame(
+                        frame=f_stream,
+                        text="No Input" if self.__enable_inf else "The End",
+                        logging=self.__logging,
+                    )
+
+            # reducer frames size if specified
+            if self.__frame_size_reduction:
+                f_stream = await reducer(
+                    f_stream,
+                    percentage=self.__frame_size_reduction,
+                    interpolation=self.__interpolation,
                 )
 
-        # reducer frames size if specified
-        if self.__frame_size_reduction:
-            f_stream = await reducer(
-                f_stream,
-                percentage=self.__frame_size_reduction,
-                interpolation=self.__interpolation,
-            )
+            # construct `av.frame.Frame` from `numpy.nd.array`
+            frame = VideoFrame.from_ndarray(f_stream, format="bgr24")
+            frame.pts = pts
+            frame.time_base = time_base
 
-        # construct `av.frame.Frame` from `numpy.nd.array`
-        frame = VideoFrame.from_ndarray(f_stream, format="bgr24")
-        frame.pts = pts
-        frame.time_base = time_base
+            # return `av.frame.Frame`
+            return frame
 
-        # return `av.frame.Frame`
-        return frame
-
-    async def reset(self):
-        """
-        Resets timestamp clock
-        """
-        self.__reset_enabled = True
-        self.is_running = False
-
-    def terminate(self):
-        """
-        Gracefully terminates VideoGear stream
-        """
-        if not (self.__stream is None):
-            # terminate running flag
+        async def reset(self):
+            """
+            Resets timestamp clock
+            """
+            self.__reset_enabled = True
             self.is_running = False
-            if self.__logging:
-                logger.debug("Terminating Internal RTC Video-Server")
-            # terminate
-            self.__stream.stop()
-            self.__stream = None
+
+        def terminate(self):
+            """
+            Gracefully terminates VideoGear stream
+            """
+            if not (self.__stream is None):
+                # terminate running flag
+                self.is_running = False
+                if self.__logging:
+                    logger.debug("Terminating Internal RTC Video-Server")
+                # terminate
+                self.__stream.stop()
+                self.__stream = None
 
 
 class WebGear_RTC:
