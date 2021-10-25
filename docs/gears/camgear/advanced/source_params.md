@@ -41,7 +41,7 @@ These tweak parameters can be used to transform input Camera-Source properties _
 
 	These attributes are as follows:
 
-	- [X] `STREAM_RESOLUTION` _(string)_: This attribute can be used in CamGear's Stream Mode (`stream_mode=True`) for specifying supported stream resolution. Its possible values can be: `144p`, `240p`, `360p`, `480p`, `720p`, `1080p`, `1440p`, `2160p`, `worst`, `best`, and its default value is `best`. Its usage is as follows:
+	- [X] `STREAM_RESOLUTION` _(string)_: This attribute can be used in CamGear's Stream Mode (`stream_mode=True`) for specifying supported stream resolution. Its possible values can be: `144p`, `240p`, `360p`, `480p`, `720p`, `1080p`, `1440p`, `2160p`, `4320p`, `worst`, `best`, and its default value is `best`. Its usage is as follows:
 
 		!!! warning "In case specificed `STREAM_RESOLUTION` value is unavailable within Source Stream, it defaults to `best`!"
 

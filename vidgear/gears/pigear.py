@@ -104,12 +104,11 @@ class PiGear:
         self.__camera = PiCamera(camera_num=camera_num)
         self.__camera.resolution = tuple(resolution)
         self.__camera.framerate = framerate
-        if self.__logging:
-            logger.debug(
-                "Activating Pi camera at index: {} with resolution: {} & framerate: {}".format(
-                    camera_num, resolution, framerate
-                )
+        self.__logging and logger.debug(
+            "Activating Pi camera at index: {} with resolution: {} & framerate: {}".format(
+                camera_num, resolution, framerate
             )
+        )
 
         # initialize framerate variable
         self.framerate = framerate
@@ -127,12 +126,9 @@ class PiGear:
                 raise ValueError(
                     "[PiGear:ERROR] :: `HWFAILURE_TIMEOUT` value can only be between 1.0 ~ 10.0"
                 )
-            if self.__logging:
-                logger.debug(
-                    "Setting HW Failure Timeout: {} seconds".format(
-                        self.__failure_timeout
-                    )
-                )
+            self.__logging and logger.debug(
+                "Setting HW Failure Timeout: {} seconds".format(self.__failure_timeout)
+            )
         else:
             # reset improper values
             self.__failure_timeout = 2.0
@@ -140,8 +136,9 @@ class PiGear:
         try:
             # apply attributes to source if specified
             for key, value in options.items():
-                if self.__logging:
-                    logger.debug("Setting Parameter: {} = '{}'".format(key, value))
+                self.__logging and logger.debug(
+                    "Setting Parameter: {} = '{}'".format(key, value)
+                )
                 setattr(self.__camera, key, value)
         except Exception as e:
             # Catch if any error occurred
@@ -226,8 +223,7 @@ class PiGear:
             # check for frozen thread
             if time.time() - self.__t_elasped > self.__failure_timeout:
                 # log failure
-                if self.__logging:
-                    logger.critical("Camera Module Disconnected!")
+                self.__logging and logger.critical("Camera Module Disconnected!")
                 # prepare for clean exit
                 self.__exceptions = True
                 self.__terminate = True  # self-terminate
@@ -265,12 +261,11 @@ class PiGear:
                     if isinstance(self.color_space, int):
                         color_frame = cv2.cvtColor(frame, self.color_space)
                     else:
-                        if self.__logging:
-                            logger.warning(
-                                "Global color_space parameter value `{}` is not a valid!".format(
-                                    self.color_space
-                                )
+                        self.__logging and logger.warning(
+                            "Global color_space parameter value `{}` is not a valid!".format(
+                                self.color_space
                             )
+                        )
                         self.color_space = None
                 except Exception as e:
                     # Catch if any error occurred
@@ -328,8 +323,7 @@ class PiGear:
         """
         Safely terminates the thread, and release the VideoStream resources.
         """
-        if self.__logging:
-            logger.debug("Terminating PiGear Processes.")
+        self.__logging and logger.debug("Terminating PiGear Processes.")
 
         # make sure that the threads should be terminated
         self.__terminate = True

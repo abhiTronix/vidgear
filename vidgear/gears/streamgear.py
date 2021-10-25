@@ -124,10 +124,9 @@ class StreamGear:
 
         # check if valid FFmpeg path returned
         if self.__ffmpeg:
-            if self.__logging:
-                logger.debug(
-                    "Found valid FFmpeg executables: `{}`.".format(self.__ffmpeg)
-                )
+            self.__logging and logger.debug(
+                "Found valid FFmpeg executables: `{}`.".format(self.__ffmpeg)
+            )
         else:
             # else raise error
             raise RuntimeError(
@@ -175,14 +174,13 @@ class StreamGear:
                 self.__aspect_source = validation_results["resolution"]
                 self.__fps_source = validation_results["framerate"]
                 # log it
-                if self.__logging:
-                    logger.debug(
-                        "Given video_source is valid and has {}x{} resolution, and a framerate of {} fps.".format(
-                            self.__aspect_source[0],
-                            self.__aspect_source[1],
-                            self.__fps_source,
-                        )
+                self.__logging and logger.debug(
+                    "Given video_source is valid and has {}x{} resolution, and a framerate of {} fps.".format(
+                        self.__aspect_source[0],
+                        self.__aspect_source[1],
+                        self.__fps_source,
                     )
+                )
             else:
                 logger.warning("No valid video_source provided.")
         else:
@@ -291,24 +289,20 @@ class StreamGear:
                 ), "Given `{}` path has invalid file-extension w.r.t selected format: `{}`!".format(
                     output, self.__format.upper()
                 )
-                if self.__logging:
-                    logger.debug(
-                        "Path:`{}` is sucessfully configured for streaming.".format(
-                            abs_path
-                        )
+                self.__logging and logger.debug(
+                    "Path:`{}` is sucessfully configured for streaming.".format(
+                        abs_path
                     )
+                )
                 # assign it
                 self.__out_file = abs_path.replace(
                     "\\", "/"
                 )  # workaround for Windows platform only, others will not be affected
             # check if given output is a valid URL
             elif is_valid_url(self.__ffmpeg, url=output, logging=self.__logging):
-                if self.__logging:
-                    logger.debug(
-                        "URL:`{}` is sucessfully configured for streaming.".format(
-                            output
-                        )
-                    )
+                self.__logging and logger.debug(
+                    "URL:`{}` is sucessfully configured for streaming.".format(output)
+                )
                 self.__out_file = output
             else:
                 raise ValueError(
@@ -351,12 +345,11 @@ class StreamGear:
             self.__sourceframerate = (
                 25.0 if not (self.__inputframerate) else self.__inputframerate
             )
-            if self.__logging:
-                logger.debug(
-                    "InputFrame => Height:{} Width:{} Channels:{}".format(
-                        self.__inputheight, self.__inputwidth, self.__inputchannels
-                    )
+            self.__logging and logger.debug(
+                "InputFrame => Height:{} Width:{} Channels:{}".format(
+                    self.__inputheight, self.__inputwidth, self.__inputchannels
                 )
+            )
         # validate size of frame
         if height != self.__inputheight or width != self.__inputwidth:
             raise ValueError("[StreamGear:ERROR] :: All frames must have same size!")
@@ -492,10 +485,9 @@ class StreamGear:
         # set input framerate
         if self.__sourceframerate > 5.0 and not (self.__video_source):
             # minimum threshold is 5.0
-            if self.__logging:
-                logger.debug(
-                    "Setting Input framerate: {}".format(self.__sourceframerate)
-                )
+            self.__logging and logger.debug(
+                "Setting Input framerate: {}".format(self.__sourceframerate)
+            )
             input_parameters["-framerate"] = str(self.__sourceframerate)
 
         # handle input resolution and pixel format
@@ -544,8 +536,9 @@ class StreamGear:
             # reset to defaut if invalid
             bpp = 0.1000
         # log it
-        if self.__logging:
-            logger.debug("Setting bit-per-pixels: {} for this stream.".format(bpp))
+        self.__logging and logger.debug(
+            "Setting bit-per-pixels: {} for this stream.".format(bpp)
+        )
 
         # handle gop
         gop = self.__params.pop("-gop", 0)
@@ -555,8 +548,7 @@ class StreamGear:
             # reset to some recommended value
             gop = 2 * int(self.__sourceframerate)
         # log it
-        if self.__logging:
-            logger.debug("Setting GOP: {} for this stream.".format(gop))
+        self.__logging and logger.debug("Setting GOP: {} for this stream.".format(gop))
 
         # define and map default stream
         if self.__format != "hls":
@@ -655,8 +647,9 @@ class StreamGear:
             # calculate source aspect-ratio
             source_aspect_ratio = self.__inputwidth / self.__inputheight
             # log the process
-            if self.__logging:
-                logger.debug("Processing {} streams.".format(len(streams)))
+            self.__logging and logger.debug(
+                "Processing {} streams.".format(len(streams))
+            )
             # iterate over given streams
             for stream in streams:
                 stream_copy = stream.copy()  # make copy
@@ -758,8 +751,7 @@ class StreamGear:
                 # increment to next stream
                 stream_count += 1
             output_params["stream_count"] = stream_count
-            if self.__logging:
-                logger.debug("All streams processed successfully!")
+            self.__logging and logger.debug("All streams processed successfully!")
         else:
             logger.warning("Invalid type `-streams` skipped!")
 

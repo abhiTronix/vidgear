@@ -162,13 +162,12 @@ if not (aiortc is None):
             )
 
             # log it
-            if self.__logging:
-                logger.debug(
-                    "Setting params:: Size Reduction:{}%{}".format(
-                        self.__frame_size_reduction,
-                        " and emulating infinite frames" if self.__enable_inf else "",
-                    )
+            self.__logging and logger.debug(
+                "Setting params:: Size Reduction:{}%{}".format(
+                    self.__frame_size_reduction,
+                    " and emulating infinite frames" if self.__enable_inf else "",
                 )
+            )
 
             # initialize blank frame
             self.blank_frame = None
@@ -180,8 +179,7 @@ if not (aiortc is None):
             """
             Launches VideoGear stream
             """
-            if self.__logging:
-                logger.debug("Launching Internal RTC Video-Server")
+            self.__logging and logger.debug("Launching Internal RTC Video-Server")
             self.is_launched = True
             self.is_running = True
             self.__stream.start()
@@ -199,12 +197,11 @@ if not (aiortc is None):
                 wait = self._start + (self._timestamp / VIDEO_CLOCK_RATE) - time.time()
                 await asyncio.sleep(wait)
             else:
-                if self.__logging:
-                    logger.debug(
-                        "{} timestamps".format(
-                            "Resetting" if self.__reset_enabled else "Setting"
-                        )
+                self.__logging and logger.debug(
+                    "{} timestamps".format(
+                        "Resetting" if self.__reset_enabled else "Setting"
                     )
+                )
                 self._start = time.time()
                 self._timestamp = 0
                 if self.__reset_enabled:
@@ -233,8 +230,7 @@ if not (aiortc is None):
                 else:
                     f_stream = self.blank_frame[:]
                 if not self.__enable_inf and not self.__reset_enabled:
-                    if self.__logging:
-                        logger.debug("Video-Stream Ended.")
+                    self.__logging and logger.debug("Video-Stream Ended.")
                     self.terminate()
             else:
                 # create blank
@@ -275,8 +271,7 @@ if not (aiortc is None):
             if not (self.__stream is None):
                 # terminate running flag
                 self.is_running = False
-                if self.__logging:
-                    logger.debug("Terminating Internal RTC Video-Server")
+                self.__logging and logger.debug("Terminating Internal RTC Video-Server")
                 # terminate
                 self.__stream.stop()
                 self.__stream = None
@@ -413,12 +408,11 @@ class WebGear_RTC:
             )
 
         # log it
-        if self.__logging:
-            logger.debug(
-                "`{}` is the default location for saving WebGear_RTC data-files.".format(
-                    data_path
-                )
+        self.__logging and logger.debug(
+            "`{}` is the default location for saving WebGear_RTC data-files.".format(
+                data_path
             )
+        )
 
         # define Jinja2 templates handler
         self.__templates = Jinja2Templates(directory="{}/templates".format(data_path))
@@ -443,8 +437,7 @@ class WebGear_RTC:
         if source is None:
             self.config = {"server": None}
             self.__default_rtc_server = None
-            if self.__logging:
-                logger.warning("Given source is of NoneType!")
+            self.__logging and logger.warning("Given source is of NoneType!")
         else:
             # Handle video source
             self.__default_rtc_server = RTC_VideoServer(
@@ -520,8 +513,7 @@ class WebGear_RTC:
                 "[WebGear_RTC:ERROR] :: Assigned configuration is invalid!"
             )
         # return Starlette application
-        if self.__logging:
-            logger.debug("Running Starlette application.")
+        self.__logging and logger.debug("Running Starlette application.")
         return Starlette(
             debug=(True if self.__logging else False),
             routes=self.routes,
@@ -542,16 +534,14 @@ class WebGear_RTC:
         if not (self.__default_rtc_server is None) and not (
             self.__default_rtc_server.is_launched
         ):
-            if self.__logging:
-                logger.debug("Initiating Video Streaming.")
+            self.__logging and logger.debug("Initiating Video Streaming.")
             self.__default_rtc_server.launch()
 
         # setup RTC peer connection - interface represents a WebRTC connection
         # between the local computer and a remote peer.
         pc = RTCPeerConnection()
         self.__pcs.add(pc)
-        if self.__logging:
-            logger.info("Created WebRTC Peer Connection.")
+        self.__logging and logger.info("Created WebRTC Peer Connection.")
 
         # track ICE connection state changes
         @pc.on("iceconnectionstatechange")
@@ -654,8 +644,7 @@ class WebGear_RTC:
         Gracefully shutdown video-server
         """
         if not (self.config["server"] is None):
-            if self.__logging:
-                logger.debug("Closing Video Server.")
+            self.__logging and logger.debug("Closing Video Server.")
             self.config["server"].terminate()
             self.config["server"] = None
         # terminate internal server aswell.
