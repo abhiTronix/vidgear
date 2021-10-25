@@ -160,13 +160,8 @@ class Custom_RTCServer(VideoStreamTrack):
         else:
             print("Got frames")
 
-        print(frame1.shape)
-        print(frame2.shape)
-
         # concatenate frame
         frame = get_conc_frame(frame1, frame2)
-
-        print(frame.shape)
 
         # reducer frames size if you want more performance otherwise comment this line
         # frame = await reducer(frame, percentage=30)  # reduce frame by 30%

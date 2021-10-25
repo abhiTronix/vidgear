@@ -309,12 +309,18 @@ def check_WriteAccess(path, is_windows=False, logging=False):
 
     **Returns:** A boolean value, confirming whether Write-Access available, or not?.
     """
+    # check if path exists
     dirpath = Path(path)
-    if not (dirpath.exists() and dirpath.is_dir()):
-        logger.warning("Specified path `{}` doesn't exists.".format(path))
+    try:
+        if not (dirpath.exists() and dirpath.is_dir()):
+            logger.warning(
+                "Specified directory `{}` doesn't exists or valid.".format(path)
+            )
+            return False
+        else:
+            path = dirpath.resolve()
+    except:
         return False
-    else:
-        path = dirpath.resolve()
     # check path on *nix systems
     if not is_windows:
         uid = os.geteuid()
@@ -394,6 +400,7 @@ def get_supported_resolution(value, logging=False):
         "1080p",
         "1440p",
         "2160p",
+        "4320p",
         "worst",
         "best",
     ]

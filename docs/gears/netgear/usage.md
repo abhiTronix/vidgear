@@ -130,11 +130,11 @@ client.close()
 
 Open a terminal on Client System _(where you want to display the input frames received from the Server)_ and execute the following python code: 
 
-!!! info "Note down the IP-address of this system(required at Server's end) by executing the command: `hostname -I` and also replace it in the following code."
+!!! info "Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="6 11-17"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -189,7 +189,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="6 14-19"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
@@ -247,7 +247,7 @@ You can easily use NetGear directly with any Video Processing library such as Op
 
 Open a terminal on Client System _(where you want to display the input frames received from the Server)_ and execute the following python code: 
 
-!!! info "Note down the IP-address of this system(required at Server's end) by executing the command: `hostname -I` and also replace it in the following code."
+!!! info "Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -364,7 +364,7 @@ You can use any VideoCapture Gear in the similar manner. Let's implement given u
 
 Open a terminal on Client System _(where you want to display the input frames received from the Server)_ and execute the following python code: 
 
-!!! info "Note down the IP-address of this system(required at Server's end) by executing the command: `hostname -I` and also replace it in the following code."
+!!! info "Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 

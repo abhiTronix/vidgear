@@ -26,18 +26,20 @@ limitations under the License.
 
 ## Overview
 
-The [`options`](../../params/#options) dictionary parameter in CamGear gives user the ability to alter various parameters available within [OpenCV's VideoCapture Class](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80). 
+With CamGear's [`options`](../../params/#options) dictionary parameter, the user has the ability to alter various tweak parameters available within [OpenCV's VideoCapture Class](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80) by formatting them as its attributes. 
 
-These tweak parameters can be used to transform input Camera-Source properties _(such as its brightness, saturation, size, iso, gain etc.)_ seamlessly. All parameters supported by CamGear API are disscussed in this document.
+These tweak parameters can be used to transform input Camera-Source properties _(such as its brightness, saturation, resolution, iso, gain etc.)_ seamlessly. All parameters supported by CamGear API are disscussed in this document.
 
 &emsp; 
 
 
-### Exclusive CamGear Parameters
+### Exclusive CamGear Attributes
 
-!!! quote ""
+??? abstract "CamGear's Exclusive Attributes"
 
-	In addition to Source Tweak Parameters, CamGear also provides some exclusive attributes for its [`options`](../../params/#options) dictionary parameters. These attributes are as follows:
+	In addition to Source Tweak Parameters, CamGear also provides some exclusive attributes for its [`options`](../../params/#options) dictionary parameters. 
+
+	These attributes are as follows:
 
 	- [X] `STREAM_RESOLUTION` _(string)_: This attribute can be used in CamGear's Stream Mode (`stream_mode=True`) for specifying supported stream resolution. Its possible values can be: `144p`, `240p`, `360p`, `480p`, `720p`, `1080p`, `1440p`, `2160p`, `worst`, `best`, and its default value is `best`. Its usage is as follows:
 

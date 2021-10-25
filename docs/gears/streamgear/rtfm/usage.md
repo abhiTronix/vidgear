@@ -31,7 +31,7 @@ limitations under the License.
 
     * StreamGear API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system.
 
-    * By default, when no additional streams are defined, ==StreamGear generates a primary stream of same resolution and framerate[^1] as the input video  _(at the index `0`)_.==
+    * By default, ==StreamGear generates a primary stream of same resolution and framerate[^1] as the input video  _(at the index `0`)_.==
 
     * Always use `terminate()` function at the very end of the main code.
 
@@ -161,7 +161,7 @@ You can easily activate ==Low-latency Livestreaming in Real-time Frames Mode==, 
 
 === "DASH"
 
-    ```python
+    ```python hl_lines="11"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -212,7 +212,7 @@ You can easily activate ==Low-latency Livestreaming in Real-time Frames Mode==, 
 
 === "HLS"
 
-    ```python
+    ```python hl_lines="11"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -272,7 +272,7 @@ The complete usage example is as follows:
 
 === "DASH"
 
-    ```python
+    ```python hl_lines="28"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -322,7 +322,7 @@ The complete usage example is as follows:
 
 === "HLS"
 
-    ```python
+    ```python hl_lines="28"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -384,7 +384,7 @@ In this example, we will retrieve framerate from webcam video-stream, and set it
 
 === "DASH"
 
-    ```python
+    ```python hl_lines="10"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -436,7 +436,7 @@ In this example, we will retrieve framerate from webcam video-stream, and set it
 
 === "HLS"
 
-    ```python
+    ```python hl_lines="10"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -605,7 +605,7 @@ Similar to Single-Source Mode, you can easily generate any number of additional 
 
 The complete example is as follows:
 
-!!! danger "Important `-streams` attribute Information"
+??? danger "Important `-streams` attribute Information"
     * On top of these additional streams, StreamGear by default, generates a primary stream of same resolution and framerate[^1] as the input, at the index `0`.
     * :warning: Make sure your System/Machine/Server/Network is able to handle these additional streams, discretion is advised! 
     * You **MUST** need to define `-resolution` value for your stream, otherwise stream will be discarded!
@@ -617,7 +617,7 @@ The complete example is as follows:
 
 === "DASH"
 
-    ```python
+    ```python hl_lines="11-15"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -675,7 +675,7 @@ The complete example is as follows:
 
 === "HLS"
 
-    ```python
+    ```python hl_lines="11-15"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -748,7 +748,7 @@ The complete example is as follows:
 
 === "DASH"
 
-    ```python
+    ```python hl_lines="16-17"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -808,7 +808,7 @@ The complete example is as follows:
 
 === "HLS"
 
-    ```python
+    ```python hl_lines="16-17"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -1006,7 +1006,7 @@ The complete example is as follows:
 
 === "DASH"
 
-    ```python
+    ```python hl_lines="18-24"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -1071,7 +1071,7 @@ The complete example is as follows:
 
 === "HLS"
 
-    ```python
+    ```python hl_lines="18-24"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -1162,7 +1162,7 @@ In this example, we will be using `h264_vaapi` as our hardware encoder and also 
 
 === "DASH"
 
-    ```python
+    ```python hl_lines="16-18"
     # import required libraries
     from vidgear.gears import VideoGear
     from vidgear.gears import StreamGear
@@ -1223,7 +1223,7 @@ In this example, we will be using `h264_vaapi` as our hardware encoder and also 
 
 === "HLS"
 
-    ```python
+    ```python hl_lines="16-18"
     # import required libraries
     from vidgear.gears import VideoGear
     from vidgear.gears import StreamGear

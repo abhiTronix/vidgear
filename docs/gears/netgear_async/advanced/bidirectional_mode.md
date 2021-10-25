@@ -87,7 +87,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="6 33 40 53"
 # import library
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
@@ -160,7 +160,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="6 15 31"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
@@ -226,11 +226,11 @@ if __name__ == "__main__":
 
 Open a terminal on Client System _(where you want to display the input frames received from the Server)_ and execute the following python code: 
 
-!!! info "Note down the IP-address of this system(required at Server's end) by executing the command: `hostname -I` and also replace it in the following code."
+!!! info "Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="11-17"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
@@ -302,7 +302,7 @@ Now, Open the terminal on another Server System _(a Raspberry Pi with Camera Mod
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="12-18"
 # import library
 from vidgear.gears.asyncio import NetGear_Async
 from vidgear.gears import VideoGear
@@ -415,7 +415,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! alert "Server end can only send [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype as frame but not as data."
 
-```python
+```python hl_lines="8 33-48 54 67"
 # import library
 from vidgear.gears.asyncio import NetGear_Async
 from vidgear.gears.asyncio.helper import reducer
@@ -504,7 +504,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="7 18 34-43"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 from vidgear.gears.asyncio.helper import reducer

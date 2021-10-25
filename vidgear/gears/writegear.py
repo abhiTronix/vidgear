@@ -140,7 +140,7 @@ class WriteGear:
             else:
                 # log warning if
                 logger.warning(
-                    "`{}` isn't a valid system path or directory. skipped!".format(
+                    "`{}` isn't a valid system path or directory. Skipped!".format(
                         output_filename
                     )
                 )
@@ -232,7 +232,7 @@ class WriteGear:
             # check whether url is valid instead
             if self.__out_file is None:
                 self.__logging and logger.debug(
-                    "Checking whether output_filename is a URL.."
+                    "Checking whether output_filename is a valid URL.."
                 )
                 if is_valid_url(
                     self.__ffmpeg, url=output_filename, logging=self.__logging

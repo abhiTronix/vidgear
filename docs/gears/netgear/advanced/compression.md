@@ -85,12 +85,14 @@ For implementing Frame Compression, NetGear API currently provide following excl
         # activate jpeg encoding and set quality 95%
         options = {"jpeg_compression": True, "jpeg_compression_quality": 95}
         ```
+
     * `jpeg_compression_fastdct`: _(bool)_ This attribute if True, NetGear API uses fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`, and its usage is as follows:
     
         ```python
         # activate jpeg encoding and enable fast dct
         options = {"jpeg_compression": True, "jpeg_compression_fastdct": True}
         ```
+
     * `jpeg_compression_fastupsample`: _(bool)_ This attribute if True, NetGear API use fastest color upsampling method. Its default value is `False`, and its usage is as follows:
     
         ```python
@@ -115,7 +117,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="11-14"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
@@ -228,7 +230,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="7 11"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
@@ -332,13 +334,13 @@ client.close()
 
 Open a terminal on Client System _(where you want to display the input frames received from the Server)_ and execute the following python code: 
 
-!!! info "Note down the IP-address of this system(required at Server's end) by executing the command: `hostname -I` and also replace it in the following code."
+!!! info "Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
 !!! note "If compression is enabled at Server, then Client will automatically enforce Frame Compression with its performance attributes."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="9-15"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -393,7 +395,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="20-25"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
@@ -473,7 +475,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! tip "You can terminate both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="12-16 42"
 # import required libraries
 from vidgear.gears import NetGear
 from vidgear.gears.helper import reducer
@@ -544,7 +546,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="8-12 35"
 # import required libraries
 from vidgear.gears import NetGear
 from vidgear.gears.helper import reducer

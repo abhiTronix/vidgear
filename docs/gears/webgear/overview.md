@@ -111,7 +111,7 @@ from vidgear.gears.asyncio import WebGear
 ??? new "New in v0.2.1" 
 	New Standalone **WebGear's Default Theme** was added in `v0.2.1`.
 
-The WebGear API by default uses simple & elegant [**WebGear's Default Theme**](https://github.com/abhiTronix/vidgear-vitals#webgear-default-theme) by [@abhitronix](https://github.com/abhiTronix), which looks like something as follows:
+The WebGear API by default uses simple & elegant [**WebGear's Default Theme**](https://github.com/abhiTronix/vidgear-vitals#webgear-default-theme) which looks like something as follows:
 
 ### Index.html
 

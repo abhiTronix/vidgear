@@ -665,7 +665,7 @@ We ask contributors to join the Gitter community channel for quick discussions:
 
 > VidGear is free and open source and will always remain so. :heart:
 
-It is (like all open source software) a labour of love and something I am doing with my own free time. If you would like to say thanks, please feel free to make a donation:
+It is something I am doing with my own free time. If you would like to say thanks, please feel free to make a donation:
 
 [![ko-fi][kofi-badge]][kofi]
 

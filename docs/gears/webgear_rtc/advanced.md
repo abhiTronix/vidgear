@@ -1,4 +1,4 @@
-s<!--
+<!--
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
@@ -36,7 +36,7 @@ Let's implement a bare-minimum example using WebGear_RTC as Real-time Broadcaste
 
 !!! tip "For accessing WebGear_RTC on different Client Devices on the network, we use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](../../../help/webgear_rtc_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear_rtc)"
 
-```python
+```python hl_lines="8"
 # import required libraries
 import uvicorn
 from vidgear.gears.asyncio import WebGear_RTC
@@ -69,10 +69,15 @@ WebGear_RTC allows you to easily define your own Custom Media Server with a cust
 Let's implement a bare-minimum example with a Custom Source using WebGear_RTC API and OpenCV:
 
 
+!!! warning "Auto-Reconnection will NOT work with Custom Source(OpenCV)"
+
+    - The WebGear_RTC's inbuilt auto-reconnection feature only available with its internal [**RTC_VideoServer**](https://github.com/abhiTronix/vidgear/blob/38a7f54eb911218e1fd6a95e243da2fba51a6991/vidgear/gears/asyncio/webgear_rtc.py#L77) which can seamlessly handle restarting of source/server any number of times, and therefore will fail to work with your user-defined Custom Source(OpenCV). 
+    - This means that once the browser tab with WebGear_RTC stream is closed, it will require you to manually close and restart the WebGear_RTC server, in order to refresh or reopen it in a new browser/tab successfully.
+
 !!! danger "Make sure your Custom Media Server Class is inherited from aiortc's [VideoStreamTrack](https://github.com/aiortc/aiortc/blob/a270cd887fba4ce9ccb680d267d7d0a897de3d75/src/aiortc/mediastreams.py#L109) only and at-least implements `recv()` and `terminate()` methods as shown in following example, otherwise WebGear_RTC will throw ValueError!"
 
 
-```python
+```python hl_lines="13-63 67"
 # import necessary libs
 import uvicorn, asyncio, cv2
 from av import VideoFrame
@@ -157,7 +162,7 @@ web.shutdown()
 
 With our highly extensible WebGear_RTC API, you can add your own mounting points, where additional files located, as follows:
 
-```python
+```python hl_lines="18-20"
 # import libs
 import uvicorn
 from starlette.routing import Mount
@@ -215,7 +220,7 @@ Suppose we want to add a simple **`hello world` webpage** to our WebGear_RTC ser
  
 Then in our application code, we can integrate this webpage route, as follows:
 
-```python
+```python hl_lines="11-14 28"
 # import libs
 import uvicorn, asyncio
 from starlette.templating import Jinja2Templates
@@ -270,7 +275,7 @@ For this example, let's use [`CORSMiddleware`](https://www.starlette.io/middlewa
 
 !!! tip "Starlette provides several arguments for enabling origins, methods, or headers for CORSMiddleware API. More information can be found [here ➶](https://www.starlette.io/middleware/#corsmiddleware)"
 
-```python
+```python hl_lines="18-26"
 # import libs
 import uvicorn, asyncio
 from starlette.middleware import Middleware

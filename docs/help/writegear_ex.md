@@ -25,6 +25,8 @@ limitations under the License.
 
 ## Using WriteGear's Compression Mode for YouTube-Live Streaming
 
+In Compression Mode, you can also use WriteGear for Youtube-Livestreaming. The example is as follows:   
+
 ??? new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
@@ -32,7 +34,7 @@ limitations under the License.
 
 !!! danger "Make sure to change [_YouTube-Live Stream Key_](https://support.google.com/youtube/answer/2907883#zippy=%2Cstart-live-streaming-now) with yours in following code before running!"
 
-```python
+```python hl_lines="15-24 28 32"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -94,12 +96,14 @@ writer.close()
 &nbsp;
 
 
-## Using WriteGear's Compression Mode creating MP4 segments from a video stream
+## Using WriteGear's Compression Mode for creating MP4 segments
+
+In Compression Mode, you can also use WriteGear for creating MP4 segments from almost any video source. The example is as follows:   
 
 ??? new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
-```python
+```python hl_lines="13-20 24"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import WriteGear
@@ -163,12 +167,14 @@ writer.close()
 
 ## Using WriteGear's Compression Mode to add external audio file input to video frames
 
+You can also use WriteGear for merging external audio with live video-source:  
+
 ??? new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
 !!! failure "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
 
-```python
+```python hl_lines="11-12"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear

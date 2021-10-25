@@ -96,7 +96,7 @@ In Compression Mode, WriteGear API contains [`rgb_mode`](../../../../bonus/refer
 
 The complete usage example is as follows:
 
-```python
+```python hl_lines="26"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import WriteGear
@@ -164,7 +164,7 @@ WriteGear API provides [`-input_framerate`](../../params/#supported-parameters) 
 
 In this code we will retrieve framerate from video stream, and set it as `-input_framerate` attribute for `option` parameter in WriteGear API:
 
-```python
+```python hl_lines="10"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -227,7 +227,7 @@ In this example, we will stream live camera feed directly to Twitch:
 
 !!! alert "Make sure to change [_Twitch Stream Key_](https://www.youtube.com/watch?v=xwOtOfPMIIk) with yours in following code before running!"
 
-```python
+```python hl_lines="11-16 20 24"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -318,7 +318,7 @@ In this example, we will be using `h264_vaapi` as our hardware encoder and also 
     ```
 
 
-```python
+```python hl_lines="11-13"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -376,7 +376,7 @@ writer.close()
 
 You can easily use WriterGear API directly with any Video Processing library(_For e.g OpenCV itself_) in Compression Mode. The complete usage example is as follows:
 
-```python
+```python hl_lines="6"
 # import required libraries
 from vidgear.gears import WriteGear
 import cv2
@@ -578,7 +578,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
 
 !!! warning "You **MUST** use [`-input_framerate`](../../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
-```python
+```python hl_lines="11-15"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import WriteGear

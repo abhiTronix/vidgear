@@ -116,7 +116,7 @@ You can be a [**Stargazer :star2:**][stargazer] by starring us on Github, it hel
 
 > VidGear is free and open source and will always remain so. :heart:
 
-It is (like all open source software) a labour of love and something I am doing with my own free time. If you would like to say thanks, please feel free to make a donation:
+It is something I am doing with my own free time. If you would like to say thanks, please feel free to make a donation:
 
 <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#eba100', 'W7W8WTYO');kofiwidget2.draw();</script> 
 

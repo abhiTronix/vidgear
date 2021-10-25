@@ -91,7 +91,7 @@ You can access and run WebGear VideoStreamer Server programmatically in your pyt
 !!! tip "For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](../../../help/webgear_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear)"
 
 
-```python
+```python hl_lines="7-10"
 # import required libraries
 import uvicorn
 from vidgear.gears.asyncio import WebGear

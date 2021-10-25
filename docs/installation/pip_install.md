@@ -92,7 +92,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
             
             ```
 
-### Core Prerequisites
+### Core Prerequisites :warning:
 
 * #### OpenCV 
 
@@ -114,7 +114,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
     ```
 
 
-### API Specific Prerequisites
+### API Specific Prerequisites 
 
 * #### FFmpeg 
 
@@ -273,10 +273,10 @@ pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[asyncio]
 **Or you can also download its wheel (`.whl`) package from our repository's [releases](https://github.com/abhiTronix/vidgear/releases) section, and thereby can be installed as follows:**
 
 ```sh
-pip install vidgear-0.2.2-py3-none-any.whl
+pip install vidgear-0.2.3-py3-none-any.whl
 
 # or with asyncio support
-pip install vidgear-0.2.2-py3-none-any.whl[asyncio]
+pip install vidgear-0.2.3-py3-none-any.whl[asyncio]
 ```
 
 &nbsp;

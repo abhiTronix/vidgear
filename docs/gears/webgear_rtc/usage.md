@@ -76,7 +76,7 @@ You can access and run WebGear_RTC VideoStreamer Server programmatically in your
 
 !!! info "We are using `frame_size_reduction` attribute for frame size reduction _(in percentage)_ to be streamed with its [`options`](../params/#options) dictionary parameter to cope with performance-throttling in this example."
 
-```python
+```python hl_lines="7"
 # import required libraries
 import uvicorn
 from vidgear.gears.asyncio import WebGear_RTC

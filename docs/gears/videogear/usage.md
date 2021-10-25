@@ -77,11 +77,10 @@ Following is the bare-minimum code you need to access PiGear API with VideoGear:
 
 !!! warning "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using PiGear Backend, otherwise nothing will work."
 
-```python
+```python hl_lines="6"
 # import required libraries
 from vidgear.gears import VideoGear
 import cv2
-
 
 # enable enablePiCamera boolean flag to access PiGear API backend
 stream = VideoGear(enablePiCamera=True).start()
@@ -125,7 +124,7 @@ The usage example is as follows:
 
 !!! warning "The stabilizer might be slower for High-Quality/Resolution videos-frames."
 
-```python
+```python hl_lines="7"
 # import required libraries
 from vidgear.gears import VideoGear
 import numpy as np
@@ -237,7 +236,7 @@ VideoGear API also supports **Colorspace Manipulation** but **NOT Direct** like 
 In following example code, we will convert source colorspace to [**HSV**](https://en.wikipedia.org/wiki/HSL_and_HSV) on initialization:
 
 
-```python
+```python hl_lines="6"
 # import required libraries
 from vidgear.gears import VideoGear
 import cv2

@@ -113,7 +113,7 @@ from vidgear.gears.asyncio import WebGear_RTC
 
 ## WebGear_RTC's Default Template
 
-The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Theme**](https://github.com/abhiTronix/vidgear-vitals#webgear_rtc-default-theme) by [@abhitronix](https://github.com/abhiTronix), which looks like something as follows:
+The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Theme**](https://github.com/abhiTronix/vidgear-vitals#webgear_rtc-default-theme) which looks like something as follows:
 
 ### Index.html
 

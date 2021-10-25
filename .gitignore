@@ -1,1 +1,17 @@
 __pycache__
+.pytest_cache
+.ipynb_checkpoints
+.mypy_cache
+.vscode
+venv
+Pipfile.lock
+env3.*
+env
+.coverage
+coverage.xml
+.netlify
+.idea
+
+# vim temporary files
+*~
+.*.sw?

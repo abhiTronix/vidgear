@@ -76,6 +76,24 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
 
 &nbsp;
 
+## How to find local IP-address on different OS platforms?
+
+**Answer:** For finding local IP-address of your machine:
+
+=== "On Linux OS"
+
+    - [x] **Follow [this tutorial ➶](https://linuxize.com/post/how-to-find-ip-address-linux/#find-your-private-ip-address)**
+
+=== "On Windows OS"
+
+    - [x] **Follow [this tutorial ➶](https://www.avast.com/c-how-to-find-ip-address)**
+
+=== "On MAC OS"
+    
+    - [x] **Follow [this tutorial ➶](https://www.avast.com/c-how-to-find-ip-address)**
+
+&nbsp;
+
 ## How to send data along with frames in Multi-Servers and Multi-Clients Modes?
 
 **Answer:** See [Multi-Servers usage example ➶](../../gears/netgear/advanced/multi_server/#using-multi-servers-mode-with-custom-data-transfer) and [Multi-Clients usage example ➶](../../gears/netgear/advanced/multi_client/#using-multi-clients-mode-with-custom-data-transfer)

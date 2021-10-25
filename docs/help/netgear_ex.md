@@ -39,7 +39,7 @@ Open a terminal on Client System where you want to display the input frames _(an
 
 !!! alert "High CPU utilization may occur on Client's end. User discretion is advised."
 
-!!! note "Note down the IP-address of this system _(required at Server's end)_ by executing the  `hostname -I` command and also replace it in the following code.""
+!!! info "Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
 ```python
 # import necessary libs
@@ -191,7 +191,7 @@ Open a terminal on Client System where you want to display the input frames _(an
 
 !!! alert "High CPU utilization may occur on Client's end. User discretion is advised."
 
-!!! note "Note down the IP-address of this system _required at Server's end)_ by executing the  `hostname -I` command and also replace it in the following code.""
+!!! info "Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
 ```python
 # import required libraries
