@@ -310,6 +310,7 @@ class NetGear:
                 assert check_WriteAccess(
                     custom_cert_location,
                     is_windows=True if os.name == "nt" else False,
+                    logging=self.__logging,
                 ), "[NetGear:ERROR] :: Permission Denied!, cannot write ZMQ authentication certificates to '{}' directory!".format(
                     value
                 )

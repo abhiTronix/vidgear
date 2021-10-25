@@ -248,7 +248,9 @@ class StreamGear:
             abs_path = os.path.abspath(output)
 
             if check_WriteAccess(
-                os.path.dirname(abs_path), is_windows=self.__os_windows
+                os.path.dirname(abs_path),
+                is_windows=self.__os_windows,
+                logging=self.__logging,
             ):
                 # check if given path is directory
                 valid_extension = "mpd" if self.__format == "dash" else "m3u8"
