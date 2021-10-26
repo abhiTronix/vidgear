@@ -20,6 +20,95 @@ limitations under the License.
 
 # Release Notes
 
+
+## v0.2.3 (2021-10-26)
+
+??? tip "New Features"
+    - [x] **CamGear:** 
+        * Added support for `4K` Streaming URLs.
+    - [x] **Maintenance:**
+        * Added new `.gitignore`  for specifying intentionally untracked files to ignore
+            + Added more files entries to `.gitignore`.
+        * Added `.gitattributes` to manage how Git reads line endings.
+            + Enabled `auto` default behavior, in case people don't have `core.autocrlf` set.
+            + Enforced LF line-endings for selective files types.
+            + Added Binary data files that specifies they are not text, and git should not try to change them.
+            + Added Language aware diff headers.
+            + Added Linguist language overrides.
+        * Introduced python short-circuiting for handling logging logic. This behavior is also summarized in the [python docs](https://docs.python.org/3/library/stdtypes.html#boolean-operations-and-or-not)
+    - [x] **Docs:**
+        * Added new ScreenGear with WebGear_RTC API bonus example.
+        * Added support for `hl_lines` argument for highlighting specific code lines.
+        * Added drop-shadow effects for its `slate` theme to improve visibility.
+
+??? success "Updates/Improvements"
+    - [x] WriteGear:
+        * Enabled logging for `check_WriteAccess` method in WriteGear, StreamGear and NetGear.
+    - [x] StreamGear: 
+        * Updated default stream_count dict key value to 1.
+    - [x] Docs:
+        * Added warning for ScreenGear outputting RGBA frames instead of default BGR frames with `mss` backend.
+        * Added warnings for properly formatting output_params when assigning external audio-source in WriteGear.
+        * Added depreciation notice for Python 3.6 legacies.
+        * Restructured docs to make it more user-friendly.
+        * Updated, Extended and Improved context.
+        * Improved code comments.
+        * Updated docs admonitions.
+        * Updated Zenodo badge.
+    - [x] CI: 
+        * Migrated to new Codecov Uploader in Azure Pipelines.
+            + Support for the Bash Uploader will be deprecated on February 1st, 2022. See: https://docs.codecov.com/docs/about-the-codecov-bash-uploader
+            + Added commands for signature and SHASUM verification to ensure integrity of the Uploader before use.
+            + Replaced related bash commands.
+        * Replaced `env` with `export` in ci_linux.yml.
+        * Replaced `bubkoo/needs-more-info@v1` with `wow-actions/needs-more-info@v1`.
+        * Added codecov secret token through `env` variable. 
+        * Added wildcard to skip CI tests for doc(`.md`) files.
+        * Added `.md` files to Codecov ignore list.
+
+??? danger "Breaking Updates/Changes"
+    - [ ] `check_WriteAccess` will now return as invalid path if writing directory does not exists. This will effect output file handling in WriteGear and StreamGear APIs.
+
+??? bug "Bug-fixes"
+    - [x] StreamGear:
+        * Fixed StreamGear Malformed URI Error with HLS Segments [PR #243 by @Vboivin]
+            + Removed the extra '%' character from the naming convention for segment files.
+            + Used stream_count variable to alter template for hls segment filenames.
+    - [x] WriteGear: 
+        * Fixed bug in disable_force_termination logic which accidentally disables force termination.
+    - [x] WebGear_RTC: 
+        * Fixed name 'VideoStreamTrack' is not defined bug.
+    - [x] Setup.py: 
+        * Fixed TypeError bug.
+        * Fixed invalid `latest_version` retrieval.
+    - [x] Helper:
+        * Fixed `check_WriteAccess` failing to recognize correct permission for writing the output file on windows platform. 
+            + Implemented separate logic for `Windows` and `*nix` platforms.
+            + Added new `stat` import.
+            + Improved warnings and error handling.
+            + Added logging parameter to `check_WriteAccess`.
+        * Fixed bug in check_WriteAccess that throws `OSError` while handling URLs.
+    - [x] Docs:
+        * Fixed bugs in WriteGear's Compression Mode with Live Audio Input example.
+        * Several internal and external webpage links typos fixed.
+        * Fixed several language typos.
+    - [x] CI: 
+        * Fixed Azure Pipeline coverage upload bugs.
+        * Fixed random errors in CamGear `stream_mode` test.
+    - [x] Bash:
+        * Removed the Windows carriage returns from the shell scripts to be able to execute them on Linux. 
+    - [x] Fixed logging comments.
+
+??? question "Pull Requests"
+    * PR #249
+    * PR #261
+
+
+&nbsp; 
+
+&nbsp; 
+
+
 ## v0.2.2 (2021-09-02)
 
 ??? tip "New Features"

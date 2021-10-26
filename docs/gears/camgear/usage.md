@@ -73,7 +73,7 @@ CamGear API provides direct support for piping video streams from various popula
 
     **Checkout [this FAQ ➶](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.**
 
-???+ info "Exclusive CamGear Attributes"
+??? info "Exclusive CamGear Attributes"
     CamGear also provides exclusive attributes: 
     
     - `STREAM_RESOLUTION` _(for specifying stream resolution)_
@@ -138,7 +138,7 @@ The complete usage example is as follows:
 
 !!! bug "Not all resolutions are supported with YouTube Livestreams. See issue #244"
 
-???+ info "Exclusive CamGear Attributes"
+??? info "Exclusive CamGear Attributes"
     CamGear also provides exclusive attributes:
 
     - `STREAM_RESOLUTION`: _(for specifying stream resolution)_

@@ -23,7 +23,7 @@ limitations under the License.
 <img src="assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" loading="lazy" width="90%" />
 
 <h2 align="center">
-	<img src="assets/images/tagline.svg" alt="VidGear tagline" loading="lazy" width="40%"/>
+	<img src="assets/images/tagline.svg" alt="VidGear tagline" loading="lazy" width="45%"/>
 </h2>
 
 &thinsp;

@@ -29,7 +29,7 @@
 *.html linguist-language=HTML
 *.yml linguist-language=YAML
 
-# Enforce LF
+# Override LF on some files
 *.js    text eol=lf
 *.md    text eol=lf
 *.css   text eol=lf
