@@ -50,12 +50,11 @@
     <span class=bp>self</span><span class=o>.</span><span class=n>__camera</span> <span class=o>=</span> <span class=n>PiCamera</span><span class=p>(</span><span class=n>camera_num</span><span class=o>=</span><span class=n>camera_num</span><span class=p>)</span>
     <span class=bp>self</span><span class=o>.</span><span class=n>__camera</span><span class=o>.</span><span class=n>resolution</span> <span class=o>=</span> <span class=nb>tuple</span><span class=p>(</span><span class=n>resolution</span><span class=p>)</span>
     <span class=bp>self</span><span class=o>.</span><span class=n>__camera</span><span class=o>.</span><span class=n>framerate</span> <span class=o>=</span> <span class=n>framerate</span>
-    <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-        <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
-            <span class=s2>&quot;Activating Pi camera at index: </span><span class=si>{}</span><span class=s2> with resolution: </span><span class=si>{}</span><span class=s2> &amp; framerate: </span><span class=si>{}</span><span class=s2>&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
-                <span class=n>camera_num</span><span class=p>,</span> <span class=n>resolution</span><span class=p>,</span> <span class=n>framerate</span>
-            <span class=p>)</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+        <span class=s2>&quot;Activating Pi camera at index: </span><span class=si>{}</span><span class=s2> with resolution: </span><span class=si>{}</span><span class=s2> &amp; framerate: </span><span class=si>{}</span><span class=s2>&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
+            <span class=n>camera_num</span><span class=p>,</span> <span class=n>resolution</span><span class=p>,</span> <span class=n>framerate</span>
         <span class=p>)</span>
+    <span class=p>)</span>
 
     <span class=c1># initialize framerate variable</span>
     <span class=bp>self</span><span class=o>.</span><span class=n>framerate</span> <span class=o>=</span> <span class=n>framerate</span>
@@ -73,12 +72,9 @@
             <span class=k>raise</span> <span class=ne>ValueError</span><span class=p>(</span>
                 <span class=s2>&quot;[PiGear:ERROR] :: `HWFAILURE_TIMEOUT` value can only be between 1.0 ~ 10.0&quot;</span>
             <span class=p>)</span>
-        <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-            <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
-                <span class=s2>&quot;Setting HW Failure Timeout: </span><span class=si>{}</span><span class=s2> seconds&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
-                    <span class=bp>self</span><span class=o>.</span><span class=n>__failure_timeout</span>
-                <span class=p>)</span>
-            <span class=p>)</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+            <span class=s2>&quot;Setting HW Failure Timeout: </span><span class=si>{}</span><span class=s2> seconds&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>__failure_timeout</span><span class=p>)</span>
+        <span class=p>)</span>
     <span class=k>else</span><span class=p>:</span>
         <span class=c1># reset improper values</span>
         <span class=bp>self</span><span class=o>.</span><span class=n>__failure_timeout</span> <span class=o>=</span> <span class=mf>2.0</span>
@@ -86,8 +82,9 @@
     <span class=k>try</span><span class=p>:</span>
         <span class=c1># apply attributes to source if specified</span>
         <span class=k>for</span> <span class=n>key</span><span class=p>,</span> <span class=n>value</span> <span class=ow>in</span> <span class=n>options</span><span class=o>.</span><span class=n>items</span><span class=p>():</span>
-            <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-                <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Setting Parameter: </span><span class=si>{}</span><span class=s2> = &#39;</span><span class=si>{}</span><span class=s2>&#39;&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span><span class=n>key</span><span class=p>,</span> <span class=n>value</span><span class=p>))</span>
+            <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+                <span class=s2>&quot;Setting Parameter: </span><span class=si>{}</span><span class=s2> = &#39;</span><span class=si>{}</span><span class=s2>&#39;&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span><span class=n>key</span><span class=p>,</span> <span class=n>value</span><span class=p>)</span>
+            <span class=p>)</span>
             <span class=nb>setattr</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>__camera</span><span class=p>,</span> <span class=n>key</span><span class=p>,</span> <span class=n>value</span><span class=p>)</span>
     <span class=k>except</span> <span class=ne>Exception</span> <span class=k>as</span> <span class=n>e</span><span class=p>:</span>
         <span class=c1># Catch if any error occurred</span>
@@ -190,8 +187,7 @@
     <span class=sd>&quot;&quot;&quot;</span>
 <span class=sd>    Safely terminates the thread, and release the VideoStream resources.</span>
 <span class=sd>    &quot;&quot;&quot;</span>
-    <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-        <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Terminating PiGear Processes.&quot;</span><span class=p>)</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Terminating PiGear Processes.&quot;</span><span class=p>)</span>
 
     <span class=c1># make sure that the threads should be terminated</span>
     <span class=bp>self</span><span class=o>.</span><span class=n>__terminate</span> <span class=o>=</span> <span class=kc>True</span>

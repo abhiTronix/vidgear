@@ -107,12 +107,11 @@
                     <span class=c1># extract stream URL as source</span>
                     <span class=n>source</span> <span class=o>=</span> <span class=n>parsed_stream</span><span class=o>.</span><span class=n>url</span>
                     <span class=c1># log progress</span>
-                    <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-                        <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
-                            <span class=s2>&quot;YouTube source ID: `</span><span class=si>{}</span><span class=s2>`, Title: `</span><span class=si>{}</span><span class=s2>`, Quality: `</span><span class=si>{}</span><span class=s2>`&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
-                                <span class=n>video_url</span><span class=p>,</span> <span class=n>source_object</span><span class=o>.</span><span class=n>title</span><span class=p>,</span> <span class=n>stream_resolution</span>
-                            <span class=p>)</span>
+                    <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+                        <span class=s2>&quot;YouTube source ID: `</span><span class=si>{}</span><span class=s2>`, Title: `</span><span class=si>{}</span><span class=s2>`, Quality: `</span><span class=si>{}</span><span class=s2>`&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
+                            <span class=n>video_url</span><span class=p>,</span> <span class=n>source_object</span><span class=o>.</span><span class=n>title</span><span class=p>,</span> <span class=n>stream_resolution</span>
                         <span class=p>)</span>
+                    <span class=p>)</span>
                 <span class=k>else</span><span class=p>:</span>
                     <span class=c1># raise error if Gstreamer backend unavailable for YouTube live-streams</span>
                     <span class=c1># see issue: https://github.com/abhiTronix/vidgear/issues/133</span>
@@ -183,18 +182,16 @@
         <span class=c1># define queue and assign it to global var</span>
         <span class=bp>self</span><span class=o>.</span><span class=n>__queue</span> <span class=o>=</span> <span class=n>queue</span><span class=o>.</span><span class=n>Queue</span><span class=p>(</span><span class=n>maxsize</span><span class=o>=</span><span class=mi>96</span><span class=p>)</span>  <span class=c1># max len 96 to check overflow</span>
         <span class=c1># log it</span>
-        <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-            <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
-                <span class=s2>&quot;Enabling Threaded Queue Mode for the current video source!&quot;</span>
-            <span class=p>)</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+            <span class=s2>&quot;Enabling Threaded Queue Mode for the current video source!&quot;</span>
+        <span class=p>)</span>
     <span class=k>else</span><span class=p>:</span>
         <span class=c1># otherwise disable it</span>
         <span class=bp>self</span><span class=o>.</span><span class=n>__threaded_queue_mode</span> <span class=o>=</span> <span class=kc>False</span>
         <span class=c1># log it</span>
-        <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-            <span class=n>logger</span><span class=o>.</span><span class=n>warning</span><span class=p>(</span>
-                <span class=s2>&quot;Threaded Queue Mode is disabled for the current video source!&quot;</span>
-            <span class=p>)</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>warning</span><span class=p>(</span>
+            <span class=s2>&quot;Threaded Queue Mode is disabled for the current video source!&quot;</span>
+        <span class=p>)</span>
 
     <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__thread_timeout</span><span class=p>:</span>
         <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
@@ -304,8 +301,7 @@
     <span class=sd>&quot;&quot;&quot;</span>
 <span class=sd>    Safely terminates the thread, and release the VideoStream resources.</span>
 <span class=sd>    &quot;&quot;&quot;</span>
-    <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-        <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Terminating processes.&quot;</span><span class=p>)</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Terminating processes.&quot;</span><span class=p>)</span>
     <span class=c1># terminate Threaded queue mode separately</span>
     <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__threaded_queue_mode</span><span class=p>:</span>
         <span class=bp>self</span><span class=o>.</span><span class=n>__threaded_queue_mode</span> <span class=o>=</span> <span class=kc>False</span>

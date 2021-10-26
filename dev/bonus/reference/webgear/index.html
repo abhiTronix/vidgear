@@ -32,13 +32,11 @@
         <span class=k>raise</span> <span class=ne>RuntimeError</span><span class=p>(</span><span class=s2>&quot;[WebGear:ERROR] :: Assigned configuration is invalid!&quot;</span><span class=p>)</span>
 
     <span class=c1># initiate stream</span>
-    <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-        <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Initiating Video Streaming.&quot;</span><span class=p>)</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Initiating Video Streaming.&quot;</span><span class=p>)</span>
     <span class=k>if</span> <span class=ow>not</span> <span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>__stream</span> <span class=ow>is</span> <span class=kc>None</span><span class=p>):</span>
         <span class=bp>self</span><span class=o>.</span><span class=n>__stream</span><span class=o>.</span><span class=n>start</span><span class=p>()</span>
     <span class=c1># return Starlette application</span>
-    <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-        <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Running Starlette application.&quot;</span><span class=p>)</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Running Starlette application.&quot;</span><span class=p>)</span>
     <span class=k>return</span> <span class=n>Starlette</span><span class=p>(</span>
         <span class=n>debug</span><span class=o>=</span><span class=p>(</span><span class=kc>True</span> <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=k>else</span> <span class=kc>False</span><span class=p>),</span>
         <span class=n>routes</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>routes</span><span class=p>,</span>
@@ -219,12 +217,11 @@
         <span class=p>)</span>
 
     <span class=c1># log it</span>
-    <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-        <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
-            <span class=s2>&quot;`</span><span class=si>{}</span><span class=s2>` is the default location for saving WebGear data-files.&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
-                <span class=n>data_path</span>
-            <span class=p>)</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+        <span class=s2>&quot;`</span><span class=si>{}</span><span class=s2>` is the default location for saving WebGear data-files.&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
+            <span class=n>data_path</span>
         <span class=p>)</span>
+    <span class=p>)</span>
 
     <span class=c1># define Jinja2 templates handler</span>
     <span class=bp>self</span><span class=o>.</span><span class=n>__templates</span> <span class=o>=</span> <span class=n>Jinja2Templates</span><span class=p>(</span><span class=n>directory</span><span class=o>=</span><span class=s2>&quot;</span><span class=si>{}</span><span class=s2>/templates&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span><span class=n>data_path</span><span class=p>))</span>
@@ -295,8 +292,7 @@
 <span class=sd>    Implements a Callable to be run on application shutdown</span>
 <span class=sd>    &quot;&quot;&quot;</span>
     <span class=k>if</span> <span class=ow>not</span> <span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>__stream</span> <span class=ow>is</span> <span class=kc>None</span><span class=p>):</span>
-        <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-            <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Closing Video Streaming.&quot;</span><span class=p>)</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Closing Video Streaming.&quot;</span><span class=p>)</span>
         <span class=c1># stops producer</span>
         <span class=bp>self</span><span class=o>.</span><span class=n>__isrunning</span> <span class=o>=</span> <span class=kc>False</span>
         <span class=c1># stops VideoGear stream</span>

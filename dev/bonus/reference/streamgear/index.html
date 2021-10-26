@@ -55,10 +55,9 @@
 
     <span class=c1># check if valid FFmpeg path returned</span>
     <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__ffmpeg</span><span class=p>:</span>
-        <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-            <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
-                <span class=s2>&quot;Found valid FFmpeg executables: `</span><span class=si>{}</span><span class=s2>`.&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>__ffmpeg</span><span class=p>)</span>
-            <span class=p>)</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+            <span class=s2>&quot;Found valid FFmpeg executables: `</span><span class=si>{}</span><span class=s2>`.&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>__ffmpeg</span><span class=p>)</span>
+        <span class=p>)</span>
     <span class=k>else</span><span class=p>:</span>
         <span class=c1># else raise error</span>
         <span class=k>raise</span> <span class=ne>RuntimeError</span><span class=p>(</span>
@@ -106,14 +105,13 @@
             <span class=bp>self</span><span class=o>.</span><span class=n>__aspect_source</span> <span class=o>=</span> <span class=n>validation_results</span><span class=p>[</span><span class=s2>&quot;resolution&quot;</span><span class=p>]</span>
             <span class=bp>self</span><span class=o>.</span><span class=n>__fps_source</span> <span class=o>=</span> <span class=n>validation_results</span><span class=p>[</span><span class=s2>&quot;framerate&quot;</span><span class=p>]</span>
             <span class=c1># log it</span>
-            <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-                <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
-                    <span class=s2>&quot;Given video_source is valid and has </span><span class=si>{}</span><span class=s2>x</span><span class=si>{}</span><span class=s2> resolution, and a framerate of </span><span class=si>{}</span><span class=s2> fps.&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
-                        <span class=bp>self</span><span class=o>.</span><span class=n>__aspect_source</span><span class=p>[</span><span class=mi>0</span><span class=p>],</span>
-                        <span class=bp>self</span><span class=o>.</span><span class=n>__aspect_source</span><span class=p>[</span><span class=mi>1</span><span class=p>],</span>
-                        <span class=bp>self</span><span class=o>.</span><span class=n>__fps_source</span><span class=p>,</span>
-                    <span class=p>)</span>
+            <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+                <span class=s2>&quot;Given video_source is valid and has </span><span class=si>{}</span><span class=s2>x</span><span class=si>{}</span><span class=s2> resolution, and a framerate of </span><span class=si>{}</span><span class=s2> fps.&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
+                    <span class=bp>self</span><span class=o>.</span><span class=n>__aspect_source</span><span class=p>[</span><span class=mi>0</span><span class=p>],</span>
+                    <span class=bp>self</span><span class=o>.</span><span class=n>__aspect_source</span><span class=p>[</span><span class=mi>1</span><span class=p>],</span>
+                    <span class=bp>self</span><span class=o>.</span><span class=n>__fps_source</span><span class=p>,</span>
                 <span class=p>)</span>
+            <span class=p>)</span>
         <span class=k>else</span><span class=p>:</span>
             <span class=n>logger</span><span class=o>.</span><span class=n>warning</span><span class=p>(</span><span class=s2>&quot;No valid video_source provided.&quot;</span><span class=p>)</span>
     <span class=k>else</span><span class=p>:</span>
@@ -222,24 +220,20 @@
             <span class=p>),</span> <span class=s2>&quot;Given `</span><span class=si>{}</span><span class=s2>` path has invalid file-extension w.r.t selected format: `</span><span class=si>{}</span><span class=s2>`!&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
                 <span class=n>output</span><span class=p>,</span> <span class=bp>self</span><span class=o>.</span><span class=n>__format</span><span class=o>.</span><span class=n>upper</span><span class=p>()</span>
             <span class=p>)</span>
-            <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-                <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
-                    <span class=s2>&quot;Path:`</span><span class=si>{}</span><span class=s2>` is sucessfully configured for streaming.&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
-                        <span class=n>abs_path</span>
-                    <span class=p>)</span>
+            <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+                <span class=s2>&quot;Path:`</span><span class=si>{}</span><span class=s2>` is sucessfully configured for streaming.&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
+                    <span class=n>abs_path</span>
                 <span class=p>)</span>
+            <span class=p>)</span>
             <span class=c1># assign it</span>
             <span class=bp>self</span><span class=o>.</span><span class=n>__out_file</span> <span class=o>=</span> <span class=n>abs_path</span><span class=o>.</span><span class=n>replace</span><span class=p>(</span>
                 <span class=s2>&quot;</span><span class=se>\\</span><span class=s2>&quot;</span><span class=p>,</span> <span class=s2>&quot;/&quot;</span>
             <span class=p>)</span>  <span class=c1># workaround for Windows platform only, others will not be affected</span>
         <span class=c1># check if given output is a valid URL</span>
         <span class=k>elif</span> <span class=n>is_valid_url</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>__ffmpeg</span><span class=p>,</span> <span class=n>url</span><span class=o>=</span><span class=n>output</span><span class=p>,</span> <span class=n>logging</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>):</span>
-            <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-                <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
-                    <span class=s2>&quot;URL:`</span><span class=si>{}</span><span class=s2>` is sucessfully configured for streaming.&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
-                        <span class=n>output</span>
-                    <span class=p>)</span>
-                <span class=p>)</span>
+            <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+                <span class=s2>&quot;URL:`</span><span class=si>{}</span><span class=s2>` is sucessfully configured for streaming.&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span><span class=n>output</span><span class=p>)</span>
+            <span class=p>)</span>
             <span class=bp>self</span><span class=o>.</span><span class=n>__out_file</span> <span class=o>=</span> <span class=n>output</span>
         <span class=k>else</span><span class=p>:</span>
             <span class=k>raise</span> <span class=ne>ValueError</span><span class=p>(</span>
@@ -281,12 +275,11 @@
         <span class=bp>self</span><span class=o>.</span><span class=n>__sourceframerate</span> <span class=o>=</span> <span class=p>(</span>
             <span class=mf>25.0</span> <span class=k>if</span> <span class=ow>not</span> <span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>__inputframerate</span><span class=p>)</span> <span class=k>else</span> <span class=bp>self</span><span class=o>.</span><span class=n>__inputframerate</span>
         <span class=p>)</span>
-        <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-            <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
-                <span class=s2>&quot;InputFrame =&gt; Height:</span><span class=si>{}</span><span class=s2> Width:</span><span class=si>{}</span><span class=s2> Channels:</span><span class=si>{}</span><span class=s2>&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
-                    <span class=bp>self</span><span class=o>.</span><span class=n>__inputheight</span><span class=p>,</span> <span class=bp>self</span><span class=o>.</span><span class=n>__inputwidth</span><span class=p>,</span> <span class=bp>self</span><span class=o>.</span><span class=n>__inputchannels</span>
-                <span class=p>)</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+            <span class=s2>&quot;InputFrame =&gt; Height:</span><span class=si>{}</span><span class=s2> Width:</span><span class=si>{}</span><span class=s2> Channels:</span><span class=si>{}</span><span class=s2>&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
+                <span class=bp>self</span><span class=o>.</span><span class=n>__inputheight</span><span class=p>,</span> <span class=bp>self</span><span class=o>.</span><span class=n>__inputwidth</span><span class=p>,</span> <span class=bp>self</span><span class=o>.</span><span class=n>__inputchannels</span>
             <span class=p>)</span>
+        <span class=p>)</span>
     <span class=c1># validate size of frame</span>
     <span class=k>if</span> <span class=n>height</span> <span class=o>!=</span> <span class=bp>self</span><span class=o>.</span><span class=n>__inputheight</span> <span class=ow>or</span> <span class=n>width</span> <span class=o>!=</span> <span class=bp>self</span><span class=o>.</span><span class=n>__inputwidth</span><span class=p>:</span>
         <span class=k>raise</span> <span class=ne>ValueError</span><span class=p>(</span><span class=s2>&quot;[StreamGear:ERROR] :: All frames must have same size!&quot;</span><span class=p>)</span>

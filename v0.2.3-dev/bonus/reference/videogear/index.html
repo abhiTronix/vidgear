@@ -73,10 +73,9 @@
             <span class=n>crop_n_zoom</span><span class=o>=</span><span class=n>crop_n_zoom</span><span class=p>,</span>
             <span class=n>logging</span><span class=o>=</span><span class=n>logging</span><span class=p>,</span>
         <span class=p>)</span>
-        <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-            <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
-                <span class=s2>&quot;Enabling Stablization Mode for the current video source!&quot;</span>
-            <span class=p>)</span>  <span class=c1># log info</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+            <span class=s2>&quot;Enabling Stablization Mode for the current video source!&quot;</span>
+        <span class=p>)</span>  <span class=c1># log info</span>
 
     <span class=k>if</span> <span class=n>enablePiCamera</span><span class=p>:</span>
         <span class=c1># only import the pigear module only if required</span>
@@ -136,8 +135,7 @@
 <span class=sd>    &quot;&quot;&quot;</span>
     <span class=bp>self</span><span class=o>.</span><span class=n>stream</span><span class=o>.</span><span class=n>stop</span><span class=p>()</span>
     <span class=c1># logged</span>
-    <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-        <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Terminating VideoGear.&quot;</span><span class=p>)</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Terminating VideoGear.&quot;</span><span class=p>)</span>
     <span class=c1># clean queue</span>
     <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__stablization_mode</span><span class=p>:</span>
         <span class=bp>self</span><span class=o>.</span><span class=n>__stabilizer_obj</span><span class=o>.</span><span class=n>clean</span><span class=p>()</span>

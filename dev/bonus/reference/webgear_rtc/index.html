@@ -46,8 +46,7 @@
             <span class=s2>&quot;[WebGear_RTC:ERROR] :: Assigned configuration is invalid!&quot;</span>
         <span class=p>)</span>
     <span class=c1># return Starlette application</span>
-    <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-        <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Running Starlette application.&quot;</span><span class=p>)</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Running Starlette application.&quot;</span><span class=p>)</span>
     <span class=k>return</span> <span class=n>Starlette</span><span class=p>(</span>
         <span class=n>debug</span><span class=o>=</span><span class=p>(</span><span class=kc>True</span> <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=k>else</span> <span class=kc>False</span><span class=p>),</span>
         <span class=n>routes</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>routes</span><span class=p>,</span>
@@ -164,12 +163,11 @@
         <span class=p>)</span>
 
     <span class=c1># log it</span>
-    <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-        <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
-            <span class=s2>&quot;`</span><span class=si>{}</span><span class=s2>` is the default location for saving WebGear_RTC data-files.&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
-                <span class=n>data_path</span>
-            <span class=p>)</span>
+    <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+        <span class=s2>&quot;`</span><span class=si>{}</span><span class=s2>` is the default location for saving WebGear_RTC data-files.&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
+            <span class=n>data_path</span>
         <span class=p>)</span>
+    <span class=p>)</span>
 
     <span class=c1># define Jinja2 templates handler</span>
     <span class=bp>self</span><span class=o>.</span><span class=n>__templates</span> <span class=o>=</span> <span class=n>Jinja2Templates</span><span class=p>(</span><span class=n>directory</span><span class=o>=</span><span class=s2>&quot;</span><span class=si>{}</span><span class=s2>/templates&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span><span class=n>data_path</span><span class=p>))</span>
@@ -194,8 +192,7 @@
     <span class=k>if</span> <span class=n>source</span> <span class=ow>is</span> <span class=kc>None</span><span class=p>:</span>
         <span class=bp>self</span><span class=o>.</span><span class=n>config</span> <span class=o>=</span> <span class=p>{</span><span class=s2>&quot;server&quot;</span><span class=p>:</span> <span class=kc>None</span><span class=p>}</span>
         <span class=bp>self</span><span class=o>.</span><span class=n>__default_rtc_server</span> <span class=o>=</span> <span class=kc>None</span>
-        <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-            <span class=n>logger</span><span class=o>.</span><span class=n>warning</span><span class=p>(</span><span class=s2>&quot;Given source is of NoneType!&quot;</span><span class=p>)</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>warning</span><span class=p>(</span><span class=s2>&quot;Given source is of NoneType!&quot;</span><span class=p>)</span>
     <span class=k>else</span><span class=p>:</span>
         <span class=c1># Handle video source</span>
         <span class=bp>self</span><span class=o>.</span><span class=n>__default_rtc_server</span> <span class=o>=</span> <span class=n>RTC_VideoServer</span><span class=p>(</span>
@@ -227,8 +224,7 @@
 <span class=sd>    Gracefully shutdown video-server</span>
 <span class=sd>    &quot;&quot;&quot;</span>
     <span class=k>if</span> <span class=ow>not</span> <span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>config</span><span class=p>[</span><span class=s2>&quot;server&quot;</span><span class=p>]</span> <span class=ow>is</span> <span class=kc>None</span><span class=p>):</span>
-        <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span><span class=p>:</span>
-            <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Closing Video Server.&quot;</span><span class=p>)</span>
+        <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span><span class=s2>&quot;Closing Video Server.&quot;</span><span class=p>)</span>
         <span class=bp>self</span><span class=o>.</span><span class=n>config</span><span class=p>[</span><span class=s2>&quot;server&quot;</span><span class=p>]</span><span class=o>.</span><span class=n>terminate</span><span class=p>()</span>
         <span class=bp>self</span><span class=o>.</span><span class=n>config</span><span class=p>[</span><span class=s2>&quot;server&quot;</span><span class=p>]</span> <span class=o>=</span> <span class=kc>None</span>
     <span class=c1># terminate internal server aswell.</span>

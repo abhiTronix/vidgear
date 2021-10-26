@@ -440,3 +440,8 @@ main #g6219 {
 		transform: rotate(0);
 	}
 }
+
+[data-md-color-scheme="slate"] {
+   -webkit-filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.5));
+  	filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.5));
+}
