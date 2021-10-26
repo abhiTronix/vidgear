@@ -47,6 +47,13 @@ limitations under the License.
         * Added drop-shadow effects for its `slate` theme to improve visibility.
 
 ??? success "Updates/Improvements"  
+    - [x] CamGear:
+        * Replaced `youtube-dl` with `yt-dlp` as pafy backend.
+            + Implemented hack to trick pafy into assuming `yt-dlp` as `youtube-dl`.
+            + Using `sys.modules` to present `yt-dlp` as `youtube-dl`.
+            + `yt-dlp` python API functions exactly similar to `youtube-dl`.
+            + Replaced `youtube-dl` dependency with `yt-dlp`.
+            + Replaced `youtube-dl` imports with `yt-dlp`.
     - [x] StreamGear: 
         * Updated default `stream_count` internal dict key value to 1.
     - [x] Maintenance:
@@ -71,6 +78,7 @@ limitations under the License.
         * Added codecov secret token through `env` variable. 
         * Added wildcard to skip CI tests for doc(`.md`) files.
         * Added `.md` files to Codecov ignore list.
+        * Update vidgear's banner image.
 
 ??? danger "Breaking Updates/Changes"
     - [ ] `check_WriteAccess` will now return as invalid path if writing directory does not exists. This will effect output file handling in WriteGear and StreamGear APIs.
