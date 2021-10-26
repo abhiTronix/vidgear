@@ -212,6 +212,8 @@ limitations under the License.
     background-color: var(--md-primary-fg-color) !important;
     font-family: inherit !important;
     font-size: 12px;
+    -webkit-filter: none !important;
+    filter: none !important;
 }
 
 .center-small {
@@ -441,7 +443,27 @@ main #g6219 {
 	}
 }
 
-[data-md-color-scheme="slate"] {
+body[data-md-color-scheme="slate"] img[class="shadow"]{
    -webkit-filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.5));
   	filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.5));
+}
+
+body[data-md-color-scheme="slate"] div[class="btn-container"]{
+   -webkit-filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.5));
+  	filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.5));
+}
+
+body[data-md-color-scheme="slate"] div[class="highlight"]{
+   -webkit-filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.5));
+  	filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.5));
+}
+
+body[data-md-color-scheme="slate"] div[class^="admonition"]{
+   -webkit-filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.5));
+  	filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.5));
+}
+
+body[data-md-color-scheme="slate"] img[class="shadow2"]{
+   -webkit-filter: drop-shadow(1px 1px 0 black);
+  	filter: drop-shadow(1px 1px 0 black);
 }
