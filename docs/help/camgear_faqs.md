@@ -68,7 +68,7 @@ limitations under the License.
 
 ## How to change quality and parameters of YouTube Streams with CamGear?
 
-**Answer:** CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `youtube-dl`) parameters)_ with its [`options`](../../gears/camgear/params/#options) dictionary parameter. See [this bonus example ➶](../camgear_ex/#using-variable-youtube-dl-parameters-in-camgear).
+**Answer:** CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `yt_dlp`) parameters)_ with its [`options`](../../gears/camgear/params/#options) dictionary parameter. See [this bonus example ➶](../camgear_ex/#using-variable-yt_dlp-parameters-in-camgear).
 
 
 &nbsp;

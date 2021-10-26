@@ -81,9 +81,9 @@ stream2.stop()
 
 &nbsp;
 
-## Using variable Youtube-DL parameters in CamGear
+## Using variable `yt_dlp` parameters in CamGear
 
-CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `youtube-dl`) parameters)_ with its [`options`](../../gears/camgear/params/#options) dictionary parameter. 
+CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `yt_dlp`) parameters)_ with its [`options`](../../gears/camgear/params/#options) dictionary parameter. 
 
 The complete usage example is as follows: 
 

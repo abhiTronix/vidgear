@@ -236,7 +236,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
         | APIs | Dependencies |
         |:---:|:---|
-        | CamGear | `pafy`, `youtube-dl`, `streamlink` |
+        | CamGear | `pafy`, `yt_dlp`, `streamlink` |
         | PiGear | `picamera` |
         | VideoGear | - |
         | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |

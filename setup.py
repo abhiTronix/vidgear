@@ -92,7 +92,7 @@ setup(
     author="Abhishek Thakur",
     install_requires=[
         "pafy{}".format(latest_version("pafy")),
-        "youtube-dl{}".format(latest_version("youtube-dl")),  # pafy backend
+        "yt_dlp{}".format(latest_version("yt_dlp")),  # pafy backend
         "mss{}".format(latest_version("mss")),
         "cython",  # helper for numpy install
         "numpy",
@@ -142,7 +142,7 @@ setup(
         "uvicorn",
         "uvloop",
         "pafy",
-        "youtube-dl",
+        "yt-dlp",
         "asyncio",
         "dash",
         "streamlink",

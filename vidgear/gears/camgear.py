@@ -22,6 +22,7 @@ limitations under the License.
 import cv2
 import time
 import queue
+import sys
 import logging as log
 from threading import Thread, Event
 
@@ -55,7 +56,7 @@ class CamGear:
     It relies on Threaded Queue mode for threaded, error-free and synchronized frame handling.
 
     CamGear internally employs streamlink for piping live videos from various streaming services like Twitch, Livestream, Dailymotion etc., and also utilizies pafy
-    with youtube-dl at its backend for seamless YouTube pipelining.
+    with yt_dlp at its backend for seamless YouTube pipelining.
     """
 
     def __init__(
@@ -105,9 +106,15 @@ class CamGear:
                 # detect whether a YouTube URL
                 video_url = youtube_url_validator(source)
                 if video_url:
-                    # import backend library
+                    # !!! HACK !!!
+                    # pafy only supports `youtube-dl` backend and not `yt-dlp`. 
+                    # But `yt-dlp` python API functions exactly similar to `youtube-dl`, 
+                    # Therefore its easy to trick pafy into assuming `yt-dlp` as `youtube-dl`.
+                    yt_dlp = import_dependency_safe("yt_dlp")
+                    sys.modules["youtube_dl"] = yt_dlp
+                    # Next, import backend library
                     pafy = import_dependency_safe("pafy")
-                    logger.info("Using Youtube-dl Backend")
+                    logger.info("Using yt-dlp Backend")
                     # create new pafy object
                     source_object = pafy.new(video_url, ydl_opts=stream_params)
                     # extract all valid video-streams

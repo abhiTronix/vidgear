@@ -21,7 +21,7 @@ limitations under the License.
 # Release Notes
 
 
-## v0.2.3 (2021-10-26)
+## v0.2.3 (2021-10-27)
 
 ??? tip "New Features"
     - [x] **CamGear:** 

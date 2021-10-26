@@ -45,9 +45,9 @@ def return_youtubevideo_params(url):
     """
     returns Youtube Video parameters(FPS, dimensions) directly using Youtube-dl
     """
-    import youtube_dl
+    import yt_dlp
 
-    ydl = youtube_dl.YoutubeDL(
+    ydl = yt_dlp.YoutubeDL(
         {
             "outtmpl": "%(id)s%(ext)s",
             "noplaylist": True,

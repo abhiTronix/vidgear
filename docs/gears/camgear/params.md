@@ -55,7 +55,7 @@ Its valid input can be one of the following:
 
     !!! quote "CamGear automatically detects whether `source` belong to YouTube or elsewhere, and handles it with appropriate API."
 
-    * **Youtube URLs:** CamGear utilizes `pafy` with `youtube-dl` backend. For example `"https://youtu.be/bvetuLwJIkA"` as follows:
+    * **Youtube URLs:** CamGear utilizes `pafy` with `yt_dlp` backend. For example `"https://youtu.be/bvetuLwJIkA"` as follows:
 
         ??? info "Valid YouTube URL formats"
 

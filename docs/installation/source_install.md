@@ -213,7 +213,7 @@ When installing VidGear from source, FFmpeg and Aiortc are the only two API spec
 
         | APIs | Dependencies |
         |:---:|:---|
-        | CamGear | `pafy`, `youtube-dl`, `streamlink` |
+        | CamGear | `pafy`, `yt_dlp`, `streamlink` |
         | PiGear | `picamera` |
         | VideoGear | - |
         | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |

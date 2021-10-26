@@ -31,7 +31,7 @@ limitations under the License.
 
 CamGear API provides a flexible, high-level multi-threaded wrapper around OpenCV's *[VideoCapture API](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80)* with direct access to almost all of its available [*parameters*](../advanced/source_params/). It relies on [**Threaded Queue mode**](../../../bonus/TQM/) for threaded, error-free and synchronized frame handling.
 
-CamGear internally employs [`streamlink`][streamlink] for [*piping live videos*](../usage/#using-camgear-with-streaming-websites) from various streaming services like [Twitch](https://www.twitch.tv/), [Livestream](https://livestream.com/), [Dailymotion](https://www.dailymotion.com/live) etc., and also utilizies [`pafy`][pafy] with [`youtube-dl`][youtube-dl] at its backend for seamless [*YouTube pipelining*](../usage/#using-camgear-with-youtube-videos).
+CamGear internally employs [`streamlink`][streamlink] for [*piping live videos*](../usage/#using-camgear-with-streaming-websites) from various streaming services like [Twitch](https://www.twitch.tv/), [Livestream](https://livestream.com/), [Dailymotion](https://www.dailymotion.com/live) etc., and also utilizies [`pafy`][pafy] with [`yt_dlp`][yt_dlp] at its backend for seamless [*YouTube pipelining*](../usage/#using-camgear-with-youtube-videos).
 
 &thinsp; 
 
@@ -95,4 +95,4 @@ from vidgear.gears import CamGear
 [ffmpeg]:https://www.ffmpeg.org/
 [pyscreenshot]:https://github.com/ponty/pyscreenshot
 [streamlink]:https://streamlink.github.io/
-[youtube-dl]:https://youtube-dl.org/
+[yt_dlp]:https://github.com/yt-dlp/yt-dlp

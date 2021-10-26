@@ -142,7 +142,7 @@ The complete usage example is as follows:
     CamGear also provides exclusive attributes:
 
     - `STREAM_RESOLUTION`: _(for specifying stream resolution)_
-    - `STREAM_PARAMS`: _(for specifying underlying API(i.e. [youtube-dl](https://youtube-dl.org/)) parameters)_ 
+    - `STREAM_PARAMS`: _(for specifying underlying API(i.e. [yt_dlp](https://github.com/yt-dlp/yt-dlp)) parameters)_ 
 
     with its [`options`](../params/#options) dictionary parameter. **More information can be found [here ➶](../advanced/source_params/#exclusive-camgear-parameters)**
 
