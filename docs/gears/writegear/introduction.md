@@ -21,7 +21,7 @@ limitations under the License.
 # WriteGear API 
 
 <figure>
-  <img src="../../../assets/images/writegear.png" alt="WriteGear Functional Block Diagram" loading="lazy" class="center-small"/>
+  <img src="../../../assets/images/writegear.png" alt="WriteGear Functional Block Diagram" loading="lazy" class="center-small shadow"/>
   <figcaption>WriteGear API generalized workflow</figcaption>
 </figure>
 

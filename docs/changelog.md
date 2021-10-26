@@ -26,6 +26,12 @@ limitations under the License.
 ??? tip "New Features"
     - [x] **CamGear:** 
         * Added support for `4K` Streaming URLs.
+    - [x] **Helper:** 
+        * Implemented logging ColorFormatter string alignment.
+            + Center aligned logging Levelname and Classname.
+            + Changed `%` formatting style with modern `{`.
+            + Re-added `asctime` value to Formatter string.
+            + Re-arranged parameter positions in Formatter string.
     - [x] **Maintenance:**
         * Added new `.gitignore`  for specifying intentionally untracked files to ignore
             + Added more files entries to `.gitignore`.
@@ -90,6 +96,8 @@ limitations under the License.
         * Fixed bug in check_WriteAccess that throws `OSError` while handling URLs.
     - [x] Docs:
         * Fixed bugs in WriteGear's Compression Mode with Live Audio Input example.
+        * Fixed "drop-shadow" property via `filter` function conflicting with sidecard button.
+            + Added new CSS classes for image, admonitions and code highlight in dark theme.
         * Several internal and external webpage links typos fixed.
         * Fixed several language typos.
     - [x] CI: 

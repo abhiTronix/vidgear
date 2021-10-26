@@ -19,7 +19,7 @@ limitations under the License.
 -->
 
 <figure>
-  <img src="../assets/images/cv2vidgear.png" loading="lazy" alt="Switching from OpenCV" />
+  <img src="../assets/images/cv2vidgear.png" loading="lazy" alt="Switching from OpenCV" class="shadow" />
 </figure>
 
 &emsp; 

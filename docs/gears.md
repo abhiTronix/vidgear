@@ -21,7 +21,7 @@ limitations under the License.
 # Introduction
 
 <figure>
-  <img src="../assets/images/gears_fbd.png" loading="lazy" alt="@Vidgear Functional Block Diagram"/>
+  <img src="../assets/images/gears_fbd.png" loading="lazy" alt="@Vidgear Functional Block Diagram" class="shadow2" />
   <figcaption>Gears: generalized workflow</figcaption>
 </figure>
 

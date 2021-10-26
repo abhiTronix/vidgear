@@ -54,7 +54,7 @@ def logger_handler():
     """
     # logging formatter
     formatter = ColoredFormatter(
-        "%(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
+        "{green}{asctime}{reset} :: {bold_blue}{name:^14}{reset} :: {log_color}{levelname:^7}{reset} :: {message}",
         datefmt="%H:%M:%S",
         reset=True,
         log_colors={
@@ -64,6 +64,7 @@ def logger_handler():
             "ERROR": "bold_red",
             "CRITICAL": "bold_red,bg_white",
         },
+        style="{",
     )
     # check if VIDGEAR_LOGFILE defined
     file_mode = os.environ.get("VIDGEAR_LOGFILE", False)
@@ -81,8 +82,9 @@ def logger_handler():
             )
             handler = log.FileHandler(file_path, mode="a")
             formatter = log.Formatter(
-                "%(asctime)s :: %(name)s :: %(levelname)s :: %(message)s",
+                "{asctime} :: {name} :: {levelname} :: {message}",
                 datefmt="%H:%M:%S",
+                style="{",
             )
 
     handler.setFormatter(formatter)
