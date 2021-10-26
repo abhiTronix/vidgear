@@ -35,23 +35,23 @@ limitations under the License.
     - [x] **Maintenance:**
         * Added new `.gitignore`  for specifying intentionally untracked files to ignore
             + Added more files entries to `.gitignore`.
-        * Added `.gitattributes` to manage how Git reads line endings.
+        * Added new `.gitattributes` to manage how Git reads line endings.
             + Enabled `auto` default behavior, in case people don't have `core.autocrlf` set.
             + Enforced LF line-endings for selective files types.
             + Added Binary data files that specifies they are not text, and git should not try to change them.
             + Added Language aware diff headers.
             + Added Linguist language overrides.
-        * Introduced python short-circuiting for handling logging logic. This behavior is also summarized in the [python docs](https://docs.python.org/3/library/stdtypes.html#boolean-operations-and-or-not)
     - [x] **Docs:**
         * Added new ScreenGear with WebGear_RTC API bonus example.
         * Added support for `hl_lines` argument for highlighting specific code lines.
         * Added drop-shadow effects for its `slate` theme to improve visibility.
 
-??? success "Updates/Improvements"
-    - [x] WriteGear:
-        * Enabled logging for `check_WriteAccess` method in WriteGear, StreamGear and NetGear.
+??? success "Updates/Improvements"  
     - [x] StreamGear: 
-        * Updated default stream_count dict key value to 1.
+        * Updated default `stream_count` internal dict key value to 1.
+    - [x] Maintenance:
+        * Introduced python short-circuiting for handling logging logic.
+        * Enabled logging for `check_WriteAccess` method in WriteGear, StreamGear and NetGear APIs.
     - [x] Docs:
         * Added warning for ScreenGear outputting RGBA frames instead of default BGR frames with `mss` backend.
         * Added warnings for properly formatting output_params when assigning external audio-source in WriteGear.
@@ -77,15 +77,15 @@ limitations under the License.
 
 ??? bug "Bug-fixes"
     - [x] StreamGear:
-        * Fixed StreamGear Malformed URI Error with HLS Segments [PR #243 by @Vboivin]
-            + Removed the extra '%' character from the naming convention for segment files.
-            + Used stream_count variable to alter template for hls segment filenames.
+        * Fixed StreamGear Malformed URI Error with HLS Segments **[PR #243 by @Vboivin]**
+            + Removed the extra `'%'` character from the naming convention for segment files.
+            + Used `stream_count` internal dict variable to alter template for HLS segment filenames.
     - [x] WriteGear: 
         * Fixed bug in disable_force_termination logic which accidentally disables force termination.
     - [x] WebGear_RTC: 
-        * Fixed name 'VideoStreamTrack' is not defined bug.
+        * Fixed `name 'VideoStreamTrack' is not defined` bug.
     - [x] Setup.py: 
-        * Fixed TypeError bug.
+        * Fixed `TypeError` bug.
         * Fixed invalid `latest_version` retrieval.
     - [x] Helper:
         * Fixed `check_WriteAccess` failing to recognize correct permission for writing the output file on windows platform. 
