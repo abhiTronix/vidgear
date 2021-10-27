@@ -28,7 +28,7 @@ limitations under the License.
         * Added support for `4K` Streaming URLs.
     - [x] **Helper:** 
         * Implemented logging ColorFormatter string alignment.
-            + Center aligned logging Levelname and Classname.
+            + Center aligned logging Level-name and Class-name.
             + Changed `%` formatting style with modern `{`.
             + Re-added `asctime` value to Formatter string.
             + Re-arranged parameter positions in Formatter string.
@@ -48,7 +48,7 @@ limitations under the License.
 
 ??? success "Updates/Improvements"  
     - [x] CamGear:
-        * Replaced `youtube-dl` with `yt-dlp` as pafy backend.
+        * Replaced `youtube-dl` with `yt-dlp` as pafy backend for YouTube videos pipelining.
             + Implemented hack to trick pafy into assuming `yt-dlp` as `youtube-dl`.
             + Using `sys.modules` to present `yt-dlp` as `youtube-dl`.
             + `yt-dlp` python API functions exactly similar to `youtube-dl`.
@@ -61,13 +61,13 @@ limitations under the License.
         * Enabled logging for `check_WriteAccess` method in WriteGear, StreamGear and NetGear APIs.
     - [x] Docs:
         * Added warning for ScreenGear outputting RGBA frames instead of default BGR frames with `mss` backend.
-        * Added warnings for properly formatting output_params when assigning external audio-source in WriteGear.
+        * Added warnings for properly formatting `output_params` when assigning external audio-source in WriteGear.
         * Added depreciation notice for Python 3.6 legacies.
         * Restructured docs to make it more user-friendly.
         * Updated, Extended and Improved context.
         * Improved code comments.
         * Updated docs admonitions.
-        * Updated Zenodo badge.
+        * Updated `Zenodo` badge.
     - [x] CI: 
         * Migrated to new Codecov Uploader in Azure Pipelines.
             + Support for the Bash Uploader will be deprecated on February 1st, 2022. See: https://docs.codecov.com/docs/about-the-codecov-bash-uploader
@@ -117,7 +117,7 @@ limitations under the License.
 
 ??? question "Pull Requests"
     * PR #249
-    * PR #261
+    * PR #262
 
 
 &nbsp; 
