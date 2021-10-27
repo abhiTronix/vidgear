@@ -97,10 +97,10 @@ web.shutdown()
 
 In this example, we'll be displaying two video feeds side-by-side simultaneously on browser using WebGear API by defining two separate frame generators: 
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
-**Step-1 (Trigger Auto-Generation Process):** Firstly, run this bare-minimum code to trigger the [**Auto-generation**](../../gears/webgear/#auto-generation-process) process, this will create `.vidgear` directory at current location _(directory where you'll run this code)_:
+**Step-1 (Trigger Auto-Generation Process):** Firstly, run this bare-minimum code to trigger the [**Auto-generation**](../../gears/webgear/overview/#auto-generation-process) process, this will create `.vidgear` directory at current location _(directory where you'll run this code)_:
 
 ```python
 # import required libraries

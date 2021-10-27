@@ -33,7 +33,7 @@ WebGear_RTC API is the part of `asyncio` package of VidGear, thereby you need to
 
 ### Aiortc
 
-Must Required only if you're using [WebGear_RTC API](../../gears/webgear_rtc/overview/). You can easily install it via pip:
+Must Required with WebGear_RTC API. You can easily install it via pip:
 
 ??? error "Microsoft Visual C++ 14.0 is required."
     
@@ -76,7 +76,7 @@ You can access and run WebGear_RTC VideoStreamer Server programmatically in your
 
 !!! info "We are using `frame_size_reduction` attribute for frame size reduction _(in percentage)_ to be streamed with its [`options`](../params/#options) dictionary parameter to cope with performance-throttling in this example."
 
-```python
+```python hl_lines="7"
 # import required libraries
 import uvicorn
 from vidgear.gears.asyncio import WebGear_RTC

@@ -22,6 +22,7 @@ limitations under the License.
 import cv2
 import time
 import queue
+import sys
 import logging as log
 from threading import Thread, Event
 
@@ -55,7 +56,7 @@ class CamGear:
     It relies on Threaded Queue mode for threaded, error-free and synchronized frame handling.
 
     CamGear internally employs streamlink for piping live videos from various streaming services like Twitch, Livestream, Dailymotion etc., and also utilizies pafy
-    with youtube-dl at its backend for seamless YouTube pipelining.
+    with yt_dlp at its backend for seamless YouTube pipelining.
     """
 
     def __init__(
@@ -105,9 +106,15 @@ class CamGear:
                 # detect whether a YouTube URL
                 video_url = youtube_url_validator(source)
                 if video_url:
-                    # import backend library
+                    # !!! HACK !!!
+                    # pafy only supports `youtube-dl` backend and not `yt-dlp`. 
+                    # But `yt-dlp` python API functions exactly similar to `youtube-dl`, 
+                    # Therefore its easy to trick pafy into assuming `yt-dlp` as `youtube-dl`.
+                    yt_dlp = import_dependency_safe("yt_dlp")
+                    sys.modules["youtube_dl"] = yt_dlp
+                    # Next, import backend library
                     pafy = import_dependency_safe("pafy")
-                    logger.info("Using Youtube-dl Backend")
+                    logger.info("Using yt-dlp Backend")
                     # create new pafy object
                     source_object = pafy.new(video_url, ydl_opts=stream_params)
                     # extract all valid video-streams
@@ -167,12 +174,11 @@ class CamGear:
                         # extract stream URL as source
                         source = parsed_stream.url
                         # log progress
-                        if self.__logging:
-                            logger.debug(
-                                "YouTube source ID: `{}`, Title: `{}`, Quality: `{}`".format(
-                                    video_url, source_object.title, stream_resolution
-                                )
+                        self.__logging and logger.debug(
+                            "YouTube source ID: `{}`, Title: `{}`, Quality: `{}`".format(
+                                video_url, source_object.title, stream_resolution
                             )
+                        )
                     else:
                         # raise error if Gstreamer backend unavailable for YouTube live-streams
                         # see issue: https://github.com/abhiTronix/vidgear/issues/133
@@ -243,18 +249,16 @@ class CamGear:
             # define queue and assign it to global var
             self.__queue = queue.Queue(maxsize=96)  # max len 96 to check overflow
             # log it
-            if self.__logging:
-                logger.debug(
-                    "Enabling Threaded Queue Mode for the current video source!"
-                )
+            self.__logging and logger.debug(
+                "Enabling Threaded Queue Mode for the current video source!"
+            )
         else:
             # otherwise disable it
             self.__threaded_queue_mode = False
             # log it
-            if self.__logging:
-                logger.warning(
-                    "Threaded Queue Mode is disabled for the current video source!"
-                )
+            self.__logging and logger.warning(
+                "Threaded Queue Mode is disabled for the current video source!"
+            )
 
         if self.__thread_timeout:
             logger.debug(
@@ -437,8 +441,7 @@ class CamGear:
         """
         Safely terminates the thread, and release the VideoStream resources.
         """
-        if self.__logging:
-            logger.debug("Terminating processes.")
+        self.__logging and logger.debug("Terminating processes.")
         # terminate Threaded queue mode separately
         if self.__threaded_queue_mode:
             self.__threaded_queue_mode = False

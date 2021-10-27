@@ -28,7 +28,7 @@ limitations under the License.
 
 ## Overview
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This document was added in `v0.2.2`.
 
 
@@ -49,6 +49,7 @@ All patterns are valid for this mode and it can be easily activated in NetGear A
     * It is advise to use `pattern=2` to overcome random disconnection due to delays in network.
     * SSH tunneling Mode is fully supports [Bidirectional Mode](../../advanced/multi_server), [Secure Mode](../../advanced/secure_mode/) and [JPEG-Frame Compression](../../advanced/compression/).
     * It is advised to enable logging (`logging = True`) on the first run, to easily identify any runtime errors.
+
 
 &nbsp;
 
@@ -89,6 +90,20 @@ For implementing SSH Tunneling Mode, NetGear API currently provide following exc
 
 * **`ssh_tunnel_mode`** (_string_) : This attribute activates SSH Tunneling Mode and sets the fully specified `"<ssh-username>@<client-public-ip>:<forwarded-port>"` SSH URL for tunneling at Server end. Its usage is as follows:
   
+    ??? tip "Finding Your Public IP Address"
+
+        !!! warning "Only IPv4 IP-addresses are supported"
+
+        - A Public IP address is a globally routable IP address that is assigned to a network device, allowing it direct access to the Internet. They are assigned to the device by its ISP, and each device has a unique public IP address.
+        - Determining the public IP address involves contacting a remote server over the HTTP/HTTPS or DNS protocol and obtaining the IP address from the remote server response.
+        - On Desktop machines, the easiest way to find out your public IP address is to google =="what is my IP"== in your browser:
+
+        ![Placeholder](https://techantena.com/wp-content/uploads/2017/01/find-public-ip.png)
+
+    ??? question "How to Port Forward in your Router"
+
+        For more information on Forwarding Port in Popular Home Routers. See [this document ➶](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/)" 
+
     !!! fail "On Server end, NetGear automatically validates if the `port` is open at specified SSH URL or not, and if it fails _(i.e. port is closed)_, NetGear will throw `AssertionError`!"
 
     === "With Default Port"
@@ -159,7 +174,7 @@ For implementing SSH Tunneling Mode, NetGear API currently provide following exc
 
 
 
-??? question "How to Port Forward in Router"
+??? question "How to Port Forward in your Router"
 
     For more information on Forwarding Port in Popular Home Routers. See [this document ➶](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/)" 
 
@@ -214,7 +229,7 @@ Open a terminal on Client System _(A Regular PC where you want to display the in
 
 !!! info "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="7"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -263,11 +278,26 @@ Now, Open the terminal on Remote Server System _(A Raspberry Pi with a webcam co
 
 !!! danger "Make sure to replace the SSH URL in following example with yours."
 
+??? tip "Finding Your Public IP Address"
+
+    !!! warning "Only IPv4 IP-addresses are supported"
+
+    - A Public IP address is a globally routable IP address that is assigned to a network device, allowing it direct access to the Internet. They are assigned to the device by its ISP, and each device has a unique public IP address.
+    - Determining the public IP address involves contacting a remote server over the HTTP/HTTPS or DNS protocol and obtaining the IP address from the remote server response.
+    - On Desktop machines, the easiest way to find out your public IP address is to google =="what is my IP"== in your browser:
+
+    ![Placeholder](https://techantena.com/wp-content/uploads/2017/01/find-public-ip.png)
+
+??? question "How to Port Forward in your Router"
+
+    For more information on Forwarding Port in Popular Home Routers. See [this document ➶](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/)" 
+
+
 !!! warning "On Server end, NetGear automatically validates if the `port` is open at specified SSH URL or not, and if it fails _(i.e. port is closed)_, NetGear will throw `AssertionError`!"
 
 !!! info "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="8-9 17"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear

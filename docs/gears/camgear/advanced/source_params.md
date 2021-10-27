@@ -26,20 +26,22 @@ limitations under the License.
 
 ## Overview
 
-The [`options`](../../params/#options) dictionary parameter in CamGear gives user the ability to alter various parameters available within [OpenCV's VideoCapture Class](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80). 
+With CamGear's [`options`](../../params/#options) dictionary parameter, the user has the ability to alter various tweak parameters available within [OpenCV's VideoCapture Class](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80) by formatting them as its attributes. 
 
-These tweak parameters can be used to transform input Camera-Source properties _(such as its brightness, saturation, size, iso, gain etc.)_ seamlessly. All parameters supported by CamGear API are disscussed in this document.
+These tweak parameters can be used to transform input Camera-Source properties _(such as its brightness, saturation, resolution, iso, gain etc.)_ seamlessly. All parameters supported by CamGear API are disscussed in this document.
 
 &emsp; 
 
 
-### Exclusive CamGear Parameters
+### Exclusive CamGear Attributes
 
-!!! quote ""
+??? abstract "CamGear's Exclusive Attributes"
 
-	In addition to Source Tweak Parameters, CamGear also provides some exclusive attributes for its [`options`](../../params/#options) dictionary parameters. These attributes are as follows:
+	In addition to Source Tweak Parameters, CamGear also provides some exclusive attributes for its [`options`](../../params/#options) dictionary parameters. 
 
-	- [X] `STREAM_RESOLUTION` _(string)_: This attribute can be used in CamGear's Stream Mode (`stream_mode=True`) for specifying supported stream resolution. Its possible values can be: `144p`, `240p`, `360p`, `480p`, `720p`, `1080p`, `1440p`, `2160p`, `worst`, `best`, and its default value is `best`. Its usage is as follows:
+	These attributes are as follows:
+
+	- [X] `STREAM_RESOLUTION` _(string)_: This attribute can be used in CamGear's Stream Mode (`stream_mode=True`) for specifying supported stream resolution. Its possible values can be: `144p`, `240p`, `360p`, `480p`, `720p`, `1080p`, `1440p`, `2160p`, `4320p`, `worst`, `best`, and its default value is `best`. Its usage is as follows:
 
 		!!! warning "In case specificed `STREAM_RESOLUTION` value is unavailable within Source Stream, it defaults to `best`!"
 
@@ -49,14 +51,14 @@ These tweak parameters can be used to transform input Camera-Source properties _
 
 		!!! example "Its complete usage example is given [here ➶](../../../../help/camgear_faqs/#how-to-change-quality-and-parameters-of-youtube-streams-with-camgear)"
 
-	- [X] `STREAM_PARAMS` _(dict)_: This dictionary attribute can be used in CamGear's Stream Mode (`stream_mode=True`) for specifying underlying API's(i.e. `streamlink` & `youtube-dl`) internal parameters. Its usage is as follows:
+	- [X] `STREAM_PARAMS` _(dict)_: This dictionary attribute can be used in CamGear's Stream Mode (`stream_mode=True`) for specifying underlying API's(i.e. `streamlink` & `yt_dlp`) internal parameters. Its usage is as follows:
 
 		!!! tip "All `STREAM_PARAMS` Supported Parameters"
-			- For Streamlink parameter can be found [here ➶](https://streamlink.github.io/api.html#streamlink.Streamlink.set_option)
-			- For Youtube-DL parameter can be found [here ➶](https://github.com/ytdl-org/youtube-dl/blob/0ee78d62d5d98d30f5b26e76504660adae01bd19/youtube_dl/YoutubeDL.py#L119-L316)
+			- All Streamlink parameter can be found [here ➶](https://streamlink.github.io/api.html#streamlink.Streamlink.set_option)
+			- All yt_dlp parameter can be found [here ➶](https://github.com/yt-dlp/yt-dlp/blob/bd1c7923274962e3027acf63111ccb0d766b9725/yt_dlp/__init__.py#L594-L749)
 
 		```python
-		options = {"STREAM_PARAMS": {"nocheckcertificate": True}} # disables verifying SSL certificates in Youtube-DL 
+		options = {"STREAM_PARAMS": {"nocheckcertificate": True}} # disables verifying SSL certificates in yt_dlp
 		```
 
 	- [X] `THREADED_QUEUE_MODE` _(boolean)_: This attribute can be used to override Threaded-Queue-Mode mode to manually disable it:
@@ -69,7 +71,7 @@ These tweak parameters can be used to transform input Camera-Source properties _
 
 	- [X] `THREAD_TIMEOUT` _(int/float)_: This attribute can be used to override the timeout value(positive number), that blocks the video-thread for at most ==timeout seconds== if no video-frame was available within that time, and otherwise raises the [Empty exception](https://docs.python.org/3/library/queue.html#queue.Empty) to prevent any never-ending deadlocks. Its default value is `None`, meaning no timeout at all.  Its usage is as follows:
 
-		!!! new "New in v0.2.1" 
+		??? new "New in v0.2.1" 
 			`THREAD_TIMEOUT` attribute added in `v0.2.1`.
 
 		```python

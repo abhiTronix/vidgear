@@ -21,7 +21,7 @@ limitations under the License.
 # WriteGear API 
 
 <figure>
-  <img src="../../../assets/images/writegear.png" alt="WriteGear Functional Block Diagram" loading="lazy" class="center-small"/>
+  <img src="../../../assets/images/writegear.png" alt="WriteGear Functional Block Diagram" loading="lazy" class="center-small shadow"/>
   <figcaption>WriteGear API generalized workflow</figcaption>
 </figure>
 
@@ -53,7 +53,7 @@ WriteGear primarily operates in following modes:
 
 !!! tip "Helpful Tips"
 
-	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../switch_from_cv/#switching-videowriter-api)
+	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../../switch_from_cv/#switching-videowriter-api)
 
 	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 

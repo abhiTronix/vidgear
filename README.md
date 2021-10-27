@@ -166,7 +166,7 @@ Each API is designed exclusively to handle/control/process different data-specif
 
 > *CamGear can grab ultra-fast frames from a diverse range of file-formats/devices/streams, which includes almost any IP-USB Cameras, multimedia video file-formats ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rstp, rtmp, mms, etc.`, and GStreamer's pipelines, plus direct support for live video streaming sites like YouTube, Twitch, LiveStream, Dailymotion etc.*
 
-CamGear implements a flexible, high-level, multi-threaded framework around OpenCV's [VideoCapture class][opencv-vc] with access almost all of its available parameters. CamGear also employs [streamlink][streamlink] for [piping live videos][piping-live-videos] from various streaming services and also utilizies [pafy][pafy] with [youtube-dl][youtube-dl] at its backend for [YouTube pipelining][youtube-doc]. Furthermore, its framework relies exclusively on [**Threaded Queue mode**][TQM-doc] for ultra-fast, error-free, and synchronized video-frame handling.
+CamGear implements a flexible, high-level, multi-threaded framework around OpenCV's [VideoCapture class][opencv-vc] with access almost all of its available parameters. CamGear also employs [streamlink][streamlink] for [piping live videos][piping-live-videos] from various streaming services and also utilizies [pafy][pafy] with [yt_dlp][yt_dlp] at its backend for [YouTube pipelining][youtube-doc]. Furthermore, its framework relies exclusively on [**Threaded Queue mode**][TQM-doc] for ultra-fast, error-free, and synchronized video-frame handling.
 
 ### CamGear API Guide:
 
@@ -665,7 +665,7 @@ We ask contributors to join the Gitter community channel for quick discussions:
 
 > VidGear is free and open source and will always remain so. :heart:
 
-It is (like all open source software) a labour of love and something I am doing with my own free time. If you would like to say thanks, please feel free to make a donation:
+It is something I am doing with my own free time. If you would like to say thanks, please feel free to make a donation:
 
 [![ko-fi][kofi-badge]][kofi]
 
@@ -678,12 +678,9 @@ It is (like all open source software) a labour of love and something I am doing 
 
 # Citation
 
-
-
-
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4718616.svg)](https://doi.org/10.5281/zenodo.4718616)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5389830.svg)](https://doi.org/10.5281/zenodo.5389830)
 
 ```BibTeX
 @software{vidgear,
@@ -697,8 +694,8 @@ Here is a Bibtex entry you can use to cite this project in a publication:
     year         = 2021
     publisher    = {Zenodo},
     version      = {vidgear-0.2.2},
-    doi          = {10.5281/zenodo.4718616},
-    url          = {https://doi.org/10.5281/zenodo.4718616}
+    doi          = {10.5281/zenodo.5389830},
+    url          = {https://doi.org/10.5281/zenodo.5389830}
   }
 ```
 
@@ -804,7 +801,7 @@ External URLs
 [uvloop]: https://github.com/MagicStack/uvloop
 [streamlink]:https://streamlink.github.io/
 [aiortc]:https://aiortc.readthedocs.io/en/latest/
-[youtube-dl]:https://youtube-dl.org/
+[yt_dlp]:https://yt_dlp.org/
 [pyscreenshot]:https://github.com/ponty/pyscreenshot
 [uvloop-ns]: https://github.com/MagicStack/uvloop/issues/14
 [ffmpeg]:https://www.ffmpeg.org/
@@ -831,7 +828,7 @@ External URLs
 [OV5647-picam]:https://github.com/techyian/MMALSharp/doc/OmniVision-OV5647-Camera-Module
 [IMX219-picam]:https://github.com/techyian/MMALSharp/doc/Sony-IMX219-Camera-Module
 [opencv-vw]:https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html
-[yt-dl]:https://github.com/ytdl-org/youtube-dl/
+[yt-dl]:https://github.com/yt-dlp/yt-dlp
 [numpy]:https://github.com/numpy/numpy
 [zmq-pair]:https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pair.html
 [zmq-req-rep]:https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/client_server.html

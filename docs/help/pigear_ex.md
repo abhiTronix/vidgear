@@ -28,7 +28,7 @@ You can use `stream` global parameter in PiGear to feed any [`picamera`](https:/
 
 In this example we will set initial Camera Module's `brightness` value `80`, and will change it `50` when **`z` key** is pressed at runtime:
 
-```python
+```python hl_lines="35"
 # import required libraries
 from vidgear.gears import PiGear
 import cv2

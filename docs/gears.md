@@ -21,7 +21,7 @@ limitations under the License.
 # Introduction
 
 <figure>
-  <img src="../assets/images/gears_fbd.png" loading="lazy" alt="@Vidgear Functional Block Diagram"/>
+  <img src="../assets/images/gears_fbd.png" loading="lazy" alt="@Vidgear Functional Block Diagram" class="shadow2" />
   <figcaption>Gears: generalized workflow</figcaption>
 </figure>
 
@@ -52,7 +52,7 @@ These Gears can be classified as follows:
 
 ### C. Streaming Gears
 
-> **Basic Function:** Transcodes/Broadcasts files & [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames for streaming.
+> **Basic Function:** Transcodes/Broadcasts files and [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames for streaming.
 
 !!! tip "You can also use [WriteGear](writegear/introduction/) for streaming with traditional protocols such as RTMP, RTSP/RTP."
 
@@ -66,7 +66,7 @@ These Gears can be classified as follows:
 
 ### D. Network Gears
 
-> **Basic Function:** Sends/Receives [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames over connected networks.
+> **Basic Function:** Sends/Receives data and [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames over connected networks.
 
 * [NetGear](netgear/overview/): Handles High-Performance Video-Frames & Data Transfer between interconnecting systems over the network.
 

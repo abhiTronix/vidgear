@@ -22,11 +22,11 @@ limitations under the License.
 
 !!! warning "Important Information"
     
-    * StreamGear **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../../../ffmpeg_install/) for its installation.
+    * StreamGear **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../../ffmpeg_install/) for its installation.
 
     * StreamGear API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system.
 
-    * By default, when no additional streams are defined, ==StreamGear generates a primary stream of same resolution and framerate[^1] as the input video  _(at the index `0`)_.==
+    * By default, ==StreamGear generates a primary stream of same resolution and framerate[^1] as the input video  _(at the index `0`)_.==
 
     * Always use `terminate()` function at the very end of the main code.
 
@@ -88,7 +88,7 @@ You can easily activate ==Low-latency Livestreaming in Single-Source Mode==, whe
 
 === "DASH"
 
-    ```python
+    ```python hl_lines="5"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -104,7 +104,7 @@ You can easily activate ==Low-latency Livestreaming in Single-Source Mode==, whe
 
 === "HLS"
 
-    ```python
+    ```python hl_lines="5"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -130,7 +130,8 @@ The complete example is as follows:
 
 !!! note "If input video-source contains any audio stream/channel, then it automatically gets assigned to all generated streams without any extra efforts."
 
-!!! danger "Important `-streams` attribute Information"
+??? danger "Important `-streams` attribute Information"
+    
     * On top of these additional streams, StreamGear by default, generates a primary stream of same resolution and framerate as the input, at the index `0`.
     * :warning: Make sure your System/Machine/Server/Network is able to handle these additional streams, discretion is advised! 
     * You **MUST** need to define `-resolution` value for your stream, otherwise stream will be discarded!
@@ -142,7 +143,7 @@ The complete example is as follows:
 
 === "DASH"
 
-    ```python
+    ```python hl_lines="6-12"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -166,7 +167,7 @@ The complete example is as follows:
 
 === "HLS"
 
-    ```python
+    ```python hl_lines="6-12"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -203,7 +204,7 @@ The complete example is as follows:
 
 === "DASH"
 
-    ```python
+    ```python hl_lines="12"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -227,7 +228,7 @@ The complete example is as follows:
 
 === "HLS"
 
-    ```python
+    ```python hl_lines="12"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -268,7 +269,7 @@ For this example, let us use our own [H.265/HEVC](https://trac.ffmpeg.org/wiki/E
 
 === "DASH"
 
-    ```python
+    ```python hl_lines="6-10 15-17"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -298,7 +299,7 @@ For this example, let us use our own [H.265/HEVC](https://trac.ffmpeg.org/wiki/E
 
 === "HLS"
 
-    ```python
+    ```python hl_lines="6-10 15-17"
     # import required libraries
     from vidgear.gears import StreamGear
 

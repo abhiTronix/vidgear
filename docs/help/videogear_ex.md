@@ -28,7 +28,7 @@ We will be using [`cv_bridge`](http://wiki.ros.org/cv_bridge/Tutorials/Convertin
 
 In this example, we'll create a node that convert OpenCV frames into ROS image messages, and then publishes them over ROS.
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
 !!! note "This example is vidgear implementation of this [wiki example](http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython)." 
@@ -56,7 +56,7 @@ class image_publisher:
         # define publisher topic
         self.image_pub = rospy.Publisher("image_topic_pub", Image)
         # open stream with given parameters
-        self.stream_stab = VideoGear(source=source, logging=logging).start()
+        self.stream = VideoGear(source=source, logging=logging).start()
         # define publisher topic
         rospy.Subscriber("image_topic_sub", Image, self.callback)
 
@@ -80,7 +80,7 @@ class image_publisher:
 
     def close(self):
         # stop stream
-        self.stream_stab.stop()
+        self.stream.stop()
 
 
 def main(args):
@@ -112,7 +112,7 @@ if __name__ == "__main__":
 
 Here's a high-level wrapper code around VideoGear API to enable auto-reconnection during capturing, plus stabilization is enabled _(`stabilize=True`)_ in order to stabilize captured frames on-the-go: 
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
 ??? tip "Enforcing UDP stream"

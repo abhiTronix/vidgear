@@ -278,7 +278,7 @@ Its valid input can be one of the following:
 
     !!! quote "NetGear_Async automatically detects whether `source` belong to YouTube or elsewhere, and handles it with appropriate API."
 
-    * **Youtube URLs:** CamGear utilizes `pafy` with `youtube-dl` backend. For example `"https://youtu.be/bvetuLwJIkA"` as follows:
+    * **Youtube URLs:** CamGear utilizes `pafy` with `yt_dlp` backend. For example `"https://youtu.be/bvetuLwJIkA"` as follows:
 
         ??? info "Valid YouTube URL formats"
 
@@ -343,7 +343,7 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 
 !!! warning "NetGear_Async automatically enforce GStreamer backend _(backend=`cv2.CAP_GSTREAMER`)_ for YouTube-livestreams!"
 
-!!! error "NetGear_Async will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support. Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
+!!! error "NetGear_Async will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
 
 **Data-Type:** Boolean
 

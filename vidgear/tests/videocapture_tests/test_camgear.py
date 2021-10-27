@@ -45,9 +45,9 @@ def return_youtubevideo_params(url):
     """
     returns Youtube Video parameters(FPS, dimensions) directly using Youtube-dl
     """
-    import youtube_dl
+    import yt_dlp
 
-    ydl = youtube_dl.YoutubeDL(
+    ydl = yt_dlp.YoutubeDL(
         {
             "outtmpl": "%(id)s%(ext)s",
             "noplaylist": True,
@@ -180,10 +180,10 @@ def test_stream_mode(url, quality, parameters):
         stream.stop()
         logger.debug("WIDTH: {} HEIGHT: {} FPS: {}".format(width, height, fps))
     except Exception as e:
-        if isinstance(e, (RuntimeError, ValueError)) and (
+        if isinstance(e, (RuntimeError, ValueError, cv2.error)) and (
             url == "im_not_a_url" or platform.system() in ["Windows", "Darwin"]
         ):
-            pass
+            pytest.xfail(str(e))
         else:
             pytest.fail(str(e))
 

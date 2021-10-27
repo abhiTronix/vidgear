@@ -25,14 +25,16 @@ limitations under the License.
 
 ## Using WriteGear's Compression Mode for YouTube-Live Streaming
 
-!!! new "New in v0.2.1" 
+In Compression Mode, you can also use WriteGear for Youtube-Livestreaming. The example is as follows:   
+
+??? new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
 !!! alert "This example assume you already have a [**YouTube Account with Live-Streaming enabled**](https://support.google.com/youtube/answer/2474026#enable) for publishing video."
 
 !!! danger "Make sure to change [_YouTube-Live Stream Key_](https://support.google.com/youtube/answer/2907883#zippy=%2Cstart-live-streaming-now) with yours in following code before running!"
 
-```python
+```python hl_lines="15-24 28 32"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -94,12 +96,14 @@ writer.close()
 &nbsp;
 
 
-## Using WriteGear's Compression Mode creating MP4 segments from a video stream
+## Using WriteGear's Compression Mode for creating MP4 segments
 
-!!! new "New in v0.2.1" 
+In Compression Mode, you can also use WriteGear for creating MP4 segments from almost any video source. The example is as follows:   
+
+??? new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
-```python
+```python hl_lines="13-20 24"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import WriteGear
@@ -163,12 +167,14 @@ writer.close()
 
 ## Using WriteGear's Compression Mode to add external audio file input to video frames
 
-!!! new "New in v0.2.1" 
+You can also use WriteGear for merging external audio with live video-source:  
+
+??? new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
 !!! failure "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
 
-```python
+```python hl_lines="11-12"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -228,7 +234,7 @@ We will be using [`cv_bridge`](http://wiki.ros.org/cv_bridge/Tutorials/Convertin
 
 In this example, we'll create a node that listens to a ROS image message topic, converts the recieved images messages into OpenCV frames, draws a circle on it, and then process these frames into a lossless compressed file format in real-time.
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
 !!! note "This example is vidgear implementation of this [wiki example](http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython)." 

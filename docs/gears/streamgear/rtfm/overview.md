@@ -39,7 +39,7 @@ For this mode, StreamGear API provides exclusive [`stream()`](../../../../bonus/
 
 &emsp;
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
 
     Apple HLS support was added in `v0.2.2`.
 

@@ -118,10 +118,9 @@ class VideoGear:
                 crop_n_zoom=crop_n_zoom,
                 logging=logging,
             )
-            if self.__logging:
-                logger.debug(
-                    "Enabling Stablization Mode for the current video source!"
-                )  # log info
+            self.__logging and logger.debug(
+                "Enabling Stablization Mode for the current video source!"
+            )  # log info
 
         if enablePiCamera:
             # only import the pigear module only if required
@@ -184,8 +183,7 @@ class VideoGear:
         """
         self.stream.stop()
         # logged
-        if self.__logging:
-            logger.debug("Terminating VideoGear.")
+        self.__logging and logger.debug("Terminating VideoGear.")
         # clean queue
         if self.__stablization_mode:
             self.__stabilizer_obj.clean()

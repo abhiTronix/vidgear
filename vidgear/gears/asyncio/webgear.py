@@ -246,12 +246,11 @@ class WebGear:
             )
 
         # log it
-        if self.__logging:
-            logger.debug(
-                "`{}` is the default location for saving WebGear data-files.".format(
-                    data_path
-                )
+        self.__logging and logger.debug(
+            "`{}` is the default location for saving WebGear data-files.".format(
+                data_path
             )
+        )
 
         # define Jinja2 templates handler
         self.__templates = Jinja2Templates(directory="{}/templates".format(data_path))
@@ -352,13 +351,11 @@ class WebGear:
             raise RuntimeError("[WebGear:ERROR] :: Assigned configuration is invalid!")
 
         # initiate stream
-        if self.__logging:
-            logger.debug("Initiating Video Streaming.")
+        self.__logging and logger.debug("Initiating Video Streaming.")
         if not (self.__stream is None):
             self.__stream.start()
         # return Starlette application
-        if self.__logging:
-            logger.debug("Running Starlette application.")
+        self.__logging and logger.debug("Running Starlette application.")
         return Starlette(
             debug=(True if self.__logging else False),
             routes=self.routes,
@@ -466,8 +463,7 @@ class WebGear:
         Implements a Callable to be run on application shutdown
         """
         if not (self.__stream is None):
-            if self.__logging:
-                logger.debug("Closing Video Streaming.")
+            self.__logging and logger.debug("Closing Video Streaming.")
             # stops producer
             self.__isrunning = False
             # stops VideoGear stream

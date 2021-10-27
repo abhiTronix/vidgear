@@ -158,10 +158,9 @@ class NetGear:
             # otherwise default to 0:`zmq.PAIR`
             pattern = 0
             msg_pattern = valid_messaging_patterns[pattern]
-            if self.__logging:
-                logger.warning(
-                    "Wrong pattern value, Defaulting to `zmq.PAIR`! Kindly refer Docs for more Information."
-                )
+            self.__logging and logger.warning(
+                "Wrong pattern value, Defaulting to `zmq.PAIR`! Kindly refer Docs for more Information."
+            )
         # assign pattern to global parameter for further use
         self.__pattern = pattern
 
@@ -170,10 +169,9 @@ class NetGear:
             # else default to `tcp` protocol
             protocol = "tcp"
             # log it
-            if self.__logging:
-                logger.warning(
-                    "Protocol is not supported or not provided. Defaulting to `tcp` protocol!"
-                )
+            self.__logging and logger.warning(
+                "Protocol is not supported or not provided. Defaulting to `tcp` protocol!"
+            )
 
         # Handle connection params
 
@@ -310,6 +308,7 @@ class NetGear:
                 assert check_WriteAccess(
                     custom_cert_location,
                     is_windows=True if os.name == "nt" else False,
+                    logging=self.__logging,
                 ), "[NetGear:ERROR] :: Permission Denied!, cannot write ZMQ authentication certificates to '{}' directory!".format(
                     value
                 )
@@ -403,16 +402,14 @@ class NetGear:
             # activate and log if overwriting is enabled
             if overwrite_cert:
                 if not receive_mode:
-                    if self.__logging:
-                        logger.warning(
-                            "Overwriting ZMQ Authentication certificates over previous ones!"
-                        )
+                    self.__logging and logger.warning(
+                        "Overwriting ZMQ Authentication certificates over previous ones!"
+                    )
                 else:
                     overwrite_cert = False
-                    if self.__logging:
-                        logger.critical(
-                            "Overwriting ZMQ Authentication certificates is disabled for Client's end!"
-                        )
+                    self.__logging and logger.critical(
+                        "Overwriting ZMQ Authentication certificates is disabled for Client's end!"
+                    )
 
             # Validate certificate generation paths
             try:
@@ -437,12 +434,11 @@ class NetGear:
                         logging=logging,
                     )
                 # log it
-                if self.__logging:
-                    logger.debug(
-                        "`{}` is the default location for storing ZMQ authentication certificates/keys.".format(
-                            auth_cert_dir
-                        )
+                self.__logging and logger.debug(
+                    "`{}` is the default location for storing ZMQ authentication certificates/keys.".format(
+                        auth_cert_dir
                     )
+                )
             except Exception as e:
                 # catch if any error occurred and disable Secure mode
                 logger.exception(str(e))
@@ -507,19 +503,17 @@ class NetGear:
                 )
         elif self.__bi_mode:
             # log Bidirectional mode activation
-            if self.__logging:
-                logger.debug(
-                    "Bidirectional Data Transmission is enabled for this connection!"
-                )
+            self.__logging and logger.debug(
+                "Bidirectional Data Transmission is enabled for this connection!"
+            )
         elif self.__ssh_tunnel_mode:
             # log Bidirectional mode activation
-            if self.__logging:
-                logger.debug(
-                    "SSH Tunneling is enabled for host:`{}` with `{}` back-end.".format(
-                        self.__ssh_tunnel_mode,
-                        "paramiko" if self.__paramiko_present else "pexpect",
-                    )
+            self.__logging and logger.debug(
+                "SSH Tunneling is enabled for host:`{}` with `{}` back-end.".format(
+                    self.__ssh_tunnel_mode,
+                    "paramiko" if self.__paramiko_present else "pexpect",
                 )
+            )
 
         # define messaging context instance
         self.__msg_context = zmq.Context.instance()
@@ -645,12 +639,11 @@ class NetGear:
                     self.__msg_pattern = msg_pattern[1]
                     self.__poll.register(self.__msg_socket, zmq.POLLIN)
 
-                    if self.__logging:
-                        logger.debug(
-                            "Reliable transmission is enabled for this pattern with max-retries: {} and timeout: {} secs.".format(
-                                self.__max_retries, self.__request_timeout / 1000
-                            )
+                    self.__logging and logger.debug(
+                        "Reliable transmission is enabled for this pattern with max-retries: {} and timeout: {} secs.".format(
+                            self.__max_retries, self.__request_timeout / 1000
                         )
+                    )
 
             except Exception as e:
                 # otherwise log and raise error
@@ -683,10 +676,9 @@ class NetGear:
                     )
 
             # Handle threaded queue mode
-            if self.__logging:
-                logger.debug(
-                    "Threaded Queue Mode is enabled by default for this connection."
-                )
+            self.__logging and logger.debug(
+                "Threaded Queue Mode is enabled by default for this connection."
+            )
 
             # define deque and assign it to global var
             self.__queue = deque(maxlen=96)  # max len 96 to check overflow
@@ -863,12 +855,11 @@ class NetGear:
                     self.__msg_pattern = msg_pattern[0]
                     self.__poll.register(self.__msg_socket, zmq.POLLIN)
 
-                    if self.__logging:
-                        logger.debug(
-                            "Reliable transmission is enabled for this pattern with max-retries: {} and timeout: {} secs.".format(
-                                self.__max_retries, self.__request_timeout / 1000
-                            )
+                    self.__logging and logger.debug(
+                        "Reliable transmission is enabled for this pattern with max-retries: {} and timeout: {} secs.".format(
+                            self.__max_retries, self.__request_timeout / 1000
                         )
+                    )
 
             except Exception as e:
                 # otherwise log and raise error
@@ -1007,12 +998,11 @@ class NetGear:
                                 "Termination signal successfully received at client!"
                             )
                         self.__port_buffer.remove(msg_json["port"])
-                        if self.__logging:
-                            logger.warning(
-                                "Termination signal received from Server at port: {}!".format(
-                                    msg_json["port"]
-                                )
+                        self.__logging and logger.warning(
+                            "Termination signal received from Server at port: {}!".format(
+                                msg_json["port"]
                             )
+                        )
                     # if termination signal received from all servers then exit client.
                     if not self.__port_buffer:
                         logger.critical(
@@ -1028,8 +1018,9 @@ class NetGear:
                     # termination
                     self.__terminate = True
                     # notify client
-                    if self.__logging:
-                        logger.critical("Termination signal received from server!")
+                    self.__logging and logger.critical(
+                        "Termination signal received from server!"
+                    )
                 continue
 
             msg_data = self.__msg_socket.recv(
@@ -1453,20 +1444,18 @@ class NetGear:
                     return None
 
                 # log confirmation
-                if self.__logging:
-                    logger.debug(recv_confirmation)
+                self.__logging and logger.debug(recv_confirmation)
 
     def close(self):
         """
         Safely terminates the threads, and NetGear resources.
         """
-        if self.__logging:
-            # log it
-            logger.debug(
-                "Terminating various {} Processes.".format(
-                    "Receive Mode" if self.__receive_mode else "Send Mode"
-                )
+        # log it
+        self.__logging and logger.debug(
+            "Terminating various {} Processes.".format(
+                "Receive Mode" if self.__receive_mode else "Send Mode"
             )
+        )
         #  whether `receive_mode` is enabled or not
         if self.__receive_mode:
             # check whether queue mode is empty
@@ -1479,12 +1468,10 @@ class NetGear:
                 # properly handle thread exit
                 self.__thread.join()
                 self.__thread = None
-            if self.__logging:
-                logger.debug("Terminating. Please wait...")
+            self.__logging and logger.debug("Terminating. Please wait...")
             # properly close the socket
             self.__msg_socket.close(linger=0)
-            if self.__logging:
-                logger.debug("Terminated Successfully!")
+            self.__logging and logger.debug("Terminated Successfully!")
 
         else:
             # indicate that process should be terminated
@@ -1521,8 +1508,7 @@ class NetGear:
 
                 # check for confirmation if available within 1/5 timeout
                 if self.__pattern < 2:
-                    if self.__logging:
-                        logger.debug("Terminating. Please wait...")
+                    self.__logging and logger.debug("Terminating. Please wait...")
                     if self.__msg_socket.poll(self.__request_timeout // 5, zmq.POLLIN):
                         self.__msg_socket.recv()
             except Exception as e:
@@ -1532,5 +1518,4 @@ class NetGear:
                 # properly close the socket
                 self.__msg_socket.setsockopt(zmq.LINGER, 0)
                 self.__msg_socket.close()
-                if self.__logging:
-                    logger.debug("Terminated Successfully!")
+                self.__logging and logger.debug("Terminated Successfully!")

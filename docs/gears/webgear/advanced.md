@@ -32,14 +32,14 @@ WebGear by default only supports "BGR" colorspace frames as input, but you can u
 
 Let's implement a bare-minimum example using WebGear, where we will be sending [**GRAY**](https://en.wikipedia.org/wiki/Grayscale) frames to client browser:
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
-!!! example "This example works in conjunction with [Source ColorSpace manipulation for VideoCapture Gears ➶](../../../../bonus/colorspace_manipulation/#source-colorspace-manipulation)"
+!!! example "This example works in conjunction with [Source ColorSpace manipulation for VideoCapture Gears ➶](../../../bonus/colorspace_manipulation/#source-colorspace-manipulation)"
 
 !!! info "Supported `jpeg_compression_colorspace` colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
 
-```python
+```python hl_lines="8" 
 # import required libraries
 import uvicorn
 from vidgear.gears.asyncio import WebGear
@@ -71,7 +71,7 @@ web.shutdown()
 
 ## Using WebGear with a Custom Source(OpenCV)
 
-!!! new "New in v0.2.1" 
+??? new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
 WebGear allows you to easily define your own custom Source that you want to use to transform your frames before sending them onto the browser. 
@@ -81,7 +81,7 @@ WebGear allows you to easily define your own custom Source that you want to use 
 Let's implement a bare-minimum example with a Custom Source using WebGear API and OpenCV:
 
 
-```python
+```python hl_lines="10-34 38"
 # import necessary libs
 import uvicorn, asyncio, cv2
 from vidgear.gears.asyncio import WebGear
@@ -137,7 +137,7 @@ web.shutdown()
 
 With our highly extensible WebGear API, you can add your own mounting points, where additional files located, as follows:
 
-```python
+```python hl_lines="21-23"
 # import libs
 import uvicorn
 from starlette.routing import Mount
@@ -198,7 +198,7 @@ Suppose we want to add a simple **`hello world` webpage** to our WebGear server.
  
 Then in our application code, we can integrate this webpage route, as follows:
 
-```python
+```python hl_lines="11-14 31"
 # import libs
 import uvicorn, asyncio
 from starlette.templating import Jinja2Templates
@@ -245,7 +245,7 @@ web.shutdown()
 
 WebGear natively supports ASGI middleware classes with Starlette for implementing behavior that is applied across your entire ASGI application easily.
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
 !!! info "All supported middlewares can be found [here ➶](https://www.starlette.io/middleware/)"
@@ -256,7 +256,7 @@ For this example, let's use [`CORSMiddleware`](https://www.starlette.io/middlewa
 
 !!! tip "Starlette provides several arguments for enabling origins, methods, or headers for CORSMiddleware API. More information can be found [here ➶](https://www.starlette.io/middleware/#corsmiddleware)"
 
-```python
+```python hl_lines="21-29"
 # import libs
 import uvicorn, asyncio
 from starlette.middleware import Middleware

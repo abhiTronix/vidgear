@@ -254,12 +254,11 @@ class ScreenGear:
                     if isinstance(self.color_space, int):
                         color_frame = cv2.cvtColor(frame, self.color_space)
                     else:
-                        if self.__logging:
-                            logger.warning(
-                                "Global color_space parameter value `{}` is not a valid!".format(
-                                    self.color_space
-                                )
+                        self.__logging and logger.warning(
+                            "Global color_space parameter value `{}` is not a valid!".format(
+                                self.color_space
                             )
+                        )
                         self.color_space = None
                 except Exception as e:
                     # Catch if any error occurred
@@ -297,8 +296,7 @@ class ScreenGear:
         """
         Safely terminates the thread, and release the resources.
         """
-        if self.__logging:
-            logger.debug("Terminating ScreenGear Processes.")
+        self.__logging and logger.debug("Terminating ScreenGear Processes.")
 
         # indicate that the thread should be terminate
         self.__terminate.set()

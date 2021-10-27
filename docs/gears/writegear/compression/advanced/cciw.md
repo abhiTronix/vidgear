@@ -32,7 +32,7 @@ This opens endless possibilities of exploiting every FFmpeg params within WriteG
 
     * This Feature Requires WriteGear's [Compression Mode enabled(`compression_mode = True`)](../../params/#compression_mode). Follow these dedicated [Installation Instructions ➶](../../advanced/ffmpeg_install/) for its installation.
 
-    * Only python **`list`** is a valid datatype as input value by this function, otherwise it will throw `ValueError`.
+    * ==Only **python list** is a valid datatype as input for this function, any other value will throw `ValueError`.==
 
     * Kindly read [**FFmpeg Docs**](https://ffmpeg.org/documentation.html) carefully, before passing any values to `output_param` dictionary parameter. Wrong values may result in undesired Errors or no output at all.
 
@@ -82,7 +82,7 @@ execute_ffmpeg_cmd(ffmpeg_command)
 
 In this example, we will extract and save audio from a URL stream:
 
-```python
+```python hl_lines="13-18 21"
 # import required libraries
 from vidgear.gears import WriteGear
 
@@ -126,7 +126,7 @@ In this example, we will merge audio with video:
     * Both these Audio and Video files are compatible.
 
 
-```python
+```python hl_lines="59-75 78"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import WriteGear

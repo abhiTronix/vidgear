@@ -27,6 +27,7 @@ import sys
 import cv2
 import types
 import errno
+import stat
 import shutil
 import importlib
 import requests
@@ -53,7 +54,7 @@ def logger_handler():
     """
     # logging formatter
     formatter = ColoredFormatter(
-        "%(bold_blue)s%(name)s%(reset)s :: %(log_color)s%(levelname)s%(reset)s :: %(message)s",
+        "{green}{asctime}{reset} :: {bold_blue}{name:^14}{reset} :: {log_color}{levelname:^7}{reset} :: {message}",
         datefmt="%H:%M:%S",
         reset=True,
         log_colors={
@@ -63,6 +64,7 @@ def logger_handler():
             "ERROR": "bold_red",
             "CRITICAL": "bold_red,bg_white",
         },
+        style="{",
     )
     # check if VIDGEAR_LOGFILE defined
     file_mode = os.environ.get("VIDGEAR_LOGFILE", False)
@@ -80,8 +82,9 @@ def logger_handler():
             )
             handler = log.FileHandler(file_path, mode="a")
             formatter = log.Formatter(
-                "%(asctime)s :: %(name)s :: %(levelname)s :: %(message)s",
+                "{asctime} :: {name} :: {levelname} :: {message}",
                 datefmt="%H:%M:%S",
+                style="{",
             )
 
     handler.setFormatter(formatter)
@@ -295,7 +298,7 @@ def check_open_port(address, port=22):
             return False
 
 
-def check_WriteAccess(path, is_windows=False):
+def check_WriteAccess(path, is_windows=False, logging=False):
     """
     ## check_WriteAccess
 
@@ -304,26 +307,52 @@ def check_WriteAccess(path, is_windows=False):
     Parameters:
         path (string): absolute path of directory
         is_windows (boolean): is running on Windows OS?
+        logging (bool): enables logging for its operations
 
     **Returns:** A boolean value, confirming whether Write-Access available, or not?.
     """
-    write_accessible = False
-    if not is_windows and not os.access(
-        path, os.W_OK, effective_ids=os.access in os.supports_effective_ids
-    ):
-        return False
-    temp_fname = os.path.join(path, "temp.tmp")
+    # check if path exists
+    dirpath = Path(path)
     try:
-        mkdir_safe(path)
-        fd = os.open(temp_fname, os.O_WRONLY | os.O_CREAT)
-        os.close(fd)
-        write_accessible = True
-    except Exception:
+        if not (dirpath.exists() and dirpath.is_dir()):
+            logger.warning(
+                "Specified directory `{}` doesn't exists or valid.".format(path)
+            )
+            return False
+        else:
+            path = dirpath.resolve()
+    except:
+        return False
+    # check path on *nix systems
+    if not is_windows:
+        uid = os.geteuid()
+        gid = os.getegid()
+        s = os.stat(path)
+        mode = s[stat.ST_MODE]
+        return (
+            ((s[stat.ST_UID] == uid) and (mode & stat.S_IWUSR))
+            or ((s[stat.ST_GID] == gid) and (mode & stat.S_IWGRP))
+            or (mode & stat.S_IWOTH)
+        )
+    # otherwise, check path on windows
+    else:
         write_accessible = False
-    finally:
-        if os.path.exists(temp_fname):
+        temp_fname = os.path.join(path, "temp.tmp")
+        try:
+            fd = os.open(temp_fname, os.O_WRONLY | os.O_CREAT | os.O_TRUNC)
+            os.close(fd)
+            write_accessible = True
+        except Exception as e:
+            if isinstance(e, PermissionError):
+                logger.error(
+                    "You don't have adequate access rights to use `{}` directory!".format(
+                        path
+                    )
+                )
+            logging and logger.exception(str(e))
+        finally:
             delete_file_safe(temp_fname)
-    return write_accessible
+        return write_accessible
 
 
 def check_gstreamer_support(logging=False):
@@ -345,8 +374,7 @@ def check_gstreamer_support(logging=False):
     ]
     if gst and "YES" in gst[0]:
         version = re.search(r"(\d+\.)?(\d+\.)?(\*|\d+)", gst[0])
-        if logging:
-            logger.debug("Found GStreamer version:{}".format(version[0]))
+        logging and logger.debug("Found GStreamer version:{}".format(version[0]))
         return version[0] >= "1.0.0"
     else:
         logger.warning("GStreamer not found!")
@@ -374,16 +402,16 @@ def get_supported_resolution(value, logging=False):
         "1080p",
         "1440p",
         "2160p",
+        "4320p",
         "worst",
         "best",
     ]
     if isinstance(value, str):
         if value.strip().lower() in supported_stream_qualities:
             stream_resolution = value.strip().lower()
-            if logging:
-                logger.debug(
-                    "Selecting `{}` resolution for streams.".format(stream_resolution)
-                )
+            logging and logger.debug(
+                "Selecting `{}` resolution for streams.".format(stream_resolution)
+            )
         else:
             logger.warning(
                 "Specified stream-resolution `{}` is not supported. Reverting to `best`!".format(
@@ -502,14 +530,13 @@ def is_valid_url(path, url=None, logging=False):
     supported_protocols += ["rtsp"] if "rtsp" in get_supported_demuxers(path) else []
     # Test and return result whether scheme is supported
     if extracted_scheme_url and extracted_scheme_url in supported_protocols:
-        if logging:
-            logger.debug(
-                "URL scheme `{}` is supported by FFmpeg.".format(extracted_scheme_url)
-            )
+        logging and logger.debug(
+            "URL scheme `{}` is supported by FFmpeg.".format(extracted_scheme_url)
+        )
         return True
     else:
         logger.warning(
-            "URL scheme `{}` is not supported by FFmpeg!".format(extracted_scheme_url)
+            "URL scheme `{}` isn't supported by FFmpeg!".format(extracted_scheme_url)
         )
         return False
 
@@ -536,8 +563,7 @@ def validate_video(path, video_path=None, logging=False):
     )
     # clean and search
     stripped_data = [x.decode("utf-8").strip() for x in metadata.split(b"\n")]
-    if logging:
-        logger.debug(stripped_data)
+    logging and logger.debug(stripped_data)
     result = {}
     for data in stripped_data:
         output_a = re.findall(r"([1-9]\d+)x([1-9]\d+)", data)
@@ -573,8 +599,7 @@ def create_blank_frame(frame=None, text="", logging=False):
     blank_frame = np.zeros(frame.shape, frame.dtype)
     # setup text
     if text and isinstance(text, str):
-        if logging:
-            logger.debug("Adding text: {}".format(text))
+        logging and logger.debug("Adding text: {}".format(text))
         # setup font
         font = cv2.FONT_HERSHEY_SCRIPT_COMPLEX
         # get boundary of this text
@@ -701,10 +726,9 @@ def delete_file_safe(file_path):
         if sys.version_info >= (3, 8, 0):
             dfile.unlink(missing_ok=True)
         else:
-            if dfile.exists():
-                dfile.unlink()
+            dfile.exists() and dfile.unlink()
     except Exception as e:
-        logger.exception(e)
+        logger.exception(str(e))
 
 
 def mkdir_safe(dir_path, logging=False):
@@ -720,13 +744,10 @@ def mkdir_safe(dir_path, logging=False):
     """
     try:
         os.makedirs(dir_path)
-        if logging:
-            logger.debug("Created directory at `{}`".format(dir_path))
-    except OSError as e:
-        if e.errno != errno.EEXIST:
+        logging and logger.debug("Created directory at `{}`".format(dir_path))
+    except (OSError, IOError) as e:
+        if e.errno != errno.EACCES and e.errno != errno.EEXIST:
             raise
-        if logging:
-            logger.debug("Directory already exists at `{}`".format(dir_path))
 
 
 def delete_ext_safe(dir_path, extensions=[], logging=False):
@@ -762,8 +783,7 @@ def delete_ext_safe(dir_path, extensions=[], logging=False):
             ]
         for file in files_ext:
             delete_file_safe(file)
-            if logging:
-                logger.debug("Deleted file: `{}`".format(file))
+            logging and logger.debug("Deleted file: `{}`".format(file))
 
 
 def capPropId(property, logging=True):
@@ -930,10 +950,9 @@ def get_valid_ffmpeg_path(
 
                     ffmpeg_download_path = tempfile.gettempdir()
 
-                if logging:
-                    logger.debug(
-                        "FFmpeg Windows Download Path: {}".format(ffmpeg_download_path)
-                    )
+                logging and logger.debug(
+                    "FFmpeg Windows Download Path: {}".format(ffmpeg_download_path)
+                )
 
                 # download Binaries
                 os_bit = (
@@ -963,8 +982,9 @@ def get_valid_ffmpeg_path(
             final_path = os.path.join(final_path, "ffmpeg.exe")
         else:
             # else return False
-            if logging:
-                logger.debug("No valid FFmpeg executables found at Custom FFmpeg path!")
+            logging and logger.debug(
+                "No valid FFmpeg executables found at Custom FFmpeg path!"
+            )
             return False
     else:
         # otherwise perform test for Unix
@@ -978,17 +998,15 @@ def get_valid_ffmpeg_path(
                 final_path = os.path.join(custom_ffmpeg, "ffmpeg")
             else:
                 # else return False
-                if logging:
-                    logger.debug(
-                        "No valid FFmpeg executables found at Custom FFmpeg path!"
-                    )
+                logging and logger.debug(
+                    "No valid FFmpeg executables found at Custom FFmpeg path!"
+                )
                 return False
         else:
             # otherwise assign ffmpeg binaries from system
             final_path += "ffmpeg"
 
-    if logging:
-        logger.debug("Final FFmpeg Path: {}".format(final_path))
+    logging and logger.debug("Final FFmpeg Path: {}".format(final_path))
 
     # Final Auto-Validation for FFmeg Binaries. returns final path if test is passed
     return final_path if validate_ffmpeg(final_path, logging=logging) else False
@@ -1035,8 +1053,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                 + path
             )
             # remove leftovers if exists
-            if os.path.isfile(file_name):
-                delete_file_safe(file_name)
+            os.path.isfile(file_name) and delete_file_safe(file_name)
             # download and write file to the given path
             with open(file_name, "wb") as f:
                 logger.debug(
@@ -1062,8 +1079,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                     bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
                     for data in response.iter_content(chunk_size=4096):
                         f.write(data)
-                        if len(data) > 0:
-                            bar.update(len(data))
+                        len(data) > 0 and bar.update(len(data))
                     bar.close()
             logger.debug("Extracting executables.")
             with zipfile.ZipFile(file_name, "r") as zip_ref:
@@ -1094,8 +1110,7 @@ def validate_ffmpeg(path, logging=False):
         version = check_output([path, "-version"])
         firstline = version.split(b"\n")[0]
         version = firstline.split(b" ")[2].strip()
-        if logging:
-            # log if test are passed
+        if logging:  # log if test are passed
             logger.debug("FFmpeg validity Test Passed!")
             logger.debug(
                 "Found valid FFmpeg Version: `{}` installed on this system".format(
@@ -1292,8 +1307,7 @@ def validate_auth_keys(path, extension):
             keys_buffer.append(key_file)  # store it
 
     # remove invalid keys if found
-    if len(keys_buffer) == 1:
-        delete_file_safe(os.path.join(path, keys_buffer[0]))
+    len(keys_buffer) == 1 and delete_file_safe(os.path.join(path, keys_buffer[0]))
 
     # return results
     return True if (len(keys_buffer) == 2) else False

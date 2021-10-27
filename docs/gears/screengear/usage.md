@@ -65,10 +65,12 @@ stream.stop()
 
 ## Using ScreenGear with Variable Screen Dimensions
 
-ScreenGear API provides us the flexibility to directly set the dimensions of capturing-area of the screen. These dimensions can be easily applied to ScreenGear API through its [`options`](../params/#options) dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
+ScreenGear API provides us the flexibility to directly set the dimensions of capturing-area of the screen. These dimensions can be easily applied to ScreenGear API through its [`options`](../params/#options) dictionary parameter by formatting them as its attributes. 
+
+The complete usage example is as follows:
 
 
-```python
+```python hl_lines="6"
 # import required libraries
 from vidgear.gears import ScreenGear
 import cv2
@@ -114,9 +116,14 @@ ScreenGear API provides us the flexibility to select any connected display for f
 
 !!! tip "You can assign `monitor` value to `-1` to fetch frames from all connected multiple monitor screens."
 
-!!! warning "Any value on `monitor` parameter will disable the `backend` parameter."
+!!! warning "Implication of using `monitor` parameter"
+    Any value on `monitor` parameter other than `None` in ScreenGear API: 
+    
+    * Will force `mss` library backend.
+    * Will output [`BGRA`](https://en.wikipedia.org/wiki/RGBA_color_model) colorspace frames instead of default `BGR`. 
+    * Will disable the [`backend`](../params/#backend) parameter.
 
-```python
+```python hl_lines="6"
 # import required libraries
 from vidgear.gears import ScreenGear
 import cv2
@@ -155,13 +162,19 @@ stream.stop()
 
 ## Using ScreenGear with Variable Backend
 
-With ScreenGear API, you can select from many different backends that generates best performance as well as the most compatible with our machine by employing its [`backend`](../params/#backend) parameter that supports `pil` ,`mss` ,`scrot` ,`maim` ,`imagemagick` ,`pyqt5` ,`pyqt` ,`pyside2` ,`pyside` ,`wx` ,`pygdk3` ,`mac_screencapture` ,`mac_quartz` ,`gnome_dbus` ,`gnome-screenshot` ,`kwin_dbus` like many different parameters easily:  
+With ScreenGear API, you can select from many different backends that generates best performance as well as the most compatible with our machine by employing its [`backend`](../params/#backend) parameter that supports many different backends:
+
+!!! tip "Supported `backend` values" 
+
+    **Its possible values are:** `pil`, `mss`, `scrot`, `maim`, `imagemagick`, `pyqt5`, `pyqt`, `pyside2`, `pyside`, `wx`, `pygdk3`, `mac_screencapture`, `mac_quartz`, `gnome_dbus`, `gnome-screenshot`, `kwin_dbus`. 
+
+    More information on these backends can be found [here ➶](https://github.com/ponty/pyscreenshot)
 
 !!! warning "Remember to install backend library and all of its dependencies you're planning to use with ScreenGear API. More information on these backends can be found [here ➶](https://github.com/ponty/pyscreenshot)"
 
 !!! error "Any value on `monitor` parameter will disable the `backend` parameter. You cannot use them simultaneously."
 
-```python
+```python hl_lines="6"
 # import required libraries
 from vidgear.gears import ScreenGear
 import cv2
@@ -210,7 +223,7 @@ In following example code, we will start with [**HSV**](https://en.wikipedia.org
 !!! warning "Any incorrect or None-type value, will immediately revert the colorspace to default i.e. `BGR`."
 
 
-```python
+```python hl_lines="6 29 33 37"
 # import required libraries
 from vidgear.gears import ScreenGear
 import cv2

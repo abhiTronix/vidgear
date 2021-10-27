@@ -128,13 +128,13 @@ if __name__ == "__main__":
 
 Open a terminal on Client System _(where you want to display the input frames received from the Server)_ and execute the following python code: 
 
-!!! info "Note down the IP-address of this system(required at Server's end) by executing the command: `hostname -I` and also replace it in the following code."
+!!! info "Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
 !!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="7-12"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
@@ -189,7 +189,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="7-12"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 import asyncio
@@ -233,7 +233,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="14-31 38"
 # import library
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
@@ -349,7 +349,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="7"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 import asyncio

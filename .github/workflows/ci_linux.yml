@@ -18,10 +18,13 @@ on:
   push:
     branches:
       - testing
+    paths-ignore:
+      - '**/*.md'
   pull_request:
     branches:
       - testing
-
+    paths-ignore:
+      - '**/*.md'
 
 jobs:
   test:
@@ -51,7 +54,7 @@ jobs:
           pip install -U pip wheel numpy
           pip install -U .[asyncio]
           pip uninstall opencv-python -y
-          pip install -U flake8 six codecov pytest pytest-asyncio pytest-cov youtube-dl mpegdash paramiko m3u8 async-asgi-testclient
+          pip install -U flake8 six codecov pytest pytest-asyncio pytest-cov yt_dlp mpegdash paramiko m3u8 async-asgi-testclient
         if: success()
       - name: run prepare_dataset_script
         run: bash scripts/bash/prepare_dataset.sh
@@ -64,10 +67,9 @@ jobs:
       - name: pytest with_ENV
         run: |
           mkdir -p $HOME/logs
+          export VIDGEAR_LOGFILE="$HOME/logs"
           timeout 1200 pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "EXIT_CODE=$code" >>$GITHUB_ENV; fi
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        env:
-          VIDGEAR_LOGFILE: $HOME/logs
         if: success() && matrix.python-version == 3.7
       - name: pytest without_ENV
         run: |

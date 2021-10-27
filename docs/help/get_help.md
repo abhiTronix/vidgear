@@ -21,7 +21,7 @@ limitations under the License.
 # Getting Help
 
 <figure>
-<img src="https://i.pinimg.com/originals/d1/1a/0e/d11a0e5f0616e5ce74ebf0dd7ec5594f.gif" loading="lazy" alt="Getting help"/>
+<img src="https://i.pinimg.com/originals/d1/1a/0e/d11a0e5f0616e5ce74ebf0dd7ec5594f.gif" loading="lazy" alt="Getting help" />
 <figcaption>Courtesy - <a href="https://www.pinterest.com/pin/435019645249342748/">Pinterest</a></figcaption>
 </figure>
 

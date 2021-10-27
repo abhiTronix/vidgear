@@ -29,26 +29,15 @@ limitations under the License.
 When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), you need to check manually if following dependencies are installed:
 
 
-???+ alert "Upgrade your `pip`"
+??? alert "Upgrade your `pip`"
 
-    It strongly advised to upgrade to latest `pip` before installing vidgear to avoid any undesired installation error(s).  There are two mechanisms to upgrade `pip`:
+    ==It strongly advised to upgrade to latest `pip` before installing vidgear to avoid any undesired installation error(s).==
 
-    1. **`ensurepip`:** Python comes with an [`ensurepip`](https://docs.python.org/3/library/ensurepip.html#module-ensurepip) module[^1], which can easily upgrade/install `pip` in any Python environment.
+    There are two mechanisms to upgrade `pip`:
 
-        === "Linux/MacOS"
+    === "`pip`"
 
-            ```sh
-            python -m ensurepip --upgrade
-            
-            ```
-
-        === "Windows"
-
-            ```sh
-            py -m ensurepip --upgrade
-            
-            ```
-    2. **`pip`:** Use can also use existing `pip` to upgrade itself:
+        You can use existing `pip` to upgrade itself:
 
         ??? info "Install `pip` if not present"
 
@@ -85,7 +74,25 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
             
             ```
 
-### Core Prerequisites
+    === "`ensurepip`"
+
+        Python also comes with an [`ensurepip`](https://docs.python.org/3/library/ensurepip.html#module-ensurepip) module[^1], which can easily upgrade/install `pip` in any Python environment.
+
+        === "Linux/MacOS"
+
+            ```sh
+            python -m ensurepip --upgrade
+            
+            ```
+
+        === "Windows"
+
+            ```sh
+            py -m ensurepip --upgrade
+            
+            ```
+
+### Core Prerequisites :warning:
 
 * #### OpenCV 
 
@@ -107,11 +114,11 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
     ```
 
 
-### API Specific Prerequisites
+### API Specific Prerequisites 
 
 * #### FFmpeg 
 
-    Require only for the video compression and encoding compatibility within [**StreamGear API**](../../gears/streamgear/overview/) API and [**WriteGear API's Compression Mode**](../../gears/writegear/compression/overview/). 
+    Require only for the video compression and encoding compatibility within [**StreamGear API**](../../gears/streamgear/introduction/) and [**WriteGear API's Compression Mode**](../../gears/writegear/compression/overview/). 
 
     !!! tip "FFmpeg Installation"
 
@@ -229,7 +236,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
         | APIs | Dependencies |
         |:---:|:---|
-        | CamGear | `pafy`, `youtube-dl`, `streamlink` |
+        | CamGear | `pafy`, `yt_dlp`, `streamlink` |
         | PiGear | `picamera` |
         | VideoGear | - |
         | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |
@@ -266,10 +273,10 @@ pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[asyncio]
 **Or you can also download its wheel (`.whl`) package from our repository's [releases](https://github.com/abhiTronix/vidgear/releases) section, and thereby can be installed as follows:**
 
 ```sh
-pip install vidgear-0.2.2-py3-none-any.whl
+pip install vidgear-0.2.3-py3-none-any.whl
 
 # or with asyncio support
-pip install vidgear-0.2.2-py3-none-any.whl[asyncio]
+pip install vidgear-0.2.3-py3-none-any.whl[asyncio]
 ```
 
 &nbsp;

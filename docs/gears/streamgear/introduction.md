@@ -43,7 +43,7 @@ SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ or a Mast
 
 &thinsp;
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
 
     Apple HLS support was added in `v0.2.2`.
 

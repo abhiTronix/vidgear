@@ -125,7 +125,9 @@ class WriteGear:
             abs_path = os.path.abspath(output_filename)
 
             if check_WriteAccess(
-                os.path.dirname(abs_path), is_windows=self.__os_windows
+                os.path.dirname(abs_path),
+                is_windows=self.__os_windows,
+                logging=self.__logging,
             ):
                 if os.path.isdir(abs_path):  # check if given path is directory
                     abs_path = os.path.join(
@@ -138,7 +140,7 @@ class WriteGear:
             else:
                 # log warning if
                 logger.warning(
-                    "The given path:`{}` does not have write access permission. Skipped!".format(
+                    "`{}` isn't a valid system path or directory. Skipped!".format(
                         output_filename
                     )
                 )
@@ -156,7 +158,7 @@ class WriteGear:
 
             if self.__logging:
                 logger.debug(
-                    "Compression Mode is enabled therefore checking for valid FFmpeg executables."
+                    "Compression Mode is enabled therefore checking for valid FFmpeg executable."
                 )
                 logger.debug("Output Parameters: {}".format(self.__output_parameters))
 
@@ -188,22 +190,20 @@ class WriteGear:
                 self.__inputframerate = float(self.__inputframerate)
 
             # handle special-case force-termination in compression mode
-            self.__force_termination = self.__output_parameters.pop(
-                "-disable_force_termination", False
+            disable_force_termination = self.__output_parameters.pop(
+                "-disable_force_termination",
+                False if ("-i" in self.__output_parameters) else True,
             )
-            if not isinstance(self.__force_termination, bool):
+            if isinstance(disable_force_termination, bool):
+                self.__force_termination = not (disable_force_termination)
+            else:
                 # handle improper values
                 self.__force_termination = (
                     True if ("-i" in self.__output_parameters) else False
                 )
-            else:
-                self.__force_termination = (
-                    self.__force_termination
-                    if ("-i" in self.__output_parameters)
-                    else False
-                )
 
-            # validate the FFmpeg path/binaries and returns valid FFmpeg file executable location (also downloads static binaries on windows)
+            # validate the FFmpeg path/binaries and returns valid FFmpeg file
+            # executable location (also downloads static binaries on windows)
             self.__ffmpeg = get_valid_ffmpeg_path(
                 custom_ffmpeg,
                 self.__os_windows,
@@ -213,14 +213,13 @@ class WriteGear:
 
             # check if valid path returned
             if self.__ffmpeg:
-                if self.__logging:
-                    logger.debug(
-                        "Found valid FFmpeg executables: `{}`.".format(self.__ffmpeg)
-                    )
+                self.__logging and logger.debug(
+                    "Found valid FFmpeg executable: `{}`.".format(self.__ffmpeg)
+                )
             else:
                 # otherwise disable Compression Mode
                 logger.warning(
-                    "Disabling Compression Mode since no valid FFmpeg executables found on this machine!"
+                    "Disabling Compression Mode since no valid FFmpeg executable found on this machine!"
                 )
                 if self.__logging and not self.__os_windows:
                     logger.debug(
@@ -232,35 +231,40 @@ class WriteGear:
         if self.__compression and self.__ffmpeg:
             # check whether url is valid instead
             if self.__out_file is None:
+                self.__logging and logger.debug(
+                    "Checking whether output_filename is a valid URL.."
+                )
                 if is_valid_url(
                     self.__ffmpeg, url=output_filename, logging=self.__logging
                 ):
-                    if self.__logging:
-                        logger.debug(
-                            "URL:`{}` is successfully configured for streaming.".format(
-                                output_filename
-                            )
-                        )
-                    self.__out_file = output_filename
-                else:
-                    raise ValueError(
-                        "[WriteGear:ERROR] :: output_filename value:`{}` is not valid/supported in Compression Mode!".format(
+                    self.__logging and logger.debug(
+                        "URL:`{}` is successfully configured for streaming.".format(
                             output_filename
                         )
                     )
-            if self.__logging:
-                logger.debug("Compression Mode is configured properly!")
+                    self.__out_file = output_filename
+                else:
+                    raise ValueError(
+                        "[WriteGear:ERROR] :: output_filename value:`{}` is not supported in Compression Mode.".format(
+                            output_filename
+                        )
+                    )
+            self.__force_termination and logger.debug(
+                "Forced termination is enabled for this FFmpeg process."
+            )
+            self.__logging and logger.debug(
+                "Compression Mode with FFmpeg backend is configured properly."
+            )
         else:
             if self.__out_file is None:
                 raise ValueError(
-                    "[WriteGear:ERROR] :: output_filename value:`{}` is not vaild in Non-Compression Mode!".format(
+                    "[WriteGear:ERROR] :: output_filename value:`{}` is not supported in Non-Compression Mode.".format(
                         output_filename
                     )
                 )
-            if self.__logging:
-                logger.debug(
-                    "Compression Mode is disabled, Activating OpenCV built-in Writer!"
-                )
+            logger.critical(
+                "Compression Mode is disabled, Activating OpenCV built-in Writer!"
+            )
 
     def write(self, frame, rgb_mode=False):
 
@@ -284,20 +288,21 @@ class WriteGear:
             self.__inputheight = height
             self.__inputwidth = width
             self.__inputchannels = channels
-            if self.__logging:
-                logger.debug(
-                    "InputFrame => Height:{} Width:{} Channels:{}".format(
-                        self.__inputheight, self.__inputwidth, self.__inputchannels
-                    )
+            self.__logging and logger.debug(
+                "InputFrame => Height:{} Width:{} Channels:{}".format(
+                    self.__inputheight, self.__inputwidth, self.__inputchannels
                 )
+            )
 
         # validate size of frame
         if height != self.__inputheight or width != self.__inputwidth:
-            raise ValueError("[WriteGear:ERROR] :: All frames must have same size!")
+            raise ValueError(
+                "[WriteGear:ERROR] :: All video-frames must have same size!"
+            )
         # validate number of channels
         if channels != self.__inputchannels:
             raise ValueError(
-                "[WriteGear:ERROR] :: All frames must have same number of channels!"
+                "[WriteGear:ERROR] :: All video-frames must have same number of channels!"
             )
 
         if self.__compression:
@@ -326,11 +331,10 @@ class WriteGear:
                 self.__startCV_Process()
                 # Check status of the process
                 assert self.__process is not None
-                if self.__logging:
-                    # log OpenCV warning
-                    logger.info(
-                        "RGBA and 16-bit grayscale video frames are not supported by OpenCV yet, switch to `compression_mode` to use them!"
-                    )
+                # log OpenCV warning
+                self.__logging and logger.info(
+                    "RGBA and 16-bit grayscale video frames are not supported by OpenCV yet, switch to `compression_mode` to use them!"
+                )
             # write the frame
             self.__process.write(frame)
 
@@ -375,10 +379,9 @@ class WriteGear:
 
         if self.__inputframerate > 5:
             # set input framerate - minimum threshold is 5.0
-            if self.__logging:
-                logger.debug(
-                    "Setting Input framerate: {}".format(self.__inputframerate)
-                )
+            self.__logging and logger.debug(
+                "Setting Input framerate: {}".format(self.__inputframerate)
+            )
             input_parameters["-framerate"] = str(self.__inputframerate)
 
         # initiate FFmpeg process
@@ -434,7 +437,7 @@ class WriteGear:
         else:
             raise RuntimeError(
                 "[WriteGear:ERROR] :: Provided FFmpeg does not support any suitable/usable video-encoders for compression."
-                " Kindly disable compression mode or switch to another FFmpeg(if available)."
+                " Kindly disable compression mode or switch to another FFmpeg binaries(if available)."
             )
 
         # convert output parameters to list
@@ -483,7 +486,7 @@ class WriteGear:
         # check if Compression Mode is enabled
         if not (self.__compression):
             raise RuntimeError(
-                "[WriteGear:ERROR] :: Compression Mode is disabled, Kindly enable it to access this function!"
+                "[WriteGear:ERROR] :: Compression Mode is disabled, Kindly enable it to access this function."
             )
 
         # add configured FFmpeg path
@@ -543,8 +546,7 @@ class WriteGear:
 
         except Exception as e:
             # log if something is wrong
-            if self.__logging:
-                logger.exception(str(e))
+            self.__logging and logger.exception(str(e))
             raise ValueError(
                 "[WriteGear:ERROR] :: Wrong Values passed to OpenCV Writer, Kindly Refer Docs!"
             )

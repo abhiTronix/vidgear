@@ -20,10 +20,10 @@ limitations under the License.
 
 # Introduction
 
-<img src="assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" loading="lazy" width="90%" />
+<img src="assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" loading="lazy" width="90%" class="shadow" />
 
 <h2 align="center">
-	<img src="assets/images/tagline.svg" alt="VidGear tagline" loading="lazy" width="40%"/>
+	<img src="assets/images/tagline.svg" alt="VidGear tagline" loading="lazy" width="45%" class="shadow" />
 </h2>
 
 &thinsp;
@@ -56,7 +56,7 @@ VidGear focuses on simplicity, and thereby lets programmers and software develop
 
 ## Gears
 
-> VidGear is built with multiple APIs a.k.a [Gears](gears), each with some unique functionality.
+> VidGear is built with multiple [Gears](gears) each with some unique functionality.
 
 Each Gear is designed exclusively to handle/control/process different data-specific & device-specific video streams, network streams, and media encoders/decoders.
 
@@ -116,7 +116,7 @@ You can be a [**Stargazer :star2:**][stargazer] by starring us on Github, it hel
 
 > VidGear is free and open source and will always remain so. :heart:
 
-It is (like all open source software) a labour of love and something I am doing with my own free time. If you would like to say thanks, please feel free to make a donation:
+It is something I am doing with my own free time. If you would like to say thanks, please feel free to make a donation:
 
 <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#eba100', 'W7W8WTYO');kofiwidget2.draw();</script> 
 
@@ -126,7 +126,7 @@ It is (like all open source software) a labour of love and something I am doing 
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4718616.svg)](https://doi.org/10.5281/zenodo.4718616)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5389830.svg)](https://doi.org/10.5281/zenodo.5389830)
 
 ```BibTeX
 @software{vidgear,
@@ -140,8 +140,8 @@ Here is a Bibtex entry you can use to cite this project in a publication:
     year         = 2021
     publisher    = {Zenodo},
     version      = {vidgear-0.2.2},
-    doi          = {10.5281/zenodo.4718616},
-    url          = {https://doi.org/10.5281/zenodo.4718616}
+    doi          = {10.5281/zenodo.5389830},
+    url          = {https://doi.org/10.5281/zenodo.5389830}
   }
 ```
 

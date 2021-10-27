@@ -12,8 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# specific path build
 trigger:
-  - testing
+ branches:
+   include:
+   - testing
+ paths:
+   exclude:
+   - docs
+   - README.md
 
 pr:
   - testing
@@ -55,23 +62,29 @@ steps:
 
 - script: |
     python -m pip install --upgrade pip wheel
-    pip install --upgrade .[asyncio] six codecov youtube-dl mpegdash paramiko m3u8 async-asgi-testclient
+    pip install --upgrade .[asyncio] six codecov yt_dlp mpegdash paramiko m3u8 async-asgi-testclient
     pip install --upgrade pytest pytest-asyncio pytest-cov pytest-azurepipelines 
   displayName: 'Install pip dependencies'
 
 - script: |
-    timeout 1200 pytest --verbose --cov=vidgear --cov-report=xml --cov-report=html --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "##vso[task.setvariable variable=exit_code]$code"; fi
+    timeout 1500 pytest --verbose --cov=vidgear --cov-report=xml --cov-report=html --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "##vso[task.setvariable variable=exit_code]$code"; fi
   displayName: 'pytest'
   
 - bash: |
     echo "Exit Code was: $(exit_code)"
+    curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import
+    curl -Os https://uploader.codecov.io/latest/macos/codecov
+    curl -Os https://uploader.codecov.io/latest/macos/codecov.SHA256SUM
+    curl -Os https://uploader.codecov.io/latest/macos/codecov.SHA256SUM.sig
+    gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
+    shasum -a 256 -c codecov.SHA256SUM
+    chmod +x codecov
     if [ "$(exit_code)" != "124" ]; then
-      bash <(curl -s https://codecov.io/bash) -C $(Build.SourceVersion) -B $(Build.SourceBranch) -b $(Build.BuildNumber);
+      ./codecov -t $CODECOV_TOKEN -f coverage.xml -C $(Build.SourceVersion) -B $(Build.SourceBranch) -b $(Build.BuildNumber);
     else
       echo "Timeout test - Skipped Codecov!"; 
     fi
   env:
-    CI_BUILD_ID: $(Build.BuildNumber)-$(Agent.OS)
-    VCS_BRANCH_NAME: $(Build.SourceBranchName)
-    VCS_COMMIT_ID: $(Build.SourceVersion)
+    CODECOV_TOKEN: $(TOKEN)
   displayName: Upload coverage to CodeCov
+  

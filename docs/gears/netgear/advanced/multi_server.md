@@ -96,12 +96,12 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! info "Important Notes"
 
-    * Note down the IP-address of this system(required at all Server's end) by executing the command: `hostname -I` and also replace it in the following code.
+    * Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Servers you are going to connect to this system. 
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="7 14 40-52"
 # import required libraries
 from vidgear.gears import NetGear
 from imutils import build_montages
@@ -182,7 +182,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 !!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 
-```python
+```python hl_lines="9 14"
 # import libraries
 from vidgear.gears import NetGear
 from vidgear.gears import CamGear
@@ -235,7 +235,7 @@ Finally, Open the terminal on another Server System _(also with a webcam connect
 
 !!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="9 14"
 # import libraries
 from vidgear.gears import NetGear
 from vidgear.gears import CamGear
@@ -293,7 +293,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! info "Important Notes"
 
-    * Note down the IP-address of this system(required at all Server's end) by executing the command: `hostname -I` and also replace it in the following code.
+    * Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Servers you are going to connect to this system. 
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
@@ -481,7 +481,7 @@ server.close()
 ### Using Multi-Servers Mode with Custom Data Transfer
 
 
-!!! info
+!!! abstract
 
     With Multi-Servers Mode, you can send additional data of any data-type _(such as list, tuple, string, int etc.)_ along with frame, from all connected Server(s) to a single Client unidirectionally.
 
@@ -496,12 +496,12 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! info "Important Notes"
 
-    * Note down the IP-address of this system(required at all Server's end) by executing the command: `hostname -I` and also replace it in the following code.
+    * Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Servers you are going to connect to this system. 
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="38-61"
 # import required libraries
 from vidgear.gears import NetGear
 from imutils import build_montages
@@ -511,6 +511,7 @@ import cv2
 options = {"multiserver_mode": True}
 
 # Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
 client = NetGear(
     address="192.168.x.x",
     port=(5577, 5578),
@@ -519,8 +520,7 @@ client = NetGear(
     receive_mode=True,
     logging=True,
     **options
-)  # !!! change following IP address '192.168.x.xxx' with yours !!!
-
+)  
 # Define received frame dictionary
 frame_dict = {}
 
@@ -590,7 +590,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="40"
 # import libraries
 from vidgear.gears import NetGear
 from vidgear.gears import VideoGear
@@ -652,7 +652,7 @@ Finally, Open the terminal on another Server System _(this time a Raspberry Pi w
 
 !!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="50"
 # import libraries
 from vidgear.gears import NetGear
 from vidgear.gears import PiGear

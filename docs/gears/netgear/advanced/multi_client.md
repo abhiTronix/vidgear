@@ -95,7 +95,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! info "Important Notes"
 
-    * Note down the IP-address of this system(required at all Client's end) by executing the command: `hostname -I` and also replace it in the following code.
+    * Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
 
 !!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
@@ -103,7 +103,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 !!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 
-```python
+```python hl_lines="9 16 39-52"
 # import required libraries
 from vidgear.gears import NetGear
 from vidgear.gears import CamGear
@@ -176,7 +176,7 @@ Now, Open a terminal on another Client System _(where you want to display the in
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="6 11-17"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -233,7 +233,7 @@ Finally, Open a terminal on another Client System _(where you want to display th
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="6  11-17"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -295,7 +295,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! info "Important Notes"
 
-    * Note down the IP-address of this system(required at all Client's end) by executing the command: `hostname -I` and also replace it in the following code.
+    * Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
 
 !!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
@@ -484,7 +484,7 @@ client.close()
 ### Using Multi-Clients Mode with Custom Data Transfer
 
 
-!!! info
+!!! abstract
 
     With Multi-Clients Mode, you can also send additional data of any data-type _(such as list, tuple, string, int, ndarray etc.)_ along with frame, from all connected Clients(s) back to  a Server unidirectionally.
 
@@ -498,14 +498,14 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! info "Important Notes"
 
-    * Note down the IP-address of this system(required at all Client's end) by executing the command: `hostname -I` and also replace it in the following code.
+    * Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
 
 !!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
 
 !!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="46-60"
 # import required libraries
 from vidgear.gears import PiGear
 from vidgear.gears import NetGear
@@ -588,7 +588,7 @@ Now, Open a terminal on another Client System _(where you want to display the in
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python hl_lines="27"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -649,7 +649,7 @@ Finally, Open a terminal on another Client System _(also, where you want to disp
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 
-```python
+```python hl_lines="27"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2

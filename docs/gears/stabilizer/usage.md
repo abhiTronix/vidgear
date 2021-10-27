@@ -147,7 +147,7 @@ stream.release()
 
 Stabilizer class provide certain [parameters](../params/) which you can use to tweak its internal properties. The complete usage example is as follows:
 
-```python
+```python hl_lines="10"
 # import required libraries
 from vidgear.gears.stabilizer import Stabilizer
 from vidgear.gears import CamGear

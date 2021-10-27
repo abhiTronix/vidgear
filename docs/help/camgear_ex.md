@@ -81,15 +81,15 @@ stream2.stop()
 
 &nbsp;
 
-## Using variable Youtube-DL parameters in CamGear
+## Using variable `yt_dlp` parameters in CamGear
 
-CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `youtube-dl`) parameters)_ with its [`options`](../../gears/camgear/params/#options) dictionary parameter. 
+CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `yt_dlp`) parameters)_ with its [`options`](../../gears/camgear/params/#options) dictionary parameter. 
 
 The complete usage example is as follows: 
 
 !!! tip "More information on `STREAM_RESOLUTION` & `STREAM_PARAMS` attributes can be found [here ➶](../../gears/camgear/advanced/source_params/#exclusive-camgear-parameters)"
 
-```python
+```python hl_lines="6"
 # import required libraries
 from vidgear.gears import CamGear
 import cv2
@@ -140,14 +140,14 @@ You can open any network stream _(such as RTSP/RTMP)_ just by providing its URL 
 
 Here's a high-level wrapper code around CamGear API to enable auto-reconnection during capturing: 
 
-!!! new "New in v0.2.2" 
+??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
 ??? tip "Enforcing UDP stream"
     
     You can easily enforce UDP for RSTP streams inplace of default TCP, by putting following lines of code on the top of your existing code:
 
-    ```python
+    ```python 
     # import required libraries
     import os
 

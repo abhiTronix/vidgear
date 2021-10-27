@@ -77,7 +77,7 @@ PiGear supports almost every parameter available within [**Picamera library**](h
 !!! tip "All supported parameters are listed in [PiCamera Docs ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html)"
 
 
-```python
+```python hl_lines="7-12"
 # import required libraries
 from vidgear.gears import PiGear
 import cv2
@@ -136,7 +136,7 @@ In following example code, we will start with [**HSV**](https://en.wikipedia.org
 !!! warning "Any incorrect or None-Type value will immediately revert the colorspace to default _(i.e. `BGR`)_."
 
 
-```python
+```python hl_lines="20 47 51 55"
 # import required libraries
 from vidgear.gears import PiGear
 import cv2

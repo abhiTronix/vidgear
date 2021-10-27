@@ -37,7 +37,7 @@ Best of all, PiGear contains ==Threaded Internal Timer== - that silently keeps a
 
 !!! tip "Helpful Tips"
 
-	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../switch_from_cv/#switching-videocapture-apis)
+	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../../switch_from_cv/#switching-videocapture-apis)
 
 	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 

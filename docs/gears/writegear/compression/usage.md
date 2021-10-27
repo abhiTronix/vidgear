@@ -96,7 +96,7 @@ In Compression Mode, WriteGear API contains [`rgb_mode`](../../../../bonus/refer
 
 The complete usage example is as follows:
 
-```python
+```python hl_lines="26"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import WriteGear
@@ -146,7 +146,7 @@ writer.close()
 
 ## Using Compression Mode with controlled FrameRate
 
-WriteGear API provides [`-input_framerate`](../params/#supported-parameters)  attribute for its `options` dictionary parameter in Compression Mode, which allow us to control/set the constant framerate of the output video. 
+WriteGear API provides [`-input_framerate`](../../params/#supported-parameters)  attribute for its `options` dictionary parameter in Compression Mode, which allow us to control/set the constant framerate of the output video. 
 
 ??? tip "Advanced Tip for setting constant framerate"
 
@@ -164,7 +164,7 @@ WriteGear API provides [`-input_framerate`](../params/#supported-parameters)  at
 
 In this code we will retrieve framerate from video stream, and set it as `-input_framerate` attribute for `option` parameter in WriteGear API:
 
-```python
+```python hl_lines="10"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -217,17 +217,17 @@ writer.close()
 
 ## Using Compression Mode for Streaming URLs
 
-In Compression Mode, WriteGear also allows URL strings _(as output)_ for network streaming with its [`output_filename`](../params/#output_filename) parameter.   
+In Compression Mode, WriteGear also allows URL strings _(as output)_ for network streaming with its [`output_filename`](../../params/#output_filename) parameter.   
 
 In this example, we will stream live camera feed directly to Twitch:
 
-!!! info "YouTube-Live Streaming example code also available in [WriteGear FAQs ➶](../../../../help/writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming)"
+!!! info "YouTube-Live Streaming example code also available in [WriteGear's Bonus Examples ➶](../../../../help/writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming)"
 
 !!! warning "This example assume you already have a [**Twitch Account**](https://www.twitch.tv/) for publishing video."
 
 !!! alert "Make sure to change [_Twitch Stream Key_](https://www.youtube.com/watch?v=xwOtOfPMIIk) with yours in following code before running!"
 
-```python
+```python hl_lines="11-16 20 24"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -294,7 +294,7 @@ writer.close()
 ## Using Compression Mode with Hardware encoders
 
 
-By default, WriteGear API uses `libx264` encoder for encoding output files in Compression Mode. But you can easily change encoder to your suitable [supported encoder](../params/#supported-encoders) by passing `-vcodec` FFmpeg parameter as an attribute with its [*output_param*](../params/#output_params) dictionary parameter. In addition to this, you can also specify the additional properties/features of your system's GPU easily. 
+By default, WriteGear API uses `libx264` encoder for encoding output files in Compression Mode. But you can easily change encoder to your suitable [supported encoder](../../params/#supported-encoders) by passing `-vcodec` FFmpeg parameter as an attribute with its [*output_param*](../../params/#output_params) dictionary parameter. In addition to this, you can also specify the additional properties/features of your system's GPU easily. 
 
 ??? warning "User Discretion Advised"
 
@@ -318,7 +318,7 @@ In this example, we will be using `h264_vaapi` as our hardware encoder and also 
     ```
 
 
-```python
+```python hl_lines="11-13"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -376,7 +376,7 @@ writer.close()
 
 You can easily use WriterGear API directly with any Video Processing library(_For e.g OpenCV itself_) in Compression Mode. The complete usage example is as follows:
 
-```python
+```python hl_lines="6"
 # import required libraries
 from vidgear.gears import WriteGear
 import cv2
@@ -474,9 +474,9 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             ```python
             # assign appropriate input audio-source
             output_params = {
+                "-f": "dshow", # !!! warning: always keep this line above "-i" parameter !!!
                 "-i":"audio=Microphone (USB2.0 Camera)",
                 "-thread_queue_size": "512",
-                "-f": "dshow",
                 "-ac": "2",
                 "-acodec": "aac",
                 "-ar": "44100",
@@ -521,12 +521,11 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             ```python
             # assign appropriate input audio-source
             output_params = {
-                "-i": "hw:1",
                 "-thread_queue_size": "512",
-                "-f": "alsa",
                 "-ac": "2",
-                "-acodec": "aac",
-                "-ar": "44100",
+                "-ar": "48000",
+                "-f": "alsa", # !!! warning: always keep this line above "-i" parameter !!!
+                "-i": "hw:1",
             }
             ```
 
@@ -564,12 +563,11 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             ```python
             # assign appropriate input audio-source
             output_params = {
-                "-audio_device_index": "0",
                 "-thread_queue_size": "512",
-                "-f": "avfoundation",
                 "-ac": "2",
-                "-acodec": "aac",
-                "-ar": "44100",
+                "-ar": "48000",
+                "-f": "avfoundation", # !!! warning: always keep this line above "-audio_device_index" parameter !!!
+                "-audio_device_index": "0",
             }
             ```
 
@@ -580,7 +578,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
 
 !!! warning "You **MUST** use [`-input_framerate`](../../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
-```python
+```python hl_lines="11-15"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import WriteGear
@@ -592,10 +590,10 @@ stream = VideoGear(source=0).start()
 # change with your webcam soundcard, plus add additional required FFmpeg parameters for your writer
 output_params = {
     "-thread_queue_size": "512",
-    "-f": "alsa",
-    "-ac": "1",
+    "-ac": "2",
     "-ar": "48000",
-    "-i": "plughw:CARD=CAMERA,DEV=0",
+    "-f": "alsa", # !!! warning: always keep this line above "-i" parameter !!!
+    "-i": "hw:1",
 }
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4

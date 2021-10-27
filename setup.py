@@ -56,14 +56,16 @@ def latest_version(package_name):
     Get latest package version from pypi (Hack)
     """
     url = "https://pypi.python.org/pypi/%s/json" % (package_name,)
+    versions = []
     try:
         response = urllib.request.urlopen(urllib.request.Request(url), timeout=1)
         data = json.load(response)
         versions = list(data["releases"].keys())
         versions.sort(key=LooseVersion)
         return ">={}".format(versions[-1])
-    except:
-        pass
+    except Exception as e:
+        if versions and isinstance(e, TypeError):
+            return ">={}".format(versions[-1])
     return ""
 
 
@@ -90,7 +92,7 @@ setup(
     author="Abhishek Thakur",
     install_requires=[
         "pafy{}".format(latest_version("pafy")),
-        "youtube-dl{}".format(latest_version("youtube-dl")),  # pafy backend
+        "yt_dlp{}".format(latest_version("yt_dlp")),  # pafy backend
         "mss{}".format(latest_version("mss")),
         "cython",  # helper for numpy install
         "numpy",
@@ -140,7 +142,7 @@ setup(
         "uvicorn",
         "uvloop",
         "pafy",
-        "youtube-dl",
+        "yt-dlp",
         "asyncio",
         "dash",
         "streamlink",
