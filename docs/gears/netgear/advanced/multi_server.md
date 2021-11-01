@@ -96,7 +96,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Note down the local IP-address of this system(required at all Server(s) end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Servers you are going to connect to this system. 
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
@@ -293,7 +293,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Note down the local IP-address of this system(required at all Server(s) end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Servers you are going to connect to this system. 
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
@@ -496,7 +496,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Note down the local IP-address of this system(required at all Server(s) end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Servers you are going to connect to this system. 
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"

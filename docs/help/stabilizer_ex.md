@@ -70,9 +70,9 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             ```python
             # assign appropriate input audio-source
             output_params = {
+                "-f": "dshow", # !!! warning: always keep this line above "-i" parameter !!!
                 "-i":"audio=Microphone (USB2.0 Camera)",
                 "-thread_queue_size": "512",
-                "-f": "dshow",
                 "-ac": "2",
                 "-acodec": "aac",
                 "-ar": "44100",
@@ -117,12 +117,11 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             ```python
             # assign appropriate input audio-source
             output_params = {
-                "-i": "hw:1",
                 "-thread_queue_size": "512",
-                "-f": "alsa",
                 "-ac": "2",
-                "-acodec": "aac",
-                "-ar": "44100",
+                "-ar": "48000",
+                "-f": "alsa", # !!! warning: always keep this line above "-i" parameter !!!
+                "-i": "hw:1",
             }
             ```
 
@@ -160,12 +159,11 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             ```python
             # assign appropriate input audio-source
             output_params = {
-                "-audio_device_index": "0",
                 "-thread_queue_size": "512",
-                "-f": "avfoundation",
                 "-ac": "2",
-                "-acodec": "aac",
-                "-ar": "44100",
+                "-ar": "48000",
+                "-f": "avfoundation", # !!! warning: always keep this line above "-audio_device_index" parameter !!!
+                "-audio_device_index": "0",
             }
             ```
 
@@ -191,10 +189,10 @@ stab = Stabilizer(smoothing_radius=30, crop_n_zoom=True, border_size=5, logging=
 # change with your webcam soundcard, plus add additional required FFmpeg parameters for your writer
 output_params = {
     "-thread_queue_size": "512",
-    "-f": "alsa",
-    "-ac": "1",
+    "-ac": "2",
     "-ar": "48000",
-    "-i": "plughw:CARD=CAMERA,DEV=0",
+    "-f": "alsa", # !!! warning: always keep this line above "-i" parameter !!!
+    "-i": "hw:1",
 }
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4
