@@ -8,13 +8,13 @@
 <span class=sd>    &quot;&quot;&quot;</span>
     <span class=c1># logging formatter</span>
     <span class=n>formatter</span> <span class=o>=</span> <span class=n>ColoredFormatter</span><span class=p>(</span>
-        <span class=s2>&quot;</span><span class=si>{green}{asctime}{reset}</span><span class=s2> :: </span><span class=si>{bold_blue}{name:^14}{reset}</span><span class=s2> :: </span><span class=si>{log_color}{levelname:^7}{reset}</span><span class=s2> :: </span><span class=si>{message}</span><span class=s2>&quot;</span><span class=p>,</span>
+        <span class=s2>&quot;</span><span class=si>{green}{asctime}{reset}</span><span class=s2> :: </span><span class=si>{bold_purple}{name:^13}{reset}</span><span class=s2> :: </span><span class=si>{log_color}{levelname:^8}{reset}</span><span class=s2> :: </span><span class=si>{message}</span><span class=s2>&quot;</span><span class=p>,</span>
         <span class=n>datefmt</span><span class=o>=</span><span class=s2>&quot;%H:%M:%S&quot;</span><span class=p>,</span>
         <span class=n>reset</span><span class=o>=</span><span class=kc>True</span><span class=p>,</span>
         <span class=n>log_colors</span><span class=o>=</span><span class=p>{</span>
-            <span class=s2>&quot;INFO&quot;</span><span class=p>:</span> <span class=s2>&quot;bold_green&quot;</span><span class=p>,</span>
+            <span class=s2>&quot;INFO&quot;</span><span class=p>:</span> <span class=s2>&quot;bold_cyan&quot;</span><span class=p>,</span>
             <span class=s2>&quot;DEBUG&quot;</span><span class=p>:</span> <span class=s2>&quot;bold_yellow&quot;</span><span class=p>,</span>
-            <span class=s2>&quot;WARNING&quot;</span><span class=p>:</span> <span class=s2>&quot;bold_purple&quot;</span><span class=p>,</span>
+            <span class=s2>&quot;WARNING&quot;</span><span class=p>:</span> <span class=s2>&quot;bold_red,fg_thin_yellow&quot;</span><span class=p>,</span>
             <span class=s2>&quot;ERROR&quot;</span><span class=p>:</span> <span class=s2>&quot;bold_red&quot;</span><span class=p>,</span>
             <span class=s2>&quot;CRITICAL&quot;</span><span class=p>:</span> <span class=s2>&quot;bold_red,bg_white&quot;</span><span class=p>,</span>
         <span class=p>},</span>
