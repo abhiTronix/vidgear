@@ -223,7 +223,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 * **`-audio`** _(string/list)_: This attribute takes external custom audio path _(as `string`)_ or audio device name followed by suitable demuxer _(as `list`)_ as audio source input for all StreamGear streams. Its value be one of the following:
 
-    !!! failure "Make sure this audio-source is compatible with provided video -source, otherwise you encounter multiple errors, or even no output at all!"
+    !!! failure "Make sure this audio-source is compatible with provided video -source, otherwise you could encounter multiple errors, or even no output at all!"
 
     * **Audio Filename** _(string)_: Valid path to Audio file as follows:
         ```python

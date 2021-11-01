@@ -172,7 +172,7 @@ You can also use WriteGear for merging external audio with live video-source:
 ??? new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
-!!! failure "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
+!!! failure "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."
 
 ```python hl_lines="11-12"
 # import required libraries

@@ -218,3 +218,66 @@ if __name__ == "__main__":
 ```
 
 &nbsp;
+
+
+## Using VideoGear for Real-time Stabilization with Audio Encoding
+
+In this example code, we will be directly merging the audio from a Video-File _(to be stabilized)_ with its processed stabilized frames into a compressed video output in real time:
+
+??? new "New in v0.2.4" 
+    This example was added in `v0.2.4`.
+
+!!! danger "Make sure this input video-file _(to be stabilized)_ contains valid audio source, otherwise you could encounter multiple errors or no output at all."
+
+!!! warning "You **MUST** use `-input_framerate` attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
+
+!!! alert "Use `-disable_force_termination` flag when video duration is too short(<60sec), otherwise WriteGear will not produce any valid output."
+
+```python
+# import required libraries
+from vidgear.gears import WriteGear
+from vidgear.gears import VideoGear
+import cv2
+
+# Give suitable video file path to be stabilized
+unstablized_videofile = "test.mp4"
+
+# open any valid video path with stabilization enabled(`stabilize = True`)
+stream_stab = VideoGear(source=unstablized_videofile, stabilize=True, logging=True).start()
+
+# define required FFmpeg optimizing parameters for your writer
+output_params = {
+    "-i": unstablized_videofile,
+    "-c:a": "aac",
+    "-input_framerate": stream_stab.framerate,
+    "-clones": ["-shortest"],
+    # !!! Uncomment following line if video duration is too short(<60sec). !!!
+    #"-disable_force_termination": True,
+}
+
+# Define writer with defined parameters and suitable output filename for e.g. `Output.mp4
+writer = WriteGear(output_filename="Output.mp4", logging=True, **output_params)
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame_stab = stream_stab.read()
+
+    # check for frame if not grabbed
+    if frame_stab is None:
+        break
+
+    # {do something with the stabilized frame here}
+
+    # write stabilized frame to writer
+    writer.write(frame_stab)
+
+# safely close streams
+stream_stab.stop()
+
+# safely close writer
+writer.close()
+```
+
+&nbsp;

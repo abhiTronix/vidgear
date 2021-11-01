@@ -31,9 +31,12 @@ limitations under the License.
 
     * While providing additional av-source with `-i` FFmpeg parameter in `output_params` make sure it don't interfere with WriteGear's frame pipeline otherwise it will break things!
 
+    * Use [`-disable_force_termination`](../params/#supported-parameters) flag when video duration is too short(<60sec), otherwise WriteGear will not produce any valid output.
+
     * Heavy resolution multimedia files take time to render which can last up to _0.1-1 seconds_. Kindly wait till the WriteGear API terminates itself, and **DO NOT** try to kill the process instead.
 
     * Always use `writer.close()` at the very end of the main code. **NEVER USE IT INBETWEEN CODE** to avoid undesired behavior.
+
 
 
 &thinsp;
@@ -146,7 +149,7 @@ writer.close()
 
 ## Using Compression Mode with controlled FrameRate
 
-WriteGear API provides [`-input_framerate`](../../params/#supported-parameters)  attribute for its `options` dictionary parameter in Compression Mode, which allow us to control/set the constant framerate of the output video. 
+WriteGear API provides [`-input_framerate`](../params/#supported-parameters)  attribute for its `options` dictionary parameter in Compression Mode, which allow us to control/set the constant framerate of the output video. 
 
 ??? tip "Advanced Tip for setting constant framerate"
 
@@ -217,7 +220,7 @@ writer.close()
 
 ## Using Compression Mode for Streaming URLs
 
-In Compression Mode, WriteGear also allows URL strings _(as output)_ for network streaming with its [`output_filename`](../../params/#output_filename) parameter.   
+In Compression Mode, WriteGear also allows URL strings _(as output)_ for network streaming with its [`output_filename`](../params/#output_filename) parameter.   
 
 In this example, we will stream live camera feed directly to Twitch:
 
@@ -294,7 +297,7 @@ writer.close()
 ## Using Compression Mode with Hardware encoders
 
 
-By default, WriteGear API uses `libx264` encoder for encoding output files in Compression Mode. But you can easily change encoder to your suitable [supported encoder](../../params/#supported-encoders) by passing `-vcodec` FFmpeg parameter as an attribute with its [*output_param*](../../params/#output_params) dictionary parameter. In addition to this, you can also specify the additional properties/features of your system's GPU easily. 
+By default, WriteGear API uses `libx264` encoder for encoding output files in Compression Mode. But you can easily change encoder to your suitable [supported encoder](../params/#supported-encoders) by passing `-vcodec` FFmpeg parameter as an attribute with its [*output_param*](../params/#output_params) dictionary parameter. In addition to this, you can also specify the additional properties/features of your system's GPU easily. 
 
 ??? warning "User Discretion Advised"
 
@@ -574,9 +577,9 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
         !!! fail "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
-!!! danger "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
+!!! danger "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."
 
-!!! warning "You **MUST** use [`-input_framerate`](../../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
+!!! warning "You **MUST** use [`-input_framerate`](../params/#supported-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
 ```python hl_lines="11-15"
 # import required libraries
@@ -589,6 +592,7 @@ stream = VideoGear(source=0).start()
 
 # change with your webcam soundcard, plus add additional required FFmpeg parameters for your writer
 output_params = {
+    "-input_framerate": stream.framerate,
     "-thread_queue_size": "512",
     "-ac": "2",
     "-ar": "48000",
