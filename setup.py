@@ -103,7 +103,7 @@ setup(
         "requests",
         "pyzmq{}".format(latest_version("pyzmq")),
         "simplejpeg{}".format(latest_version("simplejpeg")),
-        "colorlog",
+        "colorlog{}".format(latest_version("colorlog")),
         "tqdm",
         "Pillow",
         "pyscreenshot{}".format(latest_version("pyscreenshot")),

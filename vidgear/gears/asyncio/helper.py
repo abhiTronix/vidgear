@@ -39,7 +39,7 @@ from requests.packages.urllib3.util.retry import Retry
 from ..helper import logger_handler, mkdir_safe
 
 # define logger
-logger = log.getLogger("Helper Asyncio")
+logger = log.getLogger("Helper_Async")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
