@@ -64,9 +64,9 @@ class image_publisher:
 
         # {do something with received ROS node data here}
 
-        # read stabilized frames
+        # read frames
         frame = self.stream.read()
-        # check for stabilized frame if None-type
+        # check for frame if None-type
         if not (frame is None):
 
             # {do something with the frame here}

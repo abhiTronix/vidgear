@@ -39,7 +39,6 @@ from tqdm import tqdm
 from contextlib import closing
 from pathlib import Path
 from colorlog import ColoredFormatter
-from colorlog.escape_codes import esc
 from distutils.version import LooseVersion
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry

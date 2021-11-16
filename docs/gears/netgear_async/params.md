@@ -165,17 +165,16 @@ This parameter provides the flexibility to alter various NetGear_Async API's int
 
     * **`bidirectional_mode`** (_boolean_) : This internal attribute activates the exclusive [**Bidirectional Mode**](../advanced/bidirectional_mode/), if enabled(`True`).
 
+        The desired attributes can be passed to NetGear_Async API as follows:
 
-The desired attributes can be passed to NetGear_Async API as follows:
-
-```python
-# formatting parameters as dictionary attributes
-options = {
-    "bidirectional_mode": True,
-}
-# assigning it
-NetGear_Async(logging=True, **options)
-```
+        ```python
+        # formatting parameters as dictionary attributes
+        options = {
+            "bidirectional_mode": True,
+        }
+        # assigning it
+        NetGear_Async(logging=True, **options)
+        ```
 
 
 &nbsp; 

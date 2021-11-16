@@ -120,7 +120,8 @@ markdown_extensions:
   - meta
   - toc:
       permalink: ⚓
-      slugify: !!python/name:pymdownx.slugs.uslugify
+      slugify: !!python/name:pymdownx.slugs.uslugify_cased
+      permalink_title: Anchor link to this section for reference
   - codehilite:
       guess_lang: false
   - pymdownx.arithmatex
