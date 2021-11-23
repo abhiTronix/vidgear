@@ -124,16 +124,12 @@ setup(
             if (platform.system() != "Windows")
             else []
         ),
-        "camgear": [
+        "core": [
             "pafy{}".format(latest_version("pafy")),
             "yt_dlp{}".format(latest_version("yt_dlp")),  # pafy backend
             "streamlink",
-        ],
-        "netgear": [
             "pyzmq{}".format(latest_version("pyzmq")),
             "simplejpeg{}".format(latest_version("simplejpeg")),
-        ],
-        "screengear": [
             "mss{}".format(latest_version("mss")),
             "Pillow",
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
