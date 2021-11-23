@@ -172,7 +172,7 @@ You can also use WriteGear for merging external audio with live video-source:
 ??? new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
-!!! failure "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
+!!! failure "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."
 
 ```python hl_lines="11-12"
 # import required libraries
@@ -275,14 +275,13 @@ class image_subscriber:
         if cv_image:
 
             # {do something with the frame here}
-
-            # add circle
+            # let's add a circle
             (rows, cols, channels) = cv_image.shape
             if cols > 60 and rows > 60:
                 cv2.circle(cv_image, (50, 50), 10, 255)
 
             # write frame to writer
-            writer.write(frame)
+            writer.write(cv_image)
 
         def close(self):
             # safely close video stream

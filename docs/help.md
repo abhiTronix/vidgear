@@ -75,7 +75,7 @@ Let others know how you are using VidGear and why you like it!
 
 ## Helping Author
 
-> Donations help keep VidGear's development alive and motivate me _(as author)_. :heart:
+> Donations help keep VidGear's development alive and motivate me _(as author)_. :heart:{ .heart }
 
 It is (like all open source software) a labour of love and something I am doing with my own free time. If you would like to say thanks, please feel free to make a donation through ko-fi:
 

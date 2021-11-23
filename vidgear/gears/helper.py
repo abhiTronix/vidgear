@@ -54,13 +54,13 @@ def logger_handler():
     """
     # logging formatter
     formatter = ColoredFormatter(
-        "{green}{asctime}{reset} :: {bold_blue}{name:^14}{reset} :: {log_color}{levelname:^7}{reset} :: {message}",
+        "{green}{asctime}{reset} :: {bold_purple}{name:^13}{reset} :: {log_color}{levelname:^8}{reset} :: {message}",
         datefmt="%H:%M:%S",
         reset=True,
         log_colors={
-            "INFO": "bold_green",
+            "INFO": "bold_cyan",
             "DEBUG": "bold_yellow",
-            "WARNING": "bold_purple",
+            "WARNING": "bold_red,fg_thin_yellow",
             "ERROR": "bold_red",
             "CRITICAL": "bold_red,bg_white",
         },

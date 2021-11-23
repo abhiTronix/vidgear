@@ -70,9 +70,9 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             ```python
             # assign appropriate input audio-source
             output_params = {
+                "-f": "dshow", # !!! warning: always keep this line above "-i" parameter !!!
                 "-i":"audio=Microphone (USB2.0 Camera)",
                 "-thread_queue_size": "512",
-                "-f": "dshow",
                 "-ac": "2",
                 "-acodec": "aac",
                 "-ar": "44100",
@@ -117,12 +117,11 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             ```python
             # assign appropriate input audio-source
             output_params = {
-                "-i": "hw:1",
                 "-thread_queue_size": "512",
-                "-f": "alsa",
                 "-ac": "2",
-                "-acodec": "aac",
-                "-ar": "44100",
+                "-ar": "48000",
+                "-f": "alsa", # !!! warning: always keep this line above "-i" parameter !!!
+                "-i": "hw:1",
             }
             ```
 
@@ -160,21 +159,20 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             ```python
             # assign appropriate input audio-source
             output_params = {
-                "-audio_device_index": "0",
                 "-thread_queue_size": "512",
-                "-f": "avfoundation",
                 "-ac": "2",
-                "-acodec": "aac",
-                "-ar": "44100",
+                "-ar": "48000",
+                "-f": "avfoundation", # !!! warning: always keep this line above "-audio_device_index" parameter !!!
+                "-audio_device_index": "0",
             }
             ```
 
         !!! fail "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
-!!! danger "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
+!!! danger "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."
 
-!!! warning "You **MUST** use [`-input_framerate`](../../gears/writegear/compression/params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
+!!! warning "You **MUST** use [`-input_framerate`](../../gears/writegear/compression/params/#supported-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
 ```python
 # import required libraries
@@ -190,12 +188,90 @@ stab = Stabilizer(smoothing_radius=30, crop_n_zoom=True, border_size=5, logging=
 
 # change with your webcam soundcard, plus add additional required FFmpeg parameters for your writer
 output_params = {
+    "-input_framerate": stream.get(cv2.CAP_PROP_FPS),
     "-thread_queue_size": "512",
-    "-f": "alsa",
-    "-ac": "1",
+    "-ac": "2",
     "-ar": "48000",
-    "-i": "plughw:CARD=CAMERA,DEV=0",
+    "-f": "alsa", # !!! warning: always keep this line above "-i" parameter !!!
+    "-i": "hw:1",
 }
+
+# Define writer with defined parameters and suitable output filename for e.g. `Output.mp4
+writer = WriteGear(output_filename="Output.mp4", logging=True, **output_params)
+
+# loop over
+while True:
+
+    # read frames from stream
+    (grabbed, frame) = stream.read()
+
+    # check for frame if not grabbed
+    if not grabbed:
+        break
+
+    # send current frame to stabilizer for processing
+    stabilized_frame = stab.stabilize(frame)
+
+    # wait for stabilizer which still be initializing
+    if stabilized_frame is None:
+        continue
+
+    # {do something with the stabilized frame here}
+
+    # write stabilized frame to writer
+    writer.write(stabilized_frame)
+
+
+# clear stabilizer resources
+stab.clean()
+
+# safely close video stream
+stream.release()
+
+# safely close writer
+writer.close()
+```
+
+&nbsp;
+
+## Saving Stabilizer Class output with File Audio Input
+
+In this example code, we will be directly merging the audio from a Video-File _(to be stabilized)_ with its processed stabilized frames into a compressed video output in real time:
+
+??? new "New in v0.2.4" 
+    This example was added in `v0.2.4`.
+
+!!! danger "Make sure this input video-file _(to be stabilized)_ contains valid audio source, otherwise you could encounter multiple errors or no output at all."
+
+!!! warning "You **MUST** use [`-input_framerate`](../../gears/writegear/compression/params/#supported-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
+
+!!! alert "Use [`-disable_force_termination`](../../gears/writegear/compression/params/#supported-parameters) flag when video duration is too short(<60sec), otherwise WriteGear will not produce any valid output."
+
+```python
+# import required libraries
+from vidgear.gears import WriteGear
+from vidgear.gears.stabilizer import Stabilizer
+import cv2
+
+# Give suitable video file path to be stabilized
+unstablized_videofile = "test.mp4"
+
+# open stream on given path
+stream = cv2.VideoCapture(unstablized_videofile)
+
+# initiate stabilizer object with defined parameters
+stab = Stabilizer(smoothing_radius=30, crop_n_zoom=True, border_size=5, logging=True)
+
+# define required FFmpeg optimizing parameters for your writer
+output_params = {
+    "-i": unstablized_videofile,
+    "-c:a": "aac",
+    "-input_framerate": stream.get(cv2.CAP_PROP_FPS),
+    "-clones": ["-shortest"],
+    # !!! Uncomment following line if video duration is too short(<60sec). !!!
+    #"-disable_force_termination": True,
+}
+
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4
 writer = WriteGear(output_filename="Output.mp4", logging=True, **output_params)

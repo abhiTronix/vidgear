@@ -95,7 +95,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Note down the local IP-address of this system(required at all Client(s) end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
 
 !!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
@@ -295,7 +295,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Note down the local IP-address of this system(required at all Client(s) end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
 
 !!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
@@ -498,7 +498,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Note down the local IP-address of this system(required at all Client(s) end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
 
 !!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."

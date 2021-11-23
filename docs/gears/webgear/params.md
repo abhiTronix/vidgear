@@ -87,7 +87,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 * **`jpeg_compression_quality`**: _(int/float)_ This attribute controls the JPEG quantization factor. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. Its usage is as follows:
 
     ??? new "New in v0.2.2" 
-        `enable_infinite_frames` attribute was added in `v0.2.2`.
+        `jpeg_compression_quality` attribute was added in `v0.2.2`.
 
     ```python
     # activate jpeg encoding and set quality 95%
@@ -99,7 +99,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 * **`jpeg_compression_fastdct`**: _(bool)_ This attribute if True, WebGear API uses fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`, and its usage is as follows:
 
     ??? new "New in v0.2.2" 
-        `enable_infinite_frames` attribute was added in `v0.2.2`.
+        `jpeg_compression_fastdct` attribute was added in `v0.2.2`.
 
     ```python
     # activate jpeg encoding and enable fast dct
@@ -111,7 +111,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 * **`jpeg_compression_fastupsample`**: _(bool)_ This attribute if True, WebGear API use fastest color upsampling method. Its default value is `False`, and its usage is as follows:
 
     ??? new "New in v0.2.2" 
-        `enable_infinite_frames` attribute was added in `v0.2.2`.
+        `jpeg_compression_fastupsample` attribute was added in `v0.2.2`.
 
     ```python
     # activate jpeg encoding and enable fast upsampling
@@ -125,7 +125,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     !!! info "Supported `jpeg_compression_colorspace` colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
 
     ??? new "New in v0.2.2" 
-        `enable_infinite_frames` attribute was added in `v0.2.2`.
+        `jpeg_compression_colorspace` attribute was added in `v0.2.2`.
 
     ```python
     # Specify incoming frames are `grayscale`
