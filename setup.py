@@ -108,6 +108,14 @@ setup(
     url="https://abhitronix.github.io/vidgear",
     extras_require={
         "asyncio": [
+            "pafy{}".format(latest_version("pafy")),
+            "yt_dlp{}".format(latest_version("yt_dlp")),  # pafy backend
+            "streamlink",
+            "pyzmq{}".format(latest_version("pyzmq")),
+            "simplejpeg{}".format(latest_version("simplejpeg")),
+            "mss{}".format(latest_version("mss")),
+            "Pillow",
+            "pyscreenshot{}".format(latest_version("pyscreenshot")),
             "starlette{}".format(latest_version("starlette")),
             "jinja2",
             "uvicorn{}".format(latest_version("uvicorn")),
