@@ -91,19 +91,11 @@ setup(
     license="Apache License 2.0",
     author="Abhishek Thakur",
     install_requires=[
-        "pafy{}".format(latest_version("pafy")),
-        "yt_dlp{}".format(latest_version("yt_dlp")),  # pafy backend
-        "mss{}".format(latest_version("mss")),
         "cython",  # helper for numpy install
         "numpy",
-        "streamlink",
         "requests",
-        "pyzmq{}".format(latest_version("pyzmq")),
-        "simplejpeg{}".format(latest_version("simplejpeg")),
         "colorlog",
         "tqdm",
-        "Pillow",
-        "pyscreenshot{}".format(latest_version("pyscreenshot")),
     ]
     + (["opencv-python"] if test_opencv() else [])
     + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
@@ -128,7 +120,21 @@ setup(
             )
             if (platform.system() != "Windows")
             else []
-        )
+        ),
+        "camgear": [
+            "pafy{}".format(latest_version("pafy")),
+            "yt_dlp{}".format(latest_version("yt_dlp")),  # pafy backend
+            "streamlink",
+        ],
+        "netgear": [
+            "pyzmq{}".format(latest_version("pyzmq")),
+            "simplejpeg{}".format(latest_version("simplejpeg")),
+        ],
+        "screengear": [
+            "mss{}".format(latest_version("mss")),
+            "Pillow",
+            "pyscreenshot{}".format(latest_version("pyscreenshot")),
+        ],
     },
     keywords=[
         "OpenCV",
