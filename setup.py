@@ -123,6 +123,7 @@ setup(
             "msgpack_numpy{}".format(latest_version("msgpack_numpy")),
             "aiortc{}".format(latest_version("aiortc")),
         ]
+        + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
         + (
             (
                 ["uvloop{}".format(latest_version("uvloop"))]
