@@ -141,7 +141,8 @@ setup(
             "mss{}".format(latest_version("mss")),
             "Pillow",
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
-        ],
+        ]
+        + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
     },
     keywords=[
         "OpenCV",
