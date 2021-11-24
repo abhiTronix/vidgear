@@ -101,7 +101,6 @@ setup(
         "tqdm",
     ]
     + (["opencv-python"] if test_opencv() else [])
-    + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
     long_description=long_description,
     long_description_content_type="text/markdown",
     author_email="abhi.una12@gmail.com",
