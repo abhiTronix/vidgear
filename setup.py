@@ -100,20 +100,33 @@ setup(
         "colorlog",
         "tqdm",
     ]
-    + (["opencv-python"] if test_opencv() else [])
+    + (["opencv-python"] if test_opencv() else []),
     long_description=long_description,
     long_description_content_type="text/markdown",
     author_email="abhi.una12@gmail.com",
     url="https://abhitronix.github.io/vidgear",
     extras_require={
+        # API specific deps
+        "core": [
+            "yt_dlp{}".format(latest_version("yt_dlp")),
+            "streamlink",
+            "pyzmq{}".format(latest_version("pyzmq")),
+            "Pillow",
+            "pafy"
+            "simplejpeg{}".format(latest_version("simplejpeg")),
+            "mss{}".format(latest_version("mss")),
+            "pyscreenshot{}".format(latest_version("pyscreenshot")),
+        ]
+        + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
+        # API specific + Asyncio deps
         "asyncio": [
-            "pafy{}".format(latest_version("pafy")),
-            "yt_dlp{}".format(latest_version("yt_dlp")),  # pafy backend
+            "yt_dlp{}".format(latest_version("yt_dlp")),
             "streamlink",
             "pyzmq{}".format(latest_version("pyzmq")),
             "simplejpeg{}".format(latest_version("simplejpeg")),
             "mss{}".format(latest_version("mss")),
             "Pillow",
+            "pafy",
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
             "starlette{}".format(latest_version("starlette")),
             "jinja2",
@@ -122,7 +135,7 @@ setup(
             "msgpack_numpy{}".format(latest_version("msgpack_numpy")),
             "aiortc{}".format(latest_version("aiortc")),
         ]
-        + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
+        + (["picamera"] if ("arm" in platform.uname()[4][:3]) else [])
         + (
             (
                 ["uvloop{}".format(latest_version("uvloop"))]
@@ -132,17 +145,6 @@ setup(
             if (platform.system() != "Windows")
             else []
         ),
-        "core": [
-            "pafy{}".format(latest_version("pafy")),
-            "yt_dlp{}".format(latest_version("yt_dlp")),  # pafy backend
-            "streamlink",
-            "pyzmq{}".format(latest_version("pyzmq")),
-            "simplejpeg{}".format(latest_version("simplejpeg")),
-            "mss{}".format(latest_version("mss")),
-            "Pillow",
-            "pyscreenshot{}".format(latest_version("pyscreenshot")),
-        ]
-        + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
     },
     keywords=[
         "OpenCV",
