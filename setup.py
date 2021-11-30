@@ -112,7 +112,7 @@ setup(
             "streamlink",
             "pyzmq{}".format(latest_version("pyzmq")),
             "Pillow",
-            "pafy"
+            "pafy",
             "simplejpeg{}".format(latest_version("simplejpeg")),
             "mss{}".format(latest_version("mss")),
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
