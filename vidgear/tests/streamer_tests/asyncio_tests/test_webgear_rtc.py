@@ -155,8 +155,8 @@ class Custom_Stream_Class:
         # flag that we're not running
         self.running = False
         # close stream
-        if not self.source is None:
-            self.source.release()
+        if not self.stream is None:
+            self.stream.release()
 
 
 class Invalid_Custom_Stream_Class:
