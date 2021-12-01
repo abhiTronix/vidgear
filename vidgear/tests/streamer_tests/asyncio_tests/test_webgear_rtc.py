@@ -135,12 +135,12 @@ class Custom_Stream_Class:
 
     def read(self):
         # check if source was initialized or not
-        if self.source is None:
+        if self.stream is None:
             return None
         # check if we're still running
         if self.running:
             # read frame from provided source
-            (grabbed, frame) = self.source.read()
+            (grabbed, frame) = self.stream.read()
             # check if frame is available
             if grabbed:
                 # return our gray frame
@@ -392,8 +392,8 @@ async def test_webgear_rtc_custom_stream_class(stream_class, result):
     # assign your Custom Streaming Class with adequate source (for e.g. foo.mp4)
     # to `custom_stream` attribute in options parameter
     options = {"custom_stream": stream_class}
-    web = WebGear_RTC(logging=True, **options)
     try:
+        web = WebGear_RTC(logging=True, **options)
         async with TestClient(web()) as client:
             response = await client.get("/")
             assert response.status_code == 200
@@ -415,11 +415,12 @@ async def test_webgear_rtc_custom_stream_class(stream_class, result):
             )
             assert response_rtc_offer.status_code == 200
             await offer_pc.close()
+        web.shutdown()
     except Exception as e:
         if result and not isinstance(e, (ValueError, MediaStreamError)):
             pytest.fail(str(e))
-    finally:
-        web.shutdown()
+        else:
+            pytest.xfail(str(e))
 
 
 test_data_class = [
@@ -445,6 +446,8 @@ async def test_webgear_rtc_custom_middleware(middleware, result):
     except Exception as e:
         if result and not isinstance(e, MediaStreamError):
             pytest.fail(str(e))
+        else:
+            pytest.xfail(str(e))
 
 
 @pytest.mark.asyncio
