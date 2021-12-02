@@ -96,7 +96,7 @@ Now, Open the terminal on another Server System _(with a montior/display attache
 
 ```python
 # import required libraries
-from vidgear.gears import VideoGear
+from vidgear.gears import ScreenGear
 from vidgear.gears import NetGear
 
 # define dimensions of screen w.r.t to given monitor to be captured
@@ -151,88 +151,114 @@ server.close()
 
 The complete usage example is as follows: 
 
-??? new "New in v0.2.3" 
-    This example was added in `v0.2.3`.
+??? new "New in v0.2.4" 
+    This example was added in `v0.2.4`.
 
-```python
-# import necessary libs
-import uvicorn, asyncio, cv2
-from av import VideoFrame
-from aiortc import VideoStreamTrack
-from aiortc.mediastreams import MediaStreamError
-from vidgear.gears import ScreenGear
-from vidgear.gears.asyncio import WebGear_RTC
-from vidgear.gears.asyncio.helper import reducer
+=== "Bare-Minimum"
 
-# initialize WebGear_RTC app without any source
-web = WebGear_RTC(logging=True)
+    ```python hl_lines="8"
+    # import necessary libs
+    import uvicorn, cv2
+    from vidgear.gears import ScreenGear
+    from vidgear.gears.asyncio import WebGear_RTC
 
-# create your own Bare-Minimum Custom Media Server with ScreenGear source
-class Custom_RTCScreenGearServer(VideoStreamTrack):
-    """
-    Custom Media Server using OpenCV, an inherit-class
-    to aiortc's VideoStreamTrack.
-    """
+    # assign your ScreenGear class with adequate parameters 
+    # to `custom_stream` attribute in options parameter
+    options = {"custom_stream": ScreenGear(logging=True)}
 
-    def __init__(self, monitor=None, logging=False):
+    # initialize WebGear_RTC app without any source
+    web = WebGear_RTC(logging=True, **options)
 
-        # don't forget this line!
-        super().__init__()
+    # run this app on Uvicorn server at address http://localhost:8000/
+    uvicorn.run(web(), host="localhost", port=8000)
 
-        # initialize global params
-        self.stream = ScreenGear(monitor=monitor, logging=logging).start()
+    # close app safely
+    web.shutdown()
+    ```
 
-    async def recv(self):
+=== "Advanced"
+
+    !!! fail "For VideoCapture APIs you also need to implement `start()` in addition to `read()` and `stop()` methods in your Custom Streaming Class as shown in following example, otherwise WebGear_RTC will fail to work!"
+
+    ```python hl_lines="8-64 69"
+    # import necessary libs
+    import uvicorn, cv2
+    from vidgear.gears import ScreenGear
+    from vidgear.gears.helper import reducer
+    from vidgear.gears.asyncio import WebGear_RTC
+
+    # create your own custom streaming class
+    class Custom_Stream_Class:
         """
-        A coroutine function that yields `av.frame.Frame`.
+        Custom Streaming using ScreenGear
         """
-        # don't forget this function!!!
 
-        # get next timestamp
-        pts, time_base = await self.next_timestamp()
+        def __init__(self, backend="mss", logging=False):
 
-        # read video frame
-        frame = self.stream.read()
+            # !!! define your own video source here !!!
+            self.source = ScreenGear(backend=backend, logging=logging)
 
-        # if NoneType
-        if frame is None:
-            return MediaStreamError
+            # define running flag
+            self.running = True
 
-        # reducer frames size if you want more performance otherwise comment this line
-        frame = await reducer(frame, percentage=20)  # reduce frame by 20%
+        def start(self):
 
-        # contruct `av.frame.Frame` from `numpy.nd.array`
-        if frame.shape[-1] == 4:
-            # hack: handles `mss` backend that outputs BGRA frames
-            av_frame = VideoFrame.from_ndarray(frame, format="bgra")
-        else:
-            av_frame = VideoFrame.from_ndarray(frame, format="bgr24")
-        av_frame.pts = pts
-        av_frame.time_base = time_base
+            # don't forget this function!!!
+            # This function is specific to VideoCapture APIs only
 
-        # return `av.frame.Frame`
-        return av_frame
+            if not self.source is None:
+                self.source.start()
 
-    def terminate(self):
-        """
-        Gracefully terminates VideoGear stream
-        """
-        # don't forget this function!!!
+        def read(self):
 
-        # terminate
-        if not (self.stream is None):
-            self.stream.stop()
-            self.stream = None
+            # don't forget this function!!!
+
+            # check if source was initialized or not
+            if self.source is None:
+                return None
+            # check if we're still running
+            if self.running:
+                # read frame from provided source
+                frame = self.source.read()
+                # check if frame is available
+                if not(frame is None):
+
+                    # do something with your OpenCV frame here
+
+                    # reducer frames size if you want more performance otherwise comment this line
+                    frame = reducer(frame, percentage=20)  # reduce frame by 20%
+
+                    # return our gray frame
+                    return frame
+                else:
+                    # signal we're not running now
+                    self.running = False
+            # return None-type
+            return None
+
+        def stop(self):
+
+            # don't forget this function!!!
+
+            # flag that we're not running
+            self.running = False
+            # close stream
+            if not self.source is None:
+                self.source.stop()
 
 
-# assign your custom media server to config with ScreenGear source
-web.config["server"] = Custom_RTCScreenGearServer(logging=True)
+    # assign your Custom Streaming Class with adequate ScreenGear parameters
+    # to `custom_stream` attribute in options parameter
+    options = {"custom_stream": Custom_Stream_Class(backend="pil", logging=True)}
 
-# run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host="localhost", port=8000)
+    # initialize WebGear_RTC app without any source
+    web = WebGear_RTC(logging=True, **options)
 
-# close app safely
-web.shutdown()
-```
+    # run this app on Uvicorn server at address http://localhost:8000/
+    uvicorn.run(web(), host="localhost", port=8000)
+
+    # close app safely
+    web.shutdown()
+    ```
 
 &nbsp; 

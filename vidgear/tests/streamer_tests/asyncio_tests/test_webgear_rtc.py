@@ -43,6 +43,7 @@ from aiortc import (
     RTCSessionDescription,
 )
 from av import VideoFrame
+from vidgear.gears import VideoGear
 from aiortc.mediastreams import MediaStreamError
 from vidgear.gears.asyncio import WebGear_RTC
 from vidgear.gears.helper import logger_handler
@@ -119,95 +120,61 @@ def hello_webpage(request):
     return PlainTextResponse("Hello, world!")
 
 
-class Custom_RTCServer(VideoStreamTrack):
+# create your own custom streaming class
+class Custom_Stream_Class:
     """
-    Custom Media Server using OpenCV, an inherit-class to aiortc's VideoStreamTrack API.
+    Custom Streaming using OpenCV
     """
 
-    def __init__(self, source=None):
-        # don't forget this line!
-        super().__init__()
-
-        # initialize global params
+    def __init__(self, source=0):
+        # !!! define your own video source here !!!
         self.stream = cv2.VideoCapture(source)
 
-    async def recv(self):
-        """
-        A coroutine function that yields `av.frame.Frame`.
-        """
-        # get next timestamp
-        pts, time_base = await self.next_timestamp()
+        # define running flag
+        self.running = True
 
-        # read video frame
-        (grabbed, frame) = self.stream.read()
+    def read(self):
+        # check if source was initialized or not
+        if self.stream is None:
+            return None
+        # check if we're still running
+        if self.running:
+            # read frame from provided source
+            (grabbed, frame) = self.stream.read()
+            # check if frame is available
+            if grabbed:
+                # return our gray frame
+                return frame
+            else:
+                # signal we're not running now
+                self.running = False
+        # return None-type
+        return None
 
-        # if NoneType
-        if not grabbed:
-            raise MediaStreamError
-
-        # contruct `av.frame.Frame` from `numpy.nd.array`
-        av_frame = VideoFrame.from_ndarray(frame, format="bgr24")
-        av_frame.pts = pts
-        av_frame.time_base = time_base
-
-        # return `av.frame.Frame`
-        return av_frame
-
-    def terminate(self):
-        """
-        Gracefully terminates VideoGear stream
-        """
-        # terminate
-        if not (self.stream is None):
+    def stop(self):
+        # flag that we're not running
+        self.running = False
+        # close stream
+        if not self.stream is None:
             self.stream.release()
-            self.stream = None
 
 
-class Invalid_Custom_RTCServer_1(VideoStreamTrack):
+class Invalid_Custom_Stream_Class:
     """
     Custom Invalid WebGear_RTC Server
     """
 
-    def __init__(self, source=None):
-        # don't forget this line!
-        super().__init__()
+    def __init__(self, source=0):
 
-        # initialize global params
-        self.stream = cv2.VideoCapture(source)
-        self.stream.release()
+        # define running flag
+        self.running = True
 
-    async def recv(self):
-        """
-        A coroutine function that yields `av.frame.Frame`.
-        """
-        # get next timestamp
-        pts, time_base = await self.next_timestamp()
+    def stop(self):
 
-        # read video frame
-        (grabbed, frame) = self.stream.read()
+        # don't forget this function!!!
 
-        # if NoneType
-        if not grabbed:
-            raise MediaStreamError
-
-        # contruct `av.frame.Frame` from `numpy.nd.array`
-        av_frame = VideoFrame.from_ndarray(frame, format="bgr24")
-        av_frame.pts = pts
-        av_frame.time_base = time_base
-
-        # return `av.frame.Frame`
-        return av_frame
-
-
-class Invalid_Custom_RTCServer_2:
-    """
-    Custom Invalid WebGear_RTC Server
-    """
-
-    def __init__(self, source=None):
-
-        # don't forget this line!
-        super().__init__()
+        # flag that we're not running
+        self.running = False
 
 
 test_data = [
@@ -398,7 +365,9 @@ async def test_webpage_reload(options):
             # shutdown
             await offer_pc.close()
     except Exception as e:
-        if "enable_live_broadcast" in options and isinstance(e, (AssertionError, MediaStreamError)):
+        if "enable_live_broadcast" in options and isinstance(
+            e, (AssertionError, MediaStreamError)
+        ):
             pytest.xfail("Test Passed")
         else:
             pytest.fail(str(e))
@@ -406,27 +375,52 @@ async def test_webpage_reload(options):
         web.shutdown()
 
 
-test_data_class = [
+test_stream_classes = [
     (None, False),
-    ("Invalid", False),
-    (Custom_RTCServer(source=return_testvideo_path()), True),
-    (Invalid_Custom_RTCServer_1(source=return_testvideo_path()), False),
-    (Invalid_Custom_RTCServer_2(source=return_testvideo_path()), False),
+    (Custom_Stream_Class(source=return_testvideo_path()), True),
+    (VideoGear(source=return_testvideo_path(), logging=True), True),
+    (Invalid_Custom_Stream_Class(source=return_testvideo_path()), False),
 ]
 
 
 @pytest.mark.asyncio
-@pytest.mark.xfail(raises=(ValueError, MediaStreamError))
-@pytest.mark.parametrize("server, result", test_data_class)
-async def test_webgear_rtc_custom_server_generator(server, result):
+@pytest.mark.parametrize("stream_class, result", test_stream_classes)
+async def test_webgear_rtc_custom_stream_class(stream_class, result):
     """
     Test for WebGear_RTC API's custom source
     """
-    web = WebGear_RTC(logging=True)
-    web.config["server"] = server
-    async with TestClient(web()) as client:
-        pass
-    web.shutdown()
+    # assign your Custom Streaming Class with adequate source (for e.g. foo.mp4)
+    # to `custom_stream` attribute in options parameter
+    options = {"custom_stream": stream_class}
+    try:
+        web = WebGear_RTC(logging=True, **options)
+        async with TestClient(web()) as client:
+            response = await client.get("/")
+            assert response.status_code == 200
+            response_404 = await client.get("/test")
+            assert response_404.status_code == 404
+            (offer_pc, data) = await get_RTCPeer_payload()
+            response_rtc_answer = await client.post(
+                "/offer",
+                data=data,
+                headers={"Content-Type": "application/json"},
+            )
+            params = response_rtc_answer.json()
+            answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+            await offer_pc.setRemoteDescription(answer)
+            response_rtc_offer = await client.get(
+                "/offer",
+                data=data,
+                headers={"Content-Type": "application/json"},
+            )
+            assert response_rtc_offer.status_code == 200
+            await offer_pc.close()
+        web.shutdown()
+    except Exception as e:
+        if result and not isinstance(e, (ValueError, MediaStreamError)):
+            pytest.fail(str(e))
+        else:
+            pytest.xfail(str(e))
 
 
 test_data_class = [
@@ -452,6 +446,8 @@ async def test_webgear_rtc_custom_middleware(middleware, result):
     except Exception as e:
         if result and not isinstance(e, MediaStreamError):
             pytest.fail(str(e))
+        else:
+            pytest.xfail(str(e))
 
 
 @pytest.mark.asyncio

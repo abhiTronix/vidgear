@@ -64,87 +64,85 @@ web.shutdown()
 
 ## Using WebGear_RTC with a Custom Source(OpenCV)
 
-WebGear_RTC allows you to easily define your own Custom Media Server with a custom source that you want to use to transform your frames before sending them onto the browser. 
+WebGear_RTC provides [`custom_stream`](../params/#webgear_rtc-specific-attributes) attribute with its `options` parameter that allows you to easily define your own Custom Streaming Class with suitable source that you want to use to transform your frames before sending them onto the browser. 
 
 Let's implement a bare-minimum example with a Custom Source using WebGear_RTC API and OpenCV:
 
+??? new "New in v0.2.4" 
+    This implementation was added in `v0.2.4`.
 
-!!! warning "Auto-Reconnection will NOT work with Custom Source(OpenCV)"
+!!! success "Auto-Reconnection or Auto-Refresh works out-of-the-box with this implementation."
 
-    - The WebGear_RTC's inbuilt auto-reconnection feature only available with its internal [**RTC_VideoServer**](https://github.com/abhiTronix/vidgear/blob/38a7f54eb911218e1fd6a95e243da2fba51a6991/vidgear/gears/asyncio/webgear_rtc.py#L77) which can seamlessly handle restarting of source/server any number of times, and therefore will fail to work with your user-defined Custom Source(OpenCV). 
-    - This means that once the browser tab with WebGear_RTC stream is closed, it will require you to manually close and restart the WebGear_RTC server, in order to refresh or reopen it in a new browser/tab successfully.
+!!! danger "Make sure your Custom Streaming Class at-least implements `read()` and `stop()` methods as shown in following example, otherwise WebGear_RTC will throw ValueError!"
 
-!!! danger "Make sure your Custom Media Server Class is inherited from aiortc's [VideoStreamTrack](https://github.com/aiortc/aiortc/blob/a270cd887fba4ce9ccb680d267d7d0a897de3d75/src/aiortc/mediastreams.py#L109) only and at-least implements `recv()` and `terminate()` methods as shown in following example, otherwise WebGear_RTC will throw ValueError!"
+???+ tip "Using Vidgear's VideoCapture APIs instead of OpenCV"
+    You can directly replace Custom Streaming Class(`Custom_Stream_Class` in following example) with any [VideoCapture APIs](../../#a-videocapture-gears). These APIs implements `read()` and `stop()` methods by-default, so they're also supported out-of-the-box. 
+
+    See this [example ➶](../../../help/screengear_ex/#using-screengear-with-webgear_rtc) for more information.
 
 
-```python hl_lines="13-63 67"
+```python hl_lines="6-54 58"
 # import necessary libs
-import uvicorn, asyncio, cv2
-from av import VideoFrame
-from aiortc import VideoStreamTrack
-from aiortc.mediastreams import MediaStreamError
+import uvicorn, cv2
 from vidgear.gears.asyncio import WebGear_RTC
-from vidgear.gears.asyncio.helper import reducer
+
+# create your own custom streaming class
+class Custom_Stream_Class:
+    """
+    Custom Streaming using OpenCV
+    """
+
+    def __init__(self, source=0):
+
+        # !!! define your own video source here !!!
+        self.source = cv2.VideoCapture(source)
+
+        # define running flag
+        self.running = True
+
+    def read(self):
+
+        # don't forget this function!!!
+
+        # check if source was initialized or not
+        if self.source is None:
+            return None
+        # check if we're still running
+        if self.running:
+            # read frame from provided source
+            (grabbed, frame) = self.source.read()
+            # check if frame is available
+            if grabbed:
+
+                # do something with your OpenCV frame here
+
+                # lets convert frame to gray for this example
+                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+                # return our gray frame
+                return gray
+            else:
+                # signal we're not running now
+                self.running = False
+        # return None-type
+        return None
+
+    def stop(self):
+
+        # don't forget this function!!!
+
+        # flag that we're not running
+        self.running = False
+        # close stream
+        if not self.source is None:
+            self.source.release()
+
+# assign your Custom Streaming Class with adequate source (for e.g. foo.mp4) 
+# to `custom_stream` attribute in options parameter
+options = {"custom_stream": Custom_Stream_Class(source="foo.mp4")}
 
 # initialize WebGear_RTC app without any source
-web = WebGear_RTC(logging=True)
-
-# create your own Bare-Minimum Custom Media Server
-class Custom_RTCServer(VideoStreamTrack):
-    """
-    Custom Media Server using OpenCV, an inherit-class
-    to aiortc's VideoStreamTrack.
-    """
-
-    def __init__(self, source=None):
-
-        # don't forget this line!
-        super().__init__()
-
-        # initialize global params
-        self.stream = cv2.VideoCapture(source)
-
-    async def recv(self):
-        """
-        A coroutine function that yields `av.frame.Frame`.
-        """
-        # don't forget this function!!!
-
-        # get next timestamp
-        pts, time_base = await self.next_timestamp()
-
-        # read video frame
-        (grabbed, frame) = self.stream.read()
-
-        # if NoneType
-        if not grabbed:
-            return MediaStreamError
-
-        # reducer frames size if you want more performance otherwise comment this line
-        frame = await reducer(frame, percentage=30)  # reduce frame by 30%
-
-        # contruct `av.frame.Frame` from `numpy.nd.array`
-        av_frame = VideoFrame.from_ndarray(frame, format="bgr24")
-        av_frame.pts = pts
-        av_frame.time_base = time_base
-
-        # return `av.frame.Frame`
-        return av_frame
-
-    def terminate(self):
-        """
-        Gracefully terminates VideoGear stream
-        """
-        # don't forget this function!!!
-
-        # terminate
-        if not (self.stream is None):
-            self.stream.release()
-            self.stream = None
-
-
-# assign your custom media server to config with adequate source (for e.g. foo.mp4)
-web.config["server"] = Custom_RTCServer(source="foo.mp4")
+web = WebGear_RTC(logging=True, **options)
 
 # run this app on Uvicorn server at address http://localhost:8000/
 uvicorn.run(web(), host="localhost", port=8000)
@@ -154,6 +152,7 @@ web.shutdown()
 ```
 
 **And that's all, Now you can see output at [`http://localhost:8000/`](http://localhost:8000/) address.**
+
 
 &nbsp;
 

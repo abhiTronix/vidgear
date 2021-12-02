@@ -90,17 +90,15 @@ web.shutdown()
 
 In this example, we'll be displaying two video feeds side-by-side simultaneously on browser using WebGear_RTC API by simply concatenating frames in real-time: 
 
-??? new "New in v0.2.2" 
-    This example was added in `v0.2.2`.
+??? new "New in v0.2.4" 
+    This example was added in `v0.2.4`.
 
-```python
+```python hl_lines="10-22 26-92 97-101"
 # import necessary libs
-import uvicorn, asyncio, cv2
+import uvicorn, cv2
 import numpy as np
-from av import VideoFrame
-from aiortc import VideoStreamTrack
+from vidgear.gears.helper import reducer
 from vidgear.gears.asyncio import WebGear_RTC
-from vidgear.gears.asyncio.helper import reducer
 
 # initialize WebGear_RTC app without any source
 web = WebGear_RTC(logging=True)
@@ -120,18 +118,15 @@ def get_conc_frame(frame1, frame2):
     return vis
 
 
-# create your own Bare-Minimum Custom Media Server
-class Custom_RTCServer(VideoStreamTrack):
+# create your own custom streaming class
+class Custom_Stream_Class:
     """
-    Custom Media Server using OpenCV, an inherit-class
-    to aiortc's VideoStreamTrack.
+    Custom Streaming using two OpenCV sources
     """
 
     def __init__(self, source1=None, source2=None):
 
-        # don't forget this line!
-        super().__init__()
-
+        # !!! define your own video source here !!!
         # check is source are provided
         if source1 is None or source2 is None:
             raise ValueError("Provide both source")
@@ -141,46 +136,49 @@ class Custom_RTCServer(VideoStreamTrack):
         self.stream1 = cv2.VideoCapture(source1)
         self.stream2 = cv2.VideoCapture(source2)
 
-    async def recv(self):
-        """
-        A coroutine function that yields `av.frame.Frame`.
-        """
+        # define running flag
+        self.running = True
+
+    def read(self):
+
         # don't forget this function!!!
 
-        # get next timestamp
-        pts, time_base = await self.next_timestamp()
-
-        # read video frame
-        (grabbed1, frame1) = self.stream1.read()
-        (grabbed2, frame2) = self.stream2.read()
-
-        # if NoneType
-        if not grabbed1 or not grabbed2:
+        # check if sources were initialized or not
+        if self.stream1 is None or self.stream2 is None:
             return None
-        else:
-            print("Got frames")
 
-        # concatenate frame
-        frame = get_conc_frame(frame1, frame2)
+        # check if we're still running
+        if self.running:
+            # read video frame
+            (grabbed1, frame1) = self.stream1.read()
+            (grabbed2, frame2) = self.stream2.read()
 
-        # reducer frames size if you want more performance otherwise comment this line
-        # frame = await reducer(frame, percentage=30)  # reduce frame by 30%
+            # if NoneType
+            if not grabbed1 or not grabbed2:
 
-        # contruct `av.frame.Frame` from `numpy.nd.array`
-        av_frame = VideoFrame.from_ndarray(frame, format="bgr24")
-        av_frame.pts = pts
-        av_frame.time_base = time_base
+                # do something with your OpenCV frame here
 
-        # return `av.frame.Frame`
-        return av_frame
+                # concatenate frame
+                frame = get_conc_frame(frame1, frame2)
 
-    def terminate(self):
-        """
-        Gracefully terminates VideoGear stream
-        """
+                # reducer frames size if you want more performance otherwise comment this line
+                # frame = await reducer(frame, percentage=30)  # reduce frame by 30%
+
+                # return our gray frame
+                return frame
+            else:
+                # signal we're not running now
+                self.running = False
+        # return None-type
+        return None
+
+    def stop(self):
+
         # don't forget this function!!!
 
-        # terminate
+        # flag that we're not running
+        self.running = False
+        # close stream
         if not (self.stream1 is None):
             self.stream1.release()
             self.stream1 = None
@@ -190,10 +188,16 @@ class Custom_RTCServer(VideoStreamTrack):
             self.stream2 = None
 
 
-# assign your custom media server to config with both adequate sources (for e.g. foo1.mp4 and foo2.mp4)
-web.config["server"] = Custom_RTCServer(
-    source1="dance_videos/foo1.mp4", source2="dance_videos/foo2.mp4"
-)
+# assign your Custom Streaming Class with adequate two sources
+# to `custom_stream` attribute in options parameter
+options = {
+    "custom_stream": Custom_Stream_Class(
+        source1="foo1.mp4", source2="foo2.mp4"
+    )
+}
+
+# initialize WebGear_RTC app without any source
+web = WebGear_RTC(logging=True, **options)
 
 # run this app on Uvicorn server at address http://localhost:8000/
 uvicorn.run(web(), host="localhost", port=8000)

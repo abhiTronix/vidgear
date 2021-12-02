@@ -55,6 +55,28 @@ This parameter can be used to pass user-defined parameter to WebGear_RTC API by 
 
 ### WebGear_RTC Specific attributes
 
+* **`custom_stream`** _(class)_ : Can be used to easily define your own Custom Streaming Class with suitable custom source(such as OpenCV) that you want to use to transform your frames before sending them onto the browser. 
+
+    !!! danger "Make sure your Custom Streaming Class at-least implements `read()` and `stop()` methods, otherwise WebGear_RTC will throw ValueError!"
+
+    ??? new "New in v0.2.4" 
+        This attribute was added in `v0.2.4`.
+
+    ??? tip "Using Vidgear's VideoCapture APIs instead of OpenCV"
+        You can directly replace Custom Streaming Class with any [VideoCapture APIs](../../#a-videocapture-gears). These APIs implements `read()` and `stop()` methods by-default, so they're also supported out-of-the-box. 
+
+        See this [example ➶](../../../help/screengear_ex/#using-screengear-with-webgear_rtc) for more information.
+
+    !!! example "Its complete usage example is given [here ➶](../advanced/#using-webgear_rtc-with-a-custom-sourceopencv)."
+
+    ```python
+    # set CamGear as custom streaming class with adequate parameters
+    options = {"custom_stream": CamGear(source="foo.mp4", logging=True)}
+    # assign it
+    WebGear_RTC(logging=True, **options)
+    ```
+
+
 * **`custom_data_location`** _(string)_ : Can be used to change/alter [*default location*](../overview/#default-location) path to somewhere else. Its usage is as follows:
 
     ```python
