@@ -111,7 +111,8 @@ if not (yt_dlp is None):
             if (
                 not (self.meta_data is None)  # meta-data is valid
                 and not ("entries" in self.meta_data)  # playlists are not supported
-                and len(self.meta_data["formats"]) > 0  # video formats must exist
+                and len(self.meta_data.get("formats", {}))
+                > 0  # video formats must exist
             ):
                 self.is_livestream = self.meta_data.get("is_live", False)
                 self.streams_metadata = self.meta_data.get("formats", {})
