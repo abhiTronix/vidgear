@@ -146,13 +146,13 @@ def test_threaded_queue_mode(source, options):
     [
         (
             "https://www.youtube.com/playlist?list=PLXsatjadpxK5wpQVrWKSxu4_ItvpwfCby",  # playlist
-            "73p",
+            "720p",
             "invalid",
         ),
         ("https://youtu.be/uCy5OuSQnyA", "73p", "invalid"),  # video
         ("https://youtu.be/viOkh9al0xM", "720p", "invalid"),  # video(live)
         (
-            "https://www.dailymotion.com/video/x7xsoud",  # video(external)
+            "https://www.dailymotion.com/video/x2yrnum",  # video(external)
             "invalid",
             {"nocheckcertificate": True},
         ),
@@ -183,13 +183,10 @@ def test_stream_mode(url, quality, parameters):
         stream.stop()
         logger.debug("WIDTH: {} HEIGHT: {} FPS: {}".format(width, height, fps))
     except Exception as e:
-        if isinstance(e, (RuntimeError, ValueError, cv2.error)) and (
-            url == "im_not_a_url" or platform.system() in ["Windows", "Darwin"]
-        ):
+        if isinstance(e, (RuntimeError, ValueError, cv2.error)):
             pytest.xfail(str(e))
         else:
             pytest.fail(str(e))
-
 
 def test_network_playback():
     """
