@@ -32,7 +32,6 @@ from .helper import (
     logger_handler,
     check_CV_version,
     restore_levelnames,
-    youtube_url_validator,
     get_supported_resolution,
     check_gstreamer_support,
     dimensions_to_resolutions,
@@ -45,6 +44,157 @@ logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
+yt_dlp = import_dependency_safe("yt_dlp", error="silent")
+if not (yt_dlp is None):
+    # import YouTubeDL Parser
+    from yt_dlp import YoutubeDL
+
+    class YT_backend:
+        """
+        CamGear's Internal YT-DLP Backend Class for extracting metadata from Streaming URLs.
+
+        Parameters:
+            source_url (string): defines the URL of source stream
+            logging (bool): enables/disables logging.
+            options (dict): provides ability to alter yt-dlp backend params.
+        """
+
+        def __init__(self, source_url, logging=False, **stream_params):
+            # initialize global params
+            self.__logging = logging
+            self.is_livestream = False
+            self.is_valid_source = False
+            self.streams_metadata = {}
+            self.streams = {}
+
+            # define supported resolution values
+            self.supported_resolutions = {
+                "256x144": "144p",
+                "426x240": "240p",
+                "640x360": "360p",
+                "854x480": "480p",
+                "1280x720": "720p",
+                "1920x1080": "1080p",
+                "2560x1440": "1440p",
+                "3840x2160": "2160p",
+                "7680x4320": "4320p",
+            }
+
+            # assign source_url
+            self.source_url = source_url
+
+            # define default options for yt-dlp backend
+            self.ydl_opts = {
+                "format": "best*[vcodec!=none]",
+                "quiet": True,
+                "prefer_insecure": False,
+                "no_warnings": True if logging else False,
+                "dump_single_json": True,
+                "extract_flat": True,
+                "skip_download": True,
+            }
+            # remove any attribute from user dict
+            # that can cause API to fail
+            stream_params.pop("format", None)
+            stream_params.pop("dump_single_json", None)
+            stream_params.pop("extract_flat", None)
+
+            # extract exclusive params
+            std_hdrs = stream_params.pop("std_headers", None)
+            if not (std_hdrs is None) and isinstance(std_hdrs, dict):
+                yt_dlp.utils.std_headers.update(std_hdrs)
+
+            # update with user defined options
+            self.ydl_opts.update(stream_params)
+
+            # extract metadata
+            self.meta_data = self.__extract_meta()
+
+            # check if source url is supported
+            if (
+                not (self.meta_data is None)  # meta-data is valid
+                and not ("entries" in self.meta_data)  # playlists are not supported
+                and len(self.meta_data["formats"]) > 0  # video formats must exist
+            ):
+                self.is_livestream = self.meta_data["is_live"]
+                self.streams_metadata = self.meta_data["formats"]
+                self.streams = self.__extract_streams()
+                if self.streams:
+                    self.is_valid_source = True
+                    logger.info(
+                        "[Backend] :: Streaming URL is supported by YT_backend. Available Streams are: [{}]".format(
+                            ", ".join(list(self.streams.keys()))
+                        )
+                    )
+                else:
+                    self.is_valid_source = False
+                    logger.warning(
+                        "[Backend] :: Streaming URL isn't supported by YT_backend. No usable video streams detected!"
+                    )
+            else:
+                # otherwise notify user
+                self.is_valid_source = False
+                logger.warning(
+                    "[Backend] :: Streaming URL isn't valid for YT_backend"
+                    + ". Playlists aren't supported yet!"
+                    if "entries" in self.meta_data
+                    else "!"
+                )
+
+        def __extract_meta(self):
+            extracted_data = None
+            # run parser
+            with YoutubeDL(self.ydl_opts) as ydl:
+                try:
+                    # parse data
+                    extracted_data = ydl.extract_info(self.source_url, download=False)
+                except yt_dlp.utils.DownloadError as e:
+                    # log errors
+                    logger.error(" [Backend] : " + str(e))
+                    # let users know source URL isn't valid.
+                    extracted_data = None
+                    self.is_valid_source = False
+            # return data
+            return extracted_data
+
+        def __extract_streams(self):
+            # extract streams
+            streams = {}
+            streams_copy = {}
+            for stream in self.streams_metadata:
+                # extract useable metadata
+                stream_dim = stream["resolution"]
+                stream_url = stream["url"]
+                stream_protocol = stream["protocol"]
+                stream_with_video = False if stream["vcodec"] == "none" else True
+                stream_with_audio = False if stream["acodec"] == "none" else True
+                # streams must contain video
+                if stream_with_video:
+                    # check if stream resolution is supported
+                    if stream_dim in self.supported_resolutions:
+                        stream_res = self.supported_resolutions[stream_dim]
+                        if (
+                            not stream_with_audio  # prefer audioless
+                            or stream_protocol in ["https", "http"]  # prefer http/https
+                            or not (
+                                stream_res in streams
+                            )  # check if already not in dict
+                        ):
+                            streams[stream_res] = stream_url
+                    # otherwise make a copy
+                    if (
+                        not stream_with_audio  # prefer audioless
+                        or stream_protocol in ["https", "http"]  # prefer http/https
+                        or not (
+                            stream_dim in streams_copy
+                        )  # check if already not in dict
+                    ):
+                        streams_copy[stream_dim] = stream_url
+            # use copy to decide best or worst
+            streams["best"] = streams_copy[list(streams_copy.keys())[-1]]
+            streams["worst"] = streams_copy[list(streams_copy.keys())[0]]
+            return streams
+
 
 class CamGear:
     """
@@ -55,8 +205,7 @@ class CamGear:
     CamGear API provides a flexible, high-level multi-threaded wrapper around OpenCV's VideoCapture API with direct access to almost all of its available parameters.
     It relies on Threaded Queue mode for threaded, error-free and synchronized frame handling.
 
-    CamGear internally employs streamlink for piping live videos from various streaming services like Twitch, Livestream, Dailymotion etc., and also utilizies pafy
-    with yt_dlp at its backend for seamless YouTube pipelining.
+    CamGear internally employs yt_dlp and streamlink backend for piping live video frames from wide range of streaming services like Twitch, Livestream, Dailymotion and YouTube etc.
     """
 
     def __init__(
@@ -87,6 +236,8 @@ class CamGear:
         self.__logging = False
         if logging:
             self.__logging = logging
+        # initialize global
+        self.ytv_metadata = {}
 
         # check if Stream-Mode is ON (True)
         if stream_mode:
@@ -96,115 +247,90 @@ class CamGear:
             stream_resolution = get_supported_resolution(
                 options.pop("STREAM_RESOLUTION", "best"), logging=logging
             )
-            stream_params = options.pop("STREAM_PARAMS", {})
-            if isinstance(stream_params, dict):
-                stream_params = {str(k).strip(): v for k, v in stream_params.items()}
-            else:
-                stream_params = {}
             # handle Stream-Mode
+            if not (yt_dlp is None):
+                # extract user-defined params
+                yt_stream_params = options.pop("YT_STREAM_PARAMS", {})
+                if isinstance(yt_stream_params, dict):
+                    yt_stream_params = {
+                        str(k).strip(): v for k, v in yt_stream_params.items()
+                    }
+                else:
+                    yt_stream_params = {}
+                # Validate source for Yt_dlp backend
+                logger.info("Verifying Streaming URL. Please wait...")
+                # initialize YT_backend
+                ytbackend = YT_backend(
+                    source_url=source, logging=logging, **yt_stream_params
+                )
+            else:
+                # otherwise disable Yt_dlp backend
+                ytbackend = None
+                # log warning
+                import_dependency_safe("yt_dlp", error="log")
+                logger.warning("Yt_dlp backend is disabled for this session.")
+
             try:
-                # detect whether a YouTube URL
-                video_url = youtube_url_validator(source)
-                if video_url:
-                    # !!! HACK !!!
-                    # pafy only supports `youtube-dl` backend and not `yt-dlp`. 
-                    # But `yt-dlp` python API functions exactly similar to `youtube-dl`, 
-                    # Therefore its easy to trick pafy into assuming `yt-dlp` as `youtube-dl`.
-                    yt_dlp = import_dependency_safe("yt_dlp")
-                    sys.modules["youtube_dl"] = yt_dlp
-                    # Next, import backend library
-                    pafy = import_dependency_safe("pafy")
-                    logger.info("Using yt-dlp Backend")
-                    # create new pafy object
-                    source_object = pafy.new(video_url, ydl_opts=stream_params)
-                    # extract all valid video-streams
-                    valid_streams = [
-                        v_streams
-                        for v_streams in source_object.videostreams
-                        if v_streams.notes != "HLS" and v_streams.extension == "webm"
-                    ] + [va_streams for va_streams in source_object.streams]
-                    # extract available stream resolutions
-                    available_streams = [qs.notes for qs in valid_streams]
-                    # check whether YouTube-stream is live or not?
-                    is_live = (
-                        all(x == "HLS" or x == "" for x in available_streams)
-                        if available_streams
-                        else False
-                    )
-                    # validate streams
-                    if valid_streams and (not is_live or gst_support):
-                        # handle live-streams
-                        if is_live:
-                            # Enforce GStreamer backend for YouTube-livestreams
-                            logger.critical(
-                                "YouTube livestream URL detected. Enforcing GStreamer backend."
-                            )
-                            backend = cv2.CAP_GSTREAMER
-                            # convert stream dimensions to streams resolutions
-                            available_streams = dimensions_to_resolutions(
-                                [qs.resolution for qs in valid_streams]
-                            )
-                        # check whether stream-resolution was specified and available
-                        if stream_resolution in ["best", "worst"] or not (
-                            stream_resolution in available_streams
-                        ):
-                            # not specified and unavailable
-                            if not stream_resolution in ["best", "worst"]:
-                                logger.warning(
-                                    "Specified stream-resolution `{}` is not available. Reverting to `best`!".format(
-                                        stream_resolution
-                                    )
-                                )
-                                # revert to best
-                                stream_resolution = "best"
-                            # parse and select best or worst streams
-                            valid_streams.sort(
-                                key=lambda x: x.dimensions,
-                                reverse=True if stream_resolution == "best" else False,
-                            )
-                            parsed_stream = valid_streams[0]
-                        else:
-                            # apply specfied valid stream-resolution
-                            matched_stream = [
-                                i
-                                for i, s in enumerate(available_streams)
-                                if stream_resolution in s
-                            ]
-                            parsed_stream = valid_streams[matched_stream[0]]
-                        # extract stream URL as source
-                        source = parsed_stream.url
-                        # log progress
-                        self.__logging and logger.debug(
-                            "YouTube source ID: `{}`, Title: `{}`, Quality: `{}`".format(
-                                video_url, source_object.title, stream_resolution
+                if ytbackend and ytbackend.is_valid_source:
+                    # save video metadata
+                    self.ytv_metadata = ytbackend.meta_data
+                    logger.info("Using yt-dlp backend")
+                    # handle live-streams
+                    if ytbackend.is_livestream:
+                        # Throw warning for livestreams
+                        logger.warning(
+                            "Livestream URL detected. It is strongly advised to use GStreamer backend(`cv2.CAP_GSTREAMER`) with it."
+                        )
+                    # check whether stream-resolution was specified and available
+                    if not (stream_resolution in ytbackend.streams.keys()):
+                        logger.warning(
+                            "Specified stream-resolution `{}` is not available. Reverting to `best`!".format(
+                                stream_resolution
                             )
                         )
+                        # revert to best
+                        stream_resolution = "best"
                     else:
-                        # raise error if Gstreamer backend unavailable for YouTube live-streams
-                        # see issue: https://github.com/abhiTronix/vidgear/issues/133
-                        raise RuntimeError(
-                            "[CamGear:ERROR] :: Unable to find any OpenCV supported streams in `{}` YouTube URL. Kindly compile OpenCV with GSstreamer(>=v1.0.0) support or Use another URL!".format(
-                                source
+                        if self.__logging:
+                            logger.debug(
+                                "Using `{}` resolution for streaming.".format(
+                                    stream_resolution
+                                )
                             )
+                    # extract stream URL as source using stream-resolution
+                    source = ytbackend.streams[stream_resolution]
+                    # log progress
+                    self.__logging and logger.debug(
+                        "YouTube source ID: `{}`, Title: `{}`, Quality: `{}`".format(
+                            self.ytv_metadata["id"],
+                            self.ytv_metadata["title"],
+                            stream_resolution,
                         )
+                    )
                 else:
                     # import backend library
                     Streamlink = import_dependency_safe(
                         "from streamlink import Streamlink"
                     )
                     restore_levelnames()
-                    logger.info("Using Streamlink Backend")
+                    logger.info("Using streamlink backend")
                     # check session
                     session = Streamlink()
                     # extract streams
                     streams = session.streams(source)
                     # set parameters
-                    for key, value in stream_params.items():
-                        session.set_option(key, value)
+                    # extract user-defined params
+                    sl_stream_params = options.pop("SL_STREAM_PARAMS", {})
+                    if isinstance(sl_stream_params, dict):
+                        sl_stream_params = {
+                            str(k).strip(): v for k, v in sl_stream_params.items()
+                        }
+                        for key, value in sl_stream_params.items():
+                            session.set_option(key, value)
                     # select streams are available
                     assert (
                         streams
-                    ), "[CamGear:ERROR] :: Invalid `{}` URL cannot be processed!".format(
+                    ), "[CamGear:ERROR] :: Streaming URL `{}` cannot be processed!".format(
                         source
                     )
                     # check whether stream-resolution was specified and available
@@ -224,7 +350,6 @@ class CamGear:
                 raise ValueError(
                     "[CamGear:ERROR] :: Stream Mode is enabled but Input URL is invalid!"
                 )
-
         # youtube mode variable initialization
         self.__youtube_mode = stream_mode
 

@@ -110,9 +110,8 @@ setup(
         "core": [
             "yt_dlp{}".format(latest_version("yt_dlp")),
             "streamlink",
-            "pyzmq{}".format(latest_version("pyzmq")),
+            "pyzmq",
             "Pillow",
-            "pafy",
             "simplejpeg{}".format(latest_version("simplejpeg")),
             "mss{}".format(latest_version("mss")),
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
@@ -122,11 +121,10 @@ setup(
         "asyncio": [
             "yt_dlp{}".format(latest_version("yt_dlp")),
             "streamlink",
-            "pyzmq{}".format(latest_version("pyzmq")),
+            "pyzmq",
             "simplejpeg{}".format(latest_version("simplejpeg")),
             "mss{}".format(latest_version("mss")),
             "Pillow",
-            "pafy",
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
             "starlette{}".format(latest_version("starlette")),
             "jinja2",
@@ -142,7 +140,7 @@ setup(
                 if sys.version_info[:2] >= (3, 7)  # dropped support for 3.6.x legacies
                 else ["uvloop==0.14.0"]
             )
-            if (platform.system() != "Windows")
+            if (platform.system() != "Windows") # windows not supported
             else []
         ),
     },
