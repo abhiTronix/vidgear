@@ -248,23 +248,6 @@ class TimeoutHTTPAdapter(HTTPAdapter):
         return super().send(request, **kwargs)
 
 
-def restore_levelnames():
-    """
-    ## restore_levelnames
-
-    Auxiliary method to restore logger levelnames.
-    """
-    default_levelnames = {
-        log.CRITICAL: "CRITICAL",
-        log.ERROR: "ERROR",
-        log.WARN: "WARN",
-        log.INFO: "INFO",
-        log.DEBUG: "DEBUG",
-    }
-    for level, name in default_levelnames.items():
-        log.addLevelName(level, name)
-
-
 def check_CV_version():
     """
     ## check_CV_version

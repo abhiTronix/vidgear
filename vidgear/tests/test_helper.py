@@ -46,7 +46,6 @@ from vidgear.gears.helper import (
     validate_video,
     validate_ffmpeg,
     get_video_bitrate,
-    restore_levelnames,
     get_valid_ffmpeg_path,
     download_ffmpeg_binaries,
     check_gstreamer_support,
