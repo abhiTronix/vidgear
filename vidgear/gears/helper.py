@@ -248,23 +248,6 @@ class TimeoutHTTPAdapter(HTTPAdapter):
         return super().send(request, **kwargs)
 
 
-def restore_levelnames():
-    """
-    ## restore_levelnames
-
-    Auxiliary method to restore logger levelnames.
-    """
-    default_levelnames = {
-        log.CRITICAL: "CRITICAL",
-        log.ERROR: "ERROR",
-        log.WARN: "WARN",
-        log.INFO: "INFO",
-        log.DEBUG: "DEBUG",
-    }
-    for level, name in default_levelnames.items():
-        log.addLevelName(level, name)
-
-
 def check_CV_version():
     """
     ## check_CV_version
@@ -824,29 +807,6 @@ def retrieve_best_interpolation(interpolations):
             if not (interpolation is None):
                 return interpolation
     return None
-
-
-def youtube_url_validator(url):
-    """
-    ## youtube_url_validator
-
-    Validates & extracts Youtube video ID from URL.
-
-    Parameters:
-        url (string): inputs URL.
-
-    **Returns:**  A valid Youtube video string ID.
-    """
-    youtube_regex = (
-        r"(?:http:|https:)*?\/\/(?:www\.|)(?:youtube\.com|m\.youtube\.com|youtu\.|youtube-nocookie\.com).*"
-        r"(?:v=|v%3D|v\/|(?:a|p)\/(?:a|u)\/\d.*\/|watch\?|vi(?:=|\/)|\/embed\/|oembed\?|be\/|e\/)([^&?%#\/\n]*)"
-    )
-    matched = re.search(youtube_regex, url)
-    # check for None-type
-    if not (matched is None):
-        return matched.groups()[0]
-    else:
-        return ""
 
 
 def reducer(frame=None, percentage=0, interpolation=cv2.INTER_LANCZOS4):

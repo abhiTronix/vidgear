@@ -51,10 +51,9 @@ These tweak parameters can be used to transform input Camera-Source properties _
 
 		!!! example "Its complete usage example is given [here ➶](../../../../help/camgear_faqs/#how-to-change-quality-and-parameters-of-youtube-streams-with-camgear)"
 
-	- [X] `STREAM_PARAMS` _(dict)_: This dictionary attribute can be used in CamGear's Stream Mode (`stream_mode=True`) for specifying underlying API's(i.e. `streamlink` & `yt_dlp`) internal parameters. Its usage is as follows:
+	- [X] `STREAM_PARAMS` _(dict)_: This dictionary attribute can be used in CamGear's Stream Mode (`stream_mode=True`) for specifying parameters for its internal `yt_dlp` backend class. Its usage is as follows:
 
-		!!! tip "All `STREAM_PARAMS` Supported Parameters"
-			- All Streamlink parameter can be found [here ➶](https://streamlink.github.io/api.html#streamlink.Streamlink.set_option)
+		!!! info "All `STREAM_PARAMS` Supported Parameters"
 			- All yt_dlp parameter can be found [here ➶](https://github.com/yt-dlp/yt-dlp/blob/bd1c7923274962e3027acf63111ccb0d766b9725/yt_dlp/__init__.py#L594-L749)
 
 		```python

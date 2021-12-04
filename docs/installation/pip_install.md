@@ -122,7 +122,9 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
     !!! tip "FFmpeg Installation"
 
-        Follow this dedicated [**FFmpeg Installation doc**](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
+        * **For WriteGear API's Compression Mode**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
+        * **For StreamGear API**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/streamgear/ffmpeg_install/) for its installation.
+
 
 * #### Picamera
 
@@ -151,17 +153,33 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 ## Installation
 
 
-**Installation is as simple as:**
-
-
-???+ danger "Installation command has been changed in `v0.2.4`"
+???+ danger "Installation command with `pip` has been changed in `v0.2.4`"
 
     The legacy `#!sh  pip install vidgear` command now installs critical bare-minimum dependencies only. Therefore in order to automatically install all the API specific dependencies as previous versions, use `#!sh  pip install vidgear[core]` command instead.
+
+    === "`v0.2.4` and newer"
+
+        ```sh
+        # Install latest stable release with all Core dependencies
+        pip install -U vidgear[core]
+        ```
+
+    === "Older"
+
+        !!! fail "`[core]` keyword isn't available in versions older than `v0.2.4`"
+
+        ```sh
+        # Install older stable release with all Core dependencies
+        pip install vidgear<0.2.4
+        ```
 
     Similarly in your python project files like `setup.py` or `requirements.txt` or `setup.cfg`, use vidgear dependency as `#!sh  vidgear[core]>=0.2.4`  instead.
 
     !!! note "This change does not affects `#!sh pip install vidgear[asyncio]` command."
 
+
+
+**Installation is as simple as:**
 
 ??? experiment "Installing vidgear with only selective dependencies"
 
@@ -172,7 +190,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
     - Install bare-minimum vidgear as follows:
 
         
-        === "`v0.2.4` and above"
+        === "`v0.2.4` and newer"
 
             ```sh
             # Install stable release with bare-minimum dependencies
@@ -188,7 +206,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
     - Then, you must install **Critical dependencies**(if not already):
 
-        === "`v0.2.4` and above"
+        === "`v0.2.4` and newer"
 
             ```sh
             # Install opencv(only if not installed previously)
@@ -210,12 +228,12 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
         | APIs | Dependencies |
         |:---:|:---|
-        | CamGear | `yt_dlp`, `streamlink` |
+        | CamGear | `yt_dlp` |
         | PiGear | `picamera` |
         | VideoGear | *Based on CamGear or PiGear backend in use*  |
         | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |
-        | WriteGear | **FFmpeg:** See [this doc ➶](https://abhitronix.github.io/vidgear/v0.2.2-dev/gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
-        | StreamGear | **FFmpeg:** See [this doc ➶](https://abhitronix.github.io/vidgear/v0.2.2-dev/gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
+        | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
+        | StreamGear | **FFmpeg:** See [this doc ➶](../../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
         | NetGear | `pyzmq`, `simplejpeg` |
         | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
         | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
@@ -224,6 +242,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
                     
         ```sh
         # Just copy-&-paste from above table
+
         pip install <API-specific dependencies>
         ```
 
@@ -233,111 +252,62 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
     A quick solution may be to preface every Python command with `python -m` like this:
 
-    === "`v0.2.4` and above"
+    ```sh
+    # Install latest stable release with all Core dependencies
+    python -m pip install -U vidgear[core]
 
-        ```sh
-        # Install latest stable release with all Core dependencies
-        $ pip install -U vidgear[core]
-
-        # Or Install latest stable release with all Core & Asyncio dependencies
-        $ pip install -U vidgear[asyncio]
-        ```
-
-    === "Older"
-
-        ```sh
-        # Install latest stable release with all Core dependencies
-        $ pip install vidgear<0.2.4
-
-        # Or Install latest stable release with all Core & Asyncio dependencies
-        $ pip install vidgear[asyncio]<0.2.4
-        ```
+    # Or Install latest stable release with all Core & Asyncio dependencies
+    python -m pip install -U vidgear[asyncio]
+    ```
 
     And, If you don't have the privileges to the directory you're installing package. Then use `--user` flag, that makes pip install packages in your home directory instead:
 
-    === "`v0.2.4` and above"
+    ```sh
+    # Install latest stable release with all Core dependencies
+    python -m pip install --upgrade --user vidgear[core]
 
-        ```sh
-        # Install latest stable release with all Core dependencies
-        $ python -m pip install --upgrade --user vidgear[core]
-
-        # Or Install latest stable release with all Core & Asyncio dependencies
-        $ python -m pip install --upgrade --user vidgear[asyncio]
-        ```
-
-    === "Older"
-
-        ```sh
-        # Install latest stable release with all Core dependencies
-        $ python -m pip install --user vidgear<0.2.4
-
-        # Or Install latest stable release with all Core & Asyncio dependencies
-        $ python -m pip install --user vidgear[asyncio]<0.2.4
-        ```
+    # Or Install latest stable release with all Core & Asyncio dependencies
+    python -m pip install --upgrade --user vidgear[asyncio]
+    ```
 
     Or, If you're using `py` as alias for installed python, then:
 
-    === "`v0.2.4` and above"
-
-        ```sh
-        # Install latest stable release with all Core dependencies
-        $ py -m pip install --upgrade --user vidgear[core]
-
-        # Or Install latest stable release with all Core & Asyncio dependencies
-        $ py -m pip install --upgrade --user vidgear[asyncio]
-        ```
-
-    === "Older"
-
-        ```sh
-        # Install latest stable release with all Core dependencies
-        $ py -m pip install --user vidgear<0.2.4
-
-        # Or Install latest stable release with all Core & Asyncio dependencies
-        $ py -m pip install --user vidgear[asyncio]<0.2.4
-        ```
-
-=== "`v0.2.4` and above"
-
     ```sh
     # Install latest stable release with all Core dependencies
-    pip install -U vidgear[core]
+    py -m pip install --upgrade --user vidgear[core]
 
     # Or Install latest stable release with all Core & Asyncio dependencies
-    pip install -U vidgear[asyncio]
+    py -m pip install --upgrade --user vidgear[asyncio]
     ```
 
-    **And if you prefer to install VidGear directly from the repository:**
 
-    ```sh
-    # Install latest stable release with all Core dependencies
-    pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[core]
+```sh
+# Install latest stable release with all Core dependencies
+pip install -U vidgear[core]
 
-    # Or Install latest stable release with all Core & Asyncio dependencies
-    pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[asyncio]
-    ```
+# Or Install latest stable release with all Core & Asyncio dependencies
+pip install -U vidgear[asyncio]
+```
 
-    **Or you can also download its wheel (`.whl`) package from our repository's [releases](https://github.com/abhiTronix/vidgear/releases) section, and thereby can be installed as follows:**
+**And if you prefer to install VidGear directly from the repository:**
 
-    ```sh
-    # Install latest stable release with all Core dependencies
-    pip install vidgear-0.2.3-py3-none-any.whl[core]
+```sh
+# Install latest stable release with all Core dependencies
+pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[core]
 
-    # Or Install latest stable release with all Core & Asyncio dependencies
-    pip install vidgear-0.2.3-py3-none-any.whl[asyncio]
-    ```
+# Or Install latest stable release with all Core & Asyncio dependencies
+pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[asyncio]
+```
 
-=== "Older"
+**Or you can also download its wheel (`.whl`) package from our repository's [releases](https://github.com/abhiTronix/vidgear/releases) section, and thereby can be installed as follows:**
 
-    !!! fail "`[core]` keyword isn't available in versions older than `v0.2.4`"
+```sh
+# Install latest stable release with all Core dependencies
+pip install vidgear-0.2.4-py3-none-any.whl[core]
 
-    ```sh
-    # Install latest stable release with all Core dependencies
-    pip install vidgear<0.2.4
-
-    # Or Install latest stable release with Core + Asyncio dependencies
-    pip install vidgear[asyncio]<0.2.4
-    ```
+# Or Install latest stable release with all Core & Asyncio dependencies
+pip install vidgear-0.2.4-py3-none-any.whl[asyncio]
+```
 
 &nbsp;
 

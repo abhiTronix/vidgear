@@ -141,32 +141,15 @@ Its valid input can be one of the following:
 
 - [x] **Streaming Services URL Address (*string*):** _Valid Video URL as input when Stream Mode is enabled(*i.e. `stream_mode=True`*)_ 
 
-    !!! quote "VideoGear automatically detects whether `source` belong to YouTube or elsewhere, and handles it with appropriate API."
+    CamGear internally implements `yt_dlp` backend class for pipelining live video-frames and metadata from various streaming services. For example Twitch URL can be used as follows:
 
-    * **Youtube URLs:** CamGear utilizes `pafy` with `yt_dlp` backend. For example `"https://youtu.be/bvetuLwJIkA"` as follows:
+    !!! info "Supported Streaming Websites"
 
-        ??? info "Valid YouTube URL formats"
+        The list of all supported Streaming Websites URLs can be found [here ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites)
 
-            All YouTube URLS with following format are supported:
-
-            * `https://youtu.be/{video-id}`
-            * `http://www.youtube.com/watch?v={video-id}`
-            * `http://www.youtube.com/v/{video-id}`
-            * `{video-id}`
-
-        ```python
-        VideoGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
-        ```
-
-    * **Streaming Websites URLs:** CamGear utilizes `streamlink` backend. For example `"https://www.dailymotion.com/video/x7xsoud"` as follows:
-
-        ??? info "Supported Streaming Websites"
-
-            The list of all supported Streaming Websites URLs can be found [here ➶](https://streamlink.github.io/plugin_matrix.html#plugins)
-
-        ```python
-        VideoGear(source='https://www.dailymotion.com/video/x7xsoud', stream_mode=True)
-        ```
+    ```python
+    CamGear(source='https://www.twitch.tv/shroud', stream_mode=True)
+    ```
 
 - [x] **Network Address (*string*):** _Valid (`http(s)`, `rtp`, `rstp`, `rtmp`, `mms`, etc.) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
 

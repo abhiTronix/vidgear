@@ -144,14 +144,17 @@ def test_threaded_queue_mode(source, options):
 @pytest.mark.parametrize(
     "url, quality, parameters",
     [
-        ("https://youtu.be/uCy5OuSQnyA", "73p", "invalid"),
-        ("https://www.dailymotion.com/video/x7xsoud", "73p", "invalid"),
-        ("https://youtu.be/uCy5OuSQnyA", "720p", "invalid"),
-        ("https://youtu.be/NMre6IAAAiU", "invalid", {"nocheckcertificate": True}),
         (
-            "https://www.dailymotion.com/video/x7xsoud",
+            "https://www.youtube.com/playlist?list=PLXsatjadpxK5wpQVrWKSxu4_ItvpwfCby",  # playlist
+            "720p",
             "invalid",
-            {"hls-live-edge": 3.0},
+        ),
+        ("https://youtu.be/uCy5OuSQnyA", "73p", "invalid"),  # video
+        ("https://youtu.be/viOkh9al0xM", "720p", "invalid"),  # video(live)
+        (
+            "https://www.dailymotion.com/video/x2yrnum",  # video(external)
+            "invalid",
+            {"nocheckcertificate": True},
         ),
         ("im_not_a_url", "", {}),
     ],
@@ -180,13 +183,10 @@ def test_stream_mode(url, quality, parameters):
         stream.stop()
         logger.debug("WIDTH: {} HEIGHT: {} FPS: {}".format(width, height, fps))
     except Exception as e:
-        # if isinstance(e, (RuntimeError, ValueError, cv2.error)) and (
-        #    url == "im_not_a_url" or platform.system() in ["Windows", "Darwin"]
-        # ):
-        pytest.xfail(str(e))
-        # else:
-        #    pytest.fail(str(e))
-
+        if isinstance(e, (RuntimeError, ValueError, cv2.error)):
+            pytest.xfail(str(e))
+        else:
+            pytest.fail(str(e))
 
 def test_network_playback():
     """
