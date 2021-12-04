@@ -196,13 +196,13 @@ if not (yt_dlp is None):
 class CamGear:
     """
     CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format (upto 4k tested),
-    any network stream URL such as http(s), rtp, rstp, rtmp, mms, etc. In addition to this, it also supports Gstreamer's RAW pipelines and various live video streaming
-    sites like YouTube, Twitch, Dailymotion etc.
+    any network stream URL such as http(s), rtp, rstp, rtmp, mms, etc. It also supports Gstreamer's RAW pipelines.
 
     CamGear API provides a flexible, high-level multi-threaded wrapper around OpenCV's VideoCapture API with direct access to almost all of its available parameters.
     It relies on Threaded Queue mode for threaded, error-free and synchronized frame handling.
 
-    CamGear internally employs yt_dlp and streamlink backend for piping live video frames from wide range of streaming services like Twitch, Livestream, Dailymotion and YouTube etc.
+    CamGear internally implements `yt_dlp` backend class for seamlessly pipelining live video-frames and metadata from various streaming services like YouTube, Dailymotion,
+    Twitch, and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites)
     """
 
     def __init__(
@@ -270,7 +270,7 @@ class CamGear:
                         if ytbackend.is_livestream:
                             # Throw warning for livestreams
                             logger.warning(
-                                "Livestream URL detected. It is strongly advised to use GStreamer backend(`cv2.CAP_GSTREAMER`) with it."
+                                "Livestream URL detected. It is advised to use GStreamer backend(`cv2.CAP_GSTREAMER`) with it."
                             )
                         # check whether stream-resolution was specified and available
                         if not (stream_resolution in ytbackend.streams.keys()):

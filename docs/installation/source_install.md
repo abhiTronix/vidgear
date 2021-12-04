@@ -106,7 +106,8 @@ When installing VidGear from source, FFmpeg is the only API specific prerequisit
 
     !!! tip "FFmpeg Installation"
 
-        Follow this dedicated [**FFmpeg Installation doc**](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
+        * **For WriteGear API's Compression Mode**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
+        * **For StreamGear API**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/streamgear/ffmpeg_install/) for its installation.
 
 
 &nbsp;
@@ -138,7 +139,7 @@ When installing VidGear from source, FFmpeg is the only API specific prerequisit
         git checkout testing
 
         # Install stable release with bare-minimum dependencies
-        pip install --no-deps .
+        pip install .
         ```
 
     - Then, you must install **Critical dependencies**(if not already):
@@ -153,7 +154,7 @@ When installing VidGear from source, FFmpeg is the only API specific prerequisit
 
         | APIs | Dependencies |
         |:---:|:---|
-        | CamGear | `yt_dlp`, `streamlink` |
+        | CamGear | `yt_dlp` |
         | PiGear | `picamera` |
         | VideoGear | *Based on CamGear or PiGear backend in use*  |
         | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |
@@ -178,10 +179,10 @@ When installing VidGear from source, FFmpeg is the only API specific prerequisit
 
     ```sh
     # Install latest stable release with all Core dependencies
-    pip install -U .[core]
+    python -m pip install -U .[core]
 
     # Or Install latest stable release with all Core & Asyncio dependencies
-    pip install -U .[asyncio]
+    python -m pip install -U .[asyncio]
     ```
 
     And, If you don't have the privileges to the directory you're installing package. Then use `--user` flag, that makes pip install packages in your home directory instead:

@@ -38,7 +38,7 @@ limitations under the License.
 
 &nbsp;
 
-VidGear is a **High-Performance Video Processing Python Library** that provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio API Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**
+VidGear is a **High-Performance Video Processing Python Library** that provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio API Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**
 
 VidGear primarily focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks, in just a few lines of code.
 
@@ -166,7 +166,7 @@ Each API is designed exclusively to handle/control/process different data-specif
 
 > *CamGear can grab ultra-fast frames from a diverse range of file-formats/devices/streams, which includes almost any IP-USB Cameras, multimedia video file-formats ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rstp, rtmp, mms, etc.`, and GStreamer's pipelines, plus direct support for live video streaming sites like YouTube, Twitch, LiveStream, Dailymotion etc.*
 
-CamGear implements a flexible, high-level, multi-threaded framework around OpenCV's [VideoCapture class][opencv-vc] with access almost all of its available parameters. CamGear also employs [streamlink][streamlink] for [piping live videos][piping-live-videos] from various streaming services and also utilizies [pafy][pafy] with [yt_dlp][yt_dlp] at its backend for [YouTube pipelining][youtube-doc]. Furthermore, its framework relies exclusively on [**Threaded Queue mode**][TQM-doc] for ultra-fast, error-free, and synchronized video-frame handling.
+CamGear provides a flexible, high-level, multi-threaded framework around OpenCV's [VideoCapture class][opencv-vc] with access almost all of its available parameters. CamGear internally implements [`yt_dlp`][yt_dlp] backend class for seamlessly pipelining live video-frames and metadata from various streaming services like [YouTube][youtube-doc], [Twitch][piping-live-videos], and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites). Furthermore, its framework relies exclusively on [**Threaded Queue mode**][TQM-doc] for ultra-fast, error-free, and synchronized video-frame handling.
 
 ### CamGear API Guide:
 

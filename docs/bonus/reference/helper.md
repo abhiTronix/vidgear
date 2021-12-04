@@ -126,10 +126,6 @@ limitations under the License.
 
 &nbsp;
 
-::: vidgear.gears.helper.youtube_url_validator
-
-&nbsp;
-
 
 ::: vidgear.gears.helper.validate_auth_keys
 
