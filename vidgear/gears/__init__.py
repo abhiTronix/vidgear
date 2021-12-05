@@ -1,15 +1,8 @@
 # import the necessary packages
 import sys
 import types
-import logging
 import importlib
 from distutils.version import LooseVersion
-
-# define custom logger
-FORMAT = "%(name)s :: %(levelname)s :: %(message)s"
-logging.basicConfig(format=FORMAT)
-logger = logging.getLogger("VidGear CORE")
-logger.propagate = False
 
 
 def get_module_version(module=None):
@@ -57,7 +50,7 @@ def import_core_dependency(
     Parameters:
         name (string): name of dependency to be imported.
         pkg_name (string): (Optional) package name of dependency(if different `pip` name). Otherwise `name` will be used.
-        custom_message (string): (Optional) custom Import error message to be raised or logged.
+        custom_message (string): (Optional) custom Import error message to be raised.
         version (string): (Optional) required minimum/maximum version of the dependency to be imported.
         mode (boolean): (Optional) Possible values "gte"(greater then equal), "lte"(less then equal), "exact"(exact). Default is "gte".
 

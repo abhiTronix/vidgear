@@ -20,6 +20,130 @@ limitations under the License.
 
 # Release Notes
 
+## v0.2.4 (2021-12-05)
+
+??? tip "New Features"
+    - [x] **CamGear:** 
+        * Added a new YT_backend Internal Class with YT-DLP backend:
+            + Implemented `YT_backend` a new CamGear's Internal YT-DLP backend class for extracting metadata from Streaming URLs.
+            + Added support for pipeling (live) video-frames from all yt-dlp supported streaming sites: https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites
+            + Implemented algorithm from scratch for auto-extracting resolution specific streamable URLs for pipelineing.
+            + Implemented logic for auto-calculating `best` and `worst` resolutions.
+            + Added new `ytv_metadata` global parameter to CamGear for accessing video's metadata(such as duration, title, description) on-the-go.
+            + ⚠️ Playlists are still unsupported.
+    - [x] **WebGear_RTC:** 
+        * Implemented a new easy way of defining Custom Streaming Class with suitable source(such as OpenCV):
+            + Added new `custom_stream` attribute with WebGear_RTC `options` parameter that allows you to easily define your own Custom Streaming Class with suitable source(such as OpenCV).
+            + This implementation supports repeated Auto-Reconnection or Auto-Refresh out-of-the-box.
+            + This implementation is more user-friendly and easy to integrate within complex APIs.
+            + This implementation requires at-least `read()` and `stop()` methods implemented within Custom Streaming Class, otherwise WebGear_RTC will throw ValueError.
+            + This implementation supports all vidgear's VideoCapture APIs readily as input.
+    - [x] **Maintenance:**
+        * Added new `.gitignore`  for specifying intentionally untracked files to ignore
+            + Added more files entries to `.gitignore`.
+        * Added new `.gitattributes` to manage how Git reads line endings.
+            + Enabled `auto` default behavior, in case people don't have `core.autocrlf` set.
+            + Enforced LF line-endings for selective files types.
+            + Added Binary data files that specifies they are not text, and git should not try to change them.
+            + Added Language aware diff headers.
+            + Added Linguist language overrides.
+    - [x] **Docs:**
+        * Added bonus example to add real-time file audio encoding with VideoGear and Stabilizer class.
+        * Added complete usage docs with new CamGear's Internal Class with YT-DLP backend.
+        * Added instructions to extract video's metadata in CamGear.
+        * Added donation link in page footer with bouncing heart animation through pure CSS.
+        * Added info about critical changes in `v0.2.4` and above installation through new announcement bar.
+        * Added related usage docs for new WebGear_RTC custom streaming class.
+        * Added changes for upgrading mkdocs-material from `v7.x` to newer `v8.x`.
+        * Added outdated version warning block.
+
+??? success "Updates/Improvements"  
+    - [x] CamGear:
+        * Added `is_livestream` global YT_backend parameters.
+        * Added default options for yt-dlp for extracting info_dict(metadata) of the video as a single JSON line.
+        * Completely removed old logic for extracting streams using pafy.
+        * Removed all dead code related to streamlink backend.
+    - [x] Setup.py:
+        * Moved all API specific dependencies to `extra_requires` under the name `"core"`. **[PR #268 by @zpapakipos]**
+        * Added rule to replace GitHub heading links in description.
+        * Updated `extra_require` dependencies.
+        * Removed `streamlink` dependency.
+        * Removed `pafy` dependency.
+        * Removed `pyzmq` from latest_version group.
+        * Updated SEO Keywords.
+    - [x] Docs: 
+        * Re-written `pip` and `source` installation docs. 
+        * Added warning for using `-disable_force_termination` flag for short duration videos.
+        * Added `permalink_title` entry to mkdocs.yml.
+        * Updated CamGear parameters.
+        * Updated Admonitions with related information.
+        * Updated Functional Block Diagram(`gears_fbd.png`) image.
+        * Updated installation instructions.
+        * Updated Advanced examples using WebGear_RTC's custom streaming class.
+        * Updated code highlighting.
+        * Updated zenodo badge.
+        * Updated BibTex for project citation.
+        * Replaced incorrect API parameter docs.
+        * Updated WebGear_RTC parameters.
+    - [x] CI:
+        * Updated CI tests for new WebGear_RTC custom streaming class.
+        * Restored `test_stream_mode` CamGear test.
+        * Updated Streaming Sites test links.
+        * Added more tests cases.
+    - [x] Maintenance: 
+        * Updated spacing in logger formatting.
+        * Renamed Asyncio Helper logger name.
+        * Changed logging colors.
+        * Updated logging messages.
+
+
+??? danger "Breaking Updates/Changes"
+    - [ ] Installation command with `pip` has been changed in `v0.2.4`:
+        * The legacy `#!sh  pip install vidgear` command now installs critical bare-minimum dependencies only. Therefore in order to automatically install all the API specific dependencies as previous versions, use `#!sh  pip install vidgear[core]` command instead.
+    - [ ] CamGear:
+        * Removed `streamlink` backend support from `stream_mode` in favor of more reliable CamGear's Internal YT-DLP backend class for extracting metadata from Streaming URLs.
+            + CamGear will raise `ValueError` if streaming site URL is unsupported by yt-dlp backend.
+            + CamGear will raise `ValueError` if `yt-dlp` isn't installed and `stream_mode` is enabled.
+        * Removed automatic enforcing of GStreamer backend for YouTube-livestreams and made it optional.
+            + The CamGear will not raise ValueError if GStreamer support is missing in OpenCV backends.
+    - [ ] WebGear_RTC:
+        * Removed support for assigning Custom Media Server Class(inherited from aiortc's VideoStreamTrack) in WebGear_RTC through its `config` global parameter.
+        * WebGear_RTC API will now throws ValueError if `source` parameter is NoneType as well as `custom_stream` attribute is undefined.
+    - [ ] Helper: 
+        * Removed `restore_levelnames` method.
+        * Removed `youtube_url_validator` helper method.
+
+
+??? bug "Bug-fixes"
+    - [x] CamGear:
+        * Fixed KeyError Bug for missing attributed in meta_data json in some streaming sites.
+    - [x] Helper: 
+        * Removed unused imports.
+    - [x] Docs:
+        * Removed slugify from mkdocs which was causing invalid hyperlinks in docs.
+        * Fixed GitHub hyperlinks in README.md.
+        * Fixed hyperlink in announcement bar.
+        * Fixed content tabs failing to work.
+        * Fixed line-endings and usage example code.
+        * Removed any `pafy` and `streamlink` references.
+        * Fixed context and typos.
+    - [x] CI: 
+        * Fixed NameError bugs in WebGear_RTC CI test.
+    - [x] Maintenance: 
+        * Removed dead logger code causing Python's Built-in logging module to hide logs.
+        * Removed unused `logging` import.
+        * Updated code comments.
+
+??? question "Pull Requests"
+    * PR #268
+    * PR #272
+    * PR #274
+
+
+&nbsp; 
+
+&nbsp; 
+
 
 ## v0.2.3 (2021-10-27)
 
@@ -171,7 +295,7 @@ limitations under the License.
     - [x] **NetGear_Async:**
         * New exclusive Bidirectional Mode for bidirectional data transfer:
             + NetGear_Async's first-ever exclusive Bidirectional mode with pure asyncio implementation.
-            + :warning: Bidirectional mode is only available with User-defined Custom Source(i.e. `source=None`)
+            + Bidirectional mode is only available with User-defined Custom Source(i.e. `source=None`)
             + Added support for `PAIR` & `REQ/REP` bidirectional patterns for this mode.
             + Added powerful `asyncio.Queues` for handling user data and frames in real-time.
             + Implemented new `transceive_data` method  to Transmit _(in Recieve mode)_ and Receive _(in Send mode)_ data in real-time.
@@ -180,7 +304,7 @@ limitations under the License.
             + Added support for `np.ndarray` video frames.
             + Added new `bidirectional_mode` attribute for enabling this mode.
             + Added 8-digit random alphanumeric id generator for each device.
-            + :warning: NetGear_Async will throw `RuntimeError` if bidirectional mode is disabled at server or client but not both.
+            + NetGear_Async will throw `RuntimeError` if bidirectional mode is disabled at server or client but not both.
         * Added new `disable_confirmation` used to force disable termination confirmation from client in `terminate_connection`.
         * Added `task_done()` method after every `get()` call to gracefully terminate queues.
         * Added new `secrets` and `string` imports.
@@ -296,7 +420,7 @@ limitations under the License.
     - [x] VidGear Core: 
         * New behavior to virtually isolate optional API specific dependencies by silencing `ImportError` on all VidGear's APIs import.
         * Implemented algorithm to cache all imports on startup but silence any `ImportError` on missing optional dependency.
-        * :warning: Now `ImportError` will be raised only any certain API specific dependency is missing during given API's initialization.
+        * Now `ImportError` will be raised only any certain API specific dependency is missing during given API's initialization.
         * New `import_dependency_safe` to imports specified dependency safely with `importlib` module.
         * Replaced all APIs imports with `import_dependency_safe`.
         * Added support for relative imports in `import_dependency_safe`.
@@ -318,8 +442,8 @@ limitations under the License.
         * Improved custom source handling.
         * Removed deprecated `loop` parameter from asyncio methods.
         * Re-implemented `skip_loop` parameter in `close()` method.
-        * :warning: `run_until_complete` will not used if `skip_loop` is enabled.
-        * :warning: `skip_loop` now will create asyncio task instead and will enable `disable_confirmation` by default.
+        * `run_until_complete` will not used if `skip_loop` is enabled.
+        * `skip_loop` now will create asyncio task instead and will enable `disable_confirmation` by default.
         * Replaced `create_task` with `ensure_future` to ensure backward compatibility with python-3.6 legacies.
         * Simplified code for `transceive_data` method.
     - [x] WebGear_RTC: 
@@ -745,10 +869,10 @@ limitations under the License.
     - [x] Bumped codecov.
 
 ??? danger "Breaking Updates/Changes"
-    - [ ] :warning: WriteGear will automatically switch video encoder to default if specified encoder not found.
-    - [ ] :warning: WriteGear will throw `RuntimeError` if no suitable default encoder found!
-    - [ ] :warning: Removed format specific OpenCV decoding and encoding support for NetGear.
-    - [ ] :warning: Dropped support for `compression_format`, `compression_param` attributes from NetGear.
+    - [ ] WriteGear will automatically switch video encoder to default if specified encoder not found.
+    - [ ] WriteGear will throw `RuntimeError` if no suitable default encoder found!
+    - [ ] Removed format specific OpenCV decoding and encoding support for NetGear.
+    - [ ] Dropped support for `compression_format`, `compression_param` attributes from NetGear.
     - [ ] Non-existent parent folder in `output_filename` value will no longer be considered as invalid in StreamGear and WriteGear APIs.
     - [ ] None-type `source` parameter value is allowed for WebGear and NetGear_Async for defining custom sources.
 
@@ -943,8 +1067,8 @@ limitations under the License.
     - [x] Docs: Version Selector UI reworked and other minor changes.
 
 ??? danger "Breaking Updates/Changes"
-    - [ ] :warning: `y_tube` parameter renamed as `stream_mode` in CamGear API!
-    - [ ] :warning: Removed Travis support and `travis.yml` deleted.
+    - [ ] `y_tube` parameter renamed as `stream_mode` in CamGear API!
+    - [ ] Removed Travis support and `travis.yml` deleted.
 
 ??? bug "Bug-fixes"
     - [x] Fixed StreamGear API Limited Segments Bug
@@ -1144,7 +1268,7 @@ limitations under the License.
     - [x] Updated termination linger to zero at Server's end.
 
 ??? danger "Breaking Updates/Changes"
-    - [ ] :warning: Changed Webgear API default address to `localhost` for cross-compatibility between different platforms.
+    - [ ] Changed Webgear API default address to `localhost` for cross-compatibility between different platforms.
     - [ ] In Netgear_Async API, `source` value can now be NoneType for a custom frame-generator at Server-end only.
     - [ ] Temp _(such as `/tmp` in linux)_ is now not a valid directory for WriteGear & StreamGear API outputs.
     - [ ] Moved vidgear docs assets _(i.e images, gifs, javascripts and stylescripts)_ to `override` directory.
@@ -1272,7 +1396,7 @@ limitations under the License.
     - [x] Removed redundant code.
 
 ??? danger "Breaking Updates/Changes"
-    - [ ] :warning: VidGear Docs moved to GitHub Pages, Now Available at https://abhitronix.github.io/vidgear.
+    - [ ] VidGear Docs moved to GitHub Pages, Now Available at https://abhitronix.github.io/vidgear.
     - [ ] Removed `filter` attribute from `options` parameter in NetGear API.
     - [ ] Removed `force_terminate` parameter support from NetGear API.
     - [ ] Disabled additional data of datatype `numpy.ndarray` for Server end in Bidirectional Mode.
@@ -1366,7 +1490,7 @@ limitations under the License.
     - [x] Bumped Codecov to maximum. 
 
 ??? danger "Breaking Updates/Changes"
-    - [ ] :warning: **Dropped support for Python 3.5 and below legacies. (See [issue #99](https://github.com/abhiTronix/vidgear/issues/99))**
+    - [ ] **Dropped support for Python 3.5 and below legacies. (See [issue #99](https://github.com/abhiTronix/vidgear/issues/99))**
     - [ ] Dropped and replaced Python 3.5 matrices with new Python 3.8 matrices in all CI environments.
     - [ ] Implemented PEP-8 Styled [**Black**](https://github.com/psf/black) formatting throughout the source-code.
     - [ ] Limited protocols support to `tcp` and `ipc` only, in NetGear API.
@@ -1486,8 +1610,8 @@ limitations under the License.
     - [x] Reformatted & implemented necessary MacOS related changes and dependencies in `travis.yml`.
 
 ??? danger "Breaking Updates/Changes"
-    - [ ] :warning: Python 2.7 legacy support dropped completely.
-    - [ ] :warning: Source-code Relicensed to Apache 2.0 License.
+    - [ ] Python 2.7 legacy support dropped completely.
+    - [ ] Source-code Relicensed to Apache 2.0 License.
     - [ ] Python 3+ are only supported legacies for installing v0.1.6 and above.
     - [ ] Python 2.7 and 3.4 legacies support dropped from CI tests.
 

@@ -26,7 +26,7 @@ limitations under the License.
 
 ## Prerequisites
 
-When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), you need to check manually if following dependencies are installed:
+When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), you need to manually install following prerequisites:
 
 
 ??? alert "Upgrade your `pip`"
@@ -92,7 +92,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
             
             ```
 
-### Core Prerequisites :warning:
+### Critical Prerequisites :warning:
 
 * #### OpenCV 
 
@@ -122,7 +122,9 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
     !!! tip "FFmpeg Installation"
 
-        Follow this dedicated [**FFmpeg Installation doc**](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
+        * **For WriteGear API's Compression Mode**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
+        * **For StreamGear API**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/streamgear/ffmpeg_install/) for its installation.
+
 
 * #### Picamera
 
@@ -133,38 +135,13 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
     ```sh
     pip install picamera
-    ``` 
-
-* #### Aiortc
-
-    Required only if you're using the [**WebGear_RTC**](../../gears/webgear_rtc/overview/) API. You can easily install it via pip:
-
-    ??? error "Microsoft Visual C++ 14.0 is required."
-        
-        Installing `aiortc` on windows may sometimes require Microsoft Build Tools for Visual C++ libraries installed. You can easily fix this error by installing any **ONE** of these choices:
-
-        !!! info "While the error is calling for VC++ 14.0 - but newer versions of Visual C++ libraries works as well."
-
-          - Microsoft [Build Tools for Visual Studio](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16).
-          - Alternative link to Microsoft [Build Tools for Visual Studio](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019).
-          - Offline installer: [vs_buildtools.exe](https://aka.ms/vs/16/release/vs_buildtools.exe)
-
-        Afterwards, Select: Workloads → Desktop development with C++, then for Individual Components, select only:
-
-          - [x] Windows 10 SDK
-          - [x] C++ x64/x86 build tools
-
-        Finally, proceed installing `aiortc` via pip.
-
-    ```sh
-    pip install aiortc
-    ``` 
+    ```  
 
 * #### Uvloop
 
     Required only if you're using the [**NetGear_Async**](../../gears/netgear_async/overview/) API on UNIX machines for maximum performance. You can easily install it via pip:
 
-    !!! error "uvloop is **[NOT yet supported on Windows Machines](https://github.com/MagicStack/uvloop/issues/14).**"
+    !!! fail "uvloop is **[NOT yet supported on Windows Machines](https://github.com/MagicStack/uvloop/issues/14).**"
     !!! warning "Python-3.6 legacies support [**dropped in version `>=1.15.0`**](https://github.com/MagicStack/uvloop/releases/tag/v0.15.0). Kindly install previous `0.14.0` version instead."
 
     ```sh
@@ -175,7 +152,99 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
 ## Installation
 
+
+???+ danger "Installation command with `pip` has been changed in `v0.2.4`"
+
+    The legacy `#!sh  pip install vidgear` command now installs critical bare-minimum dependencies only. Therefore in order to automatically install all the API specific dependencies as previous versions, use `#!sh  pip install vidgear[core]` command instead.
+
+    === "`v0.2.4` and newer"
+
+        ```sh
+        # Install latest stable release with all Core dependencies
+        pip install -U vidgear[core]
+        ```
+
+    === "Older"
+
+        !!! fail "`[core]` keyword isn't available in versions older than `v0.2.4`"
+
+        ```sh
+        # Install older stable release with all Core dependencies
+        pip install vidgear<0.2.4
+        ```
+
+    Similarly in your python project files like `setup.py` or `requirements.txt` or `setup.cfg`, use vidgear dependency as `#!sh  vidgear[core]>=0.2.4`  instead.
+
+    !!! note "This change does not affects `#!sh pip install vidgear[asyncio]` command."
+
+
+
 **Installation is as simple as:**
+
+??? experiment "Installing vidgear with only selective dependencies"
+
+    Starting with version `v0.2.2`, you can now run any VidGear API by installing only just specific dependencies required by the API in use(except for some Core dependencies). 
+
+    This is useful when you want to manually review, select and install minimal API-specific dependencies on bare-minimum vidgear from scratch on your system:
+    
+    - Install bare-minimum vidgear as follows:
+
+        
+        === "`v0.2.4` and newer"
+
+            ```sh
+            # Install stable release with bare-minimum dependencies
+            pip install -U vidgear
+            ```
+
+        === "Older"
+
+            ```sh
+            # Install stable without any dependencies
+            pip install --no-deps vidgear<0.2.4
+            ```
+
+    - Then, you must install **Critical dependencies**(if not already):
+
+        === "`v0.2.4` and newer"
+
+            ```sh
+            # Install opencv(only if not installed previously)
+            pip install opencv-python 
+            ```
+
+        === "Older"
+
+            ```sh
+            # Install critical dependencies
+            pip install cython, numpy, requests, tqdm, colorlog
+
+            # Install opencv(only if not installed previously)
+            pip install opencv-python 
+            ```
+
+    - Finally, manually install your **API-specific dependencies** as required by your API(in use):
+
+
+        | APIs | Dependencies |
+        |:---:|:---|
+        | CamGear | `yt_dlp` |
+        | PiGear | `picamera` |
+        | VideoGear | *Based on CamGear or PiGear backend in use*  |
+        | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |
+        | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
+        | StreamGear | **FFmpeg:** See [this doc ➶](../../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
+        | NetGear | `pyzmq`, `simplejpeg` |
+        | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
+        | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
+        | NetGear_Async | `pyzmq`, `msgpack`, `msgpack_numpy`, `uvloop` |
+        | Stabilizer Class | - |
+                    
+        ```sh
+        # Just copy-&-paste from above table
+
+        pip install <API-specific dependencies>
+        ```
 
 ??? warning "Windows Installation"
 
@@ -184,101 +253,62 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
     A quick solution may be to preface every Python command with `python -m` like this:
 
     ```sh
-    python -m pip install vidgear
+    # Install latest stable release with all Core dependencies
+    python -m pip install -U vidgear[core]
 
-    # or with asyncio support
-    python -m pip install vidgear[asyncio]
+    # Or Install latest stable release with all Core & Asyncio dependencies
+    python -m pip install -U vidgear[asyncio]
     ```
 
     And, If you don't have the privileges to the directory you're installing package. Then use `--user` flag, that makes pip install packages in your home directory instead:
 
-    ``` sh
-    python -m pip install --user vidgear
+    ```sh
+    # Install latest stable release with all Core dependencies
+    python -m pip install --upgrade --user vidgear[core]
 
-    # or with asyncio support
-    python -m pip install --user vidgear[asyncio]
+    # Or Install latest stable release with all Core & Asyncio dependencies
+    python -m pip install --upgrade --user vidgear[asyncio]
     ```
 
     Or, If you're using `py` as alias for installed python, then:
 
-    ``` sh
-    py -m pip install --user vidgear
+    ```sh
+    # Install latest stable release with all Core dependencies
+    py -m pip install --upgrade --user vidgear[core]
 
-    # or with asyncio support
-    py -m pip install --user vidgear[asyncio]
+    # Or Install latest stable release with all Core & Asyncio dependencies
+    py -m pip install --upgrade --user vidgear[asyncio]
     ```
-
-??? experiment "Installing vidgear with only selective dependencies"
-
-    Starting with version `v0.2.2`, you can now run any VidGear API by installing only just specific dependencies required by the API in use(except for some Core dependencies). 
-
-    This is useful when you want to manually review, select and install minimal API-specific dependencies on bare-minimum vidgear from scratch on your system:
-    
-    - To install bare-minimum vidgear without any dependencies, use [`--no-deps`](https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-no-deps) pip flag as follows:
-
-        ```sh
-        # Install stable release without any dependencies
-        pip install --no-deps --upgrade vidgear
-        ```
-
-    - Then, you must install all **Core dependencies**:
-
-        ```sh
-        # Install core dependencies
-        pip install cython, numpy, requests, tqdm, colorlog
-
-        # Install opencv(only if not installed previously)
-        pip install opencv-python 
-        ```
-
-    - Finally, manually install your **API-specific dependencies** as required by your API(in use):
-
-
-        | APIs | Dependencies |
-        |:---:|:---|
-        | CamGear | `pafy`, `yt_dlp`, `streamlink` |
-        | PiGear | `picamera` |
-        | VideoGear | - |
-        | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |
-        | WriteGear | **FFmpeg:** See [this doc ➶](https://abhitronix.github.io/vidgear/v0.2.2-dev/gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
-        | StreamGear | **FFmpeg:** See [this doc ➶](https://abhitronix.github.io/vidgear/v0.2.2-dev/gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
-        | NetGear | `pyzmq`, `simplejpeg` |
-        | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
-        | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
-        | NetGear_Async | `pyzmq`, `msgpack`, `msgpack_numpy`, `uvloop` |
-                    
-        ```sh
-        # Just copy-&-paste from above table
-        pip install <API-specific dependencies>
-        ```
 
 
 ```sh
-# Install latest stable release
-pip install -U vidgear
+# Install latest stable release with all Core dependencies
+pip install -U vidgear[core]
 
-# Or Install latest stable release with Asyncio support
+# Or Install latest stable release with all Core & Asyncio dependencies
 pip install -U vidgear[asyncio]
 ```
 
 **And if you prefer to install VidGear directly from the repository:**
 
 ```sh
-pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear
+# Install latest stable release with all Core dependencies
+pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[core]
 
-# or with asyncio support
+# Or Install latest stable release with all Core & Asyncio dependencies
 pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[asyncio]
 ```
 
 **Or you can also download its wheel (`.whl`) package from our repository's [releases](https://github.com/abhiTronix/vidgear/releases) section, and thereby can be installed as follows:**
 
 ```sh
-pip install vidgear-0.2.3-py3-none-any.whl
+# Install latest stable release with all Core dependencies
+pip install vidgear-0.2.4-py3-none-any.whl[core]
 
-# or with asyncio support
-pip install vidgear-0.2.3-py3-none-any.whl[asyncio]
+# Or Install latest stable release with all Core & Asyncio dependencies
+pip install vidgear-0.2.4-py3-none-any.whl[asyncio]
 ```
 
 &nbsp;
 
-[^1]: :warning: The `ensurepip` module is missing/disabled on Ubuntu. Use second method.
+[^1]: :warning: The `ensurepip` module is missing/disabled on Ubuntu. Use `pip` method only.

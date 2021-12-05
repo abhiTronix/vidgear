@@ -27,7 +27,7 @@ limitations under the License.
 
 <div align="center">
 
-[Releases][release]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Gears][gears]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Documentation][docs]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Installation][installation]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[License](#license)
+[Releases][release]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Gears][gears]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Documentation][docs]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Installation][installation]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[License](#copyright)
 
 [![Build Status][github-cli]][github-flow] [![Codecov branch][codecov]][code]  [![Azure DevOps builds (branch)][azure-badge]][azure-pipeline]
 
@@ -38,7 +38,7 @@ limitations under the License.
 
 &nbsp;
 
-VidGear is a **High-Performance Video Processing Python Library** that provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio API Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**
+VidGear is a **High-Performance Video Processing Python Library** that provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio API Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**
 
 VidGear primarily focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks, in just a few lines of code.
 
@@ -166,7 +166,7 @@ Each API is designed exclusively to handle/control/process different data-specif
 
 > *CamGear can grab ultra-fast frames from a diverse range of file-formats/devices/streams, which includes almost any IP-USB Cameras, multimedia video file-formats ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rstp, rtmp, mms, etc.`, and GStreamer's pipelines, plus direct support for live video streaming sites like YouTube, Twitch, LiveStream, Dailymotion etc.*
 
-CamGear implements a flexible, high-level, multi-threaded framework around OpenCV's [VideoCapture class][opencv-vc] with access almost all of its available parameters. CamGear also employs [streamlink][streamlink] for [piping live videos][piping-live-videos] from various streaming services and also utilizies [pafy][pafy] with [yt_dlp][yt_dlp] at its backend for [YouTube pipelining][youtube-doc]. Furthermore, its framework relies exclusively on [**Threaded Queue mode**][TQM-doc] for ultra-fast, error-free, and synchronized video-frame handling.
+CamGear provides a flexible, high-level, multi-threaded framework around OpenCV's [VideoCapture class][opencv-vc] with access almost all of its available parameters. CamGear internally implements [`yt_dlp`][yt_dlp] backend class for seamlessly pipelining live video-frames and metadata from various streaming services like [YouTube][youtube-doc], [Twitch][piping-live-videos], and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites). Furthermore, its framework relies exclusively on [**Threaded Queue mode**][TQM-doc] for ultra-fast, error-free, and synchronized video-frame handling.
 
 ### CamGear API Guide:
 
@@ -618,7 +618,7 @@ NetGear_Async provides complete server-client handling and options to use variab
 
 NetGear_Async now supports additional [**bidirectional data transmission**][btm_netgear_async] between receiver(client) and sender(server) while transferring video-frames. Users can easily build complex applications such as like [Real-Time Video Chat][rtvc] in just few lines of code.
 
-NetGear_Async as of now supports [all four ZeroMQ messaging patterns](#attributes-and-parameters-wrench):
+NetGear_Async as of now supports all four ZeroMQ messaging patterns:
 * [**`zmq.PAIR`**][zmq-pair] _(ZMQ Pair Pattern)_ 
 * [**`zmq.REQ/zmq.REP`**][zmq-req-rep] _(ZMQ Request/Reply Pattern)_
 * [**`zmq.PUB/zmq.SUB`**][zmq-pub-sub] _(ZMQ Publish/Subscribe Pattern)_ 
@@ -680,23 +680,25 @@ It is something I am doing with my own free time. If you would like to say thank
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5389830.svg)](https://doi.org/10.5281/zenodo.5389830)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5602375.svg)](https://doi.org/10.5281/zenodo.5602375)
 
 ```BibTeX
 @software{vidgear,
-    author       = {Abhishek Thakur and
-                    Christian Clauss and
-                    Christian Hollinger and
-                    Benjamin Lowe and
-                    Mickaël Schoentgen and
-                    Renaud Bouckenooghe},
-    title        = {abhiTronix/vidgear: VidGear v0.2.2},
-    year         = 2021
-    publisher    = {Zenodo},
-    version      = {vidgear-0.2.2},
-    doi          = {10.5281/zenodo.5389830},
-    url          = {https://doi.org/10.5281/zenodo.5389830}
-  }
+  author       = {Abhishek Thakur and
+                  Christian Clauss and
+                  Christian Hollinger and
+                  Vincent Boivin and
+                  Benjamin Lowe and
+                  Mickaël Schoentgen and
+                  Renaud Bouckenooghe},
+  title        = {abhiTronix/vidgear: VidGear v0.2.3},
+  month        = oct,
+  year         = 2021,
+  publisher    = {Zenodo},
+  version      = {vidgear-0.2.3},
+  doi          = {10.5281/zenodo.5602375},
+  url          = {https://doi.org/10.5281/zenodo.5602375}
+}
 ```
 
 &nbsp;
@@ -801,7 +803,6 @@ External URLs
 [uvloop]: https://github.com/MagicStack/uvloop
 [streamlink]:https://streamlink.github.io/
 [aiortc]:https://aiortc.readthedocs.io/en/latest/
-[yt_dlp]:https://yt_dlp.org/
 [pyscreenshot]:https://github.com/ponty/pyscreenshot
 [uvloop-ns]: https://github.com/MagicStack/uvloop/issues/14
 [ffmpeg]:https://www.ffmpeg.org/
@@ -828,7 +829,7 @@ External URLs
 [OV5647-picam]:https://github.com/techyian/MMALSharp/doc/OmniVision-OV5647-Camera-Module
 [IMX219-picam]:https://github.com/techyian/MMALSharp/doc/Sony-IMX219-Camera-Module
 [opencv-vw]:https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html
-[yt-dl]:https://github.com/yt-dlp/yt-dlp
+[yt_dlp]:https://github.com/yt-dlp/yt-dlp
 [numpy]:https://github.com/numpy/numpy
 [zmq-pair]:https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pair.html
 [zmq-req-rep]:https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/client_server.html

@@ -197,7 +197,7 @@ By default, if input video-source _(i.e. `-video_source`)_ contains any audio, t
 
 The complete example is as follows:
 
-!!! failure "Make sure this `-audio` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
+!!! failure "Make sure this `-audio` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."
 
 !!! tip "You can also assign a valid Audio URL as input, rather than filepath. More details can be found [here ➶](../../params/#a-exclusive-parameters)"
 

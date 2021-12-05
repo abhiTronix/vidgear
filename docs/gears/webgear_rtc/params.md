@@ -55,6 +55,28 @@ This parameter can be used to pass user-defined parameter to WebGear_RTC API by 
 
 ### WebGear_RTC Specific attributes
 
+* **`custom_stream`** _(class)_ : Can be used to easily define your own Custom Streaming Class with suitable custom source(such as OpenCV) that you want to use to transform your frames before sending them onto the browser. 
+
+    !!! danger "Make sure your Custom Streaming Class at-least implements `read()` and `stop()` methods, otherwise WebGear_RTC will throw ValueError!"
+
+    ??? new "New in v0.2.4" 
+        This attribute was added in `v0.2.4`.
+
+    ??? tip "Using Vidgear's VideoCapture APIs instead of OpenCV"
+        You can directly replace Custom Streaming Class with any [VideoCapture APIs](../../#a-videocapture-gears). These APIs implements `read()` and `stop()` methods by-default, so they're also supported out-of-the-box. 
+
+        See this [example ➶](../../../help/screengear_ex/#using-screengear-with-webgear_rtc) for more information.
+
+    !!! example "Its complete usage example is given [here ➶](../advanced/#using-webgear_rtc-with-a-custom-sourceopencv)."
+
+    ```python
+    # set CamGear as custom streaming class with adequate parameters
+    options = {"custom_stream": CamGear(source="foo.mp4", logging=True)}
+    # assign it
+    WebGear_RTC(logging=True, **options)
+    ```
+
+
 * **`custom_data_location`** _(string)_ : Can be used to change/alter [*default location*](../overview/#default-location) path to somewhere else. Its usage is as follows:
 
     ```python
@@ -84,41 +106,14 @@ This parameter can be used to pass user-defined parameter to WebGear_RTC API by 
     WebGear_RTC(logging=True, **options)
     ```
 
-* **`jpeg_compression_quality`** _(int/float)_ : This attribute controls the JPEG quantization factor. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. Its usage is as follows:
-
-    ```python
-    # activate jpeg encoding and set quality 95%
-    options = {"jpeg_compression": True, "jpeg_compression_quality": 95}
-    ```
-
-* **`jpeg_compression_fastdct`** _(bool)_ : This attribute if True, WebGear API uses fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`, and its usage is as follows:
-
-    ```python
-    # activate jpeg encoding and enable fast dct
-    options = {"jpeg_compression": True, "jpeg_compression_fastdct": True}
-    ```
-
-* **`jpeg_compression_fastupsample`** _(bool)_ : This attribute if True, WebGear API use fastest color upsampling method. Its default value is `False`, and its usage is as follows:
-
-    ```python
-    # activate jpeg encoding and enable fast upsampling
-    options = {"jpeg_compression": True, "jpeg_compression_fastupsample": True}
-    ```
-
-* **`jpeg_compression_colorspace`** _(str)_ :  This internal attribute is used to specify incoming frames colorspace with compression. Its usage is as follows:
-
-    !!! info "Supported colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
-
-    ```python
-    # Specify incoming frames are `grayscale`
-    options = {"jpeg_compression": "GRAY"}
-    ```
-
 * **`enable_live_broadcast`** _(boolean)_ : WebGear_RTC by default only supports one-to-one peer connection with a single consumer/client, Hence this boolean attribute can be used to enable live broadcast to multiple peer consumers/clients at same time. Its default value is `False`. Its usage is as follows:
 
     !!! note "`enable_infinite_frames` is enforced by default when this attribute is enabled(`True`)."
 
     !!! tip "For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](../../../help/webgear_rtc_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear_rtc)"
+
+    ??? new "New in v0.2.2" 
+        `enable_live_broadcast` attribute was added in `v0.2.2`.
 
     ```python
     # enable live boadcast to multiple consumers.
@@ -134,6 +129,9 @@ This parameter can be used to pass user-defined parameter to WebGear_RTC API by 
 
 
     !!! warning "`enable_infinite_frames` is disabled when `enable_live_broadcast` attribute is enabled(`True`)."
+
+    ??? new "New in v0.2.1" 
+        `enable_infinite_frames` attribute was added in `v0.2.1`.
 
     ```python
     # emulate infinite frames
@@ -241,32 +239,15 @@ Its valid input can be one of the following:
 
 - [x] **Streaming Services URL Address (*string*):** _Valid Video URL as input when Stream Mode is enabled(*i.e. `stream_mode=True`*)_ 
 
-    !!! quote "WebGear_RTC automatically detects whether `source` belong to YouTube or elsewhere, and handles it with appropriate API."
+    CamGear internally implements `yt_dlp` backend class for pipelining live video-frames and metadata from various streaming services. For example Twitch URL can be used as follows:
 
-    * **Youtube URLs:** CamGear utilizes `pafy` with `yt_dlp` backend. For example `"https://youtu.be/bvetuLwJIkA"` as follows:
+    !!! info "Supported Streaming Websites"
 
-        ??? info "Valid YouTube URL formats"
+        The complete list of all supported Streaming Websites URLs can be found [here ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites)
 
-            All YouTube URLS with following format are supported:
-
-            * `https://youtu.be/{video-id}`
-            * `http://www.youtube.com/watch?v={video-id}`
-            * `http://www.youtube.com/v/{video-id}`
-            * `{video-id}`
-
-        ```python
-        WebGear_RTC(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
-        ```
-
-    * **Streaming Websites URLs:** CamGear utilizes `streamlink` backend. For example `"https://www.dailymotion.com/video/x7xsoud"` as follows:
-
-        ??? info "Supported Streaming Websites"
-
-            The list of all supported Streaming Websites URLs can be found [here ➶](https://streamlink.github.io/plugin_matrix.html#plugins)
-
-        ```python
-        WebGear_RTC(source='https://www.dailymotion.com/video/x7xsoud', stream_mode=True)
-        ```
+    ```python
+    CamGear(source='https://www.twitch.tv/shroud', stream_mode=True)
+    ```
 
 - [x] **Network Address (*string*):** _Valid (`http(s)`, `rtp`, `rstp`, `rtmp`, `mms`, etc.) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
 
@@ -301,13 +282,9 @@ Its valid input can be one of the following:
 
 ### **`stream_mode`**
 
-This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), the WebGear_RTC API will interpret the given `source` input as YouTube URL address. 
+This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), the CamGear API will interpret the given `source` input as YouTube URL address. 
 
-!!! bug "Due to a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend _(`backend=cv2.CAP_GSTREAMER`)_](#backend) for any livestreams _(such as Twitch)_."
-
-!!! warning "WebGear_RTC automatically enforce GStreamer backend _(backend=`cv2.CAP_GSTREAMER`)_ for YouTube-livestreams!"
-
-!!! error "WebGear_RTC will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
+!!! bug "Due to a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend](#backend) for any livestream videos. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
 
 **Data-Type:** Boolean
 
@@ -315,11 +292,15 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 
 **Usage:**
 
+!!! info "Supported Streaming Websites"
+
+    The complete list of all supported Streaming Websites URLs can be found [here ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites)
+
 ```python
 WebGear_RTC(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
-!!! example "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
+!!! example "Its complete usage example is given [here ➶](../../camgear/usage/#using-camgear-with-youtube-videos)."
 
 
 &nbsp;

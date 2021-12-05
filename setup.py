@@ -79,6 +79,9 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = long_description.replace(  # patch for images
         "docs/overrides/assets", "https://abhitronix.github.io/vidgear/latest/assets"
     )
+    long_description = long_description.replace(
+        "(#", "(https://github.com/abhiTronix/vidgear#"
+    )
     # patch for unicodes
     long_description = long_description.replace("➶", ">>")
     long_description = long_description.replace("©", "(c)")
@@ -91,28 +94,36 @@ setup(
     license="Apache License 2.0",
     author="Abhishek Thakur",
     install_requires=[
-        "pafy{}".format(latest_version("pafy")),
-        "yt_dlp{}".format(latest_version("yt_dlp")),  # pafy backend
-        "mss{}".format(latest_version("mss")),
         "cython",  # helper for numpy install
         "numpy",
-        "streamlink",
         "requests",
-        "pyzmq{}".format(latest_version("pyzmq")),
-        "simplejpeg{}".format(latest_version("simplejpeg")),
         "colorlog",
         "tqdm",
-        "Pillow",
-        "pyscreenshot{}".format(latest_version("pyscreenshot")),
     ]
-    + (["opencv-python"] if test_opencv() else [])
-    + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
+    + (["opencv-python"] if test_opencv() else []),
     long_description=long_description,
     long_description_content_type="text/markdown",
     author_email="abhi.una12@gmail.com",
     url="https://abhitronix.github.io/vidgear",
     extras_require={
+        # API specific deps
+        "core": [
+            "yt_dlp{}".format(latest_version("yt_dlp")),
+            "pyzmq",
+            "Pillow",
+            "simplejpeg{}".format(latest_version("simplejpeg")),
+            "mss{}".format(latest_version("mss")),
+            "pyscreenshot{}".format(latest_version("pyscreenshot")),
+        ]
+        + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
+        # API specific + Asyncio deps
         "asyncio": [
+            "yt_dlp{}".format(latest_version("yt_dlp")),
+            "pyzmq",
+            "simplejpeg{}".format(latest_version("simplejpeg")),
+            "mss{}".format(latest_version("mss")),
+            "Pillow",
+            "pyscreenshot{}".format(latest_version("pyscreenshot")),
             "starlette{}".format(latest_version("starlette")),
             "jinja2",
             "uvicorn{}".format(latest_version("uvicorn")),
@@ -120,15 +131,16 @@ setup(
             "msgpack_numpy{}".format(latest_version("msgpack_numpy")),
             "aiortc{}".format(latest_version("aiortc")),
         ]
+        + (["picamera"] if ("arm" in platform.uname()[4][:3]) else [])
         + (
             (
                 ["uvloop{}".format(latest_version("uvloop"))]
                 if sys.version_info[:2] >= (3, 7)  # dropped support for 3.6.x legacies
                 else ["uvloop==0.14.0"]
             )
-            if (platform.system() != "Windows")
+            if (platform.system() != "Windows") # windows not supported
             else []
-        )
+        ),
     },
     keywords=[
         "OpenCV",
@@ -141,11 +153,10 @@ setup(
         "aiortc",
         "uvicorn",
         "uvloop",
-        "pafy",
         "yt-dlp",
         "asyncio",
         "dash",
-        "streamlink",
+        "hls",
         "Video Processing",
         "Video Stablization",
         "Computer Vision",

@@ -66,96 +66,221 @@ stream.stop()
 
 ## Using Camgear with Streaming Websites
 
-CamGear API provides direct support for piping video streams from various popular streaming services like [Twitch](https://www.twitch.tv/), [Vimeo](https://vimeo.com/), [Dailymotion](https://www.dailymotion.com), and [many more ➶](https://streamlink.github.io/plugin_matrix.html#plugins). All you have to do is to provide the desired Video's URL to its `source` parameter, and enable the [`stream_mode`](../params/#stream_mode) parameter. The complete usage example is as follows:
+CamGear internally implements [`yt_dlp`]() backend class for seamlessly pipelining live video-frames and metadata from various streaming services like [Twitch](https://www.twitch.tv/), [Vimeo](https://vimeo.com/), [Dailymotion](https://www.dailymotion.com), and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites). All you have to do is to provide the desired Video's URL to its `source` parameter, and enable its [`stream_mode`](../params/#stream_mode) parameter. 
 
-!!! bug "Bug in OpenCV's FFmpeg"
-    To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently, You must always use [GStreamer backend](../params/#backend) for  Livestreams _(such as Twitch URLs)_. 
+The complete usage example for Dailymotion and Twitch URLs are as follows:
+
+
+??? bug "Bug in OpenCV's FFmpeg"
+
+    To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend](../params/#backend) for Livestream videos.
 
     **Checkout [this FAQ ➶](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.**
 
-??? info "Exclusive CamGear Attributes"
+    !!! fail "Not all resolutions are supported with GStreamer Backend. See issue #244"
+
+???+ info "Exclusive CamGear Attributes for `yt_dlp` backend"
+    
     CamGear also provides exclusive attributes: 
     
     - `STREAM_RESOLUTION` _(for specifying stream resolution)_
-    - `STREAM_PARAMS` _(for specifying underlying API(i.e. [streamlink](https://streamlink.github.io/)) parameters)_ 
+    - `STREAM_PARAMS` _(for specifying  `yt_dlp` parameters)_ 
     
     with its [`options`](../params/#options) dictionary parameter. **More information can be found [here ➶](../advanced/source_params/#exclusive-camgear-parameters)**
 
-```python  hl_lines="12-13"
-# import required libraries
-from vidgear.gears import CamGear
-import cv2
 
-# set desired quality as 720p
-options = {"STREAM_RESOLUTION": "720p"}
+??? note "Supported Streaming Websites"
 
-# Add any desire Video URL as input source
-# for e.g https://vimeo.com/151666798
-# and enable Stream Mode (`stream_mode = True`)
-stream = CamGear(
-    source="https://vimeo.com/151666798",
-    stream_mode=True,
-    logging=True,
-    **options
-).start()
+    The list of all supported Streaming Websites URLs can be found [here ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites)
 
-# loop over
-while True:
 
-    # read frames from stream
-    frame = stream.read()
+??? tip "Accessing Stream's Metadata"
 
-    # check for frame if Nonetype
-    if frame is None:
-        break
+    CamGear now provides `ytv_metadata` global parameter for accessing given Video's metadata as JSON Object. It can used as follows:
 
-    # {do something with the frame here}
+    ??? new "New in v0.2.4" 
+        `ytv_metadata` global parameter was added in `v0.2.4`.
 
-    # Show output window
-    cv2.imshow("Output", frame)
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+    # Add YouTube Video URL as input source (for e.g https://www.dailymotion.com/video/x2yrnum)
+    # and enable Stream Mode (`stream_mode = True`)
+    stream = CamGear(
+        source="https://www.dailymotion.com/video/x2yrnum", stream_mode=True, logging=True, **options
+    ).start()
 
-# close output window
-cv2.destroyAllWindows()
+    # get Video's metadata as JSON object
+    video_metadata =  stream.ytv_metadata
 
-# safely close video stream
-stream.stop()
-```
+    # print all available keys
+    print(video_metadata.keys())
+
+    # get data like `title`
+    print(video_metadata["title"])
+    ```
+
+=== "Dailymotion"
+    ```python  hl_lines="12-13"
+    # import required libraries
+    from vidgear.gears import CamGear
+    import cv2
+
+    # set desired quality as 720p
+    options = {"STREAM_RESOLUTION": "720p"}
+
+    # Add any desire Video URL as input source
+    # for e.g https://vimeo.com/151666798
+    # and enable Stream Mode (`stream_mode = True`)
+    stream = CamGear(
+        source="https://www.dailymotion.com/video/x2yrnum",
+        stream_mode=True,
+        logging=True,
+        **options
+    ).start()
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # Show output window
+        cv2.imshow("Output", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+    ```
+=== "Twitch"
+
+    !!! warning "If Twitch user is offline, CamGear will throw ValueError."
+
+    ```python  hl_lines="12-13"
+    # import required libraries
+    from vidgear.gears import CamGear
+    import cv2
+
+    # set desired quality as 720p
+    options = {"STREAM_RESOLUTION": "720p"}
+
+    # Add any desire Video URL as input source
+    # for e.g hhttps://www.twitch.tv/shroud
+    # and enable Stream Mode (`stream_mode = True`)
+    stream = CamGear(
+        source="https://www.twitch.tv/shroud",
+        stream_mode=True,
+        logging=True,
+        **options
+    ).start()
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # Show output window
+        cv2.imshow("Output", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+    ```
+
 
 &nbsp; 
 
 ## Using Camgear with Youtube Videos
 
-CamGear API provides direct support for **YouTube Livestream _(with GStreamer)_ + Normal Video frames pipelining**. All you have to do is to provide the desired YouTube Video's URL to its `source` parameter and enable the [`stream_mode`](../params/#stream_mode) parameter. 
+CamGear API also provides out-of-the-box support for pipelining live video-frames and metadata from **YouTube (Livestream + Normal) Videos**. 
+
+!!! fail "YouTube Playlists are not supported yet."
 
 The complete usage example is as follows:
 
-!!! warning "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225), CamGear automatically enforces [GStreamer backend](../params/#backend) for YouTube-livestreams! Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
+??? bug "Bug in OpenCV's FFmpeg"
 
-!!! bug "Not all resolutions are supported with YouTube Livestreams. See issue #244"
+    To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend](../params/#backend) for Livestream videos.
 
-??? info "Exclusive CamGear Attributes"
-    CamGear also provides exclusive attributes:
+    **Checkout [this FAQ ➶](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.**
 
-    - `STREAM_RESOLUTION`: _(for specifying stream resolution)_
-    - `STREAM_PARAMS`: _(for specifying underlying API(i.e. [yt_dlp](https://github.com/yt-dlp/yt-dlp)) parameters)_ 
+    !!! fail "Not all resolutions are supported with GStreamer Backend. See issue #244"
+    
 
+??? info "Exclusive CamGear Attributes for `yt_dlp` backend"
+    
+    CamGear also provides exclusive attributes: 
+    
+    - `STREAM_RESOLUTION` _(for specifying stream resolution)_
+    - `STREAM_PARAMS` _(for specifying  `yt_dlp` parameters)_ 
+    
     with its [`options`](../params/#options) dictionary parameter. **More information can be found [here ➶](../advanced/source_params/#exclusive-camgear-parameters)**
 
+
+??? tip "Accessing Stream's Metadata"
+
+    CamGear now provides `ytv_metadata` global parameter for accessing given Video's metadata as JSON Object. It can used as follows:
+
+    ??? new "New in v0.2.4" 
+        `ytv_metadata` global parameter was added in `v0.2.4`.
+
+    ```python
+    # import required libraries
+    from vidgear.gears import CamGear
+
+    # Add YouTube Video URL as input source (for e.g https://youtu.be/uCy5OuSQnyA)
+    # and enable Stream Mode (`stream_mode = True`)
+    stream = CamGear(
+        source="https://youtu.be/uCy5OuSQnyA", stream_mode=True, logging=True, **options
+    ).start()
+
+    # get Video's metadata as JSON object
+    video_metadata =  stream.ytv_metadata
+
+    # print all available keys
+    print(video_metadata.keys())
+
+    # get data like `title`
+    print(video_metadata["title"])
+    ```
 
 ```python hl_lines="8-9"
 # import required libraries
 from vidgear.gears import CamGear
 import cv2
 
-# Add YouTube Video URL as input source (for e.g https://youtu.be/bvetuLwJIkA)
+# Add YouTube Video URL as input source (for e.g https://youtu.be/uCy5OuSQnyA)
 # and enable Stream Mode (`stream_mode = True`)
 stream = CamGear(
-    source="https://youtu.be/bvetuLwJIkA", 
+    source="https://youtu.be/uCy5OuSQnyA", 
     stream_mode=True,
     logging=True
 ).start()

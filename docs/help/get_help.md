@@ -49,8 +49,8 @@ Checkout the Frequently Asked Questions, a curated list of all the questions wit
 - [WebGear FAQs ➶](webgear_faqs.md)
 - [WebGear_RTC FAQs ➶](webgear_rtc_faqs.md)
 - [VideoGear FAQs ➶](videogear_faqs.md)
-- [Stabilizer Class FAQs ➶](stabilizer_faqs.md)
 - [NetGear_Async FAQs ➶](netgear_async_faqs.md)
+- [Stabilizer Class FAQs ➶](stabilizer_faqs.md)
 
 
 &thinsp;
@@ -62,17 +62,17 @@ Checkout the Frequently Asked Questions, a curated list of all the questions wit
 
 Checkout the Bonus Examples, a curated list of all advanced examples with unusual configuration, which isn't available in Vidgear API's usage examples:
 
-- [CamGear FAQs ➶](camgear_ex.md)
-- [PiGear FAQs ➶](pigear_ex.md)
-- [ScreenGear FAQs ➶](screengear_ex.md)
-- [StreamGear FAQs ➶](streamgear_ex.md)
-- [WriteGear FAQs ➶](writegear_ex.md)
-- [NetGear FAQs ➶](netgear_ex.md)
-- [WebGear FAQs ➶](webgear_ex.md)
-- [WebGear_RTC FAQs ➶](webgear_rtc_ex.md)
-- [VideoGear FAQs ➶](videogear_ex.md)
-- [Stabilizer Class FAQs ➶](stabilizer_ex.md)
-- [NetGear_Async FAQs ➶](netgear_async_ex.md)
+- [CamGear Examples ➶](camgear_ex.md)
+- [PiGear Examples ➶](pigear_ex.md)
+- [ScreenGear Examples ➶](screengear_ex.md)
+- [StreamGear Examples ➶](streamgear_ex.md)
+- [WriteGear Examples ➶](writegear_ex.md)
+- [NetGear Examples ➶](netgear_ex.md)
+- [WebGear Examples ➶](webgear_ex.md)
+- [WebGear_RTC Examples ➶](webgear_rtc_ex.md)
+- [VideoGear Examples ➶](videogear_ex.md)
+- [NetGear_Async Examples ➶](netgear_async_ex.md)
+- [Stabilizer Class Examples ➶](stabilizer_ex.md)
 
 &thinsp;
 

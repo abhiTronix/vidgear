@@ -63,7 +63,7 @@ jobs:
         run: bash scripts/bash/install_opencv.sh
         shell: bash
       - name: recheck pip_dependencies
-        run: pip install .
+        run: pip install .[core]
       - name: pytest with_ENV
         run: |
           mkdir -p $HOME/logs

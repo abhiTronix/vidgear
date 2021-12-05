@@ -172,7 +172,7 @@ You can also use WriteGear for merging external audio with live video-source:
 ??? new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
-!!! failure "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you encounter multiple errors or no output at all."
+!!! failure "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."
 
 ```python hl_lines="11-12"
 # import required libraries
@@ -225,6 +225,104 @@ stream.stop()
 writer.close()
 ```
 
+
+&nbsp;
+
+
+## Using WriteGear's Compression Mode for generating Timely Accurate Video
+
+If you need timely accurate video with exactly same speed as real-time input, then you need to use FFmpeg directly through its `execute_ffmpeg_cmd` method: 
+
+??? new "New in v0.2.4" 
+    This example was added in `v0.2.4`.
+
+In this example we are capturing video from desktop screen in a Timely Accurate manner.
+
+=== "Windows"
+
+    ```python hl_lines="8-17"
+    # import required libraries
+    from vidgear.gears import WriteGear
+
+    # Define writer with defined parameters and with some dummy name
+    writer = WriteGear(output_filename="Output.mp4", logging=True)
+
+    # format FFmpeg command to generate time accurate video
+    ffmpeg_command = [
+        "-y",
+        "-f",
+        "gdigrab",
+        "-framerate",
+        "30",
+        "-i",
+        "desktop",
+        "Output.mkv",
+    ]  # `-y` parameter is to overwrite outputfile if exists
+
+    # execute FFmpeg command
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+
+    # safely close writer
+    writer.close()
+    ```
+
+=== "Linux"
+
+    ```python hl_lines="8-17"
+    # import required libraries
+    from vidgear.gears import WriteGear
+
+    # Define writer with defined parameters and with some dummy name
+    writer = WriteGear(output_filename="Output.mp4", logging=True)
+
+    # format FFmpeg command to generate time accurate video
+    ffmpeg_command = [
+        "-y",
+        "-f",
+        "x11grab",
+        "-framerate",
+        "30",
+        "-i",
+        "default",
+        "Output.mkv",
+    ]  # `-y` parameter is to overwrite outputfile if exists
+
+    # execute FFmpeg command
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+
+    # safely close writer
+    writer.close()
+    ```
+
+=== "macOS"
+
+    ```python hl_lines="8-17"
+    # import required libraries
+    from vidgear.gears import WriteGear
+
+    # Define writer with defined parameters and with some dummy name
+    writer = WriteGear(output_filename="Output.mp4", logging=True)
+
+    # format FFmpeg command to generate time accurate video
+    ffmpeg_command = [
+        "-y",
+        "-f",
+        "avfoundation",
+        "-framerate",
+        "30",
+        "-i",
+        "default",
+        "Output.mkv",
+    ]  # `-y` parameter is to overwrite outputfile if exists
+
+    # execute FFmpeg command
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+
+    # safely close writer
+    writer.close()
+    ```
+
+
 &nbsp;
 
 
@@ -275,14 +373,13 @@ class image_subscriber:
         if cv_image:
 
             # {do something with the frame here}
-
-            # add circle
+            # let's add a circle
             (rows, cols, channels) = cv_image.shape
             if cols > 60 and rows > 60:
                 cv2.circle(cv_image, (50, 50), 10, 255)
 
             # write frame to writer
-            writer.write(frame)
+            writer.write(cv_image)
 
         def close(self):
             # safely close video stream

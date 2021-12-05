@@ -120,6 +120,7 @@ if not (aiortc is None):
             self.__enable_inf = False  # continue frames even when video ends.
             self.is_launched = False  # check if launched already
             self.is_running = False  # check if running
+            self.__stream = None
 
             self.__frame_size_reduction = 20  # 20% reduction
             # retrieve interpolation for reduction
@@ -144,22 +145,37 @@ if not (aiortc is None):
                             "Skipped invalid `enable_infinite_frames` value!"
                         )
                     del options["enable_infinite_frames"]  # clean
+                if "custom_stream" in options:
+                    value = options["custom_stream"]
+                    if (hasattr(value, "read") and callable(value.read)) and (
+                        hasattr(value, "stop") and callable(value.stop)
+                    ):
+                        self.__stream = value
+                        logger.critical(
+                            "Using custom stream for its Default Internal Video-Server."
+                        )
+                    else:
+                        raise ValueError(
+                            "[WebGear_RTC:ERROR] :: Invalid `custom_stream` value. Check VidGear docs!"
+                        )
+                    del options["custom_stream"]  # clean
 
-            # define VideoGear stream.
-            self.__stream = VideoGear(
-                enablePiCamera=enablePiCamera,
-                stabilize=stabilize,
-                source=source,
-                camera_num=camera_num,
-                stream_mode=stream_mode,
-                backend=backend,
-                colorspace=colorspace,
-                resolution=resolution,
-                framerate=framerate,
-                logging=logging,
-                time_delay=time_delay,
-                **options
-            )
+            # define VideoGear stream if not already.
+            if self.__stream is None:
+                self.__stream = VideoGear(
+                    enablePiCamera=enablePiCamera,
+                    stabilize=stabilize,
+                    source=source,
+                    camera_num=camera_num,
+                    stream_mode=stream_mode,
+                    backend=backend,
+                    colorspace=colorspace,
+                    resolution=resolution,
+                    framerate=framerate,
+                    logging=logging,
+                    time_delay=time_delay,
+                    **options
+                )
 
             # log it
             self.__logging and logger.debug(
@@ -182,7 +198,8 @@ if not (aiortc is None):
             self.__logging and logger.debug("Launching Internal RTC Video-Server")
             self.is_launched = True
             self.is_running = True
-            self.__stream.start()
+            if hasattr(self.__stream, "start") and callable(self.__stream.start):
+                self.__stream.start()
 
         async def next_timestamp(self):
             """
@@ -249,8 +266,14 @@ if not (aiortc is None):
                     interpolation=self.__interpolation,
                 )
 
-            # construct `av.frame.Frame` from `numpy.nd.array`
-            frame = VideoFrame.from_ndarray(f_stream, format="bgr24")
+            # construct `av.frame.Frame` from `numpy.nd.array` 
+            # based on available channels in frames
+            f_format = "bgr24"
+            if f_stream.ndim == 3 and f_stream.shape[-1] == 4:
+                f_format = "bgra"
+            if f_stream.ndim == 2:
+                f_format = "gray"
+            frame = VideoFrame.from_ndarray(f_stream, format=f_format)
             frame.pts = pts
             frame.time_base = time_base
 
@@ -434,11 +457,7 @@ class WebGear_RTC:
         self.middleware = []
 
         # Handle RTC video server
-        if source is None:
-            self.config = {"server": None}
-            self.__default_rtc_server = None
-            self.__logging and logger.warning("Given source is of NoneType!")
-        else:
+        if "custom_stream" in options or not (source is None):
             # Handle video source
             self.__default_rtc_server = RTC_VideoServer(
                 enablePiCamera=enablePiCamera,
@@ -454,12 +473,15 @@ class WebGear_RTC:
                 time_delay=time_delay,
                 **options
             )
-            # define default frame generator in configuration
-            self.config = {"server": self.__default_rtc_server}
             # add exclusive reset connection node
             self.routes.append(
                 Route("/close_connection", self.__reset_connections, methods=["POST"])
             )
+        else:
+            raise ValueError(
+                "[WebGear_RTC:ERROR] :: Source cannot be NoneType without Custom Stream(`custom_stream`) defined!"
+            )
+
         # copying original routing tables for further validation
         self.__rt_org_copy = self.routes[:]
         # collects peer RTC connections
@@ -484,34 +506,6 @@ class WebGear_RTC:
         ):
             raise RuntimeError("[WebGear_RTC:ERROR] :: Middlewares are not valid!")
 
-        # validate assigned RTC video-server in WebGear_RTC configuration
-        if isinstance(self.config, dict) and "server" in self.config:
-            # check if assigned RTC server class is inherit from `VideoStreamTrack` API.i
-            if self.config["server"] is None or not issubclass(
-                self.config["server"].__class__, VideoStreamTrack
-            ):
-                # otherwise raise error
-                raise ValueError(
-                    "[WebGear_RTC:ERROR] :: Invalid configuration. {}. Refer Docs for more information!".format(
-                        "Video-Server not assigned"
-                        if self.config["server"] is None
-                        else "Assigned Video-Server class must be inherit from `aiortc.VideoStreamTrack` only"
-                    )
-                )
-            # check if assigned server class has `terminate` function defined and callable
-            if not (
-                hasattr(self.config["server"], "terminate")
-                and callable(self.config["server"].terminate)
-            ):
-                # otherwise raise error
-                raise ValueError(
-                    "[WebGear_RTC:ERROR] :: Invalid configuration. Assigned Video-Server Class must have `terminate` method defined. Refer Docs for more information!"
-                )
-        else:
-            # raise error if validation fails
-            raise RuntimeError(
-                "[WebGear_RTC:ERROR] :: Assigned configuration is invalid!"
-            )
         # return Starlette application
         self.__logging and logger.debug("Running Starlette application.")
         return Starlette(
@@ -566,9 +560,9 @@ class WebGear_RTC:
             # add video server to peer track
             if t.kind == "video":
                 pc.addTrack(
-                    self.__relay.subscribe(self.config["server"])
+                    self.__relay.subscribe(self.__default_rtc_server)
                     if not (self.__relay is None)
-                    else self.config["server"]
+                    else self.__default_rtc_server
                 )
 
         # Create an SDP answer to an offer received from a remote peer
@@ -643,9 +637,9 @@ class WebGear_RTC:
         """
         Gracefully shutdown video-server
         """
-        if not (self.config["server"] is None):
+        if not (self.__default_rtc_server is None):
             self.__logging and logger.debug("Closing Video Server.")
-            self.config["server"].terminate()
-            self.config["server"] = None
+            self.__default_rtc_server.terminate()
+            self.__default_rtc_server = None
         # terminate internal server aswell.
         self.__default_rtc_server = None

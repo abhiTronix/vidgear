@@ -21,16 +21,17 @@ limitations under the License.
 # Install from source
 
 
-> _Best option for trying latest patches(maybe experimental), forking for Pull Requests, or automatically installing all dependencies(with a few exceptions)._
+> _Best option for trying latest patches(maybe experimental), forking for Pull Requests, or automatically installing all prerequisites(with a few exceptions)._
 
 
 ## Prerequisites
 
-When installing VidGear from source, FFmpeg and Aiortc are the only two API specific dependencies you need to install manually:
+When installing VidGear from source, FFmpeg is the only API specific prerequisites you need to install manually:
 
-!!! question "What about rest of the dependencies?"
 
-    Any other python dependencies _(Core/API specific)_ will be automatically installed based on your OS specifications.
+!!! question "What about rest of the prerequisites?"
+
+    Any other python prerequisites _(Critical/API specific)_ will be automatically installed based on your OS/System specifications.
     
 
 ??? alert "Upgrade your `pip`"
@@ -105,79 +106,22 @@ When installing VidGear from source, FFmpeg and Aiortc are the only two API spec
 
     !!! tip "FFmpeg Installation"
 
-        Follow this dedicated [**FFmpeg Installation doc**](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
+        * **For WriteGear API's Compression Mode**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
+        * **For StreamGear API**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/streamgear/ffmpeg_install/) for its installation.
 
-
-* #### Aiortc
-
-    Required only if you're using the [**WebGear_RTC**](../../gears/webgear_rtc/overview/) API. You can easily install it via pip:
-
-    ??? error "Microsoft Visual C++ 14.0 is required."
-        
-        Installing `aiortc` on windows may sometimes requires Microsoft Build Tools for Visual C++ libraries installed. You can easily fix this error by installing any **ONE** of these choices:
-
-        !!! info "While the error is calling for VC++ 14.0 - but newer versions of Visual C++ libraries works as well."
-
-          - Microsoft [Build Tools for Visual Studio](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16).
-          - Alternative link to Microsoft [Build Tools for Visual Studio](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019).
-          - Offline installer: [vs_buildtools.exe](https://aka.ms/vs/16/release/vs_buildtools.exe)
-
-        Afterwards, Select: Workloads → Desktop development with C++, then for Individual Components, select only:
-
-          - [x] Windows 10 SDK
-          - [x] C++ x64/x86 build tools
-
-        Finally, proceed installing `aiortc` via pip.
-
-    ```sh
-    pip install aiortc
-    ``` 
 
 &nbsp;
 
+
 ## Installation
 
-**If you want to just install and try out the checkout the latest beta [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch , you can do so with the following command:**
 
-!!! info "This can be useful if you want to provide feedback for a new feature or want to confirm if a bug you have encountered is fixed in the `testing` branch."
+**If you want to checkout the latest beta [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch , you can do so with the following commands:**
 
-!!! warning "DO NOT clone or install `development` branch unless advised, as it is not tested with CI environments and possibly very unstable or unusable."
 
-??? tip "Windows Installation"
-  
-    * Install [git for windows](https://gitforwindows.org/).
+!!! info "This can be useful if you want to provide feedback for a new feature or bug fix in the `testing` branch."
 
-    * Use following commands to clone and install VidGear:
-
-        ```sh
-        # clone the repository and get inside
-        git clone https://github.com/abhiTronix/vidgear.git && cd vidgear
-
-        # checkout the latest testing branch
-        git checkout testing
-
-        # install normally
-        python -m pip install .
-
-        # OR install with asyncio support
-        python - m pip install .[asyncio]
-        ```
-        
-    * If you're using `py` as alias for installed python, then:
-
-        ``` sh
-        # clone the repository and get inside
-        git clone https://github.com/abhiTronix/vidgear.git && cd vidgear
-
-        # checkout the latest testing branch
-        git checkout testing
-
-        # install normally
-        python -m pip install .
-
-        # OR install with asyncio support
-        python - m pip install .[asyncio]
-        ```
+!!! danger "DO NOT clone or install any other branch other than `testing` unless advised, as it is not tested with CI environments and possibly very unstable or unusable."
 
 ??? experiment "Installing vidgear with only selective dependencies"
 
@@ -185,7 +129,7 @@ When installing VidGear from source, FFmpeg and Aiortc are the only two API spec
 
     This is useful when you want to manually review, select and install minimal API-specific dependencies on bare-minimum vidgear from scratch on your system:
     
-    - To install bare-minimum vidgear without any dependencies, use [`--no-deps`](https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-no-deps) pip flag as follows:
+    - To clone and install bare-minimum vidgear without any dependencies do as follows:
 
         ```sh
         # clone the repository and get inside
@@ -194,16 +138,13 @@ When installing VidGear from source, FFmpeg and Aiortc are the only two API spec
         # checkout the latest testing branch
         git checkout testing
 
-        # Install without any dependencies
-        pip install --no-deps .
+        # Install stable release with bare-minimum dependencies
+        pip install .
         ```
 
-    - Then, you must install all **Core dependencies**:
+    - Then, you must install **Critical dependencies**(if not already):
 
         ```sh
-        # Install core dependencies
-        pip install cython, numpy, requests, tqdm, colorlog
-
         # Install opencv(only if not installed previously)
         pip install opencv-python 
         ```
@@ -213,9 +154,9 @@ When installing VidGear from source, FFmpeg and Aiortc are the only two API spec
 
         | APIs | Dependencies |
         |:---:|:---|
-        | CamGear | `pafy`, `yt_dlp`, `streamlink` |
+        | CamGear | `yt_dlp` |
         | PiGear | `picamera` |
-        | VideoGear | - |
+        | VideoGear | *Based on CamGear or PiGear backend in use*  |
         | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |
         | WriteGear | **FFmpeg:** See [this doc ➶](https://abhitronix.github.io/vidgear/v0.2.2-dev/gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
         | StreamGear | **FFmpeg:** See [this doc ➶](https://abhitronix.github.io/vidgear/v0.2.2-dev/gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
@@ -223,36 +164,63 @@ When installing VidGear from source, FFmpeg and Aiortc are the only two API spec
         | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
         | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
         | NetGear_Async | `pyzmq`, `msgpack`, `msgpack_numpy`, `uvloop` |
+        | Stabilizer Class | - |
                     
         ```sh
         # Just copy-&-paste from above table
         pip install <API-specific dependencies>
         ```
 
+??? warning "Windows Installation"
+
+    If you are using Windows, some of the commands given below, may not work out-of-the-box.
+
+    A quick solution may be to preface every Python command with `python -m` like this:
+
+    ```sh
+    # Install latest stable release with all Core dependencies
+    python -m pip install -U .[core]
+
+    # Or Install latest stable release with all Core & Asyncio dependencies
+    python -m pip install -U .[asyncio]
+    ```
+
+    And, If you don't have the privileges to the directory you're installing package. Then use `--user` flag, that makes pip install packages in your home directory instead:
+
+    ```sh
+    # Install latest stable release with all Core dependencies
+    python -m pip install --upgrade --user .[core]
+
+    # Or Install latest stable release with all Core & Asyncio dependencies
+    python -m pip install --upgrade --user .[asyncio]
+    ```
+
+    Or, If you're using `py` as alias for installed python, then:
+
+    ```sh
+    # Install latest stable release with all Core dependencies
+    py -m pip install --upgrade --user .[core]
+
+    # Or Install latest stable release with all Core & Asyncio dependencies
+    py -m pip install --upgrade --user .[asyncio]
+    ```
+    
+
 ```sh
-  # clone the repository and get inside
-  git clone https://github.com/abhiTronix/vidgear.git && cd vidgear
+# clone the repository and get inside
+git clone https://github.com/abhiTronix/vidgear.git && cd vidgear
 
-  # checkout the latest testing branch
-  git checkout testing
+# checkout the latest testing branch
+git checkout testing
 
-  # install normally
-  pip install .
+# Install latest stable release with all Core dependencies
+pip install -U .[core]
 
-  # OR install with asyncio support
-  pip install .[asyncio]
-```
-
-**Or just install directly without cloning:**
-
-```sh
-pip install git+git://github.com/abhiTronix/vidgear@testing#egg=vidgear
-
-# or with asyncio support
-pip install git+git://github.com/abhiTronix/vidgear@testing#egg=vidgear[asyncio]
+# Or Install latest stable release with all Core & Asyncio dependencies
+pip install -U .[asyncio]
 ```
 
 &nbsp;
 
 
-[^1]: The `ensurepip` module was added to the Python standard library in Python 3.4.
+[^1]: :warning: The `ensurepip` module is missing/disabled on Ubuntu. Use `pip` method only.

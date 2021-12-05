@@ -30,7 +30,7 @@ limitations under the License.
 
 > VidGear is a cross-platform High-Performance **Video-Processing** Framework for building complex real-time media applications in python :fire:
 
-VidGear provides an easy-to-use, highly extensible, **[Multi-Threaded](bonus/TQM/#threaded-queue-mode) + [Asyncio](https://docs.python.org/3/library/asyncio.html) API Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [streamlink][streamlink], [pafy][pafy], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and real-time performance ⚡️.
+VidGear provides an easy-to-use, highly extensible, **[Multi-Threaded](bonus/TQM/#threaded-queue-mode) + [Asyncio](https://docs.python.org/3/library/asyncio.html) API Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and real-time performance ⚡️.
 
 > _"Write Less and Accomplish More"_ — VidGear's Motto
 
@@ -108,13 +108,13 @@ If you've come up with some new idea, or looking for the fastest way troubleshoo
 
 ## Become a Stargazer
 
-You can be a [**Stargazer :star2:**][stargazer] by starring us on Github, it helps us a lot and you're making it easier for others to find & trust this library. Thanks!
+You can be a [**Stargazer** :star2:{ .heart }][stargazer] by starring us on Github, it helps us a lot and you're making it easier for others to find & trust this library. Thanks!
 
 &thinsp;
 
 ## Donations
 
-> VidGear is free and open source and will always remain so. :heart:
+> VidGear is free and open source and will always remain so. :heart:{ .heart }
 
 It is something I am doing with my own free time. If you would like to say thanks, please feel free to make a donation:
 
@@ -126,23 +126,25 @@ It is something I am doing with my own free time. If you would like to say thank
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5389830.svg)](https://doi.org/10.5281/zenodo.5389830)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5602375.svg)](https://doi.org/10.5281/zenodo.5602375)
 
 ```BibTeX
 @software{vidgear,
-    author       = {Abhishek Thakur and
-                    Christian Clauss and
-                    Christian Hollinger and
-                    Benjamin Lowe and
-                    Mickaël Schoentgen and
-                    Renaud Bouckenooghe},
-    title        = {abhiTronix/vidgear: VidGear v0.2.2},
-    year         = 2021
-    publisher    = {Zenodo},
-    version      = {vidgear-0.2.2},
-    doi          = {10.5281/zenodo.5389830},
-    url          = {https://doi.org/10.5281/zenodo.5389830}
-  }
+  author       = {Abhishek Thakur and
+                  Christian Clauss and
+                  Christian Hollinger and
+                  Vincent Boivin and
+                  Benjamin Lowe and
+                  Mickaël Schoentgen and
+                  Renaud Bouckenooghe},
+  title        = {abhiTronix/vidgear: VidGear v0.2.3},
+  month        = oct,
+  year         = 2021,
+  publisher    = {Zenodo},
+  version      = {vidgear-0.2.3},
+  doi          = {10.5281/zenodo.5602375},
+  url          = {https://doi.org/10.5281/zenodo.5602375}
+}
 ```
 
 &thinsp;
@@ -163,3 +165,4 @@ External URLs
 [pyscreenshot]:https://github.com/ponty/pyscreenshot
 [streamlink]:https://streamlink.github.io/
 [aiortc]:https://aiortc.readthedocs.io/en/latest/
+[yt_dlp]:https://github.com/yt-dlp/yt-dlp

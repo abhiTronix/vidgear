@@ -31,7 +31,7 @@ limitations under the License.
 
 CamGear API provides a flexible, high-level multi-threaded wrapper around OpenCV's *[VideoCapture API](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80)* with direct access to almost all of its available [*parameters*](../advanced/source_params/). It relies on [**Threaded Queue mode**](../../../bonus/TQM/) for threaded, error-free and synchronized frame handling.
 
-CamGear internally employs [`streamlink`][streamlink] for [*piping live videos*](../usage/#using-camgear-with-streaming-websites) from various streaming services like [Twitch](https://www.twitch.tv/), [Livestream](https://livestream.com/), [Dailymotion](https://www.dailymotion.com/live) etc., and also utilizies [`pafy`][pafy] with [`yt_dlp`][yt_dlp] at its backend for seamless [*YouTube pipelining*](../usage/#using-camgear-with-youtube-videos).
+CamGear internally implements [`yt_dlp`][yt_dlp] backend class for seamlessly pipelining live video-frames and metadata from various streaming services like [YouTube](../usage/#using-camgear-with-youtube-videos), [Twitch](../usage/#using-camgear-with-streaming-websites), and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites)
 
 &thinsp; 
 
