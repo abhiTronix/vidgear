@@ -225,6 +225,104 @@ stream.stop()
 writer.close()
 ```
 
+
+&nbsp;
+
+
+## Using WriteGear's Compression Mode for generating Timely Accurate Video
+
+If you need timely accurate video with exactly same speed as real-time input, then you need to use FFmpeg directly through its `execute_ffmpeg_cmd` method: 
+
+??? new "New in v0.2.4" 
+    This example was added in `v0.2.4`.
+
+In this example we are capturing video from desktop screen in a Timely Accurate manner.
+
+=== "Windows"
+
+    ```python hl_lines="8-17"
+    # import required libraries
+    from vidgear.gears import WriteGear
+
+    # Define writer with defined parameters and with some dummy name
+    writer = WriteGear(output_filename="Output.mp4", logging=True)
+
+    # format FFmpeg command to generate time accurate video
+    ffmpeg_command = [
+        "-y",
+        "-f",
+        "gdigrab",
+        "-framerate",
+        "30",
+        "-i",
+        "desktop",
+        "Output.mkv",
+    ]  # `-y` parameter is to overwrite outputfile if exists
+
+    # execute FFmpeg command
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+
+    # safely close writer
+    writer.close()
+    ```
+
+=== "Linux"
+
+    ```python hl_lines="8-17"
+    # import required libraries
+    from vidgear.gears import WriteGear
+
+    # Define writer with defined parameters and with some dummy name
+    writer = WriteGear(output_filename="Output.mp4", logging=True)
+
+    # format FFmpeg command to generate time accurate video
+    ffmpeg_command = [
+        "-y",
+        "-f",
+        "x11grab",
+        "-framerate",
+        "30",
+        "-i",
+        "default",
+        "Output.mkv",
+    ]  # `-y` parameter is to overwrite outputfile if exists
+
+    # execute FFmpeg command
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+
+    # safely close writer
+    writer.close()
+    ```
+
+=== "macOS"
+
+    ```python hl_lines="8-17"
+    # import required libraries
+    from vidgear.gears import WriteGear
+
+    # Define writer with defined parameters and with some dummy name
+    writer = WriteGear(output_filename="Output.mp4", logging=True)
+
+    # format FFmpeg command to generate time accurate video
+    ffmpeg_command = [
+        "-y",
+        "-f",
+        "avfoundation",
+        "-framerate",
+        "30",
+        "-i",
+        "default",
+        "Output.mkv",
+    ]  # `-y` parameter is to overwrite outputfile if exists
+
+    # execute FFmpeg command
+    writer.execute_ffmpeg_cmd(ffmpeg_command)
+
+    # safely close writer
+    writer.close()
+    ```
+
+
 &nbsp;
 
 

@@ -801,7 +801,6 @@ External URLs
 [uvloop]: https://github.com/MagicStack/uvloop
 [streamlink]:https://streamlink.github.io/
 [aiortc]:https://aiortc.readthedocs.io/en/latest/
-[yt_dlp]:https://yt_dlp.org/
 [pyscreenshot]:https://github.com/ponty/pyscreenshot
 [uvloop-ns]: https://github.com/MagicStack/uvloop/issues/14
 [ffmpeg]:https://www.ffmpeg.org/
@@ -828,7 +827,7 @@ External URLs
 [OV5647-picam]:https://github.com/techyian/MMALSharp/doc/OmniVision-OV5647-Camera-Module
 [IMX219-picam]:https://github.com/techyian/MMALSharp/doc/Sony-IMX219-Camera-Module
 [opencv-vw]:https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html
-[yt-dl]:https://github.com/yt-dlp/yt-dlp
+[yt_dlp]:https://github.com/yt-dlp/yt-dlp
 [numpy]:https://github.com/numpy/numpy
 [zmq-pair]:https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pair.html
 [zmq-req-rep]:https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/client_server.html
