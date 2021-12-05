@@ -680,23 +680,25 @@ It is something I am doing with my own free time. If you would like to say thank
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5389830.svg)](https://doi.org/10.5281/zenodo.5389830)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5602375.svg)](https://doi.org/10.5281/zenodo.5602375)
 
 ```BibTeX
 @software{vidgear,
-    author       = {Abhishek Thakur and
-                    Christian Clauss and
-                    Christian Hollinger and
-                    Benjamin Lowe and
-                    Mickaël Schoentgen and
-                    Renaud Bouckenooghe},
-    title        = {abhiTronix/vidgear: VidGear v0.2.2},
-    year         = 2021
-    publisher    = {Zenodo},
-    version      = {vidgear-0.2.2},
-    doi          = {10.5281/zenodo.5389830},
-    url          = {https://doi.org/10.5281/zenodo.5389830}
-  }
+  author       = {Abhishek Thakur and
+                  Christian Clauss and
+                  Christian Hollinger and
+                  Vincent Boivin and
+                  Benjamin Lowe and
+                  Mickaël Schoentgen and
+                  Renaud Bouckenooghe},
+  title        = {abhiTronix/vidgear: VidGear v0.2.3},
+  month        = oct,
+  year         = 2021,
+  publisher    = {Zenodo},
+  version      = {vidgear-0.2.3},
+  doi          = {10.5281/zenodo.5602375},
+  url          = {https://doi.org/10.5281/zenodo.5602375}
+}
 ```
 
 &nbsp;
