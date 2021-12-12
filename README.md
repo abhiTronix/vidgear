@@ -596,7 +596,7 @@ web.shutdown()
 
 ### WebGear_RTC API Guide:
 
-[**>>> Usage Guide**][webgear-doc]
+[**>>> Usage Guide**][webgear_rtc-doc]
 
 
 &nbsp;
@@ -680,24 +680,25 @@ It is something I am doing with my own free time. If you would like to say thank
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5602375.svg)](https://doi.org/10.5281/zenodo.5602375)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5759524.svg)](https://doi.org/10.5281/zenodo.5759524)
 
 ```BibTeX
 @software{vidgear,
   author       = {Abhishek Thakur and
+                  Zoe Papakipos and
                   Christian Clauss and
                   Christian Hollinger and
                   Vincent Boivin and
                   Benjamin Lowe and
                   Mickaël Schoentgen and
                   Renaud Bouckenooghe},
-  title        = {abhiTronix/vidgear: VidGear v0.2.3},
-  month        = oct,
+  title        = {abhiTronix/vidgear: VidGear v0.2.4},
+  month        = dec,
   year         = 2021,
   publisher    = {Zenodo},
-  version      = {vidgear-0.2.3},
-  doi          = {10.5281/zenodo.5602375},
-  url          = {https://doi.org/10.5281/zenodo.5602375}
+  version      = {vidgear-0.2.4},
+  doi          = {10.5281/zenodo.5759524},
+  url          = {https://doi.org/10.5281/zenodo.5759524}
 }
 ```
 
@@ -773,6 +774,7 @@ Internal URLs
 [writegear-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/introduction/
 [netgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/overview/
 [webgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/webgear/overview/
+[webgear_rtc-doc]:https://abhitronix.github.io/vidgear/latest/gears/webgear_rtc/overview/
 [netgear_async-doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear_async/overview/
 [drop35]:https://github.com/abhiTronix/vidgear/issues/99
 [custom-command-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/advanced/cciw/

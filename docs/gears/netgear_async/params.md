@@ -348,8 +348,6 @@ NetGear_Async(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 
 This parameter manually selects the backend for OpenCV's VideoCapture class _(only if specified)_. 
 
-!!! warning "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225), NetGear_Async automatically enforce GStreamer backend(`backend=cv2.CAP_GSTREAMER`) for YouTube-livestreams in [Stream Mode](#stream_mode). This behavior discards any `backend` parameter value for those streams."
-
 **Data-Type:** Integer
 
 **Default Value:** Its default value is `0` 

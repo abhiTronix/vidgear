@@ -143,8 +143,6 @@ CamGear(source=0, colorspace="COLOR_BGR2HSV")
 
 This parameter manually selects the backend for OpenCV's VideoCapture class _(only if specified)_. 
 
-!!! warning "To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225), CamGear automatically enforce GStreamer backend for YouTube-livestreams in [Stream Mode](#stream_mode). This behavior discards any `backend` parameter value for those streams."
-
 **Data-Type:** Integer
 
 **Default Value:** Its default value is `0` 

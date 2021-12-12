@@ -379,7 +379,7 @@ class image_subscriber:
                 cv2.circle(cv_image, (50, 50), 10, 255)
 
             # write frame to writer
-            writer.write(cv_image)
+            self.writer.write(cv_image)
 
         def close(self):
             # safely close video stream
