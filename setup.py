@@ -126,7 +126,6 @@ setup(
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
             "starlette{}".format(latest_version("starlette")),
             "jinja2",
-            "uvicorn{}".format(latest_version("uvicorn")),
             "msgpack{}".format(latest_version("msgpack")),
             "msgpack_numpy{}".format(latest_version("msgpack_numpy")),
             "aiortc{}".format(latest_version("aiortc")),
@@ -138,8 +137,13 @@ setup(
                 if sys.version_info[:2] >= (3, 7)  # dropped support for 3.6.x legacies
                 else ["uvloop==0.14.0"]
             )
-            if (platform.system() != "Windows") # windows not supported
+            if (platform.system() != "Windows")  # windows not supported
             else []
+        )
+        + (
+            ["uvicorn{}".format(latest_version("uvicorn"))]
+            if sys.version_info[:2] >= (3, 7)  # dropped support for 3.6.x legacies
+            else ["uvicorn==0.16.0"]
         ),
     },
     keywords=[
