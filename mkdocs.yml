@@ -96,7 +96,6 @@ extra:
       link: https://www.linkedin.com/in/abhishek-singh-thakur-a37845a5
     - icon: fontawesome/brands/dev
       link: https://dev.to/abhitronix
-  manifest: site.webmanifest
   version:
     provider: mike
   analytics: # Google analytics
@@ -151,6 +150,7 @@ markdown_extensions:
   - pymdownx.tilde
   - pymdownx.striphtml:
       strip_comments: true
+  - pymdownx.magiclink
 
 # Page tree
 nav:

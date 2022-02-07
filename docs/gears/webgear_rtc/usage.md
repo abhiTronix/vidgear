@@ -103,7 +103,7 @@ which can be accessed on any browser on your machine at http://localhost:8000/.
 
 You can also access and run WebGear_RTC Server directly from the terminal commandline. The following command will run a WebGear_RTC VideoStreamer server at http://localhost:8000/:
 
-!!! danger "Make sure your `PYTHON_PATH` is set to python 3.6+ versions only."
+!!! danger "Make sure your `PYTHON_PATH` is set to python 3.7+ versions only."
 
 !!! warning "If you're using `--options/-op` flag, then kindly wrap your dictionary value in single `''` quotes."
 

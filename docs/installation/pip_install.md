@@ -142,7 +142,6 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
     Required only if you're using the [**NetGear_Async**](../../gears/netgear_async/overview/) API on UNIX machines for maximum performance. You can easily install it via pip:
 
     !!! fail "uvloop is **[NOT yet supported on Windows Machines](https://github.com/MagicStack/uvloop/issues/14).**"
-    !!! warning "Python-3.6 legacies support [**dropped in version `>=1.15.0`**](https://github.com/MagicStack/uvloop/releases/tag/v0.15.0). Kindly install previous `0.14.0` version instead."
 
     ```sh
     pip install uvloop
@@ -157,7 +156,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
     The legacy `#!sh  pip install vidgear` command now installs critical bare-minimum dependencies only. Therefore in order to automatically install all the API specific dependencies as previous versions, use `#!sh  pip install vidgear[core]` command instead.
 
-    === "`v0.2.4` and newer"
+    === "`v0.2.5` and newer"
 
         ```sh
         # Install latest stable release with all Core dependencies
@@ -321,10 +320,10 @@ pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[asyncio]
 
 ```sh
 # Install latest stable release with all Core dependencies
-pip install vidgear-0.2.4-py3-none-any.whl[core]
+pip install vidgear-0.2.5-py3-none-any.whl[core]
 
 # Or Install latest stable release with all Core & Asyncio dependencies
-pip install vidgear-0.2.4-py3-none-any.whl[asyncio]
+pip install vidgear-0.2.5-py3-none-any.whl[asyncio]
 ```
 
 &nbsp;

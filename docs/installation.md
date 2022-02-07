@@ -29,7 +29,7 @@ limitations under the License.
 
 ## Supported Systems
 
-VidGear is well-tested and supported on the following systems(but not limited to), with [python 3.6+](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/installing/#do-i-need-to-install-pip) installed:
+VidGear is well-tested and supported on the following systems(but not limited to), with [python 3.7+](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/installing/#do-i-need-to-install-pip) installed:
 
 * Any Linux distro released in 2016 or later
 * Windows 7 or later
@@ -39,12 +39,11 @@ VidGear is well-tested and supported on the following systems(but not limited to
 
 ## Supported Python legacies
 
-!!! alert "Depreciation Notice"
+!!! warning "Depreciation Notice"
 
-    Python 3.6 legacy will be depreciated soon. Consider upgrading to Python 3.7+ legacies as soon as possible.
+    Python-3.6 legacies support has been dropped from Vidgear.
 
-
-[**Python 3.6+**](https://www.python.org/downloads/) are only supported legacies for installing Vidgear v0.1.7 and above.
+[**Python 3.7+**](https://www.python.org/downloads/) are only supported legacies for installing Vidgear v0.2.5 and above.
 
 &thinsp;
 

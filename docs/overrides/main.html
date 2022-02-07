@@ -24,9 +24,7 @@
 {% endblock %}
 {% block announce %}
   <!-- Add announcement here, including arbitrary HTML -->
-  {% set announcement_link = config.site_url ~ '/installation/pip_install/#installation' %}
-
-  <b>Installation command has been changed in <code>v0.2.4</code>. More information can be found <a href="{{ announcement_link }}">here ➶</a></b>
+  <b><span class="twemoji"> {% include ".icons/material/alert-decagram.svg" %} </span> Python-3.6 legacies support has been dropped in <code>v0.2.5</code>.</b>
 {% endblock %}
 {% block outdated %}
   You're not viewing the latest version.
