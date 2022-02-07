@@ -320,7 +320,7 @@ class CamGear:
         self.__thread_timeout = options.pop("THREAD_TIMEOUT", None)
         if self.__thread_timeout and isinstance(self.__thread_timeout, (int, float)):
             # set values
-            self.__thread_timeout = int(self.__thread_timeout)
+            self.__thread_timeout = float(self.__thread_timeout)
         else:
             # defaults to 5mins timeout
             self.__thread_timeout = None
@@ -329,7 +329,7 @@ class CamGear:
         # initialize queue for video files only
         if self.__threaded_queue_mode and isinstance(source, str):
             # define queue and assign it to global var
-            self.__queue = queue.Queue(maxsize=96)  # max len 96 to check overflow
+            self.__queue = queue.Queue(maxsize=96)  # max bufferlen 96 to check overflow
             # log it
             self.__logging and logger.debug(
                 "Enabling Threaded Queue Mode for the current video source!"

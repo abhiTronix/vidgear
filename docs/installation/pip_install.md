@@ -226,19 +226,37 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
     - Finally, manually install your **API-specific dependencies** as required by your API(in use):
 
 
-        | APIs | Dependencies |
-        |:---:|:---|
-        | CamGear | `yt_dlp` |
-        | PiGear | `picamera` |
-        | VideoGear | *Based on CamGear or PiGear backend in use*  |
-        | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |
-        | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
-        | StreamGear | **FFmpeg:** See [this doc ➶](../../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
-        | NetGear | `pyzmq`, `simplejpeg` |
-        | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
-        | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
-        | NetGear_Async | `pyzmq`, `msgpack`, `msgpack_numpy`, `uvloop` |
-        | Stabilizer Class | - |
+        === "`v0.2.4` and newer"
+
+            | APIs | Dependencies |
+            |:---:|:---|
+            | CamGear | `yt_dlp` |
+            | PiGear | `picamera` |
+            | VideoGear | *Based on CamGear or PiGear backend in use*  |
+            | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |
+            | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
+            | StreamGear | **FFmpeg:** See [this doc ➶](../../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
+            | NetGear | `pyzmq`, `simplejpeg` |
+            | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
+            | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
+            | NetGear_Async | `pyzmq`, `msgpack`, `msgpack_numpy`, `uvloop` |
+            | Stabilizer Class | - |
+
+        === "Older"
+
+            | APIs | Dependencies |
+            |:---:|:---|
+            | CamGear | `pafy`, `yt_dlp`, `streamlink` |
+            | PiGear | `picamera` |
+            | VideoGear | - |
+            | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |
+            | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
+            | StreamGear | **FFmpeg:** See [this doc ➶](../../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
+            | NetGear | `pyzmq`, `simplejpeg` |
+            | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
+            | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
+            | NetGear_Async | `pyzmq`, `msgpack`, `msgpack_numpy`, `uvloop` |
+            | Stabilizer Class | - |
                     
         ```sh
         # Just copy-&-paste from above table
