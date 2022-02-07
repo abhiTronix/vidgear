@@ -140,9 +140,6 @@ import_core_dependency(
 )
 import_core_dependency(
     "numpy",
-    version="1.19.5"
-    if sys.version_info[:2] < (3, 7)
-    else None,  # dropped support for 3.6.x legacies
     mode="lte",
 )
 import_core_dependency(

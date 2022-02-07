@@ -20,7 +20,6 @@ limitations under the License.
 # import the necessary packages
 import os
 import cv2
-import sys
 import time
 import math
 import difflib

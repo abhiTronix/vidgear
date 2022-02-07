@@ -22,7 +22,6 @@ limitations under the License.
 import cv2
 import time
 import queue
-import sys
 import logging as log
 from threading import Thread, Event
 
