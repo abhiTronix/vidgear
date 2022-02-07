@@ -261,11 +261,22 @@ test_data_class = [
     ("", "", {}, False),
     ("Output1.mp4", "", {}, True),
     (os.path.join(tempfile.gettempdir(), "temp_write"), "", {}, True),
-    ("Output2.mp4", "", {"-vcodec": "libx264", "-crf": 0, "-preset": "fast"}, True),
+    (
+        "Output2.mp4",
+        "",
+        {"-vcodec": "libx264", "-crf": 0, "-preset": "fast", "-ffpreheaders": False},
+        True,
+    ),
     (
         "Output3.mp4",
         return_static_ffmpeg(),
-        {"-c:v": "libx265", "-vcodec": "libx264", "-crf": 0, "-preset": "veryfast"},
+        {
+            "-c:v": "libx265",
+            "-vcodec": "libx264",
+            "-crf": 0,
+            "-preset": "veryfast",
+            "-ffpreheaders": ["-re"],
+        },
         True,
     ),
 ]

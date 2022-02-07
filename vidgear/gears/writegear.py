@@ -189,6 +189,12 @@ class WriteGear:
                 # must be float
                 self.__inputframerate = float(self.__inputframerate)
 
+            # handle user defined ffmpeg cmd preheaders(must be a list)
+            self.__ffmpeg_preheaders = self.__output_parameters.pop("-ffpreheaders", [])
+            if not isinstance(self.__ffmpeg_preheaders, list):
+                # reset improper values
+                self.__ffmpeg_preheaders = []
+
             # handle special-case force-termination in compression mode
             disable_force_termination = self.__output_parameters.pop(
                 "-disable_force_termination",
@@ -490,7 +496,7 @@ class WriteGear:
             )
 
         # add configured FFmpeg path
-        cmd = [self.__ffmpeg] + cmd
+        cmd = [self.__ffmpeg] + self.__ffmpeg_preheaders + cmd
 
         try:
             # write to pipeline
@@ -576,6 +582,10 @@ class WriteGear:
                 frameSize=(WIDTH, HEIGHT),
                 isColor=COLOR,
             )
+
+        assert (
+            self.__process.isOpened()
+        ), "[WriteGear:ERROR] :: Failed to intialize OpenCV Writer!"
 
     def close(self):
         """

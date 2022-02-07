@@ -149,7 +149,7 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
         output_params = {"-output_dimensions": (1280,720)} # to produce a 1280x720 resolution/scale output video
         ```
 
-    * **`-clones`** _(list)_: is required to set special FFmpeg parameters that are repeated more than once in the command _(For more info., see [this issue](https://github.com/abhiTronix/vidgear/issues/141))_ or in cases where you want to preserve order of multiple FFmpeg parameters. This attribute only accepts **list** datatype as value. Its usage is as follows:
+    * **`-clones`** _(list)_: required to set special FFmpeg parameters that are repeated more than once in the command _(For more info., see [this issue](https://github.com/abhiTronix/vidgear/issues/141))_ or in cases where you want to preserve order of multiple FFmpeg parameters. This attribute only accepts **list** datatype as value. Its usage is as follows:
 
         !!! tip "Turn on logging([`logging = True`](#logging)) to see the FFmpeg command that is being executed in WriteGear's pipeline. This helps you debug/address any issues and make adjustments accordingly."
 
@@ -165,6 +165,18 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
         }
         ```
 
+    * **`-ffpreheaders`** _(list)_: required to set special FFmpeg parameters that are present at the starting of command(such as `-re`). This attribute only accepts **list** datatype as value. Its usage is as follows:
+
+        !!! danger "This attribute is quite powerful and can break FFmpeg pipeline easily if not used correctly. User Discretion is advised!" 
+
+        !!! tip "Turn on logging([`logging = True`](#logging)) to see the FFmpeg command that is being executed in WriteGear's pipeline. This helps you debug/address any issues and make adjustments accordingly."
+
+        ```python
+        output_params = {
+            "-ffpreheaders": ["-re"], # executes as `ffmpeg -re <rest of command>`
+        }
+        ```
+        
     * **`-disable_force_termination`** _(bool)_: sets a special flag to manually disable the default forced-termination behaviour in WriteGear API when `-i` FFmpeg parameter is used _(For more details, see issue: #149)_. Its usage is as follows:
 
         !!! warning "`-disable_force_termination` flag is a absolute necessity when video duration is too short(<60sec), otherwise WriteGear will not produce any valid output."
