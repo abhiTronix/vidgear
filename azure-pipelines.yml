@@ -36,7 +36,7 @@ strategy:
       python.version: '3.8'
     Python39:
       python.version: '3.9'
-    Python39:
+    Python310:
       python.version: '3.10'
 
 steps:
