@@ -129,21 +129,13 @@ setup(
             "msgpack{}".format(latest_version("msgpack")),
             "msgpack_numpy{}".format(latest_version("msgpack_numpy")),
             "aiortc{}".format(latest_version("aiortc")),
+            "uvicorn{}".format(latest_version("uvicorn")),
         ]
         + (["picamera"] if ("arm" in platform.uname()[4][:3]) else [])
         + (
-            (
-                ["uvloop{}".format(latest_version("uvloop"))]
-                if sys.version_info[:2] >= (3, 7)  # dropped support for 3.6.x legacies
-                else ["uvloop==0.14.0"]
-            )
+            ["uvloop{}".format(latest_version("uvloop"))]
             if (platform.system() != "Windows")  # windows not supported
             else []
-        )
-        + (
-            ["uvicorn{}".format(latest_version("uvicorn"))]
-            if sys.version_info[:2] >= (3, 7)  # dropped support for 3.6.x legacies
-            else ["uvicorn==0.16.0"]
         ),
     },
     keywords=[
@@ -181,12 +173,12 @@ setup(
         "Intended Audience :: Science/Research",
         "Intended Audience :: Education",
         "License :: OSI Approved :: Apache Software License",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     scripts=[],
     project_urls={
         "Bug Reports": "https://github.com/abhiTronix/vidgear/issues",
