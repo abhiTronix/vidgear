@@ -451,6 +451,7 @@ class WriteGear:
         # format command
         cmd = (
             [self.__ffmpeg, "-y"]
+            + self.__ffmpeg_preheaders
             + ["-f", "rawvideo", "-vcodec", "rawvideo"]
             + input_parameters
             + ["-i", "-"]
@@ -496,7 +497,7 @@ class WriteGear:
             )
 
         # add configured FFmpeg path
-        cmd = [self.__ffmpeg] + self.__ffmpeg_preheaders + cmd
+        cmd = [self.__ffmpeg] + cmd
 
         try:
             # write to pipeline

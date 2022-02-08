@@ -42,6 +42,7 @@ from colorlog import ColoredFormatter
 from distutils.version import LooseVersion
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
+from ..version import __version__
 
 
 def logger_handler():
@@ -54,7 +55,7 @@ def logger_handler():
     """
     # logging formatter
     formatter = ColoredFormatter(
-        "{green}{asctime}{reset} :: {bold_purple}{name:^13}{reset} :: {log_color}{levelname:^8}{reset} :: {message}",
+        "{green}{asctime}{reset} :: {bold_purple}{name:^13}{reset} :: {log_color}{levelname:^8}{reset} :: {bold_white}{message}",
         datefmt="%H:%M:%S",
         reset=True,
         log_colors={
@@ -96,6 +97,8 @@ logger = log.getLogger("Helper")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+# log current version for debugging
+logger.info("Running VidGear Version: {}".format(str(__version__)))
 
 
 def get_module_version(module=None):
