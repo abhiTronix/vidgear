@@ -406,6 +406,7 @@
         <span class=c1># format command</span>
         <span class=n>cmd</span> <span class=o>=</span> <span class=p>(</span>
             <span class=p>[</span><span class=bp>self</span><span class=o>.</span><span class=n>__ffmpeg</span><span class=p>,</span> <span class=s2>&quot;-y&quot;</span><span class=p>]</span>
+            <span class=o>+</span> <span class=bp>self</span><span class=o>.</span><span class=n>__ffmpeg_preheaders</span>
             <span class=o>+</span> <span class=p>[</span><span class=s2>&quot;-f&quot;</span><span class=p>,</span> <span class=s2>&quot;rawvideo&quot;</span><span class=p>,</span> <span class=s2>&quot;-vcodec&quot;</span><span class=p>,</span> <span class=s2>&quot;rawvideo&quot;</span><span class=p>]</span>
             <span class=o>+</span> <span class=n>input_parameters</span>
             <span class=o>+</span> <span class=p>[</span><span class=s2>&quot;-i&quot;</span><span class=p>,</span> <span class=s2>&quot;-&quot;</span><span class=p>]</span>
@@ -451,7 +452,7 @@
             <span class=p>)</span>
 
         <span class=c1># add configured FFmpeg path</span>
-        <span class=n>cmd</span> <span class=o>=</span> <span class=p>[</span><span class=bp>self</span><span class=o>.</span><span class=n>__ffmpeg</span><span class=p>]</span> <span class=o>+</span> <span class=bp>self</span><span class=o>.</span><span class=n>__ffmpeg_preheaders</span> <span class=o>+</span> <span class=n>cmd</span>
+        <span class=n>cmd</span> <span class=o>=</span> <span class=p>[</span><span class=bp>self</span><span class=o>.</span><span class=n>__ffmpeg</span><span class=p>]</span> <span class=o>+</span> <span class=n>cmd</span>
 
         <span class=k>try</span><span class=p>:</span>
             <span class=c1># write to pipeline</span>
@@ -812,7 +813,7 @@
         <span class=p>)</span>
 
     <span class=c1># add configured FFmpeg path</span>
-    <span class=n>cmd</span> <span class=o>=</span> <span class=p>[</span><span class=bp>self</span><span class=o>.</span><span class=n>__ffmpeg</span><span class=p>]</span> <span class=o>+</span> <span class=bp>self</span><span class=o>.</span><span class=n>__ffmpeg_preheaders</span> <span class=o>+</span> <span class=n>cmd</span>
+    <span class=n>cmd</span> <span class=o>=</span> <span class=p>[</span><span class=bp>self</span><span class=o>.</span><span class=n>__ffmpeg</span><span class=p>]</span> <span class=o>+</span> <span class=n>cmd</span>
 
     <span class=k>try</span><span class=p>:</span>
         <span class=c1># write to pipeline</span>
