@@ -2,6 +2,7 @@
 name: Bug report
 about: Create a bug-report for VidGear
 labels: ':beetle: BUG'
+title: '[Bug]: '
 assignees: 'abhiTronix'
 ---
 
@@ -16,10 +17,10 @@ assignees: 'abhiTronix'
     or may choose to close the issue until there is enough information provided.
 -->
 
-## Description
+## Brief Description
 
-<!-- Provide a more detailed introduction to the issue itself, and why you consider it to be a bug -->
-_Kindly explain the issue here._
+<!-- Provide a brief introduction to the issue, and why you consider it to be a bug -->
+_Kindly briefly explain the issue here._
 
 
 ### Acknowledgment
@@ -45,10 +46,10 @@ _Kindly explain the issue here._
 
 ### Actual Behavior
 <!-- Tell us what happens instead -->
-<!-- You can turn `logging=True` in parameters of the respective vidgear API for getting debug output -->
+<!-- You can turn ```logging=True``` in parameters of the respective vidgear API for getting debug output -->
 
 ### Possible Fix
-<!-- Not obligatory, but suggest a fix or reason for the bug or remove this block-->
+<!-- Not obligatory, but suggest a fix or reason for the bug or else remove this block-->
 
 ### Steps to reproduce
 
@@ -65,4 +66,4 @@ _Kindly explain the issue here._
 
 
 ### Optional
-<!-- Provide screenshots where appropriate -->
+<!-- Provide screenshots or relevant information if available or else remove this block -->

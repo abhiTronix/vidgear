@@ -502,15 +502,27 @@ def test_multiserver_mode(pattern, options):
 
         # send frame from Server-1 to client and save it in dict
         server_1.send(frame_server)
-        unique_address, frame = client.recv()
+        unique_address, frame = client.recv(
+            return_data="data"
+            if "bidirectional_mode" in options and pattern == 1
+            else "",
+        )
         client_frame_dict[unique_address] = frame
         # send frame from Server-2 to client and save it in dict
         server_2.send(frame_server)
-        unique_address, frame = client.recv()
+        unique_address, frame = client.recv(
+            return_data="data"
+            if "bidirectional_mode" in options and pattern == 1
+            else "",
+        )
         client_frame_dict[unique_address] = frame
         # send frame from Server-3 to client and save it in dict
         server_3.send(frame_server)
-        unique_address, frame = client.recv()
+        unique_address, frame = client.recv(
+            return_data="data"
+            if "bidirectional_mode" in options and pattern == 1
+            else "",
+        )
         client_frame_dict[unique_address] = frame
 
         # check if recieved frames from each unique server exactly matches input frame
@@ -581,17 +593,26 @@ def test_multiclient_mode(pattern):
         assert not (frame_client is None)
 
         # send frame from 1 server to multiple clients
-        server.send(frame_client)
+        server.send(
+            frame_client,
+            message="data" if pattern == 1 else "",
+        )
         frame_1 = client_1.recv()
-        server.send(frame_client)
+        server.send(
+            frame_client,
+            message="data" if pattern == 1 else "",
+        )
         frame_2 = client_2.recv()
-        server.send(frame_client)
+        server.send(
+            frame_client,
+            message="data" if pattern == 1 else "",
+        )
         frame_3 = client_3.recv()
 
         # check if received frames from server exactly matches input frame
-        assert np.array_equal(frame_1, frame_client)
-        assert np.array_equal(frame_2, frame_client)
-        assert np.array_equal(frame_3, frame_client)
+        assert np.array_equal(frame_1[1] if pattern == 1 else frame_1, frame_client)
+        assert np.array_equal(frame_2[1] if pattern == 1 else frame_2, frame_client)
+        assert np.array_equal(frame_3[1] if pattern == 1 else frame_3, frame_client)
 
     except Exception as e:
         if isinstance(e, (ZMQError, ValueError, RuntimeError, queue.Empty)):
