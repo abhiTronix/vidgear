@@ -46,7 +46,7 @@ This mode can be easily activated in NetGear through `bidirectional_mode` attrib
 
     * Bidirectional Mode is smart enough to sense data _(if available or not)_, and **DOES NOT** interfere with transferring of video-frames _(unless data is huge)_, as both mechanisms works independently.
 
-    * Bidirectional Mode is **NOT** compatibile with [Multi-Servers mode](../../advanced/multi_server/) and [Multi-Clients mode](../../advanced/multi_client/) exclusive modes. Thereby, if Bidirectional mode is enabled with any of these modes, it will be **DISABLED** automatically.
+    * Bidirectional Mode is now compatibile with both [Multi-Servers mode](../../advanced/multi_server/) and [Multi-Clients mode](../../advanced/multi_client/) exclusive modes.
 
 
 &nbsp;

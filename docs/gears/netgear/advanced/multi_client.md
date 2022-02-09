@@ -27,7 +27,7 @@ limitations under the License.
 
 ## Overview
 
-In Multi-Clients Mode, NetGear robustly handles Multiple Clients at once thereby able to broadcast frames and data across multiple Clients/Consumers in the network at same time. This mode works almost contrary to [Multi-Servers Mode](../multi_server/) but here data transfer works unidirectionally with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ only. Every new Client that connects to single Server can be identified by its unique port address on the network. 
+In Multi-Clients Mode, NetGear robustly handles Multiple Clients at once thereby able to broadcast frames and data across multiple Clients/Consumers in the network at same time. This mode works contrary to [Multi-Servers Mode](../multi_server/) such that every new Client that connects to single Server can be identified by its unique port address on the network. 
 
 The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`) and can be easily activated in NetGear API through `multiclient_mode` attribute of its [`options`](../../params/#options) dictionary parameter during initialization.
 
@@ -481,7 +481,7 @@ client.close()
 &nbsp;
 
 
-### Using Multi-Clients Mode with Custom Data Transfer
+### Using Multi-Clients Mode for Unidirectional Custom Data Transfer
 
 
 !!! abstract
@@ -505,7 +505,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="46-60"
+```python hl_lines="47-60"
 # import required libraries
 from vidgear.gears import PiGear
 from vidgear.gears import NetGear
@@ -700,3 +700,260 @@ client.close()
 ```
 
 &nbsp;
+
+&nbsp;
+
+
+### Using Multi-Clients Mode with Bidirectional Mode
+
+!!! abstract
+    Multi-Clients Mode now also compatible with [Bidirectional Mode](../../advanced/bidirectional_mode/), which lets you send additional data of ***any datatype***[^1]  along with frame in real-time bidirectionally between a single Server and all connected Client(s).
+
+!!! warning "Important Information"
+    * Bidirectional data transfer **ONLY** works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_, and **NOT** with pattern `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_
+    * Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server's end with its [`message`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.send) parameter.
+    * Bidirectional Mode may lead to additional **LATENCY** depending upon the size of data being transfer bidirectionally. User discretion is advised!
+
+??? new "New in v0.2.5" 
+    This example was added in `v0.2.5`.
+
+In this example, We will be transferring video-frames and data _(a Text String, for the sake of simplicity)_ from a single Server _(In this case, Raspberry Pi with Camera Module)_ over the network to two independent Clients for displaying them both in real-time. At the same time, we will be sending data _(a Text String, for the sake of simplicity)_ back from both the Client(s) to our Server, which will be printed onto the terminal.
+
+#### Server's End
+
+Now, Open the terminal on a Server System _(with a webcam connected to it at index `0`)_. Now execute the following python code: 
+
+!!! info "Important Notes"
+
+    * Note down the local IP-address of this system(required at all Client(s) end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
+
+!!! alert "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
+
+!!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
+
+```python hl_lines="19 48-64"
+# import required libraries
+from vidgear.gears import PiGear
+from vidgear.gears import NetGear
+
+# add various Picamera tweak parameters to dictionary
+options = {
+    "hflip": True,
+    "exposure_mode": "auto",
+    "iso": 800,
+    "exposure_compensation": 15,
+    "awb_mode": "horizon",
+    "sensor_mode": 0,
+}
+
+# open pi video stream with defined parameters
+stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
+
+# activate both multiclient and bidirectional modes
+options = {"multiclient_mode": True, "bidirectional_mode": True}
+
+# Define NetGear Client at given IP address and assign list/tuple of 
+# all unique Server((5577,5578) in our case) and other parameters
+server = NetGear(
+    address="192.168.x.x",
+    port=(5577, 5578),
+    protocol="tcp",
+    pattern=1,
+    logging=True,
+    **options
+)  # !!! change following IP address '192.168.x.xxx' with yours !!!
+
+# Define received data dictionary
+data_dict = {}
+
+# loop over until KeyBoard Interrupted
+while True:
+
+    try:
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # prepare data to be sent(a simple text in our case)
+        target_data = "Hello, I am a Server."
+
+        # send frame & data and also receive data from Client(s)
+        recv_data = server.send(frame, message=target_data)
+
+        # check if valid data recieved
+        if not (recv_data is None):
+            # extract unique port address and its respective data
+            unique_address, data = recv_data
+            # update the extracted data in the data dictionary
+            data_dict[unique_address] = data
+
+        if data_dict:
+            # print data just received from Client(s)
+            for key, value in data_dict.items():
+                print("Client at port {} said: {}".format(key, value))
+
+    except KeyboardInterrupt:
+        break
+
+# safely close video stream
+stream.stop()
+
+# safely close server
+server.close()
+```
+
+&nbsp;
+
+
+#### Client-1's End
+
+Now, Open a terminal on another Client System _(where you want to display the input frames received from Server)_, let's name it Client-1. Execute the following python code: 
+
+!!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
+
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
+
+```python hl_lines="6 23-34 42-44"
+# import required libraries
+from vidgear.gears import NetGear
+import cv2
+
+# activate both multiclient and bidirectional modes
+options = {"multiclient_mode": True, "bidirectional_mode": True}
+
+# Define NetGear Client at Server's IP address and assign a unique port address and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+client = NetGear(
+    address="192.168.x.x",
+    port="5577",
+    protocol="tcp",
+    pattern=1,
+    receive_mode=True,
+    logging=True,
+    **options
+)
+
+# loop over
+while True:
+
+    # prepare data to be sent
+    target_data = "Hi, I am 5577 Client here."
+
+    # receive data from server and also send our data
+    data = client.recv(return_data=target_data)
+
+    # check for data if None
+    if data is None:
+        break
+
+    # extract server_data & frame from data
+    server_data, frame = data
+
+    # again check for frame if None
+    if frame is None:
+        break
+
+    # {do something with the extracted frame and data here}
+
+    # lets print extracted server data
+    if not (server_data is None):
+        print(server_data)
+
+    # Show output window
+    cv2.imshow("Client 5577 Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close client
+client.close()
+```
+
+&nbsp;
+
+#### Client-2's End
+
+Finally, Open a terminal on another Client System _(also, where you want to display the input frames received from Server)_, let's name it Client-2. Execute the following python code: 
+
+!!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
+
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
+
+
+```python hl_lines="6 23-34 42-44"
+# import required libraries
+from vidgear.gears import NetGear
+import cv2
+
+# activate both multiclient and bidirectional modes
+options = {"multiclient_mode": True, "bidirectional_mode": True}
+
+# Define NetGear Client at Server's IP address and assign a unique port address and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+client = NetGear(
+    address="192.168.x.x",
+    port="5578",
+    protocol="tcp",
+    pattern=1,
+    receive_mode=True,
+    logging=True,
+    **options
+) 
+
+# loop over
+while True:
+
+    # prepare data to be sent
+    target_data = "Hi, I am 5578 Client here."
+
+    # receive data from server and also send our data
+    data = client.recv(return_data=target_data)
+
+    # check for data if None
+    if data is None:
+        break
+
+    # extract server_data & frame from data
+    server_data, frame = data
+
+    # again check for frame if None
+    if frame is None:
+        break
+
+    # {do something with the extracted frame and data here}
+
+    # lets print extracted server data
+    if not (server_data is None):
+        print(server_data)
+
+    # Show output window
+    cv2.imshow("Client 5578 Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close client
+client.close()
+```
+
+&nbsp;
+
+[^1]: 
+    
+    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server's end with its [`message`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.send) parameter."
