@@ -429,12 +429,9 @@
         <span class=k>elif</span> <span class=bp>self</span><span class=o>.</span><span class=n>__multiserver_mode</span> <span class=ow>or</span> <span class=bp>self</span><span class=o>.</span><span class=n>__multiclient_mode</span><span class=p>:</span>
             <span class=c1># check if Bidirectional Mode also enabled</span>
             <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__bi_mode</span><span class=p>:</span>
-                <span class=c1># disable bi_mode if enabled</span>
-                <span class=bp>self</span><span class=o>.</span><span class=n>__bi_mode</span> <span class=o>=</span> <span class=kc>False</span>
-                <span class=n>logger</span><span class=o>.</span><span class=n>warning</span><span class=p>(</span>
-                    <span class=s2>&quot;Bidirectional Data Transmission is disabled when </span><span class=si>{}</span><span class=s2> Mode is Enabled due to incompatibility!&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
-                        <span class=s2>&quot;Multi-Server&quot;</span> <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__multiserver_mode</span> <span class=k>else</span> <span class=s2>&quot;Multi-Client&quot;</span>
-                    <span class=p>)</span>
+                <span class=c1># log it</span>
+                <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+                    <span class=s2>&quot;Bidirectional Data Transmission is also enabled for this connection!&quot;</span>
                 <span class=p>)</span>
             <span class=c1># check if SSH Tunneling Mode also enabled</span>
             <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__ssh_tunnel_mode</span><span class=p>:</span>
@@ -1011,7 +1008,9 @@
                                 <span class=p>)</span>
 
                         <span class=n>return_dict</span> <span class=o>=</span> <span class=p>(</span>
-                            <span class=nb>dict</span><span class=p>()</span> <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__bi_mode</span> <span class=k>else</span> <span class=nb>dict</span><span class=p>(</span><span class=n>port</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>__port</span><span class=p>)</span>
+                            <span class=nb>dict</span><span class=p>(</span><span class=n>port</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>__port</span><span class=p>)</span>
+                            <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__multiclient_mode</span>
+                            <span class=k>else</span> <span class=nb>dict</span><span class=p>()</span>
                         <span class=p>)</span>
 
                         <span class=n>return_dict</span><span class=o>.</span><span class=n>update</span><span class=p>(</span>
@@ -1047,7 +1046,9 @@
                         <span class=p>)</span>
                     <span class=k>else</span><span class=p>:</span>
                         <span class=n>return_dict</span> <span class=o>=</span> <span class=p>(</span>
-                            <span class=nb>dict</span><span class=p>()</span> <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__bi_mode</span> <span class=k>else</span> <span class=nb>dict</span><span class=p>(</span><span class=n>port</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>__port</span><span class=p>)</span>
+                            <span class=nb>dict</span><span class=p>(</span><span class=n>port</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>__port</span><span class=p>)</span>
+                            <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__multiclient_mode</span>
+                            <span class=k>else</span> <span class=nb>dict</span><span class=p>()</span>
                         <span class=p>)</span>
                         <span class=n>return_dict</span><span class=o>.</span><span class=n>update</span><span class=p>(</span>
                             <span class=nb>dict</span><span class=p>(</span>
@@ -1839,12 +1840,9 @@
     <span class=k>elif</span> <span class=bp>self</span><span class=o>.</span><span class=n>__multiserver_mode</span> <span class=ow>or</span> <span class=bp>self</span><span class=o>.</span><span class=n>__multiclient_mode</span><span class=p>:</span>
         <span class=c1># check if Bidirectional Mode also enabled</span>
         <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__bi_mode</span><span class=p>:</span>
-            <span class=c1># disable bi_mode if enabled</span>
-            <span class=bp>self</span><span class=o>.</span><span class=n>__bi_mode</span> <span class=o>=</span> <span class=kc>False</span>
-            <span class=n>logger</span><span class=o>.</span><span class=n>warning</span><span class=p>(</span>
-                <span class=s2>&quot;Bidirectional Data Transmission is disabled when </span><span class=si>{}</span><span class=s2> Mode is Enabled due to incompatibility!&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
-                    <span class=s2>&quot;Multi-Server&quot;</span> <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__multiserver_mode</span> <span class=k>else</span> <span class=s2>&quot;Multi-Client&quot;</span>
-                <span class=p>)</span>
+            <span class=c1># log it</span>
+            <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+                <span class=s2>&quot;Bidirectional Data Transmission is also enabled for this connection!&quot;</span>
             <span class=p>)</span>
         <span class=c1># check if SSH Tunneling Mode also enabled</span>
         <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__ssh_tunnel_mode</span><span class=p>:</span>
