@@ -2,13 +2,15 @@
 name: Proposal
 about: Suggest an idea for improving VidGear
 labels: 'PROPOSAL :envelope_with_arrow:'
+title: '[Proposal]: '
 ---
 
-<!--- Add a brief but descriptive title for your issue above -->
+<!--- Add a brief title for your issue above -->
 
-## Detailed Description
 
-<!--- Provide a detailed description of the change or addition you are proposing -->
+## Brief Description
+
+<!--- Provide a brief description of the change or addition you are proposing -->
 _Kindly explain the issue here._
 
 
@@ -27,4 +29,4 @@ _Kindly explain the issue here._
 
 
 ### Any Other Important Information
-<!--- This is a example/screenshot I want to share -->
+<!-- Provide screenshots or relevant information if available or else remove this block -->
