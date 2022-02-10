@@ -69,6 +69,7 @@
             <span class=kc>True</span>  <span class=c1># initiate one time process for valid process initialization</span>
         <span class=p>)</span>
         <span class=bp>self</span><span class=o>.</span><span class=n>__out_file</span> <span class=o>=</span> <span class=kc>None</span>  <span class=c1># handles output filename</span>
+        <span class=n>gstpipeline_support</span> <span class=o>=</span> <span class=kc>False</span>  <span class=c1># handles GStreamer Pipeline Mode</span>
 
         <span class=c1># handles output file name (if not given)</span>
         <span class=k>if</span> <span class=ow>not</span> <span class=n>output_filename</span><span class=p>:</span>
@@ -187,6 +188,22 @@
                         <span class=s2>&quot;Kindly install working FFmpeg or provide a valid custom FFmpeg binary path. See docs for more info.&quot;</span>
                     <span class=p>)</span>
                 <span class=bp>self</span><span class=o>.</span><span class=n>__compression</span> <span class=o>=</span> <span class=kc>False</span>  <span class=c1># compression mode disabled</span>
+        <span class=k>else</span><span class=p>:</span>
+            <span class=c1># handle GStreamer Pipeline Mode for non-compression mode</span>
+            <span class=k>if</span> <span class=s2>&quot;-gst_pipeline_mode&quot;</span> <span class=ow>in</span> <span class=bp>self</span><span class=o>.</span><span class=n>__output_parameters</span><span class=p>:</span>
+                <span class=k>if</span> <span class=nb>isinstance</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>__output_parameters</span><span class=p>[</span><span class=s2>&quot;-gst_pipeline_mode&quot;</span><span class=p>],</span> <span class=nb>bool</span><span class=p>):</span>
+                    <span class=n>gstpipeline_support</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>__output_parameters</span><span class=p>[</span>
+                        <span class=s2>&quot;-gst_pipeline_mode&quot;</span>
+                    <span class=p>]</span> <span class=ow>and</span> <span class=n>check_gstreamer_support</span><span class=p>(</span><span class=n>logging</span><span class=o>=</span><span class=n>logging</span><span class=p>)</span>
+                    <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+                        <span class=s2>&quot;GStreamer Pipeline Mode successfully activated!&quot;</span>
+                    <span class=p>)</span>
+                <span class=k>else</span><span class=p>:</span>
+                    <span class=c1># reset improper values</span>
+                    <span class=n>gstpipeline_support</span> <span class=o>=</span> <span class=kc>False</span>
+                    <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>warning</span><span class=p>(</span>
+                        <span class=s2>&quot;GStreamer Pipeline Mode failed to activate!&quot;</span>
+                    <span class=p>)</span>
 
         <span class=c1># display confirmation if logging is enabled/disabled</span>
         <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__compression</span> <span class=ow>and</span> <span class=bp>self</span><span class=o>.</span><span class=n>__ffmpeg</span><span class=p>:</span>
@@ -218,11 +235,21 @@
             <span class=p>)</span>
         <span class=k>else</span><span class=p>:</span>
             <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__out_file</span> <span class=ow>is</span> <span class=kc>None</span><span class=p>:</span>
-                <span class=k>raise</span> <span class=ne>ValueError</span><span class=p>(</span>
-                    <span class=s2>&quot;[WriteGear:ERROR] :: output_filename value:`</span><span class=si>{}</span><span class=s2>` is not supported in Non-Compression Mode.&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
-                        <span class=n>output_filename</span>
+                <span class=k>if</span> <span class=n>gstpipeline_support</span><span class=p>:</span>
+                    <span class=c1># enforce GStreamer backend</span>
+                    <span class=bp>self</span><span class=o>.</span><span class=n>__output_parameters</span><span class=p>[</span><span class=s2>&quot;-backend&quot;</span><span class=p>]</span> <span class=o>=</span> <span class=s2>&quot;CAP_GSTREAMER&quot;</span>
+                    <span class=c1># assign original value</span>
+                    <span class=bp>self</span><span class=o>.</span><span class=n>__out_file</span> <span class=o>=</span> <span class=n>output_filename</span>
+                    <span class=c1># log it</span>
+                    <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+                        <span class=s2>&quot;Non-Compression Mode is successfully configured in GStreamer Pipeline Mode.&quot;</span>
                     <span class=p>)</span>
-                <span class=p>)</span>
+                <span class=k>else</span><span class=p>:</span>
+                    <span class=k>raise</span> <span class=ne>ValueError</span><span class=p>(</span>
+                        <span class=s2>&quot;[WriteGear:ERROR] :: output_filename value:`</span><span class=si>{}</span><span class=s2>` is not supported in Non-Compression Mode.&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
+                            <span class=n>output_filename</span>
+                        <span class=p>)</span>
+                    <span class=p>)</span>
             <span class=n>logger</span><span class=o>.</span><span class=n>critical</span><span class=p>(</span>
                 <span class=s2>&quot;Compression Mode is disabled, Activating OpenCV built-in Writer!&quot;</span>
             <span class=p>)</span>
@@ -608,6 +635,7 @@
         <span class=kc>True</span>  <span class=c1># initiate one time process for valid process initialization</span>
     <span class=p>)</span>
     <span class=bp>self</span><span class=o>.</span><span class=n>__out_file</span> <span class=o>=</span> <span class=kc>None</span>  <span class=c1># handles output filename</span>
+    <span class=n>gstpipeline_support</span> <span class=o>=</span> <span class=kc>False</span>  <span class=c1># handles GStreamer Pipeline Mode</span>
 
     <span class=c1># handles output file name (if not given)</span>
     <span class=k>if</span> <span class=ow>not</span> <span class=n>output_filename</span><span class=p>:</span>
@@ -726,6 +754,22 @@
                     <span class=s2>&quot;Kindly install working FFmpeg or provide a valid custom FFmpeg binary path. See docs for more info.&quot;</span>
                 <span class=p>)</span>
             <span class=bp>self</span><span class=o>.</span><span class=n>__compression</span> <span class=o>=</span> <span class=kc>False</span>  <span class=c1># compression mode disabled</span>
+    <span class=k>else</span><span class=p>:</span>
+        <span class=c1># handle GStreamer Pipeline Mode for non-compression mode</span>
+        <span class=k>if</span> <span class=s2>&quot;-gst_pipeline_mode&quot;</span> <span class=ow>in</span> <span class=bp>self</span><span class=o>.</span><span class=n>__output_parameters</span><span class=p>:</span>
+            <span class=k>if</span> <span class=nb>isinstance</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>__output_parameters</span><span class=p>[</span><span class=s2>&quot;-gst_pipeline_mode&quot;</span><span class=p>],</span> <span class=nb>bool</span><span class=p>):</span>
+                <span class=n>gstpipeline_support</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>__output_parameters</span><span class=p>[</span>
+                    <span class=s2>&quot;-gst_pipeline_mode&quot;</span>
+                <span class=p>]</span> <span class=ow>and</span> <span class=n>check_gstreamer_support</span><span class=p>(</span><span class=n>logging</span><span class=o>=</span><span class=n>logging</span><span class=p>)</span>
+                <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+                    <span class=s2>&quot;GStreamer Pipeline Mode successfully activated!&quot;</span>
+                <span class=p>)</span>
+            <span class=k>else</span><span class=p>:</span>
+                <span class=c1># reset improper values</span>
+                <span class=n>gstpipeline_support</span> <span class=o>=</span> <span class=kc>False</span>
+                <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>warning</span><span class=p>(</span>
+                    <span class=s2>&quot;GStreamer Pipeline Mode failed to activate!&quot;</span>
+                <span class=p>)</span>
 
     <span class=c1># display confirmation if logging is enabled/disabled</span>
     <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__compression</span> <span class=ow>and</span> <span class=bp>self</span><span class=o>.</span><span class=n>__ffmpeg</span><span class=p>:</span>
@@ -757,11 +801,21 @@
         <span class=p>)</span>
     <span class=k>else</span><span class=p>:</span>
         <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>__out_file</span> <span class=ow>is</span> <span class=kc>None</span><span class=p>:</span>
-            <span class=k>raise</span> <span class=ne>ValueError</span><span class=p>(</span>
-                <span class=s2>&quot;[WriteGear:ERROR] :: output_filename value:`</span><span class=si>{}</span><span class=s2>` is not supported in Non-Compression Mode.&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
-                    <span class=n>output_filename</span>
+            <span class=k>if</span> <span class=n>gstpipeline_support</span><span class=p>:</span>
+                <span class=c1># enforce GStreamer backend</span>
+                <span class=bp>self</span><span class=o>.</span><span class=n>__output_parameters</span><span class=p>[</span><span class=s2>&quot;-backend&quot;</span><span class=p>]</span> <span class=o>=</span> <span class=s2>&quot;CAP_GSTREAMER&quot;</span>
+                <span class=c1># assign original value</span>
+                <span class=bp>self</span><span class=o>.</span><span class=n>__out_file</span> <span class=o>=</span> <span class=n>output_filename</span>
+                <span class=c1># log it</span>
+                <span class=bp>self</span><span class=o>.</span><span class=n>__logging</span> <span class=ow>and</span> <span class=n>logger</span><span class=o>.</span><span class=n>debug</span><span class=p>(</span>
+                    <span class=s2>&quot;Non-Compression Mode is successfully configured in GStreamer Pipeline Mode.&quot;</span>
                 <span class=p>)</span>
-            <span class=p>)</span>
+            <span class=k>else</span><span class=p>:</span>
+                <span class=k>raise</span> <span class=ne>ValueError</span><span class=p>(</span>
+                    <span class=s2>&quot;[WriteGear:ERROR] :: output_filename value:`</span><span class=si>{}</span><span class=s2>` is not supported in Non-Compression Mode.&quot;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span>
+                        <span class=n>output_filename</span>
+                    <span class=p>)</span>
+                <span class=p>)</span>
         <span class=n>logger</span><span class=o>.</span><span class=n>critical</span><span class=p>(</span>
             <span class=s2>&quot;Compression Mode is disabled, Activating OpenCV built-in Writer!&quot;</span>
         <span class=p>)</span>
