@@ -84,10 +84,15 @@ writer.close()
 
 &nbsp; 
 
+&nbsp; 
+
 ## Using Non-Compression Mode with VideoCapture Gears
 
+In Non-Compression mode, WriteGear API provides flexible control over [**OpenCV's VideoWriter API**](https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) parameters through its `output_param` dictionary parameter by formating them as dictionary attributes. Moreover, WriteGear API can be used in conjunction with any other Gears/APIs effortlessly. 
 
-In Non-Compression mode, WriteGear API provides flexible control over [**OpenCV's VideoWriter API**](https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) parameters through its `output_param` dictionary parameter by formating them as dictionary attributes. Also, WriteGear API can be used in conjunction with any other Gear effortlessly. The complete usage example is as follows:
+!!! info "All supported attributes for `output_param` can be found  [here ➶](../params/#a-opencv-parameters)"
+
+The complete usage example is as follows:
 
 ```python
 # import required libraries
@@ -142,8 +147,10 @@ stream.stop()
 writer.close()
 ```
 
+&nbsp; 
 
-&nbsp;
+&nbsp; 
+
 
 ## Using Non-Compression Mode with OpenCV
 
@@ -184,6 +191,77 @@ while True:
 
     # Show output window
     cv2.imshow("Output Gray Frame", gray)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.release()
+
+# safely close writer
+writer.close()
+```
+
+&nbsp; 
+
+&nbsp; 
+
+
+## Using Non-Compression Mode with GStreamer Pipeline
+
+  WriteGear API's Non-Compression Mode also supports GStreamer Pipeline as input to its `output_filename` parameter, when [GStreamer Pipeline Mode](../params/#b-exclusive-parameters) is enabled. This provides flexible way to write video frames to file or network stream with controlled framerate and bitrate. The complete usage example is as follows:
+
+!!! warning "Requirement for GStreamer Pipelining"
+    GStreamer Pipelining in WriteGear requires your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
+
+??? new "New in v0.2.5" 
+    This example was added in `v0.2.5`.
+
+In this example we will be constructing GStreamer pipeline to write video-frames into a file(`foo.mp4`) at 1M video-bitrate.
+
+```python
+# import required libraries
+from vidgear.gears import WriteGear
+import cv2
+
+# enable GStreamer Pipeline Mode for writer
+output_params = {"-gst_pipeline_mode": True}
+
+# open live video stream on webcam at first index(i.e. 0) device
+stream = cv2.VideoCapture(0)
+
+# gst pipeline to write to a file `foo.mp4` at 1M video-bitrate
+GSTPipeline = "appsrc ! videoconvert ! avenc_mpeg4 bitrate=100000 ! mp4mux ! filesink location={}".format(
+    "foo.mp4"
+)
+
+# Define writer with defined parameters and with our Gstreamer pipeline
+writer = WriteGear(
+    output_filename=GSTPipeline, compression_mode=False, logging=True, **output_params
+)
+
+# loop over
+while True:
+
+    # read frames from stream
+    (grabbed, frame) = stream.read()
+
+    # check for frame if not grabbed
+    if not grabbed:
+        break
+
+    # {do something with the frame here}
+
+    # write frame to writer
+    writer.write(frame)
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
 
     # check for 'q' key if pressed
     key = cv2.waitKey(1) & 0xFF
