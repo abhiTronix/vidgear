@@ -238,18 +238,15 @@ class WriteGear:
             gstpipeline_support = self.__output_parameters.pop(
                 "-gst_pipeline_mode", False
             )
-            if not isinstance(gstpipeline_support, bool):
+            if gstpipeline_support and isinstance(gstpipeline_support, bool):
+                gstpipeline_support = check_gstreamer_support(logging=logging)
+            else:
                 # reset improper values
                 gstpipeline_support = False
-            else:
-                gstpipeline_support = check_gstreamer_support(logging=logging)
-            self.__logging and logger.info(
-                "GStreamer Pipeline Mode {}!".format(
-                    "successfully activated"
-                    if gstpipeline_support
-                    else "failed to activate"
-                )
-            )
+            self.__logging and (
+                gstpipeline_support
+                and logger.debug("GStreamer Pipeline Mode successfully activated!")
+            ) or logger.warning("GStreamer Pipeline Mode failed to activate!")
 
         # display confirmation if logging is enabled/disabled
         if self.__compression and self.__ffmpeg:
