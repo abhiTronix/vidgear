@@ -234,9 +234,9 @@ class WriteGear:
                     )
                 self.__compression = False  # compression mode disabled
         else:
-            # handle user defined framerate for non-compression mode
+            # handle GStreamer Pipeline Mode for non-compression mode
             gstpipeline_support = self.__output_parameters.pop(
-                "-gstreamer_pipeline_mode", False
+                "-gst_pipeline_mode", False
             )
             if not isinstance(gstpipeline_support, bool):
                 # reset improper values
