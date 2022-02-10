@@ -128,11 +128,17 @@ def test_write(conversion):
 
 
 test_data_class = [
-    ("", {}, False),
+    ("", {"-gst_pipeline_mode": "invalid"}, False),
     (os.path.join(tempfile.gettempdir(), "temp_write"), {}, True),
     (
         "Output_twc.mp4",
-        {"-fourcc": "DIVX", "-fps": 25, "-backend": "CAP_FFMPEG", "-color": True},
+        {
+            "-fourcc": "DIVX",
+            "-fps": 25,
+            "-backend": "CAP_FFMPEG",
+            "-color": True,
+            "-gst_pipeline_mode": False,
+        },
         True,
     ),
     (
@@ -144,6 +150,11 @@ test_data_class = [
             "-fps": -11,
         },
         False,
+    ),
+    (
+        "appsrc ! videoconvert ! avenc_mpeg4 bitrate=100000 ! mp4mux ! filesink location=foo.mp4",
+        {"-gst_pipeline_mode": True},
+        True if platform.system() == "Linux" else False,
     ),
 ]
 
@@ -168,9 +179,14 @@ def test_WriteGear_compression(f_name, output_params, result):
             writer.write(frame)
         stream.release()
         writer.close()
-        remove_file_safe(f_name)
+        remove_file_safe(
+            "foo.html"
+            if "-gst_pipeline_mode" in output_params
+            and output_params["-gst_pipeline_mode"] == True
+            else f_name
+        )
     except Exception as e:
         if result:
             pytest.fail(str(e))
         else:
-            logger.exception(str(e))
+            pytest.xfail(str(e))
