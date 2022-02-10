@@ -34,6 +34,7 @@ from .helper import (
     check_WriteAccess,
     get_valid_ffmpeg_path,
     get_supported_vencoders,
+    check_gstreamer_support,
 )
 
 # define logger
@@ -232,6 +233,23 @@ class WriteGear:
                         "Kindly install working FFmpeg or provide a valid custom FFmpeg binary path. See docs for more info."
                     )
                 self.__compression = False  # compression mode disabled
+        else:
+            # handle user defined framerate for non-compression mode
+            gstpipeline_support = self.__output_parameters.pop(
+                "-gstreamer_pipeline_mode", False
+            )
+            if not isinstance(gstpipeline_support, bool):
+                # reset improper values
+                gstpipeline_support = False
+            else:
+                gstpipeline_support = check_gstreamer_support(logging=logging)
+            self.__logging and logger.info(
+                "GStreamer Pipeline Mode {}!".format(
+                    "successfully activated"
+                    if gstpipeline_support
+                    else "failed to activate"
+                )
+            )
 
         # display confirmation if logging is enabled/disabled
         if self.__compression and self.__ffmpeg:
@@ -263,11 +281,21 @@ class WriteGear:
             )
         else:
             if self.__out_file is None:
-                raise ValueError(
-                    "[WriteGear:ERROR] :: output_filename value:`{}` is not supported in Non-Compression Mode.".format(
-                        output_filename
+                if gstpipeline_support:
+                    # enforce GStreamer backend
+                    self.__output_parameters["-backend"] = "CAP_GSTREAMER"
+                    # assign original value
+                    self.__out_file = output_filename
+                    # log it
+                    self.__logging and logger.debug(
+                        "Non-Compression Mode is successfully configured in GStreamer Pipeline Mode."
                     )
-                )
+                else:
+                    raise ValueError(
+                        "[WriteGear:ERROR] :: output_filename value:`{}` is not supported in Non-Compression Mode.".format(
+                            output_filename
+                        )
+                    )
             logger.critical(
                 "Compression Mode is disabled, Activating OpenCV built-in Writer!"
             )
