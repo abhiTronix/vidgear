@@ -115,6 +115,7 @@ class WriteGear:
             True  # initiate one time process for valid process initialization
         )
         self.__out_file = None  # handles output filename
+        gstpipeline_support = False  # handles GStreamer Pipeline Mode
 
         # handles output file name (if not given)
         if not output_filename:
@@ -237,12 +238,18 @@ class WriteGear:
             # handle GStreamer Pipeline Mode for non-compression mode
             if "-gst_pipeline_mode" in self.__output_parameters:
                 if isinstance(self.__output_parameters["-gst_pipeline_mode"], bool):
-                    gstpipeline_support = self.__output_parameters["-gst_pipeline_mode"] and check_gstreamer_support(logging=logging)
-                    self.__logging and logger.debug("GStreamer Pipeline Mode successfully activated!")
+                    gstpipeline_support = self.__output_parameters[
+                        "-gst_pipeline_mode"
+                    ] and check_gstreamer_support(logging=logging)
+                    self.__logging and logger.debug(
+                        "GStreamer Pipeline Mode successfully activated!"
+                    )
                 else:
                     # reset improper values
                     gstpipeline_support = False
-                    self.__logging and logger.warning("GStreamer Pipeline Mode failed to activate!")
+                    self.__logging and logger.warning(
+                        "GStreamer Pipeline Mode failed to activate!"
+                    )
 
         # display confirmation if logging is enabled/disabled
         if self.__compression and self.__ffmpeg:
