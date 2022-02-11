@@ -20,6 +20,79 @@ limitations under the License.
 
 # Release Notes
 
+## v0.2.5 (In Progress)
+
+??? tip "New Features"
+    - [x] **WriteGear:** 
+        * Add support for GStreamer pipeline in WriteGear API's Non-Compression mode:
+            + Implemented GStreamer Pipeline Mode to accept GStreamer pipeline as string to its output_filename parameter.
+            + Added new special `-gst_pipeline_mode` attribute for its output_params parameter.
+            + This feature provides flexible way to directly write video frames into GStreamer Pipeline with controlled bitrate. 
+            + Added new docs and updated existing docs with related changes.
+        * Added new `-ffpreheaders` special attribute to WriteGear's options parameter:
+            + This attribute is specifically required to set special FFmpeg parameters in Compression Mode that are present at the starting of command(such as `-re`).
+            + This attribute only accepts **list** datatype as value.
+            + Added related docs.
+    - [x] **NetGear:** 
+        * Added bidirectional data transfer support by extending Bidirectional mode support to existing exclusive Multi-Clients and Multi-Servers modes:
+            + Bidirectional mode will no longer disables automatically when Multi-Clients and Multi-Servers modes already enabled.
+            + Added new docs and updated existing docs with related changes.
+    - [x] **Maintenance:** 
+        * ==Added official support for **Python-3.10** legacies.==
+        * Added `float` value support to `THREAD_TIMEOUT` optional parameter.
+        * Added info about dropped support for Python-3.6 legacies through new announcement bar.
+        * Added `config.md` file for Issue templates.
+        * Added title to templates.
+
+??? success "Updates/Improvements"  
+    - [x] Setup.py:
+        * Dropped support for Python-3.6 legacies.
+        * Updated python_requires to `>=3.7`.
+        * Bumped version to `0.2.5`.
+    - [x] Helper:
+        * Vidgear will now report current version on every run.
+    - [x] Docs: 
+        * Updated SSH tunneling docs context.
+        * Updated Zenodo badge and BibTeX entry.
+        * Updated code comments.
+    - [x] CI:
+        * Removed support for Python-3.6 legacies from all workflows.
+        * Updated NetGear's Exclusive Mode tests.
+        * Added GStreamer Pipeline Mode tests.
+    - [x] Maintenance: 
+        * Updated Issue and PR templates.
+        * Updated metadata
+
+
+??? danger "Breaking Updates/Changes"
+    - [ ] **Dropped support for Python-3.6 legacies from vidgear.**
+
+??? bug "Bug-fixes"
+    - [x] NetGear: Fixed bidirectional mode overriding multi-clients mode's data.
+    - [x] WriteGear: 
+        * Fixed wrongly defined ffmpeg_preheaders.
+        * Fixed condition logic bugs.
+        * Fixed UnboundLocalError bug.
+    - [x] Setup: Fixed uvicorn and aiortc dropped support for Python-3.6 legacies.
+    - [x] CI: 
+        * Fixed GitHub Actions interprets 3.10 as 3.1 if used without strings.
+        * Fixed naming error in azure YAML.
+    - [x] Docs:
+        * Fixed hyperlinks in README.
+        * Fixed indentation and spacing.
+        * Fixed typos and updated context.
+        * Removed dead code.
+    - [x] Maintenance: 
+        * Removed depreciated condition checks.
+
+??? question "Pull Requests"
+    * PR #283
+    * PR #284
+
+&nbsp; 
+
+&nbsp; 
+
 ## v0.2.4 (2021-12-05)
 
 ??? tip "New Features"
