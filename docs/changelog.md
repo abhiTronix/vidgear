@@ -42,7 +42,10 @@ limitations under the License.
         * Added `float` value support to `THREAD_TIMEOUT` optional parameter.
         * Added info about dropped support for Python-3.6 legacies through new announcement bar.
         * Added `config.md` file for Issue templates.
-        * Added title to templates.
+        * Added title to Issue templates.
+    - [x] **Docs:**
+        * Added new Code Annotations
+        * Added new icons to headings.
 
 ??? success "Updates/Improvements"  
     - [x] Setup.py:
@@ -55,6 +58,9 @@ limitations under the License.
     - [x] Docs: 
         * Updated SSH tunneling docs context.
         * Updated Zenodo badge and BibTeX entry.
+        * Updated dark theme hue to `260`.
+        * Updated Admonitions.
+        * Additional warnings against pushing PR against VidGear's `testing` branch only.
         * Updated code comments.
     - [x] CI:
         * Removed support for Python-3.6 legacies from all workflows.
@@ -79,6 +85,7 @@ limitations under the License.
         * Fixed GitHub Actions interprets 3.10 as 3.1 if used without strings.
         * Fixed naming error in azure YAML.
     - [x] Docs:
+        * Fixed codecov badge URL in README.md
         * Fixed hyperlinks in README.
         * Fixed indentation and spacing.
         * Fixed typos and updated context.
