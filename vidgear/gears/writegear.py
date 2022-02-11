@@ -34,6 +34,7 @@ from .helper import (
     check_WriteAccess,
     get_valid_ffmpeg_path,
     get_supported_vencoders,
+    check_gstreamer_support,
 )
 
 # define logger
@@ -114,6 +115,7 @@ class WriteGear:
             True  # initiate one time process for valid process initialization
         )
         self.__out_file = None  # handles output filename
+        gstpipeline_support = False  # handles GStreamer Pipeline Mode
 
         # handles output file name (if not given)
         if not output_filename:
@@ -189,6 +191,12 @@ class WriteGear:
                 # must be float
                 self.__inputframerate = float(self.__inputframerate)
 
+            # handle user defined ffmpeg cmd preheaders(must be a list)
+            self.__ffmpeg_preheaders = self.__output_parameters.pop("-ffpreheaders", [])
+            if not isinstance(self.__ffmpeg_preheaders, list):
+                # reset improper values
+                self.__ffmpeg_preheaders = []
+
             # handle special-case force-termination in compression mode
             disable_force_termination = self.__output_parameters.pop(
                 "-disable_force_termination",
@@ -226,6 +234,22 @@ class WriteGear:
                         "Kindly install working FFmpeg or provide a valid custom FFmpeg binary path. See docs for more info."
                     )
                 self.__compression = False  # compression mode disabled
+        else:
+            # handle GStreamer Pipeline Mode for non-compression mode
+            if "-gst_pipeline_mode" in self.__output_parameters:
+                if isinstance(self.__output_parameters["-gst_pipeline_mode"], bool):
+                    gstpipeline_support = self.__output_parameters[
+                        "-gst_pipeline_mode"
+                    ] and check_gstreamer_support(logging=logging)
+                    self.__logging and logger.debug(
+                        "GStreamer Pipeline Mode successfully activated!"
+                    )
+                else:
+                    # reset improper values
+                    gstpipeline_support = False
+                    self.__logging and logger.warning(
+                        "GStreamer Pipeline Mode failed to activate!"
+                    )
 
         # display confirmation if logging is enabled/disabled
         if self.__compression and self.__ffmpeg:
@@ -257,11 +281,21 @@ class WriteGear:
             )
         else:
             if self.__out_file is None:
-                raise ValueError(
-                    "[WriteGear:ERROR] :: output_filename value:`{}` is not supported in Non-Compression Mode.".format(
-                        output_filename
+                if gstpipeline_support:
+                    # enforce GStreamer backend
+                    self.__output_parameters["-backend"] = "CAP_GSTREAMER"
+                    # assign original value
+                    self.__out_file = output_filename
+                    # log it
+                    self.__logging and logger.debug(
+                        "Non-Compression Mode is successfully configured in GStreamer Pipeline Mode."
                     )
-                )
+                else:
+                    raise ValueError(
+                        "[WriteGear:ERROR] :: output_filename value:`{}` is not supported in Non-Compression Mode.".format(
+                            output_filename
+                        )
+                    )
             logger.critical(
                 "Compression Mode is disabled, Activating OpenCV built-in Writer!"
             )
@@ -445,6 +479,7 @@ class WriteGear:
         # format command
         cmd = (
             [self.__ffmpeg, "-y"]
+            + self.__ffmpeg_preheaders
             + ["-f", "rawvideo", "-vcodec", "rawvideo"]
             + input_parameters
             + ["-i", "-"]
@@ -576,6 +611,10 @@ class WriteGear:
                 frameSize=(WIDTH, HEIGHT),
                 isColor=COLOR,
             )
+
+        assert (
+            self.__process.isOpened()
+        ), "[WriteGear:ERROR] :: Failed to intialize OpenCV Writer!"
 
     def close(self):
         """

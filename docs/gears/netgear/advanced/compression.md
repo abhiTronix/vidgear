@@ -517,7 +517,7 @@ while True:
         target_data = "Hello, I am a Server."
 
         # send frame & data and also receive data from Client
-        recv_data = server.send(frame, message=target_data)
+        recv_data = server.send(frame, message=target_data) # (1)
 
         # check data just received from Client is of numpy datatype
         if not (recv_data is None) and isinstance(recv_data, np.ndarray):
@@ -537,6 +537,8 @@ stream.release()
 # safely close server
 server.close()
 ```
+
+1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted as `target_data` in `message` parameter.
 
 &nbsp;
 

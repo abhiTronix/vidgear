@@ -883,7 +883,7 @@ The complete example is as follows:
 
 ??? tip "Using devices with `-audio` attribute on different OS platforms"
     
-    === "On Windows"
+    === ":fontawesome-brands-windows: Windows"
 
         Windows OS users can use the [dshow](https://trac.ffmpeg.org/wiki/DirectShow) (DirectShow) to list audio input device which is the preferred option for Windows users. You can refer following steps to identify and specify your sound card:
 
@@ -921,7 +921,7 @@ The complete example is as follows:
         !!! fail "If audio still doesn't work then [checkout this troubleshooting guide ➶](https://www.maketecheasier.com/fix-microphone-not-working-windows10/) or reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
-    === "On Linux"
+    === ":material-linux: Linux"
 
         Linux OS users can use the [alsa](https://ffmpeg.org/ffmpeg-all.html#alsa) to list input device to capture live audio input such as from a webcam. You can refer following steps to identify and specify your sound card:
 
@@ -961,7 +961,7 @@ The complete example is as follows:
         !!! fail "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
-    === "On MacOS"
+    === ":material-apple: MacOS"
 
         MAC OS users can use the [avfoundation](https://ffmpeg.org/ffmpeg-devices.html#avfoundation) to list input devices for grabbing audio from integrated iSight cameras as well as cameras connected via USB or FireWire. You can refer following steps to identify and specify your sound card on MacOS/OSX machines:
 

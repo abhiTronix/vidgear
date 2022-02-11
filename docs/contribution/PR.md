@@ -36,10 +36,10 @@ The following guidelines tells you how to submit a valid PR for vidGear:
 
 ## Clone Testing branch
 
-!!! warning "All changes **MUST** be pushed against VidGear's [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch only for triggering CI testing. If it is not, then [rebase it ➶](https://git-scm.com/book/en/v2/Git-Branching-Rebasing)"
+!!! warning "Base Branch must be `testing` in your Pull Request"
+	Every PR **MUST** be pushed against VidGear's [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch only, in order to trigger must needed CI testing workflows. If your's not, then [change the base branch to `testing` ➶](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/changing-the-base-branch-of-a-pull-request)
 
 !!! tip "Make sure the [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch of your Forked repository is up-to-date with VidGear, before starting working on Pull Request."
-
 
 You can clone your [**Forked**](https://docs.github.com/en/free-pro-team@latest/github/getting-started-with-github/fork-a-repo) remote git to local and create your PR working branch as a sub-branch of latest [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch as follows:
 
@@ -188,7 +188,7 @@ Testing VidGear requires additional test dependencies and dataset, which can be 
   
     You can easily install these dependencies via pip:
 
-    ??? info "MPEGDASH for Windows"
+    ??? info "MPEGDASH for Windows :fontawesome-brands-windows:"
         The [`mpegdash`](https://github.com/sangwonl/python-mpegdash) library has not yet been updated and bugs on windows machines. Therefore install the forked [DEV-version of `mpegdash`](https://github.com/abhiTronix/python-mpegdash) as follows:
         
         ```sh

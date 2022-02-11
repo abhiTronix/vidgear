@@ -42,8 +42,9 @@ This mode implements [SSH Remote Port Forwarding](https://www.ssh.com/academy/ss
 All patterns are valid for this mode and it can be easily activated in NetGear API at server end through `ssh_tunnel_mode` string attribute of its [`options`](../../params/#options) dictionary parameter during initialization.
 
 !!! warning "Important"
-    * ==SSH tunneling can only be enabled on Server-end to establish remote SSH connection with Client.==
-    * SSH tunneling Mode is **NOT** compatible with [Multi-Servers](../../advanced/multi_server) and [Multi-Clients](../../advanced/multi_client) Exclusive Modes yet.
+    * ==SSH tunneling mode can only be enabled on Server-end to establish remote SSH connection with Client.==
+    * SSH tunneling mode requires Client's SSH Port(default `22`) to be TCP Port Forwarded by its Router, which allows Server machine to connect to it remotely.   
+    * SSH tunneling mode is **NOT** compatible with [Multi-Servers](../../advanced/multi_server) and [Multi-Clients](../../advanced/multi_client) Exclusive Modes yet.
     
 !!! tip "Useful Tips"
     * It is advise to use `pattern=2` to overcome random disconnection due to delays in network.
@@ -54,7 +55,7 @@ All patterns are valid for this mode and it can be easily activated in NetGear A
 &nbsp;
 
 
-## Requirements
+## Prerequisites 
 
 SSH Tunnel Mode requires [`pexpect`](http://www.noah.org/wiki/pexpect) or [`paramiko`](http://www.lag.net/paramiko/) as an additional dependency which is not part of standard VidGear package. It can be easily installed via pypi as follows:
 
@@ -88,43 +89,37 @@ SSH Tunnel Mode requires [`pexpect`](http://www.noah.org/wiki/pexpect) or [`para
 
 For implementing SSH Tunneling Mode, NetGear API currently provide following exclusive attribute for its [`options`](../../params/#options) dictionary parameter:
 
-* **`ssh_tunnel_mode`** (_string_) : This attribute activates SSH Tunneling Mode and sets the fully specified `"<ssh-username>@<client-public-ip>:<forwarded-port>"` SSH URL for tunneling at Server end. Its usage is as follows:
+* **`ssh_tunnel_mode`** (_string_) : This attribute activates SSH Tunneling Mode and assigns the `"<ssh-username>@<client-public-ip-address>:<tcp-forwarded-port>"` SSH URL for tunneling at Server end. Its usage is as follows:
   
-    ??? tip "Finding Your Public IP Address"
-
-        !!! warning "Only IPv4 IP-addresses are supported"
-
-        - A Public IP address is a globally routable IP address that is assigned to a network device, allowing it direct access to the Internet. They are assigned to the device by its ISP, and each device has a unique public IP address.
-        - Determining the public IP address involves contacting a remote server over the HTTP/HTTPS or DNS protocol and obtaining the IP address from the remote server response.
-        - On Desktop machines, the easiest way to find out your public IP address is to google =="what is my IP"== in your browser:
-
-        ![Placeholder](https://techantena.com/wp-content/uploads/2017/01/find-public-ip.png)
-
-    ??? question "How to Port Forward in your Router"
-
-        For more information on Forwarding Port in Popular Home Routers. See [this document ➶](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/)" 
-
-    !!! fail "On Server end, NetGear automatically validates if the `port` is open at specified SSH URL or not, and if it fails _(i.e. port is closed)_, NetGear will throw `AssertionError`!"
+    !!! fail "On Server end, NetGear automatically validates if the `port` is open at specified Client's Public IP Address or not, and if it fails _(i.e. port is closed)_, NetGear will throw `AssertionError`!"
 
     === "With Default Port"
-        !!! info "The `port` value in SSH URL is the forwarded port on host(client) machine. Its default value is `22`_(meaning default SSH port is forwarded)_."
+        
+        !!! info "The default port value in SSH URL is `22`, meaning Server assumes TCP Port `22` is forwarded on Client's end by default."
 
         ```python
-        # activates SSH Tunneling and assign SSH URL
+        # activate SSH Tunneling and assign SSH URL
         options = {"ssh_tunnel_mode":"userid@52.194.1.73"}
-        # only connections from the public IP address 52.194.1.73 on default port 22 are allowed
+
+        # i.e. only connections from the Public IP address `52.194.1.73` 
+        # on default port 22 are allowed.
         ```
 
     === "With Custom Port"
-        !!! quote "You can also define your custom forwarded port instead."
+        
+        But, you can also define your own custom TCP forwarded port instead:
+
+        !!! quote "Here we're defining our own TCP Port `8080`, meaning Server assumes TCP Port `8080` is forwarded on Client's end."
 
         ```python
-        # activates SSH Tunneling and assign SSH URL
+        # activate SSH Tunneling and assign SSH URL
         options = {"ssh_tunnel_mode":"userid@52.194.1.73:8080"}
-        # only connections from the public IP address 52.194.1.73 on custom port 8080 are allowed
+
+        # i.e. only connections from the Public IP address `52.194.1.73` 
+        # on custom port 8080 are allowed.
         ```
 
-* **`ssh_tunnel_pwd`** (_string_): This attribute sets the password required to authorize Host for SSH Connection at Server end. This password grant access and controls SSH user can access what. It can be used as follows:
+* **`ssh_tunnel_pwd`** (_string_): This attribute sets the password required to authorize Host(client) for SSH Connection at Server end. This password grant access and controls SSH user can access what. It can be used as follows:
 
     ```python
     # set password for our SSH conection
@@ -134,7 +129,7 @@ For implementing SSH Tunneling Mode, NetGear API currently provide following exc
     } 
     ```
 
-* **`ssh_tunnel_keyfile`** (_string_): This attribute sets path to Host key that provide another way to authenticate host for SSH Connection at Server end. Its purpose is to prevent man-in-the-middle attacks. Certificate-based host authentication can be a very attractive alternative in large organizations. It allows device authentication keys to be rotated and managed conveniently and every connection to be secured. It can be used as follows:
+* **`ssh_tunnel_keyfile`** (_string_): This attribute sets path to Host key that provide another way to authenticate Host(client) for SSH Connection at Server end. Its purpose is to prevent man-in-the-middle attacks. It allows device authentication keys to be rotated and managed conveniently and every connection to be secured. It can be used as follows:
 
     !!! tip "You can use [Ssh-keygen](https://www.ssh.com/academy/ssh/keygen) tool for creating new authentication key pairs for SSH Tunneling."
 
@@ -163,20 +158,19 @@ For implementing SSH Tunneling Mode, NetGear API currently provide following exc
 
     - **Client:**
         * [x] Client end is a **Regular PC/Computer** located at `52.155.1.89` public IP address for displaying frames received from the remote Server.
-        * [x] This Client is Port Forwarded by its Router to a default SSH Port(22), which allows Server to connect to its TCP port `22` remotely. This connection will then be tunneled back to our PC/Computer(Client) and makes TCP connection to it again via port `22` on localhost(`127.0.0.1`).
+        * [x] Client's SSH Port(default `22`) is TCP Port Forwarded by its Router, which allows Server to connect to it remotely. This connection will then be tunneled back to our PC/Computer(Client) and makes TCP connection to it again via port `22` on localhost(`127.0.0.1`).
         * [x] Also, there's a username `test` present on the PC/Computer(Client) to SSH login with password `pas$wd`.
 
     - **Setup Diagram:**
         
         Assumed setup can be visualized throw diagram as follows:
 
-        ![Placeholder](../../../../assets/images/ssh_tunnel_ex.png){ loading=lazy }
+        <figure markdown>
+          <img src="../../../../assets/images/ssh_tunnel_ex.png" alt="Setup Diagram"/>
+          <figcaption>Setup Diagram</figcaption>
+        </figure>
 
-
-
-??? question "How to Port Forward in your Router"
-
-    For more information on Forwarding Port in Popular Home Routers. See [this document ➶](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/)" 
+        
 
 
 
@@ -185,13 +179,13 @@ For implementing SSH Tunneling Mode, NetGear API currently provide following exc
 Open a terminal on Client System _(A Regular PC where you want to display the input frames received from the Server)_ and execute the following python code: 
 
 
-!!! warning "Prerequisites for Client's End"
+???+ warning "Requirements for Client's End"
     
     To ensure a successful Remote NetGear Connection with Server:
 
-    * **Install OpenSSH Server: (Tested)**
+    * [x] **Install OpenSSH Server: (Tested)**
 
-        === "On Linux"
+        === ":material-linux: Linux"
 
             ```sh
             # Debian-based
@@ -201,20 +195,39 @@ Open a terminal on Client System _(A Regular PC where you want to display the in
             sudo yum install openssh-server
             ```
 
-        === "On Windows" 
+        === ":fontawesome-brands-windows: Windows" 
 
             See [this official Microsoft doc ➶](https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse)
 
 
-        === "On OSX"
+        === ":material-apple: MacOS"
 
             ```sh
             brew install openssh
             ```
 
-    * Make sure to note down the Client's public IP address required by Server end. Use https://www.whatismyip.com/ to determine it.
+    * [x] Make sure to note down the ==Client's public IP address== required by Server end.
 
-    * Make sure that Client Machine is Port Forward by its Router to expose it to the public Internet. Also, this forwarded port value is needed at Server end."
+    * [x] Make sure that ==Client's SSH Port(default `22`) is TCP Port Forwarded by its Router== to expose it to the public Internet. Also, this forwarded TCP port value is needed at Server end.
+
+
+??? tip "Finding Public IP Address"
+
+    !!! warning "Only IPv4 IP-addresses are supported"
+
+    ??? note "Enabling Dynamic DNS"
+    
+        SSH tunneling requires public IP address to able to access host on public Internet. Thereby, if it's troublesome to remember Public IP address or your IP address change constantly, then you can use dynamic DNS services like https://www.noip.com/
+
+    - A Public IP address is a globally routable IP address that is assigned to a network device, allowing it direct access to the Internet. They are assigned to the device by its ISP, and each device has a unique public IP address.
+    - Determining the public IP address involves contacting a remote server over the HTTP/HTTPS or DNS protocol and obtaining the IP address from the remote server response.
+    - On Desktop machines, the easiest way to find out your public IP address is to google =="what is my IP"== in your browser:
+
+    ![Placeholder](https://techantena.com/wp-content/uploads/2017/01/find-public-ip.png)
+
+??? question "How to TCP Port Forward in your Router"
+
+    For more information on Forwarding Port in Popular Home Routers. See [this document ➶](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/)
 
 
 ??? fail "Secsh channel X open FAILED: open failed: Administratively prohibited"
@@ -223,9 +236,6 @@ Open a terminal on Client System _(A Regular PC where you want to display the in
 
     **Solution:** You need to change `GatewayPorts no` option to `GatewayPorts yes` in the **OpenSSH server configuration file** [`sshd_config`](https://www.ssh.com/ssh/sshd_config/) to allows anyone to connect to the forwarded ports on Client Machine. 
 
-
-??? tip "Enabling Dynamic DNS"
-    SSH tunneling requires public IP address to able to access host on public Internet. Thereby, if it's troublesome to remember Public IP address or your IP address change constantly, then you can use dynamic DNS services like https://www.noip.com/
 
 !!! info "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -276,24 +286,9 @@ client.close()
 
 Now, Open the terminal on Remote Server System _(A Raspberry Pi with a webcam connected to it at index `0`)_, and execute the following python code: 
 
-!!! danger "Make sure to replace the SSH URL in following example with yours."
+!!! danger "Make sure to replace the Client's **Public IP Address** and **Forwarded TCP port(default is 22)** in SSH URL with yours in the following example."
 
-??? tip "Finding Your Public IP Address"
-
-    !!! warning "Only IPv4 IP-addresses are supported"
-
-    - A Public IP address is a globally routable IP address that is assigned to a network device, allowing it direct access to the Internet. They are assigned to the device by its ISP, and each device has a unique public IP address.
-    - Determining the public IP address involves contacting a remote server over the HTTP/HTTPS or DNS protocol and obtaining the IP address from the remote server response.
-    - On Desktop machines, the easiest way to find out your public IP address is to google =="what is my IP"== in your browser:
-
-    ![Placeholder](https://techantena.com/wp-content/uploads/2017/01/find-public-ip.png)
-
-??? question "How to Port Forward in your Router"
-
-    For more information on Forwarding Port in Popular Home Routers. See [this document ➶](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/)" 
-
-
-!!! warning "On Server end, NetGear automatically validates if the `port` is open at specified SSH URL or not, and if it fails _(i.e. port is closed)_, NetGear will throw `AssertionError`!"
+!!! warning "On Server end, NetGear automatically validates if the `port` is open at specified Client's Public IP Address or not, and if it fails _(i.e. port is closed)_, NetGear will throw `AssertionError`!"
 
 !!! info "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 

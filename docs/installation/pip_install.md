@@ -29,7 +29,7 @@ limitations under the License.
 When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), you need to manually install following prerequisites:
 
 
-??? alert "Upgrade your `pip`"
+??? alert ":fontawesome-brands-python: Upgrade your `pip`"
 
     ==It strongly advised to upgrade to latest `pip` before installing vidgear to avoid any undesired installation error(s).==
 
@@ -44,14 +44,14 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
             * Download the script, from https://bootstrap.pypa.io/get-pip.py.
             * Open a terminal/command prompt, `cd` to the folder containing the `get-pip.py` file and run:
 
-            === "Linux/MacOS"
+            === ":material-linux: Linux / :material-apple: MacOS"
 
                 ```sh
                 python get-pip.py
                 
                 ```
 
-            === "Windows"
+            === ":fontawesome-brands-windows: Windows"
 
                 ```sh
                 py get-pip.py
@@ -60,14 +60,14 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
             More details about this script can be found in [pypa/get-pip’s README](https://github.com/pypa/get-pip).
 
 
-        === "Linux/MacOS"
+        === ":material-linux: Linux / :material-apple: MacOS"
 
             ```sh
             python -m pip install pip --upgrade
             
             ```
 
-        === "Windows"
+        === ":fontawesome-brands-windows: Windows"
 
             ```sh
             py -m pip install pip --upgrade
@@ -78,14 +78,14 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
         Python also comes with an [`ensurepip`](https://docs.python.org/3/library/ensurepip.html#module-ensurepip) module[^1], which can easily upgrade/install `pip` in any Python environment.
 
-        === "Linux/MacOS"
+        === ":material-linux: Linux / :material-apple: MacOS"
 
             ```sh
             python -m ensurepip --upgrade
             
             ```
 
-        === "Windows"
+        === ":fontawesome-brands-windows: Windows"
 
             ```sh
             py -m ensurepip --upgrade
@@ -128,7 +128,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
 * #### Picamera
 
-    Required only if you're using Raspberry Pi Camera Modules with its [**PiGear**](../../gears/pigear/overview/) API. You can easily install it via pip:
+    Required only if you're using Raspberry Pi :fontawesome-brands-raspberry-pi: Camera Modules with its [**PiGear**](../../gears/pigear/overview/) API. You can easily install it via pip:
 
 
     !!! warning "Make sure to [**enable Raspberry Pi hardware-specific settings**](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior to using this library, otherwise it won't work."
@@ -141,8 +141,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
     Required only if you're using the [**NetGear_Async**](../../gears/netgear_async/overview/) API on UNIX machines for maximum performance. You can easily install it via pip:
 
-    !!! fail "uvloop is **[NOT yet supported on Windows Machines](https://github.com/MagicStack/uvloop/issues/14).**"
-    !!! warning "Python-3.6 legacies support [**dropped in version `>=1.15.0`**](https://github.com/MagicStack/uvloop/releases/tag/v0.15.0). Kindly install previous `0.14.0` version instead."
+    !!! fail "uvloop is **[NOT yet supported on Windows :fontawesome-brands-windows: Machines](https://github.com/MagicStack/uvloop/issues/14).**"
 
     ```sh
     pip install uvloop
@@ -153,7 +152,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 ## Installation
 
 
-???+ danger "Installation command with `pip` has been changed in `v0.2.4`"
+??? danger "Installation command with `pip` has been changed in `v0.2.4`"
 
     The legacy `#!sh  pip install vidgear` command now installs critical bare-minimum dependencies only. Therefore in order to automatically install all the API specific dependencies as previous versions, use `#!sh  pip install vidgear[core]` command instead.
 
@@ -225,28 +224,45 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
     - Finally, manually install your **API-specific dependencies** as required by your API(in use):
 
-
-        | APIs | Dependencies |
-        |:---:|:---|
-        | CamGear | `yt_dlp` |
-        | PiGear | `picamera` |
-        | VideoGear | *Based on CamGear or PiGear backend in use*  |
-        | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |
-        | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
-        | StreamGear | **FFmpeg:** See [this doc ➶](../../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
-        | NetGear | `pyzmq`, `simplejpeg` |
-        | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
-        | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
-        | NetGear_Async | `pyzmq`, `msgpack`, `msgpack_numpy`, `uvloop` |
-        | Stabilizer Class | - |
-                    
         ```sh
-        # Just copy-&-paste from above table
-
+        # Just copy-&-paste from table below
         pip install <API-specific dependencies>
         ```
 
-??? warning "Windows Installation"
+        === "`v0.2.4` and newer"
+
+            | APIs | Dependencies |
+            |:---:|:---|
+            | CamGear | `yt_dlp` |
+            | PiGear | `picamera` |
+            | VideoGear | *Based on CamGear or PiGear backend in use*  |
+            | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |
+            | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
+            | StreamGear | **FFmpeg:** See [this doc ➶](../../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
+            | NetGear | `pyzmq`, `simplejpeg` |
+            | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
+            | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
+            | NetGear_Async | `pyzmq`, `msgpack`, `msgpack_numpy`, `uvloop` |
+            | Stabilizer Class | - |
+
+        === "Older"
+
+            | APIs | Dependencies |
+            |:---:|:---|
+            | CamGear | `pafy`, `yt_dlp`, `streamlink` |
+            | PiGear | `picamera` |
+            | VideoGear | *Based on CamGear or PiGear backend in use* |
+            | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |
+            | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
+            | StreamGear | **FFmpeg:** See [this doc ➶](../../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
+            | NetGear | `pyzmq`, `simplejpeg` |
+            | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
+            | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
+            | NetGear_Async | `pyzmq`, `msgpack`, `msgpack_numpy`, `uvloop` |
+            | Stabilizer Class | - |
+                    
+
+??? warning ":fontawesome-brands-windows: Windows Installation"
 
     If you are using Windows, some of the commands given below, may not work out-of-the-box.
 
@@ -303,10 +319,10 @@ pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[asyncio]
 
 ```sh
 # Install latest stable release with all Core dependencies
-pip install vidgear-0.2.4-py3-none-any.whl[core]
+pip install vidgear-0.2.5-py3-none-any.whl[core]
 
 # Or Install latest stable release with all Core & Asyncio dependencies
-pip install vidgear-0.2.4-py3-none-any.whl[asyncio]
+pip install vidgear-0.2.5-py3-none-any.whl[asyncio]
 ```
 
 &nbsp;

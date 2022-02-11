@@ -41,10 +41,10 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
 
 | Exclusive Modes | Multi-Servers | Multi-Clients | Secure | Bidirectional | SSH Tunneling |
 | :-------------: | :-----------: | :-----------: | :----: | :-----------: | :-----------: |
-| **Multi-Servers** | - | No _(throws error)_ | Yes | No _(disables it)_ | No _(throws error)_ |
-| **Multi-Clients** |  No _(throws error)_ | - | Yes | No _(disables it)_ | No _(throws error)_ |
+| **Multi-Servers** | - | No _(throws error)_ | Yes | Yes | No _(throws error)_ |
+| **Multi-Clients** |  No _(throws error)_ | - | Yes | Yes | No _(throws error)_ |
 | **Secure** | Yes | Yes | - | Yes | Yes |
-| **Bidirectional** | No _(disabled)_ | No _(disabled)_ | Yes | - | Yes |
+| **Bidirectional** | Yes | Yes | Yes | - | Yes |
 | **SSH Tunneling** |  No _(throws error)_ | No _(throws error)_ | Yes | Yes | - |
 
 &nbsp;

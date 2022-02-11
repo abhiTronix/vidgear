@@ -486,12 +486,9 @@ class NetGear:
         elif self.__multiserver_mode or self.__multiclient_mode:
             # check if Bidirectional Mode also enabled
             if self.__bi_mode:
-                # disable bi_mode if enabled
-                self.__bi_mode = False
-                logger.warning(
-                    "Bidirectional Data Transmission is disabled when {} Mode is Enabled due to incompatibility!".format(
-                        "Multi-Server" if self.__multiserver_mode else "Multi-Client"
-                    )
+                # log it
+                self.__logging and logger.debug(
+                    "Bidirectional Data Transmission is also enabled for this connection!"
                 )
             # check if SSH Tunneling Mode also enabled
             if self.__ssh_tunnel_mode:
@@ -1068,7 +1065,9 @@ class NetGear:
                                 )
 
                         return_dict = (
-                            dict() if self.__bi_mode else dict(port=self.__port)
+                            dict(port=self.__port)
+                            if self.__multiclient_mode
+                            else dict()
                         )
 
                         return_dict.update(
@@ -1104,7 +1103,9 @@ class NetGear:
                         )
                     else:
                         return_dict = (
-                            dict() if self.__bi_mode else dict(port=self.__port)
+                            dict(port=self.__port)
+                            if self.__multiclient_mode
+                            else dict()
                         )
                         return_dict.update(
                             dict(

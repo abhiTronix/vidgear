@@ -104,7 +104,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 ```python hl_lines="7 14 40-52"
 # import required libraries
 from vidgear.gears import NetGear
-from imutils import build_montages
+from imutils import build_montages # (1)
 import cv2
 
 # activate multiserver_mode
@@ -169,6 +169,8 @@ cv2.destroyAllWindows()
 # safely close client
 client.close()
 ```
+
+1.  For building Frames Montage you'll need `imutils` python library. Install it with `pip install imutils` command.
 
 &nbsp;
 
@@ -301,7 +303,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 ```python
 # import required libraries
 from vidgear.gears import NetGear
-from imutils import build_montages
+from imutils import build_montages # (1)
 import cv2
 
 # activate multiserver_mode
@@ -366,6 +368,8 @@ cv2.destroyAllWindows()
 # safely close client
 client.close()
 ```
+
+1.  For building Frames Montage you'll need `imutils` python library. Install it with `pip install imutils` command.
 
 &nbsp;
 
@@ -478,17 +482,15 @@ server.close()
 &nbsp;
 
 
-### Using Multi-Servers Mode with Custom Data Transfer
-
+### Using Multi-Servers Mode for Unidirectional Custom Data Transfer
 
 !!! abstract
-
-    With Multi-Servers Mode, you can send additional data of any data-type _(such as list, tuple, string, int etc.)_ along with frame, from all connected Server(s) to a single Client unidirectionally.
+    With Multi-Servers Mode, you can send additional data of *any datatype*[^1] along with frame with frame in real-time, from all connected Server(s) to a single Client unidirectionally.
 
     !!! warning "But [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT** supported as data."
 
 
-In this example, We will be transferring video-frames and data _(a Text String, for the sake of simplicity)_, from all two Servers _(consisting of a Raspberry Pi with Camera Module & a Laptop with webcam)_ to a single Client over the network in real-time. The received video-frames at Client's end will displayed as a live montage, whereas the received data will be printed to the terminal.
+In this example, We will be transferring video-frames and data _(a Text String, for the sake of simplicity)_ from two Servers _(consisting of a Raspberry Pi with Camera Module & a Laptop with webcam)_ to a single Client over the network in real-time. The received video-frames at Client's end will displayed as a live montage, whereas the received data will be printed to the terminal.
 
 #### Client's End
 
@@ -504,7 +506,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 ```python hl_lines="38-61"
 # import required libraries
 from vidgear.gears import NetGear
-from imutils import build_montages
+from imutils import build_montages # (1)
 import cv2
 
 # activate multiserver_mode
@@ -579,6 +581,9 @@ cv2.destroyAllWindows()
 client.close()
 ```
 
+1.  For building Frames Montage you'll need `imutils` python library. Install it with `pip install imutils` command.
+
+
 &nbsp;
 
 
@@ -627,10 +632,10 @@ while True:
         # {do something with frame and data(to be sent) here}
 
         # let's prepare a text string as data
-        text = "I'm Server-1 at Port: 5577"
+        target_data = "I'm Server-1 at Port: 5577"
 
         # send frame and data through server
-        server.send(frame, message=text)
+        server.send(frame, message=target_data) # (1)
 
     except KeyboardInterrupt:
         break
@@ -641,6 +646,9 @@ stream.stop()
 # safely close server
 server.close()
 ```
+
+1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted as `target_data` in `message` parameter.
+
 
 &nbsp;
 
@@ -716,6 +724,267 @@ server.close()
 
 &nbsp;
 
+&nbsp;
+
+
+### Using Multi-Servers Mode with Bidirectional Mode
+
+!!! abstract
+    Multi-Servers Mode now also compatible with [Bidirectional Mode](../../advanced/bidirectional_mode/), which lets you send additional data of ***any datatype***[^1]  along with frame in real-time bidirectionally between a single Client and all connected Server(s).
+
+!!! warning "Important Information"
+    * Bidirectional data transfer **ONLY** works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_, and **NOT** with pattern `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_
+    * Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server(s) with their [`message`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.send) parameter.
+    * Bidirectional Mode may lead to additional **LATENCY** depending upon the size of data being transfer bidirectionally. User discretion is advised!
+
+??? new "New in v0.2.5" 
+    This example was added in `v0.2.5`.
+
+In this example, We will be transferring video-frames and data _(a Text String, for the sake of simplicity)_ from two Servers _(consisting of a Raspberry Pi with Camera Module & a Laptop with webcam)_ to a single Client, and at same time sending back data _(a Text String, for the sake of simplicity)_ to them over the network all in real-time. The received video-frames at Client's end will displayed as a live montage, whereas the received data will be printed to the terminal.
+
+#### Client's End
+
+Open a terminal on Client System _(where you want to display the input frames received from Mutiple Servers)_ and execute the following python code: 
+
+!!! info "Important Notes"
+
+    * Note down the local IP-address of this system(required at all Server(s) end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Also, assign the tuple/list of port address of all Servers you are going to connect to this system. 
+
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
+
+```python hl_lines="7 27-31 38 41-64"
+# import required libraries
+from vidgear.gears import NetGear
+from imutils import build_montages # (1)
+import cv2
+
+# activate both multiserver and bidirectional modes
+options = {"multiserver_mode": True, "bidirectional_mode": True}
+
+# Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+client = NetGear(
+    address="192.168.x.x",
+    port=(5577, 5578),
+    protocol="tcp",
+    pattern=1,
+    receive_mode=True,
+    logging=True,
+    **options
+)  
+# Define received frame dictionary
+frame_dict = {}
+
+# loop over until Keyboard Interrupted
+while True:
+
+    try:
+        # prepare data to be sent
+        target_data = "Hi, I am a Client here."
+
+        # receive data from server(s) and also send our data
+        data = client.recv(return_data=target_data)
+
+        # check if data received isn't None
+        if data is None:
+            break
+
+        # extract unique port address and its respective frame and received data
+        unique_address, extracted_data, frame = recv_data
+
+        # {do something with the extracted frame and data here}
+        # let's display extracted data on our extracted frame
+        cv2.putText(
+            frame,
+            extracted_data,
+            (10, frame.shape[0] - 10),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (0, 255, 0),
+            2,
+        )
+
+        # get extracted frame's shape
+        (h, w) = frame.shape[:2]
+
+        # update the extracted frame in the frame dictionary
+        frame_dict[unique_address] = frame
+
+        # build a montage using data dictionary
+        montages = build_montages(frame_dict.values(), (w, h), (2, 1))
+
+        # display the montage(s) on the screen
+        for (i, montage) in enumerate(montages):
+
+            cv2.imshow("Montage Footage {}".format(i), montage)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    except KeyboardInterrupt:
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close client
+client.close()
+```
+
+1.  For building Frames Montage you'll need `imutils` python library. Install it with `pip install imutils` command.
+
+&nbsp;
+
+
+#### Server-1's End
+
+Now, Open the terminal on another Server System _(with a webcam connected to it at index `0`)_, and let's called it Server-1. Now execute the following python code: 
+
+!!! info "Replace the IP address in the following code with Client's IP address you noted earlier and also assign a unique port address _(required by Client to identify this system)_."
+
+!!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
+
+```python hl_lines="10 36-44"
+# import libraries
+from vidgear.gears import NetGear
+from vidgear.gears import VideoGear
+import cv2
+
+# Open suitable video stream (webcam on first index in our case)
+stream = VideoGear(source=0).start()
+
+# activate both multiserver and bidirectional modes
+options = {"multiserver_mode": True, "bidirectional_mode": True}
+
+# Define NetGear Server at Client's IP address and assign a unique port address and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+server = NetGear(
+    address="192.168.x.x",
+    port="5577",
+    protocol="tcp",
+    pattern=1,
+    logging=True,
+    **options
+)
+
+# loop over until Keyboard Interrupted
+while True:
+
+    try:
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with frame and data(to be sent) here}
+
+        # let's prepare a text string as data
+        target_data = "I'm Server-1 at Port: 5577"
+
+        # send frame & data and also receive data from Client
+        recv_data = server.send(frame, message=target_data) # (1)
+
+        # print data just received from Client
+        if not (recv_data is None):
+            print(recv_data)
+
+    except KeyboardInterrupt:
+        break
+
+# safely close video stream
+stream.stop()
+
+# safely close server
+server.close()
+```
+
+1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted as `target_data` in `message` parameter.
+
+&nbsp;
+
+#### Server-2's End
+
+Finally, Open the terminal on another Server System _(this time a Raspberry Pi with Camera Module connected to it)_, and let's called it Server-2. Now execute the following python code: 
+
+!!! info "Replace the IP address in the following code with Client's IP address you noted earlier and also assign a unique port address _(required by Client to identify this system)_."
+
+!!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
+
+```python hl_lines="20 46-54"
+# import libraries
+from vidgear.gears import NetGear
+from vidgear.gears import PiGear
+import cv2
+
+# add various Picamera tweak parameters to dictionary
+options = {
+    "hflip": True,
+    "exposure_mode": "auto",
+    "iso": 800,
+    "exposure_compensation": 15,
+    "awb_mode": "horizon",
+    "sensor_mode": 0,
+}
+
+# open pi video stream with defined parameters
+stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
+
+# activate both multiserver and bidirectional modes
+options = {"multiserver_mode": True, "bidirectional_mode": True}
+
+# Define NetGear Server at Client's IP address and assign a unique port address and other parameters
+# !!! change following IP address '192.168.x.xxx' with yours !!!
+server = NetGear(
+    address="192.168.1.xxx",
+    port="5578",
+    protocol="tcp",
+    pattern=1,
+    logging=True,
+    **options
+)
+
+# loop over until Keyboard Interrupted
+while True:
+
+    try:
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with frame and data(to be sent) here}
+
+        # let's prepare a text string as data
+        target_data = "I'm Server-2 at Port: 5578"
+
+        # send frame & data and also receive data from Client
+        recv_data = server.send(frame, message=target_data) # (1)
+
+        # print data just received from Client
+        if not (recv_data is None):
+            print(recv_data)
+
+    except KeyboardInterrupt:
+        break
+
+# safely close video stream.
+stream.stop()
+
+# safely close server
+server.close()
+```
+
+1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted as `target_data` in `message` parameter.
+
+&nbsp;
+
 [^1]: 
     
-    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server's end with its [`message`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.send) parameter."
+    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server(s) with their [`message`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.send) parameter."

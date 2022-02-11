@@ -32,7 +32,7 @@ There are very simple ways to help us:
 &nbsp; 
 
 
-## Star VidGear on GitHub
+## :material-star-settings: Star VidGear on GitHub
 
 You can star :star2: VidGear on GitHub: [![GitHub Repo stars](https://img.shields.io/github/stars/abhiTronix/vidgear?label=stars%20%E2%9C%A8&logo=github&style=flat-square)](https://github.com/abhiTronix/vidgear/stargazers)
 
@@ -42,7 +42,7 @@ It helps us a lot by making it easier for others to find & trust this library. T
 &nbsp; 
 
 
-## Help others with issues on GitHub
+## :fontawesome-solid-handshake: Help others with issues on GitHub
 
 You can see through any opened or pinned existing issues on our GitHub repository, and try helping others, wherever possible: [![GitHub issues](https://img.shields.io/github/issues-raw/abhiTronix/vidgear?label=open%20issues%20%20%F0%9F%94%A7&logo=github&style=flat-square)](https://github.com/abhiTronix/vidgear/issues)
 
@@ -50,7 +50,7 @@ You can see through any opened or pinned existing issues on our GitHub repositor
 &nbsp; 
 
 
-## Watch the GitHub repository
+## :fontawesome-solid-eye: Watch the GitHub repository
 
 You can **watch 👀** VidGear Activities on GitHub: [![GitHub watchers](https://img.shields.io/github/watchers/abhiTronix/vidgear?label=watch%20%F0%9F%91%80&logo=github&style=flat-square)](https://github.com/abhiTronix/vidgear/subscription)
 
@@ -62,7 +62,7 @@ You can try helping solving those issues, or give valuable feedback/review on ne
 &nbsp; 
 
 
-## Tweet about VidGear
+## :material-twitter: Tweet about VidGear
 
 Tweet about VidGear and Spread the word 🗣:
 
@@ -73,7 +73,7 @@ Let others know how you are using VidGear and why you like it!
 &nbsp; 
 
 
-## Helping Author
+## :fontawesome-solid-gift: Helping Author
 
 > Donations help keep VidGear's development alive and motivate me _(as author)_. :heart:{ .heart }
 
@@ -87,7 +87,7 @@ Thanks a million! :blush:
 &nbsp; 
 
 
-## Connect with Author
+## :material-connection: Connect with Author
 
 You can connect with me, the author 👋:
 

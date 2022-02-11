@@ -51,15 +51,15 @@ limitations under the License.
 
 **Answer:** For compiling OpenCV with GSstreamer(`>=v1.0.0`) support:
 
-=== "On Linux OS"
+=== ":material-linux: Linux"
 
     - [x] **Follow [this tutorial ➶](https://medium.com/@galaktyk01/how-to-build-opencv-with-gstreamer-b11668fa09c)**
 
-=== "On Windows OS"
+=== ":fontawesome-brands-windows: Windows"
 
     - [x] **Follow [this tutorial ➶](https://medium.com/@galaktyk01/how-to-build-opencv-with-gstreamer-b11668fa09c)**
 
-=== "On MAC OS"
+=== ":material-apple: MacOS"
     
     - [x] **Follow [this tutorial ➶](https://medium.com/testinium-tech/how-to-install-opencv-with-java-and-gstreamer-support-on-macos-c3c7b28d2864)**
 

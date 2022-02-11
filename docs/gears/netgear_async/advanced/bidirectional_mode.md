@@ -127,7 +127,7 @@ async def my_frame_generator():
             print(recv_data)
 
         # send our frame & data
-        yield (target_data, frame)
+        yield (target_data, frame) # (1)
 
         # sleep for sometime
         await asyncio.sleep(0)
@@ -153,6 +153,9 @@ if __name__ == "__main__":
         # finally close the server
         server.close()
 ```
+
+1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted in `target_data`.
+
 
 #### Client End
 
@@ -364,7 +367,7 @@ async def my_frame_generator():
             print(recv_data)
 
         # send our frame & data
-        yield (target_data, frame)
+        yield (target_data, frame) # (1)
 
         # sleep for sometime
         await asyncio.sleep(0)
@@ -390,6 +393,8 @@ if __name__ == "__main__":
         # finally close the server
         server.close()
 ```
+
+1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted in `target_data`.
 
 &nbsp; 
 
@@ -469,7 +474,7 @@ async def my_frame_generator():
         target_data = "Hello, I am a Server."
 
         # send our frame & data to client
-        yield (target_data, frame)
+        yield (target_data, frame) # (1)
 
         # sleep for sometime
         await asyncio.sleep(0)
@@ -495,6 +500,9 @@ if __name__ == "__main__":
         # finally close the server
         server.close()
 ```
+
+
+1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted in `target_data`.
 
 &nbsp;
 
@@ -572,7 +580,6 @@ if __name__ == "__main__":
 ```
 
 &nbsp;
-
 
 [^1]: 
     

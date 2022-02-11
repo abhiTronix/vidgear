@@ -94,7 +94,7 @@ The complete usage example for Dailymotion and Twitch URLs are as follows:
     The list of all supported Streaming Websites URLs can be found [here ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites)
 
 
-??? tip "Accessing Stream's Metadata"
+??? tip "Accessing Stream's Metadata :material-database-eye:"
 
     CamGear now provides `ytv_metadata` global parameter for accessing given Video's metadata as JSON Object. It can used as follows:
 
@@ -121,7 +121,7 @@ The complete usage example for Dailymotion and Twitch URLs are as follows:
     print(video_metadata["title"])
     ```
 
-=== "Dailymotion"
+=== "Dailymotion :fontawesome-brands-dailymotion:"
     ```python  hl_lines="12-13"
     # import required libraries
     from vidgear.gears import CamGear
@@ -166,7 +166,7 @@ The complete usage example for Dailymotion and Twitch URLs are as follows:
     # safely close video stream
     stream.stop()
     ```
-=== "Twitch"
+=== "Twitch :fontawesome-brands-twitch:"
 
     !!! warning "If Twitch user is offline, CamGear will throw ValueError."
 
@@ -220,9 +220,9 @@ The complete usage example for Dailymotion and Twitch URLs are as follows:
 
 ## Using Camgear with Youtube Videos
 
-CamGear API also provides out-of-the-box support for pipelining live video-frames and metadata from **YouTube (Livestream + Normal) Videos**. 
+CamGear API also provides out-of-the-box support for pipelining live video-frames and metadata from **:fontawesome-brands-youtube: YouTube (Livestream + Normal) Videos**. 
 
-!!! fail "YouTube Playlists are not supported yet."
+!!! fail "YouTube Playlists :material-youtube-subscription: are not supported yet."
 
 The complete usage example is as follows:
 
@@ -245,7 +245,7 @@ The complete usage example is as follows:
     with its [`options`](../params/#options) dictionary parameter. **More information can be found [here ➶](../advanced/source_params/#exclusive-camgear-parameters)**
 
 
-??? tip "Accessing Stream's Metadata"
+??? tip "Accessing Stream's Metadata :material-database-eye:"
 
     CamGear now provides `ytv_metadata` global parameter for accessing given Video's metadata as JSON Object. It can used as follows:
 
@@ -317,7 +317,7 @@ stream.stop()
 
 ## Using CamGear with Variable Camera Properties
 
-CamGear API also flexibly support various **Source Tweak Parameters** available within [OpenCV's VideoCapture API](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d). These tweak parameters can be used to transform input source Camera-Device properties _(such as its brightness, saturation, size, iso, gain etc.)_ seamlessly, and can be easily applied in CamGear API through its `options` dictionary parameter by formatting them as its attributes. 
+CamGear API also flexibly support various **Source Tweak Parameters** available within [OpenCV's VideoCapture API](https://docs.opencv.org/master/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d). These tweak parameters can be used to transform input source Camera-Device properties _(such as its brightness, saturation, framerate, resolution, gain etc.)_ seamlessly, and can be easily applied in CamGear API through its `options` dictionary parameter by formatting them as its attributes. 
 
 The complete usage example is as follows:
 
@@ -331,9 +331,9 @@ import cv2
 
 # define suitable tweak parameters for your stream.
 options = {
-    "CAP_PROP_FRAME_WIDTH": 320,
+    "CAP_PROP_FRAME_WIDTH": 320, # resolution 320x240
     "CAP_PROP_FRAME_HEIGHT": 240,
-    "CAP_PROP_FPS": 60,
+    "CAP_PROP_FPS": 60, # framerate 60fps
 }
 
 # To open live video stream on webcam at first index(i.e. 0) 

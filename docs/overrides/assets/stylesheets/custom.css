@@ -442,3 +442,6 @@ footer.sponsorship {
 	 color: var(--md-default-fg-color--lighter) !important;
 }
  
+[data-md-color-scheme="slate"] {
+  --md-hue: 260; 
+}

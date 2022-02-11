@@ -95,13 +95,13 @@ class ScreenGear:
         self.__thread_timeout = options.pop("THREAD_TIMEOUT", None)
         if self.__thread_timeout and isinstance(self.__thread_timeout, (int, float)):
             # set values
-            self.__thread_timeout = int(self.__thread_timeout)
+            self.__thread_timeout = float(self.__thread_timeout)
         else:
             # defaults to 5mins timeout
             self.__thread_timeout = None
 
         # define deque and assign it to global var
-        self.__queue = queue.Queue(maxsize=96)  # max len 96 to check overflow
+        self.__queue = queue.Queue(maxsize=96)  # max bufferlen 96 to check overflow
         # log it
         if logging:
             logger.debug("Enabling Threaded Queue Mode by default for ScreenGear!")

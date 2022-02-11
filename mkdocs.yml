@@ -41,6 +41,7 @@ theme:
     - search.suggest
     - search.highlight
     - search.share
+    - content.code.annotate
   palette:
     # Light mode
     - media: "(prefers-color-scheme: light)"
@@ -96,7 +97,6 @@ extra:
       link: https://www.linkedin.com/in/abhishek-singh-thakur-a37845a5
     - icon: fontawesome/brands/dev
       link: https://dev.to/abhitronix
-  manifest: site.webmanifest
   version:
     provider: mike
   analytics: # Google analytics
@@ -133,7 +133,8 @@ markdown_extensions:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
   - pymdownx.inlinehilite
-  - pymdownx.highlight
+  - pymdownx.highlight:
+      anchor_linenums: true
   - pymdownx.keys
   - pymdownx.magiclink:
       repo_url_shorthand: true
@@ -151,6 +152,7 @@ markdown_extensions:
   - pymdownx.tilde
   - pymdownx.striphtml:
       strip_comments: true
+  - pymdownx.magiclink
 
 # Page tree
 nav:

@@ -33,7 +33,7 @@ There are several ways to get help with VidGear:
 &thinsp;
 
 
-## Frequently Asked Questions
+## Frequently Asked Questions :material-chat-question:
 
 > Got a question related to VidGear Working?  
 
@@ -56,7 +56,7 @@ Checkout the Frequently Asked Questions, a curated list of all the questions wit
 &thinsp;
 
 
-## Bonus Examples
+## Bonus Examples :material-egg-easter:
 
 > How we do this with that API?  
 
@@ -76,7 +76,7 @@ Checkout the Bonus Examples, a curated list of all advanced examples with unusua
 
 &thinsp;
 
-## Join our Gitter Community channel
+## Join our Gitter Community channel :material-chat-processing:
 
 > Have you come up with some new idea 💡 or looking for the fastest way troubleshoot your problems
 
@@ -88,7 +88,7 @@ There you can ask quick questions, swiftly troubleshoot your problems, help othe
 &thinsp;
 
 
-## This is what you do when...
+## This is what you do when... :fontawesome-solid-question:
 
 - [x] [Got a question or problem?](../../contribution/#got-a-question-or-problem)
 - [x] [Found a typo?](../../contribution/#found-a-typo)

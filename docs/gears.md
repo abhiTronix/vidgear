@@ -25,7 +25,7 @@ limitations under the License.
   <figcaption>Gears: generalized workflow</figcaption>
 </figure>
 
-## Gears, What are these?
+## Gears :octicons-gear-24:, What are these?
 
 VidGear is built on Standalone APIs - also known as **Gears**, each with some unique functionality. Each Gears is designed exclusively to handle/control/process different data-specific & device-specific video streams, network streams, and media encoders/decoders. 
 

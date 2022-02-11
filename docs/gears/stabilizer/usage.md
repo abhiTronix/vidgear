@@ -24,7 +24,7 @@ limitations under the License.
 
 !!! fail "The stabilizer may not perform well against High-frequency jitter in video. Use at your own risk!"
 
-!!! warning "The stabilizer might be slower for High-Quality/Resolution videos-frames."
+!!! warning "The stabilizer might be slower :snail: for High-Quality/Resolution :material-high-definition-box: videos-frames."
 
 !!! tip "It is advised to enable logging on the first run for easily identifying any runtime errors."
 

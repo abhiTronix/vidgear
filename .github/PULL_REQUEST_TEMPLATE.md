@@ -1,16 +1,12 @@
+<!--- Add a brief title for your PR above -->
 
-<!--- Provide a general summary of the issue in the Title above -->
-
-## Description
-
-_Kindly explain the changes you made here._
-
+## Brief Description
+<!--- Provide a brief summary of this PR here -->
+_Kindly briefly explain the changes you made here._
 
 
 ### Requirements / Checklist
-
 <!--- By pushing this PR you acknowledge the following: Put an `x` in all the boxes that apply(important): -->
-
 - [ ] I have read the [PR Guidelines](https://abhitronix.github.io/vidgear/latest/contribution/PR/#submitting-pull-requestpr-guidelines).
 - [ ] I have read the [Documentation](https://abhitronix.github.io/vidgear/latest).
 - [ ] I have updated the documentation accordingly(if required).
@@ -22,8 +18,10 @@ _Kindly explain the changes you made here._
 <!--- If fixing a bug, there should be an issue describing it with steps to reproduce -->
 <!--- Please link to the issue here: -->
 
+
 ### Context
 <!--- Why is this change required? What problem does it solve? -->
+
 
 ### Types of changes
 <!--- What types of changes does your code introduce? Put an `x` in the box that apply(important): -->
@@ -31,5 +29,6 @@ _Kindly explain the changes you made here._
 - [ ] New feature (non-breaking change which adds functionality)
 - [ ] Breaking change (fix or feature that would cause existing functionality to change)
 
+
 ### Screenshots (if available):
-<!--- Provide screenshots where appropriate -->
+<!-- Provide screenshots if available or else remove this block -->
