@@ -46,6 +46,7 @@ branches:
 skip_commits:
   files:
     - '**/*.md'
+    - docs/*
 
 matrix:
     fast_finish: true

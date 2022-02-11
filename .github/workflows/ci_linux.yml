@@ -20,11 +20,13 @@ on:
       - testing
     paths-ignore:
       - '**/*.md'
+      - 'docs/**'
   pull_request:
     branches:
       - testing
     paths-ignore:
       - '**/*.md'
+      - 'docs/**'
 
 jobs:
   test:
