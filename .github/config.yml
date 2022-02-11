@@ -2,6 +2,7 @@ newPRWelcomeComment: |
   Thanks so much for opening your first PR here, a maintainer will get back to you shortly!
 
   ### In the meantime:
+  - :warning: Make sure your PR is pushed against our [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch only. If it's not, then [change the base branch to `testing` ➶](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/changing-the-base-branch-of-a-pull-request)
   - Read our [Pull Request(PR) Guidelines](https://abhitronix.github.io/vidgear/latest/contribution/PR/#submitting-pull-requestpr-guidelines) for submitting a valid PR for VidGear.
   - Submit a [issue](https://abhitronix.github.io/vidgear/latest/contribution/issue/#submitting-an-issue-guidelines) beforehand for your Pull Request.
   - Go briefly through our [PR FAQ section](https://abhitronix.github.io/vidgear/latest/contribution/PR/#frequently-asked-questions).

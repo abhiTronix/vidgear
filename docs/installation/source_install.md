@@ -34,7 +34,7 @@ When installing VidGear from source, FFmpeg is the only API specific prerequisit
     Any other python prerequisites _(Critical/API specific)_ will be automatically installed based on your OS/System specifications.
     
 
-??? alert "Upgrade your `pip`"
+??? alert ":fontawesome-brands-python: Upgrade your `pip`"
 
     ==It strongly advised to upgrade to latest `pip` before installing vidgear to avoid any undesired installation error(s).==
 
@@ -151,6 +151,10 @@ When installing VidGear from source, FFmpeg is the only API specific prerequisit
 
     - Finally, manually install your **API-specific dependencies** as required by your API(in use):
 
+        ```sh
+        # Just copy-&-paste from table below
+        pip install <API-specific dependencies>
+        ```
 
         | APIs | Dependencies |
         |:---:|:---|
@@ -166,12 +170,8 @@ When installing VidGear from source, FFmpeg is the only API specific prerequisit
         | NetGear_Async | `pyzmq`, `msgpack`, `msgpack_numpy`, `uvloop` |
         | Stabilizer Class | - |
                     
-        ```sh
-        # Just copy-&-paste from above table
-        pip install <API-specific dependencies>
-        ```
 
-??? warning "Windows Installation"
+??? warning ":fontawesome-brands-windows: Windows Installation"
 
     If you are using Windows, some of the commands given below, may not work out-of-the-box.
 

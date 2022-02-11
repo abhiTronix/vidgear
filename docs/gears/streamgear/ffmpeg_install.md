@@ -33,7 +33,7 @@ StreamGear must requires FFmpeg executables for transcoding Media Chunks. You ca
 
 &thinsp;
 
-## Linux FFmpeg Installation
+## :material-linux: Linux FFmpeg Installation
 
 The StreamGear API supports _Auto-Detection_ and _Manual Configuration_ methods on a Linux machine:
 
@@ -60,7 +60,7 @@ If StreamGear API not receives any input from the user on [**`custom_ffmpeg`**](
 
 &nbsp;
 
-## Windows FFmpeg Installation
+## :fontawesome-brands-windows: Windows FFmpeg Installation
 
 The StreamGear API supports _Auto-Installation_ and _Manual Configuration_ methods on Windows systems.
 
@@ -96,7 +96,7 @@ If StreamGear API not receives any input from the user on [**`custom_ffmpeg`**](
 
 &nbsp;
 
-## MacOS FFmpeg Installation
+## :material-apple: MacOS FFmpeg Installation
 
 The StreamGear API supports _Auto-Detection_ and _Manual Configuration_ methods on a macOS machine.
 

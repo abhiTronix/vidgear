@@ -104,7 +104,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 ```python hl_lines="7 14 40-52"
 # import required libraries
 from vidgear.gears import NetGear
-from imutils import build_montages
+from imutils import build_montages # (1)
 import cv2
 
 # activate multiserver_mode
@@ -169,6 +169,8 @@ cv2.destroyAllWindows()
 # safely close client
 client.close()
 ```
+
+1.  For building Frames Montage you'll need `imutils` python library. Install it with `pip install imutils` command.
 
 &nbsp;
 
@@ -301,7 +303,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 ```python
 # import required libraries
 from vidgear.gears import NetGear
-from imutils import build_montages
+from imutils import build_montages # (1)
 import cv2
 
 # activate multiserver_mode
@@ -366,6 +368,8 @@ cv2.destroyAllWindows()
 # safely close client
 client.close()
 ```
+
+1.  For building Frames Montage you'll need `imutils` python library. Install it with `pip install imutils` command.
 
 &nbsp;
 
@@ -502,7 +506,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 ```python hl_lines="38-61"
 # import required libraries
 from vidgear.gears import NetGear
-from imutils import build_montages
+from imutils import build_montages # (1)
 import cv2
 
 # activate multiserver_mode
@@ -577,6 +581,9 @@ cv2.destroyAllWindows()
 client.close()
 ```
 
+1.  For building Frames Montage you'll need `imutils` python library. Install it with `pip install imutils` command.
+
+
 &nbsp;
 
 
@@ -625,10 +632,10 @@ while True:
         # {do something with frame and data(to be sent) here}
 
         # let's prepare a text string as data
-        text = "I'm Server-1 at Port: 5577"
+        target_data = "I'm Server-1 at Port: 5577"
 
         # send frame and data through server
-        server.send(frame, message=text)
+        server.send(frame, message=target_data) # (1)
 
     except KeyboardInterrupt:
         break
@@ -639,6 +646,9 @@ stream.stop()
 # safely close server
 server.close()
 ```
+
+1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted as `target_data` in `message` parameter.
+
 
 &nbsp;
 
@@ -746,7 +756,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 ```python hl_lines="7 27-31 38 41-64"
 # import required libraries
 from vidgear.gears import NetGear
-from imutils import build_montages
+from imutils import build_montages # (1)
 import cv2
 
 # activate both multiserver and bidirectional modes
@@ -824,6 +834,8 @@ cv2.destroyAllWindows()
 client.close()
 ```
 
+1.  For building Frames Montage you'll need `imutils` python library. Install it with `pip install imutils` command.
+
 &nbsp;
 
 
@@ -875,7 +887,7 @@ while True:
         target_data = "I'm Server-1 at Port: 5577"
 
         # send frame & data and also receive data from Client
-        recv_data = server.send(frame, message=target_data)
+        recv_data = server.send(frame, message=target_data) # (1)
 
         # print data just received from Client
         if not (recv_data is None):
@@ -890,6 +902,8 @@ stream.stop()
 # safely close server
 server.close()
 ```
+
+1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted as `target_data` in `message` parameter.
 
 &nbsp;
 
@@ -951,7 +965,7 @@ while True:
         target_data = "I'm Server-2 at Port: 5578"
 
         # send frame & data and also receive data from Client
-        recv_data = server.send(frame, message=target_data)
+        recv_data = server.send(frame, message=target_data) # (1)
 
         # print data just received from Client
         if not (recv_data is None):
@@ -966,6 +980,8 @@ stream.stop()
 # safely close server
 server.close()
 ```
+
+1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted as `target_data` in `message` parameter.
 
 &nbsp;
 

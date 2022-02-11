@@ -34,7 +34,7 @@ WriteGear must requires FFmpeg executables for its Compression capabilities in C
 &nbsp;
 
 
-## Linux FFmpeg Installation
+## :material-linux: Linux FFmpeg Installation
 
 The WriteGear API supports _Auto-Detection_ and _Manual Configuration_ methods on a Linux machine:
 
@@ -61,7 +61,7 @@ If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](.
 
 &nbsp;
 
-## Windows FFmpeg Installation
+## :fontawesome-brands-windows: Windows FFmpeg Installation
 
 The WriteGear API supports _Auto-Installation_ and _Manual Configuration_ methods on Windows systems.
 
@@ -97,7 +97,7 @@ If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](.
 
 &nbsp;
 
-## MacOS FFmpeg Installation
+## :material-apple: MacOS FFmpeg Installation
 
 The WriteGear API supports _Auto-Detection_ and _Manual Configuration_ methods on a macOS machine.
 

@@ -47,6 +47,7 @@ limitations under the License.
 ??? success "Updates/Improvements"  
     - [x] Setup.py:
         * Dropped support for Python-3.6 legacies.
+        * Updated logging formating.
         * Updated python_requires to `>=3.7`.
         * Bumped version to `0.2.5`.
     - [x] Helper:

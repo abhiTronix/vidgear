@@ -54,7 +54,7 @@ VidGear focuses on simplicity, and thereby lets programmers and software develop
 
 &thinsp;
 
-## Gears
+## Gears :octicons-gear-16: 
 
 > VidGear is built with multiple [Gears](gears) each with some unique functionality.
 

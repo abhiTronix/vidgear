@@ -784,7 +784,7 @@ while True:
         target_data = "Hello, I am a Server."
 
         # send frame & data and also receive data from Client(s)
-        recv_data = server.send(frame, message=target_data)
+        recv_data = server.send(frame, message=target_data) # (1)
 
         # check if valid data recieved
         if not (recv_data is None):
@@ -807,6 +807,9 @@ stream.stop()
 # safely close server
 server.close()
 ```
+
+1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted as `target_data` in `message` parameter.
+
 
 &nbsp;
 

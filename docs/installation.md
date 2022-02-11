@@ -31,9 +31,9 @@ limitations under the License.
 
 VidGear is well-tested and supported on the following systems(but not limited to), with [python 3.7+](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/installing/#do-i-need-to-install-pip) installed:
 
-* Any Linux distro released in 2016 or later
-* Windows 7 or later
-* macOS 10.12.6 (Sierra) or later
+* Any :material-linux: Linux distro released in 2016 or later
+* :fontawesome-brands-windows: Windows 7 or later
+* :material-apple: MacOS 10.12.6 (Sierra) or later
 
 &thinsp;
 
@@ -43,7 +43,7 @@ VidGear is well-tested and supported on the following systems(but not limited to
 
     Python-3.6 legacies support has been dropped from Vidgear.
 
-[**Python 3.7+**](https://www.python.org/downloads/) are only supported legacies for installing Vidgear v0.2.5 and above.
+:fontawesome-brands-python: [**Python 3.7+**](https://www.python.org/downloads/) are only supported legacies for installing Vidgear v0.2.5 and above.
 
 &thinsp;
 
