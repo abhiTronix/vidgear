@@ -50,7 +50,7 @@ You can see through any opened or pinned existing issues on our GitHub repositor
 &nbsp; 
 
 
-## :eyes: Watch the GitHub repository
+## :fontawesome-solid-eye: Watch the GitHub repository
 
 You can **watch 👀** VidGear Activities on GitHub: [![GitHub watchers](https://img.shields.io/github/watchers/abhiTronix/vidgear?label=watch%20%F0%9F%91%80&logo=github&style=flat-square)](https://github.com/abhiTronix/vidgear/subscription)
 
@@ -73,7 +73,7 @@ Let others know how you are using VidGear and why you like it!
 &nbsp; 
 
 
-## :coin: Helping Author
+## :fontawesome-solid-gift: Helping Author
 
 > Donations help keep VidGear's development alive and motivate me _(as author)_. :heart:{ .heart }
 

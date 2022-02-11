@@ -88,7 +88,7 @@ There you can ask quick questions, swiftly troubleshoot your problems, help othe
 &thinsp;
 
 
-## This is what you do when...
+## This is what you do when... :fontawesome-solid-question:
 
 - [x] [Got a question or problem?](../../contribution/#got-a-question-or-problem)
 - [x] [Found a typo?](../../contribution/#found-a-typo)

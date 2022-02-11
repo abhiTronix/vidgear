@@ -179,13 +179,13 @@ For implementing SSH Tunneling Mode, NetGear API currently provide following exc
 Open a terminal on Client System _(A Regular PC where you want to display the input frames received from the Server)_ and execute the following python code: 
 
 
-!!! warning "Requirements for Client's End"
+???+ warning "Requirements for Client's End"
     
     To ensure a successful Remote NetGear Connection with Server:
 
     * [x] **Install OpenSSH Server: (Tested)**
 
-        === "On Linux"
+        === ":material-linux: Linux"
 
             ```sh
             # Debian-based
@@ -195,12 +195,12 @@ Open a terminal on Client System _(A Regular PC where you want to display the in
             sudo yum install openssh-server
             ```
 
-        === "On Windows" 
+        === ":fontawesome-brands-windows: Windows" 
 
             See [this official Microsoft doc ➶](https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse)
 
 
-        === "On OSX"
+        === ":material-apple: MacOS"
 
             ```sh
             brew install openssh

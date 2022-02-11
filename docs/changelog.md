@@ -20,7 +20,7 @@ limitations under the License.
 
 # Release Notes
 
-## v0.2.5 (In Progress)
+## v0.2.5 (2021-02-11)
 
 ??? tip "New Features"
     - [x] **WriteGear:** 
@@ -34,13 +34,14 @@ limitations under the License.
             + This attribute only accepts **list** datatype as value.
             + Added related docs.
     - [x] **NetGear:** 
-        * Added bidirectional data transfer support by extending Bidirectional mode support to existing exclusive Multi-Clients and Multi-Servers modes:
+        * Added bidirectional data transfer support by extending Bidirectional mode support to exclusive Multi-Clients and Multi-Servers modes:
+            + Users will now able to send data bidirectionally in both Multi-Clients and Multi-Servers exclusive modes.
             + Bidirectional mode will no longer disables automatically when Multi-Clients and Multi-Servers modes already enabled.
             + Added new docs and updated existing docs with related changes.
     - [x] **Maintenance:** 
         * ==Added official support for **Python-3.10** legacies.==
         * Added `float` value support to `THREAD_TIMEOUT` optional parameter.
-        * Added info about dropped support for Python-3.6 legacies through new announcement bar.
+        * Added info about dropped support for Python-3.6 legacies through announcement bar.
         * Added `config.md` file for Issue templates.
         * Added title to Issue templates.
     - [x] **Docs:**
@@ -50,8 +51,8 @@ limitations under the License.
 
 ??? success "Updates/Improvements"  
     - [x] Setup.py:
-        * Dropped support for Python-3.6 legacies.
-        * Updated logging formating.
+        * Dropped support for Python-3.6 and below legacies.
+        * Updated logging formatting.
         * Updated python_requires to `>=3.7`.
         * Bumped version to `0.2.5`.
     - [x] Helper:
