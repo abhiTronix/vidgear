@@ -46,6 +46,7 @@ limitations under the License.
     - [x] **Docs:**
         * Added new Code Annotations
         * Added new icons to headings.
+        * Added Advanced VideoGear usage example with CamGear backend.
 
 ??? success "Updates/Improvements"  
     - [x] Setup.py:
