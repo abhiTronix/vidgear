@@ -57,6 +57,7 @@ limitations under the License.
         * Vidgear will now report current version on every run.
     - [x] Docs: 
         * Updated SSH tunneling docs context.
+        * Excluded `docs` directory from CI envs.
         * Updated Zenodo badge and BibTeX entry.
         * Updated dark theme hue to `260`.
         * Updated Admonitions.
@@ -68,7 +69,7 @@ limitations under the License.
         * Added GStreamer Pipeline Mode tests.
     - [x] Maintenance: 
         * Updated Issue and PR templates.
-        * Updated metadata
+        * Updated metadata.
 
 
 ??? danger "Breaking Updates/Changes"
