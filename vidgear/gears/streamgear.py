@@ -368,7 +368,7 @@ class StreamGear:
 
         # write the frame to pipeline
         try:
-            self.__process.stdin.write(frame.tostring())
+            self.__process.stdin.write(frame.tobytes())
         except (OSError, IOError):
             # log something is wrong!
             logger.error(
