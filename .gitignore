@@ -11,6 +11,9 @@ env
 coverage.xml
 .netlify
 .idea
+build/*
+*.egg-info/
+*.egg
 
 # vim temporary files
 *~
