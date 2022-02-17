@@ -32,7 +32,7 @@ In Multi-Clients Mode, NetGear robustly handles Multiple Clients at once thereby
 The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`) and can be easily activated in NetGear API through `multiclient_mode` attribute of its [`options`](../../params/#options) dictionary parameter during initialization.
 
 
-!!! tip "Multi-Clients Mode is best for broadcasting **Meta-Data with Video-frames** to specific limited number of clients in real time. But if you're looking to scale broadcast to a very large pool of clients, then see our [WebGear](../../../webgear/overview/) or [WebGear_RTC](../../../webgear_rtc/overview/) APIs."
+!!! alert "Multi-Clients Mode is best for broadcasting **Meta-Data with Video-frames** to specific limited number of clients in real time. But if you're looking to scale broadcast to a very large pool of clients, then see our [WebGear](../../../webgear/overview/) or [WebGear_RTC](../../../webgear_rtc/overview/) APIs."
 
 &nbsp;
 
