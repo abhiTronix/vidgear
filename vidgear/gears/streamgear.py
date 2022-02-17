@@ -770,7 +770,7 @@ class StreamGear:
         # validate `hls_segment_type`
         default_hls_segment_type = self.__params.pop("-hls_segment_type", "mpegts")
         if isinstance(
-            default_hls_segment_type, int
+            default_hls_segment_type, str
         ) and default_hls_segment_type.strip() in ["fmp4", "mpegts"]:
             output_params["-hls_segment_type"] = default_hls_segment_type.strip()
         else:
