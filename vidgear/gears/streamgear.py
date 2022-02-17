@@ -949,7 +949,7 @@ class StreamGear:
             stdout=sp.DEVNULL
             if (not self.__video_source and not self.__logging)
             else sp.PIPE,
-            stderr=sp.STDOUT if (not self.__video_source and not self.__logging) else None,
+            stderr=sp.STDOUT if (self.__video_source and not self.__logging) else None,
         )
         # post handle progress bar and runtime errors in case of video_source
         if self.__video_source:
