@@ -131,3 +131,9 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
 **Answer:** First, carefully go through [NetGear doc ➶](../../gears/netgear/overview/) that contains detailed information. Also, checkout [PyZmq Docs ➶](https://pyzmq.readthedocs.io/en/latest/) for its various settings/parameters. If still it doesn't work for you, then let us know on [Gitter ➶](https://gitter.im/vidgear/community)
 
 &nbsp;
+
+## How to solve `zmq.error.ZMQError` errors?
+
+**Answer:** For those used to the idea that a "server" provides their address to a client, then you should *recheck your preconceptions*! Please read the [Netgear instructions](https://abhitronix.github.io/vidgear/latest/gears/netgear/usage/#using-netgear-with-variable-parameters) carefully, and you will note that it is the client device that defines the IP that is provided to the server config. If you get this the wrong way (using the server IP on the client), then you will get a `zmq.error.ZMQError` error. Make sure it is the **client's IP** shared across the two systems.
+
+&nbsp;
