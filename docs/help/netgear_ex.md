@@ -44,6 +44,7 @@ Open a terminal on Client System where you want to display the input frames _(an
 ```python
 # import necessary libs
 import uvicorn, asyncio, cv2
+from vidgear.gears import NetGear
 from vidgear.gears.asyncio import WebGear
 from vidgear.gears.asyncio.helper import reducer
 
@@ -77,11 +78,11 @@ async def my_frame_producer():
     # loop over frames
     while True:
         # receive frames from network
-        frame = self.client.recv()
+        frame = client.recv()
 
         # if NoneType
         if frame is None:
-            return None
+            return
 
         # do something with your OpenCV frame here
 
