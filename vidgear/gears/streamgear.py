@@ -484,8 +484,8 @@ class StreamGear:
             output_parameters["-movflags"] = "+faststart"
 
         # set input framerate
-        if self.__sourceframerate > 5.0 and not (self.__video_source):
-            # minimum threshold is 5.0
+        if self.__sourceframerate > 0 and not (self.__video_source):
+            # set input framerate
             self.__logging and logger.debug(
                 "Setting Input framerate: {}".format(self.__sourceframerate)
             )
