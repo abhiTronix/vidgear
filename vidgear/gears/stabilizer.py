@@ -146,6 +146,12 @@ class Stabilizer:
         # define normalized box filter
         self.__box_filter = np.ones(smoothing_radius) / smoothing_radius
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.clean()
+
     def stabilize(self, frame):
         """
         This method takes an unstabilized video frame, and returns a stabilized one.

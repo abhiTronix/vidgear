@@ -318,6 +318,12 @@ class StreamGear:
             )
         )
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.terminate()
+
     def stream(self, frame, rgb_mode=False):
         """
         Pipelines `ndarray` frames to FFmpeg Pipeline for transcoding into multi-bitrate streamable assets.

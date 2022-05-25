@@ -418,6 +418,12 @@ class CamGear:
         # initialize stream read flag event
         self.__stream_read = Event()
 
+    def __enter__(self):
+        return self.start()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.stop()
+
     def start(self):
         """
         Launches the internal *Threaded Frames Extractor* daemon.

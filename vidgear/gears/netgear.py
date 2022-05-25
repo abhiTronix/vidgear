@@ -925,6 +925,12 @@ class NetGear:
                     "Send Mode is successfully activated and ready to send data."
                 )
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
     def __recv_handler(self):
 
         """

@@ -300,6 +300,12 @@ class WriteGear:
                 "Compression Mode is disabled, Activating OpenCV built-in Writer!"
             )
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
     def write(self, frame, rgb_mode=False):
 
         """

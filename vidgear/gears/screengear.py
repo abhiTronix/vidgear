@@ -196,6 +196,12 @@ class ScreenGear:
         # initialize termination flag
         self.__terminate = Event()
 
+    def __enter__(self):
+        return self.start()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.stop()
+
     def start(self):
         """
         Launches the internal *Threaded Frames Extractor* daemon
