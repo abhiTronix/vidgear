@@ -46,7 +46,6 @@ if not (yt_dlp is None):
     # import YouTubeDL Parser
     from yt_dlp import YoutubeDL
 
-
     class YT_backend:
         """
         CamGear's Internal YT-DLP Backend Class for extracting metadata from Streaming URLs.
@@ -109,10 +108,10 @@ if not (yt_dlp is None):
 
             # check if source url is supported
             if (
-                    not (self.meta_data is None)  # meta-data is valid
-                    and not ("entries" in self.meta_data)  # playlists are not supported
-                    and len(self.meta_data.get("formats", {}))
-                    > 0  # video formats must exist
+                not (self.meta_data is None)  # meta-data is valid
+                and not ("entries" in self.meta_data)  # playlists are not supported
+                and len(self.meta_data.get("formats", {}))
+                > 0  # video formats must exist
             ):
                 self.is_livestream = self.meta_data.get("is_live", False)
                 self.streams_metadata = self.meta_data.get("formats", {})
@@ -173,20 +172,20 @@ if not (yt_dlp is None):
                     if stream_dim in self.supported_resolutions:
                         stream_res = self.supported_resolutions[stream_dim]
                         if (
-                                not stream_with_audio  # prefer audioless
-                                or stream_protocol in ["https", "http"]  # prefer http/https
-                                or not (
+                            not stream_with_audio  # prefer audioless
+                            or stream_protocol in ["https", "http"]  # prefer http/https
+                            or not (
                                 stream_res in streams
-                        )  # check if already not in dict
+                            )  # check if already not in dict
                         ):
                             streams[stream_res] = stream_url
                     # otherwise make a copy
                     if (
-                            not stream_with_audio  # prefer audioless
-                            or stream_protocol in ["https", "http"]  # prefer http/https
-                            or not (
+                        not stream_with_audio  # prefer audioless
+                        or stream_protocol in ["https", "http"]  # prefer http/https
+                        or not (
                             stream_dim in streams_copy
-                    )  # check if already not in dict
+                        )  # check if already not in dict
                     ):
                         streams_copy[stream_dim] = stream_url
             # use copy to decide best or worst
@@ -208,14 +207,14 @@ class CamGear:
     """
 
     def __init__(
-            self,
-            source=0,
-            stream_mode=False,
-            backend=0,
-            colorspace=None,
-            logging=False,
-            time_delay=0,
-            **options
+        self,
+        source=0,
+        stream_mode=False,
+        backend=0,
+        colorspace=None,
+        logging=False,
+        time_delay=0,
+        **options
     ):
 
         """
@@ -517,7 +516,7 @@ class CamGear:
         return (
             self.frame
             if not self.__terminate.is_set()  # check if already terminated
-               and self.__stream_read.wait(timeout=self.__thread_timeout)  # wait for it
+            and self.__stream_read.wait(timeout=self.__thread_timeout)  # wait for it
             else None
         )
 
