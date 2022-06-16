@@ -158,6 +158,8 @@ if not (yt_dlp is None):
                 stream_dim = stream.get("resolution", "")
                 stream_url = stream.get("url", "")
                 stream_protocol = stream.get("protocol", "")
+                if stream_protocol == 'http_dash_segments':
+                    continue
                 stream_with_video = (
                     False if stream.get("vcodec", "none") == "none" else True
                 )
