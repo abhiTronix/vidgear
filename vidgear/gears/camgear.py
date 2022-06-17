@@ -165,7 +165,12 @@ if not (yt_dlp is None):
                     False if stream.get("acodec", "none") == "none" else True
                 )
                 # streams must contain video
-                if stream_with_video and stream_dim and stream_url and stream_protocol != "http_dash_segments":
+                if (
+                    stream_with_video
+                    and stream_dim
+                    and stream_url
+                    and stream_protocol != "http_dash_segments"
+                ):
                     # check if stream resolution is supported
                     if stream_dim in self.supported_resolutions:
                         stream_res = self.supported_resolutions[stream_dim]
