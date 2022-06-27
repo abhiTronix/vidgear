@@ -117,7 +117,6 @@ markdown_extensions:
   - footnotes
   - md_in_html
   - meta
-  - deduplicate-toc
   - toc:
       permalink: ⚓
       permalink_title: Anchor link to this section for reference
