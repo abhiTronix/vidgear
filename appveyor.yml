@@ -47,6 +47,8 @@ skip_commits:
   files:
     - '**/*.md'
     - '**/*.html'
+    - '**/*.js'
+    - '**/*.css'
     - dir/**/*
     - mkdocs.yml
 

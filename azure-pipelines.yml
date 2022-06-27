@@ -23,6 +23,8 @@ trigger:
    - mkdocs.yml
    - '**/*.md'
    - '**/*.html'
+   - '**/*.js'
+   - '**/*.css'
 
 pr:
   - testing

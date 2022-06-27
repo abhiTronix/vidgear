@@ -21,7 +21,9 @@ on:
     paths-ignore:
       - '**/*.md'
       - '**/*.html'
-      - dir/**/*
+      - '**/*.js'
+      - '**/*.css'
+      - 'docs/**'
       - mkdocs.yml
   pull_request:
     branches:
