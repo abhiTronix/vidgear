@@ -74,10 +74,9 @@ plugins:
   - minify:
       minify_html: true
   - mkdocstrings:
-      default_handler: python
       handlers:
         python:
-          rendering:
+          options:
             show_root_heading: false
             show_root_toc_entry: false
             show_source: true
@@ -118,6 +117,7 @@ markdown_extensions:
   - footnotes
   - md_in_html
   - meta
+  - deduplicate-toc
   - toc:
       permalink: ⚓
       permalink_title: Anchor link to this section for reference
