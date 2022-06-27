@@ -23,6 +23,63 @@ limitations under the License.
 
 &nbsp;
 
+## Using WriteGear's Compression Mode for RSTP/RTP Live-Streaming
+
+In Compression Mode, you can use WriteGear for livestreaming with traditional protocols such as RSTP/RTP. The example to achieve that is as follows:   
+
+??? new "New in v0.2.6" 
+    This example was added in `v0.2.6`.
+
+!!! alert "This example assume you already have a RSTP Server running at specified RSTP address with format *`rtsp://[RTSP_ADDRESS]:[RTSP_PORT]/[RTSP_PATH]`* for publishing video frames."
+
+??? tip "Creating your own RSTP Server locally"
+    If you want to create your RSTP Server locally, then checkout [**rtsp-simple-server**](https://github.com/aler9/rtsp-simple-server) - a ready-to-use and zero-dependency server and proxy that allows users to publish, read and proxy live video and audio streams through various protocols such as RSTP.
+    
+!!! danger "Make sure to change RSTP address `rtsp://localhost:8554/mystream` with yours in following code before running!"
+
+
+```python hl_lines="10 15"
+# import required libraries
+import cv2
+from vidgear.gears import CamGear
+from vidgear.gears import WriteGear
+
+# open any valid video stream(for e.g `foo.mp4` file)
+stream = CamGear(source="foo.mp4").start()
+
+# define required FFmpeg parameters for your writer
+output_params = {"-f": "rtsp", "-rtsp_transport": "tcp"}
+
+# Define writer with defined parameters and RSTP address
+# [WARNING] Change your RSTP address `rtsp://localhost:8554/mystream` with yours!
+writer = WriteGear(
+    output_filename="rtsp://localhost:8554/mystream", logging=True, **output_params
+)
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # write frame to writer
+    writer.write(frame)
+
+# safely close video stream
+stream.stop()
+
+# safely close writer
+writer.close()
+```
+
+&nbsp;
+
 ## Using WriteGear's Compression Mode for YouTube-Live Streaming
 
 In Compression Mode, you can also use WriteGear for Youtube-Livestreaming. The example is as follows:   
@@ -46,7 +103,7 @@ VIDEO_SOURCE = "/home/foo/foo.mp4"
 # Open stream
 stream = CamGear(source=VIDEO_SOURCE, logging=True).start()
 
-# define required FFmpeg optimizing parameters for your writer
+# define required FFmpeg parameters for your writer
 # [NOTE]: Added VIDEO_SOURCE as audio-source, since YouTube rejects audioless streams!
 output_params = {
     "-i": VIDEO_SOURCE,
@@ -64,7 +121,7 @@ output_params = {
 # [WARNING] Change your YouTube-Live Stream Key here:
 YOUTUBE_STREAM_KEY = "xxxx-xxxx-xxxx-xxxx-xxxx"
 
-# Define writer with defined parameters and
+# Define writer with defined parameters
 writer = WriteGear(
     output_filename="rtmp://a.rtmp.youtube.com/live2/{}".format(YOUTUBE_STREAM_KEY),
     logging=True,

@@ -27,7 +27,7 @@ limitations under the License.
 
     * It is advised to comprehend [NetGear API](../../netgear/overview/) before using this API.
 
-!!! examples "After going through following Usage Examples, Checkout more bonus examples [here ➶](../../../help/netgear_async_ex/)"
+!!! example "After going through following Usage Examples, Checkout more bonus examples [here ➶](../../../help/netgear_async_ex/)"
 
 
 ## Requirement
