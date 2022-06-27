@@ -33,7 +33,7 @@ In Compression Mode, you can use WriteGear for livestreaming with traditional pr
 !!! alert "This example assume you already have a RSTP Server running at specified RSTP address with format *`rtsp://[RTSP_ADDRESS]:[RTSP_PORT]/[RTSP_PATH]`* for publishing video frames."
 
 ??? tip "Creating your own RSTP Server locally"
-    If you want to create your RSTP Server locally, then checkout [**rtsp-simple-server**](https://github.com/aler9/rtsp-simple-server) - a ready-to-use and zero-dependency server and proxy that allows users to publish, read and proxy live video and audio streams through various protocols such as RSTP.
+    If you want to create your RSTP Server locally, then checkout [**rtsp-simple-server**](https://github.com/aler9/rtsp-simple-server) - a ready-to-use and zero-dependency server and proxy that allows users to publish, read and proxy live video and audio streams through various protocols such as RSTP, RTMP etc.
     
 !!! danger "Make sure to change RSTP address `rtsp://localhost:8554/mystream` with yours in following code before running!"
 
