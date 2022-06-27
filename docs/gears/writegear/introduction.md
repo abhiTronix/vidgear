@@ -31,7 +31,7 @@ limitations under the License.
 
 WriteGear API provides a complete, flexible, and robust wrapper around [**FFmpeg**](https://ffmpeg.org/), a leading multimedia framework. WriteGear can process real-time frames into a lossless compressed video-file with any suitable specifications _(such as`bitrate, codec, framerate, resolution, subtitles,  etc.`)_. 
 
-WriteGear also supports streaming with traditional protocols such as RTMP, RTSP/RTP. It is powerful enough to perform complex tasks such as [Live-Streaming](../compression/usage/#using-compression-mode-for-live-streaming) _(such as for Twitch, YouTube etc.)_ and [Multiplexing Video-Audio](../compression/usage/#using-compression-mode-with-live-audio-input) with real-time frames in just few lines of code.
+WriteGear also supports streaming with traditional protocols such as [RTSP/RTP](../../../help/writegear_ex/#using-writegears-compression-mode-for-rstprtp-live-streaming), RTMP. It is powerful enough to perform complex tasks such as [Live-Streaming](../compression/usage/#using-compression-mode-for-live-streaming) _(such as for Twitch, YouTube etc.)_ and [Multiplexing Video-Audio](../compression/usage/#using-compression-mode-with-live-audio-input) with real-time frames in just few lines of code.
 
 Best of all, WriteGear grants users the complete freedom to play with any FFmpeg parameter with its exclusive ==Custom Commands function== _(see this [doc](../compression/advanced/cciw/))_ without relying on any third-party API.
 
