@@ -151,6 +151,8 @@ The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Th
 <a href="../usage/">See here 🚀</a>
 </div>
 
+!!! examples "After going through WebGear_RTC Usage Examples, Checkout more bonus examples [here ➶](../../../help/webgear_rtc_ex/)"
+
 ## Parameters
 
 <div>

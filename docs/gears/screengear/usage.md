@@ -20,6 +20,8 @@ limitations under the License.
 
 # ScreenGear API Usage Examples:
 
+!!! experiment "After going through ScreenGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/screengear_ex/)"
+
 &thinsp;
 
 ## Bare-Minimum Usage
@@ -335,9 +337,3 @@ writer.close()
 ``` 
 
 &nbsp; 
-
-## Bonus Examples
-
-!!! example "Checkout more advanced NetGear examples with unusual configuration [here ➶](../../../help/screengear_ex/)"
-
-&nbsp;

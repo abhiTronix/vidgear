@@ -756,7 +756,7 @@ Internal URLs
 
 [faq]:https://abhitronix.github.io/vidgear/latest/help/get_help/#frequently-asked-questions
 [doc-vidgear-purpose]:https://abhitronix.github.io/vidgear/latest/help/motivation/#why-is-vidgear-a-thing
-[live-stream]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/usage/#using-compression-mode-for-streaming-urls
+[live-stream]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/usage/#using-compression-mode-for-live-streaming
 [live-audio-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/usage/#using-compression-mode-with-live-audio-input
 [piping-live-videos]:https://abhitronix.github.io/vidgear/latest/gears/camgear/usage/#using-camgear-with-streaming-websites
 [ffmpeg-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/advanced/ffmpeg_install/

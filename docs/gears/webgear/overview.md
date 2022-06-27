@@ -149,6 +149,9 @@ The WebGear API by default uses simple & elegant [**WebGear's Default Theme**](h
 <a href="../usage/">See here 🚀</a>
 </div>
 
+!!! examples "After going through WebGear Usage Examples, Checkout more bonus examples [here ➶](../../../help/webgear_ex/)"
+
+
 ## Parameters
 
 <div>

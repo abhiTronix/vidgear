@@ -29,6 +29,9 @@ limitations under the License.
     * Only either of two functions (i.e. `send()` and `recv()`) can be accessed at any given instance based on activated [primary mode](../overview/#primary-modes) selected during NetGear API initialization. Trying to access wrong function in incorrect mode (_for e.g using `send()` function in Receive Mode_), will result in `ValueError`.
 
 
+!!! examples "After going through following Usage Examples, Checkout more bonus examples [here ➶](../../../help/netgear_ex/)"
+
+
 &thinsp;
 
 
@@ -472,9 +475,3 @@ server.close()
 ```
 
 &nbsp; 
-
-## Bonus Examples
-
-!!! example "Checkout more advanced NetGear examples with unusual configuration [here ➶](../../../help/netgear_ex/)"
-
-&nbsp;

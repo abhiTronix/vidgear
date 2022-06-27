@@ -83,6 +83,8 @@ from vidgear.gears.stabilizer import Stabilizer
 <a href="../usage/">See here 🚀</a>
 </div>
 
+!!! experiment "After going through Stabilizer Class Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/stabilizer_ex/)"
+
 
 ## Parameters
 

@@ -28,6 +28,9 @@ limitations under the License.
 
 !!! tip "It is advised to enable logging on the first run for easily identifying any runtime errors."
 
+!!! experiment "After going through Stabilizer Class Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/stabilizer_ex/)"
+
+
 &thinsp;
 
 &thinsp;
@@ -272,11 +275,5 @@ writer.close()
 [VideoGear API](../../videogear/overview/) provides a special internal wrapper around Stabilizer class that enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort and writing way fewer lines of code.
 
 !!! example "The complete usage example can be found [here ➶](../../videogear/usage/#using-videogear-with-video-stabilizer-backend)"
-
-&nbsp;
-
-## Bonus Examples
-
-!!! example "Checkout more advanced Stabilizer examples with unusual configuration [here ➶](../../../help/stabilizer_ex/)"
 
 &nbsp;

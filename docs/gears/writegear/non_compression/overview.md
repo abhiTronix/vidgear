@@ -51,6 +51,7 @@ This mode provides flexible access to [**OpenCV's VideoWriter API**](https://doc
 <a href="../usage/">See here 🚀</a>
 </div>
 
+!!! examples "After going through WriteGear Usage Examples, Checkout more bonus examples [here ➶](../../../help/writegear_ex/)"
 
 ## Parameters
 

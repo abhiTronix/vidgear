@@ -62,6 +62,8 @@ from vidgear.gears import CamGear
 <a href="../usage/">See here 🚀</a>
 </div>
 
+!!! experiment "After going through CamGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/camgear_ex/)"
+
 ## Parameters
 
 <div>

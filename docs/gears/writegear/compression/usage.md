@@ -38,6 +38,7 @@ limitations under the License.
     * Always use `writer.close()` at the very end of the main code. **NEVER USE IT INBETWEEN CODE** to avoid undesired behavior.
 
 
+!!! examples "After going through WriteGear Usage Examples, Checkout more bonus examples [here ➶](../../../help/writegear_ex/)"
 
 &thinsp;
 
@@ -218,13 +219,13 @@ writer.close()
 &nbsp;
 
 
-## Using Compression Mode for Streaming URLs
+## Using Compression Mode for live streaming
 
-In Compression Mode, WriteGear also allows URL strings _(as output)_ for network streaming with its [`output_filename`](../params/#output_filename) parameter.   
+In Compression Mode, WriteGear also allows URL strings _(as output)_ for live streaming realtime frames with its [`output_filename`](../params/#output_filename) parameter.  
 
-In this example, we will stream live camera feed directly to Twitch :fontawesome-brands-twitch::
+In this example, we will stream live camera frames directly to Twitch :fontawesome-brands-twitch::
 
-!!! info ":fontawesome-brands-youtube: YouTube-Live Streaming example code also available in [WriteGear's Bonus Examples ➶](../../../../help/writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming)"
+!!! example ":fontawesome-brands-youtube: YouTube-Live Streaming example code also available in [WriteGear's Bonus Examples ➶](../../../../help/writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming)"
 
 !!! warning "This example assume you already have a [**Twitch Account**](https://www.twitch.tv/) for publishing video."
 

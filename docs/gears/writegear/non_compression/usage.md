@@ -30,6 +30,9 @@ limitations under the License.
     * Always use `writer.close()` at the very end of the main code. **NEVER USE IT INBETWEEN CODE** to avoid undesired behavior.
 
 
+!!! examples "After going through WriteGear Usage Examples, Checkout more bonus examples [here ➶](../../../help/writegear_ex/)"
+
+
 &thinsp;
 
 

@@ -67,6 +67,8 @@ This function opens endless possibilities of exploiting any FFmpeg supported par
 <a href="../usage/">See here 🚀</a>
 </div>
 
+!!! examples "After going through WriteGear Usage Examples, Checkout more bonus examples [here ➶](../../../help/writegear_ex/)"
+
 
 ## Parameters
 
