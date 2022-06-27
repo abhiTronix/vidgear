@@ -19,8 +19,10 @@ trigger:
    - testing
  paths:
    exclude:
-   - docs
-   - README.md
+   - dir/**/*
+   - mkdocs.yml
+   - '**/*.md'
+   - '**/*.html'
 
 pr:
   - testing

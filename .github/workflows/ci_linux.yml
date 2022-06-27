@@ -20,7 +20,9 @@ on:
       - testing
     paths-ignore:
       - '**/*.md'
-      - 'docs/**'
+      - '**/*.html'
+      - dir/**/*
+      - mkdocs.yml
   pull_request:
     branches:
       - testing
