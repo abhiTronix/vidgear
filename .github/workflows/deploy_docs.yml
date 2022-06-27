@@ -49,6 +49,7 @@ jobs:
         run: |
           pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin mkdocs-exclude mike
           pip install mkdocstrings==0.17.0
+          pip install jinja2<3.1.0
         if: success()
       - name: git configure
         run: |
@@ -90,6 +91,7 @@ jobs:
         run: |
           pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin mkdocs-exclude mike
           pip install mkdocstrings==0.17.0
+          pip install jinja2<3.1.0
         if: success()
       - name: git configure
         run: |
@@ -134,6 +136,7 @@ jobs:
         run: |
           pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin mkdocs-exclude mike
           pip install mkdocstrings==0.17.0
+          pip install jinja2<3.1.0
         if: success()
       - name: git configure
         run: |
