@@ -49,8 +49,9 @@ skip_commits:
     - '**/*.html'
     - '**/*.js'
     - '**/*.css'
-    - dir/**/*
+    - docs/**/*
     - mkdocs.yml
+    - README.md
 
 matrix:
     fast_finish: true

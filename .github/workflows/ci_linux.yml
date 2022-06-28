@@ -23,7 +23,8 @@ on:
       - '**/*.html'
       - '**/*.js'
       - '**/*.css'
-      - 'docs/**'
+      - 'docs/**/*'
+      - README.md
       - mkdocs.yml
   pull_request:
     branches:
