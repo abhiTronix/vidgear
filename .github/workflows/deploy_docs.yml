@@ -132,7 +132,8 @@ jobs:
         if: success()
       - name: install_dependencies
         run: |
-          pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin mkdocs-exclude mike mkdocstrings mkdocstrings-python-legacy
+          pip install -U mkdocs mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin mkdocs-exclude mike mkdocstrings mkdocstrings-python-legacy
+          pip install -U https://github.com/squidfunk/mkdocs-material/archive/a261130.zip
           pip install jinja2==3.0.*
         if: success()
       - name: git configure
