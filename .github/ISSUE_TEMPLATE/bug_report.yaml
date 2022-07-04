@@ -16,7 +16,7 @@ body:
       label: Acknowledgment
       description: "By posting this issue you acknowledge the following:"
       options:
-        - label: I have searched the [issues](https://github.com/abhiTronix/vidgear/issues) for my issue and found nothing related or helpful.
+        - label: I have searched open or closed [issues](https://github.com/abhiTronix/vidgear/issues) for my problem and found nothing related or helpful.
           required: true
         - label: I have read the [Documentation](https://abhitronix.github.io/vidgear/latest) and found nothing related or helpful.
           required: true
@@ -52,7 +52,7 @@ body:
   - type: textarea
     attributes:
       label: Python Code
-      description: Share your python code here (only if available) or else leave this block empty. You can directly paste your python code here, no need for any backticks or formatting.
+      description: Share python code you're using(only if available) here or else leave this block empty. You can directly paste your python code here, no need for any backticks or formatting.
       render: python
   - type: input
     attributes:
@@ -85,7 +85,7 @@ body:
   - type: textarea
     attributes:
       label: Any other Relevant Information?
-      description: Provide any other relevant information if available or else leave this block empty.
+      description: Provide any other relevant information if available or else leave this block empty. If applicable, you can also drag-and-drop mockups or screenshots images here, or link to external assets.
       placeholder: |-
         ex. Related Issue: xyz/foo#4083
     validations:
