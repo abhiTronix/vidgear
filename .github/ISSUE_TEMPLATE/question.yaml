@@ -1,0 +1,57 @@
+name: Question
+description: Have any questions regarding VidGear?
+title: "[Question]: "
+labels: "QUESTION :question:"
+body:
+  - type: textarea
+    attributes:
+      label: Description
+      description: Please provide a brief description of the question in 1-2 sentences.
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Acknowledgment
+      description: "By posting this issue you acknowledge the following:"
+      options:
+        - label: I have searched open or closed [issues](https://github.com/abhiTronix/vidgear/issues) for my problem and found nothing related or helpful.
+          required: true
+        - label: I have read the [Documentation](https://abhitronix.github.io/vidgear/latest) and found nothing related or helpful.
+          required: true
+        - label: I have gone through the [Bonus Examples](https://abhitronix.github.io/vidgear/latest/help/get_help/#bonus-examples) and [FAQs](https://abhitronix.github.io/vidgear/latest/help/get_help/#frequently-asked-questions) and found nothing related or helpful.
+          required: true
+  - type: textarea
+    attributes:
+      label: Explain your Question
+      description: Please describe your question thoroughly here. What are you trying to accomplish?
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: VidGear Version
+      description: What version of VidGear are you running? Run command `python -c "import vidgear; print(vidgear.__version__)"` to find out.
+      placeholder: ex. 0.2.6
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Python version
+      description: What version of Python you're running Vidgear on? Run command `python -V`  to find out.
+      placeholder: ex. 3.7
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Operating System version
+      description: What Operating system you're using?
+      placeholder: ex. Linux Mint 20.3 “Una” Xfce
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Any other Relevant Information?
+      description: Provide any other relevant information if available or else leave this block empty. If applicable, you can also drag-and-drop mockups or screenshots images here, or link to external assets.
+      placeholder: |-
+        ex. Related Issue: xyz/foo#4083
+    validations:
+      required: false
