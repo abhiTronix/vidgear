@@ -1,0 +1,92 @@
+name: Bug Report
+description: File a bug report for VidGear
+title: "[Bug]: "
+labels: ["BUG :bug:", "NEED TRIAGE :police_car:"]
+assignees:
+  - abhiTronix
+body:
+  - type: textarea
+    attributes:
+      label: Description
+      description: Please provide a brief description of the bug in 1-2 sentences, and why you consider it to be a bug?
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Acknowledgment
+      description: "By posting this issue you acknowledge the following:"
+      options:
+        - label: I have searched the [issues](https://github.com/abhiTronix/vidgear/issues) for my issue and found nothing related or helpful.
+          required: true
+        - label: I have read the [Documentation](https://abhitronix.github.io/vidgear/latest) and found nothing related or helpful.
+          required: true
+        - label: I've read the [Issue Guidelines](https://abhitronix.github.io/vidgear/latest/contribution/issue/#submitting-an-issue-guidelines) and wholeheartedly agree.
+          required: true
+  - type: textarea
+    attributes:
+      label: Expected behaviour
+      description: Please describe precisely what you'd expect to happen.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Actual behaviour
+      description: Please describe precisely what is actually happening.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: Please describe the steps to reproduce the bug.
+      placeholder: |-
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Terminal log output
+      description: Please copy and paste any relevant terminal log output to help quickly debug bugs. You can enable logging with `logging=True` in any Vidgear API for getting verbose terminal logs.
+      render: shell
+  - type: textarea
+    attributes:
+      label: Python Code
+      description: Share your python code here (only if available) or else leave this block empty. You can directly paste your python code here, no need for any backticks or formatting.
+      render: python
+  - type: input
+    attributes:
+      label: VidGear Version
+      description: What version of VidGear are you running? Run command `python -c "import vidgear; print(vidgear.__version__)"` to find out.
+      placeholder: ex. 0.2.6
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Python version
+      description: What version of Python you're running Vidgear on? Run command `python -V`  to find out.
+      placeholder: ex. 3.7
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: OpenCV version
+      description: What version of OpenCV binaries you're running? Run command `python -c "import cv2; print(cv2.__version__)"` to find out.
+      placeholder: ex. 4.6.0.66
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Operating System version
+      description: What Operating system you're using?
+      placeholder: ex. Linux Mint 20.3 “Una” Xfce
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Any other Relevant Information?
+      description: Provide any other relevant information if available or else leave this block empty.
+      placeholder: |-
+        ex. Related Issue: xyz/foo#4083
+    validations:
+      required: false
