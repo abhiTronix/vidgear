@@ -3,26 +3,27 @@ description: Have any questions regarding VidGear?
 title: "[Question]: "
 labels: "QUESTION :question:"
 body:
-  - type: textarea
-    attributes:
-      label: Description
-      description: Please provide a brief description of the question in 1-2 sentences.
-    validations:
-      required: true
   - type: checkboxes
     attributes:
-      label: Acknowledgment
+      label: Issue guidelines
+      description: Please read the Issue guidelines before proceeding.
+      options:
+        - label: I've read the [Issue Guidelines](https://abhitronix.github.io/vidgear/latest/contribution/issue/#submitting-an-issue-guidelines) and wholeheartedly agree.
+          required: true
+  - type: checkboxes
+    attributes:
+      label: Issue Checklist
       description: "By posting this issue you acknowledge the following:"
       options:
         - label: I have searched open or closed [issues](https://github.com/abhiTronix/vidgear/issues) for my problem and found nothing related or helpful.
           required: true
-        - label: I have read the [Documentation](https://abhitronix.github.io/vidgear/latest) and found nothing related or helpful.
+        - label: I have read the [Documentation](https://abhitronix.github.io/vidgear/latest) and found nothing related to my problem.
           required: true
         - label: I have gone through the [Bonus Examples](https://abhitronix.github.io/vidgear/latest/help/get_help/#bonus-examples) and [FAQs](https://abhitronix.github.io/vidgear/latest/help/get_help/#frequently-asked-questions) and found nothing related or helpful.
           required: true
   - type: textarea
     attributes:
-      label: Explain your Question
+      label: Describe your Question
       description: Please describe your question thoroughly here. What are you trying to accomplish?
     validations:
       required: true
