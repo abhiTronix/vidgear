@@ -45,7 +45,7 @@ body:
     attributes:
       label: Operating System version
       description: What Operating system you're using?
-      placeholder: ex. Linux Mint 20.3 “Una” Xfce
+      placeholder: ex. Linux Mint 20.3 Cinnamon
     validations:
       required: true
   - type: textarea

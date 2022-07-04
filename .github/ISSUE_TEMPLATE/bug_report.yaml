@@ -1,5 +1,5 @@
 name: Bug Report
-description: File a bug report for VidGear
+description: File a bug report for VidGear 🐛
 title: "[Bug]: "
 labels: ["BUG :bug:", "NEED TRIAGE :police_car:"]
 assignees:
@@ -8,7 +8,7 @@ body:
   - type: textarea
     attributes:
       label: Description
-      description: Please provide a brief description of the bug in 1-2 sentences, and why you consider it to be a bug?
+      description: Please provide a brief description of the bug in 1-2 sentences.
     validations:
       required: true
   - type: checkboxes
@@ -31,7 +31,7 @@ body:
   - type: textarea
     attributes:
       label: Actual behaviour
-      description: Please describe precisely what is actually happening.
+      description: Please describe precisely what is actually happening, and why you consider it to be a bug?
     validations:
       required: true
   - type: textarea
@@ -79,7 +79,7 @@ body:
     attributes:
       label: Operating System version
       description: What Operating system you're using?
-      placeholder: ex. Linux Mint 20.3 “Una” Xfce
+      placeholder: ex. Linux Mint 20.3 Cinnamon
     validations:
       required: true
   - type: textarea
