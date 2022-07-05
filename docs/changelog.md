@@ -27,6 +27,7 @@ limitations under the License.
         * Added new bonus example for RSTP/RTP Live-Streaming using WriteGear's Compression Mode.
         * Added "How to resolve zmq.error.ZMQError" FAQ for NetGear API.(PR by @iandol)
         * Added new ko-fi button to README.md
+        * Added new contributors block to changelog.md
     - [x] **Maintenance:** 
         * Added new patterns to `.gitignore` to ignore pypi's `build` directory and `egg-info` files.
     - [x] **CI:**
@@ -98,6 +99,12 @@ limitations under the License.
     * PR #307
     * PR #313
     * PR #320
+
+??? new "New Contributors"
+    * @iandol
+    * @freol35241
+    * @enarche-ahn
+    * @DynamiteC
 
 &nbsp; 
 
@@ -182,6 +189,7 @@ limitations under the License.
 ??? question "Pull Requests"
     * PR #283
     * PR #284
+
 
 &nbsp; 
 
@@ -306,6 +314,8 @@ limitations under the License.
     * PR #272
     * PR #274
 
+??? new "New Contributors"
+    * @zpapakipos
 
 &nbsp; 
 
@@ -410,6 +420,8 @@ limitations under the License.
     * PR #249
     * PR #262
 
+??? new "New Contributors"
+    * @Vboivin
 
 &nbsp; 
 
@@ -823,6 +835,8 @@ limitations under the License.
     * PR #239 
     * PR #243 
 
+??? new "New Contributors"
+    * @kpetrykin
 
 &nbsp; 
 
@@ -1097,6 +1111,9 @@ limitations under the License.
     * PR #196
     * PR #203
     * PR #206
+
+??? new "New Contributors"
+    * @bml1g12
 
 &nbsp; 
 
@@ -1699,6 +1716,10 @@ limitations under the License.
     * PR #118
     * PR #124
 
+??? new "New Contributors"
+    * @cclauss
+    * @chollinger93
+
 
 &nbsp; 
 
@@ -1813,7 +1834,8 @@ limitations under the License.
     - [x] PR #82
     - [x] PR #84
 
-
+??? new "New Contributors"
+    * @BoboTiG
 
 &nbsp; 
 
@@ -1879,8 +1901,6 @@ limitations under the License.
     - [x] PR #32
     - [x] PR #33
     - [x] PR #34
-
-
 
 &nbsp; 
 
