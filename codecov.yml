@@ -28,9 +28,11 @@ coverage:
         
 ignore:
   - "vidgear/tests"
-  - "docs"
+  - "dir/**/*"
   - "scripts"
   - "vidgear/gears/__init__.py" #trivial
   - "vidgear/gears/asyncio/__main__.py" #trivial
   - "setup.py"
   - "**/*.md"
+  - "**/*.html"
+  - "mkdocs.yml"

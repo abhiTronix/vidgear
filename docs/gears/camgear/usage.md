@@ -20,6 +20,8 @@ limitations under the License.
 
 # CamGear API Usage Examples:
 
+!!! experiment "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/camgear_ex/)"
+
 &thinsp;
 
 ## Bare-Minimum Usage
@@ -434,8 +436,3 @@ stream.stop()
 
 &nbsp; 
 
-## Bonus Examples
-
-!!! example "Checkout more advanced CamGear examples with unusual configuration [here ➶](../../../help/camgear_ex/)"
-
-&nbsp;

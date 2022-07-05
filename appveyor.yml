@@ -46,7 +46,12 @@ branches:
 skip_commits:
   files:
     - '**/*.md'
-    - docs/*
+    - '**/*.html'
+    - '**/*.js'
+    - '**/*.css'
+    - docs/**/*
+    - mkdocs.yml
+    - README.md
 
 matrix:
     fast_finish: true

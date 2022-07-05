@@ -24,7 +24,7 @@
 {% endblock %}
 {% block announce %}
   <!-- Add announcement here, including arbitrary HTML -->
-  <b><span class="twemoji"> {% include ".icons/material/alert-decagram.svg" %} </span> Python-3.6 legacies support has been dropped in <code>v0.2.5</code>.</b>
+  <b><span class="twemoji"> {% include ".icons/material/message-alert.svg" %} </span> Hey, checkout our new <a href="https://abhitronix.github.io/deffcode"><x-sign>Deffcode</x-sign></a> library that will replace OpenCV soon. We’d love to hear your <a href="https://gitter.im/deffcode-python/community"><x-sign>feedback</x-sign></a>!</b>
 {% endblock %}
 {% block outdated %}
   You're not viewing the latest version.
@@ -50,6 +50,11 @@
   <script src="https://cdn.jsdelivr.net/gh/clappr/dash-shaka-playback@latest/dist/dash-shaka-playback.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@clappr/hlsjs-playback@latest/dist/hlsjs-playback.min.js"></script>
   <script src="https://sidecar.gitter.im/dist/sidecar.v1.js" async defer></script>
+<script>
+  ((window.gitter = {}).chat = {}).options = {
+    room: 'vidgear/community'
+  };
+</script>
 {% endblock %}
 
 <!--

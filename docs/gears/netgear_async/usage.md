@@ -27,6 +27,8 @@ limitations under the License.
 
     * It is advised to comprehend [NetGear API](../../netgear/overview/) before using this API.
 
+!!! example "After going through following Usage Examples, Checkout more bonus examples [here ➶](../../../help/netgear_async_ex/)"
+
 
 ## Requirement
 
@@ -430,9 +432,3 @@ if __name__ == "__main__":
 ```
 
 &nbsp; 
-
-## Bonus Examples
-
-!!! example "Checkout more advanced NetGear_Async examples with unusual configuration [here ➶](../../../help/netgear_async_ex/)"
-
-&nbsp;

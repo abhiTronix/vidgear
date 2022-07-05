@@ -453,7 +453,7 @@ server.close()
 
 &nbsp; 
 
-## Using Bidirectional Mode for Video-Frames Transfer with Frame Compression :fire:
+### Using Bidirectional Mode for Video-Frames Transfer with Frame Compression :fire:
 
 
 NetGear now supports ==Dual Frame Compression== for transferring video-frames with its exclusive Bidirectional Mode for achieving unmatchable performance bidirectionally. You can easily enable Frame Compression with its performance attributes at both ends to boost performance bidirectionally.

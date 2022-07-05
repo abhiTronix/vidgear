@@ -151,14 +151,15 @@ class StreamGear:
 
         # handle Video-Source input
         source = self.__params.pop("-video_source", "")
-        # Check if input is valid
-        if source and isinstance(source, str):
+        # Check if input is valid string
+        if source and isinstance(source, str) and len(source) > 1:
             # Differentiate input
             if os.path.isfile(source):
                 self.__video_source = os.path.abspath(source)
             elif is_valid_url(self.__ffmpeg, url=source, logging=self.__logging):
                 self.__video_source = source
             else:
+                # discard the value otherwise
                 self.__video_source = ""
             # Validate input
             if self.__video_source:
@@ -183,6 +184,7 @@ class StreamGear:
             else:
                 logger.warning("No valid video_source provided.")
         else:
+            # discard the value otherwise
             self.__video_source = ""
 
         # handle user-defined framerate
@@ -366,7 +368,7 @@ class StreamGear:
 
         # write the frame to pipeline
         try:
-            self.__process.stdin.write(frame.tostring())
+            self.__process.stdin.write(frame.tobytes())
         except (OSError, IOError):
             # log something is wrong!
             logger.error(
@@ -482,8 +484,8 @@ class StreamGear:
             output_parameters["-movflags"] = "+faststart"
 
         # set input framerate
-        if self.__sourceframerate > 5.0 and not (self.__video_source):
-            # minimum threshold is 5.0
+        if self.__sourceframerate > 0 and not (self.__video_source):
+            # set input framerate
             self.__logging and logger.debug(
                 "Setting Input framerate: {}".format(self.__sourceframerate)
             )
@@ -770,7 +772,7 @@ class StreamGear:
         # validate `hls_segment_type`
         default_hls_segment_type = self.__params.pop("-hls_segment_type", "mpegts")
         if isinstance(
-            default_hls_segment_type, int
+            default_hls_segment_type, str
         ) and default_hls_segment_type.strip() in ["fmp4", "mpegts"]:
             output_params["-hls_segment_type"] = default_hls_segment_type.strip()
         else:
@@ -949,7 +951,7 @@ class StreamGear:
             stdout=sp.DEVNULL
             if (not self.__video_source and not self.__logging)
             else sp.PIPE,
-            stderr=sp.STDOUT if (self.__video_source and not self.__logging) else None,
+            stderr=None if self.__logging else sp.STDOUT,
         )
         # post handle progress bar and runtime errors in case of video_source
         if self.__video_source:

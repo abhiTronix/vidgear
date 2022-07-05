@@ -141,6 +141,8 @@ from vidgear.gears import NetGear
 <a href="../usage/">See here 🚀</a>
 </div>
 
+!!! example "After going through NetGear Usage Examples, Checkout more bonus examples [here ➶](../../../help/netgear_ex/)"
+
 
 ## Parameters
 

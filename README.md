@@ -67,9 +67,7 @@ The following **functional block diagram** clearly depicts the generalized funct
   * [**WebGear**](#webgear)
   * [**WebGear_RTC**](#webgear_rtc)
   * [**NetGear_Async**](#netgear_async)
-* [**Contributions & Community Support**](#contributions--community-support)
-  * [**Community Support**](#community-support)
-  * [**Contributors**](#contributors)
+* [**Contributions**](#contributions)
 * [**Donations**](#donations)
 * [**Citation**](#citation)
 * [**Copyright**](#copyright)
@@ -408,7 +406,7 @@ stream.stop()
 
 WriteGear API provides a complete, flexible, and robust wrapper around [**FFmpeg**][ffmpeg], a leading multimedia framework. WriteGear can process real-time frames into a lossless compressed video-file with any suitable specifications _(such as`bitrate, codec, framerate, resolution, subtitles,  etc.`)_. 
 
-WriteGear also supports streaming with traditional protocols such as RTMP, RTSP/RTP. It is powerful enough to perform complex tasks such as [Live-Streaming][live-stream] _(such as for Twitch, YouTube etc.)_ and [Multiplexing Video-Audio][live-audio-doc] with real-time frames in just few lines of code. 
+WriteGear also supports streaming with traditional protocols such as [RTSP/RTP][rstp-ex], RTMP. It is powerful enough to perform complex tasks such as [Live-Streaming][live-stream] _(such as for Twitch, YouTube etc.)_ and [Multiplexing Video-Audio][live-audio-doc] with real-time frames in just few lines of code. 
 
 Best of all, WriteGear grants users the complete freedom to play with any FFmpeg parameter with its exclusive **Custom Commands function** _(see this [doc][custom-command-doc])_ without relying on any third-party API.
 
@@ -635,24 +633,19 @@ Whereas supported protocol are: `tcp` and `ipc`.
 
 &nbsp;
 
-# Contributions & Community Support
+# Contributions
 
-> Contributions are welcome. We'd love to have your contributions to fix bugs or to implement new features!  
+<div align="center">
+   <h3>:crown: Contributor Hall of Fame :crown:</h3><br>
+   <a href="https://github.com/abhiTronix/vidgear/graphs/contributors">
+    <img src="https://contributors-img.web.app/image?repo=abhiTronix/vidgear"/><br><br>
+  </a>
+  <p><i>We're happy to meet new contributors:heartpulse:</i></p><br>
+</div>
 
-Please see our **[Contribution Guidelines](contributing.md)** for more details.
+We welcome your contributions to help us improve and extend this project. If you want to get involved with VidGear development, checkout the **[Contribution Guidelines ➶][contribute]**
 
-### Community Support
-
-We ask contributors to join the Gitter community channel for quick discussions:
-
-[![Gitter](https://badges.gitter.im/vidgear/community.svg)](https://gitter.im/vidgear/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-
-### Contributors
-
-<a href="https://github.com/abhiTronix/vidgear/graphs/contributors">
-  <img src="https://contributors-img.web.app/image?repo=abhiTronix/vidgear" />
-</a>
-
+We're offering support for VidGear on [**Gitter Community Channel ➶**](https://gitter.im/vidgear/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge). Come and join the conversation over there!
 
 &nbsp;
 
@@ -661,13 +654,14 @@ We ask contributors to join the Gitter community channel for quick discussions:
 
 # Donations
 
-<img src="docs/overrides/assets/images/help_us.png" alt="PiGear" width="50%" />
+<div align="center">
+   <img src="docs/overrides/assets/images/help_us.png" alt="PiGear" width="50%" />
+   <p><i>VidGear is free and open source and will always remain so. :heart:</i></p>
+</div>
 
-> VidGear is free and open source and will always remain so. :heart:
+It is something I am doing with my own free time. But so much more needs to be done, and I need your help to do this. For just the price of a cup of coffee, you can make a difference :slightly_smiling_face:
 
-It is something I am doing with my own free time. If you would like to say thanks, please feel free to make a donation:
-
-[![ko-fi][kofi-badge]][kofi]
+<a href='https://ko-fi.com/W7W8WTYO' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 
 &nbsp;
@@ -680,7 +674,7 @@ It is something I am doing with my own free time. If you would like to say thank
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5759524.svg)](https://doi.org/10.5281/zenodo.5759524)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6046843.svg)](https://doi.org/10.5281/zenodo.6046843)
 
 ```BibTeX
 @software{vidgear,
@@ -692,13 +686,13 @@ Here is a Bibtex entry you can use to cite this project in a publication:
                   Benjamin Lowe and
                   Mickaël Schoentgen and
                   Renaud Bouckenooghe},
-  title        = {abhiTronix/vidgear: VidGear v0.2.4},
-  month        = dec,
-  year         = 2021,
+  title        = {abhiTronix/vidgear: VidGear v0.2.5},
+  month        = feb,
+  year         = 2022,
   publisher    = {Zenodo},
-  version      = {vidgear-0.2.4},
-  doi          = {10.5281/zenodo.5759524},
-  url          = {https://doi.org/10.5281/zenodo.5759524}
+  version      = {vidgear-0.2.5},
+  doi          = {10.5281/zenodo.6046843},
+  url          = {https://doi.org/10.5281/zenodo.6046843}
 }
 ```
 
@@ -755,8 +749,10 @@ Internal URLs
 [bs_script_dataset]:https://github.com/abhiTronix/vidgear/blob/testing/scripts/bash/prepare_dataset.sh
 
 [faq]:https://abhitronix.github.io/vidgear/latest/help/get_help/#frequently-asked-questions
+[contribute]:https://abhitronix.github.io/vidgear/latest/contribution
+[rstp-ex]:https://abhitronix.github.io/vidgear/latest/help/writegear_ex/#using-writegears-compression-mode-for-rstprtp-live-streaming
 [doc-vidgear-purpose]:https://abhitronix.github.io/vidgear/latest/help/motivation/#why-is-vidgear-a-thing
-[live-stream]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/usage/#using-compression-mode-for-streaming-urls
+[live-stream]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/usage/#using-compression-mode-for-live-streaming
 [live-audio-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/usage/#using-compression-mode-with-live-audio-input
 [piping-live-videos]:https://abhitronix.github.io/vidgear/latest/gears/camgear/usage/#using-camgear-with-streaming-websites
 [ffmpeg-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/advanced/ffmpeg_install/

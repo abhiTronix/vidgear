@@ -37,7 +37,7 @@ There are several ways to get help with VidGear:
 
 > Got a question related to VidGear Working?  
 
-Checkout the Frequently Asked Questions, a curated list of all the questions with adequate answer that we commonly receive, for quickly troubleshooting your problems:
+Checkout the **Frequently Asked Questions** - a curated list of all the questions with adequate answer that we commonly receive for quickly troubleshooting your problems:
 
 - [General FAQs ➶](general_faqs.md)
 - [CamGear FAQs ➶](camgear_faqs.md)
@@ -60,7 +60,7 @@ Checkout the Frequently Asked Questions, a curated list of all the questions wit
 
 > How we do this with that API?  
 
-Checkout the Bonus Examples, a curated list of all advanced examples with unusual configuration, which isn't available in Vidgear API's usage examples:
+Checkout the **Bonus Examples** - a curated list of all experimental examples with unusual configuration that aren't included in general usage examples:
 
 - [CamGear Examples ➶](camgear_ex.md)
 - [PiGear Examples ➶](pigear_ex.md)

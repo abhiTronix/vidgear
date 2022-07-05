@@ -351,7 +351,7 @@ class WriteGear:
 
             # write the frame
             try:
-                self.__process.stdin.write(frame.tostring())
+                self.__process.stdin.write(frame.tobytes())
             except (OSError, IOError):
                 # log something is wrong!
                 logger.error(
@@ -411,8 +411,8 @@ class WriteGear:
                 "[WriteGear:ERROR] :: Frames with channels outside range 1-to-4 are not supported!"
             )
 
-        if self.__inputframerate > 5:
-            # set input framerate - minimum threshold is 5.0
+        if self.__inputframerate > 0:
+            # set input framerate
             self.__logging and logger.debug(
                 "Setting Input framerate: {}".format(self.__inputframerate)
             )

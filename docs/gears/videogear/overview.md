@@ -59,6 +59,9 @@ from vidgear.gears import VideoGear
 <a href="../usage/">See here 🚀</a>
 </div>
 
+!!! experiment "After going through VideoGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/videogear_ex/)"
+
+
 ## Parameters
 
 <div>

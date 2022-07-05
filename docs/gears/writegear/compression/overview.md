@@ -27,9 +27,9 @@ limitations under the License.
 
 ## Overview
 
-When [`compression_mode`](../params/#compression_mode) parameter is enabled (.i.e compression_mode = True), WriteGear API provides a complete, flexible & robust wrapper around [**FFmpeg**](https://ffmpeg.org/) to encode lossless & compressed multimedia files.
+When [`compression_mode`](../params/#compression_mode) parameter is enabled (.i.e `compression_mode = True`), WriteGear API provides a complete, flexible & robust wrapper around [**FFmpeg**](https://ffmpeg.org/) to encode lossless & compressed multimedia files.
 
-This mode can process real-time video frames into a lossless compressed format with any suitable setting video/audio properties such as _bitrate, codec, framerate, resolution, subtitles, and much more_ in just a few easy lines of code. It can also perform complex tasks such as [Live-Streaming](../usage/#using-compression-mode-for-streaming-urls) _(such as for Twitch)_, multiplexing video with audio in real-time (see this [usage example](../usage/#using-compression-mode-with-live-audio-input)) while handling all errors robustly.
+This mode can process real-time video frames into a lossless compressed format with any suitable setting video/audio properties such as _bitrate, codec, framerate, resolution, subtitles, and much more_ in just a few easy lines of code. It can also perform complex tasks such as [Live-Streaming](../usage/#using-compression-mode-for-live-streaming) _(such as for Twitch)_, multiplexing video with audio in real-time (see this [usage example](../usage/#using-compression-mode-with-live-audio-input)) while handling all errors robustly.
 
 
 &nbsp; 
@@ -66,6 +66,8 @@ This function opens endless possibilities of exploiting any FFmpeg supported par
 <div>
 <a href="../usage/">See here 🚀</a>
 </div>
+
+!!! examples "After going through WriteGear Usage Examples, Checkout more bonus examples [here ➶](../../../help/writegear_ex/)"
 
 
 ## Parameters

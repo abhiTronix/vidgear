@@ -23,6 +23,9 @@ limitations under the License.
 
 !!! warning "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this API, otherwise nothing will work."
 
+!!! experiment "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/pigear_ex/)"
+
+
 
 &thinsp;
 
@@ -271,9 +274,3 @@ writer.close()
 ``` 
 
 &nbsp; 
-
-## Bonus Examples
-
-!!! example "Checkout more advanced PiGear examples with unusual configuration [here ➶](../../../help/pigear_ex/)"
-
-&nbsp;

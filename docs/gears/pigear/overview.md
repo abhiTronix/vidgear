@@ -60,6 +60,9 @@ from vidgear.gears import PiGear
 <a href="../usage/">See here 🚀</a>
 </div>
 
+!!! experiment "After going through PiGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/pigear_ex/)"
+
+
 
 ## Parameters
 

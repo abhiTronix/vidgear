@@ -102,8 +102,3 @@ var player_stab = new Clappr.Player({
   poster: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/94bf767c28bf2fe61b9c327625af8e22745f9fdf/stabilizer_video_chunks/hd_thumbnail_2.png',
   preload: 'metadata',
 });
-
-// gitter sidecard
-((window.gitter = {}).chat = {}).options = {
-  room: 'vidgear/community'
-};

@@ -116,7 +116,7 @@ You can be a [**Stargazer** :star2:{ .heart }][stargazer] by starring us on Gith
 
 > VidGear is free and open source and will always remain so. :heart:{ .heart }
 
-It is something I am doing with my own free time. If you would like to say thanks, please feel free to make a donation:
+It is something I am doing with my own free time. But so much more needs to be done, and I need your help to do this. For just the price of a cup of coffee, you can make a difference :slight_smile:
 
 <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#eba100', 'W7W8WTYO');kofiwidget2.draw();</script> 
 
@@ -126,7 +126,7 @@ It is something I am doing with my own free time. If you would like to say thank
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5759524.svg)](https://doi.org/10.5281/zenodo.5759524)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6046843.svg)](https://doi.org/10.5281/zenodo.6046843)
 
 ```BibTeX
 @software{vidgear,
@@ -138,13 +138,13 @@ Here is a Bibtex entry you can use to cite this project in a publication:
                   Benjamin Lowe and
                   Mickaël Schoentgen and
                   Renaud Bouckenooghe},
-  title        = {abhiTronix/vidgear: VidGear v0.2.4},
-  month        = dec,
-  year         = 2021,
+  title        = {abhiTronix/vidgear: VidGear v0.2.5},
+  month        = feb,
+  year         = 2022,
   publisher    = {Zenodo},
-  version      = {vidgear-0.2.4},
-  doi          = {10.5281/zenodo.5759524},
-  url          = {https://doi.org/10.5281/zenodo.5759524}
+  version      = {vidgear-0.2.5},
+  doi          = {10.5281/zenodo.6046843},
+  url          = {https://doi.org/10.5281/zenodo.6046843}
 }
 ```
 

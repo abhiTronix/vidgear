@@ -20,13 +20,18 @@ on:
       - testing
     paths-ignore:
       - '**/*.md'
-      - 'docs/**'
+      - '**/*.html'
+      - '**/*.js'
+      - '**/*.css'
+      - 'docs/**/*'
+      - README.md
+      - mkdocs.yml
   pull_request:
     branches:
       - testing
     paths-ignore:
       - '**/*.md'
-      - 'docs/**'
+      - 'docs/**/*'
 
 jobs:
   test:

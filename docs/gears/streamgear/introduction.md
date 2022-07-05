@@ -72,7 +72,7 @@ StreamGear primarily operates in following independent modes for transcoding:
 
 ??? warning "Real-time Frames Mode is NOT Live-Streaming."
 
-    Rather, you can enable live-streaming in Real-time Frames Mode by using using exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter in StreamGear API. Checkout [this usage example](../rtfm/usage/#bare-minimum-usage-with-live-streaming) for more information.
+    Rather, you can enable live-streaming in Real-time Frames Mode by using the exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter in StreamGear API. Checkout [this usage example](../rtfm/usage/#bare-minimum-usage-with-live-streaming) for more information.
 
 
 - [**Single-Source Mode**](../ssm/overview): In this mode, StreamGear **transcodes entire video file** _(as opposed to frame-by-frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well when you're transcoding long-duration lossless videos(with audio) for streaming that required no interruptions. But on the downside, the provided source cannot be flexibly manipulated or transformed before sending onto FFmpeg Pipeline for processing. 
@@ -171,9 +171,3 @@ from vidgear.gears import StreamGear
 </div>
 
 &thinsp;
-
-## Bonus Examples
-
-!!! example "Checkout more advanced StreamGear examples with unusual configuration [here ➶](../../../help/streamgear_ex/)"
-
-&nbsp;

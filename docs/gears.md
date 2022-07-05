@@ -54,7 +54,7 @@ These Gears can be classified as follows:
 
 > **Basic Function:** Transcodes/Broadcasts files and [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames for streaming.
 
-!!! tip "You can also use [WriteGear](writegear/introduction/) for streaming with traditional protocols such as RTMP, RTSP/RTP."
+!!! tip "You can also use [WriteGear](writegear/introduction/) for :material-video-wireless: streaming with traditional protocols such as RTMP, RTSP/RTP."
 
 * [StreamGear](streamgear/introduction/): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
 

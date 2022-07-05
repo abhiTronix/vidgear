@@ -73,6 +73,7 @@ from vidgear.gears.asyncio import NetGear_Async
 <a href="../usage/">See here 🚀</a>
 </div>
 
+!!! example "After going through NetGear_Async Usage Examples, Checkout more bonus examples [here ➶](../../../help/netgear_async_ex/)"
 
 ## Parameters
 

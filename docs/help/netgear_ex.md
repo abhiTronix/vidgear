@@ -39,11 +39,12 @@ Open a terminal on Client System where you want to display the input frames _(an
 
 !!! alert "High CPU utilization may occur on Client's end. User discretion is advised."
 
-!!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](../netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
+!!! info "Note down the local IP-address of this system (required at Server's end) and also replace it in the following code. You can follow [this FAQ](../netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
 ```python
 # import necessary libs
 import uvicorn, asyncio, cv2
+from vidgear.gears import NetGear
 from vidgear.gears.asyncio import WebGear
 from vidgear.gears.asyncio.helper import reducer
 
@@ -77,11 +78,11 @@ async def my_frame_producer():
     # loop over frames
     while True:
         # receive frames from network
-        frame = self.client.recv()
+        frame = client.recv()
 
         # if NoneType
         if frame is None:
-            return None
+            break
 
         # do something with your OpenCV frame here
 
