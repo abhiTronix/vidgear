@@ -1,0 +1,43 @@
+name: Proposal
+description: Suggest an idea for improving VidGear 💡
+title: "[Proposal]: "
+labels: "PROPOSAL :envelope_with_arrow:"
+body:
+  - type: checkboxes
+    attributes:
+      label: Issue guidelines
+      description: Please read the Issue guidelines before proceeding.
+      options:
+        - label: I've read the [Issue Guidelines](https://abhitronix.github.io/vidgear/latest/contribution/issue/#submitting-an-issue-guidelines) and wholeheartedly agree.
+          required: true
+  - type: checkboxes
+    attributes:
+      label: Issue Checklist
+      description: "By posting this issue you acknowledge the following:"
+      options:
+        - label: I have searched open or closed [issues](https://github.com/abhiTronix/vidgear/issues) and found nothing related to my idea.
+          required: true
+        - label: I have read the [Documentation](https://abhitronix.github.io/vidgear/latest) and it doesn't mention anything about my idea.
+          required: true
+        - label: To my best knowledge, my idea wouldn't break something for other users.
+          required: true
+  - type: textarea
+    attributes:
+      label: Describe your Idea
+      description: Please describe your Idea thoroughly here. Will this change the existing VidGear APIs? How?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Use Cases
+      description: Please describe how would you use it? How can it benefit other users?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Any other Relevant Information?
+      description: Provide any other relevant information if available or else leave this block empty. If applicable, you can also drag-and-drop mockups or screenshots images here, or link to external assets.
+      placeholder: |-
+        ex. Related Issue: xyz/foo#4083
+    validations:
+      required: false
