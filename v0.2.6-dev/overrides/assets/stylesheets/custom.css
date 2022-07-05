@@ -320,7 +320,8 @@ blockquote p {
 .embed-responsive-1by1::before {
 	padding-top: 100%;
 }
-/* ends */
+
+/* Handles footer sponsorship block animation */
 
 footer.sponsorship {
 	text-align: center;
@@ -400,6 +401,29 @@ footer.sponsorship:not(:hover) .twemoji.heart-throb-hover svg {
   animation: heart 1000ms infinite;
 }
 
+footer.sponsorship {
+	 text-align: center;
+}
+ footer.sponsorship hr {
+	 display: inline-block;
+	 width: px2rem(32px);
+	 margin: 0 px2rem(14px);
+	 vertical-align: middle;
+	 border-bottom: 2px solid var(--md-default-fg-color--lighter);
+}
+ footer.sponsorship:hover hr {
+	 border-color: var(--md-accent-fg-color);
+}
+ footer.sponsorship:not(:hover) .twemoji.heart-throb-hover svg {
+	 color: var(--md-default-fg-color--lighter) !important;
+}
+
+/* Tweaks to body appearance */
+ 
+[data-md-color-scheme="slate"] {
+  --md-hue: 260;
+}
+
 body[data-md-color-scheme="slate"] img[class="shadow"]{
    -webkit-filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.5));
   	filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.5));
@@ -425,23 +449,22 @@ body[data-md-color-scheme="slate"] img[class="shadow2"]{
   	filter: drop-shadow(1px 1px 0 black);
 }
 
-footer.sponsorship {
-	 text-align: center;
+/* Glow text effect  */
+
+x-sign {
+	color: white;
+  text-shadow: 
+    0 0 10px var(--md-code-hl-keyword-color),
+    0 0 20px var(--md-code-hl-constant-color),
+    0 0 40px var(--md-code-hl-function-color),
+    0 0 80px var(--md-code-hl-special-color);
+  will-change: filter, color;
+  filter: saturate(60%);
+  animation: flicker steps(100) 1s 1s infinite;
 }
- footer.sponsorship hr {
-	 display: inline-block;
-	 width: px2rem(32px);
-	 margin: 0 px2rem(14px);
-	 vertical-align: middle;
-	 border-bottom: 2px solid var(--md-default-fg-color--lighter);
-}
- footer.sponsorship:hover hr {
-	 border-color: var(--md-accent-fg-color);
-}
- footer.sponsorship:not(:hover) .twemoji.heart-throb-hover svg {
-	 color: var(--md-default-fg-color--lighter) !important;
-}
- 
-[data-md-color-scheme="slate"] {
-  --md-hue: 260; 
+
+@keyframes flicker {
+  50% {
+    filter: saturate(150%) hue-rotate(20deg);
+  }
 }

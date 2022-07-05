@@ -22,6 +22,10 @@
   <meta name="twitter:description" content="{{ config.site_description }}">
   <meta name="twitter:image" content="{{ image }}">
 {% endblock %}
+{% block announce %}
+  <!-- Add announcement here, including arbitrary HTML -->
+  <b><span class="twemoji"> {% include ".icons/material/message-alert.svg" %} </span> Hey, checkout our new <a href="https://abhitronix.github.io/deffcode"><x-sign>Deffcode</x-sign></a> library that will replace OpenCV soon. We’d love to hear your <a href="https://gitter.im/deffcode-python/community"><x-sign>feedback</x-sign></a>!</b>
+{% endblock %}
 {% block outdated %}
   You're not viewing the latest version.
   <a href="{{ '../' ~ base_url }}">
