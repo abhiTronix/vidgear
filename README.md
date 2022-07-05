@@ -659,7 +659,7 @@ We're offering support for VidGear on [**Gitter Community Channel ➶**](https:/
    <p><i>VidGear is free and open source and will always remain so. :heart:</i></p>
 </div>
 
-It is something I am doing with my own free time. BUT - so much more needs to be done, and I need your help to do this. For just the price of a cup of coffee, you can make a difference :heartpulse:
+It is something I am doing with my own free time. But so much more needs to be done, and I need your help to do this. For just the price of a cup of coffee, you can make a difference :slightly_smiling_face:
 
 <a href='https://ko-fi.com/W7W8WTYO' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 

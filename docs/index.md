@@ -116,7 +116,7 @@ You can be a [**Stargazer** :star2:{ .heart }][stargazer] by starring us on Gith
 
 > VidGear is free and open source and will always remain so. :heart:{ .heart }
 
-It is something I am doing with my own free time. BUT - so much more needs to be done, and I need your help to do this. For just the price of a cup of coffee, you can make a difference :heartpulse:
+It is something I am doing with my own free time. But so much more needs to be done, and I need your help to do this. For just the price of a cup of coffee, you can make a difference :slight_smile:
 
 <script type='text/javascript' src='https://ko-fi.com/widgets/widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#eba100', 'W7W8WTYO');kofiwidget2.draw();</script> 
 
