@@ -20,6 +20,89 @@ limitations under the License.
 
 # Release Notes
 
+## v0.2.6 (2022-07-05)
+
+??? tip "New Features"
+    - [x] **Docs:**
+        * Added new bonus example for RSTP/RTP Live-Streaming using WriteGear's Compression Mode.
+        * Added "How to resolve zmq.error.ZMQError" FAQ for NetGear API.(PR by @iandol)
+        * Added new ko-fi button to README.md
+    - [x] **Maintenance:** 
+        * Added new patterns to `.gitignore` to ignore pypi's `build` directory and `egg-info` files.
+    - [x] **CI:**
+        * Switched to new Issue GitHub's form schema using YAML
+            + Added new `bug_report.yaml`.
+            + Added new `question.yaml`.
+            + Added new `proposal.yaml`.
+            + Deleted depreciated markdown files.
+            + Polished forms.
+
+??? success "Updates/Improvements"  
+    - [x] Setup.py:
+        * Bumped version to `0.2.6`.
+        * Updated logic operators and dependency.
+            + Replaced `>=` comparsion operator with more flexible `~=`.
+            + Replaced `distutils.version.LooseVersion` with `pkg_resources.parse_version`.
+    - [x] Docs:
+        * Updated Site Navigation.
+            + Added new notices to inform users more effectively about bonus examples.
+            + Added new `Bonus` section to navigation and moved suitable pages under it.
+            + Updated headings and URLs.
+        * Redesigned and Rewritten Donation and Contribution section to README.md
+        * Updated Zenodo badge and bibtex entry.
+        * Updated Admonition Icon, FAQs and site-links.
+        * Reformatted code and its comments.
+        * Updated `changelog.md`.
+    - [x] API:
+        * Updated depreciated tostring() to tobytes(). `tostring` was renamed to `tobytes` for the purposes for clarity in Python 3.2. https://docs.python.org/3/library/array.html#array.array.tobytes
+    - [x] CI:
+        * Added more paths and files to skip commits.
+    
+??? danger "Breaking Updates/Changes"
+    - [ ] `-input_framerate` parameter now accepts any positive value for WriteGear and StreamGear APIs.
+
+??? bug "Bug-fixes"
+    - [x] API:
+        * Fixed `-input_framerate` less than 5 does not get used in WriteGear and StreamGear APIs.(PR by @freol35241)
+    - [x] CamGear: Fixed Yt-dlp generated HTTP DASH Segments URLs not supported by OpenCV's VideoCapture(PR by @DynamiteC)
+    - [x] StreamGear: 
+        * Fixed `hls_segment_type` not working bug. (PR by @enarche-ahn)
+        * Fixed critical logging parameter bug
+            + Fixed debug logs even when `logging=False` in StreamGear's Real-time Mode. (patch suggested by @enarche-ahn)
+            + Added length check to `-video_source` attribute to correctly infers it as empty(or invalid).
+    - [x] CI:
+        * Xfailed RSTP CamGear CI test.
+        * Fixed pinned version syntax bug in docs_deployer workflow.
+        * Fixed typos in Github forms and its context.
+        * Added missing dependency.
+    - [x] Docs:
+        * Fixed jinja2 `3.1.0` or above breaks mkdocs.
+            + `jinja2>=3.1.0` breaks mkdocs (mkdocs/mkdocs#2799), therefore pinned jinja2 version to `<3.1.0`.
+        * Fixed support for new `mkdocstring` versions
+            + Replaced rendering sub-value with options.
+            + Removed pinned `mkdocstrings==0.17.0` version.
+        * Fixed Netgear+Webgear bonus example code bugs.(PR by @iandol)
+            + Added a missing import.
+            + Removed `self.` typo.
+            + Replaced the `return` value with `break` in the async as it triggers an error. 
+        * Fixed external bug that causing "Home" tab to irresponsive randomly when accessed from other tabs.
+        * Fixed indentation and spacing.
+        * Fixed typos and updated context.
+        * Removed dead code.
+
+??? question "Pull Requests"
+    * PR #288
+    * PR #290
+    * PR #293
+    * PR #295
+    * PR #307
+    * PR #313
+    * PR #320
+
+&nbsp; 
+
+&nbsp; 
+
 ## v0.2.5 (2021-02-11)
 
 ??? tip "New Features"
@@ -85,7 +168,7 @@ limitations under the License.
         * Fixed UnboundLocalError bug.
     - [x] Setup: Fixed uvicorn and aiortc dropped support for Python-3.6 legacies.
     - [x] CI: 
-        * Fixed GitHub Actions interprets 3.10 as 3.1 if used without strings.
+        * Fixed GitHub Actions interprets `3.10` as `3.1` if used without strings.
         * Fixed naming error in azure YAML.
     - [x] Docs:
         * Fixed codecov badge URL in README.md
