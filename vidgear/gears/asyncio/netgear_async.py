@@ -127,7 +127,7 @@ class NetGear_Async:
             options (dict): provides ability to alter Tweak Parameters of NetGear_Async, CamGear, PiGear & Stabilizer.
         """
         # raise error(s) for critical Class imports
-        import_dependency_safe("zmq" if zmq is None else "", min_version="4.0")
+        import_dependency_safe("zmq" if zmq is None else "", min_version="4.0", pkg_name="pyzmq")
         import_dependency_safe("msgpack" if msgpack is None else "")
         import_dependency_safe("msgpack_numpy" if m is None else "")
 

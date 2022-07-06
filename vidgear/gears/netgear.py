@@ -133,7 +133,7 @@ class NetGear:
             options (dict): provides the flexibility to alter various NetGear internal properties.
         """
         # raise error(s) for critical Class imports
-        import_dependency_safe("zmq" if zmq is None else "", min_version="4.0")
+        import_dependency_safe("zmq" if zmq is None else "", min_version="4.0", pkg_name="pyzmq")
         import_dependency_safe(
             "simplejpeg" if simplejpeg is None else "", error="log", min_version="1.6.1"
         )

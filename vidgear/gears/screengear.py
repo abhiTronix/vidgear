@@ -66,7 +66,7 @@ class ScreenGear:
             options (dict): provides the flexibility to manually set the dimensions of capture screen area.
         """
         # raise error(s) for critical Class imports
-        import_dependency_safe("mss.mss" if mss is None else "")
+        import_dependency_safe("from mss import mss" if mss is None else "", pkg_name="mss")
         import_dependency_safe("pyscreenshot" if pysct is None else "")
 
         # enable logging if specified:
