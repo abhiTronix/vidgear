@@ -636,16 +636,16 @@ Whereas supported protocol are: `tcp` and `ipc`.
 # Contributions
 
 <div align="center">
-   <h3>:crown: Contributor Hall of Fame :crown:</h3><br>
+   <h3>👑 Contributor Hall of Fame 👑</h3><br>
    <a href="https://github.com/abhiTronix/vidgear/graphs/contributors">
     <img src="https://contributors-img.web.app/image?repo=abhiTronix/vidgear"/><br><br>
   </a>
-  <p><i>We're happy to meet new contributors:heartpulse:</i></p><br>
+  <p><i>We're happy to meet new contributors💗</i></p><br>
 </div>
 
-We welcome your contributions to help us improve and extend this project. If you want to get involved with VidGear development, checkout the **[Contribution Guidelines ➶][contribute]**
+We welcome your contributions to help us improve and extend this project. If you want to get involved with VidGear development, checkout the **[Contribution Guidelines ▶️][contribute]**
 
-We're offering support for VidGear on [**Gitter Community Channel ➶**](https://gitter.im/vidgear/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge). Come and join the conversation over there!
+We're offering support for VidGear on [**Gitter Community Channel**](https://gitter.im/vidgear/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge). Come and join the conversation over there!
 
 &nbsp;
 
@@ -656,10 +656,10 @@ We're offering support for VidGear on [**Gitter Community Channel ➶**](https:/
 
 <div align="center">
    <img src="docs/overrides/assets/images/help_us.png" alt="PiGear" width="50%" />
-   <p><i>VidGear is free and open source and will always remain so. :heart:</i></p>
+   <p><i>VidGear is free and open source and will always remain so. ❤️</i></p>
 </div>
 
-It is something I am doing with my own free time. But so much more needs to be done, and I need your help to do this. For just the price of a cup of coffee, you can make a difference :slightly_smiling_face:
+It is something I am doing with my own free time. But so much more needs to be done, and I need your help to do this. For just the price of a cup of coffee, you can make a difference 🙂
 
 <a href='https://ko-fi.com/W7W8WTYO' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 

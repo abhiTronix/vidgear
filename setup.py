@@ -62,10 +62,10 @@ def latest_version(package_name):
         data = json.load(response)
         versions = list(data["releases"].keys())
         versions.sort(key=parse_version)
-        return "~={}".format(versions[-1])
+        return ">={}".format(versions[-1])
     except TypeError as e:
         if versions:
-            return "~={}".format(versions[-1])
+            return ">={}".format(versions[-1])
     return ""
 
 
