@@ -305,9 +305,6 @@ def check_WriteAccess(path, is_windows=False, logging=False):
                 "Specified directory `{}` doesn't exists or valid.".format(path)
             )
             return False
-        elif dirpath.is_block_device():
-            # check if path points to a block device (or a symbolic link pointing to a block device)
-            return True
         else:
             path = dirpath.resolve()
     except:
