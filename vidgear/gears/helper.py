@@ -305,12 +305,18 @@ def check_WriteAccess(path, is_windows=False, logging=False):
                 "Specified directory `{}` doesn't exists or valid.".format(path)
             )
             return False
+        elif dirpath.is_block_device():
+            # check if path points to a block device (or a symbolic link pointing to a block device)
+            return True
         else:
             path = dirpath.resolve()
     except:
         return False
-    # check path on *nix systems
-    if not is_windows:
+    # check if linux video device path (such as `/dev/video0`)
+    if platform.system() == "Linux" and path.is_char_device():
+        return True
+    # check filepath on *nix systems
+    elif not is_windows:
         uid = os.geteuid()
         gid = os.getegid()
         s = os.stat(path)
@@ -320,7 +326,7 @@ def check_WriteAccess(path, is_windows=False, logging=False):
             or ((s[stat.ST_GID] == gid) and (mode & stat.S_IWGRP))
             or (mode & stat.S_IWOTH)
         )
-    # otherwise, check path on windows
+    # otherwise, check filepath on windows
     else:
         write_accessible = False
         temp_fname = os.path.join(path, "temp.tmp")
@@ -624,7 +630,7 @@ def extract_time(value):
         )
         return (
             sum(
-                int(x) * 60 ** i
+                int(x) * 60**i
                 for i, x in enumerate(reversed(t_duration[0].split(":")))
             )
             if t_duration
