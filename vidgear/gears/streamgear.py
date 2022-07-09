@@ -303,7 +303,7 @@ class StreamGear:
                 )  # workaround for Windows platform only, others will not be affected
             elif (
                 platform.system() == "Linux"
-                and pathlib.Path(output_filename).is_char_device()
+                and pathlib.Path(output).is_char_device()
             ):
                 # check if linux video device path (such as `/dev/video0`)
                 self.__logging and logger.debug(
