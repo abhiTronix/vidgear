@@ -309,11 +309,8 @@ def check_WriteAccess(path, is_windows=False, logging=False):
             path = dirpath.resolve()
     except:
         return False
-    # check if linux video device path (such as `/dev/video0`)
-    if platform.system() == "Linux" and path.is_char_device():
-        return True
     # check filepath on *nix systems
-    elif not is_windows:
+    if not is_windows:
         uid = os.geteuid()
         gid = os.getegid()
         s = os.stat(path)

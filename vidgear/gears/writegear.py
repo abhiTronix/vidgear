@@ -22,6 +22,8 @@ import os
 import cv2
 import sys
 import time
+import platform
+import pathlib
 import logging as log
 import subprocess as sp
 
@@ -253,16 +255,24 @@ class WriteGear:
 
         # display confirmation if logging is enabled/disabled
         if self.__compression and self.__ffmpeg:
-            # check whether url is valid instead
             if self.__out_file is None:
-                self.__logging and logger.debug(
-                    "Checking whether output_filename is a valid URL.."
-                )
-                if is_valid_url(
+                if (
+                    platform.system() == "Linux"
+                    and pathlib.Path(output_filename).is_char_device()
+                ):
+                    # check if linux video device path (such as `/dev/video0`)
+                    self.__logging and logger.debug(
+                        "Path:`{}` is a valid Linux Video Device path.".format(
+                            output_filename
+                        )
+                    )
+                    self.__out_file = output_filename
+                elif is_valid_url(
                     self.__ffmpeg, url=output_filename, logging=self.__logging
                 ):
+                    # check whether url is valid instead
                     self.__logging and logger.debug(
-                        "URL:`{}` is successfully configured for streaming.".format(
+                        "URL:`{}` is valid and successfully configured for streaming.".format(
                             output_filename
                         )
                     )

@@ -22,6 +22,8 @@ import os
 import cv2
 import time
 import math
+import platform
+import pathlib
 import difflib
 import logging as log
 import subprocess as sp
@@ -299,10 +301,21 @@ class StreamGear:
                 self.__out_file = abs_path.replace(
                     "\\", "/"
                 )  # workaround for Windows platform only, others will not be affected
+            elif (
+                platform.system() == "Linux"
+                and pathlib.Path(output_filename).is_char_device()
+            ):
+                # check if linux video device path (such as `/dev/video0`)
+                self.__logging and logger.debug(
+                    "Path:`{}` is a valid Linux Video Device path.".format(output)
+                )
+                self.__out_file = output
             # check if given output is a valid URL
             elif is_valid_url(self.__ffmpeg, url=output, logging=self.__logging):
                 self.__logging and logger.debug(
-                    "URL:`{}` is sucessfully configured for streaming.".format(output)
+                    "URL:`{}` is valid and sucessfully configured for streaming.".format(
+                        output
+                    )
                 )
                 self.__out_file = output
             else:
