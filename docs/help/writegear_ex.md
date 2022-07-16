@@ -80,6 +80,109 @@ writer.close()
 
 &nbsp;
 
+## Using WriteGear's Compression Mode with v4l2loopback Virtual Cameras
+
+With WriteGear's Compression Mode, you can directly feed video-frames to [`v4l2loopback`](https://github.com/umlaeute/v4l2loopback) generated Virtual Camera devices on Linux Machines. The complete usage example is as follows:
+
+??? new "New in v0.3.0" 
+    This example was added in `v0.3.0`.
+
+???+ danger "Example Assumptions"
+
+    * ==You're running are a Linux machine.==
+    * ==WriteGear API's backend FFmpeg binaries are compiled with `v4l2/v4l2loopback` demuxer support.==
+    * You already have `v4l2loopback` Virtual Camera device running at address: `/dev/video0`
+
+??? tip "Creating your own Virtual Camera device with `v4l2loopback` module."
+    
+    To install and create a v4l2loopback virtual camera device on Linux Mint OS/Ubuntu _(may slightly differ for other distros)_, run following two terminal commands:
+
+    ```sh
+    $ sudo apt-get install v4l2loopback-dkms v4l2loopback-utils linux-modules-extra-$(uname -r)
+
+    $ sudo modprobe v4l2loopback devices=1 video_nr=0 exclusive_caps=1 card_label='VCamera'
+    ```
+
+    !!! note "For further information on parameters used, checkout [v4l2loopback](https://github.com/umlaeute/v4l2loopback#v4l2loopback---a-kernel-module-to-create-v4l2-loopback-devices) docs"
+
+    Finally, You can check the loopback device you just created by listing contents of `/sys/devices/virtual/video4linux` directory with terminal command:
+
+    ```sh
+    $ sudo ls -1 /sys/devices/virtual/video4linux
+
+    video0 
+    ```
+
+    Now you can use `/dev/video0` Virtual Camera device path in WriteGear API.
+
+??? fail "v4l2: open /dev/videoX: Permission denied"
+
+    If you got this error, then you must add your username to the `video` group by running following commands:
+    ```sh
+    $ sudo adduser $(whoami) video
+    $ sudo usermod -a -G video $(whoami)
+    ```
+    Afterwards, restart your computer to finialize these changes.
+
+    **Note:** If the problem still persists, then try to run your python script as superuser with `sudo` command.
+
+
+??? warning "Default `libx264` encoder is incompatible with `v4l2loopback` module."
+
+    Kindly use other encoders such as `libxvid`, `mpeg4` etc.
+
+
+
+```python hl_lines="12-15 19"
+# import required libraries
+from vidgear.gears import CamGear
+from vidgear.gears import WriteGear
+import cv2
+
+# open any valid video stream(for e.g `foo.mp4` file)
+stream = CamGear(source="foo.mp4").start()
+
+# define required FFmpeg parameters for your writer
+# also retrieve framerate from CamGear Stream and pass it as `-input_framerate` parameter
+output_params = {
+    "-input_framerate": stream.framerate,
+    "-vcodec": "libxvid",
+    "-f": "v4l2",
+    "-pix_fmt": "yuv420p",
+}
+
+# Define writer with "/dev/video0" as source and user-defined parameters 
+writer = WriteGear(output_filename="/dev/video0", logging=True, **output_params)
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if None-type
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # write frame to writer
+    writer.write(frame)
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+
+# safely close writer
+writer.close()
+```
+
+!!! success "The data sent to the v4l2loopback device `/dev/video0` in this example with WriteGear API, can then be read by any v4l2-capable application _(such as OpenCV, VLC, ffplay etc.)_"
+
+&nbsp; 
+
 ## Using WriteGear's Compression Mode for YouTube-Live Streaming
 
 In Compression Mode, you can also use WriteGear for Youtube-Livestreaming. The example is as follows:   
