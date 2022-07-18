@@ -80,6 +80,138 @@ writer.close()
 
 &nbsp;
 
+
+## Using WriteGear's Compression Mode for YouTube-Live Streaming
+
+In Compression Mode, you can also use WriteGear for Youtube-Livestreaming. The example is as follows:   
+
+??? new "New in v0.2.1" 
+    This example was added in `v0.2.1`.
+
+!!! alert "This example assume you already have a [**YouTube Account with Live-Streaming enabled**](https://support.google.com/youtube/answer/2474026#enable) for publishing video."
+
+!!! danger "Make sure to change [_YouTube-Live Stream Key_](https://support.google.com/youtube/answer/2907883#zippy=%2Cstart-live-streaming-now) with yours in following code before running!"
+
+=== "Without Audio"
+
+    ```python hl_lines="11-17 21 25"
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import WriteGear
+    import cv2
+
+    # define and open video source
+    stream = CamGear(source="/home/foo/foo.mp4", logging=True).start()
+
+    # define required FFmpeg parameters for your writer
+    output_params = {
+        "-clones": ["-f", "lavfi", "-i", "anullsrc"],
+        "-vcodec": "libx264",
+        "-preset": "medium",
+        "-b:v": "4500k",
+        "-bufsize": "512k",
+        "-pix_fmt": "yuv420p",
+        "-f": "flv",
+    }
+
+    # [WARNING] Change your YouTube-Live Stream Key here:
+    YOUTUBE_STREAM_KEY = "xxxx-xxxx-xxxx-xxxx-xxxx"
+
+    # Define writer with defined parameters
+    writer = WriteGear(
+        output_filename="rtmp://a.rtmp.youtube.com/live2/{}".format(YOUTUBE_STREAM_KEY),
+        logging=True,
+        **output_params
+    )
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # write frame to writer
+        writer.write(frame)
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close writer
+    writer.close()
+    ```
+
+=== "With Audio"
+
+    !!! warning "This code assume given input video source contains valid audio stream."
+
+    ```python hl_lines="7 15-24 28 32"
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import WriteGear
+    import cv2
+
+    # define video source(with audio) here
+    VIDEO_SOURCE = "/home/foo/foo.mp4"
+
+    # Open stream
+    stream = CamGear(source=VIDEO_SOURCE, logging=True).start()
+
+    # define required FFmpeg parameters for your writer
+    # [NOTE]: Added VIDEO_SOURCE as audio-source
+    output_params = {
+        "-i": VIDEO_SOURCE,
+        "-acodec": "aac",
+        "-ar": 44100,
+        "-b:a": 712000,
+        "-vcodec": "libx264",
+        "-preset": "medium",
+        "-b:v": "4500k",
+        "-bufsize": "512k",
+        "-pix_fmt": "yuv420p",
+        "-f": "flv",
+    }
+
+    # [WARNING] Change your YouTube-Live Stream Key here:
+    YOUTUBE_STREAM_KEY = "xxxx-xxxx-xxxx-xxxx-xxxx"
+
+    # Define writer with defined parameters
+    writer = WriteGear(
+        output_filename="rtmp://a.rtmp.youtube.com/live2/{}".format(YOUTUBE_STREAM_KEY),
+        logging=True,
+        **output_params
+    )
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # write frame to writer
+        writer.write(frame)
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close writer
+    writer.close()
+    ```
+
+&nbsp;
+
+
 ## Using WriteGear's Compression Mode with v4l2loopback Virtual Cameras
 
 With WriteGear's Compression Mode, you can directly feed video-frames to [`v4l2loopback`](https://github.com/umlaeute/v4l2loopback) generated Virtual Camera devices on Linux Machines. The complete usage example is as follows:
@@ -182,78 +314,6 @@ writer.close()
 !!! success "The data sent to the v4l2loopback device `/dev/video0` in this example with WriteGear API, can then be read by any v4l2-capable application _(such as OpenCV, VLC, ffplay etc.)_"
 
 &nbsp; 
-
-## Using WriteGear's Compression Mode for YouTube-Live Streaming
-
-In Compression Mode, you can also use WriteGear for Youtube-Livestreaming. The example is as follows:   
-
-??? new "New in v0.2.1" 
-    This example was added in `v0.2.1`.
-
-!!! alert "This example assume you already have a [**YouTube Account with Live-Streaming enabled**](https://support.google.com/youtube/answer/2474026#enable) for publishing video."
-
-!!! danger "Make sure to change [_YouTube-Live Stream Key_](https://support.google.com/youtube/answer/2907883#zippy=%2Cstart-live-streaming-now) with yours in following code before running!"
-
-```python hl_lines="15-24 28 32"
-# import required libraries
-from vidgear.gears import CamGear
-from vidgear.gears import WriteGear
-import cv2
-
-# define video source
-VIDEO_SOURCE = "/home/foo/foo.mp4"
-
-# Open stream
-stream = CamGear(source=VIDEO_SOURCE, logging=True).start()
-
-# define required FFmpeg parameters for your writer
-# [NOTE]: Added VIDEO_SOURCE as audio-source, since YouTube rejects audioless streams!
-output_params = {
-    "-i": VIDEO_SOURCE,
-    "-acodec": "aac",
-    "-ar": 44100,
-    "-b:a": 712000,
-    "-vcodec": "libx264",
-    "-preset": "medium",
-    "-b:v": "4500k",
-    "-bufsize": "512k",
-    "-pix_fmt": "yuv420p",
-    "-f": "flv",
-}
-
-# [WARNING] Change your YouTube-Live Stream Key here:
-YOUTUBE_STREAM_KEY = "xxxx-xxxx-xxxx-xxxx-xxxx"
-
-# Define writer with defined parameters
-writer = WriteGear(
-    output_filename="rtmp://a.rtmp.youtube.com/live2/{}".format(YOUTUBE_STREAM_KEY),
-    logging=True,
-    **output_params
-)
-
-# loop over
-while True:
-
-    # read frames from stream
-    frame = stream.read()
-
-    # check for frame if Nonetype
-    if frame is None:
-        break
-
-    # {do something with the frame here}
-
-    # write frame to writer
-    writer.write(frame)
-
-# safely close video stream
-stream.stop()
-
-# safely close writer
-writer.close()
-```
-
-&nbsp;
 
 
 ## Using WriteGear's Compression Mode for creating MP4 segments
