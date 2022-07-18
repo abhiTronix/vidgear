@@ -27,6 +27,16 @@ body:
       description: Please describe your question thoroughly here. What are you trying to accomplish?
     validations:
       required: true
+  - type: textarea
+    attributes:
+      label: Terminal log output(Optional)
+      description: Copy and paste any relevant terminal log output(only if applicable) here or else leave this block empty. You can enable logging with `logging=True` in any Vidgear API for getting verbose terminal logs.
+      render: shell
+  - type: textarea
+    attributes:
+      label: Python Code(Optional)
+      description: Share python code you're using(only if available) here or else leave this block empty. You can directly paste your python code here, no need for any backticks or formatting.
+      render: python
   - type: input
     attributes:
       label: VidGear Version
