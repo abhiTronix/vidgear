@@ -36,45 +36,11 @@ limitations under the License.
 	--md-admonition-icon--xadvance: url("data:image/svg+xml,%3C%3Fxml version='1.0' standalone='no'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 20010904//EN' 'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'%3E%3Csvg version='1.0' xmlns='http://www.w3.org/2000/svg' width='512.000000pt' height='512.000000pt' viewBox='0 0 512.000000 512.000000' preserveAspectRatio='xMidYMid meet'%3E%3Cg transform='translate(0.000000,512.000000) scale(0.100000,-0.100000)'%0Afill='%23000000' stroke='none'%3E%3Cpath d='M2372 5103 c-39 -19 -70 -59 -78 -102 -12 -57 4 -98 63 -162 l57 -60%0A-280 -278 -279 -278 -774 -329 c-426 -181 -797 -342 -824 -359 -57 -34 -111%0A-105 -128 -168 -17 -62 -7 -173 20 -227 16 -32 215 -237 679 -702 590 -590%0A663 -660 717 -684 144 -66 328 -6 396 129 12 22 167 391 345 821 l324 781 274%0A274 275 275 60 -57 c41 -37 73 -58 96 -63 130 -24 225 99 166 214 -24 46 -934%0A954 -978 976 -41 20 -89 20 -131 -1z m421 -701 l157 -157 -263 -263 -262 -262%0A-488 2 -488 3 293 124 293 124 295 293 c162 162 297 294 300 294 3 0 76 -71%0A163 -158z m-545 -999 c-3 -10 -132 -325 -288 -701 l-284 -683 -628 628 c-345%0A345 -628 631 -628 634 0 3 69 35 153 72 l152 66 764 0 c722 1 763 0 759 -16z'/%3E%3Cpath d='M3742 4560 c-42 -26 -76 -99 -68 -144 13 -68 65 -121 126 -126 62 -5%0A82 1 123 39 41 39 42 41 42 106 0 65 -1 67 -42 106 -38 35 -47 39 -95 39 -36%0A0 -64 -7 -86 -20z'/%3E%3Cpath d='M3980 3922 c-104 -57 -108 -201 -8 -262 95 -58 222 17 222 130 0 110%0A-120 184 -214 132z'/%3E%3Cpath d='M3052 3270 c-99 -61 -95 -203 8 -257 34 -18 59 -23 117 -23 l73 0 0%0A-419 0 -419 -57 -27 c-275 -135 -509 -401 -617 -703 -87 -243 -91 -546 -10%0A-799 33 -105 104 -246 170 -339 61 -87 217 -244 266 -267 33 -16 94 -17 753%0A-17 658 0 720 1 753 17 51 24 206 182 269 273 151 221 223 454 223 719 0 261%0A-68 485 -213 701 -102 152 -281 313 -448 403 l-79 42 0 418 0 417 62 0 c81 0%0A137 27 166 79 40 70 20 154 -47 198 l-34 23 -661 0 c-642 0 -662 -1 -694 -20z%0Am908 -763 c0 -600 -16 -546 182 -636 201 -91 332 -212 443 -407 25 -43 45 -82%0A45 -86 0 -5 -394 -8 -875 -8 -481 0 -875 2 -875 5 0 3 12 29 26 58 97 191 249%0A338 446 432 53 25 100 45 105 45 20 0 75 70 84 106 4 22 9 249 9 507 l0 467%0A205 0 205 0 0 -483z m737 -1554 c-10 -227 -95 -428 -251 -591 l-59 -62 -632 0%0A-632 0 -60 63 c-156 162 -240 359 -250 585 l-6 122 948 0 948 0 -6 -117z'/%3E%3C/g%3E%3C/svg%3E%0A");
 }
 
+
+/* "Advance" admonition*/
 .md-typeset .admonition.advance,
 .md-typeset details.advance {
 	border-color: rgb(27, 77, 62);
-}
-
-.md-typeset .admonition.new,
-.md-typeset details.new {
-	border-color: rgb(57,255,20);
-}
-
-.md-typeset .admonition.alert,
-.md-typeset details.alert {
-	border-color: rgb(255, 0, 255);
-}
-
-.md-typeset .new > .admonition-title,
-.md-typeset .new > summary {
-	background-color: rgb(57,255,20,0.1);
-	border-color: rgb(57,255,20);
-}
-
-.md-typeset .new > .admonition-title::before,
-.md-typeset .new > summary::before {
-	background-color: rgb(57,255,20);
-	-webkit-mask-image: var(--md-admonition-icon--new);
-	mask-image: var(--md-admonition-icon--new);
-}
-
-.md-typeset .alert > .admonition-title,
-.md-typeset .alert > summary {
-	background-color: rgba(255, 0, 255, 0.1);
-	border-color: rgb(255, 0, 255);
-}
-
-.md-typeset .alert > .admonition-title::before,
-.md-typeset .alert > summary::before {
-	background-color: rgb(255, 0, 255);
-	-webkit-mask-image: var(--md-admonition-icon--alert);
-	mask-image: var(--md-admonition-icon--alert);
 }
 
 .md-typeset .advance > .admonition-title,
@@ -94,6 +60,46 @@ limitations under the License.
 	mask-image: var(--md-admonition-icon--xadvance);
 }
 
+/* "New" admonition*/
+.md-typeset .admonition.new,
+.md-typeset details.new {
+	border-color: rgb(57,255,20);
+}
+
+.md-typeset .new > .admonition-title,
+.md-typeset .new > summary {
+	background-color: rgb(57,255,20,0.1);
+	border-color: rgb(57,255,20);
+}
+
+.md-typeset .new > .admonition-title::before,
+.md-typeset .new > summary::before {
+	background-color: rgb(57,255,20);
+	-webkit-mask-image: var(--md-admonition-icon--new);
+	mask-image: var(--md-admonition-icon--new);
+}
+
+
+/* "Alert" admonition*/
+.md-typeset .admonition.alert,
+.md-typeset details.alert {
+	border-color: rgb(255, 0, 255);
+}
+
+.md-typeset .alert > .admonition-title,
+.md-typeset .alert > summary {
+	background-color: rgba(255, 0, 255, 0.1);
+	border-color: rgb(255, 0, 255);
+}
+
+.md-typeset .alert > .admonition-title::before,
+.md-typeset .alert > summary::before {
+	background-color: rgb(255, 0, 255);
+	-webkit-mask-image: var(--md-admonition-icon--alert);
+	mask-image: var(--md-admonition-icon--alert);
+}
+
+/* Custom "Warning" admonition*/
 .md-typeset .attention > .admonition-title::before,
 .md-typeset .attention > summary::before,
 .md-typeset .caution > .admonition-title::before,
@@ -104,6 +110,7 @@ limitations under the License.
 	mask-image: var(--md-admonition-icon--xwarning);
 }
 
+/* Custom "Tip" admonition*/
 .md-typeset .hint > .admonition-title::before,
 .md-typeset .hint > summary::before,
 .md-typeset .important > .admonition-title::before,
@@ -114,6 +121,7 @@ limitations under the License.
 	mask-image: var(--md-admonition-icon--xtip) !important;
 }
 
+/* Custom "Info" admonition*/
 .md-typeset .info > .admonition-title::before,
 .md-typeset .info > summary::before,
 .md-typeset .todo > .admonition-title::before,
@@ -122,6 +130,7 @@ limitations under the License.
 	mask-image: var(--md-admonition-icon--xinfo);
 }
 
+/* Custom "Danger" admonition*/
 .md-typeset .danger > .admonition-title::before,
 .md-typeset .danger > summary::before,
 .md-typeset .error > .admonition-title::before,
@@ -130,12 +139,14 @@ limitations under the License.
 	mask-image: var(--md-admonition-icon--xdanger);
 }
 
+/* Custom "Note" admonition*/
 .md-typeset .note > .admonition-title::before,
 .md-typeset .note > summary::before {
 	-webkit-mask-image: var(--md-admonition-icon--xnote);
 	mask-image: var(--md-admonition-icon--xnote);
 }
 
+/* Custom "Abstract" admonition*/
 .md-typeset .abstract > .admonition-title::before,
 .md-typeset .abstract > summary::before,
 .md-typeset .summary > .admonition-title::before,
@@ -146,6 +157,7 @@ limitations under the License.
 	mask-image: var(--md-admonition-icon--xabstract);
 }
 
+/* Custom "Question" admonition*/
 .md-typeset .faq > .admonition-title::before,
 .md-typeset .faq > summary::before,
 .md-typeset .help > .admonition-title::before,
@@ -156,6 +168,7 @@ limitations under the License.
 	mask-image: var(--md-admonition-icon--xquestion);
 }
 
+/* Custom "Success" admonition*/
 .md-typeset .check > .admonition-title::before,
 .md-typeset .check > summary::before,
 .md-typeset .done > .admonition-title::before,
@@ -166,6 +179,7 @@ limitations under the License.
 	mask-image: var(--md-admonition-icon--xsuccess);
 }
 
+/* Custom "Fail" admonition*/
 .md-typeset .fail > .admonition-title::before,
 .md-typeset .fail > summary::before,
 .md-typeset .failure > .admonition-title::before,
@@ -176,18 +190,21 @@ limitations under the License.
 	mask-image: var(--md-admonition-icon--xfail);
 }
 
+/* Custom "bug" admonition*/
 .md-typeset .bug > .admonition-title::before,
 .md-typeset .bug > summary::before {
 	-webkit-mask-image: var(--md-admonition-icon--xbug);
 	mask-image: var(--md-admonition-icon--xbug);
 }
 
+/* Custom "Example" admonition*/
 .md-typeset .example > .admonition-title::before,
 .md-typeset .example > summary::before {
 	-webkit-mask-image: var(--md-admonition-icon--xexample);
 	mask-image: var(--md-admonition-icon--xexample);
 }
 
+/* Custom "Summary" admonition*/
 .md-typeset .cite > .admonition-title::before,
 .md-typeset .cite > summary::before,
 .md-typeset .quote > .admonition-title::before,
@@ -196,24 +213,19 @@ limitations under the License.
 	mask-image: var(--md-admonition-icon--xquote);
 }
 
+
+/* Handles DeFFcode UI */
 .md-nav__item--active > .md-nav__link {
 	font-weight: bold;
 }
-
 .center {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
 	width: 80%;
 }
-
-/* Handles Gitter Sidecard UI */
-.gitter-open-chat-button {
-    background-color: var(--md-primary-fg-color) !important;
-    font-family: inherit !important;
-    font-size: 12px;
-    -webkit-filter: none !important;
-    filter: none !important;
+.doc-heading {
+	padding-top: 50px;
 }
 
 .center-small {
@@ -246,6 +258,18 @@ limitations under the License.
 	mask-image: var(--md-admonition-icon--failure);
 }
 
+
+/* Handles Gitter Sidecard UI */
+.gitter-open-chat-button {
+    background-color: var(--md-primary-fg-color) !important;
+    font-family: inherit !important;
+    font-size: 12px;
+    -webkit-filter: none !important;
+    filter: none !important;
+}
+
+
+/* Custom Blockquotes */
 blockquote {
 	padding: 0.5em 10px;
 	quotes: "\201C""\201D""\2018""\2019";
@@ -268,8 +292,9 @@ blockquote:after {
 blockquote p {
 	display: inline;
 }
-/* Handles Responive Video tags (from bootstrap) */
 
+
+/* Handles Responive Video (from bootstrap) */
 .video {
 	padding: 0;
 	margin: 0;
@@ -322,7 +347,6 @@ blockquote p {
 }
 
 /* Handles footer sponsorship block animation */
-
 footer.sponsorship {
 	text-align: center;
 }
@@ -343,10 +367,8 @@ footer.sponsorship:not(:hover) .twemoji.heart-throb-hover svg {
 	color: var(--md-default-fg-color--lighter) !important;
 }
 
-.doc-heading {
-	padding-top: 50px;
-}
 
+/* Custom Button UI */
 .btn {
 	z-index: 1;
 	overflow: hidden;
@@ -389,6 +411,8 @@ footer.sponsorship:not(:hover) .twemoji.heart-throb-hover svg {
 	width: 100%;
 }
 
+
+/* Heart Animation */
 @keyframes heart {
   0%, 40%, 80%, 100% {
     transform: scale(1);
@@ -401,6 +425,8 @@ footer.sponsorship:not(:hover) .twemoji.heart-throb-hover svg {
   animation: heart 1000ms infinite;
 }
 
+
+/* Footer Sponsorship Block */
 footer.sponsorship {
 	 text-align: center;
 }
@@ -418,12 +444,11 @@ footer.sponsorship {
 	 color: var(--md-default-fg-color--lighter) !important;
 }
 
-/* Tweaks to body appearance */
- 
+
+/* Dark Theme Changes */
 [data-md-color-scheme="slate"] {
   --md-hue: 260;
 }
-
 body[data-md-color-scheme="slate"] img[class="shadow"]{
    -webkit-filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.5));
   	filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.5));
@@ -449,8 +474,8 @@ body[data-md-color-scheme="slate"] img[class="shadow2"]{
   	filter: drop-shadow(1px 1px 0 black);
 }
 
-/* Glow text effect  */
 
+/* Glow text effect  */
 x-sign {
 	color: white;
   text-shadow: 
