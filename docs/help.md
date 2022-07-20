@@ -26,7 +26,7 @@ limitations under the License.
 
 > Liked VidGear? Would you like to help VidGear, other users, and the author?
 
-There are very simple ways to help us:
+There are many simple ways to help us:
 
 
 &nbsp; 
@@ -91,11 +91,14 @@ Thanks a million! :blush:
 
 You can connect with me, the author 👋:
 
+![Author Image](https://avatars.githubusercontent.com/u/34266896?v=4){ align=left width="160" loading=lazy }
+
 * Follow author on GitHub: [![GitHub follow](https://img.shields.io/github/followers/abhiTronix?label=Follow%20%40abhiTronix&logo=github&style=flat-square)](https://github.com/abhiTronix)
 * Follow author on Twitter: <a href="https://twitter.com/abhi_una12?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow &commat;abhi_una12</a>
 * Get in touch with author on Linkedin: [![Linkedin follow](https://img.shields.io/badge/Follow-&commat;Abhishek&nbsp;Thakur-orange.svg?logo=linkedin&style=flat-square)](https://in.linkedin.com/in/abhishek-abhitronix?trk=profile-badge)
 
-<!-- Place this tag in your head or just before your close body tag. -->
+
+<!-- scripts -->
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
