@@ -52,7 +52,7 @@ cd "$TMPFOLDER"/Downloads/FFmpeg_static
 
 if [ $OS_NAME = "linux" ]; then
 
-  echo "Downloading Linux Static FFmpeg Binaries..."
+  echo "Downloading Linux64 Static FFmpeg Binaries..."
   curl -LO https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/linux/ffmpeg-git-amd64-static.tar.xz
   tar -xJf ffmpeg-git-amd64-static.tar.xz
   rm *.tar.*
@@ -60,7 +60,7 @@ if [ $OS_NAME = "linux" ]; then
 
 elif [ $OS_NAME = "windows" ]; then
 
-  echo "Downloading Windows Static FFmpeg Binaries..."
+  echo "Downloading Win64 Static FFmpeg Binaries..."
   curl -LO https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/windows/ffmpeg-latest-win64-static.zip
   unzip -qq ffmpeg-latest-win64-static.zip
   rm ffmpeg-latest-win64-static.zip
