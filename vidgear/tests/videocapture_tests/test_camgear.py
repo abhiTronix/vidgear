@@ -192,7 +192,7 @@ def test_network_playback():
     """
     Testing Direct Network Video Playback capabilities of VidGear(with rtsp streaming)
     """
-    Publictest_rstp_urls = [
+    Publictest_rtsp_urls = [
         "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov",
         "rtsp://freja.hiof.no:1935/rtplive/definst/hessdalen03.stream",
         "rtsp://170.93.143.139/rtplive/470011e600ef003a004ee33696235daa",
@@ -201,10 +201,10 @@ def test_network_playback():
 
     index = 0
 
-    while index < len(Publictest_rstp_urls):
+    while index < len(Publictest_rtsp_urls):
         try:
             output_stream = CamGear(
-                source=Publictest_rstp_urls[index], logging=True
+                source=Publictest_rtsp_urls[index], logging=True
             ).start()
             i = 0
             Output_data = []
@@ -221,12 +221,12 @@ def test_network_playback():
         except Exception as e:
             if isinstance(e, RuntimeError):
                 logger.debug(
-                    "`{}` URL is not working".format(Publictest_rstp_urls[index])
+                    "`{}` URL is not working".format(Publictest_rtsp_urls[index])
                 )
                 index += 1
                 continue
             else:
                 pytest.fail(str(e))
 
-    if index == len(Publictest_rstp_urls):
+    if index == len(Publictest_rtsp_urls):
         pytest.xfail("Test failed to play any URL!")

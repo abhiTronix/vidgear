@@ -24,7 +24,7 @@ limitations under the License.
 
 ## What is CamGear API and what does it do?
 
-**Answer:** CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format (upto 4k tested), any network stream URL such as http(s), rtp, rstp, rtmp, mms, etc. In addition to this, it also supports live Gstreamer's RAW pipelines and YouTube video/livestreams URLs. _For more info. see [CamGear doc ➶](../../gears/camgear/overview/)._
+**Answer:** CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format (upto 4k tested), any network stream URL such as http(s), rtp, rtsp, rtmp, mms, etc. In addition to this, it also supports live Gstreamer's RAW pipelines and YouTube video/livestreams URLs. _For more info. see [CamGear doc ➶](../../gears/camgear/overview/)._
 
 &nbsp;
 
@@ -74,9 +74,9 @@ limitations under the License.
 &nbsp;
 
 
-## How to open RSTP network streams with CamGear?
+## How to open RTSP network streams with CamGear?
 
-**Answer:** You can open any local network stream _(such as RTSP)_ just by providing its URL directly to CamGear's [`source`](../../gears/camgear/params/#source) parameter. See [this bonus example ➶](../camgear_ex/#using-camgear-for-capturing-rstprtmp-urls).
+**Answer:** You can open any local network stream _(such as RTSP)_ just by providing its URL directly to CamGear's [`source`](../../gears/camgear/params/#source) parameter. See [this bonus example ➶](../camgear_ex/#using-camgear-for-capturing-rtsprtmp-urls).
 
 &nbsp;
 

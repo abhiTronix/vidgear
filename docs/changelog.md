@@ -24,7 +24,7 @@ limitations under the License.
 
 ??? tip "New Features"
     - [x] **Docs:**
-        * Added new bonus example for RSTP/RTP Live-Streaming using WriteGear's Compression Mode.
+        * Added new bonus example for RTSP/RTP Live-Streaming using WriteGear's Compression Mode.
         * Added "How to resolve zmq.error.ZMQError" FAQ for NetGear API.(PR by @iandol)
         * Added new ko-fi button to README.md
         * Added new contributors block to changelog.md
@@ -72,7 +72,7 @@ limitations under the License.
             + Fixed debug logs even when `logging=False` in StreamGear's Real-time Mode. (patch suggested by @enarche-ahn)
             + Added length check to `-video_source` attribute to correctly infers it as empty(or invalid).
     - [x] CI:
-        * Xfailed RSTP CamGear CI test.
+        * Xfailed RTSP CamGear CI test.
         * Fixed pinned version syntax bug in docs_deployer workflow.
         * Fixed typos in Github forms and its context.
         * Added missing dependency.
@@ -764,7 +764,7 @@ limitations under the License.
         * Fixed bug with `create_blank_frame` that throws error with gray frames:
             + Implemented automatic output channel correction inside `create_blank_frame` function.
             + Extended automatic output channel correction support to asyncio package.
-        * Implemented `RSTP` protocol validation as _demuxer_, since it's not a protocol but a demuxer.
+        * Implemented `RTSP` protocol validation as _demuxer_, since it's not a protocol but a demuxer.
         * Removed redundant `logger_handler`, `mkdir_safe`, `retrieve_best_interpolation`, `capPropId` helper functions from asyncio package. Relatively imported helper functions from non-asyncio package.
         * Removed unused `aiohttp` dependency.
         * Removed `asctime` formatting from logging.
@@ -1020,7 +1020,7 @@ limitations under the License.
         * Update Tests docs and other minor tweaks to increase overall coverage.
         * Enabled debugging and disabled exit 1 on error in azure pipeline.
         * Removed redundant benchmark tests.
-    - [x] Helper: Added missing RSTP URL scheme to `is_valid_url` method.
+    - [x] Helper: Added missing RTSP URL scheme to `is_valid_url` method.
     - [x] NetGear_Async: Added fix for uvloop only supporting python>=3.7 legacies.
     - [x] Extended WebGear's Video-Handler scope to `https`.
     - [x] CI: Remove all redundant 32-bit Tests from Appveyor:

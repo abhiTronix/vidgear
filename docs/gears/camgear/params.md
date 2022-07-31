@@ -63,7 +63,7 @@ Its valid input can be one of the following:
     CamGear(source='https://www.twitch.tv/shroud', stream_mode=True)
     ```
 
-- [x] **Network Address (*string*):** _Valid (`http(s)`, `rtp`, `rstp`, `rtmp`, `mms`, etc.) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
+- [x] **Network Address (*string*):** _Valid (`http(s)`, `rtp`, `rtsp`, `rtmp`, `mms`, etc.) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
 
     ```python
     CamGear(source='rtsp://192.168.31.163:554/')

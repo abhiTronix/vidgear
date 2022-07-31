@@ -118,7 +118,7 @@ def test_video_stablization(source, options):
         framerate = stab_stream.framerate
         # playback
         while True:
-            frame = stab_stream.read()  # read stablized frames
+            frame = stab_stream.read()  # read stabilized frames
             if frame is None:
                 break
         # clean resources

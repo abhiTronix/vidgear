@@ -162,7 +162,7 @@ Each API is designed exclusively to handle/control/process different data-specif
   <img src="docs/overrides/assets/images/camgear.png" alt="CamGear Functional Block Diagram" width="45%"/>
 </p>
 
-> *CamGear can grab ultra-fast frames from a diverse range of file-formats/devices/streams, which includes almost any IP-USB Cameras, multimedia video file-formats ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rstp, rtmp, mms, etc.`, and GStreamer's pipelines, plus direct support for live video streaming sites like YouTube, Twitch, LiveStream, Dailymotion etc.*
+> *CamGear can grab ultra-fast frames from a diverse range of file-formats/devices/streams, which includes almost any IP-USB Cameras, multimedia video file-formats ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rtsp, rtmp, mms, etc.`, and GStreamer's pipelines, plus direct support for live video streaming sites like YouTube, Twitch, LiveStream, Dailymotion etc.*
 
 CamGear provides a flexible, high-level, multi-threaded framework around OpenCV's [VideoCapture class][opencv-vc] with access almost all of its available parameters. CamGear internally implements [`yt_dlp`][yt_dlp] backend class for seamlessly pipelining live video-frames and metadata from various streaming services like [YouTube][youtube-doc], [Twitch][piping-live-videos], and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites). Furthermore, its framework relies exclusively on [**Threaded Queue mode**][TQM-doc] for ultra-fast, error-free, and synchronized video-frame handling.
 
@@ -177,14 +177,14 @@ CamGear provides a flexible, high-level, multi-threaded framework around OpenCV'
 
 ## VideoGear
 
-> *VideoGear API provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**][stablizer-doc] class.*
+> *VideoGear API provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**][stabilizer-doc] class.*
 
 VideoGear also acts as a Common Video-Capture API that provides internal access for both [CamGear](#camgear) and [PiGear](#pigear) APIs and their parameters with an exclusive `enablePiCamera` boolean flag.
 
 VideoGear is ideal when you need to switch to different video sources without changing your code much. Also, it enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort and writing way fewer lines of code.
 
 
-**Below is a snapshot of a VideoGear Stabilizer in action  (_See its detailed usage [here][stablizer-doc-ex]_):**
+**Below is a snapshot of a VideoGear Stabilizer in action  (_See its detailed usage [here][stabilizer-doc-ex]_):**
 
 <p align="center">
   <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/stabilizer.gif" alt="VideoGear Stabilizer in action!"/>
@@ -406,7 +406,7 @@ stream.stop()
 
 WriteGear API provides a complete, flexible, and robust wrapper around [**FFmpeg**][ffmpeg], a leading multimedia framework. WriteGear can process real-time frames into a lossless compressed video-file with any suitable specifications _(such as`bitrate, codec, framerate, resolution, subtitles,  etc.`)_. 
 
-WriteGear also supports streaming with traditional protocols such as [RTSP/RTP][rstp-ex], RTMP. It is powerful enough to perform complex tasks such as [Live-Streaming][live-stream] _(such as for Twitch, YouTube etc.)_ and [Multiplexing Video-Audio][live-audio-doc] with real-time frames in just few lines of code. 
+WriteGear also supports streaming with traditional protocols such as [RTSP/RTP][rtsp-ex], RTMP. It is powerful enough to perform complex tasks such as [Live-Streaming][live-stream] _(such as for Twitch, YouTube etc.)_ and [Multiplexing Video-Audio][live-audio-doc] with real-time frames in just few lines of code. 
 
 Best of all, WriteGear grants users the complete freedom to play with any FFmpeg parameter with its exclusive **Custom Commands function** _(see this [doc][custom-command-doc])_ without relying on any third-party API.
 
@@ -750,7 +750,7 @@ Internal URLs
 
 [faq]:https://abhitronix.github.io/vidgear/latest/help/get_help/#frequently-asked-questions
 [contribute]:https://abhitronix.github.io/vidgear/latest/contribution
-[rstp-ex]:https://abhitronix.github.io/vidgear/latest/help/writegear_ex/#using-writegears-compression-mode-for-rstprtp-live-streaming
+[rtsp-ex]:https://abhitronix.github.io/vidgear/latest/help/writegear_ex/#using-writegears-compression-mode-for-rtsprtp-live-streaming
 [doc-vidgear-purpose]:https://abhitronix.github.io/vidgear/latest/help/motivation/#why-is-vidgear-a-thing
 [live-stream]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/usage/#using-compression-mode-for-live-streaming
 [live-audio-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/usage/#using-compression-mode-with-live-audio-input
@@ -759,8 +759,8 @@ Internal URLs
 [youtube-doc]:https://abhitronix.github.io/vidgear/latest/gears/camgear/usage/#using-camgear-with-youtube-videos
 [TQM-doc]:https://abhitronix.github.io/vidgear/latest/bonus/TQM/#threaded-queue-mode
 [camgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/camgear/overview/
-[stablizer-doc]:https://abhitronix.github.io/vidgear/latest/gears/stabilizer/overview/
-[stablizer-doc-ex]:https://abhitronix.github.io/vidgear/latest/gears/videogear/usage/#using-videogear-with-video-stabilizer-backend
+[stabilizer-doc]:https://abhitronix.github.io/vidgear/latest/gears/stabilizer/overview/
+[stabilizer-doc-ex]:https://abhitronix.github.io/vidgear/latest/gears/videogear/usage/#using-videogear-with-video-stabilizer-backend
 [videogear-doc]:https://abhitronix.github.io/vidgear/latest/gears/videogear/overview/
 [pigear-doc]:https://abhitronix.github.io/vidgear/latest/gears/pigear/overview/
 [cm-writegear-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/overview/
