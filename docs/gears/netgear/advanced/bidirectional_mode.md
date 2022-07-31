@@ -261,7 +261,7 @@ while True:
 
     # {do something with the extracted frame and data here}
 
-    # lets print recieved server data
+    # lets print received server data
     if not (server_data is None):
         print(server_data)
 

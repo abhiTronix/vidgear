@@ -85,7 +85,7 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
 ### Bare-Minimum Usage
 
-In this example, we will capturing live video-frames from a source _(a.k.a Server)_ with a webcam connected to it. Afterwards, those captured frame will be sent over the network to two independent system _(a.k.a Clients)_ using this Multi-Clients Mode in NetGear API. Finally, both Clients will be displaying recieved frames in Output Windows in real time.
+In this example, we will capturing live video-frames from a source _(a.k.a Server)_ with a webcam connected to it. Afterwards, those captured frame will be sent over the network to two independent system _(a.k.a Clients)_ using this Multi-Clients Mode in NetGear API. Finally, both Clients will be displaying received frames in Output Windows in real time.
 
 !!! tip "This example is useful for building applications like Real-Time Video Broadcasting to multiple clients in local network."
 
@@ -145,7 +145,7 @@ while True:
         # send frame and also receive data from Client(s)
         recv_data = server.send(frame)
 
-        # check if valid data recieved
+        # check if valid data received
         if not (recv_data is None):
             # extract unique port address and its respective data
             unique_address, data = recv_data
@@ -343,7 +343,7 @@ while True:
         # send frame and also receive data from Client(s)
         recv_data = server.send(frame)
 
-        # check if valid data recieved
+        # check if valid data received
         if not (recv_data is None):
             # extract unique port address and its respective data
             unique_address, data = recv_data
@@ -555,7 +555,7 @@ while True:
         # send frame and also receive data from Client(s)
         recv_data = server.send(frame)
 
-        # check if valid data recieved
+        # check if valid data received
         if not (recv_data is None):
             # extract unique port address and its respective data
             unique_address, data = recv_data
@@ -786,7 +786,7 @@ while True:
         # send frame & data and also receive data from Client(s)
         recv_data = server.send(frame, message=target_data) # (1)
 
-        # check if valid data recieved
+        # check if valid data received
         if not (recv_data is None):
             # extract unique port address and its respective data
             unique_address, data = recv_data

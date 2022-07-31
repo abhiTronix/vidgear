@@ -23,19 +23,19 @@ limitations under the License.
 
 &nbsp;
 
-## Using WriteGear's Compression Mode for RSTP/RTP Live-Streaming
+## Using WriteGear's Compression Mode for RTSP/RTP Live-Streaming
 
-In Compression Mode, you can use WriteGear for livestreaming with traditional protocols such as RSTP/RTP. The example to achieve that is as follows:   
+In Compression Mode, you can use WriteGear for livestreaming with traditional protocols such as RTSP/RTP. The example to achieve that is as follows:   
 
 ??? new "New in v0.2.6" 
     This example was added in `v0.2.6`.
 
-!!! alert "This example assume you already have a RSTP Server running at specified RSTP address with format *`rtsp://[RTSP_ADDRESS]:[RTSP_PORT]/[RTSP_PATH]`* for publishing video frames."
+!!! alert "This example assume you already have a RTSP Server running at specified RTSP address with format *`rtsp://[RTSP_ADDRESS]:[RTSP_PORT]/[RTSP_PATH]`* for publishing video frames."
 
-??? tip "Creating your own RSTP Server locally"
-    If you want to create your RSTP Server locally, then checkout [**rtsp-simple-server**](https://github.com/aler9/rtsp-simple-server) - a ready-to-use and zero-dependency server and proxy that allows users to publish, read and proxy live video and audio streams through various protocols such as RSTP, RTMP etc.
+??? tip "Creating your own RTSP Server locally"
+    If you want to create your RTSP Server locally, then checkout [**rtsp-simple-server**](https://github.com/aler9/rtsp-simple-server) - a ready-to-use and zero-dependency server and proxy that allows users to publish, read and proxy live video and audio streams through various protocols such as RTSP, RTMP etc.
     
-!!! danger "Make sure to change RSTP address `rtsp://localhost:8554/mystream` with yours in following code before running!"
+!!! danger "Make sure to change RTSP address `rtsp://localhost:8554/mystream` with yours in following code before running!"
 
 
 ```python hl_lines="10 15"
@@ -50,8 +50,8 @@ stream = CamGear(source="foo.mp4").start()
 # define required FFmpeg parameters for your writer
 output_params = {"-f": "rtsp", "-rtsp_transport": "tcp"}
 
-# Define writer with defined parameters and RSTP address
-# [WARNING] Change your RSTP address `rtsp://localhost:8554/mystream` with yours!
+# Define writer with defined parameters and RTSP address
+# [WARNING] Change your RTSP address `rtsp://localhost:8554/mystream` with yours!
 writer = WriteGear(
     output_filename="rtsp://localhost:8554/mystream", logging=True, **output_params
 )
@@ -550,7 +550,7 @@ In this example we are capturing video from desktop screen in a Timely Accurate 
 
 We will be using [`cv_bridge`](http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython) to convert OpenCV frames to ROS image messages and vice-versa. 
 
-In this example, we'll create a node that listens to a ROS image message topic, converts the recieved images messages into OpenCV frames, draws a circle on it, and then process these frames into a lossless compressed file format in real-time.
+In this example, we'll create a node that listens to a ROS image message topic, converts the received images messages into OpenCV frames, draws a circle on it, and then process these frames into a lossless compressed file format in real-time.
 
 ??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
@@ -583,7 +583,7 @@ class image_subscriber:
         self.writer = WriteGear(output_filename=output_filename)
 
     def callback(self, data):
-        # convert recieved data to frame
+        # convert received data to frame
         try:
             cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
         except CvBridgeError as e:

@@ -105,15 +105,15 @@ limitations under the License.
 
 &nbsp;
 
-## Is YouTube-Live Streaming possibe with WriteGear?
+## Is YouTube-Live Streaming possible with WriteGear?
 
 **Answer:** Yes, See [this bonus example ➶](../writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming).
 
 &nbsp;
 
-## How to Live-Streaming using RSTP/RTP protocol with WriteGear?
+## How to Live-Streaming using RTSP/RTP protocol with WriteGear?
 
-**Answer:** See [this bonus example ➶](../writegear_ex/#using-writegears-compression-mode-for-rstprtp-live-streaming).
+**Answer:** See [this bonus example ➶](../writegear_ex/#using-writegears-compression-mode-for-rtsprtp-live-streaming).
 
 &nbsp;
 

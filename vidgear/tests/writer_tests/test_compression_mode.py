@@ -151,7 +151,7 @@ def test_input_framerate(c_ffmpeg):
 )
 def test_write(conversion):
     """
-    Testing WriteGear Compression-Mode(FFmpeg) Writer capabilties in different colorspace with CamGearAPI.
+    Testing WriteGear Compression-Mode(FFmpeg) Writer capabilities in different colorspace with CamGearAPI.
     """
     try:
         # Open stream

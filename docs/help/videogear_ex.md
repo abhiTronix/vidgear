@@ -108,7 +108,7 @@ if __name__ == "__main__":
 
 &nbsp;
 
-## Using VideoGear for capturing RSTP/RTMP URLs
+## Using VideoGear for capturing RTSP/RTMP URLs
 
 Here's a high-level wrapper code around VideoGear API to enable auto-reconnection during capturing, plus stabilization is enabled _(`stabilize=True`)_ in order to stabilize captured frames on-the-go: 
 
@@ -117,7 +117,7 @@ Here's a high-level wrapper code around VideoGear API to enable auto-reconnectio
 
 ??? tip "Enforcing UDP stream"
     
-    You can easily enforce UDP for RSTP streams inplace of default TCP, by putting following lines of code on the top of your existing code:
+    You can easily enforce UDP for RTSP streams inplace of default TCP, by putting following lines of code on the top of your existing code:
 
     ```python
     # import required libraries
@@ -240,14 +240,14 @@ from vidgear.gears import VideoGear
 import cv2
 
 # Give suitable video file path to be stabilized
-unstablized_videofile = "test.mp4"
+unstabilized_videofile = "test.mp4"
 
 # open any valid video path with stabilization enabled(`stabilize = True`)
-stream_stab = VideoGear(source=unstablized_videofile, stabilize=True, logging=True).start()
+stream_stab = VideoGear(source=unstabilized_videofile, stabilize=True, logging=True).start()
 
 # define required FFmpeg optimizing parameters for your writer
 output_params = {
-    "-i": unstablized_videofile,
+    "-i": unstabilized_videofile,
     "-c:a": "aac",
     "-input_framerate": stream_stab.framerate,
     "-clones": ["-shortest"],

@@ -971,7 +971,7 @@ The complete example is as follows:
         - [x] **Identify Sound Card:** Then, You can locate your soundcard using `avfoundation` as follows:
 
             ```sh
-            ffmpeg -f qtkit -list_devices true -i ""
+            ffmpeg -f avfoundation -list_devices true -i ""
             ffmpeg version N-45279-g6b86dd5... --enable-runtime-cpudetect
               libavutil      51. 74.100 / 51. 74.100
               libavcodec     54. 65.100 / 54. 65.100

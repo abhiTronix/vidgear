@@ -475,7 +475,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             ```
 
 
-        - [x] **Specify Sound Card:** Then, you can specify your located soundcard in StreamGear as follows:
+        - [x] **Specify Sound Card:** Then, you can specify your located soundcard in WriteGear as follows:
 
             ```python
             # assign appropriate input audio-source
@@ -546,7 +546,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
         - [x] **Identify Sound Card:** Then, You can locate your soundcard using `avfoundation` as follows:
 
             ```sh
-            ffmpeg -f qtkit -list_devices true -i ""
+            ffmpeg -f avfoundation -list_devices true -i ""
             ffmpeg version N-45279-g6b86dd5... --enable-runtime-cpudetect
               libavutil      51. 74.100 / 51. 74.100
               libavcodec     54. 65.100 / 54. 65.100
@@ -564,7 +564,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             ```
 
 
-        - [x] **Specify Sound Card:** Then, you can specify your located soundcard in StreamGear as follows:
+        - [x] **Specify Sound Card:** Then, you can specify your located soundcard in WriteGear as follows:
 
             ```python
             # assign appropriate input audio-source

@@ -389,7 +389,7 @@ def test_bidirectional_mode(pattern, target_data, options):
             server_data, frame_client = client.recv(return_data=target_data)
             # server receives the data and cycle continues
             client_data = server.send(target_data)
-            # test if recieved successfully
+            # test if received successfully
             assert not (client_data is None), "Test Failed!"
         else:
             # get frame from stream
@@ -525,7 +525,7 @@ def test_multiserver_mode(pattern, options):
         )
         client_frame_dict[unique_address] = frame
 
-        # check if recieved frames from each unique server exactly matches input frame
+        # check if received frames from each unique server exactly matches input frame
         for key in client_frame_dict.keys():
             assert np.array_equal(frame_server, client_frame_dict[key])
 
