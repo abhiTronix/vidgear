@@ -212,7 +212,7 @@ class PiGear:
 
     def __timeit(self):
         """
-        Threaded Internal Timer that keep checks on thread excecution timing
+        Threaded Internal Timer that keep checks on thread execution timing
         """
 
         # assign current time

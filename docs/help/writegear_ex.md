@@ -387,7 +387,7 @@ In this example we are capturing video from desktop screen in a Timely Accurate 
 
 We will be using [`cv_bridge`](http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython) to convert OpenCV frames to ROS image messages and vice-versa. 
 
-In this example, we'll create a node that listens to a ROS image message topic, converts the recieved images messages into OpenCV frames, draws a circle on it, and then process these frames into a lossless compressed file format in real-time.
+In this example, we'll create a node that listens to a ROS image message topic, converts the received images messages into OpenCV frames, draws a circle on it, and then process these frames into a lossless compressed file format in real-time.
 
 ??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
@@ -420,7 +420,7 @@ class image_subscriber:
         self.writer = WriteGear(output_filename=output_filename)
 
     def callback(self, data):
-        # convert recieved data to frame
+        # convert received data to frame
         try:
             cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
         except CvBridgeError as e:

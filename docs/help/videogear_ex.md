@@ -240,14 +240,14 @@ from vidgear.gears import VideoGear
 import cv2
 
 # Give suitable video file path to be stabilized
-unstablized_videofile = "test.mp4"
+unstabilized_videofile = "test.mp4"
 
 # open any valid video path with stabilization enabled(`stabilize = True`)
-stream_stab = VideoGear(source=unstablized_videofile, stabilize=True, logging=True).start()
+stream_stab = VideoGear(source=unstabilized_videofile, stabilize=True, logging=True).start()
 
 # define required FFmpeg optimizing parameters for your writer
 output_params = {
-    "-i": unstablized_videofile,
+    "-i": unstabilized_videofile,
     "-c:a": "aac",
     "-input_framerate": stream_stab.framerate,
     "-clones": ["-shortest"],

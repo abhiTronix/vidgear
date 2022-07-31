@@ -820,7 +820,7 @@ class NetGear:
                             protocol + "://" + str(address) + ":" + str(pt)
                         )
                 else:
-                    # handle SSH tuneling if enabled
+                    # handle SSH tunneling if enabled
                     if self.__ssh_tunnel_mode:
                         # establish tunnel connection
                         ssh.tunnel_connection(

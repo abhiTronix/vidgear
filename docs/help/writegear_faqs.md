@@ -105,7 +105,7 @@ limitations under the License.
 
 &nbsp;
 
-## Is YouTube-Live Streaming possibe with WriteGear?
+## Is YouTube-Live Streaming possible with WriteGear?
 
 **Answer:** Yes, See [this bonus example ➶](../writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming).
 
