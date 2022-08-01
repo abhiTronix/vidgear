@@ -19,10 +19,10 @@ limitations under the License.
 -->
 
 <h1 align="center">
-  <img src="docs/overrides/assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="80%"/>
+  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="80%"/>
 </h1>
 <h2 align="center">
-  <img src="docs/overrides/assets/images/tagline.svg" alt="VidGear tagline" width="40%"/>
+  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/tagline.svg" alt="VidGear tagline" width="40%"/>
 </h2>
 
 <div align="center">
@@ -47,7 +47,7 @@ VidGear primarily focuses on simplicity, and thereby lets programmers and softwa
 The following **functional block diagram** clearly depicts the generalized functioning of VidGear APIs:
 
 <p align="center">
-  <img src="docs/overrides/assets/images/gears_fbd.png" alt="@Vidgear Functional Block Diagram" />
+  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/gears_fbd.png" alt="@Vidgear Functional Block Diagram" />
 </p>
 
 &nbsp;
@@ -159,7 +159,7 @@ Each API is designed exclusively to handle/control/process different data-specif
 ## CamGear
 
 <p align="center">
-  <img src="docs/overrides/assets/images/camgear.png" alt="CamGear Functional Block Diagram" width="45%"/>
+  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/camgear.png" alt="CamGear Functional Block Diagram" width="45%"/>
 </p>
 
 > *CamGear can grab ultra-fast frames from a diverse range of file-formats/devices/streams, which includes almost any IP-USB Cameras, multimedia video file-formats ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rtsp, rtmp, mms, etc.`, and GStreamer's pipelines, plus direct support for live video streaming sites like YouTube, Twitch, LiveStream, Dailymotion etc.*
@@ -270,7 +270,7 @@ stream_stab.stop()
 ## PiGear
 
 <p align="center">
-  <img src="docs/overrides/assets/images/picam2.webp" alt="PiGear" width="50%" />
+  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/picam2.webp" alt="PiGear" width="50%" />
 </p>
 
 > *PiGear is similar to CamGear but made to support various Raspberry Pi Camera Modules *(such as [OmniVision OV5647 Camera Module][OV5647-picam] and [Sony IMX219 Camera Module][IMX219-picam])*.*
@@ -345,7 +345,7 @@ ScreenGear implements a multi-threaded wrapper around [**pyscreenshot**][pyscree
 **Below is a snapshot of a ScreenGear API in action:**
 
 <p align="center">
-  <img src="docs/overrides/assets/gifs/screengear.gif" alt="ScreenGear in action!"/>
+  <img src="https://abhitronix.github.io/vidgear/latest/assets/gifs/screengear.gif" alt="ScreenGear in action!"/>
 </p>
 
 **Code to generate the above results:**
@@ -399,7 +399,7 @@ stream.stop()
 ## WriteGear
 
 <p align="center">
-  <img src="docs/overrides/assets/images/writegear.png" alt="WriteGear Functional Block Diagram" width="70%" />
+  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/writegear.png" alt="WriteGear Functional Block Diagram" width="70%" />
 </p>
 
 > *WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data.*
@@ -430,7 +430,7 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 ## StreamGear
 
 <p align="center">
-  <img src="docs/overrides/assets/images/streamgear_flow.webp" alt="NetGear API" width=80%/>
+  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/streamgear_flow.webp" alt="NetGear API" width=80%/>
 </p>
 
 
@@ -462,7 +462,7 @@ SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ or a Mast
 ## NetGear
 
 <p align="center">
-  <img src="docs/overrides/assets/images/netgear.png" alt="NetGear API" width=65%/>
+  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/netgear.png" alt="NetGear API" width=65%/>
 </p>
 
 > *NetGear is exclusively designed to transfer video-frames & data synchronously between interconnecting systems over the network in real-time.*
@@ -509,7 +509,7 @@ In layman's terms, WebGear acts as a powerful **Video Broadcaster** that transmi
 **Below is a snapshot of a WebGear Video Server in action on Chrome browser:**
 
 <p align="center">
-  <img src="docs/overrides/assets/gifs/webgear.gif" alt="WebGear in action!" width="80%" />
+  <img src="https://abhitronix.github.io/vidgear/latest/assets/gifs/webgear.gif" alt="WebGear in action!" width="80%" />
   <br>
   <sub><i>WebGear Video Server at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</i></sub>
 </p>
@@ -565,7 +565,7 @@ Additionally, WebGear_RTC API also provides a special internal wrapper around [V
 **Below is a snapshot of a WebGear_RTC Media Server in action on Chrome browser:**
 
 <p align="center">
-  <img src="docs/overrides/assets/gifs/webgear_rtc.gif" alt="WebGear_RTC in action!" width="80%" />
+  <img src="https://abhitronix.github.io/vidgear/latest/assets/gifs/webgear_rtc.gif" alt="WebGear_RTC in action!" width="80%" />
   <br>
   <sub><i>WebGear_RTC Video Server at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</i></sub>
 </p>
@@ -604,7 +604,7 @@ web.shutdown()
 ## NetGear_Async 
 
 <p align="center">
-  <img src="docs/overrides/assets/images/zmq_asyncio.png" alt="WebGear in action!" width="70%"/>
+  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/zmq_asyncio.png" alt="WebGear in action!" width="70%"/>
 </p>
 .
 
@@ -655,7 +655,7 @@ We're offering support for VidGear on [**Gitter Community Channel**](https://git
 # Donations
 
 <div align="center">
-   <img src="docs/overrides/assets/images/help_us.png" alt="PiGear" width="50%" />
+   <img src="https://abhitronix.github.io/vidgear/latest/assets/images/help_us.png" alt="PiGear" width="50%" />
    <p><i>VidGear is free and open source and will always remain so. ❤️</i></p>
 </div>
 
