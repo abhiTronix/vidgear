@@ -66,6 +66,9 @@ theme:
     logo: logo
   logo: assets/images/logo.svg
   favicon: assets/images/favicon-32.png
+    # 404 page
+  static_templates:
+    - 404.html
 
 # Plugins
 plugins:
