@@ -499,9 +499,11 @@ class CamGear:
                 self.__queue.put(self.frame)
 
         # indicate immediate termination
-        self.__threaded_queue_mode = False
         self.__terminate.set()
         self.__stream_read.set()
+        # signal queue we're done
+        self.__threaded_queue_mode and self.__queue.put(None)
+        self.__threaded_queue_mode = False
         # release resources
         self.stream.release()
 
