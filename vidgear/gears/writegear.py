@@ -35,6 +35,7 @@ from .helper import (
     logger_handler,
     check_WriteAccess,
     get_valid_ffmpeg_path,
+    get_supported_pixfmts,
     get_supported_vencoders,
     check_gstreamer_support,
 )
@@ -193,6 +194,14 @@ class WriteGear:
                 # must be float
                 self.__inputframerate = float(self.__inputframerate)
 
+            # handle user defined input rawframes pixfmt
+            self.__inputpixfmt = self.__output_parameters.pop("-input_pixfmt", None)
+            if not isinstance(self.__inputpixfmt, str):
+                # reset improper values
+                self.__inputpixfmt = None
+            else:
+                self.__inputpixfmt = self.__inputpixfmt.strip()
+
             # handle user defined ffmpeg cmd preheaders(must be a list)
             self.__ffmpeg_preheaders = self.__output_parameters.pop("-ffpreheaders", [])
             if not isinstance(self.__ffmpeg_preheaders, list):
@@ -323,18 +332,23 @@ class WriteGear:
         if frame is None:  # None-Type frames will be skipped
             return
 
-        # get height, width and number of channels of current frame
+        # get height, width, number of channels, and dtype of current frame
         height, width = frame.shape[:2]
         channels = frame.shape[-1] if frame.ndim == 3 else 1
+        dtype = frame.dtype
 
         # assign values to class variables on first run
         if self.__initiate:
             self.__inputheight = height
             self.__inputwidth = width
             self.__inputchannels = channels
+            self.__inputdtype = dtype
             self.__logging and logger.debug(
-                "InputFrame => Height:{} Width:{} Channels:{}".format(
-                    self.__inputheight, self.__inputwidth, self.__inputchannels
+                "InputFrame => Height:{} Width:{} Channels:{} Datatype:{}".format(
+                    self.__inputheight,
+                    self.__inputwidth,
+                    self.__inputchannels,
+                    self.__inputdtype,
                 )
             )
 
@@ -348,6 +362,11 @@ class WriteGear:
             raise ValueError(
                 "[WriteGear:ERROR] :: All video-frames must have same number of channels!"
             )
+        # validate datatype
+        if dtype != self.__inputdtype:
+            raise ValueError(
+                "[WriteGear:ERROR] :: All video-frames must have same datatype!"
+            )
 
         if self.__compression:
             # checks if compression mode is enabled
@@ -355,7 +374,7 @@ class WriteGear:
             # initiate FFmpeg process on first run
             if self.__initiate:
                 # start pre-processing and initiate process
-                self.__Preprocess(channels, rgb=rgb_mode)
+                self.__Preprocess(channels, dtype=dtype, rgb=rgb_mode)
                 # Check status of the process
                 assert self.__process is not None
 
@@ -382,7 +401,7 @@ class WriteGear:
             # write the frame
             self.__process.write(frame)
 
-    def __Preprocess(self, channels, rgb=False):
+    def __Preprocess(self, channels, dtype=None, rgb=False):
         """
         Internal method that pre-processes FFmpeg Parameters before beginning pipelining.
 
@@ -407,19 +426,48 @@ class WriteGear:
             )  # apply if defined
         input_parameters["-s"] = str(dimensions)
 
-        # handles pix_fmt based on channels(HACK)
-        if channels == 1:
-            input_parameters["-pix_fmt"] = "gray"
-        elif channels == 2:
-            input_parameters["-pix_fmt"] = "ya8"
-        elif channels == 3:
-            input_parameters["-pix_fmt"] = "rgb24" if rgb else "bgr24"
-        elif channels == 4:
-            input_parameters["-pix_fmt"] = "rgba" if rgb else "bgra"
+        # handles user-defined and automated pix_fmt
+        if not (
+            self.__inputpixfmt is None
+        ) and self.__inputpixfmt in get_supported_pixfmts(self.__ffmpeg):
+            # assign directly if valid
+            input_parameters["-pix_fmt"] = self.__inputpixfmt
         else:
-            raise ValueError(
-                "[WriteGear:ERROR] :: Frames with channels outside range 1-to-4 are not supported!"
-            )
+            # handles pix_fmt based on channels and dtype(HACK)
+            if dtype.kind == "u" and dtype.itemsize == 2:
+                # handle frames with higher than 8-bit depth
+                # such as 16-bit(uint16), 32-bit(uint32), etc.
+                pix_fmt = None
+                if channels == 1:
+                    pix_fmt = "gray16"
+                elif channels == 2:
+                    pix_fmt = "ya16"
+                elif channels == 3:
+                    pix_fmt = "rgb48" if rgb else "bgr48"
+                elif channels == 4:
+                    pix_fmt = "rgba64" if rgb else "bgra64"
+                else:
+                    raise ValueError(
+                        "[WriteGear:ERROR] :: Frames with channels outside range 1-to-4 are not supported!"
+                    )
+                # Add Endianness (byte-order)
+                input_parameters["-pix_fmt"] = pix_fmt + (
+                    "be" if dtype.byteorder == ">" else "le"
+                )
+            else:
+                # handle frames with 8-bit depth (uint8)
+                if channels == 1:
+                    input_parameters["-pix_fmt"] = "gray"
+                elif channels == 2:
+                    input_parameters["-pix_fmt"] = "ya8"
+                elif channels == 3:
+                    input_parameters["-pix_fmt"] = "rgb24" if rgb else "bgr24"
+                elif channels == 4:
+                    input_parameters["-pix_fmt"] = "rgba" if rgb else "bgra"
+                else:
+                    raise ValueError(
+                        "[WriteGear:ERROR] :: Frames with channels outside range 1-to-4 are not supported!"
+                    )
 
         if self.__inputframerate > 0:
             # set input framerate
