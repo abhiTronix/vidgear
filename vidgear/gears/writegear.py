@@ -77,7 +77,7 @@ class WriteGear:
 
     def __init__(
         self,
-        output_filename="",
+        output="",
         compression_mode=True,
         custom_ffmpeg="",
         logging=False,
@@ -88,7 +88,7 @@ class WriteGear:
         This constructor method initializes the object state and attributes of the WriteGear class.
 
         Parameters:
-            output_filename (str): sets the valid filename/path/URL for encoding.
+            output (str): sets the valid filename/path/URL for encoding.
             compression_mode (bool): selects the WriteGear's Primary Mode of Operation.
             custom_ffmpeg (str): assigns the location of custom path/directory for custom FFmpeg executables.
             logging (bool): enables/disables logging.
@@ -117,16 +117,16 @@ class WriteGear:
         gstpipeline_mode = False  # handles GStreamer Pipeline Mode
 
         # handles output
-        if not output_filename:
+        if not output:
             # raise error otherwise
             raise ValueError(
-                "[WriteGear:ERROR] :: Kindly provide a valid `output_filename` value. Refer Docs for more info."
+                "[WriteGear:ERROR] :: Kindly provide a valid `output` value. Refer Docs for more info."
             )
         else:
             # validate output is a system file/directory
             # and Whether WriteGear has the write rights
             # to specified file/directory or not
-            abs_path = os.path.abspath(output_filename)
+            abs_path = os.path.abspath(output)
             if check_WriteAccess(
                 os.path.dirname(abs_path),
                 is_windows=self.__os_windows,
@@ -146,7 +146,7 @@ class WriteGear:
                 # log note otherwise
                 logger.note(
                     "`{}` isn't a valid system path or directory. Skipped!".format(
-                        output_filename
+                        output
                     )
                 )
 
@@ -286,30 +286,30 @@ class WriteGear:
             if self.__out_file is None:
                 if (
                     platform.system() == "Linux"
-                    and pathlib.Path(output_filename).is_char_device()
+                    and pathlib.Path(output).is_char_device()
                 ):
                     # check whether output is a Linux video device path (such as `/dev/video0`)
                     self.__logging and logger.debug(
                         "Path:`{}` is a valid Linux Video Device path.".format(
-                            output_filename
+                            output
                         )
                     )
-                    self.__out_file = output_filename
+                    self.__out_file = output
                 elif is_valid_url(
-                    self.__ffmpeg, url=output_filename, logging=self.__logging
+                    self.__ffmpeg, url=output, logging=self.__logging
                 ):
                     # check whether output is a valid URL instead
                     self.__logging and logger.debug(
                         "URL:`{}` is valid and successfully configured for streaming.".format(
-                            output_filename
+                            output
                         )
                     )
-                    self.__out_file = output_filename
+                    self.__out_file = output
                 else:
                     # raise error otherwise
                     raise ValueError(
-                        "[WriteGear:ERROR] :: output_filename value:`{}` is not supported in Compression Mode.".format(
-                            output_filename
+                        "[WriteGear:ERROR] :: output value:`{}` is not supported in Compression Mode.".format(
+                            output
                         )
                     )
             # log if forced termination is enabled
@@ -327,7 +327,7 @@ class WriteGear:
                     # enforce GStreamer backend
                     self.__output_parameters["-backend"] = "CAP_GSTREAMER"
                     # assign original ouput value
-                    self.__out_file = output_filename
+                    self.__out_file = output
                     # log it
                     self.__logging and logger.debug(
                         "Non-Compression Mode is successfully configured in GStreamer Pipeline Mode."
@@ -335,8 +335,8 @@ class WriteGear:
                 else:
                     # raise error otherwise
                     raise ValueError(
-                        "[WriteGear:ERROR] :: output_filename value:`{}` is not supported in Non-Compression Mode.".format(
-                            output_filename
+                        "[WriteGear:ERROR] :: output value:`{}` is not supported in Non-Compression Mode.".format(
+                            output
                         )
                     )
             # log if Compression is disabled

@@ -392,7 +392,7 @@ import cv2, asyncio
 # define and launch Client with `receive_mode=True`
 client = NetGear_Async(receive_mode=True).launch()
 # Define writer with output filename 'Output.mp4'
-writer = WriteGear(output_filename="Output.mp4", logging=True)
+writer = WriteGear(output="Output.mp4", logging=True)
 
 
 # Create a async function where you want to show/manipulate your received frames

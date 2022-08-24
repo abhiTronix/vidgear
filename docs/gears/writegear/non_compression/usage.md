@@ -50,7 +50,7 @@ import cv2
 stream = CamGear(source="myvideo.avi").start()
 
 # Define writer with Non-compression mode and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename="Output.mp4", compression_mode=False)
+writer = WriteGear(output="Output.mp4", compression_mode=False)
 
 # loop over
 while True:
@@ -111,7 +111,7 @@ stream = VideoGear(source=0, logging=True).start()
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
 writer = WriteGear(
-    output_filename="Output.mp4", compression_mode=False, logging=True, **output_params
+    output="Output.mp4", compression_mode=False, logging=True, **output_params
 )
 
 
@@ -172,7 +172,7 @@ stream = cv2.VideoCapture(0)
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
 writer = WriteGear(
-    output_filename="Output.mp4", compression_mode=False, logging=True, **output_params
+    output="Output.mp4", compression_mode=False, logging=True, **output_params
 )
 
 # loop over
@@ -217,7 +217,7 @@ writer.close()
 
 ## Using Non-Compression Mode with GStreamer Pipeline
 
-  WriteGear API's Non-Compression Mode also supports GStreamer Pipeline as input to its `output_filename` parameter, when [GStreamer Pipeline Mode](../params/#b-exclusive-parameters) is enabled. This provides flexible way to write video frames to file or network stream with controlled framerate and bitrate. The complete usage example is as follows:
+  WriteGear API's Non-Compression Mode also supports GStreamer Pipeline as input to its `output` parameter, when [GStreamer Pipeline Mode](../params/#b-exclusive-parameters) is enabled. This provides flexible way to write video frames to file or network stream with controlled framerate and bitrate. The complete usage example is as follows:
 
 !!! warning "Requirement for GStreamer Pipelining"
     GStreamer Pipelining in WriteGear requires your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
@@ -245,7 +245,7 @@ GSTPipeline = "appsrc ! videoconvert ! avenc_mpeg4 bitrate=100000 ! mp4mux ! fil
 
 # Define writer with defined parameters and with our Gstreamer pipeline
 writer = WriteGear(
-    output_filename=GSTPipeline, compression_mode=False, logging=True, **output_params
+    output=GSTPipeline, compression_mode=False, logging=True, **output_params
 )
 
 # loop over

@@ -129,7 +129,7 @@ def test_input_framerate(c_ffmpeg):
         else {"-input_framerate": "wrong_input"}
     )
     writer = WriteGear(
-        output_filename="Output_tif.mp4",
+        output="Output_tif.mp4",
         custom_ffmpeg=c_ffmpeg,
         logging=True,
         **output_params
@@ -163,7 +163,7 @@ def test_write(conversion):
             **options
         ).start()
         writer = WriteGear(
-            output_filename="Output_tw.mp4", custom_ffmpeg=return_static_ffmpeg()
+            output="Output_tw.mp4", custom_ffmpeg=return_static_ffmpeg()
         )  # Define writer
         while True:
             frame = stream.read()
@@ -233,7 +233,7 @@ def test_output_dimensions():
     else:
         output_params = {"-output_dimensions": dimensions}
     writer = WriteGear(
-        output_filename="Output_tod.mp4",
+        output="Output_tod.mp4",
         custom_ffmpeg=return_static_ffmpeg(),
         logging=True,
         **output_params
@@ -290,7 +290,7 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
     try:
         stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
         writer = WriteGear(
-            output_filename=f_name, compression_mode=True, **output_params
+            output=f_name, compression_mode=True, **output_params
         )
         while True:
             (grabbed, frame) = stream.read()
@@ -350,7 +350,7 @@ def test_WriteGear_customFFmpeg(ffmpeg_cmd, logging, output_params):
     try:
         # define writer
         writer = WriteGear(
-            output_filename="Output.mp4",
+            output="Output.mp4",
             compression_mode=(True if ffmpeg_cmd != ["invalid"] else False),
             logging=logging,
             **output_params

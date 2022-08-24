@@ -53,7 +53,7 @@ output_params = {"-f": "rtsp", "-rtsp_transport": "tcp"}
 # Define writer with defined parameters and RTSP address
 # [WARNING] Change your RTSP address `rtsp://localhost:8554/mystream` with yours!
 writer = WriteGear(
-    output_filename="rtsp://localhost:8554/mystream", logging=True, **output_params
+    output="rtsp://localhost:8554/mystream", logging=True, **output_params
 )
 
 # loop over
@@ -119,7 +119,7 @@ In Compression Mode, you can also use WriteGear for Youtube-Livestreaming. The e
 
     # Define writer with defined parameters
     writer = WriteGear(
-        output_filename="rtmp://a.rtmp.youtube.com/live2/{}".format(YOUTUBE_STREAM_KEY),
+        output="rtmp://a.rtmp.youtube.com/live2/{}".format(YOUTUBE_STREAM_KEY),
         logging=True,
         **output_params
     )
@@ -182,7 +182,7 @@ In Compression Mode, you can also use WriteGear for Youtube-Livestreaming. The e
 
     # Define writer with defined parameters
     writer = WriteGear(
-        output_filename="rtmp://a.rtmp.youtube.com/live2/{}".format(YOUTUBE_STREAM_KEY),
+        output="rtmp://a.rtmp.youtube.com/live2/{}".format(YOUTUBE_STREAM_KEY),
         logging=True,
         **output_params
     )
@@ -284,7 +284,7 @@ output_params = {
 }
 
 # Define writer with "/dev/video0" as source and user-defined parameters 
-writer = WriteGear(output_filename="/dev/video0", logging=True, **output_params)
+writer = WriteGear(output="/dev/video0", logging=True, **output_params)
 
 # loop over
 while True:
@@ -347,7 +347,7 @@ output_params = {
 }
 
 # Define writer with defined parameters
-writer = WriteGear(output_filename="output%03d.mp4", logging=True, **output_params)
+writer = WriteGear(output="output%03d.mp4", logging=True, **output_params)
 
 # loop over
 while True:
@@ -410,7 +410,7 @@ stream_params = {
 }
 
 # Define writer with defined parameters
-writer = WriteGear(output_filename="Output.mp4", logging=True, **stream_params)
+writer = WriteGear(output="Output.mp4", logging=True, **stream_params)
 
 # loop over
 while True:
@@ -465,7 +465,7 @@ In this example we are capturing video from desktop screen in a Timely Accurate 
     from vidgear.gears import WriteGear
 
     # Define writer with defined parameters and with some dummy name
-    writer = WriteGear(output_filename="Output.mp4", logging=True)
+    writer = WriteGear(output="Output.mp4", logging=True)
 
     # format FFmpeg command to generate time accurate video
     ffmpeg_command = [
@@ -493,7 +493,7 @@ In this example we are capturing video from desktop screen in a Timely Accurate 
     from vidgear.gears import WriteGear
 
     # Define writer with defined parameters and with some dummy name
-    writer = WriteGear(output_filename="Output.mp4", logging=True)
+    writer = WriteGear(output="Output.mp4", logging=True)
 
     # format FFmpeg command to generate time accurate video
     ffmpeg_command = [
@@ -521,7 +521,7 @@ In this example we are capturing video from desktop screen in a Timely Accurate 
     from vidgear.gears import WriteGear
 
     # Define writer with defined parameters and with some dummy name
-    writer = WriteGear(output_filename="Output.mp4", logging=True)
+    writer = WriteGear(output="Output.mp4", logging=True)
 
     # format FFmpeg command to generate time accurate video
     ffmpeg_command = [
@@ -574,13 +574,13 @@ from vidgear.gears import WriteGear
 
 # custom publisher class
 class image_subscriber:
-    def __init__(self, output_filename="Output.mp4"):
+    def __init__(self, output="Output.mp4"):
         # create CV bridge
         self.bridge = CvBridge()
         # define publisher topic
         self.image_pub = rospy.Subscriber("image_topic_sub", Image, self.callback)
         # Define writer with default parameters
-        self.writer = WriteGear(output_filename=output_filename)
+        self.writer = WriteGear(output=output)
 
     def callback(self, data):
         # convert received data to frame
@@ -609,7 +609,7 @@ class image_subscriber:
 def main(args):
     # define publisher with suitable output filename
     # such as `Output.mp4` for saving output
-    ic = image_subscriber(output_filename="Output.mp4")
+    ic = image_subscriber(output="Output.mp4")
     # initiate ROS node on publisher
     rospy.init_node("image_subscriber", anonymous=True)
     try:

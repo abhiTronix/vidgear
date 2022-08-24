@@ -92,7 +92,7 @@ url_to_stream = (
 )
 
 # Define writer with default parameters
-writer = WriteGear(output_filename="Output.mp4", logging=True)
+writer = WriteGear(output="Output.mp4", logging=True)
 
 # format command to convert stream audio as 'output_audio.aac' as list
 ffmpeg_command_to_save_audio = [
@@ -145,7 +145,7 @@ output_params = {
 }  # output framerate must match source framerate
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename="Output.mp4", **output_params)
+writer = WriteGear(output="Output.mp4", **output_params)
 
 # loop over
 while True:

@@ -22,11 +22,11 @@ limitations under the License.
 
 &thinsp;
 
-## **`output_filename`**
+## **`output`**
 
 This parameter sets the valid output Video filename/path for the output video.
 
-!!! warning "WriteGear API will throw `RuntimeError` if `output_filename` provided is empty or invalid."
+!!! warning "WriteGear API will throw `RuntimeError` if `output` provided is empty or invalid."
 
 **Data-Type:** String
 
@@ -41,18 +41,18 @@ Its valid input can be one of the following:
 * **Path to directory**: Valid path of the directory to save the output video file. In this case, WriteGear API will automatically assign a unique filename (_with a default extension i.e.`.mp4`_) as follows:
 
     ```python
-    writer = WriteGear(output_filename = '/home/foo/foo1', compression_mode=False) # Define writer 
+    writer = WriteGear(output = '/home/foo/foo1', compression_mode=False) # Define writer 
     ```
 
 * **Filename** _(with/without path)_: Valid filename(_with valid extension_) of the output video file. In case filename is provided without path, then current working directory will be used.
 
     ```python
-    writer = WriteGear(output_filename = 'output.mp4', compression_mode=False) # Define writer 
+    writer = WriteGear(output = 'output.mp4', compression_mode=False) # Define writer 
     ```
 
 * **GStreamer Pipeline:** 
    
-    WriteGear API also supports GStreamer Pipeline as input to its `output_filename` parameter in Non-Compression Mode, when [GStreamer Pipeline Mode](#b-exclusive-parameters) is enabled. It can be used as follows:
+    WriteGear API also supports GStreamer Pipeline as input to its `output` parameter in Non-Compression Mode, when [GStreamer Pipeline Mode](#b-exclusive-parameters) is enabled. It can be used as follows:
 
     !!! warning "Requirement for GStreamer Pipelining"
 
@@ -67,7 +67,7 @@ Its valid input can be one of the following:
     output_params = {"-gst_pipeline_mode": True}
     # Define writer
     writer = WriteGear(
-    output_filename="appsrc ! videoconvert ! avenc_mpeg4 bitrate=100000 ! mp4mux ! filesink location=foo.mp4", compression_mode=False) 
+    output="appsrc ! videoconvert ! avenc_mpeg4 bitrate=100000 ! mp4mux ! filesink location=foo.mp4", compression_mode=False) 
     ```
 
 &nbsp;
@@ -84,7 +84,7 @@ This parameter selects the WriteGear's Primary [Mode of Operation](../../introdu
 **Usage:**
 
 ```python
-WriteGear(output_filename = 'output.mp4', compression_mode=False)
+WriteGear(output = 'output.mp4', compression_mode=False)
 ```
 
 &nbsp;
@@ -131,7 +131,7 @@ WriteGear provides access to all available [**OpenCV's VideoWriter API**](https:
 
 In addition to OpenCV Parameters, WriteGear API also provides few exclusive attribute, which are as follows: 
 
-* **`-gst_pipeline_mode`**: a boolean attribute to enable **GStreamer Pipeline Mode** to supports GStreamer Pipeline as input to its `output_filename` parameter in Non-Compression Mode.
+* **`-gst_pipeline_mode`**: a boolean attribute to enable **GStreamer Pipeline Mode** to supports GStreamer Pipeline as input to its `output` parameter in Non-Compression Mode.
 
     !!! note "Enabling `-gst_pipeline_mode` will enforce `-backend` parameter value to `"CAP_GSTREAMER"`"
 
@@ -149,7 +149,7 @@ To assign desired parameters in Non-Compression Mode, you can format it as dicti
 # format parameter as dictionary attribute
 output_params = {"-fps":30} 
 # and then, assign it
-WriteGear(output_filename = 'output.mp4', **output_params)
+WriteGear(output = 'output.mp4', **output_params)
 ```
 
 !!! example "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-videocapture-gears)."
@@ -170,7 +170,7 @@ To select desired FOURCC codec in Non-Compression Mode, you can format it as dic
 # format codec as dictionary attribute
 output_params = {"-fourcc":"MJPG"} 
 # and then, assign it
-WriteGear(output_filename = 'output.mp4', **output_params)
+WriteGear(output = 'output.mp4', **output_params)
 ```
 
 !!! example "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-videocapture-gears)."
@@ -188,7 +188,7 @@ This parameter enables logging _(if `True`)_, essential for debugging.
 **Usage:**
 
 ```python
-WriteGear(output_filename = 'output.mp4', logging=True)
+WriteGear(output = 'output.mp4', logging=True)
 ```
 
 &nbsp;

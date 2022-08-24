@@ -236,7 +236,7 @@ output_params = {"-vcodec": "libx264", "-crf": 0, "-preset": "fast"}
 stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename="Output.mp4", logging=True, **output_params)
+writer = WriteGear(output="Output.mp4", logging=True, **output_params)
 
 # loop over
 while True:
