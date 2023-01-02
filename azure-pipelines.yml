@@ -67,7 +67,7 @@ steps:
 
   - script: |
       python -m pip install --upgrade pip wheel
-      pip install --upgrade .[asyncio] six codecov yt_dlp mpegdash paramiko m3u8 async-asgi-testclient
+      pip install --upgrade .[asyncio] six codecov yt_dlp httpx mpegdash paramiko m3u8 async-asgi-testclient
       pip install --upgrade deffcode 
       pip install --upgrade pytest pytest-asyncio pytest-cov pytest-azurepipelines
     displayName: "Install pip dependencies"
