@@ -61,7 +61,7 @@ while [ "$RETRY" -gt 0 ]; do
   #opencv version to install
   OPENCV_FILENAME=$(basename $LATEST_VERSION)
   if [ -f $(find . -name '$OPENCV_FILENAME') ]; then
-    echo "Downloaded OpenCV binary successfully."
+    echo "Downloaded OpenCV binary: $OPENCV_FILENAME successfully at $LATEST_VERSION"
     break
   else
     echo "Retrying!!!"
