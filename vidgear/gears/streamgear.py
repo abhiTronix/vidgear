@@ -301,10 +301,7 @@ class StreamGear:
                 self.__out_file = abs_path.replace(
                     "\\", "/"
                 )  # workaround for Windows platform only, others will not be affected
-            elif (
-                platform.system() == "Linux"
-                and pathlib.Path(output).is_char_device()
-            ):
+            elif platform.system() == "Linux" and pathlib.Path(output).is_char_device():
                 # check if linux video device path (such as `/dev/video0`)
                 self.__logging and logger.debug(
                     "Path:`{}` is a valid Linux Video Device path.".format(output)
@@ -1021,6 +1018,20 @@ class StreamGear:
                         self.__format.upper()
                     )
                 )
+
+    def __enter__(self):
+        """
+        Handles entry with the `with` statement. See [PEP343 -- The 'with' statement'](https://peps.python.org/pep-0343/).
+
+        **Returns:** Returns a reference to the StreamGear Class
+        """
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """
+        Handles exit with the `with` statement. See [PEP343 -- The 'with' statement'](https://peps.python.org/pep-0343/).
+        """
+        self.terminate()
 
     def terminate(self):
         """
