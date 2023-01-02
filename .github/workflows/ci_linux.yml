@@ -19,19 +19,19 @@ on:
     branches:
       - testing
     paths-ignore:
-      - '**/*.md'
-      - '**/*.html'
-      - '**/*.js'
-      - '**/*.css'
-      - 'docs/**/*'
+      - "**/*.md"
+      - "**/*.html"
+      - "**/*.js"
+      - "**/*.css"
+      - "docs/**/*"
       - README.md
       - mkdocs.yml
   pull_request:
     branches:
       - testing
     paths-ignore:
-      - '**/*.md'
-      - 'docs/**/*'
+      - "**/*.md"
+      - "docs/**/*"
 
 jobs:
   test:
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10']
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -62,6 +62,7 @@ jobs:
           pip install -U .[asyncio]
           pip uninstall opencv-python -y
           pip install -U flake8 six codecov pytest pytest-asyncio pytest-cov yt_dlp mpegdash paramiko m3u8 async-asgi-testclient
+          pip install -U deffcode
         if: success()
       - name: run prepare_dataset_script
         run: bash scripts/bash/prepare_dataset.sh
