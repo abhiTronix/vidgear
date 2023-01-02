@@ -97,7 +97,9 @@ class WriteGear:
 
         # assign parameter values to class variables
         # enables compression if enabled
-        self.__compression = compression if isinstance(compression, bool) else False
+        self.__compression = (
+            compression_mode if isinstance(compression_mode, bool) else False
+        )
         # specifies if machine in-use is running Windows OS or not
         self.__os_windows = True if os.name == "nt" else False
         # enable logging if specified
