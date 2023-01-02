@@ -146,7 +146,7 @@ class WriteGear:
                 self.__out_file = abs_path
             else:
                 # log note otherwise
-                logger.note(
+                logger.info(
                     "`{}` isn't a valid system path or directory. Skipped!".format(
                         output
                     )
