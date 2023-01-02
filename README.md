@@ -1,5 +1,5 @@
 <!--
-===============================================
+
 vidgear library source-code is deployed under the Apache 2.0 License:
 
 Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
@@ -8,7 +8,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-   http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,16 +29,17 @@ limitations under the License.
 
 [Releases][release]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Gears][gears]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Documentation][docs]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Installation][installation]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[License](#copyright)
 
-[![Build Status][github-cli]][github-flow] [![Codecov branch][codecov]][code]  [![Azure DevOps builds (branch)][azure-badge]][azure-pipeline]
+[![Build Status][github-cli]][github-flow] [![Codecov branch][codecov]][code] [![Azure DevOps builds (branch)][azure-badge]][azure-pipeline]
 
-[![Glitter chat][gitter-bagde]][gitter] [![Build Status][appveyor]][app] [![PyPi version][pypi-badge]][pypi] 
+[![Glitter chat][gitter-bagde]][gitter] [![Build Status][appveyor]][app] [![PyPi version][pypi-badge]][pypi]
 
 [![Code Style][black-badge]][black]
+
 </div>
 
 &nbsp;
 
-VidGear is a **High-Performance Video Processing Python Library** that provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio API Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**
+VidGear is a **High-Performance Video Processing Python Library** that provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio API Framework** on top of many state-of-the-art specialized libraries like _[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]_ serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**
 
 VidGear primarily focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks, in just a few lines of code.
 
@@ -54,46 +55,43 @@ The following **functional block diagram** clearly depicts the generalized funct
 
 # Table of Contents
 
-* [**TL;DR**](#tldr)
-* [**Getting Started**](#getting-started)
-* [**Gears: What are these?**](#gears-what-are-these)
-  * [**CamGear**](#camgear)
-  * [**PiGear**](#pigear)
-  * [**VideoGear**](#videogear)
-  * [**ScreenGear**](#screengear)
-  * [**WriteGear**](#writegear)
-  * [**StreamGear**](#streamgear)
-  * [**NetGear**](#netgear)
-  * [**WebGear**](#webgear)
-  * [**WebGear_RTC**](#webgear_rtc)
-  * [**NetGear_Async**](#netgear_async)
-* [**Contributions**](#contributions)
-* [**Donations**](#donations)
-* [**Citation**](#citation)
-* [**Copyright**](#copyright)
-
-
-&nbsp;
+- [**TL;DR**](#tldr)
+- [**Getting Started**](#getting-started)
+- [**Gears: What are these?**](#gears-what-are-these)
+  - [**CamGear**](#camgear)
+  - [**PiGear**](#pigear)
+  - [**VideoGear**](#videogear)
+  - [**ScreenGear**](#screengear)
+  - [**WriteGear**](#writegear)
+  - [**StreamGear**](#streamgear)
+  - [**NetGear**](#netgear)
+  - [**WebGear**](#webgear)
+  - [**WebGear_RTC**](#webgear_rtc)
+  - [**NetGear_Async**](#netgear_async)
+- [**Contributions**](#contributions)
+- [**Donations**](#donations)
+- [**Citation**](#citation)
+- [**Copyright**](#copyright)
 
 &nbsp;
 
-
+&nbsp;
 
 ## TL;DR
-  
+
 #### What is vidgear?
 
-> *"VidGear is a cross-platform High-Performance Framework that provides an one-stop **Video-Processing** solution for building complex real-time media applications in python."*
+> _"VidGear is a cross-platform High-Performance Framework that provides an one-stop **Video-Processing** solution for building complex real-time media applications in python."_
 
 #### What does it do?
 
-> *"VidGear can read, write, process, send & receive video files/frames/streams from/to various devices in real-time, and [**faster**][TQM-doc]  than underline libraries."*
+> _"VidGear can read, write, process, send & receive video files/frames/streams from/to various devices in real-time, and [**faster**][tqm-doc] than underline libraries."_
 
 #### What is its purpose?
 
-> *"Write Less and Accomplish More"* — **VidGear's Motto**
+> _"Write Less and Accomplish More"_ — **VidGear's Motto**
 
-> *"Built with simplicity in mind, VidGear lets programmers and software developers to easily integrate and perform **Complex Video-Processing Tasks** in their existing or newer applications without going through hefty documentation and in just a [**few lines of code**][switch_from_cv]. Beneficial for both, if you're new to programming with Python language or already a pro at it."*
+> _"Built with simplicity in mind, VidGear lets programmers and software developers to easily integrate and perform **Complex Video-Processing Tasks** in their existing or newer applications without going through hefty documentation and in just a [**few lines of code**][switch_from_cv]. Beneficial for both, if you're new to programming with Python language or already a pro at it."_
 
 &nbsp;
 
@@ -103,7 +101,7 @@ The following **functional block diagram** clearly depicts the generalized funct
 
 If this is your first time using VidGear, head straight to the [Installation ➶][installation] to install VidGear.
 
-Once you have VidGear installed, **Checkout its Well-Documented [Function-Specific Gears ➶][gears]** 
+Once you have VidGear installed, **Checkout its Well-Documented [Function-Specific Gears ➶][gears]**
 
 Also, if you're already familiar with [OpenCV][opencv] library, then see [Switching from OpenCV Library ➶][switch_from_cv]
 
@@ -113,48 +111,45 @@ Or, if you're just getting started with OpenCV-Python programming, then refer th
 
 &nbsp;
 
-
 ## Gears: What are these?
 
 > **VidGear is built with multiple APIs a.k.a [Gears][gears], each with some unique functionality.**
 
-Each API is designed exclusively to handle/control/process different data-specific & device-specific video streams, network streams, and media encoders/decoders. These APIs provides the user an easy-to-use, dynamic, extensible, and exposed Multi-Threaded + Asyncio optimized internal layer above state-of-the-art libraries to work with, while silently delivering robust error-handling. 
+Each API is designed exclusively to handle/control/process different data-specific & device-specific video streams, network streams, and media encoders/decoders. These APIs provides the user an easy-to-use, dynamic, extensible, and exposed Multi-Threaded + Asyncio optimized internal layer above state-of-the-art libraries to work with, while silently delivering robust error-handling.
 
 **These Gears can be classified as follows:**
 
 **A. Video-Capture Gears:**
 
-  * [**CamGear:**](#camgear) Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
-  * [**PiGear:**](#pigear) Multi-Threaded API targeting various Raspberry-Pi Camera Modules.
-  * [**ScreenGear:**](#screengear) Multi-Threaded API targeting ultra-fast Screencasting.    
-  * [**VideoGear:**](#videogear) Common Video-Capture API with internal [Video Stabilizer](https://abhitronix.github.io/vidgear/latest/gears/stabilizer/overview/) wrapper.
+- [**CamGear:**](#camgear) Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
+- [**PiGear:**](#pigear) Multi-Threaded API targeting various Raspberry-Pi Camera Modules.
+- [**ScreenGear:**](#screengear) Multi-Threaded API targeting ultra-fast Screencasting.
+- [**VideoGear:**](#videogear) Common Video-Capture API with internal [Video Stabilizer](https://abhitronix.github.io/vidgear/latest/gears/stabilizer/overview/) wrapper.
 
 **B. Video-Writer Gears:**
 
-  * [**WriteGear:**](#writegear) Handles Lossless Video-Writer for file/stream/frames Encoding and Compression.
+- [**WriteGear:**](#writegear) Handles Lossless Video-Writer for file/stream/frames Encoding and Compression.
 
 **C. Streaming Gears:**
 
-  * [**StreamGear**](#streamgear): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
+- [**StreamGear**](#streamgear): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
 
-  * **Asynchronous I/O Streaming Gear:**
+- **Asynchronous I/O Streaming Gear:**
 
-    * [**WebGear:**](#webgear) ASGI Video-Server that broadcasts Live MJPEG-Frames to any web-browser on the network.
-    * [**WebGear_RTC:**](#webgear_rtc) Real-time Asyncio WebRTC media server for streaming directly to peer clients over the network.
+  - [**WebGear:**](#webgear) ASGI Video-Server that broadcasts Live MJPEG-Frames to any web-browser on the network.
+  - [**WebGear_RTC:**](#webgear_rtc) Real-time Asyncio WebRTC media server for streaming directly to peer clients over the network.
 
 **D. Network Gears:**
 
-  * [**NetGear:**](#netgear) Handles High-Performance Video-Frames & Data Transfer between interconnecting systems over the network.
+- [**NetGear:**](#netgear) Handles High-Performance Video-Frames & Data Transfer between interconnecting systems over the network.
 
-  * **Asynchronous I/O Network Gear:**
+- **Asynchronous I/O Network Gear:**
 
-    * [**NetGear_Async:**](#netgear_async) Immensely Memory-Efficient Asyncio Video-Frames Network Messaging Framework.
-
-
-&nbsp;
+  - [**NetGear_Async:**](#netgear_async) Immensely Memory-Efficient Asyncio Video-Frames Network Messaging Framework.
 
 &nbsp;
 
+&nbsp;
 
 ## CamGear
 
@@ -162,9 +157,9 @@ Each API is designed exclusively to handle/control/process different data-specif
   <img src="https://abhitronix.github.io/vidgear/latest/assets/images/camgear.png" alt="CamGear Functional Block Diagram" width="45%"/>
 </p>
 
-> *CamGear can grab ultra-fast frames from a diverse range of file-formats/devices/streams, which includes almost any IP-USB Cameras, multimedia video file-formats ([_upto 4k tested_][test-4k]), various network stream protocols such as `http(s), rtp, rtsp, rtmp, mms, etc.`, and GStreamer's pipelines, plus direct support for live video streaming sites like YouTube, Twitch, LiveStream, Dailymotion etc.*
+> _CamGear can grab ultra-fast frames from a diverse range of file-formats/devices/streams, which includes almost any IP-USB Cameras, multimedia video file-formats ([*upto 4k tested*][test-4k]), various network stream protocols such as `http(s), rtp, rtsp, rtmp, mms, etc.`, and GStreamer's pipelines, plus direct support for live video streaming sites like YouTube, Twitch, LiveStream, Dailymotion etc._
 
-CamGear provides a flexible, high-level, multi-threaded framework around OpenCV's [VideoCapture class][opencv-vc] with access almost all of its available parameters. CamGear internally implements [`yt_dlp`][yt_dlp] backend class for seamlessly pipelining live video-frames and metadata from various streaming services like [YouTube][youtube-doc], [Twitch][piping-live-videos], and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites). Furthermore, its framework relies exclusively on [**Threaded Queue mode**][TQM-doc] for ultra-fast, error-free, and synchronized video-frame handling.
+CamGear provides a flexible, high-level, multi-threaded framework around OpenCV's [VideoCapture class][opencv-vc] with access almost all of its available parameters. CamGear internally implements [`yt_dlp`][yt_dlp] backend class for seamlessly pipelining live video-frames and metadata from various streaming services like [YouTube][youtube-doc], [Twitch][piping-live-videos], and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites). Furthermore, its framework relies exclusively on [**Threaded Queue mode**][tqm-doc] for ultra-fast, error-free, and synchronized video-frame handling.
 
 ### CamGear API Guide:
 
@@ -174,17 +169,15 @@ CamGear provides a flexible, high-level, multi-threaded framework around OpenCV'
 
 &nbsp;
 
-
 ## VideoGear
 
-> *VideoGear API provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**][stabilizer-doc] class.*
+> _VideoGear API provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**][stabilizer-doc] class._
 
 VideoGear also acts as a Common Video-Capture API that provides internal access for both [CamGear](#camgear) and [PiGear](#pigear) APIs and their parameters with an exclusive `enablePiCamera` boolean flag.
 
-VideoGear is ideal when you need to switch to different video sources without changing your code much. Also, it enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort and writing way fewer lines of code.
+VideoGear is ideal when you need to switch to different video sources without changing your code much. Also, it enables easy stabilization for various video-streams _(real-time or not)_ with minimum effort and writing way fewer lines of code.
 
-
-**Below is a snapshot of a VideoGear Stabilizer in action  (_See its detailed usage [here][stabilizer-doc-ex]_):**
+**Below is a snapshot of a VideoGear Stabilizer in action (_See its detailed usage [here][stabilizer-doc-ex]_):**
 
 <p align="center">
   <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/stabilizer.gif" alt="VideoGear Stabilizer in action!"/>
@@ -266,19 +259,17 @@ stream_stab.stop()
 
 &nbsp;
 
-
 ## PiGear
 
 <p align="center">
   <img src="https://abhitronix.github.io/vidgear/latest/assets/images/picam2.webp" alt="PiGear" width="50%" />
 </p>
 
-> *PiGear is similar to CamGear but made to support various Raspberry Pi Camera Modules *(such as [OmniVision OV5647 Camera Module][OV5647-picam] and [Sony IMX219 Camera Module][IMX219-picam])*.*
+> _PiGear is similar to CamGear but made to support various Raspberry Pi Camera Modules _(such as [OmniVision OV5647 Camera Module][ov5647-picam] and [Sony IMX219 Camera Module][imx219-picam])_._
 
 PiGear provides a flexible multi-threaded framework around complete [picamera](https://picamera.readthedocs.io/en/release-1.13/index.html) python library, and provide us the ability to exploit almost all of its parameters like `brightness, saturation, sensor_mode, iso, exposure, etc.` effortlessly. Furthermore, PiGear also supports multiple camera modules, such as in the case of Raspberry-Pi Compute Module IO boards.
 
 Best of all, PiGear contains **Threaded Internal Timer** - that silently keeps active track of any frozen-threads/hardware-failures and exit safely, if any does occur. That means that if you're running PiGear API in your script and someone accidentally pulls the Camera-Module cable out, instead of going into possible kernel panic, API will exit safely to save resources.
-
 
 **Code to open picamera stream with variable parameters in PiGear API:**
 
@@ -327,6 +318,7 @@ cv2.destroyAllWindows()
 stream.stop()
 
 ```
+
 ### PiGear API Guide:
 
 [**>>> Usage Guide**][pigear-doc]
@@ -335,12 +327,11 @@ stream.stop()
 
 &nbsp;
 
-
 ## ScreenGear
 
-> *ScreenGear is designed exclusively for ultra-fast Screencasting, which means it can grab frames from your monitor in real-time, either by defining an area on the computer screen or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors as well as supports multiple backends.*
+> _ScreenGear is designed exclusively for ultra-fast Screencasting, which means it can grab frames from your monitor in real-time, either by defining an area on the computer screen or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors as well as supports multiple backends._
 
-ScreenGear implements a multi-threaded wrapper around [**pyscreenshot**][pyscreenshot] & [**python-mss**][mss] python library API and also supports an easy and flexible direct internal parameter manipulation. 
+ScreenGear implements a multi-threaded wrapper around [**pyscreenshot**][pyscreenshot] & [**python-mss**][mss] python library API and also supports an easy and flexible direct internal parameter manipulation.
 
 **Below is a snapshot of a ScreenGear API in action:**
 
@@ -389,12 +380,9 @@ stream.stop()
 
 [**>>> Usage Guide**][screengear-doc]
 
-
 &nbsp;
 
 &nbsp;
-
-
 
 ## WriteGear
 
@@ -402,11 +390,11 @@ stream.stop()
   <img src="https://abhitronix.github.io/vidgear/latest/assets/images/writegear.png" alt="WriteGear Functional Block Diagram" width="70%" />
 </p>
 
-> *WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data.*
+> _WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data._
 
-WriteGear API provides a complete, flexible, and robust wrapper around [**FFmpeg**][ffmpeg], a leading multimedia framework. WriteGear can process real-time frames into a lossless compressed video-file with any suitable specifications _(such as`bitrate, codec, framerate, resolution, subtitles,  etc.`)_. 
+WriteGear API provides a complete, flexible, and robust wrapper around [**FFmpeg**][ffmpeg], a leading multimedia framework. WriteGear can process real-time frames into a lossless compressed video-file with any suitable specifications _(such as`bitrate, codec, framerate, resolution, subtitles,  etc.`)_.
 
-WriteGear also supports streaming with traditional protocols such as [RTSP/RTP][rtsp-ex], RTMP. It is powerful enough to perform complex tasks such as [Live-Streaming][live-stream] _(such as for Twitch, YouTube etc.)_ and [Multiplexing Video-Audio][live-audio-doc] with real-time frames in just few lines of code. 
+WriteGear also supports streaming with traditional protocols such as [RTSP/RTP][rtsp-ex], RTMP. It is powerful enough to perform complex tasks such as [Live-Streaming][live-stream] _(such as for Twitch, YouTube etc.)_ and [Multiplexing Video-Audio][live-audio-doc] with real-time frames in just few lines of code.
 
 Best of all, WriteGear grants users the complete freedom to play with any FFmpeg parameter with its exclusive **Custom Commands function** _(see this [doc][custom-command-doc])_ without relying on any third-party API.
 
@@ -414,9 +402,9 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 
 **WriteGear primarily operates in the following two modes:**
 
-  * **Compression Mode:** In this mode, WriteGear utilizes powerful [**FFmpeg**][ffmpeg] inbuilt encoders to encode lossless multimedia files. This mode provides us the ability to exploit almost any parameter available within FFmpeg, effortlessly and flexibly, and while doing that it robustly handles all errors/warnings quietly. **You can find more about this mode [here ➶][cm-writegear-doc]**
+- **Compression Mode:** In this mode, WriteGear utilizes powerful [**FFmpeg**][ffmpeg] inbuilt encoders to encode lossless multimedia files. This mode provides us the ability to exploit almost any parameter available within FFmpeg, effortlessly and flexibly, and while doing that it robustly handles all errors/warnings quietly. **You can find more about this mode [here ➶][cm-writegear-doc]**
 
-  * **Non-Compression Mode:**  In this mode, WriteGear utilizes basic [**OpenCV's inbuilt VideoWriter API**][opencv-vw] tools. This mode also supports all parameter transformations available within OpenCV's VideoWriter API, but it lacks the ability to manipulate encoding parameters and other important features like video compression, audio encoding, etc. **You can learn about this mode [here ➶][ncm-writegear-doc]**
+- **Non-Compression Mode:** In this mode, WriteGear utilizes basic [**OpenCV's inbuilt VideoWriter API**][opencv-vw] tools. This mode also supports all parameter transformations available within OpenCV's VideoWriter API, but it lacks the ability to manipulate encoding parameters and other important features like video compression, audio encoding, etc. **You can learn about this mode [here ➶][ncm-writegear-doc]**
 
 ### WriteGear API Guide:
 
@@ -426,30 +414,27 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 
 &nbsp;
 
-
 ## StreamGear
 
 <p align="center">
   <img src="https://abhitronix.github.io/vidgear/latest/assets/images/streamgear_flow.webp" alt="NetGear API" width=80%/>
 </p>
 
-
-
-> *StreamGear automates transcoding workflow for generating Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH and Apple HLS) in just few lines of python code.*
+> _StreamGear automates transcoding workflow for generating Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH and Apple HLS) in just few lines of python code._
 
 StreamGear provides a standalone, highly extensible, and flexible wrapper around [**FFmpeg**][ffmpeg] multimedia framework for generating chunked-encoded media segments of the content.
 
 SteamGear is an out-of-the-box solution for transcoding source videos/audio files & real-time video frames and breaking them into a sequence of multiple smaller chunks/segments of suitable lengths. These segments make it possible to stream videos at different quality levels _(different bitrates or spatial resolutions)_ and can be switched in the middle of a video from one quality level to another – if bandwidth permits – on a per-segment basis. A user can serve these segments on a web server that makes it easier to download them through HTTP standard-compliant GET requests.
 
-SteamGear currently supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_  and [**Apple HLS**](https://developer.apple.com/documentation/http_live_streaming) _(HTTP Live Streaming)_. But, Multiple DRM support is yet to be implemented.
+SteamGear currently supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_ and [**Apple HLS**](https://developer.apple.com/documentation/http_live_streaming) _(HTTP Live Streaming)_. But, Multiple DRM support is yet to be implemented.
 
 SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ or a Master Playlist _(such as M3U8 in-case of Apple HLS)_ besides segments that describe these segment information _(timing, URL, media characteristics like video resolution and bit rates)_ and is provided to the client before the streaming session.
 
 **StreamGear primarily works in two Independent Modes for transcoding which serves different purposes:**
 
-  * **Single-Source Mode:** In this mode, StreamGear **transcodes entire video file** _(as opposed to frame-by-frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well when you're transcoding long-duration lossless videos(with audio) for streaming that required no interruptions. But on the downside, the provided source cannot be flexibly manipulated or transformed before sending onto FFmpeg Pipeline for processing. ***Learn more about this mode [here ➶][ss-mode-doc]***
+- **Single-Source Mode:** In this mode, StreamGear **transcodes entire video file** _(as opposed to frame-by-frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well when you're transcoding long-duration lossless videos(with audio) for streaming that required no interruptions. But on the downside, the provided source cannot be flexibly manipulated or transformed before sending onto FFmpeg Pipeline for processing. **_Learn more about this mode [here ➶][ss-mode-doc]_**
 
-  * **Real-time Frames Mode:** In this mode, StreamGear directly **transcodes frame-by-frame** _(as opposed to a entire video file)_, into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well when you desire to flexibility manipulate or transform [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames in real-time before sending them onto FFmpeg Pipeline for processing. But on the downside, audio has to added manually _(as separate source)_ for streams. ***Learn more about this mode [here ➶][rtf-mode-doc]***
+- **Real-time Frames Mode:** In this mode, StreamGear directly **transcodes frame-by-frame** _(as opposed to a entire video file)_, into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well when you desire to flexibility manipulate or transform [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames in real-time before sending them onto FFmpeg Pipeline for processing. But on the downside, audio has to added manually _(as separate source)_ for streams. **_Learn more about this mode [here ➶][rtf-mode-doc]_**
 
 ### StreamGear API Guide:
 
@@ -465,11 +450,11 @@ SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ or a Mast
   <img src="https://abhitronix.github.io/vidgear/latest/assets/images/netgear.png" alt="NetGear API" width=65%/>
 </p>
 
-> *NetGear is exclusively designed to transfer video-frames & data synchronously between interconnecting systems over the network in real-time.*
+> _NetGear is exclusively designed to transfer video-frames & data synchronously between interconnecting systems over the network in real-time._
 
 NetGear implements a high-level wrapper around [**PyZmQ**][pyzmq] python library that contains python bindings for [**ZeroMQ**][zmq] - a high-performance asynchronous distributed messaging library.
 
-NetGear seamlessly supports additional [**bidirectional data transmission**][netgear_bidata_doc] between receiver(client) and sender(server) while transferring video-frames all in real-time. 
+NetGear seamlessly supports additional [**bidirectional data transmission**][netgear_bidata_doc] between receiver(client) and sender(server) while transferring video-frames all in real-time.
 
 NetGear can also robustly handle [**Multiple Server-Systems**][netgear_multi_server_doc] and [**Multiple Client-Systems**][netgear_multi_client_doc] and at once, thereby providing access to a seamless exchange of video-frames & data between multiple devices across the network at the same time.
 
@@ -481,9 +466,9 @@ For security, NetGear implements easy access to ZeroMQ's powerful, smart & secur
 
 **NetGear as of now seamlessly supports three ZeroMQ messaging patterns:**
 
-* [**`zmq.PAIR`**][zmq-pair] _(ZMQ Pair Pattern)_ 
-* [**`zmq.REQ/zmq.REP`**][zmq-req-rep] _(ZMQ Request/Reply Pattern)_
-* [**`zmq.PUB/zmq.SUB`**][zmq-pub-sub] _(ZMQ Publish/Subscribe Pattern)_
+- [**`zmq.PAIR`**][zmq-pair] _(ZMQ Pair Pattern)_
+- [**`zmq.REQ/zmq.REP`**][zmq-req-rep] _(ZMQ Request/Reply Pattern)_
+- [**`zmq.PUB/zmq.SUB`**][zmq-pub-sub] _(ZMQ Publish/Subscribe Pattern)_
 
 Whereas supported protocol are: `tcp` and `ipc`.
 
@@ -495,12 +480,11 @@ Whereas supported protocol are: `tcp` and `ipc`.
 
 &nbsp;
 
-
 ## WebGear
 
-> *WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-Broadcaster API ideal for transmitting [Motion-JPEG](https://en.wikipedia.org/wiki/Motion_JPEG)-frames from a single source to multiple recipients via the browser.*
+> _WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-Broadcaster API ideal for transmitting [Motion-JPEG](https://en.wikipedia.org/wiki/Motion_JPEG)-frames from a single source to multiple recipients via the browser._
 
-WebGear API works on [**Starlette**](https://www.starlette.io/)'s ASGI application and provides a highly extensible and flexible async wrapper around its complete framework. WebGear can flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
+WebGear API works on [**Starlette**](https://www.starlette.io/)'s ASGI application and provides a highly extensible and flexible async wrapper around its complete framework. WebGear can flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc.
 
 WebGear API uses an intraframe-only compression scheme under the hood where the sequence of video-frames are first encoded as JPEG-DIB (JPEG with Device-Independent Bit compression) and then streamed over HTTP using Starlette's Multipart [Streaming Response](https://www.starlette.io/responses/#streamingresponse) and a [Uvicorn](https://www.uvicorn.org/#quickstart) ASGI Server. This method imposes lower processing and memory requirements, but the quality is not the best, since JPEG compression is not very efficient for motion video.
 
@@ -543,24 +527,21 @@ web.shutdown()
 
 [**>>> Usage Guide**][webgear-doc]
 
-
 &nbsp;
 
 &nbsp;
-
 
 ## WebGear_RTC
 
-> *WebGear_RTC is similar to [WeGear API](#webgear) in many aspects but utilizes [WebRTC][webrtc] technology under the hood instead of Motion JPEG, which makes it suitable for building powerful video-streaming solutions for all modern browsers as well as native clients available on all major platforms.*
+> _WebGear_RTC is similar to [WeGear API](#webgear) in many aspects but utilizes [WebRTC][webrtc] technology under the hood instead of Motion JPEG, which makes it suitable for building powerful video-streaming solutions for all modern browsers as well as native clients available on all major platforms._
 
 WebGear_RTC is implemented with the help of [**aiortc**][aiortc] library which is built on top of asynchronous I/O framework for Web Real-Time Communication (WebRTC) and Object Real-Time Communication (ORTC) and supports many features like SDP generation/parsing, Interactive Connectivity Establishment with half-trickle and mDNS support, DTLS key and certificate generation, DTLS handshake, etc.
 
-WebGear_RTC can handle [multiple consumers][webgear_rtc-mc] seamlessly and provides native support for ICE _(Interactive Connectivity Establishment)_ protocol, STUN _(Session Traversal Utilities for NAT)_, and TURN _(Traversal Using Relays around NAT)_ servers that help us to seamlessly establish direct media connection with the remote peers for uninterrupted data flow. It also allows us to define our custom streaming class with suitable source to transform frames easily before sending them across the network(see this [doc][webgear_rtc-cs] example).
+WebGear*RTC can handle [multiple consumers][webgear_rtc-mc] seamlessly and provides native support for ICE *(Interactive Connectivity Establishment)_ protocol, STUN _(Session Traversal Utilities for NAT)_, and TURN _(Traversal Using Relays around NAT)\_ servers that help us to seamlessly establish direct media connection with the remote peers for uninterrupted data flow. It also allows us to define our custom streaming class with suitable source to transform frames easily before sending them across the network(see this [doc][webgear_rtc-cs] example).
 
-WebGear_RTC API works in conjunction with [**Starlette**][starlette]'s ASGI application and provides easy access to its complete framework. WebGear_RTC can also flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
+WebGear_RTC API works in conjunction with [**Starlette**][starlette]'s ASGI application and provides easy access to its complete framework. WebGear_RTC can also flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc.
 
 Additionally, WebGear_RTC API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs.
-
 
 **Below is a snapshot of a WebGear_RTC Media Server in action on Chrome browser:**
 
@@ -596,12 +577,11 @@ web.shutdown()
 
 [**>>> Usage Guide**][webgear_rtc-doc]
 
-
 &nbsp;
 
 &nbsp;
 
-## NetGear_Async 
+## NetGear_Async
 
 <p align="center">
   <img src="https://abhitronix.github.io/vidgear/latest/assets/images/zmq_asyncio.png" alt="WebGear in action!" width="70%"/>
@@ -610,24 +590,24 @@ web.shutdown()
 
 > _NetGear_Async can generate the same performance as [NetGear API](#netgear) at about one-third the memory consumption, and also provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but lacks in term of flexibility as it supports only a few [NetGear's Exclusive Modes][netgear-exm]._
 
-NetGear_Async is built on [`zmq.asyncio`][asyncio-zmq], and powered by a high-performance asyncio event loop called [**`uvloop`**][uvloop] to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. NetGear_Async can transfer thousands of frames in just a few seconds without causing any significant load on your system. 
+NetGear_Async is built on [`zmq.asyncio`][asyncio-zmq], and powered by a high-performance asyncio event loop called [**`uvloop`**][uvloop] to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. NetGear_Async can transfer thousands of frames in just a few seconds without causing any significant load on your system.
 
-NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to [NetGear API](#netgear). Furthermore, NetGear_Async allows us to define our custom Server as source to transform frames easily before sending them across the network(see this [doc][netgear_Async-cs] example).
+NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to [NetGear API](#netgear). Furthermore, NetGear_Async allows us to define our custom Server as source to transform frames easily before sending them across the network(see this [doc][netgear_async-cs] example).
 
 NetGear_Async now supports additional [**bidirectional data transmission**][btm_netgear_async] between receiver(client) and sender(server) while transferring video-frames. Users can easily build complex applications such as like [Real-Time Video Chat][rtvc] in just few lines of code.
 
 NetGear_Async as of now supports all four ZeroMQ messaging patterns:
-* [**`zmq.PAIR`**][zmq-pair] _(ZMQ Pair Pattern)_ 
-* [**`zmq.REQ/zmq.REP`**][zmq-req-rep] _(ZMQ Request/Reply Pattern)_
-* [**`zmq.PUB/zmq.SUB`**][zmq-pub-sub] _(ZMQ Publish/Subscribe Pattern)_ 
-* [**`zmq.PUSH/zmq.PULL`**][zmq-pull-push] _(ZMQ Push/Pull Pattern)_
+
+- [**`zmq.PAIR`**][zmq-pair] _(ZMQ Pair Pattern)_
+- [**`zmq.REQ/zmq.REP`**][zmq-req-rep] _(ZMQ Request/Reply Pattern)_
+- [**`zmq.PUB/zmq.SUB`**][zmq-pub-sub] _(ZMQ Publish/Subscribe Pattern)_
+- [**`zmq.PUSH/zmq.PULL`**][zmq-pull-push] _(ZMQ Push/Pull Pattern)_
 
 Whereas supported protocol are: `tcp` and `ipc`.
 
 ### NetGear_Async API Guide:
 
 [**>>> Usage Guide**][netgear_async-doc]
-
 
 &nbsp;
 
@@ -651,7 +631,6 @@ We're offering support for VidGear on [**Gitter Community Channel**](https://git
 
 &nbsp;
 
-
 # Donations
 
 <div align="center">
@@ -663,12 +642,9 @@ It is something I am doing with my own free time. But so much more needs to be d
 
 <a href='https://ko-fi.com/W7W8WTYO' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
-
 &nbsp;
 
 &nbsp;
-
-
 
 # Citation
 
@@ -703,93 +679,86 @@ Here is a Bibtex entry you can use to cite this project in a publication:
 
 &nbsp;
 
-
 # Copyright
 
 **Copyright © abhiTronix 2019**
 
 This library is released under the **[Apache 2.0 License][license]**.
 
-
-
-
 <!--
 Badges
 -->
 
-[appveyor]:https://img.shields.io/appveyor/ci/abhitronix/vidgear.svg?style=for-the-badge&logo=appveyor
-[codecov]:https://img.shields.io/codecov/c/gh/abhiTronix/vidgear?logo=codecov&style=for-the-badge&token=zrES4mwVKe
-[github-cli]:https://img.shields.io/github/workflow/status/abhiTronix/vidgear/Run%20Linux%20CI-Tests%20for%20vidgear?style=for-the-badge&logo=data:image/svg%2bxml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMTAgMWE5IDkgMCAwMTkgOSA5IDkgMCAwMS05IDkgOSA5IDAgMDEtOS05IDkgOSAwIDAxOS05ek0yMyAxOWE2IDYgMCAxMTAgMTIgNiA2IDAgMDEwLTEyek0yMyAzNWE2IDYgMCAxMTAgMTIgNiA2IDAgMDEwLTEyeiIgc3Ryb2tlPSJ2YXIoLS1jb2xvci1tYXJrZXRpbmctaWNvbi1wcmltYXJ5LCAjMjA4OEZGKSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik00MSAzNWE2IDYgMCAxMTAgMTIgNiA2IDAgMDEwLTEyeiIgc3Ryb2tlPSJ2YXIoLS1jb2xvci1tYXJrZXRpbmctaWNvbi1zZWNvbmRhcnksICM3OUI4RkYpIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yNS4wMzcgMjMuNjA3bC0zLjA3IDMuMDY1LTEuNDktMS40ODUiIHN0cm9rZT0idmFyKC0tY29sb3ItbWFya2V0aW5nLWljb24tcHJpbWFyeSwgIzIwODhGRikiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNNDEgMTlhNiA2IDAgMTEwIDEyIDYgNiAwIDAxMC0xMnoiIHN0cm9rZT0idmFyKC0tY29sb3ItbWFya2V0aW5nLWljb24tcHJpbWFyeSwgIzIwODhGRikiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTQzLjAzNiAyMy42MDdsLTMuMDY5IDMuMDY1LTEuNDktMS40ODVNNyA2LjgxMmExIDEgMCAwMTEuNTMzLS44NDZsNS4xMTMgMy4yMmExIDEgMCAwMS0uMDA2IDEuNjk3bC01LjExMyAzLjE3QTEgMSAwIDAxNyAxMy4yMDNWNi44MTN6TTkgMTl2MTVjMCAzLjg2NiAzLjE3NyA3IDcgN2gxIiBzdHJva2U9InZhcigtLWNvbG9yLW1hcmtldGluZy1pY29uLXByaW1hcnksICMyMDg4RkYpIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0xNi45NDkgMjZhMSAxIDAgMTAwLTJ2MnpNOCAxOS4wMzVBNi45NjUgNi45NjUgMCAwMDE0Ljk2NSAyNnYtMkE0Ljk2NSA0Ljk2NSAwIDAxMTAgMTkuMDM1SDh6TTE0Ljk2NSAyNmgxLjk4NHYtMmgtMS45ODR2MnoiIGZpbGw9InZhcigtLWNvbG9yLW1hcmtldGluZy1pY29uLXByaW1hcnksICMyMDg4RkYpIi8+PHBhdGggZD0iTTI5LjA1NSAyNWg1Ljk0NCIgc3Ryb2tlPSJ2YXIoLS1jb2xvci1tYXJrZXRpbmctaWNvbi1wcmltYXJ5LCAjMjA4OEZGKSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTIxIDQwYTEgMSAwIDExLS4wMDEgMi4wMDFBMSAxIDAgMDEyMSA0MHpNMjUgNDBhMSAxIDAgMTEtLjAwMSAyLjAwMUExIDEgMCAwMTI1IDQweiIgZmlsbD0idmFyKC0tY29sb3ItbWFya2V0aW5nLWljb24tc2Vjb25kYXJ5LCAjNzlCOEZGKSIvPjxwYXRoIGQ9Ik0zNC4wMDUgNDEuMDA3bC0xLjAxMy4wMzMiIHN0cm9rZT0idmFyKC0tY29sb3ItbWFya2V0aW5nLWljb24tc2Vjb25kYXJ5LCAjNzlCOEZGKSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4=
-[prs-badge]:https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABC0lEQVRYhdWVPQoCMRCFX6HY2ghaiZUXsLW0EDyBrbWtN/EUHsHTWFnYyCL4gxibVZZlZzKTnWz0QZpk5r0vIdkF/kBPAMOKeddE+CQPKoc5Yt5cTjBMdQSwDQToWgBJAn3jmhqgltapAV6E6b5U17MGGAUaUj07TficMfIBZDV6vxowBm1BP9WbSQE4o5h9IjPJmy73TEPDDxVmoZdQrQ5jRhly9Q8tgMUXkIIWn0oG4GYQfAXQzz1PGoCiQndM7b4RgJay/h7zBLT3hASgoKjamQJMreKf0gfuAGyYtXEIAKcL/Dss15iq6ohXghozLYiAMxPuACwtIT4yeQUxAaLrZwAoqGRKGk7qDSYTfYQ8LuYnAAAAAElFTkSuQmCC
-[twitter-badge]:https://img.shields.io/badge/Tweet-Now-blue.svg?style=for-the-badge&logo=twitter
-[azure-badge]:https://img.shields.io/azure-devops/build/abhiuna12/942b3b13-d745-49e9-8d7d-b3918ff43ac2/2/testing?logo=azure-pipelines&style=for-the-badge
-[pypi-badge]:https://img.shields.io/pypi/v/vidgear.svg?style=for-the-badge&logo=pypi
-[gitter-bagde]:https://img.shields.io/badge/Chat-Gitter-blueviolet.svg?style=for-the-badge&logo=gitter
-[Coffee-badge]:https://abhitronix.github.io/img/vidgear/orange_img.png
-[kofi-badge]:https://www.ko-fi.com/img/githubbutton_sm.svg
-[black-badge]:https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge&logo=github
-
+[appveyor]: https://img.shields.io/appveyor/ci/abhitronix/vidgear.svg?style=for-the-badge&logo=appveyor
+[codecov]: https://img.shields.io/codecov/c/gh/abhiTronix/vidgear?logo=codecov&style=for-the-badge&token=zrES4mwVKe
+[github-cli]: https://img.shields.io/github/actions/workflow/status/abhiTronix/vidgear/.github/workflows/ci_linux.yml?style=for-the-badge&logo=data:image/svg%2bxml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMTAgMWE5IDkgMCAwMTkgOSA5IDkgMCAwMS05IDkgOSA5IDAgMDEtOS05IDkgOSAwIDAxOS05ek0yMyAxOWE2IDYgMCAxMTAgMTIgNiA2IDAgMDEwLTEyek0yMyAzNWE2IDYgMCAxMTAgMTIgNiA2IDAgMDEwLTEyeiIgc3Ryb2tlPSJ2YXIoLS1jb2xvci1tYXJrZXRpbmctaWNvbi1wcmltYXJ5LCAjMjA4OEZGKSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik00MSAzNWE2IDYgMCAxMTAgMTIgNiA2IDAgMDEwLTEyeiIgc3Ryb2tlPSJ2YXIoLS1jb2xvci1tYXJrZXRpbmctaWNvbi1zZWNvbmRhcnksICM3OUI4RkYpIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yNS4wMzcgMjMuNjA3bC0zLjA3IDMuMDY1LTEuNDktMS40ODUiIHN0cm9rZT0idmFyKC0tY29sb3ItbWFya2V0aW5nLWljb24tcHJpbWFyeSwgIzIwODhGRikiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNNDEgMTlhNiA2IDAgMTEwIDEyIDYgNiAwIDAxMC0xMnoiIHN0cm9rZT0idmFyKC0tY29sb3ItbWFya2V0aW5nLWljb24tcHJpbWFyeSwgIzIwODhGRikiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTQzLjAzNiAyMy42MDdsLTMuMDY5IDMuMDY1LTEuNDktMS40ODVNNyA2LjgxMmExIDEgMCAwMTEuNTMzLS44NDZsNS4xMTMgMy4yMmExIDEgMCAwMS0uMDA2IDEuNjk3bC01LjExMyAzLjE3QTEgMSAwIDAxNyAxMy4yMDNWNi44MTN6TTkgMTl2MTVjMCAzLjg2NiAzLjE3NyA3IDcgN2gxIiBzdHJva2U9InZhcigtLWNvbG9yLW1hcmtldGluZy1pY29uLXByaW1hcnksICMyMDg4RkYpIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0xNi45NDkgMjZhMSAxIDAgMTAwLTJ2MnpNOCAxOS4wMzVBNi45NjUgNi45NjUgMCAwMDE0Ljk2NSAyNnYtMkE0Ljk2NSA0Ljk2NSAwIDAxMTAgMTkuMDM1SDh6TTE0Ljk2NSAyNmgxLjk4NHYtMmgtMS45ODR2MnoiIGZpbGw9InZhcigtLWNvbG9yLW1hcmtldGluZy1pY29uLXByaW1hcnksICMyMDg4RkYpIi8+PHBhdGggZD0iTTI5LjA1NSAyNWg1Ljk0NCIgc3Ryb2tlPSJ2YXIoLS1jb2xvci1tYXJrZXRpbmctaWNvbi1wcmltYXJ5LCAjMjA4OEZGKSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTIxIDQwYTEgMSAwIDExLS4wMDEgMi4wMDFBMSAxIDAgMDEyMSA0MHpNMjUgNDBhMSAxIDAgMTEtLjAwMSAyLjAwMUExIDEgMCAwMTI1IDQweiIgZmlsbD0idmFyKC0tY29sb3ItbWFya2V0aW5nLWljb24tc2Vjb25kYXJ5LCAjNzlCOEZGKSIvPjxwYXRoIGQ9Ik0zNC4wMDUgNDEuMDA3bC0xLjAxMy4wMzMiIHN0cm9rZT0idmFyKC0tY29sb3ItbWFya2V0aW5nLWljb24tc2Vjb25kYXJ5LCAjNzlCOEZGKSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4=
+[prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABC0lEQVRYhdWVPQoCMRCFX6HY2ghaiZUXsLW0EDyBrbWtN/EUHsHTWFnYyCL4gxibVZZlZzKTnWz0QZpk5r0vIdkF/kBPAMOKeddE+CQPKoc5Yt5cTjBMdQSwDQToWgBJAn3jmhqgltapAV6E6b5U17MGGAUaUj07TficMfIBZDV6vxowBm1BP9WbSQE4o5h9IjPJmy73TEPDDxVmoZdQrQ5jRhly9Q8tgMUXkIIWn0oG4GYQfAXQzz1PGoCiQndM7b4RgJay/h7zBLT3hASgoKjamQJMreKf0gfuAGyYtXEIAKcL/Dss15iq6ohXghozLYiAMxPuACwtIT4yeQUxAaLrZwAoqGRKGk7qDSYTfYQ8LuYnAAAAAElFTkSuQmCC
+[twitter-badge]: https://img.shields.io/badge/Tweet-Now-blue.svg?style=for-the-badge&logo=twitter
+[azure-badge]: https://img.shields.io/azure-devops/build/abhiuna12/942b3b13-d745-49e9-8d7d-b3918ff43ac2/2/testing?logo=azure-pipelines&style=for-the-badge
+[pypi-badge]: https://img.shields.io/pypi/v/vidgear.svg?style=for-the-badge&logo=pypi
+[gitter-bagde]: https://img.shields.io/badge/Chat-Gitter-blueviolet.svg?style=for-the-badge&logo=gitter
+[coffee-badge]: https://abhitronix.github.io/img/vidgear/orange_img.png
+[kofi-badge]: https://www.ko-fi.com/img/githubbutton_sm.svg
+[black-badge]: https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge&logo=github
 
 <!--
 Internal URLs
 -->
 
-[release]:https://github.com/abhiTronix/vidgear/releases/latest
-[pypi]:https://pypi.org/project/vidgear/
-[gitter]:https://gitter.im/vidgear/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
-[twitter-intent]:https://twitter.com/intent/tweet?url=https%3A%2F%2Fabhitronix.github.io%2Fvidgear&via%20%40abhi_una12&text=Checkout%20VidGear%20-%20A%20High-Performance%20Video-Processing%20Python%20Framework.&hashtags=vidgear%20%23videoprocessing%20%23python%20%23threaded%20%23asyncio
-[coffee]:https://www.buymeacoffee.com/2twOXFvlA
+[release]: https://github.com/abhiTronix/vidgear/releases/latest
+[pypi]: https://pypi.org/project/vidgear/
+[gitter]: https://gitter.im/vidgear/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
+[twitter-intent]: https://twitter.com/intent/tweet?url=https%3A%2F%2Fabhitronix.github.io%2Fvidgear&via%20%40abhi_una12&text=Checkout%20VidGear%20-%20A%20High-Performance%20Video-Processing%20Python%20Framework.&hashtags=vidgear%20%23videoprocessing%20%23python%20%23threaded%20%23asyncio
+[coffee]: https://www.buymeacoffee.com/2twOXFvlA
 [kofi]: https://ko-fi.com/W7W8WTYO
-[license]:https://github.com/abhiTronix/vidgear/blob/master/LICENSE
-[github-flow]:https://github.com/abhiTronix/vidgear/actions?query=workflow%3A%22Run+Linux+CI-Tests+for+vidgear%22
-[azure-pipeline]:https://dev.azure.com/abhiuna12/public/_build?definitionId=2
-[app]:https://ci.appveyor.com/project/abhiTronix/vidgear
-[code]:https://codecov.io/gh/abhiTronix/vidgear
+[license]: https://github.com/abhiTronix/vidgear/blob/master/LICENSE
+[github-flow]: https://github.com/abhiTronix/vidgear/actions?query=workflow%3A%22Run+Linux+CI-Tests+for+vidgear%22
+[azure-pipeline]: https://dev.azure.com/abhiuna12/public/_build?definitionId=2
+[app]: https://ci.appveyor.com/project/abhiTronix/vidgear
+[code]: https://codecov.io/gh/abhiTronix/vidgear
 [btm_netgear_async]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/advanced/bidirectional_mode/
 [rtvc]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer
-
-[test-4k]:https://github.com/abhiTronix/vidgear/blob/e0843720202b0921d1c26e2ce5b11fadefbec892/vidgear/tests/benchmark_tests/test_benchmark_playback.py#L65
-[bs_script_dataset]:https://github.com/abhiTronix/vidgear/blob/testing/scripts/bash/prepare_dataset.sh
-
-[faq]:https://abhitronix.github.io/vidgear/latest/help/get_help/#frequently-asked-questions
-[contribute]:https://abhitronix.github.io/vidgear/latest/contribution
-[rtsp-ex]:https://abhitronix.github.io/vidgear/latest/help/writegear_ex/#using-writegears-compression-mode-for-rtsprtp-live-streaming
-[doc-vidgear-purpose]:https://abhitronix.github.io/vidgear/latest/help/motivation/#why-is-vidgear-a-thing
-[live-stream]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/usage/#using-compression-mode-for-live-streaming
-[live-audio-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/usage/#using-compression-mode-with-live-audio-input
-[piping-live-videos]:https://abhitronix.github.io/vidgear/latest/gears/camgear/usage/#using-camgear-with-streaming-websites
-[ffmpeg-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/advanced/ffmpeg_install/
-[youtube-doc]:https://abhitronix.github.io/vidgear/latest/gears/camgear/usage/#using-camgear-with-youtube-videos
-[TQM-doc]:https://abhitronix.github.io/vidgear/latest/bonus/TQM/#threaded-queue-mode
-[camgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/camgear/overview/
-[stabilizer-doc]:https://abhitronix.github.io/vidgear/latest/gears/stabilizer/overview/
-[stabilizer-doc-ex]:https://abhitronix.github.io/vidgear/latest/gears/videogear/usage/#using-videogear-with-video-stabilizer-backend
-[videogear-doc]:https://abhitronix.github.io/vidgear/latest/gears/videogear/overview/
-[pigear-doc]:https://abhitronix.github.io/vidgear/latest/gears/pigear/overview/
-[cm-writegear-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/overview/
-[ncm-writegear-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/non_compression/overview/
-[screengear-doc]:https://abhitronix.github.io/vidgear/latest/gears/screengear/overview/
-[streamgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/streamgear/introduction/
-[writegear-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/introduction/
-[netgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/overview/
-[webgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/webgear/overview/
-[webgear_rtc-doc]:https://abhitronix.github.io/vidgear/latest/gears/webgear_rtc/overview/
-[netgear_async-doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear_async/overview/
-[drop35]:https://github.com/abhiTronix/vidgear/issues/99
-[custom-command-doc]:https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/advanced/cciw/
-[advanced-webgear-doc]:https://abhitronix.github.io/vidgear/latest/gears/webgear/advanced/
-[netgear_bidata_doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/bidirectional_mode/
-[netgear_compression_doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/compression/
-[netgear_security_doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/secure_mode/
-[netgear_multi_server_doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/multi_server/
-[netgear_multi_client_doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/multi_client/
-[netgear_sshtunnel_doc]:https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/ssh_tunnel/
+[test-4k]: https://github.com/abhiTronix/vidgear/blob/e0843720202b0921d1c26e2ce5b11fadefbec892/vidgear/tests/benchmark_tests/test_benchmark_playback.py#L65
+[bs_script_dataset]: https://github.com/abhiTronix/vidgear/blob/testing/scripts/bash/prepare_dataset.sh
+[faq]: https://abhitronix.github.io/vidgear/latest/help/get_help/#frequently-asked-questions
+[contribute]: https://abhitronix.github.io/vidgear/latest/contribution
+[rtsp-ex]: https://abhitronix.github.io/vidgear/latest/help/writegear_ex/#using-writegears-compression-mode-for-rtsprtp-live-streaming
+[doc-vidgear-purpose]: https://abhitronix.github.io/vidgear/latest/help/motivation/#why-is-vidgear-a-thing
+[live-stream]: https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/usage/#using-compression-mode-for-live-streaming
+[live-audio-doc]: https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/usage/#using-compression-mode-with-live-audio-input
+[piping-live-videos]: https://abhitronix.github.io/vidgear/latest/gears/camgear/usage/#using-camgear-with-streaming-websites
+[ffmpeg-doc]: https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/advanced/ffmpeg_install/
+[youtube-doc]: https://abhitronix.github.io/vidgear/latest/gears/camgear/usage/#using-camgear-with-youtube-videos
+[tqm-doc]: https://abhitronix.github.io/vidgear/latest/bonus/TQM/#threaded-queue-mode
+[camgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/camgear/overview/
+[stabilizer-doc]: https://abhitronix.github.io/vidgear/latest/gears/stabilizer/overview/
+[stabilizer-doc-ex]: https://abhitronix.github.io/vidgear/latest/gears/videogear/usage/#using-videogear-with-video-stabilizer-backend
+[videogear-doc]: https://abhitronix.github.io/vidgear/latest/gears/videogear/overview/
+[pigear-doc]: https://abhitronix.github.io/vidgear/latest/gears/pigear/overview/
+[cm-writegear-doc]: https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/overview/
+[ncm-writegear-doc]: https://abhitronix.github.io/vidgear/latest/gears/writegear/non_compression/overview/
+[screengear-doc]: https://abhitronix.github.io/vidgear/latest/gears/screengear/overview/
+[streamgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/streamgear/introduction/
+[writegear-doc]: https://abhitronix.github.io/vidgear/latest/gears/writegear/introduction/
+[netgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear/overview/
+[webgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/webgear/overview/
+[webgear_rtc-doc]: https://abhitronix.github.io/vidgear/latest/gears/webgear_rtc/overview/
+[netgear_async-doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/overview/
+[drop35]: https://github.com/abhiTronix/vidgear/issues/99
+[custom-command-doc]: https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/advanced/cciw/
+[advanced-webgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/webgear/advanced/
+[netgear_bidata_doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/bidirectional_mode/
+[netgear_compression_doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/compression/
+[netgear_security_doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/secure_mode/
+[netgear_multi_server_doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/multi_server/
+[netgear_multi_client_doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/multi_client/
+[netgear_sshtunnel_doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/ssh_tunnel/
 [netgear-exm]: https://abhitronix.github.io/vidgear/latest/gears/netgear/overview/#modes-of-operation
-[stabilize_webgear_doc]:https://abhitronix.github.io/vidgear/latest/gears/webgear/advanced/#using-webgear-with-real-time-video-stabilization-enabled
-[netgear_Async-cs]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/usage/#using-netgear_async-with-a-custom-sourceopencv
-[installation]:https://abhitronix.github.io/vidgear/latest/installation/
-[gears]:https://abhitronix.github.io/vidgear/latest/gears
-[switch_from_cv]:https://abhitronix.github.io/vidgear/latest/switch_from_cv/
+[stabilize_webgear_doc]: https://abhitronix.github.io/vidgear/latest/gears/webgear/advanced/#using-webgear-with-real-time-video-stabilization-enabled
+[netgear_async-cs]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/usage/#using-netgear_async-with-a-custom-sourceopencv
+[installation]: https://abhitronix.github.io/vidgear/latest/installation/
+[gears]: https://abhitronix.github.io/vidgear/latest/gears
+[switch_from_cv]: https://abhitronix.github.io/vidgear/latest/switch_from_cv/
 [ss-mode-doc]: https://abhitronix.github.io/vidgear/latest/gears/streamgear/ssm/#overview
 [rtf-mode-doc]: https://abhitronix.github.io/vidgear/latest/gears/streamgear/rtfm/#overview
 [webgear-cs]: https://abhitronix.github.io/vidgear/latest/gears/webgear/advanced/#using-webgear-with-a-custom-sourceopencv
@@ -800,41 +769,42 @@ Internal URLs
 <!--
 External URLs
 -->
-[asyncio-zmq]:https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html
+
+[asyncio-zmq]: https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html
 [uvloop]: https://github.com/MagicStack/uvloop
-[streamlink]:https://streamlink.github.io/
-[aiortc]:https://aiortc.readthedocs.io/en/latest/
-[pyscreenshot]:https://github.com/ponty/pyscreenshot
+[streamlink]: https://streamlink.github.io/
+[aiortc]: https://aiortc.readthedocs.io/en/latest/
+[pyscreenshot]: https://github.com/ponty/pyscreenshot
 [uvloop-ns]: https://github.com/MagicStack/uvloop/issues/14
-[ffmpeg]:https://www.ffmpeg.org/
+[ffmpeg]: https://www.ffmpeg.org/
 [flake8]: https://flake8.pycqa.org/en/latest/
 [black]: https://github.com/psf/black
-[pytest]:https://docs.pytest.org/en/latest/
-[opencv-writer]:https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5
-[OpenCV-windows]:https://www.learnopencv.com/install-opencv3-on-windows/
-[OpenCV-linux]:https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/
-[OpenCV-pi]:https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/
-[starlette]:https://www.starlette.io/
-[uvicorn]:http://www.uvicorn.org/
-[daphne]:https://github.com/django/daphne/
-[hypercorn]:https://pgjones.gitlab.io/hypercorn/
-[prs]:http://makeapullrequest.com
-[opencv]:https://github.com/opencv/opencv
-[picamera]:https://github.com/waveform80/picamera
-[pafy]:https://github.com/mps-youtube/pafy
-[pyzmq]:https://github.com/zeromq/pyzmq
-[zmq]:https://zeromq.org/
-[mss]:https://github.com/BoboTiG/python-mss
-[pip]:https://pip.pypa.io/en/stable/installing/
-[opencv-vc]:https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80
-[OV5647-picam]:https://github.com/techyian/MMALSharp/doc/OmniVision-OV5647-Camera-Module
-[IMX219-picam]:https://github.com/techyian/MMALSharp/doc/Sony-IMX219-Camera-Module
-[opencv-vw]:https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html
-[yt_dlp]:https://github.com/yt-dlp/yt-dlp
-[numpy]:https://github.com/numpy/numpy
-[zmq-pair]:https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pair.html
-[zmq-req-rep]:https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/client_server.html
-[zmq-pub-sub]:https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html
+[pytest]: https://docs.pytest.org/en/latest/
+[opencv-writer]: https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5
+[opencv-windows]: https://www.learnopencv.com/install-opencv3-on-windows/
+[opencv-linux]: https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/
+[opencv-pi]: https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/
+[starlette]: https://www.starlette.io/
+[uvicorn]: http://www.uvicorn.org/
+[daphne]: https://github.com/django/daphne/
+[hypercorn]: https://pgjones.gitlab.io/hypercorn/
+[prs]: http://makeapullrequest.com
+[opencv]: https://github.com/opencv/opencv
+[picamera]: https://github.com/waveform80/picamera
+[pafy]: https://github.com/mps-youtube/pafy
+[pyzmq]: https://github.com/zeromq/pyzmq
+[zmq]: https://zeromq.org/
+[mss]: https://github.com/BoboTiG/python-mss
+[pip]: https://pip.pypa.io/en/stable/installing/
+[opencv-vc]: https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80
+[ov5647-picam]: https://github.com/techyian/MMALSharp/doc/OmniVision-OV5647-Camera-Module
+[imx219-picam]: https://github.com/techyian/MMALSharp/doc/Sony-IMX219-Camera-Module
+[opencv-vw]: https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html
+[yt_dlp]: https://github.com/yt-dlp/yt-dlp
+[numpy]: https://github.com/numpy/numpy
+[zmq-pair]: https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pair.html
+[zmq-req-rep]: https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/client_server.html
+[zmq-pub-sub]: https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html
 [zmq-pull-push]: https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pushpull.html#push-pull
-[picamera-setting]:https://picamera.readthedocs.io/en/release-1.13/quickstart.html
-[webrtc]:https://webrtc.org/
+[picamera-setting]: https://picamera.readthedocs.io/en/release-1.13/quickstart.html
+[webrtc]: https://webrtc.org/
