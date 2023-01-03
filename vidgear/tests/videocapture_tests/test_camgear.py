@@ -22,6 +22,7 @@ limitations under the License.
 import os
 import cv2
 import time
+import queue
 import numpy as np
 import pytest
 import logging as log
@@ -187,6 +188,7 @@ def test_stream_mode(url, quality, parameters):
             pytest.xfail(str(e))
         else:
             pytest.fail(str(e))
+
 
 def test_network_playback():
     """
