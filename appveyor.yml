@@ -34,7 +34,7 @@ environment:
 
 build: off
 
-version: '{branch}-{build}'
+version: "{branch}-{build}"
 
 cache:
   - '%LOCALAPPDATA%\pip\Cache'
@@ -45,22 +45,24 @@ branches:
 
 skip_commits:
   files:
-    - '**/*.md'
-    - '**/*.html'
-    - '**/*.js'
-    - '**/*.css'
+    - "**/*.md"
+    - "**/*.html"
+    - "**/*.js"
+    - "**/*.css"
     - docs/**/*
     - mkdocs.yml
     - README.md
 
 matrix:
-    fast_finish: true
+  fast_finish: true
 
 install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
   - "python -m pip install --upgrade pip wheel"
-  - "python -m pip install --upgrade .[asyncio] six codecov pytest pytest-cov pytest-asyncio yt_dlp aiortc paramiko m3u8 async-asgi-testclient"
+  - "python -m pip install --upgrade .[asyncio] six codecov httpx pytest pytest-cov pytest-asyncio yt_dlp aiortc paramiko m3u8 async-asgi-testclient"
+  - "python -m pip install --upgrade deffcode"
+  - "python -m pip install cryptography==38.0.4"
   - "python -m pip install https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev2/mpegdash-0.3.0.dev2-py3-none-any.whl"
   - cmd: chmod +x scripts/bash/prepare_dataset.sh
   - cmd: bash scripts/bash/prepare_dataset.sh
@@ -69,4 +71,4 @@ test_script:
   - cmd: python -m pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/
 
 after_test:
-  - cmd: python -m codecov 
+  - cmd: python -m codecov

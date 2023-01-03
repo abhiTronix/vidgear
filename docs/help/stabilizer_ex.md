@@ -197,7 +197,7 @@ output_params = {
 }
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4
-writer = WriteGear(output_filename="Output.mp4", logging=True, **output_params)
+writer = WriteGear(output="Output.mp4", logging=True, **output_params)
 
 # loop over
 while True:
@@ -274,7 +274,7 @@ output_params = {
 
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4
-writer = WriteGear(output_filename="Output.mp4", logging=True, **output_params)
+writer = WriteGear(output="Output.mp4", logging=True, **output_params)
 
 # loop over
 while True:

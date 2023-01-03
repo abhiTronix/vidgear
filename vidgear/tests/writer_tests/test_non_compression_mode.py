@@ -90,7 +90,7 @@ def test_write(conversion):
     """
     stream = cv2.VideoCapture(return_testvideo_path())
     writer = WriteGear(
-        output_filename="Output_twc.avi", compression_mode=False
+        output="Output_twc.avi", compression_mode=False
     )  # Define writer
     while True:
         (grabbed, frame) = stream.read()
@@ -167,7 +167,7 @@ def test_WriteGear_compression(f_name, output_params, result):
     try:
         stream = cv2.VideoCapture(return_testvideo_path())
         writer = WriteGear(
-            output_filename=f_name,
+            output=f_name,
             compression_mode=False,
             logging=True,
             **output_params

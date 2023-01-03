@@ -57,7 +57,7 @@ import cv2
 stream = CamGear(source="myvideo.avi").start()
 
 # Define writer with default parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename="Output.mp4")
+writer = WriteGear(output="Output.mp4")
 
 # loop over
 while True:
@@ -110,7 +110,7 @@ import cv2
 stream = VideoGear(source=0).start()
 
 # Define writer with default parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename="Output.mp4")
+writer = WriteGear(output="Output.mp4")
 
 # loop over
 while True:
@@ -160,7 +160,7 @@ WriteGear API provides [`-input_framerate`](../params/#supported-parameters)  at
     # set output constant framerate to (say 60 fps)
     output_params = {"-input_framerate":60, "-r":60}
     # assign that to WriteGear
-    writer = WriteGear(output_filename="out.mp4", logging =True, **output_params)
+    writer = WriteGear(output="out.mp4", logging =True, **output_params)
     ```
 
     But make sure you ==MUST set value of `-r` and `-input_framerate` parameter less than or equal to your input source framerate.==
@@ -181,7 +181,7 @@ stream = CamGear(source=0).start()
 output_params = {"-input_framerate": stream.framerate}
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename="Output.mp4", **output_params)
+writer = WriteGear(output="Output.mp4", **output_params)
 
 # loop over
 while True:
@@ -221,7 +221,7 @@ writer.close()
 
 ## Using Compression Mode for live streaming
 
-In Compression Mode, WriteGear also allows URL strings _(as output)_ for live streaming realtime frames with its [`output_filename`](../params/#output_filename) parameter.  
+In Compression Mode, WriteGear also allows URL strings _(as output)_ for live streaming realtime frames with its [`output`](../params/#output) parameter.  
 
 In this example, we will stream live camera frames directly to Twitch :fontawesome-brands-twitch::
 
@@ -257,7 +257,7 @@ TWITCH_KEY = "live_XXXXXXXXXX~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 # Define writer with defined parameters and
 writer = WriteGear(
-    output_filename="rtmp://live.twitch.tv/app/{}".format(TWITCH_KEY),
+    output="rtmp://live.twitch.tv/app/{}".format(TWITCH_KEY),
     logging=True,
     **output_params
 )
@@ -341,7 +341,7 @@ output_params = {
 }
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename="Output.mp4", **output_params)
+writer = WriteGear(output="Output.mp4", **output_params)
 
 # loop over
 while True:
@@ -394,7 +394,7 @@ output_params = {"-vcodec": "libx264", "-crf": 0, "-preset": "fast"}
 stream = cv2.VideoCapture(0)
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename="Output.mp4", logging=True, **output_params)
+writer = WriteGear(output="Output.mp4", logging=True, **output_params)
 
 # loop over
 while True:
@@ -604,7 +604,7 @@ output_params = {
 }
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4
-writer = WriteGear(output_filename="Output.mp4", logging=True, **output_params)
+writer = WriteGear(output="Output.mp4", logging=True, **output_params)
 
 # loop over
 while True:

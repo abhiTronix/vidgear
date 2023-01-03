@@ -489,6 +489,38 @@ def get_supported_demuxers(path):
     return [o.strip() for o in outputs]
 
 
+def get_supported_pixfmts(path):
+    """
+    ## get_supported_pixfmts
+
+    Find and returns all FFmpeg's supported pixel formats.
+
+    Parameters:
+        path (string): absolute path of FFmpeg binaries
+
+    **Returns:** List of supported pixel formats.
+    """
+    pxfmts = check_output([path, "-hide_banner", "-pix_fmts"])
+    splitted = pxfmts.split(b"\n")
+    srtindex = [i for i, s in enumerate(splitted) if b"-----" in s]
+    # extract video encoders
+    supported_pxfmts = [
+        x.decode("utf-8").strip()
+        for x in splitted[srtindex[0] + 1 :]
+        if x.decode("utf-8").strip()
+    ]
+    # compile regex
+    finder = re.compile(r"([A-Z]*[\.]+[A-Z]*\s[a-z0-9_-]*)(\s+[0-4])(\s+[0-9]+)")
+    # find all outputs
+    outputs = finder.findall("\n".join(supported_pxfmts))
+    # return output findings
+    return [
+        [s for s in o[0].split(" ")][-1]
+        for o in outputs
+        if len(o) == 3
+    ]
+
+
 def is_valid_url(path, url=None, logging=False):
     """
     ## is_valid_url

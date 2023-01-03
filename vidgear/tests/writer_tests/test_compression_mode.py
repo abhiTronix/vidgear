@@ -15,7 +15,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-===============================================
+================================================
 """
 # import the necessary packages
 
@@ -29,7 +29,7 @@ import platform
 import tempfile
 import subprocess
 from six import string_types
-
+from deffcode import FFdecoder
 from vidgear.gears import CamGear, WriteGear
 from vidgear.gears.helper import capPropId, check_output, logger_handler
 
@@ -64,12 +64,18 @@ def return_static_ffmpeg():
     return os.path.abspath(path)
 
 
-def return_testvideo_path():
+def return_testvideo_path(fmt="av"):
     """
     returns Test video path
     """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
+    supported_fmts = {
+        "av": "BigBuckBunny_4sec.mp4",
+        "vo": "BigBuckBunny_4sec_VO.mp4",
+        "ao": "BigBuckBunny_4sec_AO.mp4",
+    }
+    req_fmt = fmt if (fmt in supported_fmts) else "av"
+    path = "{}/Downloads/Test_videos/{}".format(
+        tempfile.gettempdir(), supported_fmts[req_fmt]
     )
     return os.path.abspath(path)
 
@@ -129,10 +135,7 @@ def test_input_framerate(c_ffmpeg):
         else {"-input_framerate": "wrong_input"}
     )
     writer = WriteGear(
-        output_filename="Output_tif.mp4",
-        custom_ffmpeg=c_ffmpeg,
-        logging=True,
-        **output_params
+        output="Output_tif.mp4", custom_ffmpeg=c_ffmpeg, logging=True, **output_params
     )  # Define writer
     while True:
         (grabbed, frame) = stream.read()
@@ -147,45 +150,46 @@ def test_input_framerate(c_ffmpeg):
 
 
 @pytest.mark.parametrize(
-    "conversion", ["COLOR_BGR2GRAY", "COLOR_BGR2INVALID", "COLOR_BGR2BGRA"]
+    "pixfmts", ["bgr24", "rgba", "invalid", "invalid2", "yuv444p", "bgr48be"]
 )
-def test_write(conversion):
+def test_write(pixfmts):
     """
-    Testing WriteGear Compression-Mode(FFmpeg) Writer capabilities in different colorspace with CamGearAPI.
+    Testing `frame_format` with different pixel formats.
     """
+    source = return_testvideo_path(fmt="vo")
     try:
-        # Open stream
-        options = {"THREAD_TIMEOUT": 300}
-        stream = CamGear(
-            source=return_testvideo_path(),
-            colorspace=conversion,
-            logging=True,
-            **options
-        ).start()
+        # formulate the decoder with suitable source(for e.g. foo.mp4)
+        if pixfmts != "invalid2":
+            decoder = FFdecoder(
+                source,
+                frame_format=pixfmts,
+                custom_ffmpeg=return_static_ffmpeg(),
+            ).formulate()
+            output_params = {
+                "-input_pixfmt": pixfmts,
+            }
+        else:
+            decoder = FFdecoder(
+                source,
+                custom_ffmpeg=return_static_ffmpeg(),
+            )
+            # assign manually pix-format via `metadata` property object {special case}
+            decoder.metadata = dict(output_frames_pixfmt="yuvj422p")
+            # formulate decoder
+            decoder.formulate()
+            output_params = {
+                "-input_pixfmt": "yuvj422p",
+            }
         writer = WriteGear(
-            output_filename="Output_tw.mp4", custom_ffmpeg=return_static_ffmpeg()
+            output="Output_tw.mp4",
+            custom_ffmpeg=return_static_ffmpeg(),
+            **output_params
         )  # Define writer
-        while True:
-            frame = stream.read()
-            # check if frame is None
-            if frame is None:
-                # if True break the infinite loop
-                break
-            if conversion == "COLOR_BGR2RGBA":
-                writer.write(frame, rgb_mode=True)
-            elif conversion == "COLOR_BGR2INVALID":
-                # test invalid color_space value
-                stream.color_space = conversion
-                conversion = "COLOR_BGR2INVALID2"
-                writer.write(frame)
-            elif conversion == "COLOR_BGR2INVALID2":
-                # test wrong color_space value
-                stream.color_space = 1546755546
-                writer.write(frame)
-                conversion = ""
-            else:
-                writer.write(frame)
-        stream.stop()
+        # grab RGB24(default) 3D frames from decoder
+        for frame in decoder.generateFrame():
+            # lets write it
+            writer.write(frame)
+        decoder.terminate()
         writer.close()
         basepath, _ = os.path.split(return_static_ffmpeg())
         ffprobe_path = os.path.join(
@@ -209,10 +213,7 @@ def test_write(conversion):
                 x in result for x in ["Error", "Invalid", "error", "invalid"]
             ), "Test failed!"
     except Exception as e:
-        if not isinstance(e, (AssertionError, queue.Empty)):
-            pytest.fail(str(e))
-        else:
-            logger.exception(str(e))
+        pytest.fail(str(e))
     finally:
         remove_file_safe("Output_tw.mp4")
 
@@ -233,7 +234,7 @@ def test_output_dimensions():
     else:
         output_params = {"-output_dimensions": dimensions}
     writer = WriteGear(
-        output_filename="Output_tod.mp4",
+        output="Output_tod.mp4",
         custom_ffmpeg=return_static_ffmpeg(),
         logging=True,
         **output_params
@@ -289,9 +290,7 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
     """
     try:
         stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
-        writer = WriteGear(
-            output_filename=f_name, compression_mode=True, **output_params
-        )
+        writer = WriteGear(output=f_name, compression_mode=True, **output_params)
         while True:
             (grabbed, frame) = stream.read()
             if not grabbed:
@@ -350,7 +349,7 @@ def test_WriteGear_customFFmpeg(ffmpeg_cmd, logging, output_params):
     try:
         # define writer
         writer = WriteGear(
-            output_filename="Output.mp4",
+            output="Output.mp4",
             compression_mode=(True if ffmpeg_cmd != ["invalid"] else False),
             logging=logging,
             **output_params

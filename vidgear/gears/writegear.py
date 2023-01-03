@@ -35,6 +35,7 @@ from .helper import (
     logger_handler,
     check_WriteAccess,
     get_valid_ffmpeg_path,
+    get_supported_pixfmts,
     get_supported_vencoders,
     check_gstreamer_support,
 )
@@ -76,7 +77,7 @@ class WriteGear:
 
     def __init__(
         self,
-        output_filename="",
+        output="",
         compression_mode=True,
         custom_ffmpeg="",
         logging=False,
@@ -87,7 +88,7 @@ class WriteGear:
         This constructor method initializes the object state and attributes of the WriteGear class.
 
         Parameters:
-            output_filename (str): sets the valid filename/path/URL for the video output.
+            output (str): sets the valid filename/path/URL for encoding.
             compression_mode (bool): selects the WriteGear's Primary Mode of Operation.
             custom_ffmpeg (str): assigns the location of custom path/directory for custom FFmpeg executables.
             logging (bool): enables/disables logging.
@@ -95,57 +96,59 @@ class WriteGear:
         """
 
         # assign parameter values to class variables
-        self.__compression = compression_mode
-        self.__os_windows = (
-            True if os.name == "nt" else False
-        )  # checks if machine in-use is running windows os or not
-
-        # enable logging if specified
-        self.__logging = False
-        if logging:
-            self.__logging = logging
-
-        # initialize various important class variables
-        self.__output_parameters = {}
-        self.__inputheight = None
-        self.__inputwidth = None
-        self.__inputchannels = None
-        self.__process = None  # handle process to be frames written
-        self.__cmd = ""  # handle FFmpeg Pipe command
-        self.__ffmpeg = ""  # handle valid FFmpeg binaries location
-        self.__initiate = (
-            True  # initiate one time process for valid process initialization
+        # enables compression if enabled
+        self.__compression = (
+            compression_mode if isinstance(compression_mode, bool) else False
         )
-        self.__out_file = None  # handles output filename
-        gstpipeline_support = False  # handles GStreamer Pipeline Mode
+        # specifies if machine in-use is running Windows OS or not
+        self.__os_windows = True if os.name == "nt" else False
+        # enable logging if specified
+        self.__logging = logging if isinstance(logging, bool) else False
+        # initialize various important class variables
+        self.__output_parameters = {}  # handles output parameters
+        self.__inputheight = None  # handles input frames height
+        self.__inputwidth = None  # handles input frames width
+        self.__inputchannels = None  # handles input frames channels
+        self.__inputdtype = None  # handles input frames dtype
+        self.__process = None  # handles Encoding class/process
+        self.__ffmpeg = ""  # handles valid FFmpeg binaries location
+        self.__initiate_process = (
+            True  # handles initiate one-time process for generating pipeline
+        )
+        self.__out_file = None  # handles output
+        gstpipeline_mode = False  # handles GStreamer Pipeline Mode
 
-        # handles output file name (if not given)
-        if not output_filename:
+        # handles output
+        if not output:
+            # raise error otherwise
             raise ValueError(
-                "[WriteGear:ERROR] :: Kindly provide a valid `output_filename` value. Refer Docs for more information."
+                "[WriteGear:ERROR] :: Kindly provide a valid `output` value. Refer Docs for more info."
             )
         else:
-            # validate this class has the access rights to specified directory or not
-            abs_path = os.path.abspath(output_filename)
-
+            # validate output is a system file/directory
+            # and Whether WriteGear has the write rights
+            # to specified file/directory or not
+            abs_path = os.path.abspath(output)
             if check_WriteAccess(
                 os.path.dirname(abs_path),
                 is_windows=self.__os_windows,
                 logging=self.__logging,
             ):
-                if os.path.isdir(abs_path):  # check if given path is directory
+                # check if given path is directory
+                if os.path.isdir(abs_path):
+                    # then, auto-assign valid name and adds it to path
                     abs_path = os.path.join(
                         abs_path,
                         "VidGear-{}.mp4".format(time.strftime("%Y%m%d-%H%M%S")),
-                    )  # auto-assign valid name and adds it to path
-
-                # assign output file absolute path to class variable
+                    )
+                # assign output file absolute
+                # path to class variable if valid
                 self.__out_file = abs_path
             else:
-                # log warning if
-                logger.warning(
+                # log note otherwise
+                logger.info(
                     "`{}` isn't a valid system path or directory. Skipped!".format(
-                        output_filename
+                        output
                     )
                 )
 
@@ -156,36 +159,45 @@ class WriteGear:
             else v
             for k, v in output_params.items()
         }
+        # log it if specified
+        self.__logging and logger.debug(
+            "Output Parameters: `{}`".format(self.__output_parameters)
+        )
 
-        # handles FFmpeg binaries validity tests
+        # handles FFmpeg binaries validity
+        # in Compression mode
         if self.__compression:
+            # log it if specified
+            self.__logging and logger.debug(
+                "Compression Mode is enabled therefore checking for valid FFmpeg executable."
+            )
 
-            if self.__logging:
-                logger.debug(
-                    "Compression Mode is enabled therefore checking for valid FFmpeg executable."
-                )
-                logger.debug("Output Parameters: {}".format(self.__output_parameters))
-
-            # handles where to save the downloaded FFmpeg Static Binaries on Windows(if specified)
+            # handles where to save the downloaded FFmpeg Static Binaries
+            # on Windows(if specified)
             __ffmpeg_download_path = self.__output_parameters.pop(
                 "-ffmpeg_download_path", ""
             )
+            # check if value is valid
             if not isinstance(__ffmpeg_download_path, (str)):
                 # reset improper values
                 __ffmpeg_download_path = ""
 
-            # handle user defined output dimensions(must be a tuple or list)
+            # handle user-defined output resolution (must be a tuple or list)
+            # in Compression Mode only.
             self.__output_dimensions = self.__output_parameters.pop(
                 "-output_dimensions", None
             )
+            # check if value is valid
             if not isinstance(self.__output_dimensions, (list, tuple)):
                 # reset improper values
                 self.__output_dimensions = None
 
-            # handle user defined framerate
+            # handle user defined input framerate of encoding pipeline
+            # in Compression Mode only.
             self.__inputframerate = self.__output_parameters.pop(
                 "-input_framerate", 0.0
             )
+            # check if value is valid
             if not isinstance(self.__inputframerate, (float, int)):
                 # reset improper values
                 self.__inputframerate = 0.0
@@ -193,54 +205,70 @@ class WriteGear:
                 # must be float
                 self.__inputframerate = float(self.__inputframerate)
 
-            # handle user defined ffmpeg cmd preheaders(must be a list)
+            # handle user-defined input frames pixel-format in Compression Mode only.
+            self.__inputpixfmt = self.__output_parameters.pop("-input_pixfmt", None)
+            # check if value is valid
+            if not isinstance(self.__inputpixfmt, str):
+                # reset improper values
+                self.__inputpixfmt = None
+            else:
+                # must be exact
+                self.__inputpixfmt = self.__inputpixfmt.strip()
+
+            # handle user-defined FFmpeg command pre-headers(must be a list)
+            # in Compression Mode only.
             self.__ffmpeg_preheaders = self.__output_parameters.pop("-ffpreheaders", [])
+            # check if value is valid
             if not isinstance(self.__ffmpeg_preheaders, list):
                 # reset improper values
                 self.__ffmpeg_preheaders = []
 
-            # handle special-case force-termination in compression mode
+            # handle the special-case of forced-termination (only for Compression mode)
             disable_force_termination = self.__output_parameters.pop(
                 "-disable_force_termination",
                 False if ("-i" in self.__output_parameters) else True,
             )
+            # check if value is valid
             if isinstance(disable_force_termination, bool):
-                self.__force_termination = not (disable_force_termination)
+                self.__forced_termination = not (disable_force_termination)
             else:
                 # handle improper values
-                self.__force_termination = (
+                self.__forced_termination = (
                     True if ("-i" in self.__output_parameters) else False
                 )
 
-            # validate the FFmpeg path/binaries and returns valid FFmpeg file
-            # executable location (also downloads static binaries on windows)
+            # validate the FFmpeg path/binaries and returns valid executable FFmpeg
+            # location/path (also auto-downloads static binaries on Windows OS)
             self.__ffmpeg = get_valid_ffmpeg_path(
                 custom_ffmpeg,
                 self.__os_windows,
                 ffmpeg_download_path=__ffmpeg_download_path,
                 logging=self.__logging,
             )
-
-            # check if valid path returned
+            # check if valid executable FFmpeg location/path
             if self.__ffmpeg:
+                # log it if found
                 self.__logging and logger.debug(
                     "Found valid FFmpeg executable: `{}`.".format(self.__ffmpeg)
                 )
             else:
                 # otherwise disable Compression Mode
+                # and switch to Non-compression mode
                 logger.warning(
                     "Disabling Compression Mode since no valid FFmpeg executable found on this machine!"
                 )
                 if self.__logging and not self.__os_windows:
                     logger.debug(
-                        "Kindly install working FFmpeg or provide a valid custom FFmpeg binary path. See docs for more info."
+                        "Kindly install a working FFmpeg module or provide a valid custom FFmpeg binary path. See docs for more info."
                     )
-                self.__compression = False  # compression mode disabled
+                # compression mode disabled
+                self.__compression = False
         else:
-            # handle GStreamer Pipeline Mode for non-compression mode
+            # handle GStreamer Pipeline Mode (only for Non-compression mode)
             if "-gst_pipeline_mode" in self.__output_parameters:
+                # check if value is valid
                 if isinstance(self.__output_parameters["-gst_pipeline_mode"], bool):
-                    gstpipeline_support = self.__output_parameters[
+                    gstpipeline_mode = self.__output_parameters[
                         "-gst_pipeline_mode"
                     ] and check_gstreamer_support(logging=logging)
                     self.__logging and logger.debug(
@@ -248,64 +276,68 @@ class WriteGear:
                     )
                 else:
                     # reset improper values
-                    gstpipeline_support = False
+                    gstpipeline_mode = False
+                    # log it
                     self.__logging and logger.warning(
                         "GStreamer Pipeline Mode failed to activate!"
                     )
 
-        # display confirmation if logging is enabled/disabled
+        # handle output differently in Compression/Non-compression Modes
         if self.__compression and self.__ffmpeg:
+            # check if output falls in exclusive cases
             if self.__out_file is None:
                 if (
                     platform.system() == "Linux"
-                    and pathlib.Path(output_filename).is_char_device()
+                    and pathlib.Path(output).is_char_device()
                 ):
-                    # check if linux video device path (such as `/dev/video0`)
+                    # check whether output is a Linux video device path (such as `/dev/video0`)
                     self.__logging and logger.debug(
-                        "Path:`{}` is a valid Linux Video Device path.".format(
-                            output_filename
-                        )
+                        "Path:`{}` is a valid Linux Video Device path.".format(output)
                     )
-                    self.__out_file = output_filename
-                elif is_valid_url(
-                    self.__ffmpeg, url=output_filename, logging=self.__logging
-                ):
-                    # check whether url is valid instead
+                    self.__out_file = output
+                elif is_valid_url(self.__ffmpeg, url=output, logging=self.__logging):
+                    # check whether output is a valid URL instead
                     self.__logging and logger.debug(
                         "URL:`{}` is valid and successfully configured for streaming.".format(
-                            output_filename
+                            output
                         )
                     )
-                    self.__out_file = output_filename
+                    self.__out_file = output
                 else:
+                    # raise error otherwise
                     raise ValueError(
-                        "[WriteGear:ERROR] :: output_filename value:`{}` is not supported in Compression Mode.".format(
-                            output_filename
+                        "[WriteGear:ERROR] :: output value:`{}` is not supported in Compression Mode.".format(
+                            output
                         )
                     )
-            self.__force_termination and logger.debug(
+            # log if forced termination is enabled
+            self.__forced_termination and logger.debug(
                 "Forced termination is enabled for this FFmpeg process."
             )
+            # log Compression is enabled
             self.__logging and logger.debug(
                 "Compression Mode with FFmpeg backend is configured properly."
             )
         else:
             if self.__out_file is None:
-                if gstpipeline_support:
+                # check if GStreamer Pipeline Mode is enabled
+                if gstpipeline_mode:
                     # enforce GStreamer backend
                     self.__output_parameters["-backend"] = "CAP_GSTREAMER"
-                    # assign original value
-                    self.__out_file = output_filename
+                    # assign original ouput value
+                    self.__out_file = output
                     # log it
                     self.__logging and logger.debug(
                         "Non-Compression Mode is successfully configured in GStreamer Pipeline Mode."
                     )
                 else:
+                    # raise error otherwise
                     raise ValueError(
-                        "[WriteGear:ERROR] :: output_filename value:`{}` is not supported in Non-Compression Mode.".format(
-                            output_filename
+                        "[WriteGear:ERROR] :: output value:`{}` is not supported in Non-Compression Mode.".format(
+                            output
                         )
                     )
+            # log if Compression is disabled
             logger.critical(
                 "Compression Mode is disabled, Activating OpenCV built-in Writer!"
             )
@@ -313,7 +345,7 @@ class WriteGear:
     def write(self, frame, rgb_mode=False):
 
         """
-        Pipelines `ndarray` frames to respective API _(FFmpeg in Compression Mode & OpenCV VideoWriter API in Non-Compression Mode)_.
+        Pipelines `ndarray` frames to respective API _(**FFmpeg** in Compression Mode & **OpenCV's VideoWriter API** in Non-Compression Mode)_.
 
         Parameters:
             frame (ndarray): a valid numpy frame
@@ -323,79 +355,89 @@ class WriteGear:
         if frame is None:  # None-Type frames will be skipped
             return
 
-        # get height, width and number of channels of current frame
+        # get height, width, number of channels, and dtype of current frame
         height, width = frame.shape[:2]
         channels = frame.shape[-1] if frame.ndim == 3 else 1
+        dtype = frame.dtype
 
         # assign values to class variables on first run
-        if self.__initiate:
+        if self.__initiate_process:
             self.__inputheight = height
             self.__inputwidth = width
             self.__inputchannels = channels
+            self.__inputdtype = dtype
             self.__logging and logger.debug(
-                "InputFrame => Height:{} Width:{} Channels:{}".format(
-                    self.__inputheight, self.__inputwidth, self.__inputchannels
+                "InputFrame => Height:{} Width:{} Channels:{} Datatype:{}".format(
+                    self.__inputheight,
+                    self.__inputwidth,
+                    self.__inputchannels,
+                    self.__inputdtype,
                 )
             )
 
-        # validate size of frame
+        # validate frame size
         if height != self.__inputheight or width != self.__inputwidth:
             raise ValueError(
                 "[WriteGear:ERROR] :: All video-frames must have same size!"
             )
-        # validate number of channels
+        # validate number of channels in frame
         if channels != self.__inputchannels:
             raise ValueError(
                 "[WriteGear:ERROR] :: All video-frames must have same number of channels!"
             )
+        # validate frame datatype
+        if dtype != self.__inputdtype:
+            raise ValueError(
+                "[WriteGear:ERROR] :: All video-frames must have same datatype!"
+            )
 
+        # checks if compression mode is enabled
         if self.__compression:
-            # checks if compression mode is enabled
-
             # initiate FFmpeg process on first run
-            if self.__initiate:
-                # start pre-processing and initiate process
-                self.__Preprocess(channels, rgb=rgb_mode)
+            if self.__initiate_process:
+                # start pre-processing of FFmpeg parameters, and initiate process
+                self.__PreprocessFFParams(channels, dtype=dtype, rgb=rgb_mode)
                 # Check status of the process
                 assert self.__process is not None
-
-            # write the frame
             try:
+                # try writing the frame bytes to the subprocess pipeline
                 self.__process.stdin.write(frame.tobytes())
             except (OSError, IOError):
-                # log something is wrong!
+                # log if something is wrong!
                 logger.error(
-                    "BrokenPipeError caught, Wrong values passed to FFmpeg Pipe, Kindly Refer Docs!"
+                    "BrokenPipeError caught, Wrong values passed to FFmpeg Pipe. Kindly Refer Docs!"
                 )
                 raise ValueError  # for testing purpose only
         else:
-            # otherwise initiate OpenCV's VideoWriter Class
-            if self.__initiate:
+            # otherwise initiate OpenCV's VideoWriter Class process
+            if self.__initiate_process:
                 # start VideoWriter Class process
-                self.__startCV_Process()
+                self.__start_CVProcess()
                 # Check status of the process
                 assert self.__process is not None
-                # log OpenCV warning
+                # log one-time OpenCV warning
                 self.__logging and logger.info(
-                    "RGBA and 16-bit grayscale video frames are not supported by OpenCV yet, switch to `compression_mode` to use them!"
+                    "RGBA and 16-bit grayscale video frames are not supported by OpenCV yet. Kindly switch on `compression_mode` to use them!"
                 )
-            # write the frame
+            # write frame directly to
+            # VideoWriter Class process
             self.__process.write(frame)
 
-    def __Preprocess(self, channels, rgb=False):
+    def __PreprocessFFParams(self, channels, dtype=None, rgb=False):
         """
-        Internal method that pre-processes FFmpeg Parameters before beginning pipelining.
+        Internal method that pre-processes FFmpeg Parameters before beginning to pipeline frames.
 
         Parameters:
-            channels (int): Number of channels
-            rgb_mode (boolean): activates RGB mode _(if enabled)_.
+            channels (int): Number of channels in input frame.
+            dtype (str): Datatype of input frame.
+            rgb_mode (boolean): Whether to activate `RGB mode`?
         """
         # turn off initiate flag
-        self.__initiate = False
+        self.__initiate_process = False
         # initialize input parameters
         input_parameters = {}
 
-        # handle dimensions
+        # handle output frames dimensions
         dimensions = ""
         if self.__output_dimensions is None:  # check if dimensions are given
             dimensions += "{}x{}".format(
@@ -407,60 +449,97 @@ class WriteGear:
             )  # apply if defined
         input_parameters["-s"] = str(dimensions)
 
-        # handles pix_fmt based on channels(HACK)
-        if channels == 1:
-            input_parameters["-pix_fmt"] = "gray"
-        elif channels == 2:
-            input_parameters["-pix_fmt"] = "ya8"
-        elif channels == 3:
-            input_parameters["-pix_fmt"] = "rgb24" if rgb else "bgr24"
-        elif channels == 4:
-            input_parameters["-pix_fmt"] = "rgba" if rgb else "bgra"
+        # handles user-defined and auto-assigned input pixel-formats
+        if not (
+            self.__inputpixfmt is None
+        ) and self.__inputpixfmt in get_supported_pixfmts(self.__ffmpeg):
+            # assign directly if valid
+            input_parameters["-pix_fmt"] = self.__inputpixfmt
         else:
-            raise ValueError(
-                "[WriteGear:ERROR] :: Frames with channels outside range 1-to-4 are not supported!"
-            )
+            # handles pix_fmt based on channels and dtype(HACK)
+            if dtype.kind == "u" and dtype.itemsize == 2:
+                # handle pix_fmt for frames with higher than 8-bit depth
+                pix_fmt = None
+                if channels == 1:
+                    pix_fmt = "gray16"
+                elif channels == 2:
+                    pix_fmt = "ya16"
+                elif channels == 3:
+                    pix_fmt = "rgb48" if rgb else "bgr48"
+                elif channels == 4:
+                    pix_fmt = "rgba64" if rgb else "bgra64"
+                else:
+                    # raise error otherwise
+                    raise ValueError(
+                        "[WriteGear:ERROR] :: Frames with channels outside range 1-to-4 are not supported!"
+                    )
+                # Add endianness suffix (w.r.t byte-order)
+                input_parameters["-pix_fmt"] = pix_fmt + (
+                    "be" if dtype.byteorder == ">" else "le"
+                )
+            else:
+                # handle pix_fmt for frames with exactly 8-bit depth(`uint8`)
+                if channels == 1:
+                    input_parameters["-pix_fmt"] = "gray"
+                elif channels == 2:
+                    input_parameters["-pix_fmt"] = "ya8"
+                elif channels == 3:
+                    input_parameters["-pix_fmt"] = "rgb24" if rgb else "bgr24"
+                elif channels == 4:
+                    input_parameters["-pix_fmt"] = "rgba" if rgb else "bgra"
+                else:
+                    # raise error otherwise
+                    raise ValueError(
+                        "[WriteGear:ERROR] :: Frames with channels outside range 1-to-4 are not supported!"
+                    )
 
-        if self.__inputframerate > 0:
-            # set input framerate
+        # handles user-defined output video framerate
+        if self.__inputframerate > 0.0:
+            # assign input framerate if valid
             self.__logging and logger.debug(
                 "Setting Input framerate: {}".format(self.__inputframerate)
             )
             input_parameters["-framerate"] = str(self.__inputframerate)
 
         # initiate FFmpeg process
-        self.__startFFmpeg_Process(
+        self.__start_FFProcess(
             input_params=input_parameters, output_params=self.__output_parameters
         )
 
-    def __startFFmpeg_Process(self, input_params, output_params):
+    def __start_FFProcess(self, input_params, output_params):
 
         """
-        An Internal method that launches FFmpeg subprocess, that pipelines frames to
-        stdin, in Compression Mode.
+        An Internal method that launches FFmpeg subprocess pipeline in Compression Mode
+        for pipelining frames to `stdin`.
 
         Parameters:
             input_params (dict): Input FFmpeg parameters
             output_params (dict): Output FFmpeg parameters
         """
-        # convert input parameters to list
+        # convert input parameters to argument list
         input_parameters = dict2Args(input_params)
 
-        # dynamically pre-assign a default video-encoder (if not assigned by user).
+        # handle output video encoder.
+        # get list of supported video-encoders
         supported_vcodecs = get_supported_vencoders(self.__ffmpeg)
+        # dynamically select default encoder
         default_vcodec = [
             vcodec
             for vcodec in ["libx264", "libx265", "libxvid", "mpeg4"]
             if vcodec in supported_vcodecs
         ][0] or "unknown"
+        # extract any user-defined encoder
         if "-c:v" in output_params:
+            # assign it to the pipeline
             output_params["-vcodec"] = output_params.pop("-c:v", default_vcodec)
         if not "-vcodec" in output_params:
+            # auto-assign default video-encoder (if not assigned by user).
             output_params["-vcodec"] = default_vcodec
         if (
             default_vcodec != "unknown"
             and not output_params["-vcodec"] in supported_vcodecs
         ):
+            # reset to default if not supported
             logger.critical(
                 "Provided FFmpeg does not support `{}` video-encoder. Switching to default supported `{}` encoder!".format(
                     output_params["-vcodec"], default_vcodec
@@ -468,7 +547,7 @@ class WriteGear:
             )
             output_params["-vcodec"] = default_vcodec
 
-        # assign optimizations
+        # assign optimizations based on selected video encoder(if any)
         if output_params["-vcodec"] in supported_vcodecs:
             if output_params["-vcodec"] in ["libx265", "libx264"]:
                 if not "-crf" in output_params:
@@ -479,14 +558,16 @@ class WriteGear:
                 if not "-qscale:v" in output_params:
                     output_params["-qscale:v"] = "3"
         else:
+            # raise error otherwise
             raise RuntimeError(
                 "[WriteGear:ERROR] :: Provided FFmpeg does not support any suitable/usable video-encoders for compression."
                 " Kindly disable compression mode or switch to another FFmpeg binaries(if available)."
             )
 
-        # convert output parameters to list
+        # convert output parameters to argument list
         output_parameters = dict2Args(output_params)
-        # format command
+
+        # format FFmpeg command
         cmd = (
             [self.__ffmpeg, "-y"]
             + self.__ffmpeg_preheaders
@@ -496,12 +577,11 @@ class WriteGear:
             + output_parameters
             + [self.__out_file]
         )
-        # assign value to class variable
-        self.__cmd += " ".join(cmd)
-        # Launch the FFmpeg process
+        # Launch the process with FFmpeg command
         if self.__logging:
-            logger.debug("Executing FFmpeg command: `{}`".format(self.__cmd))
-            # In debugging mode
+            # log command in logging mode
+            logger.debug("Executing FFmpeg command: `{}`".format(" ".join(cmd)))
+            # In logging mode
             self.__process = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
         else:
             # In silent mode
@@ -509,73 +589,91 @@ class WriteGear:
                 cmd, stdin=sp.PIPE, stdout=sp.DEVNULL, stderr=sp.STDOUT
             )
 
-    def execute_ffmpeg_cmd(self, cmd=None):
+    def __enter__(self):
+        """
+        Handles entry with the `with` statement. See [PEP343 -- The 'with' statement'](https://peps.python.org/pep-0343/).
+
+        **Returns:** Returns a reference to the WriteGear Class
+        """
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """
+        Handles exit with the `with` statement. See [PEP343 -- The 'with' statement'](https://peps.python.org/pep-0343/).
+        """
+        self.close()
+
+    def execute_ffmpeg_cmd(self, command=None):
         """
 
         Executes user-defined FFmpeg Terminal command, formatted as a python list(in Compression Mode only).
 
         Parameters:
-            cmd (list): inputs list data-type command.
+            command (list): inputs list data-type command.
 
         """
         # check if valid command
-        if cmd is None or not (cmd):
-            logger.warning("Input FFmpeg command is empty, Nothing to execute!")
+        if command is None or not (command):
+            logger.warning("Input command is empty, Nothing to execute!")
             return
         else:
-            if not (isinstance(cmd, list)):
+            if not (isinstance(command, list)):
                 raise ValueError(
-                    "[WriteGear:ERROR] :: Invalid input FFmpeg command datatype! Kindly read docs."
+                    "[WriteGear:ERROR] :: Invalid input command datatype! Kindly read docs."
                 )
 
         # check if Compression Mode is enabled
         if not (self.__compression):
+            # raise error otherwise
             raise RuntimeError(
                 "[WriteGear:ERROR] :: Compression Mode is disabled, Kindly enable it to access this function."
             )
 
         # add configured FFmpeg path
-        cmd = [self.__ffmpeg] + cmd
+        cmd = [self.__ffmpeg] + command
 
         try:
-            # write to pipeline
+            # write frames to pipeline
             if self.__logging:
+                # log command in logging mode
                 logger.debug("Executing FFmpeg command: `{}`".format(" ".join(cmd)))
-                # In debugging mode
+                # In logging mode
                 sp.run(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
             else:
+                # In silent mode
                 sp.run(cmd, stdin=sp.PIPE, stdout=sp.DEVNULL, stderr=sp.STDOUT)
         except (OSError, IOError):
-            # log something is wrong!
+            # raise error and log if something is wrong.
             logger.error(
                 "BrokenPipeError caught, Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!"
             )
             raise ValueError  # for testing purpose only
 
-    def __startCV_Process(self):
+    def __start_CVProcess(self):
         """
-        An Internal method that launches OpenCV VideoWriter process for given settings, in Non-Compression Mode.
+        An Internal method that launches OpenCV VideoWriter process in Non-Compression
+        Mode with given settings.
         """
         # turn off initiate flag
-        self.__initiate = False
+        self.__initiate_process = False
 
-        # initialize essential parameter variables
+        # initialize essential variables
         FPS = 0
         BACKEND = ""
         FOURCC = 0
         COLOR = True
 
-        # pre-assign default encoder parameters (if not assigned by user).
+        # pre-assign default parameters (if not assigned by user).
         if "-fourcc" not in self.__output_parameters:
             FOURCC = cv2.VideoWriter_fourcc(*"MJPG")
         if "-fps" not in self.__output_parameters:
             FPS = 25
 
-        # auto assign dimensions
+        # auto-assign frame dimensions
         HEIGHT = self.__inputheight
         WIDTH = self.__inputwidth
 
-        # assign parameter dict values to variables
+        # assign dict parameter values to variables
         try:
             for key, value in self.__output_parameters.items():
                 if key == "-fourcc":
@@ -588,22 +686,21 @@ class WriteGear:
                     COLOR = bool(value)
                 else:
                     pass
-
         except Exception as e:
-            # log if something is wrong
+            # log and raise error if something is wrong
             self.__logging and logger.exception(str(e))
             raise ValueError(
                 "[WriteGear:ERROR] :: Wrong Values passed to OpenCV Writer, Kindly Refer Docs!"
             )
 
-        if self.__logging:
-            # log values for debugging
-            logger.debug(
-                "FILE_PATH: {}, FOURCC = {}, FPS = {}, WIDTH = {}, HEIGHT = {}, BACKEND = {}".format(
-                    self.__out_file, FOURCC, FPS, WIDTH, HEIGHT, BACKEND
-                )
+        # log values for debugging
+        self.__logging and logger.debug(
+            "FILE_PATH: {}, FOURCC = {}, FPS = {}, WIDTH = {}, HEIGHT = {}, BACKEND = {}".format(
+                self.__out_file, FOURCC, FPS, WIDTH, HEIGHT, BACKEND
             )
-        # start different process for with/without Backend.
+        )
+        # start different OpenCV VideoCapture processes
+        # for with and without Backend.
         if BACKEND:
             self.__process = cv2.VideoWriter(
                 self.__out_file,
@@ -621,7 +718,7 @@ class WriteGear:
                 frameSize=(WIDTH, HEIGHT),
                 isColor=COLOR,
             )
-
+        # check if OpenCV VideoCapture is opened successfully
         assert (
             self.__process.isOpened()
         ), "[WriteGear:ERROR] :: Failed to intialize OpenCV Writer!"
@@ -630,21 +727,31 @@ class WriteGear:
         """
         Safely terminates various WriteGear process.
         """
+        # log termination
         if self.__logging:
             logger.debug("Terminating WriteGear Processes.")
-
+        # handle termination separately
         if self.__compression:
-            # if Compression Mode is enabled
+            # when Compression Mode is enabled
             if self.__process is None or not (self.__process.poll() is None):
-                return  # no process was initiated at first place
-            if self.__process.stdin:
-                self.__process.stdin.close()  # close `stdin` output
-            if self.__force_termination:
-                self.__process.terminate()
-            self.__process.wait()  # wait if still process is still processing some information
-            self.__process = None
+                # return if no process initiated
+                # at first place
+                return
+            # close `stdin` output
+            self.__process.stdin and self.__process.stdin.close()
+            # close `stdout` output
+            self.__process.stdout and self.__process.stdout.close()
+            # forced termination if specified.
+            self.__forced_termination and self.__process.terminate()
+            # wait if process is still processing
+            self.__process.wait()
         else:
-            # if Compression Mode is disabled
+            # when Compression Mode is disabled
             if self.__process is None:
-                return  # no process was initiated at first place
-            self.__process.release()  # close it
+                # return if no process initiated
+                # at first place
+                return
+            # close it
+            self.__process.release()
+        # discard process
+        self.__process = None

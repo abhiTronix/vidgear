@@ -227,7 +227,7 @@ Let's extend previous bare-minimum python code and save those extracted frames t
     stream = CamGear(source=0).start() 
 
     # Define WriteGear Object with suitable output filename for e.g. `Output.mp4`
-    writer = WriteGear(output_filename = 'Output.mp4') 
+    writer = WriteGear(output = 'Output.mp4') 
 
     # loop over
     while True:
@@ -274,7 +274,7 @@ Let's breakdown a few noteworthy difference in both syntaxes:
 
 | Task | OpenCV VideoWriter Class | VidGear's WriteGear API |
 | :----------: | :--------------------: | :---------------------: |
-| Initiating | `#!python writer = cv2.VideoWriter('output.avi', cv2.VideoWriter_fourcc(*'XVID'), 20.0, (640, 480))` | `#!python writer = WriteGear(output_filename='Output.mp4')` |
+| Initiating | `#!python writer = cv2.VideoWriter('output.avi', cv2.VideoWriter_fourcc(*'XVID'), 20.0, (640, 480))` | `#!python writer = WriteGear(output='Output.mp4')` |
 | Writing frames | `#!python writer.write(frame)` | `#!python writer.write(frame)` |
 | Terminating | `#!python writer.release()` | `#!python writer.close()` |
 
