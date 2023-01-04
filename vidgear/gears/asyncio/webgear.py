@@ -19,12 +19,10 @@ limitations under the License.
 """
 # import the necessary packages
 import os
-import cv2
 import asyncio
 import inspect
 import numpy as np
 import logging as log
-from collections import deque
 from os.path import expanduser
 
 # import helper packages
@@ -120,7 +118,7 @@ class WebGear:
         )
 
         # initialize global params
-        self.__skip_generate_webdata = False  # generate webdata by default
+        self.__skip_generate_webdata = False  # generate webgear data by default
         # define frame-compression handler
         self.__jpeg_compression_quality = 90  # 90% quality
         self.__jpeg_compression_fastdct = True  # fastest DCT on by default
@@ -294,7 +292,7 @@ class WebGear:
             self.routes = [
                 Route("/video", endpoint=self.__video),
             ]
-            # log it
+            # log exceptions
             self.__logging and logger.warning(
                 "Only `/video` route is available for this instance."
             )
