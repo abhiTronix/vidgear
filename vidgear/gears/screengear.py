@@ -19,15 +19,19 @@ limitations under the License.
 """
 # import the necessary packages
 import cv2
-import time
 import queue
 import numpy as np
 import logging as log
 from threading import Thread, Event
-from collections import deque, OrderedDict
+from collections import OrderedDict
 
 # import helper packages
-from .helper import import_dependency_safe, capPropId, logger_handler
+from .helper import (
+    import_dependency_safe,
+    capPropId,
+    logger_handler,
+    logcurr_vidgear_ver,
+)
 
 # safe import critical Class modules
 mss = import_dependency_safe("from mss import mss", error="silent")
@@ -65,8 +69,13 @@ class ScreenGear:
             logging (bool): enables/disables logging.
             options (dict): provides the flexibility to manually set the dimensions of capture screen area.
         """
+        # print current version
+        logcurr_vidgear_ver(logging=logging)
+
         # raise error(s) for critical Class imports
-        import_dependency_safe("from mss import mss" if mss is None else "", pkg_name="mss")
+        import_dependency_safe(
+            "from mss import mss" if mss is None else "", pkg_name="mss"
+        )
         import_dependency_safe("pyscreenshot" if pysct is None else "")
 
         # enable logging if specified:

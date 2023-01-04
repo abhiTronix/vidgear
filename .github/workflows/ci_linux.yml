@@ -50,6 +50,7 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -qq unzip wget -y
           sudo apt-get install -qq dos2unix -y
+          sudo apt-get install ffmpeg v4l2loopback-dkms v4l2loopback-utils linux-modules-extra-$(uname -r) -y
       - name: prepare bash_scripts
         run: |
           dos2unix scripts/bash/prepare_dataset.sh
@@ -82,6 +83,7 @@ jobs:
         if: success() && matrix.python-version == 3.7
       - name: pytest without_ENV
         run: |
+          sudo modprobe v4l2loopback devices=1 video_nr=0 exclusive_caps=1 card_label='VCamera'
           timeout 1200 pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "EXIT_CODE=$code" >>$GITHUB_ENV; fi
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         if: success() && matrix.python-version != 3.7

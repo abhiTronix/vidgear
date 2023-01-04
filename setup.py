@@ -19,9 +19,7 @@ limitations under the License.
 """
 # import the necessary packages
 import json
-import sys
 import platform
-import setuptools
 import urllib.request
 
 from pkg_resources import parse_version
@@ -63,7 +61,7 @@ def latest_version(package_name):
         versions = list(data["releases"].keys())
         versions.sort(key=parse_version)
         return ">={}".format(versions[-1])
-    except TypeError as e:
+    except Exception as e:
         if versions:
             return ">={}".format(versions[-1])
     return ""

@@ -23,12 +23,9 @@ limitations under the License.
 # import the necessary packages
 import os
 import cv2
-import errno
-import numpy as np
-import asyncio
-import logging as log
-import platform
 import requests
+import numpy as np
+import logging as log
 from tqdm import tqdm
 from colorlog import ColoredFormatter
 from requests.adapters import HTTPAdapter
