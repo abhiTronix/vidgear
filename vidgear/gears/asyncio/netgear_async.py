@@ -30,7 +30,7 @@ import platform
 from collections import deque
 
 # import helper packages
-from ..helper import logger_handler, import_dependency_safe
+from ..helper import logger_handler, import_dependency_safe, logcurr_vidgear_ver
 
 # import additional API(s)
 from ..videogear import VideoGear
@@ -126,8 +126,13 @@ class NetGear_Async:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Tweak Parameters of NetGear_Async, CamGear, PiGear & Stabilizer.
         """
+        # print current version
+        logcurr_vidgear_ver(logging=logging)
+
         # raise error(s) for critical Class imports
-        import_dependency_safe("zmq" if zmq is None else "", min_version="4.0", pkg_name="pyzmq")
+        import_dependency_safe(
+            "zmq" if zmq is None else "", min_version="4.0", pkg_name="pyzmq"
+        )
         import_dependency_safe("msgpack" if msgpack is None else "")
         import_dependency_safe("msgpack_numpy" if m is None else "")
 

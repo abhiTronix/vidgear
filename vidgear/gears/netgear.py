@@ -19,7 +19,6 @@ limitations under the License.
 """
 # import the necessary packages
 import os
-import cv2
 import time
 import string
 import secrets
@@ -36,6 +35,7 @@ from .helper import (
     check_WriteAccess,
     check_open_port,
     import_dependency_safe,
+    logcurr_vidgear_ver,
 )
 
 # safe import critical Class modules
@@ -132,8 +132,13 @@ class NetGear:
             logging (bool): enables/disables logging.
             options (dict): provides the flexibility to alter various NetGear internal properties.
         """
+        # print current version
+        logcurr_vidgear_ver(logging=logging)
+
         # raise error(s) for critical Class imports
-        import_dependency_safe("zmq" if zmq is None else "", min_version="4.0", pkg_name="pyzmq")
+        import_dependency_safe(
+            "zmq" if zmq is None else "", min_version="4.0", pkg_name="pyzmq"
+        )
         import_dependency_safe(
             "simplejpeg" if simplejpeg is None else "", error="log", min_version="1.6.1"
         )

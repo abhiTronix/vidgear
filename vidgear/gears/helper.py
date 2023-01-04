@@ -92,13 +92,35 @@ def logger_handler():
     return handler
 
 
+# global var to check
+# if version is logged
+ver_is_logged = False
+
 # define logger
 logger = log.getLogger("Helper")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
-# log current version for debugging
-logger.info("Running VidGear Version: {}".format(str(__version__)))
+
+
+def logcurr_vidgear_ver(logging=False):
+    """
+    ## logcurr_vidgear_ver
+
+    A auxiliary function to log current vidgear version for debugging.
+
+    Parameters:
+        logging (bool): enables logging for its operations
+    """
+    # making changes to global var
+    global ver_is_logged
+    # log current vidgear version
+    logging and not (ver_is_logged) and logger.info(
+        "Running VidGear Version: {}".format(str(__version__))
+    )
+    # disable logging same thing again
+    if logging and not (ver_is_logged):
+        ver_is_logged = True
 
 
 def get_module_version(module=None):
@@ -514,11 +536,7 @@ def get_supported_pixfmts(path):
     # find all outputs
     outputs = finder.findall("\n".join(supported_pxfmts))
     # return output findings
-    return [
-        [s for s in o[0].split(" ")][-1]
-        for o in outputs
-        if len(o) == 3
-    ]
+    return [[s for s in o[0].split(" ")][-1] for o in outputs if len(o) == 3]
 
 
 def is_valid_url(path, url=None, logging=False):

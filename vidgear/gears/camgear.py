@@ -33,6 +33,7 @@ from .helper import (
     get_supported_resolution,
     check_gstreamer_support,
     import_dependency_safe,
+    logcurr_vidgear_ver,
 )
 
 # define logger
@@ -232,6 +233,8 @@ class CamGear:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Source Tweak Parameters.
         """
+        # print current version
+        logcurr_vidgear_ver(logging=logging)
 
         # enable logging if specified
         self.__logging = False

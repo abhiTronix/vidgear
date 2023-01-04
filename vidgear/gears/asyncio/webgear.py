@@ -33,7 +33,12 @@ from .helper import (
     generate_webdata,
     create_blank_frame,
 )
-from ..helper import logger_handler, retrieve_best_interpolation, import_dependency_safe
+from ..helper import (
+    logger_handler,
+    retrieve_best_interpolation,
+    import_dependency_safe,
+    logcurr_vidgear_ver,
+)
 
 # import additional API(s)
 from ..videogear import VideoGear
@@ -105,6 +110,9 @@ class WebGear:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Tweak Parameters of WebGear, CamGear, PiGear & Stabilizer.
         """
+        # print current version
+        logcurr_vidgear_ver(logging=logging)
+
         # raise error(s) for critical Class imports
         import_dependency_safe("starlette" if starlette is None else "")
         import_dependency_safe(

@@ -20,7 +20,6 @@ limitations under the License.
 # import the necessary packages
 import os
 import cv2
-import sys
 import time
 import platform
 import pathlib
@@ -38,6 +37,7 @@ from .helper import (
     get_supported_pixfmts,
     get_supported_vencoders,
     check_gstreamer_support,
+    logcurr_vidgear_ver,
 )
 
 # define logger
@@ -94,6 +94,13 @@ class WriteGear:
             logging (bool): enables/disables logging.
             output_params (dict): provides the flexibility to control supported internal parameters and FFmpeg properities.
         """
+        # print current version
+        logcurr_vidgear_ver(logging=logging)
+
+        # check if user not using depreciated `output_filename` parameter
+        assert (
+            not "output_filename" in output_params
+        ), "[WriteGear:ERROR] :: The `output_filename` parameter has been renamed to `output`. Refer Docs for more info."
 
         # assign parameter values to class variables
         # enables compression if enabled

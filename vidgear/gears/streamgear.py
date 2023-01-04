@@ -19,7 +19,6 @@ limitations under the License.
 """
 # import the necessary packages
 import os
-import cv2
 import time
 import math
 import platform
@@ -44,6 +43,7 @@ from .helper import (
     check_WriteAccess,
     get_video_bitrate,
     get_valid_ffmpeg_path,
+    logcurr_vidgear_ver,
 )
 
 # define logger
@@ -81,6 +81,9 @@ class StreamGear:
             logging (bool): enables/disables logging.
             stream_params (dict): provides the flexibility to control supported internal parameters and FFmpeg properities.
         """
+        # print current version
+        logcurr_vidgear_ver(logging=logging)
+
         # checks if machine in-use is running windows os or not
         self.__os_windows = True if os.name == "nt" else False
         # enable logging if specified
