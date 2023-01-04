@@ -326,24 +326,26 @@ class WriteGear:
                 "Compression Mode with FFmpeg backend is configured properly."
             )
         else:
-            if self.__out_file is None:
-                # check if GStreamer Pipeline Mode is enabled
-                if gstpipeline_mode:
-                    # enforce GStreamer backend
-                    self.__output_parameters["-backend"] = "CAP_GSTREAMER"
-                    # assign original ouput value
-                    self.__out_file = output
-                    # log it
-                    self.__logging and logger.debug(
-                        "Non-Compression Mode is successfully configured in GStreamer Pipeline Mode."
+            # raise error if not valid input
+            if self.__out_file is None and not gstpipeline_mode:
+                raise ValueError(
+                    "[WriteGear:ERROR] :: output value:`{}` is not supported in Non-Compression Mode.".format(
+                        output
                     )
-                else:
-                    # raise error otherwise
-                    raise ValueError(
-                        "[WriteGear:ERROR] :: output value:`{}` is not supported in Non-Compression Mode.".format(
-                            output
-                        )
-                    )
+                )
+
+            # check if GStreamer Pipeline Mode is enabled
+            if gstpipeline_mode:
+                # enforce GStreamer backend
+                self.__output_parameters["-backend"] = "CAP_GSTREAMER"
+                # enforce original output value
+                self.__out_file = output
+
+            # log it
+            self.__logging and logger.debug(
+                "Non-Compression Mode is successfully configured in GStreamer Pipeline Mode."
+            )
+
             # log if Compression is disabled
             logger.critical(
                 "Compression Mode is disabled, Activating OpenCV built-in Writer!"
