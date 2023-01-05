@@ -27,6 +27,7 @@ import logging as log
 import requests
 import tempfile
 from starlette.routing import Route
+from starlette.responses import JSONResponse
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import PlainTextResponse
@@ -115,6 +116,7 @@ def test_webgear_class(source, stabilize, colorspace, time_delay):
             "jpeg_compression_colorspace": "invalid",
             "jpeg_compression_quality": 5,
             "custom_data_location": True,
+            "skip_generate_webdata": "invalid",
             "jpeg_compression_fastdct": "invalid",
             "jpeg_compression_fastupsample": "invalid",
             "frame_size_reduction": "invalid",
@@ -124,6 +126,7 @@ def test_webgear_class(source, stabilize, colorspace, time_delay):
         {
             "jpeg_compression_colorspace": " gray  ",
             "jpeg_compression_quality": 50,
+            "skip_generate_webdata": "invalid",
             "jpeg_compression_fastdct": True,
             "jpeg_compression_fastupsample": True,
             "overwrite_default_files": True,
@@ -133,6 +136,7 @@ def test_webgear_class(source, stabilize, colorspace, time_delay):
         {
             "jpeg_compression_quality": 55.55,
             "jpeg_compression_fastdct": True,
+            "skip_generate_webdata": "invalid",
             "jpeg_compression_fastupsample": True,
             "custom_data_location": "im_wrong",
         },
@@ -247,6 +251,33 @@ def test_webgear_routes():
         assert response.status_code == 200
         response_hello = client.get("/hello")
         assert response_hello.status_code == 200
+        web.shutdown()
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+def test_skip_generate_webdata():
+    """
+    Test for `skip_generate_webdata` optional attribute
+    """
+    try:
+        # add various performance tweaks as usual
+        options = {
+            "frame_size_reduction": 40,
+            "jpeg_compression_quality": 80,
+            "jpeg_compression_fastdct": True,
+            "jpeg_compression_fastupsample": False,
+            "skip_generate_webdata": True,
+        }
+        web = WebGear(source=return_testvideo_path(), logging=True, **options)
+        client = TestClient(web(), raise_server_exceptions=True)
+        response = client.get("/")
+        assert "detail" in response.json()
+        response_404 = client.get("/test")
+        assert "detail" in response_404.json()
+        assert response_404.status_code == 404
+        response_video = client.get("/video")
+        assert response_video.status_code == 200
         web.shutdown()
     except Exception as e:
         pytest.fail(str(e))

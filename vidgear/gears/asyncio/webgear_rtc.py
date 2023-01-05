@@ -19,12 +19,10 @@ limitations under the License.
 """
 # import the necessary packages
 import os
-import cv2
 import time
 import fractions
 import asyncio
 import logging as log
-from collections import deque
 from os.path import expanduser
 
 # import helper packages

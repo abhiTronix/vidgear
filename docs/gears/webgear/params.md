@@ -146,6 +146,18 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     WebGear(logging=True, **options)
     ```
 
+* **`skip_generate_webdata`** _(boolean)_ : Can be used to completely disable Data-Files Auto-Generation WorkFlow in WebGear API, and thereby no default data files will be downloaded or validated during its initialization. Its default value is `False`. Its usage is as follows
+
+    ??? new "New in v0.3.0"
+        `skip_generate_webdata` attribute was added in `v0.3.0`.
+
+    ```python
+    # completely disable Data-Files Auto-Generation WorkFlow
+    options = {"skip_generate_webdata": True}
+    # assign it
+    WebGear(logging=True, **options)
+    ```
+
 &nbsp; 
 
 &nbsp;

@@ -56,7 +56,10 @@ def latest_version(package_name):
     url = "https://pypi.python.org/pypi/%s/json" % (package_name,)
     versions = []
     try:
-        response = urllib.request.urlopen(urllib.request.Request(url), timeout=1)
+        response = urllib.request.urlopen(
+            urllib.request.Request(url),
+            timeout=1,
+        )
         data = json.load(response)
         versions = list(data["releases"].keys())
         versions.sort(key=parse_version)
@@ -64,6 +67,8 @@ def latest_version(package_name):
     except Exception as e:
         if versions:
             return ">={}".format(versions[-1])
+        else:
+            print(str(e))
     return ""
 
 
