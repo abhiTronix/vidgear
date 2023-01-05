@@ -243,7 +243,7 @@ def download_webdata(path, c_name="webgear", files=[], logging=False):
             # get filename
             file_name = os.path.join(path, file)
             # get URL
-            file_url = "https://raw.githubusercontent.com/abhiTronix/vidgear-vitals/master/{}{}/{}/{}".format(
+            file_url = "https://gitlab.com/abhiTronix/vidgear-vitals/-/raw/main/{}{}/{}/{}".format(
                 c_name, "/static" if basename != "templates" else "", basename, file
             )
             # download and write file to the given path
