@@ -709,15 +709,23 @@ def validate_audio(path, source=None):
         for line in metadata.decode("utf-8").split("\n")
         if "Audio:" in line
     ]
-    audio_bitrate = re.findall(r"([0-9]+)\s(kb|mb|gb)\/s", audio_bitrate_meta[0])[-1]
+    audio_bitrate = (
+        re.findall(r"([0-9]+)\s(kb|mb|gb)\/s", audio_bitrate_meta[0])[-1]
+        if audio_bitrate_meta
+        else ""
+    )
     # extract samplerate
     audio_samplerate_metadata = [
         line.strip()
         for line in metadata.decode("utf-8").split("\n")
         if all(x in line for x in ["Audio:", "Hz"])
     ]
-    audio_samplerate = re.findall(r"[0-9]+\sHz", audio_samplerate_metadata[0])[0]
-    # format actual readable value
+    audio_samplerate = (
+        re.findall(r"[0-9]+\sHz", audio_samplerate_metadata[0])[0]
+        if audio_samplerate_metadata
+        else ""
+    )
+    # format into actual readable bitrate value
     if audio_bitrate:
         # return bitrate directly
         return "{}{}".format(int(audio_bitrate[0].strip()), audio_bitrate[1].strip()[0])
