@@ -1122,7 +1122,11 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                     http.mount("https://", adapter)
                     response = http.get(file_url, stream=True)
                     response.raise_for_status()
-                    total_length = response.headers.get("content-length")
+                    total_length = (
+                        response.headers.get("content-length")
+                        if "content-length" in response.headers
+                        else len(response.content)
+                    )
                     assert not (
                         total_length is None
                     ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
