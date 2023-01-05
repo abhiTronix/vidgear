@@ -42,6 +42,8 @@ theme:
     - search.highlight
     - search.share
     - content.code.annotate
+    - content.code.copy
+    - content.tabs.link
   palette:
     # Light mode
     - media: "(prefers-color-scheme: light)"
@@ -66,7 +68,6 @@ theme:
     logo: logo
   logo: assets/images/logo.svg
   favicon: assets/images/favicon-32.png
-    # 404 page
   static_templates:
     - 404.html
 
@@ -106,10 +107,10 @@ extra:
     property: UA-131929464-1
 
 extra_css:
-    - assets/stylesheets/custom.css
-  
+  - assets/stylesheets/custom.css
+
 extra_javascript:
-    - assets/javascripts/extra.js
+  - assets/javascripts/extra.js
 
 # Extensions
 markdown_extensions:
@@ -158,181 +159,181 @@ markdown_extensions:
 
 # Page tree
 nav:
-  - Home: 
-    - Overview: index.md
-    - Installation: 
-      - Installation Overview: installation.md
-      - Install using pip: installation/pip_install.md
-      - Install from source: installation/source_install.md
-    - Switching from OpenCV: switch_from_cv.md
-    - Contribution Guidelines: 
-      - Contribution Overview: contribution.md
-      - Submitting an Issue Guidelines: contribution/issue.md
-      - Submitting Pull Request(PR) Guidelines: contribution/PR.md
-    - Release Notes: changelog.md
-    - License: license.md
+  - Home:
+      - Overview: index.md
+      - Installation:
+          - Installation Overview: installation.md
+          - Install using pip: installation/pip_install.md
+          - Install from source: installation/source_install.md
+      - Switching from OpenCV: switch_from_cv.md
+      - Contribution Guidelines:
+          - Contribution Overview: contribution.md
+          - Submitting an Issue Guidelines: contribution/issue.md
+          - Submitting Pull Request(PR) Guidelines: contribution/PR.md
+      - Release Notes: changelog.md
+      - License: license.md
   - Gears:
-    - Introduction: gears.md
-    - CamGear: 
-      - Overview: gears/camgear/overview.md
-      - Usage Examples: gears/camgear/usage.md
-      - Parameters: gears/camgear/params.md
-      - Bonus:
-        - Source Tweak Parameters: gears/camgear/advanced/source_params.md
-        - API References: bonus/reference/camgear.md
-        - Bonus Examples: help/camgear_ex.md
-        - FAQs: help/camgear_faqs.md
-    - PiGear: 
-      - Overview: gears/pigear/overview.md
-      - Usage Examples: gears/pigear/usage.md
-      - Parameters: gears/pigear/params.md
-      - Bonus:
-        - API References: bonus/reference/pigear.md
-        - Bonus Examples: help/pigear_ex.md
-        - FAQs: help/pigear_faqs.md
-    - VideoGear: 
-      - Overview: gears/videogear/overview.md
-      - Usage Examples: gears/videogear/usage.md
-      - Parameters: gears/videogear/params.md
-      - Bonus:
-        - API References: bonus/reference/videogear.md
-        - Bonus Examples: help/videogear_ex.md
-        - FAQs: help/videogear_faqs.md
-    - ScreenGear: 
-      - Overview: gears/screengear/overview.md
-      - Usage Examples: gears/screengear/usage.md
-      - Parameters: gears/screengear/params.md
-      - Bonus:
-        - API References: bonus/reference/screengear.md
-        - Bonus Examples: help/screengear_ex.md
-        - FAQs: help/screengear_faqs.md
-    - WriteGear:
-      - Introduction: gears/writegear/introduction.md
-      - Compression Mode:
-        - Overview: gears/writegear/compression/overview.md
-        - Usage Examples: gears/writegear/compression/usage.md
-        - Advanced: 
-          - Custom FFmpeg Commands: gears/writegear/compression/advanced/cciw.md
-          - FFmpeg Installation: gears/writegear/compression/advanced/ffmpeg_install.md
-        - Parameters: gears/writegear/compression/params.md
-      - Non-Compression Mode:
-        - Overview: gears/writegear/non_compression/overview.md
-        - Usage Examples: gears/writegear/non_compression/usage.md
-        - Parameters: gears/writegear/non_compression/params.md
-      - Bonus:
-        - API References: bonus/reference/writegear.md
-        - Bonus Examples: help/writegear_ex.md
-        - FAQs: help/writegear_faqs.md
-    - StreamGear: 
-      - Introduction: gears/streamgear/introduction.md
-      - Single-Source Mode:
-        - Overview: gears/streamgear/ssm/overview.md
-        - Usage Examples: gears/streamgear/ssm/usage.md
-      - Real-time Frames Mode: 
-        - Overview: gears/streamgear/rtfm/overview.md
-        - Usage Examples: gears/streamgear/rtfm/usage.md
-      - Parameters: gears/streamgear/params.md
-      - Bonus:
-        - API References: bonus/reference/streamgear.md
-        - FFmpeg Installation: gears/streamgear/ffmpeg_install.md
-        - Bonus Examples: help/streamgear_ex.md
-        - FAQs: help/streamgear_faqs.md
-    - NetGear: 
-      - Overview: gears/netgear/overview.md
-      - Usage Examples: gears/netgear/usage.md
-      - Advanced Usages: 
-        - Multi-Servers Mode: gears/netgear/advanced/multi_server.md
-        - Multi-Clients Mode: gears/netgear/advanced/multi_client.md
-        - Bidirectional Mode: gears/netgear/advanced/bidirectional_mode.md
-        - SSH Tunneling Mode: gears/netgear/advanced/ssh_tunnel.md
-        - Secure Mode: gears/netgear/advanced/secure_mode.md 
-        - Frame Compression: gears/netgear/advanced/compression.md
-      - Parameters: gears/netgear/params.md
-      - Bonus:
-        - API References: bonus/reference/netgear.md
-        - Bonus Examples: help/netgear_ex.md
-        - FAQs: help/netgear_faqs.md
-    - WebGear: 
-      - Overview: gears/webgear/overview.md
-      - Usage Examples: gears/webgear/usage.md
-      - Advanced Usages: gears/webgear/advanced.md
-      - Parameters: gears/webgear/params.md
-      - Bonus:
-        - API References: bonus/reference/webgear.md
-        - Bonus Examples: help/webgear_ex.md
-        - FAQs: help/webgear_faqs.md
-    - WebGear_RTC: 
-      - Overview: gears/webgear_rtc/overview.md
-      - Usage Examples: gears/webgear_rtc/usage.md
-      - Advanced Usages: gears/webgear_rtc/advanced.md
-      - Parameters: gears/webgear_rtc/params.md
-      - Bonus:
-        - API References: bonus/reference/webgear_rtc.md
-        - Bonus Examples: help/webgear_rtc_ex.md
-        - FAQs: help/webgear_rtc_faqs.md
-    - NetGear_Async: 
-      - Overview: gears/netgear_async/overview.md
-      - Usage Examples: gears/netgear_async/usage.md
-      - Advanced Usages:
-        - Bidirectional Mode: gears/netgear_async/advanced/bidirectional_mode.md
-      - Parameters: gears/netgear_async/params.md
-      - Bonus:
-        - API References: bonus/reference/netgear_async.md
-        - Bonus Examples: help/netgear_async_ex.md
-        - FAQs: help/netgear_async_faqs.md
-    - Stabilizer Class: 
-      - Overview: gears/stabilizer/overview.md
-      - Usage Examples: gears/stabilizer/usage.md
-      - Parameters: gears/stabilizer/params.md
-      - Bonus:
-        - API References: bonus/reference/stabilizer.md
-        - Bonus Examples: help/stabilizer_ex.md
-        - FAQs: help/stabilizer_faqs.md
-  - References: 
-    - API References:
-      - vidgear.gears: 
-        - CamGear API: bonus/reference/camgear.md
-        - PiGear API: bonus/reference/pigear.md
-        - VideoGear API: bonus/reference/videogear.md
-        - ScreenGear API: bonus/reference/screengear.md
-        - WriteGear API: bonus/reference/writegear.md
-        - StreamGear API: bonus/reference/streamgear.md
-        - NetGear API: bonus/reference/netgear.md
-        - Stabilizer Class: bonus/reference/stabilizer.md
-        - Helper Methods: bonus/reference/helper.md
-      - vidgear.gears.asyncio:
-        - WebGear API: bonus/reference/webgear.md
-        - WebGear_RTC API: bonus/reference/webgear_rtc.md
-        - NetGear_Async API: bonus/reference/netgear_async.md
-        - Helper Methods: bonus/reference/helper_async.md
-    - Colorspace Manipulation: bonus/colorspace_manipulation.md
-    - Threaded Queue Mode: bonus/TQM.md
+      - Introduction: gears.md
+      - CamGear:
+          - Overview: gears/camgear/overview.md
+          - Usage Examples: gears/camgear/usage.md
+          - Parameters: gears/camgear/params.md
+          - Bonus:
+              - Source Tweak Parameters: gears/camgear/advanced/source_params.md
+              - API References: bonus/reference/camgear.md
+              - Bonus Examples: help/camgear_ex.md
+              - FAQs: help/camgear_faqs.md
+      - PiGear:
+          - Overview: gears/pigear/overview.md
+          - Usage Examples: gears/pigear/usage.md
+          - Parameters: gears/pigear/params.md
+          - Bonus:
+              - API References: bonus/reference/pigear.md
+              - Bonus Examples: help/pigear_ex.md
+              - FAQs: help/pigear_faqs.md
+      - VideoGear:
+          - Overview: gears/videogear/overview.md
+          - Usage Examples: gears/videogear/usage.md
+          - Parameters: gears/videogear/params.md
+          - Bonus:
+              - API References: bonus/reference/videogear.md
+              - Bonus Examples: help/videogear_ex.md
+              - FAQs: help/videogear_faqs.md
+      - ScreenGear:
+          - Overview: gears/screengear/overview.md
+          - Usage Examples: gears/screengear/usage.md
+          - Parameters: gears/screengear/params.md
+          - Bonus:
+              - API References: bonus/reference/screengear.md
+              - Bonus Examples: help/screengear_ex.md
+              - FAQs: help/screengear_faqs.md
+      - WriteGear:
+          - Introduction: gears/writegear/introduction.md
+          - Compression Mode:
+              - Overview: gears/writegear/compression/overview.md
+              - Usage Examples: gears/writegear/compression/usage.md
+              - Advanced:
+                  - Custom FFmpeg Commands: gears/writegear/compression/advanced/cciw.md
+                  - FFmpeg Installation: gears/writegear/compression/advanced/ffmpeg_install.md
+              - Parameters: gears/writegear/compression/params.md
+          - Non-Compression Mode:
+              - Overview: gears/writegear/non_compression/overview.md
+              - Usage Examples: gears/writegear/non_compression/usage.md
+              - Parameters: gears/writegear/non_compression/params.md
+          - Bonus:
+              - API References: bonus/reference/writegear.md
+              - Bonus Examples: help/writegear_ex.md
+              - FAQs: help/writegear_faqs.md
+      - StreamGear:
+          - Introduction: gears/streamgear/introduction.md
+          - Single-Source Mode:
+              - Overview: gears/streamgear/ssm/overview.md
+              - Usage Examples: gears/streamgear/ssm/usage.md
+          - Real-time Frames Mode:
+              - Overview: gears/streamgear/rtfm/overview.md
+              - Usage Examples: gears/streamgear/rtfm/usage.md
+          - Parameters: gears/streamgear/params.md
+          - Bonus:
+              - API References: bonus/reference/streamgear.md
+              - FFmpeg Installation: gears/streamgear/ffmpeg_install.md
+              - Bonus Examples: help/streamgear_ex.md
+              - FAQs: help/streamgear_faqs.md
+      - NetGear:
+          - Overview: gears/netgear/overview.md
+          - Usage Examples: gears/netgear/usage.md
+          - Advanced Usages:
+              - Multi-Servers Mode: gears/netgear/advanced/multi_server.md
+              - Multi-Clients Mode: gears/netgear/advanced/multi_client.md
+              - Bidirectional Mode: gears/netgear/advanced/bidirectional_mode.md
+              - SSH Tunneling Mode: gears/netgear/advanced/ssh_tunnel.md
+              - Secure Mode: gears/netgear/advanced/secure_mode.md
+              - Frame Compression: gears/netgear/advanced/compression.md
+          - Parameters: gears/netgear/params.md
+          - Bonus:
+              - API References: bonus/reference/netgear.md
+              - Bonus Examples: help/netgear_ex.md
+              - FAQs: help/netgear_faqs.md
+      - WebGear:
+          - Overview: gears/webgear/overview.md
+          - Usage Examples: gears/webgear/usage.md
+          - Advanced Usages: gears/webgear/advanced.md
+          - Parameters: gears/webgear/params.md
+          - Bonus:
+              - API References: bonus/reference/webgear.md
+              - Bonus Examples: help/webgear_ex.md
+              - FAQs: help/webgear_faqs.md
+      - WebGear_RTC:
+          - Overview: gears/webgear_rtc/overview.md
+          - Usage Examples: gears/webgear_rtc/usage.md
+          - Advanced Usages: gears/webgear_rtc/advanced.md
+          - Parameters: gears/webgear_rtc/params.md
+          - Bonus:
+              - API References: bonus/reference/webgear_rtc.md
+              - Bonus Examples: help/webgear_rtc_ex.md
+              - FAQs: help/webgear_rtc_faqs.md
+      - NetGear_Async:
+          - Overview: gears/netgear_async/overview.md
+          - Usage Examples: gears/netgear_async/usage.md
+          - Advanced Usages:
+              - Bidirectional Mode: gears/netgear_async/advanced/bidirectional_mode.md
+          - Parameters: gears/netgear_async/params.md
+          - Bonus:
+              - API References: bonus/reference/netgear_async.md
+              - Bonus Examples: help/netgear_async_ex.md
+              - FAQs: help/netgear_async_faqs.md
+      - Stabilizer Class:
+          - Overview: gears/stabilizer/overview.md
+          - Usage Examples: gears/stabilizer/usage.md
+          - Parameters: gears/stabilizer/params.md
+          - Bonus:
+              - API References: bonus/reference/stabilizer.md
+              - Bonus Examples: help/stabilizer_ex.md
+              - FAQs: help/stabilizer_faqs.md
+  - References:
+      - API References:
+          - vidgear.gears:
+              - CamGear API: bonus/reference/camgear.md
+              - PiGear API: bonus/reference/pigear.md
+              - VideoGear API: bonus/reference/videogear.md
+              - ScreenGear API: bonus/reference/screengear.md
+              - WriteGear API: bonus/reference/writegear.md
+              - StreamGear API: bonus/reference/streamgear.md
+              - NetGear API: bonus/reference/netgear.md
+              - Stabilizer Class: bonus/reference/stabilizer.md
+              - Helper Methods: bonus/reference/helper.md
+          - vidgear.gears.asyncio:
+              - WebGear API: bonus/reference/webgear.md
+              - WebGear_RTC API: bonus/reference/webgear_rtc.md
+              - NetGear_Async API: bonus/reference/netgear_async.md
+              - Helper Methods: bonus/reference/helper_async.md
+      - Colorspace Manipulation: bonus/colorspace_manipulation.md
+      - Threaded Queue Mode: bonus/TQM.md
   - Help:
-    - Help VidGear 'n' Get Help:
-      - Helping VidGear: help.md
-      - Getting Help: help/get_help.md
-    - Frequently Asked Questions:
-      - General FAQs: help/general_faqs.md
-      - CamGear FAQs: help/camgear_faqs.md
-      - PiGear FAQs: help/pigear_faqs.md
-      - VideoGear FAQs: help/videogear_faqs.md
-      - ScreenGear FAQs: help/screengear_faqs.md
-      - WriteGear FAQs: help/writegear_faqs.md
-      - StreamGear FAQs: help/streamgear_faqs.md
-      - NetGear FAQs: help/netgear_faqs.md
-      - WebGear FAQs: help/webgear_faqs.md
-      - WebGear_RTC FAQs: help/webgear_rtc_faqs.md
-      - NetGear_Async FAQs: help/netgear_async_faqs.md
-      - Stabilizer Class FAQs: help/stabilizer_faqs.md
-    - Bonus Examples:
-      - CamGear Examples: help/camgear_ex.md
-      - PiGear Examples: help/pigear_ex.md
-      - VideoGear Examples: help/videogear_ex.md
-      - ScreenGear Examples: help/screengear_ex.md
-      - WriteGear Examples: help/writegear_ex.md
-      - StreamGear Examples: help/streamgear_ex.md
-      - NetGear Examples: help/netgear_ex.md
-      - WebGear Examples: help/webgear_ex.md
-      - WebGear_RTC Examples: help/webgear_rtc_ex.md
-      - NetGear_Async Examples: help/netgear_async_ex.md
-      - Stabilizer Class Examples: help/stabilizer_ex.md
+      - Help VidGear 'n' Get Help:
+          - Helping VidGear: help.md
+          - Getting Help: help/get_help.md
+      - Frequently Asked Questions:
+          - General FAQs: help/general_faqs.md
+          - CamGear FAQs: help/camgear_faqs.md
+          - PiGear FAQs: help/pigear_faqs.md
+          - VideoGear FAQs: help/videogear_faqs.md
+          - ScreenGear FAQs: help/screengear_faqs.md
+          - WriteGear FAQs: help/writegear_faqs.md
+          - StreamGear FAQs: help/streamgear_faqs.md
+          - NetGear FAQs: help/netgear_faqs.md
+          - WebGear FAQs: help/webgear_faqs.md
+          - WebGear_RTC FAQs: help/webgear_rtc_faqs.md
+          - NetGear_Async FAQs: help/netgear_async_faqs.md
+          - Stabilizer Class FAQs: help/stabilizer_faqs.md
+      - Bonus Examples:
+          - CamGear Examples: help/camgear_ex.md
+          - PiGear Examples: help/pigear_ex.md
+          - VideoGear Examples: help/videogear_ex.md
+          - ScreenGear Examples: help/screengear_ex.md
+          - WriteGear Examples: help/writegear_ex.md
+          - StreamGear Examples: help/streamgear_ex.md
+          - NetGear Examples: help/netgear_ex.md
+          - WebGear Examples: help/webgear_ex.md
+          - WebGear_RTC Examples: help/webgear_rtc_ex.md
+          - NetGear_Async Examples: help/netgear_async_ex.md
+          - Stabilizer Class Examples: help/stabilizer_ex.md
