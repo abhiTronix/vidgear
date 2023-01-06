@@ -20,7 +20,7 @@ limitations under the License.
 
 // DASH StreamGear demo
 var player_dash = new Clappr.Player({
-  source: 'https://glcdn.githack.com/abhiTronix/vidgear-docs-additionals/-/raw/main/streamgear_video_segments/DASH/streamgear_dash.mpd',
+  source: 'https://bbcdn.githack.com/abhi_uno/vidgear-docs-additionals/raw/abc0c193ab26e21f97fa30c9267de6beb8a72295/streamgear_video_segments/DASH/streamgear_dash.mpd',
   plugins: [DashShakaPlayback, LevelSelector],
   shakaConfiguration: {
     streaming: {
@@ -33,41 +33,24 @@ var player_dash = new Clappr.Player({
   levelSelectorConfig: {
     title: 'Quality',
     labels: {
-        2: 'High', // 500kbps
-        1: 'Med', // 240kbps
-        0: 'Low', // 120kbps
+      2: 'High', // 500kbps
+      1: 'Med', // 240kbps
+      0: 'Low', // 120kbps
     },
     labelCallback: function(playbackLevel, customLabel) {
-        return customLabel; // High 720p
+      return customLabel; // High 720p
     }
-  },
-  shakaConfiguration: {
-    manifest: {
-      retryParameters: {
-        maxAttempts: Infinity,
-      }
-    },
-    streaming: {
-      retryParameters: {
-        maxAttempts: Infinity,
-      }
-    },
-    drm: {
-      retryParameters: {
-        maxAttempts: Infinity,
-      }
-    },    
   },
   width: '100%',
   height: '100%',
   parentId: '#player_dash',
-  poster: 'https://glcdn.githack.com/abhiTronix/vidgear-docs-additionals/-/raw/main/streamgear_video_segments/DASH/hd_thumbnail.jpg',
+  poster: 'https://bbcdn.githack.com/abhi_uno/vidgear-docs-additionals/raw/abc0c193ab26e21f97fa30c9267de6beb8a72295/streamgear_video_segments/DASH/hd_thumbnail.jpg',
   preload: 'metadata',
 });
 
 // HLS StremGear demo
 var player_hls = new Clappr.Player({
-  source: 'https://glcdn.githack.com/abhiTronix/vidgear-docs-additionals/-/raw/main/streamgear_video_segments/HLS/streamgear_hls.m3u8',
+  source: 'https://bbcdn.githack.com/abhi_uno/vidgear-docs-additionals/raw/abc0c193ab26e21f97fa30c9267de6beb8a72295/streamgear_video_segments/HLS/streamgear_hls.m3u8',
   plugins: [HlsjsPlayback, LevelSelector],
   hlsUseNextLevel: false,
   hlsMinimumDvrSize: 60,
@@ -86,24 +69,24 @@ var player_hls = new Clappr.Player({
   levelSelectorConfig: {
     title: 'Quality',
     labels: {
-        2: 'High', // 500kbps
-        1: 'Med', // 240kbps
-        0: 'Low', // 120kbps
+      2: 'High', // 500kbps
+      1: 'Med', // 240kbps
+      0: 'Low', // 120kbps
     },
     labelCallback: function(playbackLevel, customLabel) {
-        return customLabel; // High 720p
+      return customLabel; // High 720p
     }
   },
   width: '100%',
   height: '100%',
   parentId: '#player_hls',
-  poster: 'https://glcdn.githack.com/abhiTronix/vidgear-docs-additionals/-/raw/main/streamgear_video_segments/HLS/hd_thumbnail.jpg',
+  poster: 'https://bbcdn.githack.com/abhi_uno/vidgear-docs-additionals/raw/abc0c193ab26e21f97fa30c9267de6beb8a72295/streamgear_video_segments/HLS/hd_thumbnail.jpg',
   preload: 'metadata',
 });
 
 // DASH Stabilizer demo
 var player_stab = new Clappr.Player({
-  source: 'https://glcdn.githack.com/abhiTronix/vidgear-docs-additionals/-/raw/main/stabilizer_video_chunks/stabilizer_dash.mpd',
+  source: 'https://bbcdn.githack.com/abhi_uno/vidgear-docs-additionals/raw/abc0c193ab26e21f97fa30c9267de6beb8a72295/stabilizer_video_chunks/stabilizer_dash.mpd',
   plugins: [DashShakaPlayback],
   shakaConfiguration: {
     streaming: {
@@ -113,26 +96,9 @@ var player_stab = new Clappr.Player({
   shakaOnBeforeLoad: function(shaka_player) {
     // shaka_player.getNetworkingEngine().registerRequestFilter() ...
   },
-  shakaConfiguration: {
-    manifest: {
-      retryParameters: {
-        maxAttempts: Infinity,
-      }
-    },
-    streaming: {
-      retryParameters: {
-        maxAttempts: Infinity,
-      }
-    },
-    drm: {
-      retryParameters: {
-        maxAttempts: Infinity,
-      }
-    },    
-  },
   width: '100%',
   height: '100%',
   parentId: '#player_stab',
-  poster: 'https://glcdn.githack.com/abhiTronix/vidgear-docs-additionals/-/raw/main/stabilizer_video_chunks/hd_thumbnail_2.png',
+  poster: 'https://bbcdn.githack.com/abhi_uno/vidgear-docs-additionals/raw/abc0c193ab26e21f97fa30c9267de6beb8a72295/stabilizer_video_chunks/hd_thumbnail.png',
   preload: 'metadata',
 });
