@@ -53,24 +53,25 @@ export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 
 RETRY=3
 while [ "$RETRY" -gt 0 ]; do
-  LATEST_VERSION=$(curl -s https://api.github.com/repos/abhiTronix/OpenCV-CI-Releases/releases/latest |
+  LATEST_VERSION=$(curl -sL https://api.github.com/repos/abhiTronix/OpenCV-CI-Releases/releases/latest |
     grep "OpenCV-.*.*-*-$PYTHONSUFFIX.*.deb" |
     grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")
-  echo "$LATEST_VERSION"
-  curl -O -L "$LATEST_VERSION"
+  echo "Found version: $LATEST_VERSION. Downloading..."
+  curl -LO $LATEST_VERSION
   #opencv version to install
   OPENCV_FILENAME=$(basename "$LATEST_VERSION")
-  if [ -z "$LATEST_VERSION" ] && [ -f $(find . -name "$OPENCV_FILENAME") ]; then
+  echo "Installing OpenCV File: $OPENCV_FILENAME"
+  if ![ -z "$LATEST_VERSION" ] && [ -f $(find . -name "$OPENCV_FILENAME") ]; then
     echo "Downloaded OpenCV binary: $OPENCV_FILENAME successfully at $LATEST_VERSION"
     break
   else
-    echo "Retrying!!!"
-    $RETRY -= 1
-    sleep 5
+    echo "Retrying: $RETRY!!!"
+    ((RETRY = RETRY - 1))
+    sleep 3
   fi
 done
 
-if [ -z "${LATEST_VERSION}" ]; then
+if [ -z "$LATEST_VERSION" ]; then
   echo "Something is wrong!"
   exit 1
 fi
