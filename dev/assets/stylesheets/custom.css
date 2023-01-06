@@ -473,23 +473,3 @@ body[data-md-color-scheme="slate"] img[class="shadow2"]{
    -webkit-filter: drop-shadow(1px 1px 0 black);
   	filter: drop-shadow(1px 1px 0 black);
 }
-
-
-/* Glow text effect  */
-x-sign {
-	color: white;
-  text-shadow: 
-    0 0 10px var(--md-code-hl-keyword-color),
-    0 0 20px var(--md-code-hl-constant-color),
-    0 0 40px var(--md-code-hl-function-color),
-    0 0 80px var(--md-code-hl-special-color);
-  will-change: filter, color;
-  filter: saturate(60%);
-  animation: flicker steps(100) 1s 1s infinite;
-}
-
-@keyframes flicker {
-  50% {
-    filter: saturate(150%) hue-rotate(20deg);
-  }
-}
