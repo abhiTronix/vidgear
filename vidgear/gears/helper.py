@@ -701,33 +701,71 @@ def validate_audio(path, source=None):
     cmd = [path, "-hide_banner"] + (
         source if isinstance(source, list) else ["-i", source]
     )
-    # extract audio sample-rate from metadata
+    # extract metadata
     metadata = check_output(cmd, force_retrieve_stderr=True)
-    audio_bitrate = re.findall(r"fltp,\s[0-9]+\s\w\w[/]s", metadata.decode("utf-8"))
-    sample_rate_identifiers = ["Audio", "Hz"] + (
-        ["fltp"] if isinstance(source, str) else []
-    )
-    audio_sample_rate = [
+    # extract bitrate
+    audio_bitrate_meta = [
         line.strip()
         for line in metadata.decode("utf-8").split("\n")
-        if all(x in line for x in sample_rate_identifiers)
+        if "Audio:" in line
     ]
+    audio_bitrate = (
+        re.findall(r"([0-9]+)\s(kb|mb|gb)\/s", audio_bitrate_meta[0])[-1]
+        if audio_bitrate_meta
+        else ""
+    )
+    # extract samplerate
+    audio_samplerate_metadata = [
+        line.strip()
+        for line in metadata.decode("utf-8").split("\n")
+        if all(x in line for x in ["Audio:", "Hz"])
+    ]
+    audio_samplerate = (
+        re.findall(r"[0-9]+\sHz", audio_samplerate_metadata[0])[0]
+        if audio_samplerate_metadata
+        else ""
+    )
+    # format into actual readable bitrate value
     if audio_bitrate:
-        filtered = audio_bitrate[0].split(" ")[1:3]
-        final_bitrate = "{}{}".format(
-            int(filtered[0].strip()),
-            "k" if (filtered[1].strip().startswith("k")) else "M",
+        # return bitrate directly
+        return "{}{}".format(int(audio_bitrate[0].strip()), audio_bitrate[1].strip()[0])
+    elif audio_samplerate:
+        # convert samplerate to bitrate first
+        sample_rate_value = int(audio_samplerate.split(" ")[0])
+        channels_value = 1 if "mono" in audio_samplerate_metadata[0] else 2
+        bit_depth_value = re.findall(
+            r"(u|s|f)([0-9]+)(le|be)", audio_samplerate_metadata[0]
+        )[0][1]
+        return (
+            (
+                str(
+                    get_audio_bitrate(
+                        sample_rate_value, channels_value, int(bit_depth_value)
+                    )
+                )
+                + "k"
+            )
+            if bit_depth_value
+            else ""
         )
-        return final_bitrate
-    elif audio_sample_rate:
-        sample_rate = re.findall(r"[0-9]+\sHz", audio_sample_rate[0])[0]
-        sample_rate_value = int(sample_rate.split(" ")[0])
-        samplerate_2_bitrate = int(
-            (sample_rate_value - 44100) * (320 - 96) / (48000 - 44100) + 96
-        )
-        return str(samplerate_2_bitrate) + "k"
     else:
         return ""
+
+
+def get_audio_bitrate(samplerate, channels, bit_depth):
+    """
+    ## get_audio_bitrate
+
+    Calculate optimum bitrate from audio samplerate, channels, bit-depth values
+
+    Parameters:
+        samplerate (int): audio samplerate value
+        channels (int): number of channels
+        bit_depth (float): audio bit depth value
+
+    **Returns:** Audio bitrate _(in Kbps)_ as integer.
+    """
+    return round((samplerate * channels * bit_depth) / 1000)
 
 
 def get_video_bitrate(width, height, fps, bpp):
@@ -1084,7 +1122,11 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                     http.mount("https://", adapter)
                     response = http.get(file_url, stream=True)
                     response.raise_for_status()
-                    total_length = response.headers.get("content-length")
+                    total_length = (
+                        response.headers.get("content-length")
+                        if "content-length" in response.headers
+                        else len(response.content)
+                    )
                     assert not (
                         total_length is None
                     ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"

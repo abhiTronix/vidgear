@@ -190,8 +190,11 @@ def generate_webdata(path, c_name="webgear", overwrite_default=False, logging=Fa
             else "Failed to detect critical WebGear data-files: index.html, 404.html & 500.html!"
         )
         # download default files
-        if logging:
-            logger.info("Downloading default data-files from the GitHub Server.")
+        logging and logger.info(
+            "Downloading default data-files from the Gitlab Server: {}.".format(
+                "https://gitlab.com/abhiTronix/vidgear-vitals"
+            )
+        )
         download_webdata(
             template_dir,
             c_name=c_name,
@@ -243,12 +246,13 @@ def download_webdata(path, c_name="webgear", files=[], logging=False):
             # get filename
             file_name = os.path.join(path, file)
             # get URL
-            file_url = "https://raw.githubusercontent.com/abhiTronix/vidgear-vitals/master/{}{}/{}/{}".format(
+            file_url = "https://gitlab.com/abhiTronix/vidgear-vitals/-/raw/main/{}{}/{}/{}".format(
                 c_name, "/static" if basename != "templates" else "", basename, file
             )
             # download and write file to the given path
-            if logging:
-                logger.debug("Downloading {} data-file: {}.".format(basename, file))
+            logging and logger.debug(
+                "Downloading {} data-file: {}.".format(basename, file)
+            )
 
             with open(file_name, "wb") as f:
                 # setup retry strategy
@@ -262,7 +266,11 @@ def download_webdata(path, c_name="webgear", files=[], logging=False):
                 http.mount("https://", adapter)
                 response = http.get(file_url, stream=True)
                 response.raise_for_status()
-                total_length = response.headers.get("content-length")
+                total_length = (
+                    response.headers.get("content-length")
+                    if "content-length" in response.headers
+                    else len(response.content)
+                )
                 assert not (
                     total_length is None
                 ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"

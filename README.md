@@ -1,5 +1,5 @@
 <!--
-
+===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
 Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
@@ -8,7 +8,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-http://www.apache.org/licenses/LICENSE-2.0
+   http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -180,7 +180,7 @@ VideoGear is ideal when you need to switch to different video sources without ch
 **Below is a snapshot of a VideoGear Stabilizer in action (_See its detailed usage [here][stabilizer-doc-ex]_):**
 
 <p align="center">
-  <img src="https://github.com/abhiTronix/Imbakup/raw/master/Images/stabilizer.gif" alt="VideoGear Stabilizer in action!"/>
+  <img src="https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/stabilizer.gif" alt="VideoGear Stabilizer in action!"/>
   <br>
   <sub><i>Original Video Courtesy <a href="http://liushuaicheng.org/SIGGRAPH2013/database.html" title="opensourced video samples database">@SIGGRAPH2013</a></i></sub>
 </p>
@@ -537,7 +537,7 @@ web.shutdown()
 
 WebGear_RTC is implemented with the help of [**aiortc**][aiortc] library which is built on top of asynchronous I/O framework for Web Real-Time Communication (WebRTC) and Object Real-Time Communication (ORTC) and supports many features like SDP generation/parsing, Interactive Connectivity Establishment with half-trickle and mDNS support, DTLS key and certificate generation, DTLS handshake, etc.
 
-WebGear*RTC can handle [multiple consumers][webgear_rtc-mc] seamlessly and provides native support for ICE *(Interactive Connectivity Establishment)_ protocol, STUN _(Session Traversal Utilities for NAT)_, and TURN _(Traversal Using Relays around NAT)\_ servers that help us to seamlessly establish direct media connection with the remote peers for uninterrupted data flow. It also allows us to define our custom streaming class with suitable source to transform frames easily before sending them across the network(see this [doc][webgear_rtc-cs] example).
+WebGear_RTC can handle [multiple consumers][webgear_rtc-mc] seamlessly and provides native support for ICE _(Interactive Connectivity Establishment)_ protocol, STUN _(Session Traversal Utilities for NAT)_, and TURN _(Traversal Using Relays around NAT)_ servers that help us to seamlessly establish direct media connection with the remote peers for uninterrupted data flow. It also allows us to define our custom streaming class with suitable source to transform frames easily before sending them across the network(see this [doc][webgear_rtc-cs] example).
 
 WebGear_RTC API works in conjunction with [**Starlette**][starlette]'s ASGI application and provides easy access to its complete framework. WebGear_RTC can also flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc.
 

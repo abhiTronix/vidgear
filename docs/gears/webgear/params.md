@@ -134,7 +134,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     WebGear(logging=True, **options)
     ```
 
-* **`enable_infinite_frames`** _(boolean)_ : Can be used to continue streaming _(instead of terminating immediately)_ with emulated blank frames with text "No Input", whenever the input source disconnects. Its default value is `False`. Its usage is as follows
+* **`enable_infinite_frames`** _(boolean)_ : Can be used to continue streaming _(instead of terminating immediately)_ with emulated blank frames with text "No Input", whenever the input source disconnects. Its default value is `False`. Its usage is as follows:
 
     ??? new "New in v0.2.1" 
         `enable_infinite_frames` attribute was added in `v0.2.1`.
@@ -146,7 +146,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     WebGear(logging=True, **options)
     ```
 
-* **`skip_generate_webdata`** _(boolean)_ : Can be used to completely disable Data-Files Auto-Generation WorkFlow in WebGear API, and thereby no default data files will be downloaded or validated during its initialization. Its default value is `False`. Its usage is as follows
+* **`skip_generate_webdata`** _(boolean)_ : Can be used to completely disable Data-Files Auto-Generation WorkFlow in WebGear API, and thereby no default data files will be downloaded or validated during its initialization. Its default value is `False`. Its usage is as follows:
 
     ??? new "New in v0.3.0"
         `skip_generate_webdata` attribute was added in `v0.3.0`.

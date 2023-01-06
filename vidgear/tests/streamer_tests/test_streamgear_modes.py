@@ -496,7 +496,7 @@ def test_params(stream_params, format):
             {
                 "-clear_prev_assets": True,
                 "-video_source": return_testvideo_path(fmt="vo"),
-                "-audio": "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/invalid.aac",
+                "-audio": "https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/invalid.aac",
             },
             "dash",
         ),
@@ -512,7 +512,7 @@ def test_params(stream_params, format):
             {
                 "-clear_prev_assets": True,
                 "-video_source": return_testvideo_path(fmt="vo"),
-                "-audio": "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/big_buck_bunny_720p_1mb_ao.aac",
+                "-audio": "https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/big_buck_bunny_720p_1mb_ao.aac",
             },
             "dash",
         ),
@@ -520,7 +520,7 @@ def test_params(stream_params, format):
             {
                 "-clear_prev_assets": True,
                 "-video_source": return_testvideo_path(fmt="vo"),
-                "-audio": "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/invalid.aac",
+                "-audio": "https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/invalid.aac",
             },
             "hls",
         ),
@@ -535,8 +535,8 @@ def test_params(stream_params, format):
         (
             {
                 "-clear_prev_assets": True,
-                "-video_source": return_testvideo_path(fmt="vo"),
-                "-audio": "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/big_buck_bunny_720p_1mb_ao.aac",
+                "-video_source": "https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/input.mp4",
+                "-audio": "https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/noise.wav",
             },
             "hls",
         ),
