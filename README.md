@@ -180,7 +180,7 @@ VideoGear is ideal when you need to switch to different video sources without ch
 **Below is a snapshot of a VideoGear Stabilizer in action (_See its detailed usage [here][stabilizer-doc-ex]_):**
 
 <p align="center">
-  <img src="https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/stabilizer.gif" alt="VideoGear Stabilizer in action!"/>
+  <img src="https://user-images.githubusercontent.com/34266896/211500670-b3aaf4db-a52a-4836-a03c-c2c17b971feb.gif" alt="VideoGear Stabilizer in action!"/>
   <br>
   <sub><i>Original Video Courtesy <a href="http://liushuaicheng.org/SIGGRAPH2013/database.html" title="opensourced video samples database">@SIGGRAPH2013</a></i></sub>
 </p>
@@ -493,7 +493,7 @@ In layman's terms, WebGear acts as a powerful **Video Broadcaster** that transmi
 **Below is a snapshot of a WebGear Video Server in action on Chrome browser:**
 
 <p align="center">
-  <img src="https://abhitronix.github.io/vidgear/latest/assets/gifs/webgear.gif" alt="WebGear in action!" width="80%" />
+  <img src="https://user-images.githubusercontent.com/34266896/211500287-0c12bfdf-2cbb-417a-9f3c-7a8b03ca5b6a.gif" alt="WebGear in action!" width="80%" />
   <br>
   <sub><i>WebGear Video Server at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</i></sub>
 </p>
@@ -546,7 +546,7 @@ Additionally, WebGear_RTC API also provides a special internal wrapper around [V
 **Below is a snapshot of a WebGear_RTC Media Server in action on Chrome browser:**
 
 <p align="center">
-  <img src="https://abhitronix.github.io/vidgear/latest/assets/gifs/webgear_rtc.gif" alt="WebGear_RTC in action!" width="80%" />
+  <img src="https://user-images.githubusercontent.com/34266896/211502451-6dc1fb24-2472-4e95-b38e-cab252071cc7.gif" alt="WebGear_RTC in action!" width="80%" />
   <br>
   <sub><i>WebGear_RTC Video Server at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</i></sub>
 </p>
