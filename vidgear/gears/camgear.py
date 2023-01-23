@@ -517,7 +517,9 @@ class CamGear:
 
         **Returns:** A n-dimensional numpy array.
         """
-        while self.__threaded_queue_mode and not self.__terminate.is_set():
+        while self.__threaded_queue_mode and self.__terminate.is_set():
+            if self.__queue.empty():
+                return None
             return self.__queue.get(timeout=self.__thread_timeout)
         # return current frame
         # only after stream is read
@@ -534,12 +536,13 @@ class CamGear:
         """
         self.__logging and logger.debug("Terminating processes.")
         # terminate Threaded queue mode separately
-        self.__threaded_queue_mode = False
+        if self.__threaded_queue_mode:
+            self.__threaded_queue_mode = False
 
         # indicate that the thread
         # should be terminated immediately
-        self.__stream_read.set()
         self.__terminate.set()
+        self.__stream_read.set()
 
         # wait until stream resources are released (producer thread might be still grabbing frame)
         if self.__thread is not None:
