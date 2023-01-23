@@ -1,15 +1,11 @@
 """
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
-
 Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
    http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,7 +46,6 @@ if not (yt_dlp is None):
     class YT_backend:
         """
         CamGear's Internal YT-DLP Backend Class for extracting metadata from Streaming URLs.
-
         Parameters:
             source_url (string): defines the URL of source stream
             logging (bool): enables/disables logging.
@@ -202,10 +197,8 @@ class CamGear:
     """
     CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format (upto 4k tested),
     any network stream URL such as http(s), rtp, rtsp, rtmp, mms, etc. It also supports Gstreamer's RAW pipelines.
-
     CamGear API provides a flexible, high-level multi-threaded wrapper around OpenCV's VideoCapture API with direct access to almost all of its available parameters.
     It relies on Threaded Queue mode for threaded, error-free and synchronized frame handling.
-
     CamGear internally implements `yt_dlp` backend class for seamlessly pipelining live video-frames and metadata from various streaming services like YouTube, Dailymotion,
     Twitch, and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites)
     """
@@ -223,7 +216,6 @@ class CamGear:
 
         """
         This constructor method initializes the object state and attributes of the CamGear class.
-
         Parameters:
             source (based on input): defines the source for the input stream.
             stream_mode (bool): controls the exclusive **Stream Mode** for handling streaming URLs.
@@ -429,7 +421,6 @@ class CamGear:
     def start(self):
         """
         Launches the internal *Threaded Frames Extractor* daemon.
-
         **Returns:** A reference to the CamGear class object.
         """
 
@@ -514,12 +505,9 @@ class CamGear:
         """
         Extracts frames synchronously from monitored queue, while maintaining a fixed-length frame buffer in the memory,
         and blocks the thread if the queue is full.
-
         **Returns:** A n-dimensional numpy array.
         """
-        while self.__threaded_queue_mode and self.__terminate.is_set():
-            if self.__queue.empty():
-                return None
+        while self.__threaded_queue_mode and not self.__terminate.is_set():
             return self.__queue.get(timeout=self.__thread_timeout)
         # return current frame
         # only after stream is read
@@ -536,13 +524,12 @@ class CamGear:
         """
         self.__logging and logger.debug("Terminating processes.")
         # terminate Threaded queue mode separately
-        if self.__threaded_queue_mode:
-            self.__threaded_queue_mode = False
+        self.__threaded_queue_mode = False
 
         # indicate that the thread
         # should be terminated immediately
-        self.__terminate.set()
         self.__stream_read.set()
+        self.__terminate.set()
 
         # wait until stream resources are released (producer thread might be still grabbing frame)
         if self.__thread is not None:

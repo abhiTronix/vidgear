@@ -1,15 +1,11 @@
 """
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
-
 Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
    http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -52,7 +48,6 @@ class ScreenGear:
     """
     ScreenGear is designed exclusively for ultra-fast Screencasting, which means it can grab frames from your monitor in real-time, either by defining an area on the computer screen or full-screen,
     at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors as well as supports multiple backends.
-
     ScreenGear API implements a multi-threaded wrapper around pyscreenshot & python-mss python library, and also flexibly supports its internal parameter.
     """
 
@@ -61,7 +56,6 @@ class ScreenGear:
     ):
         """
         This constructor method initializes the object state and attributes of the ScreenGear class.
-
         Parameters:
             monitor (int): enables `mss` backend and sets the index of the monitor screen.
             backend (str): enables `pyscreenshot` and select suitable backend for extracting frames.
@@ -208,7 +202,6 @@ class ScreenGear:
     def start(self):
         """
         Launches the internal *Threaded Frames Extractor* daemon
-
         **Returns:** A reference to the ScreenGear class object.
         """
         self.__thread = Thread(target=self.__update, name="ScreenGear", args=())
@@ -221,15 +214,10 @@ class ScreenGear:
         A **Threaded Frames Extractor**, that keep iterating frames from `mss` API to a internal monitored deque,
         until the thread is terminated, or frames runs out.
         """
-        # intialize frame variable
+        # initialize frame variable
         frame = None
         # keep looping infinitely until the thread is terminated
-        while True:
-
-            # if the thread indicator variable is set, stop the thread
-            if self.__terminate.is_set():
-                break
-
+        while not self.__terminate.is_set():
             try:
                 if self.__monitor_instance:
                     frame = np.asanyarray(
@@ -284,6 +272,12 @@ class ScreenGear:
             # append to queue
             self.__queue.put(self.frame)
 
+        # signal queue we're done
+        self.__queue.put(None)
+
+        # indicate immediate termination
+        self.__terminate.set()
+
         # finally release mss resources
         if self.__monitor_instance:
             self.__capture_object.close()
@@ -292,11 +286,12 @@ class ScreenGear:
         """
         Extracts frames synchronously from monitored deque, while maintaining a fixed-length frame buffer in the memory,
         and blocks the thread if the deque is full.
-
         **Returns:** A n-dimensional numpy array.
         """
         # check whether or not termination flag is enabled
         while not self.__terminate.is_set():
+            if self.__queue.empty():
+                break
             return self.__queue.get(timeout=self.__thread_timeout)
         # otherwise return NoneType
         return None
