@@ -447,10 +447,8 @@ class CamGear:
         # keep iterating infinitely
         # until the thread is terminated
         # or frames runs out
-        while True:
-            # if the thread indicator variable is set, stop the thread
-            if self.__terminate.is_set():
-                break
+        # if the thread indicator variable is set, stop the thread
+        while not self.__terminate.is_set():
 
             # stream not read yet
             self.__stream_read.clear()
@@ -501,12 +499,14 @@ class CamGear:
             if self.__threaded_queue_mode:
                 self.__queue.put(self.frame)
 
-        # indicate immediate termination
-        self.__terminate.set()
-        self.__stream_read.set()
         # signal queue we're done
         self.__threaded_queue_mode and self.__queue.put(None)
         self.__threaded_queue_mode = False
+
+        # indicate immediate termination
+        self.__terminate.set()
+        self.__stream_read.set()
+
         # release resources
         self.stream.release()
 
@@ -517,7 +517,7 @@ class CamGear:
 
         **Returns:** A n-dimensional numpy array.
         """
-        while self.__threaded_queue_mode:
+        while self.__threaded_queue_mode and not self.__terminate.is_set():
             return self.__queue.get(timeout=self.__thread_timeout)
         # return current frame
         # only after stream is read
@@ -534,13 +534,12 @@ class CamGear:
         """
         self.__logging and logger.debug("Terminating processes.")
         # terminate Threaded queue mode separately
-        if self.__threaded_queue_mode:
-            self.__threaded_queue_mode = False
+        self.__threaded_queue_mode = False
 
         # indicate that the thread
         # should be terminated immediately
-        self.__terminate.set()
         self.__stream_read.set()
+        self.__terminate.set()
 
         # wait until stream resources are released (producer thread might be still grabbing frame)
         if self.__thread is not None:
