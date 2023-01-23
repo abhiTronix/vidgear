@@ -69,6 +69,3 @@ install:
 
 test_script:
   - cmd: python -m pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/
-
-after_test:
-  - cmd: python -m codecov
