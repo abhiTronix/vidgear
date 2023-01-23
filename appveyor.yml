@@ -68,4 +68,8 @@ install:
   - cmd: bash scripts/bash/prepare_dataset.sh
 
 test_script:
-  - cmd: python -m pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/
+  - cmd: python -m pytest --verbose --capture=no -o faulthandler_timeout=60 --cov-report term-missing --cov=vidgear vidgear/tests/
+
+
+after_test:
+  - cmd: python -m codecov
