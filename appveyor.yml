@@ -60,7 +60,6 @@ install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
   - "python -m pip install --upgrade pip wheel"
-  - "python -m pip install pyzmq==24.0.1" # bug on Appveyor
   - "python -m pip install .[asyncio] six codecov httpx pytest-cov pytest-asyncio yt_dlp aiortc paramiko m3u8 async-asgi-testclient"
   - "python -m pip install --upgrade deffcode"
   - "python -m pip install cryptography==38.0.4"
