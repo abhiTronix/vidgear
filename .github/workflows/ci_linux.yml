@@ -87,10 +87,13 @@ jobs:
           timeout 1200 pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "EXIT_CODE=$code" >>$GITHUB_ENV; fi
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         if: success() && matrix.python-version != 3.7
+      - name: Display exit code
+        run: echo "Exit code was = $EXIT_CODE"
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
           name: ${{ matrix.python-version }}
+          token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           verbose: true
         if: ${{ env.EXIT_CODE != '124' }}
