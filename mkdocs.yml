@@ -75,7 +75,6 @@ theme:
 plugins:
   - search
   - git-revision-date-localized
-  - offline
   - minify:
       minify_html: true
   - mkdocstrings:
