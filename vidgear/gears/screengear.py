@@ -221,15 +221,10 @@ class ScreenGear:
         A **Threaded Frames Extractor**, that keep iterating frames from `mss` API to a internal monitored deque,
         until the thread is terminated, or frames runs out.
         """
-        # intialize frame variable
+        # initialize frame variable
         frame = None
         # keep looping infinitely until the thread is terminated
-        while True:
-
-            # if the thread indicator variable is set, stop the thread
-            if self.__terminate.is_set():
-                break
-
+        while not self.__terminate.is_set():
             try:
                 if self.__monitor_instance:
                     frame = np.asanyarray(
@@ -284,6 +279,12 @@ class ScreenGear:
             # append to queue
             self.__queue.put(self.frame)
 
+        # signal queue we're done
+        self.__queue.put(None)
+
+        # indicate immediate termination
+        self.__terminate.set()
+
         # finally release mss resources
         if self.__monitor_instance:
             self.__capture_object.close()
@@ -297,6 +298,8 @@ class ScreenGear:
         """
         # check whether or not termination flag is enabled
         while not self.__terminate.is_set():
+            if self.__queue.empty():
+                break
             return self.__queue.get(timeout=self.__thread_timeout)
         # otherwise return NoneType
         return None
