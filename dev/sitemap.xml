@@ -1,523 +1,523 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/index.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/changelog/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/changelog.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/contribution/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/contribution.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/installation/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/installation.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/license/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/license.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/switch_from_cv/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/switch_from_cv.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/TQM/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/TQM.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/colorspace_manipulation/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/colorspace_manipulation.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/camgear/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/camgear.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/helper/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/helper.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/helper_async/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/helper_async.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/netgear/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/netgear.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/netgear_async/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/netgear_async.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/pigear/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/pigear.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/screengear/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/screengear.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/stabilizer/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/stabilizer.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/streamgear/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/streamgear.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/videogear/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/videogear.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/webgear/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/webgear.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/webgear_rtc/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/webgear_rtc.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/writegear/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/bonus/reference/writegear.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/contribution/PR/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/contribution/PR.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/contribution/issue/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/contribution/issue.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/camgear/overview/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/camgear/overview.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/camgear/params/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/camgear/params.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/camgear/usage/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/camgear/usage.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/camgear/advanced/source_params/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/camgear/advanced/source_params.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/overview/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/overview.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/params/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/params.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/usage/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/usage.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/advanced/bidirectional_mode/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/advanced/bidirectional_mode.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/advanced/compression/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/advanced/compression.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/advanced/multi_client/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/advanced/multi_client.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/advanced/multi_server/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/advanced/multi_server.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/advanced/secure_mode/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/advanced/secure_mode.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/advanced/ssh_tunnel/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear/advanced/ssh_tunnel.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear_async/overview/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear_async/overview.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear_async/params/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear_async/params.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear_async/usage/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear_async/usage.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear_async/advanced/bidirectional_mode/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/netgear_async/advanced/bidirectional_mode.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/pigear/overview/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/pigear/overview.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/pigear/params/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/pigear/params.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/pigear/usage/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/pigear/usage.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/screengear/overview/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/screengear/overview.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/screengear/params/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/screengear/params.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/screengear/usage/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/screengear/usage.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/stabilizer/overview/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/stabilizer/overview.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/stabilizer/params/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/stabilizer/params.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/stabilizer/usage/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/stabilizer/usage.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/streamgear/ffmpeg_install/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/streamgear/ffmpeg_install.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/streamgear/introduction/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/streamgear/introduction.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/streamgear/params/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/streamgear/params.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/streamgear/rtfm/overview/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/streamgear/rtfm/overview.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/streamgear/rtfm/usage/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/streamgear/rtfm/usage.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/streamgear/ssm/overview/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/streamgear/ssm/overview.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/streamgear/ssm/usage/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/streamgear/ssm/usage.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/videogear/overview/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/videogear/overview.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/videogear/params/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/videogear/params.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/videogear/usage/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/videogear/usage.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/webgear/advanced/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/webgear/advanced.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/webgear/overview/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/webgear/overview.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/webgear/params/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/webgear/params.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/webgear/usage/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/webgear/usage.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/webgear_rtc/advanced/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/webgear_rtc/advanced.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/webgear_rtc/overview/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/webgear_rtc/overview.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/webgear_rtc/params/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/webgear_rtc/params.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/webgear_rtc/usage/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/webgear_rtc/usage.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/introduction/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/introduction.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/compression/overview/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/compression/overview.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/compression/params/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/compression/params.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/compression/usage/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/compression/usage.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/compression/advanced/cciw/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/compression/advanced/cciw.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/compression/advanced/ffmpeg_install/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/compression/advanced/ffmpeg_install.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/non_compression/overview/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/non_compression/overview.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/non_compression/params/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/non_compression/params.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/non_compression/usage/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/gears/writegear/non_compression/usage.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/camgear_ex/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/camgear_ex.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/camgear_faqs/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/camgear_faqs.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/general_faqs/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/general_faqs.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/get_help/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/get_help.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/netgear_async_ex/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/netgear_async_ex.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/netgear_async_faqs/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/netgear_async_faqs.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/netgear_ex/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/netgear_ex.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/netgear_faqs/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/netgear_faqs.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/pigear_ex/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/pigear_ex.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/pigear_faqs/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/pigear_faqs.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/screengear_ex/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/screengear_ex.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/screengear_faqs/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/screengear_faqs.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/stabilizer_ex/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/stabilizer_ex.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/stabilizer_faqs/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/stabilizer_faqs.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/streamgear_ex/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/streamgear_ex.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/streamgear_faqs/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/streamgear_faqs.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/videogear_ex/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/videogear_ex.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/videogear_faqs/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/videogear_faqs.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/webgear_ex/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/webgear_ex.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/webgear_faqs/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/webgear_faqs.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/webgear_rtc_ex/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/webgear_rtc_ex.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/webgear_rtc_faqs/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/webgear_rtc_faqs.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/writegear_ex/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/writegear_ex.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/writegear_faqs/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/help/writegear_faqs.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/installation/pip_install/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/installation/pip_install.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/installation/source_install/</loc>
-         <lastmod>2023-01-10</lastmod>
+         <loc>https://abhitronix.github.io/vidgear/v0.3.0-dev/installation/source_install.html</loc>
+         <lastmod>2023-01-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
