@@ -19,12 +19,10 @@ limitations under the License.
 """
 # import the necessary packages
 import os
-import cv2
 import time
 import fractions
 import asyncio
 import logging as log
-from collections import deque
 from os.path import expanduser
 
 # import helper packages
@@ -33,7 +31,12 @@ from .helper import (
     generate_webdata,
     create_blank_frame,
 )
-from ..helper import logger_handler, retrieve_best_interpolation, import_dependency_safe
+from ..helper import (
+    logger_handler,
+    retrieve_best_interpolation,
+    import_dependency_safe,
+    logcurr_vidgear_ver,
+)
 
 # import additional API(s)
 from ..videogear import VideoGear
@@ -111,6 +114,8 @@ if not (aiortc is None):
                 time_delay (int): time delay (in sec) before start reading the frames.
                 options (dict): provides ability to alter Tweak Parameters of WebGear_RTC, CamGear, PiGear & Stabilizer.
             """
+            # print current version
+            logcurr_vidgear_ver(logging=logging)
 
             super().__init__()  # don't forget this!
 
@@ -265,7 +270,7 @@ if not (aiortc is None):
                     interpolation=self.__interpolation,
                 )
 
-            # construct `av.frame.Frame` from `numpy.nd.array` 
+            # construct `av.frame.Frame` from `numpy.nd.array`
             # based on available channels in frames
             f_format = "bgr24"
             if f_stream.ndim == 3 and f_stream.shape[-1] == 4:

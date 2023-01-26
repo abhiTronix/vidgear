@@ -19,12 +19,10 @@ limitations under the License.
 """
 # import the necessary packages
 import os
-import cv2
 import asyncio
 import inspect
 import numpy as np
 import logging as log
-from collections import deque
 from os.path import expanduser
 
 # import helper packages
@@ -33,7 +31,12 @@ from .helper import (
     generate_webdata,
     create_blank_frame,
 )
-from ..helper import logger_handler, retrieve_best_interpolation, import_dependency_safe
+from ..helper import (
+    logger_handler,
+    retrieve_best_interpolation,
+    import_dependency_safe,
+    logcurr_vidgear_ver,
+)
 
 # import additional API(s)
 from ..videogear import VideoGear
@@ -42,7 +45,7 @@ from ..videogear import VideoGear
 starlette = import_dependency_safe("starlette", error="silent")
 if not (starlette is None):
     from starlette.routing import Mount, Route
-    from starlette.responses import StreamingResponse
+    from starlette.responses import StreamingResponse, JSONResponse
     from starlette.templating import Jinja2Templates
     from starlette.staticfiles import StaticFiles
     from starlette.applications import Starlette
@@ -105,6 +108,9 @@ class WebGear:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Tweak Parameters of WebGear, CamGear, PiGear & Stabilizer.
         """
+        # print current version
+        logcurr_vidgear_ver(logging=logging)
+
         # raise error(s) for critical Class imports
         import_dependency_safe("starlette" if starlette is None else "")
         import_dependency_safe(
@@ -112,6 +118,7 @@ class WebGear:
         )
 
         # initialize global params
+        self.__skip_generate_webdata = False  # generate webgear data by default
         # define frame-compression handler
         self.__jpeg_compression_quality = 90  # 90% quality
         self.__jpeg_compression_fastdct = True  # fastest DCT on by default
@@ -134,6 +141,16 @@ class WebGear:
 
         # assign values to global variables if specified and valid
         if options:
+            # check whether to disable Data-Files Auto-Generation WorkFlow
+            if "skip_generate_webdata" in options:
+                value = options["skip_generate_webdata"]
+                # enable jpeg fastdct
+                if isinstance(value, bool):
+                    self.__skip_generate_webdata = value
+                else:
+                    logger.warning("Skipped invalid `skip_generate_webdata` value!")
+                del options["skip_generate_webdata"]  # clean
+
             if "jpeg_compression_colorspace" in options:
                 value = options["jpeg_compression_colorspace"]
                 if isinstance(value, str) and value.strip().upper() in [
@@ -227,45 +244,61 @@ class WebGear:
                     logger.warning("Skipped invalid `enable_infinite_frames` value!")
                 del options["enable_infinite_frames"]  # clean
 
-        # check if custom certificates path is specified
-        if custom_data_location:
-            data_path = generate_webdata(
-                custom_data_location,
-                c_name="webgear",
-                overwrite_default=overwrite_default,
-                logging=logging,
+        # check if disable Data-Files Auto-Generation WorkFlow is disabled
+        if not self.__skip_generate_webdata:
+            # check if custom data path is specified
+            if custom_data_location:
+                data_path = generate_webdata(
+                    custom_data_location,
+                    c_name="webgear",
+                    overwrite_default=overwrite_default,
+                    logging=logging,
+                )
+            else:
+                # otherwise generate suitable path
+                data_path = generate_webdata(
+                    os.path.join(expanduser("~"), ".vidgear"),
+                    c_name="webgear",
+                    overwrite_default=overwrite_default,
+                    logging=logging,
+                )
+
+            # log it
+            self.__logging and logger.debug(
+                "`{}` is the default location for saving WebGear data-files.".format(
+                    data_path
+                )
             )
+            # define Jinja2 templates handler
+            self.__templates = Jinja2Templates(
+                directory="{}/templates".format(data_path)
+            )
+            # define routing tables
+            self.routes = [
+                Route("/", endpoint=self.__homepage),
+                Route("/video", endpoint=self.__video),
+                Mount(
+                    "/static",
+                    app=StaticFiles(directory="{}/static".format(data_path)),
+                    name="static",
+                ),
+            ]
         else:
-            # otherwise generate suitable path
-            data_path = generate_webdata(
-                os.path.join(expanduser("~"), ".vidgear"),
-                c_name="webgear",
-                overwrite_default=overwrite_default,
-                logging=logging,
+            # log it
+            self.__logging and logger.critical(
+                "WebGear Data-Files Auto-Generation WorkFlow has been manually disabled."
             )
-
-        # log it
-        self.__logging and logger.debug(
-            "`{}` is the default location for saving WebGear data-files.".format(
-                data_path
+            # define routing tables
+            self.routes = [
+                Route("/video", endpoint=self.__video),
+            ]
+            # log exceptions
+            self.__logging and logger.warning(
+                "Only `/video` route is available for this instance."
             )
-        )
-
-        # define Jinja2 templates handler
-        self.__templates = Jinja2Templates(directory="{}/templates".format(data_path))
 
         # define custom exception handlers
         self.__exception_handlers = {404: self.__not_found, 500: self.__server_error}
-        # define routing tables
-        self.routes = [
-            Route("/", endpoint=self.__homepage),
-            Route("/video", endpoint=self.__video),
-            Mount(
-                "/static",
-                app=StaticFiles(directory="{}/static".format(data_path)),
-                name="static",
-            ),
-        ]
         # define middleware support
         self.middleware = []
         # Handle video source
@@ -427,7 +460,7 @@ class WebGear:
 
     async def __video(self, scope):
         """
-        Return a async video streaming response.
+        Returns a async video streaming response.
         """
         assert scope["type"] in ["http", "https"]
         return StreamingResponse(
@@ -437,24 +470,45 @@ class WebGear:
 
     async def __homepage(self, request):
         """
-        Return an HTML index page.
+        Returns an HTML index page.
         """
-        return self.__templates.TemplateResponse("index.html", {"request": request})
+        return (
+            self.__templates.TemplateResponse("index.html", {"request": request})
+            if not self.__skip_generate_webdata
+            else JSONResponse(
+                {"detail": "WebGear Data-Files Auto-Generation WorkFlow is disabled!"},
+                status_code=404,
+            )
+        )
 
     async def __not_found(self, request, exc):
         """
-        Return an HTML 404 page.
+        Returns an HTML 404 page.
         """
-        return self.__templates.TemplateResponse(
-            "404.html", {"request": request}, status_code=404
+        return (
+            self.__templates.TemplateResponse(
+                "404.html", {"request": request}, status_code=404
+            )
+            if not self.__skip_generate_webdata
+            else JSONResponse(
+                {"detail": "WebGear Data-Files Auto-Generation WorkFlow is disabled!"},
+                status_code=404,
+            )
         )
 
     async def __server_error(self, request, exc):
         """
-        Return an HTML 500 page.
+        Returns an HTML 500 page.
         """
-        return self.__templates.TemplateResponse(
-            "500.html", {"request": request}, status_code=500
+        return (
+            self.__templates.TemplateResponse(
+                "500.html", {"request": request}, status_code=500
+            )
+            if not self.__skip_generate_webdata
+            else JSONResponse(
+                {"detail": "WebGear Data-Files Auto-Generation WorkFlow is disabled!"},
+                status_code=500,
+            )
         )
 
     def shutdown(self):

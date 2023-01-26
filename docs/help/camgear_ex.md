@@ -134,7 +134,7 @@ stream.stop()
 &nbsp;
 
 
-## Using CamGear for capturing RSTP/RTMP URLs
+## Using CamGear for capturing RTSP/RTMP URLs
 
 You can open any network stream _(such as RTSP/RTMP)_ just by providing its URL directly to CamGear's [`source`](../../gears/camgear/params/#source) parameter. 
 
@@ -145,7 +145,7 @@ Here's a high-level wrapper code around CamGear API to enable auto-reconnection 
 
 ??? tip "Enforcing UDP stream"
     
-    You can easily enforce UDP for RSTP streams inplace of default TCP, by putting following lines of code on the top of your existing code:
+    You can easily enforce UDP for RTSP streams inplace of default TCP, by putting following lines of code on the top of your existing code:
 
     ```python 
     # import required libraries

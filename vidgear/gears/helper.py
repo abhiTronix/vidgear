@@ -39,9 +39,8 @@ from tqdm import tqdm
 from contextlib import closing
 from pathlib import Path
 from colorlog import ColoredFormatter
-from distutils.version import LooseVersion
-from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
+from pkg_resources import parse_version
+from requests.adapters import HTTPAdapter, Retry
 from ..version import __version__
 
 
@@ -92,13 +91,35 @@ def logger_handler():
     return handler
 
 
+# global var to check
+# if version is logged
+ver_is_logged = False
+
 # define logger
 logger = log.getLogger("Helper")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
-# log current version for debugging
-logger.info("Running VidGear Version: {}".format(str(__version__)))
+
+
+def logcurr_vidgear_ver(logging=False):
+    """
+    ## logcurr_vidgear_ver
+
+    A auxiliary function to log current vidgear version for debugging.
+
+    Parameters:
+        logging (bool): enables logging for its operations
+    """
+    # making changes to global var
+    global ver_is_logged
+    # log current vidgear version
+    logging and not (ver_is_logged) and logger.info(
+        "Running VidGear Version: {}".format(str(__version__))
+    )
+    # disable logging same thing again
+    if logging and not (ver_is_logged):
+        ver_is_logged = True
 
 
 def get_module_version(module=None):
@@ -212,7 +233,7 @@ def import_dependency_safe(
         # extract version
         version = get_module_version(module_to_get)
         # verify
-        if LooseVersion(version) < LooseVersion(min_version):
+        if parse_version(version) < parse_version(min_version):
             # create message
             msg = """Unsupported version '{}' found. Vidgear requires '{}' dependency installed with version '{}' or greater. 
             Update it with  `pip install -U {}` command.""".format(
@@ -257,7 +278,7 @@ def check_CV_version():
 
     **Returns:** OpenCV's version first bit
     """
-    if LooseVersion(cv2.__version__) >= LooseVersion("4"):
+    if parse_version(cv2.__version__) >= parse_version("4"):
         return 4
     else:
         return 3
@@ -309,7 +330,7 @@ def check_WriteAccess(path, is_windows=False, logging=False):
             path = dirpath.resolve()
     except:
         return False
-    # check path on *nix systems
+    # check filepath on *nix systems
     if not is_windows:
         uid = os.geteuid()
         gid = os.getegid()
@@ -320,7 +341,7 @@ def check_WriteAccess(path, is_windows=False, logging=False):
             or ((s[stat.ST_GID] == gid) and (mode & stat.S_IWGRP))
             or (mode & stat.S_IWOTH)
         )
-    # otherwise, check path on windows
+    # otherwise, check filepath on windows
     else:
         write_accessible = False
         temp_fname = os.path.join(path, "temp.tmp")
@@ -489,6 +510,34 @@ def get_supported_demuxers(path):
     return [o.strip() for o in outputs]
 
 
+def get_supported_pixfmts(path):
+    """
+    ## get_supported_pixfmts
+
+    Find and returns all FFmpeg's supported pixel formats.
+
+    Parameters:
+        path (string): absolute path of FFmpeg binaries
+
+    **Returns:** List of supported pixel formats.
+    """
+    pxfmts = check_output([path, "-hide_banner", "-pix_fmts"])
+    splitted = pxfmts.split(b"\n")
+    srtindex = [i for i, s in enumerate(splitted) if b"-----" in s]
+    # extract video encoders
+    supported_pxfmts = [
+        x.decode("utf-8").strip()
+        for x in splitted[srtindex[0] + 1 :]
+        if x.decode("utf-8").strip()
+    ]
+    # compile regex
+    finder = re.compile(r"([A-Z]*[\.]+[A-Z]*\s[a-z0-9_-]*)(\s+[0-4])(\s+[0-9]+)")
+    # find all outputs
+    outputs = finder.findall("\n".join(supported_pxfmts))
+    # return output findings
+    return [[s for s in o[0].split(" ")][-1] for o in outputs if len(o) == 3]
+
+
 def is_valid_url(path, url=None, logging=False):
     """
     ## is_valid_url
@@ -624,7 +673,7 @@ def extract_time(value):
         )
         return (
             sum(
-                int(x) * 60 ** i
+                int(x) * 60**i
                 for i, x in enumerate(reversed(t_duration[0].split(":")))
             )
             if t_duration
@@ -652,33 +701,71 @@ def validate_audio(path, source=None):
     cmd = [path, "-hide_banner"] + (
         source if isinstance(source, list) else ["-i", source]
     )
-    # extract audio sample-rate from metadata
+    # extract metadata
     metadata = check_output(cmd, force_retrieve_stderr=True)
-    audio_bitrate = re.findall(r"fltp,\s[0-9]+\s\w\w[/]s", metadata.decode("utf-8"))
-    sample_rate_identifiers = ["Audio", "Hz"] + (
-        ["fltp"] if isinstance(source, str) else []
-    )
-    audio_sample_rate = [
+    # extract bitrate
+    audio_bitrate_meta = [
         line.strip()
         for line in metadata.decode("utf-8").split("\n")
-        if all(x in line for x in sample_rate_identifiers)
+        if "Audio:" in line
     ]
+    audio_bitrate = (
+        re.findall(r"([0-9]+)\s(kb|mb|gb)\/s", audio_bitrate_meta[0])[-1]
+        if audio_bitrate_meta
+        else ""
+    )
+    # extract samplerate
+    audio_samplerate_metadata = [
+        line.strip()
+        for line in metadata.decode("utf-8").split("\n")
+        if all(x in line for x in ["Audio:", "Hz"])
+    ]
+    audio_samplerate = (
+        re.findall(r"[0-9]+\sHz", audio_samplerate_metadata[0])[0]
+        if audio_samplerate_metadata
+        else ""
+    )
+    # format into actual readable bitrate value
     if audio_bitrate:
-        filtered = audio_bitrate[0].split(" ")[1:3]
-        final_bitrate = "{}{}".format(
-            int(filtered[0].strip()),
-            "k" if (filtered[1].strip().startswith("k")) else "M",
+        # return bitrate directly
+        return "{}{}".format(int(audio_bitrate[0].strip()), audio_bitrate[1].strip()[0])
+    elif audio_samplerate:
+        # convert samplerate to bitrate first
+        sample_rate_value = int(audio_samplerate.split(" ")[0])
+        channels_value = 1 if "mono" in audio_samplerate_metadata[0] else 2
+        bit_depth_value = re.findall(
+            r"(u|s|f)([0-9]+)(le|be)", audio_samplerate_metadata[0]
+        )[0][1]
+        return (
+            (
+                str(
+                    get_audio_bitrate(
+                        sample_rate_value, channels_value, int(bit_depth_value)
+                    )
+                )
+                + "k"
+            )
+            if bit_depth_value
+            else ""
         )
-        return final_bitrate
-    elif audio_sample_rate:
-        sample_rate = re.findall(r"[0-9]+\sHz", audio_sample_rate[0])[0]
-        sample_rate_value = int(sample_rate.split(" ")[0])
-        samplerate_2_bitrate = int(
-            (sample_rate_value - 44100) * (320 - 96) / (48000 - 44100) + 96
-        )
-        return str(samplerate_2_bitrate) + "k"
     else:
         return ""
+
+
+def get_audio_bitrate(samplerate, channels, bit_depth):
+    """
+    ## get_audio_bitrate
+
+    Calculate optimum bitrate from audio samplerate, channels, bit-depth values
+
+    Parameters:
+        samplerate (int): audio samplerate value
+        channels (int): number of channels
+        bit_depth (float): audio bit depth value
+
+    **Returns:** Audio bitrate _(in Kbps)_ as integer.
+    """
+    return round((samplerate * channels * bit_depth) / 1000)
 
 
 def get_video_bitrate(width, height, fps, bpp):
@@ -1035,7 +1122,11 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
                     http.mount("https://", adapter)
                     response = http.get(file_url, stream=True)
                     response.raise_for_status()
-                    total_length = response.headers.get("content-length")
+                    total_length = (
+                        response.headers.get("content-length")
+                        if "content-length" in response.headers
+                        else len(response.content)
+                    )
                     assert not (
                         total_length is None
                     ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"

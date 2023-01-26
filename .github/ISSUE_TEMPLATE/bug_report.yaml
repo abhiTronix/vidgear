@@ -51,7 +51,7 @@ body:
       render: shell
   - type: textarea
     attributes:
-      label: Python Code
+      label: Python Code(Optional)
       description: Share python code you're using(only if available) here or else leave this block empty. You can directly paste your python code here, no need for any backticks or formatting.
       render: python
   - type: input

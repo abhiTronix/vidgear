@@ -22,7 +22,7 @@ limitations under the License.
 import logging as log
 
 # import helper packages
-from .helper import logger_handler
+from .helper import logger_handler, logcurr_vidgear_ver
 
 # import additional API(s)
 from .camgear import CamGear
@@ -80,6 +80,8 @@ class VideoGear:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Tweak Parameters of CamGear, PiGear & Stabilizer.
         """
+        # print current version
+        logcurr_vidgear_ver(logging=logging)
 
         # initialize stabilizer
         self.__stablization_mode = stabilize

@@ -27,7 +27,12 @@ import logging as log
 from collections import deque
 
 # import helper packages
-from .helper import logger_handler, check_CV_version, retrieve_best_interpolation
+from .helper import (
+    logger_handler,
+    check_CV_version,
+    retrieve_best_interpolation,
+    logcurr_vidgear_ver,
+)
 
 # define logger
 logger = log.getLogger("Stabilizer")
@@ -65,6 +70,8 @@ class Stabilizer:
             crop_n_zoom (bool): enables croping and zooming of frames(to original size) to reduce the black borders.
             logging (bool): enables/disables logging.
         """
+        # print current version
+        logcurr_vidgear_ver(logging=logging)
 
         # initialize deques for handling input frames and its indexes
         self.__frame_queue = deque(maxlen=smoothing_radius)

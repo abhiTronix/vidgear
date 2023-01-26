@@ -20,11 +20,192 @@ limitations under the License.
 
 # Release Notes
 
+## v0.3.0 (2023-01-26)
+
+??? tip "New Features"
+    - [x] **WriteGear:** 
+        * Added support for user-defined and higher than 8-bit depth input frames pixel-format.
+            + Added support for higher than 8-bit depth frames with datatypes of unsigned integer(`uint`) kind and element size `2`.
+            + Added `dtype` parameter to internal `Preprocess` method for passing input frames datatype.
+            + Implemented auto-calculation of input pixel-format based on number of channels in higher than 8-bit depth frames.
+            + Added various known working pixel-formats(based on number of channels), supported by all prominent computer vision libraries.
+            + Added support for up to 1-channel(`gray16-le/be`) to all the way up to 4-channels(`bgra64-le/be`) in input frames.
+            + Added endianness little(`le`) or big(`be`) at the suffix of pixel-format based on byte-order of input frames datatypes.
+            + Extended support for higher RGB 8-bit depth frames through RGB mode.
+        * Added support for user-defined custom input pixel-format.
+            + Added new `-input_pixfmt` attribute to `output_params` dictionary parameter for easily specifying custom input pixel-format.
+            + Added newly implemented `get_supported_pixfmts` method import for verifying user-defined input pixel-format against Installed FFmpeg supported pixel-formats. Unsupported values will be discarded. 
+            + Implemented runtime datatype validation check, such that all input frames must have same datatype.
+        * Added support for Context Managers for proper handling of resources via `with` statement for allocating and releasing resources precisely. (Suggested by @sueskind)
+            + Implement the `__enter__()` and `__exit__()` methods.
+            + Added `__enter__` method that returns reference to the WriteGear Class.
+            + Added `__exit__` method that automatically executes `close()` for performing the cleanup operations and handling exception gracefully. 
+    - [x] **StreamGear:** 
+        * Added support for Context Managers for proper handling of resources via `with` statement for allocating and releasing resources precisely. (Suggested by @sueskind)
+            + Implement the `__enter__()` and `__exit__()` methods.
+            + Added `__enter__` method that returns reference to the StreamGear Class.
+            + Added `__exit__` method that automatically executes `close()` for performing the cleanup operations and handling exception gracefully. 
+    - [x] **WebGear:**
+        * Added way to completely disable Data-Files Auto-Generation WorkFlow.
+            + Added new `skip_generate_webdata` boolean optional attribute(`False` by default) to completely disable Data-Files Auto-Generation WorkFlow.
+            + This flag enables only `/video` route for disabled Data-Files Auto-Generation WorkFlow.
+            + Implemented JSONResponse as placeholder response instead of Index, `404` and `500` HTML pages, when workflow is disabled. _(Note: Index HTML page will throw `404` status code.)_
+            + Added necessary imports.
+    - [x] **Helper:**
+        * Added more robust implementation of validate_audio method.
+            + Added new more robust regex pattern for extracting audio-samplerate.
+            + Added new `validate_audio` method for calculating accurate bitrate(in kbps) from audio samplerate, channels, bit-depth values.
+            + Implemented new patterns and logic for accurately extracting audio channels and bit-depth from given metadata.
+        * Added support for Linux video device path _(such as `/dev/video0`)_.
+    - [x] **Maintenance:** 
+        * Logging current vidgear version when vidgear APIs are called, not at import.
+            + Added `logcurr_vidgear_ver` helper function to facilitate logging current vidgear version, when called within a API.
+            + Implemented `ver_is_logged` global variable in helper to log version only once, which can modifiable with `logcurr_vidgear_ver` method only. Followed recommendation given in official python docs: https://docs.python.org/3/faq/programming.html#how-do-i-share-global-variables-across-modules
+            + Current version can only be logged by VidGear APIs with the logging turned on _(i.e. `logging=True`)_.
+    - [x] **Docs:**
+        * Added new WriteGear Bonus Example:
+            + Added "Using WriteGear's Compression Mode with `v4l2loopback` Virtual Cameras bonus python example.
+            + Added related prerequisites and dependencies for creating `v4l2loopback` Virtual Cameras on Linux machines.
+            + Added both With/Without-Audio cases for "Using WriteGear's Compression Mode for YouTube-Live Streaming".
+        * Added `content.code.copy` and `content.tabs.link` features.
+        * Added docs related to `skip_generate_webdata` optional attribute.
+        * Added feedback features to mkdocs.yml.
+        * Added `404.html` static template to `mkdocs.yml`.
+    - [x] **CI:**
+        * Added v4l2loopback support for testing `/dev/video0` device on Linux machines.
+        * Added test cases for newer implementation of `validate_audio` method.
+        * Added `test_skip_generate_webdata` to test `skip_generate_webdata` optional attribute.
+        * Added tests for user-defined and higher than 8-bit depth input frames pixel-format.
+
+
+??? success "Updates/Improvements" 
+    - [x] WriteGear: 
+        * Completely revamped code structure and comments.
+            + Updated comments, description, and logging messages to more sensible and developer friendly.
+            + Implemented operator short-circuiting to cleanup code as much as possible.
+            + Renamed `startFFmpeg_Process` internal class method to `start_FFProcess`.
+            + Renamed `Preprocess` internal class method to `PreprocessFFParams`.
+            + Renamed `startCV_Process` internal class method to `start_CVProcess`.
+            + Renamed `initiate` internal class parameter to `initiate_process`.
+            + Renamed `force_termination` internal class parameter to `forced_termination`.
+            + Enabled `output_params` parameters logging in both modes.
+            + Improved `compression` and `logging` parameters boolean value handling.
+            + Impelemented `stdout` closing to cleanup pipeline before terminating.
+    - [x] Helper:
+        *  Updated `validate_audio` method with improved and more robust regex patterns for identifying audio bitrate in ay audio file.
+    - [x] Setup.py:
+        * Bumped version to `0.3.0`.
+        * Replaced `>=` comparsion operator with more flexible `~=`.
+        * Replaced `distutils.version.LooseVersion` with `pkg_resources.parse_version`.
+    - [x] Maintenance: 
+        * Replaced depreciated `LooseVersion` with `parse_version`.
+        * Updated `Retry` package to be imported from `requests.adapters`.
+        * Moved terminal and python code text area to Question GitHub Form Schema.
+        * Removed unnecessary imports.
+        * Removed redundant code.
+        * Improved logging messages.
+        * Updated code comments.
+        * Updated method descriptions.
+        * Refactored code.
+        * Increased coverage.
+    - [x] Bash Script:
+        * Updated FFmpeg Static Binaries links to latest date/version tag to `12-07-2022`.
+        * Removed depreciated binaries download links and code.
+    - [x] Docs:
+        * Replaced all `raw.githubusercontent.com` GIF URLs with `user-images.githubusercontent.com`.
+        * Reformatted `custom.css` and added missing comments.
+        * Updated sponsor block.
+        * Enabled Code Highlights.
+        * Updated announcement bar.
+        * Updated `changelog.md`.
+        * Reduced `webgear_rtc.gif` size.
+        * Updated Zenodo badge and the BibTeX entry.
+    - [x] CI:
+        * Added more flexible formats to `return_testvideo_path` function.
+        * Updated `test_write` test for higher than 8-bit depth input frames pixel-format in WriteGear's Compression Mode.
+        * Updated `actions/checkout` to `v3`.
+        * Updated `actions/setup-python` to `v4`.
+        * Updated `codecov/codecov-action` to `v3`.
+        * Moved `test_colorspaces` test to CamGear tests.
+        * Added deffcode library import.
+      * Re-stuctured yaml code.
+
+??? danger "Breaking Updates/Changes"
+    - [ ] WriteGear: 
+        * Renamed `output_filename` string parameter to `output`.
+            + Since WriteGear API accepts all sorts of streams _(such as valid filename/path/URL)_ for encoding, thereby changing parameter name to `output` will be more true to its purpose.
+            + Renaming `output_filename` to `output` in WriteGear API will also help user to not accidentally assume WriteGear supports only encoding of video files.
+            + It matches the `output` parameter in StreamGear which basically does the same thing.
+        * Renamed `cmd` parameter in `execute_ffmpeg_cmd()` class method to more sensible `command`.
+        * `ValueError` will be raised if datatype of input frames mismatches Writegear API
+
+??? bug "Bug-fixes"
+    - [x] Camgear: 
+        * Fixed `CamGear.read()` blocked unnecessarily.
+            + 💬 When `THREADED_QUEUE_MODE` is enabled `CamGear.read()` blocks for an excessive duration when attempting to read past the end of a stream.
+            + Added `None` frame to the queue at the end to signal we're done.
+            + Added `terminate` Event check before continuing.
+        * Fixed deadlock on exit.
+            + 💬 The deadlock is due to `self.__queue.get(timeout=self.__thread_timeout)` line in `read()` method, which still waits for timeout(thread_timeout) to happen when main `update()` thread was already terminated on exit and queue was empty. Since there was no way to signal queue that stream is already ended, the blocking `queue.get()` keeps on waiting until timeout occurs.
+            + The solution was to signal `queue.get()` that stream is already ended by putting `None` in queue on exiting the main `update()` thread.
+    - [x] ScreenGear: 
+        * Fixed `ScreenGear.read()` blocked during cold startup.
+          + 💬 During startup, `ScreenGear.read()` doesn't checks if queue is empty before continuing.
+    - [x] WriteGear: 
+        * Fixed gstpipeline_mode not activating when wrongly assuming `output` value as valid path.
+        * Fixed name 'compression' is not defined bug.
+        * Fixed `AttributeError`.
+    - [x] Helper:
+        * Fixed `fltp` keyword in regex pattern causing non-ftlp streams to be not recognized.
+        * Fixed response.headers returning `content-length` as Nonetype since it may not necessarily have the Content-Legth header set.
+            + Reason: The response from gitlab.com  contains a Transfer-Encoding field as `'Transfer-Encoding': 'chunked'`, which means data is sent in a series of chunks, so the Content-Length header is emitted. More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Transfer-Encoding#Directives
+        * Fixed Linux video device paths still not working. 
+            + Moved `helper.py` logic to WriteGear and StreamGear APIs resp.
+        * Fixed KeyError for empty metadata.
+    - [x] Setup:
+        * Pinned `pyzmq==24.0.1` working version.
+        * Removed redundant patch for the issue.
+    - [x] Maintaince:
+        * Fixed missing pkg name `import_dependency_safe` functions calls.
+    - [x] Bash Script: 
+        * Fixed gstreamer installation.
+    - [x] CI:
+        * Fixed missing v4l2loopback apt dependency on Linux envs.
+        * Added fix for RTCPeerConnection fails to create RTCDtlsTransport (Related issue: aiortc/aiortc#804)
+            + Pinned `cryptography==38.0.4` in dependencies.
+        * Pinned Linux image to `ubuntu-20.04` in github actions.
+        * Fixed No module named 'httpx' bug.
+            + Added `httpx` library import.
+        * Fixed F821 undefined name bug.
+        * Fixed Gstreamer bug.
+    - [x] Docs:
+        * Fixed hyperlinks to new GitHub's form schemas. 
+        * Fixed non-rendering images in README.md 
+            + Replaced all relative image/gifs paths with absolute URLs in README.md.
+        * Fixed badges/shields#8671 badge issue in README.md
+        * Fixed GitLab CDN links throwing blocked by CORS policy bug.
+            + Replaced gitlab GitHack CDN links with with bitbucket.
+        * Fixed DASH playback failing by setting the `maxAttempts` to Infinity.
+        * Removed `x-sign` glow-text effect CSS.
+        * Fixed several typos (suggested by @timgates42)
+        * Fixed coverage badge.
+
+??? question "Pull Requests"
+    * PR #346
+    * PR #348
+    * PR #349
+    * PR #350
+    * PR #351
+
+&nbsp; 
+
+&nbsp; 
+
 ## v0.2.6 (2022-07-05)
 
 ??? tip "New Features"
     - [x] **Docs:**
-        * Added new bonus example for RSTP/RTP Live-Streaming using WriteGear's Compression Mode.
+        * Added new bonus example for RTSP/RTP Live-Streaming using WriteGear's Compression Mode.
         * Added "How to resolve zmq.error.ZMQError" FAQ for NetGear API.(PR by @iandol)
         * Added new ko-fi button to README.md
         * Added new contributors block to changelog.md
@@ -72,7 +253,7 @@ limitations under the License.
             + Fixed debug logs even when `logging=False` in StreamGear's Real-time Mode. (patch suggested by @enarche-ahn)
             + Added length check to `-video_source` attribute to correctly infers it as empty(or invalid).
     - [x] CI:
-        * Xfailed RSTP CamGear CI test.
+        * Xfailed RTSP CamGear CI test.
         * Fixed pinned version syntax bug in docs_deployer workflow.
         * Fixed typos in Github forms and its context.
         * Added missing dependency.
@@ -764,7 +945,7 @@ limitations under the License.
         * Fixed bug with `create_blank_frame` that throws error with gray frames:
             + Implemented automatic output channel correction inside `create_blank_frame` function.
             + Extended automatic output channel correction support to asyncio package.
-        * Implemented `RSTP` protocol validation as _demuxer_, since it's not a protocol but a demuxer.
+        * Implemented `RTSP` protocol validation as _demuxer_, since it's not a protocol but a demuxer.
         * Removed redundant `logger_handler`, `mkdir_safe`, `retrieve_best_interpolation`, `capPropId` helper functions from asyncio package. Relatively imported helper functions from non-asyncio package.
         * Removed unused `aiohttp` dependency.
         * Removed `asctime` formatting from logging.
@@ -1020,7 +1201,7 @@ limitations under the License.
         * Update Tests docs and other minor tweaks to increase overall coverage.
         * Enabled debugging and disabled exit 1 on error in azure pipeline.
         * Removed redundant benchmark tests.
-    - [x] Helper: Added missing RSTP URL scheme to `is_valid_url` method.
+    - [x] Helper: Added missing RTSP URL scheme to `is_valid_url` method.
     - [x] NetGear_Async: Added fix for uvloop only supporting python>=3.7 legacies.
     - [x] Extended WebGear's Video-Handler scope to `https`.
     - [x] CI: Remove all redundant 32-bit Tests from Appveyor:

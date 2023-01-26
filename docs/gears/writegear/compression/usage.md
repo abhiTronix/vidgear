@@ -57,7 +57,7 @@ import cv2
 stream = CamGear(source="myvideo.avi").start()
 
 # Define writer with default parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename="Output.mp4")
+writer = WriteGear(output="Output.mp4")
 
 # loop over
 while True:
@@ -110,7 +110,7 @@ import cv2
 stream = VideoGear(source=0).start()
 
 # Define writer with default parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename="Output.mp4")
+writer = WriteGear(output="Output.mp4")
 
 # loop over
 while True:
@@ -160,7 +160,7 @@ WriteGear API provides [`-input_framerate`](../params/#supported-parameters)  at
     # set output constant framerate to (say 60 fps)
     output_params = {"-input_framerate":60, "-r":60}
     # assign that to WriteGear
-    writer = WriteGear(output_filename="out.mp4", logging =True, **output_params)
+    writer = WriteGear(output="out.mp4", logging =True, **output_params)
     ```
 
     But make sure you ==MUST set value of `-r` and `-input_framerate` parameter less than or equal to your input source framerate.==
@@ -181,7 +181,7 @@ stream = CamGear(source=0).start()
 output_params = {"-input_framerate": stream.framerate}
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename="Output.mp4", **output_params)
+writer = WriteGear(output="Output.mp4", **output_params)
 
 # loop over
 while True:
@@ -221,11 +221,11 @@ writer.close()
 
 ## Using Compression Mode for live streaming
 
-In Compression Mode, WriteGear also allows URL strings _(as output)_ for live streaming realtime frames with its [`output_filename`](../params/#output_filename) parameter.  
+In Compression Mode, WriteGear also allows URL strings _(as output)_ for live streaming realtime frames with its [`output`](../params/#output) parameter.  
 
 In this example, we will stream live camera frames directly to Twitch :fontawesome-brands-twitch::
 
-!!! tip "For streaming with traditional protocols such as :material-video-wireless: RTSP/RTP, Checkout this [WriteGear's Bonus Examples ➶](../../../../help/writegear_ex/#using-writegears-compression-mode-for-rstprtp-live-streaming)."
+!!! tip "For streaming with traditional protocols such as :material-video-wireless: RTSP/RTP, Checkout this [WriteGear's Bonus Examples ➶](../../../../help/writegear_ex/#using-writegears-compression-mode-for-rtsprtp-live-streaming)."
 
 !!! example ":fontawesome-brands-youtube: YouTube-Live Streaming example code also available in [WriteGear's Bonus Examples ➶](../../../../help/writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming)"
 
@@ -257,7 +257,7 @@ TWITCH_KEY = "live_XXXXXXXXXX~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 # Define writer with defined parameters and
 writer = WriteGear(
-    output_filename="rtmp://live.twitch.tv/app/{}".format(TWITCH_KEY),
+    output="rtmp://live.twitch.tv/app/{}".format(TWITCH_KEY),
     logging=True,
     **output_params
 )
@@ -341,7 +341,7 @@ output_params = {
 }
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename="Output.mp4", **output_params)
+writer = WriteGear(output="Output.mp4", **output_params)
 
 # loop over
 while True:
@@ -394,7 +394,7 @@ output_params = {"-vcodec": "libx264", "-crf": 0, "-preset": "fast"}
 stream = cv2.VideoCapture(0)
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename="Output.mp4", logging=True, **output_params)
+writer = WriteGear(output="Output.mp4", logging=True, **output_params)
 
 # loop over
 while True:
@@ -475,7 +475,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             ```
 
 
-        - [x] **Specify Sound Card:** Then, you can specify your located soundcard in StreamGear as follows:
+        - [x] **Specify Sound Card:** Then, you can specify your located soundcard in WriteGear as follows:
 
             ```python
             # assign appropriate input audio-source
@@ -546,7 +546,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
         - [x] **Identify Sound Card:** Then, You can locate your soundcard using `avfoundation` as follows:
 
             ```sh
-            ffmpeg -f qtkit -list_devices true -i ""
+            ffmpeg -f avfoundation -list_devices true -i ""
             ffmpeg version N-45279-g6b86dd5... --enable-runtime-cpudetect
               libavutil      51. 74.100 / 51. 74.100
               libavcodec     54. 65.100 / 54. 65.100
@@ -564,7 +564,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             ```
 
 
-        - [x] **Specify Sound Card:** Then, you can specify your located soundcard in StreamGear as follows:
+        - [x] **Specify Sound Card:** Then, you can specify your located soundcard in WriteGear as follows:
 
             ```python
             # assign appropriate input audio-source
@@ -604,7 +604,7 @@ output_params = {
 }
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4
-writer = WriteGear(output_filename="Output.mp4", logging=True, **output_params)
+writer = WriteGear(output="Output.mp4", logging=True, **output_params)
 
 # loop over
 while True:

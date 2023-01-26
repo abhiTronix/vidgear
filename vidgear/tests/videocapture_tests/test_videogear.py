@@ -76,7 +76,7 @@ def test_PiGear_import():
 # Video credit: http://www.liushuaicheng.org/CVPR2014/index.html
 test_data = [
     (
-        "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/example4_train_input.mp4",
+        "https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/example4_train_input.mp4",
         {
             "SMOOTHING_RADIUS": 5,
             "BORDER_SIZE": 10,
@@ -85,7 +85,7 @@ test_data = [
         },
     ),
     (
-        "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/example_empty_train_input.mp4",
+        "https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/example_empty_train_input.mp4",
         {
             "SMOOTHING_RADIUS": 5,
             "BORDER_SIZE": 15,
@@ -93,7 +93,7 @@ test_data = [
         },
     ),
     (
-        "https://raw.githubusercontent.com/abhiTronix/Imbakup/master/Images/example4_train_input.mp4",
+        "https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/example4_train_input.mp4",
         {
             "SMOOTHING_RADIUS": "5",
             "BORDER_SIZE": "15",
@@ -118,7 +118,7 @@ def test_video_stablization(source, options):
         framerate = stab_stream.framerate
         # playback
         while True:
-            frame = stab_stream.read()  # read stablized frames
+            frame = stab_stream.read()  # read stabilized frames
             if frame is None:
                 break
         # clean resources

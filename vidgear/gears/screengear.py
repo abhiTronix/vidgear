@@ -19,15 +19,19 @@ limitations under the License.
 """
 # import the necessary packages
 import cv2
-import time
 import queue
 import numpy as np
 import logging as log
 from threading import Thread, Event
-from collections import deque, OrderedDict
+from collections import OrderedDict
 
 # import helper packages
-from .helper import import_dependency_safe, capPropId, logger_handler
+from .helper import (
+    import_dependency_safe,
+    capPropId,
+    logger_handler,
+    logcurr_vidgear_ver,
+)
 
 # safe import critical Class modules
 mss = import_dependency_safe("from mss import mss", error="silent")
@@ -65,8 +69,13 @@ class ScreenGear:
             logging (bool): enables/disables logging.
             options (dict): provides the flexibility to manually set the dimensions of capture screen area.
         """
+        # print current version
+        logcurr_vidgear_ver(logging=logging)
+
         # raise error(s) for critical Class imports
-        import_dependency_safe("mss.mss" if mss is None else "")
+        import_dependency_safe(
+            "from mss import mss" if mss is None else "", pkg_name="mss"
+        )
         import_dependency_safe("pyscreenshot" if pysct is None else "")
 
         # enable logging if specified:
@@ -212,15 +221,10 @@ class ScreenGear:
         A **Threaded Frames Extractor**, that keep iterating frames from `mss` API to a internal monitored deque,
         until the thread is terminated, or frames runs out.
         """
-        # intialize frame variable
+        # initialize frame variable
         frame = None
         # keep looping infinitely until the thread is terminated
-        while True:
-
-            # if the thread indicator variable is set, stop the thread
-            if self.__terminate.is_set():
-                break
-
+        while not self.__terminate.is_set():
             try:
                 if self.__monitor_instance:
                     frame = np.asanyarray(
@@ -275,6 +279,12 @@ class ScreenGear:
             # append to queue
             self.__queue.put(self.frame)
 
+        # signal queue we're done
+        self.__queue.put(None)
+
+        # indicate immediate termination
+        self.__terminate.set()
+
         # finally release mss resources
         if self.__monitor_instance:
             self.__capture_object.close()
@@ -288,6 +298,8 @@ class ScreenGear:
         """
         # check whether or not termination flag is enabled
         while not self.__terminate.is_set():
+            if self.__queue.empty():
+                break
             return self.__queue.get(timeout=self.__thread_timeout)
         # otherwise return NoneType
         return None

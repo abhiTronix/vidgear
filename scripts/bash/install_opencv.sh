@@ -26,14 +26,14 @@ TMPFOLDER=$(python -c 'import tempfile; print(tempfile.gettempdir())')
 PYTHONSUFFIX=$(python -c 'import platform; a = platform.python_version(); print(".".join(a.split(".")[:2]))')
 PYTHONVERSION=$(python -c 'import platform; print(platform.python_version())')
 
-echo $PYTHONSUFFIX
-echo $PYTHONVERSION
+echo "$PYTHONSUFFIX"
+echo "$PYTHONVERSION"
 
 echo "Installing OpenCV Dependencies..."
 
 sudo apt-get install -y -qq --allow-unauthenticated build-essential cmake pkg-config gfortran libavutil-dev ffmpeg
 
-sudo apt-get install -y -qq --allow-unauthenticated yasm libv4l-dev libgtk-3-dev libtbb-dev libavresample-dev
+sudo apt-get install -y -qq --allow-unauthenticated yasm libv4l-dev libgtk-3-dev libtbb-dev libswresample-dev
 
 sudo apt-get install -y -qq --allow-unauthenticated libavcodec-dev libavformat-dev libswscale-dev libopenexr-dev
 
@@ -41,43 +41,44 @@ sudo apt-get install -y -qq --allow-unauthenticated libxvidcore-dev libx264-dev 
 
 sudo apt-get install -y -qq --allow-unauthenticated zlib1g-dev libjpeg-dev checkinstall libwebp-dev libpng-dev libopenblas-dev libopenblas-base
 
-sudo apt-get install -y -qq --allow-unauthenticated libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
+sudo apt-get install -y -qq --allow-unauthenticated libgstreamer1.0-0 libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
 
-sudo apt-get install -y -qq --allow-unauthenticated libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
+sudo apt-get install -y -qq --allow-unauthenticated gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
 
 echo "Installing OpenCV Library"
 
-cd $TMPFOLDER
+cd "$TMPFOLDER || exit"
 
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 
 RETRY=3
 while [ "$RETRY" -gt 0 ]; do
-  LATEST_VERSION=$(curl -s https://api.github.com/repos/abhiTronix/OpenCV-CI-Releases/releases/latest |
+  LATEST_VERSION=$(curl -sL https://api.github.com/repos/abhiTronix/OpenCV-CI-Releases/releases/latest |
     grep "OpenCV-.*.*-*-$PYTHONSUFFIX.*.deb" |
     grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")
-  echo $LATEST_VERSION
-  curl -O -L $LATEST_VERSION
+  echo "Found version: $LATEST_VERSION. Downloading..."
+  curl -LO $LATEST_VERSION
   #opencv version to install
-  OPENCV_FILENAME=$(basename $LATEST_VERSION)
-  if [ -f $(find . -name '$OPENCV_FILENAME') ]; then
-    echo "Downloaded OpenCV binary successfully."
+  OPENCV_FILENAME=$(basename "$LATEST_VERSION")
+  echo "Installing OpenCV File: $OPENCV_FILENAME"
+  if [ -n "$LATEST_VERSION" ] && [ -f $(find . -name "$OPENCV_FILENAME") ]; then
+    echo "Downloaded OpenCV binary: $OPENCV_FILENAME successfully at $LATEST_VERSION"
     break
   else
-    echo "Retrying!!!"
-    ((RETRY -= 1))
-    sleep 5
+    echo "Retrying: $RETRY!!!"
+    RETRY=$((RETRY+1))
+    sleep 3
   fi
 done
 
-if [ -z "${LATEST_VERSION}" ]; then
+if [ -z "$LATEST_VERSION" ]; then
   echo "Something is wrong!"
   exit 1
 fi
 
 echo "Installing OpenCV file: $OPENCV_FILENAME"
 
-sudo dpkg -i $OPENCV_FILENAME
+sudo dpkg -i "$OPENCV_FILENAME"
 
 sudo ln -s /usr/local/lib/python$PYTHONSUFFIX/site-packages/*.so /opt/hostedtoolcache/Python/$PYTHONVERSION/x64/lib/python$PYTHONSUFFIX/site-packages
 

@@ -19,30 +19,30 @@ on:
     branches:
       - testing
     paths-ignore:
-      - '**/*.md'
-      - '**/*.html'
-      - '**/*.js'
-      - '**/*.css'
-      - 'docs/**/*'
+      - "**/*.md"
+      - "**/*.html"
+      - "**/*.js"
+      - "**/*.css"
+      - "docs/**/*"
       - README.md
       - mkdocs.yml
   pull_request:
     branches:
       - testing
     paths-ignore:
-      - '**/*.md'
-      - 'docs/**/*'
+      - "**/*.md"
+      - "docs/**/*"
 
 jobs:
   test:
     name: CI Test vidgear
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10']
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
       - name: install apt_dependencies
@@ -50,6 +50,7 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -qq unzip wget -y
           sudo apt-get install -qq dos2unix -y
+          sudo apt-get install ffmpeg v4l2loopback-dkms v4l2loopback-utils linux-modules-extra-$(uname -r) -y
       - name: prepare bash_scripts
         run: |
           dos2unix scripts/bash/prepare_dataset.sh
@@ -61,7 +62,9 @@ jobs:
           pip install -U pip wheel numpy
           pip install -U .[asyncio]
           pip uninstall opencv-python -y
-          pip install -U flake8 six codecov pytest pytest-asyncio pytest-cov yt_dlp mpegdash paramiko m3u8 async-asgi-testclient
+          pip install -U flake8 six codecov httpx pytest pytest-asyncio pytest-cov yt_dlp mpegdash paramiko m3u8 async-asgi-testclient
+          pip install -U deffcode
+          pip install cryptography==38.0.4
         if: success()
       - name: run prepare_dataset_script
         run: bash scripts/bash/prepare_dataset.sh
@@ -80,13 +83,17 @@ jobs:
         if: success() && matrix.python-version == 3.7
       - name: pytest without_ENV
         run: |
+          sudo modprobe v4l2loopback devices=1 video_nr=0 exclusive_caps=1 card_label='VCamera'
           timeout 1200 pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "EXIT_CODE=$code" >>$GITHUB_ENV; fi
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         if: success() && matrix.python-version != 3.7
+      - name: Display exit code
+        run: echo "Exit code was = $EXIT_CODE"
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
           name: ${{ matrix.python-version }}
+          token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           verbose: true
         if: ${{ env.EXIT_CODE != '124' }}

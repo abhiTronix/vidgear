@@ -2,7 +2,7 @@
 import sys
 import types
 import importlib
-from distutils.version import LooseVersion
+from pkg_resources import parse_version
 
 
 def get_module_version(module=None):
@@ -105,7 +105,7 @@ def import_core_dependency(
         module_version = get_module_version(module_to_get)
         # verify
         if mode == "exact":
-            if LooseVersion(module_version) != LooseVersion(version):
+            if parse_version(module_version) != parse_version(version):
                 # create message
                 msg = "Unsupported version '{}' found. Vidgear requires '{}' dependency with exact version '{}' installed!".format(
                     module_version, parent_module, version
@@ -113,7 +113,7 @@ def import_core_dependency(
                 # raise
                 raise ImportError(msg)
         elif mode == "lte":
-            if LooseVersion(module_version) > LooseVersion(version):
+            if parse_version(module_version) > parse_version(version):
                 # create message
                 msg = "Unsupported version '{}' found. Vidgear requires '{}' dependency installed with older version '{}' or smaller!".format(
                     module_version, parent_module, version
@@ -121,7 +121,7 @@ def import_core_dependency(
                 # raise
                 raise ImportError(msg)
         else:
-            if LooseVersion(module_version) < LooseVersion(version):
+            if parse_version(module_version) < parse_version(version):
                 # create message
                 msg = "Unsupported version '{}' found. Vidgear requires '{}' dependency installed with newer version '{}' or greater!".format(
                     module_version, parent_module, version

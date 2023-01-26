@@ -33,6 +33,7 @@ from .helper import (
     get_supported_resolution,
     check_gstreamer_support,
     import_dependency_safe,
+    logcurr_vidgear_ver,
 )
 
 # define logger
@@ -200,7 +201,7 @@ if not (yt_dlp is None):
 class CamGear:
     """
     CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format (upto 4k tested),
-    any network stream URL such as http(s), rtp, rstp, rtmp, mms, etc. It also supports Gstreamer's RAW pipelines.
+    any network stream URL such as http(s), rtp, rtsp, rtmp, mms, etc. It also supports Gstreamer's RAW pipelines.
 
     CamGear API provides a flexible, high-level multi-threaded wrapper around OpenCV's VideoCapture API with direct access to almost all of its available parameters.
     It relies on Threaded Queue mode for threaded, error-free and synchronized frame handling.
@@ -232,6 +233,8 @@ class CamGear:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Source Tweak Parameters.
         """
+        # print current version
+        logcurr_vidgear_ver(logging=logging)
 
         # enable logging if specified
         self.__logging = False
@@ -444,10 +447,8 @@ class CamGear:
         # keep iterating infinitely
         # until the thread is terminated
         # or frames runs out
-        while True:
-            # if the thread indicator variable is set, stop the thread
-            if self.__terminate.is_set():
-                break
+        # if the thread indicator variable is set, stop the thread
+        while not self.__terminate.is_set():
 
             # stream not read yet
             self.__stream_read.clear()
@@ -498,10 +499,14 @@ class CamGear:
             if self.__threaded_queue_mode:
                 self.__queue.put(self.frame)
 
-        # indicate immediate termination
+        # signal queue we're done
+        self.__threaded_queue_mode and self.__queue.put(None)
         self.__threaded_queue_mode = False
+
+        # indicate immediate termination
         self.__terminate.set()
         self.__stream_read.set()
+
         # release resources
         self.stream.release()
 
@@ -512,7 +517,7 @@ class CamGear:
 
         **Returns:** A n-dimensional numpy array.
         """
-        while self.__threaded_queue_mode:
+        while self.__threaded_queue_mode and not self.__terminate.is_set():
             return self.__queue.get(timeout=self.__thread_timeout)
         # return current frame
         # only after stream is read
@@ -529,13 +534,12 @@ class CamGear:
         """
         self.__logging and logger.debug("Terminating processes.")
         # terminate Threaded queue mode separately
-        if self.__threaded_queue_mode:
-            self.__threaded_queue_mode = False
+        self.__threaded_queue_mode = False
 
         # indicate that the thread
         # should be terminated immediately
-        self.__terminate.set()
         self.__stream_read.set()
+        self.__terminate.set()
 
         # wait until stream resources are released (producer thread might be still grabbing frame)
         if self.__thread is not None:

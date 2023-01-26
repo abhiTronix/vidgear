@@ -23,13 +23,13 @@ limitations under the License.
 
 &thinsp;
 
-## **`output_filename`**
+## **`output`**
 
 This parameter sets the valid filename/path/URL for the video output.
 
 !!! warning
 
-    WriteGear API will throw `ValueError` if `output_filename` provided is empty or invalid.
+    WriteGear API will throw `ValueError` if `output` provided is empty or invalid.
 
 **Data-Type:** String
 
@@ -40,13 +40,13 @@ Its valid input can be one of the following:
 * **Path to directory**: Valid path of the directory to save the output video file. In this case, WriteGear API will automatically assign a unique filename (_with a default extension i.e.`.mp4`_) as follows:
 
     ```python
-    writer = WriteGear(output_filename = '/home/foo/foo1') #Define writer 
+    writer = WriteGear(output = '/home/foo/foo1') #Define writer 
     ```
 
 * **Filename** _(with/without path)_: Valid filename(_with valid extension_) of the output video file. In case filename is provided without path, then current working directory will be used.
 
     ```python
-    writer = WriteGear(output_filename = 'output.mp4') #Define writer 
+    writer = WriteGear(output = 'output.mp4') #Define writer 
     ```
 
     !!! danger "Make sure to provide valid filename with valid file-extension based on the encoder in use."
@@ -55,7 +55,7 @@ Its valid input can be one of the following:
 * **URL**: Valid URL of a network stream with a protocol supported by installed FFmpeg _(verify with command `ffmpeg -protocols`)_ only. This is useful for building a [**Video-Streaming Server**](https://trac.ffmpeg.org/wiki/StreamingGuide) with FFmpeg in WriteGear API. For example, you can stream on a `rtmp` protocol URL as follows:
 
     ```python
-    writer = WriteGear(output_filename = 'rtmp://localhost/live/test') #Define writer 
+    writer = WriteGear(output = 'rtmp://localhost/live/test') #Define writer 
     ```
 
 &nbsp;
@@ -72,7 +72,7 @@ This parameter selects the WriteGear's Primary [Mode of Operation](../../introdu
 **Usage:**
 
 ```python
-WriteGear(output_filename = 'output.mp4', compression_mode=True)
+WriteGear(output = 'output.mp4', compression_mode=True)
 ```
 
 &nbsp;
@@ -94,7 +94,7 @@ This parameter assigns the custom _path/directory_ where the custom FFmpeg execu
 
 ```python
 # if ffmpeg executables are located at "/foo/foo1/FFmpeg"
-WriteGear(output_filename = 'output.mp4', custom_ffmpeg="/foo/foo1/FFmpeg")
+WriteGear(output = 'output.mp4', custom_ffmpeg="/foo/foo1/FFmpeg")
 ```
 
 &nbsp;
@@ -208,7 +208,7 @@ This parameter enables logging _(if `True`)_, essential for debugging.
 **Usage:**
 
 ```python
-WriteGear(output_filename = 'output.mp4', logging=True)
+WriteGear(output = 'output.mp4', logging=True)
 ```
 
 &nbsp;

@@ -222,7 +222,7 @@ stream = CamGear(source="unstabilized_stream.mp4").start()
 stab = Stabilizer()
 
 # Define writer with default parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output_filename="Output.mp4")
+writer = WriteGear(output="Output.mp4")
 
 # loop over
 while True:

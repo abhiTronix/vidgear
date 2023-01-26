@@ -76,7 +76,7 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
     * All of Servers will be transferring frames to a single Client system at the same time, which will be displaying received frames as a live montage _(multiple frames concatenated together)_.
 
-    * For building Frames Montage at Client's end, We are going to use `imutils` python library function to build montages, by concatenating  together frames recieved from different servers. Therefore, Kindly install this library with `pip install imutils` terminal command.
+    * For building Frames Montage at Client's end, We are going to use `imutils` python library function to build montages, by concatenating  together frames received from different servers. Therefore, Kindly install this library with `pip install imutils` terminal command.
 
 
 &nbsp;

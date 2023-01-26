@@ -19,9 +19,7 @@ limitations under the License.
 """
 # import the necessary packages
 import json
-import sys
 import platform
-import setuptools
 import urllib.request
 
 from pkg_resources import parse_version
@@ -58,14 +56,19 @@ def latest_version(package_name):
     url = "https://pypi.python.org/pypi/%s/json" % (package_name,)
     versions = []
     try:
-        response = urllib.request.urlopen(urllib.request.Request(url), timeout=1)
+        response = urllib.request.urlopen(
+            urllib.request.Request(url),
+            timeout=1,
+        )
         data = json.load(response)
         versions = list(data["releases"].keys())
         versions.sort(key=parse_version)
         return ">={}".format(versions[-1])
-    except TypeError as e:
+    except Exception as e:
         if versions:
             return ">={}".format(versions[-1])
+        else:
+            print(str(e))
     return ""
 
 
@@ -76,9 +79,6 @@ with open(ver_path) as ver_file:
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
-    long_description = long_description.replace(  # patch for images
-        "docs/overrides/assets", "https://abhitronix.github.io/vidgear/latest/assets"
-    )
     long_description = long_description.replace(
         "(#", "(https://github.com/abhiTronix/vidgear#"
     )
@@ -109,7 +109,7 @@ setup(
         # API specific deps
         "core": [
             "yt_dlp{}".format(latest_version("yt_dlp")),
-            "pyzmq",
+            "pyzmq==24.0.1",
             "Pillow",
             "simplejpeg{}".format(latest_version("simplejpeg")),
             "mss{}".format(latest_version("mss")),
@@ -119,7 +119,7 @@ setup(
         # API specific + Asyncio deps
         "asyncio": [
             "yt_dlp{}".format(latest_version("yt_dlp")),
-            "pyzmq",
+            "pyzmq==24.0.1",
             "simplejpeg{}".format(latest_version("simplejpeg")),
             "mss{}".format(latest_version("mss")),
             "Pillow",

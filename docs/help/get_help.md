@@ -27,8 +27,7 @@ limitations under the License.
 
 > Would you like to get help with VidGear?
 
-There are several ways to get help with VidGear:
-
+There are several ways such as:
 
 &thinsp;
 
@@ -99,7 +98,7 @@ There you can ask quick questions, swiftly troubleshoot your problems, help othe
 &thinsp;
 
 
-## Reporting an issues
+## Reporting an issues :fontawesome-regular-face-tired:
 
 > Want to report a bug? Suggest a new feature?
 
@@ -109,7 +108,7 @@ Before you do, please read our [guidelines ➶](../../contribution/issue/)
 &thinsp;
 
 
-## Preparing a Pull Request
+## Preparing a Pull Request :fontawesome-solid-code-pull-request:
 
 > Interested in contributing to VidGear?
 

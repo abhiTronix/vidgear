@@ -22,6 +22,7 @@ limitations under the License.
 import os
 import cv2
 import time
+import queue
 import numpy as np
 import pytest
 import logging as log
@@ -188,11 +189,12 @@ def test_stream_mode(url, quality, parameters):
         else:
             pytest.fail(str(e))
 
+
 def test_network_playback():
     """
     Testing Direct Network Video Playback capabilities of VidGear(with rtsp streaming)
     """
-    Publictest_rstp_urls = [
+    Publictest_rtsp_urls = [
         "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov",
         "rtsp://freja.hiof.no:1935/rtplive/definst/hessdalen03.stream",
         "rtsp://170.93.143.139/rtplive/470011e600ef003a004ee33696235daa",
@@ -201,10 +203,10 @@ def test_network_playback():
 
     index = 0
 
-    while index < len(Publictest_rstp_urls):
+    while index < len(Publictest_rtsp_urls):
         try:
             output_stream = CamGear(
-                source=Publictest_rstp_urls[index], logging=True
+                source=Publictest_rtsp_urls[index], logging=True
             ).start()
             i = 0
             Output_data = []
@@ -221,12 +223,50 @@ def test_network_playback():
         except Exception as e:
             if isinstance(e, RuntimeError):
                 logger.debug(
-                    "`{}` URL is not working".format(Publictest_rstp_urls[index])
+                    "`{}` URL is not working".format(Publictest_rtsp_urls[index])
                 )
                 index += 1
                 continue
             else:
                 pytest.fail(str(e))
 
-    if index == len(Publictest_rstp_urls):
+    if index == len(Publictest_rtsp_urls):
         pytest.xfail("Test failed to play any URL!")
+
+
+@pytest.mark.parametrize(
+    "conversion", ["COLOR_BGR2GRAY", "COLOR_BGR2INVALID", "COLOR_BGR2BGRA"]
+)
+def test_colorspaces(conversion):
+    """
+    Testing different colorspace with CamGear API.
+    """
+    try:
+        # Open stream
+        options = {"THREAD_TIMEOUT": 300}
+        stream = CamGear(
+            source=return_testvideo_path(),
+            colorspace=conversion,
+            logging=True,
+            **options
+        ).start()
+        while True:
+            frame = stream.read()
+            # check if frame is None
+            if frame is None:
+                # if True break the infinite loop
+                break
+            if conversion == "COLOR_BGR2INVALID":
+                # test invalid color_space value
+                stream.color_space = conversion
+                conversion = "COLOR_BGR2INVALID2"
+            if conversion == "COLOR_BGR2INVALID2":
+                # test wrong color_space value
+                stream.color_space = 1546755546
+                conversion = ""
+        stream.stop()
+    except Exception as e:
+        if not isinstance(e, (AssertionError, queue.Empty)):
+            pytest.fail(str(e))
+        else:
+            logger.exception(str(e))

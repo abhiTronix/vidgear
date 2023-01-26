@@ -30,7 +30,7 @@ Switching OpenCV with VidGear APIs is fairly painless process, and will just req
 
 !!! abstract "This document is intended to software developers who want to migrate their python code from OpenCV Library to VidGear APIs."
 
-!!! warning "Prior knowledge of Python or OpenCV won't be covered in this guide. Proficiency with OpenCV-Python _(Python API for OpenCV)_ is a must in order understand this document."
+!!! warning "Prior knowledge of Python or OpenCV won't be covered in this guide. Proficiency with [**OpenCV-Python**](https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html) _(Python API for OpenCV)_ is a must in order understand this document."
 
 !!! tip "If you're just getting started with OpenCV-Python programming, then refer this [FAQ ➶](../help/general_faqs/#im-new-to-python-programming-or-its-usage-in-opencv-library-how-to-use-vidgear-in-my-projects)"
 
@@ -61,7 +61,7 @@ Let's compare a bare-minimum python code for extracting frames out of any Webcam
 
 === "OpenCV VideoCapture Class"
 
-    ```python
+    ```python hl_lines="5 11 14-15 33"
     # import required libraries
     import cv2
 
@@ -99,7 +99,7 @@ Let's compare a bare-minimum python code for extracting frames out of any Webcam
     
 === "VidGear's CamGear API"
 
-    ```python
+    ```python hl_lines="6 12 15-16 34"
     # import required libraries
     from vidgear.gears import CamGear
     import cv2
@@ -166,14 +166,16 @@ Let's extend previous bare-minimum python code and save those extracted frames t
 !!! info "WriteGear API also provides backend for OpenCV's VideoWriter Class. More information [here ➶](../gears/writegear/non_compression/overview/)"
 
 === "OpenCV VideoWriter Class"
-    ```python
+
+    ```python hl_lines="9-10 27 45"
     # import required libraries
     import cv2
 
     # Open suitable video stream, such as webcam on first index(i.e. 0)
     stream = cv2.VideoCapture(0) 
 
-    # Define the codec and create VideoWriter object with suitable output filename for e.g. `Output.avi`
+    # Define the codec and create VideoWriter object with suitable output 
+    # filename for e.g. `Output.avi`
     fourcc = cv2.VideoWriter_fourcc(*'XVID') 
     writer = cv2.VideoWriter('output.avi', fourcc, 20.0, (640, 480)) 
 
@@ -215,7 +217,7 @@ Let's extend previous bare-minimum python code and save those extracted frames t
 
 === "VidGear's WriteGear API"
 
-    ```python
+    ```python hl_lines="10 27 44"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import WriteGear
@@ -225,7 +227,7 @@ Let's extend previous bare-minimum python code and save those extracted frames t
     stream = CamGear(source=0).start() 
 
     # Define WriteGear Object with suitable output filename for e.g. `Output.mp4`
-    writer = WriteGear(output_filename = 'Output.mp4') 
+    writer = WriteGear(output = 'Output.mp4') 
 
     # loop over
     while True:
@@ -272,7 +274,7 @@ Let's breakdown a few noteworthy difference in both syntaxes:
 
 | Task | OpenCV VideoWriter Class | VidGear's WriteGear API |
 | :----------: | :--------------------: | :---------------------: |
-| Initiating | `#!python writer = cv2.VideoWriter('output.avi', cv2.VideoWriter_fourcc(*'XVID'), 20.0, (640, 480))` | `#!python writer = WriteGear(output_filename='Output.mp4')` |
+| Initiating | `#!python writer = cv2.VideoWriter('output.avi', cv2.VideoWriter_fourcc(*'XVID'), 20.0, (640, 480))` | `#!python writer = WriteGear(output='Output.mp4')` |
 | Writing frames | `#!python writer.write(frame)` | `#!python writer.write(frame)` |
 | Terminating | `#!python writer.release()` | `#!python writer.close()` |
 

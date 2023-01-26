@@ -89,9 +89,7 @@ def test_write(conversion):
     Testing VidGear Non-Compression(OpenCV) Mode Writer
     """
     stream = cv2.VideoCapture(return_testvideo_path())
-    writer = WriteGear(
-        output_filename="Output_twc.avi", compression_mode=False
-    )  # Define writer
+    writer = WriteGear(output="Output_twc.avi", compression_mode=False)  # Define writer
     while True:
         (grabbed, frame) = stream.read()
         # read frames
@@ -153,7 +151,9 @@ test_data_class = [
     ),
     (
         "appsrc ! videoconvert ! avenc_mpeg4 bitrate=100000 ! mp4mux ! filesink location=foo.mp4",
-        {"-gst_pipeline_mode": True},
+        {"-gst_pipeline_mode": True}
+        if platform.system() == "Linux"
+        else {"-gst_pipeline_mode": "invalid"},
         True if platform.system() == "Linux" else False,
     ),
 ]
@@ -167,10 +167,7 @@ def test_WriteGear_compression(f_name, output_params, result):
     try:
         stream = cv2.VideoCapture(return_testvideo_path())
         writer = WriteGear(
-            output_filename=f_name,
-            compression_mode=False,
-            logging=True,
-            **output_params
+            output=f_name, compression_mode=False, logging=True, **output_params
         )
         while True:
             (grabbed, frame) = stream.read()

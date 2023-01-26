@@ -25,7 +25,12 @@ import logging as log
 from threading import Thread
 
 # import helper packages
-from .helper import capPropId, logger_handler, import_dependency_safe
+from .helper import (
+    capPropId,
+    logger_handler,
+    import_dependency_safe,
+    logcurr_vidgear_ver,
+)
 
 # safe import critical Class modules
 picamera = import_dependency_safe("picamera", error="silent")
@@ -74,6 +79,9 @@ class PiGear:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Source Tweak Parameters.
         """
+        # print current version
+        logcurr_vidgear_ver(logging=logging)
+
         # raise error(s) for critical Class imports
         import_dependency_safe(
             "picamera" if picamera is None else "",
@@ -212,7 +220,7 @@ class PiGear:
 
     def __timeit(self):
         """
-        Threaded Internal Timer that keep checks on thread excecution timing
+        Threaded Internal Timer that keep checks on thread execution timing
         """
 
         # assign current time
