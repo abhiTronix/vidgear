@@ -126,7 +126,7 @@ It is something I am doing with my own free time. But so much more needs to be d
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6926196.svg)](https://doi.org/10.5281/zenodo.6926196)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7571405.svg)](https://doi.org/10.5281/zenodo.7571405)
 
 ```BibTeX
 @software{vidgear,
@@ -141,13 +141,13 @@ Here is a Bibtex entry you can use to cite this project in a publication:
                   Benjamin Lowe and
                   Mickaël Schoentgen and
                   Renaud Bouckenooghe},
-  title        = {abhiTronix/vidgear: VidGear v0.2.6},
-  month        = jul,
-  year         = 2022,
+  title        = {abhiTronix/vidgear: VidGear v0.3.0},
+  month        = jan,
+  year         = 2023,
   publisher    = {Zenodo},
-  version      = {vidgear-0.2.6},
-  doi          = {10.5281/zenodo.6926196},
-  url          = {https://doi.org/10.5281/zenodo.6926196}
+  version      = {vidgear-0.3.0},
+  doi          = {10.5281/zenodo.7571405},
+  url          = {https://doi.org/10.5281/zenodo.7571405}
 }
 ```
 
