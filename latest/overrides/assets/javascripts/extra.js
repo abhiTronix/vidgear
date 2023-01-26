@@ -20,7 +20,7 @@ limitations under the License.
 
 // DASH StreamGear demo
 var player_dash = new Clappr.Player({
-  source: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/dca65250d95eeeb87d594686c2f2c2208a015486/streamgear_video_segments/DASH/streamgear_dash.mpd',
+  source: 'https://bbcdn.githack.com/abhi_uno/vidgear-docs-additionals/raw/abc0c193ab26e21f97fa30c9267de6beb8a72295/streamgear_video_segments/DASH/streamgear_dash.mpd',
   plugins: [DashShakaPlayback, LevelSelector],
   shakaConfiguration: {
     streaming: {
@@ -44,13 +44,13 @@ var player_dash = new Clappr.Player({
   width: '100%',
   height: '100%',
   parentId: '#player_dash',
-  poster: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/dca65250d95eeeb87d594686c2f2c2208a015486/streamgear_video_segments/DASH/hd_thumbnail.jpg',
+  poster: 'https://bbcdn.githack.com/abhi_uno/vidgear-docs-additionals/raw/abc0c193ab26e21f97fa30c9267de6beb8a72295/streamgear_video_segments/DASH/hd_thumbnail.jpg',
   preload: 'metadata',
 });
 
 // HLS StremGear demo
 var player_hls = new Clappr.Player({
-  source: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/abc0c193ab26e21f97fa30c9267de6beb8a72295/streamgear_video_segments/HLS/streamgear_hls.m3u8',
+  source: 'https://bbcdn.githack.com/abhi_uno/vidgear-docs-additionals/raw/abc0c193ab26e21f97fa30c9267de6beb8a72295/streamgear_video_segments/HLS/streamgear_hls.m3u8',
   plugins: [HlsjsPlayback, LevelSelector],
   hlsUseNextLevel: false,
   hlsMinimumDvrSize: 60,
@@ -80,13 +80,13 @@ var player_hls = new Clappr.Player({
   width: '100%',
   height: '100%',
   parentId: '#player_hls',
-  poster: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/abc0c193ab26e21f97fa30c9267de6beb8a72295/streamgear_video_segments/HLS/hd_thumbnail.jpg',
+  poster: 'https://bbcdn.githack.com/abhi_uno/vidgear-docs-additionals/raw/abc0c193ab26e21f97fa30c9267de6beb8a72295/streamgear_video_segments/HLS/hd_thumbnail.jpg',
   preload: 'metadata',
 });
 
 // DASH Stabilizer demo
 var player_stab = new Clappr.Player({
-  source: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/fbcf0377b171b777db5e0b3b939138df35a90676/stabilizer_video_chunks/stabilizer_dash.mpd',
+  source: 'https://bbcdn.githack.com/abhi_uno/vidgear-docs-additionals/raw/abc0c193ab26e21f97fa30c9267de6beb8a72295/stabilizer_video_chunks/stabilizer_dash.mpd',
   plugins: [DashShakaPlayback],
   shakaConfiguration: {
     streaming: {
@@ -99,6 +99,6 @@ var player_stab = new Clappr.Player({
   width: '100%',
   height: '100%',
   parentId: '#player_stab',
-  poster: 'https://rawcdn.githack.com/abhiTronix/vidgear-docs-additionals/94bf767c28bf2fe61b9c327625af8e22745f9fdf/stabilizer_video_chunks/hd_thumbnail_2.png',
+  poster: 'https://bbcdn.githack.com/abhi_uno/vidgear-docs-additionals/raw/abc0c193ab26e21f97fa30c9267de6beb8a72295/stabilizer_video_chunks/hd_thumbnail.png',
   preload: 'metadata',
 });
