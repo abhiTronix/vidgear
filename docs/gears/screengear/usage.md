@@ -22,11 +22,21 @@ limitations under the License.
 
 !!! experiment "After going through ScreenGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/screengear_ex/)"
 
+!!! success "Recommended: Installing `dxcam` library on Windows :fontawesome-brands-windows: Machines"
+
+    On Windows Machines, if installed, ScreenGear API uses `dxcam` backend machines for higher FPS performance. Thereby, it is **highly recommended** to install it via pip as follows:
+
+    ```sh
+    pip install dxcam
+    ```
+
 &thinsp;
 
 ## Bare-Minimum Usage
 
 Following is the bare-minimum code you need to get started with ScreenGear API:
+
+!!! note "Backend defaults to `dxcam` library on Windows _(if installed)_, and `pyscreenshot` otherwise."
 
 ```python
 # import required libraries
@@ -116,49 +126,111 @@ stream.stop()
 
 ScreenGear API provides us the flexibility to select any connected display for fetching frames, with its [`monitor`](../params/#monitor) parameter:
 
-!!! tip "You can assign `monitor` value to `-1` to fetch frames from all connected multiple monitor screens."
-
 !!! warning "Implication of using `monitor` parameter"
     Any value on `monitor` parameter other than `None` in ScreenGear API: 
     
-    * Will force `mss` library backend.
-    * Will output [`BGRA`](https://en.wikipedia.org/wiki/RGBA_color_model) colorspace frames instead of default `BGR`. 
-    * Will disable the [`backend`](../params/#backend) parameter.
+    * Will enforce `dxcam` library backend on Windows platform _(if installed)_, and `mss` library backend otherwise.
+    * Will discard any value on its [`backend`](../params/#backend) parameter.
 
-```python hl_lines="6"
-# import required libraries
-from vidgear.gears import ScreenGear
-import cv2
 
-# open video stream with defined parameters with monitor at index `1` selected
-stream = ScreenGear(monitor=1, logging=True).start()
+=== "With `dxcam` on Windows :fontawesome-brands-windows:"
 
-# loop over
-while True:
+    ??? tip "Using GPU acceleration on Windows :fontawesome-brands-windows:"
+        With  `dxcam` library backend, you can also assign which GPU devices ids to use along with monitor device ids as tuple `(monitor_idx, gpu_idx)`, as follows:
 
-    # read frames from stream
-    frame = stream.read()
+        ```python
+        # open video stream with defined parameters with 
+        # monitor at index `1` and GPU at index `0`.
+        stream = ScreenGear(monitor=(1,0), logging=True).start()
+        ```
+        
+        !!! info "Getting a complete list of monitor devices and GPUs"
 
-    # check for frame if Nonetype
-    if frame is None:
-        break
+            To get a complete list of monitor devices and outputs(GPUs), you can use `dxcam` library itself:
+            ```sh
+            >>> import dxcam
+            >>> dxcam.device_info()
+            'Device[0]:<Device Name:NVIDIA GeForce RTX 3090 Dedicated VRAM:24348Mb VendorId:4318>\n'
+            >>> dxcam.output_info()
+            'Device[0] Output[0]: Res:(1920, 1080) Rot:0 Primary:True\nDevice[0] Output[1]: Res:(1920, 1080) Rot:0 Primary:False\n'
+            ```
 
-    # {do something with the frame here}
+    ```python hl_lines="6"
+    # import required libraries
+    from vidgear.gears import ScreenGear
+    import cv2
 
-    # Show output window
-    cv2.imshow("Output Frame", frame)
+    # open video stream with defined parameters with monitor at index `1` selected
+    stream = ScreenGear(monitor=1, logging=True).start()
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+    # loop over
+    while True:
 
-# close output window
-cv2.destroyAllWindows()
+        # read frames from stream
+        frame = stream.read()
 
-# safely close video stream
-stream.stop()
-``` 
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # Show output window
+        cv2.imshow("Output Frame", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+    ``` 
+
+=== "With `mss` backend "
+
+
+    !!! tip "With `mss` library backend, You can also assign `monitor` value to `-1` to fetch frames from all connected multiple monitor screens with `mss` backend."
+
+    !!! danger "With `mss` library backend, API will output [`BGRA`](https://en.wikipedia.org/wiki/RGBA_color_model) colorspace frames instead of default `BGR`."
+
+    ```python hl_lines="6"
+    # import required libraries
+    from vidgear.gears import ScreenGear
+    import cv2
+
+    # open video stream with defined parameters with monitor at index `1` selected
+    stream = ScreenGear(monitor=1, logging=True).start()
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # Show output window
+        cv2.imshow("Output Frame", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+    ``` 
 
 &nbsp; 
 
@@ -168,11 +240,9 @@ With ScreenGear API, you can select from many different backends that generates 
 
 !!! tip "Supported `backend` values" 
 
-    **Its possible values are:** `pil`, `mss`, `scrot`, `maim`, `imagemagick`, `pyqt5`, `pyqt`, `pyside2`, `pyside`, `wx`, `pygdk3`, `mac_screencapture`, `mac_quartz`, `gnome_dbus`, `gnome-screenshot`, `kwin_dbus`. 
+    **Its possible values are:** `dxcam` _(Windows only)_, `pil`, `mss`, `scrot`, `maim`, `imagemagick`, `pyqt5`, `pyqt`, `pyside2`, `pyside`, `wx`, `pygdk3`, `mac_screencapture`, `mac_quartz`, `gnome_dbus`, `gnome-screenshot`, `kwin_dbus`. 
 
-    More information on these backends can be found [here ➶](https://github.com/ponty/pyscreenshot)
-
-!!! warning "Remember to install backend library and all of its dependencies you're planning to use with ScreenGear API. More information on these backends can be found [here ➶](https://github.com/ponty/pyscreenshot)"
+!!! warning "Remember to install backend library and all of its dependencies you're planning to use with ScreenGear API. More information on all these backends _(except `dxcam`)_ can be found [here ➶](https://github.com/ponty/pyscreenshot)"
 
 !!! error "Any value on `monitor` parameter will disable the `backend` parameter. You cannot use them simultaneously."
 

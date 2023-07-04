@@ -85,10 +85,10 @@ class ScreenGear:
         ), "[ScreenGear:ERROR] :: Invalid `monitor` value detected!"
 
         # initialize backend
-        if backend:
+        if backend and monitor is None:
             self.__backend = backend.lower().strip()
         else:
-            # enforce `dxcam` for windows machines if undefined
+            # enforce `dxcam` for Windows machines if undefined (or monitor is defined)
             self.__backend = (
                 "dxcam" if platform.system() == "Windows" and dxcam else None
             )
