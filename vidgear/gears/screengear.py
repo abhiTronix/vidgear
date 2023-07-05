@@ -190,7 +190,9 @@ class ScreenGear:
                 self.__monitor_instance = self.__capture_object.monitors[monitor]
 
         # log backend
-        logging and logger.debug("Setting Backend: {}".format(self.__backend.upper()))
+        self.__backend and logging and logger.debug(
+            "Setting Backend: {}".format(self.__backend.upper())
+        )
 
         # assigns special parameter to global variable and clear
         # separately handle colorspace value to int conversion

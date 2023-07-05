@@ -19,7 +19,6 @@ limitations under the License.
 """
 # import the necessary packages
 
-import sys
 import cv2
 import asyncio
 import numpy as np
