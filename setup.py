@@ -112,7 +112,7 @@ setup(
             "pyzmq==24.0.1",
             "Pillow",
             "simplejpeg{}".format(latest_version("simplejpeg")),
-            "mss{}".format(latest_version("mss")),
+            "mss==7.0.1",  # TODO temporary solution, needs to be addressed
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
         ]
         + (["picamera"] if ("arm" in platform.uname()[4][:3]) else [])
@@ -126,7 +126,7 @@ setup(
             "yt_dlp{}".format(latest_version("yt_dlp")),
             "pyzmq==24.0.1",
             "simplejpeg{}".format(latest_version("simplejpeg")),
-            "mss{}".format(latest_version("mss")),
+            "mss==7.0.1",  # TODO temporary solution, needs to be addressed
             "Pillow",
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
             "starlette{}".format(latest_version("starlette")),
