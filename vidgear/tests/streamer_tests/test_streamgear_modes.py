@@ -22,13 +22,11 @@ limitations under the License.
 import os
 import cv2
 import queue
-import time
 import pytest
 import m3u8
 import logging as log
 import platform
 import tempfile
-import subprocess
 from mpegdash.parser import MPEGDASHParser
 
 from vidgear.gears import CamGear, StreamGear
@@ -115,10 +113,12 @@ def check_valid_m3u8(file=""):
     checks if given file is a valid M3U8 file
     """
     if not file or not os.path.isfile(file):
+        logger.error("No file provided")
         return False
     metas = []
     try:
-        playlist = m3u8.load(file)
+        data = open(file).read()
+        playlist = m3u8.loads(data)
         if playlist.is_variant:
             for pl in playlist.playlists:
                 meta = {}
