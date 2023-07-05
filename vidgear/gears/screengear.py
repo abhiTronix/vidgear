@@ -92,8 +92,6 @@ class ScreenGear:
             self.__backend = (
                 "dxcam" if platform.system() == "Windows" and dxcam else None
             )
-        # log it
-        logging and logger.debug("Setting Backend: {}".format(self.__backend.upper()))
 
         # initiate screen dimension handler
         screen_dims = {}
@@ -190,6 +188,9 @@ class ScreenGear:
                     "Backends are disabled for Monitor Indexing(monitor>=0)!"
                 )
                 self.__monitor_instance = self.__capture_object.monitors[monitor]
+
+        # log backend
+        logging and logger.debug("Setting Backend: {}".format(self.__backend.upper()))
 
         # assigns special parameter to global variable and clear
         # separately handle colorspace value to int conversion
