@@ -22,7 +22,7 @@ limitations under the License.
 
 !!! experiment "After going through ScreenGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/screengear_ex/)"
 
-!!! success "Recommended: Installing `dxcam` library on Windows :fontawesome-brands-windows: Machines"
+!!! success "Recommended: Install DXcam library on Windows :fontawesome-brands-windows: Machines"
 
     On Windows Machines, if installed, ScreenGear API uses `dxcam` backend machines for higher FPS performance. Thereby, it is **highly recommended** to install it via pip as follows:
 
@@ -35,8 +35,6 @@ limitations under the License.
 ## Bare-Minimum Usage
 
 Following is the bare-minimum code you need to get started with ScreenGear API:
-
-!!! note "Backend defaults to `dxcam` library on Windows _(if installed)_, and `pyscreenshot` otherwise."
 
 ```python
 # import required libraries
@@ -238,20 +236,23 @@ ScreenGear API provides us the flexibility to select any connected display for f
 
 With ScreenGear API, you can select from many different backends that generates best performance as well as the most compatible with our machine by employing its [`backend`](../params/#backend) parameter that supports many different backends:
 
-!!! tip "Supported `backend` values" 
+??? tip "Supported `backend` values" 
 
     **Its possible values are:** `dxcam` _(Windows only)_, `pil`, `mss`, `scrot`, `maim`, `imagemagick`, `pyqt5`, `pyqt`, `pyside2`, `pyside`, `wx`, `pygdk3`, `mac_screencapture`, `mac_quartz`, `gnome_dbus`, `gnome-screenshot`, `kwin_dbus`. 
 
-!!! warning "Remember to install backend library and all of its dependencies you're planning to use with ScreenGear API. More information on all these backends _(except `dxcam`)_ can be found [here ➶](https://github.com/ponty/pyscreenshot)"
+    !!! warning "Remember to install backend library and all of its dependencies you're planning to use with ScreenGear API. More information on all these backends _(except `dxcam`)_ can be found [here ➶](https://github.com/ponty/pyscreenshot)"
+
+!!! note "Backend defaults to `dxcam` library on Windows _(if installed)_, and `pyscreenshot` otherwise."
 
 !!! error "Any value on `monitor` parameter will disable the `backend` parameter. You cannot use them simultaneously."
 
-```python hl_lines="6"
+```python hl_lines="7"
 # import required libraries
 from vidgear.gears import ScreenGear
 import cv2
 
-# open video stream with defined parameters and `mss` backend for extracting frames.
+# open video stream with defined parameters and `mss` backend 
+# for extracting frames.
 stream = ScreenGear(backend="mss", logging=True).start()
 
 # loop over

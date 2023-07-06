@@ -147,11 +147,11 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
     pip install uvloop
     ```
 
-* #### DXCAM
+* #### DXcam
 
     Required only if you're using the [**ScreenGear**](../../gears/screengear/overview/) API on Windows machines for better FPS performance. You can easily install it via pip:
 
-    !!! fail "FYI, dxcam is **ONLY supported on Windows :fontawesome-brands-windows: Machines.**"
+    !!! fail "FYI, DXcam is **ONLY supported on Windows :fontawesome-brands-windows: Machines.**"
 
     ```sh
     pip install dxcam

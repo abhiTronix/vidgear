@@ -50,10 +50,13 @@ logger.setLevel(log.DEBUG)
 
 class ScreenGear:
     """
-    ScreenGear is designed exclusively for ultra-fast Screencasting, which means it can grab frames from your monitor in real-time, either by defining an area on the computer screen or full-screen,
-    at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors as well as supports multiple backends.
+    ScreenGear is designed exclusively for targeting rapid Screencasting Capabilities, which means it can
+    grab frames from your monitor in real-time, either by defining an area on the computer screen or full-screen,
+    at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple
+    monitors as well as supports multiple backends.
 
-    ScreenGear API implements a multi-threaded wrapper around pyscreenshot & python-mss python library, and also flexibly supports its internal parameter.
+    ScreenGear API implements a multi-threaded wrapper around dxcam, pyscreenshot, python-mss python library,
+    and also flexibly supports its internal parameter.
     """
 
     def __init__(
@@ -64,10 +67,10 @@ class ScreenGear:
 
         Parameters:
             monitor (int): enables `mss` backend and sets the index of the monitor screen.
-            backend (str): enables `pyscreenshot` and select suitable backend for extracting frames.
+            backend (str): select suitable backend for extracting frames.
             colorspace (str): selects the colorspace of the input stream.
             logging (bool): enables/disables logging.
-            options (dict): provides the flexibility to manually set the dimensions of capture screen area.
+            options (dict): provides the flexibility to easily alter backend library parameters. Such as, manually set the dimensions of capture screen area etc.
         """
         # print current version
         logcurr_vidgear_ver(logging=logging)
