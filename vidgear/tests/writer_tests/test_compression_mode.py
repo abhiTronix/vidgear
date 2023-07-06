@@ -23,15 +23,14 @@ import os
 import re
 import cv2
 import pytest
-import queue
 import logging as log
 import platform
 import tempfile
 import subprocess
 from six import string_types
 from deffcode import FFdecoder
-from vidgear.gears import CamGear, WriteGear
-from vidgear.gears.helper import capPropId, check_output, logger_handler
+from vidgear.gears import WriteGear
+from vidgear.gears.helper import check_output, logger_handler
 
 # define test logger
 logger = log.getLogger("Test_commpression_mode")

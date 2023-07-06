@@ -41,7 +41,7 @@ These Gears can be classified as follows:
 
 * [CamGear](camgear/overview/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
 * [PiGear](pigear/overview/): Multi-Threaded API targeting various Raspberry-Pi Camera Modules.
-* [ScreenGear](screengear/overview/): Multi-Threaded API targeting ultra-fast Screencasting.    
+* [ScreenGear](screengear/overview/): High-performance API targeting rapid Screencasting Capabilities.
 * [VideoGear](videogear/overview/): Common Video-Capture API with internal [Video Stabilizer](stabilizer/overview/) wrapper. 
 
 ### B. VideoWriter Gears

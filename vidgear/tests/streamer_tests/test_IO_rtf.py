@@ -21,8 +21,6 @@ limitations under the License.
 
 import numpy as np
 import pytest
-import os
-import tempfile
 from vidgear.gears import StreamGear
 
 

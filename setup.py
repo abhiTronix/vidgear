@@ -112,16 +112,21 @@ setup(
             "pyzmq==24.0.1",
             "Pillow",
             "simplejpeg{}".format(latest_version("simplejpeg")),
-            "mss{}".format(latest_version("mss")),
+            "mss==7.0.1",  # TODO temporary solution, needs to be addressed
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
         ]
-        + (["picamera"] if ("arm" in platform.uname()[4][:3]) else []),
+        + (["picamera"] if ("arm" in platform.uname()[4][:3]) else [])
+        + (
+            ["dxcam{}".format(latest_version("dxcam"))]
+            if (platform.system() == "Windows")  # windows is only supported
+            else []
+        ),
         # API specific + Asyncio deps
         "asyncio": [
             "yt_dlp{}".format(latest_version("yt_dlp")),
             "pyzmq==24.0.1",
             "simplejpeg{}".format(latest_version("simplejpeg")),
-            "mss{}".format(latest_version("mss")),
+            "mss==7.0.1",  # TODO temporary solution, needs to be addressed
             "Pillow",
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
             "starlette{}".format(latest_version("starlette")),
@@ -132,6 +137,11 @@ setup(
             "uvicorn{}".format(latest_version("uvicorn")),
         ]
         + (["picamera"] if ("arm" in platform.uname()[4][:3]) else [])
+        + (
+            ["dxcam{}".format(latest_version("dxcam"))]
+            if (platform.system() == "Windows")  # windows is only supported
+            else []
+        )
         + (
             ["uvloop{}".format(latest_version("uvloop"))]
             if (platform.system() != "Windows")  # windows not supported
@@ -146,6 +156,7 @@ setup(
         "starlette",
         "mss",
         "pyzmq",
+        "dxcam",
         "aiortc",
         "uvicorn",
         "uvloop",

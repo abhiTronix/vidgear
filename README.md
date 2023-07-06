@@ -123,7 +123,7 @@ Each API is designed exclusively to handle/control/process different data-specif
 
 - [**CamGear:**](#camgear) Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
 - [**PiGear:**](#pigear) Multi-Threaded API targeting various Raspberry-Pi Camera Modules.
-- [**ScreenGear:**](#screengear) Multi-Threaded API targeting ultra-fast Screencasting.
+- [**ScreenGear:**](#screengear) High-performance API targeting rapid Screencasting Capabilities.
 - [**VideoGear:**](#videogear) Common Video-Capture API with internal [Video Stabilizer](https://abhitronix.github.io/vidgear/latest/gears/stabilizer/overview/) wrapper.
 
 **B. Video-Writer Gears:**
@@ -329,9 +329,9 @@ stream.stop()
 
 ## ScreenGear
 
-> _ScreenGear is designed exclusively for ultra-fast Screencasting, which means it can grab frames from your monitor in real-time, either by defining an area on the computer screen or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors as well as supports multiple backends._
+> _ScreenGear is designed exclusively for targeting rapid Screencasting Capabilities, which means it can grab frames from your monitor in real-time, either by defining an area on the computer screen or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors as well as supports multiple backends._
 
-ScreenGear implements a multi-threaded wrapper around [**pyscreenshot**][pyscreenshot] & [**python-mss**][mss] python library API and also supports an easy and flexible direct internal parameter manipulation.
+ScreenGear implements a Lightning-Fast API wrapper around [**dxcam**][dxcam], [**pyscreenshot**][pyscreenshot] & [**python-mss**][mss] python libraries and also supports an easy and flexible direct internal parameters manipulation.
 
 **Below is a snapshot of a ScreenGear API in action:**
 
@@ -778,6 +778,7 @@ External URLs
 [uvloop-ns]: https://github.com/MagicStack/uvloop/issues/14
 [ffmpeg]: https://www.ffmpeg.org/
 [flake8]: https://flake8.pycqa.org/en/latest/
+[dxcam]: https://github.com/ra1nty/DXcam
 [black]: https://github.com/psf/black
 [pytest]: https://docs.pytest.org/en/latest/
 [opencv-writer]: https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5

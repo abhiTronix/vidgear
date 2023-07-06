@@ -155,13 +155,14 @@ Following is the bare-minimum code you need to get started with StreamGear API i
 
 You can easily activate ==Low-latency Livestreaming in Real-time Frames Mode==, where chunks will contain information for few new frames only and forgets all previous ones), using exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter as follows:
 
-!!! tip "Use `-window_size` & `-extra_window_size` FFmpeg parameters for controlling number of frames to be kept in Chunks. Less these value, less will be latency."
-
-!!! alert "After every few chunks _(equal to the sum of `-window_size` & `-extra_window_size` values)_, all chunks will be overwritten in Live-Streaming. Thereby, since newer chunks in manifest/playlist will contain NO information of any older ones, and therefore resultant DASH/HLS stream will play only the most recent frames."
-
 !!! note "In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
 
 === "DASH"
+
+    !!! tip "Chunk size in DASH"
+        Use `-window_size` & `-extra_window_size` FFmpeg parameters for controlling number of frames to be kept in Chunks in DASH stream. Less these value, less will be latency.
+
+    !!! alert "After every few chunks _(equal to the sum of `-window_size` & `-extra_window_size` values)_, all chunks will be overwritten in Live-Streaming. Thereby, since newer chunks in manifest will contain NO information of any older ones, and therefore resultant DASH stream will play only the most recent frames."
 
     ```python hl_lines="11"
     # import required libraries
@@ -213,6 +214,12 @@ You can easily activate ==Low-latency Livestreaming in Real-time Frames Mode==, 
     ```
 
 === "HLS"
+
+    !!! tip "Chunk size in HLS"
+    
+        Use `-hls_init_time` & `-hls_time` FFmpeg parameters for controlling number of frames to be kept in Chunks in HLS stream. Less these value, less will be latency.
+
+    !!! alert "After every few chunks _(equal to the sum of `-hls_init_time` & `-hls_time` values)_, all chunks will be overwritten in Live-Streaming. Thereby, since newer chunks in playlist will contain NO information of any older ones, and therefore resultant HLS stream will play only the most recent frames."
 
     ```python hl_lines="11"
     # import required libraries
