@@ -64,6 +64,23 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     WebGear(logging=True, **options)
     ```
 
+* **`custom_video_endpoint`** _(string)_ : Can be used to change/alter default `/video` video endpoint path to any alphanumeric string value. Its usage is as follows:
+
+    ??? new "New in v0.3.1"
+        `custom_video_endpoint` attribute was added in `v0.3.1`.
+
+    !!! error "Only alphanumeric string with no space in between are allowed as `custom_video_endpoint` value. Any other value will be discarded."
+
+	!!! warning "WebGear's Default Theme which expects only default `/video` video endpoint path, will fail to work, if it is customized to any other value using this `custom_video_endpoint` attribute."
+
+	```py
+	# custom alphanumeric video endpoint string
+	options = {"custom_video_endpoint": "xyz"}
+	# initialize WebGear app and assign it
+	web = WebGear(logging=True, **options)
+	```
+	Hence, default video endpoint will now be available at `/xyz` path.
+
 * **`overwrite_default_files`** _(boolean)_ : Can be used to force trigger the [Auto-generation process](../overview/#auto-generation-process) to overwrite existing data-files. Its usage is as follows:
 
     !!! danger "Remember only [downloaded files](../overview/#auto-generation-process) will be overwritten in this process, and any other file/folder will NOT be affected/overwritten."
