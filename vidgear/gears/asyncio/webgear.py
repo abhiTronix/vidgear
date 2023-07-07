@@ -90,7 +90,6 @@ class WebGear:
         time_delay=0,
         **options
     ):
-
         """
         This constructor method initializes the object state and attributes of the WebGear class.
 
@@ -131,6 +130,7 @@ class WebGear:
             ["INTER_LINEAR_EXACT", "INTER_LINEAR", "INTER_AREA"]
         )
 
+        custom_video_endpoint = ""  # custom video endpoint path
         custom_data_location = ""  # path to save data-files to custom location
         data_path = ""  # path to WebGear data-files
         overwrite_default = False
@@ -212,9 +212,21 @@ class WebGear:
                     logger.warning("Skipped invalid `frame_size_reduction` value!")
                 del options["frame_size_reduction"]  # clean
 
+            if "custom_video_endpoint" in options:
+                value = options["custom_video_endpoint"]
+                if (
+                    value
+                    and isinstance(value, str)
+                    and all(c for c in value.strip() if c.isalnum())
+                ):
+                    custom_video_endpoint = value.strip()
+                else:
+                    logger.warning("Skipped invalid `custom_video_endpoint` value!")
+                del options["custom_video_endpoint"]  # clean
+
             if "custom_data_location" in options:
                 value = options["custom_data_location"]
-                if isinstance(value, str):
+                if value and isinstance(value, str):
                     assert os.access(
                         value, os.W_OK
                     ), "[WebGear:ERROR] :: Permission Denied!, cannot write WebGear data-files to '{}' directory!".format(
@@ -276,7 +288,12 @@ class WebGear:
             # define routing tables
             self.routes = [
                 Route("/", endpoint=self.__homepage),
-                Route("/video", endpoint=self.__video),
+                Route(
+                    "/{}".format(
+                        custom_video_endpoint if custom_video_endpoint else "video"
+                    ),
+                    endpoint=self.__video,
+                ),
                 Mount(
                     "/static",
                     app=StaticFiles(directory="{}/static".format(data_path)),
@@ -290,7 +307,12 @@ class WebGear:
             )
             # define routing tables
             self.routes = [
-                Route("/video", endpoint=self.__video),
+                Route(
+                    "/{}".format(
+                        custom_video_endpoint if custom_video_endpoint else "video"
+                    ),
+                    endpoint=self.__video,
+                ),
             ]
             # log exceptions
             self.__logging and logger.warning(
