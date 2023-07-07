@@ -272,11 +272,24 @@ if not (aiortc is None):
 
             # construct `av.frame.Frame` from `numpy.nd.array`
             # based on available channels in frames
-            f_format = "bgr24"
             if f_stream.ndim == 3 and f_stream.shape[-1] == 4:
                 f_format = "bgra"
-            if f_stream.ndim == 2:
+            elif f_stream.ndim == 2 or (f_stream.ndim == 3 and f_stream.shape[-1] == 1):
+                # drop third dimension if defined, as only `ndim==2`
+                # grayscale is supported by PyAV
+                f_stream = (
+                    f_stream[:, :, 0]
+                    if f_stream.ndim == 3 and f_stream.shape[-1] == 1
+                    else f_stream
+                )
                 f_format = "gray"
+            elif f_stream.ndim == 3:
+                f_format = "bgr24"
+            else:
+                raise ValueError(
+                    "Input frame of shape: {}, Isn't supported!".format(f_stream.shape)
+                )
+
             frame = VideoFrame.from_ndarray(f_stream, format=f_format)
             frame.pts = pts
             frame.time_base = time_base
@@ -341,7 +354,6 @@ class WebGear_RTC:
         time_delay=0,
         **options
     ):
-
         """
         This constructor method initializes the object state and attributes of the WebGear_RTC class.
 
