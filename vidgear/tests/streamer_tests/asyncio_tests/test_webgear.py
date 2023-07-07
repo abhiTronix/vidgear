@@ -139,10 +139,15 @@ def test_webgear_class(source, stabilize, colorspace, time_delay):
             "skip_generate_webdata": "invalid",
             "jpeg_compression_fastupsample": True,
             "custom_data_location": "im_wrong",
+            "custom_video_endpoint": "x x",
         },
         {
             "enable_infinite_frames": True,
             "custom_data_location": return_testvideo_path(),
+            "custom_video_endpoint": "x#x",
+        },
+        {
+            "custom_video_endpoint": " xyz ",
         },
     ],
 )
@@ -167,7 +172,12 @@ def test_webgear_options(options):
         client = TestClient(web(), raise_server_exceptions=True)
         response = client.get("/")
         assert response.status_code == 200
-        response_video = client.get("/video")
+        response_video = client.get(
+            "/xyz"
+            if "custom_video_endpoint" in options
+            and options["custom_video_endpoint"] == " xyz "
+            else "/video"
+        )
         assert response_video.status_code == 200
         web.shutdown()
     except Exception as e:
