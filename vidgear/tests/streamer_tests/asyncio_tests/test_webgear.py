@@ -122,6 +122,7 @@ def test_webgear_class(source, stabilize, colorspace, time_delay):
             "frame_size_reduction": "invalid",
             "overwrite_default_files": "invalid",
             "enable_infinite_frames": "invalid",
+            "custom_video_endpoint": "x#x",
         },
         {
             "jpeg_compression_colorspace": " gray  ",
@@ -132,6 +133,7 @@ def test_webgear_class(source, stabilize, colorspace, time_delay):
             "overwrite_default_files": True,
             "enable_infinite_frames": False,
             "custom_data_location": tempfile.gettempdir(),
+            "custom_video_endpoint": "x x",
         },
         {
             "jpeg_compression_quality": 55.55,
@@ -143,6 +145,7 @@ def test_webgear_class(source, stabilize, colorspace, time_delay):
         {
             "enable_infinite_frames": True,
             "custom_data_location": return_testvideo_path(),
+            "custom_video_endpoint": " xyz ",
         },
     ],
 )
@@ -167,7 +170,12 @@ def test_webgear_options(options):
         client = TestClient(web(), raise_server_exceptions=True)
         response = client.get("/")
         assert response.status_code == 200
-        response_video = client.get("/video")
+        response_video = client.get(
+            "/xyz"
+            if "custom_video_endpoint" in options
+            and options["custom_video_endpoint"] == " xyz "
+            else "/video"
+        )
         assert response_video.status_code == 200
         web.shutdown()
     except Exception as e:
@@ -238,6 +246,7 @@ def test_webgear_routes():
             "jpeg_compression_quality": 80,
             "jpeg_compression_fastdct": True,
             "jpeg_compression_fastupsample": False,
+            "custom_video_endpoint": "x1y1z",
         }
         # initialize WebGear app
         web = WebGear(source=return_testvideo_path(), logging=True, **options)
@@ -251,6 +260,12 @@ def test_webgear_routes():
         assert response.status_code == 200
         response_hello = client.get("/hello")
         assert response_hello.status_code == 200
+        # test new default endpoint
+        response_xyz = client.get("/x1y1z")
+        assert response_xyz.status_code == 200
+        # test old default endpoint
+        response_video = client.get("/video")
+        assert response_video.status_code == 404
         web.shutdown()
     except Exception as e:
         pytest.fail(str(e))

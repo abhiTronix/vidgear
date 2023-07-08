@@ -41,9 +41,25 @@ In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that tra
 
 ??? tip "Disabling Auto-Generation process in WebGear"
 
-    Starting with vidgear `v0.3.0`, you can now completely disable Auto-Generation process in WebGear API using [`skip_generate_webdata`](../params/#webgear-specific-attributes) dictionary boolean attribute. When `{skip_generate_webdata:True}`, no default data files will be downloaded or validated during initialization.
+    Starting with vidgear `v0.3.0`, you can now completely disable Auto-Generation process in WebGear API using [`skip_generate_webdata`](../params/#webgear-specific-attributes) optional boolean attribute. When `{skip_generate_webdata:True}`, no default data files will be downloaded or validated during initialization.
 
     !!! warning "Only `/video` route is available when `{skip_generate_webdata:True}` in WebGear API. All other default routes will be JSONResponses with `404`/`500` status codes."
+
+??? note "Customizing default video endpoint path"
+	Starting with vidgear `v0.3.1`, you can change default `/video` video endpoint path to any alphanumeric string value, using [`custom_video_endpoint`](../params/#webgear-specific-attributes) optional string attribute. For example:
+
+	!!! error "Only alphanumeric string with no space in between are allowed as `custom_video_endpoint` value. Any other value will be discarded."
+
+	!!! warning "WebGear's Default Theme which expects only default `/video` video endpoint path, will fail to work, if it is customized to any other value using this `custom_video_endpoint` attribute."
+
+	```py
+	# custom alphanumeric video endpoint string
+	options = {"custom_video_endpoint": "xyz"}
+
+	# initialize WebGear app
+	web = WebGear(source="foo.mp4", logging=True, **options)
+	```
+	Hence, default video endpoint will now be available at `/xyz` path.
 
 On initializing WebGear API, it automatically checks for three critical **data files**(i.e `index.html`, `404.html` & `500.html`) inside the `templates` folder of the `webgear` directory at the [_default location_](#default-location) which gives rise to the following two possible scenario:
 
