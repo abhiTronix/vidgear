@@ -214,12 +214,13 @@ class WebGear:
 
             if "custom_video_endpoint" in options:
                 value = options["custom_video_endpoint"]
-                if (
-                    value
-                    and isinstance(value, str)
-                    and all(c for c in value.strip() if c.isalnum())
-                ):
+                if value and isinstance(value, str) and value.strip().isalnum():
                     custom_video_endpoint = value.strip()
+                    logging and logger.critical(
+                        "Using custom video endpoint path: `/{}`".format(
+                            custom_video_endpoint
+                        )
+                    )
                 else:
                     logger.warning("Skipped invalid `custom_video_endpoint` value!")
                 del options["custom_video_endpoint"]  # clean

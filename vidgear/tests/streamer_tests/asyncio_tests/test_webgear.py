@@ -122,6 +122,7 @@ def test_webgear_class(source, stabilize, colorspace, time_delay):
             "frame_size_reduction": "invalid",
             "overwrite_default_files": "invalid",
             "enable_infinite_frames": "invalid",
+            "custom_video_endpoint": "x#x",
         },
         {
             "jpeg_compression_colorspace": " gray  ",
@@ -132,6 +133,7 @@ def test_webgear_class(source, stabilize, colorspace, time_delay):
             "overwrite_default_files": True,
             "enable_infinite_frames": False,
             "custom_data_location": tempfile.gettempdir(),
+            "custom_video_endpoint": "x x",
         },
         {
             "jpeg_compression_quality": 55.55,
@@ -139,14 +141,10 @@ def test_webgear_class(source, stabilize, colorspace, time_delay):
             "skip_generate_webdata": "invalid",
             "jpeg_compression_fastupsample": True,
             "custom_data_location": "im_wrong",
-            "custom_video_endpoint": "x x",
         },
         {
             "enable_infinite_frames": True,
             "custom_data_location": return_testvideo_path(),
-            "custom_video_endpoint": "x#x",
-        },
-        {
             "custom_video_endpoint": " xyz ",
         },
     ],
@@ -248,6 +246,7 @@ def test_webgear_routes():
             "jpeg_compression_quality": 80,
             "jpeg_compression_fastdct": True,
             "jpeg_compression_fastupsample": False,
+            "custom_video_endpoint": "x1y1z",
         }
         # initialize WebGear app
         web = WebGear(source=return_testvideo_path(), logging=True, **options)
@@ -261,6 +260,12 @@ def test_webgear_routes():
         assert response.status_code == 200
         response_hello = client.get("/hello")
         assert response_hello.status_code == 200
+        # test new default endpoint
+        response_xyz = client.get("/x1y1z")
+        assert response_xyz.status_code == 200
+        # test old default endpoint
+        response_video = client.get("/video")
+        assert response_video.status_code == 404
         web.shutdown()
     except Exception as e:
         pytest.fail(str(e))
