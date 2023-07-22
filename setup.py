@@ -134,7 +134,7 @@ setup(
             "msgpack{}".format(latest_version("msgpack")),
             "msgpack_numpy{}".format(latest_version("msgpack_numpy")),
             "aiortc{}".format(latest_version("aiortc")),
-            "uvicorn{}".format(latest_version("uvicorn")),
+            "uvicorn",
         ]
         + (["picamera"] if ("arm" in platform.uname()[4][:3]) else [])
         + (
