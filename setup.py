@@ -129,7 +129,7 @@ setup(
             "mss==7.0.1",  # TODO temporary solution, needs to be addressed
             "Pillow",
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
-            "starlette{}".format(latest_version("starlette")),
+            "starlette",
             "jinja2",
             "msgpack{}".format(latest_version("msgpack")),
             "msgpack_numpy{}".format(latest_version("msgpack_numpy")),
