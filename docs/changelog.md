@@ -20,6 +20,107 @@ limitations under the License.
 
 # Release Notes
 
+## v0.3.1 (2023-07-22)
+
+??? tip "New Features"
+    - [x] **WebGear:** 
+        * Added an option to add a custom video endpoint path.
+            + Users can now change the video endpoint path from `"/video"` to any alphanumeric string.
+            + Added the `custom_video_endpoint` optional string attribute for this purpose.
+            + Only alphanumeric strings with no spaces in between are allowed as its value.
+    - [x] **ScreenGear:** 
+        * Added `dxcam` support for Windows machines.
+            + Implemented a complete end-to-end workflow for the `dxcam` backend.
+            + `dxcam` is now the default backend for Windows machines when no backend is defined.
+            + Added support for variable screen dimensions to capture an area from the screen.
+            + Added the optional flag `dxcam_target_fps` to control the target fps in `dxcam`. Defaults to `0` (disabled).
+            + RGB frames from `dxcam` are automatically converted into BGR.
+            + For better performance, `video_mode` is enabled by default in `dxcam` backend.
+            + Added necessary imports.
+        * Added support for tuple values in the monitor parameter to specify device and output indexes as `(int[device_idx], int[output_idx])` in the `dxcam` backend only.
+            + Default `int` index is also allowed as a value for selecting device index.
+    - [x] **Helper**
+        * Added multiple servers support for downloading assets.
+            + Added GitHub server to the `generate_webdata` method to make it more robust for rate limits and other shortcomings.
+            + Now, the `generate_webdata` method will retry a different server when one fails.
+    - [x] **Setup.py**
+        * Added `dxcam` dependency in `core` and `asyncio` extra requires.
+        * Bumped version to `0.3.1`. 
+    - [x] **Docs**
+        * Added `dxcam` API specific prerequisites for ScreenGear API when installing on Windows via pip.
+        * Added documentation for the `custom_video_endpoint` optional string attribute.
+        * Added documentation for controlling Chunk size in HLS stream.
+        * Added new hyperlinks for `dxcam` dependency.
+    - [x] **CI**
+        * Added a test case for `ndim==3` grayscale frames.
+            + Added the `Custom_Grayscale_class` to generate `ndim==3` grayscale frames.
+        * Added test cases for the `custom_video_endpoint` optional string attribute.
+
+
+??? success "Updates/Improvements" 
+    - [x] WebGear: 
+        * Improved the conditions logic to check if non-empty values are assigned to optional parameters.
+    - [x] WebGear_RTC: 
+        * Improved the handling of the `format` parameter when constructing a `VideoFrame` from ndarray frames.
+    - [x] ScreenGear: 
+        * Enforced `dxcam` backend (if installed) when `monitor` is defined on Windows machines.
+        * Refactored code blocks to ensure backward compatibility.
+    - [x] Maintenance:
+        * Cleaned up unused imports and code blocks.
+        * Cleaned redundant code.
+        * Improved logging.
+        * Implemented short-circuiting.
+        * Fixed comment typos.
+        * Updated comments.
+    - [x] Docs:
+        * Updated ScreenGear API usage example docs, added new relevant information, updated requirements for `dxcam` support in Windows machines.
+        * Refactored `monitor` and `backend` parameters docs of ScreenGear.
+        * Updated class and class parameters descriptions in ScreenGear docs.
+        * Updated a new description for ScreenGear API.
+        * Updated Zenodo badge and the BibTeX entry.
+        * Relocated some docs for a better context.
+        * Removed ScreenGear name from Threaded Queue Mode doc.
+        * Updated ScreenGear FAQs.
+        * Updated changelog.md
+    - [x] CI:
+        * Updated the `test_webgear_rtc_custom_stream_class` method.
+        * Updated the `test_webgear_options` method.
+        * Updated the `test_webgear_routes` test to validate the new custom endpoint.
+        * Increased code coverage by updating tests.
+
+
+??? danger "Breaking Updates/Changes"
+    - [ ] ScreenGear: 
+        * Previously enforced threaded queue mode is now completely removed, resulting in a potential performance boost.
+            + 💬 Reason: The IO is automatically blocked by the screen refresh rate, so adding the overhead of maintaining a separate queue is pointless.
+        * Removed the `THREAD_TIMEOUT` optional flag.
+
+??? bug "Bug-fixes"
+    - [x] WebGear_RTC: 
+        * Fixed a bug caused by PyAV's error when `ndim==3` grayscale frames are encountered. 
+            + The API will now drop the third dimension if `ndim==3` grayscale frames are detected.
+    - [x] ScreenGear:
+        * Fixed backend not defined while logging.
+    - [x] Setup.py:
+        * Starting from version `8.0.0`, the python-mss library dropped support for Python `3.7`, so as a temporary measure, `mss` dependency has been pinned to version `7.0.1`.
+    - [x] Docs:
+        * Fixed context and added separate code for controlling chunk size in HLS and DASH streams in StreamGear docs.
+        * Fixed naming conventions for the recently added DXcam backend in ScreenGear docs.
+        * Fixed missing hyperlinks.
+    - [x] CI:
+        * Fixed m3u8 module failing to recognize Windows paths in ScreenGear tests.
+        * Fixed a path bug by replacing the absolute file path with the decoded file content as a string in its `loads()` 
+
+
+??? question "Pull Requests"
+    * PR #367
+    * PR #366
+    * PR #365
+
+&nbsp; 
+
+&nbsp; 
+
 ## v0.3.0 (2023-01-26)
 
 ??? tip "New Features"
@@ -90,12 +191,12 @@ limitations under the License.
             + Renamed `force_termination` internal class parameter to `forced_termination`.
             + Enabled `output_params` parameters logging in both modes.
             + Improved `compression` and `logging` parameters boolean value handling.
-            + Impelemented `stdout` closing to cleanup pipeline before terminating.
+            + Implemented `stdout` closing to cleanup pipeline before terminating.
     - [x] Helper:
         *  Updated `validate_audio` method with improved and more robust regex patterns for identifying audio bitrate in ay audio file.
     - [x] Setup.py:
         * Bumped version to `0.3.0`.
-        * Replaced `>=` comparsion operator with more flexible `~=`.
+        * Replaced `>=` comparison operator with more flexible `~=`.
         * Replaced `distutils.version.LooseVersion` with `pkg_resources.parse_version`.
     - [x] Maintenance: 
         * Replaced depreciated `LooseVersion` with `parse_version`.
@@ -231,7 +332,7 @@ limitations under the License.
             + Added new `Bonus` section to navigation and moved suitable pages under it.
             + Updated headings and URLs.
         * Redesigned and Rewritten Donation and Contribution section to README.md
-        * Updated Zenodo badge and bibtex entry.
+        * Updated Zenodo badge and Bibtex entry.
         * Updated Admonition Icon, FAQs and site-links.
         * Reformatted code and its comments.
         * Updated `changelog.md`.
