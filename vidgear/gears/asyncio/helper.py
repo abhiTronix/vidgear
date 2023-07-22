@@ -148,7 +148,7 @@ def generate_webdata(path, c_name="webgear", overwrite_default=False, logging=Fa
     """
     ## generate_webdata
 
-    Auto-Generates, and Auto-validates default data for WebGear API.
+    Auto-Generates, and Auto-validates default data for WebGear and WebGear_RTC APIs.
 
     Parameters:
         path (string): path for generating data
@@ -185,13 +185,17 @@ def generate_webdata(path, c_name="webgear", overwrite_default=False, logging=Fa
         template_dir, ["index.html", "404.html", "500.html"]
     ):
         logger.critical(
-            "Overwriting existing WebGear data-files with default data-files from the server!"
+            "Overwriting existing {} data-files with default data-files from the server!".format(
+                c_name.capitalize()
+            )
             if overwrite_default
-            else "Failed to detect critical WebGear data-files: index.html, 404.html & 500.html!"
+            else "Failed to detect critical {} data-files: index.html, 404.html & 500.html!".format(
+                c_name.capitalize()
+            )
         )
         # download default files
         logging and logger.info(
-            "Downloading default data-files from the Gitlab Server: {}.".format(
+            "Downloading default data-files from the Gitlab Server: {}".format(
                 "https://gitlab.com/abhiTronix/vidgear-vitals"
             )
         )
@@ -225,7 +229,7 @@ def download_webdata(path, c_name="webgear", files=[], logging=False):
     """
     ## download_webdata
 
-    Downloads given list of files for WebGear API(if not available) from GitHub Server,
+    Downloads given list of files for WebGear and WebGear_RTC APIs(if not available) from GitHub/Gitlab Servers,
     and also Validates them.
 
     Parameters:
@@ -240,46 +244,74 @@ def download_webdata(path, c_name="webgear", files=[], logging=False):
     if logging:
         logger.debug("Downloading {} data-files at `{}`".format(basename, path))
 
+    # list all registered urls
+    reg_urls = [
+        "https://gitlab.com/abhiTronix/vidgear-vitals/-/raw/main",
+        "https://raw.githubusercontent.com/abhiTronix/vidgear-vitals/main",
+    ]
+
     # create session
     with requests.Session() as http:
-        for file in files:
-            # get filename
-            file_name = os.path.join(path, file)
-            # get URL
-            file_url = "https://gitlab.com/abhiTronix/vidgear-vitals/-/raw/main/{}{}/{}/{}".format(
-                c_name, "/static" if basename != "templates" else "", basename, file
-            )
-            # download and write file to the given path
-            logging and logger.debug(
-                "Downloading {} data-file: {}.".format(basename, file)
-            )
+        for url in reg_urls:
+            try:
+                for file in files:
+                    # get filename
+                    file_name = os.path.join(path, file)
+                    # get URL
+                    file_url = "{}/{}{}/{}/{}".format(
+                        url,
+                        c_name,
+                        "/static" if basename != "templates" else "",
+                        basename,
+                        file,
+                    )
+                    # download and write file to the given path
+                    logging and logger.debug(
+                        "Downloading {} data-file: {}.".format(basename, file)
+                    )
 
-            with open(file_name, "wb") as f:
-                # setup retry strategy
-                retries = Retry(
-                    total=3,
-                    backoff_factor=1,
-                    status_forcelist=[429, 500, 502, 503, 504],
+                    with open(file_name, "wb") as f:
+                        # setup retry strategy
+                        retries = Retry(
+                            total=3,
+                            backoff_factor=1,
+                            status_forcelist=[429, 500, 502, 503, 504],
+                        )
+                        # Mount it for https usage
+                        adapter = TimeoutHTTPAdapter(timeout=2.0, max_retries=retries)
+                        http.mount("https://", adapter)
+                        response = http.get(file_url, stream=True)
+                        response.raise_for_status()
+                        total_length = (
+                            response.headers.get("content-length")
+                            if "content-length" in response.headers
+                            else len(response.content)
+                        )
+                        assert not (
+                            total_length is None
+                        ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
+                        bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
+                        for data in response.iter_content(chunk_size=256):
+                            f.write(data)
+                            if len(data) > 0:
+                                bar.update(len(data))
+                        bar.close()
+            except AssertionError as e:
+                # raise if connection error
+                raise e
+            except Exception as e:
+                # log error
+                logger.exception(str(e))
+                # log event if necessary
+                url != reg_urls[1] and logger.error(
+                    "Download failed for Gitlab Server! Retrying from GitHub Server: {}".format(
+                        url, "https://github.com/abhiTronix/vidgear-vitals"
+                    )
                 )
-                # Mount it for https usage
-                adapter = TimeoutHTTPAdapter(timeout=2.0, max_retries=retries)
-                http.mount("https://", adapter)
-                response = http.get(file_url, stream=True)
-                response.raise_for_status()
-                total_length = (
-                    response.headers.get("content-length")
-                    if "content-length" in response.headers
-                    else len(response.content)
-                )
-                assert not (
-                    total_length is None
-                ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
-                bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
-                for data in response.iter_content(chunk_size=256):
-                    f.write(data)
-                    if len(data) > 0:
-                        bar.update(len(data))
-                bar.close()
+            else:
+                # break otherwise
+                break
+
     if logging:
         logger.debug("Verifying downloaded data:")
     if validate_webdata(path, files=files, logging=logging):

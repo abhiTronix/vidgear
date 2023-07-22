@@ -22,7 +22,6 @@ limitations under the License.
 import pytest
 import logging as log
 import platform
-from mss.exception import ScreenShotError
 
 from vidgear.gears import ScreenGear
 from vidgear.gears.helper import logger_handler
@@ -39,10 +38,9 @@ test_data = [
     (
         1,
         "mss",
-        {"top": 40, "left": 0, "width": 100, "height": 100, "THREAD_TIMEOUT":300},
+        {"top": 40, "left": 0, "width": 100, "height": 100},
         "COLOR_BGR2INVALID",
     ),
-    (None, "", {"THREAD_TIMEOUT":"wrong"}, None),
     (None, "mss", {}, "COLOR_BGR2GRAY"),
     (
         None,

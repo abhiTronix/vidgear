@@ -27,9 +27,9 @@ limitations under the License.
 
 ## Overview
 
-> *ScreenGear is designed exclusively for ultra-fast Screencasting, which means it can grab frames from your monitor in real-time, either by defining an area on the computer screen or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors as well as supports multiple backends.*
+> *ScreenGear is designed exclusively for targeting rapid Screencasting Capabilities, which means it can grab frames from your monitor in real-time, either by defining an area on the computer screen or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors as well as supports multiple backends.*
 
-ScreenGear API implements a multi-threaded wrapper around [**pyscreenshot**](https://github.com/ponty/pyscreenshot) & [**python-mss**](https://github.com/BoboTiG/python-mss) python library, and also flexibly supports its internal parameter. 
+ScreenGear API implements a multi-threaded wrapper around [**dxcam**](https://github.com/ra1nty/DXcam), [**pyscreenshot**](https://github.com/ponty/pyscreenshot) & [**python-mss**](https://github.com/BoboTiG/python-mss) python library, and also flexibly supports its internal parameter. 
 
 &thinsp; 
 

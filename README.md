@@ -39,7 +39,7 @@ limitations under the License.
 
 &nbsp;
 
-VidGear is a **High-Performance Video Processing Python Library** that provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio API Framework** on top of many state-of-the-art specialized libraries like _[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]_ serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**
+VidGear is a **High-Performance Video Processing Python Library** that provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio API Framework** on top of many state-of-the-art specialized libraries like _[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [dxcam][dxcam], [aiortc][aiortc] and [python-mss][mss]_ serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**
 
 VidGear primarily focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks, in just a few lines of code.
 
@@ -123,7 +123,7 @@ Each API is designed exclusively to handle/control/process different data-specif
 
 - [**CamGear:**](#camgear) Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
 - [**PiGear:**](#pigear) Multi-Threaded API targeting various Raspberry-Pi Camera Modules.
-- [**ScreenGear:**](#screengear) Multi-Threaded API targeting ultra-fast Screencasting.
+- [**ScreenGear:**](#screengear) High-performance API targeting rapid Screencasting Capabilities.
 - [**VideoGear:**](#videogear) Common Video-Capture API with internal [Video Stabilizer](https://abhitronix.github.io/vidgear/latest/gears/stabilizer/overview/) wrapper.
 
 **B. Video-Writer Gears:**
@@ -329,9 +329,9 @@ stream.stop()
 
 ## ScreenGear
 
-> _ScreenGear is designed exclusively for ultra-fast Screencasting, which means it can grab frames from your monitor in real-time, either by defining an area on the computer screen or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors as well as supports multiple backends._
+> _ScreenGear is designed exclusively for targeting rapid Screencasting Capabilities, which means it can grab frames from your monitor in real-time, either by defining an area on the computer screen or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors as well as supports multiple backends._
 
-ScreenGear implements a multi-threaded wrapper around [**pyscreenshot**][pyscreenshot] & [**python-mss**][mss] python library API and also supports an easy and flexible direct internal parameter manipulation.
+ScreenGear implements a Lightning-Fast API wrapper around [**dxcam**][dxcam], [**pyscreenshot**][pyscreenshot] & [**python-mss**][mss] python libraries and also supports an easy and flexible direct internal parameters manipulation.
 
 **Below is a snapshot of a ScreenGear API in action:**
 
@@ -650,7 +650,7 @@ It is something I am doing with my own free time. But so much more needs to be d
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6926196.svg)](https://doi.org/10.5281/zenodo.6926196)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7571405.svg)](https://doi.org/10.5281/zenodo.7571405)
 
 ```BibTeX
 @software{vidgear,
@@ -665,13 +665,13 @@ Here is a Bibtex entry you can use to cite this project in a publication:
                   Benjamin Lowe and
                   Mickaël Schoentgen and
                   Renaud Bouckenooghe},
-  title        = {abhiTronix/vidgear: VidGear v0.2.6},
-  month        = jul,
-  year         = 2022,
+  title        = {abhiTronix/vidgear: VidGear v0.3.0},
+  month        = jan,
+  year         = 2023,
   publisher    = {Zenodo},
-  version      = {vidgear-0.2.6},
-  doi          = {10.5281/zenodo.6926196},
-  url          = {https://doi.org/10.5281/zenodo.6926196}
+  version      = {vidgear-0.3.0},
+  doi          = {10.5281/zenodo.7571405},
+  url          = {https://doi.org/10.5281/zenodo.7571405}
 }
 ```
 
@@ -778,6 +778,7 @@ External URLs
 [uvloop-ns]: https://github.com/MagicStack/uvloop/issues/14
 [ffmpeg]: https://www.ffmpeg.org/
 [flake8]: https://flake8.pycqa.org/en/latest/
+[dxcam]: https://github.com/ra1nty/DXcam
 [black]: https://github.com/psf/black
 [pytest]: https://docs.pytest.org/en/latest/
 [opencv-writer]: https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5

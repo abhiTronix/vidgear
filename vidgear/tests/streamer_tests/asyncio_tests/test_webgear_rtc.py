@@ -22,13 +22,13 @@ limitations under the License.
 import os
 import cv2
 import pytest
-import sys
 import asyncio
 import platform
 import logging as log
 import requests
 import tempfile
-import json, time
+import json
+import numpy as np
 from starlette.routing import Route
 from starlette.responses import PlainTextResponse
 from starlette.middleware import Middleware
@@ -37,12 +37,10 @@ from async_asgi_testclient import TestClient
 from aiortc import (
     MediaStreamTrack,
     RTCPeerConnection,
-    VideoStreamTrack,
     RTCConfiguration,
     RTCIceServer,
     RTCSessionDescription,
 )
-from av import VideoFrame
 from vidgear.gears import VideoGear
 from aiortc.mediastreams import MediaStreamError
 from vidgear.gears.asyncio import WebGear_RTC
@@ -129,7 +127,6 @@ class Custom_Stream_Class:
     def __init__(self, source=0):
         # !!! define your own video source here !!!
         self.stream = cv2.VideoCapture(source)
-
         # define running flag
         self.running = True
 
@@ -159,18 +156,49 @@ class Custom_Stream_Class:
             self.stream.release()
 
 
+# create your own custom Grayscale class
+class Custom_Grayscale_class:
+    """
+    Custom Grayscale class for producing `ndim==3` grayscale frames
+    """
+
+    def __init__(self):
+        # define running flag
+        self.running = True
+        # counter
+        self.counter = 0
+
+    def read(self, size=(480, 640, 1)):
+        # check if we're still running
+        self.counter += 1
+        if self.running:
+            # read frame from provided source
+            frame = np.random.randint(0, 255, size=size, dtype=np.uint8)
+            # check counter
+            if self.counter < 11:
+                # return our gray frame
+                return frame
+            else:
+                # signal we're not running now
+                self.running = False
+        # return None-type
+        return None
+
+    def stop(self):
+        # flag that we're not running
+        self.running = False
+
+
 class Invalid_Custom_Stream_Class:
     """
     Custom Invalid WebGear_RTC Server
     """
 
     def __init__(self, source=0):
-
         # define running flag
         self.running = True
 
     def stop(self):
-
         # don't forget this function!!!
 
         # flag that we're not running
@@ -379,6 +407,7 @@ test_stream_classes = [
     (None, False),
     (Custom_Stream_Class(source=return_testvideo_path()), True),
     (VideoGear(source=return_testvideo_path(), logging=True), True),
+    (Custom_Grayscale_class(), False),
     (Invalid_Custom_Stream_Class(source=return_testvideo_path()), False),
 ]
 
@@ -391,7 +420,10 @@ async def test_webgear_rtc_custom_stream_class(stream_class, result):
     """
     # assign your Custom Streaming Class with adequate source (for e.g. foo.mp4)
     # to `custom_stream` attribute in options parameter
-    options = {"custom_stream": stream_class}
+    options = {
+        "custom_stream": stream_class,
+        "frame_size_reduction": 0 if not result else 45,
+    }
     try:
         web = WebGear_RTC(logging=True, **options)
         async with TestClient(web()) as client:

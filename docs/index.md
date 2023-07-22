@@ -8,6 +8,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
+
    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
@@ -30,7 +31,7 @@ limitations under the License.
 
 > VidGear is a cross-platform High-Performance **Video-Processing** Framework for building complex real-time media applications in python :fire:
 
-VidGear provides an easy-to-use, highly extensible, **[Multi-Threaded](bonus/TQM/#threaded-queue-mode) + [Asyncio](https://docs.python.org/3/library/asyncio.html) API Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [aiortc][aiortc] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and real-time performance ⚡️.
+VidGear provides an easy-to-use, highly extensible, **[Multi-Threaded](bonus/TQM/#threaded-queue-mode) + [Asyncio](https://docs.python.org/3/library/asyncio.html) API Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [dxcam][dxcam], [aiortc][aiortc] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and real-time performance ⚡️.
 
 > _"Write Less and Accomplish More"_ — VidGear's Motto
 
@@ -66,7 +67,7 @@ These Gears can be classified as follows:
 
 * [CamGear](gears/camgear/overview/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
 * [PiGear](gears/pigear/overview/): Multi-Threaded API targeting various Raspberry-Pi Camera Modules.
-* [ScreenGear](gears/screengear/overview/): Multi-Threaded API targeting ultra-fast Screencasting.    
+* [ScreenGear](gears/screengear/overview/): High-performance API targeting rapid Screencasting Capabilities.    
 * [VideoGear](gears/videogear/overview/): Common Video-Capture API with internal [_Video Stabilizer_](gears/stabilizer/overview/) wrapper.
 
 #### VideoWriter Gears
@@ -126,7 +127,7 @@ It is something I am doing with my own free time. But so much more needs to be d
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6926196.svg)](https://doi.org/10.5281/zenodo.6926196)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7571405.svg)](https://doi.org/10.5281/zenodo.7571405)
 
 ```BibTeX
 @software{vidgear,
@@ -141,13 +142,13 @@ Here is a Bibtex entry you can use to cite this project in a publication:
                   Benjamin Lowe and
                   Mickaël Schoentgen and
                   Renaud Bouckenooghe},
-  title        = {abhiTronix/vidgear: VidGear v0.2.6},
-  month        = jul,
-  year         = 2022,
+  title        = {abhiTronix/vidgear: VidGear v0.3.0},
+  month        = jan,
+  year         = 2023,
   publisher    = {Zenodo},
-  version      = {vidgear-0.2.6},
-  doi          = {10.5281/zenodo.6926196},
-  url          = {https://doi.org/10.5281/zenodo.6926196}
+  version      = {vidgear-0.3.0},
+  doi          = {10.5281/zenodo.7571405},
+  url          = {https://doi.org/10.5281/zenodo.7571405}
 }
 ```
 
@@ -170,3 +171,4 @@ External URLs
 [streamlink]:https://streamlink.github.io/
 [aiortc]:https://aiortc.readthedocs.io/en/latest/
 [yt_dlp]:https://github.com/yt-dlp/yt-dlp
+[dxcam]:https://github.com/ra1nty/DXcam

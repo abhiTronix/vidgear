@@ -24,39 +24,75 @@ limitations under the License.
 
 ## **`monitor`**
 
-This parameter enables [`mss`](https://github.com/BoboTiG/python-mss) usage and is most suitable for selecting index of a specific screen _(from where you want retrieve frames)_ in multi-monitor setup. For example, its value can be assign to `2`, to fetch frames from a secondary monitor screen. More information can be found [here ➶](https://python-mss.readthedocs.io/api.html#mss.tools.mss.base.MSSBase.monitors)
-
-!!! tip "You can assign `monitor` value to `-1` to fetch frames from all connected multiple monitor screens."
+This parameter enforces [`dxcam`](https://github.com/ra1nty/DXcam) _(if installed)_ and [`mss`](https://github.com/BoboTiG/python-mss) _(otherwise)_ usage, and it is suitable for selecting index of a specific screen/monitor device _(from where you want retrieve frames)_ in multi-monitor setup. For example, its value can be assign to `2`, to fetch frames from a secondary monitor screen.
 
 !!! warning "Implication of using `monitor` parameter"
     Any value on `monitor` parameter other than `None` in ScreenGear API: 
     
-    * Will force `mss` library backend.
-    * Will output [`BGRA`](https://en.wikipedia.org/wiki/RGBA_color_model) colorspace frames instead of default `BGR`. 
-    * Will disable the [`backend`](../params/#backend) parameter.
+    * Will enforce `dxcam` library backend on Windows platform _(if installed)_, and `mss` library backend otherwise.
+    * Will discard any value on its [`backend`](../params/#backend) parameter.
 
 
-**Data-Type:** Integer
+
+**Data-Type:** Integer, Tuple _(only if `dxcam` backend on Windows)_
 
 **Default Value:** Its default value is `None` _(i.e. disabled by default)_.
 
 **Usage:**
 
-```python
-ScreenGear(monitor=-1) # to fetch frames from all connected multiple screens
-```
+=== "With `dxcam` on Windows :fontawesome-brands-windows:"
+
+    ??? tip "Using GPU acceleration on Windows :fontawesome-brands-windows:"
+        With  `dxcam` library backend, you can also assign which GPU devices ids to use along with monitor device ids as tuple `(monitor_idx, gpu_idx)`, as follows:
+
+        ```python
+        # open video stream with defined parameters with 
+        # monitor at index `1` and GPU at index `0`.
+        stream = ScreenGear(monitor=(1,0), logging=True).start()
+        ```
+        
+        !!! info "Getting a complete list of monitor devices and GPUs"
+
+            To get a complete list of monitor devices and outputs(GPUs), you can use `dxcam` library itself:
+            ```sh
+            >>> import dxcam
+            >>> dxcam.device_info()
+            'Device[0]:<Device Name:NVIDIA GeForce RTX 3090 Dedicated VRAM:24348Mb VendorId:4318>\n'
+            >>> dxcam.output_info()
+            'Device[0] Output[0]: Res:(1920, 1080) Rot:0 Primary:True\nDevice[0] Output[1]: Res:(1920, 1080) Rot:0 Primary:False\n'
+            ```
+
+    ```python
+    # open video stream with defined parameters 
+    # with monitor at index `1` selected
+    ScreenGear(monitor=1)
+    ``` 
+
+=== "With `mss` backend "
+
+    !!! tip "With `mss` library backend, You can also assign `monitor` value to `-1` to fetch frames from all connected multiple monitor screens with `mss` backend."
+
+    !!! danger "With `mss` library backend, API will output [`BGRA`](https://en.wikipedia.org/wiki/RGBA_color_model) colorspace frames instead of default `BGR`."
+
+    ```python
+    # open video stream with defined parameters 
+    # with monitor at index `1` selected
+    ScreenGear(monitor=1)
+    ``` 
 
 &nbsp;
 
 ## **`backend`**
 
-This parameter enables [`pyscreenshot`](https://github.com/BoboTiG/python-mss) usage and select suitable backend for extracting frames in ScreenGear. The user have the authority of selecting suitable backend which generates best performance as well as the most compatible with their machines. The possible values are: `pil`, `mss`, `scrot`, `maim`, `imagemagick`, `pyqt5`, `pyqt`, `pyside2`, `pyside`, `wx`, `pygdk3`, `mac_screencapture`, `mac_quartz`, `gnome_dbus`, `gnome-screenshot`, `kwin_dbus`. *More information on these backends can be found [here ➶](https://github.com/ponty/pyscreenshot)*
+This parameter enables [`pyscreenshot`](https://github.com/BoboTiG/python-mss) usage and select suitable backend for extracting frames in ScreenGear. The user have the authority of selecting suitable backend which generates best performance as well as the most compatible with their machines. The possible values are: `dxcam` _(Windows only)_, `pil`, `mss`, `scrot`, `maim`, `imagemagick`, `pyqt5`, `pyqt`, `pyside2`, `pyside`, `wx`, `pygdk3`, `mac_screencapture`, `mac_quartz`, `gnome_dbus`, `gnome-screenshot`, `kwin_dbus`. 
 
-!!! note "Performance Benchmarking of each backend can be found [here ➶](https://github.com/ponty/pyscreenshot#performance)"
+!!! note "Performance Benchmarking of all backend can be found [here ➶](https://github.com/ra1nty/DXcam#benchmarks) and [here ➶](https://github.com/ponty/pyscreenshot#performance)"
 
 !!! warning "Remember to install backend library and all of its dependencies you're planning to use with ScreenGear API."
 
 !!! error "Any value on [`monitor`](#monitor) parameter will disable the `backend` parameter. You cannot use both parameters at same time."
+
+!!! info "Backend defaults to `dxcam` library on Windows _(if installed)_, and `pyscreenshot` otherwise."
 
 **Data-Type:** String
 
@@ -65,7 +101,7 @@ This parameter enables [`pyscreenshot`](https://github.com/BoboTiG/python-mss) u
 **Usage:**
 
 ```python
-ScreenGear(backend="mss") # to enforce `mss` as backend for extracting frames.
+ScreenGear(backend="pil") # to enforce `pil` as backend for extracting frames.
 ```
 
 &nbsp;

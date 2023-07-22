@@ -147,6 +147,16 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
     pip install uvloop
     ```
 
+* #### DXcam
+
+    Required only if you're using the [**ScreenGear**](../../gears/screengear/overview/) API on Windows machines for better FPS performance. You can easily install it via pip:
+
+    !!! fail "FYI, DXcam is **ONLY supported on Windows :fontawesome-brands-windows: Machines.**"
+
+    ```sh
+    pip install dxcam
+    ```
+
 &nbsp;
 
 ## Installation
@@ -236,7 +246,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
             | CamGear | `yt_dlp` |
             | PiGear | `picamera` |
             | VideoGear | *Based on CamGear or PiGear backend in use*  |
-            | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |
+            | ScreenGear | `dxcam`, `mss`, `pyscreenshot`, `Pillow` |
             | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
             | StreamGear | **FFmpeg:** See [this doc ➶](../../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
             | NetGear | `pyzmq`, `simplejpeg` |
@@ -252,7 +262,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
             | CamGear | `pafy`, `yt_dlp`, `streamlink` |
             | PiGear | `picamera` |
             | VideoGear | *Based on CamGear or PiGear backend in use* |
-            | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |
+            | ScreenGear | `dxcam`, `mss`, `pyscreenshot`, `Pillow` |
             | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
             | StreamGear | **FFmpeg:** See [this doc ➶](../../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
             | NetGear | `pyzmq`, `simplejpeg` |
@@ -319,10 +329,10 @@ pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[asyncio]
 
 ```sh
 # Install latest stable release with all Core dependencies
-pip install vidgear-0.2.5-py3-none-any.whl[core]
+pip install vidgear-0.3.1-py3-none-any.whl[core]
 
 # Or Install latest stable release with all Core & Asyncio dependencies
-pip install vidgear-0.2.5-py3-none-any.whl[asyncio]
+pip install vidgear-0.3.1-py3-none-any.whl[asyncio]
 ```
 
 &nbsp;
