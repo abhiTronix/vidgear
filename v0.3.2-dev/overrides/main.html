@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block extrahead %}
+  {% set title = config.site_name %}
+  {% if page and page.meta and page.meta.title %}
+    {% set title = title ~ " - " ~ page.meta.title %}
+  {% elif page and page.title and not page.is_homepage %}
+    {% set title = title ~ " - " ~ page.title | striptags %}
+  {% endif %}
+  {% set image = config.site_url ~ '/assets/images/banner_link.png' %}
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ title }}">
+  <meta property="og:description" content="{{ config.site_description }}">
+  <meta property="og:url" content="{{ page.canonical_url }}">
+  <meta property="og:image" content="{{ image }}">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@abhi_una12">
+  <meta name="twitter:creator" content="@abhi_una12">
+  <meta name="twitter:title" content="{{ title }}">
+  <meta name="twitter:description" content="{{ config.site_description }}">
+  <meta name="twitter:image" content="{{ image }}">
+{% endblock %}
+{% block announce %}
+  <!-- Add announcement here, including arbitrary HTML -->
+  <b><span class="twemoji"> {% include ".icons/material/message-alert.svg" %} </span> Hey, checkout our new <a href="https://abhitronix.github.io/deffcode" style="color: yellow; text-decoration: none;">Deffcode</a> library which will added as vidgear backend soon. We’d love to hear your feedback!</b>
+{% endblock %}
+{% block outdated %}
+  You're not viewing the latest version.
+  <a href="{{ '../' ~ base_url }}">
+    <strong>Click here to go to latest.</strong>
+  </a>
+{% endblock %}
+{% block content %}
+  {{ super() }}
+  <footer class="sponsorship">
+    <hr>
+    <a href="https://ko-fi.com/W7W8WTYO">
+      <span class="twemoji heart-throb-hover">
+        <img alt="❤" class="twemoji heart" src="https://twemoji.maxcdn.com/v/latest/svg/2764.svg" title="Donate">
+      </span>
+    </a>
+    <hr>
+  </footer>
+{% endblock %}
+{% block libs %}
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/clappr/clappr-level-selector-plugin@latest/dist/level-selector.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/clappr/dash-shaka-playback@latest/dist/dash-shaka-playback.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@clappr/hlsjs-playback@latest/dist/hlsjs-playback.min.js"></script>
+  <script type="text/javascript" src="https://sidecar.gitter.im/dist/sidecar.v1.js" async defer></script>
+<script>
+  ((window.gitter = {}).chat = {}).options = {
+    room: 'vidgear/community'
+  };
+</script>
+{% endblock %}
+
+<!--
+===============================================
+vidgear library source-code is deployed under the Apache 2.0 License:
+
+Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+===============================================
+-->
