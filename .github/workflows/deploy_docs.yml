@@ -23,7 +23,7 @@ on:
     types: [published]
 
 env:
-  PYTHON_VERSION: 3.7
+  PYTHON_VERSION: 3.9
   GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
   GIT_NAME: ${{ secrets.GIT_NAME }}
   GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
@@ -65,7 +65,7 @@ jobs:
       - name: mike deploy docs release
         run: |
           echo "${{ env.NAME_RELEASE }}"
-          mike deploy --push --update-aliases --no-redirect ${{ env.NAME_RELEASE }} ${{ env.RELEASE_NAME }} --title=${{ env.RELEASE_NAME }} 
+          mike deploy --push --update-aliases --no-redirect ${{ env.NAME_RELEASE }} ${{ env.RELEASE_NAME }} --title=${{ env.RELEASE_NAME }}
         env:
           NAME_RELEASE: "v${{ env.RELEASE_NAME }}-release"
         if: success()
@@ -111,7 +111,6 @@ jobs:
         env:
           NAME_STABLE: "v${{ env.RELEASE_NAME }}-stable"
         if: success()
-
 
   deploy-docs-dev:
     name: Deploy Development Docs
