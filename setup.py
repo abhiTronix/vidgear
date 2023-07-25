@@ -109,10 +109,10 @@ setup(
         # API specific deps
         "core": [
             "yt_dlp{}".format(latest_version("yt_dlp")),
-            "pyzmq==24.0.1",
+            "pyzmq{}".format(latest_version("pyzmq")),
             "Pillow",
             "simplejpeg{}".format(latest_version("simplejpeg")),
-            "mss==7.0.1",  # TODO temporary solution, needs to be addressed
+            "mss{}".format(latest_version("mss")),
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
         ]
         + (["picamera"] if ("arm" in platform.uname()[4][:3]) else [])
@@ -124,17 +124,17 @@ setup(
         # API specific + Asyncio deps
         "asyncio": [
             "yt_dlp{}".format(latest_version("yt_dlp")),
-            "pyzmq==24.0.1",
+            "pyzmq{}".format(latest_version("pyzmq")),
             "simplejpeg{}".format(latest_version("simplejpeg")),
-            "mss==7.0.1",  # TODO temporary solution, needs to be addressed
+            "mss{}".format(latest_version("mss")),
             "Pillow",
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
-            "starlette",
+            "starlette{}".format(latest_version("starlette")),
             "jinja2",
             "msgpack{}".format(latest_version("msgpack")),
             "msgpack_numpy{}".format(latest_version("msgpack_numpy")),
             "aiortc{}".format(latest_version("aiortc")),
-            "uvicorn",
+            "uvicorn{}".format(latest_version("uvicorn")),
         ]
         + (["picamera"] if ("arm" in platform.uname()[4][:3]) else [])
         + (
@@ -184,12 +184,12 @@ setup(
         "Intended Audience :: Science/Research",
         "Intended Audience :: Education",
         "License :: OSI Approved :: Apache Software License",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
     ],
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     scripts=[],
     project_urls={
         "Bug Reports": "https://github.com/abhiTronix/vidgear/issues",
