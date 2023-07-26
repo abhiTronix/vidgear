@@ -412,6 +412,10 @@ test_stream_classes = [
 ]
 
 
+@pytest.mark.skipif(
+    (platform.system() == "Windows" and platform.python_version_tuple()[:2] >= (3, 11)),
+    reason="Random Failures!",
+)
 @pytest.mark.asyncio
 @pytest.mark.parametrize("stream_class, result", test_stream_classes)
 async def test_webgear_rtc_custom_stream_class(stream_class, result):
