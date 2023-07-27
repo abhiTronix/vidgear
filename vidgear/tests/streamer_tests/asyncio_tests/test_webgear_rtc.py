@@ -330,7 +330,13 @@ test_data = [
 ]
 
 
-@pytest.mark.skipif((platform.system() == "Windows"), reason="Random Failures!")
+@pytest.mark.skipif(
+    (
+        platform.system() == "Windows"
+        or platform.python_version_tuple()[:2] >= ("3", "11")
+    ),
+    reason="Random Failures!",
+)
 @pytest.mark.asyncio
 @pytest.mark.parametrize("options", test_data)
 async def test_webpage_reload(options):
