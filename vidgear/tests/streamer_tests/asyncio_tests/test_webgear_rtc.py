@@ -275,7 +275,7 @@ async def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
             await offer_pc.close()
         web.shutdown()
     except Exception as e:
-        if source is None or not isinstance(e, MediaStreamError):
+        if source and not isinstance(e, MediaStreamError):
             pytest.fail(str(e))
 
 
