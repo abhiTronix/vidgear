@@ -119,7 +119,6 @@ class NetGear:
         logging=False,
         **options
     ):
-
         """
         This constructor method initializes the object state and attributes of the NetGear class.
 
@@ -403,7 +402,6 @@ class NetGear:
 
         # Handle Secure mode
         if self.__secure_mode:
-
             # activate and log if overwriting is enabled
             if overwrite_cert:
                 if not receive_mode:
@@ -525,7 +523,6 @@ class NetGear:
 
         # check whether `receive_mode` is enabled
         if self.__receive_mode:
-
             # define connection address
             if address is None:
                 address = "*"  # define address
@@ -612,6 +609,7 @@ class NetGear:
                 # define exclusive socket options for patterns
                 if self.__pattern == 2:
                     self.__msg_socket.setsockopt_string(zmq.SUBSCRIBE, "")
+                    self.__msg_socket.setsockopt(zmq.LINGER, 0)
 
                 # if multiserver_mode is enabled, then assign port addresses to zmq socket
                 if self.__multiserver_mode:
@@ -721,7 +719,6 @@ class NetGear:
                 logger.debug("Receive Mode is now activated.")
 
         else:
-
             # otherwise default to `Send Mode`
 
             # define connection address
@@ -931,7 +928,6 @@ class NetGear:
                 )
 
     def __recv_handler(self):
-
         """
         A threaded receiver handler, that keep iterating data from ZMQ socket to a internally monitored deque,
         until the thread is terminated, or socket disconnects.
@@ -941,7 +937,6 @@ class NetGear:
 
         # keep looping infinitely until the thread is terminated
         while not self.__terminate:
-
             # check queue buffer for overflow
             if len(self.__queue) >= 96:
                 # stop iterating if overflowing occurs
@@ -1302,7 +1297,6 @@ class NetGear:
         if self.__pattern < 2:
             # check if Bidirectional data transmission is enabled
             if self.__bi_mode or self.__multiclient_mode:
-
                 # handles return data
                 recvd_data = None
 
@@ -1452,9 +1446,12 @@ class NetGear:
                 # log confirmation
                 self.__logging and logger.debug(recv_confirmation)
 
-    def close(self):
+    def close(self, kill=False):
         """
         Safely terminates the threads, and NetGear resources.
+
+        Parameters:
+            kill (bool): Kills ZMQ context instead of graceful exiting in receive mode.
         """
         # log it
         self.__logging and logger.debug(
@@ -1469,20 +1466,29 @@ class NetGear:
                 self.__queue.clear()
             # call immediate termination
             self.__terminate = True
-            # wait until stream resources are released (producer thread might be still grabbing frame)
+            # properly close the socket
+            self.__logging and logger.debug("Terminating. Please wait...")
+            # wait until stream resources are released
+            # (producer thread might be still grabbing frame)
             if self.__thread is not None:
                 # properly handle thread exit
-                self.__thread.join()
+                if self.__thread.is_alive() and kill:
+                    # force close if still alive
+                    logger.warning("Thread still running...Killing it forcefully!")
+                    self.__msg_context.destroy()
+                    self.__thread.join()
+                else:
+                    self.__thread.join()
+                    self.__msg_socket.close(linger=0)
                 self.__thread = None
-            self.__logging and logger.debug("Terminating. Please wait...")
-            # properly close the socket
-            self.__msg_socket.close(linger=0)
             self.__logging and logger.debug("Terminated Successfully!")
-
         else:
             # indicate that process should be terminated
             self.__terminate = True
-
+            # log if kill enabled
+            kill and logger.warning(
+                "`kill` parmeter is only available in the receive mode."
+            )
             # check if all attempts of reconnecting failed, then skip to closure
             if (self.__pattern < 2 and not self.__max_retries) or (
                 self.__multiclient_mode and not self.__port_buffer
