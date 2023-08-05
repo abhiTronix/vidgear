@@ -167,9 +167,9 @@ def test_patterns(pattern):
         if not (stream is None):
             stream.release()
         if not (server is None):
-            server.close()
+            server.close(kill=True)
         if not (client is None):
-            client.close()
+            client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -239,9 +239,9 @@ def test_compression(options_server):
         if not (stream is None):
             stream.stop()
         if not (server is None):
-            server.close()
+            server.close(kill=True)
         if not (client is None):
-            client.close()
+            client.close(kill=True)
 
 
 test_data_class = [
@@ -304,9 +304,9 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
         if not (stream is None):
             stream.release()
         if not (server is None):
-            server.close()
+            server.close(kill=True)
         if not (client is None):
-            client.close()
+            client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -418,9 +418,9 @@ def test_bidirectional_mode(pattern, target_data, options):
         if not (stream is None):
             stream.stop()
         if not (server is None):
-            server.close()
+            server.close(kill=True)
         if not (client is None):
-            client.close()
+            client.close(kill=True)
 
 
 @pytest.mark.parametrize(
