@@ -77,6 +77,20 @@ stream.stop()
 
 ScreenGear API provides us the flexibility to directly set the dimensions of capturing-area of the screen. These dimensions can be easily applied to ScreenGear API through its [`options`](../params/#options) dictionary parameter by formatting them as its attributes. 
 
+
+??? info "Supported Dimensional Attributes"
+
+	ScreenGear API takes `left`, `top`, `width`, `height` coordinates of the bounding box of capture screen area(ROI), similar to [PIL.ImageGrab.grab](https://pillow.readthedocs.io/en/stable/reference/ImageGrab.html), defined below:
+
+    <h2 align="center">
+    <img src="../../../assets/images/screengear_region.png" loading="lazy" alt="ScreenGear ROI region" width="80%"/>
+    </h2>
+
+	* **`left`:** the x-coordinate of the upper-left corner of the region
+	* **`top`:** the y-coordinate of the upper-left corner of the region
+	* **`width`:** the width of the complete region from left to the bottom-right corner of the region.
+	* **`height`:** the height of the complete region from top to the bottom-right corner of the region.
+
 The complete usage example is as follows:
 
 
