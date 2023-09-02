@@ -240,6 +240,9 @@ class NetGear:
             self.__max_retries = 3
             # request timeout
             self.__request_timeout = 4000  # 4 secs
+        else:
+            # subscriber timeout
+            self.__subscriber_timeout = None
 
         # Handle user-defined options dictionary values
         # reformat dictionary
@@ -383,10 +386,20 @@ class NetGear:
                     self.__max_retries = value
                 else:
                     logger.warning("Invalid `max_retries` value skipped!")
+
             # assign request timeout in synchronous patterns
             elif key == "request_timeout" and isinstance(value, int) and pattern < 2:
                 if value >= 4:
                     self.__request_timeout = value * 1000  # covert to milliseconds
+                else:
+                    logger.warning("Invalid `request_timeout` value skipped!")
+
+            # assign subscriber timeout
+            elif (
+                key == "subscriber_timeout" and isinstance(value, int) and pattern == 2
+            ):
+                if value > 0:
+                    self.__subscriber_timeout = value * 1000  # covert to milliseconds
                 else:
                     logger.warning("Invalid `request_timeout` value skipped!")
 
@@ -606,10 +619,15 @@ class NetGear:
                     # enable CURVE connection for this socket
                     self.__msg_socket.curve_server = True
 
-                # define exclusive socket options for patterns
+                # define exclusive socket options for `patterns=2`
                 if self.__pattern == 2:
                     self.__msg_socket.setsockopt_string(zmq.SUBSCRIBE, "")
-                    self.__msg_socket.setsockopt(zmq.LINGER, 0)
+                    self.__subscriber_timeout and self.__msg_socket.setsockopt(
+                        zmq.RCVTIMEO, self.__subscriber_timeout
+                    )
+                    self.__subscriber_timeout and self.__msg_socket.setsockopt(
+                        zmq.LINGER, 0
+                    )
 
                 # if multiserver_mode is enabled, then assign port addresses to zmq socket
                 if self.__multiserver_mode:
@@ -638,10 +656,15 @@ class NetGear:
                         )
                     self.__msg_pattern = msg_pattern[1]
                     self.__poll.register(self.__msg_socket, zmq.POLLIN)
-
                     self.__logging and logger.debug(
                         "Reliable transmission is enabled for this pattern with max-retries: {} and timeout: {} secs.".format(
                             self.__max_retries, self.__request_timeout / 1000
+                        )
+                    )
+                else:
+                    self.__logging and self.__subscriber_timeout and logger.debug(
+                        "Timeout: {} secs is enabled for this system.".format(
+                            self.__subscriber_timeout / 1000
                         )
                     )
 
@@ -981,7 +1004,14 @@ class NetGear:
 
                     continue
             else:
-                msg_json = self.__msg_socket.recv_json(flags=self.__msg_flag)
+                try:
+                    msg_json = self.__msg_socket.recv_json(flags=self.__msg_flag)
+                except zmq.ZMQError as e:
+                    if e.errno == zmq.EAGAIN:
+                        logger.critical("Connection Timeout. Exiting!")
+                        self.__terminate = True
+                        self.__queue.append(None)
+                        break
 
             # check if terminate_flag` received
             if msg_json["terminate_flag"]:
