@@ -169,7 +169,9 @@ This parameter provides the flexibility to alter various NetGear API's internal 
 
     * **`max_retries`**(_integer_): This internal attribute controls the maximum retries before Server/Client exit itself, if it's unable to get any response/reply from the socket before a certain amount of time, when synchronous messaging patterns like (`zmq.PAIR` & `zmq.REQ/zmq.REP`) are being used. It's value can anything greater than `0`, and its default value is `3`.
 
-    * **`request_timeout`**(_integer_): This internal attribute controls the timeout value _(in seconds)_, after which the Server/Client exit itself if it's unable to get any response/reply from the socket, when synchronous messaging patterns like (`zmq.PAIR` & `zmq.REQ/zmq.REP`) are being used. It's value can anything greater than `0`, and its default value is `10` seconds.
+    * **`request_timeout`**(_integer_): This internal attribute controls the timeout value _(in seconds)_, after which the Server/Client exit itself with `Nonetype` value if it's unable to get any response/reply from the socket, when synchronous messaging patterns like (`zmq.PAIR` & `zmq.REQ/zmq.REP`) are being used. It's value can anything greater than `0`, and its default value is `10` seconds.
+
+    * **`subscriber_timeout`**(_integer_): Similar to `request_timeout`, this internal attribute also controls the timeout value _(in seconds)_ but for non-synchronous `zmq.PU/zmq.SUB` pattern in compression mode, after which the Client(Subscriber) exit itself with `Nonetype` value if it's unable to get any response from the socket. It's value can anything greater than `0`, and its disabled by default _(meaning the client will wait forever for response)_.
 
     * **`flag`**(_integer_): This PyZMQ attribute value can be either `0` or `zmq.NOBLOCK`_( i.e. 1)_. More information can be found [here ➶](https://pyzmq.readthedocs.io/en/latest/api/zmq.html).
 
