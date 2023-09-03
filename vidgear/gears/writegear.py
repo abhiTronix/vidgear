@@ -81,6 +81,7 @@ class WriteGear:
         compression_mode=True,
         custom_ffmpeg="",
         logging=False,
+        ffmpeg_subprocess_creation_window=True,
         **output_params
     ):
 
@@ -92,6 +93,7 @@ class WriteGear:
             compression_mode (bool): selects the WriteGear's Primary Mode of Operation.
             custom_ffmpeg (str): assigns the location of custom path/directory for custom FFmpeg executables.
             logging (bool): enables/disables logging.
+            ffmpeg_subprocess_creation_window: enables/disables creating window for ffmpeg subprocess
             output_params (dict): provides the flexibility to control supported internal parameters and FFmpeg properities.
         """
         # print current version
@@ -122,6 +124,7 @@ class WriteGear:
         self.__initiate_process = (
             True  # handles initiate one-time process for generating pipeline
         )
+        self.ffmpeg_subprocess_creation_window = ffmpeg_subprocess_creation_window
         self.__out_file = None  # handles output
         gstpipeline_mode = False  # handles GStreamer Pipeline Mode
 
@@ -591,12 +594,25 @@ class WriteGear:
             # log command in logging mode
             logger.debug("Executing FFmpeg command: `{}`".format(" ".join(cmd)))
             # In logging mode
-            self.__process = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
+            if platform.system() == "Windows" and not self.ffmpeg_subprocess_creation_window:
+                # this prevents ffmpeg creation window from opening when building exe files with pyinstaller on windows
+                self.__process = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None, creationflags=sp.DETACHED_PROCESS)
+            else :
+                self.__process = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
+                
+                
         else:
             # In silent mode
-            self.__process = sp.Popen(
-                cmd, stdin=sp.PIPE, stdout=sp.DEVNULL, stderr=sp.STDOUT
-            )
+            if platform.system() == "Windows" and not self.ffmpeg_subprocess_creation_window:
+                # this prevents ffmpeg creation window from opening when building exe files with pyinstaller on windows
+                self.__process = sp.Popen(
+                    cmd, stdin=sp.PIPE, stdout=sp.DEVNULL, stderr=sp.STDOUT, creationflags=sp.DETACHED_PROCESS
+                )
+            else:
+                self.__process = sp.Popen(
+                    cmd, stdin=sp.PIPE, stdout=sp.DEVNULL, stderr=sp.STDOUT
+                )
+                
 
     def __enter__(self):
         """
