@@ -176,6 +176,17 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
             "-ffpreheaders": ["-re"], # executes as `ffmpeg -re <rest of command>`
         }
         ```
+
+    * **`-disable_ffmpeg_window`** _(bool)_: sets a special flag to enable detached subprocess creation on Windows OS, and can be useful while creating an `.exe` file for a python script that uses WriteGear API. On Windows, in certain cases, even after creating the `.exe` file in windowed mode or no-console mode, the FFmpeg commandline window would pop up while its being used by WriteGear API. Its usage is as follows:
+
+        ??? new "New in v0.3.2" 
+            This feature was added in `v0.3.2`.
+
+        !!! warning "`-disable_ffmpeg_window` is only available on Windows OS with logging disabled(`logging=False`) in compression mode."
+
+        ```python
+        output_params = {"-disable_ffmpeg_window": True} # disables FFmpeg creation window
+        ```
         
     * **`-disable_force_termination`** _(bool)_: sets a special flag to manually disable the default forced-termination behaviour in WriteGear API when `-i` FFmpeg parameter is used _(For more details, see issue: #149)_. Its usage is as follows:
 
