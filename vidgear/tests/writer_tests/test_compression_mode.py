@@ -229,6 +229,7 @@ def test_output_dimensions():
         output_params = {
             "-output_dimensions": dimensions,
             "-ffmpeg_download_path": tempfile.gettempdir(),
+            "-disable_ffmpeg_window": True,
         }
     else:
         output_params = {"-output_dimensions": dimensions}
@@ -264,7 +265,13 @@ test_data_class = [
     (
         "Output2.mp4",
         "",
-        {"-vcodec": "libx264", "-crf": 0, "-preset": "fast", "-ffpreheaders": False},
+        {
+            "-vcodec": "libx264",
+            "-crf": 0,
+            "-preset": "fast",
+            "-ffpreheaders": False,
+            "-disable_ffmpeg_window": True,
+        },
         True,
     ),
     (
@@ -276,6 +283,7 @@ test_data_class = [
             "-crf": 0,
             "-preset": "veryfast",
             "-ffpreheaders": ["-re"],
+            "-disable_ffmpeg_window": "Invalid",
         },
         True,
     ),
