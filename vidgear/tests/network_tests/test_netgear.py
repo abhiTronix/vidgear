@@ -133,7 +133,13 @@ def test_patterns(pattern):
     Testing NetGear different messaging patterns
     """
     # define parameters
-    options = {"flag": 0, "copy": False, "track": False, "jpeg_compression": False}
+    options = {
+        "flag": 0,
+        "copy": False,
+        "track": False,
+        "jpeg_compression": False,
+        "subscriber_timeout": 5,
+    }
     # initialize
     frame_server = None
     stream = None
@@ -345,6 +351,7 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
             {
                 "bidirectional_mode": True,
                 "jpeg_compression": True,
+                "subscriber_timeout": 0,
             },
         ),
     ],
@@ -455,6 +462,7 @@ def test_bidirectional_mode(pattern, target_data, options):
             {
                 "multiserver_mode": True,
                 "ssh_tunnel_mode": "new@sdf.org",
+                "subscriber_timeout": 5,
             },
         ),
     ],
