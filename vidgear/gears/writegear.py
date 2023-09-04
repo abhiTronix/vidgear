@@ -254,7 +254,7 @@ class WriteGear:
             )
             # check if value is valid
             if not self.__os_windows or logging:
-                logging.warning(
+                logger.warning(
                     "Optional `-disable_ffmpeg_window` flag is only available on Windows OS with `logging=False`. Discarding!"
                 )
             elif isinstance(ffmpeg_window_disabler_patch, bool):
