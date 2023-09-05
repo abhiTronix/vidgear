@@ -351,7 +351,6 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
             {
                 "bidirectional_mode": True,
                 "jpeg_compression": True,
-                "subscriber_timeout": 5,
             },
         ),
     ],
@@ -655,6 +654,7 @@ def test_multiclient_mode(pattern):
         },
         {"max_retries": 2, "request_timeout": 4, "multiclient_mode": True},
         {"max_retries": 2, "request_timeout": -1, "multiserver_mode": True},
+        {"subscriber_timeout": 4},
     ],
 )
 def test_client_reliablity(options):
@@ -666,7 +666,7 @@ def test_client_reliablity(options):
     try:
         # define params
         client = NetGear(
-            pattern=1,
+            pattern=2 if "subscriber_timeout" in options.keys() else 1,
             port=[5587] if "multiserver_mode" in options.keys() else 6657,
             receive_mode=True,
             logging=True,
@@ -755,8 +755,8 @@ def test_server_reliablity(options):
 @pytest.mark.parametrize(
     "server_ports, client_ports, options",
     [
-        (0, 5555, {"multiserver_mode": True}),
-        (5555, 0, {"multiclient_mode": True}),
+        (None, 5555, {"multiserver_mode": True}),
+        (5555, None, {"multiclient_mode": True}),
     ],
 )
 @pytest.mark.xfail(raises=ValueError)
