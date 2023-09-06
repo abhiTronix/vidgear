@@ -106,7 +106,11 @@ class ScreenGear:
         }
         # check whether user-defined dimensions are provided
         if screen_dims and len(screen_dims) == 4:
-            key_order = ("top", "left", "width", "height")
+            key_order = (
+                ("top", "left", "width", "height")
+                if self.__backend != "dxcam"
+                else ("left", "top", "width", "height")
+            )
             screen_dims = OrderedDict((k, screen_dims[k]) for k in key_order)
             logging and logger.debug(
                 "Setting Capture-Area dimensions: {}".format(json.dumps(screen_dims))
@@ -165,11 +169,7 @@ class ScreenGear:
                 # raise error(s) for critical Class imports
                 import_dependency_safe("pyscreenshot" if pysct is None else "")
                 # reset backend if not provided
-                self.__backend = (
-                    "pil"
-                    if self.__backend is None or self.__backend == "mss"
-                    else self.__backend
-                )
+                self.__backend = "pil" if self.__backend is None else self.__backend
                 # check if valid backend
                 assert (
                     self.__backend in pysct.backends()

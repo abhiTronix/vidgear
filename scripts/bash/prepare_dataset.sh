@@ -26,7 +26,7 @@ mkdir -p "$TMPFOLDER"/Downloads
 mkdir -p "$TMPFOLDER"/Downloads/{FFmpeg_static,Test_videos}
 
 # Acknowledging machine architecture
-MACHINE_BIT=$(uname -m)
+# MACHINE_BIT=$(uname -m)
 
 #Defining alternate ffmpeg static binaries date/version
 ALTBINARIES_DATE="12-07-2022"
@@ -48,12 +48,12 @@ msys*)
 esac
 
 #Download and Configure FFmpeg Static
-cd "$TMPFOLDER"/Downloads/FFmpeg_static
+cd "$TMPFOLDER"/Downloads/FFmpeg_static || exit
 
 if [ $OS_NAME = "linux" ]; then
 
   echo "Downloading Linux64 Static FFmpeg Binaries..."
-  curl -LO https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/linux/ffmpeg-git-amd64-static.tar.xz
+  curl -LO https://gitlab.com/abhiTronix/ffmpeg-static-builds/-/raw/master/$ALTBINARIES_DATE/linux/ffmpeg-git-amd64-static.tar.xz
   tar -xJf ffmpeg-git-amd64-static.tar.xz
   rm *.tar.*
   mv ffmpeg* ffmpeg
@@ -61,7 +61,7 @@ if [ $OS_NAME = "linux" ]; then
 elif [ $OS_NAME = "windows" ]; then
 
   echo "Downloading Win64 Static FFmpeg Binaries..."
-  curl -LO https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/windows/ffmpeg-latest-win64-static.zip
+  curl -LO https://gitlab.com/abhiTronix/ffmpeg-static-builds/-/raw/master/$ALTBINARIES_DATE/windows/ffmpeg-latest-win64-static.zip
   unzip -qq ffmpeg-latest-win64-static.zip
   rm ffmpeg-latest-win64-static.zip
   mv ffmpeg-latest-win64-static ffmpeg
@@ -69,7 +69,7 @@ elif [ $OS_NAME = "windows" ]; then
 else
 
   echo "Downloading MacOS64 Static FFmpeg Binary..."
-  curl -LO https://github.com/abhiTronix/ffmpeg-static-builds/raw/master/$ALTBINARIES_DATE/macOS/ffmpeg-latest-macos64-static.zip
+  curl -LO https://gitlab.com/abhiTronix/ffmpeg-static-builds/-/raw/master/$ALTBINARIES_DATE/macOS/ffmpeg-latest-macos64-static.zip
   unzip -qq ffmpeg-latest-macos64-static.zip
   rm ffmpeg-latest-macos64-static.zip
   mv ffmpeg-latest-macos64-static ffmpeg

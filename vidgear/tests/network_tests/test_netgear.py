@@ -133,7 +133,13 @@ def test_patterns(pattern):
     Testing NetGear different messaging patterns
     """
     # define parameters
-    options = {"flag": 0, "copy": False, "track": False, "jpeg_compression": False}
+    options = {
+        "flag": 0,
+        "copy": False,
+        "track": False,
+        "jpeg_compression": False,
+        "subscriber_timeout": 5,
+    }
     # initialize
     frame_server = None
     stream = None
@@ -167,9 +173,9 @@ def test_patterns(pattern):
         if not (stream is None):
             stream.release()
         if not (server is None):
-            server.close()
+            server.close(kill=True)
         if not (client is None):
-            client.close()
+            client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -239,9 +245,9 @@ def test_compression(options_server):
         if not (stream is None):
             stream.stop()
         if not (server is None):
-            server.close()
+            server.close(kill=True)
         if not (client is None):
-            client.close()
+            client.close(kill=True)
 
 
 test_data_class = [
@@ -304,9 +310,9 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
         if not (stream is None):
             stream.release()
         if not (server is None):
-            server.close()
+            server.close(kill=True)
         if not (client is None):
-            client.close()
+            client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -418,9 +424,9 @@ def test_bidirectional_mode(pattern, target_data, options):
         if not (stream is None):
             stream.stop()
         if not (server is None):
-            server.close()
+            server.close(kill=True)
         if not (client is None):
-            client.close()
+            client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -455,6 +461,7 @@ def test_bidirectional_mode(pattern, target_data, options):
             {
                 "multiserver_mode": True,
                 "ssh_tunnel_mode": "new@sdf.org",
+                "subscriber_timeout": 0,
             },
         ),
     ],
@@ -647,6 +654,7 @@ def test_multiclient_mode(pattern):
         },
         {"max_retries": 2, "request_timeout": 4, "multiclient_mode": True},
         {"max_retries": 2, "request_timeout": -1, "multiserver_mode": True},
+        {"subscriber_timeout": 4},
     ],
 )
 def test_client_reliablity(options):
@@ -658,7 +666,7 @@ def test_client_reliablity(options):
     try:
         # define params
         client = NetGear(
-            pattern=1,
+            pattern=2 if "subscriber_timeout" in options.keys() else 1,
             port=[5587] if "multiserver_mode" in options.keys() else 6657,
             receive_mode=True,
             logging=True,
@@ -747,8 +755,8 @@ def test_server_reliablity(options):
 @pytest.mark.parametrize(
     "server_ports, client_ports, options",
     [
-        (0, 5555, {"multiserver_mode": True}),
-        (5555, 0, {"multiclient_mode": True}),
+        (None, 5555, {"multiserver_mode": True}),
+        (5555, None, {"multiclient_mode": True}),
     ],
 )
 @pytest.mark.xfail(raises=ValueError)

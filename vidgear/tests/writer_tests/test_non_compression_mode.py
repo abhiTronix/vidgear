@@ -134,6 +134,7 @@ test_data_class = [
             "-fourcc": "DIVX",
             "-fps": 25,
             "-backend": "CAP_FFMPEG",
+            "-disable_ffmpeg_window": True,
             "-color": True,
             "-gst_pipeline_mode": False,
         },
