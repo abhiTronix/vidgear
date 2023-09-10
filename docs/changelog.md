@@ -22,10 +22,10 @@ limitations under the License.
 
 ## v0.3.2 (2023-09-10)
 
-??? tip "New Features"
+???+ tip "New Features"
     - [x] **NetGear:** 
         * Added new `kill` parameter to `close()` method to forcefully kill ZMQ context instead of graceful exit only in the `receive` mode.
-        * Added new `subscriber_timeout` integer optional parameter to support timeout with `pattern=2` or PUBLISHER-SUBSCRIBER pattern.
+        * Added new `subscriber_timeout` integer optional parameter to support timeout with `pattern=2` _(or Publisher-Subscriber)_ pattern.
             + Receiver will exit safely if timeout defined(any value(in milliseconds) > 0), and timeout occurs in Receiver Mode with `pattern=2`.
             + 💬 Note: Default behavior still is to block the thread till infinite time.
     - [x] **WriteGear:** 
