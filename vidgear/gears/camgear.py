@@ -220,7 +220,6 @@ class CamGear:
         time_delay=0,
         **options
     ):
-
         """
         This constructor method initializes the object state and attributes of the CamGear class.
 
@@ -449,7 +448,6 @@ class CamGear:
         # or frames runs out
         # if the thread indicator variable is set, stop the thread
         while not self.__terminate.is_set():
-
             # stream not read yet
             self.__stream_read.clear()
 

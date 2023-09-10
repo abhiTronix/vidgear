@@ -496,7 +496,7 @@ class WebGear:
         Returns an HTML index page.
         """
         return (
-            self.__templates.TemplateResponse("index.html", {"request": request})
+            self.__templates.TemplateResponse(request, "index.html")
             if not self.__skip_generate_webdata
             else JSONResponse(
                 {"detail": "WebGear Data-Files Auto-Generation WorkFlow is disabled!"},
@@ -509,9 +509,7 @@ class WebGear:
         Returns an HTML 404 page.
         """
         return (
-            self.__templates.TemplateResponse(
-                "404.html", {"request": request}, status_code=404
-            )
+            self.__templates.TemplateResponse(request, "404.html", status_code=404)
             if not self.__skip_generate_webdata
             else JSONResponse(
                 {"detail": "WebGear Data-Files Auto-Generation WorkFlow is disabled!"},
@@ -524,9 +522,7 @@ class WebGear:
         Returns an HTML 500 page.
         """
         return (
-            self.__templates.TemplateResponse(
-                "500.html", {"request": request}, status_code=500
-            )
+            self.__templates.TemplateResponse(request, "500.html", status_code=500)
             if not self.__skip_generate_webdata
             else JSONResponse(
                 {"detail": "WebGear Data-Files Auto-Generation WorkFlow is disabled!"},

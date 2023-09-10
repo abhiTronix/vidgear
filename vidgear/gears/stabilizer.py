@@ -59,7 +59,6 @@ class Stabilizer:
         crop_n_zoom=False,
         logging=False,
     ):
-
         """
         This constructor method initializes the object state and attributes of the Stabilizer class.
 
@@ -67,7 +66,7 @@ class Stabilizer:
             smoothing_radius (int): alter averaging window size.
             border_type (str): changes the extended border type.
             border_size (int): enables and set the value for extended border size to reduce the black borders.
-            crop_n_zoom (bool): enables croping and zooming of frames(to original size) to reduce the black borders.
+            crop_n_zoom (bool): enables cropping and zooming of frames(to original size) to reduce the black borders.
             logging (bool): enables/disables logging.
         """
         # print current version
@@ -88,9 +87,9 @@ class Stabilizer:
         # initialize global vars
         self.__smoothing_radius = smoothing_radius  # averaging window, handles the quality of stabilization at expense of latency and sudden panning
         self.__smoothed_path = None  # handles the smoothed path with box filter
-        self.__path = None  # handles path i.e cumulative sum of pevious_2_current transformations along a axis
-        self.__transforms = []  # handles pevious_2_current transformations [dx,dy,da]
-        self.__frame_transforms_smoothed = None  # handles smoothed array of pevious_2_current transformations w.r.t to frames
+        self.__path = None  # handles path i.e cumulative sum of previous_2_current transformations along a axis
+        self.__transforms = []  # handles previous_2_current transformations [dx,dy,da]
+        self.__frame_transforms_smoothed = None  # handles smoothed array of previous_2_current transformations w.r.t to frames
         self.__previous_gray = None  # handles previous gray frame
         self.__previous_keypoints = (
             None  # handles previous detect_GFTTed keypoints w.r.t previous gray frame
@@ -193,24 +192,13 @@ class Stabilizer:
                 :
             ]  # save gray frame clone for further processing
 
-        elif self.__frame_queue_indexes[-1] <= self.__smoothing_radius - 1:
+        elif self.__frame_queue_indexes[-1] < self.__smoothing_radius - 1:
             # for rest of frames
             self.__frame_queue.append(frame)  # save frame to deque
             self.__frame_queue_indexes.append(
                 self.__frame_queue_indexes[-1] + 1
             )  # save frame index
             self.__generate_transformations()  # generate transformations
-            if self.__frame_queue_indexes[-1] == self.__smoothing_radius - 1:
-                # calculate smooth path once transformation capturing is completed
-                for i in range(3):
-                    # apply normalized box filter to the path
-                    self.__smoothed_path[:, i] = self.__box_filter_convolve(
-                        (self.__path[:, i]), window_size=self.__smoothing_radius
-                    )
-                # calculate deviation of path from smoothed path
-                deviation = self.__smoothed_path - self.__path
-                # save smoothed transformation
-                self.__frame_transforms_smoothed = self.frame_transform + deviation
         else:
             # start applying transformations
             self.__frame_queue.append(frame)  # save frame to deque
@@ -253,7 +241,7 @@ class Stabilizer:
                 status == 1
             ]  # previous
 
-            # calculate optimal affine transformation between pevious_2_current key-points
+            # calculate optimal affine transformation between previous_2_current key-points
             if self.__cv2_version == 3:
                 # backward compatibility with OpenCV3
                 transformation = cv2.estimateRigidTransform(
@@ -270,11 +258,11 @@ class Stabilizer:
 
         # check if transformation is not None
         if not (transformation is None):
-            # pevious_2_current translation in x direction
+            # previous_2_current translation in x direction
             dx = transformation[0, 2]
-            # pevious_2_current translation in y direction
+            # previous_2_current translation in y direction
             dy = transformation[1, 2]
-            # pevious_2_current rotation in angle
+            # previous_2_current rotation in angle
             da = np.arctan2(transformation[1, 0], transformation[0, 0])
         else:
             # otherwise zero it

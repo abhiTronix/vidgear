@@ -20,6 +20,82 @@ limitations under the License.
 
 # Release Notes
 
+## v0.3.2 (2023-09-10)
+
+???+ tip "New Features"
+    - [x] **NetGear:** 
+        * Added new `kill` parameter to `close()` method to forcefully kill ZMQ context instead of graceful exit only in the `receive` mode.
+        * Added new `subscriber_timeout` integer optional parameter to support timeout with `pattern=2` _(or Publisher-Subscriber)_ pattern.
+            + Receiver will exit safely if timeout defined(any value(in milliseconds) > 0), and timeout occurs in Receiver Mode with `pattern=2`.
+            + 💬 Note: Default behavior still is to block the thread till infinite time.
+    - [x] **WriteGear:** 
+        * Added new `-disable_ffmpeg_window` optional Boolean flag to enable patch that prevents FFmpeg creation window from opening when building `.exe` files on Windows OS. _(PR by @ibtsam3301)_
+            + 💬 Note: `-disable_ffmpeg_window` optional Boolean flag is only available on Windows OS with logging disabled(`logging=False`) in compression mode.
+            + Use Case: This flag can be useful while creating an `.exe` file for a python script that uses WriteGear API. On windows even after creating the `.exe` file in windowed mode or no-console mode, the `ffmpeg.exe` command line window would pop up while its being used by WriteGear API.
+    - [x] **Setup.py**
+        * Added official support for python `3.11.x` legacies.
+        * Bumped version to `0.3.1`. 
+    - [x] **Docs**
+        * Added doc for `subscriber_timeout` optional Integer parameter in NetGear.
+        * Added doc for `disable_ffmpeg_window` optional Boolean parameter in WriteGear.
+        * Added new asset `screengear_region.png`.
+    - [x] **CI**
+        * Added python 3.11 legacy support for MacOS, Windows and Linux environments.
+        * Added kill argument to close() method in various NetGear tests.
+
+??? success "Updates/Improvements" 
+    - [x] Asyncio: 
+        * Formatted TemplateResponse class parameters w.r.t new changes in backend Starlette API.
+    - [x] Setup.py:
+        * Readded latest patch to `uvicorn`, `starlette`, `pyzmq` dependencies.
+        * Removed `3.7` legacy from Programming Language metadata.
+    - [x] Maintenance: 
+        * Added GitHub sponsors and dropped liberapay from `Funding.yml`.
+        * Removed redundant code.
+    - [x] Docs:
+        * Updated information related to Supported Dimensional Attributes in ScreenGear docs.
+        * Updated minimum python to version `3.8` while installing vidgear in docs.
+        * Updated API-specific dependencies in docs.
+        * Updated changelog.md
+    - [x] CI:
+        * Updated Azure Pipeline workflow. 
+        * Updated Appveyor Pipeline workflow.
+        * Updated GitHub Actions Pipeline workflow.
+        * Migrated python version to `3.9` in `deploy_docs.yml` workflow.
+        * Removed deprecated python `3.7` legacy support.
+        * Increased code coverage by updating tests.
+        * Updated tests for `subscriber_timeout` optional Integer parameter in NetGear.
+        * Updated tests for `disable_ffmpeg_window` optional Boolean parameter in WriteGear.
+
+??? danger "Breaking Updates/Changes"
+    - [ ] Setup.py:
+        * Removed support for python-3.7 legacies 
+            + Raised `python_requires` to `>=3.8`. Thereby python `3.7` and any before legacy are no longer supported.
+
+??? bug "Bug-fixes"
+    - [x] ScreenGear:
+        * Fixed swapped region dimensions bug with dxcam backend.
+        * Fixed "mss" backend disabled when `monitor` parameter is not defined.
+    - [x] Docs:
+        * Fixed missing `compression_mode` flags in WriteGear API docs.
+        * Fixed missing hyperlinks.
+        * Fixed typos and context.
+    - [x] CI:
+        * Temporary fix for AST constructor depth mismatch in pytest on python `3.11.x`, More information: pytest-dev/pytest#10874
+	        + Made temporary fix platform independent. 
+            + Extended fix to all Webgear_RTC tests.
+        * Fixed NetGear tests bugs.
+        * Fixed condition logic bug.
+
+??? question "Pull Requests"
+    * PR #378
+    * PR #375
+    * PR #370
+
+&nbsp; 
+
+&nbsp; 
+
 ## v0.3.1 (2023-07-22)
 
 ??? tip "New Features"

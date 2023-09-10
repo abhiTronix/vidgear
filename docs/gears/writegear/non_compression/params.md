@@ -149,7 +149,7 @@ To assign desired parameters in Non-Compression Mode, you can format it as dicti
 # format parameter as dictionary attribute
 output_params = {"-fps":30} 
 # and then, assign it
-WriteGear(output = 'output.mp4', **output_params)
+WriteGear(output = 'output.mp4', compression_mode=False, **output_params)
 ```
 
 !!! example "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-videocapture-gears)."
@@ -170,7 +170,7 @@ To select desired FOURCC codec in Non-Compression Mode, you can format it as dic
 # format codec as dictionary attribute
 output_params = {"-fourcc":"MJPG"} 
 # and then, assign it
-WriteGear(output = 'output.mp4', **output_params)
+WriteGear(output = 'output.mp4', compression_mode=False, **output_params)
 ```
 
 !!! example "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-videocapture-gears)."
@@ -188,7 +188,7 @@ This parameter enables logging _(if `True`)_, essential for debugging.
 **Usage:**
 
 ```python
-WriteGear(output = 'output.mp4', logging=True)
+WriteGear(output = 'output.mp4', compression_mode=False, logging=True)
 ```
 
 &nbsp;

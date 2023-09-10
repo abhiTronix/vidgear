@@ -161,9 +161,9 @@ When installing VidGear from source, FFmpeg is the only API specific prerequisit
         | CamGear | `yt_dlp` |
         | PiGear | `picamera` |
         | VideoGear | *Based on CamGear or PiGear backend in use*  |
-        | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |
-        | WriteGear | **FFmpeg:** See [this doc ➶](https://abhitronix.github.io/vidgear/v0.2.2-dev/gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
-        | StreamGear | **FFmpeg:** See [this doc ➶](https://abhitronix.github.io/vidgear/v0.2.2-dev/gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
+        | ScreenGear | `dxcam`, `mss`, `pyscreenshot`, `Pillow` |
+        | WriteGear | **FFmpeg:** See [this doc ➶](https://abhitronix.github.io/vidgear/dev/gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
+        | StreamGear | **FFmpeg:** See [this doc ➶](https://abhitronix.github.io/vidgear/dev/gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
         | NetGear | `pyzmq`, `simplejpeg` |
         | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
         | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |

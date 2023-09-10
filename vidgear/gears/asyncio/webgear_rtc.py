@@ -596,23 +596,19 @@ class WebGear_RTC:
         """
         Return an HTML index page.
         """
-        return self.__templates.TemplateResponse("index.html", {"request": request})
+        return self.__templates.TemplateResponse(request, "index.html")
 
     async def __not_found(self, request, exc):
         """
         Return an HTML 404 page.
         """
-        return self.__templates.TemplateResponse(
-            "404.html", {"request": request}, status_code=404
-        )
+        return self.__templates.TemplateResponse(request, "404.html", status_code=404)
 
     async def __server_error(self, request, exc):
         """
         Return an HTML 500 page.
         """
-        return self.__templates.TemplateResponse(
-            "500.html", {"request": request}, status_code=500
-        )
+        return self.__templates.TemplateResponse(request, "500.html", status_code=500)
 
     async def __reset_connections(self, request):
         """

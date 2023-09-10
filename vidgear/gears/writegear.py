@@ -53,7 +53,7 @@ class WriteGear:
     WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data.
 
     WriteGear API provides a complete, flexible, and robust wrapper around FFmpeg, a leading multimedia framework. WriteGear can process real-time frames into a lossless
-    compressed video-file with any suitable specification (such asbitrate, codec, framerate, resolution, subtitles, etc.). It is powerful enough to perform complex tasks such as
+    compressed video-file with any suitable specification (such as bitrate, codec, framerate, resolution, subtitles, etc.). It is powerful enough to perform complex tasks such as
     Live-Streaming (such as for Twitch) and Multiplexing Video-Audio with real-time frames in way fewer lines of code.
 
     Best of all, WriteGear grants users the complete freedom to play with any FFmpeg parameter with its exclusive Custom Commands function without relying on any
@@ -83,7 +83,6 @@ class WriteGear:
         logging=False,
         **output_params
     ):
-
         """
         This constructor method initializes the object state and attributes of the WriteGear class.
 
@@ -92,7 +91,7 @@ class WriteGear:
             compression_mode (bool): selects the WriteGear's Primary Mode of Operation.
             custom_ffmpeg (str): assigns the location of custom path/directory for custom FFmpeg executables.
             logging (bool): enables/disables logging.
-            output_params (dict): provides the flexibility to control supported internal parameters and FFmpeg properities.
+            output_params (dict): provides the flexibility to control supported internal parameters and FFmpeg properties.
         """
         # print current version
         logcurr_vidgear_ver(logging=logging)
@@ -121,6 +120,9 @@ class WriteGear:
         self.__ffmpeg = ""  # handles valid FFmpeg binaries location
         self.__initiate_process = (
             True  # handles initiate one-time process for generating pipeline
+        )
+        self.__ffmpeg_window_disabler_patch = (
+            False  # handles disabling window for ffmpeg subprocess on Windows
         )
         self.__out_file = None  # handles output
         gstpipeline_mode = False  # handles GStreamer Pipeline Mode
@@ -244,6 +246,22 @@ class WriteGear:
                     True if ("-i" in self.__output_parameters) else False
                 )
 
+            # handles disabling window for ffmpeg subprocess on Windows OS (only for Compression mode)
+            # this patch prevents ffmpeg creation window from opening when building exe files
+            ffmpeg_window_disabler_patch = self.__output_parameters.pop(
+                "-disable_ffmpeg_window", False
+            )
+            # check if value is valid
+            if not self.__os_windows or logging:
+                logger.warning(
+                    "Optional `-disable_ffmpeg_window` flag is only available on Windows OS with `logging=False`. Discarding!"
+                )
+            elif isinstance(ffmpeg_window_disabler_patch, bool):
+                self.__ffmpeg_window_disabler_patch = ffmpeg_window_disabler_patch
+            else:
+                # handle improper values
+                self.__ffmpeg_window_disabler_patch = False
+
             # validate the FFmpeg path/binaries and returns valid executable FFmpeg
             # location/path (also auto-downloads static binaries on Windows OS)
             self.__ffmpeg = get_valid_ffmpeg_path(
@@ -352,7 +370,6 @@ class WriteGear:
             )
 
     def write(self, frame, rgb_mode=False):
-
         """
         Pipelines `ndarray` frames to respective API _(**FFmpeg** in Compression Mode & **OpenCV's VideoWriter API** in Non-Compression Mode)_.
 
@@ -516,7 +533,6 @@ class WriteGear:
         )
 
     def __start_FFProcess(self, input_params, output_params):
-
         """
         An Internal method that launches FFmpeg subprocess pipeline in Compression Mode
         for pipelining frames to `stdin`.
@@ -595,7 +611,13 @@ class WriteGear:
         else:
             # In silent mode
             self.__process = sp.Popen(
-                cmd, stdin=sp.PIPE, stdout=sp.DEVNULL, stderr=sp.STDOUT
+                cmd,
+                stdin=sp.PIPE,
+                stdout=sp.DEVNULL,
+                stderr=sp.STDOUT,
+                creationflags=(  # this prevents ffmpeg creation window from opening when building exe files on Windows
+                    sp.DETACHED_PROCESS if self.__ffmpeg_window_disabler_patch else 0
+                ),
             )
 
     def __enter__(self):

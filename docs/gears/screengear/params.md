@@ -131,17 +131,18 @@ ScreenGear(colorspace="COLOR_BGR2HSV")
 
 This parameter provides the flexibility to manually set the dimensions of capture screen area. 
 
-!!! info "Supported Dimensional Parameters"
+!!! info "Supported Dimensional Attributes"
 
-	Supported Dimensional Parameters are as follows: 
+	ScreenGear API takes `left`, `top`, `width`, `height` coordinates of the bounding box of capture screen area(ROI), similar to [PIL.ImageGrab.grab](https://pillow.readthedocs.io/en/stable/reference/ImageGrab.html), defined below:
+
+    <h2 align="center">
+    <img src="../../../assets/images/screengear_region.png" loading="lazy" alt="ScreenGear ROI region" width="80%"/>
+    </h2>
 
 	* **`left`:** the x-coordinate of the upper-left corner of the region
 	* **`top`:** the y-coordinate of the upper-left corner of the region
-	* **`width`:** the width of the region
-	* **`height`:** the height of the region
-
-!!! note "Additional Exclusive Attribute such as [`THREAD_TIMEOUT`](../../camgear/advanced/source_params/#exclusive-camgear-parameters) is also supported for this parameter."
-
+	* **`width`:** the width of the complete region from left to the bottom-right corner of the region.
+	* **`height`:** the height of the complete region from top to the bottom-right corner of the region.
 
 **Data-Type:** Dictionary
 
@@ -149,15 +150,13 @@ This parameter provides the flexibility to manually set the dimensions of captur
 
 **Usage:**
 
-The desired dimensional parameters can be passed to ScreenGear API by formatting them as attributes, as follows:
-
-!!! tip "More information about screen dimensioning can be found [here ➶](https://python-mss.readthedocs.io/api.html#mss.tools.mss.base.MSSMixin.monitors)"
+The desired dimensional coordinates parameters can be passed to ScreenGear API by formatting them as attributes, as follows:
 
 ```python
 # formatting dimensional parameters as dictionary attributes
 options = {'top': 40, 'left': 0, 'width': 100, 'height': 100}
-# assigning it w.r.t monitor=1
-ScreenGear(monitor=1, **options)
+# assigning it
+ScreenGear(**options)
 ```
 
 &nbsp;
