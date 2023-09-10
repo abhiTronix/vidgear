@@ -53,7 +53,7 @@ class WriteGear:
     WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data.
 
     WriteGear API provides a complete, flexible, and robust wrapper around FFmpeg, a leading multimedia framework. WriteGear can process real-time frames into a lossless
-    compressed video-file with any suitable specification (such asbitrate, codec, framerate, resolution, subtitles, etc.). It is powerful enough to perform complex tasks such as
+    compressed video-file with any suitable specification (such as bitrate, codec, framerate, resolution, subtitles, etc.). It is powerful enough to perform complex tasks such as
     Live-Streaming (such as for Twitch) and Multiplexing Video-Audio with real-time frames in way fewer lines of code.
 
     Best of all, WriteGear grants users the complete freedom to play with any FFmpeg parameter with its exclusive Custom Commands function without relying on any
@@ -91,8 +91,7 @@ class WriteGear:
             compression_mode (bool): selects the WriteGear's Primary Mode of Operation.
             custom_ffmpeg (str): assigns the location of custom path/directory for custom FFmpeg executables.
             logging (bool): enables/disables logging.
-            ffmpeg_subprocess_creation_window:
-            output_params (dict): provides the flexibility to control supported internal parameters and FFmpeg properities.
+            output_params (dict): provides the flexibility to control supported internal parameters and FFmpeg properties.
         """
         # print current version
         logcurr_vidgear_ver(logging=logging)
