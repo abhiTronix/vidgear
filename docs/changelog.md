@@ -76,8 +76,6 @@ limitations under the License.
     - [x] ScreenGear:
         * Fixed swapped region dimensions bug with dxcam backend.
         * Fixed "mss" backend disabled when `monitor` parameter is not defined.
-    - [x] Setup.py:
-        * Starting from version `8.0.0`, the python-mss library dropped support for Python `3.7`, so as a temporary measure, `mss` dependency has been pinned to version `7.0.1`.
     - [x] Docs:
         * Fixed missing `compression_mode` flags in WriteGear API docs.
         * Fixed missing hyperlinks.
