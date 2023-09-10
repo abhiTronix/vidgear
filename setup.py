@@ -165,7 +165,7 @@ setup(
         "dash",
         "hls",
         "Video Processing",
-        "Video Stablization",
+        "Video Stabilization",
         "Computer Vision",
         "Video Streaming",
         "raspberrypi",
