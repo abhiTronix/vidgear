@@ -79,8 +79,9 @@ class StreamGear:
             format (str): select the adaptive HTTP streaming format(DASH and HLS).
             custom_ffmpeg (str): assigns the location of custom path/directory for custom FFmpeg executables.
             logging (bool): enables/disables logging.
-            stream_params (dict): provides the flexibility to control supported internal parameters and FFmpeg properities.
+            stream_params (dict): provides the flexibility to control supported internal parameters and FFmpeg properties.
         """
+
         # print current version
         logcurr_vidgear_ver(logging=logging)
 
@@ -873,7 +874,6 @@ class StreamGear:
         return (input_params, output_params)
 
     def __Build_n_Execute(self, input_params, output_params):
-
         """
         An Internal function that launches FFmpeg subprocess and pipelines commands.
 
