@@ -53,15 +53,17 @@ limitations under the License.
 
 === ":material-linux: Linux"
 
-    - [x] **Follow [this tutorial ➶](https://medium.com/@galaktyk01/how-to-build-opencv-with-gstreamer-b11668fa09c)**
+    - [x] **Compile manually:** **Follow [this tutorial ➶](https://medium.com/@galaktyk01/how-to-build-opencv-with-gstreamer-b11668fa09c)**
+
+    - [x] **Compile using Pip:** **Follow [this GitHub issue ➶](https://github.com/opencv/opencv-python/issues/530)**
 
 === ":fontawesome-brands-windows: Windows"
 
-    - [x] **Follow [this tutorial ➶](https://medium.com/@galaktyk01/how-to-build-opencv-with-gstreamer-b11668fa09c)**
+    - [x] **Compile manually:** **Follow [this tutorial ➶](https://medium.com/@galaktyk01/how-to-build-opencv-with-gstreamer-b11668fa09c)**
 
 === ":material-apple: MacOS"
     
-    - [x] **Follow [this tutorial ➶](https://medium.com/testinium-tech/how-to-install-opencv-with-java-and-gstreamer-support-on-macos-c3c7b28d2864)**
+    - [x] **Compile manually:** **Follow [this tutorial ➶](https://medium.com/testinium-tech/how-to-install-opencv-with-java-and-gstreamer-support-on-macos-c3c7b28d2864)**
 
 &nbsp;
 
