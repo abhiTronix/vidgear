@@ -562,7 +562,7 @@ def is_valid_url(path, url=None, logging=False):
     splitted = [x.decode("utf-8").strip() for x in protocols.split(b"\n")]
     supported_protocols = splitted[splitted.index("Output:") + 1 : len(splitted) - 1]
     # rtsp is a demuxer somehow
-    supported_protocols += ["rtsp"] if "rtsp" in get_supported_demuxers(path) else []
+    supported_protocols += ["rtsp", "rtsps"] if "rtsp" in get_supported_demuxers(path) else []
     # Test and return result whether scheme is supported
     if extracted_scheme_url and extracted_scheme_url in supported_protocols:
         logging and logger.debug(
