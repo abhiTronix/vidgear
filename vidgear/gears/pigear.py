@@ -17,9 +17,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 import cv2
 import sys
+import os
 import time
 import logging as log
 from threading import Thread
@@ -33,10 +35,17 @@ from .helper import (
 )
 
 # safe import critical Class modules
+### LEGACY picamera API ###
 picamera = import_dependency_safe("picamera", error="silent")
 if not (picamera is None):
     from picamera import PiCamera
     from picamera.array import PiRGBArray
+
+### NEW PiCamera2 API ###
+picamera2 = import_dependency_safe("picamera2", error="silent")
+if not (picamera2 is None):
+    from picamera2 import Picamera2
+    from libcamera import Transform
 
 # define logger
 logger = log.getLogger("PiGear")
@@ -83,14 +92,20 @@ class PiGear:
         logcurr_vidgear_ver(logging=logging)
 
         # raise error(s) for critical Class imports
-        import_dependency_safe(
-            "picamera" if picamera is None else "",
-        )
+        if picamera2:
+            # log if picamera2
+            logger.info("PiCamera2 API is currently being accessed.")
+        elif picamera:
+            # switch to picamera otherwise
+            logger.critical(
+                "PiCamera2 library not installed on this system. Defaulting to legacy picamera API."
+            )
+        else:
+            # raise error if none
+            import_dependency_safe("picamera")
 
         # enable logging if specified
-        self.__logging = False
-        if logging:
-            self.__logging = logging
+        self.__logging = bool(logging)
 
         assert (
             isinstance(framerate, (int, float)) and framerate > 5.0
@@ -108,17 +123,49 @@ class PiGear:
                 "Input camera_num value `{}` is invalid, Defaulting to index 0!"
             )
 
-        # initialize the picamera stream at given index
-        self.__camera = PiCamera(camera_num=camera_num)
-        self.__camera.resolution = tuple(resolution)
-        self.__camera.framerate = framerate
-        self.__logging and logger.debug(
-            "Activating Pi camera at index: {} with resolution: {} & framerate: {}".format(
-                camera_num, resolution, framerate
+        if picamera2:
+            # handle logging
+            not (self.__logging) and not os.getenv(
+                "LIBCAMERA_LOG_LEVELS", False
+            ) and logger.info(
+                "Kindly set `LIBCAMERA_LOG_LEVELS=2` environment variable to disable common libcamera API messages."
             )
-        )
+            # collect metadata
+            cameras_metadata = Picamera2.global_camera_info()
+            # initialize the picamera stream at given index
+            self.__camera = Picamera2(camera_num=camera_num)
+            # extract metadata for current camera
+            camera_metadata = [x for x in cameras_metadata if x["Num"] == camera_num][0]
+            # check connected camera is USB or I2C
+            self.__camera_is_usb = True if "usb" in camera_metadata["Id"] else False
+            # handle framerate control
+            if not self.__camera_is_usb:
+                self.__camera.set_controls({"FrameRate": framerate})
+            else:
+                logger.warning(
+                    "USB camera detected. Setting input framerate is NOT supported with Picamera2 API!"
+                )
+            # log
+            self.__logging and logger.debug(
+                "Activating Picamera2 API for `{}` camera at index: {} with resolution: {} & framerate: {}".format(
+                    camera_metadata["Model"],
+                    camera_num,
+                    resolution if not self.__camera_is_usb else "default",
+                    framerate,
+                )
+            )
+        else:
+            # initialize the picamera stream at given index
+            self.__camera = PiCamera(camera_num=camera_num)
+            self.__camera.resolution = tuple(resolution)
+            self.__camera.framerate = framerate
+            self.__logging and logger.debug(
+                "Activating Picamera API at index: {} with resolution: {} & framerate: {}".format(
+                    camera_num, resolution, framerate
+                )
+            )
 
-        # initialize framerate variable
+        # initialize framerate (Read-only) variable
         self.framerate = framerate
 
         # initializing colorspace variable
@@ -142,12 +189,158 @@ class PiGear:
             self.__failure_timeout = 2.0
 
         try:
-            # apply attributes to source if specified
-            for key, value in options.items():
-                self.__logging and logger.debug(
-                    "Setting Parameter: {} = '{}'".format(key, value)
+            if picamera2:
+                # define common supported picamera2 config parameters
+                valid_config_options = [
+                    "auto_align_output_config",  # internal
+                    "enable_verbose_logs",  # internal
+                    "format",
+                ]
+
+                # define non-USB supported picamera2 config parameters
+                non_usb_options = [
+                    "controls",
+                    "queue",
+                    "transform",
+                    "bit_depth",
+                    "buffer_count",
+                    "sensor",
+                    "stride",
+                ]  # Less are supported (will be changed in future)
+
+                # filter parameter supported with non-USB cameras only
+                if self.__camera_is_usb:
+                    unsupported_config_keys = set(list(options.keys())).intersection(
+                        set(non_usb_options)
+                    )
+                    unsupported_config_keys and logger.warning(
+                        "Setting parameters: `{}` for USB camera is NOT supported with Picamera2 API!".format(
+                            "`, `".join(unsupported_config_keys)
+                        )
+                    )
+                else:
+                    valid_config_options += non_usb_options
+
+                # log all invalid keys
+                invalid_config_keys = set(list(options.keys())) - set(
+                    valid_config_options
                 )
-                setattr(self.__camera, key, value)
+                invalid_config_keys and logger.warning(
+                    "Discarding invalid options NOT supported by Picamera2 API: `{}`".format(
+                        "`, `".join(invalid_config_keys)
+                    )
+                )
+                # delete all unsupported options
+                options = {
+                    x: y for x, y in options.items() if x in valid_config_options
+                }
+
+                # setting size, already defined
+                options.update({"size": tuple(resolution)})
+
+                # set 24-bit, BGR format by default
+                if not "format" in options:
+                    # auto defaults for USB cameras
+                    not self.__camera_is_usb and options.update({"format": "RGB888"})
+                elif self.__camera_is_usb:
+                    # check the supported formats, if USB camera
+                    avail_formats = [
+                        mode["format"] for mode in self.__camera.sensor_modes
+                    ]
+                    # handle unsupported formats
+                    if not options["format"] in avail_formats:
+                        logger.warning(
+                            "Discarding `format={}`. `{}` are the only available formats for USB camera in use!".format(
+                                options["format"], "`, `".join(avail_formats)
+                            )
+                        )
+                        del options["format"]
+                    else:
+                        # `colorspace` parameter must define with  `format` optional parameter
+                        # unless format is MPEG (tested)
+                        assert (
+                            not (colorspace is None) or options["format"] == "MPEG"
+                        ), "[PiGear:ERROR] ::  `colorspace` parameter must defined along with `format={}` in Picamera2 API!".format(
+                            options["format"]
+                        )
+                else:
+                    # `colorspace` parameter must define with  `format` optional parameter
+                    # unless format is either BGR or BGRA
+                    assert not (colorspace is None) or options["format"] in [
+                        "RGB888",
+                        "XRGB888",
+                    ], "[PiGear:ERROR] ::  `colorspace` parameter must defined along with `format={}` in Picamera2 API!".format(
+                        options["format"]
+                    )
+
+                # enable verbose logging mode (handled by Picamera2 API)
+                verbose = options.pop("enable_verbose_logs", False)
+                if self.__logging and isinstance(verbose, bool) and verbose:
+                    self.__camera.set_logging(Picamera2.DEBUG)
+                else:
+                    # setup logging
+                    self.__camera.set_logging(Picamera2.WARNING)
+
+                # handle transformations, if specified
+                transform = options.pop("transform", Transform())
+                if not isinstance(transform, Transform):
+                    logger.warning("`transform` value is of invalid type, Discarding!")
+                    transform = Transform()
+
+                # handle sensor configurations, if specified
+                sensor = options.pop("sensor", {})
+                if isinstance(sensor, dict):
+                    # remove size if output size is defined
+                    if "output_size" in sensor:
+                        del options["size"]
+                else:
+                    logger.warning("`sensor` value is of invalid type, Discarding!")
+                    sensor = {}
+
+                # handle controls, if specified
+                controls = options.pop("controls", {})
+                if isinstance(controls, dict):
+                    # remove any fps controls, done already
+                    controls.pop("FrameDuration", None)
+                    controls.pop("FrameDurationLimits", None)
+                else:
+                    logger.warning("`controls` value is of invalid type, Discarding!")
+                    controls = {}
+
+                # check if auto-align camera configuration is specified
+                auto_align_output_config = options.pop(
+                    "auto_align_output_config", False
+                )
+
+                # create default configuration for camera
+                config = self.__camera.create_preview_configuration(
+                    main=options, transform=transform, sensor=sensor, controls=controls
+                )
+
+                # auto-align camera configuration, if specified
+                if (
+                    isinstance(auto_align_output_config, bool)
+                    and auto_align_output_config
+                ):
+                    self.__logging and logger.debug(
+                        "Re-aligning Output frames to optimal configuration supported by current Camera Sensor."
+                    )
+                    self.__camera.align_configuration(config)
+
+                # configure camera
+                self.__camera.configure(config)
+                self.__logging and logger.debug(
+                    "Setting Picamera2 API Parameters: '{}'".format(
+                        self.__camera.camera_configuration()["main"]
+                    )
+                )
+            else:
+                # apply attributes to source if specified
+                for key, value in options.items():
+                    self.__logging and logger.debug(
+                        "Setting {} API Parameter for Picamera: '{}'".format(key, value)
+                    )
+                    setattr(self.__camera, key, value)
         except Exception as e:
             # Catch if any error occurred
             logger.exception(str(e))
@@ -163,18 +356,26 @@ class PiGear:
                 )
 
         # enable rgb capture array thread and capture stream
-        self.__rawCapture = PiRGBArray(self.__camera, size=resolution)
-        self.stream = self.__camera.capture_continuous(
-            self.__rawCapture, format="bgr", use_video_port=True
-        )
+        if not picamera2:
+            self.__rawCapture = PiRGBArray(self.__camera, size=resolution)
+            self.stream = self.__camera.capture_continuous(
+                self.__rawCapture, format="bgr", use_video_port=True
+            )
 
-        # frame variable initialization
-        self.frame = None
+        # initialize frame variable
+        # with captured frame
         try:
-            stream = next(self.stream)
-            self.frame = stream.array
-            self.__rawCapture.seek(0)
-            self.__rawCapture.truncate()
+            if picamera2:
+                # start camera thread
+                self.__camera.start()
+                # capture frame array
+                self.frame = self.__camera.capture_array("main")
+            else:
+                # capture frame array from stream
+                stream = next(self.stream)
+                self.frame = stream.array
+                self.__rawCapture.seek(0)
+                self.__rawCapture.truncate()
             # render colorspace if defined
             if not (self.frame is None) and not (self.color_space is None):
                 self.frame = cv2.cvtColor(self.frame, self.color_space)
@@ -205,7 +406,6 @@ class PiGear:
 
         **Returns:** A reference to the CamGear class object.
         """
-
         # Start frame producer thread
         self.__thread = Thread(target=self.__update, name="PiGear", args=())
         self.__thread.daemon = True
@@ -222,7 +422,6 @@ class PiGear:
         """
         Threaded Internal Timer that keep checks on thread execution timing
         """
-
         # assign current time
         self.__t_elasped = time.time()
 
@@ -243,23 +442,27 @@ class PiGear:
         """
         # keep looping infinitely until the thread is terminated
         while not (self.__terminate):
-
-            try:
-                # Try to iterate next frame from generator
-                stream = next(self.stream)
-            except Exception:
-                # catch and save any exceptions
-                self.__exceptions = sys.exc_info()
-                break  # exit
+            if not picamera2:
+                try:
+                    # Try to iterate next frame from generator
+                    stream = next(self.stream)
+                except Exception:
+                    # catch and save any exceptions
+                    self.__exceptions = sys.exc_info()
+                    break  # exit
 
             # __update timer
             self.__t_elasped = time.time()
 
-            # grab the frame from the stream and clear the stream in
-            # preparation for the next frame
-            frame = stream.array
-            self.__rawCapture.seek(0)
-            self.__rawCapture.truncate()
+            # grab the frame from the stream
+            if picamera2:
+                frame = self.__camera.capture_array("main")
+            else:
+                frame = stream.array
+                # clear the stream in preparation
+                # for the next frame
+                self.__rawCapture.seek(0)
+                self.__rawCapture.truncate()
 
             # apply colorspace if specified
             if not (self.color_space is None):
@@ -293,9 +496,12 @@ class PiGear:
         if not (self.__terminate):
             self.__terminate = True
 
-        # release picamera resources
-        self.__rawCapture.close()
-        self.__camera.close()
+        # release resources
+        if picamera2:
+            self.__camera.stop()
+        else:
+            self.__rawCapture.close()
+            self.__camera.close()
 
     def read(self):
         """
@@ -323,7 +529,6 @@ class PiGear:
                     )
                 )
                 raise RuntimeError(error_msg).with_traceback(self.__exceptions[2])
-
         # return the frame
         return self.frame
 
@@ -345,9 +550,12 @@ class PiGear:
         if not (self.__thread is None):
             # check if hardware failure occured
             if not (self.__exceptions is None) and isinstance(self.__exceptions, bool):
-                # force release picamera resources
-                self.__rawCapture.close()
-                self.__camera.close()
+                if picamera2:
+                    self.__camera.stop()
+                else:
+                    # force release picamera resources
+                    self.__rawCapture.close()
+                    self.__camera.close()
             # properly handle thread exit
             self.__thread.join()  # wait if still process is still processing some information
             # remove any threads

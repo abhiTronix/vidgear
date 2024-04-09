@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 import json
 import platform
@@ -115,7 +116,6 @@ setup(
             "mss{}".format(latest_version("mss")),
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
         ]
-        + (["picamera"] if ("arm" in platform.uname()[4][:3]) else [])
         + (
             ["dxcam{}".format(latest_version("dxcam"))]
             if (platform.system() == "Windows")  # windows is only supported
@@ -136,7 +136,6 @@ setup(
             "aiortc{}".format(latest_version("aiortc")),
             "uvicorn{}".format(latest_version("uvicorn")),
         ]
-        + (["picamera"] if ("arm" in platform.uname()[4][:3]) else [])
         + (
             ["dxcam{}".format(latest_version("dxcam"))]
             if (platform.system() == "Windows")  # windows is only supported
