@@ -108,7 +108,7 @@ class PiGear:
         self.__logging = bool(logging)
 
         assert (
-            isinstance(framerate, (int, float)) and framerate > 5.0
+            isinstance(framerate, (int, float)) and framerate > 0.0
         ), "[PiGear:ERROR] :: Input framerate value `{}` is a Invalid! Kindly read docs.".format(
             framerate
         )
@@ -536,6 +536,7 @@ class PiGear:
         """
         Safely terminates the thread, and release the VideoStream resources.
         """
+        # log termination
         self.__logging and logger.debug("Terminating PiGear Processes.")
 
         # make sure that the threads should be terminated
@@ -551,6 +552,7 @@ class PiGear:
             # check if hardware failure occured
             if not (self.__exceptions is None) and isinstance(self.__exceptions, bool):
                 if picamera2:
+                    # release picamera2 resources
                     self.__camera.stop()
                 else:
                     # force release picamera resources
