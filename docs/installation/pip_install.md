@@ -126,16 +126,80 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
         * **For StreamGear API**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/streamgear/ffmpeg_install/) for its installation.
 
 
-* #### Picamera
+* #### Picamera2
 
-    Required only if you're using Raspberry Pi :fontawesome-brands-raspberry-pi: Camera Modules with its [**PiGear**](../../gears/pigear/overview/) API. You can easily install it via pip:
+    ??? tip "Using Legacy `picamera` library with PiGear (`v0.3.3` and above)"
 
+        PiGear API _(version `0.3.3` onwards)_ prioritizes the newer Picamera2 library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. However, if your operating system doesn't support Picamera2, you can still use the  legacy [`picamera`](https://picamera.readthedocs.io/en/release-1.13/) library. Here's how to easily install it using pip:
 
-    !!! warning "Make sure to [**enable Raspberry Pi hardware-specific settings**](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior to using this library, otherwise it won't work."
+        !!! warning "Make sure to [**enable Raspberry Pi hardware-specific settings**](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior to using this library, otherwise it won't work."
 
-    ```sh
-    pip install picamera
-    ```  
+        ```sh
+        pip install picamera
+        ```  
+
+    ??? note "As of September 2022, Picamera2 is pre-installed on images downloaded from Raspberry Pi. So you don't have to install it manually."
+        - [x] On **Raspberry Pi OS images**, Picamera2 is now installed with all the GUI (Qt and OpenGL) dependencies.
+        - [x] On **Raspberry Pi OS Lite**, it is installed without the GUI dependencies, although preview images can still be displayed using DRM/KMS. If these users wish to use the additional X-Windows GUI features, they will need to run:
+
+            ```sh
+            sudo apt install -y python3-pyqt5 python3-opengl
+            ```
+
+    Required only if you're using Raspberry Pi :fontawesome-brands-raspberry-pi: Camera Modules _(or USB webcams)_ with the [**PiGear**](../../gears/pigear/overview/) API. Here's how to install [Picamera2](https://github.com/raspberrypi/picamera2) python library:
+
+    ??? warning "Picamera2 is only supported on Raspberry Pi OS Bullseye (or later) images, both 32 and 64-bit."
+        
+        Picamera2 is **NOT** supported on:
+
+        - [ ] Images based on Buster or earlier releases.
+        - [ ] Raspberry Pi OS Legacy images.
+        - [ ] Bullseye (or later) images where the legacy camera stack has been re-enabled.
+
+    === "Installation using `apt` (Recommended)"
+
+        If Picamera2 is not already installed, then your image is presumably older and you should start with system upgrade:
+        ```sh
+        sudo apt update && upgrade
+        ```
+
+        !!! note "If you have installed Picamera2 previously using pip, then you should also uninstall this (`pip3 uninstall picamera2`)."
+
+        Thereafter, you can install Picamera2 with all the GUI (Qt and OpenGL) dependencies using:
+
+        ```sh
+        sudo apt install -y python3-picamera2
+        ```
+
+        Or, If you **DON'T** want the GUI dependencies, use:
+
+        ```sh
+        sudo apt install -y python3-picamera2 --no-install-recommends
+        ```
+
+    === "Installation using `pip`"
+
+        !!! danger "This is **NOT** the recommended way to install Picamera2."
+        
+        However, if you wish to install Picamera2 with all the GUI (Qt and OpenGL) dependencies with pip, use:
+
+        ```sh
+        sudo apt install -y python3-libcamera python3-kms++
+        sudo apt install -y python3-pyqt5 python3-prctl 
+        sudo apt install -y libatlas-base-dev ffmpeg python3-pip
+        pip3 install numpy --upgrade
+        pip3 install picamera2[gui]
+        ```
+
+        Or, If you **DON'T** want the GUI dependencies, use:
+
+        ```sh
+        sudo apt install -y python3-libcamera python3-kms++
+        sudo apt install -y python3-prctl libatlas-base-dev
+        sudo apt install -y ffmpeg libopenjp2-7 python3-pip
+        pip3 install numpy --upgrade
+        pip3 install picamera2
+        ```
 
 * #### Uvloop
 
@@ -244,7 +308,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
             | APIs | Dependencies |
             |:---:|:---|
             | CamGear | `yt_dlp` |
-            | PiGear | `picamera` |
+            | PiGear | `picamera`, `picamera2` _(see [this](#picamera2) for its installation)_ |
             | VideoGear | *Based on CamGear or PiGear backend in use*  |
             | ScreenGear | `dxcam`, `mss`, `pyscreenshot`, `Pillow` |
             | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
@@ -329,10 +393,10 @@ pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[asyncio]
 
 ```sh
 # Install latest stable release with all Core dependencies
-pip install vidgear-0.3.2-py3-none-any.whl[core]
+pip install vidgear-0.3.3-py3-none-any.whl[core]
 
 # Or Install latest stable release with all Core & Asyncio dependencies
-pip install vidgear-0.3.2-py3-none-any.whl[asyncio]
+pip install vidgear-0.3.3-py3-none-any.whl[asyncio]
 ```
 
 &nbsp;

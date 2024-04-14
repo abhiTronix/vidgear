@@ -88,6 +88,10 @@ plugins:
   - exclude:
       glob:
         - overrides/assets/README.md
+        
+# Logging
+validation:
+  unrecognized_links: ignore
 
 # Customization
 extra:
