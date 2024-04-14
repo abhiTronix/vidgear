@@ -46,16 +46,6 @@ CamGear internally implements [`yt_dlp`][yt_dlp] backend class for seamlessly pi
 
 &thinsp; 
 
-## Importing
-
-You can import CamGear API in your program as follows:
-
-```python
-from vidgear.gears import CamGear
-```
-
-&thinsp;
-
 ## Usage Examples
 
 <div>

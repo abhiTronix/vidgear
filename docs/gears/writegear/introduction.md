@@ -59,16 +59,6 @@ WriteGear primarily operates in following modes:
 
 &thinsp; 
 
-## Importing
-
-You can import WriteGear API in your program as follows:
-
-```python
-from vidgear.gears import WriteGear
-```
-
-&thinsp; 
-
 ## FAQs
 
 <div>

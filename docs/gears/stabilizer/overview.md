@@ -67,16 +67,6 @@ The basic idea behind it is to tracks and save the salient feature array for the
 
 &thinsp; 
 
-## Importing
-
-You can import Stabilizer Class in your program as follows:
-
-```python
-from vidgear.gears.stabilizer import Stabilizer
-```
-
-&thinsp;
-
 ## Usage Examples
 
 <div>

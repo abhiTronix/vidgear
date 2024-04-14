@@ -94,22 +94,7 @@ Same as [WebGear](../../webgear_rtc/overview/), WebGear_RTC API automatically ch
 
 * Finally these downloaded files thereby are verified for errors and API proceeds for instantiating the Starlette application normally.
 
-
-&nbsp;
-
-&nbsp;
-
-## Importing
-
-You can import WebGear_RTC API in your program as follows:
-
-```python
-from vidgear.gears.asyncio import WebGear_RTC
-```
-
 &thinsp;
-
-&nbsp;
 
 ## WebGear_RTC's Default Template
 
@@ -143,7 +128,7 @@ The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Th
   <img src="../../../assets/images/webgear_rtc_temp_500.png" loading="lazy" alt="WebGear_RTC default 500 page"/>
 </h2>
 
-&nbsp;
+&thinsp;
 
 ## Usage Examples
 
@@ -164,7 +149,6 @@ The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Th
 <div>
 <a href="../../../bonus/reference/webgear_rtc/">See here 🚀</a>
 </div>
-
 
 ## FAQs
 

@@ -43,16 +43,6 @@ VideoGear is ideal when you need to switch to different video sources without ch
 
 &thinsp; 
 
-## Importing
-
-You can import VideoGear API in your program as follows:
-
-```python
-from vidgear.gears import VideoGear
-```
-
-&thinsp;
-
 ## Usage Examples
 
 <div>

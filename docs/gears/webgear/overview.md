@@ -110,21 +110,7 @@ On initializing WebGear API, it automatically checks for three critical **data f
 
 - Finally these downloaded files thereby are verified for errors and API proceeds for instantiating the Starlette application normally.
 
-&nbsp;
-
-&nbsp;
-
-## Importing
-
-You can import WebGear API in your program as follows:
-
-```python
-from vidgear.gears.asyncio import WebGear
-```
-
 &thinsp;
-
-&nbsp;
 
 ## WebGear's Default Template
 
@@ -159,7 +145,7 @@ _Appears when an API Error is encountered:_
   <img src="../../../assets/images/webgear_temp_500.png" loading="lazy" alt="WebGear default 500 page"/>
 </h2>
 
-&nbsp;
+&thinsp;
 
 ## Usage Examples
 

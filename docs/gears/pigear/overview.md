@@ -44,16 +44,6 @@ Best of all, PiGear contains ==Threaded Internal Timer== - that silently keeps a
 
 &thinsp; 
 
-## Importing
-
-You can import PiGear API in your program as follows:
-
-```python
-from vidgear.gears import PiGear
-```
-
-&thinsp;
-
 ## Usage Examples
 
 <div>
@@ -61,8 +51,6 @@ from vidgear.gears import PiGear
 </div>
 
 !!! experiment "After going through PiGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/pigear_ex/)"
-
-
 
 ## Parameters
 
