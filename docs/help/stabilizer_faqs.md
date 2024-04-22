@@ -20,7 +20,7 @@ limitations under the License.
 
 # Stabilizer Class FAQs
 
-&nbsp;
+&thinsp;
 
 ## What is Stabilizer Class and what does it do?
 

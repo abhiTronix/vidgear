@@ -20,7 +20,7 @@ limitations under the License.
 
 # WebGear_RTC_RTC Examples
 
-&nbsp;
+&thinsp;
 
 ## Using WebGear_RTC with RaspberryPi Camera Module
 

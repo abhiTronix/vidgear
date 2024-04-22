@@ -20,7 +20,7 @@ limitations under the License.
 
 # NetGear FAQs
 
-&nbsp;
+&thinsp;
 
 ## What is NetGear API and what does it do?
 

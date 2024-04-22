@@ -22,13 +22,13 @@ limitations under the License.
 
 &thinsp;
 
-!!! fail "The stabilizer may not perform well against High-frequency jitter in video. Use at your own risk!"
+!!! failure "The stabilizer may not perform well against High-frequency jitter in video. Use at your own risk!"
 
 !!! warning "The stabilizer might be slower :snail: for High-Quality/Resolution :material-high-definition-box: videos-frames."
 
 !!! tip "It is advised to enable logging on the first run for easily identifying any runtime errors."
 
-!!! experiment "After going through Stabilizer Class Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/stabilizer_ex/)"
+!!! example "After going through Stabilizer Class Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/stabilizer_ex/)"
 
 
 &thinsp;
@@ -206,7 +206,7 @@ stream.stop()
 
 VideoGear's stabilizer can be used in conjunction with WriteGear API directly without any compatibility issues. The complete usage example is as follows:
 
-!!! tip "You can also add live audio input to WriteGear pipeline. See this [bonus example](../../../help)"
+!!! example "You can also add live audio input to WriteGear pipeline. See this [bonus example  ➶](../../../help)"
 
 ```python
 # import required libraries

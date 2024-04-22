@@ -20,13 +20,13 @@ limitations under the License.
 
 # PiGear Examples
 
-&nbsp;
+&thinsp;
 
 ## Setting variable `picamera` parameters for Camera Module at runtime
 
 You can use `stream` global parameter in PiGear to feed any [`picamera`](https://picamera.readthedocs.io/en/release-1.10/api_camera.html) parameters at runtime. 
 
-In this example we will set initial Camera Module's `brightness` value `80`, and will change it `50` when **`z` key** is pressed at runtime:
+In this example we will set initial Camera Module's `brightness` value `80`, and will change it `50` when ++"Z"++ key is pressed at runtime:
 
 ```python hl_lines="35"
 # import required libraries

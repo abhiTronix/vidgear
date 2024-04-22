@@ -29,7 +29,7 @@ limitations under the License.
 
 ## Supported Systems
 
-VidGear is well-tested and supported on the following systems(but not limited to), with [python 3.8+](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/installing/#do-i-need-to-install-pip) installed:
+VidGear is well-tested and supported on the following systems(but not limited to), with [python 3.8+](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/getting-started/) installed:
 
 * Any :material-linux: Linux distro released in 2016 or later
 * :fontawesome-brands-windows: Windows 7 or later

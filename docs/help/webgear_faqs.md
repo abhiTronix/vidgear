@@ -20,7 +20,7 @@ limitations under the License.
 
 # WebGear FAQs
 
-&nbsp;
+&thinsp;
 
 ## What is WebGear API and what does it do?
 

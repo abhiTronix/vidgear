@@ -20,7 +20,7 @@ limitations under the License.
 
 # CamGear FAQs
 
-&nbsp;
+&thinsp;
 
 ## What is CamGear API and what does it do?
 

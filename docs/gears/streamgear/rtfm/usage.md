@@ -35,7 +35,7 @@ limitations under the License.
 
     * Always use `terminate()` function at the very end of the main code.
 
-!!! experiment "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
+!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
 
 
 &thinsp;
@@ -621,7 +621,7 @@ The complete example is as follows:
     * You only need either of `-video_bitrate` or `-framerate` for defining a valid stream. Since with `-framerate` value defined, video-bitrate is calculated automatically.
     * If you define both `-video_bitrate` and `-framerate` values at the same time, StreamGear will discard the `-framerate` value automatically.
 
-!!! fail "Always use `-stream` attribute to define additional streams safely, any duplicate or incorrect definition can break things!"
+!!! failure "Always use `-stream` attribute to define additional streams safely, any duplicate or incorrect definition can break things!"
 
 
 === "DASH"
@@ -927,7 +927,7 @@ The complete example is as follows:
             stream_params = {"-audio": ["-f","dshow", "-i", "audio=Microphone (USB2.0 Camera)"]}
             ```
 
-        !!! fail "If audio still doesn't work then [checkout this troubleshooting guide ➶](https://www.maketecheasier.com/fix-microphone-not-working-windows10/) or reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
+        !!! failure "If audio still doesn't work then [checkout this troubleshooting guide ➶](https://www.maketecheasier.com/fix-microphone-not-working-windows10/) or reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
     === ":material-linux: Linux"
@@ -967,7 +967,7 @@ The complete example is as follows:
             stream_params = {"-audio": ["-f","alsa", "-i", "hw:1"]}
             ```
 
-        !!! fail "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
+        !!! failure "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
     === ":material-apple: MacOS"
@@ -1003,7 +1003,7 @@ The complete example is as follows:
             stream_params = {"-audio": ["-f","avfoundation", "-audio_device_index", "0"]}
             ```
 
-        !!! fail "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
+        !!! failure "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
 !!! danger "Make sure this `-audio` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."

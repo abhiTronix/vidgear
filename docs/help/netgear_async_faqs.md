@@ -20,7 +20,7 @@ limitations under the License.
 
 # NetGear_Async FAQs
 
-&nbsp;
+&thinsp;
 
 ## What is NetGear_Async API and what does it do?
 

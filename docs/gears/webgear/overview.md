@@ -48,7 +48,7 @@ In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that tra
 ??? note "Customizing default video endpoint path"
 	Starting with vidgear `v0.3.1`, you can change default `/video` video endpoint path to any alphanumeric string value, using [`custom_video_endpoint`](../params/#webgear-specific-attributes) optional string attribute. For example:
 
-	!!! error "Only alphanumeric string with no space in between are allowed as `custom_video_endpoint` value. Any other value will be discarded."
+	!!! failure "Only alphanumeric string with no space in between are allowed as `custom_video_endpoint` value. Any other value will be discarded."
 
 	!!! warning "WebGear's Default Theme which expects only default `/video` video endpoint path, will fail to work, if it is customized to any other value using this `custom_video_endpoint` attribute."
 
@@ -69,15 +69,16 @@ On initializing WebGear API, it automatically checks for three critical **data f
 ### Default Location
 
 - A _default location_ is the path of the directory where data files/folders are downloaded/generated/saved.
-- By default, the `.vidgear` the folder at the home directory of your machine _(for e.g `/home/foo/.vidgear` on Linux)_ serves as the _default location_.
+- By default, the `.vidgear` the folder at the home directory of your machine _(for e.g `/home/foo/.vidgear` on Linux :material-linux:)_ serves as the _default location_.
 - But you can also use WebGear's [`custom_data_location`](../params/#webgear-specific-attributes) dictionary attribute to change/alter _default location_ path to somewhere else.
 
-	!!! tip
-			You can set [`logging=True`](../params/#logging) during initialization, for easily identifying the selected _default location_, which will be something like this _(on a Linux machine)_
+!!! tip "Identifying Default location"
+	You can set [`logging=True`](../params/#logging) during initialization, for easily identifying the selected _default location_, which will be something like this on a Linux :material-linux: machine:
 
-			```sh
-			WebGear :: DEBUG :: `/home/foo/.vidgear` is the default location for saving WebGear data-files.
-			```
+	```sh
+	WebGear :: DEBUG :: `/home/foo/.vidgear` is the default location for saving WebGear data-files.
+	```
+
 
 ### Auto-Generation process
 
@@ -115,7 +116,7 @@ On initializing WebGear API, it automatically checks for three critical **data f
 ## WebGear's Default Template
 
 ??? new "New in v0.2.1"
-New Standalone **WebGear's Default Theme** was added in `v0.2.1`.
+	New Standalone **WebGear's Default Theme** was added in `v0.2.1`.
 
 The WebGear API by default uses simple & elegant [**WebGear's Default Theme**](https://github.com/abhiTronix/vidgear-vitals#webgear-default-theme) which looks like something as follows:
 

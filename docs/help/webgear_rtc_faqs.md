@@ -20,7 +20,7 @@ limitations under the License.
 
 # WebGear_RTC FAQs
 
-&nbsp;
+&thinsp;
 
 ## What is WebGear_RTC API and what does it do?
 

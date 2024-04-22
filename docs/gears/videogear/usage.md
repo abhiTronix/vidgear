@@ -20,7 +20,7 @@ limitations under the License.
 
 # VideoGear API Usage Examples:
 
-!!! experiment "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/videogear_ex/)"
+!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/videogear_ex/)"
 
 &thinsp;
 

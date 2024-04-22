@@ -20,7 +20,7 @@ limitations under the License.
 
 # ScreenGear FAQs
 
-&nbsp;
+&thinsp;
 
 ## What is ScreenGear API and what does it do?
 

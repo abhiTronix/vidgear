@@ -52,15 +52,16 @@ Same as [WebGear](../../webgear_rtc/overview/), WebGear_RTC API automatically ch
 ### Default Location
 
 * A _default location_ is the path of the directory where data files/folders are downloaded/generated/saved.
-* By default, the `.vidgear` the folder at the home directory of your machine _(for e.g `/home/foo/.vidgear` on Linux)_ serves as the _default location_.
+* By default, the `.vidgear` the folder at the home directory of your machine _(for e.g `/home/foo/.vidgear` on Linux :material-linux:)_ serves as the _default location_.
 * But you can also use WebGear_RTC's [`custom_data_location`](../params/#webgear_rtc-specific-attributes) dictionary attribute to change/alter *default location* path to somewhere else.
 
-	!!! tip
-			You can set [`logging=True`](../params/#logging) during initialization, for easily identifying the selected _default location_, which will be something like this _(on a Linux machine)_:
+!!! tip "Identifying Default location"
+	You can set [`logging=True`](../params/#logging) during initialization, for easily identifying the selected _default location_, which will be something like this on a Linux :material-linux: machine:
 
-		  ```sh
-		  WebGear_RTC :: DEBUG :: `/home/foo/.vidgear` is the default location for saving WebGear_RTC data-files.
-		  ```
+	```sh
+	WebGear_RTC :: DEBUG :: `/home/foo/.vidgear` is the default location for saving WebGear_RTC data-files.
+	```
+
 
 ### Auto-Generation process
 

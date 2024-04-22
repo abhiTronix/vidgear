@@ -68,7 +68,7 @@ For this mode, StreamGear API provides exclusive [`stream()`](../../../../bonus/
 <a href="../usage/">See here 🚀</a>
 </div>
 
-!!! experiment "After going through StreamGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
+!!! example "After going through StreamGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
 
 
 ## Parameters

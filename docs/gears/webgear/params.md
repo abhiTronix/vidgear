@@ -69,7 +69,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     ??? new "New in v0.3.1"
         `custom_video_endpoint` attribute was added in `v0.3.1`.
 
-    !!! error "Only alphanumeric string with no space in between are allowed as `custom_video_endpoint` value. Any other value will be discarded."
+    !!! failure "Only alphanumeric string with no space in between are allowed as `custom_video_endpoint` value. Any other value will be discarded."
 
 	!!! warning "WebGear's Default Theme which expects only default `/video` video endpoint path, will fail to work, if it is customized to any other value using this `custom_video_endpoint` attribute."
 

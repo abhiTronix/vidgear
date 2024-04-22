@@ -20,7 +20,7 @@ limitations under the License.
 
 # PiGear FAQs
 
-&nbsp;
+&thinsp;
 
 ## What is PiGear API and what does it do?
 

@@ -33,7 +33,7 @@ PiGear provides a flexible multi-threaded framework around complete [picamera](h
 
 Best of all, PiGear contains ==Threaded Internal Timer== - that silently keeps active track of any frozen-threads/hardware-failures and exit safely, if any does occur. That means that if you're running PiGear API in your script and someone accidentally pulls the Camera-Module cable out, instead of going into possible kernel panic, API will exit safely to save resources.
 
-!!! error "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this API, otherwise nothing will work."
+!!! failure "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this API, otherwise nothing will work."
 
 !!! tip "Helpful Tips"
 
@@ -50,7 +50,7 @@ Best of all, PiGear contains ==Threaded Internal Timer== - that silently keeps a
 <a href="../usage/">See here 🚀</a>
 </div>
 
-!!! experiment "After going through PiGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/pigear_ex/)"
+!!! example "After going through PiGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/pigear_ex/)"
 
 ## Parameters
 

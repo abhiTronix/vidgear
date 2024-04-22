@@ -7,6 +7,7 @@ venv
 Pipfile.lock
 env3.*
 env
+.cache
 .coverage
 coverage.xml
 .netlify

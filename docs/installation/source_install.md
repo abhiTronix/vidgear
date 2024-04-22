@@ -26,7 +26,7 @@ limitations under the License.
 
 ## Prerequisites
 
-When installing VidGear from source, there are some API specific prerequisites you need to install manually:
+When installing VidGear from source, following are some API specific prerequisites you may need to install manually:
 
 
 !!! question "What about rest of the prerequisites?"
@@ -110,7 +110,11 @@ When installing VidGear from source, there are some API specific prerequisites y
         * **For StreamGear API**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/streamgear/ffmpeg_install/) for its installation.
 
 
+&thinsp;
+
 * #### Picamera2
+
+    Required only if you're using Raspberry Pi :fontawesome-brands-raspberry-pi: Camera Modules _(or USB webcams)_ with the [**PiGear**](../../gears/pigear/overview/) API. Here's how to install [Picamera2](https://github.com/raspberrypi/picamera2) python library:
 
     ??? tip "Using Legacy `picamera` library with PiGear (`v0.3.3` and above)"
 
@@ -122,16 +126,7 @@ When installing VidGear from source, there are some API specific prerequisites y
         pip install picamera
         ```  
 
-    ??? note "As of September 2022, Picamera2 is pre-installed on images downloaded from Raspberry Pi. So you don't have to install it manually."
-        - [x] On **Raspberry Pi OS images**, Picamera2 is now installed with all the GUI (Qt and OpenGL) dependencies.
-        - [x] On **Raspberry Pi OS Lite**, it is installed without the GUI dependencies, although preview images can still be displayed using DRM/KMS. If these users wish to use the additional X-Windows GUI features, they will need to run:
-
-            ```sh
-            sudo apt install -y python3-pyqt5 python3-opengl
-            ```
-
-    Required only if you're using Raspberry Pi :fontawesome-brands-raspberry-pi: Camera Modules _(or USB webcams)_ with the [**PiGear**](../../gears/pigear/overview/) API. Here's how to install [Picamera2](https://github.com/raspberrypi/picamera2) python library:
-
+    
     ??? warning "Picamera2 is only supported on Raspberry Pi OS Bullseye (or later) images, both 32 and 64-bit."
         
         Picamera2 is **NOT** supported on:
@@ -142,12 +137,21 @@ When installing VidGear from source, there are some API specific prerequisites y
 
     === "Installation using `apt` (Recommended)"
 
+        ??? success "As of September 2022, Picamera2 is pre-installed on images downloaded from Raspberry Pi. So you don't have to install it manually."
+
+            - [x] On **Raspberry Pi OS images**, Picamera2 is now installed with all the GUI (Qt and OpenGL) dependencies.
+            - [x] On **Raspberry Pi OS Lite**, it is installed without the GUI dependencies, although preview images can still be displayed using DRM/KMS. If these users wish to use the additional X-Windows GUI features, they will need to run:
+
+                ```sh
+                sudo apt install -y python3-pyqt5 python3-opengl
+                ```
+
         If Picamera2 is not already installed, then your image is presumably older and you should start with system upgrade:
         ```sh
         sudo apt update && upgrade
         ```
 
-        !!! note "If you have installed Picamera2 previously using pip, then you should also uninstall this (`pip3 uninstall picamera2`)."
+        !!! failure "If you have installed Picamera2 previously using pip, then you should also uninstall this (`pip3 uninstall picamera2`)."
 
         Thereafter, you can install Picamera2 with all the GUI (Qt and OpenGL) dependencies using:
 
@@ -198,7 +202,7 @@ When installing VidGear from source, there are some API specific prerequisites y
 
 !!! danger "DO NOT clone or install any other branch other than `testing` unless advised, as it is not tested with CI environments and possibly very unstable or unusable."
 
-??? experiment "Installing vidgear with only selective dependencies"
+??? example "Installing vidgear with only selective dependencies"
 
     Starting with version `v0.2.2`, you can now run any VidGear API by installing only just specific dependencies required by the API in use(except for some Core dependencies). 
 

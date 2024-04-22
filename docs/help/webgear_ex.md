@@ -20,7 +20,7 @@ limitations under the License.
 
 # WebGear Examples
 
-&nbsp;
+&thinsp;
 
 ## Using WebGear with RaspberryPi Camera Module
 

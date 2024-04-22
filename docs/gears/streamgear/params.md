@@ -28,7 +28,7 @@ This parameter sets the valid filename/path for storing the StreamGear assets _(
 
 !!! warning "StreamGear API will throw `ValueError` if `output` provided is empty or invalid."
 
-!!! error "Make sure to provide _valid filename with valid file-extension_ for selected [`format`](#format) value _(such as `.mpd` in case of MPEG-DASH and `.m3u8` in case of APPLE-HLS)_, otherwise StreamGear will throw `AssertionError`."
+!!! failure "Make sure to provide _valid filename with valid file-extension_ for selected [`format`](#format) value _(such as `.mpd` in case of MPEG-DASH and `.m3u8` in case of APPLE-HLS)_, otherwise StreamGear will throw `AssertionError`."
 
 !!! note "StreamGear generated sequence of multiple chunks/segments are also stored in the same directory."
 
@@ -92,7 +92,7 @@ This parameter select the adaptive HTTP streaming formats. For now, the supporte
 
 !!! warning "Any invalid value to `format` parameter will result in ValueError!"
 
-!!! error "Make sure to provide _valid filename with valid file-extension_ in [`output`](#output) for selected `format` value _(such as `.mpd` in case of MPEG-DASH and `.m3u8` in case of APPLE-HLS)_, otherwise StreamGear will throw `AssertionError`."
+!!! failure "Make sure to provide _valid filename with valid file-extension_ in [`output`](#output) for selected `format` value _(such as `.mpd` in case of MPEG-DASH and `.m3u8` in case of APPLE-HLS)_, otherwise StreamGear will throw `AssertionError`."
 
 
 **Data-Type:** String
@@ -329,7 +329,7 @@ Almost all FFmpeg parameter can be passed as dictionary attributes in `stream_pa
 !!! tip "Kindly check [H.264 docs ➶](https://trac.ffmpeg.org/wiki/Encode/H.264) and other [FFmpeg Docs ➶](https://ffmpeg.org/documentation.html) for more information on these parameters"
 
 
-!!! error "All ffmpeg parameters are case-sensitive. Remember to double check every parameter if any error occurs."
+!!! failure "All ffmpeg parameters are case-sensitive. Remember to double check every parameter if any error occurs."
 
 
 !!! note "In addition to these parameters, almost any FFmpeg parameter _(supported by installed FFmpeg)_ is also supported. But make sure to read [**FFmpeg Docs**](https://ffmpeg.org/documentation.html) carefully first."

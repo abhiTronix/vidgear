@@ -20,7 +20,7 @@ limitations under the License.
 
 # ScreenGear Examples
 
-&nbsp;
+&thinsp;
 
 ## Using ScreenGear with NetGear and WriteGear
 
@@ -178,7 +178,7 @@ The complete usage example is as follows:
 
 === "Advanced"
 
-    !!! fail "For VideoCapture APIs you also need to implement `start()` in addition to `read()` and `stop()` methods in your Custom Streaming Class as shown in following example, otherwise WebGear_RTC will fail to work!"
+    !!! failure "For VideoCapture APIs you also need to implement `start()` in addition to `read()` and `stop()` methods in your Custom Streaming Class as shown in following example, otherwise WebGear_RTC will fail to work!"
 
     ```python hl_lines="8-64 69"
     # import necessary libs

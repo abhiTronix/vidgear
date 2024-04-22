@@ -20,7 +20,7 @@ limitations under the License.
 
 # VideoGear Examples
 
-&nbsp;
+&thinsp;
 
 ## Using VideoGear with ROS(Robot Operating System) 
 

@@ -42,22 +42,22 @@ limitations under the License.
 
 ## Submission Contexts
 
-### Got a question or problem?
+### Got a question or problem? :material-lightbulb-question:
 
 For quick questions, please refrain from opening an issue, instead read our [FAQ & Troubleshooting](../help/get_help/#frequently-asked-questions) section or you can reach us on [Gitter](https://gitter.im/vidgear/community) community channel.
 
 
-### Found a typo?
+### Found a typo? :material-eraser:
 
 There's no need to contribute for some typos. Just reach us on [Gitter ➶](https://gitter.im/vidgear/community) community channel, We will correct them in (less than) no time. 
 
 
-### Found a bug?
+### Found a bug? :material-bug-outline: 
 
 If you encountered a bug, you can help us by [submitting an issue](../contribution/issue/) in our GitHub repository. Even better, you can submit a Pull Request(PR) with a fix, but make sure to read the [guidelines ➶](#submission-guidelines).
 
 
-### Request for a feature/improvement?
+### Request for a feature/improvement? :material-new-box: 
 
 ??? tip "Subscribe to Github Repository"
 

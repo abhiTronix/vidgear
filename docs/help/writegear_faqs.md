@@ -21,7 +21,7 @@ limitations under the License.
 
 # WriteGear FAQs
 
-&nbsp;
+&thinsp;
 
 ## What is WriteGear API and what does it do?
 
