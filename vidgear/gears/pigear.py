@@ -195,17 +195,14 @@ class PiGear:
                     "auto_align_output_config",  # internal
                     "enable_verbose_logs",  # internal
                     "format",
+                    "sensor",
                 ]
 
                 # define non-USB supported picamera2 config parameters
                 non_usb_options = [
-                    "controls",
-                    "queue",
-                    "transform",
-                    "bit_depth",
-                    "buffer_count",
-                    "sensor",
-                    "stride",
+                    "controls",  # not-supported on USB
+                    "transform",  # not-working on USB
+                    "stride",  # not-working on USB
                 ]  # Less are supported (will be changed in future)
 
                 # filter parameter supported with non-USB cameras only
@@ -226,7 +223,7 @@ class PiGear:
                     valid_config_options
                 )
                 invalid_config_keys and logger.warning(
-                    "Discarding invalid options NOT supported by Picamera2 API: `{}`".format(
+                    "Discarding invalid options NOT supported by Picamera2 API for current Camera Sensor: `{}`".format(
                         "`, `".join(invalid_config_keys)
                     )
                 )
@@ -268,7 +265,7 @@ class PiGear:
                     # unless format is either BGR or BGRA
                     assert not (colorspace is None) or options["format"] in [
                         "RGB888",
-                        "XRGB888",
+                        "XRGB8888",
                     ], "[PiGear:ERROR] ::  `colorspace` parameter must defined along with `format={}` in Picamera2 API!".format(
                         options["format"]
                     )
@@ -290,9 +287,26 @@ class PiGear:
                 # handle sensor configurations, if specified
                 sensor = options.pop("sensor", {})
                 if isinstance(sensor, dict):
+                    # extract all valid sensor keys
+                    valid_sensor = ["output_size", "bit_depth"]
+                    # log all invalid keys
+                    invalid_sensor_keys = set(list(sensor)) - set(valid_sensor)
+                    invalid_sensor_keys and logger.warning(
+                        "Discarding sensor properties NOT supported by current Camera Sensor: `{}`. Only supported are: (`{}`)".format(
+                            "`, `".join(invalid_sensor_keys),
+                            "`, `".join(valid_sensor),
+                        )
+                    )
+                    # delete all unsupported control keys
+                    sensor = {x: y for x, y in sensor.items() if x in valid_sensor}
                     # remove size if output size is defined
                     if "output_size" in sensor:
                         del options["size"]
+                        logger.critical(
+                            "Overriding output frame size with `output_size={}!".format(
+                                sensor["output_size"]
+                            )
+                        )
                 else:
                     logger.warning("`sensor` value is of invalid type, Discarding!")
                     sensor = {}
@@ -300,9 +314,25 @@ class PiGear:
                 # handle controls, if specified
                 controls = options.pop("controls", {})
                 if isinstance(controls, dict):
-                    # remove any fps controls, done already
-                    controls.pop("FrameDuration", None)
-                    controls.pop("FrameDurationLimits", None)
+                    # extract all valid control keys
+                    valid_controls = self.__camera.camera_controls
+                    # remove any fps controls, assigned already
+                    valid_controls.pop("FrameDuration", None)
+                    valid_controls.pop("FrameDurationLimits", None)
+                    # log all invalid keys
+                    invalid_control_keys = set(list(controls.keys())) - set(
+                        list(valid_controls.keys())
+                    )
+                    invalid_control_keys and logger.warning(
+                        "Discarding control properties NOT supported by current Camera Sensor: `{}`. Only supported are: (`{}`)".format(
+                            "`, `".join(invalid_control_keys),
+                            "`, `".join(list(valid_controls.keys())),
+                        )
+                    )
+                    # delete all unsupported control keys
+                    controls = {
+                        x: y for x, y in controls.items() if x in valid_controls.keys()
+                    }
                 else:
                     logger.warning("`controls` value is of invalid type, Discarding!")
                     controls = {}
@@ -330,15 +360,17 @@ class PiGear:
                 # configure camera
                 self.__camera.configure(config)
                 self.__logging and logger.debug(
-                    "Setting Picamera2 API Parameters: '{}'".format(
-                        self.__camera.camera_configuration()["main"]
+                    "Setting Picamera2 API Parameters: `{}`, controls: `{}`, and sensor: `{}`".format(
+                        self.__camera.camera_configuration()["main"],
+                        controls,
+                        sensor,
                     )
                 )
             else:
                 # apply attributes to source if specified
                 for key, value in options.items():
                     self.__logging and logger.debug(
-                        "Setting {} API Parameter for Picamera: '{}'".format(key, value)
+                        "Setting {} API Parameter for Picamera: `{}`".format(key, value)
                     )
                     setattr(self.__camera, key, value)
         except Exception as e:
@@ -425,7 +457,7 @@ class PiGear:
         # assign current time
         self.__t_elasped = time.time()
 
-        # loop until termainated
+        # loop until terminated
         while not (self.__terminate):
             # check for frozen thread
             if time.time() - self.__t_elasped > self.__failure_timeout:
