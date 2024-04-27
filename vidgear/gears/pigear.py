@@ -56,14 +56,30 @@ logger.setLevel(log.DEBUG)
 
 class PiGear:
     """
-    PiGear is similar to CamGear API but exclusively made to support various Raspberry Pi Camera Modules (such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module).
-    PiGear provides a flexible multi-threaded framework around complete picamera python library, and provide us the ability to exploit almost all of its parameters like brightness,
-    saturation, sensor_mode, iso, exposure, etc. effortlessly. Furthermore, PiGear also supports multiple camera modules, such as in the case of Raspberry-Pi Compute Module IO boards.
+    PiGear implements a seamless and robust wrapper around the [picamera2](https://github.com/raspberrypi/picamera2) python library, simplifying integration with minimal code changes and ensuring a
+    smooth transition for developers already familiar with the Picamera2 API. PiGear leverages the `libcamera` API under the hood with multi-threading, providing high-performance :fire:, enhanced
+    control and functionality for Raspberry Pi camera modules.
 
-    Best of all, PiGear contains Threaded Internal Timer - that silently keeps active track of any frozen-threads/hardware-failures and exit safely, if any does occur. That means that
-    if you're running PiGear API in your script and someone accidentally pulls the Camera-Module cable out, instead of going into possible kernel panic, API will exit safely to save resources.
+    PiGear handles common configuration parameters and non-standard settings for various camera types, simplifying the integration process. PiGear currently supports PiCamera2 API parameters such as
+    `sensor`, `controls`, `transform`, and `stride`, with internal type and sanity checks for robust performance.
 
-    !!! warning "Make sure to enable [Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this API, otherwise nothing will work."
+    While primarily focused on Raspberry Pi camera modules, PiGear also provides basic functionality for USB webcams only with Picamera2 API, along with the ability to accurately differentiate between
+    USB and Raspberry Pi cameras using metadata.
+
+    ???+ info "Backward compatibility with `picamera` library"
+        PiGear seamlessly switches to the legacy [picamera](https://picamera.readthedocs.io/en/release-1.13/index.html) library if the `picamera2` library is unavailable, ensuring seamless backward
+        compatibility. For this, PiGear also provides a flexible multi-threaded framework around complete `picamera` API, allowing developers to effortlessly exploit a wide range of parameters, such
+        as `brightness`, `saturation`, `sensor_mode`, `iso`, `exposure`, and more.
+
+    Furthermore, PiGear supports the use of multiple camera modules, including those found on Raspberry Pi Compute Module IO boards and USB cameras _(only with Picamera2 API)_.
+
+    ??? new "Threaded Internal Timer :material-camera-timer:"
+        PiGear ensures proper resource release during the termination of the API, preventing potential issues or resource leaks. PiGear API internally implements a
+        ==Threaded Internal Timer== that silently keeps active track of any frozen-threads or hardware-failures and exits safely if any do occur. This means that if
+        you're running the PiGear API in your script and someone accidentally pulls the Camera-Module cable out, instead of going into a possible kernel panic,
+        the API will exit safely to save resources.
+
+    !!! failure "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this API, otherwise nothing will work."
     """
 
     def __init__(
@@ -436,7 +452,7 @@ class PiGear:
         """
         Launches the internal *Threaded Frames Extractor* daemon
 
-        **Returns:** A reference to the CamGear class object.
+        **Returns:** A reference to the PiGear class object.
         """
         # Start frame producer thread
         self.__thread = Thread(target=self.__update, name="PiGear", args=())
@@ -566,7 +582,7 @@ class PiGear:
 
     def stop(self):
         """
-        Safely terminates the thread, and release the VideoStream resources.
+        Safely terminates the thread, and release the multi-threaded resources.
         """
         # log termination
         self.__logging and logger.debug("Terminating PiGear Processes.")

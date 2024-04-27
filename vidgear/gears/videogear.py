@@ -62,7 +62,6 @@ class VideoGear:
         logging=False,
         **options
     ):
-
         """
         This constructor method initializes the object state and attributes of the VideoGear class.
 
@@ -181,7 +180,7 @@ class VideoGear:
 
     def stop(self):
         """
-        Safely terminates the thread, and release the respective VideoStream resources.
+        Safely terminates the thread, and release the respective multi-threaded resources.
         """
         self.stream.stop()
         # logged

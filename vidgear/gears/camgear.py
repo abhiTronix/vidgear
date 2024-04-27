@@ -528,7 +528,7 @@ class CamGear:
 
     def stop(self):
         """
-        Safely terminates the thread, and release the VideoStream resources.
+        Safely terminates the thread, and release the multi-threaded resources.
         """
         self.__logging and logger.debug("Terminating processes.")
         # terminate Threaded queue mode separately
