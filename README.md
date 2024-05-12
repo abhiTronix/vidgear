@@ -122,7 +122,7 @@ Each API is designed exclusively to handle/control/process different data-specif
 **A. Video-Capture Gears:**
 
 - [**CamGear:**](#camgear) Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
-- [**PiGear:**](#pigear) Multi-Threaded API targeting various Raspberry-Pi Camera Modules.
+- [**PiGear:**](#pigear) Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis :grapes:.
 - [**ScreenGear:**](#screengear) High-performance API targeting rapid Screencasting Capabilities.
 - [**VideoGear:**](#videogear) Common Video-Capture API with internal [Video Stabilizer](https://abhitronix.github.io/vidgear/latest/gears/stabilizer/overview/) wrapper.
 
@@ -273,7 +273,7 @@ PiGear handles common configuration parameters and non-standard settings for var
 
 While primarily focused on Raspberry Pi camera modules, PiGear also provides **basic functionality for USB webcams** only with Picamera2 API, along with the ability to accurately differentiate between USB and Raspberry Pi cameras using metadata. 
 
-PiGear seamlessly switches to the legacy [picamera][picamera] library if the `picamera2` library is unavailable, ensuring seamless backward compatibility. For this, PiGear also provides a flexible multi-threaded framework around complete `picamera` API, allowing developers to effortlessly exploit a wide range of parameters, such as `brightness`, `saturation`, `sensor_mode`, `iso`, `exposure`, and more. 
+PiGear seamlessly switches to the legacy [`picamera`][picamera] library if the `picamera2` library is unavailable, ensuring seamless backward compatibility. For this, PiGear also provides a flexible multi-threaded framework around complete `picamera` API, allowing developers to effortlessly exploit a wide range of parameters, such as `brightness`, `saturation`, `sensor_mode`, `iso`, `exposure`, and more. 
 
 Furthermore, PiGear supports the use of multiple camera modules, including those found on Raspberry Pi Compute Module IO boards and USB cameras _(only with Picamera2 API)_.
 

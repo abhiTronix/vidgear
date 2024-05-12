@@ -30,7 +30,7 @@ limitations under the License.
 
 ## How to get started with WebGear_RTC API?
 
-**Answer:** See [WebGear_RTC doc ➶](../../gears/webgear_rtc/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [WebGear_RTC documentation](../../gears/webgear_rtc/overview/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 

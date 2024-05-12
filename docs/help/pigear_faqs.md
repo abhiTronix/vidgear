@@ -24,25 +24,25 @@ limitations under the License.
 
 ## What is PiGear API and what does it do?
 
-**Answer:** PiGear is similar to CamGear but exclusively made to support various Raspberry Pi Camera Modules (such as [OmniVision OV5647 Camera Module](https://github.com/techyian/MMALSharp/wiki/OmniVision-OV5647-Camera-Module) and [Sony IMX219 Camera Module](https://github.com/techyian/MMALSharp/wiki/Sony-IMX219-Camera-Module)). _For more info. see [PiGear doc ➶](../../gears/pigear/overview/)_
+**Answer:** PiGear is a specialized API similar to the [CamGear API](../../gears/camgear/overview/) but optimized for **Raspberry Pi Boards**, offering comprehensive **support for camera modules** _(e.g., OmniVision OV5647, Sony IMX219)_, along with **limited compatibility for USB cameras**. _For more info. see [PiGear doc ➶](../../gears/pigear/overview/)_
 
 &nbsp;
 
 ## I'm only familiar with OpenCV, how to get started with PiGear API?
 
-**Answer:** First, see [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis), then go through [PiGear doc](../../gears/pigear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [PiGear documentation](../../gears/pigear/overview/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
 ## Why my camera module is not detected by PiGear?
 
-**Answer:** Make sure to [enable Raspberry Pi hardware-specific settings ➶](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) before using PiGear. Also, recheck/change your Camera Module's ribbon-cable and Camera Module itself, if it damaged or got broken somehow.
+**Answer:** Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using PiGear API. Also, recheck/change your Camera Module's ribbon-cable and Camera Module itself, if it damaged or got broken somehow.
 
 &nbsp;
 
 ## How to select camera index on Pi Compute IO board with two Cameras attached?
 
-**Answer:** See [PiGear's `camera_num` parameter ➶](../../gears/pigear/params/#camera_num)
+**Answer:** Refer [this bonus example ➶](../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)
 
 &nbsp;
 
@@ -52,7 +52,7 @@ limitations under the License.
 
 &nbsp;
 
-## How to assign `picamera` settings for Camera Module with PiGear?
+## How to assign various configurational settings for Camera Module with PiGear?
 
 **Answer:** See [this usage example ➶](../../gears/pigear/usage/#using-pigear-with-variable-camera-properties)
 
@@ -60,13 +60,21 @@ limitations under the License.
 
 ## "Video output is too dark with PiGear", Why?
 
-**Answer:** Seems like the settings are wrong. Kindly see [picamera docs](https://picamera.readthedocs.io/en/release-1.13/api_camera.html) for available parameters, and look for parameters are `sensor_mode`, `shutter_speed` and `exposure_mode`, try changing those values. Also, maybe your `framerate` value is too high. Try lowering it.
+**Answer:** The camera configuration settings might be incorrect. Check [this usage example ➶](../../gears/pigear/usage/#using-pigear-with-variable-camera-properties) and try tinkering parameters like `sensor_mode`, `shutter_speed`, and `exposure_mode`. Additionally, if your `framerate` parameter value is too high, try lowering it.
 
 &nbsp;
 
 
-## How to change `picamera` settings for Camera Module at runtime?
+## How to dynamically adjust Raspberry Pi Camera Parameters at runtime with PiGear?
 
-**Answer:** You can use `stream` global parameter in PiGear to feed any `picamera` setting at runtime. See [this bonus example ➶](../pigear_ex/#setting-variable-picamera-parameters-for-camera-module-at-runtime)
+**Answer:** See [this bonus example ➶](../../help/pigear_ex/#dynamically-adjusting-raspberry-pi-camera-parameters-at-runtime-in-pigear-api)
 
 &nbsp;
+
+
+## Is it possible to change output frames Pixel Format in PiGear API?
+
+**Answer:** Yes it is possible with Picamera2 Backend. See [this bonus example ➶](../../help/pigear_ex/#changing-output-pixel-format-in-pigear-api-with-picamera2-backend)
+
+&nbsp;
+

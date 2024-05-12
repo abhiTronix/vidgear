@@ -69,17 +69,15 @@ class Stabilizer:
             crop_n_zoom (bool): enables cropping and zooming of frames(to original size) to reduce the black borders.
             logging (bool): enables/disables logging.
         """
+        # enable logging if specified
+        self.__logging = logging if isinstance(logging, bool) else False
+
         # print current version
-        logcurr_vidgear_ver(logging=logging)
+        logcurr_vidgear_ver(logging=self.__logging)
 
         # initialize deques for handling input frames and its indexes
         self.__frame_queue = deque(maxlen=smoothing_radius)
         self.__frame_queue_indexes = deque(maxlen=smoothing_radius)
-
-        # enable logging if specified
-        self.__logging = False
-        if logging:
-            self.__logging = logging
 
         # define and create Adaptive histogram equalization (AHE) object for optimizations
         self.__clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))

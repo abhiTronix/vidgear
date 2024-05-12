@@ -232,13 +232,12 @@ class CamGear:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Source Tweak Parameters.
         """
-        # print current version
-        logcurr_vidgear_ver(logging=logging)
-
         # enable logging if specified
-        self.__logging = False
-        if logging:
-            self.__logging = logging
+        self.__logging = logging if isinstance(logging, bool) else False
+
+        # print current version
+        logcurr_vidgear_ver(logging=self.__logging)
+
         # initialize global
         self.ytv_metadata = {}
 
@@ -288,12 +287,11 @@ class CamGear:
                             # revert to best
                             stream_resolution = "best"
                         else:
-                            if self.__logging:
-                                logger.debug(
-                                    "Using `{}` resolution for streaming.".format(
-                                        stream_resolution
-                                    )
+                            self.__logging and logger.debug(
+                                "Using `{}` resolution for streaming.".format(
+                                    stream_resolution
                                 )
+                            )
                         # extract stream URL as source using stream-resolution
                         source = ytbackend.streams[stream_resolution]
                         # log progress
@@ -312,9 +310,6 @@ class CamGear:
             else:
                 # raise import errors
                 import_dependency_safe("yt_dlp")
-
-        # youtube mode variable initialization
-        self.__youtube_mode = stream_mode
 
         # assigns special parameter to global variable and clear
         # Threaded Queue Mode

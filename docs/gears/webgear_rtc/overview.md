@@ -69,7 +69,7 @@ Same as [WebGear](../../webgear_rtc/overview/), WebGear_RTC API automatically ch
 
 	* You can also force trigger the Auto-generation process to overwrite existing data-files using [`overwrite_default_files`](../params/#webgear_rtc-specific-attributes) dictionary attribute. Remember, only downloaded default data files(given above) will be overwritten in this process but any other file/folder will NOT be affected.
 
-	* It is advised to enable logging(`logging=True`) on the first run for easily identifying any runtime errors
+	* It is advised to enable logging(`logging=True`) on the first run for easily identifying any runtime errors.
 
 
 * On triggering this process, WebGear_RTC API creates `webgear_rtc` directory, and `templates` and `static` folders inside along with `js`, `css`, `img` sub-folders at the assigned [*default location*](#default-location).

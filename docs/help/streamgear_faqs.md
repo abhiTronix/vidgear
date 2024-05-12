@@ -30,7 +30,7 @@ limitations under the License.
 
 ## How to get started with StreamGear API?
 
-**Answer:** See [StreamGear doc ➶](../../gears/streamgear/introduction/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [StreamGear documentation](../../gears/streamgear/overview/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &thinsp;
 

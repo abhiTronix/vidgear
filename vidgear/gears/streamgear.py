@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 import os
 import time
@@ -82,13 +83,14 @@ class StreamGear:
             stream_params (dict): provides the flexibility to control supported internal parameters and FFmpeg properties.
         """
 
+        # enable logging if specified
+        self.__logging = logging if isinstance(logging, bool) else False
+
         # print current version
-        logcurr_vidgear_ver(logging=logging)
+        logcurr_vidgear_ver(logging=self.__logging)
 
         # checks if machine in-use is running windows os or not
         self.__os_windows = True if os.name == "nt" else False
-        # enable logging if specified
-        self.__logging = logging if (logging and isinstance(logging, bool)) else False
 
         # initialize various class variables
         # handles user-defined parameters
@@ -107,9 +109,9 @@ class StreamGear:
 
         # cleans and reformat user-defined parameters
         self.__params = {
-            str(k).strip(): str(v).strip()
-            if not isinstance(v, (dict, list, int, float))
-            else v
+            str(k).strip(): (
+                str(v).strip() if not isinstance(v, (dict, list, int, float)) else v
+            )
             for k, v in stream_params.items()
         }
 
@@ -728,11 +730,11 @@ class StreamGear:
                     # otherwise calculate video-bitrate
                     fps = stream.pop("-framerate", 0.0)
                     if dimensions and isinstance(fps, (float, int)) and fps > 0:
-                        intermediate_dict[
-                            "-b:v:{}".format(stream_count)
-                        ] = "{}k".format(
-                            get_video_bitrate(
-                                int(dimensions[0]), int(dimensions[1]), fps, bpp
+                        intermediate_dict["-b:v:{}".format(stream_count)] = (
+                            "{}k".format(
+                                get_video_bitrate(
+                                    int(dimensions[0]), int(dimensions[1]), fps, bpp
+                                )
                             )
                         )
                     else:
@@ -747,16 +749,16 @@ class StreamGear:
                 audio_bitrate = stream.pop("-audio_bitrate", "")
                 if "-acodec" in output_params:
                     if audio_bitrate and audio_bitrate.endswith(("k", "M")):
-                        intermediate_dict[
-                            "-b:a:{}".format(stream_count)
-                        ] = audio_bitrate
+                        intermediate_dict["-b:a:{}".format(stream_count)] = (
+                            audio_bitrate
+                        )
                     else:
                         # otherwise calculate audio-bitrate
                         if dimensions:
                             aspect_width = int(dimensions[0])
-                            intermediate_dict[
-                                "-b:a:{}".format(stream_count)
-                            ] = "{}k".format(128 if (aspect_width > 800) else 96)
+                            intermediate_dict["-b:a:{}".format(stream_count)] = (
+                                "{}k".format(128 if (aspect_width > 800) else 96)
+                            )
                 # update output parameters
                 output_params.update(intermediate_dict)
                 # clear intermediate dict
@@ -961,9 +963,11 @@ class StreamGear:
         self.__process = sp.Popen(
             ffmpeg_cmd,
             stdin=sp.PIPE,
-            stdout=sp.DEVNULL
-            if (not self.__video_source and not self.__logging)
-            else sp.PIPE,
+            stdout=(
+                sp.DEVNULL
+                if (not self.__video_source and not self.__logging)
+                else sp.PIPE
+            ),
             stderr=None if self.__logging else sp.STDOUT,
         )
         # post handle progress bar and runtime errors in case of video_source

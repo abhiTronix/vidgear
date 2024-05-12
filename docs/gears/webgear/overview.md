@@ -86,7 +86,7 @@ On initializing WebGear API, it automatically checks for three critical **data f
 
     * You can also force trigger the Auto-generation process to overwrite existing data-files using [`overwrite_default_files`](../params/#webgear-specific-attributes) dictionary attribute. Remember, only downloaded default data files(given above) will be overwritten in this process but any other file/folder will NOT be affected.
 
-    * It is advised to enable logging(`logging=True`) on the first run for easily identifying any runtime errors
+    * It is advised to enable logging(`logging=True`) on the first run for easily identifying any runtime errors.
 
 - On triggering this process, WebGear API creates `webgear` directory, and `templates` and `static` folders inside along with `js`, `css`, `img` sub-folders at the assigned [_default location_](#default-location).
 - Thereby at this [_default location_](#default-location), the necessary default data files will be downloaded from a dedicated [**Github Server**](https://github.com/abhiTronix/vidgear-vitals) inside respective folders in the following order:

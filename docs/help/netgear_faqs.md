@@ -30,7 +30,7 @@ limitations under the License.
 
 ## How to get started with NetGear API?
 
-**Answer:** See [NetGear doc ➶](../../gears/netgear/overview/). Still in doubt, then discuss on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [NetGear documentation ➶](../../gears/netgear/overview/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 

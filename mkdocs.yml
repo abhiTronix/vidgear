@@ -47,6 +47,7 @@ theme:
     - content.code.annotate
     - content.code.copy
     - content.tabs.link
+    - content.footnote.tooltips
   palette:
     # Light mode
     - media: "(prefers-color-scheme: light)"

@@ -120,11 +120,11 @@ When installing VidGear from source, following are some API specific prerequisit
 
         PiGear API _(version `0.3.3` onwards)_ prioritizes the newer Picamera2 library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. However, if your operating system doesn't support Picamera2, you can still use the  legacy [`picamera`](https://picamera.readthedocs.io/en/release-1.13/) library. Here's how to easily install it using pip:
 
-        !!! warning "Make sure to [**enable Raspberry Pi hardware-specific settings**](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior to using this library, otherwise it won't work."
-
         ```sh
         pip install picamera
         ```  
+
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
 
     
     ??? warning "Picamera2 is only supported on Raspberry Pi OS Bullseye (or later) images, both 32 and 64-bit."
