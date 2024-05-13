@@ -145,7 +145,7 @@ class PiGear:
 
         # check if legacy picamera backend is enforced
         enforce_legacy_picamera = options.pop("enforce_legacy_picamera", False)
-        if isinstance(queue, bool) and enforce_legacy_picamera:
+        if isinstance(enforce_legacy_picamera, bool) and enforce_legacy_picamera:
             # check if picamera library is available.
             if picamera:
                 logger.critical(
