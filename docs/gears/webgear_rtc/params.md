@@ -371,7 +371,7 @@ This parameter selects the camera index to be used as the source, allowing you t
 WebGear_RTC(enablePiCamera=True, camera_num=1)
 ```
 
-!!! example "The complete usage example demonstrating the usage of the `camera_num` parameter is available [here ➶](../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)."
+!!! example "The complete usage example demonstrating the usage of the `camera_num` parameter is available [here ➶](../../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)."
 
   
 &nbsp;
