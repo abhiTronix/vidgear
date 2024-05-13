@@ -111,6 +111,7 @@ class PiGear:
         logcurr_vidgear_ver(logging=self.__logging)
 
         # raise error(s) for critical Class imports
+        global picamera, picamera2
         if picamera2:
             # log if picamera2
             self.__logging and logger.info("picamera2 API is currently being accessed.")
