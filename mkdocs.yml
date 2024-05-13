@@ -125,6 +125,7 @@ extra:
       link: https://dev.to/abhitronix
   version:
     provider: mike
+    default: latest
   analytics: # Google analytics
     provider: google
     property: G-XMZCQ3KBNJ
