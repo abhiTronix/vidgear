@@ -35,7 +35,7 @@ WebGear_RTC API is the part of `asyncio` package of VidGear, thereby you need to
 
 Must Required with WebGear_RTC API. You can easily install it via pip:
 
-??? error "Microsoft Visual C++ 14.0 is required."
+??? failure "Microsoft Visual C++ 14.0 is required."
     
     Installing `aiortc` on windows requires Microsoft Build Tools for Visual C++ libraries installed. You can easily fix this error by installing any **ONE** of these choices:
 

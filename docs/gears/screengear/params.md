@@ -90,7 +90,7 @@ This parameter enables [`pyscreenshot`](https://github.com/BoboTiG/python-mss) u
 
 !!! warning "Remember to install backend library and all of its dependencies you're planning to use with ScreenGear API."
 
-!!! error "Any value on [`monitor`](#monitor) parameter will disable the `backend` parameter. You cannot use both parameters at same time."
+!!! failure "Any value on [`monitor`](#monitor) parameter will disable the `backend` parameter. You cannot use both parameters at same time."
 
 !!! info "Backend defaults to `dxcam` library on Windows _(if installed)_, and `pyscreenshot` otherwise."
 

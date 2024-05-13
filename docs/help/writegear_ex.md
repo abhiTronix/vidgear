@@ -30,10 +30,10 @@ In Compression Mode, you can use WriteGear for livestreaming with traditional pr
 ??? new "New in v0.2.6" 
     This example was added in `v0.2.6`.
 
-!!! alert "This example assume you already have a RTSP Server running at specified RTSP address with format *`rtsp://[RTSP_ADDRESS]:[RTSP_PORT]/[RTSP_PATH]`* for publishing video frames."
+???+ tip "Creating your own RTSP Server locally"
+    If you want to create your RTSP Server locally, then checkout [**MediaMTX (formerly rtsp-simple-server)**](https://github.com/bluenviron/mediamtx) - ready-to-use and zero-dependency real-time media server and media proxy that allows to publish, read, proxy, record and playback video and audio streams.
 
-??? tip "Creating your own RTSP Server locally"
-    If you want to create your RTSP Server locally, then checkout [**rtsp-simple-server**](https://github.com/aler9/rtsp-simple-server) - a ready-to-use and zero-dependency server and proxy that allows users to publish, read and proxy live video and audio streams through various protocols such as RTSP, RTMP etc.
+!!! warning "This example assume you already have a RTSP Server running at specified RTSP address with format *`rtsp://[RTSP_ADDRESS]:[RTSP_PORT]/[RTSP_PATH]`* for publishing video frames."
     
 !!! danger "Make sure to change RTSP address `rtsp://localhost:8554/mystream` with yours in following code before running!"
 
@@ -247,7 +247,7 @@ With WriteGear's Compression Mode, you can directly feed video-frames to [`v4l2l
 
     Now you can use `/dev/video0` Virtual Camera device path in WriteGear API.
 
-??? fail "v4l2: open /dev/videoX: Permission denied"
+??? failure "v4l2: open /dev/videoX: Permission denied"
 
     If you got this error, then you must add your username to the `video` group by running following commands:
     ```sh

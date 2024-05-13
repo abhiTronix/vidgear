@@ -57,16 +57,6 @@ Whereas supported protocol are: `tcp` and `ipc`.
 
 &thinsp; 
 
-## Importing
-
-You can import NetGear_Async API in your program as follows:
-
-```python
-from vidgear.gears.asyncio import NetGear_Async
-```
-
-&thinsp;
-
 ## Usage Examples
 
 <div>

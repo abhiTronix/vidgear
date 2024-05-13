@@ -131,8 +131,11 @@ class NetGear:
             logging (bool): enables/disables logging.
             options (dict): provides the flexibility to alter various NetGear internal properties.
         """
+        # enable logging if specified
+        self.__logging = logging if isinstance(logging, bool) else False
+
         # print current version
-        logcurr_vidgear_ver(logging=logging)
+        logcurr_vidgear_ver(logging=self.__logging)
 
         # raise error(s) for critical Class imports
         import_dependency_safe(
@@ -141,9 +144,6 @@ class NetGear:
         import_dependency_safe(
             "simplejpeg" if simplejpeg is None else "", error="log", min_version="1.6.1"
         )
-
-        # enable logging if specified
-        self.__logging = True if logging else False
 
         # define valid messaging patterns => `0`: zmq.PAIR, `1`:(zmq.REQ,zmq.REP), and `1`:(zmq.SUB,zmq.PUB)
         valid_messaging_patterns = {

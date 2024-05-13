@@ -20,7 +20,7 @@ limitations under the License.
 
 # VideoGear FAQs
 
-&nbsp;
+&thinsp;
 
 ## What is VideoGear API and what does it do?
 

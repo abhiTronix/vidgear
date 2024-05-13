@@ -58,7 +58,7 @@ This mode can be easily activated by assigning suitable video path as input to [
 <a href="../usage/">See here 🚀</a>
 </div>
 
-!!! experiment "After going through StreamGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
+!!! example "After going through StreamGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
 
 
 ## Parameters

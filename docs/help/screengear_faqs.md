@@ -20,7 +20,7 @@ limitations under the License.
 
 # ScreenGear FAQs
 
-&nbsp;
+&thinsp;
 
 ## What is ScreenGear API and what does it do?
 
@@ -30,7 +30,7 @@ limitations under the License.
 
 ## I'm only familiar with OpenCV, how to get started with ScreenGear API?
 
-**Answer:** First, see [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis), then go through [ScreenGear doc](../../gears/screengear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [ScreenGear documentation](../../gears/screengear/overview/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 

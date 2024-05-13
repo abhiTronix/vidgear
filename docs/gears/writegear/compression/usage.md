@@ -489,7 +489,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             }
             ```
 
-        !!! fail "If audio still doesn't work then [checkout this troubleshooting guide ➶](https://www.maketecheasier.com/fix-microphone-not-working-windows10/) or reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
+        !!! failure "If audio still doesn't work then [checkout this troubleshooting guide ➶](https://www.maketecheasier.com/fix-microphone-not-working-windows10/) or reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
     === ":material-linux: Linux"
@@ -535,7 +535,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             }
             ```
 
-        !!! fail "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
+        !!! failure "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
     === ":material-apple: MacOS"
@@ -577,7 +577,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             }
             ```
 
-        !!! fail "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
+        !!! failure "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
 !!! danger "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."

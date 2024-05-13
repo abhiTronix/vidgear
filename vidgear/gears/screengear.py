@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 import cv2
 import json
@@ -72,11 +73,11 @@ class ScreenGear:
             logging (bool): enables/disables logging.
             options (dict): provides the flexibility to easily alter backend library parameters. Such as, manually set the dimensions of capture screen area etc.
         """
-        # print current version
-        logcurr_vidgear_ver(logging=logging)
-
-        # enable logging if specified:
+        # enable logging if specified
         self.__logging = logging if isinstance(logging, bool) else False
+
+        # print current version
+        logcurr_vidgear_ver(logging=self.__logging)
 
         # create instances for the user-defined monitor
         self.__monitor_instance = None

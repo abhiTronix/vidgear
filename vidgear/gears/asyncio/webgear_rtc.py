@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 import os
 import time
@@ -114,9 +115,6 @@ if not (aiortc is None):
                 time_delay (int): time delay (in sec) before start reading the frames.
                 options (dict): provides ability to alter Tweak Parameters of WebGear_RTC, CamGear, PiGear & Stabilizer.
             """
-            # print current version
-            logcurr_vidgear_ver(logging=logging)
-
             super().__init__()  # don't forget this!
 
             # initialize global params
@@ -371,13 +369,17 @@ class WebGear_RTC:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Tweak Parameters of WebGear_RTC, CamGear, PiGear & Stabilizer.
         """
+        # enable logging if specified
+        self.__logging = logging if isinstance(logging, bool) else False
+
+        # print current version
+        logcurr_vidgear_ver(logging=self.__logging)
+
         # raise error(s) for critical Class imports
         import_dependency_safe("starlette" if starlette is None else "")
         import_dependency_safe("aiortc" if aiortc is None else "")
 
         # initialize global params
-        self.__logging = logging
-
         custom_data_location = ""  # path to save data-files to custom location
         data_path = ""  # path to WebGear_RTC data-files
         overwrite_default = False
@@ -417,9 +419,9 @@ class WebGear_RTC:
                 if isinstance(value, bool):
                     if value:
                         self.__relay = MediaRelay()
-                        options[
-                            "enable_infinite_frames"
-                        ] = True  # enforce infinite frames
+                        options["enable_infinite_frames"] = (
+                            True  # enforce infinite frames
+                        )
                         logger.critical(
                             "Enabled live broadcasting for Peer connection(s)."
                         )

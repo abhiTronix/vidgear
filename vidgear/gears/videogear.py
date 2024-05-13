@@ -62,7 +62,6 @@ class VideoGear:
         logging=False,
         **options
     ):
-
         """
         This constructor method initializes the object state and attributes of the VideoGear class.
 
@@ -80,21 +79,19 @@ class VideoGear:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Tweak Parameters of CamGear, PiGear & Stabilizer.
         """
+        # enable logging if specified
+        self.__logging = logging if isinstance(logging, bool) else False
+
         # print current version
-        logcurr_vidgear_ver(logging=logging)
+        logcurr_vidgear_ver(logging=self.__logging)
 
         # initialize stabilizer
-        self.__stablization_mode = stabilize
-
-        # enable logging if specified
-        self.__logging = False
-        if logging:
-            self.__logging = logging
+        self.__stabilization_mode = stabilize
 
         # reformat dictionary
         options = {str(k).strip(): v for k, v in options.items()}
 
-        if self.__stablization_mode:
+        if self.__stabilization_mode:
             from .stabilizer import Stabilizer
 
             s_radius = options.pop("SMOOTHING_RADIUS", 25)
@@ -121,7 +118,7 @@ class VideoGear:
                 logging=logging,
             )
             self.__logging and logger.debug(
-                "Enabling Stablization Mode for the current video source!"
+                "Enabling Stabilization Mode for the current video source!"
             )  # log info
 
         if enablePiCamera:
@@ -170,7 +167,7 @@ class VideoGear:
 
         **Returns:** A n-dimensional numpy array.
         """
-        while self.__stablization_mode:
+        while self.__stabilization_mode:
             frame = self.stream.read()
             if frame is None:
                 break
@@ -181,11 +178,10 @@ class VideoGear:
 
     def stop(self):
         """
-        Safely terminates the thread, and release the respective VideoStream resources.
+        Safely terminates the thread, and release the respective multi-threaded resources.
         """
         self.stream.stop()
         # logged
         self.__logging and logger.debug("Terminating VideoGear.")
         # clean queue
-        if self.__stablization_mode:
-            self.__stabilizer_obj.clean()
+        self.__stabilization_mode and self.__stabilizer_obj.clean()

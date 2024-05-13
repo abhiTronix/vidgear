@@ -81,17 +81,6 @@ StreamGear primarily operates in following independent modes for transcoding:
 
 &thinsp; 
 
-## Importing
-
-You can import StreamGear API in your program as follows:
-
-```python
-from vidgear.gears import StreamGear
-```
-
-&thinsp; 
-
-
 ## Watch Demo
 
 === "Watch MPEG-DASH Stream"

@@ -31,7 +31,7 @@ limitations under the License.
     * Always use `terminate()` function at the very end of the main code.
 
 
-!!! experiment "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
+!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
 
 
 &thinsp;
@@ -81,7 +81,7 @@ Following is the bare-minimum code you need to get started with StreamGear API i
 
 ## Bare-Minimum Usage with Live-Streaming
 
-You can easily activate ==Low-latency Livestreaming in Single-Source Mode==, where chunks will contain information for few new frames only and forgets all previous ones), using exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter as follows:
+You can easily activate ==Low-latency Livestreaming in Single-Source Mode== - chunks will contain information only for few new frames and forgets all previous ones, using exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter as follows:
 
 !!! note "If input video-source _(i.e. `-video_source`)_ contains any audio stream/channel, then it automatically gets mapped to all generated streams without any extra efforts."
 
@@ -148,7 +148,7 @@ The complete example is as follows:
     * You only need either of `-video_bitrate` or `-framerate` for defining a valid stream. Since with `-framerate` value defined, video-bitrate is calculated automatically.
     * If you define both `-video_bitrate` and `-framerate` values at the same time, StreamGear will discard the `-framerate` value automatically.
 
-!!! fail "Always use `-stream` attribute to define additional streams safely, any duplicate or incorrect definition can break things!"
+!!! failure "Always use `-stream` attribute to define additional streams safely, any duplicate or incorrect definition can break things!"
 
 
 === "DASH"
@@ -275,7 +275,7 @@ For this example, let us use our own [H.265/HEVC](https://trac.ffmpeg.org/wiki/E
 
 !!! danger "Kindly read [**FFmpeg Docs**](https://ffmpeg.org/documentation.html) carefully, before passing any FFmpeg values to `stream_params` parameter. Wrong values may result in undesired errors or no output at all."
 
-!!! fail "Always use `-streams` attribute to define additional streams safely, any duplicate or incorrect stream definition can break things!"
+!!! failure "Always use `-streams` attribute to define additional streams safely, any duplicate or incorrect stream definition can break things!"
 
 === "DASH"
 

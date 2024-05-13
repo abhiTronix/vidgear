@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 import os
 import asyncio
@@ -107,8 +108,11 @@ class WebGear:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Tweak Parameters of WebGear, CamGear, PiGear & Stabilizer.
         """
+        # enable logging if specified
+        self.__logging = logging if isinstance(logging, bool) else False
+
         # print current version
-        logcurr_vidgear_ver(logging=logging)
+        logcurr_vidgear_ver(logging=self.__logging)
 
         # raise error(s) for critical Class imports
         import_dependency_safe("starlette" if starlette is None else "")
@@ -123,7 +127,6 @@ class WebGear:
         self.__jpeg_compression_fastdct = True  # fastest DCT on by default
         self.__jpeg_compression_fastupsample = False  # fastupsample off by default
         self.__jpeg_compression_colorspace = "BGR"  # use BGR colorspace by default
-        self.__logging = logging
         self.__frame_size_reduction = 25  # use 25% reduction
         # retrieve interpolation for reduction
         self.__interpolation = retrieve_best_interpolation(
@@ -359,9 +362,11 @@ class WebGear:
                         self.__jpeg_compression_colorspace,
                         self.__jpeg_compression_quality,
                         "enabled" if self.__jpeg_compression_fastdct else "disabled",
-                        "enabled"
-                        if self.__jpeg_compression_fastupsample
-                        else "disabled",
+                        (
+                            "enabled"
+                            if self.__jpeg_compression_fastupsample
+                            else "disabled"
+                        ),
                     )
                 )
 

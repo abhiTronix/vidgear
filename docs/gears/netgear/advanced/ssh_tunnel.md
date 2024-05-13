@@ -73,7 +73,7 @@ SSH Tunnel Mode requires [`pexpect`](http://www.noah.org/wiki/pexpect) or [`para
 
 === "Pexpect"
 
-    !!! fail "`pexpect` is NOT compatible with Windows Machines."
+    !!! failure "`pexpect` is NOT compatible with Windows Machines."
 
     ```sh
     # install pexpect
@@ -91,7 +91,7 @@ For implementing SSH Tunneling Mode, NetGear API currently provide following exc
 
 * **`ssh_tunnel_mode`** (_string_) : This attribute activates SSH Tunneling Mode and assigns the `"<ssh-username>@<client-public-ip-address>:<tcp-forwarded-port>"` SSH URL for tunneling at Server end. Its usage is as follows:
   
-    !!! fail "On Server end, NetGear automatically validates if the `port` is open at specified Client's Public IP Address or not, and if it fails _(i.e. port is closed)_, NetGear will throw `AssertionError`!"
+    !!! failure "On Server end, NetGear automatically validates if the `port` is open at specified Client's Public IP Address or not, and if it fails _(i.e. port is closed)_, NetGear will throw `AssertionError`!"
 
     === "With Default Port"
         
@@ -230,7 +230,7 @@ Open a terminal on Client System _(A Regular PC where you want to display the in
     For more information on Forwarding Port in Popular Home Routers. See [this document ➶](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/)
 
 
-??? fail "Secsh channel X open FAILED: open failed: Administratively prohibited"
+??? failure "Secsh channel X open FAILED: open failed: Administratively prohibited"
 
     **Error:** This error means that installed OpenSSH is preventing connections to forwarded ports from outside your Client Machine. 
 

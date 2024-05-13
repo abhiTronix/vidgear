@@ -125,16 +125,6 @@ In addition to the primary modes, NetGear API also offers application-specific E
 
 &thinsp;
 
-## Importing
-
-You can import NetGear API in your program as follows:
-
-```python
-from vidgear.gears import NetGear
-```
-
-&nbsp;
-
 ## Usage Examples
 
 <div>

@@ -20,7 +20,7 @@ limitations under the License.
 
 # NetGear_Async Examples
 
-&nbsp;
+&thinsp;
 
 ## Using NetGear_Async with WebGear
 

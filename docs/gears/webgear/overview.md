@@ -48,7 +48,7 @@ In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that tra
 ??? note "Customizing default video endpoint path"
 	Starting with vidgear `v0.3.1`, you can change default `/video` video endpoint path to any alphanumeric string value, using [`custom_video_endpoint`](../params/#webgear-specific-attributes) optional string attribute. For example:
 
-	!!! error "Only alphanumeric string with no space in between are allowed as `custom_video_endpoint` value. Any other value will be discarded."
+	!!! failure "Only alphanumeric string with no space in between are allowed as `custom_video_endpoint` value. Any other value will be discarded."
 
 	!!! warning "WebGear's Default Theme which expects only default `/video` video endpoint path, will fail to work, if it is customized to any other value using this `custom_video_endpoint` attribute."
 
@@ -69,15 +69,16 @@ On initializing WebGear API, it automatically checks for three critical **data f
 ### Default Location
 
 - A _default location_ is the path of the directory where data files/folders are downloaded/generated/saved.
-- By default, the `.vidgear` the folder at the home directory of your machine _(for e.g `/home/foo/.vidgear` on Linux)_ serves as the _default location_.
+- By default, the `.vidgear` the folder at the home directory of your machine _(for e.g `/home/foo/.vidgear` on Linux :material-linux:)_ serves as the _default location_.
 - But you can also use WebGear's [`custom_data_location`](../params/#webgear-specific-attributes) dictionary attribute to change/alter _default location_ path to somewhere else.
 
-	!!! tip
-			You can set [`logging=True`](../params/#logging) during initialization, for easily identifying the selected _default location_, which will be something like this _(on a Linux machine)_
+!!! tip "Identifying Default location"
+	You can set [`logging=True`](../params/#logging) during initialization, for easily identifying the selected _default location_, which will be something like this on a Linux :material-linux: machine:
 
-			```sh
-			WebGear :: DEBUG :: `/home/foo/.vidgear` is the default location for saving WebGear data-files.
-			```
+	```sh
+	WebGear :: DEBUG :: `/home/foo/.vidgear` is the default location for saving WebGear data-files.
+	```
+
 
 ### Auto-Generation process
 
@@ -85,7 +86,7 @@ On initializing WebGear API, it automatically checks for three critical **data f
 
     * You can also force trigger the Auto-generation process to overwrite existing data-files using [`overwrite_default_files`](../params/#webgear-specific-attributes) dictionary attribute. Remember, only downloaded default data files(given above) will be overwritten in this process but any other file/folder will NOT be affected.
 
-    * It is advised to enable logging(`logging=True`) on the first run for easily identifying any runtime errors
+    * It is advised to enable logging(`logging=True`) on the first run for easily identifying any runtime errors.
 
 - On triggering this process, WebGear API creates `webgear` directory, and `templates` and `static` folders inside along with `js`, `css`, `img` sub-folders at the assigned [_default location_](#default-location).
 - Thereby at this [_default location_](#default-location), the necessary default data files will be downloaded from a dedicated [**Github Server**](https://github.com/abhiTronix/vidgear-vitals) inside respective folders in the following order:
@@ -110,26 +111,12 @@ On initializing WebGear API, it automatically checks for three critical **data f
 
 - Finally these downloaded files thereby are verified for errors and API proceeds for instantiating the Starlette application normally.
 
-&nbsp;
-
-&nbsp;
-
-## Importing
-
-You can import WebGear API in your program as follows:
-
-```python
-from vidgear.gears.asyncio import WebGear
-```
-
 &thinsp;
-
-&nbsp;
 
 ## WebGear's Default Template
 
 ??? new "New in v0.2.1"
-New Standalone **WebGear's Default Theme** was added in `v0.2.1`.
+	New Standalone **WebGear's Default Theme** was added in `v0.2.1`.
 
 The WebGear API by default uses simple & elegant [**WebGear's Default Theme**](https://github.com/abhiTronix/vidgear-vitals#webgear-default-theme) which looks like something as follows:
 
@@ -159,7 +146,7 @@ _Appears when an API Error is encountered:_
   <img src="../../../assets/images/webgear_temp_500.png" loading="lazy" alt="WebGear default 500 page"/>
 </h2>
 
-&nbsp;
+&thinsp;
 
 ## Usage Examples
 

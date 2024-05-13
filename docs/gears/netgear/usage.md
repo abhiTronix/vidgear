@@ -20,7 +20,7 @@ limitations under the License.
 
 # NetGear API Usage Examples:
 
-!!! danger Important Information
+!!! danger "Important Information"
 
     * Kindly go through each given examples thoroughly, any incorrect settings/parameter may result in errors or no output at all.
 

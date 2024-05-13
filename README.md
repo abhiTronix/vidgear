@@ -39,7 +39,7 @@ limitations under the License.
 
 &nbsp;
 
-VidGear is a **High-Performance Video Processing Python Library** that provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio API Framework** on top of many state-of-the-art specialized libraries like _[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera][picamera], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [dxcam][dxcam], [aiortc][aiortc] and [python-mss][mss]_ serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**
+VidGear is a **High-Performance Video Processing Python Library** that provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio API Framework** on top of many state-of-the-art specialized libraries like _[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera2][picamera2], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [dxcam][dxcam], [aiortc][aiortc] and [python-mss][mss]_ serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**
 
 VidGear primarily focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks, in just a few lines of code.
 
@@ -122,7 +122,7 @@ Each API is designed exclusively to handle/control/process different data-specif
 **A. Video-Capture Gears:**
 
 - [**CamGear:**](#camgear) Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
-- [**PiGear:**](#pigear) Multi-Threaded API targeting various Raspberry-Pi Camera Modules.
+- [**PiGear:**](#pigear) Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis :grapes:.
 - [**ScreenGear:**](#screengear) High-performance API targeting rapid Screencasting Capabilities.
 - [**VideoGear:**](#videogear) Common Video-Capture API with internal [Video Stabilizer](https://abhitronix.github.io/vidgear/latest/gears/stabilizer/overview/) wrapper.
 
@@ -265,27 +265,35 @@ stream_stab.stop()
   <img src="https://abhitronix.github.io/vidgear/latest/assets/images/picam2.webp" alt="PiGear" width="50%" />
 </p>
 
-> _PiGear is similar to CamGear but made to support various Raspberry Pi Camera Modules _(such as [OmniVision OV5647 Camera Module][ov5647-picam] and [Sony IMX219 Camera Module][imx219-picam])_._
+> _PiGear is a specialized API similar to the [CamGear API](#camgear) but optimized for **Raspberry Pi :grapes: Boards**, offering comprehensive **support for camera modules** _(e.g., [OmniVision OV5647 Camera Module][ov5647-picam], [Sony IMX219 Camera Module][imx219-picam])_, along with **limited compatibility for USB cameras**._
 
-PiGear provides a flexible multi-threaded framework around complete [picamera](https://picamera.readthedocs.io/en/release-1.13/index.html) python library, and provide us the ability to exploit almost all of its parameters like `brightness, saturation, sensor_mode, iso, exposure, etc.` effortlessly. Furthermore, PiGear also supports multiple camera modules, such as in the case of Raspberry-Pi Compute Module IO boards.
+PiGear implements a seamless and robust wrapper around the [picamera2][picamera2] python library, simplifying integration with minimal code changes and ensuring a smooth transition for developers already familiar with the Picamera2 API. PiGear leverages the `libcamera` API under the hood with multi-threading, providing high-performance :fire:, enhanced control and functionality for Raspberry Pi camera modules. 
+
+PiGear handles common configuration parameters and non-standard settings for various camera types, simplifying the integration process. PiGear currently supports PiCamera2 API parameters such as `sensor`, `controls`, `transform`, and `format` etc., with internal type and sanity checks for robust performance.
+
+While primarily focused on Raspberry Pi camera modules, PiGear also provides **basic functionality for USB webcams** only with Picamera2 API, along with the ability to accurately differentiate between USB and Raspberry Pi cameras using metadata. 
+
+PiGear seamlessly switches to the legacy [picamera][picamera] library if the `picamera2` library is unavailable, ensuring seamless backward compatibility. For this, PiGear also provides a flexible multi-threaded framework around complete `picamera` API, allowing developers to effortlessly exploit a wide range of parameters, such as `brightness`, `saturation`, `sensor_mode`, `iso`, `exposure`, and more. 
+
+Furthermore, PiGear supports the use of multiple camera modules, including those found on Raspberry Pi Compute Module IO boards and USB cameras _(only with Picamera2 API)_.
 
 Best of all, PiGear contains **Threaded Internal Timer** - that silently keeps active track of any frozen-threads/hardware-failures and exit safely, if any does occur. That means that if you're running PiGear API in your script and someone accidentally pulls the Camera-Module cable out, instead of going into possible kernel panic, API will exit safely to save resources.
 
-**Code to open picamera stream with variable parameters in PiGear API:**
+**Code to open picamera2 stream with variable parameters in PiGear API:**
 
 ```python
 # import required libraries
 from vidgear.gears import PiGear
+from libcamera import Transform
 import cv2
 
-# add various Picamera tweak parameters to dictionary
+# formulate various Picamera2 API 
+# configurational parameters
 options = {
-    "hflip": True,
-    "exposure_mode": "auto",
-    "iso": 800,
-    "exposure_compensation": 15,
-    "awb_mode": "horizon",
-    "sensor_mode": 0,
+    "controls": {"Brightness": 0.5, "ExposureValue": 2.0},
+    "transform": Transform(hflip=1),
+    "sensor": {"output_size": (480, 320)},  # will override `resolution`
+    "format": "RGB888", # 8-bit BGR
 }
 
 # open pi video stream with defined parameters
@@ -316,7 +324,6 @@ cv2.destroyAllWindows()
 
 # safely close video stream
 stream.stop()
-
 ```
 
 ### PiGear API Guide:
@@ -650,7 +657,7 @@ It is something I am doing with my own free time. But so much more needs to be d
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8174694.svg)](https://doi.org/10.5281/zenodo.8174694)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8332548.svg)](https://doi.org/10.5281/zenodo.8332548)
 
 ```BibTeX
 @software{vidgear,
@@ -660,18 +667,19 @@ Here is a Bibtex entry you can use to cite this project in a publication:
                   Christian Hollinger and
                   Ian Max Andolina and
                   Vincent Boivin and
-                  enarche-ahn and
+                  Kyle Ahn and
                   freol35241 and
                   Benjamin Lowe and
                   Mickaël Schoentgen and
-                  Renaud Bouckenooghe},
-  title        = {abhiTronix/vidgear: VidGear v0.3.1},
-  month        = jul,
+                  Renaud Bouckenooghe and
+                  Ibtsam Ahmad},
+  title        = {abhiTronix/vidgear: VidGear Stable v0.3.2},
+  month        = sep,
   year         = 2023,
   publisher    = {Zenodo},
-  version      = {vidgear-0.3.1},
-  doi          = {10.5281/zenodo.8174694},
-  url          = {https://doi.org/10.5281/zenodo.8174694}
+  version      = {vidgear-0.3.2},
+  doi          = {10.5281/zenodo.8332548},
+  url          = {https://doi.org/10.5281/zenodo.8332548}
 }
 ```
 
@@ -807,5 +815,6 @@ External URLs
 [zmq-req-rep]: https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/client_server.html
 [zmq-pub-sub]: https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html
 [zmq-pull-push]: https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pushpull.html#push-pull
+[picamera2]:https://github.com/raspberrypi/picamera2
 [picamera-setting]: https://picamera.readthedocs.io/en/release-1.13/quickstart.html
 [webrtc]: https://webrtc.org/

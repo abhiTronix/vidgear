@@ -35,15 +35,19 @@ theme:
   # Default values, taken from mkdocs_theme.yml
   language: en
   features:
-    - header.autohide
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.top
+    - navigation.tracking
+    - navigation.instant
+    - navigation.instant.progress
     - search.suggest
     - search.highlight
     - search.share
     - content.code.annotate
     - content.code.copy
     - content.tabs.link
+    - content.footnote.tooltips
   palette:
     # Light mode
     - media: "(prefers-color-scheme: light)"
@@ -62,10 +66,22 @@ theme:
         icon: material/weather-night
         name: Switch to light mode
   font:
-    text: Muli
+    text: Source Sans 3
     code: Fira Code
   icon:
-    logo: logo
+    admonition:
+      note: octicons/tag-16
+      abstract: octicons/checklist-16
+      info: octicons/info-16
+      tip: octicons/light-bulb-16
+      success: octicons/check-16
+      question: octicons/question-16
+      warning: octicons/alert-16
+      failure: octicons/x-circle-16
+      danger: octicons/zap-16
+      bug: octicons/bug-16
+      example: octicons/beaker-16
+      quote: octicons/quote-16
   logo: assets/images/logo.svg
   favicon: assets/images/favicon-32.png
   static_templates:
@@ -74,7 +90,9 @@ theme:
 # Plugins
 plugins:
   - search
-  - git-revision-date-localized
+  - git-revision-date-localized:
+      enable_creation_date: true
+      fallback_to_build_date: true
   - minify:
       minify_html: true
   - mkdocstrings:
@@ -88,6 +106,11 @@ plugins:
   - exclude:
       glob:
         - overrides/assets/README.md
+  - git-authors
+
+# Logging
+validation:
+  unrecognized_links: ignore
 
 # Customization
 extra:
@@ -104,7 +127,7 @@ extra:
     provider: mike
   analytics: # Google analytics
     provider: google
-    property: UA-131929464-1
+    property: G-XMZCQ3KBNJ
     feedback:
       title: Was this page helpful?
       ratings:
@@ -130,14 +153,14 @@ extra_javascript:
 markdown_extensions:
   - admonition
   - abbr
+  - tables
   - attr_list
   - def_list
   - footnotes
   - md_in_html
   - meta
   - toc:
-      permalink: ⚓
-      permalink_title: Anchor link to this section for reference
+      permalink: true
   - codehilite:
       guess_lang: false
   - pymdownx.arithmatex
@@ -147,13 +170,16 @@ markdown_extensions:
   - pymdownx.critic
   - pymdownx.details
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.inlinehilite
   - pymdownx.highlight:
       anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
   - pymdownx.keys
   - pymdownx.magiclink:
+      normalize_issue_symbols: true
       repo_url_shorthand: true
       user: abhiTronix
       repo: vidgear
@@ -161,7 +187,11 @@ markdown_extensions:
   - pymdownx.smartsymbols
   - pymdownx.snippets:
       check_paths: true
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.tasklist:

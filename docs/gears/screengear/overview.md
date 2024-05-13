@@ -43,16 +43,6 @@ ScreenGear API implements a multi-threaded wrapper around [**dxcam**](https://gi
 
 &thinsp; 
 
-## Importing
-
-You can import ScreenGear API in your program as follows:
-
-```python
-from vidgear.gears import ScreenGear
-```
-
-&thinsp;
-
 ## Usage Examples
 
 <div>
@@ -60,8 +50,6 @@ from vidgear.gears import ScreenGear
 </div>
 
 !!! experiment "After going through ScreenGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/screengear_ex/)"
-
-
 
 ## Parameters
 
