@@ -501,7 +501,8 @@ def get_supported_demuxers(path):
     """
     demuxers = check_output([path, "-hide_banner", "-demuxers"])
     splitted = [x.decode("utf-8").strip() for x in demuxers.split(b"\n")]
-    supported_demuxers = splitted[splitted.index("--") + 1 : len(splitted) - 1]
+    split_index = [idx for idx, s in enumerate(splitted) if "--" in s][0]
+    supported_demuxers = splitted[split_index + 1 : len(splitted) - 1]
     # compile regex
     finder = re.compile(r"\s\s[a-z0-9_,-]+\s+")
     # find all outputs
@@ -673,8 +674,7 @@ def extract_time(value):
         )
         return (
             sum(
-                int(x) * 60**i
-                for i, x in enumerate(reversed(t_duration[0].split(":")))
+                int(x) * 60**i for i, x in enumerate(reversed(t_duration[0].split(":")))
             )
             if t_duration
             else 0

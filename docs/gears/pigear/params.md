@@ -37,7 +37,7 @@ This parameter selects the camera index to be used as the source, allowing you t
 PiGear(camera_num=1)
 ```
 
-!!! example "The complete usage example demonstrating the usage of the `camera_num` parameter is available [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
+!!! example "The complete usage example demonstrating the usage of the `camera_num` parameter is available [here ➶](../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)."
 
   
 &nbsp;
@@ -49,7 +49,7 @@ This parameter controls the **resolution** - a tuple _(i.e. `(width,height)`)_ o
 
 !!! warning "Make sure both width and height values should be at least `64`."
 
-!!! danger "When using the Picamera2 backend, the `resolution` parameter will be **OVERRIDDEN**, if the user explicitly defines the `output_size` property of the [`sensor` configurational parameter](#a-configurational-camera-parameters) in PiGear API."
+!!! danger "When using the Picamera2 backend, the `resolution` parameter will be **OVERRIDDEN**, if the user explicitly defines the `output_size` property of the [`sensor`](#a-configurational-camera-parameters) configurational parameter in PiGear API."
 
 **Data-Type:** Tuple
 

@@ -265,35 +265,35 @@ stream_stab.stop()
   <img src="https://abhitronix.github.io/vidgear/latest/assets/images/picam2.webp" alt="PiGear" width="50%" />
 </p>
 
-> _PiGear is a specialized API similar to the [CamGear API](#camgear) but optimized for **Raspberry Pi Boards**, offering comprehensive **support for camera modules** _(e.g., [OmniVision OV5647 Camera Module][ov5647-picam], [Sony IMX219 Camera Module][imx219-picam])_, along with **limited compatibility for USB cameras**._
+> _PiGear is a specialized API similar to the [CamGear API](#camgear) but optimized for **Raspberry Pi :grapes: Boards**, offering comprehensive **support for camera modules** _(e.g., [OmniVision OV5647 Camera Module][ov5647-picam], [Sony IMX219 Camera Module][imx219-picam])_, along with **limited compatibility for USB cameras**._
 
 PiGear implements a seamless and robust wrapper around the [picamera2][picamera2] python library, simplifying integration with minimal code changes and ensuring a smooth transition for developers already familiar with the Picamera2 API. PiGear leverages the `libcamera` API under the hood with multi-threading, providing high-performance :fire:, enhanced control and functionality for Raspberry Pi camera modules. 
 
-PiGear handles common configuration parameters and non-standard settings for various camera types, simplifying the integration process. PiGear currently supports PiCamera2 API parameters such as `sensor`, `controls`, `transform`, and `stride`, with internal type and sanity checks for robust performance.
+PiGear handles common configuration parameters and non-standard settings for various camera types, simplifying the integration process. PiGear currently supports PiCamera2 API parameters such as `sensor`, `controls`, `transform`, and `format` etc., with internal type and sanity checks for robust performance.
 
 While primarily focused on Raspberry Pi camera modules, PiGear also provides **basic functionality for USB webcams** only with Picamera2 API, along with the ability to accurately differentiate between USB and Raspberry Pi cameras using metadata. 
 
-PiGear seamlessly switches to the legacy [`picamera`][picamera] library if the `picamera2` library is unavailable, ensuring seamless backward compatibility. For this, PiGear also provides a flexible multi-threaded framework around complete `picamera` API, allowing developers to effortlessly exploit a wide range of parameters, such as `brightness`, `saturation`, `sensor_mode`, `iso`, `exposure`, and more. 
+PiGear seamlessly switches to the legacy [picamera][picamera] library if the `picamera2` library is unavailable, ensuring seamless backward compatibility. For this, PiGear also provides a flexible multi-threaded framework around complete `picamera` API, allowing developers to effortlessly exploit a wide range of parameters, such as `brightness`, `saturation`, `sensor_mode`, `iso`, `exposure`, and more. 
 
 Furthermore, PiGear supports the use of multiple camera modules, including those found on Raspberry Pi Compute Module IO boards and USB cameras _(only with Picamera2 API)_.
 
 Best of all, PiGear contains **Threaded Internal Timer** - that silently keeps active track of any frozen-threads/hardware-failures and exit safely, if any does occur. That means that if you're running PiGear API in your script and someone accidentally pulls the Camera-Module cable out, instead of going into possible kernel panic, API will exit safely to save resources.
 
-**Code to open picamera stream with variable parameters in PiGear API:**
+**Code to open picamera2 stream with variable parameters in PiGear API:**
 
 ```python
 # import required libraries
 from vidgear.gears import PiGear
+from libcamera import Transform
 import cv2
 
-# add various Picamera tweak parameters to dictionary
+# formulate various Picamera2 API 
+# configurational parameters
 options = {
-    "hflip": True,
-    "exposure_mode": "auto",
-    "iso": 800,
-    "exposure_compensation": 15,
-    "awb_mode": "horizon",
-    "sensor_mode": 0,
+    "controls": {"Brightness": 0.5, "ExposureValue": 2.0},
+    "transform": Transform(hflip=1),
+    "sensor": {"output_size": (480, 320)},  # will override `resolution`
+    "format": "RGB888", # 8-bit BGR
 }
 
 # open pi video stream with defined parameters
@@ -324,7 +324,6 @@ cv2.destroyAllWindows()
 
 # safely close video stream
 stream.stop()
-
 ```
 
 ### PiGear API Guide:

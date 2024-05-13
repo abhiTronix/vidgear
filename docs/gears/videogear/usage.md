@@ -76,7 +76,15 @@ stream.stop()
 
 Following is the bare-minimum code you need to access PiGear API with VideoGear:
 
-!!! warning "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using PiGear Backend, otherwise nothing will work."
+??? info "Under the hood, PiGear API _(version `0.3.3` onwards)_ prioritizes the new [`picamera2`](https://github.com/raspberrypi/picamera2) API backend."
+
+    However, PiGear API seamlessly switches to the legacy [`picamera`](https://picamera.readthedocs.io/en/release-1.13/index.html) backend, if the `picamera2` library is unavailable or not installed.
+    
+    !!! tip "It is advised to enable logging(`logging=True`) to see which backend is being used."
+
+    !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params) user-defined optional parameter boolean attribute."
+
+!!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this API, otherwise nothing will work."
 
 ```python hl_lines="6"
 # import required libraries
@@ -169,8 +177,7 @@ stream_stab.stop()
 
 The usage example of VideoGear API with Variable Camera Properties is as follows:
 
-???+ info
-    This example is basically a VideoGear API implementation of this [CamGear usage example](../../camgear/usage/#using-camgear-with-variable-camera-properties) for controlling its properties _(such as its brightness, saturation, resolution, framerate, gain etc.)_. Thereby, any [CamGear](../../camgear/usage/) or [PiGear](../../pigear/usage/) usage examples can be implemented with VideoGear API in the similar manner.
+!!! info "This example demonstrates how to use the VideoGear API in a similar manner to the CamGear's [example](../../camgear/usage/#using-camgear-with-variable-camera-properties) for controlling variable source properties. Any [CamGear usage example](../../camgear/usage/) can be implemented using the VideoGear API in a similar way."
 
 !!! tip "All the supported Source Tweak Parameters can be found [here ➶](../../camgear/advanced/source_params/#source-tweak-parameters-for-camgear-api)"
 
@@ -224,59 +231,118 @@ stream.stop()
 
 !!! abstract "VideoGear provides internal access to both CamGear and PiGear APIs, and thereby all additional parameters of [PiGear API](../params/#parameters-with-pigear-backend) or [CamGear API](../params/#parameters-with-camgear-backend) are also easily accessible within VideoGear API."
 
-The usage example of VideoGear API with Variable PiCamera Properties is as follows:
+The usage example of VideoGear API with Variable Camera Properties is as follows:
 
-???+ info
-    This example is basically a VideoGear API implementation of this [PiGear usage example](../../pigear/usage/#using-pigear-with-variable-camera-properties). Thereby, any [CamGear](../../camgear/usage/) or [PiGear](../../pigear/usage/) usage examples can be implemented with VideoGear API in the similar manner.
+!!! info "This example demonstrates how to use the VideoGear API in a similar manner to the PiGear's [example](../../pigear/usage/#using-pigear-with-variable-camera-properties) for using variable camera properties. Any [PiGear usage example](../../pigear/usage/) can be implemented using the VideoGear API in a similar way."
 
-!!! warning "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using PiGear Backend, otherwise nothing will work."
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../../installation/pip_install/#picamera2) for its installation."
 
-```python hl_lines="16-18"
-# import required libraries
-from vidgear.gears import VideoGear
-import cv2
+!!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
-# add various Picamera tweak parameters to dictionary
-options = {
-    "hflip": True,
-    "exposure_mode": "auto",
-    "iso": 800,
-    "exposure_compensation": 15,
-    "awb_mode": "horizon",
-    "sensor_mode": 0,
-}
 
-# activate enablePiCamera and open pi video stream with defined parameters
-stream = VideoGear(
-    enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options
-).start()
+=== "New Picamera2 backend"
 
-# loop over
-while True:
+    ```python hl_lines="3 9-13"
+    # import required libraries
+    from vidgear.gears import VideoGear
+    from libcamera import Transform
+    import cv2
 
-    # read frames from stream
-    frame = stream.read()
+    # formulate various Picamera2 API 
+    # configurational parameters
+    options = {
+        "queue": True,
+        "buffer_count": 4,
+        "controls": {"Brightness": 0.5, "ExposureValue": 2.0},
+        "transform": Transform(hflip=1),
+        "auto_align_output_config": True,  # auto-align camera configuration
+    }
 
-    # check for frame if Nonetype
-    if frame is None:
-        break
+    # open pi video stream with defined parameters
+    stream = VideoGear(enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options).start()
 
-    # {do something with the frame here}
+    # loop over
+    while True:
 
-    # Show output window
-    cv2.imshow("Output Frame", frame)
+        # read frames from stream
+        frame = stream.read()
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+        # check for frame if Nonetype
+        if frame is None:
+            break
 
-# close output window
-cv2.destroyAllWindows()
+        # {do something with the frame here}
 
-# safely close video stream
-stream.stop()
-```
+        # Show output window
+        cv2.imshow("Output Frame", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+    ```
+    
+=== "Legacy Picamera backend"
+
+    ??? info "Under the hood, Backend PiGear API _(version `0.3.3` onwards)_ prioritizes the new [`picamera2`](https://github.com/raspberrypi/picamera2) API backend."
+
+        However, the API seamlessly switches to the legacy [`picamera`](https://picamera.readthedocs.io/en/release-1.13/index.html) backend, if the `picamera2` library is unavailable or not installed.
+        
+        !!! tip "It is advised to enable logging(`logging=True`) to see which backend is being used."
+
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params) user-defined optional parameter boolean attribute."
+
+    ```python hl_lines="8-13"
+    # import required libraries
+    from vidgear.gears import VideoGear
+    import cv2
+
+    # formulate various Picamera API 
+    # configurational parameters
+    options = {
+        "hflip": True,
+        "exposure_mode": "auto",
+        "iso": 800,
+        "exposure_compensation": 15,
+        "awb_mode": "horizon",
+        "sensor_mode": 0,
+    }
+
+    # open pi video stream with defined parameters
+    stream = VideoGear(enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options).start()
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # Show output window
+        cv2.imshow("Output Frame", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+    ```
 
 &nbsp; 
 
@@ -285,10 +351,9 @@ stream.stop()
 
 VideoGear API also supports **Colorspace Manipulation** but **NOT Direct** like other VideoCapture Gears. 
 
-!!! danger "Important"
+!!! failure "Important: `color_space` global variable is NOT Supported in VideoGear API"
 
     * `color_space` global variable is **NOT Supported** in VideoGear API, calling it will result in `AttribueError`. More details can be found [here ➶](../../../bonus/colorspace_manipulation/#source-colorspace-manipulation)
-
     * Any incorrect or None-type value on [`colorspace`](../params/#colorspace) parameter will be skipped automatically.
 
 

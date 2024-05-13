@@ -365,8 +365,6 @@ limitations under the License.
         "buffer_count": 4,
         "controls": {"Brightness": 0.5, "ExposureValue": 2.0},
         "transform": Transform(hflip=1),
-        "exposure_compensation": 15,
-        "sensor": {"output_size": (480, 320)},  # will override `resolution`
         "auto_align_output_config": True,  # auto-align camera configuration
     }
 

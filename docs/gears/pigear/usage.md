@@ -108,7 +108,7 @@ stream.stop()
 
 &nbsp; 
 
-## Using PiGear with Variable Camera Module Properties
+## Using PiGear with Variable Camera Properties
 
 === "New Picamera2 backend"
 
@@ -151,7 +151,7 @@ stream.stop()
 
     !!! example "PiGear also support changing parameter at runtime. Checkout this bonus example [here ➶](../../../help/pigear_ex/#dynamically-adjusting-raspberry-pi-camera-parameters-at-runtime-in-pigear-api)"
 
-    ```python hl_lines="3 9-15"
+    ```python hl_lines="3 9-14"
     # import required libraries
     from vidgear.gears import PiGear
     from libcamera import Transform
@@ -164,7 +164,6 @@ stream.stop()
         "buffer_count": 4,
         "controls": {"Brightness": 0.5, "ExposureValue": 2.0},
         "transform": Transform(hflip=1),
-        "exposure_compensation": 15,
         "sensor": {"output_size": (480, 320)},  # !!! will override `resolution` !!!
         "auto_align_output_size": True,  # auto-align output size
     }
@@ -351,7 +350,6 @@ PiGear can be easily used with WriteGear API directly without any compatibility 
         "buffer_count": 4,
         "controls": {"Brightness": 0.5, "ExposureValue": 2.0},
         "transform": Transform(hflip=1),
-        "exposure_compensation": 15,
         "sensor": {"output_size": (480, 320)},  # will override `resolution`
         "auto_align_output_config": True,  # auto-align camera configuration
     }
