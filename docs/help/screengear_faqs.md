@@ -51,3 +51,28 @@ limitations under the License.
 **Answer:** With `mss` backend, see ScreenGear's [`monitor`](../../gears/screengear/params/#monitor) parameter that sets the index of the monitor to grab a frame from. If its value is `-1`, it will record from all monitors. _More information can be found [here  ➶](https://python-mss.readthedocs.io/examples.html#a-screen-shot-to-grab-them-all)_
 
 &nbsp;
+
+## I'm getting "AttributeError: 'DXCamera' object has no attribute 'is_capturing'" Error?
+
+**Answer:** This is a [well-known error](https://github.com/ra1nty/DXcam/issues/38) in backend `dxcam` library which occurs when you've multiple GPUs on your Windows machine. To workaround this, you need select Internal GPU in settings as follows:
+
+=== "On :fontawesome-brands-windows: Windows 11"
+
+    In **Settings**, go to `System > Display > Graphics` and add your `Python.exe` as _"Desktop App"_, then select _"Power saving"_ as follows:
+    <figure>
+        <img src="../../assets/images/screengear_error11.png" alt="AttributeError: 'DXCamera'" loading="lazy" class="center-small" width="50%" />
+    </figure>
+
+    And finally press **Save** button.  
+
+=== "On :fontawesome-brands-windows: Windows 10"
+
+    In **Settings**, go to `Graphics Settings` and add your `Python.exe` as _"Desktop App"_, then select _"Power saving"_ as follows:
+    
+    <figure>
+        <img src="https://user-images.githubusercontent.com/93147937/199585781-a1ec316d-c6dd-48e8-bf35-1dec1b725071.png" alt="AttributeError: 'DXCamera'" loading="lazy" class="center" />
+    </figure>
+
+    And finally press **Save** button.  
+
+&nbsp;
