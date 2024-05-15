@@ -21,6 +21,7 @@ limitations under the License.
 # import the necessary packages
 import os
 import time
+import contextlib
 import fractions
 import asyncio
 import logging as log
@@ -531,7 +532,7 @@ class WebGear_RTC:
             routes=self.routes,
             middleware=self.middleware,
             exception_handlers=self.__exception_handlers,
-            on_shutdown=[self.__on_shutdown],
+            lifespan=self.__lifespan,
         )
 
     async def __offer(self, request):
@@ -636,16 +637,17 @@ class WebGear_RTC:
             # if does, then do nothing
             return PlainTextResponse("DISABLED")
 
-    async def __on_shutdown(self):
-        """
-        Implements a Callable to be run on application shutdown
-        """
-        # close Video Server
-        self.shutdown()
-        # collects peer RTC connections
-        coros = [pc.close() for pc in self.__pcs]
-        await asyncio.gather(*coros)
-        self.__pcs.clear()
+    @contextlib.asynccontextmanager
+    async def __lifespan(self, context):
+        try:
+            yield
+        finally:
+            # close Video Server
+            self.shutdown()
+            # collects peer RTC connections
+            coros = [pc.close() for pc in self.__pcs]
+            await asyncio.gather(*coros)
+            self.__pcs.clear()
 
     def shutdown(self):
         """

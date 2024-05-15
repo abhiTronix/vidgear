@@ -22,6 +22,7 @@ limitations under the License.
 import os
 import asyncio
 import inspect
+import contextlib
 import numpy as np
 import logging as log
 from os.path import expanduser
@@ -421,7 +422,7 @@ class WebGear:
             routes=self.routes,
             middleware=self.middleware,
             exception_handlers=self.__exception_handlers,
-            on_shutdown=[self.shutdown],
+            lifespan=self.__lifespan,
         )
 
     async def __producer(self):
@@ -534,6 +535,14 @@ class WebGear:
                 status_code=500,
             )
         )
+
+    @contextlib.asynccontextmanager
+    async def __lifespan(self, context):
+        try:
+            yield
+        finally:
+            # close Video Server
+            self.shutdown()
 
     def shutdown(self):
         """

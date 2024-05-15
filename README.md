@@ -515,9 +515,9 @@ from vidgear.gears.asyncio import WebGear
 # various performance tweaks
 options = {
     "frame_size_reduction": 40,
-    "frame_jpeg_quality": 80,
-    "frame_jpeg_optimize": True,
-    "frame_jpeg_progressive": False,
+    "jpeg_compression_quality": 80,
+    "jpeg_compression_fastdct": True,
+    "jpeg_compression_fastupsample": False,
 }
 
 # initialize WebGear app
