@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 
 import os
@@ -41,12 +42,7 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
-@pytest.fixture(scope="module")
-def event_loop():
-    """Create an instance of the default event loop for each test case."""
-    loop = asyncio.SelectorEventLoop()
-    yield loop
-    loop.close()
+pytestmark = pytest.mark.asyncio(scope="module")
 
 
 def return_testvideo_path():
@@ -137,7 +133,7 @@ async def client_iterator(client, data=False):
 # Create a async function made to test bidirectional mode
 async def client_dataframe_iterator(client, data=""):
     # loop over Client's Asynchronous Data and Frame Generator
-    async for (recvd_data, frame) in client.recv_generator():
+    async for recvd_data, frame in client.recv_generator():
         if not (recvd_data is None):
             # {do something with received server recv_data here}
             logger.debug(recvd_data)
@@ -152,7 +148,6 @@ async def client_dataframe_iterator(client, data=""):
         await asyncio.sleep(0)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "pattern",
     [1, 2, 3, 4],
@@ -192,7 +187,6 @@ test_data_class = [
 ]
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize("generator, result", test_data_class)
 async def test_netgear_async_custom_server_generator(generator, result):
     try:
@@ -248,7 +242,6 @@ test_data_class = [
 ]
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "generator, data, options_server, options_client, result",
     test_data_class,
@@ -280,7 +273,6 @@ async def test_netgear_async_bidirectionalmode(
         client.close(skip_loop=True)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "address, port",
     [("172.31.11.15.77", "5555"), ("172.31.11.33.44", "5555"), (None, "5555")],
@@ -331,7 +323,6 @@ async def test_netgear_async_addresses(address, port):
         client.close(skip_loop=True)
 
 
-@pytest.mark.asyncio
 async def test_netgear_async_recv_generator():
     server = None
     try:
@@ -351,7 +342,6 @@ async def test_netgear_async_recv_generator():
             server.close(skip_loop=True)
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "pattern, options",
     [
@@ -366,9 +356,11 @@ async def test_netgear_async_options(pattern, options):
     try:
         # define and launch server
         client = NetGear_Async(
-            source=None
-            if options["bidirectional_mode"] != True
-            else return_testvideo_path(),
+            source=(
+                None
+                if options["bidirectional_mode"] != True
+                else return_testvideo_path()
+            ),
             receive_mode=True,
             timeout=5.0,
             pattern=pattern,
