@@ -304,7 +304,12 @@ class NetGear_Async:
                 import_dependency_safe("uvloop", error="log")
 
         # Retrieve event loop and assign it
-        self.loop = asyncio.get_event_loop()
+        try:
+            self.loop = asyncio.get_running_loop()
+        except RuntimeError:
+            # otherwise create one
+            logger.critical("No running event loop found. Creating a new one.")
+            self.loop = asyncio.new_event_loop()
         # create asyncio queue if bidirectional mode activated
         self.__queue = asyncio.Queue() if self.__bi_mode else None
         # log eventloop for debugging
@@ -331,7 +336,7 @@ class NetGear_Async:
                 "Creating NetGear_Async asynchronous server handler!"
             )
             # create task for Server Handler
-            self.task = asyncio.ensure_future(self.__server_handler())
+            self.task = self.loop.create_task(self.__server_handler())
         # return instance
         return self
 
