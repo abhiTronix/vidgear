@@ -103,7 +103,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 !!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 
-```python hl_lines="9 16 39-52"
+```python linenums="1" hl_lines="9 16 39-52"
 # import required libraries
 from vidgear.gears import NetGear
 from vidgear.gears import CamGear
@@ -176,7 +176,7 @@ Now, Open a terminal on another Client System _(where you want to display the in
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="6 11-17"
+```python linenums="1" hl_lines="6 11-17"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -233,7 +233,7 @@ Finally, Open a terminal on another Client System _(where you want to display th
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="6  11-17"
+```python linenums="1" hl_lines="6  11-17"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -302,7 +302,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -374,7 +374,7 @@ Now, Open a terminal on another Client System _(where you want to display the in
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -430,7 +430,7 @@ Finally, Open a terminal on another Client System _(also, where you want to disp
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -505,77 +505,165 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="47-60"
-# import required libraries
-from vidgear.gears import PiGear
-from vidgear.gears import NetGear
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
 
-# add various Picamera tweak parameters to dictionary
-options = {
-    "hflip": True,
-    "exposure_mode": "auto",
-    "iso": 800,
-    "exposure_compensation": 15,
-    "awb_mode": "horizon",
-    "sensor_mode": 0,
-}
+!!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
-# open pi video stream with defined parameters
-stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
 
-# activate multiclient_mode mode
-options = {"multiclient_mode": True}
+=== "New Picamera2 backend"
 
-# Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters
-server = NetGear(
-    address="192.168.x.x",
-    port=(5577, 5578),
-    protocol="tcp",
-    pattern=1,
-    logging=True,
-    **options
-)  # !!! change following IP address '192.168.x.xxx' with yours !!!
+    ```python linenums="1" hl_lines="47-60"
+    # import required libraries
+    from vidgear.gears import PiGear
+    from vidgear.gears import NetGear
 
-# Define received data dictionary
-data_dict = {}
+    # add various Picamera2 tweak parameters
+    options = {
+        "queue": True,
+        "buffer_count": 4,
+        "controls": {"Brightness": 0.5, "ExposureValue": 2.0},
+        "transform": Transform(hflip=1),
+        "auto_align_output_config": True,  # auto-align camera configuration
+    }
 
-# loop over until KeyBoard Interrupted
-while True:
+    # open pi video stream with defined parameters
+    stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
 
-    try:
-        # read frames from stream
-        frame = stream.read()
+    # activate multiclient_mode mode
+    options = {"multiclient_mode": True}
 
-        # check for frame if Nonetype
-        if frame is None:
+    # Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters
+    server = NetGear(
+        address="192.168.x.x",
+        port=(5577, 5578),
+        protocol="tcp",
+        pattern=1,
+        logging=True,
+        **options
+    )  # !!! change following IP address '192.168.x.xxx' with yours !!!
+
+    # Define received data dictionary
+    data_dict = {}
+
+    # loop over until KeyBoard Interrupted
+    while True:
+
+        try:
+            # read frames from stream
+            frame = stream.read()
+
+            # check for frame if Nonetype
+            if frame is None:
+                break
+
+            # {do something with the frame here}
+
+            # send frame and also receive data from Client(s)
+            recv_data = server.send(frame)
+
+            # check if valid data received
+            if not (recv_data is None):
+                # extract unique port address and its respective data
+                unique_address, data = recv_data
+                # update the extracted data in the data dictionary
+                data_dict[unique_address] = data
+
+            if data_dict:
+                # print data just received from Client(s)
+                for key, value in data_dict.items():
+                    print("Client at port {} said: {}".format(key, value))
+
+        except KeyboardInterrupt:
             break
 
-        # {do something with the frame here}
+    # safely close video stream
+    stream.stop()
 
-        # send frame and also receive data from Client(s)
-        recv_data = server.send(frame)
+    # safely close server
+    server.close()
+    ```
+    
+=== "Legacy Picamera backend"
 
-        # check if valid data received
-        if not (recv_data is None):
-            # extract unique port address and its respective data
-            unique_address, data = recv_data
-            # update the extracted data in the data dictionary
-            data_dict[unique_address] = data
+    ??? info "Under the hood, Backend PiGear API _(version `0.3.3` onwards)_ prioritizes the new [`picamera2`](https://github.com/raspberrypi/picamera2) API backend."
 
-        if data_dict:
-            # print data just received from Client(s)
-            for key, value in data_dict.items():
-                print("Client at port {} said: {}".format(key, value))
+        However, the API seamlessly switches to the legacy [`picamera`](https://picamera.readthedocs.io/en/release-1.13/index.html) backend, if the `picamera2` library is unavailable or not installed.
+        
+        !!! tip "It is advised to enable logging(`logging=True`) to see which backend is being used."
 
-    except KeyboardInterrupt:
-        break
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
 
-# safely close video stream
-stream.stop()
+    ```python linenums="1" hl_lines="47-60"
+    # import required libraries
+    from vidgear.gears import PiGear
+    from vidgear.gears import NetGear
 
-# safely close server
-server.close()
-```
+    # add various Picamera tweak parameters to dictionary
+    options = {
+        "hflip": True,
+        "exposure_mode": "auto",
+        "iso": 800,
+        "exposure_compensation": 15,
+        "awb_mode": "horizon",
+        "sensor_mode": 0,
+    }
+
+    # open pi video stream with defined parameters
+    stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
+
+    # activate multiclient_mode mode
+    options = {"multiclient_mode": True}
+
+    # Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters
+    server = NetGear(
+        address="192.168.x.x",
+        port=(5577, 5578),
+        protocol="tcp",
+        pattern=1,
+        logging=True,
+        **options
+    )  # !!! change following IP address '192.168.x.xxx' with yours !!!
+
+    # Define received data dictionary
+    data_dict = {}
+
+    # loop over until KeyBoard Interrupted
+    while True:
+
+        try:
+            # read frames from stream
+            frame = stream.read()
+
+            # check for frame if Nonetype
+            if frame is None:
+                break
+
+            # {do something with the frame here}
+
+            # send frame and also receive data from Client(s)
+            recv_data = server.send(frame)
+
+            # check if valid data received
+            if not (recv_data is None):
+                # extract unique port address and its respective data
+                unique_address, data = recv_data
+                # update the extracted data in the data dictionary
+                data_dict[unique_address] = data
+
+            if data_dict:
+                # print data just received from Client(s)
+                for key, value in data_dict.items():
+                    print("Client at port {} said: {}".format(key, value))
+
+        except KeyboardInterrupt:
+            break
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close server
+    server.close()
+    ```
 
 &nbsp;
 
@@ -588,7 +676,7 @@ Now, Open a terminal on another Client System _(where you want to display the in
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="27"
+```python linenums="1" hl_lines="27"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -649,7 +737,7 @@ Finally, Open a terminal on another Client System _(also, where you want to disp
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 
-```python hl_lines="27"
+```python linenums="1" hl_lines="27"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -732,83 +820,178 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="19 48-64"
-# import required libraries
-from vidgear.gears import PiGear
-from vidgear.gears import NetGear
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
 
-# add various Picamera tweak parameters to dictionary
-options = {
-    "hflip": True,
-    "exposure_mode": "auto",
-    "iso": 800,
-    "exposure_compensation": 15,
-    "awb_mode": "horizon",
-    "sensor_mode": 0,
-}
+!!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
-# open pi video stream with defined parameters
-stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
 
-# activate both multiclient and bidirectional modes
-options = {"multiclient_mode": True, "bidirectional_mode": True}
+=== "New Picamera2 backend"
 
-# Define NetGear Client at given IP address and assign list/tuple of 
-# all unique Server((5577,5578) in our case) and other parameters
-server = NetGear(
-    address="192.168.x.x",
-    port=(5577, 5578),
-    protocol="tcp",
-    pattern=1,
-    logging=True,
-    **options
-)  # !!! change following IP address '192.168.x.xxx' with yours !!!
+    ```python linenums="1" hl_lines="19 48-64"
+    # import required libraries
+    from vidgear.gears import PiGear
+    from vidgear.gears import NetGear
+    from libcamera import Transform
 
-# Define received data dictionary
-data_dict = {}
+    # add various Picamera2 tweak parameters
+    options = {
+        "queue": True,
+        "buffer_count": 4,
+        "controls": {"Brightness": 0.5, "ExposureValue": 2.0},
+        "transform": Transform(hflip=1),
+        "auto_align_output_config": True,  # auto-align camera configuration
+    }
 
-# loop over until KeyBoard Interrupted
-while True:
+    # open pi video stream with defined parameters
+    stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
 
-    try:
-        # read frames from stream
-        frame = stream.read()
+    # activate both multiclient and bidirectional modes
+    options = {"multiclient_mode": True, "bidirectional_mode": True}
 
-        # check for frame if Nonetype
-        if frame is None:
+    # Define NetGear Client at given IP address and assign list/tuple of 
+    # all unique Server((5577,5578) in our case) and other parameters
+    server = NetGear(
+        address="192.168.x.x",
+        port=(5577, 5578),
+        protocol="tcp",
+        pattern=1,
+        logging=True,
+        **options
+    )  # !!! change following IP address '192.168.x.xxx' with yours !!!
+
+    # Define received data dictionary
+    data_dict = {}
+
+    # loop over until KeyBoard Interrupted
+    while True:
+
+        try:
+            # read frames from stream
+            frame = stream.read()
+
+            # check for frame if Nonetype
+            if frame is None:
+                break
+
+            # {do something with the frame here}
+
+            # prepare data to be sent(a simple text in our case)
+            target_data = "Hello, I am a Server."
+
+            # send frame & data and also receive data from Client(s)
+            recv_data = server.send(frame, message=target_data) # (1)
+
+            # check if valid data received
+            if not (recv_data is None):
+                # extract unique port address and its respective data
+                unique_address, data = recv_data
+                # update the extracted data in the data dictionary
+                data_dict[unique_address] = data
+
+            if data_dict:
+                # print data just received from Client(s)
+                for key, value in data_dict.items():
+                    print("Client at port {} said: {}".format(key, value))
+
+        except KeyboardInterrupt:
             break
 
-        # {do something with the frame here}
+    # safely close video stream
+    stream.stop()
 
-        # prepare data to be sent(a simple text in our case)
-        target_data = "Hello, I am a Server."
+    # safely close server
+    server.close()
+    ```
 
-        # send frame & data and also receive data from Client(s)
-        recv_data = server.send(frame, message=target_data) # (1)
+    1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted as `target_data` in `message` parameter.
+    
+=== "Legacy Picamera backend"
 
-        # check if valid data received
-        if not (recv_data is None):
-            # extract unique port address and its respective data
-            unique_address, data = recv_data
-            # update the extracted data in the data dictionary
-            data_dict[unique_address] = data
+    ??? info "Under the hood, Backend PiGear API _(version `0.3.3` onwards)_ prioritizes the new [`picamera2`](https://github.com/raspberrypi/picamera2) API backend."
 
-        if data_dict:
-            # print data just received from Client(s)
-            for key, value in data_dict.items():
-                print("Client at port {} said: {}".format(key, value))
+        However, the API seamlessly switches to the legacy [`picamera`](https://picamera.readthedocs.io/en/release-1.13/index.html) backend, if the `picamera2` library is unavailable or not installed.
+        
+        !!! tip "It is advised to enable logging(`logging=True`) to see which backend is being used."
 
-    except KeyboardInterrupt:
-        break
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
 
-# safely close video stream
-stream.stop()
+    ```python linenums="1" hl_lines="19 48-64"
+    # import required libraries
+    from vidgear.gears import PiGear
+    from vidgear.gears import NetGear
 
-# safely close server
-server.close()
-```
+    # add various Picamera tweak parameters to dictionary
+    options = {
+        "hflip": True,
+        "exposure_mode": "auto",
+        "iso": 800,
+        "exposure_compensation": 15,
+        "awb_mode": "horizon",
+        "sensor_mode": 0,
+    }
 
-1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted as `target_data` in `message` parameter.
+    # open pi video stream with defined parameters
+    stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
+
+    # activate both multiclient and bidirectional modes
+    options = {"multiclient_mode": True, "bidirectional_mode": True}
+
+    # Define NetGear Client at given IP address and assign list/tuple of 
+    # all unique Server((5577,5578) in our case) and other parameters
+    server = NetGear(
+        address="192.168.x.x",
+        port=(5577, 5578),
+        protocol="tcp",
+        pattern=1,
+        logging=True,
+        **options
+    )  # !!! change following IP address '192.168.x.xxx' with yours !!!
+
+    # Define received data dictionary
+    data_dict = {}
+
+    # loop over until KeyBoard Interrupted
+    while True:
+
+        try:
+            # read frames from stream
+            frame = stream.read()
+
+            # check for frame if Nonetype
+            if frame is None:
+                break
+
+            # {do something with the frame here}
+
+            # prepare data to be sent(a simple text in our case)
+            target_data = "Hello, I am a Server."
+
+            # send frame & data and also receive data from Client(s)
+            recv_data = server.send(frame, message=target_data) # (1)
+
+            # check if valid data received
+            if not (recv_data is None):
+                # extract unique port address and its respective data
+                unique_address, data = recv_data
+                # update the extracted data in the data dictionary
+                data_dict[unique_address] = data
+
+            if data_dict:
+                # print data just received from Client(s)
+                for key, value in data_dict.items():
+                    print("Client at port {} said: {}".format(key, value))
+
+        except KeyboardInterrupt:
+            break
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close server
+    server.close()
+    ```
+
+    1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted as `target_data` in `message` parameter.
 
 
 &nbsp;
@@ -822,7 +1005,7 @@ Now, Open a terminal on another Client System _(where you want to display the in
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="6 23-34 42-44"
+```python linenums="1" hl_lines="6 23-34 42-44"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -894,7 +1077,7 @@ Finally, Open a terminal on another Client System _(also, where you want to disp
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 
-```python hl_lines="6 23-34 42-44"
+```python linenums="1" hl_lines="6 23-34 42-44"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2

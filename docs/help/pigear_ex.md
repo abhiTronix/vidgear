@@ -47,7 +47,7 @@ limitations under the License.
 
     !!! tip "You could also instead define [`colorspace="COLOR_YUV420p2RGB"`](../params/#colorspace) parameter in PiGear API for converting it back to `BGR` similarly."
 
-    ```python hl_lines="8 27"
+    ```python linenums="1" hl_lines="8 27"
     # import required libraries
     from vidgear.gears import PiGear
     import cv2
@@ -103,7 +103,7 @@ limitations under the License.
 
     !!! tip "You could also instead define [`colorspace="COLOR_YUV2BGR_YUYV"`](../params/#colorspace) parameter in PiGear API for converting it back to `BGR` similarly."
 
-    ```python hl_lines="8 27"
+    ```python linenums="1" hl_lines="8 27"
     # import required libraries
     from vidgear.gears import PiGear
     import cv2
@@ -208,7 +208,7 @@ limitations under the License.
         stream.stop()
         ```
 
-    ```python hl_lines="7 37"
+    ```python linenums="1" hl_lines="7 37"
     # import required libraries
     from vidgear.gears import PiGear
     import cv2
@@ -266,7 +266,7 @@ limitations under the License.
 
     In this example we will set initial Camera Module's `brightness` value `80` _(brighter)_, and will change it `30` _(darker)_ when ++"Z"++ key is pressed at runtime:
 
-    ```python hl_lines="7 37"
+    ```python linenums="1" hl_lines="7 37"
     # import required libraries
     from vidgear.gears import PiGear
     import cv2
@@ -352,7 +352,7 @@ limitations under the License.
 
     !!! alert "This example assumes a Camera Module is connected at index `1`, and some other camera connected at index `0` on your Raspberry Pi."
 
-    ```python hl_lines="19"
+    ```python linenums="1" hl_lines="19"
     # import required libraries
     from vidgear.gears import PiGear
     from libcamera import Transform
@@ -413,7 +413,7 @@ limitations under the License.
 
     !!! alert "This example assumes a Camera Module is connected at index `1` on your Raspberry Pi."
 
-    ```python hl_lines="17"
+    ```python linenums="1" hl_lines="17"
     # import required libraries
     from vidgear.gears import PiGear
     import cv2

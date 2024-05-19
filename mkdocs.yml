@@ -55,7 +55,7 @@ theme:
   palette:
     - media: "(prefers-color-scheme)"
       toggle:
-        icon: material/weather-sunny-off
+        icon: material/weather-hazy
         name: Switch to light mode
     # Light mode
     - media: "(prefers-color-scheme: light)"
@@ -72,7 +72,7 @@ theme:
       accent: orange
       toggle:
         icon: material/weather-night
-        name: Switch to light mode
+        name: Switch to system mode
   font:
     text: Source Sans 3
     code: Fira Code

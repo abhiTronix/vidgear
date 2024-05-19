@@ -31,7 +31,7 @@ limitations under the License.
 
 Following is the bare-minimum code you need to access CamGear API with VideoGear:
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import VideoGear
 import cv2
@@ -86,7 +86,7 @@ Following is the bare-minimum code you need to access PiGear API with VideoGear:
 
 !!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this API, otherwise nothing will work."
 
-```python hl_lines="6"
+```python linenums="1" hl_lines="6"
 # import required libraries
 from vidgear.gears import VideoGear
 import cv2
@@ -133,7 +133,7 @@ The usage example is as follows:
 
 !!! warning "The stabilizer might be slower for High-Quality/Resolution videos-frames."
 
-```python hl_lines="7"
+```python linenums="1" hl_lines="7"
 # import required libraries
 from vidgear.gears import VideoGear
 import numpy as np
@@ -181,7 +181,7 @@ The usage example of VideoGear API with Variable Camera Properties is as follows
 
 !!! tip "All the supported Source Tweak Parameters can be found [here ➶](../../camgear/advanced/source_params/#source-tweak-parameters-for-camgear-api)"
 
-```python hl_lines="15"
+```python linenums="1" hl_lines="15"
 # import required libraries
 from vidgear.gears import VideoGear
 import cv2
@@ -242,7 +242,7 @@ The usage example of VideoGear API with Variable Camera Properties is as follows
 
 === "New Picamera2 backend"
 
-    ```python hl_lines="3 9-13"
+    ```python linenums="1" hl_lines="3 9-13"
     # import required libraries
     from vidgear.gears import VideoGear
     from libcamera import Transform
@@ -298,7 +298,7 @@ The usage example of VideoGear API with Variable Camera Properties is as follows
 
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params) user-defined optional parameter boolean attribute."
 
-    ```python hl_lines="8-13"
+    ```python linenums="1" hl_lines="8-13"
     # import required libraries
     from vidgear.gears import VideoGear
     import cv2
@@ -360,7 +360,7 @@ VideoGear API also supports **Colorspace Manipulation** but **NOT Direct** like 
 In following example code, we will convert source colorspace to [**HSV**](https://en.wikipedia.org/wiki/HSL_and_HSV) on initialization:
 
 
-```python hl_lines="6"
+```python linenums="1" hl_lines="6"
 # import required libraries
 from vidgear.gears import VideoGear
 import cv2

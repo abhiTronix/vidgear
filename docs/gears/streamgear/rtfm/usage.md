@@ -50,7 +50,7 @@ Following is the bare-minimum code you need to get started with StreamGear API i
 
 === "DASH"
 
-    ```python
+    ```python linenums="1"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -99,7 +99,7 @@ Following is the bare-minimum code you need to get started with StreamGear API i
 
 === "HLS"
 
-    ```python
+    ```python linenums="1"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -164,7 +164,7 @@ You can easily activate ==Low-latency Livestreaming in Real-time Frames Mode==, 
 
     !!! alert "After every few chunks _(equal to the sum of `-window_size` & `-extra_window_size` values)_, all chunks will be overwritten in Live-Streaming. Thereby, since newer chunks in manifest will contain NO information of any older ones, and therefore resultant DASH stream will play only the most recent frames."
 
-    ```python hl_lines="11"
+    ```python linenums="1" hl_lines="11"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -221,7 +221,7 @@ You can easily activate ==Low-latency Livestreaming in Real-time Frames Mode==, 
 
     !!! alert "After every few chunks _(equal to the sum of `-hls_init_time` & `-hls_time` values)_, all chunks will be overwritten in Live-Streaming. Thereby, since newer chunks in playlist will contain NO information of any older ones, and therefore resultant HLS stream will play only the most recent frames."
 
-    ```python hl_lines="11"
+    ```python linenums="1" hl_lines="11"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -281,7 +281,7 @@ The complete usage example is as follows:
 
 === "DASH"
 
-    ```python hl_lines="28"
+    ```python linenums="1" hl_lines="28"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -331,7 +331,7 @@ The complete usage example is as follows:
 
 === "HLS"
 
-    ```python hl_lines="28"
+    ```python linenums="1" hl_lines="28"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -393,7 +393,7 @@ In this example, we will retrieve framerate from webcam video-stream, and set it
 
 === "DASH"
 
-    ```python hl_lines="10"
+    ```python linenums="1" hl_lines="10"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -445,7 +445,7 @@ In this example, we will retrieve framerate from webcam video-stream, and set it
 
 === "HLS"
 
-    ```python hl_lines="10"
+    ```python linenums="1" hl_lines="10"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -507,7 +507,7 @@ The complete usage example is as follows:
 
 === "DASH"
 
-    ```python
+    ```python linenums="1"
     # import required libraries
     from vidgear.gears import StreamGear
     import cv2
@@ -556,7 +556,7 @@ The complete usage example is as follows:
 
 === "HLS"
 
-    ```python
+    ```python linenums="1"
     # import required libraries
     from vidgear.gears import StreamGear
     import cv2
@@ -626,7 +626,7 @@ The complete example is as follows:
 
 === "DASH"
 
-    ```python hl_lines="11-15"
+    ```python linenums="1" hl_lines="11-15"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -684,7 +684,7 @@ The complete example is as follows:
 
 === "HLS"
 
-    ```python hl_lines="11-15"
+    ```python linenums="1" hl_lines="11-15"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -757,7 +757,7 @@ The complete example is as follows:
 
 === "DASH"
 
-    ```python hl_lines="16-17"
+    ```python linenums="1" hl_lines="16-17"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -817,7 +817,7 @@ The complete example is as follows:
 
 === "HLS"
 
-    ```python hl_lines="16-17"
+    ```python linenums="1" hl_lines="16-17"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -922,7 +922,7 @@ The complete example is as follows:
 
         - [x] **Specify Sound Card:** Then, you can specify your located soundcard in StreamGear as follows:
 
-            ```python
+            ```python linenums="1"
             # assign appropriate input audio-source device and demuxer device and demuxer
             stream_params = {"-audio": ["-f","dshow", "-i", "audio=Microphone (USB2.0 Camera)"]}
             ```
@@ -962,7 +962,7 @@ The complete example is as follows:
 
             !!! info "The easiest thing to do is to reference sound card directly, namely "card 0" (Intel ICH5) and "card 1" (Microphone on the USB web cam), as `hw:0` or `hw:1`"
 
-            ```python
+            ```python linenums="1"
             # assign appropriate input audio-source device and demuxer device and demuxer 
             stream_params = {"-audio": ["-f","alsa", "-i", "hw:1"]}
             ```
@@ -998,7 +998,7 @@ The complete example is as follows:
 
         - [x] **Specify Sound Card:** Then, you can specify your located soundcard in StreamGear as follows:
 
-            ```python
+            ```python linenums="1"
             # assign appropriate input audio-source device and demuxer
             stream_params = {"-audio": ["-f","avfoundation", "-audio_device_index", "0"]}
             ```
@@ -1015,7 +1015,7 @@ The complete example is as follows:
 
 === "DASH"
 
-    ```python hl_lines="18-24"
+    ```python linenums="1" hl_lines="18-24"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -1080,7 +1080,7 @@ The complete example is as follows:
 
 === "HLS"
 
-    ```python hl_lines="18-24"
+    ```python linenums="1" hl_lines="18-24"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -1171,7 +1171,7 @@ In this example, we will be using `h264_vaapi` as our hardware encoder and also 
 
 === "DASH"
 
-    ```python hl_lines="16-18"
+    ```python linenums="1" hl_lines="16-18"
     # import required libraries
     from vidgear.gears import VideoGear
     from vidgear.gears import StreamGear
@@ -1232,7 +1232,7 @@ In this example, we will be using `h264_vaapi` as our hardware encoder and also 
 
 === "HLS"
 
-    ```python hl_lines="16-18"
+    ```python linenums="1" hl_lines="16-18"
     # import required libraries
     from vidgear.gears import VideoGear
     from vidgear.gears import StreamGear

@@ -40,7 +40,7 @@ limitations under the License.
 
 Following is the bare-minimum code you need to get started with WriteGear API in Non-Compression Mode:
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -97,7 +97,7 @@ In Non-Compression mode, WriteGear API provides flexible control over [**OpenCV'
 
 The complete usage example is as follows:
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import WriteGear
@@ -159,7 +159,7 @@ writer.close()
 
 You can easily use WriterGear API directly with any Video Processing library(_For e.g OpenCV itself_) in Non-Compression Mode. The complete usage example is as follows:
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import WriteGear
 import cv2
@@ -227,7 +227,7 @@ writer.close()
 
 In this example we will be constructing GStreamer pipeline to write video-frames into a file(`foo.mp4`) at 1M video-bitrate.
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import WriteGear
 import cv2

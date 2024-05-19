@@ -44,7 +44,7 @@ Following is the bare-minimum code you need to get started with StreamGear API i
 
 === "DASH"
 
-    ```python
+    ```python linenums="1"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -60,7 +60,7 @@ Following is the bare-minimum code you need to get started with StreamGear API i
 
 === "HLS"
 
-    ```python
+    ```python linenums="1"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -92,7 +92,7 @@ You can easily activate ==Low-latency Livestreaming in Single-Source Mode== - ch
 
     !!! alert "After every few chunks _(equal to the sum of `-window_size` & `-extra_window_size` values)_, all chunks will be overwritten in Live-Streaming. Thereby, since newer chunks in manifest will contain NO information of any older ones, and therefore resultant DASH stream will play only the most recent frames."
 
-    ```python hl_lines="5"
+    ```python linenums="1" hl_lines="5"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -114,7 +114,7 @@ You can easily activate ==Low-latency Livestreaming in Single-Source Mode== - ch
 
     !!! alert "After every few chunks _(equal to the sum of `-hls_init_time` & `-hls_time` values)_, all chunks will be overwritten in Live-Streaming. Thereby, since newer chunks in playlist will contain NO information of any older ones, and therefore resultant HLS stream will play only the most recent frames."
 
-    ```python hl_lines="5"
+    ```python linenums="1" hl_lines="5"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -153,7 +153,7 @@ The complete example is as follows:
 
 === "DASH"
 
-    ```python hl_lines="6-12"
+    ```python linenums="1" hl_lines="6-12"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -177,7 +177,7 @@ The complete example is as follows:
 
 === "HLS"
 
-    ```python hl_lines="6-12"
+    ```python linenums="1" hl_lines="6-12"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -214,7 +214,7 @@ The complete example is as follows:
 
 === "DASH"
 
-    ```python hl_lines="12"
+    ```python linenums="1" hl_lines="12"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -238,7 +238,7 @@ The complete example is as follows:
 
 === "HLS"
 
-    ```python hl_lines="12"
+    ```python linenums="1" hl_lines="12"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -279,7 +279,7 @@ For this example, let us use our own [H.265/HEVC](https://trac.ffmpeg.org/wiki/E
 
 === "DASH"
 
-    ```python hl_lines="6-10 15-17"
+    ```python linenums="1" hl_lines="6-10 15-17"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -309,7 +309,7 @@ For this example, let us use our own [H.265/HEVC](https://trac.ffmpeg.org/wiki/E
 
 === "HLS"
 
-    ```python hl_lines="6-10 15-17"
+    ```python linenums="1" hl_lines="6-10 15-17"
     # import required libraries
     from vidgear.gears import StreamGear
 

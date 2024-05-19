@@ -71,7 +71,7 @@ Following is the bare-minimum code you need to get started with PiGear API:
         export LIBCAMERA_LOG_LEVELS=2
         ```
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import PiGear
 import cv2
@@ -151,7 +151,7 @@ stream.stop()
 
     !!! example "PiGear also support changing parameter at runtime. Checkout this bonus example [here ➶](../../../help/pigear_ex/#dynamically-adjusting-raspberry-pi-camera-parameters-at-runtime-in-pigear-api)"
 
-    ```python hl_lines="3 9-14"
+    ```python linenums="1" hl_lines="3 9-14"
     # import required libraries
     from vidgear.gears import PiGear
     from libcamera import Transform
@@ -212,7 +212,7 @@ stream.stop()
 
     !!! example "PiGear also support changing parameter at runtime. Checkout this bonus example [here ➶](../../../help/pigear_ex/#dynamically-adjusting-raspberry-pi-camera-parameters-at-runtime-in-pigear-api)"
 
-    ```python hl_lines="8-13"
+    ```python linenums="1" hl_lines="8-13"
     # import required libraries
     from vidgear.gears import PiGear
     import cv2
@@ -272,7 +272,7 @@ In following example code, we will start with [**HSV**](https://en.wikipedia.org
 !!! warning "Any incorrect or None-Type value will immediately revert the colorspace to default _(i.e. `BGR`)_."
 
 
-```python hl_lines="9 35 39 43"
+```python linenums="1" hl_lines="9 35 39 43"
 # import required libraries
 from vidgear.gears import PiGear
 import cv2
@@ -336,7 +336,7 @@ PiGear can be easily used with WriteGear API directly without any compatibility 
 
 === "New Picamera2 backend"
 
-    ```python
+    ```python linenums="1"
     # import required libraries
     from vidgear.gears import PiGear
     from vidgear.gears import WriteGear
@@ -406,7 +406,7 @@ PiGear can be easily used with WriteGear API directly without any compatibility 
 
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
 
-    ```python
+    ```python linenums="1"
     # import required libraries
     from vidgear.gears import PiGear
     from vidgear.gears import WriteGear

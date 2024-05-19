@@ -239,7 +239,7 @@ Open a terminal on Client System _(A Regular PC where you want to display the in
 
 !!! info "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="7"
+```python linenums="1" hl_lines="7"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -292,7 +292,7 @@ Now, Open the terminal on Remote Server System _(A Raspberry Pi with a webcam co
 
 !!! info "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="8-9 17"
+```python linenums="1" hl_lines="8-9 17"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear

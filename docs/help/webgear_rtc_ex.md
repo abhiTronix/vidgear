@@ -37,7 +37,7 @@ Here's a bare-minimum example of using WebGear_RTC API with the Raspberry Pi cam
 
 === "New Picamera2 backend"
 
-    ```python
+    ```python linenums="1" hl_lines="19"
     # import libs
     import uvicorn
     from libcamera import Transform
@@ -76,7 +76,7 @@ Here's a bare-minimum example of using WebGear_RTC API with the Raspberry Pi cam
 
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
 
-    ```python
+    ```python linenums="1" hl_lines="18"
     # import libs
     import uvicorn
     from vidgear.gears.asyncio import WebGear_RTC
@@ -110,7 +110,7 @@ Here's a bare-minimum example of using WebGear_RTC API with the Raspberry Pi cam
  
 Here's an example of using WebGear_RTC API with real-time Video Stabilization enabled:
 
-```python
+```python linenums="1" hl_lines="11"
 # import libs
 import uvicorn
 from vidgear.gears.asyncio import WebGear_RTC
@@ -139,7 +139,7 @@ In this example, we'll be displaying two video feeds side-by-side simultaneously
 ??? new "New in v0.2.4" 
     This example was added in `v0.2.4`.
 
-```python hl_lines="10-22 26-92 97-101"
+```python linenums="1" hl_lines="10-22 26-92 97-101"
 # import necessary libs
 import uvicorn, cv2
 import numpy as np
