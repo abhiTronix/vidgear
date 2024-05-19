@@ -22,13 +22,11 @@ limitations under the License.
 
 import os
 import cv2
-import sys
 import queue
 import platform
 import numpy as np
 import pytest
 import asyncio
-import functools
 import logging as log
 import tempfile
 
@@ -42,7 +40,13 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
-pytestmark = pytest.mark.asyncio(scope="module")
+@pytest.fixture(scope="module")
+def event_loop_policy(request):
+    if platform.system() == "Windows":
+        logger.critical("Setting WindowsSelectorEventLoopPolicy!!!")
+        return asyncio.WindowsSelectorEventLoopPolicy()
+    else:
+        return asyncio.DefaultEventLoopPolicy()
 
 
 def return_testvideo_path():
@@ -152,6 +156,7 @@ async def client_dataframe_iterator(client, data=""):
     "pattern",
     [1, 2, 3, 4],
 )
+@pytest.mark.asyncio(scope="module")
 async def test_netgear_async_playback(pattern):
     try:
         # define and launch Client with `receive_mode = True`
@@ -187,6 +192,7 @@ test_data_class = [
 ]
 
 
+@pytest.mark.asyncio(scope="module")
 @pytest.mark.parametrize("generator, result", test_data_class)
 async def test_netgear_async_custom_server_generator(generator, result):
     try:
@@ -242,6 +248,7 @@ test_data_class = [
 ]
 
 
+@pytest.mark.asyncio(scope="module")
 @pytest.mark.parametrize(
     "generator, data, options_server, options_client, result",
     test_data_class,
@@ -273,6 +280,7 @@ async def test_netgear_async_bidirectionalmode(
         client.close(skip_loop=True)
 
 
+@pytest.mark.asyncio(scope="module")
 @pytest.mark.parametrize(
     "address, port",
     [("172.31.11.15.77", "5555"), ("172.31.11.33.44", "5555"), (None, "5555")],
@@ -323,6 +331,7 @@ async def test_netgear_async_addresses(address, port):
         client.close(skip_loop=True)
 
 
+@pytest.mark.asyncio(scope="module")
 async def test_netgear_async_recv_generator():
     server = None
     try:
@@ -342,6 +351,7 @@ async def test_netgear_async_recv_generator():
             server.close(skip_loop=True)
 
 
+@pytest.mark.asyncio(scope="module")
 @pytest.mark.parametrize(
     "pattern, options",
     [

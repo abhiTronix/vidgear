@@ -237,6 +237,35 @@ class NetGear_Async:
             # clean
             del options["bidirectional_mode"]
 
+        # Setup and assign event loop policy
+        if platform.system() == "Windows":
+            # On Windows, VidGear requires the ``WindowsSelectorEventLoop``, but Python 3.8 and above,
+            # defaults to an ``ProactorEventLoop`` loop that is not compatible with it. Thereby,
+            # we had to set it manually.
+            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+        else:
+            if not (uvloop is None):
+                # Latest uvloop eventloop is only available for UNIX machines.
+                asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+            else:
+                # log if not present
+                import_dependency_safe("uvloop", error="log")
+
+        # Retrieve event loop and assign it
+        try:
+            self.loop = asyncio.get_running_loop()
+        except RuntimeError:
+            # otherwise create one
+            logger.critical("No running event loop found. Creating a new one.")
+            self.loop = asyncio.new_event_loop()
+
+        # log eventloop for debugging
+        self.__logging and logger.info(
+            "Using ``{}`` event loop for this process.".format(
+                self.loop.__class__.__name__
+            )
+        )
+
         # define messaging asynchronous Context
         self.__msg_context = zmq.asyncio.Context()
 
@@ -288,36 +317,8 @@ class NetGear_Async:
             # add server task handler
             self.task = None
 
-        # Retrieve event loop and assign it
-        try:
-            self.loop = asyncio.get_running_loop()
-        except RuntimeError:
-            # otherwise create one
-            logger.critical("No running event loop found. Creating a new one.")
-            self.loop = asyncio.new_event_loop()
-
-        # Setup and assign event loop policy
-        if platform.system() == "Windows":
-            # On Windows, VidGear requires the ``WindowsSelectorEventLoop``, but Python 3.8 and above,
-            # defaults to an ``ProactorEventLoop`` loop that is not compatible with it. Thereby,
-            # we had to set it manually.
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        else:
-            if not (uvloop is None):
-                # Latest uvloop eventloop is only available for UNIX machines.
-                asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-            else:
-                # log if not present
-                import_dependency_safe("uvloop", error="log")
-
         # create asyncio queue if bidirectional mode activated
         self.__queue = asyncio.Queue() if self.__bi_mode else None
-        # log eventloop for debugging
-        self.__logging and logger.info(
-            "Using `{}` event loop for this process.".format(
-                self.loop.__class__.__name__
-            )
-        )
 
     def launch(self):
         """
