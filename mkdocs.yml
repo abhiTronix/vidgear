@@ -22,7 +22,7 @@ site_description: >-
 # Repository
 repo_name: abhiTronix/vidgear
 repo_url: https://github.com/abhiTronix/vidgear
-edit_uri: ""
+edit_uri: edit/testing/docs/
 
 # Copyright
 copyright: Copyright &copy; 2019 Abhishek Thakur(@abhiTronix)
@@ -33,8 +33,8 @@ theme:
   custom_dir: docs/overrides
 
   # Default values, taken from mkdocs_theme.yml
-  language: en
   features:
+    - announce.dismiss
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.top
@@ -48,7 +48,15 @@ theme:
     - content.code.copy
     - content.tabs.link
     - content.footnote.tooltips
+    - content.action.view
+    - content.action.edit
+    - content.tooltips
+    - toc.follow
   palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/weather-sunny-off
+        name: Switch to light mode
     # Light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -106,7 +114,10 @@ plugins:
   - exclude:
       glob:
         - overrides/assets/README.md
-  - git-authors
+
+# Hooks
+hooks:
+  - docs/overrides/hooks/js_hook.py
 
 # Logging
 validation:
@@ -162,32 +173,30 @@ markdown_extensions:
   - meta
   - toc:
       permalink: true
-  - codehilite:
-      guess_lang: false
-  - pymdownx.arithmatex
+
+  # Python Markdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
   - pymdownx.betterem:
       smart_enable: all
   - pymdownx.caret
-  - pymdownx.critic
   - pymdownx.details
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
-  - pymdownx.inlinehilite
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
       pygments_lang_class: true
+  - pymdownx.inlinehilite
   - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
   - pymdownx.magiclink:
       normalize_issue_symbols: true
       repo_url_shorthand: true
       user: abhiTronix
       repo: vidgear
-  - pymdownx.mark
-  - pymdownx.smartsymbols
-  - pymdownx.snippets:
-      check_paths: true
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
@@ -198,9 +207,6 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde
-  - pymdownx.striphtml:
-      strip_comments: true
-  - pymdownx.magiclink
 
 # Page tree
 nav:
