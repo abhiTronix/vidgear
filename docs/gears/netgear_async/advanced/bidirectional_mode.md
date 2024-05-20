@@ -409,6 +409,8 @@ Now, Open the terminal on another Server System _(a Raspberry Pi with Camera Mod
         
         !!! tip "It is advised to enable logging(`logging=True`) to see which backend is being used."
 
+        !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
+
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
 
 

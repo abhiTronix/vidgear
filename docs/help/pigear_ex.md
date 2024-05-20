@@ -215,7 +215,7 @@ limitations under the License.
 
     # formulate initial configurational parameters
     # set brightness to -0.5 (dark)
-    options = "controls": {"Brightness": -0.5}
+    options = {"controls": {"Brightness": -0.5}}
 
     # open pi video stream with these parameters
     stream = PiGear(logging=True, **options).start() 
@@ -261,6 +261,8 @@ limitations under the License.
     ???+ danger "PiGear API switches to the legacy `picamera`backend if the `picamera2` library is unavailable."
     
         It is advised to enable logging(`logging=True`) to see which backend is being used.
+
+        !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params/#options) optional parameter boolean attribute."
 
@@ -348,23 +350,28 @@ limitations under the License.
 
     !!! info "The PiGear API can accurately differentiate between USB and Raspberry Pi camera modules by utilizing the camera's metadata."
 
-    In this example, we will select the Camera Module connected at index `1` on the Raspberry Pi as the primary source for extracting frames in PiGear API:
+    In this example, we will select the USB Camera connected at index `1` on the Raspberry Pi as the primary source for extracting frames in PiGear API:
 
-    !!! alert "This example assumes a Camera Module is connected at index `1`, and some other camera connected at index `0` on your Raspberry Pi."
+    ??? failure "Limited support for USB Cameras"
 
-    ```python linenums="1" hl_lines="19"
+        This example also works with USB Cameras, However:
+
+        - Users should assume that features such as: **Camera controls** (`"controls"`), **Transformations** (`"transform"`), **Queue** (`"queue"`) , and **Buffer Count** (`"buffer_count"`) that are supported on Raspberry Pi cameras, and so forth, are not available on USB Cameras. 
+        - Hot-plugging of USB cameras is also **NOT** supported - PiGear API should be completely shut down and restarted when cameras are added or removed.
+
+    !!! alert "This example assumes a USB Camera is connected at index `1`, and some other camera connected at index `0` on your Raspberry Pi."
+
+    ```python linenums="1" hl_lines="15"
     # import required libraries
     from vidgear.gears import PiGear
     from libcamera import Transform
     import cv2
 
     # formulate various Picamera2 API 
-    # configurational parameters
+    # configurational parameters for USB camera
     options = {
-        "queue": True,
-        "buffer_count": 4,
-        "controls": {"Brightness": 0.5, "ExposureValue": 2.0},
-        "transform": Transform(hflip=1),
+        "sensor": {"output_size": (480, 320)},  # will override `resolution`
+        "format": "RGB888" # BGR format for this example
         "auto_align_output_config": True,  # auto-align camera configuration
     }
 
@@ -406,6 +413,8 @@ limitations under the License.
     ???+ danger "PiGear API switches to the legacy `picamera`backend if the `picamera2` library is unavailable."
 
         It is advised to enable logging(`logging=True`) to see which backend is being used.
+
+        !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params/#options) optional parameter boolean attribute."
 

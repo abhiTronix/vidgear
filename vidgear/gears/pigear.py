@@ -151,12 +151,14 @@ class PiGear:
                 logger.critical(
                     "Enforcing legacy picamera API for this run. picamera2 API access will be disabled!"
                 )
+                # disable picamera2
+                picamera2 = None
             else:
-                logger.warning(
-                    "`picamera` is unavailable on this system, `enforce_legacy_picamera` will be discarded!"
+                # raise error otherwise
+                logger.error(
+                    "`picamera` is unavailable or unsupported on this system, `enforce_legacy_picamera` will be discarded!"
                 )
-            # disable picamera2
-            picamera2 = None
+                import_dependency_safe("picamera")
 
         if picamera2:
             # handle logging

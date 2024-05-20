@@ -77,6 +77,8 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
         
         !!! tip "It is advised to enable logging(`logging=True`) to see which backend is being used."
 
+        !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
+
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
 
     ```python linenums="1" hl_lines="21"

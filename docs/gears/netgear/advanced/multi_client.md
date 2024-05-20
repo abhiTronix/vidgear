@@ -591,6 +591,8 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
         
         !!! tip "It is advised to enable logging(`logging=True`) to see which backend is being used."
 
+        !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
+
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
 
     ```python linenums="1" hl_lines="47-60"
@@ -912,6 +914,8 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
         However, the API seamlessly switches to the legacy [`picamera`](https://picamera.readthedocs.io/en/release-1.13/index.html) backend, if the `picamera2` library is unavailable or not installed.
         
         !!! tip "It is advised to enable logging(`logging=True`) to see which backend is being used."
+
+        !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
 

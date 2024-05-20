@@ -41,6 +41,8 @@ Following is the bare-minimum code you need to get started with PiGear API:
     
     !!! tip "It is advised to enable logging(`logging=True`) to see which backend is being used."
 
+    !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
+
     !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
 
 ??? danger "Disabling common `libcamera` API messages in silent mode."
@@ -203,6 +205,8 @@ stream.stop()
     !!! danger "PiGear API switches to the legacy `picamera`backend if the `picamera2` library is unavailable."
     
         It is advised to enable logging(`logging=True`) to see which backend is being used.
+
+        !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
 
@@ -403,6 +407,8 @@ PiGear can be easily used with WriteGear API directly without any compatibility 
     ??? danger "PiGear API switches to the legacy `picamera`backend if the `picamera2` library is unavailable."
     
         It is advised to enable logging(`logging=True`) to see which backend is being used.
+
+        !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
 
