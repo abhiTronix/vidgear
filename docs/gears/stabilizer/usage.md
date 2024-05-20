@@ -41,7 +41,7 @@ Following is the bare-minimum code you need to get started with Stabilizer Class
 
 !!! tip "You can use any VideoCapture Gear instead of CamGear in the similar manner, as shown in this usage example." 
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears.stabilizer import Stabilizer
 from vidgear.gears import CamGear
@@ -96,7 +96,7 @@ stream.stop()
 
 The VidGear's stabilizer class can also work standalone easily with any Computer Vision library such as OpenCV itself. Following is the bare-minimum code you need to get started with Stabilizer Class and OpenCV:
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears.stabilizer import Stabilizer
 import cv2
@@ -150,7 +150,7 @@ stream.release()
 
 Stabilizer class provide certain [parameters](../params/) which you can use to tweak its internal properties. The complete usage example is as follows:
 
-```python hl_lines="10"
+```python linenums="1" hl_lines="10"
 # import required libraries
 from vidgear.gears.stabilizer import Stabilizer
 from vidgear.gears import CamGear
@@ -208,7 +208,7 @@ VideoGear's stabilizer can be used in conjunction with WriteGear API directly wi
 
 !!! example "You can also add live audio input to WriteGear pipeline. See this [bonus example  ➶](../../../help)"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears.stabilizer import Stabilizer
 from vidgear.gears import CamGear

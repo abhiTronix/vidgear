@@ -45,7 +45,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
@@ -89,7 +89,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -137,7 +137,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="6 11-17"
+```python linenums="1" hl_lines="6 11-17"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -192,7 +192,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="6 14-19"
+```python linenums="1" hl_lines="6 14-19"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
@@ -254,7 +254,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -309,7 +309,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -371,7 +371,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -426,7 +426,7 @@ Now, Open the terminal on another Server System _(let's say you want to transmit
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import ScreenGear
 from vidgear.gears import NetGear

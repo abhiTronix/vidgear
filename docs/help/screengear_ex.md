@@ -37,7 +37,7 @@ Open a terminal on Client System _(where you want to save the input frames recei
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 from vidgear.gears import WriteGear
@@ -94,7 +94,7 @@ Now, Open the terminal on another Server System _(with a montior/display attache
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import ScreenGear
 from vidgear.gears import NetGear
@@ -156,7 +156,7 @@ The complete usage example is as follows:
 
 === "Bare-Minimum"
 
-    ```python hl_lines="8"
+    ```python linenums="1" hl_lines="8"
     # import necessary libs
     import uvicorn, cv2
     from vidgear.gears import ScreenGear
@@ -180,7 +180,7 @@ The complete usage example is as follows:
 
     !!! failure "For VideoCapture APIs you also need to implement `start()` in addition to `read()` and `stop()` methods in your Custom Streaming Class as shown in following example, otherwise WebGear_RTC will fail to work!"
 
-    ```python hl_lines="8-64 69"
+    ```python linenums="1" hl_lines="8-64 69"
     # import necessary libs
     import uvicorn, cv2
     from vidgear.gears import ScreenGear

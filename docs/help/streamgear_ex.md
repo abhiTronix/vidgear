@@ -40,7 +40,7 @@ In this example, we will be Live-Streaming video-frames from Raspberry Pi _(with
 
     === "New Picamera2 backend"
 
-        ```python
+        ```python linenums="1"
         # import required libraries
         from vidgear.gears import PiGear
         from vidgear.gears import StreamGear
@@ -108,9 +108,11 @@ In this example, we will be Live-Streaming video-frames from Raspberry Pi _(with
             
             !!! tip "It is advised to enable logging(`logging=True`) to see which backend is being used."
 
+            !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
+
             !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params) user-defined optional parameter boolean attribute."
 
-        ```python
+        ```python linenums="1"
         # import required libraries
         from vidgear.gears import PiGear
         from vidgear.gears import StreamGear
@@ -174,7 +176,7 @@ In this example, we will be Live-Streaming video-frames from Raspberry Pi _(with
 
     === "New Picamera2 backend"
 
-        ```python
+        ```python linenums="1"
         # import required libraries
         from vidgear.gears import PiGear
         from vidgear.gears import StreamGear
@@ -242,9 +244,11 @@ In this example, we will be Live-Streaming video-frames from Raspberry Pi _(with
             
             !!! tip "It is advised to enable logging(`logging=True`) to see which backend is being used."
 
+            !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
+
             !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params) user-defined optional parameter boolean attribute."
 
-        ```python
+        ```python linenums="1"
         # import required libraries
         from vidgear.gears import PiGear
         from vidgear.gears import StreamGear

@@ -53,13 +53,7 @@ logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
-
-@pytest.fixture
-def event_loop():
-    """Create an instance of the default event loop for each test case."""
-    loop = asyncio.SelectorEventLoop()
-    yield loop
-    loop.close()
+pytestmark = pytest.mark.asyncio(scope="module")
 
 
 def return_testvideo_path():
@@ -238,7 +232,6 @@ test_data = [
     platform.python_version_tuple()[:2] >= ("3", "11"),
     reason="Random Failures!",
 )
-@pytest.mark.asyncio
 @pytest.mark.parametrize("source, stabilize, colorspace, time_delay", test_data)
 async def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
     """
@@ -308,7 +301,6 @@ test_data = [
     platform.python_version_tuple()[:2] >= ("3", "11"),
     reason="Random Failures!",
 )
-@pytest.mark.asyncio
 @pytest.mark.parametrize("options", test_data)
 async def test_webgear_rtc_options(options):
     """
@@ -368,7 +360,6 @@ test_data = [
     ),
     reason="Random Failures!",
 )
-@pytest.mark.asyncio
 @pytest.mark.parametrize("options", test_data)
 async def test_webpage_reload(options):
     """
@@ -459,7 +450,6 @@ test_stream_classes = [
     platform.python_version_tuple()[:2] >= ("3", "11"),
     reason="Random Failures!",
 )
-@pytest.mark.asyncio
 @pytest.mark.parametrize("stream_class, result", test_stream_classes)
 async def test_webgear_rtc_custom_stream_class(stream_class, result):
     """
@@ -513,7 +503,6 @@ test_data_class = [
     platform.python_version_tuple()[:2] >= ("3", "11"),
     reason="Random Failures!",
 )
-@pytest.mark.asyncio
 @pytest.mark.parametrize("middleware, result", test_data_class)
 async def test_webgear_rtc_custom_middleware(middleware, result):
     """
@@ -537,7 +526,6 @@ async def test_webgear_rtc_custom_middleware(middleware, result):
     platform.python_version_tuple()[:2] >= ("3", "11"),
     reason="Random Failures!",
 )
-@pytest.mark.asyncio
 async def test_webgear_rtc_routes():
     """
     Test for WebGear_RTC API's custom routes
@@ -586,7 +574,6 @@ async def test_webgear_rtc_routes():
     platform.python_version_tuple()[:2] >= ("3", "11"),
     reason="Random Failures!",
 )
-@pytest.mark.asyncio
 async def test_webgear_rtc_routes_validity():
     """
     Test WebGear_RTC Routes

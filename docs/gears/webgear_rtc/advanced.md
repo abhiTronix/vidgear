@@ -38,7 +38,7 @@ Let's implement a bare-minimum example using WebGear_RTC as Real-time Broadcaste
 
 !!! tip "For accessing WebGear_RTC on different Client Devices on the network, we use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](../../../help/webgear_rtc_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear_rtc)"
 
-```python hl_lines="8"
+```python linenums="1" hl_lines="8"
 # import required libraries
 import uvicorn
 from vidgear.gears.asyncio import WebGear_RTC
@@ -83,7 +83,7 @@ Let's implement a bare-minimum example with a Custom Source using WebGear_RTC AP
     See this [example ➶](../../../help/screengear_ex/#using-screengear-with-webgear_rtc) for more information.
 
 
-```python hl_lines="6-54 58"
+```python linenums="1" hl_lines="6-54 58"
 # import necessary libs
 import uvicorn, cv2
 from vidgear.gears.asyncio import WebGear_RTC
@@ -163,7 +163,7 @@ web.shutdown()
 
 With our highly extensible WebGear_RTC API, you can add your own mounting points, where additional files located, as follows:
 
-```python hl_lines="18-20"
+```python linenums="1" hl_lines="18-20"
 # import libs
 import uvicorn
 from starlette.routing import Mount
@@ -221,7 +221,7 @@ Suppose we want to add a simple **`hello world` webpage** to our WebGear_RTC ser
  
 Then in our application code, we can integrate this webpage route, as follows:
 
-```python hl_lines="11-14 28"
+```python linenums="1" hl_lines="11-14 28"
 # import libs
 import uvicorn, asyncio
 from starlette.templating import Jinja2Templates
@@ -276,7 +276,7 @@ For this example, let's use [`CORSMiddleware`](https://www.starlette.io/middlewa
 
 !!! tip "Starlette provides several arguments for enabling origins, methods, or headers for CORSMiddleware API. More information can be found [here ➶](https://www.starlette.io/middleware/#corsmiddleware)"
 
-```python hl_lines="18-26"
+```python linenums="1" hl_lines="18-26"
 # import libs
 import uvicorn, asyncio
 from starlette.middleware import Middleware

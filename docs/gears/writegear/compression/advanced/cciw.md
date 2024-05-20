@@ -82,7 +82,7 @@ execute_ffmpeg_cmd(ffmpeg_command)
 
 In this example, we will extract and save audio from a URL stream:
 
-```python hl_lines="13-18 21"
+```python linenums="1" hl_lines="13-18 21"
 # import required libraries
 from vidgear.gears import WriteGear
 
@@ -126,7 +126,7 @@ In this example, we will merge audio with video:
     * Both these Audio and Video files are compatible.
 
 
-```python hl_lines="59-75 78"
+```python linenums="1" hl_lines="59-75 78"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import WriteGear

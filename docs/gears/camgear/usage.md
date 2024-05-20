@@ -28,7 +28,7 @@ limitations under the License.
 
 Following is the bare-minimum code you need to get started with CamGear API:
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import CamGear
 import cv2
@@ -124,7 +124,8 @@ The complete usage example for Dailymotion and Twitch URLs are as follows:
     ```
 
 === "Dailymotion :fontawesome-brands-dailymotion:"
-    ```python  hl_lines="12-13"
+
+    ```python linenums="1"  hl_lines="12-13"
     # import required libraries
     from vidgear.gears import CamGear
     import cv2
@@ -172,7 +173,7 @@ The complete usage example for Dailymotion and Twitch URLs are as follows:
 
     !!! warning "If Twitch user is offline, CamGear will throw ValueError."
 
-    ```python  hl_lines="12-13"
+    ```python linenums="1"  hl_lines="12-13"
     # import required libraries
     from vidgear.gears import CamGear
     import cv2
@@ -274,7 +275,7 @@ The complete usage example is as follows:
     print(video_metadata["title"])
     ```
 
-```python hl_lines="8-9"
+```python linenums="1" hl_lines="8-9"
 # import required libraries
 from vidgear.gears import CamGear
 import cv2
@@ -325,7 +326,7 @@ The complete usage example is as follows:
 
 !!! tip "All the supported Source Tweak Parameters can be found [here ➶](../advanced/source_params/#source-tweak-parameters-for-camgear-api)"
 
-```python hl_lines="8-10"
+```python linenums="1" hl_lines="8-10"
 # import required libraries
 from vidgear.gears import CamGear
 import cv2
@@ -383,7 +384,7 @@ In following example code, we will start with [**HSV**](https://en.wikipedia.org
 !!! failure "Any incorrect or None-type value, will immediately revert the colorspace to default i.e. `BGR`."
 
 
-```python hl_lines="7 30 34 38"
+```python linenums="1" hl_lines="7 30 34 38"
 # import required libraries
 from vidgear.gears import CamGear
 import cv2

@@ -36,7 +36,7 @@ limitations under the License.
 
 Following is the bare-minimum code you need to get started with ScreenGear API:
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import ScreenGear
 import cv2
@@ -94,7 +94,7 @@ ScreenGear API provides us the flexibility to directly set the dimensions of cap
 The complete usage example is as follows:
 
 
-```python hl_lines="6"
+```python linenums="1" hl_lines="6"
 # import required libraries
 from vidgear.gears import ScreenGear
 import cv2
@@ -150,7 +150,7 @@ ScreenGear API provides us the flexibility to select any connected display for f
     ??? tip "Using GPU acceleration on Windows :fontawesome-brands-windows:"
         With  `dxcam` library backend, you can also assign which GPU devices ids to use along with monitor device ids as tuple `(monitor_idx, gpu_idx)`, as follows:
 
-        ```python
+        ```python linenums="1"
         # open video stream with defined parameters with 
         # monitor at index `1` and GPU at index `0`.
         stream = ScreenGear(monitor=(1,0), logging=True).start()
@@ -167,7 +167,7 @@ ScreenGear API provides us the flexibility to select any connected display for f
             'Device[0] Output[0]: Res:(1920, 1080) Rot:0 Primary:True\nDevice[0] Output[1]: Res:(1920, 1080) Rot:0 Primary:False\n'
             ```
 
-    ```python hl_lines="6"
+    ```python linenums="1" hl_lines="6"
     # import required libraries
     from vidgear.gears import ScreenGear
     import cv2
@@ -209,7 +209,7 @@ ScreenGear API provides us the flexibility to select any connected display for f
 
     !!! danger "With `mss` library backend, API will output [`BGRA`](https://en.wikipedia.org/wiki/RGBA_color_model) colorspace frames instead of default `BGR`."
 
-    ```python hl_lines="6"
+    ```python linenums="1" hl_lines="6"
     # import required libraries
     from vidgear.gears import ScreenGear
     import cv2
@@ -260,7 +260,7 @@ With ScreenGear API, you can select from many different backends that generates 
 
 !!! failure "Any value on `monitor` parameter will disable the `backend` parameter. You cannot use them simultaneously."
 
-```python hl_lines="7"
+```python linenums="1" hl_lines="7"
 # import required libraries
 from vidgear.gears import ScreenGear
 import cv2
@@ -310,7 +310,7 @@ In following example code, we will start with [**HSV**](https://en.wikipedia.org
 !!! warning "Any incorrect or None-type value, will immediately revert the colorspace to default i.e. `BGR`."
 
 
-```python hl_lines="6 29 33 37"
+```python linenums="1" hl_lines="6 29 33 37"
 # import required libraries
 from vidgear.gears import ScreenGear
 import cv2
@@ -367,7 +367,7 @@ stream.stop()
 
 ScreenGear can be used in conjunction with WriteGear API directly without any compatibility issues. The suitable example is as follows:
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import ScreenGear
 from vidgear.gears import WriteGear

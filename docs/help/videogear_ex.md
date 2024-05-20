@@ -33,7 +33,7 @@ In this example, we'll create a node that convert OpenCV frames into ROS image m
 
 !!! note "This example is vidgear implementation of this [wiki example](http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython)." 
 
-```python
+```python linenums="1"
 # import roslib
 import roslib
 
@@ -130,7 +130,7 @@ Here's a high-level wrapper code around VideoGear API to enable auto-reconnectio
     Finally, use [`backend`](../../gears/videogear/params/#backend) parameter value as `backend=cv2.CAP_FFMPEG` in VideoGear.
 
 
-```python
+```python linenums="1"
 from vidgear.gears import VideoGear
 import cv2
 import datetime
@@ -233,7 +233,7 @@ In this example code, we will be directly merging the audio from a Video-File _(
 
 !!! alert "Use `-disable_force_termination` flag when video duration is too short(<60sec), otherwise WriteGear will not produce any valid output."
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import WriteGear
 from vidgear.gears import VideoGear

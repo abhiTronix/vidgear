@@ -41,7 +41,7 @@ Open a terminal on Client System where you want to display the input frames _(an
 
 !!! note "Note down the IP-address of this system _(required at Server's end)_ by executing the  `hostname -I` command and also replace it in the following code.""
 
-```python
+```python linenums="1" hl_lines="16-32 40 43 46"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 from vidgear.gears.asyncio import WebGear
@@ -104,7 +104,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! note "Replace the IP address in the following code with Client's IP address you noted earlier."
 
-```python
+```python linenums="1"
 # import library
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio

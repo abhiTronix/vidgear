@@ -131,7 +131,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="9"
+```python linenums="1" hl_lines="9"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
@@ -177,7 +177,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="6"
+```python linenums="1" hl_lines="6"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -233,7 +233,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="6 11-17"
+```python linenums="1" hl_lines="6 11-17"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -292,7 +292,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="7 15-20"
+```python linenums="1" hl_lines="7 15-20"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear

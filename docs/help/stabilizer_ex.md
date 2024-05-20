@@ -37,7 +37,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
 
 ??? tip "Identifying and Specifying sound card on different OS platforms"
     
-    === "On Windows"
+    === "Windows :fontawesome-brands-windows:"
 
         Windows OS users can use the [dshow](https://trac.ffmpeg.org/wiki/DirectShow) (DirectShow) to list audio input device which is the preferred option for Windows users. You can refer following steps to identify and specify your sound card:
 
@@ -82,7 +82,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
         !!! failure "If audio still doesn't work then [checkout this troubleshooting guide ➶](https://www.maketecheasier.com/fix-microphone-not-working-windows10/) or reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
-    === "On Linux"
+    === "Linux :material-linux:"
 
         Linux OS users can use the [alsa](https://ffmpeg.org/ffmpeg-all.html#alsa) to list input device to capture live audio input such as from a webcam. You can refer following steps to identify and specify your sound card:
 
@@ -128,7 +128,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
         !!! failure "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
-    === "On MacOS"
+    === "MacOS :material-apple:"
 
         MAC OS users can use the [avfoundation](https://ffmpeg.org/ffmpeg-devices.html#avfoundation) to list input devices for grabbing audio from integrated iSight cameras as well as cameras connected via USB or FireWire. You can refer following steps to identify and specify your sound card on MacOS/OSX machines:
 
@@ -174,7 +174,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
 
 !!! warning "You **MUST** use [`-input_framerate`](../../gears/writegear/compression/params/#supported-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
-```python
+```python linenums="1" hl_lines="14-19"
 # import required libraries
 from vidgear.gears import WriteGear
 from vidgear.gears.stabilizer import Stabilizer
@@ -192,7 +192,7 @@ output_params = {
     "-thread_queue_size": "512",
     "-ac": "2",
     "-ar": "48000",
-    "-f": "alsa", # !!! warning: always keep this line above "-i" parameter !!!
+    "-f": "alsa", # (1)
     "-i": "hw:1",
 }
 
@@ -232,6 +232,8 @@ stream.release()
 writer.close()
 ```
 
+1. :warning: Always keep this line above `-i` parameter!
+
 &nbsp;
 
 ## Saving Stabilizer Class output with File Audio Input
@@ -247,7 +249,7 @@ In this example code, we will be directly merging the audio from a Video-File _(
 
 !!! alert "Use [`-disable_force_termination`](../../gears/writegear/compression/params/#supported-parameters) flag when video duration is too short(<60sec), otherwise WriteGear will not produce any valid output."
 
-```python
+```python linenums="1"  hl_lines="17-22 49"
 # import required libraries
 from vidgear.gears import WriteGear
 from vidgear.gears.stabilizer import Stabilizer

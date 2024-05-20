@@ -37,7 +37,7 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
 
 === "New Picamera2 backend"
 
-    ```python
+    ```python linenums="1" hl_lines="22"
     # import libs
     import uvicorn
     from libcamera import Transform
@@ -77,9 +77,11 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
         
         !!! tip "It is advised to enable logging(`logging=True`) to see which backend is being used."
 
+        !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
+
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
 
-    ```python
+    ```python linenums="1" hl_lines="21"
     # import libs
     import uvicorn
     from vidgear.gears.asyncio import WebGear
@@ -116,7 +118,7 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
  
 Here's an example of using WebGear API with real-time Video Stabilization enabled:
 
-```python
+```python linenums="1" hl_lines="14"
 # import libs
 import uvicorn
 from vidgear.gears.asyncio import WebGear
@@ -151,7 +153,7 @@ In this example, we'll be displaying two video feeds side-by-side simultaneously
 
 **Step-1 (Trigger Auto-Generation Process):** Firstly, run this bare-minimum code to trigger the [**Auto-generation**](../../gears/webgear/overview/#auto-generation-process) process, this will create `.vidgear` directory at current location _(directory where you'll run this code)_:
 
-```python
+```python linenums="1" hl_lines="6"
 # import required libraries
 import uvicorn
 from vidgear.gears.asyncio import WebGear
@@ -168,7 +170,7 @@ web.shutdown()
 
 **Step-2 (Replace HTML file):** Now, go inside `.vidgear` :arrow_right: `webgear` :arrow_right: `templates` directory at current location of your machine, and there replace content of `index.html` file with following:
 
-```html
+```html hl_lines="5-6"
 {% extends "base.html" %}
 {% block content %}
   <h1 class="glow">WebGear Video Feed</h1>
@@ -181,7 +183,7 @@ web.shutdown()
 
 **Step-3 (Build your own Frame Producers):** Now, create a python script code with OpenCV source, as follows:
 
-```python
+```python linenums="1"  hl_lines="9 15-38 42-65 68-77 81 84-86"
 # import necessary libs
 import uvicorn, asyncio, cv2
 from vidgear.gears.asyncio import WebGear

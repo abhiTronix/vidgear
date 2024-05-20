@@ -87,7 +87,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="6 33 40 53"
+```python linenums="1" hl_lines="6 33 40 53"
 # import library
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
@@ -163,7 +163,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="6 15 31"
+```python linenums="1" hl_lines="6 15 31"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
@@ -233,7 +233,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="11-17"
+```python linenums="1" hl_lines="11-17"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
@@ -305,96 +305,204 @@ Now, Open the terminal on another Server System _(a Raspberry Pi with Camera Mod
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="12-18"
-# import library
-from vidgear.gears.asyncio import NetGear_Async
-from vidgear.gears import VideoGear
-import cv2, asyncio
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
 
-# activate Bidirectional mode
-options = {"bidirectional_mode": True}
+!!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
-# initialize Server without any source at given IP address and define parameters 
-# !!! change following IP address '192.168.x.xxx' with client's IP address !!!
-server = NetGear_Async(
-    source=None,
-    address="192.168.x.xxx",
-    port="5454",
-    protocol="tcp",
-    pattern=1,
-    logging=True,
-    **options
-)
+=== "New Picamera2 backend"
 
-# Create a async frame generator as custom source
-async def my_frame_generator():
+    ```python linenums="1" hl_lines="13-19 23-67 74"
+    # import libs
+    from vidgear.gears.asyncio import NetGear_Async
+    from vidgear.gears import VideoGear
+    from libcamera import Transform
+    import cv2, asyncio
 
-    # !!! define your own video source here !!!
-    # Open any video stream such as live webcam
-    # video stream on first index(i.e. 0) device
-    # add various Picamera tweak parameters to dictionary
-    options = {
-        "hflip": True,
-        "exposure_mode": "auto",
-        "iso": 800,
-        "exposure_compensation": 15,
-        "awb_mode": "horizon",
-        "sensor_mode": 0,
-    }
+    # activate Bidirectional mode
+    options = {"bidirectional_mode": True}
 
-    # open pi video stream with defined parameters
-    stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
+    # initialize Server without any source at given IP address and define parameters 
+    # !!! change following IP address '192.168.x.xxx' with client's IP address !!!
+    server = NetGear_Async(
+        source=None,
+        address="192.168.x.xxx",
+        port="5454",
+        protocol="tcp",
+        pattern=1,
+        logging=True,
+        **options
+    )
 
-    # loop over stream until its terminated
-    while True:
-        # read frames
-        frame = stream.read()
+    # Create a async frame generator as custom source
+    async def my_frame_generator():
 
-        # check for frame if Nonetype
-        if frame is None:
-            break
+        # !!! define your own video source below !!!
 
-        # {do something with the frame to be sent here}
+        # define various Picamera2 tweak parameters
+        options = {
+            "queue": True,
+            "buffer_count": 4,
+            "controls": {"Brightness": 0.5, "ExposureValue": 2.0},
+            "transform": Transform(hflip=1),
+            "auto_align_output_config": True,  # auto-align camera configuration
+        }
 
-        # prepare data to be sent(a simple text in our case)
-        target_data = "Hello, I am a Server."
+        # open pi video stream with defined parameters
+        stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
 
-        # receive data from Client
-        recv_data = await server.transceive_data()
+        # loop over stream until its terminated
+        while True:
+            # read frames
+            frame = stream.read()
 
-        # print data just received from Client
-        if not (recv_data is None):
-            print(recv_data)
+            # check for frame if Nonetype
+            if frame is None:
+                break
 
-        # send our frame & data
-        yield (target_data, frame) # (1)
+            # {do something with the frame to be sent here}
 
-        # sleep for sometime
-        await asyncio.sleep(0)
+            # prepare data to be sent(a simple text in our case)
+            target_data = "Hello, I am a Server."
+
+            # receive data from Client
+            recv_data = await server.transceive_data()
+
+            # print data just received from Client
+            if not (recv_data is None):
+                print(recv_data)
+
+            # send our frame & data
+            yield (target_data, frame) # (1)
+
+            # sleep for sometime
+            await asyncio.sleep(0)
+            
+        # safely close video stream
+        stream.stop()
+
+
+    if __name__ == "__main__":
+        # set event loop
+        asyncio.set_event_loop(server.loop)
+        # Add your custom source generator to Server configuration
+        server.config["generator"] = my_frame_generator()
+        # Launch the Server
+        server.launch()
+        try:
+            # run your main function task until it is complete
+            server.loop.run_until_complete(server.task)
+        except (KeyboardInterrupt, SystemExit):
+            # wait for interrupts
+            pass
+        finally:
+            # finally close the server
+            server.close()
+    ```
+
+    1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted in `target_data`.
+    
+=== "Legacy Picamera backend"
+
+    ??? info "Under the hood, Backend PiGear API _(version `0.3.3` onwards)_ prioritizes the new [`picamera2`](https://github.com/raspberrypi/picamera2) API backend."
+
+        However, the API seamlessly switches to the legacy [`picamera`](https://picamera.readthedocs.io/en/release-1.13/index.html) backend, if the `picamera2` library is unavailable or not installed.
         
-    # safely close video stream
-    stream.stop()
+        !!! tip "It is advised to enable logging(`logging=True`) to see which backend is being used."
+
+        !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
+
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
 
 
-if __name__ == "__main__":
-    # set event loop
-    asyncio.set_event_loop(server.loop)
-    # Add your custom source generator to Server configuration
-    server.config["generator"] = my_frame_generator()
-    # Launch the Server
-    server.launch()
-    try:
-        # run your main function task until it is complete
-        server.loop.run_until_complete(server.task)
-    except (KeyboardInterrupt, SystemExit):
-        # wait for interrupts
-        pass
-    finally:
-        # finally close the server
-        server.close()
-```
+    ```python linenums="1" hl_lines="12-18 22-67 74"
+    # import library
+    from vidgear.gears.asyncio import NetGear_Async
+    from vidgear.gears import VideoGear
+    import cv2, asyncio
 
-1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted in `target_data`.
+    # activate Bidirectional mode
+    options = {"bidirectional_mode": True}
+
+    # initialize Server without any source at given IP address and define parameters 
+    # !!! change following IP address '192.168.x.xxx' with client's IP address !!!
+    server = NetGear_Async(
+        source=None,
+        address="192.168.x.xxx",
+        port="5454",
+        protocol="tcp",
+        pattern=1,
+        logging=True,
+        **options
+    )
+
+    # Create a async frame generator as custom source
+    async def my_frame_generator():
+
+        # !!! define your own video source below !!!
+
+        # define various Picamera tweak parameters
+        options = {
+            "hflip": True,
+            "exposure_mode": "auto",
+            "iso": 800,
+            "exposure_compensation": 15,
+            "awb_mode": "horizon",
+            "sensor_mode": 0,
+        }
+
+        # open pi video stream with defined parameters
+        stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
+
+        # loop over stream until its terminated
+        while True:
+            # read frames
+            frame = stream.read()
+
+            # check for frame if Nonetype
+            if frame is None:
+                break
+
+            # {do something with the frame to be sent here}
+
+            # prepare data to be sent(a simple text in our case)
+            target_data = "Hello, I am a Server."
+
+            # receive data from Client
+            recv_data = await server.transceive_data()
+
+            # print data just received from Client
+            if not (recv_data is None):
+                print(recv_data)
+
+            # send our frame & data
+            yield (target_data, frame) # (1)
+
+            # sleep for sometime
+            await asyncio.sleep(0)
+            
+        # safely close video stream
+        stream.stop()
+
+
+    if __name__ == "__main__":
+        # set event loop
+        asyncio.set_event_loop(server.loop)
+        # Add your custom source generator to Server configuration
+        server.config["generator"] = my_frame_generator()
+        # Launch the Server
+        server.launch()
+        try:
+            # run your main function task until it is complete
+            server.loop.run_until_complete(server.task)
+        except (KeyboardInterrupt, SystemExit):
+            # wait for interrupts
+            pass
+        finally:
+            # finally close the server
+            server.close()
+    ```
+
+    1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted in `target_data`.
 
 &nbsp; 
 
@@ -420,7 +528,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! alert "Server end can only send [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype as frame but not as data."
 
-```python hl_lines="8 33-48 54 67"
+```python linenums="1" hl_lines="8 33-48 54 67"
 # import library
 from vidgear.gears.asyncio import NetGear_Async
 from vidgear.gears.asyncio.helper import reducer
@@ -512,7 +620,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="7 18 34-43"
+```python linenums="1" hl_lines="7 18 34-43"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 from vidgear.gears.asyncio.helper import reducer
