@@ -425,11 +425,21 @@ class StreamGear:
         default_codec = "libx264rgb" if rgb else "libx264"
         output_parameters["-vcodec"] = self.__params.pop("-vcodec", default_codec)
         # enable optimizations and enforce compatibility
-        output_parameters["-vf"] = self.__params.pop("-vf", "format=yuv420p")
-        aspect_ratio = Fraction(
-            self.__inputwidth / self.__inputheight
-        ).limit_denominator(10)
-        output_parameters["-aspect"] = ":".join(str(aspect_ratio).split("/"))
+        if output_parameters["-vcodec"] != "copy":
+            # NOTE: these parameters only supported when stream copy not defined
+            output_parameters["-vf"] = self.__params.pop("-vf", "format=yuv420p")
+            aspect_ratio = Fraction(
+                self.__inputwidth / self.__inputheight
+            ).limit_denominator(10)
+            output_parameters["-aspect"] = ":".join(str(aspect_ratio).split("/"))
+        else:
+            # log warnings for these parameters
+            self.__params.pop("-vf", False) and logger.warning(
+                "Filtering and stream copy cannot be used together. Discarding `-vf` parameter!"
+            )
+            self.__params.pop("-aspect", False) and logger.warning(
+                "Overriding aspect ratio with stream copy may produce invalid files. Discarding `-aspect` parameter!"
+            )
         # w.r.t selected codec
         if output_parameters["-vcodec"] in [
             "libx264",
