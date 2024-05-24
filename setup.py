@@ -100,6 +100,8 @@ setup(
         "requests",
         "colorlog",
         "tqdm",
+        # typing_extensions for `deprecated` decorator
+        "typing_extensions>=4.7.1",
     ]
     + (["opencv-python"] if test_opencv() else []),
     long_description=long_description,

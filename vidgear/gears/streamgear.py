@@ -30,6 +30,7 @@ import subprocess as sp
 from tqdm import tqdm
 from fractions import Fraction
 from collections import OrderedDict
+from typing_extensions import deprecated
 
 # import helper packages
 from .helper import (
@@ -1048,23 +1049,38 @@ class StreamGear:
         """
         Handles exit with the `with` statement. See [PEP343 -- The 'with' statement'](https://peps.python.org/pep-0343/).
         """
-        self.terminate()
+        self.close()
 
+    @deprecated(
+        "The `terminate()` method will be removed in the next release. Kindly use `close()` method instead."
+    )
     def terminate(self):
         """
-        Safely terminates StreamGear.
+        !!! warning "[DEPRECATION NOTICE]: This method will be removed in the next release. Kindly use `close()` method instead."
+
+        This function simply provides backward compatibility with the old `terminate()` function.
+        It simply calls the new `close()` method to terminate various StreamGear process.
         """
+
+        self.close()
+
+    def close(self):
+        """
+        Safely terminates various StreamGear process.
+        """
+        # log termination
+        if self.__logging:
+            logger.debug("Terminating StreamGear Processes.")
         # return if no process was initiated at first place
         if self.__process is None or not (self.__process.poll() is None):
             return
         # close `stdin` output
-        if self.__process.stdin:
-            self.__process.stdin.close()
-        # force terminate if external audio source
-        if isinstance(self.__audio, list):
-            self.__process.terminate()
-        # wait if still process is still processing some information
+        self.__process.stdin and self.__process.stdin.close()
+        # close `stdout` output
+        self.__process.stdout and self.__process.stdout.close()
+        # wait if process is still processing
         self.__process.wait()
+        # discard process
         self.__process = None
         # log it
         logger.critical(
