@@ -1006,7 +1006,7 @@ The complete example is as follows:
         !!! failure "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
-!!! danger "Make sure this `-audio` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."
+!!! danger "Make sure this `-audio` audio-source it compatible with provided Device video-source, otherwise you could encounter multiple errors or no output at all."
 
 !!! warning "You **MUST** use [`-input_framerate`](../../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
@@ -1021,8 +1021,8 @@ The complete example is as follows:
     from vidgear.gears import StreamGear
     import cv2
 
-    # open any valid video stream(for e.g `foo1.mp4` file)
-    stream = CamGear(source="foo1.mp4").start()
+    # open any valid DEVICE video stream
+    stream = CamGear(source=0).start()
 
     # add various streams, along with custom audio
     stream_params = {
@@ -1039,7 +1039,7 @@ The complete example is as follows:
             "dshow",
             "-i",
             "audio=Microphone (USB2.0 Camera)",
-        ],  # assign appropriate input audio-source device and demuxer
+        ],  # assign appropriate input audio-source device(compatible with video source) and its demuxer
     }
 
     # describe a suitable manifest-file location/name and assign params
@@ -1086,8 +1086,8 @@ The complete example is as follows:
     from vidgear.gears import StreamGear
     import cv2
 
-    # open any valid video stream(for e.g `foo1.mp4` file)
-    stream = CamGear(source="foo1.mp4").start()
+    # open any valid DEVICE video stream
+    stream = CamGear(source=0).start()
 
     # add various streams, along with custom audio
     stream_params = {
@@ -1104,11 +1104,11 @@ The complete example is as follows:
             "dshow",
             "-i",
             "audio=Microphone (USB2.0 Camera)",
-        ],  # assign appropriate input audio-source device and demuxer
+        ],  # assign appropriate input audio-source device(compatible with video source) and its demuxer
     }
 
     # describe a suitable manifest-file location/name and assign params
-    streamer = StreamGear(output="dash_out.m3u8", format="hls", **stream_params)
+    streamer = StreamGear(output="hls_out.m3u8", format="hls", **stream_params)
 
     # loop over
     while True:

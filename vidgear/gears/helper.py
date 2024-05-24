@@ -669,12 +669,11 @@ def extract_time(value):
         return 0
     else:
         stripped_data = value.strip()
-        t_duration = re.findall(
-            r"(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)", stripped_data
-        )
+        t_duration = re.findall(r"\d{2}:\d{2}:\d{2}(?:\.\d{2})?", stripped_data)
         return (
             sum(
-                int(x) * 60**i for i, x in enumerate(reversed(t_duration[0].split(":")))
+                float(x) * 60**i
+                for i, x in enumerate(reversed(t_duration[0].split(":")))
             )
             if t_duration
             else 0

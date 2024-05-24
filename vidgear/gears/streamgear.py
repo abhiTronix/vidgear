@@ -657,7 +657,7 @@ class StreamGear:
         Internal function that Extracts, Evaluates & Validates user-defined streams
 
         Parameters:
-            streams (dict): Indivisual streams formatted as list of dict.
+            streams (dict): Individual streams formatted as list of dict.
             output_params (dict): Output FFmpeg parameters
         """
         # temporary streams count variable
@@ -693,7 +693,7 @@ class StreamGear:
                             "{}:a".format(1 if "-core_audio" in output_params else 0),
                         ]
 
-                # extract resolution & indivisual dimension of stream
+                # extract resolution & individual dimension of stream
                 resolution = stream.pop("-resolution", "")
                 dimensions = (
                     resolution.lower().split("x")
@@ -868,12 +868,12 @@ class StreamGear:
             output_params["-remove_at_exit"] = self.__params.pop("-remove_at_exit", 0)
             # default behaviour
             output_params["-seg_duration"] = self.__params.pop("-seg_duration", 20)
-            # Disable (0) the use of a SegmentTimline inside a SegmentTemplate.
+            # Disable (0) the use of a SegmentTimeline inside a SegmentTemplate.
             output_params["-use_timeline"] = 0
         else:
             # default behaviour
             output_params["-seg_duration"] = self.__params.pop("-seg_duration", 5)
-            # Enable (1) the use of a SegmentTimline inside a SegmentTemplate.
+            # Enable (1) the use of a SegmentTimeline inside a SegmentTemplate.
             output_params["-use_timeline"] = 1
 
         # Finally, some hardcoded DASH parameters (Refer FFmpeg docs for more info.)
@@ -944,7 +944,7 @@ class StreamGear:
         ffmpeg_cmd = None
         hide_banner = (
             [] if self.__logging else ["-hide_banner"]
-        )  # ensuring less cluterring if specified
+        )  # ensuring less cluttering if specified
         # format commands
         if self.__video_source:
             ffmpeg_cmd = (
