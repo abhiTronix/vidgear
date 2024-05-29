@@ -22,19 +22,16 @@ limitations under the License.
 import os
 import time
 import math
-import platform
-import pathlib
 import difflib
 import logging as log
 import subprocess as sp
 from tqdm import tqdm
 from fractions import Fraction
 from collections import OrderedDict
-from typing_extensions import deprecated
 
 # import helper packages
 from .helper import (
-    capPropId,
+    deprecated,
     dict2Args,
     delete_ext_safe,
     extract_time,
@@ -61,11 +58,11 @@ class StreamGear:
     StreamGear provides a standalone, highly extensible, and flexible wrapper around FFmpeg multimedia framework for generating chunked-encoded media segments of the content.
 
     SteamGear easily transcodes source videos/audio files & real-time video-frames and breaks them into a sequence of multiple smaller chunks/segments of suitable length. These segments make it
-    possible to stream videos at different quality levels (different bitrates or spatial resolutions) and can be switched in the middle of a video from one quality level to another – if bandwidth
-    permits – on a per-segment basis. A user can serve these segments on a web server that makes it easier to download them through HTTP standard-compliant GET requests.
+    possible to stream videos at different quality levels _(different bitrates or spatial resolutions)_ and can be switched in the middle of a video from one quality level to another – if bandwidth
+    permits - on a per-segment basis. A user can serve these segments on a web server that makes it easier to download them through HTTP standard-compliant GET requests.
 
-    SteamGear also creates a Manifest/Playlist file (such as MPD in-case of DASH and M3U8 in-case of HLS) besides segments that describe these segment information (timing, URL, media characteristics like video resolution and bit rates)
-     and is provided to the client before the streaming session.
+    SteamGear also creates a Manifest/Playlist file (such as MPD in-case of DASH and M3U8 in-case of HLS) besides segments that describe these segment information
+    (timing, URL, media characteristics like video resolution and bit rates) and is provided to the client before the streaming session.
 
     SteamGear currently supports MPEG-DASH (Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1) and Apple HLS (HTTP live streaming).
     """
@@ -77,13 +74,12 @@ class StreamGear:
         This constructor method initializes the object state and attributes of the StreamGear class.
 
         Parameters:
-            output (str): sets the valid filename/path for storing the StreamGear assets.
+            output (str): sets the valid filename/path for generating the StreamGear assets.
             format (str): select the adaptive HTTP streaming format(DASH and HLS).
             custom_ffmpeg (str): assigns the location of custom path/directory for custom FFmpeg executables.
             logging (bool): enables/disables logging.
             stream_params (dict): provides the flexibility to control supported internal parameters and FFmpeg properties.
         """
-
         # enable logging if specified
         self.__logging = logging if isinstance(logging, bool) else False
 
@@ -110,9 +106,7 @@ class StreamGear:
 
         # cleans and reformat user-defined parameters
         self.__params = {
-            str(k).strip(): (
-                str(v).strip() if not isinstance(v, (dict, list, int, float)) else v
-            )
+            str(k).strip(): (v.strip() if isinstance(v, str) else v)
             for k, v in stream_params.items()
         }
 
@@ -142,24 +136,25 @@ class StreamGear:
             )
 
         # handle Audio-Input
-        audio = self.__params.pop("-audio", "")
+        audio = self.__params.pop("-audio", False)
         if audio and isinstance(audio, str):
             if os.path.isfile(audio):
                 self.__audio = os.path.abspath(audio)
             elif is_valid_url(self.__ffmpeg, url=audio, logging=self.__logging):
                 self.__audio = audio
             else:
-                self.__audio = ""
+                self.__audio = False
         elif audio and isinstance(audio, list):
             self.__audio = audio
         else:
-            self.__audio = ""
-
-        if self.__audio and self.__logging:
-            logger.debug("External audio source detected!")
+            self.__audio = False
+        # log external audio source
+        self.__audio and self.__logging and logger.debug(
+            "External audio source `{}` detected.".format(self.__audio)
+        )
 
         # handle Video-Source input
-        source = self.__params.pop("-video_source", "")
+        source = self.__params.pop("-video_source", False)
         # Check if input is valid string
         if source and isinstance(source, str) and len(source) > 1:
             # Differentiate input
@@ -169,7 +164,8 @@ class StreamGear:
                 self.__video_source = source
             else:
                 # discard the value otherwise
-                self.__video_source = ""
+                self.__video_source = False
+
             # Validate input
             if self.__video_source:
                 validation_results = validate_video(
@@ -191,10 +187,17 @@ class StreamGear:
                     )
                 )
             else:
-                logger.warning("No valid video_source provided.")
+                # log warning
+                logger.warning("Discarded invalid `-video_source` value provided.")
         else:
+            if source:
+                # log warning if source provided
+                logger.warning("Invalid `-video_source` value provided.")
+            else:
+                # log normally
+                logger.info("No `-video_source` value provided.")
             # discard the value otherwise
-            self.__video_source = ""
+            self.__video_source = False
 
         # handle user-defined framerate
         self.__inputframerate = self.__params.pop("-input_framerate", 0.0)
@@ -205,80 +208,103 @@ class StreamGear:
             # reset improper values
             self.__inputframerate = 0.0
 
-        # handle old assests
-        self.__clear_assets = self.__params.pop("-clear_prev_assets", False)
-        if not isinstance(self.__clear_assets, bool):
+        # handle old assets
+        clear_assets = self.__params.pop("-clear_prev_assets", False)
+        if isinstance(clear_assets, bool):
+            self.__clear_assets = clear_assets
+            # log if clearing assets is enabled
+            clear_assets and logger.debug(
+                "Previous StreamGear API assets will be deleted in this run."
+            )
+        else:
             # reset improper values
             self.__clear_assets = False
 
         # handle whether to livestream?
-        self.__livestreaming = self.__params.pop("-livestream", False)
-        if not isinstance(self.__livestreaming, bool):
+        livestreaming = self.__params.pop("-livestream", False)
+        if isinstance(livestreaming, bool):
+            self.__livestreaming = livestreaming
+            # log if live streaming is enabled
+            livestreaming and logger.info(
+                "Live-Streaming Mode is enabled for this run."
+            )
+        else:
             # reset improper values
             self.__livestreaming = False
 
-        # handle Streaming formats
-        supported_formats = ["dash", "hls"]  # will be extended in future
-        # Validate
-        if not (format is None) and format and isinstance(format, str):
+        # handle the special-case of forced-termination
+        enable_force_termination = self.__params.pop("-enable_force_termination", False)
+        # check if value is valid
+        if isinstance(enable_force_termination, bool):
+            self.__forced_termination = enable_force_termination
+            # log if forced termination is enabled
+            self.__forced_termination and logger.info(
+                "Forced termination is enabled for this run."
+            )
+        else:
+            # handle improper values
+            self.__forced_termination = False
+
+        # handle streaming format
+        supported_formats = ["dash", "hls"]  # TODO will be extended in future
+        if format and isinstance(format, str):
             _format = format.strip().lower()
             if _format in supported_formats:
                 self.__format = _format
                 logger.info(
-                    "StreamGear will generate files for {} HTTP streaming format.".format(
+                    "StreamGear will generate asset files for {} streaming format.".format(
                         self.__format.upper()
                     )
                 )
             elif difflib.get_close_matches(_format, supported_formats):
                 raise ValueError(
-                    "[StreamGear:ERROR] :: Incorrect format! Did you mean `{}`?".format(
+                    "[StreamGear:ERROR] :: Incorrect `format` parameter value! Did you mean `{}`?".format(
                         difflib.get_close_matches(_format, supported_formats)[0]
                     )
                 )
             else:
                 raise ValueError(
-                    "[StreamGear:ERROR] :: format value `{}` not valid/supported!".format(
+                    "[StreamGear:ERROR] :: The `format` parameter value `{}` not valid/supported!".format(
                         format
                     )
                 )
         else:
             raise ValueError(
-                "[StreamGear:ERROR] :: format value is Missing/Incorrect. Check vidgear docs!"
+                "[StreamGear:ERROR] :: The `format` parameter value is Missing or Invalid!"
             )
 
-        # handles output name
-        if not output:
-            raise ValueError(
-                "[StreamGear:ERROR] :: Kindly provide a valid `output` value. Refer Docs for more information."
-            )
-        else:
+        # handles output asset filenames
+        if output:
             # validate this class has the access rights to specified directory or not
             abs_path = os.path.abspath(output)
-
+            # check if given output is a valid system path
             if check_WriteAccess(
                 os.path.dirname(abs_path),
                 is_windows=self.__os_windows,
                 logging=self.__logging,
             ):
-                # check if given path is directory
-                valid_extension = "mpd" if self.__format == "dash" else "m3u8"
                 # get all assets extensions
+                valid_extension = "mpd" if self.__format == "dash" else "m3u8"
                 assets_exts = [
                     ("chunk-stream", ".m4s"),  # filename prefix, extension
                     ("chunk-stream", ".ts"),  # filename prefix, extension
                     ".{}".format(valid_extension),
                 ]
                 # add source file extension too
-                if self.__video_source:
-                    assets_exts.append(
-                        (
-                            "chunk-stream",
-                            os.path.splitext(self.__video_source)[1],
-                        )  # filename prefix, extension
-                    )
+                self.__video_source and assets_exts.append(
+                    (
+                        "chunk-stream",
+                        os.path.splitext(self.__video_source)[1],
+                    )  # filename prefix, extension
+                )
+                # handle output
+                # check if path is a directory
                 if os.path.isdir(abs_path):
-                    if self.__clear_assets:
-                        delete_ext_safe(abs_path, assets_exts, logging=self.__logging)
+                    # clear previous assets if specified
+                    self.__clear_assets and delete_ext_safe(
+                        abs_path, assets_exts, logging=self.__logging
+                    )
+                    # auto-assign valid name and adds it to path
                     abs_path = os.path.join(
                         abs_path,
                         "{}-{}.{}".format(
@@ -286,8 +312,10 @@ class StreamGear:
                             time.strftime("%Y%m%d-%H%M%S"),
                             valid_extension,
                         ),
-                    )  # auto-assign valid name and adds it to path
-                elif self.__clear_assets and os.path.isfile(abs_path):
+                    )
+                # or check if path is a file
+                elif os.path.isfile(abs_path) and self.__clear_assets:
+                    # clear previous assets if specified
                     delete_ext_safe(
                         os.path.dirname(abs_path),
                         assets_exts,
@@ -300,41 +328,45 @@ class StreamGear:
                     output, self.__format.upper()
                 )
                 self.__logging and logger.debug(
-                    "Path:`{}` is sucessfully configured for streaming.".format(
+                    "Output Path:`{}` is successfully configured for generating streaming assets.".format(
                         abs_path
                     )
                 )
-                # assign it
-                self.__out_file = abs_path.replace(
-                    "\\", "/"
-                )  # workaround for Windows platform only, others will not be affected
-            elif platform.system() == "Linux" and pathlib.Path(output).is_char_device():
-                # check if linux video device path (such as `/dev/video0`)
-                self.__logging and logger.debug(
-                    "Path:`{}` is a valid Linux Video Device path.".format(output)
-                )
-                self.__out_file = output
+                # workaround patch for Windows only,
+                # others platforms will not be affected
+                self.__out_file = abs_path.replace("\\", "/")
             # check if given output is a valid URL
             elif is_valid_url(self.__ffmpeg, url=output, logging=self.__logging):
                 self.__logging and logger.debug(
-                    "URL:`{}` is valid and sucessfully configured for streaming.".format(
+                    "URL:`{}` is valid and successfully configured for generating streaming assets.".format(
                         output
                     )
                 )
                 self.__out_file = output
+            # raise ValueError otherwise
             else:
                 raise ValueError(
-                    "[StreamGear:ERROR] :: Output value:`{}` is not valid/supported!".format(
+                    "[StreamGear:ERROR] :: The output parameter value:`{}` is not valid/supported!".format(
                         output
                     )
                 )
+        else:
+            # raise ValueError otherwise
+            raise ValueError(
+                "[StreamGear:ERROR] :: Kindly provide a valid `output` parameter value. Refer Docs for more information."
+            )
+
         # log Mode of operation
-        logger.info(
+        self.__video_source and logger.info(
             "StreamGear has been successfully configured for {} Mode.".format(
                 "Single-Source" if self.__video_source else "Real-time Frames"
             )
         )
 
+    @deprecated(
+        parameter="rgb_mode",
+        message="The `rgb_mode` parameter is deprecated and will be removed in a future version. Only BGR format frames will be supported going forward.",
+    )
     def stream(self, frame, rgb_mode=False):
         """
         Pipelines `ndarray` frames to FFmpeg Pipeline for transcoding into multi-bitrate streamable assets.
@@ -342,12 +374,11 @@ class StreamGear:
         Parameters:
             frame (ndarray): a valid numpy frame
             rgb_mode (boolean): enable this flag to activate RGB mode _(i.e. specifies that incoming frames are of RGB format instead of default BGR)_.
-
         """
         # check if function is called in correct context
         if self.__video_source:
             raise RuntimeError(
-                "[StreamGear:ERROR] :: `stream()` function cannot be used when streaming from a `-video_source` input file. Kindly refer vidgear docs!"
+                "[StreamGear:ERROR] :: The `stream()` method cannot be used when streaming from a `-video_source` input file. Kindly refer vidgear docs!"
             )
         # None-Type frames will be skipped
         if frame is None:
@@ -400,7 +431,7 @@ class StreamGear:
         # check if function is called in correct context
         if not (self.__video_source):
             raise RuntimeError(
-                "[StreamGear:ERROR] :: `transcode_source()` function cannot be used without a valid `-video_source` input. Kindly refer vidgear docs!"
+                "[StreamGear:ERROR] :: The `transcode_source()` method cannot be used without a valid `-video_source` input. Kindly refer vidgear docs!"
             )
         # assign height, width and framerate
         self.__inputheight = int(self.__aspect_source[1])
@@ -411,21 +442,22 @@ class StreamGear:
 
     def __PreProcess(self, channels=0, rgb=False):
         """
-        Internal method that pre-processes default FFmpeg parameters before beginning pipelining.
+        Internal method that pre-processes default FFmpeg parameters before starting pipelining.
 
         Parameters:
             channels (int): Number of channels
-            rgb_mode (boolean): activates RGB mode _(if enabled)_.
+            rgb (boolean): activates RGB mode _(if enabled)_.
         """
         # turn off initiate flag
         self.__initiate_stream = False
-        # initialize parameters
+        # initialize I/O parameters
         input_parameters = OrderedDict()
         output_parameters = OrderedDict()
         # pre-assign default codec parameters (if not assigned by user).
         default_codec = "libx264rgb" if rgb else "libx264"
         output_parameters["-vcodec"] = self.__params.pop("-vcodec", default_codec)
-        # enable optimizations and enforce compatibility
+
+        # enforce compatibility
         if output_parameters["-vcodec"] != "copy":
             # NOTE: these parameters only supported when stream copy not defined
             output_parameters["-vf"] = self.__params.pop("-vf", "format=yuv420p")
@@ -441,7 +473,9 @@ class StreamGear:
             self.__params.pop("-aspect", False) and logger.warning(
                 "Overriding aspect ratio with stream copy may produce invalid files. Discarding `-aspect` parameter!"
             )
-        # w.r.t selected codec
+
+        # enable optimizations w.r.t selected codec
+        ### OPTIMIZATION-1 ###
         if output_parameters["-vcodec"] in [
             "libx264",
             "libx264rgb",
@@ -449,33 +483,36 @@ class StreamGear:
             "libvpx-vp9",
         ]:
             output_parameters["-crf"] = self.__params.pop("-crf", "20")
-        if output_parameters["-vcodec"] in ["libx264", "libx264rgb"]:
+        ### OPTIMIZATION-2 ###
+        if output_parameters["-vcodec"] == "libx264":
             if not (self.__video_source):
                 output_parameters["-profile:v"] = self.__params.pop(
                     "-profile:v", "high"
                 )
+        ### OPTIMIZATION-3 ###
+        if output_parameters["-vcodec"] in ["libx264", "libx264rgb"]:
             output_parameters["-tune"] = self.__params.pop("-tune", "zerolatency")
             output_parameters["-preset"] = self.__params.pop("-preset", "veryfast")
+        ### OPTIMIZATION-4 ###
         if output_parameters["-vcodec"] == "libx265":
             output_parameters["-x265-params"] = self.__params.pop(
                 "-x265-params", "lossless=1"
             )
+
         # enable audio (if present)
         if self.__audio:
             # validate audio source
             bitrate = validate_audio(self.__ffmpeg, source=self.__audio)
             if bitrate:
                 logger.info(
-                    "Detected External Audio Source is valid, and will be used for streams."
+                    "Detected External Audio Source is valid, and will be used for generating streams."
                 )
-
                 # assign audio source
                 output_parameters[
                     "{}".format(
                         "-core_asource" if isinstance(self.__audio, list) else "-i"
                     )
                 ] = self.__audio
-
                 # assign audio codec
                 output_parameters["-acodec"] = self.__params.pop(
                     "-acodec", "aac" if isinstance(self.__audio, list) else "copy"
@@ -488,30 +525,30 @@ class StreamGear:
                 logger.warning(
                     "Audio source `{}` is not valid, Skipped!".format(self.__audio)
                 )
+        # validate input video's audio source if available
         elif self.__video_source:
-            # validate audio source
             bitrate = validate_audio(self.__ffmpeg, source=self.__video_source)
             if bitrate:
-                logger.info("Source Audio will be used for streams.")
+                logger.info("Input Video's audio source will be used for this run.")
                 # assign audio codec
                 output_parameters["-acodec"] = (
                     "aac" if self.__format == "hls" else "copy"
                 )
                 output_parameters["a_bitrate"] = bitrate  # temporary handler
             else:
-                logger.warning(
-                    "No valid audio_source available. Disabling audio for streams!"
+                logger.info(
+                    "No valid audio source available in the input video. Disabling audio while generating streams."
                 )
         else:
-            logger.warning(
-                "No valid audio_source provided. Disabling audio for streams!"
+            logger.info(
+                "No valid audio source provided. Disabling audio while generating streams."
             )
         # enable audio optimizations based on audio codec
         if "-acodec" in output_parameters and output_parameters["-acodec"] == "aac":
             output_parameters["-movflags"] = "+faststart"
 
         # set input framerate
-        if self.__sourceframerate > 0 and not (self.__video_source):
+        if self.__sourceframerate > 0.0 and not (self.__video_source):
             # set input framerate
             self.__logging and logger.debug(
                 "Setting Input framerate: {}".format(self.__sourceframerate)
@@ -542,10 +579,10 @@ class StreamGear:
         # check if processing completed successfully
         assert not (
             process_params is None
-        ), "[StreamGear:ERROR] :: {} stream cannot be initiated!".format(
+        ), "[StreamGear:ERROR] :: `{}` stream cannot be initiated properly!".format(
             self.__format.upper()
         )
-        # Finally start FFmpef pipline and process everything
+        # Finally start FFmpeg pipeline and process everything
         self.__Build_n_Execute(process_params[0], process_params[1])
 
     def __handle_streams(self, input_params, output_params):
@@ -558,42 +595,45 @@ class StreamGear:
         """
         # handle bit-per-pixels
         bpp = self.__params.pop("-bpp", 0.1000)
-        if isinstance(bpp, (float, int)) and bpp > 0.0:
-            bpp = float(bpp) if (bpp > 0.001) else 0.1000
+        if isinstance(bpp, float) and bpp >= 0.001:
+            bpp = float(bpp)
         else:
-            # reset to defaut if invalid
+            # reset to default if invalid
             bpp = 0.1000
         # log it
-        self.__logging and logger.debug(
+        bpp and self.__logging and logger.debug(
             "Setting bit-per-pixels: {} for this stream.".format(bpp)
         )
 
         # handle gop
-        gop = self.__params.pop("-gop", 0)
-        if isinstance(gop, (int, float)) and gop > 0:
+        gop = self.__params.pop("-gop", 2 * int(self.__sourceframerate))
+        if isinstance(gop, (int, float)) and gop >= 0:
             gop = int(gop)
         else:
             # reset to some recommended value
             gop = 2 * int(self.__sourceframerate)
         # log it
-        self.__logging and logger.debug("Setting GOP: {} for this stream.".format(gop))
+        gop and self.__logging and logger.debug(
+            "Setting GOP: {} for this stream.".format(gop)
+        )
 
-        # define and map default stream
-        if self.__format != "hls":
-            output_params["-map"] = 0
-        else:
+        # define default stream and its mapping
+        if self.__format == "hls":
             output_params["-corev0"] = ["-map", "0:v"]
             if "-acodec" in output_params:
                 output_params["-corea0"] = [
                     "-map",
                     "{}:a".format(1 if "-core_audio" in output_params else 0),
                 ]
-        # assign resolution
+        else:
+            output_params["-map"] = 0
+
+        # assign default output resolution
         if "-s:v:0" in self.__params:
             # prevent duplicates
             del self.__params["-s:v:0"]
         output_params["-s:v:0"] = "{}x{}".format(self.__inputwidth, self.__inputheight)
-        # assign video-bitrate
+        # assign default output video-bitrate
         if "-b:v:0" in self.__params:
             # prevent duplicates
             del self.__params["-b:v:0"]
@@ -608,12 +648,13 @@ class StreamGear:
             )
             + "k"
         )
-        # assign audio-bitrate
+
+        # assign default output audio-bitrate
         if "-b:a:0" in self.__params:
             # prevent duplicates
             del self.__params["-b:a:0"]
-        # extract audio-bitrate from temporary handler
-        a_bitrate = output_params.pop("a_bitrate", "")
+        # extract and assign audio-bitrate from temporary handler
+        a_bitrate = output_params.pop("a_bitrate", False)
         if "-acodec" in output_params and a_bitrate:
             output_params["-b:a:0"] = a_bitrate
 
@@ -621,7 +662,7 @@ class StreamGear:
         streams = self.__params.pop("-streams", {})
         output_params = self.__evaluate_streams(streams, output_params, bpp)
 
-        # define additional stream optimization parameters
+        # define additional streams optimization parameters
         if output_params["-vcodec"] in ["libx264", "libx264rgb"]:
             if not "-bf" in self.__params:
                 output_params["-bf"] = 1
@@ -629,17 +670,18 @@ class StreamGear:
                 output_params["-sc_threshold"] = 0
             if not "-keyint_min" in self.__params:
                 output_params["-keyint_min"] = gop
-        if output_params["-vcodec"] in ["libx264", "libx264rgb", "libvpx-vp9"]:
-            if not "-g" in self.__params:
-                output_params["-g"] = gop
+        if (
+            output_params["-vcodec"] in ["libx264", "libx264rgb", "libvpx-vp9"]
+            and not "-g" in self.__params
+        ):
+            output_params["-g"] = gop
         if output_params["-vcodec"] == "libx265":
             output_params["-core_x265"] = [
                 "-x265-params",
                 "keyint={}:min-keyint={}".format(gop, gop),
             ]
 
-        # process given dash/hls stream
-        processed_params = None
+        # process given dash/hls stream and return it
         if self.__format == "dash":
             processed_params = self.__generate_dash_stream(
                 input_params=input_params,
@@ -650,7 +692,6 @@ class StreamGear:
                 input_params=input_params,
                 output_params=output_params,
             )
-
         return processed_params
 
     def __evaluate_streams(self, streams, output_params, bpp):
@@ -666,12 +707,13 @@ class StreamGear:
 
         # check if streams are empty
         if not streams:
-            logger.warning("No `-streams` are provided!")
+            logger.info("No additional `-streams` are provided.")
             return output_params
 
         # check if streams are valid
         if isinstance(streams, list) and all(isinstance(x, dict) for x in streams):
-            stream_count = 1  # keep track of streams
+            # keep track of streams
+            stream_count = 1
             # calculate source aspect-ratio
             source_aspect_ratio = self.__inputwidth / self.__inputheight
             # log the process
@@ -679,20 +721,23 @@ class StreamGear:
                 "Processing {} streams.".format(len(streams))
             )
             # iterate over given streams
-            for stream in streams:
-                stream_copy = stream.copy()  # make copy
-                intermediate_dict = {}  # handles intermediate stream data as dictionary
-
+            for idx, stream in enumerate(streams):
+                # log stream processing
+                self.__logging and logger.debug("Processing #{} stream now".format(idx))
+                # make copy
+                stream_copy = stream.copy()
+                # handle intermediate stream data as dictionary
+                intermediate_dict = {}
                 # define and map stream to intermediate dict
-                if self.__format != "hls":
-                    intermediate_dict["-core{}".format(stream_count)] = ["-map", "0"]
-                else:
+                if self.__format == "hls":
                     intermediate_dict["-corev{}".format(stream_count)] = ["-map", "0:v"]
                     if "-acodec" in output_params:
                         intermediate_dict["-corea{}".format(stream_count)] = [
                             "-map",
                             "{}:a".format(1 if "-core_audio" in output_params else 0),
                         ]
+                else:
+                    intermediate_dict["-core{}".format(stream_count)] = ["-map", "0"]
 
                 # extract resolution & individual dimension of stream
                 resolution = stream.pop("-resolution", "")
@@ -713,7 +758,7 @@ class StreamGear:
                     )
                     if int(dimensions[0]) != expected_width:
                         logger.warning(
-                            "Given stream resolution `{}` is not in accordance with the Source Aspect-Ratio. Stream Output may appear Distorted!".format(
+                            "The provided stream resolution '{}' does not align with the source aspect ratio. Output stream may appear distorted!".format(
                                 resolution
                             )
                         )
@@ -722,7 +767,7 @@ class StreamGear:
                 else:
                     # otherwise log error and skip stream
                     logger.error(
-                        "Missing `-resolution` value, Stream `{}` Skipped!".format(
+                        "Missing `-resolution` value. Invalid stream `{}` Skipped!".format(
                             stream_copy
                         )
                     )
@@ -751,7 +796,7 @@ class StreamGear:
                     else:
                         # If everything fails, log and skip the stream!
                         logger.error(
-                            "Unable to determine Video-Bitrate for the stream `{}`, Skipped!".format(
+                            "Unable to determine Video-Bitrate for the stream `{}`. Skipped!".format(
                                 stream_copy
                             )
                         )
@@ -778,9 +823,16 @@ class StreamGear:
                 stream_copy.clear()
                 # increment to next stream
                 stream_count += 1
+                # log stream processing
+                self.__logging and logger.debug(
+                    "Processed #{} stream successfully.".format(idx)
+                )
+            # store stream count
             output_params["stream_count"] = stream_count
+            # log streams processing
             self.__logging and logger.debug("All streams processed successfully!")
         else:
+            # skip and log
             logger.warning("Invalid type `-streams` skipped!")
 
         return output_params
@@ -794,8 +846,6 @@ class StreamGear:
             input_params (dict): Input FFmpeg parameters
             output_params (dict): Output FFmpeg parameters
         """
-        # Check if live-streaming or not?
-
         # validate `hls_segment_type`
         default_hls_segment_type = self.__params.pop("-hls_segment_type", "mpegts")
         if isinstance(
@@ -803,38 +853,77 @@ class StreamGear:
         ) and default_hls_segment_type.strip() in ["fmp4", "mpegts"]:
             output_params["-hls_segment_type"] = default_hls_segment_type.strip()
         else:
+            # otherwise reset to default
+            logger.warning("Invalid `-hls_segment_type` value skipped!")
             output_params["-hls_segment_type"] = "mpegts"
-
         # gather required parameters
         if self.__livestreaming:
-            # `hls_list_size` must be greater than 0
+            # `hls_list_size` must be greater than or equal to 0
             default_hls_list_size = self.__params.pop("-hls_list_size", 6)
-            if isinstance(default_hls_list_size, int) and default_hls_list_size > 0:
+            if isinstance(default_hls_list_size, int) and default_hls_list_size >= 0:
                 output_params["-hls_list_size"] = default_hls_list_size
             else:
-                # otherwise reset to  default
+                # otherwise reset to default
+                logger.warning("Invalid `-hls_list_size` value skipped!")
                 output_params["-hls_list_size"] = 6
-            # default behaviour
-            output_params["-hls_init_time"] = self.__params.pop("-hls_init_time", 4)
-            output_params["-hls_time"] = self.__params.pop("-hls_time", 6)
-            output_params["-hls_flags"] = self.__params.pop(
+            # `hls_init_time` must be greater than or equal to 0
+            default_hls_init_time = self.__params.pop("-hls_init_time", 4)
+            if isinstance(default_hls_init_time, int) and default_hls_init_time >= 0:
+                output_params["-hls_init_time"] = default_hls_init_time
+            else:
+                # otherwise reset to default
+                logger.warning("Invalid `-hls_init_time` value skipped!")
+                output_params["-hls_init_time"] = 4
+            # `hls_time` must be greater than or equal to 0
+            default_hls_time = self.__params.pop("-hls_time", 4)
+            if isinstance(default_hls_time, int) and default_hls_time >= 0:
+                output_params["-hls_time"] = default_hls_time
+            else:
+                # otherwise reset to default
+                logger.warning("Invalid `-hls_time` value skipped!")
+                output_params["-hls_time"] = 6
+            # `hls_flags` must be string
+            default_hls_flags = self.__params.pop(
                 "-hls_flags", "delete_segments+discont_start+split_by_time"
             )
+            if isinstance(default_hls_flags, str):
+                output_params["-hls_flags"] = default_hls_flags
+            else:
+                # otherwise reset to default
+                logger.warning("Invalid `-hls_flags` value skipped!")
+                output_params["-hls_flags"] = (
+                    "delete_segments+discont_start+split_by_time"
+                )
             # clean everything at exit?
-            output_params["-remove_at_exit"] = self.__params.pop("-remove_at_exit", 0)
+            remove_at_exit = self.__params.pop("-remove_at_exit", 0)
+            if isinstance(remove_at_exit, int) and remove_at_exit in [
+                0,
+                1,
+            ]:
+                output_params["-remove_at_exit"] = remove_at_exit
+            else:
+                # otherwise reset to default
+                logger.warning("Invalid `-remove_at_exit` value skipped!")
+                output_params["-remove_at_exit"] = 0
         else:
             # enforce "contain all the segments"
             output_params["-hls_list_size"] = 0
             output_params["-hls_playlist_type"] = "vod"
 
         # handle base URL for absolute paths
-        output_params["-hls_base_url"] = self.__params.pop("-hls_base_url", "")
+        hls_base_url = self.__params.pop("-hls_base_url", "")
+        if isinstance(hls_base_url, str):
+            output_params["-hls_base_url"] = hls_base_url
+        else:
+            # otherwise reset to default
+            logger.warning("Invalid `-hls_base_url` value skipped!")
+            output_params["-hls_base_url"] = ""
 
-        # Finally, some hardcoded HLS parameters (Refer FFmpeg docs for more info.)
+        # Hardcoded HLS parameters (Refer FFmpeg docs for more info.)
         output_params["-allowed_extensions"] = "ALL"
         # Handling <hls_segment_filename>
-        # Here filenname will be based on `stream_count` dict parameter that
-        # would be used to check whether stream is multivariant(>1) or single(0-1)
+        # Here filename will be based on `stream_count` dict parameter that
+        # would be used to check whether stream is multi-variant(>1) or single(0-1)
         segment_template = (
             "{}-stream%v-%03d.{}"
             if output_params["stream_count"] > 1
@@ -844,9 +933,11 @@ class StreamGear:
             os.path.join(os.path.dirname(self.__out_file), "chunk"),
             "m4s" if output_params["-hls_segment_type"] == "fmp4" else "ts",
         )
+        # Hardcoded HLS parameters (Refer FFmpeg docs for more info.)
         output_params["-hls_allow_cache"] = 0
         # enable hls formatting
         output_params["-f"] = "hls"
+        # return HLS params
         return (input_params, output_params)
 
     def __generate_dash_stream(self, input_params, output_params):
@@ -861,19 +952,52 @@ class StreamGear:
 
         # Check if live-streaming or not?
         if self.__livestreaming:
-            output_params["-window_size"] = self.__params.pop("-window_size", 5)
-            output_params["-extra_window_size"] = self.__params.pop(
-                "-extra_window_size", 5
-            )
+            # `extra_window_size` must be greater than or equal to 0
+            window_size = self.__params.pop("-window_size", 5)
+            if isinstance(window_size, int) and window_size >= 0:
+                output_params["-window_size"] = window_size
+            else:
+                # otherwise reset to default
+                logger.warning("Invalid `-window_size` value skipped!")
+                output_params["-window_size"] = 5
+            # `extra_window_size` must be greater than or equal to 0
+            extra_window_size = self.__params.pop("-extra_window_size", 5)
+            if isinstance(extra_window_size, int) and extra_window_size >= 0:
+                output_params["-extra_window_size"] = window_size
+            else:
+                # otherwise reset to default
+                logger.warning("Invalid `-extra_window_size` value skipped!")
+                output_params["-extra_window_size"] = 5
             # clean everything at exit?
-            output_params["-remove_at_exit"] = self.__params.pop("-remove_at_exit", 0)
-            # default behaviour
-            output_params["-seg_duration"] = self.__params.pop("-seg_duration", 20)
+            remove_at_exit = self.__params.pop("-remove_at_exit", 0)
+            if isinstance(remove_at_exit, int) and remove_at_exit in [
+                0,
+                1,
+            ]:
+                output_params["-remove_at_exit"] = remove_at_exit
+            else:
+                # otherwise reset to default
+                logger.warning("Invalid `-remove_at_exit` value skipped!")
+                output_params["-remove_at_exit"] = 0
+            # `seg_duration` must be greater than or equal to 0
+            seg_duration = self.__params.pop("-seg_duration", 20)
+            if isinstance(seg_duration, int) and seg_duration >= 0:
+                output_params["-seg_duration"] = seg_duration
+            else:
+                # otherwise reset to default
+                logger.warning("Invalid `-seg_duration` value skipped!")
+                output_params["-seg_duration"] = 20
             # Disable (0) the use of a SegmentTimeline inside a SegmentTemplate.
             output_params["-use_timeline"] = 0
         else:
-            # default behaviour
+            # `seg_duration` must be greater than or equal to 0
             output_params["-seg_duration"] = self.__params.pop("-seg_duration", 5)
+            if isinstance(seg_duration, int) and seg_duration >= 0:
+                output_params["-seg_duration"] = seg_duration
+            else:
+                # otherwise reset to default
+                logger.warning("Invalid `-seg_duration` value skipped!")
+                output_params["-seg_duration"] = 5
             # Enable (1) the use of a SegmentTimeline inside a SegmentTemplate.
             output_params["-use_timeline"] = 1
 
@@ -884,6 +1008,7 @@ class StreamGear:
         )
         # enable dash formatting
         output_params["-f"] = "dash"
+        # return DASH params
         return (input_params, output_params)
 
     def __Build_n_Execute(self, input_params, output_params):
@@ -895,13 +1020,11 @@ class StreamGear:
             output_params (dict): Output FFmpeg parameters
         """
         # handle audio source if present
-        if "-core_asource" in output_params:
-            output_params.move_to_end("-core_asource", last=False)
-
-        # finally handle `-i`
-        if "-i" in output_params:
-            output_params.move_to_end("-i", last=False)
-
+        "-core_asource" in output_params and output_params.move_to_end(
+            "-core_asource", last=False
+        )
+        # handle `-i` parameter
+        "-i" in output_params and output_params.move_to_end("-i", last=False)
         # copy streams count
         stream_count = output_params.pop("stream_count", 1)
 
@@ -930,22 +1053,20 @@ class StreamGear:
             ]
 
         # log it if enabled
-        if self.__logging:
-            logger.debug(
-                "User-Defined Output parameters: `{}`".format(
-                    " ".join(output_commands) if output_commands else None
-                )
+        self.__logging and logger.debug(
+            "User-Defined Output parameters: `{}`".format(
+                " ".join(output_commands) if output_commands else None
             )
-            logger.debug(
-                "Additional parameters: `{}`".format(
-                    " ".join(stream_commands) if stream_commands else None
-                )
+        )
+        self.__logging and logger.debug(
+            "Additional parameters: `{}`".format(
+                " ".join(stream_commands) if stream_commands else None
             )
+        )
         # build FFmpeg command from parameters
         ffmpeg_cmd = None
-        hide_banner = (
-            [] if self.__logging else ["-hide_banner"]
-        )  # ensuring less cluttering if specified
+        # ensuring less cluttering if silent mode
+        hide_banner = [] if self.__logging else ["-hide_banner"]
         # format commands
         if self.__video_source:
             ffmpeg_cmd = (
@@ -986,7 +1107,10 @@ class StreamGear:
             return_code = 0
             pbar = None
             sec_prev = 0
-            if not self.__logging:
+            if self.__logging:
+                self.__process.communicate()
+                return_code = self.__process.returncode
+            else:
                 # iterate until stdout runs out
                 while True:
                     # read and process data
@@ -994,41 +1118,36 @@ class StreamGear:
                     if data:
                         data = data.decode("utf-8")
                         # extract duration and time-left
-                        if pbar is None:
-                            if "Duration:" in data:
-                                sec_duration = extract_time(data)
-                                # initate progress bar
-                                pbar = tqdm(
-                                    total=sec_duration,
-                                    desc="Processing Frames",
-                                    unit="frame",
-                                )
-                        else:
-                            if "time=" in data:
-                                sec_current = extract_time(data)
-                                # update progress bar
-                                if sec_current:
-                                    pbar.update(sec_current - sec_prev)
-                                    sec_prev = sec_current
+                        if pbar is None and "Duration:" in data:
+                            # extract time in seconds
+                            sec_duration = extract_time(data)
+                            # initiate progress bar
+                            pbar = tqdm(
+                                total=sec_duration,
+                                desc="Processing Frames",
+                                unit="frame",
+                            )
+                        elif "time=" in data:
+                            # extract time in seconds
+                            sec_current = extract_time(data)
+                            # update progress bar
+                            if sec_current:
+                                pbar.update(sec_current - sec_prev)
+                                sec_prev = sec_current
                     else:
                         # poll if no data
                         if self.__process.poll() is not None:
                             break
                 return_code = self.__process.poll()
-            else:
-                self.__process.communicate()
-                return_code = self.__process.returncode
             # close progress bar
-            if pbar:
-                pbar.close()
+            not (pbar is None) and pbar.close()
             # handle return_code
-            if return_code:
+            if return_code != 0:
                 # log and raise error if return_code is `1`
                 logger.error(
                     "StreamGear failed to initiate stream for this video source!"
                 )
-                error = sp.CalledProcessError(return_code, ffmpeg_cmd)
-                raise error
+                raise sp.CalledProcessError(return_code, ffmpeg_cmd)
             else:
                 # log if successful
                 logger.critical(
@@ -1052,14 +1171,15 @@ class StreamGear:
         self.close()
 
     @deprecated(
-        "The `terminate()` method will be removed in the next release. Kindly use `close()` method instead."
+        message="The `terminate()` method will be removed in the next release. Kindly use `close()` method instead."
     )
     def terminate(self):
         """
-        !!! warning "[DEPRECATION NOTICE]: This method will be removed in the next release. Kindly use `close()` method instead."
+        !!! warning "[DEPRECATION NOTICE]: This method is now deprecated and will be removed in a future release."
 
-        This function simply provides backward compatibility with the old `terminate()` function.
-        It simply calls the new `close()` method to terminate various StreamGear process.
+        This function ensures backward compatibility for the `terminate()` method to maintain the API on existing systems.
+        It achieves this by calling the new `close()` method to terminate various
+        StreamGear processes.
         """
 
         self.close()
@@ -1078,13 +1198,8 @@ class StreamGear:
         self.__process.stdin and self.__process.stdin.close()
         # close `stdout` output
         self.__process.stdout and self.__process.stdout.close()
+        # forced termination if specified.
+        self.__forced_termination and self.__process.terminate()
         # wait if process is still processing
-        self.__process.wait()
         # discard process
         self.__process = None
-        # log it
-        logger.critical(
-            "Transcoding Ended. {} Streaming assets are successfully generated at specified path.".format(
-                self.__format.upper()
-            )
-        )
