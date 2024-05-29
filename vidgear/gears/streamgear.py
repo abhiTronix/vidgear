@@ -22,6 +22,7 @@ limitations under the License.
 import os
 import time
 import math
+import signal
 import difflib
 import logging as log
 import subprocess as sp
@@ -582,7 +583,7 @@ class StreamGear:
         ), "[StreamGear:ERROR] :: `{}` stream cannot be initiated properly!".format(
             self.__format.upper()
         )
-        # Finally start FFmpeg pipeline and process everything
+        # Finally start FFmpef pipline and process everything
         self.__Build_n_Execute(process_params[0], process_params[1])
 
     def __handle_streams(self, input_params, output_params):
@@ -723,7 +724,7 @@ class StreamGear:
             # iterate over given streams
             for idx, stream in enumerate(streams):
                 # log stream processing
-                self.__logging and logger.debug("Processing #{} stream now".format(idx))
+                self.__logging and logger.debug("Processing #{} stream ::".format(idx))
                 # make copy
                 stream_copy = stream.copy()
                 # handle intermediate stream data as dictionary
@@ -1189,8 +1190,7 @@ class StreamGear:
         Safely terminates various StreamGear process.
         """
         # log termination
-        if self.__logging:
-            logger.debug("Terminating StreamGear Processes.")
+        self.__logging and logger.debug("Terminating StreamGear Processes.")
         # return if no process was initiated at first place
         if self.__process is None or not (self.__process.poll() is None):
             return
@@ -1199,7 +1199,12 @@ class StreamGear:
         # close `stdout` output
         self.__process.stdout and self.__process.stdout.close()
         # forced termination if specified.
-        self.__forced_termination and self.__process.terminate()
+        if self.__forced_termination:
+            self.__process.terminate()
+        else:
+            # send CTRL_BREAK_EVENT signal
+            self.__process.send_signal(signal.CTRL_BREAK_EVENT)
         # wait if process is still processing
+        self.__process.wait()
         # discard process
         self.__process = None

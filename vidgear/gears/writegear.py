@@ -22,6 +22,7 @@ limitations under the License.
 import os
 import cv2
 import time
+import signal
 import platform
 import pathlib
 import logging as log
@@ -759,8 +760,7 @@ class WriteGear:
         Safely terminates various WriteGear process.
         """
         # log termination
-        if self.__logging:
-            logger.debug("Terminating WriteGear Processes.")
+        self.__logging and logger.debug("Terminating WriteGear Processes.")
         # handle termination separately
         if self.__compression:
             # when Compression Mode is enabled
@@ -773,7 +773,11 @@ class WriteGear:
             # close `stdout` output
             self.__process.stdout and self.__process.stdout.close()
             # forced termination if specified.
-            self.__forced_termination and self.__process.terminate()
+            if self.__forced_termination:
+                self.__process.terminate()
+            else:
+                # send CTRL_BREAK_EVENT signal
+                self.__process.send_signal(signal.CTRL_BREAK_EVENT)
             # wait if process is still processing
             self.__process.wait()
         else:
