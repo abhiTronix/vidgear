@@ -235,7 +235,7 @@ def test_ss_stream(format):
             output=assets_file_path, format=format, logging=True, **stream_params
         )
         streamer.transcode_source()
-        streamer.terminate()
+        streamer.close()
         if format == "dash":
             assert check_valid_mpd(assets_file_path), "Test Failed!"
         else:
@@ -263,7 +263,7 @@ def test_ss_livestream(format):
             output=assets_file_path, format=format, logging=True, **stream_params
         )
         streamer.transcode_source()
-        streamer.terminate()
+        streamer.close()
     except Exception as e:
         pytest.fail(str(e))
 
@@ -308,7 +308,7 @@ def test_rtf_stream(conversion, format):
             else:
                 streamer.stream(frame)
         stream.stop()
-        streamer.terminate()
+        streamer.close()
         asset_file = [
             os.path.join(assets_file_path, f)
             for f in os.listdir(assets_file_path)
@@ -346,7 +346,7 @@ def test_rtf_livestream(format):
                 break
             streamer.stream(frame)
         stream.stop()
-        streamer.terminate()
+        streamer.close()
     except Exception as e:
         if not isinstance(e, queue.Empty):
             pytest.fail(str(e))
@@ -386,7 +386,7 @@ def test_input_framerate_rtf(format):
                 break
             streamer.stream(frame)
         stream.release()
-        streamer.terminate()
+        streamer.close()
         if format == "dash":
             meta_data = extract_meta_mpd(assets_file_path)
             assert meta_data and len(meta_data) > 0, "Test Failed!"
@@ -480,7 +480,7 @@ def test_params(stream_params, format):
                 break
             streamer.stream(frame)
         stream.release()
-        streamer.terminate()
+        streamer.close()
         if format == "dash":
             assert check_valid_mpd(assets_file_path), "Test Failed!"
         else:
@@ -564,7 +564,7 @@ def test_audio(stream_params, format):
             output=assets_file_path, format=format, logging=True, **stream_params
         )
         streamer.transcode_source()
-        streamer.terminate()
+        streamer.close()
         if format == "dash":
             assert check_valid_mpd(assets_file_path), "Test Failed!"
         else:
@@ -712,7 +712,7 @@ def test_multistreams(format, stream_params):
             output=assets_file_path, format=format, logging=True, **stream_params
         )
         streamer.transcode_source()
-        streamer.terminate()
+        streamer.close()
         if format == "dash":
             metadata = extract_meta_mpd(assets_file_path)
             meta_videos = [x for x in metadata if x["mime_type"].startswith("video")]

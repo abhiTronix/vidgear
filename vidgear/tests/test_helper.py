@@ -537,7 +537,7 @@ def test_delete_ext_safe(ext, result):
             }
             streamer = StreamGear(output=mpd_file_path, **stream_params)
             streamer.transcode_source()
-            streamer.terminate()
+            streamer.close()
             assert check_valid_mpd(mpd_file_path)
         delete_ext_safe(path, ext, logging=True)
         assert not os.listdir(path), "`delete_ext_safe` Test failed!"

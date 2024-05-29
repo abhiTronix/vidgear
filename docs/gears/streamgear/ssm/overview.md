@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-# StreamGear API: Single-Source Mode
+# StreamGear API: Single-Source Mode :material-file-video-outline:
 
 <figure>
   <img src="../../../../assets/images/streamgear_file.webp" loading="lazy" alt="Single-Source Mode Flow Diagram" />
@@ -45,7 +45,7 @@ This mode can be easily activated by assigning suitable video path as input to [
     Apple HLS support was added in `v0.2.2`.
 
 
-!!! warning 
+!!! danger "Please Remember :material-police-badge-outline:"
 
     * Using [`stream()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) function instead of [`transcode_source()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) in Single-Source Mode will instantly result in **`RuntimeError`**!
     * Any invalid value to the [`-video_source`](../../params/#a-exclusive-parameters) attribute will result in **`AssertionError`**! 

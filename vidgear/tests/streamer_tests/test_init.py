@@ -63,7 +63,7 @@ def test_custom_ffmpeg(c_ffmpeg):
     Testing custom FFmpeg for StreamGear
     """
     streamer = StreamGear(output="output.mpd", custom_ffmpeg=c_ffmpeg, logging=True)
-    streamer.terminate()
+    streamer.close()
 
 
 @pytest.mark.xfail(raises=(AssertionError, ValueError))
@@ -73,7 +73,7 @@ def test_formats(format):
     Testing different formats for StreamGear
     """
     streamer = StreamGear(output="output.mpd", format=format, logging=True)
-    streamer.terminate()
+    streamer.close()
 
 
 @pytest.mark.parametrize(
@@ -96,7 +96,7 @@ def test_outputs(output):
             logging=True,
             **stream_params
         )
-        streamer.terminate()
+        streamer.close()
     except Exception as e:
         if output is None or output.endswith("m3u8"):
             pytest.xfail(str(e))

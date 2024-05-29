@@ -165,9 +165,7 @@ class WriteGear:
 
         # cleans and reformat output parameters
         self.__output_parameters = {
-            str(k).strip(): (
-                str(v).strip() if not isinstance(v, (list, tuple, int, float)) else v
-            )
+            str(k).strip(): (v.strip() if not isinstance(v, str) else v)
             for k, v in output_params.items()
         }
         # log it if specified
