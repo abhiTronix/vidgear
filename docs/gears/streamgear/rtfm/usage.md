@@ -499,7 +499,7 @@ To generate Secondary Streams, add each desired resolution and bitrate/framerate
 
 !!! info "A more detailed information on `-streams` attribute can be found [here ➶](../../params/#a-exclusive-parameters)" 
 
-!!! alert "In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
+!!! alert "In this mode, StreamGear DOES NOT automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
 
 ???+ danger "Important Information about `-streams` attribute :material-file-document-alert-outline:"
 
@@ -1050,6 +1050,8 @@ In this example, we will be using `h264_vaapi` as our Hardware Encoder and speci
      V..... mpeg2_vaapi          MPEG-2 (VAAPI) (codec mpeg2video)
      V..... vp8_vaapi            VP8 (VAAPI) (codec vp8)
     ```
+
+!!! failure "Please read the [**FFmpeg Documentation**](https://ffmpeg.org/documentation.html) carefully before passing any additional values to the `stream_params` parameter. Incorrect values may cause errors or result in no output."
 
 
 === "DASH"

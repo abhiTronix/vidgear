@@ -85,7 +85,7 @@ Following is the bare-minimum code you need to get started with StreamGear API i
 
 ## Usage with Additional Streams
 
-> In addition to the Primary Stream, you can easily generate any number of additional Secondary Streams with variable bitrates or spatial resolutions, using the exclusive [`-streams`](../../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter. 
+> In addition to the Primary Stream, you can easily generate any number of additional Secondary Streams with variable bitrate or spatial resolutions, using the exclusive [`-streams`](../../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter. 
 
 To generate Secondary Streams, add each desired resolution and bitrate/framerate as a list of dictionaries to the `-streams` attribute. StreamGear will handle the rest automatically. The complete example is as follows:
 
@@ -227,7 +227,8 @@ In this example, we'll use the [H.265/HEVC](https://trac.ffmpeg.org/wiki/Encode/
 
 !!! info "This example is just conveying the idea on how to use FFmpeg's internal encoders/parameters with StreamGear API. You can use any FFmpeg parameter in the similar manner."
 
-!!! danger "Refer to the FFmpeg Documentation (https://ffmpeg.org/documentation.html) before passing FFmpeg values to `stream_params`. Incorrect values may result in errors or no output."
+!!! danger "Please read the [**FFmpeg Documentation**](https://ffmpeg.org/documentation.html) carefully before passing any additional values to the `stream_params` parameter. Incorrect values may cause errors or result in no output."
+
 
 === "DASH"
 
