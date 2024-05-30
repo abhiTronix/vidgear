@@ -466,17 +466,14 @@ class StreamGear:
         if output_parameters["-vcodec"] != "copy":
             # NOTE: these parameters only supported when stream copy not defined
             output_parameters["-vf"] = self.__params.pop("-vf", "format=yuv420p")
-            aspect_ratio = Fraction(
-                self.__inputwidth / self.__inputheight
-            ).limit_denominator(10)
-            output_parameters["-aspect"] = ":".join(str(aspect_ratio).split("/"))
+            # Non-essential `-aspect` parameter is removed from the default pipeline.
         else:
             # log warnings for these parameters
             self.__params.pop("-vf", False) and logger.warning(
-                "Filtering and stream copy cannot be used together. Discarding `-vf` parameter!"
+                "Filtering and stream copy cannot be used together. Discarding specified `-vf` parameter!"
             )
             self.__params.pop("-aspect", False) and logger.warning(
-                "Overriding aspect ratio with stream copy may produce invalid files. Discarding `-aspect` parameter!"
+                "Overriding aspect ratio with stream copy may produce invalid files. Discarding specified `-aspect` parameter!"
             )
 
         # enable optimizations w.r.t selected codec
