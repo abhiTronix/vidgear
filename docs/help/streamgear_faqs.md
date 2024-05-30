@@ -77,13 +77,11 @@ limitations under the License.
 
 &thinsp;
 
-## Is Real-time Frames Mode only used for Live-Streaming?
+## How to use StreamGear API with RGB Frames?
 
-**Answer:** Real-time Frame Modes and Live-Streaming are completely different terms and not directly related. 
+**Answer:** The `rgb_mode` parameter in [`stream()`](../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) method, which earlier used to support RGB frames in Real-time Frames Mode is now deprecated, and will be removed in a future version. Only BGR format frames will be supported going forward. Please update your code to handle BGR format frames.
 
-- **Real-time Frame Mode** is one of [primary mode](../../gears/streamgear/introduction/#mode-of-operations) for directly transcoding real-time [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) video-frames _(as opposed to a entire file)_ into a sequence of multiple smaller chunks/segments for streaming. 
-
-- **Live-Streaming** is feature of StreamGear's primary modes that activates behaviour where chunks will contain information for few new frames only and forgets all previous ones for low latency streaming. It can be activated for any primary mode using exclusive [`-livestream`](../../gears/streamgear/params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter.
+&thinsp;
 
 
 ## How to use Hardware/GPU encoder for StreamGear trancoding?

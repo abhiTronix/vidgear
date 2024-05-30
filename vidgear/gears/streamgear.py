@@ -59,7 +59,7 @@ class StreamGear:
     StreamGear provides a standalone, highly extensible, and flexible wrapper around FFmpeg multimedia framework for generating chunked-encoded media segments of the content.
 
     SteamGear easily transcodes source videos/audio files & real-time video-frames and breaks them into a sequence of multiple smaller chunks/segments of suitable length. These segments make it
-    possible to stream videos at different quality levels _(different bitrates or spatial resolutions)_ and can be switched in the middle of a video from one quality level to another – if bandwidth
+    possible to stream videos at different quality levels _(different bitrate or spatial resolutions)_ and can be switched in the middle of a video from one quality level to another - if bandwidth
     permits - on a per-segment basis. A user can serve these segments on a web server that makes it easier to download them through HTTP standard-compliant GET requests.
 
     SteamGear also creates a Manifest/Playlist file (such as MPD in-case of DASH and M3U8 in-case of HLS) besides segments that describe these segment information
@@ -370,7 +370,10 @@ class StreamGear:
     )
     def stream(self, frame, rgb_mode=False):
         """
-        Pipelines `ndarray` frames to FFmpeg Pipeline for transcoding into multi-bitrate streamable assets.
+        Pipes `ndarray` frames to FFmpeg Pipeline for transcoding them into chunked-encoded media segments of
+        streaming formats such as MPEG-DASH and HLS.
+
+        !!! warning "[DEPRECATION NOTICE]: The `rgb_mode` parameter is deprecated and will be removed in a future version."
 
         Parameters:
             frame (ndarray): a valid numpy frame
@@ -427,7 +430,8 @@ class StreamGear:
 
     def transcode_source(self):
         """
-        Transcodes entire Video Source _(with audio)_ into multi-bitrate streamable assets
+        Transcodes an entire video file _(with or without audio)_ into chunked-encoded media segments of
+        streaming formats such as MPEG-DASH and HLS.
         """
         # check if function is called in correct context
         if not (self.__video_source):

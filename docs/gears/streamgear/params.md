@@ -322,15 +322,23 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
+* **`-enable_force_termination`** _(bool)_: sets a special flag to enable the forced termination of FFmpeg process. Its usage is as follows:
+
+    !!! warning "The `-enable_force_termination` flag can potentially cause unexpected behavior or prevent the program from producing the desired output in certain scenarios. It is recommended to use this flag with caution."
+
+    ```python
+    stream_params = {"-enable_force_termination": True} # enables forced-termination behavior
+    ```
+
+&ensp;
+
 #### B. FFmpeg Parameters 
 
 Almost all FFmpeg parameter can be passed as dictionary attributes in `stream_params`. For example, for using `libx264 encoder` to produce a lossless output video, we can pass required FFmpeg parameters as dictionary attributes, as follows:
 
 !!! tip "Kindly check [H.264 docs ➶](https://trac.ffmpeg.org/wiki/Encode/H.264) and other [FFmpeg Docs ➶](https://ffmpeg.org/documentation.html) for more information on these parameters"
 
-
 !!! failure "All ffmpeg parameters are case-sensitive. Remember to double check every parameter if any error occurs."
-
 
 !!! note "In addition to these parameters, almost any FFmpeg parameter _(supported by installed FFmpeg)_ is also supported. But make sure to read [**FFmpeg Docs**](https://ffmpeg.org/documentation.html) carefully first."
 
@@ -342,9 +350,9 @@ stream_params = {"-vcodec":"libx264", "-crf": 0, "-preset": "fast", "-tune": "ze
 
 ### Supported Encoders and Decoders
 
-All the encoders and decoders that are compiled with FFmpeg in use, are supported by WriteGear API. You can easily check the compiled encoders by running following command in your terminal:
+All the encoders and decoders that are compiled with FFmpeg in use, are supported by StreamGear API. You can easily check the compiled encoders by running following command in your terminal:
 
-!!! info "Similarily, supported demuxers and filters depends upons compiled FFmpeg in use."
+!!! info "Similarly, supported Demuxers and Filters depends upon compiled FFmpeg in use."
 
 ```sh
 # for checking encoder

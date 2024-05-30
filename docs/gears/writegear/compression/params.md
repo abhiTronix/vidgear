@@ -188,9 +188,9 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
         output_params = {"-disable_ffmpeg_window": True} # disables FFmpeg creation window
         ```
         
-    * **`-disable_force_termination`** _(bool)_: sets a special flag to manually disable the default forced-termination behaviour in WriteGear API when `-i` FFmpeg parameter is used _(For more details, see issue: #149)_. Its usage is as follows:
+    * **`-disable_force_termination`** _(bool)_: sets a special flag to manually disable the default forced termination of FFmpeg process in WriteGear API when `-i` FFmpeg parameter is used _(For more details, see issue: #149)_. Its usage is as follows:
 
-        !!! warning "`-disable_force_termination` flag is a absolute necessity when video duration is too short(<60sec), otherwise WriteGear will not produce any valid output."
+        !!! warning "The `-disable_force_termination` flag is a absolute necessity when video duration is too short(`< 60sec`), otherwise WriteGear may produce invalid or no output."
 
         ```python
         output_params = {"-disable_force_termination": True} # disable the default forced-termination behaviour
