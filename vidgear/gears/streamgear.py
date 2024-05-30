@@ -239,8 +239,8 @@ class StreamGear:
         if isinstance(enable_force_termination, bool):
             self.__forced_termination = enable_force_termination
             # log if forced termination is enabled
-            self.__forced_termination and logger.info(
-                "Forced termination is enabled for this run."
+            self.__forced_termination and logger.warning(
+                "Forced termination is enabled for this run. This may result in corrupted output in certain scenarios!"
             )
         else:
             # handle improper values

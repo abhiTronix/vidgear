@@ -322,9 +322,9 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
-* **`-enable_force_termination`** _(bool)_: sets a special flag to enable the forced termination of FFmpeg process. Its usage is as follows:
+* **`-enable_force_termination`** _(bool)_: sets a special flag to enable the forced termination of the FFmpeg process, required only if StreamGear is getting frozen when terminated. Its usage is as follows:
 
-    !!! warning "The `-enable_force_termination` flag can potentially cause unexpected behavior or prevent the program from producing the desired output in certain scenarios. It is recommended to use this flag with caution."
+    !!! warning "The `-enable_force_termination` flag can potentially cause unexpected behavior or corrupted output in certain scenarios. It is recommended to use this flag with caution."
 
     ```python
     stream_params = {"-enable_force_termination": True} # enables forced-termination behavior
