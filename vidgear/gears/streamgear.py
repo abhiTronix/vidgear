@@ -224,11 +224,17 @@ class StreamGear:
         # handle whether to livestream?
         livestreaming = self.__params.pop("-livestream", False)
         if isinstance(livestreaming, bool):
-            self.__livestreaming = livestreaming
-            # log if live streaming is enabled
-            livestreaming and logger.info(
-                "Live-Streaming Mode is enabled for this run."
-            )
+            # NOTE:  `livestream` is only available with real-time mode.
+            self.__livestreaming = livestreaming if not (self.__video_source) else False
+            if self.__video_source:
+                logger.error(
+                    "Live-Streaming is only available with Real-time Mode. Refer docs for more information."
+                )
+            else:
+                # log if live streaming is enabled
+                livestreaming and logger.info(
+                    "Live-Streaming is successfully enabled for this run."
+                )
         else:
             # reset improper values
             self.__livestreaming = False

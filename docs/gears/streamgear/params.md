@@ -158,13 +158,15 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
 
 StreamGear API provides some exclusive internal parameters to easily generate Streaming Assets and effortlessly tweak its internal properties. These parameters are discussed below:
 
-* **`-streams`** _(list of dicts)_: This important attribute makes it simple and pretty straight-forward to define additional multiple streams as _list of dictionaries_ of different quality levels _(i.e. different bitrates or spatial resolutions)_ for streaming. 
+* **`-streams`** _(list of dicts)_: This important attribute makes it simple and pretty straight-forward to define additional multiple streams as _list of dictionaries_ of different quality levels _(i.e. different bitrate or spatial resolutions)_ for streaming. 
 
-    !!! danger "Important `-streams` attribute facts"
-        * ==On top of these additional streams, StreamGear by default, generates a primary stream of same resolution and framerate[^1] as the input Video, at the index `0`.==  
-        * You **MUST** need to define `-resolution` value for your stream, otherwise stream will be discarded!
-        * You only need either of `-video_bitrate` or `-framerate` for defining a valid stream. Since with `-framerate` value defined, video-bitrate is calculated automatically using `-bpps` and `-resolution` values.
-        * If you define both `-video_bitrate` and `-framerate` values at the same time, StreamGear will discard the `-framerate` value automatically.
+    ???+ danger "Important Information about `-streams` attribute :material-file-document-alert-outline:"
+
+        * In addition to the user-defined Secondary Streams, ==StreamGear automatically generates a Primary Stream _(at index `0`)_ with the same resolution as the input frames and at default framerate[^1], at the index `0`.==  
+        * You **MUST** define the `-resolution` value for each stream; otherwise, the stream will be discarded.
+        * You only need to define either the `-video_bitrate` or the `-framerate` for a valid stream. 
+            * If you specify the `-framerate`, the video bitrate will be calculated automatically.
+            * If you define both the `-video_bitrate` and the `-framerate`, the `-framerate` will get discard automatically.
 
 
     **To construct the additional stream dictionaries, you'll will need following sub-attributes:**
@@ -189,7 +191,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
     **Usage:** You can easily define any number of streams using `-streams` attribute as follows:
 
-    !!! tip "Usage example can be found [here ➶](../ssm/usage/#usage-with-additional-streams)"
+    !!! example "Usage example can be found [here ➶](../ssm/usage/#usage-with-additional-streams)"
 
     ```python
     stream_params = 
@@ -204,7 +206,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 * **`-video_source`** _(string)_: This attribute takes valid Video path as input and activates [**Single-Source Mode**](../ssm/overview), for transcoding it into multiple smaller chunks/segments for streaming after successful validation. Its value be one of the following:
 
-    !!! tip "Usage example can be found [here ➶](../ssm/usage/#bare-minimum-usage)"
+    !!! example "Usage example can be found [here ➶](../ssm/usage/#bare-minimum-usage)"
 
     * **Video Filename**: Valid path to Video file as follows:
         ```python
@@ -229,7 +231,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
         ```python
         stream_params = {"-audio": "/home/foo/foo1.aac"} # set input audio source: /home/foo/foo1.aac
         ```
-        !!! tip "Usage example can be found [here ➶](../ssm/usage/#usage-with-custom-audio)"
+        !!! example "Usage example can be found [here ➶](../ssm/usage/#usage-with-custom-audio)"
 
     * **Audio URL** _(string)_: Valid URL of a network audio stream as follows:
 
@@ -244,29 +246,31 @@ StreamGear API provides some exclusive internal parameters to easily generate St
         ```python
         stream_params = {"-audio": "https://exampleaudio.org/example-160.mp3"} # set input audio source: https://exampleaudio.org/example-160.mp3
         ``` 
-        !!! tip "Usage example can be found [here ➶](../rtfm/usage/#usage-with-device-audio--input)"
+        !!! example "Usage example can be found [here ➶](../rtfm/usage/#usage-with-device-audio--input)"
 
 
 
 &ensp;
 
-* **`-livestream`** _(bool)_: ***(optional)*** specifies whether to enable **Livestream Support**_(chunks will contain information for new frames only)_ for the selected mode, or not. You can easily set it to `True` to enable this feature, and default value is `False`. It can be used as follows: 
+* **`-livestream`** _(bool)_: ***(optional)*** specifies whether to enable **Low-latency Live-Streaming :material-video-wireless-outline:** in Real-time Frames Mode only, where chunks will contain information for new frames only and forget previous ones, or not. The default value is `False`. It can be used as follows: 
     
-    !!! tip "Use `window_size` & `extra_window_size` FFmpeg parameters for controlling number of frames to be kept in New Chunks."
+    !!! warning "The `-livestream` optional parameter is **NOT** supported in [Single-Source mode](../ssm/overview)."
 
     ```python
-    stream_params = {"-livestream": True} # enable livestreaming
+    stream_params = {"-livestream": True} # enable live-streaming
     ```
+
+    !!! example "Usage example can be found [here ➶](../rtfm/usage/#bare-minimum-usage-with-live-streaming)" 
 
 &ensp;
 
 * **`-input_framerate`** _(float/int)_ :  ***(optional)*** specifies the assumed input video source framerate, and only works in [Real-time Frames Mode](../usage/#b-real-time-frames-mode). It can be used as follows:
 
-    !!! tip "Usage example can be found [here ➶](../rtfm/usage/#bare-minimum-usage-with-controlled-input-framerate)" 
-
     ```python
     stream_params = {"-input_framerate": 60.0} # set input video source framerate to 60fps
     ```
+
+    !!! example "Usage example can be found [here ➶](../rtfm/usage/#bare-minimum-usage-with-controlled-input-framerate)" 
 
 &ensp;
 

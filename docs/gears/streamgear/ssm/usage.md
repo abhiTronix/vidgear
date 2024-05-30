@@ -27,8 +27,11 @@ limitations under the License.
     - [x] In this mode, if input video-source _(i.e. `-video_source`)_ contains any audio stream/channel, then it automatically gets mapped to all generated streams.
     - [x] Always use `close()` function at the very end of the main code.
 
-??? danger "[DEPRECATION NOTICE]: The `terminate()` method in StreamGear is now deprecated."
-    The `terminate()` method in StreamGear is now deprecated and will be removed in a future release. Developers should use the new [`close()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.close) method instead, as it offers a more descriptive name, similar to the WriteGear API, for safely terminating StreamGear processes.
+???+ danger "DEPRECATION NOTICES for `v0.3.3` and above"
+    
+    - [ ] The `terminate()` method in StreamGear is now deprecated and will be removed in a future release. Developers should use the new [`close()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.close) method instead, as it offers a more descriptive name, similar to the WriteGear API, for safely terminating StreamGear processes.
+    - [ ] The [`-livestream`](../../params/#a-exclusive-parameters) optional parameter is NOT supported in this Single-Source Mode.
+
 
 !!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
 
@@ -77,57 +80,6 @@ Following is the bare-minimum code you need to get started with StreamGear API i
 
     !!! success "After running this bare-minimum example, StreamGear will produce a Master Playlist file (`hls_out.mpd`) with streamable chunks, containing information about a Primary Stream with the same resolution and framerate as the input."
 
-
-&thinsp;
-
-## Bare-Minimum Usage with Live-Streaming
-
-You can easily activate ==Low-latency Livestreaming in Single-Source Mode== - chunks will contain information only for few new frames and forgets all previous ones, using exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter as follows:
-
-!!! note "If input video-source _(i.e. `-video_source`)_ contains any audio stream/channel, then it automatically gets mapped to all generated streams without any extra efforts."
-
-=== "DASH"
-
-    !!! tip "Chunk size in DASH"
-        Use `-window_size` & `-extra_window_size` FFmpeg parameters for controlling number of frames to be kept in Chunks in DASH stream. Less these value, less will be latency.
-
-    !!! alert "After every few chunks _(equal to the sum of `-window_size` & `-extra_window_size` values)_, all chunks will be overwritten in Live-Streaming. Thereby, since newer chunks in manifest will contain NO information of any older ones, and therefore resultant DASH stream will play only the most recent frames."
-
-    ```python linenums="1" hl_lines="5"
-    # import required libraries
-    from vidgear.gears import StreamGear
-
-    # activate Single-Source Mode with valid video input and enable livestreaming
-    stream_params = {"-video_source": 0, "-livestream": True}
-    # describe a suitable manifest-file location/name and assign params
-    streamer = StreamGear(output="dash_out.mpd", **stream_params)
-    # transcode source
-    streamer.transcode_source()
-    # close
-    streamer.close()
-    ```
-
-=== "HLS"
-
-    !!! tip "Chunk size in HLS"
-    
-        Use `-hls_init_time` & `-hls_time` FFmpeg parameters for controlling number of frames to be kept in Chunks in HLS stream. Less these value, less will be latency.
-
-    !!! alert "After every few chunks _(equal to the sum of `-hls_init_time` & `-hls_time` values)_, all chunks will be overwritten in Live-Streaming. Thereby, since newer chunks in playlist will contain NO information of any older ones, and therefore resultant HLS stream will play only the most recent frames."
-
-    ```python linenums="1" hl_lines="5"
-    # import required libraries
-    from vidgear.gears import StreamGear
-
-    # activate Single-Source Mode with valid video input and enable livestreaming
-    stream_params = {"-video_source": 0, "-livestream": True}
-    # describe a suitable master playlist location/name and assign params
-    streamer = StreamGear(output="hls_out.m3u8", format = "hls", **stream_params)
-    # transcode source
-    streamer.transcode_source()
-    # close
-    streamer.close()
-    ```
 
 &thinsp;
 

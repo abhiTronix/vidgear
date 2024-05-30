@@ -32,9 +32,10 @@ limitations under the License.
     - [x] In this mode, API **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter.
     - [x] Always use `close()` function at the very end of the main code.
 
-??? danger "[DEPRECATION NOTICE]: The `terminate()` method in StreamGear is now deprecated."
+???+ danger "DEPRECATION NOTICES for `v0.3.3` and above"
     
-    The `terminate()` method in StreamGear is now deprecated and will be removed in a future release. Developers should use the new [`close()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.close) method instead, as it offers a more descriptive name, similar to the WriteGear API, for safely terminating StreamGear processes.
+    - [ ] The `terminate()` method in StreamGear is now deprecated and will be removed in a future release. Developers should use the new [`close()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.close) method instead, as it offers a more descriptive name, similar to the WriteGear API, for safely terminating StreamGear processes.
+    - [ ] The `rgb_mode` parameter in [`stream()`](../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) method, which earlier used to support RGB frames in Real-time Frames Mode is now deprecated, and will be removed in a future version. Only BGR format frames will be supported going forward. Please update your code to handle BGR format frames.
 
 !!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
 

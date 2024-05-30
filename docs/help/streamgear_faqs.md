@@ -77,14 +77,7 @@ limitations under the License.
 
 &thinsp;
 
-## How to use StreamGear API with RGB Frames?
-
-**Answer:** The `rgb_mode` parameter in [`stream()`](../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) method, which earlier used to support RGB frames in Real-time Frames Mode is now deprecated, and will be removed in a future version. Only BGR format frames will be supported going forward. Please update your code to handle BGR format frames.
-
-&thinsp;
-
-
-## How to use Hardware/GPU encoder for StreamGear trancoding?
+## How to use Hardware/GPU encoder for transcoding in StreamGear API?
 
 **Answer:** [See this example ➶](../../gears/streamgear/rtfm/usage/#usage-with-hardware-video-encoder)
 

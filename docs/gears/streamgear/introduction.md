@@ -38,7 +38,7 @@ With StreamGear, you can transcode source video/audio files and real-time video 
 
 SteamGear currently supports both [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_  and [**Apple HLS**](https://developer.apple.com/documentation/http_live_streaming) _(HTTP Live Streaming)_. 
 
-Additionally, StreamGear generates a manifest file _(such as MPD for DASH)_ or a master playlist _(such as M3U8 for Apple HLS)_ alongside the segments. These files contain essential segment information, _including timing, URLs, and media characteristics like video resolution and adaptive bitrates_. They are provided to the client before the streaming session begins.
+Additionally, StreamGear generates a manifest file _(such as MPD for DASH)_ or a master playlist _(such as M3U8 for Apple HLS)_ alongside the segments. These files contain essential segment information, _including timing, URLs, and media characteristics like video resolution and adaptive bitrate_. They are provided to the client before the streaming session begins.
 
 !!! alert "For streaming with older traditional protocols such as RTMP, RTSP/RTP you could use [WriteGear](../../writegear/introduction/) API instead."
 
