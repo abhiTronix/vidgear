@@ -17,8 +17,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import the necessary packages
 
+# import the necessary packages
 import os
 import cv2
 import queue
@@ -257,6 +257,7 @@ def test_ss_livestream(format):
         stream_params = {
             "-video_source": return_testvideo_path(),
             "-livestream": True,
+            "-clear_prev_assets": "invalid",
             "-remove_at_exit": 1,
         }
         streamer = StreamGear(
@@ -337,6 +338,7 @@ def test_rtf_livestream(format):
         stream = CamGear(source=return_testvideo_path(), **options).start()
         stream_params = {
             "-livestream": True,
+            "-enable_force_termination": True,
         }
         streamer = StreamGear(output=assets_file_path, format=format, **stream_params)
         while True:
@@ -346,7 +348,7 @@ def test_rtf_livestream(format):
                 break
             streamer.stream(frame)
         stream.stop()
-        streamer.close()
+        streamer.terminate()
     except Exception as e:
         if not isinstance(e, queue.Empty):
             pytest.fail(str(e))
@@ -367,6 +369,9 @@ def test_input_framerate_rtf(format):
         stream_params = {
             "-clear_prev_assets": True,
             "-input_framerate": test_framerate,
+            "-vcodec": "copy",
+            "-vf": "format=yuv420p",
+            "-aspect": "4:3",
         }
         if format == "hls":
             stream_params.update(
@@ -416,6 +421,7 @@ def test_input_framerate_rtf(format):
                 "-bpp": 0.2000,
                 "-gop": 125,
                 "-vcodec": "libx265",
+                "-enable_force_termination": "invalid",
             },
             "hls",
         ),
@@ -698,7 +704,7 @@ def test_audio(stream_params, format):
 )
 def test_multistreams(format, stream_params):
     """
-    Testing Support for additional Secondary Streams of variable bitrates or spatial resolutions.
+    Testing Support for additional Secondary Streams of variable bitrate or spatial resolutions.
     """
     assets_file_path = os.path.join(
         return_assets_path(False if format == "dash" else True),

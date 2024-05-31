@@ -17,10 +17,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import the necessary packages
 
-import numpy as np
+# import the necessary packages
 import pytest
+import numpy as np
 from vidgear.gears import StreamGear
 
 
@@ -91,7 +91,7 @@ def test_invalid_params_rtf(format):
     random_data = np.random.random(size=(480, 640, 3)) * 255
     input_data = random_data.astype(np.uint8)
 
-    stream_params = {"-vcodec": "unknown"}
+    stream_params = {"-vcodec": "unknown", "-livestream": "invalid"}
     streamer = StreamGear(
         output="output{}".format(".mpd" if format == "dash" else ".m3u8"),
         format=format,
