@@ -466,14 +466,24 @@ class StreamGear:
         output_parameters = OrderedDict()
         # pre-assign default codec parameters (if not assigned by user).
         default_codec = "libx264rgb" if rgb else "libx264"
-        output_parameters["-vcodec"] = self.__params.pop("-vcodec", default_codec)
-
-        # enforce compatibility
+        output_vcodec = self.__params.pop("-vcodec", default_codec)
+        # enforce default encoder if stream copy specified
+        # in Real-time Frames Mode
+        output_parameters["-vcodec"] = (
+            default_codec
+            if output_vcodec == "copy" and not (self.__video_source)
+            else output_vcodec
+        )
+        # enforce compatibility with stream copy
         if output_parameters["-vcodec"] != "copy":
             # NOTE: these parameters only supported when stream copy not defined
             output_parameters["-vf"] = self.__params.pop("-vf", "format=yuv420p")
             # Non-essential `-aspect` parameter is removed from the default pipeline.
         else:
+            # log warnings if stream copy specified in Real-time Frames Mode
+            not (self.__video_source) and logger.error(
+                "Stream copy is not compatible with Real-time Frames Mode as it requires encoding incoming frames. Discarding the `-vcodec copy` parameter!"
+            )
             # log warnings for these parameters
             self.__params.pop("-vf", False) and logger.warning(
                 "Filtering and stream copy cannot be used together. Discarding specified `-vf` parameter!"
