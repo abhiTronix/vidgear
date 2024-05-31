@@ -776,8 +776,10 @@ class WriteGear:
             if self.__forced_termination:
                 self.__process.terminate()
             else:
-                # send CTRL_BREAK_EVENT signal
-                self.__process.send_signal(signal.CTRL_BREAK_EVENT)
+                # send `CTRL_BREAK_EVENT` signal if Windows else `SIGINT`
+                self.__process.send_signal(
+                    signal.CTRL_BREAK_EVENT if self.__os_windows else signal.SIGINT
+                )
             # wait if process is still processing
             self.__process.wait()
         else:
