@@ -731,7 +731,7 @@ class StreamGear:
             # iterate over given streams
             for idx, stream in enumerate(streams):
                 # log stream processing
-                self.__logging and logger.debug("Processing #{} stream ::".format(idx))
+                self.__logging and logger.debug("Processing Stream: #{}".format(idx))
                 # make copy
                 stream_copy = stream.copy()
                 # handle intermediate stream data as dictionary
@@ -999,7 +999,7 @@ class StreamGear:
             output_params["-use_timeline"] = 0
         else:
             # `seg_duration` must be greater than or equal to 0
-            output_params["-seg_duration"] = self.__params.pop("-seg_duration", 5)
+            seg_duration = self.__params.pop("-seg_duration", 5)
             if isinstance(seg_duration, int) and seg_duration >= 0:
                 output_params["-seg_duration"] = seg_duration
             else:

@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 
 import os
@@ -437,7 +438,7 @@ def test_create_blank_frame(frame, text):
 @pytest.mark.parametrize(
     "value, result",
     [
-        ("Duration: 00:00:08.44, start: 0.000000, bitrate: 804 kb/s", 8),
+        ("Duration: 00:00:08.44, start: 0.000000, bitrate: 804 kb/s", 8.44),
         ("Duration: 00:07:08 , start: 0.000000, bitrate: 804 kb/s", 428),
         ("", False),
     ],
