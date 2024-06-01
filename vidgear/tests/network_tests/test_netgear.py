@@ -641,9 +641,9 @@ def test_multiclient_mode(pattern):
         if not (client_1 is None):
             client_1.close()
         if not (client_2 is None):
-            client_1.close()
+            client_2.close()
         if not (client_3 is None):
-            client_1.close()
+            client_3.close()
 
 
 @pytest.mark.parametrize(
