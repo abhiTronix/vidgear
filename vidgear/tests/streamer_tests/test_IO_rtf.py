@@ -81,7 +81,7 @@ def test_method_call_rtf():
 
 
 @pytest.mark.xfail(raises=ValueError)
-@pytest.mark.parametrize("format", ["dash", "hls"])
+@pytest.mark.parametrize("format", ["dash", "hls", "invalid"])
 def test_invalid_params_rtf(format):
     """
     Invalid parameter Failure Test - Made to fail by calling invalid parameters

@@ -540,9 +540,11 @@ class StreamGear:
                     ["-map", "1:a:0"] if self.__format == "dash" else []
                 )
             else:
+                # discard invalid audio
                 logger.warning(
                     "Audio source `{}` is not valid, Skipped!".format(self.__audio)
                 )
+                self.__audio = False
         # validate input video's audio source if available
         elif self.__video_source:
             bitrate = validate_audio(self.__ffmpeg, source=self.__video_source)
@@ -1208,6 +1210,7 @@ class StreamGear:
         """
         # log termination
         self.__logging and logger.debug("Terminating StreamGear Processes.")
+
         # return if no process was initiated at first place
         if self.__process is None or not (self.__process.poll() is None):
             return

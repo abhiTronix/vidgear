@@ -77,6 +77,7 @@ def test_paths_ss(path, format):
     try:
         stream_params = {
             "-video_source": return_testvideo_path(),
+            "-ffmpeg_download_path": 12345,
             "-livestream": "invalid",
         }
         streamer = StreamGear(output=path, format=format, logging=True, **stream_params)

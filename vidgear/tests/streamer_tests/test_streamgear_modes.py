@@ -220,6 +220,10 @@ def test_ss_stream(format):
     try:
         stream_params = {
             "-video_source": return_testvideo_path(),
+            "-vcodec": "copy",
+            "-aspect": "4:3",
+            "-vf": "format=yuv420p",
+            "-streams": "invalid",
             "-clear_prev_assets": True,
         }
         if format == "hls":
@@ -260,11 +264,10 @@ def test_ss_livestream(format):
             "-clear_prev_assets": "invalid",
             "-remove_at_exit": 1,
         }
-        streamer = StreamGear(
+        with StreamGear(
             output=assets_file_path, format=format, logging=True, **stream_params
-        )
-        streamer.transcode_source()
-        streamer.close()
+        ) as streamer:
+            streamer.transcode_source()
     except Exception as e:
         pytest.fail(str(e))
 
@@ -298,18 +301,19 @@ def test_rtf_stream(conversion, format):
                     + os.sep
                 }
             )
-        streamer = StreamGear(output=assets_file_path, format=format, **stream_params)
-        while True:
-            frame = stream.read()
-            # check if frame is None
-            if frame is None:
-                break
-            if conversion == "COLOR_BGR2RGBA":
-                streamer.stream(frame, rgb_mode=True)
-            else:
-                streamer.stream(frame)
-        stream.stop()
-        streamer.close()
+        with StreamGear(
+            output=assets_file_path, format=format, **stream_params
+        ) as streamer:
+            while True:
+                frame = stream.read()
+                # check if frame is None
+                if frame is None:
+                    break
+                if conversion == "COLOR_BGR2RGBA":
+                    streamer.stream(frame, rgb_mode=True)
+                else:
+                    streamer.stream(frame)
+            stream.stop()
         asset_file = [
             os.path.join(assets_file_path, f)
             for f in os.listdir(assets_file_path)
@@ -421,7 +425,13 @@ def test_input_framerate_rtf(format):
                 "-bpp": 0.2000,
                 "-gop": 125,
                 "-vcodec": "libx265",
-                "-enable_force_termination": "invalid",
+                "-hls_segment_type": "invalid",
+                "-hls_init_time": -223.2,
+                "-hls_flags": 94884,
+                "-hls_list_size": -4.3,
+                "-hls_time": -4758.56,
+                "-remove_at_exit": 4.56,
+                "-livestream": True,
             },
             "hls",
         ),
@@ -433,6 +443,7 @@ def test_input_framerate_rtf(format):
                 "-s:v:0": "unknown",
                 "-b:v:0": "unknown",
                 "-b:a:0": "unknown",
+                "-enable_force_termination": "invalid",
             },
             "hls",
         ),
@@ -441,13 +452,21 @@ def test_input_framerate_rtf(format):
                 "-clear_prev_assets": True,
                 "-bpp": 0.2000,
                 "-gop": 125,
+                "-audio": ["invalid"],
                 "-vcodec": "libx265",
+                "-window_size": -456.4,
+                "-extra_window_size": -354.45,
+                "-remove_at_exit": -34.34,
+                "-seg_duration": -334.23,
+                "-livestream": True,
             },
             "dash",
         ),
         (
             {
                 "-clear_prev_assets": True,
+                "-seg_duration": -346.67,
+                "-audio": "inv/\lid",
                 "-bpp": "unknown",
                 "-gop": "unknown",
                 "-s:v:0": "unknown",
@@ -487,10 +506,12 @@ def test_params(stream_params, format):
             streamer.stream(frame)
         stream.release()
         streamer.close()
-        if format == "dash":
-            assert check_valid_mpd(assets_file_path), "Test Failed!"
-        else:
-            assert extract_meta_video(assets_file_path), "Test Failed!"
+        livestream = stream_params.pop("-livestream", False)
+        if not (livestream):
+            if format == "dash":
+                assert check_valid_mpd(assets_file_path), "Test Failed!"
+            else:
+                assert extract_meta_video(assets_file_path), "Test Failed!"
     except Exception as e:
         pytest.fail(str(e))
 
