@@ -1543,7 +1543,6 @@ class NetGear:
                 else:
                     self.__thread.join()
                     self.__msg_socket.close(linger=0)
-                    self.__msg_context.term()
                 self.__thread = None
             self.__logging and logger.debug("Terminated Successfully!")
         else:

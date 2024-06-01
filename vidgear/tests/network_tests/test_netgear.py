@@ -85,12 +85,9 @@ def test_playback(address, port):
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.release()
-        if not (server is None):
-            server.close()
-        if not (client is None):
-            client.close()
+        not (stream is None) and stream.release()
+        not (server is None) and server.close()
+        not (client is None) and client.close()
 
 
 @pytest.mark.parametrize("receive_mode", [True, False])
@@ -120,10 +117,8 @@ def test_primary_mode(receive_mode):
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.stop()
-        if not (conn is None):
-            conn.close()
+        not (stream is None) and stream.stop()
+        not (conn is None) and conn.close()
 
 
 @pytest.mark.parametrize(
@@ -171,12 +166,9 @@ def test_patterns(pattern):
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.release()
-        if not (server is None):
-            server.close(kill=True)
-        if not (client is None):
-            client.close(kill=True)
+        not (stream is None) and stream.release()
+        not (server is None) and server.close(kill=True)
+        not (client is None) and client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -243,12 +235,9 @@ def test_compression(options_server):
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.stop()
-        if not (server is None):
-            server.close(kill=True)
-        if not (client is None):
-            client.close(kill=True)
+        not (stream is None) and stream.stop()
+        not (server is None) and server.close(kill=True)
+        not (client is None) and client.close(kill=True)
 
 
 test_data_class = [
@@ -313,12 +302,9 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.release()
-        if not (server is None):
-            server.close(kill=True)
-        if not (client is None):
-            client.close(kill=True)
+        not (stream is None) and stream.release()
+        not (server is None) and server.close(kill=True)
+        not (client is None) and client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -427,12 +413,9 @@ def test_bidirectional_mode(pattern, target_data, options):
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.stop()
-        if not (server is None):
-            server.close(kill=True)
-        if not (client is None):
-            client.close(kill=True)
+        not (stream is None) and stream.stop()
+        not (server is None) and server.close(kill=True)
+        not (client is None) and client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -549,16 +532,11 @@ def test_multiserver_mode(pattern, options):
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.release()
-        if not (server_1 is None):
-            server_1.close(kill=True)
-        if not (server_2 is None):
-            server_2.close(kill=True)
-        if not (server_3 is None):
-            server_3.close(kill=True)
-        if not (client is None):
-            client.close(kill=True)
+        not (stream is None) and stream.release()
+        not (server_1 is None) and server_1.close(kill=True)
+        not (server_2 is None) and server_2.close(kill=True)
+        not (server_3 is None) and server_3.close(kill=True)
+        not (client is None) and client.close(kill=True)
 
 
 @pytest.mark.parametrize("pattern", [0, 1])
@@ -636,14 +614,10 @@ def test_multiclient_mode(pattern):
         # clean resources
         if not (stream is None):
             stream.stop()
-        if not (server is None):
-            server.close(kill=True)
-        if not (client_1 is None):
-            client_1.close(kill=True)
-        if not (client_2 is None):
-            client_2.close(kill=True)
-        if not (client_3 is None):
-            client_3.close(kill=True)
+        not (server is None) and server.close(kill=True)
+        not (client_1 is None) and client_1.close(kill=True)
+        not (client_2 is None) and client_2.close(kill=True)
+        not (client_3 is None) and client_3.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -690,8 +664,7 @@ def test_client_reliability(options):
             logger.exception(str(e))
     finally:
         # clean resources
-        if not (client is None):
-            client.close(kill=True)
+        not (client is None) and client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -752,10 +725,8 @@ def test_server_reliability(options):
             logger.exception(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.release()
-        if not (server is None):
-            server.close(kill=True)
+        not (stream is None) and stream.release()
+        not (server is None) and server.close(kill=True)
 
 
 @pytest.mark.parametrize(
