@@ -552,13 +552,13 @@ def test_multiserver_mode(pattern, options):
         if not (stream is None):
             stream.release()
         if not (server_1 is None):
-            server_1.close()
+            server_1.close(kill=True)
         if not (server_2 is None):
-            server_2.close()
+            server_2.close(kill=True)
         if not (server_3 is None):
-            server_3.close()
+            server_3.close(kill=True)
         if not (client is None):
-            client.close()
+            client.close(kill=True)
 
 
 @pytest.mark.parametrize("pattern", [0, 1])
@@ -637,13 +637,13 @@ def test_multiclient_mode(pattern):
         if not (stream is None):
             stream.stop()
         if not (server is None):
-            server.close()
+            server.close(kill=True)
         if not (client_1 is None):
-            client_1.close()
+            client_1.close(kill=True)
         if not (client_2 is None):
-            client_2.close()
+            client_2.close(kill=True)
         if not (client_3 is None):
-            client_3.close()
+            client_3.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -691,7 +691,7 @@ def test_client_reliability(options):
     finally:
         # clean resources
         if not (client is None):
-            client.close()
+            client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -755,7 +755,7 @@ def test_server_reliability(options):
         if not (stream is None):
             stream.release()
         if not (server is None):
-            server.close()
+            server.close(kill=True)
 
 
 @pytest.mark.parametrize(
