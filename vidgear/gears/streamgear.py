@@ -482,7 +482,7 @@ class StreamGear:
         else:
             # log warnings if stream copy specified in Real-time Frames Mode
             not (self.__video_source) and logger.error(
-                "Stream copy is not compatible with Real-time Frames Mode as it requires encoding incoming frames. Discarding the `-vcodec copy` parameter!"
+                "Stream copy is not compatible with Real-time Frames Mode as it requires re-encoding of incoming frames. Discarding the `-vcodec copy` parameter!"
             )
             # log warnings for these parameters
             self.__params.pop("-vf", False) and logger.warning(

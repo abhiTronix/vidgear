@@ -30,6 +30,7 @@ limitations under the License.
     - [x] StreamGear API **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../../ffmpeg_install/) for its installation. API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system.
     - [x] In this mode, ==API by default generates a primary stream _(at the index `0`)_ of same resolution as the input frames and at default framerate[^1].==
     - [x] In this mode, API **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter.
+    - [x] In this mode, Stream copy (`-vcodec copy`) is not compatible as this mode requires re-encoding of incoming frames.
     - [x] Always use `close()` function at the very end of the main code.
 
 ???+ danger "DEPRECATION NOTICES for `v0.3.3` and above"
@@ -1035,9 +1036,11 @@ To stream live audio, format your audio device name followed by a suitable demux
 
 In this example, we will be using `h264_vaapi` as our Hardware Encoder and specifying the device hardware's location and compatible video filters  by formatting them as attributes in the `stream_params` dictionary parameter.
 
-!!! warning "This example is just conveying the idea of how to use FFmpeg's hardware encoders with the StreamGear API in Real-time Frames Mode, which MAY OR MAY NOT suit your system. Please use suitable parameters based on your supported system and FFmpeg configurations only."
+!!! danger "This example is just conveying the idea of how to use FFmpeg's hardware encoders with the StreamGear API in Real-time Frames Mode, which MAY OR MAY NOT suit your system. Please use suitable parameters based on your supported system and FFmpeg configurations only."
 
-??? danger "Check VAAPI support"
+!!! warning "Stream copy (`-vcodec copy`) is not compatible with this Mode as it requires re-encoding of incoming frames."
+
+??? info "Check VAAPI support"
 
     To use `h264_vaapi` encoder, remember to check if its available and your FFmpeg compiled with VAAPI support. You can easily do this by executing following one-liner command in your terminal, and observing if output contains something similar as follows:
 

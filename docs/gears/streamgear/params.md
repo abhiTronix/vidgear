@@ -381,6 +381,8 @@ stream_params = {"-vcodec":"libx264", "-crf": 0, "-preset": "fast", "-tune": "ze
 
 All encoders and decoders compiled with the FFmpeg in use are supported by the StreamGear API. You can check the compiled encoders by running the following command in your terminal:
 
+!!! warning "Stream copy (`-vcodec copy`) is not compatible with Real-time Frames Mode as this mode requires re-encoding of incoming frames."
+
 !!! info "Similarly, supported audio/video demuxers and filters depend on the FFmpeg binaries in use."
 
 ```sh

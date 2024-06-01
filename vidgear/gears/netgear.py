@@ -1527,7 +1527,10 @@ class NetGear:
             # properly close the socket
             self.__logging and logger.debug("Terminating. Please wait...")
             # Handle Secure Mode Thread
-            self.__z_auth and self.__z_auth.is_alive() and self.__z_auth.stop()
+            if self.__z_auth:
+                self.__z_auth.stop()
+                while self.__z_auth.is_alive():
+                    pass
             # wait until stream resources are released
             # (producer thread might be still grabbing frame)
             if self.__thread is not None:
@@ -1551,7 +1554,10 @@ class NetGear:
                 "`kill` parmeter is only available in the receive mode."
             )
             # Handle Secure Mode Thread
-            self.__z_auth and self.__z_auth.is_alive() and self.__z_auth.stop()
+            if self.__z_auth:
+                self.__z_auth.stop()
+                while self.__z_auth.is_alive():
+                    pass
             # check if all attempts of reconnecting failed, then skip to closure
             if (self.__pattern < 2 and not self.__max_retries) or (
                 self.__multiclient_mode and not self.__port_buffer
@@ -1563,7 +1569,6 @@ class NetGear:
                 except ZMQError:
                     pass
                 finally:
-                    self.__msg_context.term()
                     # exit
                     return
 
@@ -1594,5 +1599,4 @@ class NetGear:
                 # properly close the socket
                 self.__msg_socket.setsockopt(zmq.LINGER, 0)
                 self.__msg_socket.close()
-                self.__msg_context.term()
                 self.__logging and logger.debug("Terminated Successfully!")

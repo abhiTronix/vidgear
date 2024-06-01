@@ -33,7 +33,6 @@ Secure Mode uses a new wire protocol, [**ZMTP 3.0**](http://zmtp.org/) that adds
 
 Secure Mode can be easily activated in NetGear API through `secure_mode` attribute of its [`options`](../../params/#options) dictionary parameter, during initialization. Furthermore, for managing this mode, NetGear API provides additional `custom_cert_location` & `overwrite_cert` like attribute too.
 
-
 &nbsp;
 
 ## Supported ZMQ Security Layers
@@ -47,6 +46,11 @@ Secure mode supports the two most powerful ZMQ security layers:
 
 &nbsp;
 
+???+ warning "Secure Mode Issues with PyZMQ (`version > 24.0.1`) on :fontawesome-brands-windows: Windows"
+
+    The Secure Mode functionality is currently broken with PyZMQ (`version > 24.0.1`) on the Windows platform. This issue is due to recent changes in the [`zmq.auth`](https://pyzmq.readthedocs.io/en/latest/api/zmq.auth.html#module-zmq.auth) module introduced in PyZMQ `version 25.0.0`. Attempting to use Secure Mode with these versions will result in the error: `zmq.error.ZMQError: Address in use (addr='inproc://zeromq.zap.01')`.
+
+    !!! info "To use Secure Mode on Windows, please downgrade to PyZMQ (`version <= 24.0.1`)"
 
 !!! danger "Important Information regarding Secure Mode"
 
@@ -124,6 +128,12 @@ For implementing Secure Mode, NetGear API currently provide following exclusive 
 ### Bare-Minimum Usage
 
 Following is the bare-minimum code you need to get started with Secure Mode in NetGear API:
+
+??? warning "Secure Mode Issues with PyZMQ (`version > 24.0.1`) on :fontawesome-brands-windows: Windows"
+
+    The Secure Mode functionality is currently broken with PyZMQ (`version > 24.0.1`) on the Windows platform. This issue is due to recent changes in the [`zmq.auth`](https://pyzmq.readthedocs.io/en/latest/api/zmq.auth.html#module-zmq.auth) module introduced in PyZMQ `version 25.0.0`. Attempting to use Secure Mode with these versions will result in the error: `zmq.error.ZMQError: Address in use (addr='inproc://zeromq.zap.01')`.
+
+    !!! info "To use Secure Mode on Windows, please downgrade to PyZMQ (`version <= 24.0.1`)"
 
 #### Server's End
 
@@ -222,6 +232,11 @@ client.close()
 
 ### Using Secure Mode with Variable Parameters
 
+??? warning "Secure Mode Issues with PyZMQ (`version > 24.0.1`) on :fontawesome-brands-windows: Windows"
+
+    The Secure Mode functionality is currently broken with PyZMQ (`version > 24.0.1`) on the Windows platform. This issue is due to recent changes in the [`zmq.auth`](https://pyzmq.readthedocs.io/en/latest/api/zmq.auth.html#module-zmq.auth) module introduced in PyZMQ `version 25.0.0`. Attempting to use Secure Mode with these versions will result in the error: `zmq.error.ZMQError: Address in use (addr='inproc://zeromq.zap.01')`.
+
+    !!! info "To use Secure Mode on Windows, please downgrade to PyZMQ (`version <= 24.0.1`)"
 
 #### Client's End
 
