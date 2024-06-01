@@ -533,9 +533,7 @@ class NetGear:
             )
 
         # define ZMQ messaging context instance
-        self.__msg_context = (
-            zmq.Context() if self.__secure_mode > 0 else zmq.Context.instance()
-        )
+        self.__msg_context = zmq.Context.instance()
 
         # initialize and assign receive mode to global variable
         self.__receive_mode = receive_mode
@@ -1542,6 +1540,7 @@ class NetGear:
                 else:
                     self.__thread.join()
                     self.__msg_socket.close(linger=0)
+                    self.__msg_context.term()
                 self.__thread = None
             self.__logging and logger.debug("Terminated Successfully!")
         else:
@@ -1564,6 +1563,7 @@ class NetGear:
                 except ZMQError:
                     pass
                 finally:
+                    self.__msg_context.term()
                     # exit
                     return
 
@@ -1594,4 +1594,5 @@ class NetGear:
                 # properly close the socket
                 self.__msg_socket.setsockopt(zmq.LINGER, 0)
                 self.__msg_socket.close()
+                self.__msg_context.term()
                 self.__logging and logger.debug("Terminated Successfully!")
