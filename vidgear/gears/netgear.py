@@ -186,6 +186,9 @@ class NetGear:
 
         # Handle NetGear's internal exclusive modes and params
 
+        # define Secure Mode
+        self.__z_auth = None
+
         # define SSH Tunneling Mode
         self.__ssh_tunnel_mode = None  # handles ssh_tunneling mode state
         self.__ssh_tunnel_pwd = None
@@ -584,19 +587,19 @@ class NetGear:
                 # activate secure_mode threaded authenticator
                 if self.__secure_mode > 0:
                     # start an authenticator for this context
-                    z_auth = ThreadAuthenticator(self.__msg_context)
-                    z_auth.start()
-                    z_auth.allow(str(address))  # allow current address
+                    self.__z_auth = ThreadAuthenticator(self.__msg_context)
+                    self.__z_auth.start()
+                    self.__z_auth.allow(str(address))  # allow current address
 
                     # check if `IronHouse` is activated
                     if self.__secure_mode == 2:
                         # tell authenticator to use the certificate from given valid dir
-                        z_auth.configure_curve(
+                        self.__z_auth.configure_curve(
                             domain="*", location=self.__auth_publickeys_dir
                         )
                     else:
                         # otherwise tell the authenticator how to handle the CURVE requests, if `StoneHouse` is activated
-                        z_auth.configure_curve(
+                        self.__z_auth.configure_curve(
                             domain="*", location=auth.CURVE_ALLOW_ANY
                         )
 
@@ -675,11 +678,13 @@ class NetGear:
                 # otherwise log and raise error
                 logger.exception(str(e))
                 if self.__secure_mode:
+                    # Handle Secure Mode
                     logger.critical(
                         "Failed to activate Secure Mode: `{}` for this connection!".format(
                             valid_security_mech[self.__secure_mode]
                         )
                     )
+                    self.__z_auth and self.__z_auth.is_alive() and self.__z_auth.stop()
                 if self.__multiserver_mode or self.__multiclient_mode:
                     raise RuntimeError(
                         "[NetGear:ERROR] :: Receive Mode failed to activate {} Mode at address: {} with pattern: {}! Kindly recheck all parameters.".format(
@@ -798,19 +803,19 @@ class NetGear:
                 # activate secure_mode threaded authenticator
                 if self.__secure_mode > 0:
                     # start an authenticator for this context
-                    z_auth = ThreadAuthenticator(self.__msg_context)
-                    z_auth.start()
-                    z_auth.allow(str(address))  # allow current address
+                    self.__z_auth = ThreadAuthenticator(self.__msg_context)
+                    self.__z_auth.start()
+                    self.__z_auth.allow(str(address))  # allow current address
 
                     # check if `IronHouse` is activated
                     if self.__secure_mode == 2:
                         # tell authenticator to use the certificate from given valid dir
-                        z_auth.configure_curve(
+                        self.__z_auth.configure_curve(
                             domain="*", location=self.__auth_publickeys_dir
                         )
                     else:
                         # otherwise tell the authenticator how to handle the CURVE requests, if `StoneHouse` is activated
-                        z_auth.configure_curve(
+                        self.__z_auth.configure_curve(
                             domain="*", location=auth.CURVE_ALLOW_ANY
                         )
 
@@ -896,11 +901,13 @@ class NetGear:
                 # otherwise log and raise error
                 logger.exception(str(e))
                 if self.__secure_mode:
+                    # Handle Secure Mode
                     logger.critical(
                         "Failed to activate Secure Mode: `{}` for this connection!".format(
                             valid_security_mech[self.__secure_mode]
                         )
                     )
+                    self.__z_auth and self.__z_auth.is_alive() and self.__z_auth.stop()
                 if self.__multiserver_mode or self.__multiclient_mode:
                     raise RuntimeError(
                         "[NetGear:ERROR] :: Send Mode failed to activate {} Mode at address: {} with pattern: {}! Kindly recheck all parameters.".format(
@@ -1521,6 +1528,8 @@ class NetGear:
             self.__terminate = True
             # properly close the socket
             self.__logging and logger.debug("Terminating. Please wait...")
+            # Handle Secure Mode Thread
+            self.__z_auth and self.__z_auth.is_alive() and self.__z_auth.stop()
             # wait until stream resources are released
             # (producer thread might be still grabbing frame)
             if self.__thread is not None:
@@ -1542,6 +1551,8 @@ class NetGear:
             kill and logger.warning(
                 "`kill` parmeter is only available in the receive mode."
             )
+            # Handle Secure Mode Thread
+            self.__z_auth and self.__z_auth.is_alive() and self.__z_auth.stop()
             # check if all attempts of reconnecting failed, then skip to closure
             if (self.__pattern < 2 and not self.__max_retries) or (
                 self.__multiclient_mode and not self.__port_buffer
