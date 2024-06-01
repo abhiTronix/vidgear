@@ -267,6 +267,9 @@ test_data_class = [
 ]
 
 
+@pytest.mark.skipif(
+    platform.system() == "Windows", reason="Not supported with pyzmq>24.0.1"
+)
 @pytest.mark.parametrize(
     "pattern, security_mech, custom_cert_location, overwrite_cert", test_data_class
 )
@@ -432,9 +435,6 @@ def test_bidirectional_mode(pattern, target_data, options):
             client.close(kill=True)
 
 
-@pytest.mark.skipif(
-    platform.system() == "Windows", reason="Not supported with pyzmq>24.0.1"
-)
 @pytest.mark.parametrize(
     "pattern, options",
     [
