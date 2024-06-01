@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 import os
 import time
@@ -528,8 +529,10 @@ class NetGear:
                 )
             )
 
-        # define messaging context instance
-        self.__msg_context = zmq.Context.instance()
+        # define ZMQ messaging context instance
+        self.__msg_context = (
+            zmq.Context() if self.__secure_mode > 0 else zmq.Context.instance()
+        )
 
         # initialize and assign receive mode to global variable
         self.__receive_mode = receive_mode
@@ -680,9 +683,11 @@ class NetGear:
                 if self.__multiserver_mode or self.__multiclient_mode:
                     raise RuntimeError(
                         "[NetGear:ERROR] :: Receive Mode failed to activate {} Mode at address: {} with pattern: {}! Kindly recheck all parameters.".format(
-                            "Multi-Server"
-                            if self.__multiserver_mode
-                            else "Multi-Client",
+                            (
+                                "Multi-Server"
+                                if self.__multiserver_mode
+                                else "Multi-Client"
+                            ),
                             (protocol + "://" + str(address) + ":" + str(port)),
                             pattern,
                         )
@@ -723,12 +728,16 @@ class NetGear:
                         "JPEG Frame-Compression is activated for this connection with Colorspace:`{}`, Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
                             self.__jpeg_compression_colorspace,
                             self.__jpeg_compression_quality,
-                            "enabled"
-                            if self.__jpeg_compression_fastdct
-                            else "disabled",
-                            "enabled"
-                            if self.__jpeg_compression_fastupsample
-                            else "disabled",
+                            (
+                                "enabled"
+                                if self.__jpeg_compression_fastdct
+                                else "disabled"
+                            ),
+                            (
+                                "enabled"
+                                if self.__jpeg_compression_fastupsample
+                                else "disabled"
+                            ),
                         )
                     )
                 if self.__secure_mode:
@@ -895,9 +904,11 @@ class NetGear:
                 if self.__multiserver_mode or self.__multiclient_mode:
                     raise RuntimeError(
                         "[NetGear:ERROR] :: Send Mode failed to activate {} Mode at address: {} with pattern: {}! Kindly recheck all parameters.".format(
-                            "Multi-Server"
-                            if self.__multiserver_mode
-                            else "Multi-Client",
+                            (
+                                "Multi-Server"
+                                if self.__multiserver_mode
+                                else "Multi-Client"
+                            ),
                             (protocol + "://" + str(address) + ":" + str(port)),
                             pattern,
                         )
@@ -931,12 +942,16 @@ class NetGear:
                         "JPEG Frame-Compression is activated for this connection with Colorspace:`{}`, Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
                             self.__jpeg_compression_colorspace,
                             self.__jpeg_compression_quality,
-                            "enabled"
-                            if self.__jpeg_compression_fastdct
-                            else "disabled",
-                            "enabled"
-                            if self.__jpeg_compression_fastupsample
-                            else "disabled",
+                            (
+                                "enabled"
+                                if self.__jpeg_compression_fastdct
+                                else "disabled"
+                            ),
+                            (
+                                "enabled"
+                                if self.__jpeg_compression_fastupsample
+                                else "disabled"
+                            ),
                         )
                     )
                 if self.__secure_mode:
@@ -1103,19 +1118,25 @@ class NetGear:
                         return_dict.update(
                             dict(
                                 return_type=(type(self.__return_data).__name__),
-                                compression={
-                                    "dct": self.__jpeg_compression_fastdct,
-                                    "ups": self.__jpeg_compression_fastupsample,
-                                    "colorspace": self.__jpeg_compression_colorspace,
-                                }
-                                if self.__jpeg_compression
-                                else False,
-                                array_dtype=str(self.__return_data.dtype)
-                                if not (self.__jpeg_compression)
-                                else "",
-                                array_shape=self.__return_data.shape
-                                if not (self.__jpeg_compression)
-                                else "",
+                                compression=(
+                                    {
+                                        "dct": self.__jpeg_compression_fastdct,
+                                        "ups": self.__jpeg_compression_fastupsample,
+                                        "colorspace": self.__jpeg_compression_colorspace,
+                                    }
+                                    if self.__jpeg_compression
+                                    else False
+                                ),
+                                array_dtype=(
+                                    str(self.__return_data.dtype)
+                                    if not (self.__jpeg_compression)
+                                    else ""
+                                ),
+                                array_shape=(
+                                    self.__return_data.shape
+                                    if not (self.__jpeg_compression)
+                                    else ""
+                                ),
                                 data=None,
                             )
                         )
@@ -1302,13 +1323,15 @@ class NetGear:
         msg_dict.update(
             dict(
                 terminate_flag=exit_flag,
-                compression={
-                    "dct": self.__jpeg_compression_fastdct,
-                    "ups": self.__jpeg_compression_fastupsample,
-                    "colorspace": self.__jpeg_compression_colorspace,
-                }
-                if self.__jpeg_compression
-                else False,
+                compression=(
+                    {
+                        "dct": self.__jpeg_compression_fastdct,
+                        "ups": self.__jpeg_compression_fastupsample,
+                        "colorspace": self.__jpeg_compression_colorspace,
+                    }
+                    if self.__jpeg_compression
+                    else False
+                ),
                 message=message,
                 pattern=str(self.__pattern),
                 dtype=str(frame.dtype) if not (self.__jpeg_compression) else "",

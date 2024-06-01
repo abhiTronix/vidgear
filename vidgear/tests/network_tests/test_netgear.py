@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 
 import os
@@ -256,9 +257,11 @@ test_data_class = [
     (
         1,
         2,
-        os.path.abspath(os.sep)
-        if platform.system() == "Linux"
-        else "unknown://invalid.com/",
+        (
+            os.path.abspath(os.sep)
+            if platform.system() == "Linux"
+            else "unknown://invalid.com/"
+        ),
         False,
     ),
 ]
@@ -510,25 +513,25 @@ def test_multiserver_mode(pattern, options):
         # send frame from Server-1 to client and save it in dict
         server_1.send(frame_server)
         unique_address, frame = client.recv(
-            return_data="data"
-            if "bidirectional_mode" in options and pattern == 1
-            else "",
+            return_data=(
+                "data" if "bidirectional_mode" in options and pattern == 1 else ""
+            ),
         )
         client_frame_dict[unique_address] = frame
         # send frame from Server-2 to client and save it in dict
         server_2.send(frame_server)
         unique_address, frame = client.recv(
-            return_data="data"
-            if "bidirectional_mode" in options and pattern == 1
-            else "",
+            return_data=(
+                "data" if "bidirectional_mode" in options and pattern == 1 else ""
+            ),
         )
         client_frame_dict[unique_address] = frame
         # send frame from Server-3 to client and save it in dict
         server_3.send(frame_server)
         unique_address, frame = client.recv(
-            return_data="data"
-            if "bidirectional_mode" in options and pattern == 1
-            else "",
+            return_data=(
+                "data" if "bidirectional_mode" in options and pattern == 1 else ""
+            ),
         )
         client_frame_dict[unique_address] = frame
 
@@ -657,7 +660,7 @@ def test_multiclient_mode(pattern):
         {"subscriber_timeout": 4},
     ],
 )
-def test_client_reliablity(options):
+def test_client_reliability(options):
     """
     Testing validation function of NetGear API
     """
@@ -713,7 +716,7 @@ def test_client_reliablity(options):
         },
     ],
 )
-def test_server_reliablity(options):
+def test_server_reliability(options):
     """
     Testing validation function of NetGear API
     """
