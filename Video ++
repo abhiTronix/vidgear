@@ -1,0 +1,61 @@
+import cv2
+from vidgear.gears import WriteGear
+
+# Load video clips
+cap1 = cv2.VideoCapture("videos/video1.mp4")
+cap2 = cv2.VideoCapture("videos/video2.mp4")
+
+# Set output parameters
+output_params = {"-fourcc": "mp4v", "-fps": 30, "-output_dimensions": (1280, 720)}
+
+# Create video writer
+output = WriteGear(output_filename="final_video.mp4", **output_params)
+
+while True:
+    ret1, frame1 = cap1.read()
+    if not ret1:
+        break
+    output.write(frame1)
+
+while True:
+    ret2, frame2 = cap2.read()
+    if not ret2:
+        break
+    output.write(frame2)
+
+# Release resources
+cap1.release()
+cap2.release()
+output.close()
+
+### `video_editing.py` fayli
+```python
+import cv2
+from vidgear.gears import WriteGear
+
+# Load video clips
+cap1 = cv2.VideoCapture("videos/video1.mp4")
+cap2 = cv2.VideoCapture("videos/video2.mp4")
+
+# Set output parameters
+output_params = {"-fourcc": "mp4v", "-fps": 30, "-output_dimensions": (1280, 720)}
+
+# Create video writer
+output = WriteGear(output_filename="final_video.mp4", **output_params)
+
+while True:
+    ret1, frame1 = cap1.read()
+    if not ret1:
+        break
+    output.write(frame1)
+
+while True:
+    ret2, frame2 = cap2.read()
+    if not ret2:
+        break
+    output.write(frame2)
+
+# Release resources
+cap1.release()
+cap2.release()
+output.close()
