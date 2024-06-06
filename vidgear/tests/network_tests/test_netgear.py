@@ -616,8 +616,7 @@ def test_multiclient_mode(pattern):
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.stop()
+        not (stream is None) and stream.stop()
         not (server is None) and server.close(kill=True)
         not (client_1 is None) and client_1.close(kill=True)
         not (client_2 is None) and client_2.close(kill=True)

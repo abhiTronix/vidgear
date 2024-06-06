@@ -128,7 +128,7 @@ For implementing Secure Mode, NetGear API currently provide following exclusive 
 
 Following is the bare-minimum code you need to get started with Secure Mode in NetGear API:
 
-!!! critical "In Secure Mode, Client's end MUST run before the Server's end to establish a secure connection!"
+!!! alert "In Secure Mode, Client's end MUST run before the Server's end to establish a secure connection!"
 
 #### Client's End
 
@@ -233,7 +233,7 @@ server.close()
 
 Open a terminal on Client System _(where you want to display the input frames received from the Server)_ and execute the following python code: 
 
-!!! critical "In Secure Mode, Client's end MUST run before the Server's end to establish a secure connection!"
+!!! alert "In Secure Mode, Client's end MUST run before the Server's end to establish a secure connection!"
 
 !!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
