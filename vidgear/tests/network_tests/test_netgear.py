@@ -241,8 +241,8 @@ def test_compression(options_server):
 
 
 test_data_class = [
-    (0, 1, tempfile.gettempdir(), True),
-    (0, 1, ["invalid"], True),
+    (1, 1, tempfile.gettempdir(), True),
+    (1, 2, ["invalid"], True),
     (
         1,
         2,
@@ -256,9 +256,6 @@ test_data_class = [
 ]
 
 
-@pytest.mark.skipif(
-    platform.system() == "Windows", reason="Not supported with pyzmq>24.0.1"
-)
 @pytest.mark.parametrize(
     "pattern, security_mech, custom_cert_location, overwrite_cert", test_data_class
 )
@@ -271,6 +268,7 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
         "secure_mode": security_mech,
         "custom_cert_location": custom_cert_location,
         "overwrite_cert": overwrite_cert,
+        "jpeg_compression": False,
     }
     # initialize
     frame_server = None
@@ -281,8 +279,14 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
         # open stream
         stream = cv2.VideoCapture(return_testvideo_path())
         # define params
-        server = NetGear(pattern=pattern, logging=True, **options)
-        client = NetGear(pattern=pattern, receive_mode=True, logging=True, **options)
+        server = NetGear(address="127.0.0.1", pattern=pattern, logging=True, **options)
+        client = NetGear(
+            address="127.0.0.1",
+            pattern=pattern,
+            receive_mode=True,
+            logging=True,
+            **options
+        )
         # select random input frame from stream
         i = 0
         while i < random.randint(10, 100):
