@@ -46,16 +46,12 @@ Secure mode supports the two most powerful ZMQ security layers:
 
 &nbsp;
 
-???+ warning "Secure Mode Issues with PyZMQ (`version > 24.0.1`) on :fontawesome-brands-windows: Windows"
-
-    The Secure Mode functionality is currently broken with PyZMQ (`version > 24.0.1`) on the Windows platform. This issue is due to recent changes in the [`zmq.auth`](https://pyzmq.readthedocs.io/en/latest/api/zmq.auth.html#module-zmq.auth) module introduced in PyZMQ `version 25.0.0`. Attempting to use Secure Mode with these versions will result in the error: `zmq.error.ZMQError: Address in use (addr='inproc://zeromq.zap.01')`.
-
-    !!! info "To use Secure Mode on Windows, please downgrade to PyZMQ (`version <= 24.0.1`)"
-
 !!! danger "Important Information regarding Secure Mode"
 
     * The `secure_mode` attribute value at the Client's end **MUST** match exactly the Server's end _(i.e. **IronHouse** security layer is only compatible with **IronHouse**, and **NOT** with **StoneHouse**)_.
 
+    * In Secure Mode, The Client's end **MUST** run before the Server's end to establish a secure connection.
+    
     * The Public+Secret Keypairs generated at the Server end **MUST** be made available at the Client's end too for successful authentication. If mismatched, connection failure will occur.
 
     * By Default, the Public+Secret Keypairs will be generated/stored at the `$HOME/.vidgear/keys` directory of your machine _(e.g. `/home/foo/.vidgear/keys` on Linux)_. But you can also use [`custom_cert_location`](../../params/#options) attribute to set your own Custom-Path for a directory to generate/store these Keypairs.
@@ -64,7 +60,10 @@ Secure mode supports the two most powerful ZMQ security layers:
 
     * **IronHouse** is the strongest Security Layer available, but it involves certain security checks that lead to  **ADDITIONAL LATENCY**.
 
+    
     * Secure Mode only supports `libzmq` library version `>= 4.0`.
+
+    
 
 
 &nbsp;
@@ -129,15 +128,55 @@ For implementing Secure Mode, NetGear API currently provide following exclusive 
 
 Following is the bare-minimum code you need to get started with Secure Mode in NetGear API:
 
-??? warning "Secure Mode Issues with PyZMQ (`version > 24.0.1`) on :fontawesome-brands-windows: Windows"
+!!! critical "In Secure Mode, Client's end MUST run before the Server's end to establish a secure connection!"
 
-    The Secure Mode functionality is currently broken with PyZMQ (`version > 24.0.1`) on the Windows platform. This issue is due to recent changes in the [`zmq.auth`](https://pyzmq.readthedocs.io/en/latest/api/zmq.auth.html#module-zmq.auth) module introduced in PyZMQ `version 25.0.0`. Attempting to use Secure Mode with these versions will result in the error: `zmq.error.ZMQError: Address in use (addr='inproc://zeromq.zap.01')`.
+#### Client's End
 
-    !!! info "To use Secure Mode on Windows, please downgrade to PyZMQ (`version <= 24.0.1`)"
+Open your favorite terminal and execute the following python code:
+
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
+
+```python linenums="1" hl_lines="6"
+# import required libraries
+from vidgear.gears import NetGear
+import cv2
+
+# activate StoneHouse security mechanism
+options = {"secure_mode": 1}
+
+# define NetGear Client with `receive_mode = True` and defined parameter
+client = NetGear(pattern=1, receive_mode=True, logging=True, **options)
+
+# loop over
+while True:
+
+    # receive frames from network
+    frame = client.recv()
+
+    # check for received frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # Show output window
+    cv2.imshow("Output Frame", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close client
+client.close()
+```
 
 #### Server's End
 
-Open your favorite terminal and execute the following python code:
+Then open another terminal on the same system and execute the following python code to send the frames to our client:
 
 !!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -181,49 +220,7 @@ stream.stop()
 server.close()
 ```
 
-#### Client's End
 
-Then open another terminal on the same system and execute the following python code and see the output:
-
-!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
-
-```python linenums="1" hl_lines="6"
-# import required libraries
-from vidgear.gears import NetGear
-import cv2
-
-# activate StoneHouse security mechanism
-options = {"secure_mode": 1}
-
-# define NetGear Client with `receive_mode = True` and defined parameter
-client = NetGear(pattern=1, receive_mode=True, logging=True, **options)
-
-# loop over
-while True:
-
-    # receive frames from network
-    frame = client.recv()
-
-    # check for received frame if Nonetype
-    if frame is None:
-        break
-
-    # {do something with the frame here}
-
-    # Show output window
-    cv2.imshow("Output Frame", frame)
-
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
-
-# close output window
-cv2.destroyAllWindows()
-
-# safely close client
-client.close()
-```
 
 &nbsp; 
 
@@ -232,15 +229,11 @@ client.close()
 
 ### Using Secure Mode with Variable Parameters
 
-??? warning "Secure Mode Issues with PyZMQ (`version > 24.0.1`) on :fontawesome-brands-windows: Windows"
-
-    The Secure Mode functionality is currently broken with PyZMQ (`version > 24.0.1`) on the Windows platform. This issue is due to recent changes in the [`zmq.auth`](https://pyzmq.readthedocs.io/en/latest/api/zmq.auth.html#module-zmq.auth) module introduced in PyZMQ `version 25.0.0`. Attempting to use Secure Mode with these versions will result in the error: `zmq.error.ZMQError: Address in use (addr='inproc://zeromq.zap.01')`.
-
-    !!! info "To use Secure Mode on Windows, please downgrade to PyZMQ (`version <= 24.0.1`)"
-
 #### Client's End
 
 Open a terminal on Client System _(where you want to display the input frames received from the Server)_ and execute the following python code: 
+
+!!! critical "In Secure Mode, Client's end MUST run before the Server's end to establish a secure connection!"
 
 !!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 

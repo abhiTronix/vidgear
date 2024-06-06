@@ -21,6 +21,8 @@ limitations under the License.
 # import the necessary packages
 import os
 import time
+import asyncio
+import platform
 import string
 import secrets
 import numpy as np
@@ -417,56 +419,6 @@ class NetGear:
             else:
                 pass
 
-        # Handle Secure mode
-        if self.__secure_mode:
-            # activate and log if overwriting is enabled
-            if overwrite_cert:
-                if not receive_mode:
-                    self.__logging and logger.warning(
-                        "Overwriting ZMQ Authentication certificates over previous ones!"
-                    )
-                else:
-                    overwrite_cert = False
-                    self.__logging and logger.critical(
-                        "Overwriting ZMQ Authentication certificates is disabled for Client's end!"
-                    )
-
-            # Validate certificate generation paths
-            try:
-                # check if custom certificates path is specified
-                if custom_cert_location:
-                    (
-                        auth_cert_dir,
-                        self.__auth_secretkeys_dir,
-                        self.__auth_publickeys_dir,
-                    ) = generate_auth_certificates(
-                        custom_cert_location, overwrite=overwrite_cert, logging=logging
-                    )
-                else:
-                    # otherwise auto-generate suitable path
-                    (
-                        auth_cert_dir,
-                        self.__auth_secretkeys_dir,
-                        self.__auth_publickeys_dir,
-                    ) = generate_auth_certificates(
-                        os.path.join(expanduser("~"), ".vidgear"),
-                        overwrite=overwrite_cert,
-                        logging=logging,
-                    )
-                # log it
-                self.__logging and logger.debug(
-                    "`{}` is the default location for storing ZMQ authentication certificates/keys.".format(
-                        auth_cert_dir
-                    )
-                )
-            except Exception as e:
-                # catch if any error occurred and disable Secure mode
-                logger.exception(str(e))
-                self.__secure_mode = 0
-                logger.critical(
-                    "ZMQ Security Mechanism is disabled for this connection due to errors!"
-                )
-
         # Handle ssh tunneling if enabled
         if not (self.__ssh_tunnel_mode is None):
             # SSH Tunnel Mode only available for server mode
@@ -532,17 +484,93 @@ class NetGear:
                 )
             )
 
+        # On Windows, NetGear requires the ``WindowsSelectorEventLoop`` but Python 3.8 and above,
+        # defaults to an ``ProactorEventLoop`` loop that is not compatible with it. Thereby,
+        # we had to set it manually.
+        platform.system() == "Windows" and asyncio.set_event_loop_policy(
+            asyncio.WindowsSelectorEventLoopPolicy()
+        )
+
         # define ZMQ messaging context instance
         self.__msg_context = zmq.Context.instance()
 
         # initialize and assign receive mode to global variable
         self.__receive_mode = receive_mode
 
+        # Handle Secure mode
+        if self.__secure_mode > 0:
+            # activate and log if overwriting is enabled
+            if receive_mode:
+                overwrite_cert = False
+                overwrite_cert and logger.warning(
+                    "Overwriting ZMQ Authentication certificates is disabled for Client's end!"
+                )
+            else:
+                overwrite_cert and self.__logging and logger.info(
+                    "Overwriting ZMQ Authentication certificates over previous ones!"
+                )
+
+            # Validate certificate generation paths
+            # Start threaded authenticator for this context
+            try:
+                # check if custom certificates path is specified
+                if custom_cert_location:
+                    (
+                        auth_cert_dir,
+                        self.__auth_secretkeys_dir,
+                        self.__auth_publickeys_dir,
+                    ) = generate_auth_certificates(
+                        custom_cert_location, overwrite=overwrite_cert, logging=logging
+                    )
+                else:
+                    # otherwise auto-generate suitable path
+                    (
+                        auth_cert_dir,
+                        self.__auth_secretkeys_dir,
+                        self.__auth_publickeys_dir,
+                    ) = generate_auth_certificates(
+                        os.path.join(expanduser("~"), ".vidgear"),
+                        overwrite=overwrite_cert,
+                        logging=logging,
+                    )
+                # log it
+                self.__logging and logger.debug(
+                    "`{}` is the default location for storing ZMQ authentication certificates/keys.".format(
+                        auth_cert_dir
+                    )
+                )
+
+                # start an authenticator for this context
+                self.__z_auth = ThreadAuthenticator(self.__msg_context)
+                self.__z_auth.start()
+                self.__z_auth.allow(str(address))  # allow current address
+
+                # check if `IronHouse` is activated
+                if self.__secure_mode == 2:
+                    # tell authenticator to use the certificate from given valid dir
+                    self.__z_auth.configure_curve(
+                        domain="*", location=self.__auth_publickeys_dir
+                    )
+                else:
+                    # otherwise tell the authenticator how to handle the CURVE requests, if `StoneHouse` is activated
+                    self.__z_auth.configure_curve(
+                        domain="*", location=auth.CURVE_ALLOW_ANY
+                    )
+            except zmq.ZMQError as e:
+                if "Address in use" in str(e):
+                    logger.info("ZMQ Authenticator already running.")
+                else:
+                    # catch if any error occurred and disable Secure mode
+                    logger.exception(str(e))
+                    self.__secure_mode = 0
+                    logger.error(
+                        "ZMQ Security Mechanism is disabled for this connection due to errors!"
+                    )
+
         # check whether `receive_mode` is enabled
         if self.__receive_mode:
             # define connection address
-            if address is None:
-                address = "*"  # define address
+            address = "*" if address is None else address
 
             # check if multiserver_mode is enabled
             if self.__multiserver_mode:
@@ -578,35 +606,14 @@ class NetGear:
                 self.__port = port
             else:
                 # otherwise assign local port address if None
-                if port is None:
-                    port = "5555"
+                port = "5555" if port is None else port
 
             try:
-                # activate secure_mode threaded authenticator
-                if self.__secure_mode > 0:
-                    # start an authenticator for this context
-                    self.__z_auth = ThreadAuthenticator(self.__msg_context)
-                    self.__z_auth.start()
-                    self.__z_auth.allow(str(address))  # allow current address
-
-                    # check if `IronHouse` is activated
-                    if self.__secure_mode == 2:
-                        # tell authenticator to use the certificate from given valid dir
-                        self.__z_auth.configure_curve(
-                            domain="*", location=self.__auth_publickeys_dir
-                        )
-                    else:
-                        # otherwise tell the authenticator how to handle the CURVE requests, if `StoneHouse` is activated
-                        self.__z_auth.configure_curve(
-                            domain="*", location=auth.CURVE_ALLOW_ANY
-                        )
-
                 # define thread-safe messaging socket
                 self.__msg_socket = self.__msg_context.socket(msg_pattern[1])
 
                 # define pub-sub flag
-                if self.__pattern == 2:
-                    self.__msg_socket.set_hwm(1)
+                self.__pattern == 2 and self.__msg_socket.set_hwm(1)
 
                 # enable specified secure mode for the socket
                 if self.__secure_mode > 0:
@@ -675,14 +682,13 @@ class NetGear:
             except Exception as e:
                 # otherwise log and raise error
                 logger.exception(str(e))
-                if self.__secure_mode:
-                    # Handle Secure Mode
-                    logger.critical(
-                        "Failed to activate Secure Mode: `{}` for this connection!".format(
-                            valid_security_mech[self.__secure_mode]
-                        )
+                # Handle Secure Mode
+                self.__secure_mode and logger.critical(
+                    "Failed to activate Secure Mode: `{}` for this connection!".format(
+                        valid_security_mech[self.__secure_mode]
                     )
-                    self.__z_auth and self.__z_auth.is_alive() and self.__z_auth.stop()
+                )
+                # raise errors for exclusive modes
                 if self.__multiserver_mode or self.__multiclient_mode:
                     raise RuntimeError(
                         "[NetGear:ERROR] :: Receive Mode failed to activate {} Mode at address: {} with pattern: {}! Kindly recheck all parameters.".format(
@@ -696,10 +702,9 @@ class NetGear:
                         )
                     )
                 else:
-                    if self.__bi_mode:
-                        logger.critical(
-                            "Failed to activate Bidirectional Mode for this connection!"
-                        )
+                    self.__bi_mode and logger.critical(
+                        "Failed to activate Bidirectional Mode for this connection!"
+                    )
                     raise RuntimeError(
                         "[NetGear:ERROR] :: Receive Mode failed to bind address: {} and pattern: {}! Kindly recheck all parameters.".format(
                             (protocol + "://" + str(address) + ":" + str(port)), pattern
@@ -726,39 +731,31 @@ class NetGear:
                         (protocol + "://" + str(address) + ":" + str(port)), pattern
                     )
                 )
-                if self.__jpeg_compression:
-                    logger.debug(
-                        "JPEG Frame-Compression is activated for this connection with Colorspace:`{}`, Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
-                            self.__jpeg_compression_colorspace,
-                            self.__jpeg_compression_quality,
-                            (
-                                "enabled"
-                                if self.__jpeg_compression_fastdct
-                                else "disabled"
-                            ),
-                            (
-                                "enabled"
-                                if self.__jpeg_compression_fastupsample
-                                else "disabled"
-                            ),
-                        )
+                self.__jpeg_compression and logger.debug(
+                    "JPEG Frame-Compression is activated for this connection with Colorspace:`{}`, Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                        self.__jpeg_compression_colorspace,
+                        self.__jpeg_compression_quality,
+                        ("enabled" if self.__jpeg_compression_fastdct else "disabled"),
+                        (
+                            "enabled"
+                            if self.__jpeg_compression_fastupsample
+                            else "disabled"
+                        ),
                     )
-                if self.__secure_mode:
-                    logger.debug(
-                        "Successfully enabled ZMQ Security Mechanism: `{}` for this connection.".format(
-                            valid_security_mech[self.__secure_mode]
-                        )
+                )
+                self.__secure_mode and logger.debug(
+                    "Successfully enabled ZMQ Security Mechanism: `{}` for this connection.".format(
+                        valid_security_mech[self.__secure_mode]
                     )
+                )
                 logger.debug("Multi-threaded Receive Mode is successfully enabled.")
                 logger.debug("Unique System ID is {}.".format(self.__id))
                 logger.debug("Receive Mode is now activated.")
 
         else:
             # otherwise default to `Send Mode`
-
             # define connection address
-            if address is None:
-                address = "localhost"
+            address = "localhost" if address is None else address
 
             # check if multiserver_mode is enabled
             if self.__multiserver_mode:
@@ -794,29 +791,9 @@ class NetGear:
                 self.__port_buffer = []
             else:
                 # otherwise assign local port address if None
-                if port is None:
-                    port = "5555"
+                port = "5555" if port is None else port
 
             try:
-                # activate secure_mode threaded authenticator
-                if self.__secure_mode > 0:
-                    # start an authenticator for this context
-                    self.__z_auth = ThreadAuthenticator(self.__msg_context)
-                    self.__z_auth.start()
-                    self.__z_auth.allow(str(address))  # allow current address
-
-                    # check if `IronHouse` is activated
-                    if self.__secure_mode == 2:
-                        # tell authenticator to use the certificate from given valid dir
-                        self.__z_auth.configure_curve(
-                            domain="*", location=self.__auth_publickeys_dir
-                        )
-                    else:
-                        # otherwise tell the authenticator how to handle the CURVE requests, if `StoneHouse` is activated
-                        self.__z_auth.configure_curve(
-                            domain="*", location=auth.CURVE_ALLOW_ANY
-                        )
-
                 # define thread-safe messaging socket
                 self.__msg_socket = self.__msg_context.socket(msg_pattern[0])
 
@@ -898,14 +875,13 @@ class NetGear:
             except Exception as e:
                 # otherwise log and raise error
                 logger.exception(str(e))
-                if self.__secure_mode:
-                    # Handle Secure Mode
-                    logger.critical(
-                        "Failed to activate Secure Mode: `{}` for this connection!".format(
-                            valid_security_mech[self.__secure_mode]
-                        )
+                # Handle Secure Mode
+                self.__secure_mode and logger.critical(
+                    "Failed to activate Secure Mode: `{}` for this connection!".format(
+                        valid_security_mech[self.__secure_mode]
                     )
-                    self.__z_auth and self.__z_auth.is_alive() and self.__z_auth.stop()
+                )
+                # raise errors for exclusive modes
                 if self.__multiserver_mode or self.__multiclient_mode:
                     raise RuntimeError(
                         "[NetGear:ERROR] :: Send Mode failed to activate {} Mode at address: {} with pattern: {}! Kindly recheck all parameters.".format(
@@ -919,16 +895,14 @@ class NetGear:
                         )
                     )
                 else:
-                    if self.__bi_mode:
-                        logger.critical(
-                            "Failed to activate Bidirectional Mode for this connection!"
+                    self.__bi_mode and logger.critical(
+                        "Failed to activate Bidirectional Mode for this connection!"
+                    )
+                    self.__ssh_tunnel_mode and logger.critical(
+                        "Failed to initiate SSH Tunneling Mode for this server with `{}` back-end!".format(
+                            "paramiko" if self.__paramiko_present else "pexpect"
                         )
-                    if self.__ssh_tunnel_mode:
-                        logger.critical(
-                            "Failed to initiate SSH Tunneling Mode for this server with `{}` back-end!".format(
-                                "paramiko" if self.__paramiko_present else "pexpect"
-                            )
-                        )
+                    )
                     raise RuntimeError(
                         "[NetGear:ERROR] :: Send Mode failed to connect address: {} and pattern: {}! Kindly recheck all parameters.".format(
                             (protocol + "://" + str(address) + ":" + str(port)), pattern
@@ -942,29 +916,23 @@ class NetGear:
                         (protocol + "://" + str(address) + ":" + str(port)), pattern
                     )
                 )
-                if self.__jpeg_compression:
-                    logger.debug(
-                        "JPEG Frame-Compression is activated for this connection with Colorspace:`{}`, Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
-                            self.__jpeg_compression_colorspace,
-                            self.__jpeg_compression_quality,
-                            (
-                                "enabled"
-                                if self.__jpeg_compression_fastdct
-                                else "disabled"
-                            ),
-                            (
-                                "enabled"
-                                if self.__jpeg_compression_fastupsample
-                                else "disabled"
-                            ),
-                        )
+                self.__jpeg_compression and logger.debug(
+                    "JPEG Frame-Compression is activated for this connection with Colorspace:`{}`, Quality:`{}`%, Fastdct:`{}`, and Fastupsample:`{}`.".format(
+                        self.__jpeg_compression_colorspace,
+                        self.__jpeg_compression_quality,
+                        ("enabled" if self.__jpeg_compression_fastdct else "disabled"),
+                        (
+                            "enabled"
+                            if self.__jpeg_compression_fastupsample
+                            else "disabled"
+                        ),
                     )
-                if self.__secure_mode:
-                    logger.debug(
-                        "Enabled ZMQ Security Mechanism: `{}` for this connection.".format(
-                            valid_security_mech[self.__secure_mode]
-                        )
+                )
+                self.__secure_mode and logger.debug(
+                    "Enabled ZMQ Security Mechanism: `{}` for this connection.".format(
+                        valid_security_mech[self.__secure_mode]
                     )
+                )
                 logger.debug("Unique System ID is {}.".format(self.__id))
                 logger.debug(
                     "Send Mode is successfully activated and ready to send data."
@@ -975,8 +943,9 @@ class NetGear:
         A threaded receiver handler, that keep iterating data from ZMQ socket to a internally monitored deque,
         until the thread is terminated, or socket disconnects.
         """
-        # initialize frame variable
+        # initialize variables
         frame = None
+        msg_json = None
 
         # keep looping infinitely until the thread is terminated
         while not self.__terminate:
@@ -1034,7 +1003,7 @@ class NetGear:
                         break
 
             # check if terminate_flag` received
-            if msg_json["terminate_flag"]:
+            if msg_json and msg_json["terminate_flag"]:
                 # if multiserver_mode is enabled
                 if self.__multiserver_mode:
                     # check and remove from which ports signal is received
@@ -1070,11 +1039,17 @@ class NetGear:
                     )
                 continue
 
-            msg_data = self.__msg_socket.recv(
-                flags=self.__msg_flag | zmq.DONTWAIT,
-                copy=self.__msg_copy,
-                track=self.__msg_track,
-            )
+            try:
+                msg_data = self.__msg_socket.recv(
+                    flags=self.__msg_flag | zmq.DONTWAIT,
+                    copy=self.__msg_copy,
+                    track=self.__msg_track,
+                )
+            except zmq.ZMQError as e:
+                logger.critical("Socket Session Expired. Exiting!")
+                self.__terminate = True
+                self.__queue.append(None)
+                break
 
             # handle data transfer in synchronous modes.
             if self.__pattern < 2:
@@ -1498,7 +1473,6 @@ class NetGear:
                         # connect normally
                         self.__msg_socket.connect(self.__connection_address)
                     self.__poll.register(self.__msg_socket, zmq.POLLIN)
-
                     return None
 
                 # log confirmation
@@ -1528,12 +1502,14 @@ class NetGear:
             self.__logging and logger.debug("Terminating. Please wait...")
             # Handle Secure Mode Thread
             if self.__z_auth:
+                self.__logging and logger.debug("Terminating Authenticator Thread.")
                 self.__z_auth.stop()
                 while self.__z_auth.is_alive():
                     pass
             # wait until stream resources are released
             # (producer thread might be still grabbing frame)
             if self.__thread is not None:
+                self.__logging and logger.debug("Terminating Main Thread.")
                 # properly handle thread exit
                 if self.__thread.is_alive() and kill:
                     # force close if still alive
@@ -1541,8 +1517,9 @@ class NetGear:
                     self.__msg_context.destroy()
                     self.__thread.join()
                 else:
-                    self.__thread.join()
                     self.__msg_socket.close(linger=0)
+                    self.__msg_context.term()
+                    self.__thread.join()
                 self.__thread = None
             self.__logging and logger.debug("Terminated Successfully!")
         else:
@@ -1554,6 +1531,7 @@ class NetGear:
             )
             # Handle Secure Mode Thread
             if self.__z_auth:
+                self.__logging and logger.debug("Terminating Authenticator Thread.")
                 self.__z_auth.stop()
                 while self.__z_auth.is_alive():
                     pass
