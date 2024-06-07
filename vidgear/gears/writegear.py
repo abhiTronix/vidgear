@@ -22,6 +22,7 @@ limitations under the License.
 import os
 import cv2
 import time
+import signal
 import platform
 import pathlib
 import logging as log
@@ -165,9 +166,7 @@ class WriteGear:
 
         # cleans and reformat output parameters
         self.__output_parameters = {
-            str(k).strip(): (
-                str(v).strip() if not isinstance(v, (list, tuple, int, float)) else v
-            )
+            str(k).strip(): (v.strip() if isinstance(v, str) else v)
             for k, v in output_params.items()
         }
         # log it if specified
@@ -761,8 +760,7 @@ class WriteGear:
         Safely terminates various WriteGear process.
         """
         # log termination
-        if self.__logging:
-            logger.debug("Terminating WriteGear Processes.")
+        self.__logging and logger.debug("Terminating WriteGear Processes.")
         # handle termination separately
         if self.__compression:
             # when Compression Mode is enabled

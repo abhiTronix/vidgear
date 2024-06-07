@@ -35,6 +35,8 @@ import numpy as np
 import logging as log
 import platform
 import socket
+import warnings
+from functools import wraps
 from tqdm import tqdm
 from contextlib import closing
 from pathlib import Path
@@ -152,6 +154,42 @@ def get_module_version(module=None):
             )
         )
     return str(version)
+
+
+def deprecated(parameter=None, message=None, stacklevel=2):
+    """
+    ### deprecated
+
+    Decorator to mark a parameter or function as deprecated.
+
+    Parameters:
+        parameter(str): Name of parameter to be deprecated.
+        message(str): Custom message to display in warning message.
+        stacklevel(int): Stack frames level.
+    """
+
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if parameter and parameter in kwargs:
+                warnings.warn(
+                    message
+                    or f"Parameter '{parameter}' is deprecated and will be removed in future versions.",
+                    DeprecationWarning,
+                    stacklevel=stacklevel,
+                )
+            else:
+                warnings.warn(
+                    message
+                    or f"Function '{func.__name__}' is deprecated and will be removed in future versions.",
+                    DeprecationWarning,
+                    stacklevel=stacklevel,
+                )
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
 
 
 def import_dependency_safe(
@@ -669,12 +707,11 @@ def extract_time(value):
         return 0
     else:
         stripped_data = value.strip()
-        t_duration = re.findall(
-            r"(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)", stripped_data
-        )
+        t_duration = re.findall(r"\d{2}:\d{2}:\d{2}(?:\.\d{2})?", stripped_data)
         return (
             sum(
-                int(x) * 60**i for i, x in enumerate(reversed(t_duration[0].split(":")))
+                float(x) * 60**i
+                for i, x in enumerate(reversed(t_duration[0].split(":")))
             )
             if t_duration
             else 0

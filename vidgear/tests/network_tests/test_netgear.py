@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 
 import os
@@ -84,12 +85,9 @@ def test_playback(address, port):
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.release()
-        if not (server is None):
-            server.close()
-        if not (client is None):
-            client.close()
+        not (stream is None) and stream.release()
+        not (server is None) and server.close()
+        not (client is None) and client.close()
 
 
 @pytest.mark.parametrize("receive_mode", [True, False])
@@ -119,10 +117,8 @@ def test_primary_mode(receive_mode):
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.stop()
-        if not (conn is None):
-            conn.close()
+        not (stream is None) and stream.stop()
+        not (conn is None) and conn.close()
 
 
 @pytest.mark.parametrize(
@@ -170,12 +166,9 @@ def test_patterns(pattern):
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.release()
-        if not (server is None):
-            server.close(kill=True)
-        if not (client is None):
-            client.close(kill=True)
+        not (stream is None) and stream.release()
+        not (server is None) and server.close(kill=True)
+        not (client is None) and client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -242,23 +235,22 @@ def test_compression(options_server):
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.stop()
-        if not (server is None):
-            server.close(kill=True)
-        if not (client is None):
-            client.close(kill=True)
+        not (stream is None) and stream.stop()
+        not (server is None) and server.close(kill=True)
+        not (client is None) and client.close(kill=True)
 
 
 test_data_class = [
-    (0, 1, tempfile.gettempdir(), True),
-    (0, 1, ["invalid"], True),
+    (1, 1, tempfile.gettempdir(), True),
+    (1, 2, ["invalid"], True),
     (
         1,
         2,
-        os.path.abspath(os.sep)
-        if platform.system() == "Linux"
-        else "unknown://invalid.com/",
+        (
+            os.path.abspath(os.sep)
+            if platform.system() == "Linux"
+            else "unknown://invalid.com/"
+        ),
         False,
     ),
 ]
@@ -276,6 +268,7 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
         "secure_mode": security_mech,
         "custom_cert_location": custom_cert_location,
         "overwrite_cert": overwrite_cert,
+        "jpeg_compression": False,
     }
     # initialize
     frame_server = None
@@ -286,8 +279,14 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
         # open stream
         stream = cv2.VideoCapture(return_testvideo_path())
         # define params
-        server = NetGear(pattern=pattern, logging=True, **options)
-        client = NetGear(pattern=pattern, receive_mode=True, logging=True, **options)
+        server = NetGear(address="127.0.0.1", pattern=pattern, logging=True, **options)
+        client = NetGear(
+            address="127.0.0.1",
+            pattern=pattern,
+            receive_mode=True,
+            logging=True,
+            **options
+        )
         # select random input frame from stream
         i = 0
         while i < random.randint(10, 100):
@@ -307,12 +306,9 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.release()
-        if not (server is None):
-            server.close(kill=True)
-        if not (client is None):
-            client.close(kill=True)
+        not (stream is None) and stream.release()
+        not (server is None) and server.close(kill=True)
+        not (client is None) and client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -421,12 +417,9 @@ def test_bidirectional_mode(pattern, target_data, options):
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.stop()
-        if not (server is None):
-            server.close(kill=True)
-        if not (client is None):
-            client.close(kill=True)
+        not (stream is None) and stream.stop()
+        not (server is None) and server.close(kill=True)
+        not (client is None) and client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -510,25 +503,25 @@ def test_multiserver_mode(pattern, options):
         # send frame from Server-1 to client and save it in dict
         server_1.send(frame_server)
         unique_address, frame = client.recv(
-            return_data="data"
-            if "bidirectional_mode" in options and pattern == 1
-            else "",
+            return_data=(
+                "data" if "bidirectional_mode" in options and pattern == 1 else ""
+            ),
         )
         client_frame_dict[unique_address] = frame
         # send frame from Server-2 to client and save it in dict
         server_2.send(frame_server)
         unique_address, frame = client.recv(
-            return_data="data"
-            if "bidirectional_mode" in options and pattern == 1
-            else "",
+            return_data=(
+                "data" if "bidirectional_mode" in options and pattern == 1 else ""
+            ),
         )
         client_frame_dict[unique_address] = frame
         # send frame from Server-3 to client and save it in dict
         server_3.send(frame_server)
         unique_address, frame = client.recv(
-            return_data="data"
-            if "bidirectional_mode" in options and pattern == 1
-            else "",
+            return_data=(
+                "data" if "bidirectional_mode" in options and pattern == 1 else ""
+            ),
         )
         client_frame_dict[unique_address] = frame
 
@@ -543,16 +536,11 @@ def test_multiserver_mode(pattern, options):
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.release()
-        if not (server_1 is None):
-            server_1.close()
-        if not (server_2 is None):
-            server_2.close()
-        if not (server_3 is None):
-            server_3.close()
-        if not (client is None):
-            client.close()
+        not (stream is None) and stream.release()
+        not (server_1 is None) and server_1.close(kill=True)
+        not (server_2 is None) and server_2.close(kill=True)
+        not (server_3 is None) and server_3.close(kill=True)
+        not (client is None) and client.close(kill=True)
 
 
 @pytest.mark.parametrize("pattern", [0, 1])
@@ -628,16 +616,11 @@ def test_multiclient_mode(pattern):
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.stop()
-        if not (server is None):
-            server.close()
-        if not (client_1 is None):
-            client_1.close()
-        if not (client_2 is None):
-            client_1.close()
-        if not (client_3 is None):
-            client_1.close()
+        not (stream is None) and stream.stop()
+        not (server is None) and server.close(kill=True)
+        not (client_1 is None) and client_1.close(kill=True)
+        not (client_2 is None) and client_2.close(kill=True)
+        not (client_3 is None) and client_3.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -657,7 +640,7 @@ def test_multiclient_mode(pattern):
         {"subscriber_timeout": 4},
     ],
 )
-def test_client_reliablity(options):
+def test_client_reliability(options):
     """
     Testing validation function of NetGear API
     """
@@ -684,8 +667,7 @@ def test_client_reliablity(options):
             logger.exception(str(e))
     finally:
         # clean resources
-        if not (client is None):
-            client.close()
+        not (client is None) and client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -713,7 +695,7 @@ def test_client_reliablity(options):
         },
     ],
 )
-def test_server_reliablity(options):
+def test_server_reliability(options):
     """
     Testing validation function of NetGear API
     """
@@ -746,10 +728,8 @@ def test_server_reliablity(options):
             logger.exception(str(e))
     finally:
         # clean resources
-        if not (stream is None):
-            stream.release()
-        if not (server is None):
-            server.close()
+        not (stream is None) and stream.release()
+        not (server is None) and server.close(kill=True)
 
 
 @pytest.mark.parametrize(

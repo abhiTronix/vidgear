@@ -17,10 +17,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import the necessary packages
 
-import numpy as np
+# import the necessary packages
 import pytest
+import numpy as np
 from vidgear.gears import StreamGear
 
 
@@ -39,13 +39,13 @@ def test_failedchannels(size):
         streamer = StreamGear("output.mpd", logging=True)
         streamer.stream(input_data_ch1)
         streamer.stream(input_data_ch3)
-        streamer.terminate()
+        streamer.close()
     else:
         random_data = np.random.random(size=size) * 255
         input_data = random_data.astype(np.uint8)
         streamer = StreamGear("output.mpd", logging=True)
         streamer.stream(input_data)
-        streamer.terminate()
+        streamer.close()
 
 
 @pytest.mark.xfail(raises=ValueError)
@@ -66,7 +66,7 @@ def test_fail_framedimension():
     streamer.stream(None)
     streamer.stream(input_data1)
     streamer.stream(input_data2)
-    streamer.terminate()
+    streamer.close()
 
 
 @pytest.mark.xfail(raises=RuntimeError)
@@ -77,11 +77,11 @@ def test_method_call_rtf():
     stream_params = {"-video_source": 1234}  # for CI testing only
     streamer = StreamGear(output="output.mpd", logging=True, **stream_params)
     streamer.transcode_source()
-    streamer.terminate()
+    streamer.close()
 
 
 @pytest.mark.xfail(raises=ValueError)
-@pytest.mark.parametrize("format", ["dash", "hls"])
+@pytest.mark.parametrize("format", ["dash", "hls", "invalid"])
 def test_invalid_params_rtf(format):
     """
     Invalid parameter Failure Test - Made to fail by calling invalid parameters
@@ -91,7 +91,7 @@ def test_invalid_params_rtf(format):
     random_data = np.random.random(size=(480, 640, 3)) * 255
     input_data = random_data.astype(np.uint8)
 
-    stream_params = {"-vcodec": "unknown"}
+    stream_params = {"-vcodec": "unknown", "-livestream": "invalid"}
     streamer = StreamGear(
         output="output{}".format(".mpd" if format == "dash" else ".m3u8"),
         format=format,
@@ -100,4 +100,4 @@ def test_invalid_params_rtf(format):
     )
     streamer.stream(input_data)
     streamer.stream(input_data)
-    streamer.terminate()
+    streamer.close()

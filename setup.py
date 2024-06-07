@@ -110,7 +110,7 @@ setup(
         # API specific deps
         "core": [
             "yt_dlp{}".format(latest_version("yt_dlp")),
-            "pyzmq==24.0.1",
+            "pyzmq{}".format(latest_version("pyzmq")),
             "Pillow",
             "simplejpeg{}".format(latest_version("simplejpeg")),
             "mss{}".format(latest_version("mss")),
@@ -124,7 +124,7 @@ setup(
         # API specific + Asyncio deps
         "asyncio": [
             "yt_dlp{}".format(latest_version("yt_dlp")),
-            "pyzmq==24.0.1",
+            "pyzmq{}".format(latest_version("pyzmq")),
             "simplejpeg{}".format(latest_version("simplejpeg")),
             "mss{}".format(latest_version("mss")),
             "Pillow",
