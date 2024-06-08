@@ -559,7 +559,6 @@ class WebGear_RTC:
         # track ICE connection state changes
         @pc.on("iceconnectionstatechange")
         async def on_iceconnectionstatechange():
-            logger.debug("ICE connection state is %s" % pc.iceConnectionState)
             if pc.iceConnectionState == "failed":
                 logger.error("ICE connection state failed.")
                 # check if Live Broadcasting is enabled
@@ -567,6 +566,8 @@ class WebGear_RTC:
                     # if not, close connection.
                     await pc.close()
                     self.__pcs.discard(pc)
+            else:
+                logger.debug("ICE connection state is %s" % pc.iceConnectionState)
 
         # Change the remote description associated with the connection.
         await pc.setRemoteDescription(offer)
@@ -628,7 +629,9 @@ class WebGear_RTC:
             logger.critical("Resetting Server")
             # close old peer connections
             if parameter != 0:  # disable if specified explicitly
-                coros = [pc.close() for pc in self.__pcs]
+                coros = [
+                    pc.close() for pc in self.__pcs if pc.iceConnectionState != "closed"
+                ]
                 await asyncio.gather(*coros)
                 self.__pcs.clear()
             await self.__default_rtc_server.reset()
@@ -645,7 +648,9 @@ class WebGear_RTC:
             # close Video Server
             self.shutdown()
             # collects peer RTC connections
-            coros = [pc.close() for pc in self.__pcs]
+            coros = [
+                pc.close() for pc in self.__pcs if pc.iceConnectionState != "closed"
+            ]
             await asyncio.gather(*coros)
             self.__pcs.clear()
 
