@@ -33,7 +33,7 @@ from starlette.routing import Route
 from starlette.responses import PlainTextResponse
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
-from async_asgi_testclient import TestClient
+from httpx import AsyncClient, ASGITransport
 from aiortc import (
     MediaStreamTrack,
     RTCPeerConnection,
@@ -53,7 +53,14 @@ logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
-pytestmark = pytest.mark.asyncio(scope="module")
+
+@pytest.fixture(scope="module")
+def event_loop_policy(request):
+    if platform.system() == "Windows":
+        logger.info("Setting WindowsSelectorEventLoopPolicy!")
+        return asyncio.WindowsSelectorEventLoopPolicy()
+    else:
+        return asyncio.DefaultEventLoopPolicy()
 
 
 def return_testvideo_path():
@@ -228,10 +235,7 @@ test_data = [
 ]
 
 
-@pytest.mark.skipif(
-    platform.python_version_tuple()[:2] >= ("3", "11"),
-    reason="Random Failures!",
-)
+@pytest.mark.asyncio(scope="module")
 @pytest.mark.parametrize("source, stabilize, colorspace, time_delay", test_data)
 async def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
     """
@@ -245,7 +249,9 @@ async def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
             time_delay=time_delay,
             logging=True,
         )
-        async with TestClient(web()) as client:
+        async with AsyncClient(
+            transport=ASGITransport(app=web()), base_url="http://testserver"
+        ) as client:
             response = await client.get("/")
             assert response.status_code == 200
             response_404 = await client.get("/test")
@@ -253,15 +259,15 @@ async def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
             (offer_pc, data) = await get_RTCPeer_payload()
             response_rtc_answer = await client.post(
                 "/offer",
-                data=data,
+                content=data,
                 headers={"Content-Type": "application/json"},
             )
             params = response_rtc_answer.json()
             answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
             await offer_pc.setRemoteDescription(answer)
-            response_rtc_offer = await client.get(
+            response_rtc_offer = await client.post(
                 "/offer",
-                data=data,
+                content=data,
                 headers={"Content-Type": "application/json"},
             )
             assert response_rtc_offer.status_code == 200
@@ -297,10 +303,7 @@ test_data = [
 ]
 
 
-@pytest.mark.skipif(
-    platform.python_version_tuple()[:2] >= ("3", "11"),
-    reason="Random Failures!",
-)
+@pytest.mark.asyncio(scope="module")
 @pytest.mark.parametrize("options", test_data)
 async def test_webgear_rtc_options(options):
     """
@@ -309,7 +312,9 @@ async def test_webgear_rtc_options(options):
     web = None
     try:
         web = WebGear_RTC(source=return_testvideo_path(), logging=True, **options)
-        async with TestClient(web()) as client:
+        async with AsyncClient(
+            transport=ASGITransport(app=web()), base_url="http://testserver"
+        ) as client:
             response = await client.get("/")
             assert response.status_code == 200
             if (
@@ -319,15 +324,15 @@ async def test_webgear_rtc_options(options):
                 (offer_pc, data) = await get_RTCPeer_payload()
                 response_rtc_answer = await client.post(
                     "/offer",
-                    data=data,
+                    content=data,
                     headers={"Content-Type": "application/json"},
                 )
                 params = response_rtc_answer.json()
                 answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
                 await offer_pc.setRemoteDescription(answer)
-                response_rtc_offer = await client.get(
+                response_rtc_offer = await client.post(
                     "/offer",
-                    data=data,
+                    content=data,
                     headers={"Content-Type": "application/json"},
                 )
                 assert response_rtc_offer.status_code == 200
@@ -369,7 +374,9 @@ async def test_webpage_reload(options):
     web = WebGear_RTC(source=return_testvideo_path(), logging=True, **options)
     try:
         # run webgear_rtc
-        async with TestClient(web()) as client:
+        async with AsyncClient(
+            transport=ASGITransport(app=web()), base_url="http://testserver"
+        ) as client:
             response = await client.get("/")
             assert response.status_code == 200
 
@@ -377,15 +384,15 @@ async def test_webpage_reload(options):
             (offer_pc, data) = await get_RTCPeer_payload()
             response_rtc_answer = await client.post(
                 "/offer",
-                data=data,
+                content=data,
                 headers={"Content-Type": "application/json"},
             )
             params = response_rtc_answer.json()
             answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
             await offer_pc.setRemoteDescription(answer)
-            response_rtc_offer = await client.get(
+            response_rtc_offer = await client.post(
                 "/offer",
-                data=data,
+                content=data,
                 headers={"Content-Type": "application/json"},
             )
             assert response_rtc_offer.status_code == 200
@@ -406,15 +413,15 @@ async def test_webpage_reload(options):
             (offer_pc, data) = await get_RTCPeer_payload()
             response_rtc_answer = await client.post(
                 "/offer",
-                data=data,
+                content=data,
                 headers={"Content-Type": "application/json"},
             )
             params = response_rtc_answer.json()
             answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
             await offer_pc.setRemoteDescription(answer)
-            response_rtc_offer = await client.get(
+            response_rtc_offer = await client.post(
                 "/offer",
-                data=data,
+                content=data,
                 headers={"Content-Type": "application/json"},
             )
             assert response_rtc_offer.status_code == 200
@@ -446,10 +453,7 @@ test_stream_classes = [
 ]
 
 
-@pytest.mark.skipif(
-    platform.python_version_tuple()[:2] >= ("3", "11"),
-    reason="Random Failures!",
-)
+@pytest.mark.asyncio(scope="module")
 @pytest.mark.parametrize("stream_class, result", test_stream_classes)
 async def test_webgear_rtc_custom_stream_class(stream_class, result):
     """
@@ -463,7 +467,9 @@ async def test_webgear_rtc_custom_stream_class(stream_class, result):
     }
     try:
         web = WebGear_RTC(logging=True, **options)
-        async with TestClient(web()) as client:
+        async with AsyncClient(
+            transport=ASGITransport(app=web()), base_url="http://testserver"
+        ) as client:
             response = await client.get("/")
             assert response.status_code == 200
             response_404 = await client.get("/test")
@@ -471,15 +477,15 @@ async def test_webgear_rtc_custom_stream_class(stream_class, result):
             (offer_pc, data) = await get_RTCPeer_payload()
             response_rtc_answer = await client.post(
                 "/offer",
-                data=data,
+                content=data,
                 headers={"Content-Type": "application/json"},
             )
             params = response_rtc_answer.json()
             answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
             await offer_pc.setRemoteDescription(answer)
-            response_rtc_offer = await client.get(
+            response_rtc_offer = await client.post(
                 "/offer",
-                data=data,
+                content=data,
                 headers={"Content-Type": "application/json"},
             )
             assert response_rtc_offer.status_code == 200
@@ -499,10 +505,7 @@ test_data_class = [
 ]
 
 
-@pytest.mark.skipif(
-    platform.python_version_tuple()[:2] >= ("3", "11"),
-    reason="Random Failures!",
-)
+@pytest.mark.asyncio(scope="module")
 @pytest.mark.parametrize("middleware, result", test_data_class)
 async def test_webgear_rtc_custom_middleware(middleware, result):
     """
@@ -511,7 +514,9 @@ async def test_webgear_rtc_custom_middleware(middleware, result):
     try:
         web = WebGear_RTC(source=return_testvideo_path(), logging=True)
         web.middleware = middleware
-        async with TestClient(web()) as client:
+        async with AsyncClient(
+            transport=ASGITransport(app=web()), base_url="http://testserver"
+        ) as client:
             response = await client.get("/")
             assert response.status_code == 200
         web.shutdown()
@@ -522,10 +527,7 @@ async def test_webgear_rtc_custom_middleware(middleware, result):
             pytest.xfail(str(e))
 
 
-@pytest.mark.skipif(
-    platform.python_version_tuple()[:2] >= ("3", "11"),
-    reason="Random Failures!",
-)
+@pytest.mark.asyncio(scope="module")
 async def test_webgear_rtc_routes():
     """
     Test for WebGear_RTC API's custom routes
@@ -542,7 +544,9 @@ async def test_webgear_rtc_routes():
         web.routes.append(Route("/hello", endpoint=hello_webpage))
 
         # test
-        async with TestClient(web()) as client:
+        async with AsyncClient(
+            transport=ASGITransport(app=web()), base_url="http://testserver"
+        ) as client:
             response = await client.get("/")
             assert response.status_code == 200
             response_hello = await client.get("/hello")
@@ -550,15 +554,15 @@ async def test_webgear_rtc_routes():
             (offer_pc, data) = await get_RTCPeer_payload()
             response_rtc_answer = await client.post(
                 "/offer",
-                data=data,
+                content=data,
                 headers={"Content-Type": "application/json"},
             )
             params = response_rtc_answer.json()
             answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
             await offer_pc.setRemoteDescription(answer)
-            response_rtc_offer = await client.get(
+            response_rtc_offer = await client.post(
                 "/offer",
-                data=data,
+                content=data,
                 headers={"Content-Type": "application/json"},
             )
             assert response_rtc_offer.status_code == 200
@@ -570,10 +574,7 @@ async def test_webgear_rtc_routes():
             pytest.fail(str(e))
 
 
-@pytest.mark.skipif(
-    platform.python_version_tuple()[:2] >= ("3", "11"),
-    reason="Random Failures!",
-)
+@pytest.mark.asyncio(scope="module")
 async def test_webgear_rtc_routes_validity():
     """
     Test WebGear_RTC Routes
@@ -589,7 +590,9 @@ async def test_webgear_rtc_routes_validity():
         # modify route
         web.routes.clear()
         # test
-        async with TestClient(web()) as client:
+        async with AsyncClient(
+            transport=ASGITransport(app=web()), base_url="http://testserver"
+        ) as client:
             pass
     except Exception as e:
         if isinstance(e, (RuntimeError, MediaStreamError)):

@@ -43,7 +43,7 @@ logger.setLevel(log.DEBUG)
 @pytest.fixture(scope="module")
 def event_loop_policy(request):
     if platform.system() == "Windows":
-        logger.critical("Setting WindowsSelectorEventLoopPolicy!!!")
+        logger.info("Setting WindowsSelectorEventLoopPolicy!")
         return asyncio.WindowsSelectorEventLoopPolicy()
     else:
         return asyncio.DefaultEventLoopPolicy()
