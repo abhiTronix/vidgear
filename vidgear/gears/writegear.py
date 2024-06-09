@@ -22,7 +22,6 @@ limitations under the License.
 import os
 import cv2
 import time
-import signal
 import platform
 import pathlib
 import logging as log

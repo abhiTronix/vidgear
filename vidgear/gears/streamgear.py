@@ -27,7 +27,6 @@ import difflib
 import logging as log
 import subprocess as sp
 from tqdm import tqdm
-from fractions import Fraction
 from collections import OrderedDict
 
 # import helper packages

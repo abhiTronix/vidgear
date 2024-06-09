@@ -833,10 +833,7 @@ def delete_file_safe(file_path):
     """
     try:
         dfile = Path(file_path)
-        if sys.version_info >= (3, 8, 0):
-            dfile.unlink(missing_ok=True)
-        else:
-            dfile.exists() and dfile.unlink()
+        dfile.unlink(missing_ok=True)
     except Exception as e:
         logger.exception(str(e))
 
@@ -912,9 +909,8 @@ def capPropId(property, logging=True):
     try:
         integer_value = getattr(cv2, property)
     except Exception as e:
-        if logging:
-            logger.exception(str(e))
-            logger.critical("`{}` is not a valid OpenCV property!".format(property))
+        logging and logger.exception(str(e))
+        logger.critical("`{}` is not a valid OpenCV property!".format(property))
         return None
     return integer_value
 
@@ -1201,18 +1197,15 @@ def validate_ffmpeg(path, logging=False):
         version = check_output([path, "-version"])
         firstline = version.split(b"\n")[0]
         version = firstline.split(b" ")[2].strip()
-        if logging:  # log if test are passed
-            logger.debug("FFmpeg validity Test Passed!")
-            logger.debug(
-                "Found valid FFmpeg Version: `{}` installed on this system".format(
-                    version
-                )
-            )
+        # log if test are passed
+        logging and logger.info("FFmpeg validity Test Passed!")
+        logging and logger.debug(
+            "Found valid FFmpeg Version: `{}` installed on this system".format(version)
+        )
     except Exception as e:
         # log if test are failed
-        if logging:
-            logger.exception(str(e))
-            logger.warning("FFmpeg validity Test Failed!")
+        logging and logger.exception(str(e))
+        logger.error("FFmpeg validity Test Failed!")
         return False
     return True
 

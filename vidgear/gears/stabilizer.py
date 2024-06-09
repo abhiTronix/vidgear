@@ -103,13 +103,15 @@ class Stabilizer:
             self.__crop_n_zoom = border_size  # crops and zoom frame to original size
             self.__border_size = 0  # zero out border size
             self.__frame_size = None  # handles frame size for zooming
-            if logging:
-                logger.debug("Setting Cropping margin {} pixels".format(border_size))
+            self.__logging and logger.debug(
+                "Setting Cropping margin {} pixels".format(border_size)
+            )
         else:
             # Add output borders to frame
             self.__border_size = border_size
-            if self.__logging and border_size:
-                logger.debug("Setting Border size {} pixels".format(border_size))
+            self.__logging and border_size and logger.debug(
+                "Setting Border size {} pixels".format(border_size)
+            )
 
         # define valid border modes
         border_modes = {
@@ -124,19 +126,18 @@ class Stabilizer:
             if not crop_n_zoom:
                 # initialize global border mode variable
                 self.__border_mode = border_modes[border_type]
-                if self.__logging and border_type != "black":
-                    logger.debug("Setting Border type: {}".format(border_type))
+                self.__logging and border_type != "black" and logger.info(
+                    "Setting Border type: {}".format(border_type)
+                )
             else:
                 # log and reset to default
-                if self.__logging and border_type != "black":
-                    logger.debug(
-                        "Setting border type is disabled if cropping is enabled!"
-                    )
+                self.__logging and border_type != "black" and logger.debug(
+                    "Setting border type is disabled if cropping is enabled!"
+                )
                 self.__border_mode = border_modes["black"]
         else:
             # otherwise log if not
-            if logging:
-                logger.debug("Invalid input border type!")
+            self.__logging and logger.debug("Invalid input border type!")
             self.__border_mode = border_modes["black"]  # reset to default mode
 
         # define OpenCV version
