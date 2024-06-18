@@ -143,7 +143,7 @@ from vidgear.gears import NetGear
 import cv2
 
 # define various tweak flags
-options = {"flag": 0, "copy": False, "track": False}
+options = {"flag": 0, "copy": True, "track": False}
 
 # Define Netgear Client at given IP address and define parameters 
 # !!! change following IP address '192.168.x.xxx' with yours !!!
@@ -198,7 +198,7 @@ from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
 
 # define various tweak flags
-options = {"flag": 0, "copy": False, "track": False}
+options = {"flag": 0, "copy": True, "track": False}
 
 # Open live video stream on webcam at first index(i.e. 0) device
 stream = VideoGear(source=0).start()
@@ -260,7 +260,7 @@ from vidgear.gears import NetGear
 import cv2
 
 # define tweak flags
-options = {"flag": 0, "copy": False, "track": False}
+options = {"flag": 0, "copy": True, "track": False}
 
 # Define Netgear Client at given IP address and define parameters 
 # !!! change following IP address '192.168.x.xxx' with yours !!!
@@ -318,7 +318,7 @@ import cv2
 stream = cv2.VideoCapture(0)
 
 # define tweak flags
-options = {"flag": 0, "copy": False, "track": False}
+options = {"flag": 0, "copy": True, "track": False}
 
 # Define Netgear Client at given IP address and define parameters 
 # !!! change following IP address '192.168.x.xxx' with yours !!!
@@ -377,7 +377,7 @@ from vidgear.gears import NetGear
 import cv2
 
 # define various tweak flags
-options = {"flag": 0, "copy": False, "track": False}
+options = {"flag": 0, "copy": True, "track": False}
 
 # Define Netgear Client at given IP address and define parameters 
 # !!! change following IP address '192.168.x.xxx' with yours !!!
@@ -432,7 +432,7 @@ from vidgear.gears import ScreenGear
 from vidgear.gears import NetGear
 
 # define various tweak flags
-options = {"flag": 0, "copy": False, "track": False}
+options = {"flag": 0, "copy": True, "track": False}
 
 # Start capturing live Monitor screen frames with default settings
 stream = ScreenGear().start()

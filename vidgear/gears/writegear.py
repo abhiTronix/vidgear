@@ -675,7 +675,6 @@ class WriteGear:
                 sp.run(cmd, stdin=sp.PIPE, stdout=sp.DEVNULL, stderr=sp.STDOUT)
         except (OSError, IOError) as e:
             # re-raise error
-            # PEP 409 – Suppressing exception context recommendations
             if self.__logging:
                 raise ValueError(
                     "BrokenPipeError caught, Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!"
@@ -757,7 +756,7 @@ class WriteGear:
         # check if OpenCV VideoCapture is opened successfully
         assert (
             self.__process.isOpened()
-        ), "[WriteGear:ERROR] :: Failed to intialize OpenCV Writer!"
+        ), "[WriteGear:ERROR] :: Failed to initialize OpenCV Writer!"
 
     def close(self):
         """

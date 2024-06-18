@@ -412,10 +412,16 @@ class NetGear:
             # handle ZMQ flags
             elif key == "flag" and isinstance(value, int):
                 self.__msg_flag = value
+                self.__msg_flag and logger.warning(
+                    "The flag optional value is set to `1` (NOBLOCK) for this run. This might cause NetGear to not terminate gracefully."
+                )
             elif key == "copy" and isinstance(value, bool):
                 self.__msg_copy = value
             elif key == "track" and isinstance(value, bool):
                 self.__msg_track = value
+                self.__msg_copy and self.__msg_track and logger.info(
+                    "The `track` optional value will be ignored for this run because `copy=True` is also defined."
+                )
             else:
                 pass
 

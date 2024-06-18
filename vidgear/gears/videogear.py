@@ -37,9 +37,11 @@ logger.setLevel(log.DEBUG)
 class VideoGear:
     """
     VideoGear API provides a special internal wrapper around VidGear's exclusive Video Stabilizer class.
-    VideoGear also acts as a Common Video-Capture API that provides internal access for both CamGear and PiGear APIs and their parameters with an exclusive enablePiCamera boolean flag.
+    VideoGear also acts as a Common Video-Capture API that provides internal access for both CamGear and PiGear APIs and
+    their parameters with an exclusive enablePiCamera boolean flag.
 
-    VideoGear is ideal when you need to switch to different video sources without changing your code much. Also, it enables easy stabilization for various video-streams (real-time or not)
+    VideoGear is ideal when you need to switch to different video sources without changing your code much. Also, it enables
+    easy stabilization for various video-streams (real-time or not)
     with minimum effort and writing way fewer lines of code.
     """
 
