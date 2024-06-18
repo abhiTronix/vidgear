@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 
 import os
@@ -47,6 +48,9 @@ def return_testvideo_path():
     """
     returns Test Video path
     """
+    # TODO Remove this
+    import simplejpeg
+
     path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
         tempfile.gettempdir()
     )
