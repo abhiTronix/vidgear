@@ -135,6 +135,34 @@ class StreamGear:
                 "[StreamGear:ERROR] :: Failed to find FFmpeg assets on this system. Kindly compile/install FFmpeg or provide a valid custom FFmpeg binary path!"
             )
 
+        # handle streaming format
+        supported_formats = ["dash", "hls"]  # TODO will be extended in future
+        if format and isinstance(format, str):
+            _format = format.strip().lower()
+            if _format in supported_formats:
+                self.__format = _format
+                logger.info(
+                    "StreamGear will generate asset files for {} streaming format.".format(
+                        self.__format.upper()
+                    )
+                )
+            elif difflib.get_close_matches(_format, supported_formats):
+                raise ValueError(
+                    "[StreamGear:ERROR] :: Incorrect `format` parameter value! Did you mean `{}`?".format(
+                        difflib.get_close_matches(_format, supported_formats)[0]
+                    )
+                )
+            else:
+                raise ValueError(
+                    "[StreamGear:ERROR] :: The `format` parameter value `{}` not valid/supported!".format(
+                        format
+                    )
+                )
+        else:
+            raise ValueError(
+                "[StreamGear:ERROR] :: The `format` parameter value is Missing or Invalid!"
+            )
+
         # handle Audio-Input
         audio = self.__params.pop("-audio", False)
         if audio and isinstance(audio, str):
