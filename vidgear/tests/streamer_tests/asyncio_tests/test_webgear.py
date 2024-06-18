@@ -48,9 +48,6 @@ def return_testvideo_path():
     """
     returns Test Video path
     """
-    # TODO Remove this
-    import simplejpeg
-
     path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
         tempfile.gettempdir()
     )
