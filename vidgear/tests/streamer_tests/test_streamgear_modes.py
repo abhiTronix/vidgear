@@ -466,7 +466,7 @@ def test_input_framerate_rtf(format):
             {
                 "-clear_prev_assets": True,
                 "-seg_duration": -346.67,
-                "-audio": "inv/\lid",
+                "-audio": "invAlid",
                 "-bpp": "unknown",
                 "-gop": "unknown",
                 "-s:v:0": "unknown",
