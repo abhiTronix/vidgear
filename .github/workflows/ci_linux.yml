@@ -65,7 +65,6 @@ jobs:
           pip uninstall opencv-python -y
           pip install -U flake8 six codecov httpx pytest pytest-asyncio pytest-cov yt_dlp mpegdash paramiko m3u8 async-asgi-testclient
           pip install -U deffcode
-          pip install cryptography==38.0.4
         if: success()
       - name: run prepare_dataset_script
         run: bash scripts/bash/prepare_dataset.sh
