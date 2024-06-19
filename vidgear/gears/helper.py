@@ -247,14 +247,17 @@ def import_dependency_safe(
     # try importing dependency
     try:
         module = importlib.import_module(name)
-        if sub_class:
-            module = getattr(module, sub_class)
-    except Exception:
-        # handle errors.
+        module = getattr(module, sub_class) if sub_class else module
+    except Exception as e:
         if error == "raise":
-            raise ImportError(msg) from None
+            if isinstance(e, ModuleNotFoundError):
+                # raise message
+                raise ModuleNotFoundError(msg) from None
+            else:
+                # raise error+message
+                raise ImportError(msg) from e
         elif error == "log":
-            logger.error(msg)
+            logger.error(msg, exc_info=sys.exc_info())
             return None
         else:
             return None
