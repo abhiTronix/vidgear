@@ -131,7 +131,7 @@ def test_patterns(pattern):
     # define parameters
     options = {
         "flag": 0,
-        "copy": False,
+        "copy": True,
         "track": False,
         "jpeg_compression": False,
         "subscriber_timeout": 5,

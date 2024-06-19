@@ -173,11 +173,13 @@ This parameter provides the flexibility to alter various NetGear API's internal 
 
     * **`subscriber_timeout`**(_integer_): Similar to `request_timeout`, this internal attribute also controls the timeout value _(in seconds)_ but for non-synchronous `zmq.PUB/zmq.SUB` pattern in compression mode, after which the Client(Subscriber) exit itself with `Nonetype` value if it's unable to get any response from the socket. It's value can anything greater than `0`, and its disabled by default _(meaning the client will wait forever for response)_.
 
-    * **`flag`**(_integer_): This PyZMQ attribute value can be either `0` or `zmq.NOBLOCK`_( i.e. 1)_. More information can be found [here ➶](https://pyzmq.readthedocs.io/en/latest/api/zmq.html).
+    * **`flag`**(_integer_): This PyZMQ attribute value can be either `0` or `zmq.NOBLOCK`_( i.e. 1)_. More information can be found [here ➶](https://pyzmq.readthedocs.io/en/latest/api/zmq.html#zmq.Socket.recv).
+
+    !!! warning "With flags=1 (i.e. `NOBLOCK`), NetGear raises `ZMQError` if no messages have arrived; otherwise, this waits until a message arrives."
 
     * **`copy`**(_boolean_): This PyZMQ attribute selects if message be received in a copying or non-copying manner. If `False` a object is returned, if `True` a string copy of the message is returned.
 
-    * **`track`**(_boolean_): This PyZMQ attribute check if the message is tracked for notification that ZMQ has finished with it. (_ignored if copy=True_).
+    * **`track`**(_boolean_): This PyZMQ attribute check if the message is tracked for notification that ZMQ has finished with it. _(ignored if `copy=True`)_.
 
 
 The desired attributes can be passed to NetGear API as follows:
@@ -188,9 +190,9 @@ options = {
     "secure_mode": 2,
     "custom_cert_location": "/home/foo/foo1/foo2",
     "overwrite_cert": True,
-    "flag": 0,
-    "copy": False,
-    "track": False,
+    "flag": 0, 
+    "copy": True, 
+    "track": False
 }
 # assigning it
 NetGear(logging=True, **options)

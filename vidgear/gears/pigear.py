@@ -566,26 +566,14 @@ class PiGear:
                 # apply colorspace to frames
                 color_frame = None
                 try:
-                    if isinstance(self.color_space, int):
-                        color_frame = cv2.cvtColor(frame, self.color_space)
-                    else:
-                        self.__logging and logger.warning(
-                            "Global color_space parameter value `{}` is not a valid!".format(
-                                self.color_space
-                            )
-                        )
-                        self.color_space = None
+                    color_frame = cv2.cvtColor(frame, self.color_space)
                 except Exception as e:
                     # Catch if any error occurred
+                    color_frame = None
                     self.color_space = None
-                    if self.__logging:
-                        logger.exception(str(e))
-                        logger.warning("Input colorspace is not a valid colorspace!")
-
-                if not (color_frame is None):
-                    self.frame = color_frame
-                else:
-                    self.frame = frame
+                    self.__logging and logger.exception(str(e))
+                    logger.warning("Assigned colorspace value is invalid. Discarding!")
+                self.frame = color_frame if not (color_frame is None) else frame
             else:
                 self.frame = frame
 

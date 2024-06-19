@@ -27,11 +27,17 @@ limitations under the License.
     - [x] In this mode, if input video-source _(i.e. `-video_source`)_ contains any audio stream/channel, then it automatically gets mapped to all generated streams.
     - [x] Always use `close()` function at the very end of the main code.
 
-???+ danger "DEPRECATION NOTICES for `v0.3.3` and above"
+??? danger "DEPRECATION NOTICES for `v0.3.3` and above"
     
     - [ ] The `terminate()` method in StreamGear is now deprecated and will be removed in a future release. Developers should use the new [`close()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.close) method instead, as it offers a more descriptive name, similar to the WriteGear API, for safely terminating StreamGear processes.
     - [ ] The [`-livestream`](../../params/#a-exclusive-parameters) optional parameter is NOT supported in this Single-Source Mode.
 
+??? tip "Faster Transcoding of Primary Stream with Stream Copy in Single Source Mode"
+    
+    For faster transcoding of input video in this mode, utilize Stream copy (`-vcodec copy`) as the input video encoder for creating HLS/DASH chunks of the primary stream efficiently. However, consider the following points:
+    
+    - :warning: Stream copying **NOT** compatible with Custom Streams ([`-streams`](../../params/#a-exclusive-parameters)), which require re-encoding for each additional stream. Therefore, the `-vcodec copy` parameter will be ignored.
+    - When using the audio stream from the input video, the Audio Stream copy (`-acodec copy`) encoder will be automatically applied.
 
 !!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
 
@@ -106,7 +112,7 @@ To generate Secondary Streams, add each desired resolution and bitrate/framerate
 
 === "DASH"
 
-    ```python linenums="1" hl_lines="6-12"
+    ```python linenums="1" hl_lines="7-12"
     # import required libraries
     from vidgear.gears import StreamGear
 
@@ -130,7 +136,7 @@ To generate Secondary Streams, add each desired resolution and bitrate/framerate
 
 === "HLS"
 
-    ```python linenums="1" hl_lines="6-12"
+    ```python linenums="1" hl_lines="7-12"
     # import required libraries
     from vidgear.gears import StreamGear
 

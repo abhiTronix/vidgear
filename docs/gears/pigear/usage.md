@@ -55,21 +55,18 @@ Following is the bare-minimum code you need to get started with PiGear API:
     === ":material-linux: Linux"
 
         ```sh
-        # path to file
         export LIBCAMERA_LOG_LEVELS=2
         ```
 
     === ":fontawesome-brands-windows: Windows (Powershell)"
 
         ```powershell
-        # path to file
         $Env:LIBCAMERA_LOG_LEVELS=2
         ```
 
     === ":material-apple: MacOS"
         
         ```sh
-        # path to file
         export LIBCAMERA_LOG_LEVELS=2
         ```
 

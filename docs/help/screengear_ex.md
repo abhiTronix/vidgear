@@ -44,7 +44,7 @@ from vidgear.gears import WriteGear
 import cv2
 
 # define various tweak flags
-options = {"flag": 0, "copy": False, "track": False}
+options = {"flag": 0, "copy": True, "track": False}
 
 # Define Netgear Client at given IP address and define parameters 
 # !!! change following IP address '192.168.x.xxx' with yours !!!
@@ -106,7 +106,7 @@ options = {"top": 40, "left": 0, "width": 100, "height": 100}
 stream = ScreenGear(logging=True, **options).start()
 
 # define various netgear tweak flags
-options = {"flag": 0, "copy": False, "track": False}
+options = {"flag": 0, "copy": True, "track": False}
 
 # Define Netgear server at given IP address and define parameters 
 # !!! change following IP address '192.168.x.xxx' with client's IP address !!!

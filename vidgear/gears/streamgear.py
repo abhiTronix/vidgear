@@ -27,7 +27,6 @@ import difflib
 import logging as log
 import subprocess as sp
 from tqdm import tqdm
-from fractions import Fraction
 from collections import OrderedDict
 
 # import helper packages
@@ -136,6 +135,34 @@ class StreamGear:
                 "[StreamGear:ERROR] :: Failed to find FFmpeg assets on this system. Kindly compile/install FFmpeg or provide a valid custom FFmpeg binary path!"
             )
 
+        # handle streaming format
+        supported_formats = ["dash", "hls"]  # TODO will be extended in future
+        if format and isinstance(format, str):
+            _format = format.strip().lower()
+            if _format in supported_formats:
+                self.__format = _format
+                logger.info(
+                    "StreamGear will generate asset files for {} streaming format.".format(
+                        self.__format.upper()
+                    )
+                )
+            elif difflib.get_close_matches(_format, supported_formats):
+                raise ValueError(
+                    "[StreamGear:ERROR] :: Incorrect `format` parameter value! Did you mean `{}`?".format(
+                        difflib.get_close_matches(_format, supported_formats)[0]
+                    )
+                )
+            else:
+                raise ValueError(
+                    "[StreamGear:ERROR] :: The `format` parameter value `{}` not valid/supported!".format(
+                        format
+                    )
+                )
+        else:
+            raise ValueError(
+                "[StreamGear:ERROR] :: The `format` parameter value is Missing or Invalid!"
+            )
+
         # handle Audio-Input
         audio = self.__params.pop("-audio", False)
         if audio and isinstance(audio, str):
@@ -214,8 +241,10 @@ class StreamGear:
         if isinstance(clear_assets, bool):
             self.__clear_assets = clear_assets
             # log if clearing assets is enabled
-            clear_assets and logger.debug(
-                "Previous StreamGear API assets will be deleted in this run."
+            clear_assets and logger.info(
+                "The `-clear_prev_assets` parameter is enabled successfully. All previous StreamGear API assets for `{}` format will be removed for this run.".format(
+                    self.__format.upper()
+                )
             )
         else:
             # reset improper values
@@ -223,7 +252,7 @@ class StreamGear:
 
         # handle whether to livestream?
         livestreaming = self.__params.pop("-livestream", False)
-        if isinstance(livestreaming, bool):
+        if isinstance(livestreaming, bool) and livestreaming:
             # NOTE:  `livestream` is only available with real-time mode.
             self.__livestreaming = livestreaming if not (self.__video_source) else False
             if self.__video_source:
@@ -471,7 +500,8 @@ class StreamGear:
         # in Real-time Frames Mode
         output_parameters["-vcodec"] = (
             default_codec
-            if output_vcodec == "copy" and not (self.__video_source)
+            if output_vcodec == "copy"
+            and (not (self.__video_source) or "-streams" in self.__params)
             else output_vcodec
         )
         # enforce compatibility with stream copy
@@ -482,7 +512,10 @@ class StreamGear:
         else:
             # log warnings if stream copy specified in Real-time Frames Mode
             not (self.__video_source) and logger.error(
-                "Stream copy is not compatible with Real-time Frames Mode as it requires re-encoding of incoming frames. Discarding the `-vcodec copy` parameter!"
+                "Stream copy is not compatible with Real-time Frames Mode as it require re-encoding of incoming frames. Discarding the `-vcodec copy` parameter!"
+            )
+            ("-streams" in self.__params) and logger.error(
+                "Stream copying is incompatible with Custom Streams as it require re-encoding for each additional stream. Discarding the `-vcodec copy` parameter!"
             )
             # log warnings for these parameters
             self.__params.pop("-vf", False) and logger.warning(
@@ -532,9 +565,7 @@ class StreamGear:
                     )
                 ] = self.__audio
                 # assign audio codec
-                output_parameters["-acodec"] = self.__params.pop(
-                    "-acodec", "aac" if isinstance(self.__audio, list) else "copy"
-                )
+                output_parameters["-acodec"] = self.__params.pop("-acodec", "aac")
                 output_parameters["a_bitrate"] = bitrate  # temporary handler
                 output_parameters["-core_audio"] = (
                     ["-map", "1:a:0"] if self.__format == "dash" else []
@@ -549,12 +580,14 @@ class StreamGear:
         elif self.__video_source:
             bitrate = validate_audio(self.__ffmpeg, source=self.__video_source)
             if bitrate:
-                logger.info("Input Video's audio source will be used for this run.")
+                logger.info("Input video's audio source will be used for this run.")
                 # assign audio codec
-                output_parameters["-acodec"] = (
-                    "aac" if self.__format == "hls" else "copy"
+                output_parameters["-acodec"] = self.__params.pop(
+                    "-acodec",
+                    "aac" if ("-streams" in self.__params) else "copy",
                 )
-                output_parameters["a_bitrate"] = bitrate  # temporary handler
+                if output_parameters["-acodec"] != "copy":
+                    output_parameters["a_bitrate"] = bitrate  # temporary handler
             else:
                 logger.info(
                     "No valid audio source available in the input video. Disabling audio while generating streams."
@@ -602,7 +635,7 @@ class StreamGear:
         ), "[StreamGear:ERROR] :: `{}` stream cannot be initiated properly!".format(
             self.__format.upper()
         )
-        # Finally start FFmpef pipline and process everything
+        # Finally start FFmpeg pipeline and process everything
         self.__Build_n_Execute(process_params[0], process_params[1])
 
     def __handle_streams(self, input_params, output_params):
@@ -652,22 +685,26 @@ class StreamGear:
         if "-s:v:0" in self.__params:
             # prevent duplicates
             del self.__params["-s:v:0"]
-        output_params["-s:v:0"] = "{}x{}".format(self.__inputwidth, self.__inputheight)
+        if output_params["-vcodec"] != "copy":
+            output_params["-s:v:0"] = "{}x{}".format(
+                self.__inputwidth, self.__inputheight
+            )
         # assign default output video-bitrate
         if "-b:v:0" in self.__params:
             # prevent duplicates
             del self.__params["-b:v:0"]
-        output_params["-b:v:0"] = (
-            str(
-                get_video_bitrate(
-                    int(self.__inputwidth),
-                    int(self.__inputheight),
-                    self.__sourceframerate,
-                    bpp,
+        if output_params["-vcodec"] != "copy":
+            output_params["-b:v:0"] = (
+                str(
+                    get_video_bitrate(
+                        int(self.__inputwidth),
+                        int(self.__inputheight),
+                        self.__sourceframerate,
+                        bpp,
+                    )
                 )
+                + "k"
             )
-            + "k"
-        )
 
         # assign default output audio-bitrate
         if "-b:a:0" in self.__params:

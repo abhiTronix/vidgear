@@ -218,6 +218,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
         # set video source as `/home/foo/bar.mp4`
         stream_params = {"-video_source": "/home/foo/bar.mp4"}
         ```
+
     * **Video URL**: Valid URL of a network video stream as follows:
 
         !!! danger "Ensure the given video URL uses a protocol supported by the installed FFmpeg _(verify with `ffmpeg -protocols` terminal command)_."
@@ -269,7 +270,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
-* **`-livestream`** _(bool)_: ***(optional)*** specifies whether to enable **Low-latency Live-Streaming :material-video-wireless-outline:** in Real-time Frames Mode only, where chunks will contain information for new frames only and forget previous ones, or not. The default value is `False`. It can be used as follows: 
+* **`-livestream`** _(bool)_: ***(optional)*** specifies whether to enable **Low-latency Live-Streaming :material-video-wireless-outline:** in [**Real-time Frames Mode**](../rtfm/overview) only, where chunks will contain information for new frames only and forget previous ones, or not. The default value is `False`. It can be used as follows: 
     
     !!! warning "The `-livestream` optional parameter is **NOT** supported in [Single-Source mode](../ssm/overview)."
 
@@ -338,9 +339,9 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
-* **`-clear_prev_assets`** _(bool)_: ***(optional)*** This parameter specifies whether to force-delete any previous copies of StreamGear assets _(i.e., manifest (`mpd`), playlist (`mu38`), and streaming chunks (`.m4s`), etc. files)_ present at the path specified by the [`output`](#output) parameter. The default value is `False`. It can be used as follows:
+* **`-clear_prev_assets`** _(bool)_: ***(optional)*** This parameter specifies whether to remove/delete all previous copies of StreamGear assets files for selected [`format`](#format) _(i.e., manifest (`mpd`) in DASH, playlist (`mu38`) in HLS, and respective streaming chunks (`.ts`,`.m4s`), etc.)_ present at the path specified by the [`output`](#output) parameter. The default value is `False`. It can be enabled as follows:
 
-    !!! info "Additional segments _(such as `.webm`, `.mp4` chunks)_ are also cleared automatically."
+    !!! info "Additional segments _(such as `.webm`, `.mp4` chunks)_ are also removed automatically."
 
     ```python
     # delete all previous assets
@@ -381,9 +382,13 @@ stream_params = {"-vcodec":"libx264", "-crf": 0, "-preset": "fast", "-tune": "ze
 
 All encoders and decoders compiled with the FFmpeg in use are supported by the StreamGear API. You can check the compiled encoders by running the following command in your terminal:
 
-!!! warning "Stream copy (`-vcodec copy`) is not compatible with Real-time Frames Mode as this mode requires re-encoding of incoming frames."
+???+ tip "Faster Transcoding with Stream Copy in Single Source Mode"
+    
+    For faster transcoding of input video, utilize Stream copy (`-vcodec copy`) as the input video encoder in the [**Single-Source Mode**](../ssm/overview) for creating HLS/DASH chunks of the primary stream efficiently. However, consider the following points:
 
-!!! info "Similarly, supported audio/video demuxers and filters depend on the FFmpeg binaries in use."
+    - :warning: Stream copy is **NOT** compatible with [**Real-time Frames Mode**](../rtfm/overview), as this mode necessitates re-encoding of incoming frames. Therefore, the `-vcodec copy` parameter will be ignored.
+    - :warning: Stream copying **NOT** compatible with Custom Streams ([`-streams`](#a-exclusive-parameters)), which also require re-encoding for each additional stream. Consequently, the `-vcodec copy` parameter will be ignored.
+    - When using the audio stream from the input video, the Audio Stream copy (`-acodec copy`) encoder will be automatically applied.
 
 ```sh
 # for checking encoder
@@ -391,6 +396,8 @@ ffmpeg -encoders           # use `ffmpeg.exe -encoders` on windows
 # for checking decoders
 ffmpeg -decoders           # use `ffmpeg.exe -decoders` on windows
 ``` 
+
+!!! info "Similarly, supported audio/video demuxers and filters depend on the FFmpeg binaries in use."
 
 &nbsp; 
 

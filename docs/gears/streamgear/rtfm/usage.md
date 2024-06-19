@@ -30,10 +30,10 @@ limitations under the License.
     - [x] StreamGear API **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../../ffmpeg_install/) for its installation. API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system.
     - [x] In this mode, ==API by default generates a primary stream _(at the index `0`)_ of same resolution as the input frames and at default framerate[^1].==
     - [x] In this mode, API **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter.
-    - [x] In this mode, Stream copy (`-vcodec copy`) is not compatible as this mode requires re-encoding of incoming frames.
+    - [x] In this mode, Stream copy (`-vcodec copy`) encoder is unsupported as it requires re-encoding of incoming frames.
     - [x] Always use `close()` function at the very end of the main code.
 
-???+ danger "DEPRECATION NOTICES for `v0.3.3` and above"
+??? danger "DEPRECATION NOTICES for `v0.3.3` and above"
     
     - [ ] The `terminate()` method in StreamGear is now deprecated and will be removed in a future release. Developers should use the new [`close()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.close) method instead, as it offers a more descriptive name, similar to the WriteGear API, for safely terminating StreamGear processes.
     - [ ] The `rgb_mode` parameter in [`stream()`](../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) method, which earlier used to support RGB frames in Real-time Frames Mode is now deprecated, and will be removed in a future version. Only BGR format frames will be supported going forward. Please update your code to handle BGR format frames.
@@ -515,7 +515,7 @@ To generate Secondary Streams, add each desired resolution and bitrate/framerate
 
 === "DASH"
 
-    ```python linenums="1" hl_lines="12-14"
+    ```python linenums="1" hl_lines="11-15"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -571,7 +571,7 @@ To generate Secondary Streams, add each desired resolution and bitrate/framerate
 
 === "HLS"
 
-    ```python linenums="1" hl_lines="12-14"
+    ```python linenums="1" hl_lines="11-15"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -1038,11 +1038,9 @@ In this example, we will be using `h264_vaapi` as our Hardware Encoder and speci
 
 !!! danger "This example is just conveying the idea of how to use FFmpeg's hardware encoders with the StreamGear API in Real-time Frames Mode, which MAY OR MAY NOT suit your system. Please use suitable parameters based on your supported system and FFmpeg configurations only."
 
-!!! warning "Stream copy (`-vcodec copy`) is not compatible with this Mode as it requires re-encoding of incoming frames."
+???+ info "Checking VAAPI Support for Hardware Encoding"
 
-??? info "Check VAAPI support"
-
-    To use `h264_vaapi` encoder, remember to check if its available and your FFmpeg compiled with VAAPI support. You can easily do this by executing following one-liner command in your terminal, and observing if output contains something similar as follows:
+    To use **VAAPI** (Video Acceleration API) as a hardware encoder in this example, follow these steps to ensure your FFmpeg supports VAAPI:
 
     ```sh
     ffmpeg  -hide_banner -encoders | grep vaapi 

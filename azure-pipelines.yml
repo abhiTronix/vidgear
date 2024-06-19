@@ -66,11 +66,11 @@ steps:
     displayName: "Prepare dataset"
 
   - script: |
-      python -m pip install -U pip wheel numpy
+      python -m pip install -U pip wheel 
+      python -m pip install "numpy<2.0.0"
       python -m pip install -U .[asyncio] 
       python -m pip install -U six codecov httpx pytest pytest-asyncio pytest-cov yt_dlp mpegdash paramiko m3u8 async-asgi-testclient
       python -m pip install -U deffcode
-      python -m pip install cryptography==38.0.4
     displayName: "Install pip dependencies"
 
   - script: |

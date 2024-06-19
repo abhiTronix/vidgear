@@ -22,7 +22,6 @@ limitations under the License.
 import os
 import cv2
 import time
-import signal
 import platform
 import pathlib
 import logging as log
@@ -674,12 +673,16 @@ class WriteGear:
             else:
                 # In silent mode
                 sp.run(cmd, stdin=sp.PIPE, stdout=sp.DEVNULL, stderr=sp.STDOUT)
-        except (OSError, IOError):
-            # raise error and log if something is wrong.
-            logger.error(
-                "BrokenPipeError caught, Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!"
-            )
-            raise ValueError  # for testing purpose only
+        except (OSError, IOError) as e:
+            # re-raise error
+            if self.__logging:
+                raise ValueError(
+                    "BrokenPipeError caught, Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!"
+                ) from None
+            else:
+                raise ValueError(
+                    "BrokenPipeError caught, Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!"
+                ) from e
 
     def __start_CVProcess(self):
         """
@@ -753,7 +756,7 @@ class WriteGear:
         # check if OpenCV VideoCapture is opened successfully
         assert (
             self.__process.isOpened()
-        ), "[WriteGear:ERROR] :: Failed to intialize OpenCV Writer!"
+        ), "[WriteGear:ERROR] :: Failed to initialize OpenCV Writer!"
 
     def close(self):
         """
