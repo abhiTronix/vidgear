@@ -68,8 +68,8 @@ steps:
   - script: |
       python -m pip install -U pip wheel 
       python -m pip install "numpy<2.0.0"
-      python -m pip install -U .[asyncio] 
-      python -m pip install -U six codecov httpx pytest pytest-asyncio pytest-cov yt_dlp mpegdash paramiko m3u8 async-asgi-testclient
+      python -m pip install -U .[asyncio] yt_dlp httpx six paramiko
+      python -m pip install -U codecov pytest pytest-asyncio pytest-cov mpegdash m3u8 async-asgi-testclient
       python -m pip install -U deffcode
     displayName: "Install pip dependencies"
 

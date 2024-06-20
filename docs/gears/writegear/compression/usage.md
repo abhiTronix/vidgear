@@ -29,11 +29,11 @@ limitations under the License.
 
     * **DO NOT** feed frames with different dimensions or channels to WriteGear, otherwise WriteGear will exit with `ValueError`.
 
-    * While providing additional av-source with `-i` FFmpeg parameter in `output_params` make sure it don't interfere with WriteGear's frame pipeline otherwise it will break things!
+    * When using the `-i` FFmpeg parameter in `output_params` to provide an additional audio or video source, ensure it **DOES NOT** interfere with WriteGear's internal frame pipeline. Interference can cause the pipeline to break.
 
-    * Use [`-disable_force_termination`](../params/#supported-parameters) flag when video duration is too short(<60sec), otherwise WriteGear will not produce any valid output.
+    * To ensure WriteGear produces valid output when using an additional stream `-i` parameter with videos shorter than `60` seconds, use the [`-disable_force_termination`](../params/#supported-parameters) flag.
 
-    * Heavy resolution multimedia files take time to render which can last up to _0.1-1 seconds_. Kindly wait till the WriteGear API terminates itself, and **DO NOT** try to kill the process instead.
+    * Encoding heavy resolution multimedia files can take up to _~0.2 to 2 seconds_. Please wait for the WriteGear API to terminate itself and **DO NOT** kill the process manually.
 
     * Always use `writer.close()` at the very end of the main code. **NEVER USE IT INBETWEEN CODE** to avoid undesired behavior.
 
@@ -47,7 +47,7 @@ limitations under the License.
 
 Following is the bare-minimum code you need to get started with WriteGear API in Compression Mode:
 
-```python linenums="1"
+```python linenums="1" hl_lines="10 25 42"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -168,7 +168,7 @@ WriteGear API provides [`-input_framerate`](../params/#supported-parameters)  at
 
 In this code we will retrieve framerate from video stream, and set it as `-input_framerate` attribute for `option` parameter in WriteGear API:
 
-```python linenums="1" hl_lines="10"
+```python linenums="1" hl_lines="10 13"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -584,7 +584,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
 
 !!! warning "You **MUST** use [`-input_framerate`](../params/#supported-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
-```python linenums="1" hl_lines="11-15"
+```python linenums="1" hl_lines="11-16"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import WriteGear
