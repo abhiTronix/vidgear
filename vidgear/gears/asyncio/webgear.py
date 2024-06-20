@@ -505,7 +505,9 @@ class WebGear:
             self.__templates.TemplateResponse(request, "index.html")
             if not self.__skip_generate_webdata
             else JSONResponse(
-                {"detail": "WebGear Data-Files Auto-Generation WorkFlow is disabled!"},
+                {
+                    "detail": "MESSAGE : WebGear Data-Files Auto-Generation WorkFlow is disabled!"
+                },
                 status_code=404,
             )
         )
@@ -518,7 +520,11 @@ class WebGear:
             self.__templates.TemplateResponse(request, "404.html", status_code=404)
             if not self.__skip_generate_webdata
             else JSONResponse(
-                {"detail": "WebGear Data-Files Auto-Generation WorkFlow is disabled!"},
+                {
+                    "detail": "ERROR : {} :: MESSAGE : WebGear Data-Files Auto-Generation WorkFlow is disabled.".format(
+                        exc.detail
+                    )
+                },
                 status_code=404,
             )
         )
@@ -531,7 +537,11 @@ class WebGear:
             self.__templates.TemplateResponse(request, "500.html", status_code=500)
             if not self.__skip_generate_webdata
             else JSONResponse(
-                {"detail": "WebGear Data-Files Auto-Generation WorkFlow is disabled!"},
+                {
+                    "detail": "ERROR : {} :: MESSAGE : WebGear Data-Files Auto-Generation WorkFlow is disabled.".format(
+                        exc.detail if hasattr(exc, "detail") else repr(exc)
+                    )
+                },
                 status_code=500,
             )
         )
