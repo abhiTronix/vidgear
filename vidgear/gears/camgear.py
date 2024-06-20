@@ -85,7 +85,7 @@ if not (yt_dlp is None):
                 "format": "best*[vcodec!=none]",
                 "quiet": True,
                 "prefer_insecure": False,
-                "no_warnings": True if logging else False,
+                "no_warnings": False if logging else True,
                 "dump_single_json": True,
                 "extract_flat": True,
                 "skip_download": True,

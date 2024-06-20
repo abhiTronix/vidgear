@@ -231,7 +231,7 @@ nav:
           - Parameters: gears/camgear/params.md
           - Bonus:
               - Source Tweak Parameters: gears/camgear/advanced/source_params.md
-              - API References: bonus/reference/camgear.md
+              - CamGear API References: bonus/reference/camgear.md
               - Bonus Examples: help/camgear_ex.md
               - FAQs: help/camgear_faqs.md
       - PiGear:
@@ -239,7 +239,7 @@ nav:
           - Usage Examples: gears/pigear/usage.md
           - Parameters: gears/pigear/params.md
           - Bonus:
-              - API References: bonus/reference/pigear.md
+              - PiGear API References: bonus/reference/pigear.md
               - Bonus Examples: help/pigear_ex.md
               - FAQs: help/pigear_faqs.md
       - VideoGear:
@@ -247,7 +247,7 @@ nav:
           - Usage Examples: gears/videogear/usage.md
           - Parameters: gears/videogear/params.md
           - Bonus:
-              - API References: bonus/reference/videogear.md
+              - VideoGear API References: bonus/reference/videogear.md
               - Bonus Examples: help/videogear_ex.md
               - FAQs: help/videogear_faqs.md
       - ScreenGear:
@@ -255,7 +255,7 @@ nav:
           - Usage Examples: gears/screengear/usage.md
           - Parameters: gears/screengear/params.md
           - Bonus:
-              - API References: bonus/reference/screengear.md
+              - ScreenGear API References: bonus/reference/screengear.md
               - Bonus Examples: help/screengear_ex.md
               - FAQs: help/screengear_faqs.md
       - WriteGear:
@@ -272,7 +272,7 @@ nav:
               - Usage Examples: gears/writegear/non_compression/usage.md
               - Parameters: gears/writegear/non_compression/params.md
           - Bonus:
-              - API References: bonus/reference/writegear.md
+              - WriteGear API References: bonus/reference/writegear.md
               - Bonus Examples: help/writegear_ex.md
               - FAQs: help/writegear_faqs.md
       - StreamGear:
@@ -285,7 +285,7 @@ nav:
               - Usage Examples: gears/streamgear/rtfm/usage.md
           - Parameters: gears/streamgear/params.md
           - Bonus:
-              - API References: bonus/reference/streamgear.md
+              - StreamGear API References: bonus/reference/streamgear.md
               - FFmpeg Installation: gears/streamgear/ffmpeg_install.md
               - Bonus Examples: help/streamgear_ex.md
               - FAQs: help/streamgear_faqs.md
@@ -301,7 +301,7 @@ nav:
               - Frame Compression: gears/netgear/advanced/compression.md
           - Parameters: gears/netgear/params.md
           - Bonus:
-              - API References: bonus/reference/netgear.md
+              - NetGear API References: bonus/reference/netgear.md
               - Bonus Examples: help/netgear_ex.md
               - FAQs: help/netgear_faqs.md
       - WebGear:
@@ -310,7 +310,7 @@ nav:
           - Advanced Usages: gears/webgear/advanced.md
           - Parameters: gears/webgear/params.md
           - Bonus:
-              - API References: bonus/reference/webgear.md
+              - WebGear API References: bonus/reference/webgear.md
               - Bonus Examples: help/webgear_ex.md
               - FAQs: help/webgear_faqs.md
       - WebGear_RTC:
@@ -319,7 +319,7 @@ nav:
           - Advanced Usages: gears/webgear_rtc/advanced.md
           - Parameters: gears/webgear_rtc/params.md
           - Bonus:
-              - API References: bonus/reference/webgear_rtc.md
+              - WebGear_RTC API References: bonus/reference/webgear_rtc.md
               - Bonus Examples: help/webgear_rtc_ex.md
               - FAQs: help/webgear_rtc_faqs.md
       - NetGear_Async:
@@ -329,7 +329,7 @@ nav:
               - Bidirectional Mode: gears/netgear_async/advanced/bidirectional_mode.md
           - Parameters: gears/netgear_async/params.md
           - Bonus:
-              - API References: bonus/reference/netgear_async.md
+              - NetGear_Async API References: bonus/reference/netgear_async.md
               - Bonus Examples: help/netgear_async_ex.md
               - FAQs: help/netgear_async_faqs.md
       - Stabilizer Class:

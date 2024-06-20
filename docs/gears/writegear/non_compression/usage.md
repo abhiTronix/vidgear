@@ -40,7 +40,7 @@ limitations under the License.
 
 Following is the bare-minimum code you need to get started with WriteGear API in Non-Compression Mode:
 
-```python linenums="1"
+```python linenums="1" hl_lines="10"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -97,7 +97,7 @@ In Non-Compression mode, WriteGear API provides flexible control over [**OpenCV'
 
 The complete usage example is as follows:
 
-```python linenums="1"
+```python linenums="1" hl_lines="7 15"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import WriteGear
@@ -109,11 +109,11 @@ output_params = {"-fourcc": "MJPG", "-fps": 30}
 # open live video stream on webcam at first index(i.e. 0) device
 stream = VideoGear(source=0, logging=True).start()
 
-# Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
+# Define writer with defined parameters and suitable output filename 
+# for e.g. `Output.mp4`
 writer = WriteGear(
     output="Output.mp4", compression_mode=False, logging=True, **output_params
 )
-
 
 # loop over
 while True:
@@ -159,7 +159,7 @@ writer.close()
 
 You can easily use WriterGear API directly with any Video Processing library(_For e.g OpenCV itself_) in Non-Compression Mode. The complete usage example is as follows:
 
-```python linenums="1"
+```python linenums="1" hl_lines="9 21 46"
 # import required libraries
 from vidgear.gears import WriteGear
 import cv2
@@ -170,7 +170,8 @@ output_params = {"-fourcc": "MJPG", "-fps": 30}
 # Open suitable video stream, such as webcam on first index(i.e. 0)
 stream = cv2.VideoCapture(0)
 
-# Define writer with defined parameters and suitable output filename for e.g. `Output.mp4`
+# Define writer with defined parameters and suitable output filename 
+# for e.g. `Output.mp4`
 writer = WriteGear(
     output="Output.mp4", compression_mode=False, logging=True, **output_params
 )
@@ -227,7 +228,7 @@ writer.close()
 
 In this example we will be constructing GStreamer pipeline to write video-frames into a file(`foo.mp4`) at 1M video-bitrate.
 
-```python linenums="1"
+```python linenums="1" hl_lines="12-14"
 # import required libraries
 from vidgear.gears import WriteGear
 import cv2
