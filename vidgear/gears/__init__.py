@@ -85,11 +85,14 @@ def import_core_dependency(
     # try importing dependency
     try:
         module = importlib.import_module(name)
-        if sub_class:
-            module = getattr(module, sub_class)
-    except ImportError:
-        # raise
-        raise ImportError(msg) from None
+        module = getattr(module, sub_class) if sub_class else module
+    except Exception as e:
+        if isinstance(e, ModuleNotFoundError):
+            # raise message
+            raise ModuleNotFoundError(msg) from None
+        else:
+            # raise error+message
+            raise ImportError(msg) from e
 
     # check if minimum required version
     if not (version) is None:

@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 import os
 import cv2
@@ -48,7 +49,6 @@ logger.setLevel(log.DEBUG)
 
 
 class WriteGear:
-
     """
     WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data.
 
@@ -93,8 +93,11 @@ class WriteGear:
             logging (bool): enables/disables logging.
             output_params (dict): provides the flexibility to control supported internal parameters and FFmpeg properties.
         """
+        # enable logging if specified
+        self.__logging = logging if isinstance(logging, bool) else False
+
         # print current version
-        logcurr_vidgear_ver(logging=logging)
+        logcurr_vidgear_ver(logging=self.__logging)
 
         # check if user not using depreciated `output_filename` parameter
         assert (
@@ -108,8 +111,7 @@ class WriteGear:
         )
         # specifies if machine in-use is running Windows OS or not
         self.__os_windows = True if os.name == "nt" else False
-        # enable logging if specified
-        self.__logging = logging if isinstance(logging, bool) else False
+
         # initialize various important class variables
         self.__output_parameters = {}  # handles output parameters
         self.__inputheight = None  # handles input frames height
@@ -163,9 +165,7 @@ class WriteGear:
 
         # cleans and reformat output parameters
         self.__output_parameters = {
-            str(k).strip(): str(v).strip()
-            if not isinstance(v, (list, tuple, int, float))
-            else v
+            str(k).strip(): (v.strip() if isinstance(v, str) else v)
             for k, v in output_params.items()
         }
         # log it if specified
@@ -673,12 +673,16 @@ class WriteGear:
             else:
                 # In silent mode
                 sp.run(cmd, stdin=sp.PIPE, stdout=sp.DEVNULL, stderr=sp.STDOUT)
-        except (OSError, IOError):
-            # raise error and log if something is wrong.
-            logger.error(
-                "BrokenPipeError caught, Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!"
-            )
-            raise ValueError  # for testing purpose only
+        except (OSError, IOError) as e:
+            # re-raise error
+            if self.__logging:
+                raise ValueError(
+                    "BrokenPipeError caught, Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!"
+                ) from None
+            else:
+                raise ValueError(
+                    "BrokenPipeError caught, Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!"
+                ) from e
 
     def __start_CVProcess(self):
         """
@@ -752,15 +756,14 @@ class WriteGear:
         # check if OpenCV VideoCapture is opened successfully
         assert (
             self.__process.isOpened()
-        ), "[WriteGear:ERROR] :: Failed to intialize OpenCV Writer!"
+        ), "[WriteGear:ERROR] :: Failed to initialize OpenCV Writer!"
 
     def close(self):
         """
         Safely terminates various WriteGear process.
         """
         # log termination
-        if self.__logging:
-            logger.debug("Terminating WriteGear Processes.")
+        self.__logging and logger.debug("Terminating WriteGear Processes.")
         # handle termination separately
         if self.__compression:
             # when Compression Mode is enabled

@@ -20,7 +20,7 @@ limitations under the License.
 
 # NetGear Examples
 
-&nbsp;
+&thinsp;
 
 ## Using NetGear with WebGear
 
@@ -41,7 +41,7 @@ Open a terminal on Client System where you want to display the input frames _(an
 
 !!! info "Note down the local IP-address of this system (required at Server's end) and also replace it in the following code. You can follow [this FAQ](../netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
-```python
+```python linenums="1"
 # import necessary libs
 import uvicorn, asyncio, cv2
 from vidgear.gears import NetGear
@@ -119,7 +119,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! note "Replace the IP address in the following code with Client's IP address you noted earlier."
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
@@ -194,9 +194,9 @@ Open a terminal on Client System where you want to display the input frames _(an
 
 !!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](../netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
-!!! fail "For VideoCapture APIs you also need to implement `start()` in addition to `read()` and `stop()` methods in your Custom Streaming Class as shown in following example, otherwise WebGear_RTC will fail to work!"
+!!! failure "For VideoCapture APIs you also need to implement `start()` in addition to `read()` and `stop()` methods in your Custom Streaming Class as shown in following example, otherwise WebGear_RTC will fail to work!"
 
-```python hl_lines="8-79 92-101"
+```python linenums="1" hl_lines="8-79 92-101"
 # import necessary libs
 import uvicorn, cv2
 from vidgear.gears import NetGear
@@ -317,7 +317,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! note "Replace the IP address in the following code with Client's IP address you noted earlier."
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear

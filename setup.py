@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 import json
 import platform
@@ -109,13 +110,12 @@ setup(
         # API specific deps
         "core": [
             "yt_dlp{}".format(latest_version("yt_dlp")),
-            "pyzmq==24.0.1",
+            "pyzmq{}".format(latest_version("pyzmq")),
             "Pillow",
-            "simplejpeg{}".format(latest_version("simplejpeg")),
+            "simplejpeg>=1.7.3", # Requires-Python >=3.9 for v1.7.4
             "mss{}".format(latest_version("mss")),
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
         ]
-        + (["picamera"] if ("arm" in platform.uname()[4][:3]) else [])
         + (
             ["dxcam{}".format(latest_version("dxcam"))]
             if (platform.system() == "Windows")  # windows is only supported
@@ -124,8 +124,8 @@ setup(
         # API specific + Asyncio deps
         "asyncio": [
             "yt_dlp{}".format(latest_version("yt_dlp")),
-            "pyzmq==24.0.1",
-            "simplejpeg{}".format(latest_version("simplejpeg")),
+            "pyzmq{}".format(latest_version("pyzmq")),
+            "simplejpeg>=1.7.3", # Requires-Python >=3.9 for v1.7.4
             "mss{}".format(latest_version("mss")),
             "Pillow",
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
@@ -136,7 +136,6 @@ setup(
             "aiortc{}".format(latest_version("aiortc")),
             "uvicorn{}".format(latest_version("uvicorn")),
         ]
-        + (["picamera"] if ("arm" in platform.uname()[4][:3]) else [])
         + (
             ["dxcam{}".format(latest_version("dxcam"))]
             if (platform.system() == "Windows")  # windows is only supported

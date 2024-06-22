@@ -27,7 +27,7 @@ limitations under the License.
 
 ## Gears :octicons-gear-24:, What are these?
 
-VidGear is built on Standalone APIs - also known as **Gears**, each with some unique functionality. Each Gears is designed exclusively to handle/control/process different data-specific & device-specific video streams, network streams, and media encoders/decoders. 
+VidGear is built on Standalone APIs - also known as **Gears :fontawesome-solid-gears:**, each with some unique functionality. Each Gears is designed exclusively to handle/control/process different data-specific & device-specific video streams, network streams, and media encoders/decoders. 
 
 Gears allows users to work with an inherently optimized, easy-to-use, extensible, and exposed API Framework on top of many state-of-the-art libraries, while silently delivering robust error handling and unmatched real-time performance.
 
@@ -40,7 +40,7 @@ These Gears can be classified as follows:
 > **Basic Function:** Retrieves [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames from various sources.
 
 * [CamGear](camgear/overview/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
-* [PiGear](pigear/overview/): Multi-Threaded API targeting various Raspberry-Pi Camera Modules.
+* [PiGear](pigear/overview/): Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis :fontawesome-brands-raspberry-pi:.
 * [ScreenGear](screengear/overview/): High-performance API targeting rapid Screencasting Capabilities.
 * [VideoGear](videogear/overview/): Common Video-Capture API with internal [Video Stabilizer](stabilizer/overview/) wrapper. 
 

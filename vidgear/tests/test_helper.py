@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 
 import os
@@ -47,6 +48,7 @@ from vidgear.gears.helper import (
     validate_ffmpeg,
     get_video_bitrate,
     get_valid_ffmpeg_path,
+    import_dependency_safe,
     download_ffmpeg_binaries,
     check_gstreamer_support,
     generate_auth_certificates,
@@ -127,6 +129,35 @@ def getframe():
     returns empty numpy frame/array of dimensions: (500,800,3)
     """
     return np.zeros([500, 800, 3], dtype=np.uint8)
+
+
+test_data = [
+    ("XYZ", "raise", "Invalid", "0.0.0", "My message"),
+    ("cv2", "raise", "opencv-python", "6.0.0", ""),
+    ("cv2", "log", "opencv-python", "3.0.0", ""),
+    ("cv2", "silent", "opencv-python", "6.0.0", ""),
+    ("cv2", "unknown", "opencv-python", "6.0.0", ""),
+    ("from cv2 import XYZ", "raise", "opencv-python", "3.0.0", ""),
+    ("from xyz import XYZ", "raise", "Invalid", "0.0.0", "My message"),
+    ("from cv2 import XYZ", "log", "opencv-python", "3.0.0", ""),
+    ("from xyz import XYZ", "log", "Invalid", "0.0.0", "My message"),
+]
+
+
+@pytest.mark.parametrize(
+    "name, error, pkg_name, min_version, custom_message", test_data
+)
+def test_import_dependency_safe(name, error, pkg_name, min_version, custom_message):
+    """
+    Testing import_dependency_safe helper function.
+    """
+    try:
+        import_dependency_safe(name, error, pkg_name, min_version, custom_message)
+    except Exception as e:
+        if (
+            error == "raise" and not isinstance(e, (ModuleNotFoundError, ImportError))
+        ) or (error == "unknown" and not isinstance(e, AssertionError)):
+            pytest.fail(str(e))
 
 
 test_data = [
@@ -437,7 +468,7 @@ def test_create_blank_frame(frame, text):
 @pytest.mark.parametrize(
     "value, result",
     [
-        ("Duration: 00:00:08.44, start: 0.000000, bitrate: 804 kb/s", 8),
+        ("Duration: 00:00:08.44, start: 0.000000, bitrate: 804 kb/s", 8.44),
         ("Duration: 00:07:08 , start: 0.000000, bitrate: 804 kb/s", 428),
         ("", False),
     ],
@@ -537,7 +568,7 @@ def test_delete_ext_safe(ext, result):
             }
             streamer = StreamGear(output=mpd_file_path, **stream_params)
             streamer.transcode_source()
-            streamer.terminate()
+            streamer.close()
             assert check_valid_mpd(mpd_file_path)
         delete_ext_safe(path, ext, logging=True)
         assert not os.listdir(path), "`delete_ext_safe` Test failed!"

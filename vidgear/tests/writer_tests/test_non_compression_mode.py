@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 
 import os
@@ -152,9 +153,11 @@ test_data_class = [
     ),
     (
         "appsrc ! videoconvert ! avenc_mpeg4 bitrate=100000 ! mp4mux ! filesink location=foo.mp4",
-        {"-gst_pipeline_mode": True}
-        if platform.system() == "Linux"
-        else {"-gst_pipeline_mode": "invalid"},
+        (
+            {"-gst_pipeline_mode": True}
+            if platform.system() == "Linux"
+            else {"-gst_pipeline_mode": "invalid"}
+        ),
         True if platform.system() == "Linux" else False,
     ),
 ]
@@ -167,16 +170,15 @@ def test_WriteGear_compression(f_name, output_params, result):
     """
     try:
         stream = cv2.VideoCapture(return_testvideo_path())
-        writer = WriteGear(
+        with WriteGear(
             output=f_name, compression_mode=False, logging=True, **output_params
-        )
-        while True:
-            (grabbed, frame) = stream.read()
-            if not grabbed:
-                break
-            writer.write(frame)
-        stream.release()
-        writer.close()
+        ) as writer:
+            while True:
+                (grabbed, frame) = stream.read()
+                if not grabbed:
+                    break
+                writer.write(frame)
+            stream.release()
         remove_file_safe(
             "foo.html"
             if "-gst_pipeline_mode" in output_params

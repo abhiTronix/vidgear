@@ -22,7 +22,7 @@ site_description: >-
 # Repository
 repo_name: abhiTronix/vidgear
 repo_url: https://github.com/abhiTronix/vidgear
-edit_uri: ""
+edit_uri: edit/testing/docs/
 
 # Copyright
 copyright: Copyright &copy; 2019 Abhishek Thakur(@abhiTronix)
@@ -33,18 +33,30 @@ theme:
   custom_dir: docs/overrides
 
   # Default values, taken from mkdocs_theme.yml
-  language: en
   features:
-    - header.autohide
+    - announce.dismiss
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.top
+    - navigation.tracking
+    - navigation.instant
+    - navigation.instant.progress
     - search.suggest
     - search.highlight
     - search.share
     - content.code.annotate
     - content.code.copy
     - content.tabs.link
+    - content.footnote.tooltips
+    - content.action.view
+    - content.action.edit
+    - content.tooltips
+    - toc.follow
   palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/weather-hazy
+        name: Switch to light mode
     # Light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -60,12 +72,24 @@ theme:
       accent: orange
       toggle:
         icon: material/weather-night
-        name: Switch to light mode
+        name: Switch to system mode
   font:
-    text: Muli
+    text: Source Sans 3
     code: Fira Code
   icon:
-    logo: logo
+    admonition:
+      note: octicons/tag-16
+      abstract: octicons/checklist-16
+      info: octicons/info-16
+      tip: octicons/light-bulb-16
+      success: octicons/check-16
+      question: octicons/question-16
+      warning: octicons/alert-16
+      failure: octicons/x-circle-16
+      danger: octicons/zap-16
+      bug: octicons/bug-16
+      example: octicons/beaker-16
+      quote: octicons/quote-16
   logo: assets/images/logo.svg
   favicon: assets/images/favicon-32.png
   static_templates:
@@ -74,7 +98,9 @@ theme:
 # Plugins
 plugins:
   - search
-  - git-revision-date-localized
+  - git-revision-date-localized:
+      enable_creation_date: true
+      fallback_to_build_date: true
   - minify:
       minify_html: true
   - mkdocstrings:
@@ -89,6 +115,14 @@ plugins:
       glob:
         - overrides/assets/README.md
 
+# Hooks
+hooks:
+  - docs/overrides/hooks/js_hook.py
+
+# Logging
+validation:
+  unrecognized_links: ignore
+
 # Customization
 extra:
   social:
@@ -102,9 +136,10 @@ extra:
       link: https://dev.to/abhitronix
   version:
     provider: mike
+    default: latest
   analytics: # Google analytics
     provider: google
-    property: UA-131929464-1
+    property: G-XMZCQ3KBNJ
     feedback:
       title: Was this page helpful?
       ratings:
@@ -130,46 +165,48 @@ extra_javascript:
 markdown_extensions:
   - admonition
   - abbr
+  - tables
   - attr_list
   - def_list
   - footnotes
   - md_in_html
   - meta
   - toc:
-      permalink: ⚓
-      permalink_title: Anchor link to this section for reference
-  - codehilite:
-      guess_lang: false
-  - pymdownx.arithmatex
+      permalink: true
+
+  # Python Markdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
   - pymdownx.betterem:
       smart_enable: all
   - pymdownx.caret
-  - pymdownx.critic
   - pymdownx.details
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
-  - pymdownx.inlinehilite
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.highlight:
       anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
   - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
   - pymdownx.magiclink:
+      normalize_issue_symbols: true
       repo_url_shorthand: true
       user: abhiTronix
       repo: vidgear
-  - pymdownx.mark
-  - pymdownx.smartsymbols
-  - pymdownx.snippets:
-      check_paths: true
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde
-  - pymdownx.striphtml:
-      strip_comments: true
-  - pymdownx.magiclink
 
 # Page tree
 nav:
@@ -194,7 +231,7 @@ nav:
           - Parameters: gears/camgear/params.md
           - Bonus:
               - Source Tweak Parameters: gears/camgear/advanced/source_params.md
-              - API References: bonus/reference/camgear.md
+              - CamGear API References: bonus/reference/camgear.md
               - Bonus Examples: help/camgear_ex.md
               - FAQs: help/camgear_faqs.md
       - PiGear:
@@ -202,7 +239,7 @@ nav:
           - Usage Examples: gears/pigear/usage.md
           - Parameters: gears/pigear/params.md
           - Bonus:
-              - API References: bonus/reference/pigear.md
+              - PiGear API References: bonus/reference/pigear.md
               - Bonus Examples: help/pigear_ex.md
               - FAQs: help/pigear_faqs.md
       - VideoGear:
@@ -210,7 +247,7 @@ nav:
           - Usage Examples: gears/videogear/usage.md
           - Parameters: gears/videogear/params.md
           - Bonus:
-              - API References: bonus/reference/videogear.md
+              - VideoGear API References: bonus/reference/videogear.md
               - Bonus Examples: help/videogear_ex.md
               - FAQs: help/videogear_faqs.md
       - ScreenGear:
@@ -218,7 +255,7 @@ nav:
           - Usage Examples: gears/screengear/usage.md
           - Parameters: gears/screengear/params.md
           - Bonus:
-              - API References: bonus/reference/screengear.md
+              - ScreenGear API References: bonus/reference/screengear.md
               - Bonus Examples: help/screengear_ex.md
               - FAQs: help/screengear_faqs.md
       - WriteGear:
@@ -235,7 +272,7 @@ nav:
               - Usage Examples: gears/writegear/non_compression/usage.md
               - Parameters: gears/writegear/non_compression/params.md
           - Bonus:
-              - API References: bonus/reference/writegear.md
+              - WriteGear API References: bonus/reference/writegear.md
               - Bonus Examples: help/writegear_ex.md
               - FAQs: help/writegear_faqs.md
       - StreamGear:
@@ -248,7 +285,7 @@ nav:
               - Usage Examples: gears/streamgear/rtfm/usage.md
           - Parameters: gears/streamgear/params.md
           - Bonus:
-              - API References: bonus/reference/streamgear.md
+              - StreamGear API References: bonus/reference/streamgear.md
               - FFmpeg Installation: gears/streamgear/ffmpeg_install.md
               - Bonus Examples: help/streamgear_ex.md
               - FAQs: help/streamgear_faqs.md
@@ -264,7 +301,7 @@ nav:
               - Frame Compression: gears/netgear/advanced/compression.md
           - Parameters: gears/netgear/params.md
           - Bonus:
-              - API References: bonus/reference/netgear.md
+              - NetGear API References: bonus/reference/netgear.md
               - Bonus Examples: help/netgear_ex.md
               - FAQs: help/netgear_faqs.md
       - WebGear:
@@ -273,7 +310,7 @@ nav:
           - Advanced Usages: gears/webgear/advanced.md
           - Parameters: gears/webgear/params.md
           - Bonus:
-              - API References: bonus/reference/webgear.md
+              - WebGear API References: bonus/reference/webgear.md
               - Bonus Examples: help/webgear_ex.md
               - FAQs: help/webgear_faqs.md
       - WebGear_RTC:
@@ -282,7 +319,7 @@ nav:
           - Advanced Usages: gears/webgear_rtc/advanced.md
           - Parameters: gears/webgear_rtc/params.md
           - Bonus:
-              - API References: bonus/reference/webgear_rtc.md
+              - WebGear_RTC API References: bonus/reference/webgear_rtc.md
               - Bonus Examples: help/webgear_rtc_ex.md
               - FAQs: help/webgear_rtc_faqs.md
       - NetGear_Async:
@@ -292,7 +329,7 @@ nav:
               - Bidirectional Mode: gears/netgear_async/advanced/bidirectional_mode.md
           - Parameters: gears/netgear_async/params.md
           - Bonus:
-              - API References: bonus/reference/netgear_async.md
+              - NetGear_Async API References: bonus/reference/netgear_async.md
               - Bonus Examples: help/netgear_async_ex.md
               - FAQs: help/netgear_async_faqs.md
       - Stabilizer Class:

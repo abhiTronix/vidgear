@@ -27,32 +27,36 @@ limitations under the License.
 
 ## Overview
 
-> PiGear is similar to [CamGear API](../../camgear/overview/) but exclusively made to support various Raspberry Pi Camera Modules _(such as OmniVision OV5647 Camera Module and Sony IMX219 Camera Module)_.
+> PiGear is a specialized API similar to the [CamGear API](../../camgear/overview/) but optimized for **Raspberry Pi :fontawesome-brands-raspberry-pi: Boards**, offering comprehensive **support for camera modules** _(e.g., OmniVision OV5647, Sony IMX219)_, along with **limited compatibility for USB cameras**.
 
-PiGear provides a flexible multi-threaded framework around complete [picamera](https://picamera.readthedocs.io/en/release-1.13/index.html) python library, and provide us the ability to exploit almost all of its parameters like `brightness, saturation, sensor_mode, iso, exposure, etc.` effortlessly. Furthermore, PiGear also supports multiple camera modules, such as in the case of Raspberry-Pi Compute Module IO boards.
 
-Best of all, PiGear contains ==Threaded Internal Timer== - that silently keeps active track of any frozen-threads/hardware-failures and exit safely, if any does occur. That means that if you're running PiGear API in your script and someone accidentally pulls the Camera-Module cable out, instead of going into possible kernel panic, API will exit safely to save resources.
+PiGear implements a seamless and robust wrapper around the [picamera2](https://github.com/raspberrypi/picamera2) python library, simplifying integration with minimal code changes and ensuring a smooth transition for developers already familiar with the Picamera2 API. PiGear leverages the `libcamera` API under the hood with multi-threading, providing high-performance :fire:, enhanced control and functionality for Raspberry Pi camera modules. 
 
-!!! error "Make sure to [enable Raspberry Pi hardware-specific settings](https://picamera.readthedocs.io/en/release-1.13/quickstart.html) prior using this API, otherwise nothing will work."
+PiGear handles common configuration parameters and non-standard settings for various camera types, simplifying the integration process. PiGear currently supports PiCamera2 API parameters such as `sensor`, `controls`, `transform`, and `format` etc., with internal type and sanity checks for robust performance.
+
+While primarily focused on Raspberry Pi camera modules, PiGear also provides basic functionality for USB webcams only with Picamera2 API, along with the ability to accurately differentiate between USB and Raspberry Pi cameras using metadata. 
+
+???+ info "Backward compatibility with `picamera` library"
+	  PiGear seamlessly switches to the legacy [`picamera`](https://picamera.readthedocs.io/en/release-1.13/index.html) library if the `picamera2` library is unavailable, ensuring seamless backward compatibility. For this, PiGear also provides a flexible multi-threaded framework around complete `picamera` API, allowing developers to effortlessly exploit a wide range of parameters, such as `brightness`, `saturation`, `sensor_mode`, `iso`, `exposure`, and more. 
+
+    !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
+
+Furthermore, PiGear supports the use of multiple camera modules, including those found on Raspberry Pi Compute Module IO boards and USB cameras _(only with Picamera2 API)_.
+
+???+ new "Threaded Internal Timer :material-camera-timer:"
+	PiGear ensures proper resource release during the termination of the API, preventing potential issues or resource leaks. PiGear API internally implements a ==Threaded Internal Timer== that silently keeps active track of any frozen-threads or hardware-failures and exits safely if any do occur. This means that if you're running the PiGear API in your script and someone accidentally pulls the Camera-Module cable out, instead of going into a possible kernel panic, the API will exit safely to save resources.
+
+!!! failure "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this API, otherwise nothing will work."
 
 !!! tip "Helpful Tips"
+    * Follow [PiCamera2 documentation](https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf) and [Picamera documentation](https://picamera.readthedocs.io/en/release-1.13/) which should help you quickly get started.
 
-	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../../switch_from_cv/#switching-videocapture-apis)
-
-	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
+    * If you're already familiar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../../switch_from_cv/#switching-videocapture-apis).
+  
+    * It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 
 
 &thinsp; 
-
-## Importing
-
-You can import PiGear API in your program as follows:
-
-```python
-from vidgear.gears import PiGear
-```
-
-&thinsp;
 
 ## Usage Examples
 
@@ -60,9 +64,7 @@ from vidgear.gears import PiGear
 <a href="../usage/">See here 🚀</a>
 </div>
 
-!!! experiment "After going through PiGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/pigear_ex/)"
-
-
+!!! example "After going through PiGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/pigear_ex/)"
 
 ## Parameters
 

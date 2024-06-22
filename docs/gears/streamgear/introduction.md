@@ -18,6 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
+
 # StreamGear API 
 
 
@@ -29,15 +30,15 @@ limitations under the License.
 
 ## Overview
 
-> StreamGear automates transcoding workflow for generating _Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH and Apple HLS)_ in just few lines of python code. 
+> StreamGear streamlines and simplifies the transcoding workflow to generate _Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats like MPEG-DASH and Apple HLS_ with just a few lines of Python code, allowing developers to focus on their application logic rather than dealing with the complexities of transcoding and chunking media files.
 
-StreamGear provides a standalone, highly extensible, and flexible wrapper around [**FFmpeg**](https://ffmpeg.org/) multimedia framework for generating chunked-encoded media segments of the content.
+StreamGear API provides a standalone, highly extensible, and flexible wrapper around the [**FFmpeg**](https://ffmpeg.org/) multimedia framework for generating chunk-encoded media segments from your multimedia content effortlessly.
 
-SteamGear is an out-of-the-box solution for transcoding source videos/audio files & real-time video frames and breaking them into a sequence of multiple smaller chunks/segments of suitable lengths. These segments make it possible to stream videos at different quality levels _(different bitrates or spatial resolutions)_ and can be switched in the middle of a video from one quality level to another – if bandwidth permits – on a per-segment basis. A user can serve these segments on a web server that makes it easier to download them through HTTP standard-compliant GET requests.
+With StreamGear, you can transcode source video/audio files and real-time video frames into a sequence of multiple smaller chunks/segments of suitable lengths. These segments facilitate streaming at different quality levels _(bitrates or spatial resolutions)_ and allow for seamless switching between quality levels during playback based on available bandwidth. You can serve these segments on a web server, making them easily accessible via standard **HTTP GET** requests.
 
-SteamGear currently supports [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_  and [**Apple HLS**](https://developer.apple.com/documentation/http_live_streaming) _(HTTP Live Streaming)_. 
+SteamGear currently supports both [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/) _(Dynamic Adaptive Streaming over HTTP, ISO/IEC 23009-1)_  and [**Apple HLS**](https://developer.apple.com/documentation/http_live_streaming) _(HTTP Live Streaming)_. 
 
-SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ or a Master Playlist _(such as M3U8 in-case of Apple HLS)_ besides segments that describe these segment information _(timing, URL, media characteristics like video resolution and adaptive bit rates)_ and is provided to the client before the streaming session.
+Additionally, StreamGear generates a manifest file _(such as MPD for DASH)_ or a master playlist _(such as M3U8 for Apple HLS)_ alongside the segments. These files contain essential segment information, _including timing, URLs, and media characteristics like video resolution and adaptive bitrate_. They are provided to the client before the streaming session begins.
 
 !!! alert "For streaming with older traditional protocols such as RTMP, RTSP/RTP you could use [WriteGear](../../writegear/introduction/) API instead."
 
@@ -58,9 +59,9 @@ SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ or a Mast
 
 !!! tip "Useful Links"
     
-    - Checkout [this detailed blogpost](https://ottverse.com/mpeg-dash-video-streaming-the-complete-guide/) on how MPEG-DASH works.
-    - Checkout [this detailed blogpost](https://ottverse.com/hls-http-live-streaming-how-does-it-work/) on how HLS works.
-    - Checkout [this detailed blogpost](https://ottverse.com/hls-http-live-streaming-how-does-it-work/) for HLS vs. MPEG-DASH comparison.
+    - Checkout [this detailed blogpost ➶](https://ottverse.com/mpeg-dash-video-streaming-the-complete-guide/) on how MPEG-DASH works.
+    - Checkout [this detailed blogpost ➶](https://ottverse.com/hls-http-live-streaming-how-does-it-work/) on how HLS works.
+    - Checkout [this detailed blogpost ➶](https://imagekit.io/blog/hls-vs-dash/) for HLS vs. MPEG-DASH comparison.
 
 
 &thinsp; 
@@ -70,27 +71,14 @@ SteamGear also creates a Manifest file _(such as MPD in-case of DASH)_ or a Mast
 StreamGear primarily operates in following independent modes for transcoding:
 
 
-??? warning "Real-time Frames Mode is NOT Live-Streaming."
+???+ alert "Real-time Frames Mode itself is NOT Live-Streaming :material-video-wireless-outline:"
+    To enable live-streaming in Real-time Frames Mode, use the exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter in the StreamGear API. Checkout [this usage example ➶](../rtfm/usage/#bare-minimum-usage-with-live-streaming) for more information.
 
-    Rather, you can enable live-streaming in Real-time Frames Mode by using the exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter in StreamGear API. Checkout [this usage example](../rtfm/usage/#bare-minimum-usage-with-live-streaming) for more information.
+- [**Single-Source Mode :material-file-video-outline:**](../ssm/overview) : In this mode, StreamGear **transcodes entire video file** _(as opposed to frame-by-frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well when you're transcoding long-duration lossless videos(with audio) for streaming that required no interruptions. But on the downside, the provided source cannot be flexibly manipulated or transformed before sending onto FFmpeg Pipeline for processing. 
 
-
-- [**Single-Source Mode**](../ssm/overview): In this mode, StreamGear **transcodes entire video file** _(as opposed to frame-by-frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well when you're transcoding long-duration lossless videos(with audio) for streaming that required no interruptions. But on the downside, the provided source cannot be flexibly manipulated or transformed before sending onto FFmpeg Pipeline for processing. 
-
-- [**Real-time Frames Mode**](../rtfm/overview): In this mode, StreamGear directly **transcodes frame-by-frame** _(as opposed to a entire video file)_, into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well when you desire to flexibility manipulate or transform [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames in real-time before sending them onto FFmpeg Pipeline for processing. But on the downside, audio has to added manually _(as separate source)_ for streams. 
+- [**Real-time Frames Mode :material-camera-burst:**](../rtfm/overview) : In this mode, StreamGear directly **transcodes frame-by-frame** _(as opposed to a entire video file)_, into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well when you desire to flexibility manipulate or transform [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames in real-time before sending them onto FFmpeg Pipeline for processing. But on the downside, audio has to added manually _(as separate source)_ for streams. 
 
 &thinsp; 
-
-## Importing
-
-You can import StreamGear API in your program as follows:
-
-```python
-from vidgear.gears import StreamGear
-```
-
-&thinsp; 
-
 
 ## Watch Demo
 

@@ -29,11 +29,11 @@ limitations under the License.
 
     * **DO NOT** feed frames with different dimensions or channels to WriteGear, otherwise WriteGear will exit with `ValueError`.
 
-    * While providing additional av-source with `-i` FFmpeg parameter in `output_params` make sure it don't interfere with WriteGear's frame pipeline otherwise it will break things!
+    * When using the `-i` FFmpeg parameter in `output_params` to provide an additional audio or video source, ensure it **DOES NOT** interfere with WriteGear's internal frame pipeline. Interference can cause the pipeline to break.
 
-    * Use [`-disable_force_termination`](../params/#supported-parameters) flag when video duration is too short(<60sec), otherwise WriteGear will not produce any valid output.
+    * To ensure WriteGear produces valid output when using an additional stream `-i` parameter with videos shorter than `60` seconds, use the [`-disable_force_termination`](../params/#supported-parameters) flag.
 
-    * Heavy resolution multimedia files take time to render which can last up to _0.1-1 seconds_. Kindly wait till the WriteGear API terminates itself, and **DO NOT** try to kill the process instead.
+    * Encoding heavy resolution multimedia files can take up to _~0.2 to 2 seconds_. Please wait for the WriteGear API to terminate itself and **DO NOT** kill the process manually.
 
     * Always use `writer.close()` at the very end of the main code. **NEVER USE IT INBETWEEN CODE** to avoid undesired behavior.
 
@@ -47,7 +47,7 @@ limitations under the License.
 
 Following is the bare-minimum code you need to get started with WriteGear API in Compression Mode:
 
-```python
+```python linenums="1" hl_lines="10 25 42"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -100,7 +100,7 @@ In Compression Mode, WriteGear API contains [`rgb_mode`](../../../../bonus/refer
 
 The complete usage example is as follows:
 
-```python hl_lines="26"
+```python linenums="1" hl_lines="26"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import WriteGear
@@ -168,7 +168,7 @@ WriteGear API provides [`-input_framerate`](../params/#supported-parameters)  at
 
 In this code we will retrieve framerate from video stream, and set it as `-input_framerate` attribute for `option` parameter in WriteGear API:
 
-```python hl_lines="10"
+```python linenums="1" hl_lines="10 13"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -233,7 +233,7 @@ In this example, we will stream live camera frames directly to Twitch :fontaweso
 
 !!! alert "Make sure to change [_Twitch Stream Key_](https://www.youtube.com/watch?v=xwOtOfPMIIk) with yours in following code before running!"
 
-```python hl_lines="11-16 20 24"
+```python linenums="1" hl_lines="11-16 20 24"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -324,7 +324,7 @@ In this example, we will be using `h264_vaapi` as our hardware encoder and also 
     ```
 
 
-```python hl_lines="11-13"
+```python linenums="1" hl_lines="11-13"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -382,7 +382,7 @@ writer.close()
 
 You can easily use WriterGear API directly with any Video Processing library(_For e.g OpenCV itself_) in Compression Mode. The complete usage example is as follows:
 
-```python hl_lines="6"
+```python linenums="1" hl_lines="6"
 # import required libraries
 from vidgear.gears import WriteGear
 import cv2
@@ -489,7 +489,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             }
             ```
 
-        !!! fail "If audio still doesn't work then [checkout this troubleshooting guide ➶](https://www.maketecheasier.com/fix-microphone-not-working-windows10/) or reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
+        !!! failure "If audio still doesn't work then [checkout this troubleshooting guide ➶](https://www.maketecheasier.com/fix-microphone-not-working-windows10/) or reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
     === ":material-linux: Linux"
@@ -535,7 +535,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             }
             ```
 
-        !!! fail "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
+        !!! failure "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
     === ":material-apple: MacOS"
@@ -577,14 +577,14 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
             }
             ```
 
-        !!! fail "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
+        !!! failure "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
 !!! danger "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."
 
 !!! warning "You **MUST** use [`-input_framerate`](../params/#supported-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
-```python hl_lines="11-15"
+```python linenums="1" hl_lines="11-16"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import WriteGear

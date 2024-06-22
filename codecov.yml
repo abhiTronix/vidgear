@@ -32,6 +32,7 @@ ignore:
   - "scripts"
   - "vidgear/gears/__init__.py" #trivial
   - "vidgear/gears/asyncio/__main__.py" #trivial
+  - "vidgear/gears/pigear.py" #HW limits
   - "setup.py"
   - "**/*.md"
   - "**/*.html"

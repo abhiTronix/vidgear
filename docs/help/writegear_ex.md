@@ -30,15 +30,15 @@ In Compression Mode, you can use WriteGear for livestreaming with traditional pr
 ??? new "New in v0.2.6" 
     This example was added in `v0.2.6`.
 
-!!! alert "This example assume you already have a RTSP Server running at specified RTSP address with format *`rtsp://[RTSP_ADDRESS]:[RTSP_PORT]/[RTSP_PATH]`* for publishing video frames."
+???+ tip "Creating your own RTSP Server locally"
+    If you want to create your RTSP Server locally, then checkout [**MediaMTX (formerly rtsp-simple-server)**](https://github.com/bluenviron/mediamtx) - ready-to-use and zero-dependency real-time media server and media proxy that allows to publish, read, proxy, record and playback video and audio streams.
 
-??? tip "Creating your own RTSP Server locally"
-    If you want to create your RTSP Server locally, then checkout [**rtsp-simple-server**](https://github.com/aler9/rtsp-simple-server) - a ready-to-use and zero-dependency server and proxy that allows users to publish, read and proxy live video and audio streams through various protocols such as RTSP, RTMP etc.
+!!! warning "This example assume you already have a RTSP Server running at specified RTSP address with format *`rtsp://[RTSP_ADDRESS]:[RTSP_PORT]/[RTSP_PATH]`* for publishing video frames."
     
 !!! danger "Make sure to change RTSP address `rtsp://localhost:8554/mystream` with yours in following code before running!"
 
 
-```python hl_lines="10 15"
+```python linenums="1" hl_lines="10 15"
 # import required libraries
 import cv2
 from vidgear.gears import CamGear
@@ -94,7 +94,7 @@ In Compression Mode, you can also use WriteGear for Youtube-Livestreaming. The e
 
 === "Without Audio"
 
-    ```python hl_lines="11-17 21 25"
+    ```python linenums="1" hl_lines="11-17 21 25"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import WriteGear
@@ -150,7 +150,7 @@ In Compression Mode, you can also use WriteGear for Youtube-Livestreaming. The e
 
     !!! warning "This code assume given input video source contains valid audio stream."
 
-    ```python hl_lines="7 15-24 28 32"
+    ```python linenums="1" hl_lines="7 15-24 28 32"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import WriteGear
@@ -247,7 +247,7 @@ With WriteGear's Compression Mode, you can directly feed video-frames to [`v4l2l
 
     Now you can use `/dev/video0` Virtual Camera device path in WriteGear API.
 
-??? fail "v4l2: open /dev/videoX: Permission denied"
+??? failure "v4l2: open /dev/videoX: Permission denied"
 
     If you got this error, then you must add your username to the `video` group by running following commands:
     ```sh
@@ -265,7 +265,7 @@ With WriteGear's Compression Mode, you can directly feed video-frames to [`v4l2l
 
 
 
-```python hl_lines="12-15 19"
+```python linenums="1" hl_lines="12-15 19"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -323,7 +323,7 @@ In Compression Mode, you can also use WriteGear for creating MP4 segments from a
 ??? new "New in v0.2.1" 
     This example was added in `v0.2.1`.
 
-```python hl_lines="13-20 24"
+```python linenums="1" hl_lines="13-20 24"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import WriteGear
@@ -394,7 +394,7 @@ You can also use WriteGear for merging external audio with live video-source:
 
 !!! failure "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."
 
-```python hl_lines="11-12"
+```python linenums="1" hl_lines="11-12"
 # import required libraries
 from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
@@ -458,9 +458,9 @@ If you need timely accurate video with exactly same speed as real-time input, th
 
 In this example we are capturing video from desktop screen in a Timely Accurate manner.
 
-=== "Windows"
+=== "Windows :fontawesome-brands-windows:"
 
-    ```python hl_lines="8-17"
+    ```python linenums="1" hl_lines="8-17"
     # import required libraries
     from vidgear.gears import WriteGear
 
@@ -486,9 +486,9 @@ In this example we are capturing video from desktop screen in a Timely Accurate 
     writer.close()
     ```
 
-=== "Linux"
+=== "Linux :material-linux:"
 
-    ```python hl_lines="8-17"
+    ```python linenums="1" hl_lines="8-17"
     # import required libraries
     from vidgear.gears import WriteGear
 
@@ -514,9 +514,9 @@ In this example we are capturing video from desktop screen in a Timely Accurate 
     writer.close()
     ```
 
-=== "macOS"
+=== "MacOS :material-apple:"
 
-    ```python hl_lines="8-17"
+    ```python linenums="1" hl_lines="8-17"
     # import required libraries
     from vidgear.gears import WriteGear
 
@@ -557,7 +557,7 @@ In this example, we'll create a node that listens to a ROS image message topic, 
 
 !!! note "This example is vidgear implementation of this [wiki example](http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython)." 
 
-```python
+```python linenums="1"
 # import roslib
 import roslib
 

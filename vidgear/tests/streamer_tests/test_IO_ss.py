@@ -17,10 +17,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import the necessary packages
 
+# import the necessary packages
 import os
-import numpy as np
 import pytest
 import tempfile
 import subprocess
@@ -47,7 +46,7 @@ def test_failedextension(output):
     stream_params = {"-video_source": return_testvideo_path()}
     streamer = StreamGear(output=output, logging=True, **stream_params)
     streamer.transcode_source()
-    streamer.terminate()
+    streamer.close()
 
 
 def test_failedextensionsource():
@@ -59,7 +58,7 @@ def test_failedextensionsource():
         stream_params = {"-video_source": "garbage.garbage"}
         streamer = StreamGear(output="output.mpd", logging=True, **stream_params)
         streamer.transcode_source()
-        streamer.terminate()
+        streamer.close()
 
 
 @pytest.mark.parametrize(
@@ -76,7 +75,11 @@ def test_paths_ss(path, format):
     """
     streamer = None
     try:
-        stream_params = {"-video_source": return_testvideo_path()}
+        stream_params = {
+            "-video_source": return_testvideo_path(),
+            "-ffmpeg_download_path": 12345,
+            "-livestream": "invalid",
+        }
         streamer = StreamGear(output=path, format=format, logging=True, **stream_params)
     except Exception as e:
         if isinstance(e, ValueError):
@@ -85,7 +88,7 @@ def test_paths_ss(path, format):
             pytest.fail(str(e))
     finally:
         if not streamer is None:
-            streamer.terminate()
+            streamer.close()
 
 
 @pytest.mark.xfail(raises=RuntimeError)
@@ -96,7 +99,7 @@ def test_method_call_ss():
     stream_params = {"-video_source": return_testvideo_path()}
     streamer = StreamGear(output="output.mpd", logging=True, **stream_params)
     streamer.stream("garbage.garbage")
-    streamer.terminate()
+    streamer.close()
 
 
 @pytest.mark.xfail(raises=(AttributeError, RuntimeError))
@@ -107,7 +110,7 @@ def test_method_call_ss():
     stream_params = {"-video_source": return_testvideo_path()}
     streamer = StreamGear(output="output.mpd", logging=True, **stream_params)
     streamer.stream("garbage.garbage")
-    streamer.terminate()
+    streamer.close()
 
 
 @pytest.mark.xfail(raises=subprocess.CalledProcessError)
@@ -124,4 +127,4 @@ def test_invalid_params_ss(format):
         **stream_params
     )
     streamer.transcode_source()
-    streamer.terminate()
+    streamer.close()

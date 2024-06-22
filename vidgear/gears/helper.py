@@ -35,6 +35,8 @@ import numpy as np
 import logging as log
 import platform
 import socket
+import warnings
+from functools import wraps
 from tqdm import tqdm
 from contextlib import closing
 from pathlib import Path
@@ -154,6 +156,42 @@ def get_module_version(module=None):
     return str(version)
 
 
+def deprecated(parameter=None, message=None, stacklevel=2):
+    """
+    ### deprecated
+
+    Decorator to mark a parameter or function as deprecated.
+
+    Parameters:
+        parameter(str): Name of parameter to be deprecated.
+        message(str): Custom message to display in warning message.
+        stacklevel(int): Stack frames level.
+    """
+
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if parameter and parameter in kwargs:
+                warnings.warn(
+                    message
+                    or f"Parameter '{parameter}' is deprecated and will be removed in future versions.",
+                    DeprecationWarning,
+                    stacklevel=stacklevel,
+                )
+            else:
+                warnings.warn(
+                    message
+                    or f"Function '{func.__name__}' is deprecated and will be removed in future versions.",
+                    DeprecationWarning,
+                    stacklevel=stacklevel,
+                )
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
 def import_dependency_safe(
     name,
     error="raise",
@@ -209,14 +247,17 @@ def import_dependency_safe(
     # try importing dependency
     try:
         module = importlib.import_module(name)
-        if sub_class:
-            module = getattr(module, sub_class)
-    except Exception:
-        # handle errors.
+        module = getattr(module, sub_class) if sub_class else module
+    except Exception as e:
         if error == "raise":
-            raise ImportError(msg) from None
+            if isinstance(e, ModuleNotFoundError):
+                # raise message
+                raise ModuleNotFoundError(msg) from None
+            else:
+                # raise error+message
+                raise ImportError(msg) from e
         elif error == "log":
-            logger.error(msg)
+            logger.error(msg, exc_info=sys.exc_info())
             return None
         else:
             return None
@@ -501,7 +542,8 @@ def get_supported_demuxers(path):
     """
     demuxers = check_output([path, "-hide_banner", "-demuxers"])
     splitted = [x.decode("utf-8").strip() for x in demuxers.split(b"\n")]
-    supported_demuxers = splitted[splitted.index("--") + 1 : len(splitted) - 1]
+    split_index = [idx for idx, s in enumerate(splitted) if "--" in s][0]
+    supported_demuxers = splitted[split_index + 1 : len(splitted) - 1]
     # compile regex
     finder = re.compile(r"\s\s[a-z0-9_,-]+\s+")
     # find all outputs
@@ -561,8 +603,11 @@ def is_valid_url(path, url=None, logging=False):
     protocols = check_output([path, "-hide_banner", "-protocols"])
     splitted = [x.decode("utf-8").strip() for x in protocols.split(b"\n")]
     supported_protocols = splitted[splitted.index("Output:") + 1 : len(splitted) - 1]
-    # rtsp is a demuxer somehow
-    supported_protocols += ["rtsp"] if "rtsp" in get_supported_demuxers(path) else []
+    # RTSP is a demuxer somehow
+    # support both RTSP and RTSPS(over SSL)
+    supported_protocols += (
+        ["rtsp", "rtsps"] if "rtsp" in get_supported_demuxers(path) else []
+    )
     # Test and return result whether scheme is supported
     if extracted_scheme_url and extracted_scheme_url in supported_protocols:
         logging and logger.debug(
@@ -668,12 +713,10 @@ def extract_time(value):
         return 0
     else:
         stripped_data = value.strip()
-        t_duration = re.findall(
-            r"(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)", stripped_data
-        )
+        t_duration = re.findall(r"\d{2}:\d{2}:\d{2}(?:\.\d{2})?", stripped_data)
         return (
             sum(
-                int(x) * 60**i
+                float(x) * 60**i
                 for i, x in enumerate(reversed(t_duration[0].split(":")))
             )
             if t_duration
@@ -796,10 +839,7 @@ def delete_file_safe(file_path):
     """
     try:
         dfile = Path(file_path)
-        if sys.version_info >= (3, 8, 0):
-            dfile.unlink(missing_ok=True)
-        else:
-            dfile.exists() and dfile.unlink()
+        dfile.unlink(missing_ok=True)
     except Exception as e:
         logger.exception(str(e))
 
@@ -875,9 +915,8 @@ def capPropId(property, logging=True):
     try:
         integer_value = getattr(cv2, property)
     except Exception as e:
-        if logging:
-            logger.exception(str(e))
-            logger.critical("`{}` is not a valid OpenCV property!".format(property))
+        logging and logger.exception(str(e))
+        logger.critical("`{}` is not a valid OpenCV property!".format(property))
         return None
     return integer_value
 
@@ -1164,18 +1203,15 @@ def validate_ffmpeg(path, logging=False):
         version = check_output([path, "-version"])
         firstline = version.split(b"\n")[0]
         version = firstline.split(b" ")[2].strip()
-        if logging:  # log if test are passed
-            logger.debug("FFmpeg validity Test Passed!")
-            logger.debug(
-                "Found valid FFmpeg Version: `{}` installed on this system".format(
-                    version
-                )
-            )
+        # log if test are passed
+        logging and logger.info("FFmpeg validity Test Passed!")
+        logging and logger.debug(
+            "Found valid FFmpeg Version: `{}` installed on this system".format(version)
+        )
     except Exception as e:
         # log if test are failed
-        if logging:
-            logger.exception(str(e))
-            logger.warning("FFmpeg validity Test Failed!")
+        logging and logger.exception(str(e))
+        logger.error("FFmpeg validity Test Failed!")
         return False
     return True
 

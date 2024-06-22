@@ -20,9 +20,7 @@ limitations under the License.
 
 # General FAQs
 
-
-&nbsp;
-
+&thinsp;
 
 ## "I'm new to Python Programming or its usage in OpenCV Library", How to use vidgear in my projects?
 
@@ -55,11 +53,11 @@ Once done, visit [Switching from OpenCV ➶](../../switch_from_cv/) to easily re
 
 ## How to log to a file in VidGear?
 
-**Answer:** VidGear provides exclusive **`VIDGEAR_LOGFILE`** environment variable to enable logging to a file while logging is enabled _(i.e. `logging=True`)_ on respective Gear. You just have to set ==directory pathname _(automatically creates `vidgear.log` file)_== or a ==log file pathname== itself as value for this  environment variable. This can be done on various platfroms/OSes as follows:
+**Answer:** VidGear provides exclusive **`VIDGEAR_LOGFILE`** environment variable to enable logging to a file while logging is enabled _(i.e. `logging=True`)_ on respective Gear. You just have to set ==directory pathname _(automatically creates `vidgear.log` file)_== or a ==log file pathname== itself as value for this  environment variable. This can be done on various Operating Systems as follows:
 
 !!! info "Remember enabling this logging to a file will completely disable any output on the terminal." 
 
-=== "Linux OS"
+=== ":material-linux: Linux"
 
 	```sh
 	# path to file
@@ -73,7 +71,7 @@ Once done, visit [Switching from OpenCV ➶](../../switch_from_cv/) to easily re
 	unset VIDGEAR_LOGFILE
 	```
 
-=== "Windows OS (Powershell)"
+=== ":fontawesome-brands-windows: Windows (Powershell)"
 
 	```powershell
 	# path to file
@@ -87,7 +85,7 @@ Once done, visit [Switching from OpenCV ➶](../../switch_from_cv/) to easily re
 	$Env:VIDGEAR_LOGFILE = ""
 	```
 
-=== "OSX/Mac OS"
+=== ":material-apple: MacOS"
 	
 	```sh
 	# path to file

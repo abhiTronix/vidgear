@@ -17,8 +17,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
-# import the necessary packages
 
+# import the necessary packages
 import os
 import cv2
 import queue
@@ -220,6 +220,10 @@ def test_ss_stream(format):
     try:
         stream_params = {
             "-video_source": return_testvideo_path(),
+            "-vcodec": "copy",
+            "-aspect": "4:3",
+            "-vf": "format=yuv420p",
+            "-streams": "invalid",
             "-clear_prev_assets": True,
         }
         if format == "hls":
@@ -235,7 +239,7 @@ def test_ss_stream(format):
             output=assets_file_path, format=format, logging=True, **stream_params
         )
         streamer.transcode_source()
-        streamer.terminate()
+        streamer.close()
         if format == "dash":
             assert check_valid_mpd(assets_file_path), "Test Failed!"
         else:
@@ -257,13 +261,13 @@ def test_ss_livestream(format):
         stream_params = {
             "-video_source": return_testvideo_path(),
             "-livestream": True,
+            "-clear_prev_assets": "invalid",
             "-remove_at_exit": 1,
         }
-        streamer = StreamGear(
+        with StreamGear(
             output=assets_file_path, format=format, logging=True, **stream_params
-        )
-        streamer.transcode_source()
-        streamer.terminate()
+        ) as streamer:
+            streamer.transcode_source()
     except Exception as e:
         pytest.fail(str(e))
 
@@ -297,18 +301,19 @@ def test_rtf_stream(conversion, format):
                     + os.sep
                 }
             )
-        streamer = StreamGear(output=assets_file_path, format=format, **stream_params)
-        while True:
-            frame = stream.read()
-            # check if frame is None
-            if frame is None:
-                break
-            if conversion == "COLOR_BGR2RGBA":
-                streamer.stream(frame, rgb_mode=True)
-            else:
-                streamer.stream(frame)
-        stream.stop()
-        streamer.terminate()
+        with StreamGear(
+            output=assets_file_path, format=format, **stream_params
+        ) as streamer:
+            while True:
+                frame = stream.read()
+                # check if frame is None
+                if frame is None:
+                    break
+                if conversion == "COLOR_BGR2RGBA":
+                    streamer.stream(frame, rgb_mode=True)
+                else:
+                    streamer.stream(frame)
+            stream.stop()
         asset_file = [
             os.path.join(assets_file_path, f)
             for f in os.listdir(assets_file_path)
@@ -337,6 +342,7 @@ def test_rtf_livestream(format):
         stream = CamGear(source=return_testvideo_path(), **options).start()
         stream_params = {
             "-livestream": True,
+            "-enable_force_termination": True,
         }
         streamer = StreamGear(output=assets_file_path, format=format, **stream_params)
         while True:
@@ -367,6 +373,9 @@ def test_input_framerate_rtf(format):
         stream_params = {
             "-clear_prev_assets": True,
             "-input_framerate": test_framerate,
+            "-vcodec": "copy",
+            "-vf": "format=yuv420p",
+            "-aspect": "4:3",
         }
         if format == "hls":
             stream_params.update(
@@ -386,7 +395,7 @@ def test_input_framerate_rtf(format):
                 break
             streamer.stream(frame)
         stream.release()
-        streamer.terminate()
+        streamer.close()
         if format == "dash":
             meta_data = extract_meta_mpd(assets_file_path)
             assert meta_data and len(meta_data) > 0, "Test Failed!"
@@ -416,6 +425,13 @@ def test_input_framerate_rtf(format):
                 "-bpp": 0.2000,
                 "-gop": 125,
                 "-vcodec": "libx265",
+                "-hls_segment_type": "invalid",
+                "-hls_init_time": -223.2,
+                "-hls_flags": 94884,
+                "-hls_list_size": -4.3,
+                "-hls_time": -4758.56,
+                "-remove_at_exit": 4.56,
+                "-livestream": True,
             },
             "hls",
         ),
@@ -427,6 +443,7 @@ def test_input_framerate_rtf(format):
                 "-s:v:0": "unknown",
                 "-b:v:0": "unknown",
                 "-b:a:0": "unknown",
+                "-enable_force_termination": "invalid",
             },
             "hls",
         ),
@@ -435,13 +452,21 @@ def test_input_framerate_rtf(format):
                 "-clear_prev_assets": True,
                 "-bpp": 0.2000,
                 "-gop": 125,
+                "-audio": ["invalid"],
                 "-vcodec": "libx265",
+                "-window_size": -456.4,
+                "-extra_window_size": -354.45,
+                "-remove_at_exit": -34.34,
+                "-seg_duration": -334.23,
+                "-livestream": True,
             },
             "dash",
         ),
         (
             {
                 "-clear_prev_assets": True,
+                "-seg_duration": -346.67,
+                "-audio": "invAlid",
                 "-bpp": "unknown",
                 "-gop": "unknown",
                 "-s:v:0": "unknown",
@@ -480,11 +505,13 @@ def test_params(stream_params, format):
                 break
             streamer.stream(frame)
         stream.release()
-        streamer.terminate()
-        if format == "dash":
-            assert check_valid_mpd(assets_file_path), "Test Failed!"
-        else:
-            assert extract_meta_video(assets_file_path), "Test Failed!"
+        streamer.close()
+        livestream = stream_params.pop("-livestream", False)
+        if not (livestream):
+            if format == "dash":
+                assert check_valid_mpd(assets_file_path), "Test Failed!"
+            else:
+                assert extract_meta_video(assets_file_path), "Test Failed!"
     except Exception as e:
         pytest.fail(str(e))
 
@@ -564,7 +591,7 @@ def test_audio(stream_params, format):
             output=assets_file_path, format=format, logging=True, **stream_params
         )
         streamer.transcode_source()
-        streamer.terminate()
+        streamer.close()
         if format == "dash":
             assert check_valid_mpd(assets_file_path), "Test Failed!"
         else:
@@ -698,7 +725,7 @@ def test_audio(stream_params, format):
 )
 def test_multistreams(format, stream_params):
     """
-    Testing Support for additional Secondary Streams of variable bitrates or spatial resolutions.
+    Testing Support for additional Secondary Streams of variable bitrate or spatial resolutions.
     """
     assets_file_path = os.path.join(
         return_assets_path(False if format == "dash" else True),
@@ -712,7 +739,7 @@ def test_multistreams(format, stream_params):
             output=assets_file_path, format=format, logging=True, **stream_params
         )
         streamer.transcode_source()
-        streamer.terminate()
+        streamer.close()
         if format == "dash":
             metadata = extract_meta_mpd(assets_file_path)
             meta_videos = [x for x in metadata if x["mime_type"].startswith("video")]

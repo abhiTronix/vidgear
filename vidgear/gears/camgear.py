@@ -85,7 +85,7 @@ if not (yt_dlp is None):
                 "format": "best*[vcodec!=none]",
                 "quiet": True,
                 "prefer_insecure": False,
-                "no_warnings": True if logging else False,
+                "no_warnings": False if logging else True,
                 "dump_single_json": True,
                 "extract_flat": True,
                 "skip_download": True,
@@ -232,23 +232,22 @@ class CamGear:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Source Tweak Parameters.
         """
-        # print current version
-        logcurr_vidgear_ver(logging=logging)
-
         # enable logging if specified
-        self.__logging = False
-        if logging:
-            self.__logging = logging
+        self.__logging = logging if isinstance(logging, bool) else False
+
+        # print current version
+        logcurr_vidgear_ver(logging=self.__logging)
+
         # initialize global
         self.ytv_metadata = {}
 
         # check if Stream-Mode is ON (True)
         if stream_mode:
-            # check GStreamer backend support
-            gst_support = check_gstreamer_support(logging=logging)
+            # TODO: check GStreamer backend support
+            # gst_support = check_gstreamer_support(logging=self.__logging)
             # handle special Stream Mode parameters
             stream_resolution = get_supported_resolution(
-                options.pop("STREAM_RESOLUTION", "best"), logging=logging
+                options.pop("STREAM_RESOLUTION", "best"), logging=self.__logging
             )
             # handle Stream-Mode
             if not (yt_dlp is None):
@@ -267,17 +266,16 @@ class CamGear:
                     )
                     # initialize YT_backend
                     ytbackend = YT_backend(
-                        source_url=source, logging=logging, **yt_stream_params
+                        source_url=source, logging=self.__logging, **yt_stream_params
                     )
                     if ytbackend:
                         # save video metadata
                         self.ytv_metadata = ytbackend.meta_data
                         # handle live-streams
-                        if ytbackend.is_livestream:
-                            # Throw warning for livestreams
-                            logger.warning(
-                                "Livestream URL detected. It is advised to use GStreamer backend(`cv2.CAP_GSTREAMER`) with it."
-                            )
+                        # Throw warning for livestreams
+                        ytbackend.is_livestream and logger.warning(
+                            "Livestream URL detected. It is strongly recommended to use the GStreamer backend (`backend=cv2.CAP_GSTREAMER`) with these URLs."
+                        )
                         # check whether stream-resolution was specified and available
                         if not (stream_resolution in ytbackend.streams.keys()):
                             logger.warning(
@@ -288,12 +286,11 @@ class CamGear:
                             # revert to best
                             stream_resolution = "best"
                         else:
-                            if self.__logging:
-                                logger.debug(
-                                    "Using `{}` resolution for streaming.".format(
-                                        stream_resolution
-                                    )
+                            self.__logging and logger.debug(
+                                "Using `{}` resolution for streaming.".format(
+                                    stream_resolution
                                 )
+                            )
                         # extract stream URL as source using stream-resolution
                         source = ytbackend.streams[stream_resolution]
                         # log progress
@@ -312,9 +309,6 @@ class CamGear:
             else:
                 # raise import errors
                 import_dependency_safe("yt_dlp")
-
-        # youtube mode variable initialization
-        self.__youtube_mode = stream_mode
 
         # assigns special parameter to global variable and clear
         # Threaded Queue Mode
@@ -348,10 +342,9 @@ class CamGear:
                 "Threaded Queue Mode is disabled for the current video source!"
             )
 
-        if self.__thread_timeout:
-            logger.debug(
-                "Setting Video-Thread Timeout to {}s.".format(self.__thread_timeout)
-            )
+        self.__thread_timeout and logger.info(
+            "Setting Video-Thread Timeout to {}s.".format(self.__thread_timeout)
+        )
 
         # stream variable initialization
         self.stream = None
@@ -364,7 +357,7 @@ class CamGear:
             else:
                 # Two parameters are available since OpenCV 4+ (master branch)
                 self.stream = cv2.VideoCapture(source, backend)
-            logger.debug("Setting backend `{}` for this source.".format(backend))
+            logger.info("Setting backend `{}` for this source.".format(backend))
         else:
             # initialize the camera stream
             self.stream = cv2.VideoCapture(source)
@@ -376,18 +369,16 @@ class CamGear:
         options = {str(k).strip(): v for k, v in options.items()}
         for key, value in options.items():
             property = capPropId(key)
-            if not (property is None):
-                self.stream.set(property, value)
+            not (property is None) and self.stream.set(property, value)
 
         # handle colorspace value
         if not (colorspace is None):
             self.color_space = capPropId(colorspace.strip())
-            if self.__logging and not (self.color_space is None):
-                logger.debug(
-                    "Enabling `{}` colorspace for this video stream!".format(
-                        colorspace.strip()
-                    )
+            self.__logging and not (self.color_space is None) and logger.debug(
+                "Enabling `{}` colorspace for this video stream!".format(
+                    colorspace.strip()
                 )
+            )
 
         # initialize and assign frame-rate variable
         self.framerate = 0.0
@@ -396,8 +387,7 @@ class CamGear:
             self.framerate = _fps
 
         # applying time delay to warm-up webcam only if specified
-        if time_delay and isinstance(time_delay, (int, float)):
-            time.sleep(time_delay)
+        time_delay and isinstance(time_delay, (int, float)) and time.sleep(time_delay)
 
         # frame variable initialization
         (grabbed, self.frame) = self.stream.read()
@@ -408,9 +398,8 @@ class CamGear:
             if not (self.color_space is None):
                 self.frame = cv2.cvtColor(self.frame, self.color_space)
 
-            if self.__threaded_queue_mode:
-                # initialize and append to queue
-                self.__queue.put(self.frame)
+            # initialize and append to queue
+            self.__threaded_queue_mode and self.__queue.put(self.frame)
         else:
             raise RuntimeError(
                 "[CamGear:ERROR] :: Source is invalid, CamGear failed to initialize stream on this source!"
@@ -470,32 +459,22 @@ class CamGear:
 
             # apply colorspace to frames if valid
             if not (self.color_space is None):
+                # apply colorspace to frames
                 color_frame = None
                 try:
-                    if isinstance(self.color_space, int):
-                        color_frame = cv2.cvtColor(frame, self.color_space)
-                    else:
-                        raise ValueError(
-                            "Global color_space parameter value `{}` is not a valid!".format(
-                                self.color_space
-                            )
-                        )
+                    color_frame = cv2.cvtColor(frame, self.color_space)
                 except Exception as e:
                     # Catch if any error occurred
+                    color_frame = None
                     self.color_space = None
-                    if self.__logging:
-                        logger.exception(str(e))
-                        logger.warning("Input colorspace is not a valid colorspace!")
-                if not (color_frame is None):
-                    self.frame = color_frame
-                else:
-                    self.frame = frame
+                    self.__logging and logger.exception(str(e))
+                    logger.warning("Assigned colorspace value is invalid. Discarding!")
+                self.frame = color_frame if not (color_frame is None) else frame
             else:
                 self.frame = frame
 
             # append to queue
-            if self.__threaded_queue_mode:
-                self.__queue.put(self.frame)
+            self.__threaded_queue_mode and self.__queue.put(self.frame)
 
         # signal queue we're done
         self.__threaded_queue_mode and self.__queue.put(None)
@@ -528,7 +507,7 @@ class CamGear:
 
     def stop(self):
         """
-        Safely terminates the thread, and release the VideoStream resources.
+        Safely terminates the thread, and release the multi-threaded resources.
         """
         self.__logging and logger.debug("Terminating processes.")
         # terminate Threaded queue mode separately

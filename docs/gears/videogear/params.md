@@ -190,7 +190,7 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 
 !!! warning "VideoGear automatically enforce GStreamer backend _(backend=`cv2.CAP_GSTREAMER`)_ for YouTube-livestreams!"
 
-!!! error "VideoGear will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
+!!! failure "VideoGear will exit with `RuntimeError` for YouTube livestreams, if OpenCV is not compiled with GStreamer(`>=v1.0.0`) support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
 
 
 **Data-Type:** Boolean
@@ -260,9 +260,7 @@ VideoGear(source=0, **options)
 
 ### **`camera_num`** 
 
-This parameter selects the camera module index which will be used as source, if you're having multiple camera modules connected. Its value can only be greater than zero, otherwise, it will throw `ValueError` for any negative value.
-
-!!! warning "This parameter shouldn't be altered, until unless you using [Raspberry Pi 3/3+ Compute Module IO Board](https://www.raspberrypi.org/documentation/hardware/computemodule/cmio-camera.md).""
+This parameter selects the camera index to be used as the source, allowing you to drive these multiple cameras simultaneously from within a single Python session. Its value can only be zero or greater, otherwise, VideoGear API will throw `ValueError` for any negative value.
 
 **Data-Type:** Integer
 
@@ -271,18 +269,23 @@ This parameter selects the camera module index which will be used as source, if 
 **Usage:**
 
 ```python
-VideoGear(enablePiCamera=True, camera_num=0)
+# select Camera Module at index `1`
+VideoGear(enablePiCamera=True, camera_num=1)
 ```
+
+!!! example "The complete usage example demonstrating the usage of the `camera_num` parameter is available [here ➶](../../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)."
+
   
 &nbsp;
 
 
 ### **`resolution`** 
 
-This parameter sets the resolution (i.e. `(width,height)`) of the source. 
+This parameter controls the **resolution** - a tuple _(i.e. `(width,height)`)_ of two values giving the width and height of the output frames. 
 
-!!! info "For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.resolution)"
+!!! warning "Make sure both width and height values should be at least `64`."
 
+!!! danger "When using the Picamera2 backend, the `resolution` parameter will be **OVERRIDDEN**, if the user explicitly defines the `output_size` property of the [`sensor`](#a-configurational-camera-parameters) configurational parameter."
 
 **Data-Type:** Tuple
 
@@ -298,11 +301,8 @@ VideoGear(enablePiCamera=True, resolution=(1280,720)) # sets 1280x720 resolution
 
 ### **`framerate`** 
 
-This parameter sets the framerate of the source.
- 
 
-!!! info "For more information read [here ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html#picamera.PiCamera.framerate)"
-
+This parameter controls the framerate of the source.
 
 **Data-Type:** integer/float
 
@@ -319,7 +319,18 @@ VideoGear(enablePiCamera=True, framerate=60) # sets 60fps framerate
 
 ### **`options`** 
 
-This parameter provides the ability to alter various **Tweak Parameters** `like brightness, saturation, senor_mode, resolution, etc.` available within [**Picamera library**](https://picamera.readthedocs.io/en/release-1.13/api_camera.html).
+This dictionary parameter in the internal PiGear API backend allows you to control various camera settings for both the `picamera2` and legacy `picamera` backends and some internal API tasks. These settings include:
+
+#### A. Configurational Camera Parameters
+- [x] These parameters are provided by the underlying backend library _(depending upon backend in use)_, and must be applied to the camera system before the camera can be started.
+- [x] **These parameter include:** _Brightness, Contrast, Saturation, Exposure, Colour Temperature, Colour Gains, etc._ 
+- [x] All supported parameters are listed in this [Usage example ➶](../../pigear/usage/#using-pigear-with-variable-camera-properties)
+
+
+#### B. User-defined Parameters
+- [x] These user-defined parameters control specific internal behaviors of the API and perform certain tasks on the camera objects.
+- [x] All supported User-defined Parameters are listed [here ➶](../../pigear/params/#b-user-defined-parameters)
+
 
 **Data-Type:** Dictionary
 
@@ -327,32 +338,41 @@ This parameter provides the ability to alter various **Tweak Parameters** `like 
 
 **Usage:**
 
-!!! tip "All supported parameters are listed in [PiCamera Docs](https://picamera.readthedocs.io/en/release-1.13/api_camera.html)"
+!!! example "The complete usage example demonstrating the usage of the `options` parameter is available [here ➶](../usage/#using-pigear-with-variable-camera-properties)."
 
-The desired parameters can be passed to VideoGear API by formatting them as this parameter's attributes, as follows:
+You can format these user-defined and configurational parameters as attributes of this `options` dictionary parameter as follows:
 
-```python
-# formatting parameters as dictionary attributes
-options = {
-    "hflip": True,
-    "exposure_mode": "auto",
-    "iso": 800,
-    "exposure_compensation": 15,
-    "awb_mode": "horizon",
-    "sensor_mode": 0,
-}
-# assigning it
-VideoGear(enablePiCamera=True, logging=True, **options)
-```
-
-**User-specific attributes:**
-
-Additionally, `options` parameter also support some User-specific attributes, which are as follows:
-
-* **`HWFAILURE_TIMEOUT`** (float): PiGear contains ==Threaded Internal Timer== - that silently keeps active track of any frozen-threads/hardware-failures and exit safely, if any does occur at a timeout value. This parameter can be used to control that timeout value i.e. the maximum waiting time _(in seconds)_ after which PiGear exits with a `SystemError` to save resources. Its value can only be between `1.0` _(min)_ and `10.0` _(max)_ and its default value is `2.0`. Its usage is as follows: 
+=== "New Picamera2 backend"
 
     ```python
-    options = {"HWFAILURE_TIMEOUT": 2.5}  # sets timeout to 2.5 seconds
+    # formulate various Picamera2 API parameters
+    options = {
+        "queue": True,
+        "buffer_count": 4,
+        "controls": {"Brightness": 0.5, "ExposureValue": 2.0},
+        "exposure_compensation": 15,
+        "sensor": {"output_size": (480, 320)},  # !!! will override `resolution` !!!
+    }
+
+    # open pi video stream with defined parameters
+    stream = VideoGear(enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options).start()
+    ```
+
+=== "Legacy Picamera backend"
+
+    ```python
+    # formulate various Picamera API parameters
+    options = {
+        "hflip": True,
+        "exposure_mode": "auto",
+        "iso": 800,
+        "exposure_compensation": 15,
+        "awb_mode": "horizon",
+        "sensor_mode": 0,
+    }
+
+    # open pi video stream with defined parameters
+    stream = VideoGear(enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options).start()
     ```
 
 &nbsp;

@@ -61,7 +61,7 @@ Let's compare a bare-minimum python code for extracting frames out of any Webcam
 
 === "OpenCV VideoCapture Class"
 
-    ```python hl_lines="5 11 14-15 33"
+    ```python hl_lines="5 11 14 33"
     # import required libraries
     import cv2
 
@@ -99,7 +99,7 @@ Let's compare a bare-minimum python code for extracting frames out of any Webcam
     
 === "VidGear's CamGear API"
 
-    ```python hl_lines="6 12 15-16 34"
+    ```python hl_lines="6 12 15 34"
     # import required libraries
     from vidgear.gears import CamGear
     import cv2

@@ -18,24 +18,27 @@ limitations under the License.
 ===============================================
 -->
 
-# StreamGear API Usage Examples: Real-time Frames Mode
+# StreamGear API Usage Examples: Real-time Frames Mode :material-camera-burst:
 
 
-!!! alert "Real-time Frames Mode is NOT Live-Streaming."
+!!! alert "Real-time Frames Mode itself is NOT Live-Streaming :material-video-wireless-outline:"
 
-    Rather you can easily enable live-streaming in Real-time Frames Mode by using StreamGear API's exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. Checkout following [usage example](#bare-minimum-usage-with-live-streaming).
+    To enable live-streaming in Real-time Frames Mode, use the exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter in the StreamGear API. Checkout following [usage example ➶](#bare-minimum-usage-with-live-streaming) for more information.
 
-!!! warning "Important Information"
+!!! warning "Important Information :fontawesome-solid-person-military-pointing:"
     
-    * StreamGear **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../../ffmpeg_install/) for its installation.
+    - [x] StreamGear API **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../../ffmpeg_install/) for its installation. API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system.
+    - [x] In this mode, ==API by default generates a primary stream _(at the index `0`)_ of same resolution as the input frames and at default framerate[^1].==
+    - [x] In this mode, API **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter.
+    - [x] In this mode, Stream copy (`-vcodec copy`) encoder is unsupported as it requires re-encoding of incoming frames.
+    - [x] Always use `close()` function at the very end of the main code.
 
-    * StreamGear API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system.
+??? danger "DEPRECATION NOTICES for `v0.3.3` and above"
+    
+    - [ ] The `terminate()` method in StreamGear is now deprecated and will be removed in a future release. Developers should use the new [`close()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.close) method instead, as it offers a more descriptive name, similar to the WriteGear API, for safely terminating StreamGear processes.
+    - [ ] The `rgb_mode` parameter in [`stream()`](../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) method, which earlier used to support RGB frames in Real-time Frames Mode is now deprecated, and will be removed in a future version. Only BGR format frames will be supported going forward. Please update your code to handle BGR format frames.
 
-    * By default, ==StreamGear generates a primary stream of same resolution and framerate[^1] as the input video  _(at the index `0`)_.==
-
-    * Always use `terminate()` function at the very end of the main code.
-
-!!! experiment "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
+!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
 
 
 &thinsp;
@@ -47,10 +50,11 @@ Following is the bare-minimum code you need to get started with StreamGear API i
 
 !!! note "We are using [CamGear](../../../camgear/overview/) in this Bare-Minimum example, but any [VideoCapture Gear](../../../#a-videocapture-gears) will work in the similar manner."
 
+!!! danger "In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
 
 === "DASH"
 
-    ```python
+    ```python linenums="1"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -94,12 +98,12 @@ Following is the bare-minimum code you need to get started with StreamGear API i
     stream.stop()
 
     # safely close streamer
-    streamer.terminate()
+    streamer.close()
     ```
 
 === "HLS"
 
-    ```python
+    ```python linenums="1"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -143,257 +147,24 @@ Following is the bare-minimum code you need to get started with StreamGear API i
     stream.stop()
 
     # safely close streamer
-    streamer.terminate()
+    streamer.close()
     ```
 
 !!! success "After running this bare-minimum example, StreamGear will produce a Manifest file _(`dash.mpd`)_ with streamable chunks that contains information about a Primary Stream of same resolution and framerate[^1] as input _(without any audio)_."
-
-
-&thinsp;
-
-## Bare-Minimum Usage with Live-Streaming
-
-You can easily activate ==Low-latency Livestreaming in Real-time Frames Mode==, where chunks will contain information for few new frames only and forgets all previous ones), using exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter as follows:
-
-!!! note "In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
-
-=== "DASH"
-
-    !!! tip "Chunk size in DASH"
-        Use `-window_size` & `-extra_window_size` FFmpeg parameters for controlling number of frames to be kept in Chunks in DASH stream. Less these value, less will be latency.
-
-    !!! alert "After every few chunks _(equal to the sum of `-window_size` & `-extra_window_size` values)_, all chunks will be overwritten in Live-Streaming. Thereby, since newer chunks in manifest will contain NO information of any older ones, and therefore resultant DASH stream will play only the most recent frames."
-
-    ```python hl_lines="11"
-    # import required libraries
-    from vidgear.gears import CamGear
-    from vidgear.gears import StreamGear
-    import cv2
-
-    # open any valid video stream(from web-camera attached at index `0`)
-    stream = CamGear(source=0).start()
-
-    # enable livestreaming and retrieve framerate from CamGear Stream and
-    # pass it as `-input_framerate` parameter for controlled framerate
-    stream_params = {"-input_framerate": stream.framerate, "-livestream": True}
-
-    # describe a suitable manifest-file location/name
-    streamer = StreamGear(output="dash_out.mpd", **stream_params)
-
-    # loop over
-    while True:
-
-        # read frames from stream
-        frame = stream.read()
-
-        # check for frame if Nonetype
-        if frame is None:
-            break
-
-        # {do something with the frame here}
-
-        # send frame to streamer
-        streamer.stream(frame)
-
-        # Show output window
-        cv2.imshow("Output Frame", frame)
-
-        # check for 'q' key if pressed
-        key = cv2.waitKey(1) & 0xFF
-        if key == ord("q"):
-            break
-
-    # close output window
-    cv2.destroyAllWindows()
-
-    # safely close video stream
-    stream.stop()
-
-    # safely close streamer
-    streamer.terminate()
-    ```
-
-=== "HLS"
-
-    !!! tip "Chunk size in HLS"
-    
-        Use `-hls_init_time` & `-hls_time` FFmpeg parameters for controlling number of frames to be kept in Chunks in HLS stream. Less these value, less will be latency.
-
-    !!! alert "After every few chunks _(equal to the sum of `-hls_init_time` & `-hls_time` values)_, all chunks will be overwritten in Live-Streaming. Thereby, since newer chunks in playlist will contain NO information of any older ones, and therefore resultant HLS stream will play only the most recent frames."
-
-    ```python hl_lines="11"
-    # import required libraries
-    from vidgear.gears import CamGear
-    from vidgear.gears import StreamGear
-    import cv2
-
-    # open any valid video stream(from web-camera attached at index `0`)
-    stream = CamGear(source=0).start()
-
-    # enable livestreaming and retrieve framerate from CamGear Stream and
-    # pass it as `-input_framerate` parameter for controlled framerate
-    stream_params = {"-input_framerate": stream.framerate, "-livestream": True}
-
-    # describe a suitable manifest-file location/name
-    streamer = StreamGear(output="hls_out.m3u8", format = "hls", **stream_params)
-
-    # loop over
-    while True:
-
-        # read frames from stream
-        frame = stream.read()
-
-        # check for frame if Nonetype
-        if frame is None:
-            break
-
-        # {do something with the frame here}
-
-        # send frame to streamer
-        streamer.stream(frame)
-
-        # Show output window
-        cv2.imshow("Output Frame", frame)
-
-        # check for 'q' key if pressed
-        key = cv2.waitKey(1) & 0xFF
-        if key == ord("q"):
-            break
-
-    # close output window
-    cv2.destroyAllWindows()
-
-    # safely close video stream
-    stream.stop()
-
-    # safely close streamer
-    streamer.terminate()
-    ```
-
-
-&thinsp;
-
-## Bare-Minimum Usage with RGB Mode
-
-In Real-time Frames Mode, StreamGear API provide [`rgb_mode`](../../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) boolean parameter with its `stream()` function, which if enabled _(i.e. `rgb_mode=True`)_, specifies that incoming frames are of RGB format _(instead of default BGR format)_, thereby also known as ==RGB Mode==.
-
-The complete usage example is as follows:
-
-=== "DASH"
-
-    ```python hl_lines="28"
-    # import required libraries
-    from vidgear.gears import CamGear
-    from vidgear.gears import StreamGear
-    import cv2
-
-    # open any valid video stream(for e.g `foo1.mp4` file)
-    stream = CamGear(source='foo1.mp4').start() 
-
-    # describe a suitable manifest-file location/name
-    streamer = StreamGear(output="dash_out.mpd")
-
-    # loop over
-    while True:
-
-        # read frames from stream
-        frame = stream.read()
-
-        # check for frame if Nonetype
-        if frame is None:
-            break
-
-
-        # {simulating RGB frame for this example}
-        frame_rgb = frame[:,:,::-1]
-
-
-        # send frame to streamer
-        streamer.stream(frame_rgb, rgb_mode = True) #activate RGB Mode
-
-        # Show output window
-        cv2.imshow("Output Frame", frame)
-
-        # check for 'q' key if pressed
-        key = cv2.waitKey(1) & 0xFF
-        if key == ord("q"):
-            break
-
-    # close output window
-    cv2.destroyAllWindows()
-
-    # safely close video stream
-    stream.stop()
-
-    # safely close streamer
-    streamer.terminate()
-    ```
-
-=== "HLS"
-
-    ```python hl_lines="28"
-    # import required libraries
-    from vidgear.gears import CamGear
-    from vidgear.gears import StreamGear
-    import cv2
-
-    # open any valid video stream(for e.g `foo1.mp4` file)
-    stream = CamGear(source='foo1.mp4').start() 
-
-    # describe a suitable manifest-file location/name
-    streamer = StreamGear(output="hls_out.m3u8", format = "hls")
-
-    # loop over
-    while True:
-
-        # read frames from stream
-        frame = stream.read()
-
-        # check for frame if Nonetype
-        if frame is None:
-            break
-
-
-        # {simulating RGB frame for this example}
-        frame_rgb = frame[:,:,::-1]
-
-
-        # send frame to streamer
-        streamer.stream(frame_rgb, rgb_mode = True) #activate RGB Mode
-
-        # Show output window
-        cv2.imshow("Output Frame", frame)
-
-        # check for 'q' key if pressed
-        key = cv2.waitKey(1) & 0xFF
-        if key == ord("q"):
-            break
-
-    # close output window
-    cv2.destroyAllWindows()
-
-    # safely close video stream
-    stream.stop()
-
-    # safely close streamer
-    streamer.terminate()
-    ```
-
 
 &thinsp;
 
 ## Bare-Minimum Usage with controlled Input-framerate
 
-In Real-time Frames Mode, StreamGear API provides exclusive [`-input_framerate`](../../params/#a-exclusive-parameters)  attribute for its `stream_params` dictionary parameter, that allow us to set the assumed constant framerate for incoming frames. 
+> In Real-time Frames Mode, StreamGear API provides the exclusive [`-input_framerate`](../../params/#a-exclusive-parameters) attribute for the `stream_params` dictionary parameter, which allows you to set the assumed constant framerate for incoming frames.
 
-In this example, we will retrieve framerate from webcam video-stream, and set it as value for `-input_framerate` attribute in StreamGear:
+In this example, we will retrieve the framerate from a webcam video stream and set it as the value for the `-input_framerate` attribute in StreamGear.
 
-!!! danger "Remember, Input framerate default to `25.0` fps if [`-input_framerate`](../../params/#a-exclusive-parameters) attribute value not defined in Real-time Frames mode."
-
+!!! danger "Remember, the input framerate defaults to 25.0 fps if the `-input_framerate` attribute value is not defined in Real-time Frames mode."
 
 === "DASH"
 
-    ```python hl_lines="10"
+    ```python linenums="1" hl_lines="10"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -418,9 +189,7 @@ In this example, we will retrieve framerate from webcam video-stream, and set it
         if frame is None:
             break
 
-
         # {do something with the frame here}
-
 
         # send frame to streamer
         streamer.stream(frame)
@@ -440,12 +209,12 @@ In this example, we will retrieve framerate from webcam video-stream, and set it
     stream.stop()
 
     # safely close streamer
-    streamer.terminate()
+    streamer.close()
     ```
 
 === "HLS"
 
-    ```python hl_lines="10"
+    ```python linenums="1" hl_lines="10"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -470,9 +239,7 @@ In this example, we will retrieve framerate from webcam video-stream, and set it
         if frame is None:
             break
 
-
         # {do something with the frame here}
-
 
         # send frame to streamer
         streamer.stream(frame)
@@ -492,22 +259,144 @@ In this example, we will retrieve framerate from webcam video-stream, and set it
     stream.stop()
 
     # safely close streamer
-    streamer.terminate()
+    streamer.close()
     ```
+
+&thinsp;
+
+## Bare-Minimum Usage with Live-Streaming
+
+You can easily activate **Low-latency Live-Streaming :material-video-wireless-outline:** in Real-time Frames Mode, where chunks will contain information for new frames only and forget previous ones, using the exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter.
+The complete example is as follows:
+
+!!! danger "In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
+
+=== "DASH"
+
+    !!! tip "Controlling chunk size in DASH"
+        To control the number of frames kept in Chunks for the DASH stream _(controlling latency)_, you can use the `-window_size` and `-extra_window_size` FFmpeg parameters. Lower values for these parameters will result in lower latency.
+
+    !!! alert "After every few chunks _(equal to the sum of `-window_size` and `-extra_window_size` values)_, all chunks will be overwritten while Live-Streaming. This means that newer chunks in the manifest will contain NO information from older chunks, and the resulting DASH stream will only play the most recent frames, reducing latency."
+
+    ```python linenums="1" hl_lines="11"
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import StreamGear
+    import cv2
+
+    # open any valid video stream(from web-camera attached at index `0`)
+    stream = CamGear(source=0).start()
+
+    # enable livestreaming and retrieve framerate from CamGear Stream and
+    # pass it as `-input_framerate` parameter for controlled framerate
+    stream_params = {"-input_framerate": stream.framerate, "-livestream": True}
+
+    # describe a suitable manifest-file location/name
+    streamer = StreamGear(output="dash_out.mpd", **stream_params)
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # send frame to streamer
+        streamer.stream(frame)
+
+        # Show output window
+        cv2.imshow("Output Frame", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close streamer
+    streamer.close()
+    ```
+
+=== "HLS"
+
+    !!! tip "Controlling chunk size in HLS"
+        To control the number of frames kept in Chunks for the HLS stream _(controlling latency)_, you can use the `-hls_init_time` & `-hls_time` FFmpeg parameters. Lower values for these parameters will result in lower latency.
+
+    !!! alert "After every few chunks _(equal to the sum of `-hls_init_time` & `-hls_time` values)_, all chunks will be overwritten while Live-Streaming. This means that newer chunks in the master playlist will contain NO information from older chunks, and the resulting HLS stream will only play the most recent frames, reducing latency."
+
+    ```python linenums="1" hl_lines="11"
+    # import required libraries
+    from vidgear.gears import CamGear
+    from vidgear.gears import StreamGear
+    import cv2
+
+    # open any valid video stream(from web-camera attached at index `0`)
+    stream = CamGear(source=0).start()
+
+    # enable livestreaming and retrieve framerate from CamGear Stream and
+    # pass it as `-input_framerate` parameter for controlled framerate
+    stream_params = {"-input_framerate": stream.framerate, "-livestream": True}
+
+    # describe a suitable manifest-file location/name
+    streamer = StreamGear(output="hls_out.m3u8", format = "hls", **stream_params)
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # send frame to streamer
+        streamer.stream(frame)
+
+        # Show output window
+        cv2.imshow("Output Frame", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close streamer
+    streamer.close()
+    ```
+
 
 &thinsp;
 
 ## Bare-Minimum Usage with OpenCV
 
-You can easily use StreamGear API directly with any other Video Processing library(_For e.g. [OpenCV](https://github.com/opencv/opencv) itself_) in Real-time Frames Mode. 
+> You can easily use the StreamGear API directly with any other Video Processing library _(for e.g. [OpenCV](https://github.com/opencv/opencv))_ in Real-time Frames Mode.
 
-The complete usage example is as follows:
+The following is a complete StreamGear API usage example with OpenCV:
 
-!!! tip "This just a bare-minimum example with OpenCV, but any other Real-time Frames Mode feature/example will work in the similar manner."
+!!! note "This is a bare-minimum example with OpenCV, but any other Real-time Frames Mode feature or example will work in a similar manner."
 
 === "DASH"
 
-    ```python
+    ```python linenums="1"
     # import required libraries
     from vidgear.gears import StreamGear
     import cv2
@@ -532,7 +421,6 @@ The complete usage example is as follows:
         # lets convert frame to gray for this example
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-
         # send frame to streamer
         streamer.stream(gray)
 
@@ -551,12 +439,12 @@ The complete usage example is as follows:
     stream.release()
 
     # safely close streamer
-    streamer.terminate()
+    streamer.close()
     ```
 
 === "HLS"
 
-    ```python
+    ```python linenums="1"
     # import required libraries
     from vidgear.gears import StreamGear
     import cv2
@@ -581,7 +469,6 @@ The complete usage example is as follows:
         # lets convert frame to gray for this example
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-
         # send frame to streamer
         streamer.stream(gray)
 
@@ -600,33 +487,35 @@ The complete usage example is as follows:
     stream.release()
 
     # safely close streamer
-    streamer.terminate()
+    streamer.close()
     ```
-
 
 &thinsp;
 
 ## Usage with Additional Streams
 
-Similar to Single-Source Mode, you can easily generate any number of additional Secondary Streams of variable bitrates or spatial resolutions, using exclusive [`-streams`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. You just need to add each resolution and bitrate/framerate as list of dictionaries to this attribute, and rest is done automatically.
+> Similar to Single-Source Mode, in addition to the Primary Stream, you can easily generate any number of additional Secondary Streams with variable bitrate or spatial resolution, using the exclusive [`-streams`](../../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter.
+
+To generate Secondary Streams, add each desired resolution and bitrate/framerate as a list of dictionaries to the `-streams` attribute. StreamGear will handle the rest automatically. The complete example is as follows:
 
 !!! info "A more detailed information on `-streams` attribute can be found [here ➶](../../params/#a-exclusive-parameters)" 
 
-The complete example is as follows:
+!!! alert "In this mode, StreamGear DOES NOT automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
 
-??? danger "Important `-streams` attribute Information"
-    * On top of these additional streams, StreamGear by default, generates a primary stream of same resolution and framerate[^1] as the input, at the index `0`.
-    * :warning: Make sure your System/Machine/Server/Network is able to handle these additional streams, discretion is advised! 
-    * You **MUST** need to define `-resolution` value for your stream, otherwise stream will be discarded!
-    * You only need either of `-video_bitrate` or `-framerate` for defining a valid stream. Since with `-framerate` value defined, video-bitrate is calculated automatically.
-    * If you define both `-video_bitrate` and `-framerate` values at the same time, StreamGear will discard the `-framerate` value automatically.
+???+ danger "Important Information about `-streams` attribute :material-file-document-alert-outline:"
 
-!!! fail "Always use `-stream` attribute to define additional streams safely, any duplicate or incorrect definition can break things!"
+    * In addition to the user-defined Secondary Streams, StreamGear automatically generates a Primary Stream _(at index `0`)_ with the same resolution as the input frames and at default framerate[^1].
+    * :warning: Ensure that your system, machine, server, or network can handle the additional resource requirements of the Secondary Streams. Exercise discretion when configuring multiple streams.
+    * You **MUST** define the `-resolution` value for each stream; otherwise, the stream will be discarded.
+    * You only need to define either the `-video_bitrate` or the `-framerate` for a valid stream. 
+        * If you specify the `-framerate`, the video bitrate will be calculated automatically.
+        * If you define both the `-video_bitrate` and the `-framerate`, the `-framerate` will get discard automatically.
 
+!!! failure "Always use the `-streams` attribute to define additional streams safely. Duplicate or incorrect definitions can break the transcoding pipeline and corrupt the output chunks."
 
 === "DASH"
 
-    ```python hl_lines="11-15"
+    ```python linenums="1" hl_lines="11-15"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -638,8 +527,8 @@ The complete example is as follows:
     # define various streams
     stream_params = {
         "-streams": [
-            {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps framerate
-            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps framerate
+            {"-resolution": "1280x720", "-framerate": 30.0},  # Stream1: 1280x720 at 30fps framerate
+            {"-resolution": "640x360", "-framerate": 60.0},  # Stream2: 640x360 at 60fps framerate
             {"-resolution": "320x240", "-video_bitrate": "500k"},  # Stream3: 320x240 at 500kbs bitrate
         ],
     }
@@ -657,9 +546,7 @@ The complete example is as follows:
         if frame is None:
             break
 
-
         # {do something with the frame here}
-
 
         # send frame to streamer
         streamer.stream(frame)
@@ -679,12 +566,12 @@ The complete example is as follows:
     stream.stop()
 
     # safely close streamer
-    streamer.terminate()
+    streamer.close()
     ```
 
 === "HLS"
 
-    ```python hl_lines="11-15"
+    ```python linenums="1" hl_lines="11-15"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -696,8 +583,8 @@ The complete example is as follows:
     # define various streams
     stream_params = {
         "-streams": [
-            {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps framerate
-            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps framerate
+            {"-resolution": "1280x720", "-framerate": 30.0},  # Stream1: 1280x720 at 30fps framerate
+            {"-resolution": "640x360", "-framerate": 60.0},  # Stream2: 640x360 at 60fps framerate
             {"-resolution": "320x240", "-video_bitrate": "500k"},  # Stream3: 320x240 at 500kbs bitrate
         ],
     }
@@ -715,9 +602,7 @@ The complete example is as follows:
         if frame is None:
             break
 
-
         # {do something with the frame here}
-
 
         # send frame to streamer
         streamer.stream(frame)
@@ -737,27 +622,26 @@ The complete example is as follows:
     stream.stop()
 
     # safely close streamer
-    streamer.terminate()
+    streamer.close()
     ```
 
 &thinsp;
 
 ## Usage with File Audio-Input
 
-In Real-time Frames Mode, if you want to add audio to your streams, you've to use exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. You just need to input the path of your audio file to this attribute as `string` value, and the API will automatically validate as well as maps it to all generated streams. 
+> In Real-time Frames Mode, if you want to add audio to your streams, you need to use the exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter.
 
-The complete example is as follows:
+To add a audio source, provide the path to your audio file as a string to the `-audio` attribute. The API will automatically validate and map the audio to all generated streams. The complete example is as follows:
 
-!!! failure "Make sure this `-audio` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."
+!!! failure "Ensure the provided `-audio` audio source is compatible with the input video source. Incompatibility can cause multiple errors or result in no output at all."
 
 !!! warning "You **MUST** use [`-input_framerate`](../../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
-!!! tip "You can also assign a valid Audio URL as input, rather than filepath. More details can be found [here ➶](../../params/#a-exclusive-parameters)"
-
+!!! tip "You can also assign a valid audio URL as input instead of a file path. More details can be found [here ➶](../../params/#a-exclusive-parameters)"
 
 === "DASH"
 
-    ```python hl_lines="16-17"
+    ```python linenums="1" hl_lines="16-17"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -774,7 +658,7 @@ The complete example is as follows:
             {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps
         ],
         "-input_framerate": stream.framerate, # controlled framerate for audio-video sync !!! don't forget this line !!!
-        "-audio": "/home/foo/foo1.aac" # assigns input audio-source: "/home/foo/foo1.aac"
+        "-audio": "/home/foo/foo1.aac" # assign external audio-source
     }
 
     # describe a suitable manifest-file location/name and assign params
@@ -812,12 +696,12 @@ The complete example is as follows:
     stream.stop()
 
     # safely close streamer
-    streamer.terminate()
+    streamer.close()
     ```
 
 === "HLS"
 
-    ```python hl_lines="16-17"
+    ```python linenums="1" hl_lines="16-17"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
@@ -834,7 +718,7 @@ The complete example is as follows:
             {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps
         ],
         "-input_framerate": stream.framerate, # controlled framerate for audio-video sync !!! don't forget this line !!!
-        "-audio": "/home/foo/foo1.aac" # assigns input audio-source: "/home/foo/foo1.aac"
+        "-audio": "/home/foo/foo1.aac" # assign external audio-source
     }
 
     # describe a suitable manifest-file location/name and assign params
@@ -872,25 +756,26 @@ The complete example is as follows:
     stream.stop()
 
     # safely close streamer
-    streamer.terminate()
+    streamer.close()
     ```
 
 &thinsp;
 
 ## Usage with Device Audio-Input
 
-In Real-time Frames Mode, you've can also use exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter for streaming live audio from external device. You just need to format your audio device name followed by suitable demuxer as `list` and assign to this attribute, and the API will automatically validate as well as map it to all generated streams. 
+> In Real-time Frames Mode, you can also use the exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter for streaming live audio from an external device.
 
-The complete example is as follows:
+To stream live audio, format your audio device name followed by a suitable demuxer as a list, and assign it to the `-audio` attribute. The API will automatically validate and map the audio to all generated streams. The complete example is as follows:
+
+!!! alert "Example Assumptions :octicons-checklist-24:"
+
+    - [x] You're running a Windows machine with all necessary audio drivers and software installed.
+    - [x] There's an audio device named "Microphone (USB2.0 Camera)" connected to your Windows machine. Check instructions below to use device sources with the `-audio` attribute on different OS platforms.
 
 
-!!! alert "Example Assumptions"
+??? info "Using devices sources with `-audio` attribute on different OS platforms"
 
-    * You're running are Windows machine with all neccessary audio drivers and software installed.
-    * There's a audio device with named `"Microphone (USB2.0 Camera)"` connected to your windows machine.
-
-
-??? tip "Using devices with `-audio` attribute on different OS platforms"
+    To use device sources with the `-audio` attribute on different OS platforms, follow these instructions:
     
     === ":fontawesome-brands-windows: Windows"
 
@@ -922,12 +807,12 @@ The complete example is as follows:
 
         - [x] **Specify Sound Card:** Then, you can specify your located soundcard in StreamGear as follows:
 
-            ```python
+            ```python linenums="1"
             # assign appropriate input audio-source device and demuxer device and demuxer
             stream_params = {"-audio": ["-f","dshow", "-i", "audio=Microphone (USB2.0 Camera)"]}
             ```
 
-        !!! fail "If audio still doesn't work then [checkout this troubleshooting guide ➶](https://www.maketecheasier.com/fix-microphone-not-working-windows10/) or reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
+        !!! failure "If audio still doesn't work then [checkout this troubleshooting guide ➶](https://www.maketecheasier.com/fix-microphone-not-working-windows10/) or reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
     === ":material-linux: Linux"
@@ -962,12 +847,12 @@ The complete example is as follows:
 
             !!! info "The easiest thing to do is to reference sound card directly, namely "card 0" (Intel ICH5) and "card 1" (Microphone on the USB web cam), as `hw:0` or `hw:1`"
 
-            ```python
+            ```python linenums="1"
             # assign appropriate input audio-source device and demuxer device and demuxer 
             stream_params = {"-audio": ["-f","alsa", "-i", "hw:1"]}
             ```
 
-        !!! fail "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
+        !!! failure "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
 
     === ":material-apple: MacOS"
@@ -998,48 +883,47 @@ The complete example is as follows:
 
         - [x] **Specify Sound Card:** Then, you can specify your located soundcard in StreamGear as follows:
 
-            ```python
+            ```python linenums="1"
             # assign appropriate input audio-source device and demuxer
             stream_params = {"-audio": ["-f","avfoundation", "-audio_device_index", "0"]}
             ```
 
-        !!! fail "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
+        !!! failure "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
+!!! tip "It is advised to use this example with live-streaming enabled(`True`) by using StreamGear API's exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
 
-!!! danger "Make sure this `-audio` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."
+!!! failure "Ensure the provided `-audio` audio source is compatible with the video source device. Incompatibility can cause multiple errors or result in no output at all."
 
 !!! warning "You **MUST** use [`-input_framerate`](../../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
-!!! note "It is advised to use this example with live-streaming enabled(True) by using StreamGear API's exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
-
-
 === "DASH"
 
-    ```python hl_lines="18-24"
+    ```python linenums="1" hl_lines="18-25"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
     import cv2
 
-    # open any valid video stream(for e.g `foo1.mp4` file)
-    stream = CamGear(source="foo1.mp4").start()
+    # open any valid DEVICE video stream
+    stream = CamGear(source=0).start()
 
     # add various streams, along with custom audio
     stream_params = {
         "-streams": [
             {
-                "-resolution": "1280x720",
+                "-resolution": "640x360",
                 "-video_bitrate": "4000k",
-            },  # Stream1: 1280x720 at 4000kbs bitrate
-            {"-resolution": "640x360", "-framerate": 30.0},  # Stream2: 640x360 at 30fps
+            },  # Stream1: 640x360 at 4000kbs bitrate
+            {"-resolution": "320x240", "-framerate": 30.0},  # Stream2: 320x240 at 30fps
         ],
         "-input_framerate": stream.framerate,  # controlled framerate for audio-video sync !!! don't forget this line !!!
+        "-livestream": True,
         "-audio": [
             "-f",
             "dshow",
             "-i",
             "audio=Microphone (USB2.0 Camera)",
-        ],  # assign appropriate input audio-source device and demuxer
+        ],  # assign appropriate input audio-source device(compatible with video source) and its demuxer
     }
 
     # describe a suitable manifest-file location/name and assign params
@@ -1075,40 +959,41 @@ The complete example is as follows:
     stream.stop()
 
     # safely close streamer
-    streamer.terminate()
+    streamer.close()
     ```
 
 === "HLS"
 
-    ```python hl_lines="18-24"
+    ```python linenums="1" hl_lines="18-25"
     # import required libraries
     from vidgear.gears import CamGear
     from vidgear.gears import StreamGear
     import cv2
 
-    # open any valid video stream(for e.g `foo1.mp4` file)
-    stream = CamGear(source="foo1.mp4").start()
+    # open any valid DEVICE video stream
+    stream = CamGear(source=0).start()
 
     # add various streams, along with custom audio
     stream_params = {
         "-streams": [
             {
-                "-resolution": "1280x720",
+                "-resolution": "640x360",
                 "-video_bitrate": "4000k",
-            },  # Stream1: 1280x720 at 4000kbs bitrate
-            {"-resolution": "640x360", "-framerate": 30.0},  # Stream2: 640x360 at 30fps
+            },  # Stream1: 640x360 at 4000kbs bitrate
+            {"-resolution": "320x240", "-framerate": 30.0},  # Stream2: 320x240 at 30fps
         ],
         "-input_framerate": stream.framerate,  # controlled framerate for audio-video sync !!! don't forget this line !!!
+        "-livestream": True,
         "-audio": [
             "-f",
             "dshow",
             "-i",
             "audio=Microphone (USB2.0 Camera)",
-        ],  # assign appropriate input audio-source device and demuxer
+        ],  # assign appropriate input audio-source device(compatible with video source) and its demuxer
     }
 
     # describe a suitable manifest-file location/name and assign params
-    streamer = StreamGear(output="dash_out.m3u8", format="hls", **stream_params)
+    streamer = StreamGear(output="hls_out.m3u8", format="hls", **stream_params)
 
     # loop over
     while True:
@@ -1140,23 +1025,22 @@ The complete example is as follows:
     stream.stop()
 
     # safely close streamer
-    streamer.terminate()
+    streamer.close()
     ```
 
 &thinsp;
 
 ## Usage with Hardware Video-Encoder
 
+> In Real-time Frames Mode, you can easily change the video encoder according to your requirements by passing the `-vcodec` FFmpeg parameter as an attribute in the `stream_params` dictionary parameter. Additionally, you can specify additional properties, features, and optimizations for your system's GPU.
 
-In Real-time Frames Mode, you can also easily change encoder as per your requirement just by passing `-vcodec` FFmpeg parameter as an attribute in `stream_params` dictionary parameter. In addition to this, you can also specify the additional properties/features/optimizations for your system's GPU similarly. 
+In this example, we will be using `h264_vaapi` as our Hardware Encoder and specifying the device hardware's location and compatible video filters  by formatting them as attributes in the `stream_params` dictionary parameter.
 
-In this example, we will be using `h264_vaapi` as our hardware encoder and also optionally be specifying our device hardware's location (i.e. `'-vaapi_device':'/dev/dri/renderD128'`) and other features such as `'-vf':'format=nv12,hwupload'` like properties by formatting them as `option` dictionary parameter's attributes, as follows:
+!!! danger "This example is just conveying the idea of how to use FFmpeg's hardware encoders with the StreamGear API in Real-time Frames Mode, which MAY OR MAY NOT suit your system. Please use suitable parameters based on your supported system and FFmpeg configurations only."
 
-!!! warning "Check VAAPI support"
+???+ info "Checking VAAPI Support for Hardware Encoding"
 
-    **This example is just conveying the idea on how to use FFmpeg's hardware encoders with WriteGear API in Compression mode, which MAY/MAY-NOT suit your system. Kindly use suitable parameters based your supported system and FFmpeg configurations only.**
-
-    To use `h264_vaapi` encoder, remember to check if its available and your FFmpeg compiled with VAAPI support. You can easily do this by executing following one-liner command in your terminal, and observing if output contains something similar as follows:
+    To use **VAAPI** (Video Acceleration API) as a hardware encoder in this example, follow these steps to ensure your FFmpeg supports VAAPI:
 
     ```sh
     ffmpeg  -hide_banner -encoders | grep vaapi 
@@ -1168,10 +1052,12 @@ In this example, we will be using `h264_vaapi` as our hardware encoder and also 
      V..... vp8_vaapi            VP8 (VAAPI) (codec vp8)
     ```
 
+!!! failure "Please read the [**FFmpeg Documentation**](https://ffmpeg.org/documentation.html) carefully before passing any additional values to the `stream_params` parameter. Incorrect values may cause errors or result in no output."
+
 
 === "DASH"
 
-    ```python hl_lines="16-18"
+    ```python linenums="1" hl_lines="16-18"
     # import required libraries
     from vidgear.gears import VideoGear
     from vidgear.gears import StreamGear
@@ -1189,7 +1075,7 @@ In this example, we will be using `h264_vaapi` as our hardware encoder and also 
         ],
         "-vcodec": "h264_vaapi", # define custom Video encoder
         "-vaapi_device": "/dev/dri/renderD128", # define device location
-        "-vf": "format=nv12,hwupload",  # define video pixformat
+        "-vf": "format=nv12,hwupload",  # define video filters
     }
 
     # describe a suitable manifest-file location/name and assign params
@@ -1227,12 +1113,12 @@ In this example, we will be using `h264_vaapi` as our hardware encoder and also 
     stream.stop()
 
     # safely close streamer
-    streamer.terminate()
+    streamer.close()
     ```
 
 === "HLS"
 
-    ```python hl_lines="16-18"
+    ```python linenums="1" hl_lines="16-18"
     # import required libraries
     from vidgear.gears import VideoGear
     from vidgear.gears import StreamGear
@@ -1288,10 +1174,10 @@ In this example, we will be using `h264_vaapi` as our hardware encoder and also 
     stream.stop()
 
     # safely close streamer
-    streamer.terminate()
+    streamer.close()
     ```
 
 &nbsp;
 
 [^1]: 
-    :bulb: In Real-time Frames Mode, the Primary Stream's framerate defaults to [`-input_framerate`](../../params/#a-exclusive-parameters) attribute value, if defined, else it will be 25fps.
+    :bulb: In Real-time Frames Mode, the Primary Stream's framerate defaults to the value of the [`-input_framerate`](../../params/#a-exclusive-parameters) attribute, if defined. Otherwise, it will be set to 25 fps.

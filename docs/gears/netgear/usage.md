@@ -20,7 +20,7 @@ limitations under the License.
 
 # NetGear API Usage Examples:
 
-!!! danger Important Information
+!!! danger "Important Information"
 
     * Kindly go through each given examples thoroughly, any incorrect settings/parameter may result in errors or no output at all.
 
@@ -45,7 +45,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
@@ -89,7 +89,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -137,13 +137,13 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="6 11-17"
+```python linenums="1" hl_lines="6 11-17"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
 
 # define various tweak flags
-options = {"flag": 0, "copy": False, "track": False}
+options = {"flag": 0, "copy": True, "track": False}
 
 # Define Netgear Client at given IP address and define parameters 
 # !!! change following IP address '192.168.x.xxx' with yours !!!
@@ -192,13 +192,13 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="6 14-19"
+```python linenums="1" hl_lines="6 14-19"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
 
 # define various tweak flags
-options = {"flag": 0, "copy": False, "track": False}
+options = {"flag": 0, "copy": True, "track": False}
 
 # Open live video stream on webcam at first index(i.e. 0) device
 stream = VideoGear(source=0).start()
@@ -254,13 +254,13 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
 
 # define tweak flags
-options = {"flag": 0, "copy": False, "track": False}
+options = {"flag": 0, "copy": True, "track": False}
 
 # Define Netgear Client at given IP address and define parameters 
 # !!! change following IP address '192.168.x.xxx' with yours !!!
@@ -309,7 +309,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -318,7 +318,7 @@ import cv2
 stream = cv2.VideoCapture(0)
 
 # define tweak flags
-options = {"flag": 0, "copy": False, "track": False}
+options = {"flag": 0, "copy": True, "track": False}
 
 # Define Netgear Client at given IP address and define parameters 
 # !!! change following IP address '192.168.x.xxx' with yours !!!
@@ -371,13 +371,13 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
 
 # define various tweak flags
-options = {"flag": 0, "copy": False, "track": False}
+options = {"flag": 0, "copy": True, "track": False}
 
 # Define Netgear Client at given IP address and define parameters 
 # !!! change following IP address '192.168.x.xxx' with yours !!!
@@ -426,13 +426,13 @@ Now, Open the terminal on another Server System _(let's say you want to transmit
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import ScreenGear
 from vidgear.gears import NetGear
 
 # define various tweak flags
-options = {"flag": 0, "copy": False, "track": False}
+options = {"flag": 0, "copy": True, "track": False}
 
 # Start capturing live Monitor screen frames with default settings
 stream = ScreenGear().start()

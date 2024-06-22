@@ -20,7 +20,7 @@ limitations under the License.
 
 # ScreenGear Examples
 
-&nbsp;
+&thinsp;
 
 ## Using ScreenGear with NetGear and WriteGear
 
@@ -37,14 +37,14 @@ Open a terminal on Client System _(where you want to save the input frames recei
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 from vidgear.gears import WriteGear
 import cv2
 
 # define various tweak flags
-options = {"flag": 0, "copy": False, "track": False}
+options = {"flag": 0, "copy": True, "track": False}
 
 # Define Netgear Client at given IP address and define parameters 
 # !!! change following IP address '192.168.x.xxx' with yours !!!
@@ -94,7 +94,7 @@ Now, Open the terminal on another Server System _(with a montior/display attache
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import ScreenGear
 from vidgear.gears import NetGear
@@ -106,7 +106,7 @@ options = {"top": 40, "left": 0, "width": 100, "height": 100}
 stream = ScreenGear(logging=True, **options).start()
 
 # define various netgear tweak flags
-options = {"flag": 0, "copy": False, "track": False}
+options = {"flag": 0, "copy": True, "track": False}
 
 # Define Netgear server at given IP address and define parameters 
 # !!! change following IP address '192.168.x.xxx' with client's IP address !!!
@@ -156,7 +156,7 @@ The complete usage example is as follows:
 
 === "Bare-Minimum"
 
-    ```python hl_lines="8"
+    ```python linenums="1" hl_lines="8"
     # import necessary libs
     import uvicorn, cv2
     from vidgear.gears import ScreenGear
@@ -178,9 +178,9 @@ The complete usage example is as follows:
 
 === "Advanced"
 
-    !!! fail "For VideoCapture APIs you also need to implement `start()` in addition to `read()` and `stop()` methods in your Custom Streaming Class as shown in following example, otherwise WebGear_RTC will fail to work!"
+    !!! failure "For VideoCapture APIs you also need to implement `start()` in addition to `read()` and `stop()` methods in your Custom Streaming Class as shown in following example, otherwise WebGear_RTC will fail to work!"
 
-    ```python hl_lines="8-64 69"
+    ```python linenums="1" hl_lines="8-64 69"
     # import necessary libs
     import uvicorn, cv2
     from vidgear.gears import ScreenGear

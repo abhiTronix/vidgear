@@ -17,9 +17,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 import os
 import time
+import contextlib
 import fractions
 import asyncio
 import logging as log
@@ -114,9 +116,6 @@ if not (aiortc is None):
                 time_delay (int): time delay (in sec) before start reading the frames.
                 options (dict): provides ability to alter Tweak Parameters of WebGear_RTC, CamGear, PiGear & Stabilizer.
             """
-            # print current version
-            logcurr_vidgear_ver(logging=logging)
-
             super().__init__()  # don't forget this!
 
             # initialize global params
@@ -371,13 +370,17 @@ class WebGear_RTC:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Tweak Parameters of WebGear_RTC, CamGear, PiGear & Stabilizer.
         """
+        # enable logging if specified
+        self.__logging = logging if isinstance(logging, bool) else False
+
+        # print current version
+        logcurr_vidgear_ver(logging=self.__logging)
+
         # raise error(s) for critical Class imports
         import_dependency_safe("starlette" if starlette is None else "")
         import_dependency_safe("aiortc" if aiortc is None else "")
 
         # initialize global params
-        self.__logging = logging
-
         custom_data_location = ""  # path to save data-files to custom location
         data_path = ""  # path to WebGear_RTC data-files
         overwrite_default = False
@@ -417,9 +420,9 @@ class WebGear_RTC:
                 if isinstance(value, bool):
                     if value:
                         self.__relay = MediaRelay()
-                        options[
-                            "enable_infinite_frames"
-                        ] = True  # enforce infinite frames
+                        options["enable_infinite_frames"] = (
+                            True  # enforce infinite frames
+                        )
                         logger.critical(
                             "Enabled live broadcasting for Peer connection(s)."
                         )
@@ -529,7 +532,7 @@ class WebGear_RTC:
             routes=self.routes,
             middleware=self.middleware,
             exception_handlers=self.__exception_handlers,
-            on_shutdown=[self.__on_shutdown],
+            lifespan=self.__lifespan,
         )
 
     async def __offer(self, request):
@@ -556,7 +559,6 @@ class WebGear_RTC:
         # track ICE connection state changes
         @pc.on("iceconnectionstatechange")
         async def on_iceconnectionstatechange():
-            logger.debug("ICE connection state is %s" % pc.iceConnectionState)
             if pc.iceConnectionState == "failed":
                 logger.error("ICE connection state failed.")
                 # check if Live Broadcasting is enabled
@@ -564,6 +566,8 @@ class WebGear_RTC:
                     # if not, close connection.
                     await pc.close()
                     self.__pcs.discard(pc)
+            else:
+                logger.debug("ICE connection state is %s" % pc.iceConnectionState)
 
         # Change the remote description associated with the connection.
         await pc.setRemoteDescription(offer)
@@ -625,7 +629,9 @@ class WebGear_RTC:
             logger.critical("Resetting Server")
             # close old peer connections
             if parameter != 0:  # disable if specified explicitly
-                coros = [pc.close() for pc in self.__pcs]
+                coros = [
+                    pc.close() for pc in self.__pcs if pc.iceConnectionState != "closed"
+                ]
                 await asyncio.gather(*coros)
                 self.__pcs.clear()
             await self.__default_rtc_server.reset()
@@ -634,16 +640,19 @@ class WebGear_RTC:
             # if does, then do nothing
             return PlainTextResponse("DISABLED")
 
-    async def __on_shutdown(self):
-        """
-        Implements a Callable to be run on application shutdown
-        """
-        # close Video Server
-        self.shutdown()
-        # collects peer RTC connections
-        coros = [pc.close() for pc in self.__pcs]
-        await asyncio.gather(*coros)
-        self.__pcs.clear()
+    @contextlib.asynccontextmanager
+    async def __lifespan(self, context):
+        try:
+            yield
+        finally:
+            # close Video Server
+            self.shutdown()
+            # collects peer RTC connections
+            coros = [
+                pc.close() for pc in self.__pcs if pc.iceConnectionState != "closed"
+            ]
+            await asyncio.gather(*coros)
+            self.__pcs.clear()
 
     def shutdown(self):
         """

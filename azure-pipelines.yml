@@ -66,11 +66,11 @@ steps:
     displayName: "Prepare dataset"
 
   - script: |
-      python -m pip install --upgrade pip wheel
-      pip install --upgrade .[asyncio] six codecov yt_dlp httpx mpegdash paramiko m3u8 async-asgi-testclient
-      pip install --upgrade deffcode
-      pip install cryptography==38.0.4
-      pip install --upgrade pytest pytest-asyncio pytest-cov pytest-azurepipelines
+      python -m pip install -U pip wheel 
+      python -m pip install "numpy<2.0.0"
+      python -m pip install -U .[asyncio] yt_dlp httpx six paramiko
+      python -m pip install -U codecov pytest pytest-asyncio pytest-cov mpegdash m3u8 async-asgi-testclient
+      python -m pip install -U deffcode
     displayName: "Install pip dependencies"
 
   - script: |

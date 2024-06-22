@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 import cv2
 import sys
@@ -102,7 +103,6 @@ class NetGear_Async:
         logging=False,
         **options
     ):
-
         """
         This constructor method initializes the object state and attributes of the NetGear_Async class.
 
@@ -126,8 +126,11 @@ class NetGear_Async:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Tweak Parameters of NetGear_Async, CamGear, PiGear & Stabilizer.
         """
+        # enable logging if specified
+        self.__logging = logging if isinstance(logging, bool) else False
+
         # print current version
-        logcurr_vidgear_ver(logging=logging)
+        logcurr_vidgear_ver(logging=self.__logging)
 
         # raise error(s) for critical Class imports
         import_dependency_safe(
@@ -135,9 +138,6 @@ class NetGear_Async:
         )
         import_dependency_safe("msgpack" if msgpack is None else "")
         import_dependency_safe("msgpack_numpy" if m is None else "")
-
-        # enable logging if specified
-        self.__logging = logging
 
         # define valid messaging patterns => `0`: PAIR, `1`:(REQ, REP), `2`:(SUB, PUB), `3`:(PUSH, PULL)
         valid_messaging_patterns = {
@@ -156,12 +156,11 @@ class NetGear_Async:
             # otherwise default to 0:`zmq.PAIR`
             self.__msg_pattern = 0
             self.__pattern = valid_messaging_patterns[self.__msg_pattern]
-            if self.__logging:
-                logger.warning(
-                    "Invalid pattern {pattern}. Defaulting to `zmq.PAIR`!".format(
-                        pattern=pattern
-                    )
+            self.__logging and logger.warning(
+                "Invalid pattern {pattern}. Defaulting to `zmq.PAIR`!".format(
+                    pattern=pattern
                 )
+            )
 
         # check  whether user-defined messaging protocol is valid
         if isinstance(protocol, str) and protocol in ["tcp", "ipc"]:
@@ -170,8 +169,7 @@ class NetGear_Async:
         else:
             # else default to `tcp` protocol
             self.__protocol = "tcp"
-            if self.__logging:
-                logger.warning("Invalid protocol. Defaulting to `tcp`!")
+            self.__logging and logger.warning("Invalid protocol. Defaulting to `tcp`!")
 
         # initialize Termination flag
         self.__terminate = False
@@ -239,6 +237,35 @@ class NetGear_Async:
             # clean
             del options["bidirectional_mode"]
 
+        # Setup and assign event loop policy
+        if platform.system() == "Windows":
+            # On Windows, VidGear requires the ``WindowsSelectorEventLoop``, but Python 3.8 and above,
+            # defaults to an ``ProactorEventLoop`` loop that is not compatible with it. Thereby,
+            # we had to set it manually.
+            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+        else:
+            if not (uvloop is None):
+                # Latest uvloop eventloop is only available for UNIX machines.
+                asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+            else:
+                # log if not present
+                import_dependency_safe("uvloop", error="log")
+
+        # Retrieve event loop and assign it
+        try:
+            self.loop = asyncio.get_running_loop()
+        except RuntimeError:
+            # otherwise create one
+            logger.critical("No running event loop found. Creating a new one.")
+            self.loop = asyncio.new_event_loop()
+
+        # log eventloop for debugging
+        self.__logging and logger.info(
+            "Using ``{}`` event loop for this process.".format(
+                self.loop.__class__.__name__
+            )
+        )
+
         # define messaging asynchronous Context
         self.__msg_context = zmq.asyncio.Context()
 
@@ -258,8 +285,7 @@ class NetGear_Async:
             # Handle video source
             if source is None:
                 self.config = {"generator": None}
-                if self.__logging:
-                    logger.warning("Given source is of NoneType!")
+                self.__logging and logger.warning("Given source is of NoneType!")
             else:
                 # define stream with necessary params
                 self.__stream = VideoGear(
@@ -291,33 +317,8 @@ class NetGear_Async:
             # add server task handler
             self.task = None
 
-        # Setup and assign event loop policy
-        if platform.system() == "Windows":
-            # On Windows, VidGear requires the ``WindowsSelectorEventLoop``, and this is
-            # the default in Python 3.7 and older, but new Python 3.8, defaults to an
-            # event loop that is not compatible with it. Thereby, we had to set it manually.
-            if sys.version_info[:2] >= (3, 8):
-                asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        else:
-            if not (uvloop is None):
-                # Latest uvloop eventloop is only available for UNIX machines.
-                asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-            else:
-                # log if not present
-                import_dependency_safe("uvloop", error="log")
-
-        # Retrieve event loop and assign it
-        self.loop = asyncio.get_event_loop()
         # create asyncio queue if bidirectional mode activated
         self.__queue = asyncio.Queue() if self.__bi_mode else None
-        # log eventloop for debugging
-        if self.__logging:
-            # debugging
-            logger.info(
-                "Using `{}` event loop for this process.".format(
-                    self.loop.__class__.__name__
-                )
-            )
 
     def launch(self):
         """
@@ -325,16 +326,18 @@ class NetGear_Async:
         """
         # check if receive mode enabled
         if self.__receive_mode:
-            if self.__logging:
-                logger.debug("Launching NetGear_Async asynchronous generator!")
+            self.__logging and logger.debug(
+                "Launching NetGear_Async asynchronous generator!"
+            )
             # run loop executor for Receiver asynchronous generator
             self.loop.run_in_executor(None, self.recv_generator)
         else:
             # Otherwise launch Server handler
-            if self.__logging:
-                logger.debug("Creating NetGear_Async asynchronous server handler!")
+            self.__logging and logger.debug(
+                "Creating NetGear_Async asynchronous server handler!"
+            )
             # create task for Server Handler
-            self.task = asyncio.ensure_future(self.__server_handler())
+            self.task = self.loop.create_task(self.__server_handler())
         # return instance
         return self
 
@@ -376,19 +379,18 @@ class NetGear_Async:
                 self.__protocol + "://" + str(self.__address) + ":" + str(self.__port)
             )
             # finally log if successful
-            if self.__logging:
-                logger.debug(
-                    "Successfully connected to address: {} with pattern: {}.".format(
-                        (
-                            self.__protocol
-                            + "://"
-                            + str(self.__address)
-                            + ":"
-                            + str(self.__port)
-                        ),
-                        self.__msg_pattern,
-                    )
+            self.__logging and logger.debug(
+                "Successfully connected to address: {} with pattern: {}.".format(
+                    (
+                        self.__protocol
+                        + "://"
+                        + str(self.__address)
+                        + ":"
+                        + str(self.__port)
+                    ),
+                    self.__msg_pattern,
                 )
+            )
             logger.critical(
                 "Send Mode is successfully activated and ready to send data!"
             )
@@ -495,8 +497,7 @@ class NetGear_Async:
                     recv_confirmation = await asyncio.wait_for(
                         self.__msg_socket.recv(), timeout=self.__timeout
                     )
-                    if self.__logging:
-                        logger.debug(recv_confirmation)
+                    self.__logging and logger.debug(recv_confirmation)
 
     async def recv_generator(self):
         """
@@ -524,19 +525,18 @@ class NetGear_Async:
                 self.__protocol + "://" + str(self.__address) + ":" + str(self.__port)
             )
             # finally log progress
-            if self.__logging:
-                logger.debug(
-                    "Successfully binded to address: {} with pattern: {}.".format(
-                        (
-                            self.__protocol
-                            + "://"
-                            + str(self.__address)
-                            + ":"
-                            + str(self.__port)
-                        ),
-                        self.__msg_pattern,
-                    )
+            self.__logging and logger.debug(
+                "Successfully binded to address: {} with pattern: {}.".format(
+                    (
+                        self.__protocol
+                        + "://"
+                        + str(self.__address)
+                        + ":"
+                        + str(self.__port)
+                    ),
+                    self.__msg_pattern,
                 )
+            )
             logger.critical("Receive Mode is activated successfully!")
         except Exception as e:
             logger.exception(str(e))
@@ -576,8 +576,9 @@ class NetGear_Async:
                     retdata_enc = msgpack.packb(return_dict)
                     # send message back to server
                     await self.__msg_socket.send(retdata_enc)
-                if self.__logging:
-                    logger.info("Termination signal received from server!")
+                self.__logging and logger.info(
+                    "Termination signal received from server!"
+                )
                 # break loop and terminate
                 self.__terminate = True
                 break
@@ -628,9 +629,9 @@ class NetGear_Async:
                         # otherwise create type and data dict
                         return_dict = dict(
                             return_type=(type(return_data).__name__),
-                            return_data=return_data
-                            if not (return_data is None)
-                            else "",
+                            return_data=(
+                                return_data if not (return_data is None) else ""
+                            ),
                         )
                         # encode it
                         retdata_enc = msgpack.packb(return_dict)
@@ -706,12 +707,11 @@ class NetGear_Async:
             disable_confirmation (boolean): Force disable termination confirmation from client in bidirectional patterns.
         """
         # log termination
-        if self.__logging:
-            logger.debug(
-                "Terminating various {} Processes. Please wait.".format(
-                    "Receive Mode" if self.__receive_mode else "Send Mode"
-                )
+        self.__logging and logger.debug(
+            "Terminating various {} Processes. Please wait.".format(
+                "Receive Mode" if self.__receive_mode else "Send Mode"
             )
+        )
 
         # check whether `receive_mode` is enabled or not
         if self.__receive_mode:
@@ -732,8 +732,9 @@ class NetGear_Async:
                 # then receive and log confirmation
                 recv_confirmation = await self.__msg_socket.recv()
                 recvd_conf = msgpack.unpackb(recv_confirmation, use_list=False)
-                if self.__logging and "terminated" in recvd_conf:
-                    logger.debug(recvd_conf["terminated"])
+                self.__logging and "terminated" in recvd_conf and logger.debug(
+                    recvd_conf["terminated"]
+                )
         # close socket
         self.__msg_socket.setsockopt(zmq.LINGER, 0)
         self.__msg_socket.close()

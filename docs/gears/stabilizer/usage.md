@@ -22,13 +22,13 @@ limitations under the License.
 
 &thinsp;
 
-!!! fail "The stabilizer may not perform well against High-frequency jitter in video. Use at your own risk!"
+!!! failure "The stabilizer may not perform well against High-frequency jitter in video. Use at your own risk!"
 
 !!! warning "The stabilizer might be slower :snail: for High-Quality/Resolution :material-high-definition-box: videos-frames."
 
 !!! tip "It is advised to enable logging on the first run for easily identifying any runtime errors."
 
-!!! experiment "After going through Stabilizer Class Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/stabilizer_ex/)"
+!!! example "After going through Stabilizer Class Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/stabilizer_ex/)"
 
 
 &thinsp;
@@ -41,7 +41,7 @@ Following is the bare-minimum code you need to get started with Stabilizer Class
 
 !!! tip "You can use any VideoCapture Gear instead of CamGear in the similar manner, as shown in this usage example." 
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears.stabilizer import Stabilizer
 from vidgear.gears import CamGear
@@ -96,7 +96,7 @@ stream.stop()
 
 The VidGear's stabilizer class can also work standalone easily with any Computer Vision library such as OpenCV itself. Following is the bare-minimum code you need to get started with Stabilizer Class and OpenCV:
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears.stabilizer import Stabilizer
 import cv2
@@ -150,7 +150,7 @@ stream.release()
 
 Stabilizer class provide certain [parameters](../params/) which you can use to tweak its internal properties. The complete usage example is as follows:
 
-```python hl_lines="10"
+```python linenums="1" hl_lines="10"
 # import required libraries
 from vidgear.gears.stabilizer import Stabilizer
 from vidgear.gears import CamGear
@@ -206,9 +206,9 @@ stream.stop()
 
 VideoGear's stabilizer can be used in conjunction with WriteGear API directly without any compatibility issues. The complete usage example is as follows:
 
-!!! tip "You can also add live audio input to WriteGear pipeline. See this [bonus example](../../../help)"
+!!! example "You can also add live audio input to WriteGear pipeline. See this [bonus example  ➶](../../../help)"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears.stabilizer import Stabilizer
 from vidgear.gears import CamGear

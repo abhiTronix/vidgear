@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 import cv2
 import json
@@ -72,11 +73,11 @@ class ScreenGear:
             logging (bool): enables/disables logging.
             options (dict): provides the flexibility to easily alter backend library parameters. Such as, manually set the dimensions of capture screen area etc.
         """
-        # print current version
-        logcurr_vidgear_ver(logging=logging)
-
-        # enable logging if specified:
+        # enable logging if specified
         self.__logging = logging if isinstance(logging, bool) else False
+
+        # print current version
+        logcurr_vidgear_ver(logging=self.__logging)
 
         # create instances for the user-defined monitor
         self.__monitor_instance = None
@@ -112,7 +113,7 @@ class ScreenGear:
                 else ("left", "top", "width", "height")
             )
             screen_dims = OrderedDict((k, screen_dims[k]) for k in key_order)
-            logging and logger.debug(
+            self.__logging and logger.debug(
                 "Setting Capture-Area dimensions: {}".format(json.dumps(screen_dims))
             )
         else:
@@ -125,7 +126,7 @@ class ScreenGear:
             if self.__target_fps and isinstance(self.__target_fps, (int, float)):
                 # set values
                 self.__target_fps = int(self.__target_fps)
-                logging and logger.debug(
+                self.__logging and logger.debug(
                     "Setting Target FPS: {}".format(self.__target_fps)
                 )
             else:
@@ -193,7 +194,7 @@ class ScreenGear:
                 self.__monitor_instance = self.__capture_object.monitors[monitor]
 
         # log backend
-        self.__backend and logging and logger.debug(
+        self.__backend and self.__logging and logger.debug(
             "Setting Backend: {}".format(self.__backend.upper())
         )
 
@@ -201,7 +202,7 @@ class ScreenGear:
         # separately handle colorspace value to int conversion
         if colorspace:
             self.color_space = capPropId(colorspace.strip())
-            logging and not (self.color_space is None) and logger.debug(
+            self.__logging and not (self.color_space is None) and logger.debug(
                 "Enabling `{}` colorspace for this video stream!".format(
                     colorspace.strip()
                 )
@@ -257,7 +258,9 @@ class ScreenGear:
         except Exception as e:
             if isinstance(e, ScreenShotError):
                 # otherwise catch and log errors
-                logging and logger.exception(self.__capture_object.get_error_details())
+                self.__logging and logger.exception(
+                    self.__capture_object.get_error_details()
+                )
                 raise ValueError(
                     "[ScreenGear:ERROR] :: ScreenShotError caught, Wrong dimensions passed to python-mss, Kindly Refer Docs!"
                 )
@@ -337,25 +340,14 @@ class ScreenGear:
                 # apply colorspace to frames
                 color_frame = None
                 try:
-                    if isinstance(self.color_space, int):
-                        color_frame = cv2.cvtColor(frame, self.color_space)
-                    else:
-                        self.__logging and logger.warning(
-                            "Global color_space parameter value `{}` is not a valid!".format(
-                                self.color_space
-                            )
-                        )
-                        self.color_space = None
+                    color_frame = cv2.cvtColor(frame, self.color_space)
                 except Exception as e:
                     # Catch if any error occurred
+                    color_frame = None
                     self.color_space = None
-                    if self.__logging:
-                        logger.exception(str(e))
-                        logger.warning("Input colorspace is not a valid colorspace!")
-                if not (color_frame is None):
-                    self.frame = color_frame
-                else:
-                    self.frame = frame
+                    self.__logging and logger.exception(str(e))
+                    logger.warning("Assigned colorspace value is invalid. Discarding!")
+                self.frame = color_frame if not (color_frame is None) else frame
             else:
                 self.frame = frame
 
@@ -389,5 +381,4 @@ class ScreenGear:
         self.__terminate.set()
 
         # wait until stream resources are released (producer thread might be still grabbing frame)
-        if self.__thread is not None:
-            self.__thread.join()
+        not (self.__thread is None) and self.__thread.join()

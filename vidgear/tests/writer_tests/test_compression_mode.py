@@ -17,6 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ================================================
 """
+
 # import the necessary packages
 
 import os
@@ -297,14 +298,13 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
     """
     try:
         stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
-        writer = WriteGear(output=f_name, compression_mode=True, **output_params)
-        while True:
-            (grabbed, frame) = stream.read()
-            if not grabbed:
-                break
-            writer.write(frame)
-        stream.release()
-        writer.close()
+        with WriteGear(output=f_name, compression_mode=True, **output_params) as writer:
+            while True:
+                (grabbed, frame) = stream.read()
+                if not grabbed:
+                    break
+                writer.write(frame)
+            stream.release()
         remove_file_safe(f_name)
     except Exception as e:
         if result:
@@ -332,9 +332,11 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
         (
             ["wrong_input", "invalid_flag", "break_things"],
             True,
-            {"-ffmpeg_download_path": 53}
-            if (platform.system() == "Windows")
-            else {"-disable_force_termination": "OK"},
+            (
+                {"-ffmpeg_download_path": 53}
+                if (platform.system() == "Windows")
+                else {"-disable_force_termination": "OK"}
+            ),
         ),
         (
             "wrong_input",

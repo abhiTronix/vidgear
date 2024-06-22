@@ -47,7 +47,9 @@ jobs:
         if: success()
       - name: install_dependencies
         run: |
-          pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin mkdocs-exclude mike mkdocstrings mkdocstrings-python-legacy          
+          pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin          
+          pip install -U mkdocs-exclude mike mkdocstrings mkdocstrings-python-legacy
+          pip install -U mkdocs-git-authors-plugin
           pip install jinja2==3.0.*
         if: success()
       - name: git configure
@@ -65,7 +67,7 @@ jobs:
       - name: mike deploy docs release
         run: |
           echo "${{ env.NAME_RELEASE }}"
-          mike deploy --push --update-aliases --no-redirect ${{ env.NAME_RELEASE }} ${{ env.RELEASE_NAME }} --title=${{ env.RELEASE_NAME }}
+          mike deploy --push --update-aliases --alias-type=copy ${{ env.NAME_RELEASE }} ${{ env.RELEASE_NAME }} --title=${{ env.RELEASE_NAME }}
         env:
           NAME_RELEASE: "v${{ env.RELEASE_NAME }}-release"
         if: success()
@@ -88,7 +90,9 @@ jobs:
         if: success()
       - name: install_dependencies
         run: |
-          pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin mkdocs-exclude mike mkdocstrings mkdocstrings-python-legacy
+          pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin          
+          pip install -U mkdocs-exclude mike mkdocstrings mkdocstrings-python-legacy
+          pip install -U mkdocs-git-authors-plugin          
           pip install jinja2==3.0.*
         if: success()
       - name: git configure
@@ -106,7 +110,7 @@ jobs:
       - name: mike deploy docs stable
         run: |
           echo "${{ env.NAME_STABLE }}"
-          mike deploy --push --update-aliases --no-redirect ${{ env.NAME_STABLE }} latest --title=latest
+          mike deploy --push --update-aliases --alias-type=copy ${{ env.NAME_STABLE }} latest --title=latest
           mike set-default --push latest
         env:
           NAME_STABLE: "v${{ env.RELEASE_NAME }}-stable"
@@ -131,7 +135,9 @@ jobs:
         if: success()
       - name: install_dependencies
         run: |
-          pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin mkdocs-exclude mike mkdocstrings mkdocstrings-python-legacy          
+          pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin          
+          pip install -U mkdocs-exclude mike mkdocstrings mkdocstrings-python-legacy
+          pip install -U mkdocs-git-authors-plugin          
           pip install jinja2==3.0.*
         if: success()
       - name: git configure
@@ -149,7 +155,7 @@ jobs:
       - name: mike deploy docs dev
         run: |
           echo "Releasing ${{ env.NAME_DEV }}"
-          mike deploy --push --update-aliases --no-redirect ${{ env.NAME_DEV }} dev --title=dev
+          mike deploy --push --update-aliases --alias-type=copy ${{ env.NAME_DEV }} dev --title=dev
         env:
           NAME_DEV: "v${{ env.RELEASE_NAME }}-dev"
         if: success()

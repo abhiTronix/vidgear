@@ -117,7 +117,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="11-14"
+```python linenums="1" hl_lines="11-14"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
@@ -173,7 +173,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! note "If compression is enabled at Server, then Client will automatically enforce Frame Compression with its performance attributes."
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -230,7 +230,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="7 11"
+```python linenums="1" hl_lines="7 11"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
@@ -288,7 +288,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! info "Client's end also automatically enforces Server's colorspace, there's no need to define it again."
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -340,7 +340,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="9-15"
+```python linenums="1" hl_lines="9-15"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -395,7 +395,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="20-25"
+```python linenums="1" hl_lines="20-25"
 # import required libraries
 from vidgear.gears import VideoGear
 from vidgear.gears import NetGear
@@ -475,7 +475,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! tip "You can terminate both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="12-16 42"
+```python linenums="1" hl_lines="12-16 42"
 # import required libraries
 from vidgear.gears import NetGear
 from vidgear.gears.helper import reducer
@@ -548,7 +548,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="8-12 35"
+```python linenums="1" hl_lines="8-12 35"
 # import required libraries
 from vidgear.gears import NetGear
 from vidgear.gears.helper import reducer

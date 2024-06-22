@@ -52,15 +52,16 @@ Same as [WebGear](../../webgear_rtc/overview/), WebGear_RTC API automatically ch
 ### Default Location
 
 * A _default location_ is the path of the directory where data files/folders are downloaded/generated/saved.
-* By default, the `.vidgear` the folder at the home directory of your machine _(for e.g `/home/foo/.vidgear` on Linux)_ serves as the _default location_.
+* By default, the `.vidgear` the folder at the home directory of your machine _(for e.g `/home/foo/.vidgear` on Linux :material-linux:)_ serves as the _default location_.
 * But you can also use WebGear_RTC's [`custom_data_location`](../params/#webgear_rtc-specific-attributes) dictionary attribute to change/alter *default location* path to somewhere else.
 
-	!!! tip
-			You can set [`logging=True`](../params/#logging) during initialization, for easily identifying the selected _default location_, which will be something like this _(on a Linux machine)_:
+!!! tip "Identifying Default location"
+	You can set [`logging=True`](../params/#logging) during initialization, for easily identifying the selected _default location_, which will be something like this on a Linux :material-linux: machine:
 
-		  ```sh
-		  WebGear_RTC :: DEBUG :: `/home/foo/.vidgear` is the default location for saving WebGear_RTC data-files.
-		  ```
+	```sh
+	WebGear_RTC :: DEBUG :: `/home/foo/.vidgear` is the default location for saving WebGear_RTC data-files.
+	```
+
 
 ### Auto-Generation process
 
@@ -68,7 +69,7 @@ Same as [WebGear](../../webgear_rtc/overview/), WebGear_RTC API automatically ch
 
 	* You can also force trigger the Auto-generation process to overwrite existing data-files using [`overwrite_default_files`](../params/#webgear_rtc-specific-attributes) dictionary attribute. Remember, only downloaded default data files(given above) will be overwritten in this process but any other file/folder will NOT be affected.
 
-	* It is advised to enable logging(`logging=True`) on the first run for easily identifying any runtime errors
+	* It is advised to enable logging(`logging=True`) on the first run for easily identifying any runtime errors.
 
 
 * On triggering this process, WebGear_RTC API creates `webgear_rtc` directory, and `templates` and `static` folders inside along with `js`, `css`, `img` sub-folders at the assigned [*default location*](#default-location).
@@ -94,22 +95,7 @@ Same as [WebGear](../../webgear_rtc/overview/), WebGear_RTC API automatically ch
 
 * Finally these downloaded files thereby are verified for errors and API proceeds for instantiating the Starlette application normally.
 
-
-&nbsp;
-
-&nbsp;
-
-## Importing
-
-You can import WebGear_RTC API in your program as follows:
-
-```python
-from vidgear.gears.asyncio import WebGear_RTC
-```
-
 &thinsp;
-
-&nbsp;
 
 ## WebGear_RTC's Default Template
 
@@ -143,7 +129,7 @@ The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Th
   <img src="../../../assets/images/webgear_rtc_temp_500.png" loading="lazy" alt="WebGear_RTC default 500 page"/>
 </h2>
 
-&nbsp;
+&thinsp;
 
 ## Usage Examples
 
@@ -164,7 +150,6 @@ The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Th
 <div>
 <a href="../../../bonus/reference/webgear_rtc/">See here 🚀</a>
 </div>
-
 
 ## FAQs
 

@@ -30,7 +30,7 @@ limitations under the License.
 
 ## How to get started with StreamGear API?
 
-**Answer:** See [StreamGear doc ➶](../../gears/streamgear/introduction/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [StreamGear documentation](../../gears/streamgear/overview/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &thinsp;
 
@@ -77,16 +77,7 @@ limitations under the License.
 
 &thinsp;
 
-## Is Real-time Frames Mode only used for Live-Streaming?
-
-**Answer:** Real-time Frame Modes and Live-Streaming are completely different terms and not directly related. 
-
-- **Real-time Frame Mode** is one of [primary mode](../../gears/streamgear/introduction/#mode-of-operations) for directly transcoding real-time [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) video-frames _(as opposed to a entire file)_ into a sequence of multiple smaller chunks/segments for streaming. 
-
-- **Live-Streaming** is feature of StreamGear's primary modes that activates behaviour where chunks will contain information for few new frames only and forgets all previous ones for low latency streaming. It can be activated for any primary mode using exclusive [`-livestream`](../../gears/streamgear/params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter.
-
-
-## How to use Hardware/GPU encoder for StreamGear trancoding?
+## How to use Hardware/GPU encoder for transcoding in StreamGear API?
 
 **Answer:** [See this example ➶](../../gears/streamgear/rtfm/usage/#usage-with-hardware-video-encoder)
 

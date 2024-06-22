@@ -28,7 +28,7 @@ In this example both streams and corresponding frames will be processed synchron
 
 !!! danger "Using same source with more than one instances of CamGear can lead to [Global Interpreter Lock (GIL)](https://wiki.python.org/moin/GlobalInterpreterLock#:~:text=In%20CPython%2C%20the%20global%20interpreter,conditions%20and%20ensures%20thread%20safety.&text=The%20GIL%20can%20degrade%20performance%20even%20when%20it%20is%20not%20a%20bottleneck.) that degrades performance even when it is not a bottleneck."
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import CamGear
 import cv2
@@ -89,7 +89,7 @@ The complete usage example is as follows:
 
 !!! tip "More information on `STREAM_RESOLUTION` & `STREAM_PARAMS` attributes can be found [here ➶](../../gears/camgear/advanced/source_params/#exclusive-camgear-parameters)"
 
-```python hl_lines="6"
+```python linenums="1" hl_lines="6"
 # import required libraries
 from vidgear.gears import CamGear
 import cv2
@@ -147,7 +147,7 @@ Here's a high-level wrapper code around CamGear API to enable auto-reconnection 
     
     You can easily enforce UDP for RTSP streams inplace of default TCP, by putting following lines of code on the top of your existing code:
 
-    ```python 
+    ```python
     # import required libraries
     import os
 
@@ -158,7 +158,7 @@ Here's a high-level wrapper code around CamGear API to enable auto-reconnection 
     Finally, use [`backend`](../../gears/camgear/params/#backend) parameter value as `backend=cv2.CAP_FFMPEG` in CamGear.
 
 
-```python
+```python linenums="1"
 from vidgear.gears import CamGear
 import cv2
 import datetime

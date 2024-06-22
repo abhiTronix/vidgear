@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-# StreamGear API: Real-time Frames Mode
+# StreamGear API: Real-time Frames Mode :material-camera-burst:
 
 
 <figure>
@@ -44,18 +44,15 @@ For this mode, StreamGear API provides exclusive [`stream()`](../../../../bonus/
     Apple HLS support was added in `v0.2.2`.
 
 
-!!! alert "Real-time Frames Mode is NOT Live-Streaming."
+!!! alert "Real-time Frames Mode itself is NOT Live-Streaming :material-video-wireless-outline:"
+    To enable live-streaming in Real-time Frames Mode, use the exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter in the StreamGear API. Checkout [this usage example ➶](../usage/#bare-minimum-usage-with-live-streaming) for more information.
 
-    Rather, you can easily enable live-streaming in Real-time Frames Mode by using StreamGear API's exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter. Checkout its [usage example here](../usage/#bare-minimum-usage-with-live-streaming).
 
+!!! danger "Please Remember :material-police-badge-outline:"
 
-!!! danger 
+    * Using [`transcode_source()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) function instead of [`stream()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) in Real-time Frames Mode will immediately result in **`RuntimeError`**!
 
-    * Using [`transcode_source()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.transcode_source) function instead of [`stream()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) in Real-time Frames Mode will instantly result in **`RuntimeError`**!
-
-    * **NEVER** assign anything to [`-video_source`](../../params/#a-exclusive-parameters) attribute of [`stream_params`](../../params/#supported-parameters) dictionary parameter, otherwise [Single-Source Mode](../#a-single-source-mode) may get activated, and as a result, using [`stream()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) function will throw **`RuntimeError`**!
-
-    * You **MUST** use [`-input_framerate`](../../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in this mode, otherwise audio delay will occur in output streams.
+    * **NEVER** assign anything to [`-video_source`](../../params/#a-exclusive-parameters) attribute of [`stream_params`](../../params/#supported-parameters) dictionary parameter, otherwise [Single-Source Mode](../#a-single-source-mode) get activated, and as a result, using [`stream()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.stream) function will throw **`RuntimeError`**!
 
     * Input framerate defaults to `25.0` fps if [`-input_framerate`](../../params/#a-exclusive-parameters) attribute value not defined. 
 
@@ -68,7 +65,7 @@ For this mode, StreamGear API provides exclusive [`stream()`](../../../../bonus/
 <a href="../usage/">See here 🚀</a>
 </div>
 
-!!! experiment "After going through StreamGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
+!!! example "After going through StreamGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
 
 
 ## Parameters

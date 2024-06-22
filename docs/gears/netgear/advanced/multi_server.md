@@ -101,7 +101,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="7 14 40-52"
+```python linenums="1" hl_lines="7 14 40-52"
 # import required libraries
 from vidgear.gears import NetGear
 from imutils import build_montages # (1)
@@ -184,7 +184,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 !!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
 
-```python hl_lines="9 14"
+```python linenums="1" hl_lines="9 14"
 # import libraries
 from vidgear.gears import NetGear
 from vidgear.gears import CamGear
@@ -237,7 +237,7 @@ Finally, Open the terminal on another Server System _(also with a webcam connect
 
 !!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="9 14"
+```python linenums="1" hl_lines="9 14"
 # import libraries
 from vidgear.gears import NetGear
 from vidgear.gears import CamGear
@@ -300,7 +300,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 from imutils import build_montages # (1)
@@ -381,7 +381,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import libraries
 from vidgear.gears import NetGear
 import cv2
@@ -434,7 +434,7 @@ Finally, Open the terminal on another Server System _(also with a webcam connect
 
 !!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"
 # import libraries
 from vidgear.gears import NetGear
 import cv2
@@ -503,7 +503,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="38-61"
+```python linenums="1" hl_lines="38-61"
 # import required libraries
 from vidgear.gears import NetGear
 from imutils import build_montages # (1)
@@ -595,7 +595,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="40"
+```python linenums="1" hl_lines="40"
 # import libraries
 from vidgear.gears import NetGear
 from vidgear.gears import VideoGear
@@ -660,67 +660,148 @@ Finally, Open the terminal on another Server System _(this time a Raspberry Pi w
 
 !!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="50"
-# import libraries
-from vidgear.gears import NetGear
-from vidgear.gears import PiGear
-import cv2
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
 
-# add various Picamera tweak parameters to dictionary
-options = {
-    "hflip": True,
-    "exposure_mode": "auto",
-    "iso": 800,
-    "exposure_compensation": 15,
-    "awb_mode": "horizon",
-    "sensor_mode": 0,
-}
+!!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
-# open pi video stream with defined parameters
-stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
 
-# activate multiserver_mode
-options = {"multiserver_mode": True}
+=== "New Picamera2 backend"
 
-# Define NetGear Server at Client's IP address and assign a unique port address and other parameters
-# !!! change following IP address '192.168.x.xxx' with yours !!!
-server = NetGear(
-    address="192.168.1.xxx",
-    port="5578",
-    protocol="tcp",
-    pattern=1,
-    logging=True,
-    **options
-)
+    ```python linenums="1" hl_lines="50"
+    # import libraries
+    from vidgear.gears import NetGear
+    from vidgear.gears import PiGear
+    from libcamera import Transform
+    import cv2
 
-# loop over until Keyboard Interrupted
-while True:
+    # add various Picamera tweak parameters to dictionary
+    options = {
+        "queue": True,
+        "buffer_count": 4,
+        "controls": {"Brightness": 0.5, "ExposureValue": 2.0},
+        "transform": Transform(hflip=1),
+        "auto_align_output_config": True,  # auto-align camera configuration
+    }
 
-    try:
-        # read frames from stream
-        frame = stream.read()
+    # open pi video stream with defined parameters
+    stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
 
-        # check for frame if Nonetype
-        if frame is None:
+    # activate multiserver_mode
+    options = {"multiserver_mode": True}
+
+    # Define NetGear Server at Client's IP address and assign a unique port address and other parameters
+    # !!! change following IP address '192.168.x.xxx' with yours !!!
+    server = NetGear(
+        address="192.168.1.xxx",
+        port="5578",
+        protocol="tcp",
+        pattern=1,
+        logging=True,
+        **options
+    )
+
+    # loop over until Keyboard Interrupted
+    while True:
+
+        try:
+            # read frames from stream
+            frame = stream.read()
+
+            # check for frame if Nonetype
+            if frame is None:
+                break
+
+            # {do something with frame and data(to be sent) here}
+
+            # let's prepare a text string as data
+            text = "I'm Server-2 at Port: 5578"
+
+            # send frame and data through server
+            server.send(frame, message=text)
+
+        except KeyboardInterrupt:
             break
 
-        # {do something with frame and data(to be sent) here}
+    # safely close video stream.
+    stream.stop()
 
-        # let's prepare a text string as data
-        text = "I'm Server-2 at Port: 5578"
+    # safely close server
+    server.close()
+    ```
+    
+=== "Legacy Picamera backend"
 
-        # send frame and data through server
-        server.send(frame, message=text)
+    ??? info "Under the hood, Backend PiGear API _(version `0.3.3` onwards)_ prioritizes the new [`picamera2`](https://github.com/raspberrypi/picamera2) API backend."
 
-    except KeyboardInterrupt:
-        break
+        However, the API seamlessly switches to the legacy [`picamera`](https://picamera.readthedocs.io/en/release-1.13/index.html) backend, if the `picamera2` library is unavailable or not installed.
+        
+        !!! tip "It is advised to enable logging(`logging=True`) to see which backend is being used."
 
-# safely close video stream.
-stream.stop()
+        !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-# safely close server
-server.close()
-```
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
+
+    ```python linenums="1" hl_lines="50"
+    # import libraries
+    from vidgear.gears import NetGear
+    from vidgear.gears import PiGear
+    import cv2
+
+    # add various Picamera tweak parameters to dictionary
+    options = {
+        "hflip": True,
+        "exposure_mode": "auto",
+        "iso": 800,
+        "exposure_compensation": 15,
+        "awb_mode": "horizon",
+        "sensor_mode": 0,
+    }
+
+    # open pi video stream with defined parameters
+    stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
+
+    # activate multiserver_mode
+    options = {"multiserver_mode": True}
+
+    # Define NetGear Server at Client's IP address and assign a unique port address and other parameters
+    # !!! change following IP address '192.168.x.xxx' with yours !!!
+    server = NetGear(
+        address="192.168.1.xxx",
+        port="5578",
+        protocol="tcp",
+        pattern=1,
+        logging=True,
+        **options
+    )
+
+    # loop over until Keyboard Interrupted
+    while True:
+
+        try:
+            # read frames from stream
+            frame = stream.read()
+
+            # check for frame if Nonetype
+            if frame is None:
+                break
+
+            # {do something with frame and data(to be sent) here}
+
+            # let's prepare a text string as data
+            text = "I'm Server-2 at Port: 5578"
+
+            # send frame and data through server
+            server.send(frame, message=text)
+
+        except KeyboardInterrupt:
+            break
+
+    # safely close video stream.
+    stream.stop()
+
+    # safely close server
+    server.close()
+    ```
 
 &nbsp;
 
@@ -753,7 +834,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="7 27-31 38 41-64"
+```python linenums="1" hl_lines="7 27-31 38 41-64"
 # import required libraries
 from vidgear.gears import NetGear
 from imutils import build_montages # (1)
@@ -847,7 +928,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="10 36-44"
+```python linenums="1" hl_lines="10 36-44"
 # import libraries
 from vidgear.gears import NetGear
 from vidgear.gears import VideoGear
@@ -915,71 +996,156 @@ Finally, Open the terminal on another Server System _(this time a Raspberry Pi w
 
 !!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="20 46-54"
-# import libraries
-from vidgear.gears import NetGear
-from vidgear.gears import PiGear
-import cv2
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
 
-# add various Picamera tweak parameters to dictionary
-options = {
-    "hflip": True,
-    "exposure_mode": "auto",
-    "iso": 800,
-    "exposure_compensation": 15,
-    "awb_mode": "horizon",
-    "sensor_mode": 0,
-}
+!!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
-# open pi video stream with defined parameters
-stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
 
-# activate both multiserver and bidirectional modes
-options = {"multiserver_mode": True, "bidirectional_mode": True}
+=== "New Picamera2 backend"
 
-# Define NetGear Server at Client's IP address and assign a unique port address and other parameters
-# !!! change following IP address '192.168.x.xxx' with yours !!!
-server = NetGear(
-    address="192.168.1.xxx",
-    port="5578",
-    protocol="tcp",
-    pattern=1,
-    logging=True,
-    **options
-)
+    ```python linenums="1" hl_lines="20 46-54"
+    # import libraries
+    from vidgear.gears import NetGear
+    from vidgear.gears import PiGear
+    from libcamera import Transform
+    import cv2
 
-# loop over until Keyboard Interrupted
-while True:
+    # add various Picamera2 tweak parameters
+    options = {
+        "queue": True,
+        "buffer_count": 4,
+        "controls": {"Brightness": 0.5, "ExposureValue": 2.0},
+        "transform": Transform(hflip=1),
+        "auto_align_output_config": True,  # auto-align camera configuration
+    }
 
-    try:
-        # read frames from stream
-        frame = stream.read()
+    # open pi video stream with defined parameters
+    stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
 
-        # check for frame if Nonetype
-        if frame is None:
+    # activate both multiserver and bidirectional modes
+    options = {"multiserver_mode": True, "bidirectional_mode": True}
+
+    # Define NetGear Server at Client's IP address and assign a unique port address and other parameters
+    # !!! change following IP address '192.168.x.xxx' with yours !!!
+    server = NetGear(
+        address="192.168.1.xxx",
+        port="5578",
+        protocol="tcp",
+        pattern=1,
+        logging=True,
+        **options
+    )
+
+    # loop over until Keyboard Interrupted
+    while True:
+
+        try:
+            # read frames from stream
+            frame = stream.read()
+
+            # check for frame if Nonetype
+            if frame is None:
+                break
+
+            # {do something with frame and data(to be sent) here}
+
+            # let's prepare a text string as data
+            target_data = "I'm Server-2 at Port: 5578"
+
+            # send frame & data and also receive data from Client
+            recv_data = server.send(frame, message=target_data) # (1)
+
+            # print data just received from Client
+            if not (recv_data is None):
+                print(recv_data)
+
+        except KeyboardInterrupt:
             break
 
-        # {do something with frame and data(to be sent) here}
+    # safely close video stream.
+    stream.stop()
 
-        # let's prepare a text string as data
-        target_data = "I'm Server-2 at Port: 5578"
+    # safely close server
+    server.close()
+    ```
+    
+=== "Legacy Picamera backend"
 
-        # send frame & data and also receive data from Client
-        recv_data = server.send(frame, message=target_data) # (1)
+    ??? info "Under the hood, Backend PiGear API _(version `0.3.3` onwards)_ prioritizes the new [`picamera2`](https://github.com/raspberrypi/picamera2) API backend."
 
-        # print data just received from Client
-        if not (recv_data is None):
-            print(recv_data)
+        However, the API seamlessly switches to the legacy [`picamera`](https://picamera.readthedocs.io/en/release-1.13/index.html) backend, if the `picamera2` library is unavailable or not installed.
+        
+        !!! tip "It is advised to enable logging(`logging=True`) to see which backend is being used."
 
-    except KeyboardInterrupt:
-        break
+        !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-# safely close video stream.
-stream.stop()
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
 
-# safely close server
-server.close()
-```
+    ```python linenums="1" hl_lines="20 46-54"
+    # import libraries
+    from vidgear.gears import NetGear
+    from vidgear.gears import PiGear
+    import cv2
+
+    # add various Picamera tweak parameters to dictionary
+    options = {
+        "hflip": True,
+        "exposure_mode": "auto",
+        "iso": 800,
+        "exposure_compensation": 15,
+        "awb_mode": "horizon",
+        "sensor_mode": 0,
+    }
+
+    # open pi video stream with defined parameters
+    stream = PiGear(resolution=(640, 480), framerate=60, logging=True, **options).start()
+
+    # activate both multiserver and bidirectional modes
+    options = {"multiserver_mode": True, "bidirectional_mode": True}
+
+    # Define NetGear Server at Client's IP address and assign a unique port address and other parameters
+    # !!! change following IP address '192.168.x.xxx' with yours !!!
+    server = NetGear(
+        address="192.168.1.xxx",
+        port="5578",
+        protocol="tcp",
+        pattern=1,
+        logging=True,
+        **options
+    )
+
+    # loop over until Keyboard Interrupted
+    while True:
+
+        try:
+            # read frames from stream
+            frame = stream.read()
+
+            # check for frame if Nonetype
+            if frame is None:
+                break
+
+            # {do something with frame and data(to be sent) here}
+
+            # let's prepare a text string as data
+            target_data = "I'm Server-2 at Port: 5578"
+
+            # send frame & data and also receive data from Client
+            recv_data = server.send(frame, message=target_data) # (1)
+
+            # print data just received from Client
+            if not (recv_data is None):
+                print(recv_data)
+
+        except KeyboardInterrupt:
+            break
+
+    # safely close video stream.
+    stream.stop()
+
+    # safely close server
+    server.close()
+    ```
 
 1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted as `target_data` in `message` parameter.
 

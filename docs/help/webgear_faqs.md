@@ -20,7 +20,7 @@ limitations under the License.
 
 # WebGear FAQs
 
-&nbsp;
+&thinsp;
 
 ## What is WebGear API and what does it do?
 
@@ -30,7 +30,7 @@ limitations under the License.
 
 ## How to get started with WebGear API?
 
-**Answer:** See [WebGear doc ➶](../../gears/webgear/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [WebGear documentation](../../gears/webgear/overview/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 

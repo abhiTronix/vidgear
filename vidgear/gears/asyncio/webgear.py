@@ -17,10 +17,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ===============================================
 """
+
 # import the necessary packages
 import os
 import asyncio
 import inspect
+import contextlib
 import numpy as np
 import logging as log
 from os.path import expanduser
@@ -107,8 +109,11 @@ class WebGear:
             time_delay (int): time delay (in sec) before start reading the frames.
             options (dict): provides ability to alter Tweak Parameters of WebGear, CamGear, PiGear & Stabilizer.
         """
+        # enable logging if specified
+        self.__logging = logging if isinstance(logging, bool) else False
+
         # print current version
-        logcurr_vidgear_ver(logging=logging)
+        logcurr_vidgear_ver(logging=self.__logging)
 
         # raise error(s) for critical Class imports
         import_dependency_safe("starlette" if starlette is None else "")
@@ -123,7 +128,6 @@ class WebGear:
         self.__jpeg_compression_fastdct = True  # fastest DCT on by default
         self.__jpeg_compression_fastupsample = False  # fastupsample off by default
         self.__jpeg_compression_colorspace = "BGR"  # use BGR colorspace by default
-        self.__logging = logging
         self.__frame_size_reduction = 25  # use 25% reduction
         # retrieve interpolation for reduction
         self.__interpolation = retrieve_best_interpolation(
@@ -359,9 +363,11 @@ class WebGear:
                         self.__jpeg_compression_colorspace,
                         self.__jpeg_compression_quality,
                         "enabled" if self.__jpeg_compression_fastdct else "disabled",
-                        "enabled"
-                        if self.__jpeg_compression_fastupsample
-                        else "disabled",
+                        (
+                            "enabled"
+                            if self.__jpeg_compression_fastupsample
+                            else "disabled"
+                        ),
                     )
                 )
 
@@ -416,7 +422,7 @@ class WebGear:
             routes=self.routes,
             middleware=self.middleware,
             exception_handlers=self.__exception_handlers,
-            on_shutdown=[self.shutdown],
+            lifespan=self.__lifespan,
         )
 
     async def __producer(self):
@@ -499,7 +505,9 @@ class WebGear:
             self.__templates.TemplateResponse(request, "index.html")
             if not self.__skip_generate_webdata
             else JSONResponse(
-                {"detail": "WebGear Data-Files Auto-Generation WorkFlow is disabled!"},
+                {
+                    "detail": "MESSAGE : WebGear Data-Files Auto-Generation WorkFlow is disabled!"
+                },
                 status_code=404,
             )
         )
@@ -512,7 +520,11 @@ class WebGear:
             self.__templates.TemplateResponse(request, "404.html", status_code=404)
             if not self.__skip_generate_webdata
             else JSONResponse(
-                {"detail": "WebGear Data-Files Auto-Generation WorkFlow is disabled!"},
+                {
+                    "detail": "ERROR : {} :: MESSAGE : WebGear Data-Files Auto-Generation WorkFlow is disabled.".format(
+                        exc.detail
+                    )
+                },
                 status_code=404,
             )
         )
@@ -525,10 +537,22 @@ class WebGear:
             self.__templates.TemplateResponse(request, "500.html", status_code=500)
             if not self.__skip_generate_webdata
             else JSONResponse(
-                {"detail": "WebGear Data-Files Auto-Generation WorkFlow is disabled!"},
+                {
+                    "detail": "ERROR : {} :: MESSAGE : WebGear Data-Files Auto-Generation WorkFlow is disabled.".format(
+                        exc.detail if hasattr(exc, "detail") else repr(exc)
+                    )
+                },
                 status_code=500,
             )
         )
+
+    @contextlib.asynccontextmanager
+    async def __lifespan(self, context):
+        try:
+            yield
+        finally:
+            # close Video Server
+            self.shutdown()
 
     def shutdown(self):
         """

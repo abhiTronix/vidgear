@@ -51,7 +51,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"  hl_lines="6 13"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 import asyncio
@@ -81,14 +81,13 @@ Then open another terminal on the same system and execute the following python c
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1"  hl_lines="6 9-20 27"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
 
 # define and launch Client with `receive_mode=True`
 client = NetGear_Async(receive_mode=True).launch()
-
 
 # Create a async function where you want to show/manipulate your received frames
 async def main():
@@ -103,7 +102,6 @@ async def main():
 
         # await before continuing
         await asyncio.sleep(0)
-
 
 if __name__ == "__main__":
     # Set event loop to client's
@@ -136,7 +134,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="7-12"
+```python linenums="1" hl_lines="7-12"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
@@ -191,7 +189,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="7-12"
+```python linenums="1" hl_lines="7-12"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 import asyncio
@@ -235,7 +233,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="14-31 38"
+```python linenums="1" hl_lines="14-31 38"
 # import library
 from vidgear.gears.asyncio import NetGear_Async
 import cv2, asyncio
@@ -351,7 +349,7 @@ Open your favorite terminal and execute the following python code:
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python hl_lines="7"
+```python linenums="1" hl_lines="7"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 import asyncio
@@ -383,7 +381,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python
+```python linenums="1" hl_lines="20"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 from vidgear.gears import WriteGear
@@ -391,9 +389,9 @@ import cv2, asyncio
 
 # define and launch Client with `receive_mode=True`
 client = NetGear_Async(receive_mode=True).launch()
+
 # Define writer with output filename 'Output.mp4'
 writer = WriteGear(output="Output.mp4", logging=True)
-
 
 # Create a async function where you want to show/manipulate your received frames
 async def main():

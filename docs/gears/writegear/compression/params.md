@@ -118,7 +118,7 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
 
     !!! warning "While providing additional av-source with `-i` FFmpeg parameter in `output_params` make sure it don't interfere with WriteGear's frame pipeline otherwise it will break things!"
 
-    !!! error "All ffmpeg parameters are case-sensitive. Remember to double check every parameter if any error occurs."
+    !!! failure "All ffmpeg parameters are case-sensitive. Remember to double check every parameter if any error occurs."
 
     !!! tip "Kindly check [H.264 docs ➶](https://trac.ffmpeg.org/wiki/Encode/H.264) and other [FFmpeg Docs ➶](https://ffmpeg.org/documentation.html) for more information on these parameters"
 
@@ -188,9 +188,9 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
         output_params = {"-disable_ffmpeg_window": True} # disables FFmpeg creation window
         ```
         
-    * **`-disable_force_termination`** _(bool)_: sets a special flag to manually disable the default forced-termination behaviour in WriteGear API when `-i` FFmpeg parameter is used _(For more details, see issue: #149)_. Its usage is as follows:
+    * **`-disable_force_termination`** _(bool)_: sets a special flag to manually disable the default forced termination of FFmpeg process in WriteGear API when `-i` FFmpeg parameter is used _(For more details, see issue: #149)_. Its usage is as follows:
 
-        !!! warning "`-disable_force_termination` flag is a absolute necessity when video duration is too short(<60sec), otherwise WriteGear will not produce any valid output."
+        !!! warning "The `-disable_force_termination` flag is a absolute necessity when video duration is too short(`< 60sec`), otherwise WriteGear may produce invalid or no output."
 
         ```python
         output_params = {"-disable_force_termination": True} # disable the default forced-termination behaviour

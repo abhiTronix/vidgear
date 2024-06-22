@@ -20,46 +20,97 @@ limitations under the License.
 
 # WebGear Examples
 
-&nbsp;
+&thinsp;
 
 ## Using WebGear with RaspberryPi Camera Module
 
 Because of WebGear API's flexible internal wapper around VideoGear, it can easily access any parameter of CamGear and PiGear videocapture APIs.
 
 !!! info "Following usage examples are just an idea of what can be done with WebGear API, you can try various [VideoGear](../../gears/videogear/params/), [CamGear](../../gears/camgear/params/) and [PiGear](../../gears/pigear/params/) parameters directly in WebGear API in the similar manner."
- 
-Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera module while tweaking its various properties in just one-liner:
 
-```python
-# import libs
-import uvicorn
-from vidgear.gears.asyncio import WebGear
+Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera module while tweaking its various properties in few lines of python code:
 
-# various webgear performance and Raspberry Pi camera tweaks
-options = {
-    "frame_size_reduction": 40,
-    "jpeg_compression_quality": 80,
-    "jpeg_compression_fastdct": True,
-    "jpeg_compression_fastupsample": False,
-    "hflip": True,
-    "exposure_mode": "auto",
-    "iso": 800,
-    "exposure_compensation": 15,
-    "awb_mode": "horizon",
-    "sensor_mode": 0,
-}
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
 
-# initialize WebGear app
-web = WebGear(
-    enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options
-)
+!!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
-# run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host="localhost", port=8000)
 
-# close app safely
-web.shutdown()
-```
+=== "New Picamera2 backend"
+
+    ```python linenums="1" hl_lines="22"
+    # import libs
+    import uvicorn
+    from libcamera import Transform
+    from vidgear.gears.asyncio import WebGear
+
+    # various WebGear_RTC performance 
+    # and Picamera2 API tweaks
+    options = {
+        "frame_size_reduction": 40,
+        "jpeg_compression_quality": 80,
+        "jpeg_compression_fastdct": True,
+        "jpeg_compression_fastupsample": False,
+        "queue": True,
+        "buffer_count": 4,
+        "controls": {"Brightness": 0.5, "ExposureValue": 2.0},
+        "transform": Transform(hflip=1),
+        "auto_align_output_config": True,  # auto-align camera configuration
+    }
+
+    # initialize WebGear app
+    web = WebGear(
+        enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options
+    )
+
+    # run this app on Uvicorn server at address http://localhost:8000/
+    uvicorn.run(web(), host="localhost", port=8000)
+
+    # close app safely
+    web.shutdown()
+    ```
+    
+=== "Legacy Picamera backend"
+
+    ??? info "Under the hood, Backend PiGear API _(version `0.3.3` onwards)_ prioritizes the new [`picamera2`](https://github.com/raspberrypi/picamera2) API backend."
+
+        However, the API seamlessly switches to the legacy [`picamera`](https://picamera.readthedocs.io/en/release-1.13/index.html) backend, if the `picamera2` library is unavailable or not installed.
+        
+        !!! tip "It is advised to enable logging(`logging=True`) to see which backend is being used."
+
+        !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
+
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
+
+    ```python linenums="1" hl_lines="21"
+    # import libs
+    import uvicorn
+    from vidgear.gears.asyncio import WebGear
+
+    # various webgear performance and Picamera API tweaks
+    options = {
+        "frame_size_reduction": 40,
+        "jpeg_compression_quality": 80,
+        "jpeg_compression_fastdct": True,
+        "jpeg_compression_fastupsample": False,
+        "hflip": True,
+        "exposure_mode": "auto",
+        "iso": 800,
+        "exposure_compensation": 15,
+        "awb_mode": "horizon",
+        "sensor_mode": 0,
+    }
+
+    # initialize WebGear app
+    web = WebGear(
+        enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options
+    )
+
+    # run this app on Uvicorn server at address http://localhost:8000/
+    uvicorn.run(web(), host="localhost", port=8000)
+
+    # close app safely
+    web.shutdown()
+    ```
 
 &nbsp;
 
@@ -67,7 +118,7 @@ web.shutdown()
  
 Here's an example of using WebGear API with real-time Video Stabilization enabled:
 
-```python
+```python linenums="1" hl_lines="14"
 # import libs
 import uvicorn
 from vidgear.gears.asyncio import WebGear
@@ -102,7 +153,7 @@ In this example, we'll be displaying two video feeds side-by-side simultaneously
 
 **Step-1 (Trigger Auto-Generation Process):** Firstly, run this bare-minimum code to trigger the [**Auto-generation**](../../gears/webgear/overview/#auto-generation-process) process, this will create `.vidgear` directory at current location _(directory where you'll run this code)_:
 
-```python
+```python linenums="1" hl_lines="6"
 # import required libraries
 import uvicorn
 from vidgear.gears.asyncio import WebGear
@@ -119,7 +170,7 @@ web.shutdown()
 
 **Step-2 (Replace HTML file):** Now, go inside `.vidgear` :arrow_right: `webgear` :arrow_right: `templates` directory at current location of your machine, and there replace content of `index.html` file with following:
 
-```html
+```html hl_lines="5-6"
 {% extends "base.html" %}
 {% block content %}
   <h1 class="glow">WebGear Video Feed</h1>
@@ -132,7 +183,7 @@ web.shutdown()
 
 **Step-3 (Build your own Frame Producers):** Now, create a python script code with OpenCV source, as follows:
 
-```python
+```python linenums="1"  hl_lines="9 15-38 42-65 68-77 81 84-86"
 # import necessary libs
 import uvicorn, asyncio, cv2
 from vidgear.gears.asyncio import WebGear

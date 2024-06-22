@@ -20,7 +20,7 @@ limitations under the License.
 
 # CamGear API Usage Examples:
 
-!!! experiment "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/camgear_ex/)"
+!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/camgear_ex/)"
 
 &thinsp;
 
@@ -28,7 +28,7 @@ limitations under the License.
 
 Following is the bare-minimum code you need to get started with CamGear API:
 
-```python
+```python linenums="1"
 # import required libraries
 from vidgear.gears import CamGear
 import cv2
@@ -79,7 +79,7 @@ The complete usage example for Dailymotion and Twitch URLs are as follows:
 
     **Checkout [this FAQ ➶](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.**
 
-    !!! fail "Not all resolutions are supported with GStreamer Backend. See issue #244"
+    !!! failure "Not all resolutions are supported with GStreamer Backend. See issue #244"
 
 ???+ info "Exclusive CamGear Attributes for `yt_dlp` backend"
     
@@ -124,7 +124,8 @@ The complete usage example for Dailymotion and Twitch URLs are as follows:
     ```
 
 === "Dailymotion :fontawesome-brands-dailymotion:"
-    ```python  hl_lines="12-13"
+
+    ```python linenums="1"  hl_lines="12-13"
     # import required libraries
     from vidgear.gears import CamGear
     import cv2
@@ -172,7 +173,7 @@ The complete usage example for Dailymotion and Twitch URLs are as follows:
 
     !!! warning "If Twitch user is offline, CamGear will throw ValueError."
 
-    ```python  hl_lines="12-13"
+    ```python linenums="1"  hl_lines="12-13"
     # import required libraries
     from vidgear.gears import CamGear
     import cv2
@@ -224,7 +225,7 @@ The complete usage example for Dailymotion and Twitch URLs are as follows:
 
 CamGear API also provides out-of-the-box support for pipelining live video-frames and metadata from **:fontawesome-brands-youtube: YouTube (Livestream + Normal) Videos**. 
 
-!!! fail "YouTube Playlists :material-youtube-subscription: are not supported yet."
+!!! failure "YouTube Playlists :material-youtube-subscription: are not supported yet."
 
 The complete usage example is as follows:
 
@@ -234,7 +235,7 @@ The complete usage example is as follows:
 
     **Checkout [this FAQ ➶](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.**
 
-    !!! fail "Not all resolutions are supported with GStreamer Backend. See issue #244"
+    !!! failure "Not all resolutions are supported with GStreamer Backend. See issue #244"
     
 
 ??? info "Exclusive CamGear Attributes for `yt_dlp` backend"
@@ -274,7 +275,7 @@ The complete usage example is as follows:
     print(video_metadata["title"])
     ```
 
-```python hl_lines="8-9"
+```python linenums="1" hl_lines="8-9"
 # import required libraries
 from vidgear.gears import CamGear
 import cv2
@@ -325,7 +326,7 @@ The complete usage example is as follows:
 
 !!! tip "All the supported Source Tweak Parameters can be found [here ➶](../advanced/source_params/#source-tweak-parameters-for-camgear-api)"
 
-```python hl_lines="8-10"
+```python linenums="1" hl_lines="8-10"
 # import required libraries
 from vidgear.gears import CamGear
 import cv2
@@ -377,13 +378,13 @@ CamGear API also supports **Direct Colorspace Manipulation**, which is ideal for
 
 !!! info "A more detailed  information on colorspace manipulation can be found [here ➶](../../../bonus/colorspace_manipulation/)"
 
-In following example code, we will start with [**HSV**](https://en.wikipedia.org/wiki/HSL_and_HSV) as source colorspace, and then we will switch to [**GRAY**](https://en.wikipedia.org/wiki/Grayscale)  colorspace when `w` key is pressed, and then [**LAB**](https://en.wikipedia.org/wiki/CIELAB_color_space) colorspace when `e` key is pressed, finally default colorspace _(i.e. **BGR**)_ when `s` key is pressed. Also, quit when `q` key is pressed:
+In following example code, we will start with [**HSV**](https://en.wikipedia.org/wiki/HSL_and_HSV) as source colorspace, and then we will switch to [**GRAY**](https://en.wikipedia.org/wiki/Grayscale)  colorspace when ++"W"++ key is pressed, and then [**LAB**](https://en.wikipedia.org/wiki/CIELAB_color_space) colorspace when ++"E"++ key is pressed, finally default colorspace _(i.e. **BGR**)_ when ++"S"++ key is pressed. Also, quit when ++"Q"++ key is pressed:
 
 
-!!! fail "Any incorrect or None-type value, will immediately revert the colorspace to default i.e. `BGR`."
+!!! failure "Any incorrect or None-type value, will immediately revert the colorspace to default i.e. `BGR`."
 
 
-```python hl_lines="7 30 34 38"
+```python linenums="1" hl_lines="7 30 34 38"
 # import required libraries
 from vidgear.gears import CamGear
 import cv2
