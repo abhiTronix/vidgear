@@ -20,9 +20,282 @@ limitations under the License.
 
 # Release Notes
 
-## v0.3.2 (2023-09-10)
+## v0.3.3 (2024-06-22)
 
 ???+ tip "New Features"
+    - [x] **PiGear:**
+        * ⚡️ Official Support for [**Picamera2**](https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf) API backend. (Fixes #342)
+            + This massive update brings official support for the new Picamera2 API, unlocking powerful features for Raspberry Pi Camera Modules and limited USB camera support. 
+            + **Seamless Python wrapper:** A robust wrapper around Picamera2 API library simplifies integration with minimal code changes for existing PiGear users.
+            + **Enhanced camera control:** Leverages libcamera API under the hood for Raspberry Pi Camera Modules.
+            + **Existing compatibility:** Maintains compatibility with PiGear's existing super-charged multi-threaded and colorspace manipulation framework.
+            + **Proper Resource management:** Ensures proper resource release during PiGear termination.
+            + **USB camera support (limited):** Provides basic functionality for USB webcams. PiGear could accurately differentiates between USB and Raspberry Pi cameras using metadata.
+            + **Backward compatibility:** Seamlessly switches to the legacy Picamera library backend if Picamera2 is unavailable.
+            + **Standalone functionalities:** Standalone functionalities for both legacy `picamera` and newer `picamera2` backends for clarity.
+            + **Advanced optional parameters handling:** Handles camera configurational parameters and user-defined settings for various camera types.
+                * **New optional configurational parameters:** Currently Supports `sensor`, `format`, `controls`, `transform`, `stride`, `buffer_count`, and `queue` with sanity checks. 
+                * **New user-defined optional parameters:** Such as `auto_align_output_config`, `enable_verbose_logs`, and more.
+    - [x] **StreamGear:**
+        * Introduced new `-enable_force_termination` attribute for immediate FFmpeg process termination.
+    - [x] **Helper:**
+        * Added support for SRTP/RTSPS in `is_valid_url` function (Fixes #410)
+            + Enhanced `is_valid_url` in `helper.py` to recognize and support both `rtsp` and `rtsps` protocols. (Suggested by @jonra1993)
+            + SRTP/RTSPS extends RTSP/RTP to encrypt video and audio data using the same ciphers as HTTPS, typically AES with a 128-bit key length.
+        * Added a custom deprecated decorator to mark deprecated functions and parameters to display a warning message when a deprecated one is used.
+    - [x] **Docs:**
+        * Overhauled mkdocs material theme:
+            + Added `unrecognized_links: ignore` to `mkdocs.yml` for validations.
+            + Added custom admonition icons.
+            + Added new `git-authors` plugin.
+            + Added new tables markdown extension.
+            + Added custom fences to `pymdownx.superfences` markdown extension. 
+            + Added `line_spans: __span` and `pygments_lang_class: true` parameters to `pymdownx.highlight` markdown extension. 
+            + Added `normalize_issue_symbols: true` to `pymdownx.magiclink` markdown extension.
+            + Added new mkdocs feature dependency `mkdocs-git-authors-plugin`.
+        * Added the use of new `-enable_force_termination` parameter.
+        * Added a new FAQ entry about the deprecated `rgb_mode` parameter.
+        * Added new `screengear_error11.png` asset.
+    - [x] **CI:**
+        * Added test cases for `import_dependency_safe` function to validate different scenarios and error handling in `import_dependency_safe`.
+
+??? success "Updates/Improvements" 
+    - [x] Core: 
+        * Improved exception handling for module imports: 
+            + Updated `import_dependency_safe` in `helper.py`:
+                * Added specific handling for `ModuleNotFoundError`.
+                * Included original exception in `ImportError` for better error tracing.
+                * Enhanced logging to include exception traceback when error is set to "log".
+            + Enhanced `import_core_dependency` in `__init__.py`:
+                * Added specific handling for `ModuleNotFoundError`.
+                * Included original exception in `ImportError` for better error tracing.
+        * Improved colorspace handling in videocapture gears:
+            + Logged a warning and discarded invalid colorspace values instead of raising an exception.
+            + Consolidated colorspace logging into a single line using a ternary operation.
+    - [x] Asyncio:
+        * Replaced deprecated Starlette's `on_shutdown` parameter with an async context manager `lifespan` in WebGear and WebGear_RTC APIs. (Fixes #397)
+            + Moved shutdown logic for VideoGear and peer RTC connections to this new `lifespan` context manager.
+            + Added new `contextlib` import for using `asynccontextmanager`.
+    - [x] NetGear_Async API:
+        * Modified `__init__` method to handle event loop more robustly:
+            + Try to get the running event loop using `asyncio.get_running_loop()`
+            + If no running event loop found, create a new one with `asyncio.new_event_loop()`
+            + Log if creating a new event loop
+        * Changed launch method to use `self.loop.create_task()` instead of `asyncio.ensure_future()`
+            + Ensures the task is created using the correct event loop instance.
+        * Moved the event loop initialization code to an earlier point before setting event loop policy to ensure it is set up correctly before selecting `WindowsSelectorEventLoop` policy.
+            + On Windows, vidgear requires the `WindowsSelectorEventLoop`, but Python 3.8 and above defaults to the `ProactorEventLoop` which is not compatible.
+        * Removed redundant python version check to set `WindowsSelectorEventLoop` policy, as minimum supported version is already `3.8`.
+        * Move event loop setup and policy assignment to the beginning of `__init__` before zmq Context creation.
+        * Refactored return data handling.
+    - [x] StreamGear:
+        * Updated `close()` methods for handling gracefully signal interruptions based on different operating systems with device audio streams.
+        * Deprecated `terminate()` method, introducing `close()` for safer process termination.
+        * Enhanced stream copy support in Single Source mode (Fixes #396).
+            + Moved settings for "-vf" and "-aspect" inside conditional blocks.
+            + Added warnings and discarded these parameters in stream copy mode.
+            + Ignored stream copy parameter in Real-time Frames Mode or Custom Streams with appropriate warnings.
+            + Updated `-acodec` handling:
+                * Default to `aac` for Custom Streams.
+                * Use stream copy (`-acodec copy`) for input video’s audio when Custom Streams are disabled.
+            + Refined `-livestream` parameter usage to Real-time Frames Mode only.
+            + Adjusted video and audio bitrate assignment to skip when stream copy is enabled.
+            + Improved log message for `-clear_prev_assets` parameter.
+        * Restricted `-livestream` parameter to Real-time Frames Mode only.
+            + Disabled live streaming for video files and updated relevant logging.
+        * Enhanced warning messages and clarified description.
+    - [x] PiGear:
+        * Logging optimization with warning for common `libcamera` messages.
+        * Lowered `framerate` minimum value to `0.0`.
+        * Moved `sensor` optional parameter to commonly supported picamera2 configurational parameters.
+        * Removed unsupported `bit_depth` optional parameters.
+        * Updated PiGear API tagline and introduction.
+    - [x] NetGear: 
+        * Enhanced logging and error handling for secure mode.
+        * Logged Authenticator start/stop events.
+        * Handled socket session expiration more gracefully in `recv_handler`.
+        * Ensured proper termination of the ZMQ context and socket when closing the NetGear instance.
+    - [x] WebGear:
+        * Enhanced error messages for WebGear auto-generation workflow (Fixes #403)
+            + Updated `homepage`, `not_found`, and `server_error` methods to include more detailed JSON error messages.
+            + Added specific error and message prefixes to improve clarity.
+    - [x] WebGear_RTC:
+        * Optimized peer connection closure to avoid redundant closures.
+        * Reduced unnecessary logging by only logging ICE connection state changes when they are not in a "failed" state.
+    - [x] WriteGear:
+        * Simplified the logic for formatting output parameters.
+        * Improved error handling in `execute_ffmpeg_cmd` method:
+            + Raised `ValueError` with descriptive messages for `BrokenPipeError` or `IOError`.
+            + Updated error handling per PEP 409 to preserve original exception context or suppress it based on logging settings.
+    - [x] CamGear:
+        * Removed GStreamer support check.
+        * Improved readability of livestream warning logs.
+    - [x] Setup.py:
+        * Dropped legacy picamera dependency in `setup.py`.
+        * Updated setup.py to use the latest `pyzmq` version to address installation issues (Fixes #399).
+    - [x] Helper:
+        * Added patch for substring index bug in `get_supported_demuxers` helper method.
+        * Updated `extract_time` helper function regex to handle milliseconds.
+    - [x] Docs:
+        * Update StreamGear documentation:
+            + Updated documentation to deprecated `terminate()` method, and introducing `close()` for safer process termination.
+            + Improved the overview section's description and wording.
+            + Updated usage examples for both Single-Source Mode and Real-time Frames Mode.
+            + Updated StreamGear usage examples for device audio input.
+            + Refactored sections for Live Streaming usage.
+                * Added warning for unsupported `-livestream` parameter in Single-Source Mode.
+            + Added a tip box on benefits of using stream copy (`-vcodec copy`) for faster HLS/DASH transcoding.
+                * Highlighted limitations of stream copy, including incompatibility with Real-time Frames Mode and Custom Streams.
+                * Clarified automatic audio stream copy (`-acodec copy`) usage with input video’s audio stream.
+            + Updated usage example for device video source.
+            + Addressed deprecation of the `terminate()` method in favor of the new `close()` method.
+            + Updated respective notices for the deprecated `terminate()` method and `rgb_mode` parameter.
+            + Added a deprecation warning admonition for the `rgb_mode` parameter in the `stream()` method.
+            + Removed the obsolete usage example for deprecation RGB mode with StreamGear.
+            + Added documentation and usage of the new `-enable_force_termination` parameter.
+            + Modified the warning message to mention that forced termination can cause corrupted output in certain scenarios.
+            + Updated the docstring for the `stream()` method and `transcode_source()` method.
+            + Refactored the StreamGear API Parameters documentation to enhance clarity and readability.
+            + Refined the description of the `-streams` attribute of the StreamGear API.
+        * Update PiGear documentation:
+            + Added a warning advising users to disable common `libcamera` messages when logging is disabled.
+            + Updated Picamera2 installation instructions _(including `apt`, `pip`, pre-installation on Raspberry Pi images, and compatibility warnings)_
+            + Moved legacy Picamera library installation instructions to an admonition.
+            + Removed Importing section from overview to avoid confusion.
+        * Update NetGear documentation:
+            + Added Admonition for warning users about the Client's end must run before the Server's end to establish a secure connection in Secure Mode.
+            + Added warning log for potential issues with `flag=1` (NOBLOCK). (Fixes #390)
+                * Changed default value of `copy` to `True` in NetGear API documentation.
+            + Noted that `track` option is ignored when `copy=True`.
+        * Update WriteGear documentation:
+            + Updated the documentation for the `-disable_force_termination` parameter.
+        * Update `README.md`:
+            + Replaced deprecated options (`frame_jpeg_quality`, `frame_jpeg_optimize`, `frame_jpeg_progressive`) with their newer equivalents (`jpeg_compression_quality,` `jpeg_compression_fastdct`, `jpeg_compression_fastupsample`) in WebGear usage example.
+        * Update `mkdocs.yml`:
+            + Set `edit_uri` for GitHub edit links.
+            + Add new theme features like content actions, tooltips, etc.
+            + Update palette settings for light/dark mode.
+            + Enable new markdown extensions.
+            + Add custom javascript hook support.
+            + Migrated to new Google Analytics 4.
+            + Replaced depreciated `materialx `with supported emoji extension.
+            + Replaced permalink icon with default one.
+            + Change system mode toggle icon and name in `mkdocs.yml`.
+        * Improved overall documentation quality by added detailed explanations, practical examples, following best practices, and clearer usage patterns.
+        * Updated sections, code examples, admonitions, and comments for better readability, consistency, and precision.
+        * Added missing version contributors to `changelog.md`.
+        * Added new icons to make headings more readable.
+        * Replaced unsupported admonitions with supported ones.
+        * Removed all custom admonition icons and color CSS from `custom.css`.
+        * Removed Twitter section from help and docs site metadata.
+        * Updated Zenodo badge and BibTeX entry.
+        * Added workaround for 'AttributeError: 'DXCamera' object has no attribute 'is_capturing'' error on Windows.
+        * Remove script tags from `main.html` and use a custom hook for adding javascripts on certain pages.
+        * Refactored all APIs and bonus examples to use `linenums` and `hl_lines` which makes it easier to highlight specific lines in code blocks.
+        * Removed Gitter community chat sidecard javascript file.
+        * Redefined spacing between sections.
+        * Add failure warning in various docs about `picamera` incompatibility on 64-bit OS.
+        * Update announcement icon in `main.html`.
+        * Remove `site.webmanifest` file.
+    - [x] Maintenance:
+        * Improved logging, parameter validation, and added descriptive dialogs across various APIs.
+        * Moved logging enablement before version logging for consistency in vidgear APIs.
+        * Removed redundant boolean assignment for various APIs internal logging.
+        * Simplified conditional statements and assignments using short-circuiting, Boolean operations, and ternary operators across various APIs and tests.
+        * Refactored vidgear code to improve readability, maintainability, and performance.
+        * Added `.cache` directory to `.gitignore`, 
+        * Updated vidgear library version to `v0.3.3`.
+        * Improved code efficiency with short-circuiting and formatting.
+        * Updated logging practices to be more developer-friendly.
+        * Removed unnecessary parentheses and type checks.
+        * Removed unused imports.
+        * Updated code comments.
+    - [x] CI:
+        * Temporarily removed PiGear API from code coverage due to hardware limitations.
+        * Deprecated custom `event_loop` fixture overrides in WebGear_RTC and NetGear_Async tests
+            + Removed redundant `pytest.mark.asyncio` decorators from several test functions. 
+        * Add a new `event_loop_policy` fixture for pytest to override the event loop policy:
+            + Added new recommended approach of using `pytest.mark.asyncio(scope="module")` to mark all WebGear_RTC and NetGear_Async tests as asynchronous and utilize the same event loop throughout the module.
+            + Log the event loop being used for debugging.
+        * Updated NetGear unit tests to reflect the new default for `copy`.
+        * Ensured coverage for `raise`, `log`, `silent`, and unknown error types.
+        * Improved parameterized test cases to support floating point values.
+        * Updated StreamGear tests to use the new `close()` method instead of the deprecated terminate() method.
+        * Updated tests of various APIs for better coverage and reliability.
+        * Enabled `kill=True` in `close()` in NetGear Tests.
+        * Removed pinned `cryptography==38.0.4` dependency.
+        * Remove unused imports and code cleanup.
+        * Rearranged the dependencies.
+
+??? danger "Breaking Updates/Changes"
+    - StreamGear:
+        - [ ] Deprecated `terminate()` method and introduce `close()` method.
+            + The `terminate()` method in StreamGear is now deprecated and will be removed in a future release. Developers should use the new `close()` method instead, which provides a more descriptive name like in  WriteGear API for terminating StreamGear processes safely.
+        - [ ] Deprecated `rgb_mode` parameter in `stream()` method.
+            + This parameter will be removed in a future version, and only BGR format frames will be supported.
+        - [ ] Restricted `-livestream` parameter to Real-time Frames Mode only.
+            + Live streaming is intended for low-latency streaming of real-time frames, where chunks contain only the most recent frames. It doesn't make sense when streaming from a video file, as the entire file can be streamed normally without the need for live streaming.
+
+
+??? bug "Bug-fixes"
+    - [x] PiGear:
+        * Modify PiGear class behavior when `enforce_legacy_picamera=True` on unsupported system
+            + Instead of silently disabling `picamera2` API directly, PiGear now raises an error if `picamera` is unavailable or unsupported
+            + Prevented incorrect initialization of `PiGear` class on unsupported 64-bit OS systems.
+        * Fixed `UnboundLocalError` bug for 'picamera2' variable assigment.
+        * Fixed `UnboundLocalError` bug for 'queue' variable assignment.
+        * Fixed colorspace typo bug.
+    - [x] StreamGear:
+        * Fixed incompatibility of stream copy with Real-time Frames Mode.
+            + Added warnings and discarded `-vcodec copy` when using this mode.
+        * Removed non-essential aspect ratio parameter to prevent unwanted distortions (Fixes #385).
+        * Moved handle streaming format to beginning to fix 'StreamGear' object has no attribute '_StreamGear__format' bug.
+    - [x] NetGear: 
+        * Fixed Secure Mode failing to work on conflicting ZMQ Contexts:
+            + Handled "Address in use" error more gracefully and disabled secure mode if errors occur.
+            + Improved handling of ZMQ Authenticator and Certificates.
+        * Fixed `msg_json` undefined when terminating context in the `recv_handler` method.
+    - [x] CamGear:
+        * Fixed logging condition for yt-dlp (Fixes #394) 
+            + Updated `no_warnings` parameter in `CamGear` to be `False` when logging is enabled and `True` otherwise.
+    - [x] Docs:
+        * Replaced buggy kofi widget with a button image in `index.md`.
+        * Fixed Ko-fi sponsorship heart hover effect in footer 
+            + Replaced `twemoji` heart emoji with `heart-pulse` fontawesome SVG  
+        * Fixed titles and indentations in various admonitions.
+        * Fixed various issues in code comments, and hyperlinks URLs. 
+        * Fixed typos, formatting, code highlighting, and grammar inconsistencies.
+        * Fixed minor typo in `js_hook.py`.
+    - [x] CI:
+        * Fixed simplejpeg and opencv not compatible with `numpy==2.x.x` versions.
+            + Pinned `numpy<2.0.0` in all CI envs.
+        * Fixed expected duration value in parameterized test case from `8` to `8.44` since `test_extract_time` function now supports floating point values.
+        * Fixed `test_secure_mode` NetGear test:
+            + Added `"127.0.0.1"` address to allow common endpoint for connection.
+            + Added `"jpeg_compression":False` to disable frame compression, allowing frame to be the same while assertion.
+        * Fixed `pip install` hash bug in Azure Pipelines CI.
+        * Fixed various typos and code issues in tests.
+        * Fixed invalid escape sequence in test case string.
+        * Fixed python environment bugs in `appveyor.yml`.
+
+??? question "Pull Requests"
+    * PR #411
+    * PR #409
+    * PR #406 
+    * PR #401
+    * PR #398
+    * PR #392
+
+??? new "New Contributors"
+    * @jonra1993
+
+&nbsp; 
+
+&nbsp; 
+
+## v0.3.2 (2023-09-10)
+
+??? tip "New Features"
     - [x] **NetGear:** 
         * Added new `kill` parameter to `close()` method to forcefully kill ZMQ context instead of graceful exit only in the `receive` mode.
         * Added new `subscriber_timeout` integer optional parameter to support timeout with `pattern=2` _(or Publisher-Subscriber)_ pattern.
