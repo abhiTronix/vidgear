@@ -544,12 +544,11 @@ def get_supported_demuxers(path):
     splitted = [x.decode("utf-8").strip() for x in demuxers.split(b"\n")]
     split_index = [idx for idx, s in enumerate(splitted) if "--" in s][0]
     supported_demuxers = splitted[split_index + 1 : len(splitted) - 1]
-    # compile regex
-    finder = re.compile(r"\s\s[a-z0-9_,-]+\s+")
-    # find all outputs
-    outputs = finder.findall("\n".join(supported_demuxers))
-    # return output findings
-    return [o.strip() for o in outputs]
+    # search all demuxers
+    outputs = [re.search(r"\s[a-z0-9_,-]{2,}\s", d) for d in supported_demuxers]
+    outputs = [o.group(0) for o in outputs if o]
+    # return demuxers output
+    return [o.strip() if not ("," in o) else o.split(",")[-1].strip() for o in outputs]
 
 
 def get_supported_pixfmts(path):
