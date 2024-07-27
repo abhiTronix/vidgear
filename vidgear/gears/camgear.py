@@ -24,6 +24,8 @@ import time
 import queue
 import logging as log
 from threading import Thread, Event
+from typing import TypeVar, Optional
+from numpy.typing import NDArray
 
 # import helper packages
 from .helper import (
@@ -57,7 +59,9 @@ if not (yt_dlp is None):
             options (dict): provides ability to alter yt-dlp backend params.
         """
 
-        def __init__(self, source_url, logging=False, **stream_params):
+        def __init__(
+            self, source_url: str, logging: bool = False, **stream_params: dict
+        ):
             # initialize global params
             self.__logging = logging
             self.is_livestream = False
@@ -198,6 +202,9 @@ if not (yt_dlp is None):
             return streams
 
 
+CAMGear = TypeVar("CAMGear", bound="CamGear")
+
+
 class CamGear:
     """
     CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format (upto 4k tested),
@@ -213,12 +220,12 @@ class CamGear:
     def __init__(
         self,
         source=0,
-        stream_mode=False,
-        backend=0,
-        colorspace=None,
-        logging=False,
-        time_delay=0,
-        **options
+        stream_mode: bool = False,
+        backend: int = 0,
+        colorspace: str = None,
+        logging: bool = False,
+        time_delay: int = 0,
+        **options: dict
     ):
         """
         This constructor method initializes the object state and attributes of the CamGear class.
@@ -414,7 +421,7 @@ class CamGear:
         # initialize stream read flag event
         self.__stream_read = Event()
 
-    def start(self):
+    def start(self) -> CAMGear:
         """
         Launches the internal *Threaded Frames Extractor* daemon.
 
@@ -487,7 +494,7 @@ class CamGear:
         # release resources
         self.stream.release()
 
-    def read(self):
+    def read(self) -> Optional[NDArray]:
         """
         Extracts frames synchronously from monitored queue, while maintaining a fixed-length frame buffer in the memory,
         and blocks the thread if the queue is full.
@@ -505,7 +512,7 @@ class CamGear:
             else None
         )
 
-    def stop(self):
+    def stop(self) -> None:
         """
         Safely terminates the thread, and release the multi-threaded resources.
         """
