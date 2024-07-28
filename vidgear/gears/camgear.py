@@ -202,7 +202,8 @@ if not (yt_dlp is None):
             return streams
 
 
-CAMGear = TypeVar("CAMGear", bound="CamGear")
+# Type variable `T` representing class `CamGear`.
+T = TypeVar("T", bound="CamGear")
 
 
 class CamGear:
@@ -421,7 +422,7 @@ class CamGear:
         # initialize stream read flag event
         self.__stream_read = Event()
 
-    def start(self) -> CAMGear:
+    def start(self) -> T:
         """
         Launches the internal *Threaded Frames Extractor* daemon.
 

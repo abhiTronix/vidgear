@@ -35,7 +35,8 @@ logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
-VdGear = TypeVar("VdGear", bound="VideoGear")
+# Type variable `T` representing class `VideoGear`.
+T = TypeVar("T", bound="VideoGear")
 
 
 class VideoGear:
@@ -157,7 +158,7 @@ class VideoGear:
         # initialize framerate variable
         self.framerate = self.stream.framerate
 
-    def start(self) -> VdGear:
+    def start(self) -> T:
         """
         Launches the internal *Threaded Frames Extractor* daemon of API in use.
 

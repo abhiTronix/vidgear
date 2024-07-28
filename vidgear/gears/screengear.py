@@ -50,8 +50,8 @@ logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
-
-ScrnGear = TypeVar("ScrnGear", bound="ScreenGear")
+# Type variable `T` representing class `ScreenGear`.
+T = TypeVar("T", bound="ScreenGear")
 
 
 class ScreenGear:
@@ -283,7 +283,7 @@ class ScreenGear:
         # initialize termination flag
         self.__terminate = Event()
 
-    def start(self) -> ScrnGear:
+    def start(self) -> T:
         """
         Launches the internal *Threaded Frames Extractor* daemon
 
