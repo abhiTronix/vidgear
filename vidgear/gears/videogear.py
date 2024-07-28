@@ -20,6 +20,8 @@ limitations under the License.
 
 # import the necessary packages
 import logging as log
+from typing import TypeVar, Tuple, Union
+from numpy.typing import NDArray
 
 # import helper packages
 from .helper import logger_handler, logcurr_vidgear_ver
@@ -32,6 +34,8 @@ logger = log.getLogger("VideoGear")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+
+VdGear = TypeVar("VdGear", bound="VideoGear")
 
 
 class VideoGear:
@@ -48,21 +52,21 @@ class VideoGear:
     def __init__(
         self,
         # VideoGear parameters
-        enablePiCamera=False,
-        stabilize=False,
+        enablePiCamera: bool = False,
+        stabilize: bool = False,
         # PiGear parameters
-        camera_num=0,
-        resolution=(640, 480),
-        framerate=30,
+        camera_num: int = 0,
+        resolution: Tuple[int, int] = (640, 480),
+        framerate: Union[int, float] = 30,
         # CamGear parameters
         source=0,
-        stream_mode=False,
-        backend=0,
+        stream_mode: bool = False,
+        backend: int = 0,
         # common parameters
-        time_delay=0,
-        colorspace=None,
-        logging=False,
-        **options
+        time_delay: int = 0,
+        colorspace: str = None,
+        logging: bool = False,
+        **options: dict
     ):
         """
         This constructor method initializes the object state and attributes of the VideoGear class.
@@ -153,7 +157,7 @@ class VideoGear:
         # initialize framerate variable
         self.framerate = self.stream.framerate
 
-    def start(self):
+    def start(self) -> VdGear:
         """
         Launches the internal *Threaded Frames Extractor* daemon of API in use.
 
@@ -162,7 +166,7 @@ class VideoGear:
         self.stream.start()
         return self
 
-    def read(self):
+    def read(self) -> NDArray:
         """
         Extracts frames synchronously from selected API's monitored deque, while maintaining a fixed-length frame
         buffer in the memory, and blocks the thread if the deque is full.
@@ -178,7 +182,7 @@ class VideoGear:
                 return frame_stab
         return self.stream.read()
 
-    def stop(self):
+    def stop(self) -> None:
         """
         Safely terminates the thread, and release the respective multi-threaded resources.
         """
