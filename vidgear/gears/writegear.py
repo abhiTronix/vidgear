@@ -26,6 +26,8 @@ import platform
 import pathlib
 import logging as log
 import subprocess as sp
+from typing import List
+from numpy.typing import NDArray
 
 # import helper packages
 from .helper import (
@@ -77,11 +79,11 @@ class WriteGear:
 
     def __init__(
         self,
-        output="",
-        compression_mode=True,
-        custom_ffmpeg="",
-        logging=False,
-        **output_params
+        output: str = "",
+        compression_mode: bool = True,
+        custom_ffmpeg: str = "",
+        logging: bool = False,
+        **output_params: dict
     ):
         """
         This constructor method initializes the object state and attributes of the WriteGear class.
@@ -369,7 +371,7 @@ class WriteGear:
                 "Compression Mode is disabled, Activating OpenCV built-in Writer!"
             )
 
-    def write(self, frame, rgb_mode=False):
+    def write(self, frame: NDArray, rgb_mode: bool = False) -> None:
         """
         Pipelines `ndarray` frames to respective API _(**FFmpeg** in Compression Mode & **OpenCV's VideoWriter API** in Non-Compression Mode)_.
 
@@ -634,7 +636,7 @@ class WriteGear:
         """
         self.close()
 
-    def execute_ffmpeg_cmd(self, command=None):
+    def execute_ffmpeg_cmd(self, command: List = None) -> None:
         """
 
         Executes user-defined FFmpeg Terminal command, formatted as a python list(in Compression Mode only).
@@ -758,7 +760,7 @@ class WriteGear:
             self.__process.isOpened()
         ), "[WriteGear:ERROR] :: Failed to initialize OpenCV Writer!"
 
-    def close(self):
+    def close(self) -> None:
         """
         Safely terminates various WriteGear process.
         """
