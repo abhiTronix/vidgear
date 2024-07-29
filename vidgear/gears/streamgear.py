@@ -28,6 +28,7 @@ import logging as log
 import subprocess as sp
 from tqdm import tqdm
 from collections import OrderedDict
+from numpy.typing import NDArray
 
 # import helper packages
 from .helper import (
@@ -68,7 +69,12 @@ class StreamGear:
     """
 
     def __init__(
-        self, output="", format="dash", custom_ffmpeg="", logging=False, **stream_params
+        self,
+        output: str = "",
+        format: str = "dash",
+        custom_ffmpeg: str = "",
+        logging: bool = False,
+        **stream_params: dict
     ):
         """
         This constructor method initializes the object state and attributes of the StreamGear class.
@@ -403,7 +409,7 @@ class StreamGear:
         parameter="rgb_mode",
         message="The `rgb_mode` parameter is deprecated and will be removed in a future version. Only BGR format frames will be supported going forward.",
     )
-    def stream(self, frame, rgb_mode=False):
+    def stream(self, frame: NDArray, rgb_mode: bool = False) -> None:
         """
         Pipes `ndarray` frames to FFmpeg Pipeline for transcoding them into chunked-encoded media segments of
         streaming formats such as MPEG-DASH and HLS.
@@ -463,7 +469,7 @@ class StreamGear:
             )
             raise ValueError  # for testing purpose only
 
-    def transcode_source(self):
+    def transcode_source(self) -> None:
         """
         Transcodes an entire video file _(with or without audio)_ into chunked-encoded media segments of
         streaming formats such as MPEG-DASH and HLS.
@@ -1230,7 +1236,7 @@ class StreamGear:
     @deprecated(
         message="The `terminate()` method will be removed in the next release. Kindly use `close()` method instead."
     )
-    def terminate(self):
+    def terminate(self) -> None:
         """
         !!! warning "[DEPRECATION NOTICE]: This method is now deprecated and will be removed in a future release."
 
@@ -1241,7 +1247,7 @@ class StreamGear:
 
         self.close()
 
-    def close(self):
+    def close(self) -> None:
         """
         Safely terminates various StreamGear process.
         """
