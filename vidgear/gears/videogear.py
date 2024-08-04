@@ -20,7 +20,7 @@ limitations under the License.
 
 # import the necessary packages
 import logging as log
-from typing import TypeVar, Tuple, Union
+from typing import TypeVar, Tuple, Union, Any
 from numpy.typing import NDArray
 
 # import helper packages
@@ -60,7 +60,7 @@ class VideoGear:
         resolution: Tuple[int, int] = (640, 480),
         framerate: Union[int, float] = 30,
         # CamGear parameters
-        source=0,
+        source: Any = 0,
         stream_mode: bool = False,
         backend: int = 0,
         # common parameters

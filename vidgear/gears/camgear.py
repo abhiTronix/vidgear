@@ -24,7 +24,7 @@ import time
 import queue
 import logging as log
 from threading import Thread, Event
-from typing import TypeVar, Optional
+from typing import TypeVar, Optional, Any
 from numpy.typing import NDArray
 
 # import helper packages
@@ -220,7 +220,7 @@ class CamGear:
 
     def __init__(
         self,
-        source=0,
+        source: Any = 0,
         stream_mode: bool = False,
         backend: int = 0,
         colorspace: str = None,

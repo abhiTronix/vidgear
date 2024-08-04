@@ -31,7 +31,7 @@ from threading import Thread
 from collections import deque
 from os.path import expanduser
 from numpy.typing import NDArray
-from typing import Optional
+from typing import Optional, Any
 
 # import helper packages
 from .helper import (
@@ -1248,7 +1248,7 @@ class NetGear:
         # otherwise return NoneType
         return None
 
-    def send(self, frame: NDArray, message=None):
+    def send(self, frame: NDArray, message: Any = None) -> Optional[Any]:
         """
         A Server end method, that sends the data and frames over the network to Client(s).
 
