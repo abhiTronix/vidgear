@@ -622,7 +622,7 @@ def is_valid_url(path: str, url: str = None, logging: bool = False) -> bool:
 
 def validate_video(
     path: str, video_path: str = None, logging: bool = False
-) -> Optional[Dict[str]]:
+) -> Optional[dict]:
     """
     ## validate_video
 
