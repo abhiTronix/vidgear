@@ -29,6 +29,8 @@ import string
 import secrets
 import platform
 from collections import deque
+from typing import Any, Tuple, AsyncGenerator, Union, TypeVar
+from numpy.typing import NDArray
 
 # import helper packages
 from ..helper import logger_handler, import_dependency_safe, logcurr_vidgear_ver
@@ -49,6 +51,9 @@ logger = log.getLogger("NetGear_Async")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+
+# Type variable `T` representing class `NetGear_Async`.
+T = TypeVar("T", bound="NetGear_Async")
 
 
 class NetGear_Async:
@@ -82,26 +87,26 @@ class NetGear_Async:
     def __init__(
         self,
         # NetGear_Async parameters
-        address=None,
-        port=None,
-        protocol="tcp",
-        pattern=0,
-        receive_mode=False,
-        timeout=0.0,
+        address: str = None,
+        port: str = None,
+        protocol: str = "tcp",
+        pattern: int = 0,
+        receive_mode: bool = False,
+        timeout: Union[int, float] = 0.0,
         # Videogear parameters
-        enablePiCamera=False,
-        stabilize=False,
-        source=None,
-        camera_num=0,
-        stream_mode=False,
-        backend=0,
-        colorspace=None,
-        resolution=(640, 480),
-        framerate=25,
-        time_delay=0,
+        enablePiCamera: bool = False,
+        stabilize: bool = False,
+        source: Any = None,
+        camera_num: int = 0,
+        stream_mode: bool = False,
+        backend: int = 0,
+        colorspace: str = None,
+        resolution: Tuple[int, int] = (640, 480),
+        framerate: Union[int, float] = 25,
+        time_delay: int = 0,
         # common parameters
-        logging=False,
-        **options
+        logging: bool = False,
+        **options: dict
     ):
         """
         This constructor method initializes the object state and attributes of the NetGear_Async class.
@@ -320,7 +325,7 @@ class NetGear_Async:
         # create asyncio queue if bidirectional mode activated
         self.__queue = asyncio.Queue() if self.__bi_mode else None
 
-    def launch(self):
+    def launch(self) -> T:
         """
         Launches an asynchronous generators and loop executors for respective task.
         """
@@ -499,7 +504,7 @@ class NetGear_Async:
                     )
                     self.__logging and logger.debug(recv_confirmation)
 
-    async def recv_generator(self):
+    async def recv_generator(self) -> AsyncGenerator[Tuple[Any, NDArray], NDArray]:
         """
         A default Asynchronous Frame Generator for NetGear_Async's Receiver-end.
         """
@@ -613,8 +618,7 @@ class NetGear_Async:
 
                         # create return type dict without data
                         rettype_dict = dict(
-                            return_type=(type(return_data).__name__),
-                            return_data=None,
+                            return_type=(type(return_data).__name__), return_data=None,
                         )
                         # encode it
                         rettype_enc = msgpack.packb(rettype_dict)
@@ -677,7 +681,7 @@ class NetGear_Async:
             # sleep for sometime
             await asyncio.sleep(0)
 
-    async def transceive_data(self, data=None):
+    async def transceive_data(self, data: Any = None) -> Any:
         """
         Bidirectional Mode exclusive method to Transmit data _(in Receive mode)_ and Receive data _(in Send mode)_.
 
@@ -756,7 +760,7 @@ class NetGear_Async:
             )
         )
 
-    def close(self, skip_loop=False):
+    def close(self, skip_loop: bool = False) -> None:
         """
         Terminates all NetGear_Async Asynchronous processes gracefully.
 
