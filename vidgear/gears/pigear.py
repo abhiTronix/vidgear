@@ -25,6 +25,8 @@ import os
 import time
 import logging as log
 from threading import Thread
+from typing import Tuple, Union, TypeVar
+from numpy.typing import NDArray
 
 # import helper packages
 from .helper import (
@@ -52,6 +54,9 @@ logger = log.getLogger("PiGear")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
+
+
+PIGear = TypeVar("PIGear", bound="PiGear")
 
 
 class PiGear:
@@ -84,13 +89,13 @@ class PiGear:
 
     def __init__(
         self,
-        camera_num=0,
-        resolution=(640, 480),
-        framerate=30,
-        colorspace=None,
-        logging=False,
-        time_delay=0,
-        **options
+        camera_num: int = 0,
+        resolution: Tuple[int, int] = (640, 480),
+        framerate: Union[int, float] = 30,
+        colorspace: str = None,
+        logging: bool = False,
+        time_delay: int = 0,
+        **options: dict
     ):
         """
         This constructor method initializes the object state and attributes of the PiGear class.
@@ -302,11 +307,7 @@ class PiGear:
                     # unless format is either BGR or BGRA
                     (
                         not (colorspace is None)
-                        or options["format"]
-                        in [
-                            "RGB888",
-                            "XRGB8888",
-                        ]
+                        or options["format"] in ["RGB888", "XRGB8888",]
                     ) and logger.warning(
                         "Custom Output frames `format={}` detected. It is advised to define `colorspace` parameter or handle this format manually in your code!".format(
                             options["format"]
@@ -336,8 +337,7 @@ class PiGear:
                     invalid_sensor_keys = set(list(sensor)) - set(valid_sensor)
                     invalid_sensor_keys and logger.warning(
                         "Discarding sensor properties NOT supported by current Camera Sensor: `{}`. Only supported are: (`{}`)".format(
-                            "`, `".join(invalid_sensor_keys),
-                            "`, `".join(valid_sensor),
+                            "`, `".join(invalid_sensor_keys), "`, `".join(valid_sensor),
                         )
                     )
                     # delete all unsupported control keys
@@ -497,7 +497,7 @@ class PiGear:
         # initialize termination flag
         self.__terminate = False
 
-    def start(self):
+    def start(self) -> PIGear:
         """
         Launches the internal *Threaded Frames Extractor* daemon
 
@@ -588,7 +588,7 @@ class PiGear:
             self.__rawCapture.close()
             self.__camera.close()
 
-    def read(self):
+    def read(self) -> NDArray:
         """
         Extracts frames synchronously from monitored deque, while maintaining a fixed-length frame buffer in the memory,
         and blocks the thread if the deque is full.
@@ -608,16 +608,14 @@ class PiGear:
                 # clear frame
                 self.frame = None
                 # re-raise error for debugging
-                error_msg = (
-                    "[PiGear:ERROR] :: Camera Module API failure occurred: {}".format(
-                        self.__exceptions[1]
-                    )
+                error_msg = "[PiGear:ERROR] :: Camera Module API failure occurred: {}".format(
+                    self.__exceptions[1]
                 )
                 raise RuntimeError(error_msg).with_traceback(self.__exceptions[2])
         # return the frame
         return self.frame
 
-    def stop(self):
+    def stop(self) -> None:
         """
         Safely terminates the thread, and release the multi-threaded resources.
         """

@@ -30,6 +30,8 @@ from tqdm import tqdm
 from colorlog import ColoredFormatter
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
+from numpy.typing import NDArray
+from typing import Union
 
 # import helper packages
 from ..helper import logger_handler, mkdir_safe
@@ -64,7 +66,9 @@ class TimeoutHTTPAdapter(HTTPAdapter):
         return super().send(request, **kwargs)
 
 
-def create_blank_frame(frame=None, text="", logging=False):
+def create_blank_frame(
+    frame: NDArray = None, text: str = "", logging: bool = False
+) -> NDArray:
     """
     ## create_blank_frame
 
@@ -103,7 +107,11 @@ def create_blank_frame(frame=None, text="", logging=False):
     return blank_frame
 
 
-async def reducer(frame=None, percentage=0, interpolation=cv2.INTER_LANCZOS4):
+async def reducer(
+    frame: NDArray = None,
+    percentage: Union[int, float] = 0,
+    interpolation: int = cv2.INTER_LANCZOS4,
+) -> NDArray:
     """
     ## reducer
 
@@ -144,7 +152,12 @@ async def reducer(frame=None, percentage=0, interpolation=cv2.INTER_LANCZOS4):
     return cv2.resize(frame, dimensions, interpolation=interpolation)
 
 
-def generate_webdata(path, c_name="webgear", overwrite_default=False, logging=False):
+def generate_webdata(
+    path: str,
+    c_name: str = "webgear",
+    overwrite_default: bool = False,
+    logging: bool = False,
+) -> str:
     """
     ## generate_webdata
 
@@ -209,10 +222,7 @@ def generate_webdata(path, c_name="webgear", overwrite_default=False, logging=Fa
             css_static_dir, c_name=c_name, files=["custom.css"], logging=logging
         )
         download_webdata(
-            js_static_dir,
-            c_name=c_name,
-            files=["custom.js"],
-            logging=logging,
+            js_static_dir, c_name=c_name, files=["custom.js"], logging=logging,
         )
         download_webdata(
             favicon_dir, c_name=c_name, files=["favicon-32x32.png"], logging=logging
@@ -225,7 +235,9 @@ def generate_webdata(path, c_name="webgear", overwrite_default=False, logging=Fa
     return path
 
 
-def download_webdata(path, c_name="webgear", files=[], logging=False):
+def download_webdata(
+    path: str, c_name: str = "webgear", files: list = [], logging: bool = False
+) -> str:
     """
     ## download_webdata
 
@@ -326,7 +338,7 @@ def download_webdata(path, c_name="webgear", files=[], logging=False):
         )
 
 
-def validate_webdata(path, files=[], logging=False):
+def validate_webdata(path: str, files: list = [], logging: bool = False) -> bool:
     """
     ## validate_auth_keys
 

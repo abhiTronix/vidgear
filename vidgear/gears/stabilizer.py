@@ -25,6 +25,7 @@ import cv2
 import numpy as np
 import logging as log
 from collections import deque
+from typing import Optional
 
 # import helper packages
 from .helper import (
@@ -53,11 +54,11 @@ class Stabilizer:
 
     def __init__(
         self,
-        smoothing_radius=25,
-        border_type="black",
-        border_size=0,
-        crop_n_zoom=False,
-        logging=False,
+        smoothing_radius: int = 25,
+        border_type: str = "black",
+        border_size: int = 0,
+        crop_n_zoom: bool = False,
+        logging: bool = False,
     ):
         """
         This constructor method initializes the object state and attributes of the Stabilizer class.
@@ -151,7 +152,7 @@ class Stabilizer:
         # define normalized box filter
         self.__box_filter = np.ones(smoothing_radius) / smoothing_radius
 
-    def stabilize(self, frame):
+    def stabilize(self, frame: np.ndarray) -> Optional[np.ndarray]:
         """
         This method takes an unstabilized video frame, and returns a stabilized one.
 
@@ -382,7 +383,7 @@ class Stabilizer:
         # finally return stabilized frame
         return frame_stabilized
 
-    def clean(self):
+    def clean(self) -> None:
         """
         Cleans Stabilizer resources
         """

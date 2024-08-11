@@ -30,6 +30,8 @@ import logging as log
 from threading import Thread
 from collections import deque
 from os.path import expanduser
+from numpy.typing import NDArray
+from typing import Optional, Any
 
 # import helper packages
 from .helper import (
@@ -114,13 +116,13 @@ class NetGear:
 
     def __init__(
         self,
-        address=None,
-        port=None,
-        protocol=None,
-        pattern=0,
-        receive_mode=False,
-        logging=False,
-        **options
+        address: str = None,
+        port: str = None,
+        protocol: str = None,
+        pattern: int = 0,
+        receive_mode: bool = False,
+        logging: bool = False,
+        **options: dict
     ):
         """
         This constructor method initializes the object state and attributes of the NetGear class.
@@ -1209,7 +1211,7 @@ class NetGear:
                 # otherwise append recovered frame to queue
                 self.__queue.append(frame)
 
-    def recv(self, return_data=None):
+    def recv(self, return_data=None) -> Optional[NDArray]:
         """
         A Receiver end method, that extracts received frames synchronously from monitored deque, while maintaining a
         fixed-length frame buffer in the memory, and blocks the thread if the deque is full.
@@ -1246,7 +1248,7 @@ class NetGear:
         # otherwise return NoneType
         return None
 
-    def send(self, frame, message=None):
+    def send(self, frame: NDArray, message: Any = None) -> Optional[Any]:
         """
         A Server end method, that sends the data and frames over the network to Client(s).
 
@@ -1484,7 +1486,7 @@ class NetGear:
                 # log confirmation
                 self.__logging and logger.debug(recv_confirmation)
 
-    def close(self, kill=False):
+    def close(self, kill: bool = False) -> None:
         """
         Safely terminates the threads, and NetGear resources.
 

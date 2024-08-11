@@ -28,6 +28,7 @@ import logging as log
 import subprocess as sp
 from tqdm import tqdm
 from collections import OrderedDict
+from numpy.typing import NDArray
 
 # import helper packages
 from .helper import (
@@ -68,7 +69,12 @@ class StreamGear:
     """
 
     def __init__(
-        self, output="", format="dash", custom_ffmpeg="", logging=False, **stream_params
+        self,
+        output: str = "",
+        format: str = "dash",
+        custom_ffmpeg: str = "",
+        logging: bool = False,
+        **stream_params: dict
     ):
         """
         This constructor method initializes the object state and attributes of the StreamGear class.
@@ -353,9 +359,7 @@ class StreamGear:
                 elif os.path.isfile(abs_path) and self.__clear_assets:
                     # clear previous assets if specified
                     delete_ext_safe(
-                        os.path.dirname(abs_path),
-                        assets_exts,
-                        logging=self.__logging,
+                        os.path.dirname(abs_path), assets_exts, logging=self.__logging,
                     )
                 # check if path has valid file extension
                 assert abs_path.endswith(
@@ -403,7 +407,7 @@ class StreamGear:
         parameter="rgb_mode",
         message="The `rgb_mode` parameter is deprecated and will be removed in a future version. Only BGR format frames will be supported going forward.",
     )
-    def stream(self, frame, rgb_mode=False):
+    def stream(self, frame: NDArray, rgb_mode: bool = False) -> None:
         """
         Pipes `ndarray` frames to FFmpeg Pipeline for transcoding them into chunked-encoded media segments of
         streaming formats such as MPEG-DASH and HLS.
@@ -463,7 +467,7 @@ class StreamGear:
             )
             raise ValueError  # for testing purpose only
 
-    def transcode_source(self):
+    def transcode_source(self) -> None:
         """
         Transcodes an entire video file _(with or without audio)_ into chunked-encoded media segments of
         streaming formats such as MPEG-DASH and HLS.
@@ -583,8 +587,7 @@ class StreamGear:
                 logger.info("Input video's audio source will be used for this run.")
                 # assign audio codec
                 output_parameters["-acodec"] = self.__params.pop(
-                    "-acodec",
-                    "aac" if ("-streams" in self.__params) else "copy",
+                    "-acodec", "aac" if ("-streams" in self.__params) else "copy",
                 )
                 if output_parameters["-acodec"] != "copy":
                     output_parameters["a_bitrate"] = bitrate  # temporary handler
@@ -741,13 +744,11 @@ class StreamGear:
         # process given dash/hls stream and return it
         if self.__format == "dash":
             processed_params = self.__generate_dash_stream(
-                input_params=input_params,
-                output_params=output_params,
+                input_params=input_params, output_params=output_params,
             )
         else:
             processed_params = self.__generate_hls_stream(
-                input_params=input_params,
-                output_params=output_params,
+                input_params=input_params, output_params=output_params,
             )
         return processed_params
 
@@ -843,11 +844,11 @@ class StreamGear:
                     # otherwise calculate video-bitrate
                     fps = stream.pop("-framerate", 0.0)
                     if dimensions and isinstance(fps, (float, int)) and fps > 0:
-                        intermediate_dict["-b:v:{}".format(stream_count)] = (
-                            "{}k".format(
-                                get_video_bitrate(
-                                    int(dimensions[0]), int(dimensions[1]), fps, bpp
-                                )
+                        intermediate_dict[
+                            "-b:v:{}".format(stream_count)
+                        ] = "{}k".format(
+                            get_video_bitrate(
+                                int(dimensions[0]), int(dimensions[1]), fps, bpp
                             )
                         )
                     else:
@@ -862,16 +863,16 @@ class StreamGear:
                 audio_bitrate = stream.pop("-audio_bitrate", "")
                 if "-acodec" in output_params:
                     if audio_bitrate and audio_bitrate.endswith(("k", "M")):
-                        intermediate_dict["-b:a:{}".format(stream_count)] = (
-                            audio_bitrate
-                        )
+                        intermediate_dict[
+                            "-b:a:{}".format(stream_count)
+                        ] = audio_bitrate
                     else:
                         # otherwise calculate audio-bitrate
                         if dimensions:
                             aspect_width = int(dimensions[0])
-                            intermediate_dict["-b:a:{}".format(stream_count)] = (
-                                "{}k".format(128 if (aspect_width > 800) else 96)
-                            )
+                            intermediate_dict[
+                                "-b:a:{}".format(stream_count)
+                            ] = "{}k".format(128 if (aspect_width > 800) else 96)
                 # update output parameters
                 output_params.update(intermediate_dict)
                 # clear intermediate dict
@@ -948,9 +949,9 @@ class StreamGear:
             else:
                 # otherwise reset to default
                 logger.warning("Invalid `-hls_flags` value skipped!")
-                output_params["-hls_flags"] = (
-                    "delete_segments+discont_start+split_by_time"
-                )
+                output_params[
+                    "-hls_flags"
+                ] = "delete_segments+discont_start+split_by_time"
             # clean everything at exit?
             remove_at_exit = self.__params.pop("-remove_at_exit", 0)
             if isinstance(remove_at_exit, int) and remove_at_exit in [
@@ -1230,7 +1231,7 @@ class StreamGear:
     @deprecated(
         message="The `terminate()` method will be removed in the next release. Kindly use `close()` method instead."
     )
-    def terminate(self):
+    def terminate(self) -> None:
         """
         !!! warning "[DEPRECATION NOTICE]: This method is now deprecated and will be removed in a future release."
 
@@ -1241,7 +1242,7 @@ class StreamGear:
 
         self.close()
 
-    def close(self):
+    def close(self) -> None:
         """
         Safely terminates various StreamGear process.
         """

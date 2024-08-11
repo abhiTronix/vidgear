@@ -90,7 +90,7 @@ jobs:
       - name: Display exit code
         run: echo "Exit code was = $EXIT_CODE"
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4.5.0
         with:
           name: ${{ matrix.python-version }}
           token: ${{ secrets.CODECOV_TOKEN }}

@@ -26,6 +26,7 @@ import contextlib
 import numpy as np
 import logging as log
 from os.path import expanduser
+from typing import Any, Tuple, Union
 
 # import helper packages
 from .helper import (
@@ -79,18 +80,18 @@ class WebGear:
 
     def __init__(
         self,
-        enablePiCamera=False,
-        stabilize=False,
-        source=None,
-        camera_num=0,
-        stream_mode=False,
-        backend=0,
-        colorspace=None,
-        resolution=(640, 480),
-        framerate=25,
-        logging=False,
-        time_delay=0,
-        **options
+        enablePiCamera: bool = False,
+        stabilize: bool = False,
+        source: Any = None,
+        camera_num: int = 0,
+        stream_mode: bool = False,
+        backend: int = 0,
+        colorspace: str = None,
+        resolution: Tuple[int, int] = (640, 480),
+        framerate: Union[int, float] = 25,
+        logging: bool = False,
+        time_delay: int = 0,
+        **options: dict
     ):
         """
         This constructor method initializes the object state and attributes of the WebGear class.
@@ -378,7 +379,7 @@ class WebGear:
         # keeps check if producer loop should be running
         self.__isrunning = True
 
-    def __call__(self):
+    def __call__(self) -> Starlette:
         """
         Implements a custom Callable method for WebGear application.
         """
@@ -554,7 +555,7 @@ class WebGear:
             # close Video Server
             self.shutdown()
 
-    def shutdown(self):
+    def shutdown(self) -> None:
         """
         Implements a Callable to be run on application shutdown
         """

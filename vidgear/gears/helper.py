@@ -44,6 +44,8 @@ from colorlog import ColoredFormatter
 from pkg_resources import parse_version
 from requests.adapters import HTTPAdapter, Retry
 from ..version import __version__
+from typing import List, Dict, Optional, Union
+from numpy.typing import NDArray
 
 
 def logger_handler():
@@ -193,11 +195,7 @@ def deprecated(parameter=None, message=None, stacklevel=2):
 
 
 def import_dependency_safe(
-    name,
-    error="raise",
-    pkg_name=None,
-    min_version=None,
-    custom_message=None,
+    name, error="raise", pkg_name=None, min_version=None, custom_message=None,
 ):
     """
     ## import_dependency_safe
@@ -313,7 +311,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
         return super().send(request, **kwargs)
 
 
-def check_CV_version():
+def check_CV_version() -> int:
     """
     ## check_CV_version
 
@@ -325,7 +323,7 @@ def check_CV_version():
         return 3
 
 
-def check_open_port(address, port=22):
+def check_open_port(address: str, port: int = 22) -> bool:
     """
     ## check_open_port
 
@@ -346,7 +344,9 @@ def check_open_port(address, port=22):
             return False
 
 
-def check_WriteAccess(path, is_windows=False, logging=False):
+def check_WriteAccess(
+    path: str, is_windows: bool = False, logging: bool = False
+) -> bool:
     """
     ## check_WriteAccess
 
@@ -403,7 +403,7 @@ def check_WriteAccess(path, is_windows=False, logging=False):
         return write_accessible
 
 
-def check_gstreamer_support(logging=False):
+def check_gstreamer_support(logging: bool = False) -> bool:
     """
     ## check_gstreamer_support
 
@@ -429,7 +429,7 @@ def check_gstreamer_support(logging=False):
         return False
 
 
-def get_supported_resolution(value, logging=False):
+def get_supported_resolution(value: str, logging=False) -> str:
     """
     ## get_supported_resolution
 
@@ -475,7 +475,7 @@ def get_supported_resolution(value, logging=False):
     return stream_resolution
 
 
-def dimensions_to_resolutions(value):
+def dimensions_to_resolutions(value: List[str]) -> List[str]:
     """
     ## dimensions_to_resolutions
 
@@ -502,7 +502,7 @@ def dimensions_to_resolutions(value):
     )
 
 
-def get_supported_vencoders(path):
+def get_supported_vencoders(path: str) -> List[str]:
     """
     ## get_supported_vencoders
 
@@ -529,7 +529,7 @@ def get_supported_vencoders(path):
     return [[s for s in o.split(" ")][-1] for o in outputs]
 
 
-def get_supported_demuxers(path):
+def get_supported_demuxers(path: str) -> List[str]:
     """
     ## get_supported_demuxers
 
@@ -551,7 +551,7 @@ def get_supported_demuxers(path):
     return [o.strip() if not ("," in o) else o.split(",")[-1].strip() for o in outputs]
 
 
-def get_supported_pixfmts(path):
+def get_supported_pixfmts(path: str) -> List[str]:
     """
     ## get_supported_pixfmts
 
@@ -579,7 +579,7 @@ def get_supported_pixfmts(path):
     return [[s for s in o[0].split(" ")][-1] for o in outputs if len(o) == 3]
 
 
-def is_valid_url(path, url=None, logging=False):
+def is_valid_url(path: str, url: str = None, logging: bool = False) -> bool:
     """
     ## is_valid_url
 
@@ -620,7 +620,9 @@ def is_valid_url(path, url=None, logging=False):
         return False
 
 
-def validate_video(path, video_path=None, logging=False):
+def validate_video(
+    path: str, video_path: str = None, logging: bool = False
+) -> Optional[dict]:
     """
     ## validate_video
 
@@ -658,7 +660,9 @@ def validate_video(path, video_path=None, logging=False):
     return result if (len(result) == 2) else None
 
 
-def create_blank_frame(frame=None, text="", logging=False):
+def create_blank_frame(
+    frame: NDArray = None, text: str = "", logging: bool = False
+) -> NDArray:
     """
     ## create_blank_frame
 
@@ -696,7 +700,7 @@ def create_blank_frame(frame=None, text="", logging=False):
     return blank_frame
 
 
-def extract_time(value):
+def extract_time(value: str) -> int:
     """
     ## extract_time
 
@@ -715,7 +719,7 @@ def extract_time(value):
         t_duration = re.findall(r"\d{2}:\d{2}:\d{2}(?:\.\d{2})?", stripped_data)
         return (
             sum(
-                float(x) * 60**i
+                float(x) * 60 ** i
                 for i, x in enumerate(reversed(t_duration[0].split(":")))
             )
             if t_duration
@@ -723,7 +727,7 @@ def extract_time(value):
         )
 
 
-def validate_audio(path, source=None):
+def validate_audio(path: str, source: Union[str, list] = None) -> str:
     """
     ## validate_audio
 
@@ -794,7 +798,7 @@ def validate_audio(path, source=None):
         return ""
 
 
-def get_audio_bitrate(samplerate, channels, bit_depth):
+def get_audio_bitrate(samplerate: int, channels: int, bit_depth: float) -> int:
     """
     ## get_audio_bitrate
 
@@ -810,7 +814,7 @@ def get_audio_bitrate(samplerate, channels, bit_depth):
     return round((samplerate * channels * bit_depth) / 1000)
 
 
-def get_video_bitrate(width, height, fps, bpp):
+def get_video_bitrate(width: int, height: int, fps: float, bpp: float) -> int:
     """
     ## get_video_bitrate
 
@@ -827,7 +831,7 @@ def get_video_bitrate(width, height, fps, bpp):
     return round((width * height * bpp * fps) / 1000)
 
 
-def delete_file_safe(file_path):
+def delete_file_safe(file_path: str) -> None:
     """
     ## delete_ext_safe
 
@@ -843,7 +847,7 @@ def delete_file_safe(file_path):
         logger.exception(str(e))
 
 
-def mkdir_safe(dir_path, logging=False):
+def mkdir_safe(dir_path: str, logging: bool = False) -> None:
     """
     ## mkdir_safe
 
@@ -862,7 +866,9 @@ def mkdir_safe(dir_path, logging=False):
             raise
 
 
-def delete_ext_safe(dir_path, extensions=[], logging=False):
+def delete_ext_safe(
+    dir_path: str, extensions: list = [], logging: bool = False
+) -> None:
     """
     ## delete_ext_safe
 
@@ -898,7 +904,7 @@ def delete_ext_safe(dir_path, extensions=[], logging=False):
             logging and logger.debug("Deleted file: `{}`".format(file))
 
 
-def capPropId(property, logging=True):
+def capPropId(property: str, logging: bool = True) -> int:
     """
     ## capPropId
 
@@ -920,7 +926,7 @@ def capPropId(property, logging=True):
     return integer_value
 
 
-def retrieve_best_interpolation(interpolations):
+def retrieve_best_interpolation(interpolations: list) -> Optional[int]:
     """
     ## retrieve_best_interpolation
     Retrieves best interpolation for resizing
@@ -937,7 +943,11 @@ def retrieve_best_interpolation(interpolations):
     return None
 
 
-def reducer(frame=None, percentage=0, interpolation=cv2.INTER_LANCZOS4):
+def reducer(
+    frame: NDArray = None,
+    percentage: Union[int, float] = 0,
+    interpolation: int = cv2.INTER_LANCZOS4,
+) -> NDArray:
     """
     ## reducer
 
@@ -978,7 +988,7 @@ def reducer(frame=None, percentage=0, interpolation=cv2.INTER_LANCZOS4):
     return cv2.resize(frame, dimensions, interpolation=interpolation)
 
 
-def dict2Args(param_dict):
+def dict2Args(param_dict: dict) -> list:
     """
     ## dict2Args
 
@@ -1008,8 +1018,11 @@ def dict2Args(param_dict):
 
 
 def get_valid_ffmpeg_path(
-    custom_ffmpeg="", is_windows=False, ffmpeg_download_path="", logging=False
-):
+    custom_ffmpeg: str = "",
+    is_windows: bool = False,
+    ffmpeg_download_path: str = "",
+    logging: bool = False,
+) -> Union[str, bool]:
     """
     ## get_valid_ffmpeg_path
 
@@ -1100,7 +1113,9 @@ def get_valid_ffmpeg_path(
     return final_path if validate_ffmpeg(final_path, logging=logging) else False
 
 
-def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
+def download_ffmpeg_binaries(
+    path: str, os_windows: bool = False, os_bit: str = ""
+) -> str:
     """
     ## download_ffmpeg_binaries
 
@@ -1124,8 +1139,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
             os.path.abspath(path), "ffmpeg-static-{}-gpl.zip".format(os_bit)
         )
         file_path = os.path.join(
-            os.path.abspath(path),
-            "ffmpeg-static-{}-gpl/bin/ffmpeg.exe".format(os_bit),
+            os.path.abspath(path), "ffmpeg-static-{}-gpl/bin/ffmpeg.exe".format(os_bit),
         )
         base_path, _ = os.path.split(file_name)  # extract file base path
         # check if file already exists
@@ -1185,7 +1199,7 @@ def download_ffmpeg_binaries(path, os_windows=False, os_bit=""):
     return final_path
 
 
-def validate_ffmpeg(path, logging=False):
+def validate_ffmpeg(path: str, logging: bool = False) -> bool:
     """
     ## validate_ffmpeg
 
@@ -1215,7 +1229,7 @@ def validate_ffmpeg(path, logging=False):
     return True
 
 
-def check_output(*args, **kwargs):
+def check_output(*args: Union[list, tuple], **kwargs: dict) -> bytes:
     """
     ## check_output
 
@@ -1254,7 +1268,9 @@ def check_output(*args, **kwargs):
     return output if not (retrieve_stderr) else stderr
 
 
-def generate_auth_certificates(path, overwrite=False, logging=False):
+def generate_auth_certificates(
+    path: str, overwrite: bool = False, logging: bool = False
+) -> tuple:
     """
     ## generate_auth_certificates
 
@@ -1366,7 +1382,7 @@ def generate_auth_certificates(path, overwrite=False, logging=False):
     return (keys_dir, secret_keys_dir, public_keys_dir)
 
 
-def validate_auth_keys(path, extension):
+def validate_auth_keys(path: str, extension: str) -> bool:
     """
     ## validate_auth_keys
 
