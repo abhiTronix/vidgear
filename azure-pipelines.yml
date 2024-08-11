@@ -80,14 +80,14 @@ steps:
   - bash: |
       echo "Exit Code was: $(exit_code)"
       curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --keyring trustedkeys.gpg --import
-      curl -Os https://uploader.codecov.io/latest/macos/codecov
-      curl -Os https://uploader.codecov.io/latest/macos/codecov.SHA256SUM
-      curl -Os https://uploader.codecov.io/latest/macos/codecov.SHA256SUM.sig
+      curl -Os https://cli.codecov.io/latest/macos/codecov
+      curl -Os https://cli.codecov.io/latest/macos/codecov.SHA256SUM
+      curl -Os https://cli.codecov.io/latest/macos/codecov.SHA256SUM.sig
       gpgv codecov.SHA256SUM.sig codecov.SHA256SUM
       shasum -a 256 -c codecov.SHA256SUM
       chmod +x codecov
       if [ "$(exit_code)" != "124" ]; then
-        ./codecov -t $CODECOV_TOKEN -f coverage.xml -C $(Build.SourceVersion) -B $(Build.SourceBranch) -b $(Build.BuildNumber);
+        ./codecov do-upload -t $CODECOV_TOKEN -f coverage.xml -C $(Build.SourceVersion) -B $(Build.SourceBranch) -b $(Build.BuildNumber);
       else
         echo "Timeout test - Skipped Codecov!"; 
       fi

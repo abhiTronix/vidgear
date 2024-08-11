@@ -26,6 +26,8 @@ import numpy as np
 import logging as log
 from threading import Thread, Event
 from collections import OrderedDict
+from typing import TypeVar
+from numpy.typing import NDArray
 
 # import helper packages
 from .helper import (
@@ -48,6 +50,9 @@ logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
+# Type variable `T` representing class `ScreenGear`.
+T = TypeVar("T", bound="ScreenGear")
+
 
 class ScreenGear:
     """
@@ -61,7 +66,12 @@ class ScreenGear:
     """
 
     def __init__(
-        self, monitor=None, backend=None, colorspace=None, logging=False, **options
+        self,
+        monitor: int = None,
+        backend: str = None,
+        colorspace: str = None,
+        logging: bool = False,
+        **options: dict
     ):
         """
         This constructor method initializes the object state and attributes of the ScreenGear class.
@@ -273,7 +283,7 @@ class ScreenGear:
         # initialize termination flag
         self.__terminate = Event()
 
-    def start(self):
+    def start(self) -> T:
         """
         Launches the internal *Threaded Frames Extractor* daemon
 
@@ -284,8 +294,7 @@ class ScreenGear:
         self.__thread.start()
         if self.__backend == "dxcam":
             self.__capture_object.start(
-                target_fps=self.__target_fps,
-                video_mode=True,
+                target_fps=self.__target_fps, video_mode=True,
             )
             self.__logging and self.__target_fps and logger.debug(
                 "Targeting FPS: {}".format(self.__target_fps)
@@ -361,7 +370,7 @@ class ScreenGear:
             self.__capture_object.stop()
             del self.__capture_object
 
-    def read(self):
+    def read(self) -> NDArray:
         """
         Extracts frames synchronously from monitored deque, while maintaining a fixed-length frame buffer in the memory,
         and blocks the thread if the deque is full.
@@ -371,7 +380,7 @@ class ScreenGear:
         # return the frame
         return self.frame
 
-    def stop(self):
+    def stop(self) -> None:
         """
         Safely terminates the thread, and release the resources.
         """

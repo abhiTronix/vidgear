@@ -26,6 +26,7 @@ import fractions
 import asyncio
 import logging as log
 from os.path import expanduser
+from typing import Any, Union, Tuple
 
 # import helper packages
 from .helper import (
@@ -77,6 +78,7 @@ if not (aiortc is None):
     from aiortc.contrib.media import MediaRelay
     from aiortc.mediastreams import MediaStreamError
     from av import VideoFrame  # aiortc dependency
+    from av.frame import Frame as AVFrame  # imported for type annotation
 
     class RTC_VideoServer(VideoStreamTrack):
         """
@@ -86,18 +88,18 @@ if not (aiortc is None):
 
         def __init__(
             self,
-            enablePiCamera=False,
-            stabilize=False,
-            source=None,
-            camera_num=0,
-            stream_mode=False,
-            backend=0,
-            colorspace=None,
-            resolution=(640, 480),
-            framerate=25,
-            logging=False,
-            time_delay=0,
-            **options
+            enablePiCamera: bool = False,
+            stabilize: bool = False,
+            source: Any = None,
+            camera_num: int = 0,
+            stream_mode: bool = False,
+            backend: int = 0,
+            colorspace: str = None,
+            resolution: Tuple[int, int] = (640, 480),
+            framerate: Union[int, float] = 25,
+            logging: bool = False,
+            time_delay: int = 0,
+            **options: dict
         ):
             """
             This constructor method initializes the object state and attributes of the RTC_VideoServer class.
@@ -194,7 +196,7 @@ if not (aiortc is None):
             # handles reset signal
             self.__reset_enabled = False
 
-        def launch(self):
+        def launch(self) -> None:
             """
             Launches VideoGear stream
             """
@@ -204,7 +206,7 @@ if not (aiortc is None):
             if hasattr(self.__stream, "start") and callable(self.__stream.start):
                 self.__stream.start()
 
-        async def next_timestamp(self):
+        async def next_timestamp(self) -> Tuple[int, fractions.Fraction]:
             """
             VideoStreamTrack internal method for generating accurate timestamp.
             """
@@ -229,7 +231,7 @@ if not (aiortc is None):
                     self.is_running = True
             return self._timestamp, VIDEO_TIME_BASE
 
-        async def recv(self):
+        async def recv(self) -> AVFrame:
             """
             A coroutine function that yields `av.frame.Frame`.
             """
@@ -296,14 +298,14 @@ if not (aiortc is None):
             # return `av.frame.Frame`
             return frame
 
-        async def reset(self):
+        async def reset(self) -> None:
             """
             Resets timestamp clock
             """
             self.__reset_enabled = True
             self.is_running = False
 
-        def terminate(self):
+        def terminate(self) -> None:
             """
             Gracefully terminates VideoGear stream
             """
@@ -340,18 +342,18 @@ class WebGear_RTC:
 
     def __init__(
         self,
-        enablePiCamera=False,
-        stabilize=False,
-        source=None,
-        camera_num=0,
-        stream_mode=False,
-        backend=0,
-        colorspace=None,
-        resolution=(640, 480),
-        framerate=25,
-        logging=False,
-        time_delay=0,
-        **options
+        enablePiCamera: bool = False,
+        stabilize: bool = False,
+        source: Any = None,
+        camera_num: int = 0,
+        stream_mode: bool = False,
+        backend: int = 0,
+        colorspace: str = None,
+        resolution: Tuple[int, int] = (640, 480),
+        framerate: Union[int, float] = 25,
+        logging: bool = False,
+        time_delay: int = 0,
+        **options: dict
     ):
         """
         This constructor method initializes the object state and attributes of the WebGear_RTC class.
@@ -420,9 +422,9 @@ class WebGear_RTC:
                 if isinstance(value, bool):
                     if value:
                         self.__relay = MediaRelay()
-                        options["enable_infinite_frames"] = (
-                            True  # enforce infinite frames
-                        )
+                        options[
+                            "enable_infinite_frames"
+                        ] = True  # enforce infinite frames
                         logger.critical(
                             "Enabled live broadcasting for Peer connection(s)."
                         )
@@ -506,7 +508,7 @@ class WebGear_RTC:
         # collects peer RTC connections
         self.__pcs = set()
 
-    def __call__(self):
+    def __call__(self) -> Starlette:
         """
         Implements a custom Callable method for WebGear_RTC application.
         """
@@ -654,7 +656,7 @@ class WebGear_RTC:
             await asyncio.gather(*coros)
             self.__pcs.clear()
 
-    def shutdown(self):
+    def shutdown(self) -> None:
         """
         Gracefully shutdown video-server
         """
