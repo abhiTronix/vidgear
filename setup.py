@@ -18,10 +18,7 @@ limitations under the License.
 ===============================================
 """
 
-# import the necessary packages
-import json
 import platform
-import urllib.request
 
 from pkg_resources import parse_version
 from distutils.util import convert_path
@@ -48,29 +45,6 @@ def test_opencv():
     except ImportError:
         return True
     return False
-
-
-def latest_version(package_name):
-    """
-    Get latest package version from pypi (Hack)
-    """
-    url = "https://pypi.python.org/pypi/%s/json" % (package_name,)
-    versions = []
-    try:
-        response = urllib.request.urlopen(
-            urllib.request.Request(url),
-            timeout=1,
-        )
-        data = json.load(response)
-        versions = list(data["releases"].keys())
-        versions.sort(key=parse_version)
-        return ">={}".format(versions[-1])
-    except Exception as e:
-        if versions:
-            return ">={}".format(versions[-1])
-        else:
-            print(str(e))
-    return ""
 
 
 pkg_version = {}
@@ -109,43 +83,30 @@ setup(
     extras_require={
         # API specific deps
         "core": [
-            "yt_dlp{}".format(latest_version("yt_dlp")),
-            "pyzmq{}".format(latest_version("pyzmq")),
+            "yt_dlp",
+            "pyzmq",
             "Pillow",
-            "simplejpeg>=1.7.3", # Requires-Python >=3.9 for v1.7.4
-            "mss{}".format(latest_version("mss")),
-            "pyscreenshot{}".format(latest_version("pyscreenshot")),
+            "simplejpeg>=1.7.3",  # Requires-Python >=3.9 for v1.7.4
+            "mss",
+            "pyscreenshot",
         ]
-        + (
-            ["dxcam{}".format(latest_version("dxcam"))]
-            if (platform.system() == "Windows")  # windows is only supported
-            else []
-        ),
+        + (["dxcam"] if platform.system() == "Windows" else []),
         # API specific + Asyncio deps
         "asyncio": [
-            "yt_dlp{}".format(latest_version("yt_dlp")),
-            "pyzmq{}".format(latest_version("pyzmq")),
-            "simplejpeg>=1.7.3", # Requires-Python >=3.9 for v1.7.4
-            "mss{}".format(latest_version("mss")),
+            "yt_dlp",
+            "pyzmq",
+            "simplejpeg>=1.7.3",  # Requires-Python >=3.9 for v1.7.4
+            "mss",
             "Pillow",
-            "pyscreenshot{}".format(latest_version("pyscreenshot")),
-            "starlette{}".format(latest_version("starlette")),
+            "pyscreenshot",
+            "starlette",
             "jinja2",
-            "msgpack{}".format(latest_version("msgpack")),
-            "msgpack_numpy{}".format(latest_version("msgpack_numpy")),
-            "aiortc{}".format(latest_version("aiortc")),
-            "uvicorn{}".format(latest_version("uvicorn")),
+            "msgpack",
+            "msgpack_numpy",
+            "aiortc",
+            "uvicorn",
         ]
-        + (
-            ["dxcam{}".format(latest_version("dxcam"))]
-            if (platform.system() == "Windows")  # windows is only supported
-            else []
-        )
-        + (
-            ["uvloop{}".format(latest_version("uvloop"))]
-            if (platform.system() != "Windows")  # windows not supported
-            else []
-        ),
+        + (["dxcam" if platform.system() == "Windows" else "uvloop"]),
     },
     keywords=[
         "OpenCV",
