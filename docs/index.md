@@ -1,4 +1,4 @@
-<!--
+<!-- 
 ===============================================
 vidgear library source-code is deployed under the Apache 2.0 License:
 
@@ -7,7 +7,6 @@ Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
 
    http://www.apache.org/licenses/LICENSE-2.0
 
@@ -24,18 +23,18 @@ limitations under the License.
 <img src="assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" loading="lazy" width="90%" class="shadow" />
 
 <h2 align="center">
-	<img src="assets/images/tagline.svg" alt="VidGear tagline" loading="lazy" width="45%" class="shadow" />
+        <img src="assets/images/tagline.svg" alt="VidGear tagline" loading="lazy" width="45%" class="shadow" />
 </h2>
 
 &thinsp;
 
-> VidGear is a cross-platform High-Performance **Video-Processing** Framework for building complex real-time media applications in python :fire:
+> VidGear is a cross-platform high-performance **Video-Processing** framework for building complex real-time media applications in Python :fire:
 
-VidGear provides an easy-to-use, highly extensible, **[Multi-Threaded](bonus/TQM/#threaded-queue-mode) + [Asyncio](https://docs.python.org/3/library/asyncio.html) API Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera2][picamera2], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [dxcam][dxcam], [aiortc][aiortc] and [python-mss][mss]* at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and real-time performance ⚡️.
+VidGear provides an easy-to-use, highly extensible, **[Multi-Threaded](bonus/TQM/#threaded-queue-mode) + [Asyncio](https://docs.python.org/3/library/asyncio.html) API Framework** on top of many state-of-the-art specialized libraries like *[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera2][picamera2], [Starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [dxcam][dxcam], [aiortc][aiortc], and [python-mss][mss]* at its backend, and enables us to flexibly exploit their internal parameters and methods, while silently delivering robust error-handling and real-time performance ⚡️.
 
-> _"Write Less and Accomplish More"_ — VidGear's Motto
+> "_Write Less and Accomplish More_" — VidGear's Motto
 
-VidGear focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks without going through hefty documentation and in just a few lines of code.
+VidGear focuses on simplicity, and thereby lets programmers and software developers easily integrate and perform complex video processing tasks without going through hefty documentation and in just a few lines of code.
 
 &thinsp;
 
@@ -45,13 +44,11 @@ VidGear focuses on simplicity, and thereby lets programmers and software develop
 
 - [x] If this is your first time using VidGear, head straight to the [**Installation**](installation.md) to install VidGear.
 
-- [x] Once you have VidGear installed, Checkout its **[Function-Specific Gears](gears.md)**.
+- [x] Once you have VidGear installed, check out its **[Function-Specific Gears](gears.md)**.
 
-- [x] Also, if you're already familar with [**OpenCV**][opencv] library, then see **[Switching from OpenCV Library](switch_from_cv.md)**.
+- [x] Also, if you're already familiar with the [**OpenCV**][opencv] library, then see **[Switching from OpenCV Library](switch_from_cv.md)**.
 
 !!! alert "If you're just getting started with OpenCV-Python programming, then refer this [FAQ ➶](help/general_faqs/#im-new-to-python-programming-or-its-usage-in-opencv-library-how-to-use-vidgear-in-my-projects)"
-
-
 
 &thinsp;
 
@@ -67,29 +64,29 @@ These Gears can be classified as follows:
 
 * [CamGear](gears/camgear/overview/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
 * [PiGear](gears/pigear/overview/): Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis :fontawesome-brands-raspberry-pi:.
-* [ScreenGear](gears/screengear/overview/): High-performance API targeting rapid Screencasting Capabilities.    
+* [ScreenGear](gears/screengear/overview/): High-performance API targeting rapid screencasting capabilities.    
 * [VideoGear](gears/videogear/overview/): Common Video-Capture API with internal [_Video Stabilizer_](gears/stabilizer/overview/) wrapper.
 
 #### VideoWriter Gears
 
-* [WriteGear](gears/writegear/introduction/): Handles Lossless Video-Writer for file/stream/frames Encoding and Compression.
+* [WriteGear](gears/writegear/introduction/): Handles Lossless Video-Writer for file/stream/frames encoding and compression.
 
 #### Streaming Gears
 
-* [StreamGear](gears/streamgear/introduction/): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
+* [StreamGear](gears/streamgear/introduction/): Handles transcoding of high-quality, dynamic & adaptive streaming formats.
 
 * **Asynchronous I/O Streaming Gear:**
 
-    * [WebGear](gears/webgear/overview/): ASGI Video-Server that broadcasts Live MJPEG-Frames to any web-browser on the network.
-    * [WebGear_RTC](gears/webgear_rtc/overview/): Real-time Asyncio WebRTC media server for streaming directly to peer clients over the network.
+    * [WebGear](gears/webgear/overview/): ASGI Video-Server that broadcasts live MJPEG-Frames to any web-browser on the network.
+    * [WebGear_RTC](gears/webgear_rtc/overview/): Real-time asyncio WebRTC media server for streaming directly to peer clients over the network.
 
 #### Network Gears
 
-* [NetGear](gears/netgear/overview/): Handles High-Performance Video-Frames & Data Transfer between interconnecting systems over the network.
+* [NetGear](gears/netgear/overview/): Handles high-performance video-frames & data transfer between interconnecting systems over the network.
 
 * **Asynchronous I/O Network Gear:**
 
-    * [NetGear_Async](gears/netgear_async/overview/): Immensely Memory-Efficient Asyncio Video-Frames Network Messaging Framework. 
+    * [NetGear_Async](gears/netgear_async/overview/): Immensely memory-efficient asyncio video-frames network messaging framework. 
 
 &thinsp;
 
@@ -103,13 +100,13 @@ Please see our [**Contribution Guidelines**](contribution.md) for more details.
 
 ## Community Channel
 
-If you've come up with some new idea, or looking for the fastest way troubleshoot your problems. Please checkout our [**Gitter community channel ➶**][gitter]
+If you've come up with some new idea, or looking for the fastest way to troubleshoot your problems, please checkout our [**Gitter community channel ➶**][gitter]
 
 &thinsp; 
 
 ## Become a Stargazer
 
-You can be a [**Stargazer** :star2:{ .heart }][stargazer] by starring us on Github, it helps us a lot and you're making it easier for others to find & trust this library. Thanks!
+You can be a [**Stargazer** :star2:{ .heart }][stargazer] by starring us on GitHub, it helps us a lot and you're making it easier for others to find & trust this library. Thanks!
 
 &thinsp;
 
@@ -119,13 +116,13 @@ You can be a [**Stargazer** :star2:{ .heart }][stargazer] by starring us on Gith
 
 It is something I am doing with my own free time. But so much more needs to be done, and I need your help to do this. For just the price of a cup of coffee, you can make a difference :slight_smile:
 
-<a href='https://ko-fi.com/W7W8WTYO' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+<a href='https://ko-fi.com/W7W8WTYO' target='_blank'><img height='36' style='border:0px;height:36px;' src="https://storage.ko-fi.com/cdn/kofi1.png?v=3" border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 &thinsp;
 
 ## Citation
 
-Here is a Bibtex entry you can use to cite this project in a publication:
+Here is a BibTeX entry you can use to cite this project in a publication:
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8332548.svg)](https://doi.org/10.5281/zenodo.8332548)
 
