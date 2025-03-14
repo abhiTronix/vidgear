@@ -100,6 +100,7 @@ setup(
         "requests",
         "colorlog",
         "tqdm",
+        "packaging",
     ]
     + (["opencv-python"] if test_opencv() else []),
     long_description=long_description,
@@ -112,7 +113,7 @@ setup(
             "yt_dlp{}".format(latest_version("yt_dlp")),
             "pyzmq{}".format(latest_version("pyzmq")),
             "Pillow",
-            "simplejpeg>=1.7.3", # Requires-Python >=3.9 for v1.7.4
+            "simplejpeg>=1.7.3",  # Requires-Python >=3.9 for v1.7.4
             "mss{}".format(latest_version("mss")),
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
         ]
@@ -125,7 +126,7 @@ setup(
         "asyncio": [
             "yt_dlp{}".format(latest_version("yt_dlp")),
             "pyzmq{}".format(latest_version("pyzmq")),
-            "simplejpeg>=1.7.3", # Requires-Python >=3.9 for v1.7.4
+            "simplejpeg>=1.7.3",  # Requires-Python >=3.9 for v1.7.4
             "mss{}".format(latest_version("mss")),
             "Pillow",
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
