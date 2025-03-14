@@ -55,23 +55,37 @@ The following **functional block diagram** clearly depicts the generalized funct
 
 # Table of Contents
 
-- [**TL;DR**](#tldr)
-- [**Getting Started**](#getting-started)
-- [**Gears: What are these?**](#gears-what-are-these)
-  - [**CamGear**](#camgear)
-  - [**PiGear**](#pigear)
-  - [**VideoGear**](#videogear)
-  - [**ScreenGear**](#screengear)
-  - [**WriteGear**](#writegear)
-  - [**StreamGear**](#streamgear)
-  - [**NetGear**](#netgear)
-  - [**WebGear**](#webgear)
-  - [**WebGear_RTC**](#webgear_rtc)
-  - [**NetGear_Async**](#netgear_async)
-- [**Contributions**](#contributions)
-- [**Donations**](#donations)
-- [**Citation**](#citation)
-- [**Copyright**](#copyright)
+- [Table of Contents](#table-of-contents)
+  - [TL;DR](#tldr)
+      - [What is vidgear?](#what-is-vidgear)
+      - [What does it do?](#what-does-it-do)
+      - [What is its purpose?](#what-is-its-purpose)
+  - [Getting Started](#getting-started)
+  - [Gears: What are these?](#gears-what-are-these)
+  - [CamGear](#camgear)
+    - [CamGear API Guide:](#camgear-api-guide)
+  - [VideoGear](#videogear)
+    - [VideoGear API Guide:](#videogear-api-guide)
+  - [PiGear](#pigear)
+    - [PiGear API Guide:](#pigear-api-guide)
+  - [ScreenGear](#screengear)
+    - [ScreenGear API Guide:](#screengear-api-guide)
+  - [WriteGear](#writegear)
+    - [WriteGear API Guide:](#writegear-api-guide)
+  - [StreamGear](#streamgear)
+    - [StreamGear API Guide:](#streamgear-api-guide)
+  - [NetGear](#netgear)
+    - [NetGear API Guide:](#netgear-api-guide)
+  - [WebGear](#webgear)
+    - [WebGear API Guide:](#webgear-api-guide)
+  - [WebGear\_RTC](#webgear_rtc)
+    - [WebGear\_RTC API Guide:](#webgear_rtc-api-guide)
+  - [NetGear\_Async](#netgear_async)
+    - [NetGear\_Async API Guide:](#netgear_async-api-guide)
+- [Contributions](#contributions)
+- [Donations](#donations)
+- [Citation](#citation)
+- [Copyright](#copyright)
 
 &nbsp;
 
@@ -657,7 +671,7 @@ It is something I am doing with my own free time. But so much more needs to be d
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8332548.svg)](https://doi.org/10.5281/zenodo.8332548)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5388925.svg)](https://doi.org/10.5281/zenodo.5388925)
 
 ```BibTeX
 @software{vidgear,
@@ -666,20 +680,19 @@ Here is a Bibtex entry you can use to cite this project in a publication:
                   Christian Clauss and
                   Christian Hollinger and
                   Ian Max Andolina and
-                  Vincent Boivin and
                   Kyle Ahn and
                   freol35241 and
                   Benjamin Lowe and
                   Mickaël Schoentgen and
                   Renaud Bouckenooghe and
                   Ibtsam Ahmad},
-  title        = {abhiTronix/vidgear: VidGear Stable v0.3.2},
-  month        = sep,
-  year         = 2023,
+  title        = {abhiTronix/vidgear: VidGear Stable v0.3.3},
+  month        = jun,
+  year         = 2024,
   publisher    = {Zenodo},
-  version      = {vidgear-0.3.2},
-  doi          = {10.5281/zenodo.8332548},
-  url          = {https://doi.org/10.5281/zenodo.8332548}
+  version      = {vidgear-0.3.3},
+  doi          = {10.5281/zenodo.5388925},
+  url          = {https://doi.org/10.5281/zenodo.5388925},
 }
 ```
 
