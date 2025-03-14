@@ -23,7 +23,7 @@ import json
 import platform
 import urllib.request
 
-from pkg_resources import parse_version
+from packaging.version import parse
 from distutils.util import convert_path
 from setuptools import setup
 
@@ -39,10 +39,10 @@ def test_opencv():
         import cv2
 
         # check whether OpenCV Binaries are 3.x+
-        if parse_version(cv2.__version__) < parse_version("3"):
+        if parse(cv2.__version__) < parse("3"):
             raise ImportError(
                 "Incompatible (< 3.0) OpenCV version-{} Installation found on this machine!".format(
-                    parse_version(cv2.__version__)
+                    parse(cv2.__version__)
                 )
             )
     except ImportError:
@@ -63,7 +63,7 @@ def latest_version(package_name):
         )
         data = json.load(response)
         versions = list(data["releases"].keys())
-        versions.sort(key=parse_version)
+        versions.sort(key=parse)
         return ">={}".format(versions[-1])
     except Exception as e:
         if versions:

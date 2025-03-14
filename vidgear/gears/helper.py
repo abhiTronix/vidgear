@@ -41,7 +41,7 @@ from tqdm import tqdm
 from contextlib import closing
 from pathlib import Path
 from colorlog import ColoredFormatter
-from pkg_resources import parse_version
+from packaging.version import parse
 from requests.adapters import HTTPAdapter, Retry
 from ..version import __version__
 from typing import List, Dict, Optional, Union
@@ -272,7 +272,7 @@ def import_dependency_safe(
         # extract version
         version = get_module_version(module_to_get)
         # verify
-        if parse_version(version) < parse_version(min_version):
+        if parse(version) < parse(min_version):
             # create message
             msg = """Unsupported version '{}' found. Vidgear requires '{}' dependency installed with version '{}' or greater. 
             Update it with  `pip install -U {}` command.""".format(
@@ -317,7 +317,7 @@ def check_CV_version() -> int:
 
     **Returns:** OpenCV's version first bit
     """
-    if parse_version(cv2.__version__) >= parse_version("4"):
+    if parse(cv2.__version__) >= parse("4"):
         return 4
     else:
         return 3
