@@ -24,7 +24,6 @@ import platform
 import urllib.request
 
 from pkg_resources import parse_version
-from distutils.util import convert_path
 from setuptools import setup
 
 
@@ -73,11 +72,6 @@ def latest_version(package_name):
     return ""
 
 
-pkg_version = {}
-ver_path = convert_path("vidgear/version.py")
-with open(ver_path) as ver_file:
-    exec(ver_file.read(), pkg_version)
-
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
     long_description = long_description.replace(
@@ -90,7 +84,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name="vidgear",
     packages=["vidgear", "vidgear.gears", "vidgear.gears.asyncio"],
-    version=pkg_version["__version__"],
+    version="0.3.4",
     description="High-performance cross-platform Video Processing Python framework powerpacked with unique trailblazing features.",
     license="Apache License 2.0",
     author="Abhishek Thakur",
