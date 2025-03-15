@@ -84,6 +84,10 @@ sudo ln -s /usr/local/lib/python$PYTHONSUFFIX/site-packages/*.so /opt/hostedtool
 
 sudo ldconfig
 
+echo "Python working version is $(which python)"
+
 echo "OpenCV working version is $(python -c 'import cv2; print(cv2.__version__)')"
+
+echo "Pip working version is $(python -m pip show pip) - $(python -m pip --version) - $(which pip)"
 
 echo "Done Installing OpenCV...!!!"

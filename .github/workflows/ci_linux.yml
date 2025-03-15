@@ -39,10 +39,10 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: install apt_dependencies
@@ -59,12 +59,8 @@ jobs:
           chmod +x scripts/bash/install_opencv.sh
       - name: install pip_dependencies
         run: |
-          pip install -U pip wheel
-          pip install "numpy<2.0.0"
-          pip install -U .[asyncio] six httpx yt_dlp paramiko
-          pip uninstall opencv-python -y
-          pip install -U flake8 codecov pytest pytest-asyncio pytest-cov mpegdash m3u8 async-asgi-testclient
-          pip install -U deffcode
+          python -m pip install -U pip wheel numpy cython
+          python -m pip uninstall opencv-python -y
         if: success()
       - name: run prepare_dataset_script
         run: bash scripts/bash/prepare_dataset.sh
@@ -72,21 +68,26 @@ jobs:
       - name: run install_opencv_script
         run: bash scripts/bash/install_opencv.sh
         shell: bash
-      - name: recheck pip_dependencies
-        run: pip install .[core]
+      - name: recheck and install pip_dependencies
+        run: |
+          python -c 'import cv2; print(cv2.__version__)'
+          python -m pip install -U six httpx yt_dlp paramiko
+          python -m pip install .[asyncio]
+          python -m pip install -U flake8 codecov pytest pytest-asyncio pytest-cov mpegdash m3u8 async-asgi-testclient
+          python -m pip install -U deffcode
       - name: pytest with_ENV
         run: |
           mkdir -p $HOME/logs
           export VIDGEAR_LOGFILE="$HOME/logs"
           timeout 1200 pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "EXIT_CODE=$code" >>$GITHUB_ENV; fi
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        if: success() && matrix.python-version == 3.7
+        if: success() && matrix.python-version == 3.9
       - name: pytest without_ENV
         run: |
           sudo modprobe v4l2loopback devices=1 video_nr=0 exclusive_caps=1 card_label='VCamera'
           timeout 1200 pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "EXIT_CODE=$code" >>$GITHUB_ENV; fi
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        if: success() && matrix.python-version != 3.7
+        if: success() && matrix.python-version != 3.9
       - name: Display exit code
         run: echo "Exit code was = $EXIT_CODE"
       - name: Upload coverage to Codecov

@@ -657,7 +657,7 @@ It is something I am doing with my own free time. But so much more needs to be d
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8332548.svg)](https://doi.org/10.5281/zenodo.8332548)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5388925.svg)](https://doi.org/10.5281/zenodo.5388925)
 
 ```BibTeX
 @software{vidgear,
@@ -666,20 +666,19 @@ Here is a Bibtex entry you can use to cite this project in a publication:
                   Christian Clauss and
                   Christian Hollinger and
                   Ian Max Andolina and
-                  Vincent Boivin and
                   Kyle Ahn and
                   freol35241 and
                   Benjamin Lowe and
                   Mickaël Schoentgen and
                   Renaud Bouckenooghe and
                   Ibtsam Ahmad},
-  title        = {abhiTronix/vidgear: VidGear Stable v0.3.2},
-  month        = sep,
-  year         = 2023,
+  title        = {abhiTronix/vidgear: VidGear Stable v0.3.3},
+  month        = jun,
+  year         = 2024,
   publisher    = {Zenodo},
-  version      = {vidgear-0.3.2},
-  doi          = {10.5281/zenodo.8332548},
-  url          = {https://doi.org/10.5281/zenodo.8332548}
+  version      = {vidgear-0.3.3},
+  doi          = {10.5281/zenodo.5388925},
+  url          = {https://doi.org/10.5281/zenodo.5388925},
 }
 ```
 
