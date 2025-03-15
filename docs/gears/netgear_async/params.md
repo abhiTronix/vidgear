@@ -20,7 +20,7 @@ limitations under the License.
 
 # NetGear_Async API Parameters
 
-!!! cite "NetGear_Async provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs and their parameters."
+!!! cite "NetGear_Async provides a special internal wrapper around [VideoGear](../../videogear/overview/), which itself provides internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs and their parameters."
 
 &thinsp;
 
