@@ -16,10 +16,6 @@ image: Visual Studio 2019
 
 environment:
   matrix:
-    - PYTHON: "C:\\Python38-x64"
-      PYTHON_VERSION: "3.8.x"
-      PYTHON_ARCH: "64"
-
     - PYTHON: "C:\\Python39-x64"
       PYTHON_VERSION: "3.9.x"
       PYTHON_ARCH: "64"
@@ -30,6 +26,10 @@ environment:
 
     - PYTHON: "C:\\Python311-x64"
       PYTHON_VERSION: "3.11.x"
+      PYTHON_ARCH: "64"
+
+    - PYTHON: "C:\\Python312-x64"
+      PYTHON_VERSION: "3.12.x"
       PYTHON_ARCH: "64"
 
 build: off
@@ -59,8 +59,7 @@ matrix:
 install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
-  - "python -m pip install --upgrade pip wheel"
-  - cmd: python -m pip install "numpy<2.0.0"
+  - "python -m pip install --upgrade pip wheel numpy cython opencv-python"
   - "python -m pip install --upgrade .[asyncio] six httpx yt_dlp aiortc"
   - "python -m pip install --upgrade pytest codecov pytest-cov pytest-asyncio m3u8 async-asgi-testclient paramiko"
   - "python -m pip install --upgrade deffcode"

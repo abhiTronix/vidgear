@@ -19,8 +19,6 @@ limitations under the License.
 """
 
 # import the necessary packages
-import cv2
-import sys
 import numpy as np
 import asyncio
 import inspect
@@ -28,7 +26,6 @@ import logging as log
 import string
 import secrets
 import platform
-from collections import deque
 from typing import Any, Tuple, AsyncGenerator, Union, TypeVar
 from numpy.typing import NDArray
 

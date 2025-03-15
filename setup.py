@@ -24,30 +24,7 @@ import platform
 import urllib.request
 
 from pkg_resources import parse_version
-from distutils.util import convert_path
 from setuptools import setup
-
-
-def test_opencv():
-    """
-    This function is workaround to
-    test if correct OpenCV Library version has already been installed
-    on the machine or not. Returns True if previously not installed.
-    """
-    try:
-        # import OpenCV Binaries
-        import cv2
-
-        # check whether OpenCV Binaries are 3.x+
-        if parse_version(cv2.__version__) < parse_version("3"):
-            raise ImportError(
-                "Incompatible (< 3.0) OpenCV version-{} Installation found on this machine!".format(
-                    parse_version(cv2.__version__)
-                )
-            )
-    except ImportError:
-        return True
-    return False
 
 
 def latest_version(package_name):
@@ -73,11 +50,6 @@ def latest_version(package_name):
     return ""
 
 
-pkg_version = {}
-ver_path = convert_path("vidgear/version.py")
-with open(ver_path) as ver_file:
-    exec(ver_file.read(), pkg_version)
-
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
     long_description = long_description.replace(
@@ -90,7 +62,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name="vidgear",
     packages=["vidgear", "vidgear.gears", "vidgear.gears.asyncio"],
-    version=pkg_version["__version__"],
+    version="0.3.4",
     description="High-performance cross-platform Video Processing Python framework powerpacked with unique trailblazing features.",
     license="Apache License 2.0",
     author="Abhishek Thakur",
@@ -100,8 +72,8 @@ setup(
         "requests",
         "colorlog",
         "tqdm",
-    ]
-    + (["opencv-python"] if test_opencv() else []),
+        "packaging",
+    ],
     long_description=long_description,
     long_description_content_type="text/markdown",
     author_email="abhi.una12@gmail.com",
@@ -112,7 +84,7 @@ setup(
             "yt_dlp{}".format(latest_version("yt_dlp")),
             "pyzmq{}".format(latest_version("pyzmq")),
             "Pillow",
-            "simplejpeg>=1.7.3", # Requires-Python >=3.9 for v1.7.4
+            "simplejpeg",  # Requires-Python >=3.9 for v1.7.4
             "mss{}".format(latest_version("mss")),
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
         ]
@@ -125,7 +97,7 @@ setup(
         "asyncio": [
             "yt_dlp{}".format(latest_version("yt_dlp")),
             "pyzmq{}".format(latest_version("pyzmq")),
-            "simplejpeg>=1.7.3", # Requires-Python >=3.9 for v1.7.4
+            "simplejpeg",  # Requires-Python >=3.9 for v1.7.4
             "mss{}".format(latest_version("mss")),
             "Pillow",
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
@@ -183,12 +155,12 @@ setup(
         "Intended Audience :: Science/Research",
         "Intended Audience :: Education",
         "License :: OSI Approved :: Apache Software License",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.9",
     scripts=[],
     project_urls={
         "Bug Reports": "https://github.com/abhiTronix/vidgear/issues",
