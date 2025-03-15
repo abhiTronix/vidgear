@@ -40,7 +40,7 @@ Frame Compression is enabled by default in NetGear, and can be easily controlled
 !!! info "Useful Information about Frame Compression"
     
     * Frame Compression is enabled by default in NetGear along with fast dct and compression-quality at 90%.
-    * Exclusive [`jpeg_compression`](#supported-attributes) attribute can also be used to disable Frame Compression.
+    * Exclusive [`jpeg_compression`](#exclusive-attributes) attribute can also be used to disable Frame Compression.
     * Frame Compression can leverage performance up-to 5-10% with exclusive [performance attributes](#performance-attributes).
     * Frame Compression is compatible with all messaging pattern and modes.
 
