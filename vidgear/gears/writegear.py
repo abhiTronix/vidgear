@@ -458,7 +458,7 @@ class WriteGear:
         Parameters:
             channels (int): Number of channels in input frame.
             dtype (str): Datatype of input frame.
-            rgb_mode (boolean): Whether to activate `RGB mode`?
+            rgb (boolean): Whether to activate `RGB mode`?
         """
         # turn off initiate flag
         self.__initiate_process = False
