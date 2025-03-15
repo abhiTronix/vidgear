@@ -33,6 +33,7 @@ def test_opencv():
     test if correct OpenCV Library version has already been installed
     on the machine or not. Returns True if previously not installed.
     """
+    import cv2
     try:
         # import OpenCV Binaries
         import cv2
@@ -45,7 +46,9 @@ def test_opencv():
                 )
             )
     except ImportError:
-        print("No compatible OpenCV Installation found on this machine!")
+        print(
+            "No compatible OpenCV Installation found on this machine!"
+        )
         return True
     return False
 
