@@ -59,7 +59,7 @@ matrix:
 install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
-  - "python -m pip install --upgrade pip wheel"
+  - "python -m pip install --upgrade pip wheel numpy cython opencv-python"
   - "python -m pip install --upgrade av"
   - "python -m pip install --upgrade simplejpeg"
   - "python -m pip install --upgrade .[asyncio] six httpx yt_dlp aiortc"

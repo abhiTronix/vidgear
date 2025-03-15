@@ -27,29 +27,6 @@ from pkg_resources import parse_version
 from setuptools import setup
 
 
-def test_opencv():
-    """
-    This function is workaround to
-    test if correct OpenCV Library version has already been installed
-    on the machine or not. Returns True if previously not installed.
-    """
-    import cv2
-    try:
-        # import OpenCV Binaries
-        import cv2
-
-        # check whether OpenCV Binaries are 3.x+
-        if parse_version(cv2.__version__) < parse_version("3"):
-            raise ImportError(
-                "Incompatible (< 3.0) OpenCV version-{} Installation found on this machine!".format(
-                    parse_version(cv2.__version__)
-                )
-            )
-    except ImportError:
-        return True
-    return False
-
-
 def latest_version(package_name):
     """
     Get latest package version from pypi (Hack)
@@ -96,8 +73,7 @@ setup(
         "colorlog",
         "tqdm",
         "packaging",
-    ]
-    + (["opencv-python"] if test_opencv() else []),
+    ],
     long_description=long_description,
     long_description_content_type="text/markdown",
     author_email="abhi.una12@gmail.com",
