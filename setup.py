@@ -45,6 +45,7 @@ def test_opencv():
                 )
             )
     except ImportError:
+        print("No compatible OpenCV Installation found on this machine!")
         return True
     return False
 
