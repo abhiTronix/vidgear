@@ -107,13 +107,15 @@ plugins:
       handlers:
         python:
           options:
-            show_root_heading: false
-            show_root_toc_entry: false
-            show_source: true
-            heading_level: 3
-  - exclude:
-      glob:
-        - overrides/assets/README.md
+            filters:
+              - "!^_"
+              - "^__init__$"
+              - "^__call__$"
+            extra:
+              show_root_heading: false
+              show_root_toc_entry: false
+              show_source: true
+              heading_level: 3
 
 # Hooks
 hooks:
@@ -207,6 +209,9 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde
+
+exclude_docs: |
+  overrides/assets/README.md
 
 # Page tree
 nav:
