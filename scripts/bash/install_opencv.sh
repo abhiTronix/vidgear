@@ -45,11 +45,20 @@ sudo apt-get install -y -qq --allow-unauthenticated libgstreamer1.0-0 libgstream
 
 sudo apt-get install -y -qq --allow-unauthenticated gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
 
-echo "Installing OpenCV Library"
-
 cd "$TMPFOLDER || exit"
 
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
+
+echo "Installing v4l2loopback Kernel Module"
+
+git clone https://github.com/v4l2loopback/v4l2loopback.git || exit
+cd v4l2loopback || exit
+make && sudo make install 
+sudo depmod -a
+
+cd "$TMPFOLDER" || exit
+
+echo "Installing OpenCV Library"
 
 RETRY=3
 while [ "$RETRY" -gt 0 ]; do
