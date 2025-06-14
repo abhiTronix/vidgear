@@ -403,10 +403,10 @@ pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[asyncio]
 
 ```sh
 # Install latest stable release with all Core dependencies
-pip install vidgear-0.3.3-py3-none-any.whl[core]
+pip install vidgear-0.3.4-py3-none-any.whl[core]
 
 # Or Install latest stable release with all Core & Asyncio dependencies
-pip install vidgear-0.3.3-py3-none-any.whl[asyncio]
+pip install vidgear-0.3.4-py3-none-any.whl[asyncio]
 ```
 
 &nbsp;
