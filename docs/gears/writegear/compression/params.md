@@ -80,17 +80,28 @@ WriteGear(output = 'output.mp4', compression_mode=True)
 
 ## **`custom_ffmpeg`**
 
-This parameter assigns the custom _path/directory_ where the custom FFmpeg executables are located in Compression Mode only.
+This parameter assigns the _path_ or _directory_ where the custom FFmpeg executables are located in Compression Mode only.
 
 !!! info "Compression Mode Behavior on Windows"
     
-    In Compression Mode, if a custom FFmpeg executable's path | directory is not provided through `custom_ffmpeg` parameter on Windows machine, then WriteGear API will ==automatically attempt to download and extract suitable Static FFmpeg binaries at suitable location on your windows machine==. More information can be found [here ➶](../advanced/ffmpeg_install/#a-auto-installation).
+    In Compression Mode, if a custom FFmpeg executable's path or directory is not provided through `custom_ffmpeg` parameter on Windows machine, then WriteGear API will ==automatically attempt to download and extract suitable Static FFmpeg binaries at suitable location on your windows machine==. More information can be found [here ➶](../advanced/ffmpeg_install/#a-auto-installation).
 
 **Data-Type:** String
 
 **Default Value:** Its default value is `None`.
 
 **Usage:**
+
+=== "Custom Path"
+    ```python
+    # if ffmpeg executable is located at "./foo/foo1/ffmpeg" path (On Windows: `./foo/foo1/ffmpeg.exe`)
+    WriteGear(output = 'output.mp4', compression_mode=True, custom_ffmpeg="./foo/foo1/ffmpeg")
+    ```
+=== "Custom Directory"
+    ```python
+    # if ffmpeg executable is located at "./foo/foo1/FFmpeg" directory
+    WriteGear(output = 'output.mp4', compression_mode=True, custom_ffmpeg="/foo/foo1/FFmpeg/bin")
+    ```
 
 ```python
 # if ffmpeg executables are located at "/foo/foo1/FFmpeg"
