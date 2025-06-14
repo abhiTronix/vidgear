@@ -48,7 +48,7 @@ limitations under the License.
 
 Following is the bare-minimum code you need to get started with StreamGear API in Real-time Frames Mode:
 
-!!! note "We are using [CamGear](../../../camgear/overview/) in this Bare-Minimum example, but any [VideoCapture Gear](../../../#a-videocapture-gears) will work in the similar manner."
+!!! note "We are using [CamGear](../../../camgear/) in this Bare-Minimum example, but any [VideoCapture Gear](../../../#a-videocapture-gears) will work in the similar manner."
 
 !!! danger "In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
 

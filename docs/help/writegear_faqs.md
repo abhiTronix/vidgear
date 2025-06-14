@@ -31,7 +31,7 @@ limitations under the License.
 
 ## I'm only familiar with OpenCV, how to get started with WriteGear API?
 
-**Answer:** **Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [WriteGear documentation](../../gears/writegear/overview/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** **Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [WriteGear documentation](../../gears/writegear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
@@ -107,27 +107,27 @@ limitations under the License.
 
 ## Is YouTube-Live Streaming possible with WriteGear?
 
-**Answer:** Yes, See [this bonus example ➶](../writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming).
+**Answer:** Yes, See [this Bonus Example ➶](../writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming).
 
 &nbsp;
 
 ## How to Live-Streaming using RTSP/RTP protocol with WriteGear?
 
-**Answer:** See [this bonus example ➶](../writegear_ex/#using-writegears-compression-mode-for-rtsprtp-live-streaming).
+**Answer:** See [this Bonus Example ➶](../writegear_ex/#using-writegears-compression-mode-for-rtsprtp-live-streaming).
 
 &nbsp;
 
 
 ## How to create MP4 segments from a video stream with WriteGear?
 
-**Answer:** See [this bonus example ➶](../writegear_ex/#using-writegears-compression-mode-creating-mp4-segments-from-a-video-stream).
+**Answer:** See [this Bonus Example ➶](../writegear_ex/#using-writegears-compression-mode-creating-mp4-segments-from-a-video-stream).
 
 &nbsp;
 
 
 ## How add external audio file input to video frames?
 
-**Answer:** See [this bonus example ➶](../writegear_ex/#using-writegears-compression-mode-to-add-external-audio-file-input-to-video-frames).
+**Answer:** See [this Bonus Example ➶](../writegear_ex/#using-writegears-compression-mode-to-add-external-audio-file-input-to-video-frames).
 
 &nbsp;
 

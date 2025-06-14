@@ -21,7 +21,7 @@ limitations under the License.
 # WebGear API
 
 <figure>
-  <img src="../../../assets/gifs/webgear.gif" alt="WebGear in action!" loading="lazy" width=100%/>
+  <img src="../../assets/gifs/webgear.gif" alt="WebGear in action!" loading="lazy" width=100%/>
   <figcaption>WebGear API's Video Server running at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</figcaption>
 </figure>
 
@@ -33,7 +33,7 @@ WebGear API works on [**Starlette**](https://www.starlette.io/)'s ASGI applicati
 
 WebGear API uses an intraframe-only compression scheme under the hood where the sequence of video-frames are first encoded as JPEG-DIB (JPEG with Device-Independent Bit compression) and then streamed over HTTP using Starlette's Multipart [Streaming Response](https://www.starlette.io/responses/#streamingresponse) and a [Uvicorn](https://www.uvicorn.org/#quickstart) ASGI Server. This method imposes lower processing and memory requirements, but the quality is not the best, since JPEG compression is not very efficient for motion video.
 
-In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides internal wrapper around [VideoGear](../../videogear/overview/), which itself provides internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
+In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides internal wrapper around [VideoGear](../../videogear/), which itself provides internal access to both [CamGear](../../camgear/) and [PiGear](../../pigear/) APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
 
 &thinsp;
 
@@ -125,7 +125,7 @@ The WebGear API by default uses simple & elegant [**WebGear's Default Theme**](h
 _Can be accessed by visiting WebGear app server, running at http://localhost:8000/:_
 
 <h2 align="center">
-  <img src="../../../assets/images/webgear_temp_index.png" loading="lazy" alt="WebGear default Index page"/>
+  <img src="../../assets/images/webgear_temp_index.png" loading="lazy" alt="WebGear default Index page"/>
 </h2>
 
 ### 404.html
@@ -133,7 +133,7 @@ _Can be accessed by visiting WebGear app server, running at http://localhost:800
 _Appears when respective URL is not found, for example http://localhost:8000/ok:_
 
 <h2 align="center">
-  <img src="../../../assets/images/webgear_temp_404.png" loading="lazy" alt="WebGear default 404 page"/>
+  <img src="../../assets/images/webgear_temp_404.png" loading="lazy" alt="WebGear default 404 page"/>
 </h2>
 
 ### 500.html
@@ -143,7 +143,7 @@ _Appears when an API Error is encountered:_
 !!! warning "If [`logging`](../params/#logging) is enabled and an error occurs, then instead of displaying this 500 handler, WebGear will respond with a traceback response."
 
 <h2 align="center">
-  <img src="../../../assets/images/webgear_temp_500.png" loading="lazy" alt="WebGear default 500 page"/>
+  <img src="../../assets/images/webgear_temp_500.png" loading="lazy" alt="WebGear default 500 page"/>
 </h2>
 
 &thinsp;

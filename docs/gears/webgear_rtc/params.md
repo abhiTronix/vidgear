@@ -20,13 +20,13 @@ limitations under the License.
 
 # WebGear_RTC API Parameters 
 
-!!! cite "WebGear_RTC provides a special internal wrapper around [VideoGear](../../videogear/overview/), which itself provides internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs and their parameters."
+!!! cite "WebGear_RTC provides a special internal wrapper around [VideoGear](../../videogear/), which itself provides internal access to both [CamGear](../../camgear/) and [PiGear](../../pigear/) APIs and their parameters."
 
 &thinsp;
 
 ## **`enablePiCamera`** 
 
-This parameter provide direct access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively in WebGear_RTC. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
+This parameter provide direct access to [PiGear](../../pigear/) or [CamGear](../../camgear/) APIs respectively in WebGear_RTC. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
 
 **Data-Type:** Boolean
 
@@ -77,7 +77,7 @@ This parameter can be used to pass user-defined parameter to WebGear_RTC API by 
     ```
 
 
-* **`custom_data_location`** _(string)_ : Can be used to change/alter [*default location*](../overview/#default-location) path to somewhere else. Its usage is as follows:
+* **`custom_data_location`** _(string)_ : Can be used to change/alter [*default location*](../#default-location) path to somewhere else. Its usage is as follows:
 
     ```python
     # set default location to '/home/foo/foo1'
@@ -86,9 +86,9 @@ This parameter can be used to pass user-defined parameter to WebGear_RTC API by 
     WebGear_RTC(logging=True, **options)
     ```
 
-* **`overwrite_default_files`** _(boolean)_ : Can be used to force trigger the [Auto-generation process](../overview/#auto-generation-process) to overwrite existing data-files. Its usage is as follows:
+* **`overwrite_default_files`** _(boolean)_ : Can be used to force trigger the [Auto-generation process](../#auto-generation-process) to overwrite existing data-files. Its usage is as follows:
 
-    !!! danger "Remember only [downloaded files](../overview/#auto-generation-process) will be overwritten in this process, and any other file/folder will NOT be affected/overwritten."
+    !!! danger "Remember only [downloaded files](../#auto-generation-process) will be overwritten in this process, and any other file/folder will NOT be affected/overwritten."
 
     ```python
     # force trigger the Auto-generation process
@@ -153,7 +153,7 @@ This parameter can be used to pass user-defined parameter to WebGear_RTC API by 
 
 ### **`stabilize`**
 
-This parameter enable access to [Stabilizer Class](../../stabilizer/overview/) for stabilizing frames, i.e. can be set to `True`(_to enable_) or unset to `False`(_to disable_). 
+This parameter enable access to [Stabilizer Class](../../stabilizer/) for stabilizing frames, i.e. can be set to `True`(_to enable_) or unset to `False`(_to disable_). 
 
 **Data-Type:** Boolean
 
@@ -171,7 +171,7 @@ WebGear_RTC(stabilize=True) # enable stablization
 
 ### **`options`**
 
-This parameter can be used in addition, to pass user-defined parameters supported by [Stabilizer Class](../../stabilizer/overview/). These parameters can be formatted as this parameter's attribute.
+This parameter can be used in addition, to pass user-defined parameters supported by [Stabilizer Class](../../stabilizer/). These parameters can be formatted as this parameter's attribute.
 
 **Supported dictionary attributes for Stabilizer Class are:**
 

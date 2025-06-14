@@ -24,15 +24,15 @@ limitations under the License.
 
 ## What is NetGear_Async API and what does it do?
 
-**Answer:** NetGear_Async is an asyncio videoframe messaging framework, built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html), and powered by high-performance asyncio event loop called [**`uvloop`**](https://github.com/MagicStack/uvloop) to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system. _For more info. see [NetGear_Async doc ➶](../../gears/netgear_async/overview/)_
+**Answer:** NetGear_Async is an asyncio videoframe messaging framework, built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html), and powered by high-performance asyncio event loop called [**`uvloop`**](https://github.com/MagicStack/uvloop) to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system. _For more info. see [NetGear_Async doc ➶](../../gears/netgear_async/)_
 
 &nbsp;
 
 ## How to get started with NetGear_Async API?
 
-**Answer:** **Answer:** **Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [NetGear_Async documentation ➶](../../gears/netgear_async/overview/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** **Answer:** **Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [NetGear_Async documentation ➶](../../gears/netgear_async/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
-See [NetGear_Async doc ➶](../../gears/netgear_async/overview/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+See [NetGear_Async doc ➶](../../gears/netgear_async/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
@@ -56,7 +56,7 @@ See [NetGear_Async doc ➶](../../gears/netgear_async/overview/). Still in doubt
 
 ## Can I use Multi-Server, Bi-Directional like modes in NetGear_Async?
 
-**Answer:** No, NetGear_Async does NOT provide support for any NetGear's [Exclusive modes](../../gears/netgear/overview/#exclusive-modes) yet.
+**Answer:** No, NetGear_Async does NOT provide support for any NetGear's [Exclusive modes](../../gears/netgear/#exclusive-modes) yet.
 
 &nbsp;
 

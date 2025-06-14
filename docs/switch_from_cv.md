@@ -44,7 +44,7 @@ VidGear employs OpenCV at its backend and enhances its existing capabilities eve
 
 - [x] Accelerated [Multi-Threaded](../bonus/TQM/#what-does-threaded-queue-mode-exactly-do) Performance.
 - [x] Out-of-the-box support for OpenCV APIs.
-- [x] Real-time [Stabilization](../gears/stabilizer/overview/) ready.
+- [x] Real-time [Stabilization](../gears/stabilizer/) ready.
 - [x] Lossless hardware enabled video [encoding](../gears/writegear/compression/usage/#using-compression-mode-with-hardware-encoders) and [transcoding](../gears/streamgear/rtfm/usage/#usage-with-hardware-video-encoder).
 - [x] Inherited multi-backend support for various video sources and devices.
 - [x] Screen-casting, Multi-bitrate network-streaming, and [way much more ➶](../gears)
@@ -55,7 +55,7 @@ Vidgear offers all this at once while maintaining the same standard OpenCV-Pytho
 
 ## Switching the VideoCapture APIs 
 
-Let's compare a bare-minimum python code for extracting frames out of any Webcam/USB-camera _(connected at index 0)_, between OpenCV's [VideoCapture Class](https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80) and VidGear's [CamGear](../gears/camgear/overview/) VideoCapture API side-by-side:
+Let's compare a bare-minimum python code for extracting frames out of any Webcam/USB-camera _(connected at index 0)_, between OpenCV's [VideoCapture Class](https://docs.opencv.org/3.4/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80) and VidGear's [CamGear](../gears/camgear/) VideoCapture API side-by-side:
 
 !!! tip "CamGear API share the same syntax as other [VideoCapture APIs](../gears/#a-videocapture-gears), thereby you can easily switch to any of those APIs in a similar manner."
 
@@ -163,7 +163,7 @@ Let's breakdown a few noteworthy difference in both syntaxes:
 
 Let's extend previous bare-minimum python code and save those extracted frames to disk as a valid file, with [OpenCV's VideoWriter Class](https://docs.opencv.org/3.4/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) and VidGear's [WriteGear](../gears/writegear/introduction/) _(with FFmpeg backend)_, compared side-to-side:
 
-!!! info "WriteGear API also provides backend for OpenCV's VideoWriter Class. More information [here ➶](../gears/writegear/non_compression/overview/)"
+!!! info "WriteGear API also provides backend for OpenCV's VideoWriter Class. More information [here ➶](../gears/writegear/non_compression/)"
 
 === "OpenCV VideoWriter Class"
 

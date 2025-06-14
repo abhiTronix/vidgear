@@ -21,13 +21,13 @@ limitations under the License.
 # WebGear_RTC API 
 
 <figure>
-  <img src="../../../assets/gifs/webgear_rtc.gif" alt="WebGear_RTC in action!" loading="lazy" width=100%/>
+  <img src="../../assets/gifs/webgear_rtc.gif" alt="WebGear_RTC in action!" loading="lazy" width=100%/>
   <figcaption>WebGear_RTC API's Video Server running at <a href="http://localhost:8000/" title="default address">http://localhost:8000/</a> address.</figcaption>
 </figure>
 
 ## Overview
 
-> *WebGear_RTC is similar to [WeGear API](../../webgear/overview/) in many aspects but utilizes [WebRTC](https://webrtc.org/) technology under the hood instead of Motion JPEG, which makes it suitable for building powerful video-streaming solutions for all modern browsers as well as native clients available on all major platforms.*
+> *WebGear_RTC is similar to [WeGear API](../../webgear/) in many aspects but utilizes [WebRTC](https://webrtc.org/) technology under the hood instead of Motion JPEG, which makes it suitable for building powerful video-streaming solutions for all modern browsers as well as native clients available on all major platforms.*
 
 ??? new "New in v0.2.1" 
 	WebGear_RTC API was added in `v0.2.1`.
@@ -38,13 +38,13 @@ WebGear_RTC can handle [multiple consumers](../../webgear_rtc/advanced/#using-we
 
 WebGear_RTC API works in conjunction with [**Starlette**](https://www.starlette.io/) ASGI application and can also flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
 
-Additionally, WebGear_RTC API also provides internal wrapper around [VideoGear](../../videogear/overview/), which itself provides internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs.
+Additionally, WebGear_RTC API also provides internal wrapper around [VideoGear](../../videogear/), which itself provides internal access to both [CamGear](../../camgear/) and [PiGear](../../pigear/) APIs.
 
 &thinsp;
 
 ## Data-Files Auto-Generation WorkFlow for WebGear_RTC
 
-Same as [WebGear](../../webgear_rtc/overview/), WebGear_RTC API automatically checks for three critical **data files**(i.e `index.html`, `404.html` & `500.html`) on initialization inside the `templates` folder of the `webgear_rtc` directory at the [*default location*](#default-location) which gives rise to the following two possible scenario:
+Same as [WebGear](../../webgear_rtc/), WebGear_RTC API automatically checks for three critical **data files**(i.e `index.html`, `404.html` & `500.html`) on initialization inside the `templates` folder of the `webgear_rtc` directory at the [*default location*](#default-location) which gives rise to the following two possible scenario:
 
 - [x] **If data-files found:** it will proceed normally for instantiating the WebRTC media server through Starlette application.
 - [ ] **If data-files not found:** it will trigger the [**Auto-Generation process**](#auto-generation-process)
@@ -106,7 +106,7 @@ The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Th
 *Can be accessed by visiting WebGear_RTC app server, running at http://localhost:8000/:*
 
 <h2 align="center">
-  <img src="../../../assets/images/webgear_rtc_temp_index.png" loading="lazy" alt="WebGear_RTC default Index page"/>
+  <img src="../../assets/images/webgear_rtc_temp_index.png" loading="lazy" alt="WebGear_RTC default Index page"/>
 </h2>
 
 
@@ -115,7 +115,7 @@ The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Th
 *Appears when respective URL is not found, for example http://localhost:8000/ok:*
 
 <h2 align="center">
-  <img src="../../../assets/images/webgear_rtc_temp_404.png" loading="lazy" alt="WebGear_RTC default 404 page"/>
+  <img src="../../assets/images/webgear_rtc_temp_404.png" loading="lazy" alt="WebGear_RTC default 404 page"/>
 </h2>
 
 
@@ -126,7 +126,7 @@ The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Th
 !!! warning "If [`logging`](../params/#logging) is enabled and an error occurs, then instead of displaying this 500 handler, WebGear_RTC will respond with a traceback response."
 
 <h2 align="center">
-  <img src="../../../assets/images/webgear_rtc_temp_500.png" loading="lazy" alt="WebGear_RTC default 500 page"/>
+  <img src="../../assets/images/webgear_rtc_temp_500.png" loading="lazy" alt="WebGear_RTC default 500 page"/>
 </h2>
 
 &thinsp;

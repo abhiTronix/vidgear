@@ -27,7 +27,7 @@ limitations under the License.
 WriteGear must requires FFmpeg executables for its Compression capabilities in Compression Mode. You can following machine-specific instructions for its installation:
 
 
-!!! failure "In case WriteGear API fails to detect valid FFmpeg executables on your system _(even if Compression Mode is enabled)_, it automatically fallbacks to [Non-Compression Mode](../../../non_compression/overview/)."
+!!! failure "In case WriteGear API fails to detect valid FFmpeg executables on your system _(even if Compression Mode is enabled)_, it automatically fallbacks to [Non-Compression Mode](../../../non_compression/)."
 
 &nbsp;
 
@@ -79,7 +79,7 @@ If WriteGear API not receives any input from the user on [**`custom_ffmpeg`**](.
 
     * If binaries were found at the specified path, WriteGear automatically skips the auto-installation step.
 
-    * ==If the required FFmpeg static binary fails to download, or extract, or validate during auto-installation, then, WriteGear API will **auto-disable** the Compression Mode and switches to [Non-Compression Mode](../../../non_compression/overview/)!==
+    * ==If the required FFmpeg static binary fails to download, or extract, or validate during auto-installation, then, WriteGear API will **auto-disable** the Compression Mode and switches to [Non-Compression Mode](../../../non_compression/)!==
 
 
 ### B. Manual Configuration

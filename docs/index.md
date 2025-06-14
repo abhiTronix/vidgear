@@ -65,10 +65,10 @@ These Gears can be classified as follows:
 
 #### VideoCapture Gears
 
-* [CamGear](gears/camgear/overview/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
-* [PiGear](gears/pigear/overview/): Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis :fontawesome-brands-raspberry-pi:.
-* [ScreenGear](gears/screengear/overview/): High-performance API targeting rapid Screencasting Capabilities.    
-* [VideoGear](gears/videogear/overview/): Common Video-Capture API with internal [_Video Stabilizer_](gears/stabilizer/overview/) wrapper.
+* [CamGear](gears/camgear/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
+* [PiGear](gears/pigear/): Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis :fontawesome-brands-raspberry-pi:.
+* [ScreenGear](gears/screengear/): High-performance API targeting rapid Screencasting Capabilities.    
+* [VideoGear](gears/videogear/): Common Video-Capture API with internal [_Video Stabilizer_](gears/stabilizer/) wrapper.
 
 #### VideoWriter Gears
 
@@ -80,16 +80,16 @@ These Gears can be classified as follows:
 
 * **Asynchronous I/O Streaming Gear:**
 
-    * [WebGear](gears/webgear/overview/): ASGI Video-Server that broadcasts Live MJPEG-Frames to any web-browser on the network.
-    * [WebGear_RTC](gears/webgear_rtc/overview/): Real-time Asyncio WebRTC media server for streaming directly to peer clients over the network.
+    * [WebGear](gears/webgear/): ASGI Video-Server that broadcasts Live MJPEG-Frames to any web-browser on the network.
+    * [WebGear_RTC](gears/webgear_rtc/): Real-time Asyncio WebRTC media server for streaming directly to peer clients over the network.
 
 #### Network Gears
 
-* [NetGear](gears/netgear/overview/): Handles High-Performance Video-Frames & Data Transfer between interconnecting systems over the network.
+* [NetGear](gears/netgear/): Handles High-Performance Video-Frames & Data Transfer between interconnecting systems over the network.
 
 * **Asynchronous I/O Network Gear:**
 
-    * [NetGear_Async](gears/netgear_async/overview/): Immensely Memory-Efficient Asyncio Video-Frames Network Messaging Framework. 
+    * [NetGear_Async](gears/netgear_async/): Immensely Memory-Efficient Asyncio Video-Frames Network Messaging Framework. 
 
 &thinsp;
 
