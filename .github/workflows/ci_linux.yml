@@ -36,7 +36,7 @@ on:
 jobs:
   test:
     name: CI Test vidgear
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12"]
@@ -91,7 +91,7 @@ jobs:
       - name: Display exit code
         run: echo "Exit code was = $EXIT_CODE"
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4.5.0
+        uses: codecov/codecov-action@v5
         with:
           name: ${{ matrix.python-version }}
           token: ${{ secrets.CODECOV_TOKEN }}
