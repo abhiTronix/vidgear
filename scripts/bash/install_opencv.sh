@@ -31,19 +31,49 @@ echo "$PYTHONVERSION"
 
 echo "Installing OpenCV Dependencies..."
 
-sudo apt-get install -y -qq --allow-unauthenticated build-essential cmake pkg-config gfortran libavutil-dev ffmpeg
+# Update package list
+sudo apt-get update -qq
 
-sudo apt-get install -y -qq --allow-unauthenticated yasm libv4l-dev libgtk-3-dev libtbb-dev libswresample-dev
+# Install build tools
+echo "Installing build essentials..."
+sudo apt-get install -y -qq --allow-unauthenticated build-essential gfortran cmake python3-dev
+sudo apt-get install -y -qq --allow-unauthenticated pkg-config cmake-data
 
-sudo apt-get install -y -qq --allow-unauthenticated libavcodec-dev libavformat-dev libswscale-dev libopenexr-dev
+# Install video/codec dependencies
+echo "Installing video and codec dependencies..."
+sudo apt-get install -y -qq --allow-unauthenticated \
+    libavutil-dev ffmpeg yasm libv4l-dev \
+    libxvidcore-dev libx264-dev \
+    libavcodec-dev libavformat-dev libswscale-dev libswresample-dev
 
-sudo apt-get install -y -qq --allow-unauthenticated libxvidcore-dev libx264-dev libatlas-base-dev libtiff5-dev python3-dev liblapacke-dev
+# Install image format dependencies
+echo "Installing image format dependencies..."
+sudo apt-get install -y -qq --allow-unauthenticated \
+    libtiff5-dev libjpeg-dev libpng-dev libwebp-dev libopenexr-dev
 
-sudo apt-get install -y -qq --allow-unauthenticated zlib1g-dev libjpeg-dev checkinstall libwebp-dev libpng-dev libopenblas-dev libopenblas-base
+# Install math libraries
+echo "Installing math libraries..."
+sudo apt-get install -y -qq --allow-unauthenticated \
+    libatlas-base-dev liblapacke-dev libopenblas-dev libopenblas-base
 
-sudo apt-get install -y -qq --allow-unauthenticated libgstreamer1.0-0 libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
+# Install GUI and parallel processing dependencies
+echo "Installing GUI and parallel processing dependencies..."
+sudo apt-get install -y -qq --allow-unauthenticated \
+    libgtk-3-dev libtbb-dev
 
-sudo apt-get install -y -qq --allow-unauthenticated gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
+# Install other required dependencies
+echo "Installing other dependencies..."
+sudo apt-get install -y -qq --allow-unauthenticated \
+    zlib1g-dev checkinstall
+
+# Install GStreamer dependencies
+echo "Installing GStreamer dependencies..."
+sudo apt-get install -y -qq --allow-unauthenticated \
+    libunwind-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev \
+    gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly \
+    gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 \
+    gstreamer1.0-qt5 gstreamer1.0-pulseaudio
+
 
 cd "$TMPFOLDER || exit"
 
