@@ -365,6 +365,7 @@ test_data = [
     ),
     reason="Random Failures!",
 )
+@pytest.mark.asyncio(scope="module")
 @pytest.mark.parametrize("options", test_data)
 async def test_webpage_reload(options):
     """
