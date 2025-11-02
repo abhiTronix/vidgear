@@ -21,7 +21,7 @@ limitations under the License.
 # WriteGear API: Compression Mode
 
 <figure>
-  <img src="../../../../assets/images/writegear_cm.png" loading="lazy" alt="Compression Mode" class="center-small shadow"/>
+  <img src="../../../assets/images/writegear_cm.png" loading="lazy" alt="Compression Mode" class="center-small shadow"/>
   <figcaption>WriteGear API's Compression Mode generalized workflow</figcaption>
 </figure>
 
@@ -39,7 +39,7 @@ This mode can process real-time video frames into a lossless compressed format w
 
 	* WriteGear **MUST** requires FFmpeg executables for its Compression capabilities. Follow these dedicated [Installation Instructions ➶](../advanced/ffmpeg_install/) for its installation.
 
-	* In case WriteGear API fails to detect valid FFmpeg executables on your system _(even if Compression Mode is enabled)_, it automatically fallbacks to [Non-Compression Mode](../../non_compression/overview/).
+	* In case WriteGear API fails to detect valid FFmpeg executables on your system _(even if Compression Mode is enabled)_, it automatically fallbacks to [Non-Compression Mode](../../non_compression/).
 
 	* It is advised to enable logging([`logging = True`](../params/#logging)) to see the FFmpeg command that is being executed in WriteGear's pipeline. This helps you debug any issues/errors easily and make suitable adjustments accordingly. 
 

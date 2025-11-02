@@ -21,13 +21,13 @@ limitations under the License.
 # PiGear API 
 
 <figure>
-  <img src="../../../assets/images/picam2.webp" alt="Pi Zero with Camera Module" loading="lazy" class="center" />
+  <img src="../../assets/images/picam2.webp" alt="Pi Zero with Camera Module" loading="lazy" class="center" />
   <figcaption>Raspberry Pi Camera Module</figcaption>
 </figure>
 
 ## Overview
 
-> PiGear is a specialized API similar to the [CamGear API](../../camgear/overview/) but optimized for **Raspberry Pi :fontawesome-brands-raspberry-pi: Boards**, offering comprehensive **support for camera modules** _(e.g., OmniVision OV5647, Sony IMX219)_, along with **limited compatibility for USB cameras**.
+> PiGear is a specialized API similar to the [CamGear API](../../camgear/) but optimized for **Raspberry Pi :fontawesome-brands-raspberry-pi: Boards**, offering comprehensive **support for camera modules** _(e.g., OmniVision OV5647, Sony IMX219)_, along with **limited compatibility for USB cameras**.
 
 
 PiGear implements a seamless and robust wrapper around the [picamera2](https://github.com/raspberrypi/picamera2) python library, simplifying integration with minimal code changes and ensuring a smooth transition for developers already familiar with the Picamera2 API. PiGear leverages the `libcamera` API under the hood with multi-threading, providing high-performance :fire:, enhanced control and functionality for Raspberry Pi camera modules. 

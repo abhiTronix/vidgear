@@ -84,7 +84,7 @@ setup(
             "yt_dlp{}".format(latest_version("yt_dlp")),
             "pyzmq{}".format(latest_version("pyzmq")),
             "Pillow",
-            "simplejpeg",  # Requires-Python >=3.9 for v1.7.4
+            "simplejpeg{}".format(latest_version("simplejpeg")),
             "mss{}".format(latest_version("mss")),
             "pyscreenshot{}".format(latest_version("pyscreenshot")),
         ]
@@ -97,7 +97,7 @@ setup(
         "asyncio": [
             "yt_dlp{}".format(latest_version("yt_dlp")),
             "pyzmq{}".format(latest_version("pyzmq")),
-            "simplejpeg",  # Requires-Python >=3.9 for v1.7.4
+            "simplejpeg{}".format(latest_version("simplejpeg")),
             "mss{}".format(latest_version("mss")),
             "Pillow",
             "pyscreenshot{}".format(latest_version("pyscreenshot")),

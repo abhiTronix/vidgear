@@ -20,7 +20,7 @@ limitations under the License.
 
 # WebGear_RTC API Advanced Usage:
 
-!!! note "This is a continuation of the [WebGear_RTC doc ➶](../overview/#webgear_rtc-api). Thereby, It's advised to first get familiarize with this API, and its [requirements](../usage/#requirements)."
+!!! note "This is a continuation of the [WebGear_RTC doc ➶](../#webgear_rtc-api). Thereby, It's advised to first get familiarize with this API, and its [requirements](../usage/#requirements)."
 
 
 !!! example "After going through following Usage Examples, Checkout more bonus examples [here ➶](../../../help/webgear_rtc_ex/)"
@@ -317,18 +317,18 @@ web.shutdown()
 
 ## Rules for Altering WebGear_RTC Files and Folders
 
-WebGear_RTC gives us complete freedom of altering data files generated in [**Auto-Generation Process**](../overview/#auto-generation-process), But you've to  keep the following rules in mind:
+WebGear_RTC gives us complete freedom of altering data files generated in [**Auto-Generation Process**](../#auto-generation-process), But you've to  keep the following rules in mind:
 
 ### Rules for Altering Data Files
   
-- [x] You allowed to alter/change code in all existing [default downloaded files](../overview/#auto-generation-process) at your convenience without any restrictions.
-- [x] You allowed to delete/rename all existing data files, except remember **NOT** to delete/rename three critical data-files (i.e `index.html`, `404.html` & `500.html`) present in `templates` folder inside the `webgear_rtc` directory at the [default location](../overview/#default-location), otherwise, it will trigger [Auto-generation process](../overview/#auto-generation-process), and it will overwrite the existing files with Server ones.
-- [x] You're allowed to add your own additional `.html`, `.css`, `.js`, etc. files in the respective folders at the [**default location**](../overview/#default-location) and [custom mounted Data folders](#using-webgear_rtc-with-custom-mounting-points).
+- [x] You allowed to alter/change code in all existing [default downloaded files](../#auto-generation-process) at your convenience without any restrictions.
+- [x] You allowed to delete/rename all existing data files, except remember **NOT** to delete/rename three critical data-files (i.e `index.html`, `404.html` & `500.html`) present in `templates` folder inside the `webgear_rtc` directory at the [default location](../#default-location), otherwise, it will trigger [Auto-generation process](../#auto-generation-process), and it will overwrite the existing files with Server ones.
+- [x] You're allowed to add your own additional `.html`, `.css`, `.js`, etc. files in the respective folders at the [**default location**](../#default-location) and [custom mounted Data folders](#using-webgear_rtc-with-custom-mounting-points).
 
 ### Rules for Altering Data Folders 
   
 - [x] You're allowed to add/mount any number of additional folder as shown in [this example above](#using-webgear_rtc-with-custom-mounting-points).
-- [x] You're allowed to delete/rename existing folders at the [**default location**](../overview/#default-location) except remember **NOT** to delete/rename `templates` folder in the `webgear_rtc` directory where critical data-files (i.e `index.html`, `404.html` & `500.html`) are located, otherwise, it will trigger [Auto-generation process](../overview/#auto-generation-process).
+- [x] You're allowed to delete/rename existing folders at the [**default location**](../#default-location) except remember **NOT** to delete/rename `templates` folder in the `webgear_rtc` directory where critical data-files (i.e `index.html`, `404.html` & `500.html`) are located, otherwise, it will trigger [Auto-generation process](../#auto-generation-process).
 
 &nbsp;
 

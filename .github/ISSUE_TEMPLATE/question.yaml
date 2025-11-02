@@ -1,7 +1,7 @@
 name: Question
 description: Have any questions regarding VidGear?
 title: "[Question]: "
-labels: "QUESTION :question:"
+labels: ["QUESTION :question:"]
 body:
   - type: checkboxes
     attributes:

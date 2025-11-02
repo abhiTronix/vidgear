@@ -24,13 +24,13 @@ limitations under the License.
 
 ## What is CamGear API and what does it do?
 
-**Answer:** CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format (upto 4k tested), any network stream URL such as http(s), rtp, rtsp, rtmp, mms, etc. In addition to this, it also supports live Gstreamer's RAW pipelines and YouTube video/livestreams URLs. _For more info. see [CamGear doc ➶](../../gears/camgear/overview/)._
+**Answer:** CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format (upto 4k tested), any network stream URL such as http(s), rtp, rtsp, rtmp, mms, etc. In addition to this, it also supports live Gstreamer's RAW pipelines and YouTube video/livestreams URLs. _For more info. see [CamGear doc ➶](../../gears/camgear/)._
 
 &nbsp;
 
 ## I'm only familiar with OpenCV, how to get started with CamGear API?
 
-**Answer:** **Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [CamGear documentation ➶](../../gears/camgear/overview/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** **Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [CamGear documentation ➶](../../gears/camgear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
@@ -70,7 +70,7 @@ limitations under the License.
 
 ## How to change quality and parameters of YouTube Streams with CamGear?
 
-**Answer:** CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `yt_dlp`) parameters)_ with its [`options`](../../gears/camgear/params/#options) dictionary parameter. See [this bonus example ➶](../camgear_ex/#using-variable-yt_dlp-parameters-in-camgear).
+**Answer:** CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `yt_dlp`) parameters)_ with its [`options`](../../gears/camgear/params/#options) dictionary parameter. See [this Bonus Example ➶](../camgear_ex/#using-variable-yt_dlp-parameters-in-camgear).
 
 
 &nbsp;
@@ -78,7 +78,7 @@ limitations under the License.
 
 ## How to open RTSP network streams with CamGear?
 
-**Answer:** You can open any local network stream _(such as RTSP)_ just by providing its URL directly to CamGear's [`source`](../../gears/camgear/params/#source) parameter. See [this bonus example ➶](../camgear_ex/#using-camgear-for-capturing-rtsprtmp-urls).
+**Answer:** You can open any local network stream _(such as RTSP)_ just by providing its URL directly to CamGear's [`source`](../../gears/camgear/params/#source) parameter. See [this Bonus Example ➶](../camgear_ex/#using-camgear-for-capturing-rtsprtmp-urls).
 
 &nbsp;
 
@@ -96,7 +96,7 @@ limitations under the License.
 
 ## How to synchronize between two cameras?
 
-**Answer:** See [this bonus example ➶](../camgear_ex/#synchronizing-two-sources-in-camgear).
+**Answer:** See [this Bonus Example ➶](../camgear_ex/#synchronizing-two-sources-in-camgear).
 
 &nbsp;
 

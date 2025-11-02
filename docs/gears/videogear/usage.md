@@ -27,7 +27,7 @@ limitations under the License.
 
 ## Bare-Minimum Usage with CamGear backend
 
-!!! abstract "VideoGear by default provides direct internal access to [CamGear API](../../camgear/overview/)."
+!!! abstract "VideoGear by default provides direct internal access to [CamGear API](../../camgear/)."
 
 Following is the bare-minimum code you need to access CamGear API with VideoGear:
 
@@ -72,7 +72,7 @@ stream.stop()
 
 ## Bare-Minimum Usage with PiGear backend
 
-!!! abstract "VideoGear contains a special [`enablePiCamera`](../params/#enablepicamera) flag that when `True` provides internal access to [PiGear API](../../pigear/overview/)."
+!!! abstract "VideoGear contains a special [`enablePiCamera`](../params/#enablepicamera) flag that when `True` provides internal access to [PiGear API](../../pigear/)."
 
 Following is the bare-minimum code you need to access PiGear API with VideoGear:
 
@@ -127,11 +127,11 @@ stream.stop()
 
 ## Using VideoGear with Video Stabilizer backend
 
-!!! abstract "VideoGear API provides a special internal wrapper around VidGear's Exclusive [**Video Stabilizer**](../../stabilizer/overview/) class and provides easy way of activating stabilization for various video-streams _(real-time or not)_ with its [`stabilize`](../params/#stabilize) boolean parameter during initialization."
+!!! abstract "VideoGear API provides a special internal wrapper around VidGear's Exclusive [**Video Stabilizer**](../../stabilizer/) class and provides easy way of activating stabilization for various video-streams _(real-time or not)_ with its [`stabilize`](../params/#stabilize) boolean parameter during initialization."
 
 The usage example is as follows:
 
-!!! tip "For a more detailed information on Video-Stabilizer Class, Read [here ➶](../../stabilizer/overview/)"
+!!! tip "For a more detailed information on Video-Stabilizer Class, Read [here ➶](../../stabilizer/)"
 
 !!! warning "The stabilizer might be slower for High-Quality/Resolution videos-frames."
 

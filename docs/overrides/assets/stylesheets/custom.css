@@ -282,28 +282,6 @@ footer.sponsorship:not(:hover) .twemoji.heart-throb-hover svg {
 }
 
 
-/* Footer Sponsorship Block */
-footer.sponsorship {
-	text-align: center;
-}
-
-footer.sponsorship hr {
-	display: inline-block;
-	width: px2rem(32px);
-	margin: 0 px2rem(14px);
-	vertical-align: middle;
-	border-bottom: 2px solid var(--md-default-fg-color--lighter);
-}
-
-footer.sponsorship:hover hr {
-	border-color: var(--md-accent-fg-color);
-}
-
-footer.sponsorship:not(:hover) .twemoji.heart-throb-hover svg {
-	color: var(--md-default-fg-color--lighter) !important;
-}
-
-
 /* Dark Theme Changes */
 [data-md-color-scheme="slate"] {
 	--md-hue: 260;

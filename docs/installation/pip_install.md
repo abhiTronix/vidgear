@@ -121,7 +121,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
 * #### FFmpeg 
 
-    Require only for the video compression and encoding compatibility within [**StreamGear API**](../../gears/streamgear/introduction/) and [**WriteGear API's Compression Mode**](../../gears/writegear/compression/overview/). 
+    Require only for the video compression and encoding compatibility within [**StreamGear API**](../../gears/streamgear/introduction/) and [**WriteGear API's Compression Mode**](../../gears/writegear/compression/). 
 
     !!! tip "FFmpeg Installation"
 
@@ -132,7 +132,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
 * #### Picamera2
 
-    Required only if you're using Raspberry Pi :fontawesome-brands-raspberry-pi: Camera Modules _(or USB webcams)_ with the [**PiGear**](../../gears/pigear/overview/) API. Here's how to install [Picamera2](https://github.com/raspberrypi/picamera2) python library:
+    Required only if you're using Raspberry Pi :fontawesome-brands-raspberry-pi: Camera Modules _(or USB webcams)_ with the [**PiGear**](../../gears/pigear/) API. Here's how to install [Picamera2](https://github.com/raspberrypi/picamera2) python library:
 
     ??? tip "Using Legacy `picamera` library with PiGear (`v0.3.3` and above)"
 
@@ -211,7 +211,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
 * #### Uvloop
 
-    Required only if you're using the [**NetGear_Async**](../../gears/netgear_async/overview/) API on UNIX machines for maximum performance. You can easily install it via pip:
+    Required only if you're using the [**NetGear_Async**](../../gears/netgear_async/) API on UNIX machines for maximum performance. You can easily install it via pip:
 
     !!! failure "uvloop is **[NOT yet supported on Windows :fontawesome-brands-windows: Machines](https://github.com/MagicStack/uvloop/issues/14).**"
 
@@ -223,7 +223,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
 * #### DXcam
 
-    Required only if you're using the [**ScreenGear**](../../gears/screengear/overview/) API on Windows machines for better FPS performance. You can easily install it via pip:
+    Required only if you're using the [**ScreenGear**](../../gears/screengear/) API on Windows machines for better FPS performance. You can easily install it via pip:
 
     !!! failure "FYI, DXcam is **ONLY supported on Windows :fontawesome-brands-windows: Machines.**"
 
@@ -403,10 +403,10 @@ pip install git+git://github.com/abhiTronix/vidgear@master#egg=vidgear[asyncio]
 
 ```sh
 # Install latest stable release with all Core dependencies
-pip install vidgear-0.3.3-py3-none-any.whl[core]
+pip install vidgear-0.3.4-py3-none-any.whl[core]
 
 # Or Install latest stable release with all Core & Asyncio dependencies
-pip install vidgear-0.3.3-py3-none-any.whl[asyncio]
+pip install vidgear-0.3.4-py3-none-any.whl[asyncio]
 ```
 
 &nbsp;

@@ -24,13 +24,13 @@ limitations under the License.
 
 ## What is PiGear API and what does it do?
 
-**Answer:** PiGear is a specialized API similar to the [CamGear API](../../gears/camgear/overview/) but optimized for **Raspberry Pi Boards**, offering comprehensive **support for camera modules** _(e.g., OmniVision OV5647, Sony IMX219)_, along with **limited compatibility for USB cameras**. _For more info. see [PiGear doc ➶](../../gears/pigear/overview/)_
+**Answer:** PiGear is a specialized API similar to the [CamGear API](../../gears/camgear/) but optimized for **Raspberry Pi Boards**, offering comprehensive **support for camera modules** _(e.g., OmniVision OV5647, Sony IMX219)_, along with **limited compatibility for USB cameras**. _For more info. see [PiGear doc ➶](../../gears/pigear/)_
 
 &nbsp;
 
 ## I'm only familiar with OpenCV, how to get started with PiGear API?
 
-**Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [PiGear documentation](../../gears/pigear/overview/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [PiGear documentation](../../gears/pigear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
@@ -42,7 +42,7 @@ limitations under the License.
 
 ## How to select camera index on Pi Compute IO board with two Cameras attached?
 
-**Answer:** Refer [this bonus example ➶](../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)
+**Answer:** Refer [this Bonus Example ➶](../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)
 
 &nbsp;
 
@@ -67,14 +67,14 @@ limitations under the License.
 
 ## How to dynamically adjust Raspberry Pi Camera Parameters at runtime with PiGear?
 
-**Answer:** See [this bonus example ➶](../../help/pigear_ex/#dynamically-adjusting-raspberry-pi-camera-parameters-at-runtime-in-pigear-api)
+**Answer:** See [this Bonus Example ➶](../../help/pigear_ex/#dynamically-adjusting-raspberry-pi-camera-parameters-at-runtime-in-pigear-api)
 
 &nbsp;
 
 
 ## Is it possible to change output frames Pixel Format in PiGear API?
 
-**Answer:** Yes it is possible with Picamera2 Backend. See [this bonus example ➶](../../help/pigear_ex/#changing-output-pixel-format-in-pigear-api-with-picamera2-backend)
+**Answer:** Yes it is possible with Picamera2 Backend. See [this Bonus Example ➶](../../help/pigear_ex/#changing-output-pixel-format-in-pigear-api-with-picamera2-backend)
 
 &nbsp;
 

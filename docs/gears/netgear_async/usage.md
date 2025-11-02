@@ -25,7 +25,7 @@ limitations under the License.
 
     * It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 
-    * It is advised to comprehend [NetGear API](../../netgear/overview/) before using this API.
+    * It is advised to comprehend [NetGear API](../../netgear/) before using this API.
 
 !!! example "After going through following Usage Examples, Checkout more bonus examples [here ➶](../../../help/netgear_async_ex/)"
 
@@ -341,7 +341,7 @@ if __name__ == "__main__":
 
 NetGear_Async can be used with any other Gears without any compatibility issues. 
 
-Let's implement a bare-minimum example where we are sending [Stabilized](../../stabilizer/overview/) frames from Server-end and saving them at Client's end with [WriteGear](../../writegear/introduction/) as follows:
+Let's implement a bare-minimum example where we are sending [Stabilized](../../stabilizer/) frames from Server-end and saving them at Client's end with [WriteGear](../../writegear/introduction/) as follows:
 
 ### Server's End
 

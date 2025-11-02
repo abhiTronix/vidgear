@@ -24,7 +24,7 @@ limitations under the License.
 
 ## What is Stabilizer Class and what does it do?
 
-**Answer:** Stabilizer Class is an auxiliary class that enables Video Stabilization for vidgear with minimalistic latency, and at the expense of little to no additional computational requirements. _For more info. see [Stabilizer Class doc ➶](../../gears/stabilizer/overview/)_
+**Answer:** Stabilizer Class is an auxiliary class that enables Video Stabilization for vidgear with minimalistic latency, and at the expense of little to no additional computational requirements. _For more info. see [Stabilizer Class doc ➶](../../gears/stabilizer/)_
 
 &nbsp;
 

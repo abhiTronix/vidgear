@@ -21,7 +21,7 @@ limitations under the License.
 # StreamGear API: Single-Source Mode :material-file-video-outline:
 
 <figure>
-  <img src="../../../../assets/images/streamgear_file.webp" loading="lazy" alt="Single-Source Mode Flow Diagram" />
+  <img src="../../../assets/images/streamgear_file.webp" loading="lazy" alt="Single-Source Mode Flow Diagram" />
   <figcaption>Single-Source Mode generalized workflow</figcaption>
 </figure>
 
