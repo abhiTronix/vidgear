@@ -23,7 +23,7 @@ on:
     types: [published]
 
 env:
-  PYTHON_VERSION: 3.9
+  PYTHON_VERSION: 3.11
   GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
   GIT_NAME: ${{ secrets.GIT_NAME }}
   GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
