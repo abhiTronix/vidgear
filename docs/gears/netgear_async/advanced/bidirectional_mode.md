@@ -21,8 +21,7 @@ limitations under the License.
 # Bidirectional Mode for NetGear_Async API 
 
 <h3 align="center">
-  <img src="../../../../assets/images/bidir_async.png" alt="Bidirectional Mode" loading="lazy" class="center"/>
-  <figcaption>NetGear_Async's Bidirectional Mode</figcaption>
+  <img src="../../../../assets/images/bidir_async.png" alt="Bidirectional Mode" loading="lazy" class="center" title="NetGear_Async's Bidirectional Mode"/>
 </h3>
 
 ## Overview

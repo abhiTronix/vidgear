@@ -29,14 +29,12 @@ limitations under the License.
 
 There are several ways such as:
 
-&thinsp;
 
+## Frequently Asked Questions :material-chat-alert:
 
-## Frequently Asked Questions :material-chat-question:
+> Got a question related to Vidgear?
 
-> Got a question related to VidGear Working?  
-
-Checkout the **Frequently Asked Questions** - a curated list of all the questions with adequate answer that we commonly receive for quickly troubleshooting your problems:
+You can checkout the **Frequently Asked Questions** - a curated list of all the questions with adequate answer that we commonly receive for quickly troubleshooting your problems:
 
 - [General FAQs ➶](general_faqs.md)
 - [CamGear FAQs ➶](camgear_faqs.md)
@@ -55,29 +53,29 @@ Checkout the **Frequently Asked Questions** - a curated list of all the question
 &thinsp;
 
 
-## Bonus Examples :material-egg-easter:
+## Bonus Examples :material-gift:
 
-> How we do this with that API?  
+> What if I want to connect two or more APIs together, or want to use some third-party features?
 
-Checkout the **Bonus Examples** - a curated list of all experimental examples with unusual configuration that aren't included in general usage examples:
+You can checkout the **Bonus Examples** - a curated list of all Bonus experimental examples with unusual configuration that aren't included in general usage examples:
 
-- [CamGear Examples ➶](camgear_ex.md)
-- [PiGear Examples ➶](pigear_ex.md)
-- [ScreenGear Examples ➶](screengear_ex.md)
-- [StreamGear Examples ➶](streamgear_ex.md)
-- [WriteGear Examples ➶](writegear_ex.md)
-- [NetGear Examples ➶](netgear_ex.md)
-- [WebGear Examples ➶](webgear_ex.md)
-- [WebGear_RTC Examples ➶](webgear_rtc_ex.md)
-- [VideoGear Examples ➶](videogear_ex.md)
-- [NetGear_Async Examples ➶](netgear_async_ex.md)
-- [Stabilizer Class Examples ➶](stabilizer_ex.md)
+- [CamGear Bonus Examples ➶](camgear_ex.md)
+- [PiGear Bonus Examples ➶](pigear_ex.md)
+- [ScreenGear Bonus Examples ➶](screengear_ex.md)
+- [StreamGear Bonus Examples ➶](streamgear_ex.md)
+- [WriteGear Bonus Examples ➶](writegear_ex.md)
+- [NetGear Bonus Examples ➶](netgear_ex.md)
+- [WebGear Bonus Examples ➶](webgear_ex.md)
+- [WebGear_RTC Bonus Examples ➶](webgear_rtc_ex.md)
+- [VideoGear Bonus Examples ➶](videogear_ex.md)
+- [NetGear_Async Bonus Examples ➶](netgear_async_ex.md)
+- [Stabilizer Class Bonus Examples ➶](stabilizer_ex.md)
 
 &thinsp;
 
 ## Join our Gitter Community channel :material-chat-processing:
 
-> Have you come up with some new idea 💡 or looking for the fastest way troubleshoot your problems
+> Have you come up with some new ideas or looking for the fastest way troubleshoot your problems
 
 **Join and chat on our Gitter Community channel:** [![Glitter chat](https://img.shields.io/badge/Chat&nbsp;on-Gitter-yellow.svg?style=flat-square&logo=gitter)](https://gitter.im/vidgear/community)
 
@@ -87,7 +85,7 @@ There you can ask quick questions, swiftly troubleshoot your problems, help othe
 &thinsp;
 
 
-## This is what you do when... :fontawesome-solid-question:
+## This is what you do when... :material-account-question:
 
 - [x] [Got a question or problem?](../../contribution/#got-a-question-or-problem)
 - [x] [Found a typo?](../../contribution/#found-a-typo)
@@ -98,7 +96,7 @@ There you can ask quick questions, swiftly troubleshoot your problems, help othe
 &thinsp;
 
 
-## Reporting an issues :fontawesome-regular-face-tired:
+## Reporting an issues :material-hail:
 
 > Want to report a bug? Suggest a new feature?
 
@@ -108,7 +106,7 @@ Before you do, please read our [guidelines ➶](../../contribution/issue/)
 &thinsp;
 
 
-## Preparing a Pull Request :fontawesome-solid-code-pull-request:
+## Preparing a Pull Request :material-git:
 
 > Interested in contributing to VidGear?
 

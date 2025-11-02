@@ -22,7 +22,7 @@ limitations under the License.
 
 
 <figure>
-  <img src="../../../../assets/images/streamgear_real.webp" loading="lazy" alt="Real-time Frames Mode Flow Diagram"/>
+  <img src="../../../assets/images/streamgear_real.webp" loading="lazy" alt="Real-time Frames Mode Flow Diagram"/>
   <figcaption>Real-time Frames Mode generalized workflow</figcaption>
 </figure>
 

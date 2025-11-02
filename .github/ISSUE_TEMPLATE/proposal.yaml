@@ -1,7 +1,7 @@
 name: Proposal
 description: Suggest an idea for improving VidGear 💡
 title: "[Proposal]: "
-labels: "PROPOSAL :envelope_with_arrow:"
+labels: ["PROPOSAL :envelope_with_arrow:"]
 body:
   - type: checkboxes
     attributes:

@@ -24,19 +24,19 @@ limitations under the License.
 
 ## What is NetGear API and what does it do?
 
-**Answer:** NetGear is exclusively designed to transfer video frames & data synchronously (Pair & Request/Reply) as well as asynchronously (Publish/Subscribe) between various interconnecting systems over the network in real-time. _For more info. see [NetGear doc ➶](../../gears/netgear/overview/)_
+**Answer:** NetGear is exclusively designed to transfer video frames & data synchronously (Pair & Request/Reply) as well as asynchronously (Publish/Subscribe) between various interconnecting systems over the network in real-time. _For more info. see [NetGear doc ➶](../../gears/netgear/)_
 
 &nbsp;
 
 ## How to get started with NetGear API?
 
-**Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [NetGear documentation ➶](../../gears/netgear/overview/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [NetGear documentation ➶](../../gears/netgear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
 ## What Exclusive Modes are compatible with each other in NetGear API?
 
-Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netgear/overview/#exclusive-modes):
+Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netgear/#exclusive-modes):
 
 
 | Exclusive Modes | Multi-Servers | Multi-Clients | Secure | Bidirectional | SSH Tunneling |
@@ -72,7 +72,7 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
 
 * Systematically, **check for [Hardware/Network Issues ➶](https://github.com/abhiTronix/vidgear/issues/137)**
 
-* Finally, if nothing works then, **checkout [**NetGear_Async API ➶**](../../gears/netgear_async/overview/)**
+* Finally, if nothing works then, **checkout [**NetGear_Async API ➶**](../../gears/netgear_async/)**
 
 &nbsp;
 
@@ -128,7 +128,7 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
 
 ## Why NetGear API not working correctly?
 
-**Answer:** First, carefully go through [NetGear doc ➶](../../gears/netgear/overview/) that contains detailed information. Also, checkout [PyZmq Docs ➶](https://pyzmq.readthedocs.io/en/latest/) for its various settings/parameters. If still it doesn't work for you, then let us know on [Gitter ➶](https://gitter.im/vidgear/community)
+**Answer:** First, carefully go through [NetGear doc ➶](../../gears/netgear/) that contains detailed information. Also, checkout [PyZmq Docs ➶](https://pyzmq.readthedocs.io/en/latest/) for its various settings/parameters. If still it doesn't work for you, then let us know on [Gitter ➶](https://gitter.im/vidgear/community)
 
 &nbsp;
 

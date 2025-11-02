@@ -24,13 +24,13 @@ limitations under the License.
 
 ## What is ScreenGear API and what does it do?
 
-**Answer:** ScreenGear is designed exclusively for targeting rapid Screencasting Capabilities, which means it can grab frames from your monitor in real-time, either by defining an area on the computer screen or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors as well as supports multiple backends. _For more info. see [ScreenGear doc ➶](../../gears/screengear/overview/)_
+**Answer:** ScreenGear is designed exclusively for targeting rapid Screencasting Capabilities, which means it can grab frames from your monitor in real-time, either by defining an area on the computer screen or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors as well as supports multiple backends. _For more info. see [ScreenGear doc ➶](../../gears/screengear/)_
 
 &nbsp;
 
 ## I'm only familiar with OpenCV, how to get started with ScreenGear API?
 
-**Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [ScreenGear documentation](../../gears/screengear/overview/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [ScreenGear documentation](../../gears/screengear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 

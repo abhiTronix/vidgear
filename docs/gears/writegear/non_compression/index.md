@@ -21,7 +21,7 @@ limitations under the License.
 # WriteGear API: Non-Compression Mode
 
 <figure>
-  <img src="../../../../assets/images/writegear_ncm.png" loading="lazy" alt="Non-Compression Mode" class="center-small shadow"/>
+  <img src="../../../assets/images/writegear_ncm.png" loading="lazy" alt="Non-Compression Mode" class="center-small shadow"/>
   <figcaption>WriteGear API's Non-Compression Mode generalized workflow</figcaption>
 </figure>
 
@@ -30,7 +30,7 @@ limitations under the License.
 
 When [`compression_mode`](../params/#compression_mode) parameter is disabled (.i.e `compression_mode = False`), WriteGear API uses basic OpenCV's inbuilt [**VideoWriter API**](https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) tools for encoding multimedia files but without compression.
 
-This mode provides flexible access to [**OpenCV's VideoWriter API**](https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5),and also supports various parameters available within this API, but lacks the ability to control output quality, compression, and other important features like _lossless video compression, audio encoding, etc._ which are only available in [Compression Mode](../../compression/overview/). Thereby, the resultant output video-file size will be many times larger as compared to Compression Mode.
+This mode provides flexible access to [**OpenCV's VideoWriter API**](https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5),and also supports various parameters available within this API, but lacks the ability to control output quality, compression, and other important features like _lossless video compression, audio encoding, etc._ which are only available in [Compression Mode](../../compression/). Thereby, the resultant output video-file size will be many times larger as compared to Compression Mode.
 
 
 &nbsp; 

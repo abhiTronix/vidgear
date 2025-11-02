@@ -21,8 +21,7 @@ limitations under the License.
 # Multi-Servers Mode for NetGear API 
 
 <figure>
-  <img src="../../../../assets/images/multi_server.png" alt="NetGear's Multi-Servers Mode" loading="lazy"/>
-  <figcaption>NetGear's Multi-Servers Mode</figcaption>
+  <img src="../../../../assets/images/multi_server.png" alt="NetGear's Multi-Servers Mode" loading="lazy" title="NetGear's Multi-Servers Mode"/>
 </figure>
 
 ## Overview

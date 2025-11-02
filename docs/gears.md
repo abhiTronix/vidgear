@@ -39,10 +39,10 @@ These Gears can be classified as follows:
 
 > **Basic Function:** Retrieves [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames from various sources.
 
-* [CamGear](camgear/overview/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
-* [PiGear](pigear/overview/): Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis :fontawesome-brands-raspberry-pi:.
-* [ScreenGear](screengear/overview/): High-performance API targeting rapid Screencasting Capabilities.
-* [VideoGear](videogear/overview/): Common Video-Capture API with internal [Video Stabilizer](stabilizer/overview/) wrapper. 
+* [CamGear](camgear/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
+* [PiGear](pigear/): Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis :fontawesome-brands-raspberry-pi:.
+* [ScreenGear](screengear/): High-performance API targeting rapid Screencasting Capabilities.
+* [VideoGear](videogear/): Common Video-Capture API with internal [Video Stabilizer](stabilizer/) wrapper. 
 
 ### B. VideoWriter Gears
 
@@ -60,18 +60,18 @@ These Gears can be classified as follows:
 
 * **Asynchronous I/O Streaming Gear:**
 
-    * [WebGear](webgear/overview/): ASGI Video-Server that broadcasts Live MJPEG-Frames to any web-browser on the network.
+    * [WebGear](webgear/): ASGI Video-Server that broadcasts Live MJPEG-Frames to any web-browser on the network.
 
-    * [WebGear_RTC](webgear_rtc/overview/): Real-time Asyncio WebRTC media server for streaming directly to peer clients over the network.
+    * [WebGear_RTC](webgear_rtc/): Real-time Asyncio WebRTC media server for streaming directly to peer clients over the network.
 
 ### D. Network Gears
 
 > **Basic Function:** Sends/Receives data and [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames over connected networks.
 
-* [NetGear](netgear/overview/): Handles High-Performance Video-Frames & Data Transfer between interconnecting systems over the network.
+* [NetGear](netgear/): Handles High-Performance Video-Frames & Data Transfer between interconnecting systems over the network.
 
 * **Asynchronous I/O Network Gear:**
 
-    * [NetGear_Async](netgear_async/overview/): Immensely Memory-Efficient Asyncio Video-Frames Network Messaging Framework.
+    * [NetGear_Async](netgear_async/): Immensely Memory-Efficient Asyncio Video-Frames Network Messaging Framework.
 
 &thinsp;

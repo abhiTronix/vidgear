@@ -124,7 +124,7 @@ Each API is designed exclusively to handle/control/process different data-specif
 - [**CamGear:**](#camgear) Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
 - [**PiGear:**](#pigear) Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis :grapes:.
 - [**ScreenGear:**](#screengear) High-performance API targeting rapid Screencasting Capabilities.
-- [**VideoGear:**](#videogear) Common Video-Capture API with internal [Video Stabilizer](https://abhitronix.github.io/vidgear/latest/gears/stabilizer/overview/) wrapper.
+- [**VideoGear:**](#videogear) Common Video-Capture API with internal [Video Stabilizer](https://abhitronix.github.io/vidgear/latest/gears/stabilizer/) wrapper.
 
 **B. Video-Writer Gears:**
 
@@ -737,20 +737,20 @@ Internal URLs
 [ffmpeg-doc]: https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/advanced/ffmpeg_install/
 [youtube-doc]: https://abhitronix.github.io/vidgear/latest/gears/camgear/usage/#using-camgear-with-youtube-videos
 [tqm-doc]: https://abhitronix.github.io/vidgear/latest/bonus/TQM/#threaded-queue-mode
-[camgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/camgear/overview/
-[stabilizer-doc]: https://abhitronix.github.io/vidgear/latest/gears/stabilizer/overview/
+[camgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/camgear/
+[stabilizer-doc]: https://abhitronix.github.io/vidgear/latest/gears/stabilizer/
 [stabilizer-doc-ex]: https://abhitronix.github.io/vidgear/latest/gears/videogear/usage/#using-videogear-with-video-stabilizer-backend
-[videogear-doc]: https://abhitronix.github.io/vidgear/latest/gears/videogear/overview/
-[pigear-doc]: https://abhitronix.github.io/vidgear/latest/gears/pigear/overview/
-[cm-writegear-doc]: https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/overview/
-[ncm-writegear-doc]: https://abhitronix.github.io/vidgear/latest/gears/writegear/non_compression/overview/
-[screengear-doc]: https://abhitronix.github.io/vidgear/latest/gears/screengear/overview/
+[videogear-doc]: https://abhitronix.github.io/vidgear/latest/gears/videogear/
+[pigear-doc]: https://abhitronix.github.io/vidgear/latest/gears/pigear/
+[cm-writegear-doc]: https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/
+[ncm-writegear-doc]: https://abhitronix.github.io/vidgear/latest/gears/writegear/non_compression/
+[screengear-doc]: https://abhitronix.github.io/vidgear/latest/gears/screengear/
 [streamgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/streamgear/introduction/
 [writegear-doc]: https://abhitronix.github.io/vidgear/latest/gears/writegear/introduction/
-[netgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear/overview/
-[webgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/webgear/overview/
-[webgear_rtc-doc]: https://abhitronix.github.io/vidgear/latest/gears/webgear_rtc/overview/
-[netgear_async-doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/overview/
+[netgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear/
+[webgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/webgear/
+[webgear_rtc-doc]: https://abhitronix.github.io/vidgear/latest/gears/webgear_rtc/
+[netgear_async-doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/
 [drop35]: https://github.com/abhiTronix/vidgear/issues/99
 [custom-command-doc]: https://abhitronix.github.io/vidgear/latest/gears/writegear/compression/advanced/cciw/
 [advanced-webgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/webgear/advanced/
@@ -760,7 +760,7 @@ Internal URLs
 [netgear_multi_server_doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/multi_server/
 [netgear_multi_client_doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/multi_client/
 [netgear_sshtunnel_doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/ssh_tunnel/
-[netgear-exm]: https://abhitronix.github.io/vidgear/latest/gears/netgear/overview/#modes-of-operation
+[netgear-exm]: https://abhitronix.github.io/vidgear/latest/gears/netgear/#modes-of-operation
 [stabilize_webgear_doc]: https://abhitronix.github.io/vidgear/latest/gears/webgear/advanced/#using-webgear-with-real-time-video-stabilization-enabled
 [netgear_async-cs]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/usage/#using-netgear_async-with-a-custom-sourceopencv
 [installation]: https://abhitronix.github.io/vidgear/latest/installation/

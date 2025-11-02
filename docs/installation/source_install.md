@@ -102,7 +102,7 @@ When installing VidGear from source, following are some API specific prerequisit
 
 * #### FFmpeg 
 
-    Require only for the video compression and encoding compatibility within [**StreamGear API**](../../gears/streamgear/introduction/) and [**WriteGear API's Compression Mode**](../../gears/writegear/compression/overview/). 
+    Require only for the video compression and encoding compatibility within [**StreamGear API**](../../gears/streamgear/introduction/) and [**WriteGear API's Compression Mode**](../../gears/writegear/compression/). 
 
     !!! tip "FFmpeg Installation"
 
@@ -114,7 +114,7 @@ When installing VidGear from source, following are some API specific prerequisit
 
 * #### Picamera2
 
-    Required only if you're using Raspberry Pi :fontawesome-brands-raspberry-pi: Camera Modules _(or USB webcams)_ with the [**PiGear**](../../gears/pigear/overview/) API. Here's how to install [Picamera2](https://github.com/raspberrypi/picamera2) python library:
+    Required only if you're using Raspberry Pi :fontawesome-brands-raspberry-pi: Camera Modules _(or USB webcams)_ with the [**PiGear**](../../gears/pigear/) API. Here's how to install [Picamera2](https://github.com/raspberrypi/picamera2) python library:
 
     ??? tip "Using Legacy `picamera` library with PiGear (`v0.3.3` and above)"
 

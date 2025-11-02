@@ -84,7 +84,7 @@ PiGear(framerate=60) # sets 60fps framerate
 
 This parameter controls the colorspace of the output frames. 
 
-!!! example "With the Picamera2 backend, you can also define a custom `format` _(format of output frame pixels)_ in PiGear API. Checkout this [bonus example ➶](../../../help/pigear_ex/#changing-output-pixel-format-in-pigear-api-with-picamera2-backend)"
+!!! example "With the Picamera2 backend, you can also define a custom `format` _(format of output frame pixels)_ in PiGear API. Checkout this [Bonus Example ➶](../../../help/pigear_ex/#changing-output-pixel-format-in-pigear-api-with-picamera2-backend)"
 
 **Data-Type:** String
 

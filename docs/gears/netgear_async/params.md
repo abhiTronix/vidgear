@@ -20,13 +20,13 @@ limitations under the License.
 
 # NetGear_Async API Parameters
 
-!!! cite "NetGear_Async provides a special internal wrapper around [VideoGear](../../videogear/overview/), which itself provides internal access to both [CamGear](../../camgear/overview/) and [PiGear](../../pigear/overview/) APIs and their parameters."
+!!! cite "NetGear_Async provides a special internal wrapper around [VideoGear](../../videogear/), which itself provides internal access to both [CamGear](../../camgear/) and [PiGear](../../pigear/) APIs and their parameters."
 
 &thinsp;
 
 ## **`enablePiCamera`** 
 
-This parameter provide access to [PiGear](../../pigear/overview/) or [CamGear](../../camgear/overview/) APIs respectively. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
+This parameter provide access to [PiGear](../../pigear/) or [CamGear](../../camgear/) APIs respectively. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
 
 **Data-Type:** Boolean
 
@@ -188,7 +188,7 @@ This parameter provides the flexibility to alter various NetGear_Async API's int
 
 ### **`stabilize`**
 
-This parameter enable access to [Stabilizer Class](../../stabilizer/overview/) for stabilizing frames, i.e. can be set to `True`(_to enable_) or unset to `False`(_to disable_). 
+This parameter enable access to [Stabilizer Class](../../stabilizer/) for stabilizing frames, i.e. can be set to `True`(_to enable_) or unset to `False`(_to disable_). 
 
 **Data-Type:** Boolean
 
@@ -206,7 +206,7 @@ NetGear_Async(stabilize=True) # enable stablization
 
 ### **`options`**
 
-This parameter can be used in addition, to pass user-defined parameters supported by [Stabilizer Class](../../stabilizer/overview/). These parameters can be formatted as this parameter's attribute.
+This parameter can be used in addition, to pass user-defined parameters supported by [Stabilizer Class](../../stabilizer/). These parameters can be formatted as this parameter's attribute.
 
 **Supported dictionary attributes for Stabilizer Class are:**
 

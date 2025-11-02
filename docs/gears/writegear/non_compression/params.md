@@ -101,7 +101,7 @@ WriteGear(output = 'output.mp4', compression_mode=False)
 This parameter allows us to exploit almost all [**OpenCV's VideoWriter API**](https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) supported parameters effortlessly and flexibly for video-encoding in Non-Compression Mode, by formatting desired FFmpeg Parameters as this parameter's attributes. All supported parameters and FOURCC codecs for compression mode discussed below:
 
 
-!!! info "Remember, Non-Compression mode lacks the ability to control output quality and other important features like _lossless video compression, audio encoding, etc._, which are available with WriteGear's [Compression Mode](../../compression/overview/) only."
+!!! info "Remember, Non-Compression mode lacks the ability to control output quality and other important features like _lossless video compression, audio encoding, etc._, which are available with WriteGear's [Compression Mode](../../compression/) only."
 
 
 **Data-Type:** Dictionary
