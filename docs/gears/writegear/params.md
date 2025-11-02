@@ -105,7 +105,7 @@ This parameter allows to customize the output video encoding parameters both in 
 
 **Usage:**
 
-!!! info "See [Compression Mode Parameter ➶](../compression/index.md) and [Non-Compression Mode Parameter ➶](../non_compression/index.md) for more information on its usage and supported parameters."
+!!! info "See [Compression Mode Parameter ➶](compression/index.md) and [Non-Compression Mode Parameter ➶](non_compression/index.md) for more information on its usage and supported parameters."
 
 &nbsp; 
 
