@@ -81,7 +81,7 @@ setup(
     extras_require={
         # API specific deps
         "core": [
-            "yt_dlp{}".format(latest_version("yt_dlp")),
+            "yt-dlp[default]{}".format(latest_version("yt-dlp")),
             "pyzmq{}".format(latest_version("pyzmq")),
             "Pillow",
             "simplejpeg{}".format(latest_version("simplejpeg")),
@@ -95,7 +95,7 @@ setup(
         ),
         # API specific + Asyncio deps
         "asyncio": [
-            "yt_dlp{}".format(latest_version("yt_dlp")),
+            "yt-dlp[default]{}".format(latest_version("yt-dlp")),
             "pyzmq{}".format(latest_version("pyzmq")),
             "simplejpeg{}".format(latest_version("simplejpeg")),
             "mss{}".format(latest_version("mss")),
