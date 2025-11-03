@@ -27,7 +27,7 @@ trigger:
       - "**/*.js"
       - "**/*.css"
 
-pr:
+pr: 
   - testing
 
 pool:

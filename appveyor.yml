@@ -32,7 +32,7 @@ environment:
       PYTHON_VERSION: "3.13.x"
       PYTHON_ARCH: "64"
 
-build: off
+build: false
 
 version: "{branch}-{build}"
 
