@@ -76,7 +76,7 @@ Use the pre-built OpenCV packages from VidGear's CI releases that include GStrea
 
     !!! warning "Please note that these are non-commercial builds and are intended for development and testing purposes only. Always verify compliance with licensing terms for production use."
 
-    !!! failure "Pre-built OpenCV packages may not be available work on all linux distributions or architectures. In such cases, you may need to build OpenCV from source as described in Approach 2."
+    !!! failure "Pre-built OpenCV packages may not be available or work on all linux distributions or architectures. In such cases, you may need to build OpenCV from source as described in [Approach 2](#approach-2-build-opencv-from-source)."
 
 ??? tip "Quick Start Docker commands for Reference Implementation"
 
@@ -267,10 +267,10 @@ CMD ["python3", "-m", "app.streamer"]
     # 2. Python build dependencies (if building packages)
     RUN pip install --upgrade pip setuptools wheel
 
-    # 4. VidGear and its dependencies
+    # 3. VidGear and its dependencies
     RUN pip install vidgear[asyncio]
 
-    # 5. Optional: yt-dlp for streaming from YouTube/Twitch
+    # 4. Optional: yt-dlp for streaming from YouTube/Twitch
     RUN pip install --upgrade "yt-dlp[default]"
     ```
 
