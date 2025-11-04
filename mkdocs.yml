@@ -365,9 +365,9 @@ nav:
               - WebGear_RTC API: bonus/reference/webgear_rtc.md
               - NetGear_Async API: bonus/reference/netgear_async.md
               - Helper Methods: bonus/reference/helper_async.md
+      - Containerizing VidGear with Docker: bonus/docker_example.md
       - Colorspace Manipulation: bonus/colorspace_manipulation.md
       - Threaded Queue Mode: bonus/TQM.md
-      - VidGear Docker Streamer: bonus/docker_example.md
   - Help:
       - Help VidGear 'n' Get Help:
           - Helping VidGear: help.md
