@@ -71,7 +71,7 @@ jobs:
       - name: recheck and install pip_dependencies
         run: |
           python -c 'import cv2; print(cv2.__version__)'
-          python -m pip install -U six httpx yt_dlp paramiko
+          python -m pip install -U six httpx yt-dlp[default] paramiko
           python -m pip install .[asyncio]
           python -m pip install -U flake8 codecov pytest pytest-asyncio pytest-cov mpegdash m3u8 async-asgi-testclient
           python -m pip install -U deffcode
