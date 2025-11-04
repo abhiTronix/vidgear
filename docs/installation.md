@@ -49,7 +49,10 @@ VidGear is well-tested and supported on the following systems(but not limited to
 
 ## Installation methods
 
-* [Install using pip](../installation/pip_install/) _(recommended)_
-* [Install from source](../installation/source_install/)
+* [Install using pip :simple-pypi:](../installation/pip_install/) _(recommended)_
+* [Install from source :material-hammer-wrench:](../installation/source_install/)
+
+??? example "Looking for containerizing VidGear with :simple-docker: Docker?"
+    Checkout this guide that addresses the unique challenges of containerizing VidGear applications, particularly around building OpenCV with proper GStreamer and FFmpeg support. Learn the patterns and pitfalls before you start: [**Containerizing VidGear with Docker ➶**](bonus/docker_example.md)
 
 &thinsp;

@@ -107,6 +107,8 @@ Also, if you're already familiar with [OpenCV][opencv] library, then see [Switch
 
 Or, if you're just getting started with OpenCV-Python programming, then refer this [FAQ ➶](https://abhitronix.github.io/vidgear/latest/help/general_faqs/#im-new-to-python-programming-or-its-usage-in-opencv-library-how-to-use-vidgear-in-my-projects)
 
+Finally, if looking for containerizing VidGear with Docker, then refer this [guide ➶](https://abhitronix.github.io/vidgear/latest/bonus/docker_example/#containerizing-vidgear-with-docker)
+
 &nbsp;
 
 &nbsp;
