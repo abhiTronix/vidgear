@@ -56,8 +56,7 @@ Alternatively, a more direct approach is by using **`color_space`** _(integer)_ 
 
 	* Using `color_space` global variable with [Threaded Queue Mode](../../bonus/TQM/) may have minor lag, User discretion is advised.
 
-!!! tip
-	It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
+!!! tip "It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors."
 
 
 &nbsp; 
