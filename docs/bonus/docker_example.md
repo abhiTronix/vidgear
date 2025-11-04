@@ -18,372 +18,145 @@ limitations under the License.
 ===============================================
 -->
 
-# VidGear Docker Streamer
+# Containerizing VidGear with Docker
 
 <figure>
   <img src="https://raw.githubusercontent.com/abhiTronix/vidgear-docker-example/main/assets/docker-logo.png" loading="lazy" alt="Docker Logo" class="center" style="width: 50%;"/>
 </figure>
 
-A production-ready Docker application template for the VidGear framework that demonstrates video streaming, processing, and encoding with audio support. This template showcases best practices for containerizing VidGear applications with FFmpeg, GStreamer, and OpenCV.
+> This page serves as a template and inspiration for containerizing VidGear applications with Docker, demonstrating best practices for building production-ready video processing containers.
 
-!!! info "Repository"
-    The complete source code and examples are available at: [**abhiTronix/vidgear-docker-example**](https://github.com/abhiTronix/vidgear-docker-example)
-
-&nbsp;
-
-## Features
-
-- :fontawesome-solid-film: **Video Streaming**: Stream videos from YouTube, Twitch, and other platforms using yt-dlp
-- :fontawesome-solid-music: **Audio Support**: Automatic audio extraction and merging
-- :fontawesome-solid-wrench: **Flexible Configuration**: Environment-based configuration for easy customization
-- :fontawesome-brands-docker: **Docker Compose**: Simple orchestration with docker-compose
-- :fontawesome-solid-box: **Multi-stage Build**: Optimized Docker image with minimal size
-- :fontawesome-solid-lock: **Security**: Non-root user execution and minimal attack surface
-- :fontawesome-solid-flask: **Testing**: Comprehensive test suite with pytest
-- :fontawesome-solid-robot: **CI/CD**: GitHub Actions for automated testing and releases
-- :fontawesome-solid-book: **Documentation**: Detailed configuration and usage guides
+!!! info "Complete Example Repository"
+    A full working implementation with detailed documentation is available at: [**abhiTronix/vidgear-docker-example**](https://github.com/abhiTronix/vidgear-docker-example)
 
 &nbsp;
 
-## Prerequisites
+## Overview
 
-Before you begin, ensure you have the following installed:
+Docker containerization enables VidGear applications to run consistently across different environments with all required dependencies (FFmpeg, GStreamer, OpenCV) bundled together. This approach provides:
 
-- **Docker** 20.10 or higher
-- **Docker Compose** 2.0 or higher (optional but recommended)
-- **Git** (for cloning the repository)
+- **Reproducible Builds**: Consistent environment across development, testing, and production
+- **Dependency Isolation**: All multimedia libraries packaged within the container
+- **Easy Deployment**: Single container image that works anywhere Docker runs
+- **Scalability**: Simple horizontal scaling for video processing workloads
+
+&nbsp;
+
+## Key Implementation Concepts
+
+### Multi-Stage Dockerfile
+
+Use multi-stage builds to minimize final image size while maintaining build flexibility:
+
+```dockerfile
+# Build stage - install build dependencies
+FROM python:3.9-slim as builder
+RUN apt-get update && apt-get install -y \
+    build-essential ffmpeg libsm6 libxext6
+
+# Production stage - copy only runtime dependencies
+FROM python:3.9-slim
+COPY --from=builder /usr/local/lib/python3.9 /usr/local/lib/python3.9
+RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
+```
+
+&nbsp;
+
+### Environment-Based Configuration
+
+Use environment variables for flexible configuration without rebuilding images:
+
+```python
+import os
+from vidgear.gears import CamGear, WriteGear
+
+# Configuration from environment
+video_url = os.getenv('VIDEO_URL', 'default-video-url')
+output_path = os.getenv('OUTPUT_FILE', '/app/output/output.mp4')
+codec = os.getenv('OUTPUT_CODEC', 'libx264')
+
+# Initialize VidGear with configuration
+stream = CamGear(source=video_url, logging=True).start()
+writer = WriteGear(output_filename=output_path, compression_mode=True, 
+                   logging=True, **{"-vcodec": codec})
+```
+
+&nbsp;
+
+### Docker Compose Orchestration
+
+Simplify container management with Docker Compose:
+
+```yaml
+version: '3.8'
+services:
+  vidgear-app:
+    build: .
+    volumes:
+      - ./output:/app/output
+    env_file:
+      - .env
+    environment:
+      - VIDEO_URL=${VIDEO_URL}
+      - OUTPUT_CODEC=${OUTPUT_CODEC}
+```
 
 &nbsp;
 
 ## Quick Start
 
-### Installation
-
-**Step 1: Clone the repository**
+Basic steps to containerize your VidGear application:
 
 ```bash
+# 1. Clone the example repository
 git clone https://github.com/abhiTronix/vidgear-docker-example.git
 cd vidgear-docker-example
-```
 
-**Step 2: Configure environment**
-
-```bash
+# 2. Configure environment variables
 cp .env.example .env
-# Edit .env with your preferred settings
-nano .env  # or use your favorite editor
-```
 
-**Step 3: Create output directory**
-
-```bash
-mkdir -p output
+# 3. Build and run
+docker-compose up
 ```
 
 &nbsp;
 
-### Usage Options
+## Best Practices
 
-#### Option 1: Using Docker Compose (Recommended)
+### Security
 
-=== "Build and Run"
+- Run containers as non-root user
+- Use specific base image versions (avoid `latest` tags)
+- Keep base images updated for security patches
+- Minimize attack surface by removing unnecessary tools
 
-    ```bash
-    # Build and run
-    docker-compose up
+### Performance
 
-    # Run in detached mode
-    docker-compose up -d
-    ```
+- Use volume mounts for output files to avoid container bloat
+- Consider tmpfs mounts for temporary processing files
+- Optimize FFmpeg settings for your use case
+- Use appropriate resource limits (CPU, memory)
 
-=== "View Logs"
+### Development Workflow
 
-    ```bash
-    # View logs
-    docker-compose logs -f
-    ```
-
-=== "Stop Container"
-
-    ```bash
-    # Stop the container
-    docker-compose down
-    ```
+- Separate development and production Dockerfiles if needed
+- Use `.dockerignore` to exclude unnecessary files
+- Implement health checks for container monitoring
+- Tag images properly for version tracking
 
 &nbsp;
 
-#### Option 2: Using Docker CLI
+## Additional Resources
 
-```bash
-# Build the image
-docker build -t vidgear-streamer .
+For complete implementation details including:
 
-# Run the container
-docker run -v "$(pwd)/output:/app/output" --env-file .env vidgear-streamer
+- Full Dockerfile with all dependencies
+- Comprehensive environment configuration
+- Testing setup with pytest
+- CI/CD pipeline examples
+- Troubleshooting guides
+- Multiple usage examples
 
-# Run with specific video URL
-docker run -v "$(pwd)/output:/app/output" \
-  -e VIDEO_URL="https://youtu.be/your-video-id" \
-  vidgear-streamer
-```
+Visit the [**vidgear-docker-example repository**](https://github.com/abhiTronix/vidgear-docker-example) on GitHub.
 
 &nbsp;
-
-#### Option 3: Using Makefile
-
-```bash
-# Build the image
-make build
-
-# Run the container
-make run
-
-# View logs
-make logs
-
-# Clean up
-make clean
-
-# Run tests
-make test
-```
-
-&nbsp;
-
-## Configuration
-
-All configuration is done through environment variables. The following table lists the key configuration options:
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `VIDEO_URL` | Source video URL | `https://youtu.be/xvFZjo5PgG0` |
-| `OUTPUT_FILE` | Output file path | `/app/output/vidgear_output.mp4` |
-| `VIDEO_STREAM_QUALITY` | Video quality (best/720p/1080p) | `best` |
-| `AUDIO_STREAM_QUALITY` | Audio quality | `bestaudio` |
-| `OUTPUT_CODEC` | Video codec (libx264/libx265) | `libx264` |
-| `AUDIO_CODEC` | Audio codec (aac/mp3) | `aac` |
-| `FRAME_LIMIT` | Max frames to process (0=unlimited) | `0` |
-| `VERBOSE` | Enable verbose logging | `false` |
-
-!!! tip "For detailed configuration options, see the [CONFIGURATION.md](https://github.com/abhiTronix/vidgear-docker-example/blob/main/docs/CONFIGURATION.md) in the repository."
-
-&nbsp;
-
-## Usage Examples
-
-### Example 1: Process YouTube Video
-
-```bash
-docker run -v "$(pwd)/output:/app/output" \
-  -e VIDEO_URL="https://youtu.be/dQw4w9WgXcQ" \
-  -e VIDEO_STREAM_QUALITY="720p" \
-  -e FRAME_LIMIT="300" \
-  vidgear-streamer
-```
-
-&nbsp;
-
-### Example 2: High-Quality Processing
-
-```bash
-docker run -v "$(pwd)/output:/app/output" \
-  -e VIDEO_URL="https://youtu.be/your-video" \
-  -e VIDEO_STREAM_QUALITY="1080p" \
-  -e OUTPUT_CODEC="libx265" \
-  -e AUDIO_CODEC="aac" \
-  -e VERBOSE="true" \
-  vidgear-streamer
-```
-
-&nbsp;
-
-### Example 3: Quick Test Processing
-
-```bash
-docker run -v "$(pwd)/output:/app/output" \
-  -e VIDEO_URL="https://youtu.be/test-video" \
-  -e FRAME_LIMIT="100" \
-  -e VERBOSE="true" \
-  vidgear-streamer
-```
-
-!!! example "More Examples"
-    For additional usage examples, check the [examples/](https://github.com/abhiTronix/vidgear-docker-example/tree/main/examples) directory in the repository.
-
-&nbsp;
-
-## Testing
-
-### Run Tests Locally
-
-```bash
-# Install test dependencies
-pip install pytest pytest-cov pytest-mock
-
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=app --cov-report=html
-
-# Run specific test
-pytest tests/test_streamer.py::test_streamer_initialization
-```
-
-&nbsp;
-
-### Run Tests in Docker
-
-```bash
-# Using docker-compose
-docker-compose -f docker-compose.test.yml up
-
-# Using Makefile
-make test
-```
-
-&nbsp;
-
-## Development
-
-### Building from Source
-
-```bash
-# Build with default settings
-docker build -t vidgear-streamer .
-
-# Build with custom build args
-docker build \
-  --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
-  --build-arg VCS_REF=$(git rev-parse --short HEAD) \
-  -t vidgear-streamer:dev .
-```
-
-&nbsp;
-
-### Local Development
-
-```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-pip install pytest pytest-cov pytest-mock
-
-# Run the application locally
-python -m app.streamer
-
-# Run tests
-pytest
-```
-
-&nbsp;
-
-## Troubleshooting
-
-### Common Issues
-
-!!! warning "Permission Denied Errors"
-    
-    **Solution**: Fix permissions on output directory
-    
-    ```bash
-    chmod -R 755 output/
-    ```
-
-!!! warning "Container Exits Immediately"
-    
-    **Solution**: Check logs and run with verbose mode
-    
-    ```bash
-    # Check logs
-    docker-compose logs
-
-    # Run with verbose mode
-    docker-compose up --env VERBOSE=true
-    ```
-
-!!! warning "Video URL Not Supported"
-    
-    **Solution**: Test URL with yt-dlp first
-    
-    ```bash
-    # Test URL with yt-dlp first
-    yt-dlp -F "your-video-url"
-    ```
-
-&nbsp;
-
-## Performance
-
-Typical performance metrics you can expect:
-
-| Metric | Value |
-|--------|-------|
-| **CPU Usage** | 150-400% (multi-core) |
-| **Memory** | 500MB - 2GB (depends on video quality) |
-| **Processing Speed** | Real-time to 2x realtime (depends on codec) |
-| **Disk I/O** | Moderate (depends on output format) |
-
-&nbsp;
-
-## Contributing
-
-We welcome contributions to the VidGear Docker Streamer project! Here's how you can help:
-
-- :fontawesome-solid-bug: Report bugs
-- :fontawesome-solid-lightbulb: Suggest features
-- :fontawesome-solid-code-pull-request: Submit pull requests
-- :fontawesome-solid-book: Improve documentation
-
-!!! info "For detailed contribution guidelines, see [CONTRIBUTING.md](https://github.com/abhiTronix/vidgear-docker-example/blob/main/CONTRIBUTING.md) in the repository."
-
-&nbsp;
-
-## Roadmap
-
-Future enhancements planned for the VidGear Docker Streamer:
-
-- [ ] Add GPU acceleration support (NVIDIA/AMD)
-- [ ] Implement real-time streaming (RTMP/HLS)
-- [ ] Add web UI for configuration
-- [ ] Support for multiple video sources
-- [ ] Add video filters and effects
-- [ ] Implement batch processing
-- [ ] Add monitoring and metrics (Prometheus)
-- [ ] Kubernetes deployment templates
-
-&nbsp;
-
-## Acknowledgments
-
-This project builds upon several excellent open-source projects:
-
-- [**VidGear**](https://github.com/abhiTronix/vidgear) - High-performance video processing framework
-- [**FFmpeg**](https://ffmpeg.org/) - Multimedia processing
-- [**yt-dlp**](https://github.com/yt-dlp/yt-dlp) - Video downloading
-- [**OpenCV**](https://opencv.org/) - Computer vision library
-
-&nbsp;
-
-## Support
-
-Need help or have questions?
-
-- :fontawesome-solid-book: [**Documentation**](https://github.com/abhiTronix/vidgear-docker-example/tree/main/docs)
-- :fontawesome-solid-bug: [**Issue Tracker**](https://github.com/abhiTronix/vidgear-docker-example/issues)
-- :fontawesome-solid-comments: [**Discussions**](https://github.com/abhiTronix/vidgear-docker-example/discussions)
-
-&nbsp;
-
-## License
-
-This project is licensed under the Apache License 2.0 - see the [LICENSE](https://github.com/abhiTronix/vidgear-docker-example/blob/main/LICENSE) file for details.
-
-&nbsp;
-
----
-
-Made with :heart: by the VidGear community
