@@ -66,7 +66,7 @@ You can try helping solving those issues, or give valuable feedback/review on ne
 
 It is something I am doing with my own free time. But so much more needs to be done, and I need your help to do this. For just the price of a cup of coffee 🍵, you can make a difference 🤝
 
-<a href="https://ko-fi.com/W7W8WTYO">![Support me on Ko-fi](assets/gifs/Ko-fi bean.gif){ width="204" loading=lazy }</a> 
+<a href="https://ko-fi.com/W7W8WTYO">![Support me on Ko-fi](assets/gifs/ko-fi-bean.gif){ width="204" loading=lazy }</a> 
 
 <iframe src="https://github.com/sponsors/abhiTronix/button" title="Sponsor abhiTronix" height="32" width="114" style="border: 0; border-radius: 6px;"></iframe>
 

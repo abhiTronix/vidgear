@@ -120,7 +120,7 @@ You can be a [**Stargazer** :star2:{ .heart }][stargazer] by starring us on Gith
 
 It is something I am doing with my own free time. But so much more needs to be done, and I need your help to do this. For just the price of a cup of coffee, you can make a difference :slight_smile:
 
-<a href="https://ko-fi.com/W7W8WTYO">![Support me on Ko-fi](assets/gifs/Support me 1.gif){ width="204" loading=lazy }</a> 
+<a href="https://ko-fi.com/W7W8WTYO">![Support me on Ko-fi](assets/gifs/ko-fi-support-me-1.gif){ width="204" loading=lazy }</a> 
 
 
 &thinsp;
