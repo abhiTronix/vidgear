@@ -51,11 +51,12 @@ VidGear focuses on simplicity, and thereby lets programmers and software develop
 
 !!! alert "If you're just getting started with OpenCV-Python programming, then refer this [FAQ ➶](help/general_faqs/#im-new-to-python-programming-or-its-usage-in-opencv-library-how-to-use-vidgear-in-my-projects)"
 
-
+??? example "Looking for containerizing VidGear with :simple-docker: Docker?"
+    Checkout this guide that addresses the unique challenges of containerizing VidGear applications, particularly around building OpenCV with proper GStreamer and FFmpeg support. Learn the patterns and pitfalls before you start: [**Containerizing VidGear with Docker ➶**](bonus/docker_example.md)
 
 &thinsp;
 
-## Gears 
+## Gears
 
 > VidGear is built with multiple [Gears](gears) each with some unique functionality.
 
