@@ -60,7 +60,7 @@ Simply doing `pip install opencv-python` in a container gives you a minimal buil
 
 &nbsp;
 
-## Three Approaches to Building :simple-docker: Docker Containers
+## Three Approaches to Building Docker Containers :fontawesome-solid-dice-three:
 
 ### Approach 1: Use Pre-built OpenCV with Video Support (Simplest)
 
