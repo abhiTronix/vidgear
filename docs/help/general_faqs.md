@@ -50,6 +50,11 @@ Once done, visit [Switching from OpenCV ➶](../../switch_from_cv/) to easily re
 
 &nbsp;
 
+## How to containerize VidGear with Docker?
+
+**Answer:** Checkout this guide that addresses the unique challenges of containerizing VidGear applications, particularly around building OpenCV with proper GStreamer and FFmpeg support. Learn the patterns and pitfalls before you start: [**Containerizing VidGear with Docker ➶**](../bonus/docker_example.md)
+
+&nbsp;
 
 ## How to log to a file in VidGear?
 
