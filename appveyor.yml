@@ -60,7 +60,7 @@ install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - "python --version"
   - "python -m pip install --upgrade pip wheel numpy cython opencv-python"
-  - "python -m pip install --upgrade .[asyncio] six httpx yt_dlp aiortc"
+  - "python -m pip install --upgrade .[asyncio] six httpx yt-dlp[default] aiortc"
   - "python -m pip install --upgrade pytest codecov pytest-cov pytest-asyncio m3u8 async-asgi-testclient paramiko"
   - "python -m pip install --upgrade deffcode"
   - "python -m pip install https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev2/mpegdash-0.3.0.dev2-py3-none-any.whl"
