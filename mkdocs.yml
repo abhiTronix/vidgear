@@ -367,6 +367,7 @@ nav:
               - Helper Methods: bonus/reference/helper_async.md
       - Colorspace Manipulation: bonus/colorspace_manipulation.md
       - Threaded Queue Mode: bonus/TQM.md
+      - VidGear Docker Streamer: bonus/docker_example.md
   - Help:
       - Help VidGear 'n' Get Help:
           - Helping VidGear: help.md
