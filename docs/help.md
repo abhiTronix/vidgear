@@ -45,9 +45,7 @@ It helps us a lot by making it easier for others to find & trust this library. T
 
 You can see through any opened or pinned existing issues on our GitHub :fontawesome-brands-github: repository, and try helping others, wherever possible: [![GitHub issues](https://img.shields.io/github/issues-raw/abhiTronix/vidgear?label=open%20issues%20%20%F0%9F%94%A7&logo=github&style=flat-square)](https://github.com/abhiTronix/vidgear/issues)
 
-
-&nbsp; 
-
+&nbsp;
 
 ## :fontawesome-solid-eye: Watch the GitHub repository
 
