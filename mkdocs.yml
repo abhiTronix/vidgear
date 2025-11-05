@@ -228,6 +228,7 @@ nav:
           - Submitting an Issue Guidelines: contribution/issue.md
           - Submitting Pull Request(PR) Guidelines: contribution/PR.md
       - Release Notes: changelog.md
+      - Our Sponsors: sponsors.md
       - License: license.md
   - Gears:
       - Introduction: gears.md
