@@ -39,7 +39,7 @@ limitations under the License.
     - [x] **Troubleshooting Guide**: Common issues and solutions
     - [x] **Performance Tuning**: Optimization strategies
 
-    **The reference implementation is available at:** [**abhiTronix/vidgear-docker-example**](https://github.com/abhiTronix/vidgear-docker-example)
+    **The reference implementation is available at:** [**abhiTronix/vidgear-docker-example ➶**](https://github.com/abhiTronix/vidgear-docker-example)
 
 &nbsp;
 
@@ -67,10 +67,10 @@ Simply doing `pip install opencv-python` in a container gives you a minimal buil
 Use the pre-built OpenCV packages from VidGear's CI releases that include GStreamer and FFmpeg support:
 
 !!! example "Complete Reference Implementation :material-book-open-page-variant:"
-    A complete working example demonstrating these patterns is available at: [**abhiTronix/vidgear-docker-example**](https://github.com/abhiTronix/vidgear-docker-example)
+    A complete working example demonstrating these patterns is available at: [**abhiTronix/vidgear-docker-example ➶**](https://github.com/abhiTronix/vidgear-docker-example)
 
 ???+ info "Pre-built OpenCV packages are built with full GStreamer and FFmpeg support"
-    The pre-built OpenCV packages are available for various supported Python versions here: [**VidGear OpenCV CI Releases**](https://github.com/abhiTronix/OpenCV-CI-Releases/releases)
+    The pre-built OpenCV packages are available for various supported Python versions here: [**VidGear OpenCV CI Releases ➶**](https://github.com/abhiTronix/OpenCV-CI-Releases/releases)
 
     This approach simplifies the Dockerfile significantly since you don't need to build OpenCV from source. Moreover, we use the same pre-built OpenCV binaries in Vidgear's CI tests ensuring maximum compatibility.
 
@@ -300,9 +300,11 @@ CMD ["python3", "-m", "app.streamer"]
 
 If pre-built OpenCV packages are not available for your distribution or architecture, you can build OpenCV from source with the required video backend support.
 
-Checkout this detailed script that automates building OpenCV with GStreamer and FFmpeg support: [**`create_opencv.sh`**](https://github.com/abhiTronix/OpenCV-CI-Releases/blob/main/create_opencv.sh)
+Checkout this detailed script that automates building OpenCV with GStreamer and FFmpeg support: [**`create_opencv.sh` ➶**](https://github.com/abhiTronix/OpenCV-CI-Releases/blob/main/create_opencv.sh)
 
 !!! tip "You could integrate this script into a multi-stage Dockerfile similar to [Approach 1](#approach-1-use-pre-built-opencv-with-video-support-simplest), ensuring all dependencies are installed in the builder stage before running the script."
+
+!!! info "You could also find useful resources for building OpenCV from source with GStreamer support in our FAQ section: [**Building OpenCV with GStreamer Support ➶**](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support)"
 
 &thinsp;
 
@@ -369,7 +371,7 @@ Structure your VidGear application to read all configuration from environment va
     It depicts how to configure input source, output parameters, and processing options using environment variables. This pattern allows easy customization without modifying the code.
 
 !!! example "Complete Reference Implementation :material-book-open-page-variant:"
-    A complete working example demonstrating these patterns is available at: [**abhiTronix/vidgear-docker-example**](https://github.com/abhiTronix/vidgear-docker-example)
+    A complete working example demonstrating these patterns is available at: [**abhiTronix/vidgear-docker-example ➶**](https://github.com/abhiTronix/vidgear-docker-example)
 
 ```python
 # app/streamer.py
