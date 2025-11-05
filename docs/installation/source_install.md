@@ -26,8 +26,11 @@ limitations under the License.
 
 ## Prerequisites
 
-When installing VidGear from source, following are some API specific prerequisites you may need to install manually:
+When installing VidGear from source, following are Critical and some API specific prerequisites you may need to install manually:
 
+!!! danger ":material-bomb: Breaking Changes in `v0.3.4`"
+
+    From version `v0.3.4` onwards, VidGear **NO LONGER** installs OpenCV python binaries automatically as a dependency during installation from source. So you must install it manually before using any VidGear API.
 
 !!! question "What about rest of the prerequisites?"
 
@@ -97,6 +100,28 @@ When installing VidGear from source, following are some API specific prerequisit
             
             ```
     
+
+### Critical Prerequisites :warning:
+
+* #### OpenCV
+
+    Must require OpenCV(3.0+) python binaries installed for all core functions. You easily install it directly via [pip](https://pypi.org/project/opencv-python/):
+
+    ??? tip "OpenCV installation from source"
+
+        You can also follow online tutorials for building & installing OpenCV on [Windows](https://www.learnopencv.com/install-opencv3-on-windows/), [Linux](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/), [MacOS](https://www.pyimagesearch.com/2018/08/17/install-opencv-4-on-macos/) and [Raspberry Pi](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/) machines manually from its source. 
+
+        :warning: Make sure not to install both *pip* and *source* version together. Otherwise installation will fail to work!
+
+    ??? info "Other OpenCV binaries"
+
+        OpenCV maintainers also provide additional binaries via pip that contains both main modules and contrib/extra modules [`opencv-contrib-python`](https://pypi.org/project/opencv-contrib-python/), and for server (headless) environments like [`opencv-python-headless`](https://pypi.org/project/opencv-python-headless/) and [`opencv-contrib-python-headless`](https://pypi.org/project/opencv-contrib-python-headless/). You can also install ==any one of them== in similar manner. More information can be found [here](https://github.com/opencv/opencv-python#installation-and-usage).
+
+
+    ```sh
+    pip install opencv-python       
+    ```
+
 
 ### API Specific Prerequisites
 
