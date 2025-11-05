@@ -20,9 +20,7 @@ limitations under the License.
 
 # Install using pip
 
-
 > _Best option for easily getting stable VidGear installed._
-
 
 ## Prerequisites
 
@@ -96,7 +94,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
 ### Critical Prerequisites :warning:
 
-* #### OpenCV 
+* #### OpenCV
 
     Must require OpenCV(3.0+) python binaries installed for all core functions. You easily install it directly via [pip](https://pypi.org/project/opencv-python/):
 
