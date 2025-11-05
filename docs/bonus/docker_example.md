@@ -76,7 +76,7 @@ Use the pre-built OpenCV packages from VidGear's CI releases that include GStrea
 
     !!! warning "Please note that these are non-commercial builds and are intended for development and testing purposes only. Always verify compliance with licensing terms for production use."
 
-    !!! failure "Pre-built OpenCV packages may not be available or work on all linux distributions or architectures. In such cases, you may need to build OpenCV from source as described in [Approach 2](#approach-2-build-opencv-from-source)."
+    !!! failure "Pre-built OpenCV packages may not be available or work on all linux distributions or architectures. In such cases, you may need to build OpenCV from source as described in [Approach 2](#approach-2-build-your-own-opencv-from-source-most-flexible)."
 
 ??? tip "Quick Start Docker commands for Reference Implementation"
 
