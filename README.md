@@ -44,14 +44,14 @@ VidGear primarily focuses on simplicity, and thereby lets programmers and softwa
 &thinsp;
 
 <h2></h2>
-<div align="center"><h3>Silver Sponsors ✨</h3></div>
+<div align="center"><h3>Our Silver Sponsors ✨</h3></div>
 &thinsp;
 <div align="left">
 
 | Recall.ai - API for meeting recordings  |
 | :-------------: |
 |  <a href="https://www.recall.ai"><img src="docs/overrides/assets/images/sponsors/sponsor-recallai.png" alt="Recall.ai - Meeting Recording API" /></a> |
-| If you’re looking for a meeting recording API,</br>consider checking out [**Recall.ai**](https://www.recall.ai/product/meeting-recording-api), an API that records Zoom,</br>Google Meet, Microsoft Teams, in-person meetings, and more. |
+| _If you’re looking for a meeting recording API,</br>consider checking out [**Recall.ai**](https://www.recall.ai/product/meeting-recording-api), an API that records Zoom,</br>Google Meet, Microsoft Teams, in-person meetings, and more._ |
 
 </div>
 <h2></h2>
@@ -84,7 +84,7 @@ The following **functional block diagram** clearly depicts the generalized funct
   - [**WebGear_RTC**](#webgear_rtc)
   - [**NetGear_Async**](#netgear_async)
 - [**Contributions**](#contributions)
-- [**Donations**](#donations)
+- [**Donations and Sponsorships**](#donations-and-sponsorships)
 - [**Citation**](#citation)
 - [**Copyright**](#copyright)
 
@@ -655,16 +655,22 @@ We're offering support for VidGear on [**Gitter Community Channel**](https://git
 
 &nbsp;
 
-# Donations
+# Donations and Sponsorships
 
 <div align="center">
    <img src="https://abhitronix.github.io/vidgear/latest/assets/images/help_us.png" alt="PiGear" width="50%" />
    <p><i>VidGear is free and open source and will always remain so. ❤️</i></p>
 </div>
 
-It is something I am doing with my own free time. But so much more needs to be done, and I need your help to do this. For just the price of a cup of coffee, you can make a difference 🙂
+It is something I am doing with my own free time. But so much more needs to be done, and I need your help to do this. For just the price of a cup of coffee 🍵, you can make a difference 🤝
 
 <a href='https://ko-fi.com/W7W8WTYO' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+
+You can also become a sponsor via [__GitHub Sponsors__](https://github.com/sponsors/abhiTronix) by clicking the button below:
+
+<iframe src="https://github.com/sponsors/abhiTronix/button" title="Sponsor abhiTronix" height="32" width="114" style="border: 0; border-radius: 6px;"></iframe>
+
+Thanks a million! 💖
 
 &nbsp;
 
