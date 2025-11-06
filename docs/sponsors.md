@@ -18,7 +18,7 @@ _Be a Gold sponsor and get your logo featured here!_
 
 <div class="grid cards" markdown>
 
--   :simple-githubsponsors:{ .lg .middle }  __Recall.ai - API for meeting recordings__
+-   __Recall.ai - API for meeting recordings__
 
     ---
 
