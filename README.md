@@ -19,11 +19,11 @@ limitations under the License.
 -->
 
 <h1 align="center">
-  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="80%"/>
+  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="70%"/>
 </h1>
-<h2 align="center">
-  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/tagline.svg" alt="VidGear tagline" width="40%"/>
-</h2>
+<h1 align="center">
+  <img src="docs/overrides/assets/images/tagline.png" alt="VidGear tagline" width="75%"/>
+</h1>
 
 <div align="center">
 
@@ -33,32 +33,27 @@ limitations under the License.
 
 [![Glitter chat][gitter-badge]][gitter] [![Build Status][appveyor]][app] [![PyPi version][pypi-badge]][pypi]
 
-[![Code Style][black-badge]][black]
-
 </div>
 
-VidGear is a **High-Performance Video Processing Python Library** that provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio API Framework** on top of many state-of-the-art specialized libraries like _[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera2][picamera2], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [dxcam][dxcam], [aiortc][aiortc] and [python-mss][mss]_ serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**
-
-VidGear primarily focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks, in just a few lines of code.
-
-&thinsp;
-
-<h2></h2>
-<div align="center"><h3>Our Silver Sponsors ✨</h3></div>
-&thinsp;
+<div align="center"><h1>Our Sponsors ✨</h1></div>
 <div align="left">
 
-| Recall.ai - API for meeting recordings  |
+| <h3>Recall.ai - API for meeting recordings</h3>  |
 | :-------------: |
 |  <a href="https://www.recall.ai/product/meeting-recording-api"><img src="docs/overrides/assets/images/sponsors/sponsor-recallai.png" alt="Recall.ai - Meeting Recording API" /></a> |
 | _If you’re looking for a meeting recording API,</br>consider checking out [**Recall.ai**](https://www.recall.ai/product/meeting-recording-api), an API that records Zoom,</br>Google Meet, Microsoft Teams, in-person meetings, and more._ |
 
 </div>
+
 <h2></h2>
 
 &thinsp;
 
-### Functional Block Diagram
+# Overview
+
+VidGear provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio API Framework** on top of many state-of-the-art specialized libraries like _[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera2][picamera2], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [dxcam][dxcam], [aiortc][aiortc] and [python-mss][mss]_ serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**
+
+VidGear primarily focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks, in just a few lines of code.
 
 The following **functional block diagram** clearly depicts the generalized functioning of VidGear APIs:
 
