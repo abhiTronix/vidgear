@@ -66,6 +66,10 @@ It is something I am doing with my own free time. But so much more needs to be d
 
 <a href="https://ko-fi.com/W7W8WTYO">![Support me on Ko-fi](assets/gifs/ko-fi-bean.gif){ width="204" loading=lazy }</a> 
 
+> Interested in becoming a sponsor and supporting VidGear's development?
+
+You can become a sponsor via [__GitHub Sponsors__](https://github.com/sponsors/abhiTronix) by clicking the button below:
+
 <iframe src="https://github.com/sponsors/abhiTronix/button" title="Sponsor abhiTronix" height="32" width="114" style="border: 0; border-radius: 6px;"></iframe>
 
 Thanks a million! :blush:
