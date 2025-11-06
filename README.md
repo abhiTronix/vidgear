@@ -664,13 +664,13 @@ We're offering support for VidGear on [**Gitter Community Channel**](https://git
 
 It is something I am doing with my own free time. But so much more needs to be done, and I need your help to do this. For just the price of a cup of coffee 🍵, you can make a difference 🤝
 
-<a href='https://ko-fi.com/W7W8WTYO' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+<a href="https://ko-fi.com/W7W8WTYO"><img src="docs/overrides/assets/gifs/ko-fi-support-me-1.gif" width="184" border="0" alt="Support me on Ko-fi" /></a>
 
 You can also become a sponsor via [__GitHub Sponsors__](https://github.com/sponsors/abhiTronix) by clicking the button below:
 
-<iframe src="https://github.com/sponsors/abhiTronix/button" title="Sponsor abhiTronix" height="32" width="114" style="border: 0; border-radius: 6px;"></iframe>
+[![](https://img.shields.io/static/v1?label=Sponsor%20%40abhiTronix&message=%E2%9D%A4&logo=github&color=%23fe8e86&style=social)](https://github.com/sponsors/abhiTronix)
 
-Thanks a million! 💖
+_Thanks a million! 💖_
 
 &nbsp;
 
