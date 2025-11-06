@@ -1,4 +1,4 @@
-# Our sponsors :material-hand-heart:
+# Our Sponsors :material-hand-heart:
 
 > We are incredibly thankful to all our sponsors for supporting the development of VidGear.
 
