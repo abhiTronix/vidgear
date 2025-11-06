@@ -22,7 +22,7 @@ limitations under the License.
   <img src="https://abhitronix.github.io/vidgear/latest/assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="70%"/>
 </h1>
 <h1 align="center">
-  <img src="docs/overrides/assets/images/tagline.png" alt="VidGear tagline" width="75%"/>
+  <img src="docs/overrides/assets/images/tagline_new.png" alt="VidGear tagline" width="75%"/>
 </h1>
 
 <div align="center">
