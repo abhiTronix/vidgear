@@ -50,7 +50,7 @@ VidGear primarily focuses on simplicity, and thereby lets programmers and softwa
 
 | Recall.ai - API for meeting recordings  |
 | :-------------: |
-|  <a href="https://www.recall.ai"><img src="docs/overrides/assets/images/sponsors/sponsor-recallai.png" alt="Recall.ai - Meeting Recording API" /></a> |
+|  <a href="https://www.recall.ai/product/meeting-recording-api"><img src="docs/overrides/assets/images/sponsors/sponsor-recallai.png" alt="Recall.ai - Meeting Recording API" /></a> |
 | _If you’re looking for a meeting recording API,</br>consider checking out [**Recall.ai**](https://www.recall.ai/product/meeting-recording-api), an API that records Zoom,</br>Google Meet, Microsoft Teams, in-person meetings, and more._ |
 
 </div>
