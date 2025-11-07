@@ -22,9 +22,9 @@ _Be a Gold sponsor and get your logo featured here!_
 
     ---
 
-    <a href="https://www.recall.ai/product/meeting-recording-api"><img src="../assets/images/sponsors/sponsor-recallai.png" alt="Recall.ai - Meeting Recording API" /></a>
+    <a href="https://www.recall.ai/product/meeting-recording-api?utm_source=github&utm_medium=sponsorship&utm_campaign=abhiTronix-vidgear"><img src="../assets/images/sponsors/sponsor-recallai.png" alt="Recall.ai - Meeting Recording API" /></a>
 
-    _If you’re looking for a meeting recording API, consider checking out [__Recall.ai__](https://www.recall.ai/product/meeting-recording-api), an API that records Zoom, Google Meet, Microsoft Teams, in-person meetings, and more._
+    _If you’re looking for a meeting recording API, consider checking out [__Recall.ai__](https://www.recall.ai/product/meeting-recording-api?utm_source=github&utm_medium=sponsorship&utm_campaign=abhiTronix-vidgear), an API that records Zoom, Google Meet, Microsoft Teams, in-person meetings, and more._
 
 </div>
 
