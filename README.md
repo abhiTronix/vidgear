@@ -19,10 +19,10 @@ limitations under the License.
 -->
 
 <h1 align="center">
-  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="70%"/>
+  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="75%"/>
 </h1>
 <h1 align="center">
-  <img src="docs/overrides/assets/images/tagline_new.png" alt="VidGear tagline" width="75%"/>
+  <img src="docs/overrides/assets/images/tagline_new.png" alt="VidGear tagline" width="70%"/>
 </h1>
 
 <div align="center">
@@ -49,7 +49,7 @@ limitations under the License.
 
 &thinsp;
 
-# Overview
+# Project Overview
 
 VidGear provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio API Framework** on top of many state-of-the-art specialized libraries like _[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera2][picamera2], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [dxcam][dxcam], [aiortc][aiortc] and [python-mss][mss]_ serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**
 
@@ -89,15 +89,15 @@ The following **functional block diagram** clearly depicts the generalized funct
 
 ## TL;DR
 
-#### What is vidgear?
+### What is vidgear?
 
 > _"VidGear is a cross-platform High-Performance Framework that provides an one-stop **Video-Processing** solution for building complex real-time media applications in python."_
 
-#### What does it do?
+### What does it do?
 
 > _"VidGear can read, write, process, send & receive video files/frames/streams from/to various devices in real-time, and [**faster**][tqm-doc] than underline libraries."_
 
-#### What is its purpose?
+### What is its purpose?
 
 > _"Write Less and Accomplish More"_ — **VidGear's Motto**
 
