@@ -23,8 +23,8 @@ limitations under the License.
 </h1>
 <h1 align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/overrides/assets/images/tagline-dark.png" width="70%">
-    <img alt="VidGear tagline" src="docs/overrides/assets/images/tagline-light.png" width="70%">
+    <source media="(prefers-color-scheme: dark)" srcset="docs/overrides/assets/images/tagline-dark.png" width="80%">
+    <img alt="VidGear tagline" src="docs/overrides/assets/images/tagline-light.png" width="80%">
   </picture>
 </h1>
 
