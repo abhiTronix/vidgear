@@ -30,7 +30,7 @@ limitations under the License.
 
 <div align="center">
 
-[Releases][release]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Gears][gears]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Documentation][docs]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Installation][installation]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[License](#copyright)
+[Getting Started](#getting-started)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Gears][gears]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Documentation][docs]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Installation][installation]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[License](#copyright)
 
 [![Build Status][github-cli]][github-flow] [![Codecov branch][codecov]][code] [![Azure DevOps builds (branch)][azure-badge]][azure-pipeline]
 
@@ -38,7 +38,7 @@ limitations under the License.
 
 </div>
 
-<div align="center"><h1>Our Sponsors ✨</h1></div>
+<div align="center"><h2>Our Sponsors ✨</h2></div>
 <div align="left">
 
 | <h3>Recall.ai - API for meeting recordings</h3>  |
