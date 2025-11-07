@@ -43,8 +43,8 @@ limitations under the License.
 
 | <h3>Recall.ai - API for meeting recordings</h3>  |
 | :-------------: |
-|  <a href="https://www.recall.ai/product/meeting-recording-api"><img src="docs/overrides/assets/images/sponsors/sponsor-recallai.png" alt="Recall.ai - Meeting Recording API" /></a> |
-| _If you’re looking for a meeting recording API,</br>consider checking out [**Recall.ai**](https://www.recall.ai/product/meeting-recording-api), an API that records Zoom,</br>Google Meet, Microsoft Teams, in-person meetings, and more._ |
+|  <a href="https://www.recall.ai/product/meeting-recording-api?utm_source=github&utm_medium=sponsorship&utm_campaign=abhiTronix-vidgear"><img src="docs/overrides/assets/images/sponsors/sponsor-recallai.png" alt="Recall.ai - Meeting Recording API" /></a> |
+| _If you’re looking for a meeting recording API,</br>consider checking out [**Recall.ai**](https://www.recall.ai/product/meeting-recording-api?utm_source=github&utm_medium=sponsorship&utm_campaign=abhiTronix-vidgear), an API that records Zoom,</br>Google Meet, Microsoft Teams, in-person meetings, and more._ |
 
 </div>
 
