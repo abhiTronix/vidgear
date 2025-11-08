@@ -30,7 +30,7 @@ limitations under the License.
 
 <div align="center">
 
-[Getting Started](#getting-started)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Gears][gears]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Documentation][docs]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Installation][installation]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[License](#copyright)
+**[Getting Started](#getting-started)&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Gears][gears]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Documentation][docs]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[Installation][installation]&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;[License](#copyright)**
 
 [![Build Status][github-cli]][github-flow] [![Codecov branch][codecov]][code] [![Azure DevOps builds (branch)][azure-badge]][azure-pipeline]
 
@@ -50,7 +50,7 @@ limitations under the License.
 </div>
 
 > [!NOTE]
-> Vidgear is made possible because of our supporters on GitHub Sponsors. To learn more, please check out our [sponsorship page](https://github.com/sponsors/abhiTronix).
+> Vidgear is made possible because of our supporters on GitHub Sponsors. To learn more, please check out our [sponsorship page ➶](https://github.com/sponsors/abhiTronix)
 
 &nbsp;
 
