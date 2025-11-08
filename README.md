@@ -19,12 +19,12 @@ limitations under the License.
 -->
 
 <h1 align="center">
-  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="75%"/>
+  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/vidgear.png" alt="VidGear" title="Logo designed by Abhishek Thakur(@abhiTronix), under CC-BY-NC-SA 4.0 License" width="80%"/>
 </h1>
 <h1 align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/overrides/assets/images/tagline-dark.png" width="80%">
-    <img alt="VidGear tagline" src="docs/overrides/assets/images/tagline-light.png" width="80%">
+    <source media="(prefers-color-scheme: dark)" srcset="docs/overrides/assets/images/tagline-dark.png" width="70%">
+    <img alt="VidGear tagline" src="docs/overrides/assets/images/tagline-light.png" width="70%">
   </picture>
 </h1>
 
@@ -38,7 +38,8 @@ limitations under the License.
 
 </div>
 
-<div align="center"><h2>Our Sponsors ✨</h2></div>
+<h1 align="left"> Our Sponsors 🤝 </h1>
+
 <div align="left">
 
 | <h3>Recall.ai - API for meeting recordings</h3>  |
@@ -48,15 +49,17 @@ limitations under the License.
 
 </div>
 
-<h2></h2>
+> [!NOTE]
+> Vidgear is made possible because of our supporters on GitHub Sponsors. To learn more, please check out our [sponsorship page](https://github.com/sponsors/abhiTronix).
 
-&thinsp;
+&nbsp;
 
-# Project Overview
+# Overview
 
-VidGear provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio API Framework** on top of many state-of-the-art specialized libraries like _[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera2][picamera2], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [dxcam][dxcam], [aiortc][aiortc] and [python-mss][mss]_ serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**
+VidGear provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio API Framework** on top of many state-of-the-art specialized libraries like _[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera2][picamera2], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [dxcam][dxcam], [aiortc][aiortc] and [python-mss][mss]_ serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**.
 
-VidGear primarily focuses on simplicity, and thereby lets programmers and software developers to easily integrate and perform Complex Video Processing Tasks, in just a few lines of code.
+> [!TIP]
+> Jump straight to [Getting Started ➶](#getting-started) section if you're new to VidGear.
 
 The following **functional block diagram** clearly depicts the generalized functioning of VidGear APIs:
 
@@ -94,7 +97,7 @@ The following **functional block diagram** clearly depicts the generalized funct
 
 ### What is vidgear?
 
-> _"VidGear is a cross-platform High-Performance Framework that provides an one-stop **Video-Processing** solution for building complex real-time media applications in python."_
+> _"VidGear is a cross-platform **High-Performance** Framework that provides an one-stop **Video-Processing** solution for building complex real-time media applications in python."_
 
 ### What does it do?
 
@@ -112,7 +115,7 @@ The following **functional block diagram** clearly depicts the generalized funct
 
 ## Getting Started
 
-If this is your first time using VidGear, head straight to the [Installation ➶][installation] to install VidGear.
+If this is your first time using VidGear, head straight to the [**Installation ➶**][installation] to install VidGear.
 
 Once you have VidGear installed, **Checkout its Well-Documented [Function-Specific Gears ➶][gears]**
 
