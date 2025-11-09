@@ -48,8 +48,9 @@ limitations under the License.
 | _If you’re looking for a meeting recording API,</br>consider checking out [**Recall.ai**](https://www.recall.ai/product/meeting-recording-api?utm_source=github&utm_medium=sponsorship&utm_campaign=abhiTronix-vidgear), an API that records Zoom,</br>Google Meet, Microsoft Teams, in-person meetings, and more._ |
 
 </div>
+<h5></h5>
 
-> We are incredibly thankful to all our sponsors for supporting the development of VidGear. If you'd like to support VidGear, please check out our [GitHub Sponsors page ➶](https://github.com/sponsors/abhiTronix)
+> _🙏 We are incredibly thankful to all our sponsors for supporting the development of VidGear. If you'd like to support VidGear, please check out our [GitHub Sponsors page ➶](https://github.com/sponsors/abhiTronix)_
 
 &nbsp;
 
@@ -57,8 +58,7 @@ limitations under the License.
 
 VidGear provides an easy-to-use, highly extensible, thoroughly optimised **Multi-Threaded + Asyncio API Framework** on top of many state-of-the-art specialized libraries like _[OpenCV][opencv], [FFmpeg][ffmpeg], [ZeroMQ][zmq], [picamera2][picamera2], [starlette][starlette], [yt_dlp][yt_dlp], [pyscreenshot][pyscreenshot], [dxcam][dxcam], [aiortc][aiortc] and [python-mss][mss]_ serving at its backend, and enable us to flexibly exploit their internal parameters and methods, while silently delivering **robust error-handling and real-time performance 🔥**.
 
-> [!TIP]
-> Jump straight to [Getting Started ➶](#getting-started) section if you're new to VidGear.
+> _If you're new to VidGear, head straight to the [**Getting Started ➶**](#getting-started) section to install VidGear._
 
 The following **functional block diagram** clearly depicts the generalized functioning of VidGear APIs:
 
@@ -647,7 +647,7 @@ Whereas supported protocol are: `tcp` and `ipc`.
   <p><i>We're happy to meet new contributors💗</i></p><br>
 </div>
 
-We welcome your contributions to help us improve and extend this project. If you want to get involved with VidGear development, checkout the **[Contribution Guidelines ▶️][contribute]**
+> We welcome your contributions to help us improve and extend this project. If you want to get involved with VidGear development, checkout the **[Contribution Guidelines ➶][contribute]**
 
 We're offering support for VidGear on [**Gitter Community Channel**](https://gitter.im/vidgear/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge). Come and join the conversation over there!
 
