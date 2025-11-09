@@ -36,7 +36,7 @@ ScreenGear API implements a multi-threaded wrapper around [**dxcam**](https://gi
 
 !!! tip "Helpful Tips"
 
-	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV Library ➶](../../../switch_from_cv/#switching-videocapture-apis)
+	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV Library ➶](../../switch_from_cv/#switching-the-videocapture-apis)
 
 	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 
@@ -46,28 +46,28 @@ ScreenGear API implements a multi-threaded wrapper around [**dxcam**](https://gi
 ## Usage Examples
 
 <div>
-<a href="../usage/">See here 🚀</a>
+<a href="usage/">See here 🚀</a>
 </div>
 
-!!! experiment "After going through ScreenGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/screengear_ex/)"
+!!! experiment "After going through ScreenGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../help/screengear_ex/)"
 
 ## Parameters
 
 <div>
-<a href="../params/">See here 🚀</a>
+<a href="params/">See here 🚀</a>
 </div>
 
 ## References
 
 <div>
-<a href="../../../bonus/reference/screengear/">See here 🚀</a>
+<a href="../../bonus/reference/screengear/">See here 🚀</a>
 </div>
 
 
 ## FAQs
 
 <div>
-<a href="../../../help/screengear_faqs/">See here 🚀</a>
+<a href="../../help/screengear_faqs/">See here 🚀</a>
 </div>  
 
 &thinsp; 

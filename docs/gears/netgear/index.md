@@ -31,7 +31,7 @@ limitations under the License.
 
 NetGear implements a high-level wrapper around [PyZmQ](https://github.com/zeromq/pyzmq) python library that contains python bindings for [ZeroMQ](http://zeromq.org/) - a high-performance asynchronous distributed messaging library that provides a message queue, but unlike message-oriented middleware, its system can run without a dedicated message broker. 
 
-NetGear also enables real-time [*JPEG Frame Compression*](../advanced/compression/) capabilities for boosting performance significantly while sending video-frames over the network in real-time.
+NetGear also enables real-time [*JPEG Frame Compression*](advanced/compression/) capabilities for boosting performance significantly while sending video-frames over the network in real-time.
 
 !!! quote "Lazy Pirate pattern in NetGear API"
 
@@ -41,7 +41,7 @@ NetGear also enables real-time [*JPEG Frame Compression*](../advanced/compressio
 	* Attempt to reconnect, if no reply has arrived within a timeout period.
 	* Abandon the connection if there is still no reply after several requests.
 
-	Netgear API also provides [`max_retries`](../params/#options) and [`request_timeout`](../params/#options) like attributes for controlling this polling.
+	Netgear API also provides [`max_retries`](params/#options) and [`request_timeout`](params/#options) like attributes for controlling this polling.
  
 
 NetGear as of now seamlessly supports three ZeroMQ messaging patterns:
@@ -61,39 +61,39 @@ _whereas the supported protocol are: `tcp` and `ipc`_.
 
 NetGear API primarily has two modes of operations:
 
-* **Send Mode:** _which employs `send()` function to send video frames over the network in real-time. **Activate this mode by setting parameter [`receive_mode = False`](../params/#receive_mode).**_
+* **Send Mode:** _which employs `send()` function to send video frames over the network in real-time. **Activate this mode by setting parameter [`receive_mode = False`](params/#receive_mode).**_
   
-* **Receive Mode:** _which employs `recv()` function to receive frames, sent over the network with *Send Mode* in real-time. **Activate this mode by setting parameter [`receive_mode = True`](../params/#receive_mode).**_
+* **Receive Mode:** _which employs `recv()` function to receive frames, sent over the network with *Send Mode* in real-time. **Activate this mode by setting parameter [`receive_mode = True`](params/#receive_mode).**_
 
 ### Exclusive Modes
 
 In addition to the primary modes, NetGear API also offers application-specific Exclusive Modes:
 
-!!! tip "Also, checkout this [compatibility chart](../../../help/netgear_faqs/#what-exclusive-modes-are-compatible-with-each-other-in-netgear-api) for these modes interoperability."
+!!! tip "Also, checkout this [compatibility chart](../../help/netgear_faqs/#what-exclusive-modes-are-compatible-with-each-other-in-netgear-api) for these modes interoperability."
 
 #### A. Multi-Servers Mode
 - In this exclusive mode, NetGear API robustly ==handles multiple servers at once==, thereby providing seamless access to frames and unidirectional data transfer from multiple Servers/Publishers across the network in real-time. 
 - Each new Server on the network can be identified on the client's end by using its unique port address. 
-- **You can learn about this mode [here ➶](../advanced/multi_server/)**
+- **You can learn about this mode [here ➶](advanced/multi_server/)**
 
 #### B. Multi-Clients Mode
 - In this exclusive mode, NetGear API robustly ==handles multiple clients at once==, thereby providing seamless access to frames and unidirectional data transfer to multiple Client/Consumers across the network in real-time. 
 - Each new Client on the network can be uniquely identified on the Server's end by using its unique port address. 
-- **You can learn about this mode [here ➶](../advanced/multi_client/)**
+- **You can learn about this mode [here ➶](advanced/multi_client/)**
 
 #### C. Bidirectional Mode
 - This exclusive mode ==provides seamless support for bidirectional data transmission== between between Server and Client along with video frames. 
 - Using this mode, the user can now send or receive any data(of any datatype) between Server and Client easily in real-time. 
-- **You can learn more about this mode [here ➶](../advanced/bidirectional_mode/)**
+- **You can learn more about this mode [here ➶](advanced/bidirectional_mode/)**
 
 #### D. SSH Tunneling Mode
 - This exclusive mode ==allows you to connect NetGear via secure SSH connection over the untrusted network== and access its intranet services across firewalls. 
 - This mode implements SSH Remote Port Forwarding which enables accessing Host(client) machine outside the network by exposing port to the public Internet. 
-- **You can learn more about this mode [here ➶](../advanced/ssh_tunnel/)**
+- **You can learn more about this mode [here ➶](advanced/ssh_tunnel/)**
 
 #### E. Secure Mode
 - In this exclusive mode, NetGear API ==provides easy access to powerful, smart & secure ZeroMQ's Security Layers== that enables strong encryption on data, and unbreakable authentication between the Server and Client with the help of custom certificates/keys that brings cheap, standardized privacy and authentication for distributed systems over the network. 
-- **You can learn more about this mode [here ➶](../advanced/secure_mode/)**
+- **You can learn more about this mode [here ➶](advanced/secure_mode/)**
 
 
 &thinsp;
@@ -117,40 +117,40 @@ In addition to the primary modes, NetGear API also offers application-specific E
 
 	* It is advised to enable logging (`logging = True`) on the first run, to easily identify any runtime errors.
 
-	* Kindly go through each given [Usage Examples](../usage/#netgear-api-usage-examples) thoroughly, any incorrect settings/parameter may result in errors or no output at all.
+	* Kindly go through each given [Usage Examples](usage/#netgear-api-usage-examples) thoroughly, any incorrect settings/parameter may result in errors or no output at all.
 
 	* Only either of two functions (i.e. `send()` and `recv()`) can be accessed at any given instance based on activated [primary mode](#primary-modes) selected during NetGear API initialization. Trying to access wrong function in incorrect mode _(for e.g using `send()` function in Receive Mode)_, will result in `ValueError`.
 
-	* [Frame Compression](../advanced/compression/) is enabled by default in NetGear along with fast dct and compression-quality at 90% in all connections.
+	* [Frame Compression](advanced/compression/) is enabled by default in NetGear along with fast dct and compression-quality at 90% in all connections.
 
 &thinsp;
 
 ## Usage Examples
 
 <div>
-<a href="../usage/">See here 🚀</a>
+<a href="usage/">See here 🚀</a>
 </div>
 
-!!! example "After going through NetGear Usage Examples, Checkout more bonus examples [here ➶](../../../help/netgear_ex/)"
+!!! example "After going through NetGear Usage Examples, Checkout more bonus examples [here ➶](../../help/netgear_ex/)"
 
 
 ## Parameters
 
 <div>
-<a href="../params/">See here 🚀</a>
+<a href="params/">See here 🚀</a>
 </div>
 
 ## References
 
 <div>
-<a href="../../../bonus/reference/netgear/">See here 🚀</a>
+<a href="../../bonus/reference/netgear/">See here 🚀</a>
 </div>
 
 
 ## FAQs
 
 <div>
-<a href="../../../help/netgear_faqs/">See here 🚀</a>
+<a href="../../help/netgear_faqs/">See here 🚀</a>
 </div> 
 
 

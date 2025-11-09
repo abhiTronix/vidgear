@@ -29,7 +29,7 @@ limitations under the License.
 </div>
 <p align="middle">VidGear's Stabilizer in Action<br><i>(Video Credits <a href="http://liushuaicheng.org/SIGGRAPH2013/database.html" title="opensourced video samples database">@SIGGRAPH2013</a>)</i></p>
 
-!!! info "This video is transcoded with [**StreamGear API**](../../streamgear/introduction/) and hosted on [GitHub Repository](https://github.com/abhiTronix/vidgear-docs-additionals) and served with [raw.githack.com](https://raw.githack.com)"
+!!! info "This video is transcoded with [**StreamGear API**](../streamgear/introduction/) and hosted on [GitHub Repository](https://github.com/abhiTronix/vidgear-docs-additionals) and served with [raw.githack.com](https://raw.githack.com)"
 
 
 
@@ -37,7 +37,7 @@ limitations under the License.
 
 > Stabilizer is an auxiliary class that enables Video Stabilization for vidgear with minimalistic latency, and at the expense of little to no additional computational requirements. 
 
-The basic idea behind it is to tracks and save the salient feature array for the given number of frames and then uses these anchor point to cancel out all perturbations relative to it for the incoming frames in the queue. This class relies on [**Fixed-Size Python Queues**](../../../bonus/TQM/#b-utilizes-fixed-size-queues) for error-free & ultra-fast frame handling. 
+The basic idea behind it is to tracks and save the salient feature array for the given number of frames and then uses these anchor point to cancel out all perturbations relative to it for the incoming frames in the queue. This class relies on [**Fixed-Size Python Queues**](../../bonus/TQM/#b-utilizes-fixed-size-queues) for error-free & ultra-fast frame handling. 
 
 !!! tip "For more detailed information on Stabilizer working, See [this blogpost ➶](https://learnopencv.com/video-stabilization-using-point-feature-matching-in-opencv/)"
 
@@ -49,7 +49,7 @@ The basic idea behind it is to tracks and save the salient feature array for the
 
 - [x] _Works exceptionally well with low-frequency jitter._
 
-- [x] _Integrated with [VideoGear](../usage/#using-videogear-with-stabilizer-backend), therefore, can be applied to any incoming stream._
+- [x] _Integrated with [VideoGear](usage/#using-videogear-with-stabilizer-backend), therefore, can be applied to any incoming stream._
 
 - [x] _Also seamlessly works standalone._
 
@@ -70,29 +70,29 @@ The basic idea behind it is to tracks and save the salient feature array for the
 ## Usage Examples
 
 <div>
-<a href="../usage/">See here 🚀</a>
+<a href="usage/">See here 🚀</a>
 </div>
 
-!!! example "After going through Stabilizer Class Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/stabilizer_ex/)"
+!!! example "After going through Stabilizer Class Usage Examples, Checkout more of its advanced configurations [here ➶](../../help/stabilizer_ex/)"
 
 
 ## Parameters
 
 <div>
-<a href="../params/">See here 🚀</a>
+<a href="params/">See here 🚀</a>
 </div>
 
 ## References
 
 <div>
-<a href="../../../bonus/reference/stabilizer/">See here 🚀</a>
+<a href="../../bonus/reference/stabilizer/">See here 🚀</a>
 </div>
 
 
 ## FAQs
 
 <div>
-<a href="../../../help/stabilizer_faqs/">See here 🚀</a>
+<a href="../../help/stabilizer_faqs/">See here 🚀</a>
 </div>  
 
 &thinsp; 

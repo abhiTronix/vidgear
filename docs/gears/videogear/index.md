@@ -27,9 +27,9 @@ limitations under the License.
 
 ## Overview
 
-> VideoGear API provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**](../../stabilizer/) class. 
+> VideoGear API provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**](../stabilizer/) class. 
 
-VideoGear also acts as a Common Video-Capture API that provides internal access for both [CamGear](../../camgear/) and [PiGear](../../pigear/) APIs and their parameters with an exclusive [`enablePiCamera`](../params/#enablepicamera) boolean flag.
+VideoGear also acts as a Common Video-Capture API that provides internal access for both [CamGear](../camgear/) and [PiGear](../pigear/) APIs and their parameters with an exclusive [`enablePiCamera`](params/#enablepicamera) boolean flag.
 
 VideoGear is ideal when you need to switch to different video sources without changing your code much. Also, it enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort and writing way fewer lines of code.
 
@@ -37,7 +37,7 @@ VideoGear is ideal when you need to switch to different video sources without ch
 
 !!! tip "Helpful Tips"
 
-	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../../switch_from_cv/#switching-videocapture-apis)
+	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../switch_from_cv/#switching-the-videocapture-apis)
 
 	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 
@@ -46,29 +46,29 @@ VideoGear is ideal when you need to switch to different video sources without ch
 ## Usage Examples
 
 <div>
-<a href="../usage/">See here 🚀</a>
+<a href="usage/">See here 🚀</a>
 </div>
 
-!!! example "After going through VideoGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/videogear_ex/)"
+!!! example "After going through VideoGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../help/videogear_ex/)"
 
 
 ## Parameters
 
 <div>
-<a href="../params/">See here 🚀</a>
+<a href="params/">See here 🚀</a>
 </div>
 
 ## References
 
 <div>
-<a href="../../../bonus/reference/videogear/">See here 🚀</a>
+<a href="../../bonus/reference/videogear/">See here 🚀</a>
 </div>
 
 
 ## FAQs
 
 <div>
-<a href="../../../help/videogear_faqs/">See here 🚀</a>
+<a href="../../help/videogear_faqs/">See here 🚀</a>
 </div>
 
 &thinsp; 

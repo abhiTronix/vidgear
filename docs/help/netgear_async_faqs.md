@@ -30,7 +30,7 @@ limitations under the License.
 
 ## How to get started with NetGear_Async API?
 
-**Answer:** **Answer:** **Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [NetGear_Async documentation ➶](../../gears/netgear_async/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** **Answer:** **Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-the-videocapture-apis) guide, then go through [NetGear_Async documentation ➶](../../gears/netgear_async/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 See [NetGear_Async doc ➶](../../gears/netgear_async/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 

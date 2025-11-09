@@ -33,7 +33,7 @@ WebGear API works on [**Starlette**](https://www.starlette.io/)'s ASGI applicati
 
 WebGear API uses an intraframe-only compression scheme under the hood where the sequence of video-frames are first encoded as JPEG-DIB (JPEG with Device-Independent Bit compression) and then streamed over HTTP using Starlette's Multipart [Streaming Response](https://www.starlette.io/responses/#streamingresponse) and a [Uvicorn](https://www.uvicorn.org/#quickstart) ASGI Server. This method imposes lower processing and memory requirements, but the quality is not the best, since JPEG compression is not very efficient for motion video.
 
-In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides internal wrapper around [VideoGear](../../videogear/), which itself provides internal access to both [CamGear](../../camgear/) and [PiGear](../../pigear/) APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
+In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides internal wrapper around [VideoGear](../videogear/), which itself provides internal access to both [CamGear](../camgear/) and [PiGear](../pigear/) APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
 
 &thinsp;
 
@@ -41,12 +41,12 @@ In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that tra
 
 ??? tip "Disabling Auto-Generation process in WebGear"
 
-    Starting with vidgear `v0.3.0`, you can now completely disable Auto-Generation process in WebGear API using [`skip_generate_webdata`](../params/#webgear-specific-attributes) optional boolean attribute. When `{skip_generate_webdata:True}`, no default data files will be downloaded or validated during initialization.
+    Starting with vidgear `v0.3.0`, you can now completely disable Auto-Generation process in WebGear API using [`skip_generate_webdata`](params/#webgear-specific-attributes) optional boolean attribute. When `{skip_generate_webdata:True}`, no default data files will be downloaded or validated during initialization.
 
     !!! warning "Only `/video` route is available when `{skip_generate_webdata:True}` in WebGear API. All other default routes will be JSONResponses with `404`/`500` status codes."
 
 ??? note "Customizing default video endpoint path"
-	Starting with vidgear `v0.3.1`, you can change default `/video` video endpoint path to any alphanumeric string value, using [`custom_video_endpoint`](../params/#webgear-specific-attributes) optional string attribute. For example:
+	Starting with vidgear `v0.3.1`, you can change default `/video` video endpoint path to any alphanumeric string value, using [`custom_video_endpoint`](params/#webgear-specific-attributes) optional string attribute. For example:
 
 	!!! failure "Only alphanumeric string with no space in between are allowed as `custom_video_endpoint` value. Any other value will be discarded."
 
@@ -70,10 +70,10 @@ On initializing WebGear API, it automatically checks for three critical **data f
 
 - A _default location_ is the path of the directory where data files/folders are downloaded/generated/saved.
 - By default, the `.vidgear` the folder at the home directory of your machine _(for e.g `/home/foo/.vidgear` on Linux :material-linux:)_ serves as the _default location_.
-- But you can also use WebGear's [`custom_data_location`](../params/#webgear-specific-attributes) dictionary attribute to change/alter _default location_ path to somewhere else.
+- But you can also use WebGear's [`custom_data_location`](params/#webgear-specific-attributes) dictionary attribute to change/alter _default location_ path to somewhere else.
 
 !!! tip "Identifying Default location"
-	You can set [`logging=True`](../params/#logging) during initialization, for easily identifying the selected _default location_, which will be something like this on a Linux :material-linux: machine:
+	You can set [`logging=True`](params/#logging) during initialization, for easily identifying the selected _default location_, which will be something like this on a Linux :material-linux: machine:
 
 	```sh
 	WebGear :: DEBUG :: `/home/foo/.vidgear` is the default location for saving WebGear data-files.
@@ -84,7 +84,7 @@ On initializing WebGear API, it automatically checks for three critical **data f
 
 !!! info
 
-    * You can also force trigger the Auto-generation process to overwrite existing data-files using [`overwrite_default_files`](../params/#webgear-specific-attributes) dictionary attribute. Remember, only downloaded default data files(given above) will be overwritten in this process but any other file/folder will NOT be affected.
+    * You can also force trigger the Auto-generation process to overwrite existing data-files using [`overwrite_default_files`](params/#webgear-specific-attributes) dictionary attribute. Remember, only downloaded default data files(given above) will be overwritten in this process but any other file/folder will NOT be affected.
 
     * It is advised to enable logging(`logging=True`) on the first run for easily identifying any runtime errors.
 
@@ -125,7 +125,7 @@ The WebGear API by default uses simple & elegant [**WebGear's Default Theme**](h
 _Can be accessed by visiting WebGear app server, running at http://localhost:8000/:_
 
 <h2 align="center">
-  <img src="../../assets/images/webgear_temp_index.png" loading="lazy" alt="WebGear default Index page"/>
+  <img src="../assets/images/webgear_temp_index.png" loading="lazy" alt="WebGear default Index page"/>
 </h2>
 
 ### 404.html
@@ -133,17 +133,17 @@ _Can be accessed by visiting WebGear app server, running at http://localhost:800
 _Appears when respective URL is not found, for example http://localhost:8000/ok:_
 
 <h2 align="center">
-  <img src="../../assets/images/webgear_temp_404.png" loading="lazy" alt="WebGear default 404 page"/>
+  <img src="../assets/images/webgear_temp_404.png" loading="lazy" alt="WebGear default 404 page"/>
 </h2>
 
 ### 500.html
 
 _Appears when an API Error is encountered:_
 
-!!! warning "If [`logging`](../params/#logging) is enabled and an error occurs, then instead of displaying this 500 handler, WebGear will respond with a traceback response."
+!!! warning "If [`logging`](params/#logging) is enabled and an error occurs, then instead of displaying this 500 handler, WebGear will respond with a traceback response."
 
 <h2 align="center">
-  <img src="../../assets/images/webgear_temp_500.png" loading="lazy" alt="WebGear default 500 page"/>
+  <img src="../assets/images/webgear_temp_500.png" loading="lazy" alt="WebGear default 500 page"/>
 </h2>
 
 &thinsp;
@@ -151,27 +151,27 @@ _Appears when an API Error is encountered:_
 ## Usage Examples
 
 <div>
-<a href="../usage/">See here 🚀</a>
+<a href="usage/">See here 🚀</a>
 </div>
 
-!!! example "After going through WebGear Usage Examples, Checkout more bonus examples [here ➶](../../../help/webgear_ex/)"
+!!! example "After going through WebGear Usage Examples, Checkout more bonus examples [here ➶](../../help/webgear_ex/)"
 
 ## Parameters
 
 <div>
-<a href="../params/">See here 🚀</a>
+<a href="params/">See here 🚀</a>
 </div>
 
 ## References
 
 <div>
-<a href="../../../bonus/reference/webgear/">See here 🚀</a>
+<a href="../../bonus/reference/webgear/">See here 🚀</a>
 </div>
 
 ## FAQs
 
 <div>
-<a href="../../../help/webgear_faqs/">See here 🚀</a>
+<a href="../../help/webgear_faqs/">See here 🚀</a>
 </div>
 
 &thinsp;

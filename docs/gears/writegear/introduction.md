@@ -53,7 +53,7 @@ WriteGear primarily operates in following modes:
 
 !!! tip "Helpful Tips"
 
-	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../../switch_from_cv/#switching-videowriter-api)
+	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../../switch_from_cv/#switching-the-videowriter-api)
 
 	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 
