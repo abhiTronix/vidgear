@@ -30,7 +30,7 @@ limitations under the License.
 
 ## I'm only familiar with OpenCV, how to get started with CamGear API?
 
-**Answer:** **Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-videocapture-apis) guide, then go through [CamGear documentation ➶](../../gears/camgear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** **Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-the-videocapture-apis) guide, then go through [CamGear documentation ➶](../../gears/camgear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &nbsp;
 
