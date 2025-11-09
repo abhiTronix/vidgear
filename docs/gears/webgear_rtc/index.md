@@ -27,24 +27,24 @@ limitations under the License.
 
 ## Overview
 
-> *WebGear_RTC is similar to [WeGear API](../../webgear/) in many aspects but utilizes [WebRTC](https://webrtc.org/) technology under the hood instead of Motion JPEG, which makes it suitable for building powerful video-streaming solutions for all modern browsers as well as native clients available on all major platforms.*
+> *WebGear_RTC is similar to [WeGear API](../webgear/) in many aspects but utilizes [WebRTC](https://webrtc.org/) technology under the hood instead of Motion JPEG, which makes it suitable for building powerful video-streaming solutions for all modern browsers as well as native clients available on all major platforms.*
 
 ??? new "New in v0.2.1" 
 	WebGear_RTC API was added in `v0.2.1`.
 
 WebGear_RTC is implemented with the help of [**aiortc**](https://aiortc.readthedocs.io/en/latest/) library which is built on top of asynchronous I/O framework for Web Real-Time Communication (WebRTC) and Object Real-Time Communication (ORTC) and supports many features like SDP generation/parsing, Interactive Connectivity Establishment with half-trickle and mDNS support, DTLS key and certificate generation, DTLS handshake, etc.
 
-WebGear_RTC can handle [multiple consumers](../../webgear_rtc/advanced/#using-webgear_rtc-as-real-time-broadcaster) seamlessly and provides native support for ICE _(Interactive Connectivity Establishment)_ protocol, STUN _(Session Traversal Utilities for NAT)_, and TURN _(Traversal Using Relays around NAT)_ servers that help us to seamlessly establish direct media connection with the remote peers for uninterrupted data flow. It also allows us to define our custom streaming class with suitable source to transform frames easily before sending them across the network(see this [doc](../../webgear_rtc/advanced/#using-webgear_rtc-with-a-custom-sourceopencv) example).
+WebGear_RTC can handle [multiple consumers](../webgear_rtc/advanced/#using-webgear_rtc-as-real-time-broadcaster) seamlessly and provides native support for ICE _(Interactive Connectivity Establishment)_ protocol, STUN _(Session Traversal Utilities for NAT)_, and TURN _(Traversal Using Relays around NAT)_ servers that help us to seamlessly establish direct media connection with the remote peers for uninterrupted data flow. It also allows us to define our custom streaming class with suitable source to transform frames easily before sending them across the network(see this [doc](../webgear_rtc/advanced/#using-webgear_rtc-with-a-custom-sourceopencv) example).
 
 WebGear_RTC API works in conjunction with [**Starlette**](https://www.starlette.io/) ASGI application and can also flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
 
-Additionally, WebGear_RTC API also provides internal wrapper around [VideoGear](../../videogear/), which itself provides internal access to both [CamGear](../../camgear/) and [PiGear](../../pigear/) APIs.
+Additionally, WebGear_RTC API also provides internal wrapper around [VideoGear](../videogear/), which itself provides internal access to both [CamGear](../camgear/) and [PiGear](../pigear/) APIs.
 
 &thinsp;
 
 ## Data-Files Auto-Generation WorkFlow for WebGear_RTC
 
-Same as [WebGear](../../webgear_rtc/), WebGear_RTC API automatically checks for three critical **data files**(i.e `index.html`, `404.html` & `500.html`) on initialization inside the `templates` folder of the `webgear_rtc` directory at the [*default location*](#default-location) which gives rise to the following two possible scenario:
+Same as [WebGear](../webgear_rtc/), WebGear_RTC API automatically checks for three critical **data files**(i.e `index.html`, `404.html` & `500.html`) on initialization inside the `templates` folder of the `webgear_rtc` directory at the [*default location*](#default-location) which gives rise to the following two possible scenario:
 
 - [x] **If data-files found:** it will proceed normally for instantiating the WebRTC media server through Starlette application.
 - [ ] **If data-files not found:** it will trigger the [**Auto-Generation process**](#auto-generation-process)
@@ -53,10 +53,10 @@ Same as [WebGear](../../webgear_rtc/), WebGear_RTC API automatically checks for 
 
 * A _default location_ is the path of the directory where data files/folders are downloaded/generated/saved.
 * By default, the `.vidgear` the folder at the home directory of your machine _(for e.g `/home/foo/.vidgear` on Linux :material-linux:)_ serves as the _default location_.
-* But you can also use WebGear_RTC's [`custom_data_location`](../params/#webgear_rtc-specific-attributes) dictionary attribute to change/alter *default location* path to somewhere else.
+* But you can also use WebGear_RTC's [`custom_data_location`](params/#webgear_rtc-specific-attributes) dictionary attribute to change/alter *default location* path to somewhere else.
 
 !!! tip "Identifying Default location"
-	You can set [`logging=True`](../params/#logging) during initialization, for easily identifying the selected _default location_, which will be something like this on a Linux :material-linux: machine:
+	You can set [`logging=True`](params/#logging) during initialization, for easily identifying the selected _default location_, which will be something like this on a Linux :material-linux: machine:
 
 	```sh
 	WebGear_RTC :: DEBUG :: `/home/foo/.vidgear` is the default location for saving WebGear_RTC data-files.
@@ -67,7 +67,7 @@ Same as [WebGear](../../webgear_rtc/), WebGear_RTC API automatically checks for 
 
 !!! info
 
-	* You can also force trigger the Auto-generation process to overwrite existing data-files using [`overwrite_default_files`](../params/#webgear_rtc-specific-attributes) dictionary attribute. Remember, only downloaded default data files(given above) will be overwritten in this process but any other file/folder will NOT be affected.
+	* You can also force trigger the Auto-generation process to overwrite existing data-files using [`overwrite_default_files`](params/#webgear_rtc-specific-attributes) dictionary attribute. Remember, only downloaded default data files(given above) will be overwritten in this process but any other file/folder will NOT be affected.
 
 	* It is advised to enable logging(`logging=True`) on the first run for easily identifying any runtime errors.
 
@@ -106,7 +106,7 @@ The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Th
 *Can be accessed by visiting WebGear_RTC app server, running at http://localhost:8000/:*
 
 <h2 align="center">
-  <img src="../../assets/images/webgear_rtc_temp_index.png" loading="lazy" alt="WebGear_RTC default Index page"/>
+  <img src="../assets/images/webgear_rtc_temp_index.png" loading="lazy" alt="WebGear_RTC default Index page"/>
 </h2>
 
 
@@ -115,7 +115,7 @@ The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Th
 *Appears when respective URL is not found, for example http://localhost:8000/ok:*
 
 <h2 align="center">
-  <img src="../../assets/images/webgear_rtc_temp_404.png" loading="lazy" alt="WebGear_RTC default 404 page"/>
+  <img src="../assets/images/webgear_rtc_temp_404.png" loading="lazy" alt="WebGear_RTC default 404 page"/>
 </h2>
 
 
@@ -123,10 +123,10 @@ The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Th
 
 *Appears when an API Error is encountered:*
 
-!!! warning "If [`logging`](../params/#logging) is enabled and an error occurs, then instead of displaying this 500 handler, WebGear_RTC will respond with a traceback response."
+!!! warning "If [`logging`](params/#logging) is enabled and an error occurs, then instead of displaying this 500 handler, WebGear_RTC will respond with a traceback response."
 
 <h2 align="center">
-  <img src="../../assets/images/webgear_rtc_temp_500.png" loading="lazy" alt="WebGear_RTC default 500 page"/>
+  <img src="../assets/images/webgear_rtc_temp_500.png" loading="lazy" alt="WebGear_RTC default 500 page"/>
 </h2>
 
 &thinsp;
@@ -134,27 +134,27 @@ The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Th
 ## Usage Examples
 
 <div>
-<a href="../usage/">See here 🚀</a>
+<a href="usage/">See here 🚀</a>
 </div>
 
-!!! example "After going through WebGear_RTC Usage Examples, Checkout more bonus examples [here ➶](../../../help/webgear_rtc_ex/)"
+!!! example "After going through WebGear_RTC Usage Examples, Checkout more bonus examples [here ➶](../../help/webgear_rtc_ex/)"
 
 ## Parameters
 
 <div>
-<a href="../params/">See here 🚀</a>
+<a href="params/">See here 🚀</a>
 </div>
 
 ## References
 
 <div>
-<a href="../../../bonus/reference/webgear_rtc/">See here 🚀</a>
+<a href="../../bonus/reference/webgear_rtc/">See here 🚀</a>
 </div>
 
 ## FAQs
 
 <div>
-<a href="../../../help/webgear_rtc_faqs/">See here 🚀</a>
+<a href="../../help/webgear_rtc_faqs/">See here 🚀</a>
 </div>
 
 &thinsp;
