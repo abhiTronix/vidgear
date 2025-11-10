@@ -195,7 +195,11 @@ def deprecated(parameter=None, message=None, stacklevel=2):
 
 
 def import_dependency_safe(
-    name, error="raise", pkg_name=None, min_version=None, custom_message=None,
+    name,
+    error="raise",
+    pkg_name=None,
+    min_version=None,
+    custom_message=None,
 ):
     """
     ## import_dependency_safe
@@ -719,7 +723,7 @@ def extract_time(value: str) -> int:
         t_duration = re.findall(r"\d{2}:\d{2}:\d{2}(?:\.\d{2})?", stripped_data)
         return (
             sum(
-                float(x) * 60 ** i
+                float(x) * 60**i
                 for i, x in enumerate(reversed(t_duration[0].split(":")))
             )
             if t_duration
@@ -1139,7 +1143,8 @@ def download_ffmpeg_binaries(
             os.path.abspath(path), "ffmpeg-static-{}-gpl.zip".format(os_bit)
         )
         file_path = os.path.join(
-            os.path.abspath(path), "ffmpeg-static-{}-gpl/bin/ffmpeg.exe".format(os_bit),
+            os.path.abspath(path),
+            "ffmpeg-static-{}-gpl/bin/ffmpeg.exe".format(os_bit),
         )
         base_path, _ = os.path.split(file_name)  # extract file base path
         # check if file already exists

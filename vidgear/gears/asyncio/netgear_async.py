@@ -615,7 +615,8 @@ class NetGear_Async:
 
                         # create return type dict without data
                         rettype_dict = dict(
-                            return_type=(type(return_data).__name__), return_data=None,
+                            return_type=(type(return_data).__name__),
+                            return_data=None,
                         )
                         # encode it
                         rettype_enc = msgpack.packb(rettype_dict)

@@ -422,9 +422,9 @@ class WebGear_RTC:
                 if isinstance(value, bool):
                     if value:
                         self.__relay = MediaRelay()
-                        options[
-                            "enable_infinite_frames"
-                        ] = True  # enforce infinite frames
+                        options["enable_infinite_frames"] = (
+                            True  # enforce infinite frames
+                        )
                         logger.critical(
                             "Enabled live broadcasting for Peer connection(s)."
                         )

@@ -222,7 +222,10 @@ def generate_webdata(
             css_static_dir, c_name=c_name, files=["custom.css"], logging=logging
         )
         download_webdata(
-            js_static_dir, c_name=c_name, files=["custom.js"], logging=logging,
+            js_static_dir,
+            c_name=c_name,
+            files=["custom.js"],
+            logging=logging,
         )
         download_webdata(
             favicon_dir, c_name=c_name, files=["favicon-32x32.png"], logging=logging
