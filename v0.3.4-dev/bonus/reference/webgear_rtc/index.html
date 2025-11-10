@@ -467,9 +467,9 @@ limitations under the License.
 </span><span id=__span-0-422><a id=__codelineno-0-422 name=__codelineno-0-422></a>                <span class=k>if</span> <span class=nb>isinstance</span><span class=p>(</span><span class=n>value</span><span class=p>,</span> <span class=nb>bool</span><span class=p>):</span>
 </span><span id=__span-0-423><a id=__codelineno-0-423 name=__codelineno-0-423></a>                    <span class=k>if</span> <span class=n>value</span><span class=p>:</span>
 </span><span id=__span-0-424><a id=__codelineno-0-424 name=__codelineno-0-424></a>                        <span class=bp>self</span><span class=o>.</span><span class=n>__relay</span> <span class=o>=</span> <span class=n>MediaRelay</span><span class=p>()</span>
-</span><span id=__span-0-425><a id=__codelineno-0-425 name=__codelineno-0-425></a>                        <span class=n>options</span><span class=p>[</span>
-</span><span id=__span-0-426><a id=__codelineno-0-426 name=__codelineno-0-426></a>                            <span class=s2>&quot;enable_infinite_frames&quot;</span>
-</span><span id=__span-0-427><a id=__codelineno-0-427 name=__codelineno-0-427></a>                        <span class=p>]</span> <span class=o>=</span> <span class=kc>True</span>  <span class=c1># enforce infinite frames</span>
+</span><span id=__span-0-425><a id=__codelineno-0-425 name=__codelineno-0-425></a>                        <span class=n>options</span><span class=p>[</span><span class=s2>&quot;enable_infinite_frames&quot;</span><span class=p>]</span> <span class=o>=</span> <span class=p>(</span>
+</span><span id=__span-0-426><a id=__codelineno-0-426 name=__codelineno-0-426></a>                            <span class=kc>True</span>  <span class=c1># enforce infinite frames</span>
+</span><span id=__span-0-427><a id=__codelineno-0-427 name=__codelineno-0-427></a>                        <span class=p>)</span>
 </span><span id=__span-0-428><a id=__codelineno-0-428 name=__codelineno-0-428></a>                        <span class=n>logger</span><span class=o>.</span><span class=n>critical</span><span class=p>(</span>
 </span><span id=__span-0-429><a id=__codelineno-0-429 name=__codelineno-0-429></a>                            <span class=s2>&quot;Enabled live broadcasting for Peer connection(s).&quot;</span>
 </span><span id=__span-0-430><a id=__codelineno-0-430 name=__codelineno-0-430></a>                        <span class=p>)</span>
@@ -1014,9 +1014,9 @@ limitations under the License.
 </span><span id=__span-0-422><a id=__codelineno-0-422 name=__codelineno-0-422></a>            <span class=k>if</span> <span class=nb>isinstance</span><span class=p>(</span><span class=n>value</span><span class=p>,</span> <span class=nb>bool</span><span class=p>):</span>
 </span><span id=__span-0-423><a id=__codelineno-0-423 name=__codelineno-0-423></a>                <span class=k>if</span> <span class=n>value</span><span class=p>:</span>
 </span><span id=__span-0-424><a id=__codelineno-0-424 name=__codelineno-0-424></a>                    <span class=bp>self</span><span class=o>.</span><span class=n>__relay</span> <span class=o>=</span> <span class=n>MediaRelay</span><span class=p>()</span>
-</span><span id=__span-0-425><a id=__codelineno-0-425 name=__codelineno-0-425></a>                    <span class=n>options</span><span class=p>[</span>
-</span><span id=__span-0-426><a id=__codelineno-0-426 name=__codelineno-0-426></a>                        <span class=s2>&quot;enable_infinite_frames&quot;</span>
-</span><span id=__span-0-427><a id=__codelineno-0-427 name=__codelineno-0-427></a>                    <span class=p>]</span> <span class=o>=</span> <span class=kc>True</span>  <span class=c1># enforce infinite frames</span>
+</span><span id=__span-0-425><a id=__codelineno-0-425 name=__codelineno-0-425></a>                    <span class=n>options</span><span class=p>[</span><span class=s2>&quot;enable_infinite_frames&quot;</span><span class=p>]</span> <span class=o>=</span> <span class=p>(</span>
+</span><span id=__span-0-426><a id=__codelineno-0-426 name=__codelineno-0-426></a>                        <span class=kc>True</span>  <span class=c1># enforce infinite frames</span>
+</span><span id=__span-0-427><a id=__codelineno-0-427 name=__codelineno-0-427></a>                    <span class=p>)</span>
 </span><span id=__span-0-428><a id=__codelineno-0-428 name=__codelineno-0-428></a>                    <span class=n>logger</span><span class=o>.</span><span class=n>critical</span><span class=p>(</span>
 </span><span id=__span-0-429><a id=__codelineno-0-429 name=__codelineno-0-429></a>                        <span class=s2>&quot;Enabled live broadcasting for Peer connection(s).&quot;</span>
 </span><span id=__span-0-430><a id=__codelineno-0-430 name=__codelineno-0-430></a>                    <span class=p>)</span>
