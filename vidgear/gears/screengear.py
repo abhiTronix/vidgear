@@ -294,7 +294,8 @@ class ScreenGear:
         self.__thread.start()
         if self.__backend == "dxcam":
             self.__capture_object.start(
-                target_fps=self.__target_fps, video_mode=True,
+                target_fps=self.__target_fps,
+                video_mode=True,
             )
             self.__logging and self.__target_fps and logger.debug(
                 "Targeting FPS: {}".format(self.__target_fps)

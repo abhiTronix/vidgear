@@ -307,7 +307,11 @@ class PiGear:
                     # unless format is either BGR or BGRA
                     (
                         not (colorspace is None)
-                        or options["format"] in ["RGB888", "XRGB8888",]
+                        or options["format"]
+                        in [
+                            "RGB888",
+                            "XRGB8888",
+                        ]
                     ) and logger.warning(
                         "Custom Output frames `format={}` detected. It is advised to define `colorspace` parameter or handle this format manually in your code!".format(
                             options["format"]
@@ -337,7 +341,8 @@ class PiGear:
                     invalid_sensor_keys = set(list(sensor)) - set(valid_sensor)
                     invalid_sensor_keys and logger.warning(
                         "Discarding sensor properties NOT supported by current Camera Sensor: `{}`. Only supported are: (`{}`)".format(
-                            "`, `".join(invalid_sensor_keys), "`, `".join(valid_sensor),
+                            "`, `".join(invalid_sensor_keys),
+                            "`, `".join(valid_sensor),
                         )
                     )
                     # delete all unsupported control keys
@@ -608,8 +613,10 @@ class PiGear:
                 # clear frame
                 self.frame = None
                 # re-raise error for debugging
-                error_msg = "[PiGear:ERROR] :: Camera Module API failure occurred: {}".format(
-                    self.__exceptions[1]
+                error_msg = (
+                    "[PiGear:ERROR] :: Camera Module API failure occurred: {}".format(
+                        self.__exceptions[1]
+                    )
                 )
                 raise RuntimeError(error_msg).with_traceback(self.__exceptions[2])
         # return the frame
