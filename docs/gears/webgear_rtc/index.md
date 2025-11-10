@@ -106,7 +106,7 @@ The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Th
 *Can be accessed by visiting WebGear_RTC app server, running at http://localhost:8000/:*
 
 <h2 align="center">
-  <img src="../assets/images/webgear_rtc_temp_index.png" loading="lazy" alt="WebGear_RTC default Index page"/>
+  <img src="../../assets/images/webgear_rtc_temp_index.png" loading="lazy" alt="WebGear_RTC default Index page"/>
 </h2>
 
 
@@ -115,7 +115,7 @@ The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Th
 *Appears when respective URL is not found, for example http://localhost:8000/ok:*
 
 <h2 align="center">
-  <img src="../assets/images/webgear_rtc_temp_404.png" loading="lazy" alt="WebGear_RTC default 404 page"/>
+  <img src="../../assets/images/webgear_rtc_temp_404.png" loading="lazy" alt="WebGear_RTC default 404 page"/>
 </h2>
 
 
@@ -126,7 +126,7 @@ The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Th
 !!! warning "If [`logging`](params/#logging) is enabled and an error occurs, then instead of displaying this 500 handler, WebGear_RTC will respond with a traceback response."
 
 <h2 align="center">
-  <img src="../assets/images/webgear_rtc_temp_500.png" loading="lazy" alt="WebGear_RTC default 500 page"/>
+  <img src="../../assets/images/webgear_rtc_temp_500.png" loading="lazy" alt="WebGear_RTC default 500 page"/>
 </h2>
 
 &thinsp;

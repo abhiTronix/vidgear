@@ -125,7 +125,7 @@ The WebGear API by default uses simple & elegant [**WebGear's Default Theme**](h
 _Can be accessed by visiting WebGear app server, running at http://localhost:8000/:_
 
 <h2 align="center">
-  <img src="../assets/images/webgear_temp_index.png" loading="lazy" alt="WebGear default Index page"/>
+  <img src="../../assets/images/webgear_temp_index.png" loading="lazy" alt="WebGear default Index page"/>
 </h2>
 
 ### 404.html
@@ -133,7 +133,7 @@ _Can be accessed by visiting WebGear app server, running at http://localhost:800
 _Appears when respective URL is not found, for example http://localhost:8000/ok:_
 
 <h2 align="center">
-  <img src="../assets/images/webgear_temp_404.png" loading="lazy" alt="WebGear default 404 page"/>
+  <img src="../../assets/images/webgear_temp_404.png" loading="lazy" alt="WebGear default 404 page"/>
 </h2>
 
 ### 500.html
@@ -143,7 +143,7 @@ _Appears when an API Error is encountered:_
 !!! warning "If [`logging`](params/#logging) is enabled and an error occurs, then instead of displaying this 500 handler, WebGear will respond with a traceback response."
 
 <h2 align="center">
-  <img src="../assets/images/webgear_temp_500.png" loading="lazy" alt="WebGear default 500 page"/>
+  <img src="../../assets/images/webgear_temp_500.png" loading="lazy" alt="WebGear default 500 page"/>
 </h2>
 
 &thinsp;
