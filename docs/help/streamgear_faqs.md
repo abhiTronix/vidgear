@@ -73,7 +73,7 @@ limitations under the License.
 
 ## How to use StreamGear API with real-time frames?
 
-**Answer:** See [Real-time Frames Mode ➶](../../gears/streamgear/rtfm/overview)
+**Answer:** See [Real-time Frames Mode ➶](../../gears/streamgear/rtfm/#overview)
 
 &thinsp;
 

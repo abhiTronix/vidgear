@@ -31,7 +31,7 @@ limitations under the License.
 
 Bidirectional Mode enables seamless support for Bidirectional data transmission between Client and Sender along with video-frames through its synchronous messaging patterns such as `zmq.PAIR` (ZMQ Pair Pattern) & `zmq.REQ/zmq.REP` (ZMQ Request/Reply Pattern) in NetGear_Async API.
 
-In Bidirectional Mode, we utilizes the NetGear_Async API's [`transceive_data`](../../../../bonus/reference/netgear_async/#vidgear.gears.asyncio.netgear_async.NetGear_Async.transceive_data) method for transmitting data _(at Client's end)_ and receiving data _(in Server's end)_  all while transferring frames in real-time. 
+In Bidirectional Mode, we utilizes the NetGear_Async API's [`transceive_data`](../../../../bonus/reference/netgear_async/#vidgear.gears.asyncio.NetGear_Async.transceive_data) method for transmitting data _(at Client's end)_ and receiving data _(in Server's end)_  all while transferring frames in real-time. 
 
 This mode can be easily activated in NetGear_Async through `bidirectional_mode` attribute of its [`options`](../../params/#options) dictionary parameter during initialization.
 
@@ -61,7 +61,7 @@ To send data bidirectionally, NetGear_Async API provides following exclusive met
 
 !!! alert "`transceive_data` only works when Bidirectional Mode is enabled."
 
-* [`transceive_data`](../../../../bonus/reference/NetGear_Async/#vidgear.gears.asyncio.netgear_async.NetGear_Async.transceive_data): It's a bidirectional mode exclusive method to transmit data _(in Receive mode)_ and receive data _(in Send mode)_, all while transferring frames in real-time. 
+* [`transceive_data`](../../../../bonus/reference/NetGear_Async/#vidgear.gears.asyncio.NetGear_Async.transceive_data): It's a bidirectional mode exclusive method to transmit data _(in Receive mode)_ and receive data _(in Send mode)_, all while transferring frames in real-time. 
 
     * `data`: In `transceive_data` method, this parameter enables user to inputs data _(of **ANY**[^1] datatype)_ for sending back to Server at Client's end. 
 
@@ -690,7 +690,7 @@ if __name__ == "__main__":
 
 [^1]: 
     
-    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype is **ONLY SUPPORTED** at Client's end with [`transceive_data`](../../../../bonus/reference/NetGear_Async/#vidgear.gears.asyncio.netgear_async.NetGear_Async.transceive_data) method using its `data` parameter. Whereas Server end can only send [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype as frame but not as data."
+    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype is **ONLY SUPPORTED** at Client's end with [`transceive_data`](../../../../bonus/reference/NetGear_Async/#vidgear.gears.asyncio.NetGear_Async.transceive_data) method using its `data` parameter. Whereas Server end can only send [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype as frame but not as data."
 
 
 &nbsp;

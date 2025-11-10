@@ -36,25 +36,25 @@ Once done, visit [Switching from OpenCV ➶](../../switch_from_cv/) to easily re
 
 !!! tip "If you run into any trouble or have any questions, then refer our [**Help**](../get_help) section."
 
-&nbsp;
+&thinsp;
 
 ## "VidGear is using Multi-threading, but Python is notorious for its poor performance in multithreading?"
 
 **Answer:** Refer vidgear's [Threaded-Queue-Mode ➶](../../bonus/TQM/)
 
-&nbsp;
+&thinsp;
 
 ## ModuleNotFoundError: No module named 'vidgear.gears'. 'vidgear' is not a package?
 
 **Answer:** This error means you either have a file named `vidgear.py` in your python path or you've named your python script `vidgear.py`. Replace `vidgear` name with anything else to fix this error.
 
-&nbsp;
+&thinsp;
 
 ## How to containerize VidGear with Docker?
 
 **Answer:** Checkout this guide that addresses the unique challenges of containerizing VidGear applications, particularly around building OpenCV with proper GStreamer and FFmpeg support. Learn the patterns and pitfalls before you start: [**Containerizing VidGear with Docker ➶**](../bonus/docker_example.md)
 
-&nbsp;
+&thinsp;
 
 ## How to log to a file in VidGear?
 
@@ -104,46 +104,46 @@ Once done, visit [Switching from OpenCV ➶](../../switch_from_cv/) to easily re
 	unset VIDGEAR_LOGFILE
 	```
 
-&nbsp;
+&thinsp;
 
 ## Can I perform Deep Learning task with VidGear?
 
 **Answer:** VidGear is a powerful Video Processing library _(similar to OpenCV, FFmpeg, etc.)_ that can read, write, process, send & receive a sequence of video-frames in an optimized manner. But for Deep Learning or Machine Learning tasks, you have to use a third-party library. That being said, all VidGear's APIs can be used with any third-party Library(such as PyTorch, Tensorflow, etc.) that can leverage the overall performance if you're processing video/audio streams/frames in your application with Deep Learning tasks. Also, it eases the workflow since you have to write way fewer lines of code to read/store/process output videos.
 
-&nbsp;
+&thinsp;
 
 ## Can I ask my question directly without raising an issue?
 
 **Answer:** Yes, please join our [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
-&nbsp;
+&thinsp;
 
 ## How to contribute to VidGear development?
 
 **Answer:** See our [Contribution Guidelines ➶](../../contribution/PR/)
 
-&nbsp;
+&thinsp;
 
 ## What OSes are supported by VidGear?
 
 **Answer:** See [Supported Systems ➶](../../installation/#supported-systems)
 
-&nbsp;
+&thinsp;
 
 ## What Python versions are supported by VidGear?
 
 **Answer:** See [Supported Python legacies ➶](../../installation/#supported-python-legacies)
 
-&nbsp;
+&thinsp;
 
 ## Can I include VidGear in my project commercially or not?
 
 **Answer:** Yes, you can, *but strictly under the Terms and Conditions given in [VidGear License ➶](https://github.com/abhiTronix/vidgear/blob/master/LICENSE)*
 
-&nbsp;
+&thinsp;
 
 ## "I Love using VidGear for my projects", How can I support it?
 
 **Answer:** See [Helping VidGear ➶](../../help/#helping-vidgear)  
 
-&nbsp;
+&thinsp;

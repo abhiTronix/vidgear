@@ -18,9 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-# CamGear Examples
+# CamGear Bonus Examples
 
-&nbsp;
+&thinsp; 
 
 ## Synchronizing Two Sources in CamGear
 
@@ -79,7 +79,7 @@ stream1.stop()
 stream2.stop()
 ```
 
-&nbsp;
+&thinsp;
 
 ## Using variable `yt_dlp` parameters in CamGear
 
@@ -131,7 +131,7 @@ stream.stop()
 ```
 
 
-&nbsp;
+&thinsp;
 
 
 ## Using CamGear for capturing RTSP/RTMP URLs
@@ -240,4 +240,4 @@ if __name__ == "__main__":
     stream.stop()
 ```
 
-&nbsp;
+&thinsp;

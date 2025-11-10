@@ -18,9 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-# NetGear Examples
+# NetGear Bonus Examples
 
-&thinsp;
+&thinsp; 
 
 ## Using NetGear with WebGear
 
@@ -173,7 +173,7 @@ stream.stop()
 server.close()
 ```
 
-&nbsp;
+&thinsp;
 
 ## Using NetGear with WebGear_RTC
 
@@ -371,4 +371,4 @@ stream.stop()
 server.close()
 ```
 
-&nbsp;
+&thinsp;

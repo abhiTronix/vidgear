@@ -210,7 +210,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
-* **`-video_source`** _(string)_: This attribute takes a valid video path as input and activates [**Single-Source Mode**](../ssm/overview), for transcoding it into multiple smaller chunks/segments for streaming after successful validation. Its value can be one of the following:
+* **`-video_source`** _(string)_: This attribute takes a valid video path as input and activates [**Single-Source Mode**](../ssm/#overview), for transcoding it into multiple smaller chunks/segments for streaming after successful validation. Its value can be one of the following:
 
     * **Video Filename**: Valid path to a video file as follows:
 
@@ -270,9 +270,9 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
-* **`-livestream`** _(bool)_: ***(optional)*** specifies whether to enable **Low-latency Live-Streaming :material-video-wireless-outline:** in [**Real-time Frames Mode**](../rtfm/overview) only, where chunks will contain information for new frames only and forget previous ones, or not. The default value is `False`. It can be used as follows: 
+* **`-livestream`** _(bool)_: ***(optional)*** specifies whether to enable **Low-latency Live-Streaming :material-video-wireless-outline:** in [**Real-time Frames Mode**](../rtfm/#overview) only, where chunks will contain information for new frames only and forget previous ones, or not. The default value is `False`. It can be used as follows: 
     
-    !!! warning "The `-livestream` optional parameter is **NOT** supported in [Single-Source mode](../ssm/overview)."
+    !!! warning "The `-livestream` optional parameter is **NOT** supported in [Single-Source mode](../ssm/#overview)."
 
     ```python
     stream_params = {"-livestream": True} # enable live-streaming
@@ -384,9 +384,9 @@ All encoders and decoders compiled with the FFmpeg in use are supported by the S
 
 ???+ tip "Faster Transcoding with Stream Copy in Single Source Mode"
     
-    For faster transcoding of input video, utilize Stream copy (`-vcodec copy`) as the input video encoder in the [**Single-Source Mode**](../ssm/overview) for creating HLS/DASH chunks of the primary stream efficiently. However, consider the following points:
+    For faster transcoding of input video, utilize Stream copy (`-vcodec copy`) as the input video encoder in the [**Single-Source Mode**](../ssm/#overview) for creating HLS/DASH chunks of the primary stream efficiently. However, consider the following points:
 
-    - :warning: Stream copy is **NOT** compatible with [**Real-time Frames Mode**](../rtfm/overview), as this mode necessitates re-encoding of incoming frames. Therefore, the `-vcodec copy` parameter will be ignored.
+    - :warning: Stream copy is **NOT** compatible with [**Real-time Frames Mode**](../rtfm/#overview), as this mode necessitates re-encoding of incoming frames. Therefore, the `-vcodec copy` parameter will be ignored.
     - :warning: Stream copying **NOT** compatible with Custom Streams ([`-streams`](#a-exclusive-parameters)), which also require re-encoding for each additional stream. Consequently, the `-vcodec copy` parameter will be ignored.
     - When using the audio stream from the input video, the Audio Stream copy (`-acodec copy`) encoder will be automatically applied.
 

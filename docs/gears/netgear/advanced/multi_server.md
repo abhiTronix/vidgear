@@ -814,7 +814,7 @@ Finally, Open the terminal on another Server System _(this time a Raspberry Pi w
 
 !!! warning "Important Information"
     * Bidirectional data transfer **ONLY** works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_, and **NOT** with pattern `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_
-    * Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server(s) with their [`message`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.send) parameter.
+    * Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server(s) with their [`message`](../../../../bonus/reference/netgear/#vidgear.gears.NetGear.send) parameter.
     * Bidirectional Mode may lead to additional **LATENCY** depending upon the size of data being transfer bidirectionally. User discretion is advised!
 
 ??? new "New in v0.2.5" 
@@ -1152,4 +1152,4 @@ Finally, Open the terminal on another Server System _(this time a Raspberry Pi w
 
 [^1]: 
     
-    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server(s) with their [`message`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.send) parameter."
+    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server(s) with their [`message`](../../../../bonus/reference/netgear/#vidgear.gears.NetGear.send) parameter."

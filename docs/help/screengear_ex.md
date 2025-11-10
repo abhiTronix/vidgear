@@ -18,9 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-# ScreenGear Examples
+# ScreenGear Bonus Examples
 
-&thinsp;
+&thinsp; 
 
 ## Using ScreenGear with NetGear and WriteGear
 
@@ -145,7 +145,7 @@ stream.stop()
 server.close()
 ```
 
-&nbsp;
+&thinsp;
 
 ## Using ScreenGear with WebGear_RTC
 
@@ -261,4 +261,4 @@ The complete usage example is as follows:
     web.shutdown()
     ```
 
-&nbsp; 
+&thinsp; 

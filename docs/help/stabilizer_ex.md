@@ -18,9 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-# Stabilizer Class Examples
+# Stabilizer Class Bonus Examples
 
-&thinsp;
+&thinsp; 
 
 ## Saving Stabilizer Class output with Live Audio Input
 
@@ -234,7 +234,7 @@ writer.close()
 
 1. :warning: Always keep this line above `-i` parameter!
 
-&nbsp;
+&thinsp;
 
 ## Saving Stabilizer Class output with File Audio Input
 
@@ -311,4 +311,4 @@ stream.release()
 writer.close()
 ```
 
-&nbsp;
+&thinsp;

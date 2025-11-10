@@ -26,31 +26,31 @@ limitations under the License.
 
 **Answer:** ScreenGear is designed exclusively for targeting rapid Screencasting Capabilities, which means it can grab frames from your monitor in real-time, either by defining an area on the computer screen or full-screen, at the expense of inconsiderable latency. ScreenGear also seamlessly support frame capturing from multiple monitors as well as supports multiple backends. _For more info. see [ScreenGear doc ➶](../../gears/screengear/)_
 
-&nbsp;
+&thinsp;
 
 ## I'm only familiar with OpenCV, how to get started with ScreenGear API?
 
 **Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-the-videocapture-apis) guide, then go through [ScreenGear documentation](../../gears/screengear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
-&nbsp;
+&thinsp;
 
 ## ScreenGear is Slow?
 
 **Answer:** This maybe due to selected [`backend`](../../gears/screengear/params/#backend) for ScreenGear API is not compatible with your machine. See [this usage example to change backend ➶](../../gears/screengear/usage/#using-screengear-with-variable-backend). Try different backends, and select which works the best for your machine.
 
-&nbsp;
+&thinsp;
 
 ## How to define area on screen to record with ScreenGear?
 
 **Answer:** See [this usage example ➶](../../gears/screengear/usage/#using-screengear-with-variable-screen-dimensions)
 
-&nbsp;
+&thinsp;
 
 ## How to record video from all connected screens?
 
 **Answer:** With `mss` backend, see ScreenGear's [`monitor`](../../gears/screengear/params/#monitor) parameter that sets the index of the monitor to grab a frame from. If its value is `-1`, it will record from all monitors. _More information can be found [here  ➶](https://python-mss.readthedocs.io/examples.html#a-screen-shot-to-grab-them-all)_
 
-&nbsp;
+&thinsp;
 
 ## I'm getting "AttributeError: 'DXCamera' object has no attribute 'is_capturing'" Error?
 
@@ -75,4 +75,4 @@ limitations under the License.
 
     And finally press **Save** button.  
 
-&nbsp;
+&thinsp;
