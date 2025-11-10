@@ -18,9 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-# PiGear Examples
+# PiGear Bonus Examples
 
-&thinsp;
+&thinsp; 
 
 ## Changing Output Pixel Format in PiGear API with Picamera2 Backend
 
@@ -149,7 +149,7 @@ limitations under the License.
     stream.stop()
     ```
 
-&nbsp;
+&thinsp;
 
 ## Dynamically Adjusting Raspberry Pi Camera Parameters at Runtime in PiGear API
 
@@ -468,4 +468,4 @@ limitations under the License.
     stream.stop()
     ``` 
 
-&nbsp;
+&thinsp;

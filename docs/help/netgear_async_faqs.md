@@ -26,7 +26,7 @@ limitations under the License.
 
 **Answer:** NetGear_Async is an asyncio videoframe messaging framework, built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html), and powered by high-performance asyncio event loop called [**`uvloop`**](https://github.com/MagicStack/uvloop) to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. Basically, this API is able to transfer thousands of frames in just a few seconds without causing any significant load on your system. _For more info. see [NetGear_Async doc ➶](../../gears/netgear_async/)_
 
-&nbsp;
+&thinsp;
 
 ## How to get started with NetGear_Async API?
 
@@ -34,13 +34,13 @@ limitations under the License.
 
 See [NetGear_Async doc ➶](../../gears/netgear_async/). Still in doubt, then ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
-&nbsp;
+&thinsp;
 
 ## "NetGear_Async is throwing `ModuleNotFoundError` on importing", Why?
 
 **Answer:** This error means, VidGear is installed **WITHOUT asyncio package support** on your machine. For this support, see [Requirements ➶](../../gears/netgear_async/usage/#requirement).
 
-&nbsp;
+&thinsp;
 
 ## What is the key difference between NetGear_Async and NetGear APIs?
 
@@ -52,22 +52,22 @@ See [NetGear_Async doc ➶](../../gears/netgear_async/). Still in doubt, then as
 
 **Key Difference:** NetGear_Async is highly memory efficient, but has less features as compared to NetGear API which is marginally faster too. 
 
-&nbsp;
+&thinsp;
 
 ## Can I use Multi-Server, Bi-Directional like modes in NetGear_Async?
 
 **Answer:** No, NetGear_Async does NOT provide support for any NetGear's [Exclusive modes](../../gears/netgear/#exclusive-modes) yet.
 
-&nbsp;
+&thinsp;
 
 ## How to use NetGear_Async with custom Server Source from OpenCV?
 
 **Answer:** See [this usage example ➶](../../gears/netgear_async/usage/#using-netgear_async-with-a-custom-sourceopencv). 
 
-&nbsp;
+&thinsp;
 
 ## Why NetGear_Async is running slow?
 
 **Answer:** Checkout tips suggested in [this answer ➶](../netgear_faqs/#why-netgear-is-slow)
 
-&nbsp;
+&thinsp;

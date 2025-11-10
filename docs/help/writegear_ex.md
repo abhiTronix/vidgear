@@ -21,7 +21,7 @@ limitations under the License.
 
 # WriteGear Examples
 
-&nbsp;
+&thinsp;
 
 ## Using WriteGear's Compression Mode for RTSP/RTP Live-Streaming
 
@@ -78,7 +78,7 @@ stream.stop()
 writer.close()
 ```
 
-&nbsp;
+&thinsp;
 
 
 ## Using WriteGear's Compression Mode for YouTube-Live Streaming
@@ -209,7 +209,7 @@ In Compression Mode, you can also use WriteGear for Youtube-Livestreaming. The e
     writer.close()
     ```
 
-&nbsp;
+&thinsp;
 
 
 ## Using WriteGear's Compression Mode with v4l2loopback Virtual Cameras
@@ -313,7 +313,7 @@ writer.close()
 
 !!! success "The data sent to the v4l2loopback device `/dev/video0` in this example with WriteGear API, can then be read by any v4l2-capable application _(such as OpenCV, VLC, ffplay etc.)_"
 
-&nbsp; 
+&thinsp; 
 
 
 ## Using WriteGear's Compression Mode for creating MP4 segments
@@ -382,7 +382,7 @@ stream.stop()
 writer.close()
 ```
 
-&nbsp;
+&thinsp;
 
 
 ## Using WriteGear's Compression Mode to add external audio file input to video frames
@@ -446,7 +446,7 @@ writer.close()
 ```
 
 
-&nbsp;
+&thinsp;
 
 
 ## Using WriteGear's Compression Mode for generating Timely Accurate Video
@@ -543,7 +543,7 @@ In this example we are capturing video from desktop screen in a Timely Accurate 
     ```
 
 
-&nbsp;
+&thinsp;
 
 
 ## Using WriteGear with ROS(Robot Operating System) 
@@ -626,4 +626,4 @@ if __name__ == "__main__":
     main(sys.argv)
 ```
 
-&nbsp;
+&thinsp;

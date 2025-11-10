@@ -38,7 +38,7 @@ limitations under the License.
     * Always use `writer.close()` at the very end of the main code. **NEVER USE IT INBETWEEN CODE** to avoid undesired behavior.
 
 
-!!! example "After going through WriteGear Usage Examples, Checkout more bonus examples [here ➶](../../../help/writegear_ex/)"
+!!! example "After going through WriteGear Usage Examples, Checkout more bonus examples [here ➶](../../../../help/writegear_ex/)"
 
 &thinsp;
 
@@ -96,7 +96,7 @@ writer.close()
 
 ## Using Compression Mode in RGB Mode
 
-In Compression Mode, WriteGear API contains [`rgb_mode`](../../../../bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.write) boolean parameter for RGB Mode, which when enabled _(i.e. `rgb_mode=True`)_, specifies that incoming frames are of RGB format _(instead of default BGR format)_. This mode makes WriteGear directly compatible with libraries that only supports RGB format. 
+In Compression Mode, WriteGear API contains [`rgb_mode`](../../../../bonus/reference/writegear/#vidgear.gears.WriteGear.write) boolean parameter for RGB Mode, which when enabled _(i.e. `rgb_mode=True`)_, specifies that incoming frames are of RGB format _(instead of default BGR format)_. This mode makes WriteGear directly compatible with libraries that only supports RGB format. 
 
 The complete usage example is as follows:
 
@@ -225,9 +225,9 @@ In Compression Mode, WriteGear also allows URL strings _(as output)_ for live st
 
 In this example, we will stream live camera frames directly to Twitch :fontawesome-brands-twitch::
 
-!!! tip "For streaming with traditional protocols such as :material-video-wireless: RTSP/RTP, Checkout this [WriteGear's Bonus Examples ➶](../../../../help/writegear_ex/#using-writegears-compression-mode-for-rtsprtp-live-streaming)."
+!!! tip "For streaming with traditional protocols such as :material-video-wireless: RTSP/RTP, Checkout this [WriteGear's Bonus Examples ➶](../../../../../help/writegear_ex/#using-writegears-compression-mode-for-rtsprtp-live-streaming)."
 
-!!! example ":fontawesome-brands-youtube: YouTube-Live Streaming example code also available in [WriteGear's Bonus Examples ➶](../../../../help/writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming)"
+!!! example ":fontawesome-brands-youtube: YouTube-Live Streaming example code also available in [WriteGear's Bonus Examples ➶](../../../../../help/writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming)"
 
 !!! warning "This example assume you already have a [**Twitch Account**](https://www.twitch.tv/) for publishing video."
 

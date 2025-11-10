@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-# WebGear Examples
+# WebGear Bonus Examples
 
 &thinsp;
 
@@ -112,7 +112,7 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
     web.shutdown()
     ```
 
-&nbsp;
+&thinsp;
 
 ## Using WebGear with real-time Video Stabilization enabled
  
@@ -141,7 +141,7 @@ uvicorn.run(web(), host="localhost", port=8000)
 web.shutdown()
 ```
 
-&nbsp;
+&thinsp;
 
 
 ## Display Two Sources Simultaneously in WebGear
@@ -281,4 +281,4 @@ web.shutdown()
 !!! success "On successfully running this code, the output stream will be displayed at address http://localhost:8000/ in Browser."
 
 
-&nbsp;
+&thinsp;

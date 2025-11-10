@@ -28,7 +28,7 @@ limitations under the License.
 
 Bidirectional Mode enables seamless support for Bidirectional data transmission between Client/Consumer and Sender/Publisher along with video-frames through its synchronous messaging patterns such as `zmq.PAIR` (ZMQ Pair Pattern) & `zmq.REQ/zmq.REP` (ZMQ Request/Reply Pattern).
 
-In Bidirectional Mode, we utilizes the NetGear API's [`message`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.send) parameter of `send()` method for sending data from Server-to-Client, and [`return_data`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.recv) parameter of `recv()` method to return data back from Client-to-Server all while transferring frames in real-time. 
+In Bidirectional Mode, we utilizes the NetGear API's [`message`](../../../../bonus/reference/netgear/#vidgear.gears.NetGear.send) parameter of `send()` method for sending data from Server-to-Client, and [`return_data`](../../../../bonus/reference/netgear/#vidgear.gears.NetGear.recv) parameter of `recv()` method to return data back from Client-to-Server all while transferring frames in real-time. 
 
 This mode can be easily activated in NetGear through `bidirectional_mode` attribute of its [`options`](../../params/#options) dictionary parameter during initialization.
 
@@ -72,9 +72,9 @@ This mode can be easily activated in NetGear through `bidirectional_mode` attrib
 
 To send data bidirectionally, NetGear API provides two exclusive parameters for its methods:
 
-* [`message`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.send): It enables user to send data to Client, directly through `send()` method at Server's end. 
+* [`message`](../../../../bonus/reference/netgear/#vidgear.gears.NetGear.send): It enables user to send data to Client, directly through `send()` method at Server's end. 
 
-* [`return_data`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.recv): It enables user to send data back to Server, directly through `recv()` method at Client's end.
+* [`return_data`](../../../../bonus/reference/netgear/#vidgear.gears.NetGear.recv): It enables user to send data back to Server, directly through `recv()` method at Client's end.
 
 
 &nbsp;
@@ -612,7 +612,7 @@ client.close()
 
 [^1]: 
     
-    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **ONLY SUPPORTED** at Client's end with its [`return_data`](../../../../bonus/reference/netgear/#vidgear.gears.netgear.NetGear.recv) parameter."
+    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **ONLY SUPPORTED** at Client's end with its [`return_data`](../../../../bonus/reference/netgear/#vidgear.gears.NetGear.recv) parameter."
 
 
 &nbsp;

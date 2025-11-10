@@ -26,13 +26,13 @@ limitations under the License.
 
 **Answer:** NetGear is exclusively designed to transfer video frames & data synchronously (Pair & Request/Reply) as well as asynchronously (Publish/Subscribe) between various interconnecting systems over the network in real-time. _For more info. see [NetGear doc ➶](../../gears/netgear/)_
 
-&nbsp;
+&thinsp;
 
 ## How to get started with NetGear API?
 
 **Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-the-videocapture-apis) guide, then go through [NetGear documentation ➶](../../gears/netgear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
-&nbsp;
+&thinsp;
 
 ## What Exclusive Modes are compatible with each other in NetGear API?
 
@@ -47,7 +47,7 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
 | **Bidirectional** | Yes | Yes | Yes | - | Yes |
 | **SSH Tunneling** |  No _(throws error)_ | No _(throws error)_ | Yes | Yes | - |
 
-&nbsp;
+&thinsp;
 
 
 ## Why NetGear is running slow?
@@ -74,7 +74,7 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
 
 * Finally, if nothing works then, **checkout [**NetGear_Async API ➶**](../../gears/netgear_async/)**
 
-&nbsp;
+&thinsp;
 
 ## How to find local IP-address on different OS platforms?
 
@@ -92,48 +92,48 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
     
     - [x] **Follow [this tutorial ➶](https://www.avast.com/c-how-to-find-ip-address)**
 
-&nbsp;
+&thinsp;
 
 ## How to send data along with frames in Multi-Servers and Multi-Clients Modes?
 
 **Answer:** See [Multi-Servers usage example ➶](../../gears/netgear/advanced/multi_server/#using-multi-servers-mode-with-custom-data-transfer) and [Multi-Clients usage example ➶](../../gears/netgear/advanced/multi_client/#using-multi-clients-mode-with-custom-data-transfer)
 
-&nbsp;
+&thinsp;
 
 ## How to use enable Encryption and Authentication in NetGear API?
 
 **Answer:** See its [Secure Mode doc ➶](../../gears/netgear/advanced/secure_mode/).
 
-&nbsp;
+&thinsp;
 
 ## How to send custom data along with frames bidirectionally in NetGear API?
 
 **Answer:** See its [Bidirectional Mode doc ➶](../../gears/netgear/advanced/bidirectional_mode/).
 
-&nbsp;
+&thinsp;
 
 
 ## How to access NetGear API outside network or remotely?
 
 **Answer:** See its [SSH Tunneling Mode doc ➶](../../gears/netgear/advanced/ssh_tunnel/).
 
-&nbsp;
+&thinsp;
 
 ## Are there any side-effect of sending data with frames?
 
 **Answer:** Yes, it may lead to additional **LATENCY** depending upon the size/amount of the data being transferred. User discretion is advised.
 
-&nbsp;
+&thinsp;
 
 
 ## Why NetGear API not working correctly?
 
 **Answer:** First, carefully go through [NetGear doc ➶](../../gears/netgear/) that contains detailed information. Also, checkout [PyZmq Docs ➶](https://pyzmq.readthedocs.io/en/latest/) for its various settings/parameters. If still it doesn't work for you, then let us know on [Gitter ➶](https://gitter.im/vidgear/community)
 
-&nbsp;
+&thinsp;
 
 ## How to solve `zmq.error.ZMQError` errors?
 
 **Answer:** For those used to the idea that a "server" provides their address to a client, then you should *recheck your preconceptions*! Please read the [Netgear instructions](https://abhitronix.github.io/vidgear/latest/gears/netgear/usage/#using-netgear-with-variable-parameters) carefully, and you will note that it is the client device that defines the IP that is provided to the server config. If you get this the wrong way (using the server IP on the client), then you will get a `zmq.error.ZMQError` error. Make sure it is the **client's IP** shared across the two systems.
 
-&nbsp;
+&thinsp;
