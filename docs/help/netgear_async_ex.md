@@ -18,9 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-# NetGear_Async Examples
+# NetGear_Async Bonus Examples
 
-&thinsp;
+&thinsp; 
 
 ## Using NetGear_Async with WebGear
 
@@ -166,4 +166,4 @@ if __name__ == "__main__":
         server.close()
 ```
 
-&nbsp;
+&thinsp;

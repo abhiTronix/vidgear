@@ -29,7 +29,7 @@ limitations under the License.
 
 ??? danger "DEPRECATION NOTICES for `v0.3.3` and above"
     
-    - [ ] The `terminate()` method in StreamGear is now deprecated and will be removed in a future release. Developers should use the new [`close()`](../../../../bonus/reference/streamgear/#vidgear.gears.streamgear.StreamGear.close) method instead, as it offers a more descriptive name, similar to the WriteGear API, for safely terminating StreamGear processes.
+    - [ ] The `terminate()` method in StreamGear is now deprecated and will be removed in a future release. Developers should use the new [`close()`](../../../../bonus/reference/streamgear/#vidgear.gears.StreamGear.close) method instead, as it offers a more descriptive name, similar to the WriteGear API, for safely terminating StreamGear processes.
     - [ ] The [`-livestream`](../../params/#a-exclusive-parameters) optional parameter is NOT supported in this Single-Source Mode.
 
 ??? tip "Faster Transcoding of Primary Stream with Stream Copy in Single Source Mode"
@@ -39,7 +39,7 @@ limitations under the License.
     - :warning: Stream copying **NOT** compatible with Custom Streams ([`-streams`](../../params/#a-exclusive-parameters)), which require re-encoding for each additional stream. Therefore, the `-vcodec copy` parameter will be ignored.
     - When using the audio stream from the input video, the Audio Stream copy (`-acodec copy`) encoder will be automatically applied.
 
-!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
+!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../../help/streamgear_ex/)"
 
 
 &thinsp;

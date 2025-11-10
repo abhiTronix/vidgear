@@ -18,9 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-# StreamGear Examples
+# StreamGear Bonus Examples
 
-&thinsp;
+&thinsp; 
 
 ## StreamGear Live-Streaming Usage with PiGear
 

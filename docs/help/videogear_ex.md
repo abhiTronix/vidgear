@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-# VideoGear Examples
+# VideoGear Bonus Examples
 
 &thinsp;
 
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     main(sys.argv)
 ```
 
-&nbsp;
+&thinsp;
 
 ## Using VideoGear for capturing RTSP/RTMP URLs
 
@@ -217,7 +217,7 @@ if __name__ == "__main__":
     stream.stop()
 ```
 
-&nbsp;
+&thinsp;
 
 
 ## Using VideoGear for Real-time Stabilization with Audio Encoding
@@ -280,4 +280,4 @@ stream_stab.stop()
 writer.close()
 ```
 
-&nbsp;
+&thinsp;

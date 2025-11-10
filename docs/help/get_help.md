@@ -77,7 +77,7 @@ You can checkout the **Bonus Examples** - a curated list of all Bonus experiment
 
 > Have you come up with some new ideas or looking for the fastest way troubleshoot your problems
 
-**Join and chat on our Gitter Community channel:** [![Glitter chat](https://img.shields.io/badge/Chat&nbsp;on-Gitter-yellow.svg?style=flat-square&logo=gitter)](https://gitter.im/vidgear/community)
+**Join and chat on our Gitter Community channel:** [![Glitter chat](https://img.shields.io/badge/Chat&thinsp;on-Gitter-yellow.svg?style=flat-square&logo=gitter)](https://gitter.im/vidgear/community)
 
 There you can ask quick questions, swiftly troubleshoot your problems, help others, share ideas & information, etc. 
 

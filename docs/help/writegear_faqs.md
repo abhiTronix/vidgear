@@ -27,25 +27,25 @@ limitations under the License.
 
 **Answer:** WriteGear handles various powerful Writer Tools that provide us the freedom to do almost anything imagine with multimedia files. _For more info. see [WriteGear doc ➶](../../gears/writegear/introduction/)_
 
-&nbsp;
+&thinsp;
 
 ## I'm only familiar with OpenCV, how to get started with WriteGear API?
 
 **Answer:** **Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-the-videocapture-apis) guide, then go through [WriteGear documentation](../../gears/writegear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
-&nbsp;
+&thinsp;
 
 ## Why WriteGear is throwing `ValueError`?
 
 **Answer:** WriteGear will exit with `ValueError` if you feed frames of different dimensions or channels.
 
-&nbsp;
+&thinsp;
 
 ## How to install and configure FFmpeg correctly for WriteGear on my machine?
 
 **Answer:** Follow these [Installation Instructions ➶](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
 
-&nbsp;
+&thinsp;
 
 ## Can I use WriteGear directly with OpenCV?
 
@@ -54,91 +54,91 @@ limitations under the License.
 * For Compression Mode: See [this usage example ➶](../../gears/writegear/compression/usage/#using-compression-mode-with-opencv).
 * For  Non-Compression Mode: See [this usage example ➶](../../gears/writegear/non_compression/usage/#using-non-compression-mode-with-opencv)
 
-&nbsp;
+&thinsp;
 
 ## What FFmpeg's encoders and parameters are supported by WriteGear in compression mode?
 
 **Answer:** See [Supported Parameters ➶](../../gears/writegear/compression/params/#supported-parameters) and [Supported encoders ➶](../../gears/writegear/compression/params/#supported-encoders)
 
-&nbsp;
+&thinsp;
 
 ## What OpenCV's FOURCC and parameters are supported by WriteGear in non-compression mode?
 
 **Answer:** See [Supported Parameters ➶](../../gears/writegear/non_compression/params/#supported-parameters) and [Supported FOURCC ➶](../../gears/writegear/non_compression/params/#supported-fourcc-codecs).
 
-&nbsp;
+&thinsp;
 
 ## Why this FOURCC is not working for me?
 
 **Answer:** Remember not all the FOURCC and Video extensions are compatible and supported by OpenCV VideoWriter Class. You’ll need to try different combinations of FourCC and file extensions. Furthermore, OpenCV does not return any helpful error messages regarding this problem, so it’s pretty much based on _trial and error_.
 
-&nbsp;
+&thinsp;
 
 ## Can I pass my custom FFmpeg commands directly in WriteGear API?
 
 **Answer:** Yes, See [Custom FFmpeg Commands in WriteGear API ➶](../../gears/writegear/compression/advanced/cciw/).
 
-&nbsp;
+&thinsp;
 
 ## How to use specific Hardware Encoder in WriteGear?
 
 **Answer:** See [this usage example ➶](../../gears/writegear/compression/usage/#using-compression-mode-with-hardware-encoders)
 
-&nbsp;
+&thinsp;
 
 
 ## How to add live audio to WriteGear?
 
 **Answer:** See [this doc ➶](../../gears/writegear/compression/usage/#using-compression-mode-with-live-audio-input)
 
-&nbsp;
+&thinsp;
 
 ## How to separate and merge audio from/to video?
 
 **Answer:** See [these usage examples ➶](../../gears/writegear/compression/advanced/cciw/#usage-examples)
 
-&nbsp;
+&thinsp;
 
 ## Can I live stream to Twitch with WriteGear API?
 
 **Answer:** Yes, See [this usage example ➶](../../gears/writegear/compression/usage/#using-compression-mode-for-live-streaming)
 
-&nbsp;
+&thinsp;
 
 ## Is YouTube-Live Streaming possible with WriteGear?
 
 **Answer:** Yes, See [this Bonus Example ➶](../writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming).
 
-&nbsp;
+&thinsp;
 
 ## How to Live-Streaming using RTSP/RTP protocol with WriteGear?
 
 **Answer:** See [this Bonus Example ➶](../writegear_ex/#using-writegears-compression-mode-for-rtsprtp-live-streaming).
 
-&nbsp;
+&thinsp;
 
 
 ## How to create MP4 segments from a video stream with WriteGear?
 
 **Answer:** See [this Bonus Example ➶](../writegear_ex/#using-writegears-compression-mode-creating-mp4-segments-from-a-video-stream).
 
-&nbsp;
+&thinsp;
 
 
 ## How add external audio file input to video frames?
 
 **Answer:** See [this Bonus Example ➶](../writegear_ex/#using-writegears-compression-mode-to-add-external-audio-file-input-to-video-frames).
 
-&nbsp;
+&thinsp;
 
 ## Why this FFmpeg parameter is not working for me in compression mode?
 
 **Answer:** If some FFmpeg parameter doesn't work for you, then [tell us on Gitter ➶](https://gitter.im/vidgear/community), and if that doesn't help, then finally [report an issue ➶](../../contribution/issue/)
 
-&nbsp;
+&thinsp;
 
 ## Why WriteGear is switching to Non-compression Mode, even if it is not enable?
 
 **Answer:** In case WriteGear API fails to detect valid FFmpeg executables on your system _(even if Compression Mode is enabled)_, it will automatically fallback to Non-Compression Mode. Follow [Installation Instructions ➶](../../gears/writegear/compression/advanced/ffmpeg_install/) for FFmpeg installation.
 
-&nbsp;
+&thinsp;

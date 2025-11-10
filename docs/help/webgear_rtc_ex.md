@@ -18,9 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-# WebGear_RTC_RTC Examples
+# WebGear_RTC Bonus Examples
 
-&thinsp;
+&thinsp; 
 
 ## Using WebGear_RTC with RaspberryPi Camera Module
 
@@ -106,7 +106,7 @@ Here's a bare-minimum example of using WebGear_RTC API with the Raspberry Pi cam
     web.shutdown()
     ```
 
-&nbsp;
+&thinsp;
 
 ## Using WebGear_RTC with real-time Video Stabilization enabled
  
@@ -132,7 +132,7 @@ uvicorn.run(web(), host="localhost", port=8000)
 web.shutdown()
 ```
 
-&nbsp;
+&thinsp;
 
 ## Display Two Sources Simultaneously in WebGear_RTC
 
@@ -257,4 +257,4 @@ web.shutdown()
 !!! success "On successfully running this code, the output stream will be displayed at address http://localhost:8000/ in Browser."
 
 
-&nbsp;
+&thinsp;

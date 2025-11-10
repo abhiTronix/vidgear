@@ -26,55 +26,55 @@ limitations under the License.
 
 **Answer:** PiGear is a specialized API similar to the [CamGear API](../../gears/camgear/) but optimized for **Raspberry Pi Boards**, offering comprehensive **support for camera modules** _(e.g., OmniVision OV5647, Sony IMX219)_, along with **limited compatibility for USB cameras**. _For more info. see [PiGear doc ➶](../../gears/pigear/)_
 
-&nbsp;
+&thinsp;
 
 ## I'm only familiar with OpenCV, how to get started with PiGear API?
 
 **Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-the-videocapture-apis) guide, then go through [PiGear documentation](../../gears/pigear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
-&nbsp;
+&thinsp;
 
 ## Why my camera module is not detected by PiGear?
 
 **Answer:** Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using PiGear API. Also, recheck/change your Camera Module's ribbon-cable and Camera Module itself, if it damaged or got broken somehow.
 
-&nbsp;
+&thinsp;
 
 ## How to select camera index on Pi Compute IO board with two Cameras attached?
 
 **Answer:** Refer [this Bonus Example ➶](../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)
 
-&nbsp;
+&thinsp;
 
 ## Why PiGear is throwing `SystemError`?
 
 **Answer:** This means your Raspberry Pi CSI ribbon-cable is not connected properly to your Camera Module, or damaged, or even both. 
 
-&nbsp;
+&thinsp;
 
 ## How to assign various configurational settings for Camera Module with PiGear?
 
 **Answer:** See [this usage example ➶](../../gears/pigear/usage/#using-pigear-with-variable-camera-properties)
 
-&nbsp;
+&thinsp;
 
 ## "Video output is too dark with PiGear", Why?
 
 **Answer:** The camera configuration settings might be incorrect. Check [this usage example ➶](../../gears/pigear/usage/#using-pigear-with-variable-camera-properties) and try tinkering parameters like `sensor_mode`, `shutter_speed`, and `exposure_mode`. Additionally, if your `framerate` parameter value is too high, try lowering it.
 
-&nbsp;
+&thinsp;
 
 
 ## How to dynamically adjust Raspberry Pi Camera Parameters at runtime with PiGear?
 
 **Answer:** See [this Bonus Example ➶](../../help/pigear_ex/#dynamically-adjusting-raspberry-pi-camera-parameters-at-runtime-in-pigear-api)
 
-&nbsp;
+&thinsp;
 
 
 ## Is it possible to change output frames Pixel Format in PiGear API?
 
 **Answer:** Yes it is possible with Picamera2 Backend. See [this Bonus Example ➶](../../help/pigear_ex/#changing-output-pixel-format-in-pigear-api-with-picamera2-backend)
 
-&nbsp;
+&thinsp;
 
