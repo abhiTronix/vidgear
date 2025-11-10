@@ -19,7 +19,7 @@ limitations under the License.
 ===============================================
 -->
 
-# WriteGear Examples
+# WriteGear Bonus Examples
 
 &thinsp;
 
