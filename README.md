@@ -37,7 +37,6 @@ limitations under the License.
 [![Glitter chat][gitter-badge]][gitter] [![Build Status][appveyor]][app] [![PyPi version][pypi-badge]][pypi]
 
 </div>
-
 <!-- SPONSORS START -->
 <h1 align="left"> Our Sponsors 🤝 </h1>
 
@@ -53,7 +52,6 @@ limitations under the License.
 
 > _🙏 We are incredibly thankful to all our sponsors for supporting the development of VidGear. If you'd like to support VidGear, please check out our [GitHub Sponsors page ➶](https://github.com/sponsors/abhiTronix)_
 <!-- SPONSORS END -->
-
 &nbsp;
 
 # Overview
