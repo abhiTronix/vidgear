@@ -23,8 +23,8 @@ limitations under the License.
 </h1>
 <h1 align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/overrides/assets/images/tagline-dark.png" width="70%">
-    <img alt="VidGear tagline" src="docs/overrides/assets/images/tagline-light.png" width="70%">
+    <source media="(prefers-color-scheme: dark)" srcset="https://abhitronix.github.io/vidgear/latest/assets/images/tagline-dark.png" width="70%">
+    <img alt="VidGear tagline" src="https://abhitronix.github.io/vidgear/latest/assets/images/tagline-light.png" width="70%">
   </picture>
 </h1>
 
@@ -45,7 +45,7 @@ limitations under the License.
 
 | <h3>Recall.ai - API for meeting recordings</h3>  |
 | :-------------: |
-|  <a href="https://www.recall.ai/product/meeting-recording-api?utm_source=github&utm_medium=sponsorship&utm_campaign=abhiTronix-vidgear"><img src="docs/overrides/assets/images/sponsors/sponsor-recallai.png" alt="Recall.ai - Meeting Recording API" /></a> |
+|  <a href="https://www.recall.ai/product/meeting-recording-api?utm_source=github&utm_medium=sponsorship&utm_campaign=abhiTronix-vidgear"><img src="https://abhitronix.github.io/vidgear/latest/assets/images/sponsors/sponsor-recallai.png" alt="Recall.ai - Meeting Recording API" /></a> |
 | _If you’re looking for a meeting recording API,</br>consider checking out [**Recall.ai**](https://www.recall.ai/product/meeting-recording-api?utm_source=github&utm_medium=sponsorship&utm_campaign=abhiTronix-vidgear), an API that records Zoom,</br>Google Meet, Microsoft Teams, in-person meetings, and more._ |
 
 </div>
@@ -665,7 +665,7 @@ We're offering support for VidGear on [**Gitter Community Channel**](https://git
 
 It is something I am doing with my own free time. But so much more needs to be done, and I need your help to do this. For just the price of a cup of coffee 🍵, you can make a difference 🤝
 
-<a href="https://ko-fi.com/W7W8WTYO"><img src="docs/overrides/assets/gifs/ko-fi-support-me-1.gif" width="184" border="0" alt="Support me on Ko-fi" /></a>
+<a href="https://ko-fi.com/W7W8WTYO"><img src="https://abhitronix.github.io/vidgear/latest/assets/gifs/ko-fi-support-me-1.gif" width="184" border="0" alt="Support me on Ko-fi" /></a>
 
 You can also become a sponsor via [__GitHub Sponsors__](https://github.com/sponsors/abhiTronix) by clicking the button below:
 
