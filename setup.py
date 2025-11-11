@@ -22,9 +22,9 @@ limitations under the License.
 import json
 import platform
 import urllib.request
-
-from pkg_resources import parse_version
+from packaging.version import parse
 from setuptools import setup
+import re
 
 
 def latest_version(package_name):
@@ -40,7 +40,7 @@ def latest_version(package_name):
         )
         data = json.load(response)
         versions = list(data["releases"].keys())
-        versions.sort(key=parse_version)
+        versions.sort(key=parse)
         return ">={}".format(versions[-1])
     except Exception as e:
         if versions:
@@ -54,6 +54,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
     long_description = long_description.replace(
         "(#", "(https://github.com/abhiTronix/vidgear#"
+    )
+    # Add patch to remove sponsor block
+    long_description = re.sub(
+        r"<!-- SPONSORS START -->.*?<!-- SPONSORS END -->",
+        "",
+        long_description,
+        flags=re.DOTALL,
     )
     # patch for unicodes
     long_description = long_description.replace("➶", ">>")
