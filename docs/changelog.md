@@ -21,7 +21,7 @@ limitations under the License.
 # Release Notes
 
 
-## v0.3.4 (2024-11-11)
+## v0.3.4 (2025-11-11)
 
 ???+ tip "New Features"
     - [x] **Type Hints:**
