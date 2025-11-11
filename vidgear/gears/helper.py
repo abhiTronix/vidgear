@@ -44,7 +44,7 @@ from colorlog import ColoredFormatter
 from packaging.version import parse
 from requests.adapters import HTTPAdapter, Retry
 from ..version import __version__
-from typing import List, Dict, Optional, Union
+from typing import List, Optional, Union
 from numpy.typing import NDArray
 
 
