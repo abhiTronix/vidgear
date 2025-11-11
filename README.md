@@ -37,6 +37,7 @@ limitations under the License.
 [![Glitter chat][gitter-badge]][gitter] [![Build Status][appveyor]][app] [![PyPi version][pypi-badge]][pypi]
 
 </div>
+
 <!-- SPONSORS START -->
 <h1 align="left"> Our Sponsors 🤝 </h1>
 
