@@ -20,9 +20,77 @@ limitations under the License.
 
 # Release Notes
 
-## v0.3.3 (2024-06-22)
+
+## v0.3.4 (2024-11-11)
 
 ???+ tip "New Features"
+    - [x] **Type Hints:**
+        * ⚡️ Added comprehensive type hints to function signatures and return types across all API modules for improved code readability and IDE support.
+    - [x] **Docker Guide:**
+        * 📦 Added a comprehensive new guide, `docs/bonus/docker_example.md`, detailing the challenges of containerizing VidGear, particularly around building OpenCV with correct GStreamer and FFmpeg support.
+        * Provides three distinct approaches for Dockerization, complete with Dockerfile examples, dependency breakdowns, application configuration patterns, and troubleshooting sections.
+    - [x] **Sponsor Recognition:**
+        * 🤝 Added prominent sponsor section in the `README.md` and a new dedicated "Our Sponsors" page (`docs/sponsors.md`) to highlight and thank supporters.
+
+??? success "Updates/Improvements" 
+    - [x] **Core:**
+        * Migrated from deprecated `pkg_resources` to `packaging` library for version parsing to ensure compatibility with future Python versions.
+        * Updated dependencies in `setup.py` for better stability and performance.
+        * Replaced `yt_dlp` dependency with `yt-dlp[default]` to ensure all necessary features are installed.
+        * Updated `install_opencv.sh` script with more comprehensive build dependencies (codecs, GStreamer, GUI libs) and now builds `v4l2loopback` from source.
+        * Removed `v4l2loopback-dkms` and `v4l2loopback-utils` from the `apt_dependencies` in `ci_linux.yml`.
+    - [x] **CI:**
+        * Updated test configuration for `pytest-asyncio` to align with latest testing practices by adding `@pytest.mark.asyncio(scope="module")` to async tests.
+        * Upgraded all CI workflows (`ci_linux.yml`, `appveyor.yml`, `azure-pipelines.yml`, `deploy_docs.yml`) to test against Python versions 3.10, 3.11, 3.12, and 3.13.
+        * Upgraded GitHub Actions versions (e.g., `actions/checkout@v3` to `v5`, `actions/setup-python@v4` to `v6`, `codecov/codecov-action@v3` to `v5`).
+        * Updated the Linux CI runner from `ubuntu-20.04` to `ubuntu-22.04`.
+        * Migrated Codecov uploader from deprecated uploader to new `codecov` CLI tool in `azure-pipelines.yml`.
+    - [x] **Docs:**
+        * Restructured documentation and updated links for improved navigation and accuracy.
+        * Updated MkDocs configuration with `navigation.indexes` and `navigation.prune` for cleaner URLs.
+        * Renamed all `overview.md` files for each Gear to `index.md` to create cleaner URLs and navigation.
+        * Added new `docs/gears/writegear/params.md` file to centralize parameter definitions for WriteGear.
+        * Renamed "Examples" pages in `docs/help/` to "Bonus Examples".
+        * Updated README.md tagline to use a dynamic `<picture>` element supporting light/dark modes.
+        * Added sponsors section with Ko-fi images and buttons.
+        * Updated BibTeX citation and Zenodo DOI.
+        * Removed custom Python hook (`docs/overrides/hooks/js_hook.py`) and loaded required Clappr player JavaScript files directly in `mkdocs.yml`.
+        * Added image titles and converted admonitions for better accessibility.
+
+??? danger "Breaking Updates/Changes"
+    - [ ] **Setup.py:**
+        * Raised minimum Python version requirement from 3.8+ to 3.10+ to leverage modern Python features and ensure long-term support.
+        * VidGear no longer installs `opencv-python` automatically as a dependency when installed from source. Users must now manually install their preferred OpenCV binaries (e.g., `opencv-python`, `opencv-contrib-python`) as a prerequisite.
+    - [ ] **StreamGear:**
+        * The `terminate()` method is now formally deprecated and will be removed in a future release. The `close()` method should be used instead for safer process termination.
+
+??? bug "Bug-fixes"
+    - [x] Various minor bug fixes and improvements across the codebase as part of the type hint additions and dependency updates.
+    - [x] Fixed YAML syntax error in GitHub issue templates (`proposal.yaml` and `question.yaml`) by changing `labels` from string to array format.
+    - [x] Updated `.gitignore` to replace the short project-specific list with the comprehensive standard Python `.gitignore` template, covering build artifacts, virtualenvs, test outputs, tool caches, IDEs, and packaging metadata.
+
+??? question "Pull Requests"
+    * PR #441
+    * PR #440
+    * PR #439
+    * PR #438
+    * PR #437
+    * PR #436
+    * PR #434
+    * PR #431
+    * PR #376
+
+??? new "New Contributors"
+    * @abhisheksuran
+    * @Copilot
+
+&nbsp; 
+
+&nbsp;
+
+## v0.3.3 (2024-06-22)
+
+??? tip "New Features"
     - [x] **PiGear:**
         * ⚡️ Official Support for [**Picamera2**](https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf) API backend. (Fixes #342)
             + This massive update brings official support for the new Picamera2 API, unlocking powerful features for Raspberry Pi Camera Modules and limited USB camera support. 
