@@ -659,7 +659,7 @@ We're offering support for VidGear on [**Gitter Community Channel**](https://git
 # Donations and Sponsorships
 
 <div align="center">
-   <img src="https://abhitronix.github.io/vidgear/latest/assets/images/help_us.png" alt="PiGear" width="50%" />
+   <img src="https://abhitronix.github.io/vidgear/latest/assets/images/help_us.png" alt="Donations and Sponsorships" width="50%" />
    <p><i>VidGear is free and open source and will always remain so. ❤️</i></p>
 </div>
 
