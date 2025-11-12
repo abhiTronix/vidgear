@@ -129,7 +129,7 @@ It is something I am doing with my own free time. But so much more needs to be d
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5388925.svg)](https://doi.org/10.5281/zenodo.5388925)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17586698.svg)](https://doi.org/10.5281/zenodo.17586698)
 
 ```BibTeX
 @software{vidgear,
@@ -140,17 +140,24 @@ Here is a Bibtex entry you can use to cite this project in a publication:
                   Ian Max Andolina and
                   Kyle Ahn and
                   freol35241 and
+                  Abhishek Suran and
                   Benjamin Lowe and
                   Mickaël Schoentgen and
                   Renaud Bouckenooghe and
                   Ibtsam Ahmad},
-  title        = {abhiTronix/vidgear: VidGear Stable v0.3.3},
-  month        = jun,
-  year         = 2024,
+  title        = {abhiTronix/vidgear: VidGear Stable v0.3.4},
+  month        = nov,
+  year         = 2025,
   publisher    = {Zenodo},
-  version      = {vidgear-0.3.3},
-  doi          = {10.5281/zenodo.5388925},
-  url          = {https://doi.org/10.5281/zenodo.5388925},
+  version      = {vidgear-0.3.4},
+  doi          = {10.5281/zenodo.17586698},
+  url          = {https://doi.org/10.5281/zenodo.17586698},
+  swhid        = {swh:1:dir:cd4e557ff277da86fb252ab7983e8b9d2be39065
+                   ;origin=https://doi.org/10.5281/zenodo.4718615;vis
+                   it=swh:1:snp:6bd11960231209999e32066a75196a96818d4
+                   1b8;anchor=swh:1:rel:a930455cfcd23d1098834cce7f6d8
+                   8dd58cad2e8;path=abhiTronix-vidgear-84d99c3
+                  },
 }
 ```
 
