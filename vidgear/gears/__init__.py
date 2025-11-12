@@ -139,15 +139,9 @@ import_core_dependency(
     "cv2",
     pkg_name="opencv-python",
     version="3",
-    custom_message="Failed to find core dependency '{}'. Install it with  `pip install opencv-python` command.",
 )
-import_core_dependency(
-    "numpy",
-    mode="lte",
-)
-import_core_dependency(
-    "colorlog",
-)
+import_core_dependency("numpy")
+import_core_dependency("colorlog")
 import_core_dependency("requests")
 import_core_dependency("from tqdm import tqdm", pkg_name="tqdm")
 
