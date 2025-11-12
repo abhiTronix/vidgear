@@ -7,6 +7,13 @@
     ]
   },
   {
+    "version": "v0.3.4-release",
+    "title": "0.3.4",
+    "aliases": [
+      "0.3.4"
+    ]
+  },
+  {
     "version": "v0.3.4-dev",
     "title": "dev",
     "aliases": [
