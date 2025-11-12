@@ -21,16 +21,6 @@
     ]
   },
   {
-    "version": "v0.3.4-dev",
-    "title": "dev",
-    "aliases": []
-  },
-  {
-    "version": "v0.3.3-stable",
-    "title": "latest",
-    "aliases": []
-  },
-  {
     "version": "v0.3.3-release",
     "title": "0.3.3",
     "aliases": [
@@ -56,13 +46,6 @@
     "title": "0.3.0",
     "aliases": [
       "0.3.0"
-    ]
-  },
-  {
-    "version": "v0.2.6-release",
-    "title": "0.2.6",
-    "aliases": [
-      "0.2.6"
     ]
   }
 ]
