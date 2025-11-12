@@ -609,7 +609,7 @@ ffmpeg -f lavfi -i testsrc=duration=10:size=1280x720:rate=30 \
 The following command tests if VidGear can read from a YouTube URL:
 
 ```bash
-python3 -c "from vidgear.gears import CamGear; stream = CamGear(source="https://youtu.be/xvFZjo5PgG0").start(); frame = stream.read(); print(frame.shape); stream.stop()"
+python3 -c "from vidgear.gears import CamGear; stream = CamGear(source='https://youtu.be/xvFZjo5PgG0', stream_mode=True).start(); frame = stream.read(); print(frame.shape); stream.stop()"
 ```
 
 &nbsp;
