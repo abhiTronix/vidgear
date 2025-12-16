@@ -69,6 +69,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name="vidgear",
     packages=["vidgear", "vidgear.gears", "vidgear.gears.asyncio"],
+    package_data={"vidgear": ["py.typed"]},
     version="0.3.4",
     description="High-performance cross-platform Video Processing Python framework powerpacked with unique trailblazing features.",
     license="Apache License 2.0",
