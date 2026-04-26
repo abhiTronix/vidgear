@@ -66,7 +66,8 @@ steps:
     displayName: "Prepare dataset"
 
   - script: |
-      python -m pip install -U pip wheel numpy cython opencv-python
+      python -m pip install -U pip wheel cython
+      python -m pip install opencv-python==4.12.0.88 
       python -c "import cv2; print(cv2.getBuildInformation())"
       python -m pip install -U .[asyncio] yt-dlp[default] httpx six paramiko
       python -m pip install -U codecov pytest pytest-asyncio pytest-cov mpegdash m3u8 async-asgi-testclient
