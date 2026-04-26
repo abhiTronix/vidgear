@@ -1,0 +1,47 @@
+version: 2.1
+orbs:
+  win: circleci/windows@5.0
+
+jobs:
+  build_and_test:
+    parameters:
+      python_version:
+        type: string
+        default: "3.10"
+    executor: win/default
+    steps:
+      - checkout
+      - run:
+          name: Upgrade pip and install core
+          command: python -m pip install --upgrade pip wheel numpy cython opencv-python
+      - run:
+          name: Install vidgear and dependencies
+          command: python -m pip install --upgrade .[asyncio] six httpx yt-dlp[default] aiortc
+      - run:
+          name: Install test dependencies
+          command: |
+            python -m pip install --upgrade pytest codecov pytest-cov pytest-asyncio m3u8 async-asgi-testclient paramiko deffcode
+            python -m pip install https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev2/mpegdash-0.3.0.dev2-py3-none-any.whl
+      - run:
+          name: Prepare dataset
+          shell: bash.exe
+          command: |
+            chmod +x scripts/bash/prepare_dataset.sh
+            bash scripts/bash/prepare_dataset.sh
+      - run:
+          name: Run tests
+          command: python -m pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/
+      - run:
+          name: Codecov
+          command: python -m codecov
+
+workflows:
+  test_my_app:
+    jobs:
+      - build_and_test:
+          matrix:
+            parameters:
+              python_version: ["3.10", "3.11", "3.12", "3.13"]
+          filters:
+            branches:
+              only: testing
