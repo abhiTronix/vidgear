@@ -47,7 +47,7 @@ jobs:
           # Generates coverage.xml for the Codecov orb
           command: python -m pytest --verbose --capture=no --cov-report xml:coverage.xml --cov-report term-missing --cov=vidgear vidgear/tests/
       - codecov/upload:
-          file: coverage.xml
+          files: coverage.xml
 
 workflows:
   run_tests:
