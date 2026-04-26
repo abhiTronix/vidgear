@@ -34,7 +34,7 @@ limitations under the License.
 
 [![Build Status][github-cli]][github-flow] [![Codecov branch][codecov]][code] [![Azure DevOps builds (branch)][azure-badge]][azure-pipeline]
 
-[![Glitter chat][gitter-badge]][gitter] [![Build Status][appveyor]][app] [![PyPi version][pypi-badge]][pypi]
+[![Glitter chat][gitter-badge]][gitter] [![CircleCI (branch)][circleci]][circleci-pipeline] [![PyPi version][pypi-badge]][pypi]
 
 </div>
 
@@ -727,7 +727,7 @@ This library is released under the **[Apache 2.0 License][license]**.
 Badges
 -->
 
-[appveyor]: https://img.shields.io/appveyor/build/abhitronix/vidgear/testing?style=for-the-badge&logo=appveyor
+[circleci]: https://img.shields.io/circleci/build/github/abhiTronix/vidgear/testing?style=for-the-badge&logo=circleci
 [codecov]: https://img.shields.io/codecov/c/github/abhitronix/vidgear/testing?style=for-the-badge&logo=codecov
 [github-cli]: https://img.shields.io/github/actions/workflow/status/abhitronix/vidgear/ci_linux.yml?style=for-the-badge&logo=githubactions
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABC0lEQVRYhdWVPQoCMRCFX6HY2ghaiZUXsLW0EDyBrbWtN/EUHsHTWFnYyCL4gxibVZZlZzKTnWz0QZpk5r0vIdkF/kBPAMOKeddE+CQPKoc5Yt5cTjBMdQSwDQToWgBJAn3jmhqgltapAV6E6b5U17MGGAUaUj07TficMfIBZDV6vxowBm1BP9WbSQE4o5h9IjPJmy73TEPDDxVmoZdQrQ5jRhly9Q8tgMUXkIIWn0oG4GYQfAXQzz1PGoCiQndM7b4RgJay/h7zBLT3hASgoKjamQJMreKf0gfuAGyYtXEIAKcL/Dss15iq6ohXghozLYiAMxPuACwtIT4yeQUxAaLrZwAoqGRKGk7qDSYTfYQ8LuYnAAAAAElFTkSuQmCC
@@ -752,7 +752,7 @@ Internal URLs
 [license]: https://github.com/abhiTronix/vidgear/blob/master/LICENSE
 [github-flow]: https://github.com/abhiTronix/vidgear/actions?query=workflow%3A%22Run+Linux+CI-Tests+for+vidgear%22
 [azure-pipeline]: https://dev.azure.com/abhiuna12/public/_build?definitionId=2
-[app]: https://ci.appveyor.com/project/abhiTronix/vidgear
+[circleci-pipeline]: https://app.circleci.com/projects/github/abhiTronix/vidgear
 [code]: https://codecov.io/gh/abhiTronix/vidgear
 [btm_netgear_async]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/advanced/bidirectional_mode/
 [rtvc]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer
