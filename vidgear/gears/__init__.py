@@ -148,6 +148,7 @@ import_core_dependency("from tqdm import tqdm", pkg_name="tqdm")
 
 # import all APIs
 from .camgear import CamGear
+from .ffgear import FFGear
 from .netgear import NetGear
 from .pigear import PiGear
 from .screengear import ScreenGear
@@ -157,6 +158,7 @@ from .writegear import WriteGear
 
 __all__ = [
     "CamGear",
+    "FFGear",
     "NetGear",
     "PiGear",
     "ScreenGear",
