@@ -20,6 +20,7 @@ limitations under the License.
 
 import logging as log
 import os
+import platform
 import tempfile
 import time
 
@@ -438,3 +439,43 @@ def test_stop_is_idempotent():
         stream.stop()  # second call must not raise
     except Exception as e:
         pytest.fail(str(e))
+
+
+# ---------------------------------------------------------------------------
+# Camera / device capture
+# ---------------------------------------------------------------------------
+
+
+_camera_test_data = [
+    ("/dev/video0", "v4l2", platform.system() == "Linux"),   # manual source + demuxer
+    (0, None, platform.system() == "Linux"),                  # +ve index, no demuxer
+    ("-1", "auto", platform.system() == "Linux"),             # -ve index, "auto" demuxer
+    ("5", "auto", False),                                     # out-of-range index
+    ("invalid", "auto", False),                               # invalid source
+    ("/dev/video0", "invalid", False),                        # invalid demuxer
+]
+
+
+@pytest.mark.parametrize("source, source_demuxer, result", _camera_test_data)
+def test_camera_capture(source, source_demuxer, result):
+    """Tests FFGear real-time webcam and device capture via source_demuxer."""
+    stream = None
+    try:
+        stream = FFGear(
+            source=source,
+            source_demuxer=source_demuxer,
+            frame_format="bgr24",
+            logging=True,
+        ).start()
+        for _ in range(5):
+            frame = stream.read()
+            if frame is None:
+                raise AssertionError("No frame received from camera source")
+            assert isinstance(frame, np.ndarray)
+    except Exception as e:
+        if result:
+            pytest.fail(str(e))
+        else:
+            pytest.xfail(str(e))
+    finally:
+        stream is not None and stream.stop()
