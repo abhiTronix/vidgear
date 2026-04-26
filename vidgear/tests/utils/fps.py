@@ -21,8 +21,9 @@ limitations under the License.
 # import the necessary packages
 
 import time
-import numpy as np
 from threading import Thread
+
+import numpy as np
 
 
 class FPS:
@@ -82,7 +83,7 @@ class FPS:
         calculates and return average FPS
         """
         self.__terminate = True
-        if not (self.__timer is None):
+        if self.__timer is not None:
             self.__timer.join()
             self.__timer = None
         av_fps = np.average(self.__fps) if self.__fps else 0.0

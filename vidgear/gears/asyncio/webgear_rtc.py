@@ -19,40 +19,41 @@ limitations under the License.
 """
 
 # import the necessary packages
-import os
-import time
+import asyncio
 import contextlib
 import fractions
-import asyncio
 import logging as log
+import os
+import time
 from os.path import expanduser
-from typing import Any, Union, Tuple
+from typing import Any
 
-# import helper packages
-from .helper import (
-    reducer,
-    generate_webdata,
-    create_blank_frame,
-)
 from ..helper import (
-    logger_handler,
-    retrieve_best_interpolation,
     import_dependency_safe,
     logcurr_vidgear_ver,
+    logger_handler,
+    retrieve_best_interpolation,
 )
 
 # import additional API(s)
 from ..videogear import VideoGear
 
+# import helper packages
+from .helper import (
+    create_blank_frame,
+    generate_webdata,
+    reducer,
+)
+
 # safe import critical Class modules
 starlette = import_dependency_safe("starlette", error="silent")
-if not (starlette is None):
-    from starlette.routing import Mount, Route
-    from starlette.templating import Jinja2Templates
-    from starlette.staticfiles import StaticFiles
+if starlette is not None:
     from starlette.applications import Starlette
     from starlette.middleware import Middleware
     from starlette.responses import JSONResponse, PlainTextResponse
+    from starlette.routing import Mount, Route
+    from starlette.staticfiles import StaticFiles
+    from starlette.templating import Jinja2Templates
 
 # define logger
 logger = log.getLogger("WebGear_RTC")
@@ -68,8 +69,7 @@ VIDEO_PTIME = 1 / 30  # 30fps
 VIDEO_TIME_BASE = fractions.Fraction(1, VIDEO_CLOCK_RATE)
 
 aiortc = import_dependency_safe("aiortc", error="silent")
-if not (aiortc is None):
-    from aiortc.rtcrtpsender import RTCRtpSender
+if aiortc is not None:
     from aiortc import (
         RTCPeerConnection,
         RTCSessionDescription,
@@ -77,6 +77,7 @@ if not (aiortc is None):
     )
     from aiortc.contrib.media import MediaRelay
     from aiortc.mediastreams import MediaStreamError
+    from aiortc.rtcrtpsender import RTCRtpSender
     from av import VideoFrame  # aiortc dependency
     from av.frame import Frame as AVFrame  # imported for type annotation
 
@@ -94,9 +95,9 @@ if not (aiortc is None):
             camera_num: int = 0,
             stream_mode: bool = False,
             backend: int = 0,
-            colorspace: str = None,
-            resolution: Tuple[int, int] = (640, 480),
-            framerate: Union[int, float] = 25,
+            colorspace: str | None = None,
+            resolution: tuple[int, int] = (640, 480),
+            framerate: int | float = 25,
             logging: bool = False,
             time_delay: int = 0,
             **options: dict
@@ -206,7 +207,7 @@ if not (aiortc is None):
             if hasattr(self.__stream, "start") and callable(self.__stream.start):
                 self.__stream.start()
 
-        async def next_timestamp(self) -> Tuple[int, fractions.Fraction]:
+        async def next_timestamp(self) -> tuple[int, fractions.Fraction]:
             """
             VideoStreamTrack internal method for generating accurate timestamp.
             """
@@ -309,7 +310,7 @@ if not (aiortc is None):
             """
             Gracefully terminates VideoGear stream
             """
-            if not (self.__stream is None):
+            if self.__stream is not None:
                 # terminate running flag
                 self.is_running = False
                 self.__logging and logger.debug("Terminating Internal RTC Video-Server")
@@ -348,9 +349,9 @@ class WebGear_RTC:
         camera_num: int = 0,
         stream_mode: bool = False,
         backend: int = 0,
-        colorspace: str = None,
-        resolution: Tuple[int, int] = (640, 480),
-        framerate: Union[int, float] = 25,
+        colorspace: str | None = None,
+        resolution: tuple[int, int] = (640, 480),
+        framerate: int | float = 25,
         logging: bool = False,
         time_delay: int = 0,
         **options: dict
@@ -429,7 +430,7 @@ class WebGear_RTC:
                             "Enabled live broadcasting for Peer connection(s)."
                         )
                     else:
-                        None
+                        pass
                 else:
                     logger.warning("Skipped invalid `enable_live_broadcast` value!")
                 del options["enable_live_broadcast"]  # clean
@@ -478,7 +479,7 @@ class WebGear_RTC:
         self.middleware = []
 
         # Handle RTC video server
-        if "custom_stream" in options or not (source is None):
+        if "custom_stream" in options or source is not None:
             # Handle video source
             self.__default_rtc_server = RTC_VideoServer(
                 enablePiCamera=enablePiCamera,
@@ -513,14 +514,14 @@ class WebGear_RTC:
         Implements a custom Callable method for WebGear_RTC application.
         """
         # validate routing tables
-        assert not (self.routes is None), "Routing tables are NoneType!"
+        assert self.routes is not None, "Routing tables are NoneType!"
         if not isinstance(self.routes, list) or not all(
             x in self.routes for x in self.__rt_org_copy
         ):
             raise RuntimeError("[WebGear_RTC:ERROR] :: Routing tables are not valid!")
 
         # validate middlewares
-        assert not (self.middleware is None), "Middlewares are NoneType!"
+        assert self.middleware is not None, "Middlewares are NoneType!"
         if self.middleware and (
             not isinstance(self.middleware, list)
             or not all(isinstance(x, Middleware) for x in self.middleware)
@@ -530,7 +531,7 @@ class WebGear_RTC:
         # return Starlette application
         self.__logging and logger.debug("Running Starlette application.")
         return Starlette(
-            debug=(True if self.__logging else False),
+            debug=(bool(self.__logging)),
             routes=self.routes,
             middleware=self.middleware,
             exception_handlers=self.__exception_handlers,
@@ -546,7 +547,7 @@ class WebGear_RTC:
         offer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
 
         # initiate stream
-        if not (self.__default_rtc_server is None) and not (
+        if self.__default_rtc_server is not None and not (
             self.__default_rtc_server.is_launched
         ):
             self.__logging and logger.debug("Initiating Video Streaming.")
@@ -569,7 +570,7 @@ class WebGear_RTC:
                     await pc.close()
                     self.__pcs.discard(pc)
             else:
-                logger.debug("ICE connection state is %s" % pc.iceConnectionState)
+                logger.debug("ICE connection state is {}".format(pc.iceConnectionState))
 
         # Change the remote description associated with the connection.
         await pc.setRemoteDescription(offer)
@@ -583,7 +584,7 @@ class WebGear_RTC:
             if t.kind == "video":
                 pc.addTrack(
                     self.__relay.subscribe(self.__default_rtc_server)
-                    if not (self.__relay is None)
+                    if self.__relay is not None
                     else self.__default_rtc_server
                 )
 
@@ -625,7 +626,7 @@ class WebGear_RTC:
         # check if Live Broadcasting is enabled
         if (
             self.__relay is None
-            and not (self.__default_rtc_server is None)
+            and self.__default_rtc_server is not None
             and (self.__default_rtc_server.is_running)
         ):
             logger.critical("Resetting Server")
@@ -660,7 +661,7 @@ class WebGear_RTC:
         """
         Gracefully shutdown video-server
         """
-        if not (self.__default_rtc_server is None):
+        if self.__default_rtc_server is not None:
             self.__logging and logger.debug("Closing Video Server.")
             self.__default_rtc_server.terminate()
             self.__default_rtc_server = None

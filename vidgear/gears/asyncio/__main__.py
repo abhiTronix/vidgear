@@ -20,8 +20,9 @@ limitations under the License.
 
 if __name__ == "__main__":
     # import neccessary libs
-    import yaml
     import argparse
+
+    import yaml
 
     try:
         import uvicorn
@@ -149,7 +150,7 @@ if __name__ == "__main__":
 
     options = {}
     # handle `options` params
-    if not (args["options"] is None):
+    if args["options"] is not None:
         options = yaml.safe_load(args["options"])
 
     if args["mode"] == "mjpeg":

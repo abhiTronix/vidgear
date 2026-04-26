@@ -19,25 +19,27 @@ limitations under the License.
 """
 
 # import the necessary packages
-import numpy as np
 import asyncio
 import inspect
 import logging as log
-import string
-import secrets
 import platform
-from typing import Any, Tuple, AsyncGenerator, Union, TypeVar
+import secrets
+import string
+from collections.abc import AsyncGenerator
+from typing import Any, TypeVar
+
+import numpy as np
 from numpy.typing import NDArray
 
 # import helper packages
-from ..helper import logger_handler, import_dependency_safe, logcurr_vidgear_ver
+from ..helper import import_dependency_safe, logcurr_vidgear_ver, logger_handler
 
 # import additional API(s)
 from ..videogear import VideoGear
 
 # safe import critical Class modules
 zmq = import_dependency_safe("zmq", pkg_name="pyzmq", error="silent", min_version="4.0")
-if not (zmq is None):
+if zmq is not None:
     import zmq.asyncio
 msgpack = import_dependency_safe("msgpack", error="silent")
 m = import_dependency_safe("msgpack_numpy", error="silent")
@@ -84,12 +86,12 @@ class NetGear_Async:
     def __init__(
         self,
         # NetGear_Async parameters
-        address: str = None,
-        port: str = None,
+        address: str | None = None,
+        port: str | None = None,
         protocol: str = "tcp",
         pattern: int = 0,
         receive_mode: bool = False,
-        timeout: Union[int, float] = 0.0,
+        timeout: int | float = 0.0,
         # Videogear parameters
         enablePiCamera: bool = False,
         stabilize: bool = False,
@@ -97,9 +99,9 @@ class NetGear_Async:
         camera_num: int = 0,
         stream_mode: bool = False,
         backend: int = 0,
-        colorspace: str = None,
-        resolution: Tuple[int, int] = (640, 480),
-        framerate: Union[int, float] = 25,
+        colorspace: str | None = None,
+        resolution: tuple[int, int] = (640, 480),
+        framerate: int | float = 25,
         time_delay: int = 0,
         # common parameters
         logging: bool = False,
@@ -221,11 +223,9 @@ class NetGear_Async:
                         pattern
                     )
                 )
-            elif not (source is None):
+            elif source is not None:
                 raise ValueError(
-                    "[NetGear_Async:ERROR] :: Custom source must be used when Bidirectional Mode is enabled. Kindly refer Docs for more Information!".format(
-                        pattern
-                    )
+                    "[NetGear_Async:ERROR] :: Custom source must be used when Bidirectional Mode is enabled. Kindly refer Docs for more Information!"
                 )
             elif isinstance(value, bool) and self.__logging:
                 # log Bidirectional mode activation
@@ -246,7 +246,7 @@ class NetGear_Async:
             # we had to set it manually.
             asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         else:
-            if not (uvloop is None):
+            if uvloop is not None:
                 # Latest uvloop eventloop is only available for UNIX machines.
                 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
             else:
@@ -421,7 +421,7 @@ class NetGear_Async:
             # extract data if bidirectional mode
             if self.__bi_mode and len(dataframe) == 2:
                 (data, frame) = dataframe
-                if not (data is None) and isinstance(data, np.ndarray):
+                if data is not None and isinstance(data, np.ndarray):
                     logger.warning(
                         "Skipped unsupported `data` of datatype: {}!".format(
                             type(data).__name__
@@ -448,11 +448,11 @@ class NetGear_Async:
                 frame = np.ascontiguousarray(frame, dtype=frame.dtype)
 
             # create data dict
-            data_dict = dict(
-                terminate=False,
-                bi_mode=self.__bi_mode,
-                data=data if not (data is None) else "",
-            )
+            data_dict = {
+                "terminate": False,
+                "bi_mode": self.__bi_mode,
+                "data": data if data is not None else "",
+            }
             # encode it
             data_enc = msgpack.packb(data_dict)
             # send the encoded data with correct flags
@@ -501,7 +501,7 @@ class NetGear_Async:
                     )
                     self.__logging and logger.debug(recv_confirmation)
 
-    async def recv_generator(self) -> AsyncGenerator[Tuple[Any, NDArray], NDArray]:
+    async def recv_generator(self) -> AsyncGenerator[tuple[Any, NDArray], NDArray]:
         """
         A default Asynchronous Frame Generator for NetGear_Async's Receiver-end.
         """
@@ -569,11 +569,11 @@ class NetGear_Async:
                 # send confirmation message to server if bidirectional patterns
                 if self.__msg_pattern < 2:
                     # create termination confirmation message
-                    return_dict = dict(
-                        terminated="Client-`{}` successfully terminated!".format(
+                    return_dict = {
+                        "terminated": "Client-`{}` successfully terminated!".format(
                             self.__id
                         ),
-                    )
+                    }
                     # encode message
                     retdata_enc = msgpack.packb(return_dict)
                     # send message back to server
@@ -604,7 +604,7 @@ class NetGear_Async:
                     else:
                         return_data = None
                     # check if we are returning `ndarray` frames
-                    if not (return_data is None) and isinstance(
+                    if return_data is not None and isinstance(
                         return_data, np.ndarray
                     ):
                         # check whether the incoming frame is contiguous
@@ -614,10 +614,10 @@ class NetGear_Async:
                             )
 
                         # create return type dict without data
-                        rettype_dict = dict(
-                            return_type=(type(return_data).__name__),
-                            return_data=None,
-                        )
+                        rettype_dict = {
+                            "return_type": (type(return_data).__name__),
+                            "return_data": None,
+                        }
                         # encode it
                         rettype_enc = msgpack.packb(rettype_dict)
                         # send it to server with correct flags
@@ -629,12 +629,12 @@ class NetGear_Async:
                         await self.__msg_socket.send_multipart([retframe_enc])
                     else:
                         # otherwise create type and data dict
-                        return_dict = dict(
-                            return_type=(type(return_data).__name__),
-                            return_data=(
-                                return_data if not (return_data is None) else ""
+                        return_dict = {
+                            "return_type": (type(return_data).__name__),
+                            "return_data": (
+                                return_data if return_data is not None else ""
                             ),
-                        )
+                        }
                         # encode it
                         retdata_enc = msgpack.packb(return_dict)
                         # send it over network to server
@@ -723,10 +723,10 @@ class NetGear_Async:
             # indicate that process should be terminated
             self.__terminate = True
             # terminate stream
-            if not (self.__stream is None):
+            if self.__stream is not None:
                 self.__stream.stop()
             # signal `exit` flag for termination!
-            data_dict = dict(terminate=True)
+            data_dict = {"terminate": True}
             data_enc = msgpack.packb(data_dict)
             await self.__msg_socket.send(data_enc)
             # check if bidirectional patterns
@@ -772,6 +772,6 @@ class NetGear_Async:
             self.loop.close()
         else:
             # otherwise create a task
-            asyncio.ensure_future(
+            self.__close_task = asyncio.ensure_future(
                 self.__terminate_connection(disable_confirmation=True)
             )

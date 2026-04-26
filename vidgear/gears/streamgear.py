@@ -19,31 +19,32 @@ limitations under the License.
 """
 
 # import the necessary packages
-import os
-import time
-import math
-import signal
 import difflib
 import logging as log
+import math
+import os
+import signal
 import subprocess as sp
-from tqdm import tqdm
+import time
 from collections import OrderedDict
+
 from numpy.typing import NDArray
+from tqdm import tqdm
 
 # import helper packages
 from .helper import (
+    check_WriteAccess,
+    delete_ext_safe,
     deprecated,
     dict2Args,
-    delete_ext_safe,
     extract_time,
+    get_valid_ffmpeg_path,
+    get_video_bitrate,
     is_valid_url,
+    logcurr_vidgear_ver,
     logger_handler,
     validate_audio,
     validate_video,
-    check_WriteAccess,
-    get_video_bitrate,
-    get_valid_ffmpeg_path,
-    logcurr_vidgear_ver,
 )
 
 # define logger
@@ -93,7 +94,7 @@ class StreamGear:
         logcurr_vidgear_ver(logging=self.__logging)
 
         # checks if machine in-use is running windows os or not
-        self.__os_windows = True if os.name == "nt" else False
+        self.__os_windows = (os.name == "nt")
 
         # initialize various class variables
         # handles user-defined parameters
@@ -205,9 +206,7 @@ class StreamGear:
                 validation_results = validate_video(
                     self.__ffmpeg, video_path=self.__video_source
                 )
-                assert not (
-                    validation_results is None
-                ), "[StreamGear:ERROR] :: Given `{}` video_source is Invalid, Check Again!".format(
+                assert validation_results is not None, "[StreamGear:ERROR] :: Given `{}` video_source is Invalid, Check Again!".format(
                     self.__video_source
                 )
                 self.__aspect_source = validation_results["resolution"]
@@ -462,7 +461,7 @@ class StreamGear:
         # write the frame to pipeline
         try:
             self.__process.stdin.write(frame.tobytes())
-        except (OSError, IOError):
+        except OSError:
             # log something is wrong!
             logger.error(
                 "BrokenPipeError caught, Wrong values passed to FFmpeg Pipe, Kindly Refer Docs!"
@@ -541,11 +540,10 @@ class StreamGear:
         ]:
             output_parameters["-crf"] = self.__params.pop("-crf", "20")
         ### OPTIMIZATION-2 ###
-        if output_parameters["-vcodec"] == "libx264":
-            if not (self.__video_source):
-                output_parameters["-profile:v"] = self.__params.pop(
-                    "-profile:v", "high"
-                )
+        if output_parameters["-vcodec"] == "libx264" and not (self.__video_source):
+            output_parameters["-profile:v"] = self.__params.pop(
+                "-profile:v", "high"
+            )
         ### OPTIMIZATION-3 ###
         if output_parameters["-vcodec"] in ["libx264", "libx264rgb"]:
             output_parameters["-tune"] = self.__params.pop("-tune", "zerolatency")
@@ -636,9 +634,7 @@ class StreamGear:
             input_params=input_parameters, output_params=output_parameters
         )
         # check if processing completed successfully
-        assert not (
-            process_params is None
-        ), "[StreamGear:ERROR] :: `{}` stream cannot be initiated properly!".format(
+        assert process_params is not None, "[StreamGear:ERROR] :: `{}` stream cannot be initiated properly!".format(
             self.__format.upper()
         )
         # Finally start FFmpeg pipeline and process everything
@@ -727,15 +723,15 @@ class StreamGear:
 
         # define additional streams optimization parameters
         if output_params["-vcodec"] in ["libx264", "libx264rgb"]:
-            if not "-bf" in self.__params:
+            if "-bf" not in self.__params:
                 output_params["-bf"] = 1
-            if not "-sc_threshold" in self.__params:
+            if "-sc_threshold" not in self.__params:
                 output_params["-sc_threshold"] = 0
-            if not "-keyint_min" in self.__params:
+            if "-keyint_min" not in self.__params:
                 output_params["-keyint_min"] = gop
         if (
             output_params["-vcodec"] in ["libx264", "libx264rgb", "libvpx-vp9"]
-            and not "-g" in self.__params
+            and "-g" not in self.__params
         ):
             output_params["-g"] = gop
         if output_params["-vcodec"] == "libx265":
@@ -1103,7 +1099,7 @@ class StreamGear:
         # handle HLS multi-variant streams
         if self.__format == "hls" and stream_count > 1:
             stream_map = ""
-            for count in range(0, stream_count):
+            for count in range(stream_count):
                 stream_map += "v:{}{} ".format(
                     count, ",a:{}".format(count) if "-acodec" in output_params else ","
                 )
@@ -1143,16 +1139,10 @@ class StreamGear:
             )
         else:
             ffmpeg_cmd = (
-                [self.__ffmpeg, "-y"]
-                + hide_banner
-                + ["-f", "rawvideo", "-vcodec", "rawvideo"]
-                + input_commands
-                + ["-i", "-"]
-                + output_commands
-                + stream_commands
+                [self.__ffmpeg, "-y", *hide_banner, "-f", "rawvideo", "-vcodec", "rawvideo", *input_commands, "-i", "-", *output_commands, *stream_commands]
             )
         # format outputs
-        ffmpeg_cmd.extend([self.__out_file] if not (hls_commands) else hls_commands)
+        ffmpeg_cmd.extend(hls_commands if hls_commands else [self.__out_file])
         # Launch the FFmpeg pipeline with built command
         logger.critical("Transcoding streaming chunks. Please wait...")  # log it
         self.__process = sp.Popen(
@@ -1203,7 +1193,7 @@ class StreamGear:
                             break
                 return_code = self.__process.poll()
             # close progress bar
-            not (pbar is None) and pbar.close()
+            pbar is not None and pbar.close()
             # handle return_code
             if return_code != 0:
                 # log and raise error if return_code is `1`
@@ -1255,7 +1245,7 @@ class StreamGear:
         self.__logging and logger.debug("Terminating StreamGear Processes.")
 
         # return if no process was initiated at first place
-        if self.__process is None or not (self.__process.poll() is None):
+        if self.__process is None or self.__process.poll() is not None:
             return
         # close `stdin` output
         self.__process.stdin and self.__process.stdin.close()

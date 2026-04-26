@@ -1,7 +1,8 @@
 # import the necessary packages
+import importlib
 import sys
 import types
-import importlib
+
 from packaging.version import parse
 
 
@@ -17,7 +18,7 @@ def get_module_version(module=None):
     **Returns:** version of specified module as string
     """
     # check if module type is valid
-    assert not (module is None) and isinstance(
+    assert module is not None and isinstance(
         module, types.ModuleType
     ), "[VidGear CORE:ERROR] :: Invalid module!"
 
@@ -72,12 +73,12 @@ def import_core_dependency(
     assert mode in ["gte", "lte", "exact"], "[VidGear CORE:ERROR] :: Invalid mode!"
 
     # specify package name of dependency(if defined). Otherwise use name
-    install_name = pkg_name if not (pkg_name is None) else name
+    install_name = pkg_name if pkg_name is not None else name
 
     # create message
     msg = (
         custom_message
-        if not (custom_message is None)
+        if custom_message is not None
         else "Failed to find its core dependency '{}'. Install it with  `pip install {}` command.".format(
             name, install_name
         )
@@ -95,7 +96,7 @@ def import_core_dependency(
             raise ImportError(msg) from e
 
     # check if minimum required version
-    if not (version) is None:
+    if (version) is not None:
         # Handle submodules
         parent_module = name.split(".")[0]
         if parent_module != name:
@@ -147,21 +148,21 @@ import_core_dependency("from tqdm import tqdm", pkg_name="tqdm")
 
 # import all APIs
 from .camgear import CamGear
-from .pigear import PiGear
-from .videogear import VideoGear
 from .netgear import NetGear
-from .writegear import WriteGear
+from .pigear import PiGear
 from .screengear import ScreenGear
 from .streamgear import StreamGear
+from .videogear import VideoGear
+from .writegear import WriteGear
 
 __all__ = [
-    "PiGear",
     "CamGear",
-    "VideoGear",
-    "ScreenGear",
-    "WriteGear",
     "NetGear",
+    "PiGear",
+    "ScreenGear",
     "StreamGear",
+    "VideoGear",
+    "WriteGear",
 ]
 
 __author__ = "Abhishek Thakur (@abhiTronix) <abhi.una12@gmail.com>"

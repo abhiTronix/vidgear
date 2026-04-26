@@ -19,40 +19,42 @@ limitations under the License.
 """
 
 # import the necessary packages
-import os
 import asyncio
-import inspect
 import contextlib
-import numpy as np
+import inspect
 import logging as log
+import os
 from os.path import expanduser
-from typing import Any, Tuple, Union
+from typing import Any
 
-# import helper packages
-from .helper import (
-    reducer,
-    generate_webdata,
-    create_blank_frame,
-)
+import numpy as np
+
 from ..helper import (
-    logger_handler,
-    retrieve_best_interpolation,
     import_dependency_safe,
     logcurr_vidgear_ver,
+    logger_handler,
+    retrieve_best_interpolation,
 )
 
 # import additional API(s)
 from ..videogear import VideoGear
 
+# import helper packages
+from .helper import (
+    create_blank_frame,
+    generate_webdata,
+    reducer,
+)
+
 # safe import critical Class modules
 starlette = import_dependency_safe("starlette", error="silent")
-if not (starlette is None):
-    from starlette.routing import Mount, Route
-    from starlette.responses import StreamingResponse, JSONResponse
-    from starlette.templating import Jinja2Templates
-    from starlette.staticfiles import StaticFiles
+if starlette is not None:
     from starlette.applications import Starlette
     from starlette.middleware import Middleware
+    from starlette.responses import JSONResponse, StreamingResponse
+    from starlette.routing import Mount, Route
+    from starlette.staticfiles import StaticFiles
+    from starlette.templating import Jinja2Templates
 simplejpeg = import_dependency_safe("simplejpeg", error="silent", min_version="1.6.1")
 
 # define logger
@@ -86,9 +88,9 @@ class WebGear:
         camera_num: int = 0,
         stream_mode: bool = False,
         backend: int = 0,
-        colorspace: str = None,
-        resolution: Tuple[int, int] = (640, 480),
-        framerate: Union[int, float] = 25,
+        colorspace: str | None = None,
+        resolution: tuple[int, int] = (640, 480),
+        framerate: int | float = 25,
         logging: bool = False,
         time_delay: int = 0,
         **options: dict
@@ -384,14 +386,14 @@ class WebGear:
         Implements a custom Callable method for WebGear application.
         """
         # validate routing tables
-        assert not (self.routes is None), "Routing tables are NoneType!"
+        assert self.routes is not None, "Routing tables are NoneType!"
         if not isinstance(self.routes, list) or not all(
             x in self.routes for x in self.__rt_org_copy
         ):
             raise RuntimeError("[WebGear:ERROR] :: Routing tables are not valid!")
 
         # validate middlewares
-        assert not (self.middleware is None), "Middlewares are NoneType!"
+        assert self.middleware is not None, "Middlewares are NoneType!"
         if self.middleware and (
             not isinstance(self.middleware, list)
             or not all(isinstance(x, Middleware) for x in self.middleware)
@@ -414,12 +416,12 @@ class WebGear:
 
         # initiate stream
         self.__logging and logger.debug("Initiating Video Streaming.")
-        if not (self.__stream is None):
+        if self.__stream is not None:
             self.__stream.start()
         # return Starlette application
         self.__logging and logger.debug("Running Starlette application.")
         return Starlette(
-            debug=(True if self.__logging else False),
+            debug=(bool(self.__logging)),
             routes=self.routes,
             middleware=self.middleware,
             exception_handlers=self.__exception_handlers,
@@ -559,7 +561,7 @@ class WebGear:
         """
         Implements a Callable to be run on application shutdown
         """
-        if not (self.__stream is None):
+        if self.__stream is not None:
             self.__logging and logger.debug("Closing Video Streaming.")
             # stops producer
             self.__isrunning = False

@@ -20,9 +20,10 @@ limitations under the License.
 
 # import the necessary packages
 
+import platform
+
 import numpy as np
 import pytest
-import platform
 
 from vidgear.gears import WriteGear
 
@@ -95,7 +96,7 @@ def test_fail_framedimension(compression_mode):
         else:
             pytest.fail(str(e))
     finally:
-        if not writer is None:
+        if writer is not None:
             writer.close()
 
 
@@ -103,7 +104,7 @@ def test_fail_framedimension(compression_mode):
     "compression_mode, path",
     [
         (True, "output.mp4"),
-        (True if platform.system() == "Linux" else False, "/dev/video0"),
+        (platform.system() == "Linux", "/dev/video0"),
         (True, "rtmp://live.twitch.tv/"),
         (True, "unknown://invalid.com/"),
         (False, "output.mp4"),
@@ -123,7 +124,7 @@ def test_paths(compression_mode, path):
         else:
             pytest.fail(str(e))
     finally:
-        if not writer is None:
+        if writer is not None:
             writer.close()
 
 

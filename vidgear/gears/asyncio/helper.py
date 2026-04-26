@@ -21,17 +21,16 @@ limitations under the License.
 # Contains all the support functions/modules required by Vidgear Asyncio packages
 
 # import the necessary packages
-import os
-import cv2
-import requests
-import numpy as np
 import logging as log
-from tqdm import tqdm
-from colorlog import ColoredFormatter
+import os
+
+import cv2
+import numpy as np
+import requests
+from numpy.typing import NDArray
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
-from numpy.typing import NDArray
-from typing import Union
+from tqdm import tqdm
 
 # import helper packages
 from ..helper import logger_handler, mkdir_safe
@@ -109,7 +108,7 @@ def create_blank_frame(
 
 async def reducer(
     frame: NDArray = None,
-    percentage: Union[int, float] = 0,
+    percentage: int | float = 0,
     interpolation: int = cv2.INTER_LANCZOS4,
 ) -> NDArray:
     """
@@ -239,7 +238,7 @@ def generate_webdata(
 
 
 def download_webdata(
-    path: str, c_name: str = "webgear", files: list = [], logging: bool = False
+    path: str, c_name: str = "webgear", files: list | None = None, logging: bool = False
 ) -> str:
     """
     ## download_webdata
@@ -255,6 +254,8 @@ def download_webdata(
 
     **Returns:** A valid path as string.
     """
+    if files is None:
+        files = []
     basename = os.path.basename(path)
     if logging:
         logger.debug("Downloading {} data-files at `{}`".format(basename, path))
@@ -302,9 +303,7 @@ def download_webdata(
                             if "content-length" in response.headers
                             else len(response.content)
                         )
-                        assert not (
-                            total_length is None
-                        ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
+                        assert total_length is not None, "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
                         bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
                         for data in response.iter_content(chunk_size=256):
                             f.write(data)
@@ -320,8 +319,7 @@ def download_webdata(
                 # log event if necessary
                 url != reg_urls[1] and logger.error(
                     "Download failed for Gitlab Server! Retrying from GitHub Server: {}".format(
-                        url, "https://github.com/abhiTronix/vidgear-vitals"
-                    )
+                        url, )
                 )
             else:
                 # break otherwise
@@ -341,7 +339,7 @@ def download_webdata(
         )
 
 
-def validate_webdata(path: str, files: list = [], logging: bool = False) -> bool:
+def validate_webdata(path: str, files: list | None = None, logging: bool = False) -> bool:
     """
     ## validate_auth_keys
 
@@ -355,6 +353,8 @@ def validate_webdata(path: str, files: list = [], logging: bool = False) -> bool
     **Returns:** A  boolean value, confirming whether tests passed, or not?.
     """
     # check if valid path or directory empty
+    if files is None:
+        files = []
     if not (os.path.exists(path)) or not (os.listdir(path)):
         return False
 

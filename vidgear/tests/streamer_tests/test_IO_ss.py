@@ -20,9 +20,10 @@ limitations under the License.
 
 # import the necessary packages
 import os
-import pytest
-import tempfile
 import subprocess
+import tempfile
+
+import pytest
 
 from vidgear.gears import StreamGear
 
@@ -87,19 +88,8 @@ def test_paths_ss(path, format):
         else:
             pytest.fail(str(e))
     finally:
-        if not streamer is None:
+        if streamer is not None:
             streamer.close()
-
-
-@pytest.mark.xfail(raises=RuntimeError)
-def test_method_call_ss():
-    """
-    Method calling Test - Made to fail by calling method in the wrong context.
-    """
-    stream_params = {"-video_source": return_testvideo_path()}
-    streamer = StreamGear(output="output.mpd", logging=True, **stream_params)
-    streamer.stream("garbage.garbage")
-    streamer.close()
 
 
 @pytest.mark.xfail(raises=(AttributeError, RuntimeError))

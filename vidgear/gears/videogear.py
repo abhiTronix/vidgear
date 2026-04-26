@@ -20,14 +20,15 @@ limitations under the License.
 
 # import the necessary packages
 import logging as log
-from typing import TypeVar, Tuple, Union, Any
-from numpy.typing import NDArray
+from typing import Any, TypeVar
 
-# import helper packages
-from .helper import logger_handler, logcurr_vidgear_ver
+from numpy.typing import NDArray
 
 # import additional API(s)
 from .camgear import CamGear
+
+# import helper packages
+from .helper import logcurr_vidgear_ver, logger_handler
 
 # define logger
 logger = log.getLogger("VideoGear")
@@ -57,15 +58,15 @@ class VideoGear:
         stabilize: bool = False,
         # PiGear parameters
         camera_num: int = 0,
-        resolution: Tuple[int, int] = (640, 480),
-        framerate: Union[int, float] = 30,
+        resolution: tuple[int, int] = (640, 480),
+        framerate: int | float = 30,
         # CamGear parameters
         source: Any = 0,
         stream_mode: bool = False,
         backend: int = 0,
         # common parameters
         time_delay: int = 0,
-        colorspace: str = None,
+        colorspace: str | None = None,
         logging: bool = False,
         **options: dict
     ):
@@ -179,7 +180,7 @@ class VideoGear:
             if frame is None:
                 break
             frame_stab = self.__stabilizer_obj.stabilize(frame)
-            if not (frame_stab is None):
+            if frame_stab is not None:
                 return frame_stab
         return self.stream.read()
 

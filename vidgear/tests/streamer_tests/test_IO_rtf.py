@@ -19,8 +19,9 @@ limitations under the License.
 """
 
 # import the necessary packages
-import pytest
 import numpy as np
+import pytest
+
 from vidgear.gears import StreamGear
 
 

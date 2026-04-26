@@ -19,9 +19,10 @@ limitations under the License.
 """
 
 # import the packages
-import time
-import numpy as np
 import logging
+import time
+
+import numpy as np
 
 # define custom logger
 FORMAT = "%(name)s :: %(levelname)s :: %(message)s"
@@ -31,7 +32,7 @@ logger.propagate = False
 logger.setLevel(logging.DEBUG)
 
 
-class Warn(object):
+class Warn:
     """
     Throws Warning
     """
@@ -140,12 +141,12 @@ class PiCamera(Warn):
         Fake `capture_continuous` that yields numpy frames as fake Frame object
         """
         num = 0
-        if not (self.create_bug is None) and isinstance(self.create_bug, str):
+        if self.create_bug is not None and isinstance(self.create_bug, str):
             raise RuntimeError("Fake Error")
         while self.running:
             # generate 10 frames
             frames_data = self.array_data(size=self.resolution[::-1])
-            if num > 1 and not (self.create_bug is None):
+            if num > 1 and self.create_bug is not None:
                 if isinstance(self.create_bug, bool):
                     # throw fake error
                     raise RuntimeError("PiCamera Class Fake-Error")
@@ -180,7 +181,6 @@ class PiRGBArray(Warn):
     def close(self):
         # this does nothing
         logger.debug("Closing PiRGBArray.")
-        pass
 
     def truncate(self, size=None):
         # this does nothing
@@ -191,7 +191,7 @@ class PiRGBArray(Warn):
         pass
 
 
-class array(object):
+class array:
     """
     Fake array class
     """

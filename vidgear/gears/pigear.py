@@ -19,35 +19,36 @@ limitations under the License.
 """
 
 # import the necessary packages
-import cv2
-import sys
-import os
-import time
 import logging as log
+import os
+import sys
+import time
 from threading import Thread
-from typing import Tuple, Union, TypeVar
+from typing import TypeVar
+
+import cv2
 from numpy.typing import NDArray
 
 # import helper packages
 from .helper import (
     capPropId,
-    logger_handler,
     import_dependency_safe,
     logcurr_vidgear_ver,
+    logger_handler,
 )
 
 # safe import critical Class modules
 ### LEGACY picamera API ###
 picamera = import_dependency_safe("picamera", error="silent")
-if not (picamera is None):
+if picamera is not None:
     from picamera import PiCamera
     from picamera.array import PiRGBArray
 
 ### NEW picamera2 API ###
 picamera2 = import_dependency_safe("picamera2", error="silent")
-if not (picamera2 is None):
-    from picamera2 import Picamera2
+if picamera2 is not None:
     from libcamera import Transform
+    from picamera2 import Picamera2
 
 # define logger
 logger = log.getLogger("PiGear")
@@ -90,9 +91,9 @@ class PiGear:
     def __init__(
         self,
         camera_num: int = 0,
-        resolution: Tuple[int, int] = (640, 480),
-        framerate: Union[int, float] = 30,
-        colorspace: str = None,
+        resolution: tuple[int, int] = (640, 480),
+        framerate: int | float = 30,
+        colorspace: str | None = None,
         logging: bool = False,
         time_delay: int = 0,
         **options: dict
@@ -177,9 +178,9 @@ class PiGear:
             # initialize the picamera stream at given index
             self.__camera = Picamera2(camera_num=camera_num)
             # extract metadata for current camera
-            camera_metadata = [x for x in cameras_metadata if x["Num"] == camera_num][0]
+            camera_metadata = next(x for x in cameras_metadata if x["Num"] == camera_num)
             # check connected camera is USB or I2C
-            self.__camera_is_usb = True if "usb" in camera_metadata["Id"] else False
+            self.__camera_is_usb = "usb" in camera_metadata["Id"]
             # handle framerate control
             if not self.__camera_is_usb:
                 self.__camera.set_controls({"FrameRate": framerate})
@@ -247,7 +248,7 @@ class PiGear:
 
                 # filter parameter supported with non-USB cameras only
                 if self.__camera_is_usb:
-                    unsupported_config_keys = set(list(options.keys())).intersection(
+                    unsupported_config_keys = set(options.keys()).intersection(
                         set(non_usb_options)
                     )
                     unsupported_config_keys and logger.warning(
@@ -259,7 +260,7 @@ class PiGear:
                     valid_config_options += non_usb_options
 
                 # log all invalid keys
-                invalid_config_keys = set(list(options.keys())) - set(
+                invalid_config_keys = set(options.keys()) - set(
                     valid_config_options
                 )
                 invalid_config_keys and logger.warning(
@@ -276,7 +277,7 @@ class PiGear:
                 options.update({"size": tuple(resolution)})
 
                 # set 24-bit, BGR format by default
-                if not "format" in options:
+                if "format" not in options:
                     # auto defaults for USB cameras
                     not self.__camera_is_usb and options.update({"format": "RGB888"})
                 elif self.__camera_is_usb:
@@ -285,7 +286,7 @@ class PiGear:
                         mode["format"] for mode in self.__camera.sensor_modes
                     ]
                     # handle unsupported formats
-                    if not options["format"] in avail_formats:
+                    if options["format"] not in avail_formats:
                         logger.warning(
                             "Discarding `format={}`. `{}` are the only available formats for USB camera in use!".format(
                                 options["format"], "`, `".join(avail_formats)
@@ -296,7 +297,7 @@ class PiGear:
                         # `colorspace` parameter must define with  `format` optional parameter
                         # unless format is MPEG (tested)
                         (
-                            not (colorspace is None) or options["format"] == "MPEG"
+                            colorspace is not None or options["format"] == "MPEG"
                         ) and logger.warning(
                             "Custom Output frames `format={}` detected. It is advised to define `colorspace` parameter or handle this format manually in your code!".format(
                                 options["format"]
@@ -306,7 +307,7 @@ class PiGear:
                     # `colorspace` parameter must define with  `format` optional parameter
                     # unless format is either BGR or BGRA
                     (
-                        not (colorspace is None)
+                        colorspace is not None
                         or options["format"]
                         in [
                             "RGB888",
@@ -338,7 +339,7 @@ class PiGear:
                     # extract all valid sensor keys
                     valid_sensor = ["output_size", "bit_depth"]
                     # log all invalid keys
-                    invalid_sensor_keys = set(list(sensor)) - set(valid_sensor)
+                    invalid_sensor_keys = set(sensor) - set(valid_sensor)
                     invalid_sensor_keys and logger.warning(
                         "Discarding sensor properties NOT supported by current Camera Sensor: `{}`. Only supported are: (`{}`)".format(
                             "`, `".join(invalid_sensor_keys),
@@ -368,8 +369,8 @@ class PiGear:
                     valid_controls.pop("FrameDuration", None)
                     valid_controls.pop("FrameDurationLimits", None)
                     # log all invalid keys
-                    invalid_control_keys = set(list(controls.keys())) - set(
-                        list(valid_controls.keys())
+                    invalid_control_keys = set(controls.keys()) - set(
+                        valid_controls.keys()
                     )
                     invalid_control_keys and logger.warning(
                         "Discarding control properties NOT supported by current Camera Sensor: `{}`. Only supported are: (`{}`)".format(
@@ -379,7 +380,7 @@ class PiGear:
                     )
                     # delete all unsupported control keys
                     controls = {
-                        x: y for x, y in controls.items() if x in valid_controls.keys()
+                        x: y for x, y in controls.items() if x in valid_controls
                     }
                 else:
                     logger.warning("`controls` value is of invalid type, Discarding!")
@@ -445,9 +446,9 @@ class PiGear:
             logger.exception(str(e))
 
         # separately handle colorspace value to int conversion
-        if not (colorspace is None):
+        if colorspace is not None:
             self.color_space = capPropId(colorspace.strip())
-            if self.__logging and not (self.color_space is None):
+            if self.__logging and self.color_space is not None:
                 logger.debug(
                     "Enabling `{}` colorspace for this video stream!".format(
                         colorspace.strip()
@@ -479,7 +480,7 @@ class PiGear:
                 self.__rawCapture.seek(0)
                 self.__rawCapture.truncate()
             # render colorspace if defined
-            if not (self.frame is None) and not (self.color_space is None):
+            if self.frame is not None and self.color_space is not None:
                 self.frame = cv2.cvtColor(self.frame, self.color_space)
         except Exception as e:
             logger.exception(str(e))
@@ -567,7 +568,7 @@ class PiGear:
                 self.__rawCapture.truncate()
 
             # apply colorspace if specified
-            if not (self.color_space is None):
+            if self.color_space is not None:
                 # apply colorspace to frames
                 color_frame = None
                 try:
@@ -578,7 +579,7 @@ class PiGear:
                     self.color_space = None
                     self.__logging and logger.exception(str(e))
                     logger.warning("Assigned colorspace value is invalid. Discarding!")
-                self.frame = color_frame if not (color_frame is None) else frame
+                self.frame = color_frame if color_frame is not None else frame
             else:
                 self.frame = frame
 
@@ -601,7 +602,7 @@ class PiGear:
         **Returns:** A n-dimensional numpy array.
         """
         # check if there are any thread exceptions
-        if not (self.__exceptions is None):
+        if self.__exceptions is not None:
             if isinstance(self.__exceptions, bool):
                 # clear frame
                 self.frame = None
@@ -633,14 +634,14 @@ class PiGear:
         self.__terminate = True
 
         # stop timer thread
-        if not (self.__timer is None):
+        if self.__timer is not None:
             self.__timer.join()
             self.__timer = None
 
         # handle camera thread
-        if not (self.__thread is None):
+        if self.__thread is not None:
             # check if hardware failure occurred
-            if not (self.__exceptions is None) and isinstance(self.__exceptions, bool):
+            if self.__exceptions is not None and isinstance(self.__exceptions, bool):
                 if picamera2:
                     # release picamera2 resources
                     self.__camera.stop()

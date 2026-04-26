@@ -20,18 +20,18 @@ limitations under the License.
 
 # import the necessary packages
 
-import os
-import cv2
-import pytest
 import asyncio
 import logging as log
-import requests
+import os
 import tempfile
-from starlette.routing import Route
-from starlette.responses import JSONResponse
+
+import cv2
+import pytest
+import requests
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
-from starlette.responses import PlainTextResponse
+from starlette.responses import JSONResponse, PlainTextResponse
+from starlette.routing import Route
 from starlette.testclient import TestClient
 
 from vidgear.gears.asyncio import WebGear
@@ -180,10 +180,10 @@ def test_webgear_options(options):
         assert response_video.status_code == 200
         web.shutdown()
     except Exception as e:
-        if isinstance(e, AssertionError) or isinstance(e, os.access):
+        if isinstance(e, (AssertionError, PermissionError)):
             pytest.xfail(str(e))
         elif isinstance(e, requests.exceptions.Timeout):
-            logger.exceptions(str(e))
+            logger.error(str(e))
         else:
             pytest.fail(str(e))
 
@@ -306,6 +306,6 @@ def test_webgear_routes_validity():
     # modify route
     web.routes.clear()
     # test
-    client = TestClient(web(), raise_server_exceptions=True)
+    TestClient(web(), raise_server_exceptions=True)
     # shutdown
     web.shutdown()
