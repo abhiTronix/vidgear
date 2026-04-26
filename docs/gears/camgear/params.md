@@ -53,7 +53,7 @@ Its valid input can be one of the following:
 
 - [x] **Streaming Services URL Address (*string*):** _Valid Video URL as input when Stream Mode is enabled(i.e. [`stream_mode=True`](#stream_mode)):_ 
 
-    CamGear internally implements `yt_dlp` backend class for pipelining live video-frames and metadata from various streaming services. For example Twitch URL can be used as follows:
+    CamGear internally supports `yt_dlp` backend class for pipelining live video-frames and metadata from various streaming services. For example Twitch URL can be used as follows:
 
     !!! info "Supported Streaming Websites"
 
