@@ -57,6 +57,7 @@ steps:
       brew install unzip
       brew install dos2unix
       brew install coreutils
+      brew install opencv
       dos2unix scripts/bash/prepare_dataset.sh
       chmod +x scripts/bash/prepare_dataset.sh
     displayName: "Install brew dependencies"
@@ -66,7 +67,7 @@ steps:
     displayName: "Prepare dataset"
 
   - script: |
-      python -m pip install -U pip wheel numpy cython opencv-python
+      python -m pip install -U pip wheel numpy cython
       python -m pip install -U .[asyncio] yt-dlp[default] httpx six paramiko
       python -m pip install -U codecov pytest pytest-asyncio pytest-cov mpegdash m3u8 async-asgi-testclient
       python -m pip install -U deffcode
