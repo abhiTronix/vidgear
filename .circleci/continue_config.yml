@@ -36,7 +36,8 @@ jobs:
       - run:
           name: Install test dependencies
           command: |
-            python -m pip install --upgrade pytest pytest-cov pytest-asyncio m3u8 async-asgi-testclient paramiko mpegdash deffcode
+            python -m pip install --upgrade pytest pytest-cov pytest-asyncio m3u8 async-asgi-testclient paramiko      
+            python -m pip install https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev2/mpegdash-0.3.0.dev2-py3-none-any.whl
       - run:
           name: Prepare dataset
           shell: bash.exe
@@ -52,7 +53,7 @@ jobs:
 
 workflows:
   run_tests:
-    when: << pipeline.parameters.run_tests >>
+    when: << pipeline.parameters.run_tests >> and (pipeline.event.name == "api" or pipeline.event.name == "push" or  pipeline.event.name == "pull_request" )
     jobs:
       - build_and_test:
           matrix:
