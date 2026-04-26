@@ -19,28 +19,28 @@ limitations under the License.
 """
 
 # import the necessary packages
-import os
-import cv2
-import time
-import platform
-import pathlib
 import logging as log
+import os
+import pathlib
+import platform
 import subprocess as sp
-from typing import List
+import time
+
+import cv2
 from numpy.typing import NDArray
 
 # import helper packages
 from .helper import (
     capPropId,
-    dict2Args,
-    is_valid_url,
-    logger_handler,
+    check_gstreamer_support,
     check_WriteAccess,
-    get_valid_ffmpeg_path,
+    dict2Args,
     get_supported_pixfmts,
     get_supported_vencoders,
-    check_gstreamer_support,
+    get_valid_ffmpeg_path,
+    is_valid_url,
     logcurr_vidgear_ver,
+    logger_handler,
 )
 
 # define logger
@@ -103,7 +103,7 @@ class WriteGear:
 
         # check if user not using depreciated `output_filename` parameter
         assert (
-            not "output_filename" in output_params
+            "output_filename" not in output_params
         ), "[WriteGear:ERROR] :: The `output_filename` parameter has been renamed to `output`. Refer Docs for more info."
 
         # assign parameter values to class variables
@@ -112,7 +112,7 @@ class WriteGear:
             compression_mode if isinstance(compression_mode, bool) else False
         )
         # specifies if machine in-use is running Windows OS or not
-        self.__os_windows = True if os.name == "nt" else False
+        self.__os_windows = os.name == "nt"
 
         # initialize various important class variables
         self.__output_parameters = {}  # handles output parameters
@@ -237,7 +237,7 @@ class WriteGear:
             # handle the special-case of forced-termination (only for Compression mode)
             disable_force_termination = self.__output_parameters.pop(
                 "-disable_force_termination",
-                False if ("-i" in self.__output_parameters) else True,
+                "-i" not in self.__output_parameters,
             )
             # check if value is valid
             if isinstance(disable_force_termination, bool):
@@ -245,7 +245,7 @@ class WriteGear:
             else:
                 # handle improper values
                 self.__forced_termination = (
-                    True if ("-i" in self.__output_parameters) else False
+                    "-i" in self.__output_parameters
                 )
 
             # handles disabling window for ffmpeg subprocess on Windows OS (only for Compression mode)
@@ -430,7 +430,7 @@ class WriteGear:
             try:
                 # try writing the frame bytes to the subprocess pipeline
                 self.__process.stdin.write(frame.tobytes())
-            except (OSError, IOError):
+            except OSError:
                 # log if something is wrong!
                 logger.error(
                     "BrokenPipeError caught, Wrong values passed to FFmpeg Pipe. Kindly Refer Docs!"
@@ -478,9 +478,7 @@ class WriteGear:
         input_parameters["-s"] = str(dimensions)
 
         # handles user-defined and auto-assigned input pixel-formats
-        if not (
-            self.__inputpixfmt is None
-        ) and self.__inputpixfmt in get_supported_pixfmts(self.__ffmpeg):
+        if self.__inputpixfmt is not None and self.__inputpixfmt in get_supported_pixfmts(self.__ffmpeg):
             # assign directly if valid
             input_parameters["-pix_fmt"] = self.__inputpixfmt
         else:
@@ -550,21 +548,21 @@ class WriteGear:
         # get list of supported video-encoders
         supported_vcodecs = get_supported_vencoders(self.__ffmpeg)
         # dynamically select default encoder
-        default_vcodec = [
+        default_vcodec = next(
             vcodec
             for vcodec in ["libx264", "libx265", "libxvid", "mpeg4"]
             if vcodec in supported_vcodecs
-        ][0] or "unknown"
+        ) or "unknown"
         # extract any user-defined encoder
         if "-c:v" in output_params:
             # assign it to the pipeline
             output_params["-vcodec"] = output_params.pop("-c:v", default_vcodec)
-        if not "-vcodec" in output_params:
+        if "-vcodec" not in output_params:
             # auto-assign default video-encoder (if not assigned by user).
             output_params["-vcodec"] = default_vcodec
         if (
             default_vcodec != "unknown"
-            and not output_params["-vcodec"] in supported_vcodecs
+            and output_params["-vcodec"] not in supported_vcodecs
         ):
             # reset to default if not supported
             logger.critical(
@@ -577,12 +575,11 @@ class WriteGear:
         # assign optimizations based on selected video encoder(if any)
         if output_params["-vcodec"] in supported_vcodecs:
             if output_params["-vcodec"] in ["libx265", "libx264"]:
-                if not "-crf" in output_params:
+                if "-crf" not in output_params:
                     output_params["-crf"] = "18"
-                if not "-preset" in output_params:
+                if "-preset" not in output_params:
                     output_params["-preset"] = "fast"
-            if output_params["-vcodec"] in ["libxvid", "mpeg4"]:
-                if not "-qscale:v" in output_params:
+            if output_params["-vcodec"] in ["libxvid", "mpeg4"] and "-qscale:v" not in output_params:
                     output_params["-qscale:v"] = "3"
         else:
             # raise error otherwise
@@ -596,13 +593,7 @@ class WriteGear:
 
         # format FFmpeg command
         cmd = (
-            [self.__ffmpeg, "-y"]
-            + self.__ffmpeg_preheaders
-            + ["-f", "rawvideo", "-vcodec", "rawvideo"]
-            + input_parameters
-            + ["-i", "-"]
-            + output_parameters
-            + [self.__out_file]
+            [self.__ffmpeg, "-y", *self.__ffmpeg_preheaders, "-f", "rawvideo", "-vcodec", "rawvideo", *input_parameters, "-i", "-", *output_parameters, self.__out_file]
         )
         # Launch the process with FFmpeg command
         if self.__logging:
@@ -636,7 +627,7 @@ class WriteGear:
         """
         self.close()
 
-    def execute_ffmpeg_cmd(self, command: List = None) -> None:
+    def execute_ffmpeg_cmd(self, command: list | None = None) -> None:
         """
 
         Executes user-defined FFmpeg Terminal command, formatted as a python list(in Compression Mode only).
@@ -663,7 +654,7 @@ class WriteGear:
             )
 
         # add configured FFmpeg path
-        cmd = [self.__ffmpeg] + command
+        cmd = [self.__ffmpeg, *command]
 
         try:
             # write frames to pipeline
@@ -675,7 +666,7 @@ class WriteGear:
             else:
                 # In silent mode
                 sp.run(cmd, stdin=sp.PIPE, stdout=sp.DEVNULL, stderr=sp.STDOUT)
-        except (OSError, IOError) as e:
+        except OSError as e:
             # re-raise error
             if self.__logging:
                 raise ValueError(
@@ -769,7 +760,7 @@ class WriteGear:
         # handle termination separately
         if self.__compression:
             # when Compression Mode is enabled
-            if self.__process is None or not (self.__process.poll() is None):
+            if self.__process is None or self.__process.poll() is not None:
                 # return if no process initiated
                 # at first place
                 return

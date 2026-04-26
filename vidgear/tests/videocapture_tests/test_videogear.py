@@ -20,12 +20,13 @@ limitations under the License.
 
 # import the necessary packages
 
-import os
-import sys
-import pytest
-import platform
 import logging as log
+import os
+import platform
+import sys
 import tempfile
+
+import pytest
 
 from vidgear.gears import VideoGear
 from vidgear.gears.helper import logger_handler
@@ -38,7 +39,7 @@ logger.setLevel(log.DEBUG)
 
 
 # define machine os
-_windows = True if os.name == "nt" else False
+_windows = (os.name == "nt")
 
 
 def return_testvideo_path():

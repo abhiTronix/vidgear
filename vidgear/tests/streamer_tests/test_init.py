@@ -20,12 +20,13 @@ limitations under the License.
 
 # import the necessary packages
 
-import os
-import pytest
 import logging as log
+import os
 import platform
 import tempfile
 from os.path import expanduser
+
+import pytest
 
 from vidgear.gears import StreamGear
 from vidgear.gears.helper import logger_handler

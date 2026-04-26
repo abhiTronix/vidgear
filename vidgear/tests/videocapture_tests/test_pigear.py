@@ -20,10 +20,12 @@ limitations under the License.
 
 # import the necessary packages
 
-import time
-import pytest
 import logging as log
 import platform
+import time
+
+import pytest
+
 from vidgear.gears.helper import logger_handler
 
 # define test logger
@@ -128,11 +130,11 @@ def test_pigear_parameters(
                     stream.color_space = "red"
             i += 1
     except Exception as e:
-        if not (exception_type is None) and isinstance(e, exception_type):
+        if exception_type is not None and isinstance(e, exception_type):
             pytest.xfail(str(e))
         else:
             pytest.fail(str(e))
     finally:
         # clean resources
-        if not (stream is None):
+        if stream is not None:
             stream.stop()

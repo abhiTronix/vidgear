@@ -20,15 +20,16 @@ limitations under the License.
 
 # import the necessary packages
 
-import os
-import cv2
-import queue
-import platform
-import numpy as np
-import pytest
 import asyncio
 import logging as log
+import os
+import platform
+import queue
 import tempfile
+
+import cv2
+import numpy as np
+import pytest
 
 from vidgear.gears.asyncio import NetGear_Async
 from vidgear.gears.helper import logger_handler
@@ -86,7 +87,7 @@ class Custom_Generator:
 
     def __init__(self, server=None, data=""):
         # initialize global params
-        assert not (server is None), "Invalid Value"
+        assert server is not None, "Invalid Value"
         # assign server
         self.server = server
         # data
@@ -106,7 +107,7 @@ class Custom_Generator:
 
             # recieve client's data
             recv_data = await self.server.transceive_data()
-            if not (recv_data is None):
+            if recv_data is not None:
                 if isinstance(recv_data, np.ndarray):
                     assert not (
                         recv_data is None or np.shape(recv_data) == ()
@@ -138,7 +139,7 @@ async def client_iterator(client, data=False):
 async def client_dataframe_iterator(client, data=""):
     # loop over Client's Asynchronous Data and Frame Generator
     async for recvd_data, frame in client.recv_generator():
-        if not (recvd_data is None):
+        if recvd_data is not None:
             # {do something with received server recv_data here}
             logger.debug(recvd_data)
 
@@ -174,9 +175,9 @@ async def test_netgear_async_playback(pattern):
         # gather and run tasks
         input_coroutines = [
             server.task,
-            client_iterator(client, data=True if pattern == 4 else False),
+            client_iterator(client, data=(pattern == 4)),
         ]
-        res = await asyncio.gather(*input_coroutines, return_exceptions=True)
+        await asyncio.gather(*input_coroutines, return_exceptions=True)
     except Exception as e:
         if isinstance(e, queue.Empty):
             pytest.fail(str(e))
@@ -205,7 +206,7 @@ async def test_netgear_async_custom_server_generator(generator, result):
         client = NetGear_Async(logging=True, receive_mode=True, timeout=5.0).launch()
         # gather and run tasks
         input_coroutines = [server.task, client_iterator(client)]
-        res = await asyncio.gather(*input_coroutines, return_exceptions=True)
+        await asyncio.gather(*input_coroutines, return_exceptions=True)
     except Exception as e:
         if result:
             pytest.fail(str(e))
@@ -269,7 +270,7 @@ async def test_netgear_async_bidirectionalmode(
         ).launch()
         # gather and run tasks
         input_coroutines = [server.task, client_dataframe_iterator(client, data=data)]
-        res = await asyncio.gather(*input_coroutines, return_exceptions=True)
+        await asyncio.gather(*input_coroutines, return_exceptions=True)
     except Exception as e:
         if result:
             pytest.fail(str(e))
@@ -326,7 +327,7 @@ async def test_netgear_async_addresses(address, port):
         else:
             pytest.fail(str(e))
     finally:
-        if (address is None or address == "172.31.11.33.44") and not (server is None):
+        if (address is None or address == "172.31.11.33.44") and server is not None:
             server.close(skip_loop=True)
         client.close(skip_loop=True)
 
@@ -339,7 +340,7 @@ async def test_netgear_async_recv_generator():
         server = NetGear_Async(
             source=return_testvideo_path(), timeout=5.0, logging=True
         )
-        async for frame in server.recv_generator():
+        async for _frame in server.recv_generator():
             logger.warning("Failed")
     except Exception as e:
         if isinstance(e, (ValueError, asyncio.TimeoutError)):
@@ -347,7 +348,7 @@ async def test_netgear_async_recv_generator():
         else:
             pytest.fail(str(e))
     finally:
-        if not (server is None):
+        if server is not None:
             server.close(skip_loop=True)
 
 
@@ -368,7 +369,7 @@ async def test_netgear_async_options(pattern, options):
         client = NetGear_Async(
             source=(
                 None
-                if options["bidirectional_mode"] != True
+                if not options["bidirectional_mode"]
                 else return_testvideo_path()
             ),
             receive_mode=True,
@@ -377,7 +378,7 @@ async def test_netgear_async_options(pattern, options):
             logging=True,
             **options
         )
-        async for frame in client.recv_generator():
+        async for _frame in client.recv_generator():
             if not options["bidirectional_mode"]:
                 # create target data
                 target_data = "Client here."
@@ -390,5 +391,5 @@ async def test_netgear_async_options(pattern, options):
         else:
             pytest.fail(str(e))
     finally:
-        if not (client is None):
+        if client is not None:
             client.close(skip_loop=True)

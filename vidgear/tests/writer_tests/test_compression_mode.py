@@ -20,15 +20,17 @@ limitations under the License.
 
 # import the necessary packages
 
+import logging as log
 import os
+import platform
 import re
+import subprocess
+import tempfile
+
 import cv2
 import pytest
-import logging as log
-import platform
-import tempfile
-import subprocess
 from six import string_types
+
 from deffcode import FFdecoder
 from vidgear.gears import WriteGear
 from vidgear.gears.helper import check_output, logger_handler
@@ -41,7 +43,7 @@ logger.setLevel(log.DEBUG)
 
 
 # define machine os
-_windows = True if os.name == "nt" else False
+_windows = os.name == "nt"
 
 
 def return_static_ffmpeg():
@@ -111,7 +113,8 @@ def test_download_ffmpeg():
     Auxilary test to simply delete old ffmpeg binaries.
     """
     try:
-        import glob, shutil
+        import glob
+        import shutil
 
         found = glob.glob(os.path.join(tempfile.gettempdir(), "ffmpeg-static*"))
         if found and os.path.isdir(found[0]):
@@ -174,7 +177,7 @@ def test_write(pixfmts):
                 custom_ffmpeg=return_static_ffmpeg(),
             )
             # assign manually pix-format via `metadata` property object {special case}
-            decoder.metadata = dict(output_frames_pixfmt="yuvj422p")
+            decoder.metadata = {"output_frames_pixfmt": "yuvj422p"}
             # formulate decoder
             decoder.formulate()
             output_params = {
@@ -183,7 +186,7 @@ def test_write(pixfmts):
         writer = WriteGear(
             output="Output_tw.mp4",
             custom_ffmpeg=return_static_ffmpeg(),
-            **output_params
+            **output_params,
         )  # Define writer
         # grab RGB24(default) 3D frames from decoder
         for frame in decoder.generateFrame():
@@ -238,7 +241,7 @@ def test_output_dimensions():
         output="Output_tod.mp4",
         custom_ffmpeg=return_static_ffmpeg(),
         logging=True,
-        **output_params
+        **output_params,
     )  # Define writer
     while True:
         (grabbed, frame) = stream.read()
@@ -359,9 +362,9 @@ def test_WriteGear_customFFmpeg(ffmpeg_cmd, logging, output_params):
         # define writer
         writer = WriteGear(
             output="Output.mp4",
-            compression_mode=(True if ffmpeg_cmd != ["invalid"] else False),
+            compression_mode=(ffmpeg_cmd != ["invalid"]),
             logging=logging,
-            **output_params
+            **output_params,
         )  # Define writer
 
         # execute FFmpeg command

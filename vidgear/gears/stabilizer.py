@@ -21,18 +21,18 @@ limitations under the License.
 ===============================================
 """
 # import the necessary packages
-import cv2
-import numpy as np
 import logging as log
 from collections import deque
-from typing import Optional
+
+import cv2
+import numpy as np
 
 # import helper packages
 from .helper import (
-    logger_handler,
     check_CV_version,
-    retrieve_best_interpolation,
     logcurr_vidgear_ver,
+    logger_handler,
+    retrieve_best_interpolation,
 )
 
 # define logger
@@ -152,7 +152,7 @@ class Stabilizer:
         # define normalized box filter
         self.__box_filter = np.ones(smoothing_radius) / smoothing_radius
 
-    def stabilize(self, frame: np.ndarray) -> Optional[np.ndarray]:
+    def stabilize(self, frame: np.ndarray) -> np.ndarray | None:
         """
         This method takes an unstabilized video frame, and returns a stabilized one.
 
@@ -165,7 +165,7 @@ class Stabilizer:
             return
 
         # save frame size for zooming
-        if self.__crop_n_zoom and self.__frame_size == None:
+        if self.__crop_n_zoom and self.__frame_size is None:
             self.__frame_size = frame.shape[:2]
 
         # initiate transformations capturing
@@ -231,7 +231,7 @@ class Stabilizer:
         transformation = None
         try:
             # calculate optical flow using Lucas-Kanade differential method
-            curr_kps, status, error = cv2.calcOpticalFlowPyrLK(
+            curr_kps, status, _error = cv2.calcOpticalFlowPyrLK(
                 self.__previous_gray, frame_gray, self.__previous_keypoints, None
             )
 
@@ -251,13 +251,13 @@ class Stabilizer:
                 transformation = cv2.estimateAffinePartial2D(
                     valid_previous_keypoints, valid_curr_kps
                 )[0]
-        except cv2.error as e:
+        except cv2.error:
             # catch any OpenCV assertion errors and warn user
             logger.warning("Video-Frame is too dark to generate any transformations!")
             transformation = None
 
         # check if transformation is not None
-        if not (transformation is None):
+        if transformation is not None:
             # previous_2_current translation in x direction
             dx = transformation[0, 2]
             # previous_2_current translation in y direction

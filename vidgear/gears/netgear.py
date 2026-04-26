@@ -19,35 +19,35 @@ limitations under the License.
 """
 
 # import the necessary packages
-import os
-import time
 import asyncio
-import platform
-import string
-import secrets
-import numpy as np
 import logging as log
-from threading import Thread
+import os
+import platform
+import secrets
+import string
+import time
 from collections import deque
 from os.path import expanduser
+from threading import Thread
+from typing import Any
+
+import numpy as np
 from numpy.typing import NDArray
-from typing import Optional, Any
 
 # import helper packages
 from .helper import (
-    logger_handler,
-    generate_auth_certificates,
-    check_WriteAccess,
     check_open_port,
+    check_WriteAccess,
+    generate_auth_certificates,
     import_dependency_safe,
     logcurr_vidgear_ver,
+    logger_handler,
 )
 
 # safe import critical Class modules
 zmq = import_dependency_safe("zmq", pkg_name="pyzmq", error="silent", min_version="4.0")
-if not (zmq is None):
-    from zmq import ssh
-    from zmq import auth
+if zmq is not None:
+    from zmq import auth, ssh
     from zmq.auth.thread import ThreadAuthenticator
     from zmq.error import ZMQError
 simplejpeg = import_dependency_safe("simplejpeg", error="silent", min_version="1.6.1")
@@ -116,9 +116,9 @@ class NetGear:
 
     def __init__(
         self,
-        address: str = None,
-        port: str = None,
-        protocol: str = None,
+        address: str | None = None,
+        port: str | None = None,
+        protocol: str | None = None,
         pattern: int = 0,
         receive_mode: bool = False,
         logging: bool = False,
@@ -160,7 +160,7 @@ class NetGear:
         # Handle messaging pattern
         msg_pattern = None
         # check whether user-defined messaging pattern is valid
-        if isinstance(pattern, int) and pattern in valid_messaging_patterns.keys():
+        if isinstance(pattern, int) and pattern in valid_messaging_patterns:
             # assign value
             msg_pattern = valid_messaging_patterns[pattern]
         else:
@@ -174,7 +174,7 @@ class NetGear:
         self.__pattern = pattern
 
         # Handle messaging protocol
-        if protocol is None or not (protocol in ["tcp", "ipc"]):
+        if protocol is None or protocol not in ["tcp", "ipc"]:
             # else default to `tcp` protocol
             protocol = "tcp"
             # log it
@@ -197,7 +197,7 @@ class NetGear:
         self.__ssh_tunnel_mode = None  # handles ssh_tunneling mode state
         self.__ssh_tunnel_pwd = None
         self.__ssh_tunnel_keyfile = None
-        self.__paramiko_present = False if paramiko is None else True
+        self.__paramiko_present = paramiko is not None
 
         # define Multi-Server mode
         self.__multiserver_mode = False  # handles multi-server mode state
@@ -219,7 +219,7 @@ class NetGear:
 
         # define frame-compression handler
         self.__jpeg_compression = (
-            True if not (simplejpeg is None) else False
+            simplejpeg is not None
         )  # enabled by default for all connections if simplejpeg is installed
         self.__jpeg_compression_quality = 90  # 90% quality
         self.__jpeg_compression_fastdct = True  # fastest DCT on by default
@@ -322,7 +322,7 @@ class NetGear:
                 ), "[NetGear:ERROR] :: `custom_cert_location` value must be the path to a valid directory!"
                 assert check_WriteAccess(
                     custom_cert_location,
-                    is_windows=True if os.name == "nt" else False,
+                    is_windows=(os.name == "nt"),
                     logging=self.__logging,
                 ), "[NetGear:ERROR] :: Permission Denied!, cannot write ZMQ authentication certificates to '{}' directory!".format(
                     value
@@ -351,7 +351,7 @@ class NetGear:
             # handle jpeg compression
             elif (
                 key == "jpeg_compression"
-                and not (simplejpeg is None)
+                and simplejpeg is not None
                 and isinstance(value, (bool, str))
             ):
                 if isinstance(value, str) and value.strip().upper() in [
@@ -428,7 +428,7 @@ class NetGear:
                 pass
 
         # Handle ssh tunneling if enabled
-        if not (self.__ssh_tunnel_mode is None):
+        if self.__ssh_tunnel_mode is not None:
             # SSH Tunnel Mode only available for server mode
             if receive_mode:
                 logger.error("SSH Tunneling cannot be enabled for Client-end!")
@@ -446,7 +446,7 @@ class NetGear:
                     )  # port-47 is reserved for testing
                 else:
                     # extract ip for validation
-                    ssh_user, ssh_ip = (
+                    _ssh_user, ssh_ip = (
                         ssh_address.split("@")
                         if "@" in ssh_address
                         else ["", ssh_address]
@@ -1053,7 +1053,7 @@ class NetGear:
                     copy=self.__msg_copy,
                     track=self.__msg_track,
                 )
-            except zmq.ZMQError as e:
+            except zmq.ZMQError:
                 logger.critical("Socket Session Expired. Exiting!")
                 self.__terminate = True
                 self.__queue.append(None)
@@ -1063,7 +1063,7 @@ class NetGear:
             if self.__pattern < 2:
                 if self.__bi_mode or self.__multiclient_mode:
                     # check if we are returning `ndarray` frames
-                    if not (self.__return_data is None) and isinstance(
+                    if self.__return_data is not None and isinstance(
                         self.__return_data, np.ndarray
                     ):
                         # handle return data for compression
@@ -1098,15 +1098,15 @@ class NetGear:
                                 )
 
                         return_dict = (
-                            dict(port=self.__port)
+                            {"port": self.__port}
                             if self.__multiclient_mode
-                            else dict()
+                            else {}
                         )
 
                         return_dict.update(
-                            dict(
-                                return_type=(type(self.__return_data).__name__),
-                                compression=(
+                            {
+                                "return_type": (type(self.__return_data).__name__),
+                                "compression": (
                                     {
                                         "dct": self.__jpeg_compression_fastdct,
                                         "ups": self.__jpeg_compression_fastupsample,
@@ -1115,18 +1115,18 @@ class NetGear:
                                     if self.__jpeg_compression
                                     else False
                                 ),
-                                array_dtype=(
+                                "array_dtype": (
                                     str(self.__return_data.dtype)
                                     if not (self.__jpeg_compression)
                                     else ""
                                 ),
-                                array_shape=(
+                                "array_shape": (
                                     self.__return_data.shape
                                     if not (self.__jpeg_compression)
                                     else ""
                                 ),
-                                data=None,
-                            )
+                                "data": None,
+                            }
                         )
 
                         # send the json dict
@@ -1142,15 +1142,15 @@ class NetGear:
                         )
                     else:
                         return_dict = (
-                            dict(port=self.__port)
+                            {"port": self.__port}
                             if self.__multiclient_mode
-                            else dict()
+                            else {}
                         )
                         return_dict.update(
-                            dict(
-                                return_type=(type(self.__return_data).__name__),
-                                data=self.__return_data,
-                            )
+                            {
+                                "return_type": (type(self.__return_data).__name__),
+                                "data": self.__return_data,
+                            }
                         )
                         self.__msg_socket.send_json(return_dict, self.__msg_flag)
                 else:
@@ -1192,7 +1192,7 @@ class NetGear:
             # check if multiserver_mode
             if self.__multiserver_mode:
                 # save the unique port addresses
-                if not msg_json["port"] in self.__port_buffer:
+                if msg_json["port"] not in self.__port_buffer:
                     self.__port_buffer.append(msg_json["port"])
                 # extract if any message from server and display it
                 if msg_json["message"]:
@@ -1211,7 +1211,7 @@ class NetGear:
                 # otherwise append recovered frame to queue
                 self.__queue.append(frame)
 
-    def recv(self, return_data=None) -> Optional[NDArray]:
+    def recv(self, return_data=None) -> NDArray | None:
         """
         A Receiver end method, that extracts received frames synchronously from monitored deque, while maintaining a
         fixed-length frame buffer in the memory, and blocks the thread if the deque is full.
@@ -1230,7 +1230,7 @@ class NetGear:
             )
 
         # handle Bidirectional return data
-        if (self.__bi_mode or self.__multiclient_mode) and not (return_data is None):
+        if (self.__bi_mode or self.__multiclient_mode) and return_data is not None:
             self.__return_data = return_data
 
         # check whether or not termination flag is enabled
@@ -1248,7 +1248,7 @@ class NetGear:
         # otherwise return NoneType
         return None
 
-    def send(self, frame: NDArray, message: Any = None) -> Optional[Any]:
+    def send(self, frame: NDArray, message: Any = None) -> Any | None:
         """
         A Server end method, that sends the data and frames over the network to Client(s).
 
@@ -1267,7 +1267,7 @@ class NetGear:
                 "[NetGear:ERROR] :: `send()` function cannot be used while receive_mode is enabled. Kindly refer vidgear docs!"
             )
 
-        if not (message is None) and isinstance(message, np.ndarray):
+        if message is not None and isinstance(message, np.ndarray):
             logger.warning(
                 "Skipped unsupported `message` of datatype: {}!".format(
                     type(message).__name__
@@ -1276,7 +1276,7 @@ class NetGear:
             message = None
 
         # define exit_flag and assign value
-        exit_flag = True if (frame is None or self.__terminate) else False
+        exit_flag = bool(frame is None or self.__terminate)
 
         # check whether exit_flag is False
         if not (exit_flag) and not (frame.flags["C_CONTIGUOUS"]):
@@ -1305,13 +1305,13 @@ class NetGear:
                 )
 
         # check if multiserver_mode is activated and assign values with unique port
-        msg_dict = dict(port=self.__port) if self.__multiserver_mode else dict()
+        msg_dict = {"port": self.__port} if self.__multiserver_mode else {}
 
         # prepare the exclusive json dict
         msg_dict.update(
-            dict(
-                terminate_flag=exit_flag,
-                compression=(
+            {
+                "terminate_flag": exit_flag,
+                "compression": (
                     {
                         "dct": self.__jpeg_compression_fastdct,
                         "ups": self.__jpeg_compression_fastupsample,
@@ -1320,11 +1320,11 @@ class NetGear:
                     if self.__jpeg_compression
                     else False
                 ),
-                message=message,
-                pattern=str(self.__pattern),
-                dtype=str(frame.dtype) if not (self.__jpeg_compression) else "",
-                shape=frame.shape if not (self.__jpeg_compression) else "",
-            )
+                "message": message,
+                "pattern": str(self.__pattern),
+                "dtype": str(frame.dtype) if not (self.__jpeg_compression) else "",
+                "shape": frame.shape if not (self.__jpeg_compression) else "",
+            }
         )
 
         # send the json dict
@@ -1394,7 +1394,7 @@ class NetGear:
                 # save the unique port addresses
                 if (
                     self.__multiclient_mode
-                    and not recv_json["port"] in self.__port_buffer
+                    and recv_json["port"] not in self.__port_buffer
                 ):
                     self.__port_buffer.append(recv_json["port"])
 
@@ -1502,7 +1502,7 @@ class NetGear:
         #  whether `receive_mode` is enabled or not
         if self.__receive_mode:
             # check whether queue mode is empty
-            if not (self.__queue is None) and self.__queue:
+            if self.__queue is not None and self.__queue:
                 self.__queue.clear()
             # call immediate termination
             self.__terminate = True
@@ -1552,17 +1552,16 @@ class NetGear:
                     self.__msg_socket.close()
                 except ZMQError:
                     pass
-                finally:
-                    # exit
-                    return
+                # exit
+                return
 
             if self.__multiserver_mode:
                 # check if multiserver_mode
                 # send termination flag to client with its unique port
-                term_dict = dict(terminate_flag=True, port=self.__port)
+                term_dict = {"terminate_flag": True, "port": self.__port}
             else:
                 # otherwise send termination flag to client
-                term_dict = dict(terminate_flag=True)
+                term_dict = {"terminate_flag": True}
 
             try:
                 if self.__multiclient_mode:

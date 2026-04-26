@@ -20,43 +20,44 @@ limitations under the License.
 
 # import the necessary packages
 
+import logging as log
 import os
+import platform
+import shutil
+import tempfile
+from os.path import expanduser
+
 import cv2
 import numpy as np
 import pytest
-import shutil
-import logging as log
-import platform
 import requests
-import tempfile
-from os.path import expanduser
 from mpegdash.parser import MPEGDASHParser
 
+from vidgear.gears.asyncio.helper import generate_webdata, validate_webdata
 from vidgear.gears.helper import (
-    reducer,
-    dict2Args,
-    mkdir_safe,
-    delete_ext_safe,
-    check_output,
-    extract_time,
-    create_blank_frame,
-    is_valid_url,
-    logger_handler,
-    delete_file_safe,
-    validate_audio,
-    validate_video,
-    validate_ffmpeg,
-    get_video_bitrate,
-    get_valid_ffmpeg_path,
-    import_dependency_safe,
-    download_ffmpeg_binaries,
     check_gstreamer_support,
+    check_output,
+    create_blank_frame,
+    delete_ext_safe,
+    delete_file_safe,
+    dict2Args,
+    dimensions_to_resolutions,
+    download_ffmpeg_binaries,
+    extract_time,
     generate_auth_certificates,
     get_supported_resolution,
-    dimensions_to_resolutions,
+    get_valid_ffmpeg_path,
+    get_video_bitrate,
+    import_dependency_safe,
+    is_valid_url,
+    logger_handler,
+    mkdir_safe,
+    reducer,
     retrieve_best_interpolation,
+    validate_audio,
+    validate_ffmpeg,
+    validate_video,
 )
-from vidgear.gears.asyncio.helper import generate_webdata, validate_webdata
 
 # define test logger
 logger = log.getLogger("Test_helper")
@@ -66,7 +67,7 @@ logger.setLevel(log.DEBUG)
 
 
 # define machine os
-_windows = True if os.name == "nt" else False
+_windows = (os.name == "nt")
 
 
 def return_static_ffmpeg():
@@ -121,7 +122,7 @@ def check_valid_mpd(file="", exp_reps=1):
     except Exception as e:
         logger.error(str(e))
         return False
-    return True if (len(all_reprs) >= exp_reps) else False
+    return (len(all_reprs) >= exp_reps)
 
 
 def getframe():
@@ -276,7 +277,7 @@ def test_get_valid_ffmpeg_path(paths, ffmpeg_download_paths, results):
         if paths == "wrong_test_path" or ffmpeg_download_paths == "wrong_test_path":
             pass
         elif isinstance(e, requests.exceptions.Timeout):
-            logger.exceptions(str(e))
+            logger.error(str(e))
         else:
             pytest.fail(str(e))
 
@@ -326,7 +327,7 @@ def test_generate_webdata(paths, overwrite_default, results):
         assert bool(output) == results
     except Exception as e:
         if isinstance(e, requests.exceptions.Timeout):
-            logger.exceptions(str(e))
+            logger.error(str(e))
         else:
             pytest.fail(str(e))
 
@@ -365,12 +366,12 @@ def test_reducer(frame, percentage, interpolation, result):
     """
     Testing frame size reducer function
     """
-    if not (frame is None):
+    if frame is not None:
         org_size = frame.shape[:2]
     try:
         reduced_frame = reducer(frame, percentage, interpolation)
         logger.debug(reduced_frame.shape)
-        assert not (reduced_frame is None)
+        assert reduced_frame is not None
         reduced_frame_size = reduced_frame.shape[:2]
         assert (
             100 * reduced_frame_size[0] // (100 - percentage) == org_size[0]
@@ -418,7 +419,7 @@ def test_validate_video(path, result):
     try:
         results = validate_video(return_static_ffmpeg(), video_path=path)
         if result:
-            assert not (results is None), "Video path validity test Failed!"
+            assert results is not None, "Video path validity test Failed!"
     except Exception as e:
         pytest.fail(str(e))
 
@@ -459,9 +460,9 @@ def test_create_blank_frame(frame, text):
     try:
         text_frame = create_blank_frame(frame=frame, text=text, logging=True)
         logger.debug(text_frame.shape)
-        assert not (text_frame is None)
+        assert text_frame is not None
     except Exception as e:
-        if not (frame is None):
+        if frame is not None:
             pytest.fail(str(e))
 
 

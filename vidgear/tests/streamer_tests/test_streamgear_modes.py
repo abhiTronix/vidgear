@@ -19,14 +19,15 @@ limitations under the License.
 """
 
 # import the necessary packages
-import os
-import cv2
-import queue
-import pytest
-import m3u8
 import logging as log
+import os
 import platform
+import queue
 import tempfile
+
+import cv2
+import m3u8
+import pytest
 from mpegdash.parser import MPEGDASHParser
 
 from vidgear.gears import CamGear, StreamGear
@@ -39,7 +40,7 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 # define machine os
-_windows = True if os.name == "nt" else False
+_windows = (os.name == "nt")
 
 
 def return_testvideo_path(fmt="av"):
@@ -117,17 +118,18 @@ def check_valid_m3u8(file=""):
         return False
     metas = []
     try:
-        data = open(file).read()
-        playlist = m3u8.loads(data)
-        if playlist.is_variant:
-            for pl in playlist.playlists:
-                meta = {}
-                meta["resolution"] = pl.stream_info.resolution
-                meta["framerate"] = pl.stream_info.frame_rate
-                metas.append(meta)
-        else:
-            for seg in playlist.segments:
-                metas.append(extract_meta_video(seg))
+        with open(file) as fp:
+            data = fp.read()
+            playlist = m3u8.loads(data)
+            if playlist.is_variant:
+                for pl in playlist.playlists:
+                    meta = {}
+                    meta["resolution"] = pl.stream_info.resolution
+                    meta["framerate"] = pl.stream_info.frame_rate
+                    metas.append(meta)
+            else:
+                for seg in playlist.segments:
+                    metas.append(extract_meta_video(seg))
     except Exception as e:
         logger.error(str(e))
         return False
@@ -151,7 +153,7 @@ def extract_meta_mpd(file):
                 meta["height"] = rep.height
                 meta["framerate"] = (
                     rep.frame_rate
-                    if not (rep.frame_rate is None)
+                    if rep.frame_rate is not None
                     else adapts[0].frame_rate
                 )
             logger.debug("Found Meta: {}".format(meta))
@@ -214,7 +216,7 @@ def test_ss_stream(format):
     Testing Single-Source Mode
     """
     assets_file_path = os.path.join(
-        return_assets_path(False if format == "dash" else True),
+        return_assets_path(format == "dash"),
         "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
     )
     try:
@@ -230,7 +232,7 @@ def test_ss_stream(format):
             stream_params.update(
                 {
                     "-hls_base_url": return_assets_path(
-                        False if format == "dash" else True
+                        format == "dash"
                     )
                     + os.sep
                 }
@@ -254,7 +256,7 @@ def test_ss_livestream(format):
     Testing Single-Source Mode with livestream.
     """
     assets_file_path = os.path.join(
-        return_assets_path(False if format == "dash" else True),
+        return_assets_path(format == "dash"),
         "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
     )
     try:
@@ -280,7 +282,7 @@ def test_rtf_stream(conversion, format):
     """
     Testing Real-Time Frames Mode
     """
-    assets_file_path = return_assets_path(False if format == "dash" else True)
+    assets_file_path = return_assets_path(format == "dash")
 
     try:
         # Open stream
@@ -296,7 +298,7 @@ def test_rtf_stream(conversion, format):
             stream_params.update(
                 {
                     "-hls_base_url": return_assets_path(
-                        False if format == "dash" else True
+                        format == "dash"
                     )
                     + os.sep
                 }
@@ -334,7 +336,7 @@ def test_rtf_livestream(format):
     """
     Testing Real-Time Frames Mode with livestream.
     """
-    assets_file_path = return_assets_path(False if format == "dash" else True)
+    assets_file_path = return_assets_path(format == "dash")
 
     try:
         # Open stream
@@ -365,7 +367,7 @@ def test_input_framerate_rtf(format):
     """
     try:
         assets_file_path = os.path.join(
-            return_assets_path(False if format == "dash" else True),
+            return_assets_path(format == "dash"),
             "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
         )
         stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
@@ -381,7 +383,7 @@ def test_input_framerate_rtf(format):
             stream_params.update(
                 {
                     "-hls_base_url": return_assets_path(
-                        False if format == "dash" else True
+                        format == "dash"
                     )
                     + os.sep
                 }
@@ -483,14 +485,14 @@ def test_params(stream_params, format):
     """
     try:
         assets_file_path = os.path.join(
-            return_assets_path(False if format == "dash" else True),
+            return_assets_path(format == "dash"),
             "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
         )
         if format == "hls":
             stream_params.update(
                 {
                     "-hls_base_url": return_assets_path(
-                        False if format == "dash" else True
+                        format == "dash"
                     )
                     + os.sep
                 }
@@ -574,7 +576,7 @@ def test_audio(stream_params, format):
     Testing external and audio audio for stream.
     """
     assets_file_path = os.path.join(
-        return_assets_path(False if format == "dash" else True),
+        return_assets_path(format == "dash"),
         "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
     )
     try:
@@ -582,7 +584,7 @@ def test_audio(stream_params, format):
             stream_params.update(
                 {
                     "-hls_base_url": return_assets_path(
-                        False if format == "dash" else True
+                        format == "dash"
                     )
                     + os.sep
                 }
@@ -728,7 +730,7 @@ def test_multistreams(format, stream_params):
     Testing Support for additional Secondary Streams of variable bitrate or spatial resolutions.
     """
     assets_file_path = os.path.join(
-        return_assets_path(False if format == "dash" else True),
+        return_assets_path(format == "dash"),
         "asset_test.{}".format("mpd" if format == "dash" else "m3u8"),
     )
     results = extract_resolutions(
@@ -745,7 +747,7 @@ def test_multistreams(format, stream_params):
             meta_videos = [x for x in metadata if x["mime_type"].startswith("video")]
             assert meta_videos and (len(meta_videos) <= len(results)), "Test Failed!"
             if len(meta_videos) == len(results):
-                for m_v, s_v in zip(meta_videos, list(results.values())):
+                for m_v, s_v in zip(meta_videos, list(results.values()), strict=True):
                     assert int(m_v["width"]) == int(
                         s_v["resolution"][0]
                     ), "Width check failed!"
@@ -764,7 +766,7 @@ def test_multistreams(format, stream_params):
             meta_videos = check_valid_m3u8(assets_file_path)
             assert meta_videos and (len(meta_videos) <= len(results)), "Test Failed!"
             if len(meta_videos) == len(results):
-                for m_v, s_v in zip(meta_videos, list(results.values())):
+                for m_v, s_v in zip(meta_videos, list(results.values()), strict=True):
                     assert int(m_v["resolution"][0]) == int(
                         s_v["resolution"][0]
                     ), "Width check failed!"

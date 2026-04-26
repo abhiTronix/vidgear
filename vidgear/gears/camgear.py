@@ -19,23 +19,23 @@ limitations under the License.
 """
 
 # import the necessary packages
-import cv2
-import time
-import queue
 import logging as log
-from threading import Thread, Event
-from typing import TypeVar, Optional, Any
+import queue
+import time
+from threading import Event, Thread
+from typing import Any, TypeVar
+
+import cv2
 from numpy.typing import NDArray
 
 # import helper packages
 from .helper import (
     capPropId,
-    logger_handler,
     check_CV_version,
     get_supported_resolution,
-    check_gstreamer_support,
     import_dependency_safe,
     logcurr_vidgear_ver,
+    logger_handler,
 )
 
 # define logger
@@ -45,7 +45,7 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 yt_dlp = import_dependency_safe("yt_dlp", error="silent")
-if not (yt_dlp is None):
+if yt_dlp is not None:
     # import YouTubeDL Parser
     from yt_dlp import YoutubeDL
 
@@ -89,7 +89,7 @@ if not (yt_dlp is None):
                 "format": "best*[vcodec!=none]",
                 "quiet": True,
                 "prefer_insecure": False,
-                "no_warnings": False if logging else True,
+                "no_warnings": not logging,
                 "dump_single_json": True,
                 "extract_flat": True,
                 "skip_download": True,
@@ -102,7 +102,7 @@ if not (yt_dlp is None):
 
             # extract exclusive params
             std_hdrs = stream_params.pop("std_headers", None)
-            if not (std_hdrs is None) and isinstance(std_hdrs, dict):
+            if std_hdrs is not None and isinstance(std_hdrs, dict):
                 yt_dlp.utils.std_headers.update(std_hdrs)
 
             # update with user defined options
@@ -113,8 +113,8 @@ if not (yt_dlp is None):
 
             # check if source url is supported
             if (
-                not (self.meta_data is None)  # meta-data is valid
-                and not ("entries" in self.meta_data)  # playlists are not supported
+                self.meta_data is not None  # meta-data is valid
+                and "entries" not in self.meta_data  # playlists are not supported
                 and len(self.meta_data.get("formats", {}))
                 > 0  # video formats must exist
             ):
@@ -136,7 +136,7 @@ if not (yt_dlp is None):
                 raise ValueError(
                     "[Backend] :: Streaming URL isn't valid{}".format(
                         ". Playlists aren't supported yet!"
-                        if not (self.meta_data is None) and "entries" in self.meta_data
+                        if self.meta_data is not None and "entries" in self.meta_data
                         else "!"
                     )
                 )
@@ -164,10 +164,10 @@ if not (yt_dlp is None):
                 stream_url = stream.get("url", "")
                 stream_protocol = stream.get("protocol", "")
                 stream_with_video = (
-                    False if stream.get("vcodec", "none") == "none" else True
+                    stream.get("vcodec", "none") != "none"
                 )
                 stream_with_audio = (
-                    False if stream.get("acodec", "none") == "none" else True
+                    stream.get("acodec", "none") != "none"
                 )
                 # streams must contain video
                 if (
@@ -182,23 +182,19 @@ if not (yt_dlp is None):
                         if (
                             not stream_with_audio  # prefer audioless
                             or stream_protocol in ["https", "http"]  # prefer http/https
-                            or not (
-                                stream_res in streams
-                            )  # check if already not in dict
+                            or stream_res not in streams  # check if already not in dict
                         ):
                             streams[stream_res] = stream_url
                     # otherwise make a copy
                     if (
                         not stream_with_audio  # prefer audioless
                         or stream_protocol in ["https", "http"]  # prefer http/https
-                        or not (
-                            stream_dim in streams_copy
-                        )  # check if already not in dict
+                        or stream_dim not in streams_copy  # check if already not in dict
                     ):
                         streams_copy[stream_dim] = stream_url
             # use copy to decide best or worst
             streams["best"] = streams_copy[list(streams_copy.keys())[-1]]
-            streams["worst"] = streams_copy[list(streams_copy.keys())[0]]
+            streams["worst"] = streams_copy[next(iter(streams_copy.keys()))]
             return streams
 
 
@@ -223,7 +219,7 @@ class CamGear:
         source: Any = 0,
         stream_mode: bool = False,
         backend: int = 0,
-        colorspace: str = None,
+        colorspace: str | None = None,
         logging: bool = False,
         time_delay: int = 0,
         **options: dict
@@ -258,7 +254,7 @@ class CamGear:
                 options.pop("STREAM_RESOLUTION", "best"), logging=self.__logging
             )
             # handle Stream-Mode
-            if not (yt_dlp is None):
+            if yt_dlp is not None:
                 # extract user-defined params
                 yt_stream_params = options.pop("STREAM_PARAMS", {})
                 if isinstance(yt_stream_params, dict):
@@ -285,7 +281,7 @@ class CamGear:
                             "Livestream URL detected. It is strongly recommended to use the GStreamer backend (`backend=cv2.CAP_GSTREAMER`) with these URLs."
                         )
                         # check whether stream-resolution was specified and available
-                        if not (stream_resolution in ytbackend.streams.keys()):
+                        if stream_resolution not in ytbackend.streams:
                             logger.warning(
                                 "Specified stream-resolution `{}` is not available. Reverting to `best`!".format(
                                     stream_resolution
@@ -309,7 +305,7 @@ class CamGear:
                                 stream_resolution,
                             )
                         )
-                except Exception as e:
+                except Exception:
                     # raise error if something went wrong
                     raise ValueError(
                         "[CamGear:ERROR] :: Stream Mode is enabled but Input URL is invalid!"
@@ -377,12 +373,12 @@ class CamGear:
         options = {str(k).strip(): v for k, v in options.items()}
         for key, value in options.items():
             property = capPropId(key)
-            not (property is None) and self.stream.set(property, value)
+            property is not None and self.stream.set(property, value)
 
         # handle colorspace value
-        if not (colorspace is None):
+        if colorspace is not None:
             self.color_space = capPropId(colorspace.strip())
-            self.__logging and not (self.color_space is None) and logger.debug(
+            self.__logging and self.color_space is not None and logger.debug(
                 "Enabling `{}` colorspace for this video stream!".format(
                     colorspace.strip()
                 )
@@ -403,7 +399,7 @@ class CamGear:
         # check if valid stream
         if grabbed:
             # render colorspace if defined
-            if not (self.color_space is None):
+            if self.color_space is not None:
                 self.frame = cv2.cvtColor(self.frame, self.color_space)
 
             # initialize and append to queue
@@ -466,7 +462,7 @@ class CamGear:
                     break
 
             # apply colorspace to frames if valid
-            if not (self.color_space is None):
+            if self.color_space is not None:
                 # apply colorspace to frames
                 color_frame = None
                 try:
@@ -477,7 +473,7 @@ class CamGear:
                     self.color_space = None
                     self.__logging and logger.exception(str(e))
                     logger.warning("Assigned colorspace value is invalid. Discarding!")
-                self.frame = color_frame if not (color_frame is None) else frame
+                self.frame = color_frame if color_frame is not None else frame
             else:
                 self.frame = frame
 
@@ -495,7 +491,7 @@ class CamGear:
         # release resources
         self.stream.release()
 
-    def read(self) -> Optional[NDArray]:
+    def read(self) -> NDArray | None:
         """
         Extracts frames synchronously from monitored queue, while maintaining a fixed-length frame buffer in the memory,
         and blocks the thread if the queue is full.
@@ -528,7 +524,7 @@ class CamGear:
 
         # wait until stream resources are released (producer thread might be still grabbing frame)
         if self.__thread is not None:
-            if not (self.__queue is None):
+            if self.__queue is not None:
                 while not self.__queue.empty():
                     try:
                         self.__queue.get_nowait()
