@@ -16,6 +16,7 @@ jobs:
         type: string
         default: "3.10.11"
     executor: win/default
+    parallelism: 4
     steps:
       - checkout
       - run:
