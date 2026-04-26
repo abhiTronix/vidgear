@@ -196,7 +196,7 @@ Testing VidGear requires additional test dependencies and dataset, which can be 
         ```
 
     ```sh
-    pip install --upgrade six flake8 black pytest pytest-asyncio mpegdash paramiko m3u8 async-asgi-testclient
+    pip install --upgrade six ruff pytest pytest-asyncio mpegdash paramiko m3u8 async-asgi-testclient
     ```
 
 - [x] **Download Tests Dataset:** 
@@ -221,18 +221,18 @@ All tests can be run with [`pytest`](https://docs.pytest.org/en/stable/)(*in Vid
 
 ### Formatting & Linting
 
-For formatting and linting, following libraries are used:
+For formatting and linting, [`ruff`](https://docs.astral.sh/ruff/) is used (configured in `pyproject.toml`):
 
-- [x] **Flake8:** You must run [`flake8`](https://flake8.pycqa.org/en/latest/manpage.html) linting for checking the code base against the coding style (PEP8), programming errors and other cyclomatic complexity:
+- [x] **Lint:** You must run `ruff check` for checking the code base against the coding style (PEP8), programming errors and other cyclomatic complexity:
 
     ```sh
-    flake8 {source_file_or_directory} --count --select=E9,F63,F7,F82 --show-source --statistics
+    ruff check {source_file_or_directory}
     ```
 
-- [x] **Black:**  Vidgear follows [`black`](https://github.com/psf/black) formatting to make code review faster by producing the smallest diffs possible. You must run it with sensible defaults as follows: 
+- [x] **Format:** Vidgear follows `ruff format` to make code review faster by producing the smallest diffs possible. You must run it with sensible defaults as follows:
 
     ```sh
-    black {source_file_or_directory}
+    ruff format {source_file_or_directory}
     ```
 
 &nbsp; 

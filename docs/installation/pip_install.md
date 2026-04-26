@@ -254,7 +254,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
         pip install vidgear<0.2.4
         ```
 
-    Similarly in your python project files like `setup.py` or `requirements.txt` or `setup.cfg`, use vidgear dependency as `#!sh  vidgear[core]>=0.2.4`  instead.
+    Similarly in your python project files like `pyproject.toml` or `requirements.txt`, use vidgear dependency as `#!sh  vidgear[core]>=0.2.4`  instead.
 
     !!! note "This change does not affects `#!sh pip install vidgear[asyncio]` command."
 
