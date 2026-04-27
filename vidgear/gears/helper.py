@@ -34,6 +34,7 @@ import sys
 import types
 import warnings
 from contextlib import closing
+from enum import Enum
 from functools import wraps
 from pathlib import Path
 
@@ -47,6 +48,17 @@ from requests.adapters import HTTPAdapter, Retry
 from tqdm import tqdm
 
 from ..version import __version__
+
+
+class Backend(Enum):
+    """
+    Selects the underlying capture backend for VideoGear.
+    Add new gears here to extend VideoGear.
+    """
+
+    CAMGEAR = "camgear"
+    PIGEAR = "pigear"
+    FFGEAR = "ffgear"
 
 
 def logger_handler():
