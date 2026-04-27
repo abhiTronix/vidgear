@@ -35,6 +35,7 @@ from mpegdash.parser import MPEGDASHParser
 
 from vidgear.gears.asyncio.helper import generate_webdata, validate_webdata
 from vidgear.gears.helper import (
+    Backend,
     check_gstreamer_support,
     check_output,
     create_blank_frame,
@@ -609,3 +610,27 @@ def test_delete_file_safe():
         delete_file_safe(os.path.join(expanduser("~"), "invalid"))
     except Exception as e:
         pytest.fail(str(e))
+
+
+def test_backend_enum_members():
+    """
+    All three Backend members must exist with the expected string values.
+    """
+    assert Backend.CAMGEAR.value == "camgear"
+    assert Backend.PIGEAR.value == "pigear"
+    assert Backend.FFGEAR.value == "ffgear"
+
+
+def test_backend_enum_completeness():
+    """
+    Backend enum must contain exactly three members — catches accidental deletions.
+    """
+    assert set(Backend) == {Backend.CAMGEAR, Backend.PIGEAR, Backend.FFGEAR}
+
+
+@pytest.mark.parametrize("member", list(Backend))
+def test_backend_enum_is_enum(member):
+    """
+    Every Backend member must be an instance of Backend.
+    """
+    assert isinstance(member, Backend)
