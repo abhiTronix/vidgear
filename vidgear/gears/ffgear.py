@@ -24,7 +24,6 @@ from threading import Event, Thread
 from typing import Any
 
 import cv2
-from numpy.typing import NDArray
 
 # import helper packages
 from .helper import (
@@ -237,7 +236,12 @@ class FFGear:
         self.__read_first_frame()
 
         if self.frame is not None:
-            self.__threaded_queue_mode and self.__queue.put(self.frame)
+            if self.__threaded_queue_mode:
+                # When metadata mode is active enqueue the full (frame, meta) tuple
+                if self.__extract_metadata:
+                    self.__queue.put((self.frame, self.frame_metadata))
+                else:
+                    self.__queue.put(self.frame)
         else:
             raise RuntimeError("[FFGear:ERROR] :: Source is invalid or unreadable!")
 
@@ -325,8 +329,12 @@ class FFGear:
             # Apply any OpenCV colorspace logic based on format choices
             self.__process_frame_format()
 
-            # push the frame onto the producer queue
-            self.__threaded_queue_mode and self.__queue.put(self.frame)
+            # push frame (or frame+meta tuple) onto the producer queue
+            if self.__threaded_queue_mode:
+                if self.__extract_metadata:
+                    self.__queue.put((self.frame, self.frame_metadata))
+                else:
+                    self.__queue.put(self.frame)
 
         # Poison pill for the queue signaling termination
         self.__threaded_queue_mode and self.__queue.put(None)
@@ -339,10 +347,18 @@ class FFGear:
         if self.stream is not None:
             self.stream.terminate()
 
-    def read(self) -> NDArray | None:
+    def read(self):
         """
         Consumer Thread: Pops frames symmetrically from the queue block.
-        **Returns:** N-dimensional numpy array of the frame.
+
+        **Returns:**
+            - When ``-extract_metadata`` is *disabled* (default): an N-dimensional
+              ``numpy.ndarray`` representing the decoded frame, or ``None`` when
+              the stream has ended.
+            - When ``-extract_metadata`` is *enabled*: a ``(frame, metadata)`` tuple
+              where *frame* is an ``numpy.ndarray`` and *metadata* is a ``dict``
+              with keys ``frame_num``, ``pts_time``, ``is_keyframe``, and
+              ``frame_type``; or ``None`` when the stream has ended.
         """
         while self.__threaded_queue_mode and not self.__terminate.is_set():
             try:
@@ -350,12 +366,13 @@ class FFGear:
             except queue.Empty:
                 continue
 
-        return (
-            self.frame
-            if not self.__terminate.is_set()
-            and self.__stream_read.wait(timeout=self.__thread_timeout)
-            else None
-        )
+        if not self.__terminate.is_set() and self.__stream_read.wait(
+            timeout=self.__thread_timeout
+        ):
+            if self.__extract_metadata:
+                return (self.frame, self.frame_metadata)
+            return self.frame
+        return None
 
     def stop(self) -> None:
         """
