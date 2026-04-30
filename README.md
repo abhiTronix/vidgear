@@ -75,6 +75,7 @@ The following **functional block diagram** clearly depicts the generalized funct
 - [**Getting Started**](#getting-started)
 - [**Gears: What are these?**](#gears-what-are-these)
   - [**CamGear**](#camgear)
+  - [**FFGear**](#ffgear)
   - [**PiGear**](#pigear)
   - [**VideoGear**](#videogear)
   - [**ScreenGear**](#screengear)
@@ -140,6 +141,7 @@ Each API is designed exclusively to handle/control/process different data-specif
 **A. Video-Capture Gears:**
 
 - [**CamGear:**](#camgear) Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
+- [**FFGear:**](#ffgear) Multi-Threaded API for hardware-accelerated FFmpeg-powered video decoding with full filtergraph support.
 - [**PiGear:**](#pigear) Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis :grapes:.
 - [**ScreenGear:**](#screengear) High-performance API targeting rapid Screencasting Capabilities.
 - [**VideoGear:**](#videogear) Common Video-Capture API with internal [Video Stabilizer](https://abhitronix.github.io/vidgear/latest/gears/stabilizer/) wrapper.
@@ -187,7 +189,64 @@ CamGear provides a flexible, high-level, multi-threaded framework around OpenCV'
 
 &nbsp;
 
-## VideoGear
+## FFGear
+
+> _FFGear is a multi-threaded, high-performance wrapper around [DeFFcode's FFdecoder API][deffcode-doc] that compiles and executes an FFmpeg pipeline inside a subprocess pipe for generating real-time, low-overhead, lightning-fast decoded video frames in Python._
+
+FFGear API provides **direct, transparent access** to the full FFdecoder feature-set, including:
+
+- **Hardware-Accelerated Decoding** — CUDA/CUVID and other `-hwaccel` backends for GPU-powered decoding ⚡
+- **Flexible Pixel Formats** — any FFmpeg-supported `-pix_fmt` (e.g. `bgr24`, `yuv420p`, `gray`), with an optional OpenCV-compatibility patch (`-enforce_cv_patch`) for YUV/NV layouts.
+- **Per-Frame Metadata Extraction** — asynchronous `showinfo` filter integration via `-extract_metadata`, yielding `(frame, metadata)` tuples with `frame_num`, `pts_time`, `is_keyframe`, and `frame_type`.
+- **Complex Filtergraphs** — live simple (`-vf`) and complex (`-filter_complex`) FFmpeg filter pipelines.
+- **Wide Source Support** — USB/Virtual/IP cameras, multimedia files, image sequences, and network streams (`HTTP(s)`, `RTSP/RTP`, etc.).
+
+Similar to CamGear, FFGear also supports the `yt_dlp` backend via `stream_mode=True` for seamlessly pipelining live video-frames from streaming services like [YouTube][youtube-doc], [Twitch][piping-live-videos], and [many more](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites).
+
+**Code to get started with FFGear:**
+
+```python
+# import required libraries
+from vidgear.gears import FFGear
+import cv2
+
+# open any valid video file with FFGear (default: bgr24 output)
+stream = FFGear(source="myvideo.mp4", logging=True).start()
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # Show output window
+    cv2.imshow("Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+```
+
+### FFGear API Guide:
+
+[**>>> Usage Guide**][ffgear-doc]
+
+&nbsp;
+
+&nbsp;
 
 > _VideoGear API provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**][stabilizer-doc] class._
 
@@ -769,6 +828,8 @@ Internal URLs
 [youtube-doc]: https://abhitronix.github.io/vidgear/latest/gears/camgear/usage/#using-camgear-with-youtube-videos
 [tqm-doc]: https://abhitronix.github.io/vidgear/latest/bonus/TQM/#threaded-queue-mode
 [camgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/camgear/
+[ffgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/ffgear/
+[deffcode-doc]: https://abhitronix.github.io/deffcode/latest/reference/ffdecoder/
 [stabilizer-doc]: https://abhitronix.github.io/vidgear/latest/gears/stabilizer/
 [stabilizer-doc-ex]: https://abhitronix.github.io/vidgear/latest/gears/videogear/usage/#using-videogear-with-video-stabilizer-backend
 [videogear-doc]: https://abhitronix.github.io/vidgear/latest/gears/videogear/
