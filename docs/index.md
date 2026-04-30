@@ -67,6 +67,7 @@ These Gears can be classified as follows:
 #### VideoCapture Gears
 
 * [CamGear](gears/camgear/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
+* [FFGear](gears/ffgear/): Multi-Threaded API for hardware-accelerated FFmpeg-powered video decoding with full filtergraph support.
 * [PiGear](gears/pigear/): Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis :fontawesome-brands-raspberry-pi:.
 * [ScreenGear](gears/screengear/): High-performance API targeting rapid Screencasting Capabilities.    
 * [VideoGear](gears/videogear/): Common Video-Capture API with internal [_Video Stabilizer_](gears/stabilizer/) wrapper.
@@ -180,5 +181,6 @@ External URLs
 [streamlink]:https://streamlink.github.io/
 [aiortc]:https://aiortc.readthedocs.io/en/latest/
 [yt_dlp]:https://github.com/yt-dlp/yt-dlp
+[deffcode]:https://github.com/abhiTronix/deffcode
 [dxcam]:https://github.com/ra1nty/DXcam
 [picamera2]:https://github.com/raspberrypi/picamera2

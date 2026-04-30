@@ -40,6 +40,7 @@ These Gears can be classified as follows:
 > **Basic Function:** Retrieves [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames from various sources.
 
 * [CamGear](camgear/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
+* [FFGear](ffgear/): Multi-Threaded API for hardware-accelerated FFmpeg-powered video decoding with full filtergraph support.
 * [PiGear](pigear/): Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis :fontawesome-brands-raspberry-pi:.
 * [ScreenGear](screengear/): High-performance API targeting rapid Screencasting Capabilities.
 * [VideoGear](videogear/): Common Video-Capture API with internal [Video Stabilizer](stabilizer/) wrapper. 
