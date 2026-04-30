@@ -241,6 +241,14 @@ nav:
             - CamGear Bonus Examples: help/camgear_ex.md
             - CamGear FAQs: help/camgear_faqs.md
             - Source Tweak Parameters: gears/camgear/advanced/source_params.md
+      - FFGear:
+          - gears/ffgear/index.md
+          - Usage Examples: gears/ffgear/usage.md
+          - Advanced Usage: gears/ffgear/advanced/index.md
+          - API Resources:
+              - FFGear API Parameters: gears/ffgear/params.md
+              - FFGear Bonus Examples: help/ffgear_ex.md
+              - FFGear FAQs: help/ffgear_faqs.md
       - PiGear:
           - gears/pigear/index.md
           - Usage Examples: gears/pigear/usage.md
@@ -353,6 +361,7 @@ nav:
       - API References:
           - vidgear.gears:
               - CamGear API: bonus/reference/camgear.md
+              - FFGear API: bonus/reference/ffgear.md
               - PiGear API: bonus/reference/pigear.md
               - VideoGear API: bonus/reference/videogear.md
               - ScreenGear API: bonus/reference/screengear.md
@@ -376,6 +385,7 @@ nav:
       - Frequently Asked Questions:
           - General FAQs: help/general_faqs.md
           - CamGear FAQs: help/camgear_faqs.md
+          - FFGear FAQs: help/ffgear_faqs.md
           - PiGear FAQs: help/pigear_faqs.md
           - VideoGear FAQs: help/videogear_faqs.md
           - ScreenGear FAQs: help/screengear_faqs.md
@@ -388,6 +398,7 @@ nav:
           - Stabilizer Class FAQs: help/stabilizer_faqs.md
       - Bonus Examples:
           - CamGear Examples: help/camgear_ex.md
+          - FFGear Examples: help/ffgear_ex.md
           - PiGear Examples: help/pigear_ex.md
           - VideoGear Examples: help/videogear_ex.md
           - ScreenGear Examples: help/screengear_ex.md
