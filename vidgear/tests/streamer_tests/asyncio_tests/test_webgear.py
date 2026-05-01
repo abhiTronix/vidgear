@@ -24,6 +24,7 @@ import asyncio
 import logging as log
 import os
 import tempfile
+import warnings
 
 import cv2
 import pytest
@@ -35,7 +36,7 @@ from starlette.routing import Route
 from starlette.testclient import TestClient
 
 from vidgear.gears.asyncio import WebGear
-from vidgear.gears.helper import logger_handler
+from vidgear.gears.helper import Backend, logger_handler
 from vidgear.tests.utils.helpers import get_testing_dir, return_testvideo_path
 
 # define test logger
@@ -303,3 +304,44 @@ def test_webgear_routes_validity():
     TestClient(web(), raise_server_exceptions=True)
     # shutdown
     web.shutdown()
+
+
+def test_webgear_ffgear_backend():
+    """
+    Test WebGear API with FFGear backend
+    """
+    try:
+        options = {
+            "frame_size_reduction": 40,
+            "jpeg_compression_quality": 80,
+        }
+        web = WebGear(
+            api=Backend.FFGEAR,
+            source=return_testvideo_path(),
+            logging=True,
+            **options,
+        )
+        client = TestClient(web(), raise_server_exceptions=True)
+        response = client.get("/")
+        assert response.status_code == 200
+        response_video = client.get("/video")
+        assert response_video.status_code == 200
+        web.shutdown()
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+def test_webgear_enablePiCamera_deprecated():
+    """
+    Test that `enablePiCamera` triggers DeprecationWarning in WebGear
+    """
+    try:
+        with pytest.warns(DeprecationWarning, match="enablePiCamera"):
+            web = WebGear(
+                enablePiCamera=False,
+                source=return_testvideo_path(),
+                logging=True,
+            )
+        web.shutdown()
+    except Exception as e:
+        pytest.fail(str(e))
