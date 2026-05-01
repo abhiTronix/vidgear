@@ -59,7 +59,11 @@ from vidgear.gears.helper import (
     validate_ffmpeg,
     validate_video,
 )
-from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg, return_testvideo_path
+from vidgear.tests.utils.helpers import (
+    get_testing_dir,
+    return_static_ffmpeg,
+    return_testvideo_path,
+)
 
 # define test logger
 logger = log.getLogger("Test_helper")
@@ -69,10 +73,7 @@ logger.setLevel(log.DEBUG)
 
 
 # define machine os
-_windows = (os.name == "nt")
-
-
-
+_windows = os.name == "nt"
 
 
 def check_valid_mpd(file="", exp_reps=1):
@@ -91,7 +92,7 @@ def check_valid_mpd(file="", exp_reps=1):
     except Exception as e:
         logger.error(str(e))
         return False
-    return (len(all_reprs) >= exp_reps)
+    return len(all_reprs) >= exp_reps
 
 
 def getframe():
@@ -378,6 +379,7 @@ def test_is_valid_url(URL, result):
     "path, result",
     [
         (return_testvideo_path(), True),
+        ("https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/input.mp4", True),
         (None, False),
     ],
 )
