@@ -25,6 +25,8 @@ import logging as log
 import os
 import tempfile
 
+from vidgear.tests.utils.helpers import get_testing_dir, return_testvideo_path
+
 import cv2
 import pytest
 import requests
@@ -44,14 +46,7 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
-def return_testvideo_path():
-    """
-    returns Test Video path
-    """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
-    )
-    return os.path.abspath(path)
+
 
 
 def hello_webpage(request):
@@ -133,7 +128,7 @@ def test_webgear_class(source, stabilize, colorspace, time_delay):
             "jpeg_compression_fastupsample": True,
             "overwrite_default_files": True,
             "enable_infinite_frames": False,
-            "custom_data_location": tempfile.gettempdir(),
+            "custom_data_location": get_testing_dir(),
             "custom_video_endpoint": "x x",
         },
         {

@@ -25,6 +25,8 @@ import os
 import platform
 import tempfile
 
+from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg, return_testvideo_path
+
 import cv2
 import pytest
 from six import string_types
@@ -43,34 +45,7 @@ logger.setLevel(log.DEBUG)
 _windows = (os.name == "nt")
 
 
-def return_static_ffmpeg():
-    """
-    returns system specific FFmpeg static path
-    """
-    path = ""
-    if platform.system() == "Windows":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe"
-        )
-    elif platform.system() == "Darwin":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg"
-        )
-    else:
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/ffmpeg"
-        )
-    return os.path.abspath(path)
 
-
-def return_testvideo_path():
-    """
-    returns Test Video path
-    """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
-    )
-    return os.path.abspath(path)
 
 
 def remove_file_safe(path):
@@ -91,7 +66,8 @@ def test_write(conversion):
     Testing VidGear Non-Compression(OpenCV) Mode Writer
     """
     stream = cv2.VideoCapture(return_testvideo_path())
-    writer = WriteGear(output="Output_twc.avi", compression_mode=False)  # Define writer
+    output_path = os.path.join(get_testing_dir(), "Output_twc.avi")
+    writer = WriteGear(output=output_path, compression_mode=False)  # Define writer
     while True:
         (grabbed, frame) = stream.read()
         # read frames
@@ -115,7 +91,7 @@ def test_write(conversion):
             "error",
             "-count_frames",
             "-i",
-            os.path.abspath("Output_twc.avi"),
+            output_path,
         ]
     )
     if result:
@@ -124,14 +100,14 @@ def test_write(conversion):
         logger.debug("Result: {}".format(result))
         for i in ["Error", "Invalid", "error", "invalid"]:
             assert i not in result
-    remove_file_safe("Output_twc.avi")
+    remove_file_safe(output_path)
 
 
 test_data_class = [
     ("", {"-gst_pipeline_mode": "invalid"}, False),
-    (os.path.join(tempfile.gettempdir(), "temp_write"), {}, True),
+    (os.path.join(get_testing_dir(), "temp_write"), {}, True),
     (
-        "Output_twc.mp4",
+        os.path.join(get_testing_dir(), "Output_twc.mp4"),
         {
             "-fourcc": "DIVX",
             "-fps": 25,
@@ -143,7 +119,7 @@ test_data_class = [
         True,
     ),
     (
-        "Output_twc.avi",
+        os.path.join(get_testing_dir(), "Output_twc.avi"),
         {
             "-fourcc": ["NULL"],
             "-backend": "INVALID",

@@ -20,11 +20,13 @@ limitations under the License.
 
 # import the necessary packages
 
+import os
 import platform
 
 import numpy as np
 import pytest
 
+from vidgear.tests.utils.helpers import get_testing_dir
 from vidgear.gears import WriteGear
 
 
@@ -39,7 +41,7 @@ def test_failedextension():
 
     # 'garbage' extension does not exist
     with pytest.raises(ValueError):
-        writer = WriteGear("garbage.garbage", logging=True)
+        writer = WriteGear(output="garbage.garbage", logging=True)
         writer.write(input_data)
         writer.close()
 
@@ -56,14 +58,14 @@ def test_failedchannels(size):
         input_data_ch1 = random_data_1.astype(np.uint8)
         random_data_2 = np.random.random(size=size[1]) * 255
         input_data_ch3 = random_data_2.astype(np.uint8)
-        writer = WriteGear("output.mp4", compression_mode=True)
+        writer = WriteGear(output=os.path.join(get_testing_dir(), "output.mp4"), compression_mode=True)
         writer.write(input_data_ch1)
         writer.write(input_data_ch3)
         writer.close()
     else:
         random_data = np.random.random(size=size) * 255
         input_data = random_data.astype(np.uint8)
-        writer = WriteGear("output.mp4", compression_mode=True, logging=True)
+        writer = WriteGear(output=os.path.join(get_testing_dir(), "output.mp4"), compression_mode=True, logging=True)
         writer.write(input_data)
         writer.close()
 
@@ -85,7 +87,7 @@ def test_fail_framedimension(compression_mode):
     writer = None
     try:
         writer = WriteGear(
-            "output.mp4", compression_mode=compression_mode, logging=True
+            output=os.path.join(get_testing_dir(), "output.mp4"), compression_mode=compression_mode, logging=True
         )
         writer.write(None)
         writer.write(input_data1)
@@ -103,11 +105,11 @@ def test_fail_framedimension(compression_mode):
 @pytest.mark.parametrize(
     "compression_mode, path",
     [
-        (True, "output.mp4"),
+        (True, os.path.join(get_testing_dir(), "output.mp4")),
         (platform.system() == "Linux", "/dev/video0"),
         (True, "rtmp://live.twitch.tv/"),
         (True, "unknown://invalid.com/"),
-        (False, "output.mp4"),
+        (False, os.path.join(get_testing_dir(), "output.mp4")),
         (False, "rtmp://live.twitch.tv/"),
     ],
 )
@@ -117,7 +119,7 @@ def test_paths(compression_mode, path):
     """
     writer = None
     try:
-        writer = WriteGear(path, compression_mode=compression_mode, logging=True)
+        writer = WriteGear(output=path, compression_mode=compression_mode, logging=True)
     except Exception as e:
         if isinstance(e, ValueError):
             pytest.xfail("Test Passed!")
@@ -140,7 +142,7 @@ def test_invalid_encoder(v_codec):
     try:
         output_params = {"-vcodec": v_codec}
         writer = WriteGear(
-            "output.mp4", compression_mode=True, logging=True, **output_params
+            output=os.path.join(get_testing_dir(), "output.mp4"), compression_mode=True, logging=True, **output_params
         )
         writer.write(input_data)
         writer.write(input_data)

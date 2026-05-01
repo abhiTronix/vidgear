@@ -26,6 +26,8 @@ import platform
 import sys
 import tempfile
 
+from vidgear.tests.utils.helpers import return_testvideo_path
+
 import pytest
 
 from vidgear.gears import VideoGear
@@ -42,14 +44,7 @@ logger.setLevel(log.DEBUG)
 _windows = (os.name == "nt")
 
 
-def return_testvideo_path():
-    """
-    returns Test video path
-    """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
-    )
-    return os.path.abspath(path)
+
 
 
 @pytest.mark.skipif((platform.system() != "Linux"), reason="Not Implemented")

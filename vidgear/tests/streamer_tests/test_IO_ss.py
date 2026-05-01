@@ -23,19 +23,14 @@ import os
 import subprocess
 import tempfile
 
+from vidgear.tests.utils.helpers import return_testvideo_path
+
 import pytest
 
 from vidgear.gears import StreamGear
 
 
-def return_testvideo_path():
-    """
-    returns Test video path
-    """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
-    )
-    return os.path.abspath(path)
+
 
 
 @pytest.mark.xfail(raises=(AssertionError, ValueError))

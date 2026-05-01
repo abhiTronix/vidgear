@@ -27,6 +27,8 @@ import queue
 import tempfile
 import time
 
+from vidgear.tests.utils.helpers import return_testvideo_path
+
 import cv2
 import numpy as np
 import pytest
@@ -65,14 +67,7 @@ def return_youtubevideo_params(url):
     return (int(result["width"]), int(result["height"]), float(result["fps"]))
 
 
-def return_testvideo_path():
-    """
-    returns Test Video path
-    """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
-    )
-    return os.path.abspath(path)
+
 
 
 def return_total_frame_count():

@@ -22,6 +22,8 @@ import logging as log
 import os
 import platform
 import tempfile
+
+from vidgear.tests.utils.helpers import return_testvideo_path
 import time
 
 import cv2
@@ -49,9 +51,7 @@ pytest.importorskip("deffcode", reason="`deffcode` is required for FFGear tests"
 # ---------------------------------------------------------------------------
 
 
-def return_testvideo_path():
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(tempfile.gettempdir())
-    return os.path.abspath(path)
+
 
 
 def actual_frame_count_n_frame_size(path):

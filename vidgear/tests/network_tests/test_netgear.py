@@ -27,6 +27,8 @@ import queue
 import random
 import tempfile
 
+from vidgear.tests.utils.helpers import get_testing_dir, return_testvideo_path
+
 import cv2
 import numpy as np
 import pytest
@@ -45,14 +47,7 @@ logger.setLevel(log.DEBUG)
 _windows = (os.name == "nt")
 
 
-def return_testvideo_path():
-    """
-    returns Test Video path
-    """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
-    )
-    return os.path.abspath(path)
+
 
 
 @pytest.mark.parametrize("address, port", [("172.31.11.15.77", "5555"), (None, "5555")])
@@ -242,7 +237,7 @@ def test_compression(options_server):
 
 
 test_data_class = [
-    (1, 1, tempfile.gettempdir(), True),
+    (1, 1, get_testing_dir(), True),
     (1, 2, ["invalid"], True),
     (
         1,

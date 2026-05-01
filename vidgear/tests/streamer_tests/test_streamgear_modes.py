@@ -25,6 +25,8 @@ import platform
 import queue
 import tempfile
 
+from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg, return_testvideo_path
+
 import cv2
 import m3u8
 import pytest
@@ -43,40 +45,7 @@ logger.setLevel(log.DEBUG)
 _windows = (os.name == "nt")
 
 
-def return_testvideo_path(fmt="av"):
-    """
-    returns Test video path
-    """
-    supported_fmts = {
-        "av": "BigBuckBunny_4sec.mp4",
-        "vo": "BigBuckBunny_4sec_VO.mp4",
-        "ao": "BigBuckBunny_4sec_AO.aac",
-    }
-    req_fmt = fmt if (fmt in supported_fmts) else "av"
-    path = "{}/Downloads/Test_videos/{}".format(
-        tempfile.gettempdir(), supported_fmts[req_fmt]
-    )
-    return os.path.abspath(path)
 
-
-def return_static_ffmpeg():
-    """
-    returns system specific FFmpeg static path
-    """
-    path = ""
-    if platform.system() == "Windows":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe"
-        )
-    elif platform.system() == "Darwin":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg"
-        )
-    else:
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/ffmpeg"
-        )
-    return os.path.abspath(path)
 
 
 def check_valid_mpd(file="", exp_reps=1):
@@ -168,7 +137,7 @@ def return_assets_path(hls=False):
     """
     returns assets temp path
     """
-    return os.path.join(tempfile.gettempdir(), "temp_m3u8" if hls else "temp_mpd")
+    return os.path.join(get_testing_dir(), "temp_m3u8" if hls else "temp_mpd")
 
 
 def string_to_float(value):
