@@ -14,10 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#determining system specific temp directory
+# Determining system specific temp directory
 TMPFOLDER=$(python -c 'import tempfile; print(tempfile.gettempdir())')
+TMPFOLDER="$TMPFOLDER/testing_dir"
 
 # Creating necessary directories
+mkdir -p "$TMPFOLDER" # Create testing directory
+chmod -R 777 "$TMPFOLDER" # 777 permission to all files (Necessary for sudo commands)
+
+mkdir -p "$TMPFOLDER"/temp_images # For testing Gear Assets.
 mkdir -p "$TMPFOLDER"/temp_mpd    # MPD assets temp path
 mkdir -p "$TMPFOLDER"/temp_m3u8   # M3U8 assets temp path
 mkdir -p "$TMPFOLDER"/temp_write  # For testing WriteGear Assets.
