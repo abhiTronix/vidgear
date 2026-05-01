@@ -41,12 +41,6 @@ logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
-# define machine os
-_windows = (os.name == "nt")
-
-
-
-
 
 def check_valid_mpd(file="", exp_reps=1):
     """
@@ -74,8 +68,9 @@ def extract_meta_video(file):
     Extracts metadata from a valid video file
     """
     logger.debug("Extracting Metadata from {}".format(file))
-    time.sleep(2) # Delay for processing
-    logger.debug("Listdirs: {}".format(os.listdir(os.path.dirname(file))))
+    if platform.system() == "Linux":
+        time.sleep(2) # Delay for processing
+        logger.debug("Listdirs: {}".format(os.listdir(os.path.dirname(file))))
     meta = validate_video(return_static_ffmpeg(), file, logging=True)
     return meta
 
