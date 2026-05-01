@@ -25,14 +25,13 @@ import os
 import platform
 import tempfile
 
-from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg, return_testvideo_path
-
 import cv2
 import pytest
 from six import string_types
 
 from vidgear.gears import WriteGear
 from vidgear.gears.helper import capPropId, check_output, logger_handler
+from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg, return_testvideo_path
 
 # define test logger
 logger = log.getLogger("Test_non_commpression_mode")

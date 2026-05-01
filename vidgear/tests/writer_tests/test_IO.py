@@ -26,8 +26,8 @@ import platform
 import numpy as np
 import pytest
 
-from vidgear.tests.utils.helpers import get_testing_dir
 from vidgear.gears import WriteGear
+from vidgear.tests.utils.helpers import get_testing_dir
 
 
 def test_failedextension():

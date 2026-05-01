@@ -23,14 +23,10 @@ import os
 import subprocess
 import tempfile
 
-from vidgear.tests.utils.helpers import return_testvideo_path
-
 import pytest
 
 from vidgear.gears import StreamGear
-
-
-
+from vidgear.tests.utils.helpers import return_testvideo_path
 
 
 @pytest.mark.xfail(raises=(AssertionError, ValueError))

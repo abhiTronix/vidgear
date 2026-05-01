@@ -25,8 +25,6 @@ import platform
 import queue
 import tempfile
 
-from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg, return_testvideo_path
-
 import cv2
 import m3u8
 import pytest
@@ -34,6 +32,7 @@ from mpegdash.parser import MPEGDASHParser
 
 from vidgear.gears import CamGear, StreamGear
 from vidgear.gears.helper import logger_handler, validate_video
+from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg, return_testvideo_path
 
 # define test logger
 logger = log.getLogger("Test_Streamgear")

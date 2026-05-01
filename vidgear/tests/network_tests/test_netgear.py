@@ -27,8 +27,6 @@ import queue
 import random
 import tempfile
 
-from vidgear.tests.utils.helpers import get_testing_dir, return_testvideo_path
-
 import cv2
 import numpy as np
 import pytest
@@ -36,6 +34,7 @@ from zmq.error import ZMQError
 
 from vidgear.gears import NetGear, VideoGear
 from vidgear.gears.helper import logger_handler
+from vidgear.tests.utils.helpers import get_testing_dir, return_testvideo_path
 
 # define test logger
 logger = log.getLogger("Test_netgear")

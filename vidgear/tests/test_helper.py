@@ -27,8 +27,6 @@ import shutil
 import tempfile
 from os.path import expanduser
 
-from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg, return_testvideo_path
-
 import cv2
 import numpy as np
 import pytest
@@ -61,6 +59,7 @@ from vidgear.gears.helper import (
     validate_ffmpeg,
     validate_video,
 )
+from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg, return_testvideo_path
 
 # define test logger
 logger = log.getLogger("Test_helper")

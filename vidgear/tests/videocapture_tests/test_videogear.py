@@ -26,12 +26,11 @@ import platform
 import sys
 import tempfile
 
-from vidgear.tests.utils.helpers import return_testvideo_path
-
 import pytest
 
 from vidgear.gears import VideoGear
 from vidgear.gears.helper import Backend, logger_handler
+from vidgear.tests.utils.helpers import return_testvideo_path
 
 # define test logger
 logger = log.getLogger("Test_videogear")
