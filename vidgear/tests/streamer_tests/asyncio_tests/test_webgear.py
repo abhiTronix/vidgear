@@ -25,8 +25,6 @@ import logging as log
 import os
 import tempfile
 
-from vidgear.tests.utils.helpers import get_testing_dir, return_testvideo_path
-
 import cv2
 import pytest
 import requests
@@ -38,6 +36,7 @@ from starlette.testclient import TestClient
 
 from vidgear.gears.asyncio import WebGear
 from vidgear.gears.helper import logger_handler
+from vidgear.tests.utils.helpers import get_testing_dir, return_testvideo_path
 
 # define test logger
 logger = log.getLogger("Test_webgear")

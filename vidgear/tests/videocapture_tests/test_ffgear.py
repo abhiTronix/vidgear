@@ -22,8 +22,6 @@ import logging as log
 import os
 import platform
 import tempfile
-
-from vidgear.tests.utils.helpers import return_testvideo_path
 import time
 
 import cv2
@@ -32,6 +30,7 @@ import pytest
 
 from vidgear.gears import FFGear
 from vidgear.gears.helper import logger_handler
+from vidgear.tests.utils.helpers import return_testvideo_path
 
 # define test logger
 logger = log.getLogger("Test_FFGear")

@@ -27,14 +27,13 @@ import platform
 import queue
 import tempfile
 
-from vidgear.tests.utils.helpers import return_testvideo_path
-
 import cv2
 import numpy as np
 import pytest
 
 from vidgear.gears.asyncio import NetGear_Async
 from vidgear.gears.helper import logger_handler
+from vidgear.tests.utils.helpers import return_testvideo_path
 
 # define test logger
 logger = log.getLogger("Test_NetGear_Async")

@@ -26,12 +26,11 @@ import platform
 import tempfile
 from os.path import expanduser
 
-from vidgear.tests.utils.helpers import return_static_ffmpeg
-
 import pytest
 
 from vidgear.gears import StreamGear
 from vidgear.gears.helper import logger_handler
+from vidgear.tests.utils.helpers import return_static_ffmpeg
 
 # define test logger
 logger = log.getLogger("Test_init")
