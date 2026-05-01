@@ -26,6 +26,8 @@ import platform
 import tempfile
 from os.path import expanduser
 
+from vidgear.tests.utils.helpers import return_static_ffmpeg
+
 import pytest
 
 from vidgear.gears import StreamGear
@@ -38,24 +40,7 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
-def return_static_ffmpeg():
-    """
-    returns system specific FFmpeg static path
-    """
-    path = ""
-    if platform.system() == "Windows":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe"
-        )
-    elif platform.system() == "Darwin":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg"
-        )
-    else:
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/ffmpeg"
-        )
-    return os.path.abspath(path)
+
 
 
 @pytest.mark.xfail(raises=RuntimeError)

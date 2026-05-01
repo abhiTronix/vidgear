@@ -26,6 +26,8 @@ import os
 import platform
 import tempfile
 
+from vidgear.tests.utils.helpers import get_testing_dir, return_testvideo_path
+
 import cv2
 import numpy as np
 import pytest
@@ -64,14 +66,7 @@ def event_loop_policy(request):
         return asyncio.DefaultEventLoopPolicy()
 
 
-def return_testvideo_path():
-    """
-    returns Test Video path
-    """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
-    )
-    return os.path.abspath(path)
+
 
 
 class VideoTransformTrack(MediaStreamTrack):
@@ -293,7 +288,7 @@ test_data = [
         "custom_data_location": "im_wrong",
     },
     {
-        "custom_data_location": tempfile.gettempdir(),
+        "custom_data_location": get_testing_dir(),
         "enable_infinite_frames": False,
     },
     {

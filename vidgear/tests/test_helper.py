@@ -27,6 +27,8 @@ import shutil
 import tempfile
 from os.path import expanduser
 
+from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg, return_testvideo_path
+
 import cv2
 import numpy as np
 import pytest
@@ -71,40 +73,7 @@ logger.setLevel(log.DEBUG)
 _windows = (os.name == "nt")
 
 
-def return_static_ffmpeg():
-    """
-    returns system specific FFmpeg static path
-    """
-    path = ""
-    if platform.system() == "Windows":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe"
-        )
-    elif platform.system() == "Darwin":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg"
-        )
-    else:
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/ffmpeg"
-        )
-    return os.path.abspath(path)
 
-
-def return_testvideo_path(fmt="av"):
-    """
-    returns Test video path
-    """
-    supported_fmts = {
-        "av": "BigBuckBunny_4sec.mp4",
-        "vo": "BigBuckBunny_4sec_VO.mp4",
-        "ao": "BigBuckBunny_4sec_AO.mp4",
-    }
-    req_fmt = fmt if (fmt in supported_fmts) else "av"
-    path = "{}/Downloads/Test_videos/{}".format(
-        tempfile.gettempdir(), supported_fmts[req_fmt]
-    )
-    return os.path.abspath(path)
 
 
 def check_valid_mpd(file="", exp_reps=1):
@@ -196,11 +165,11 @@ def test_dict2Args(dictionary):
 
 test_data = [
     (
-        os.path.join(tempfile.gettempdir(), "temp_ffmpeg"),
+        os.path.join(get_testing_dir(), "temp_ffmpeg"),
         "win32" if _windows else "",
     ),
     (
-        os.path.join(tempfile.gettempdir(), "temp_ffmpeg"),
+        os.path.join(get_testing_dir(), "temp_ffmpeg"),
         "win64" if _windows else "",
     ),
     ("wrong_test_path", "wrong_bit"),
@@ -248,7 +217,7 @@ test_data = [
     ("", "", True),
     ("wrong_test_path", "", False),
     ("", "wrong_test_path", False),
-    ("", os.path.join(tempfile.gettempdir(), "temp_ffmpeg"), True),
+    ("", os.path.join(get_testing_dir(), "temp_ffmpeg"), True),
     (return_static_ffmpeg(), "", True),
     (os.path.dirname(return_static_ffmpeg()), "", True),
 ]
@@ -286,8 +255,8 @@ def test_get_valid_ffmpeg_path(paths, ffmpeg_download_paths, results):
 test_data = [
     (os.path.join(expanduser("~"), ".vidgear"), False, True),
     ("test_folder", False, True),
-    (os.path.join(tempfile.gettempdir(), "temp_ffmpeg"), False, True),
-    (os.path.join(tempfile.gettempdir(), "temp_ffmpeg"), True, True),
+    (os.path.join(get_testing_dir(), "temp_ffmpeg"), False, True),
+    (os.path.join(get_testing_dir(), "temp_ffmpeg"), True, True),
 ]
 
 
