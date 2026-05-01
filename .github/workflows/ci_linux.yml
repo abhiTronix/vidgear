@@ -54,7 +54,7 @@ jobs:
       - name: prepare bash_scripts
         run: |
           dos2unix scripts/bash/prepare_dataset.sh
-          chmod +x scripts/bash/prepare_dataset.sh
+          sudo chmod +x scripts/bash/prepare_dataset.sh
           dos2unix scripts/bash/install_opencv.sh
           chmod +x scripts/bash/install_opencv.sh
       - name: install pip_dependencies
