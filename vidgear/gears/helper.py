@@ -648,13 +648,18 @@ def validate_video(
 
     **Returns:** A dictionary of retrieved Video resolution _(as tuple(width, height))_ and framerate _(as float)_.
     """
-    if video_path is None or not (video_path):
+    # check video path is not empty
+    if not (video_path):
         logger.warning("Video path is empty!")
         return None
-
+    # convert to path object and check file exists
+    _video_path = Path(video_path)
+    if not _video_path.is_file():
+        logger.warning("Video path is not a valid file!")
+        return None
     # extract metadata
     metadata = check_output(
-        [path, "-hide_banner", "-i", video_path], force_retrieve_stderr=True
+        [path, "-hide_banner", "-i", str(_video_path.resolve())], force_retrieve_stderr=True
     )
     # clean and search
     stripped_data = [x.decode("utf-8").strip() for x in metadata.split(b"\n")]
