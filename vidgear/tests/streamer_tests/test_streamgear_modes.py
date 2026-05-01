@@ -68,11 +68,10 @@ def extract_meta_video(file):
     Extracts metadata from a valid video file
     """
     logger.debug("Extracting Metadata from {}".format(file))
-    if platform.system() == "Linux":
-        with open(file, encoding='utf-8') as f:
-            lines = f.read().splitlines()
-            logger.debug("Metadata Debug: {}".format(lines))
-    meta = validate_video(return_static_ffmpeg(), file, logging=True)
+    # Use static ffmpeg if not on Linux
+    ffmpeg_path = "ffmpeg" if platform.system() == "Linux" else return_static_ffmpeg()
+    # Validate and extract metadata
+    meta = validate_video(ffmpeg_path, file, logging=True)
     return meta
 
 
