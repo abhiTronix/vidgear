@@ -24,7 +24,6 @@ import logging as log
 import os
 import platform
 import sys
-import tempfile
 
 import pytest
 
@@ -41,8 +40,6 @@ logger.setLevel(log.DEBUG)
 
 # define machine os
 _windows = (os.name == "nt")
-
-
 
 
 
@@ -93,6 +90,29 @@ def test_enablePiCamera_deprecation():
             pytest.fail(str(e))
 
 
+def test_enablePiCamera_false_deprecation():
+    """
+    Legacy `enablePiCamera=False` must route to CamGear, emit a DeprecationWarning,
+    and deliver frames (framerate > 0).
+    """
+    try:
+        with pytest.warns(DeprecationWarning):
+            stream = VideoGear(
+                enablePiCamera=False,
+                source=return_testvideo_path(),
+                logging=True,
+            ).start()
+        framerate = stream.framerate
+        while True:
+            frame = stream.read()
+            if frame is None:
+                break
+        stream.stop()
+        assert framerate > 0
+    except Exception as e:
+        pytest.fail(str(e))
+
+
 def test_invalid_api_type():
     """
     Non-`Backend` value passed to `api` must raise TypeError.
@@ -137,7 +157,8 @@ def test_camgear_explicit_backend():
 
 def test_ffgear_backend():
     """
-    `api=Backend.FFGEAR` must route to FFGear (skipped if deffcode missing).
+    `api=Backend.FFGEAR` must route to FFGear, deliver frames, and expose
+    framerate=0.0 (FFGear has no framerate attr; VideoGear falls back to 0.0).
     """
     pytest.importorskip("deffcode", reason="`deffcode` is required for FFGear backend")
     try:
@@ -147,11 +168,15 @@ def test_ffgear_backend():
             frame_format="bgr24",
             logging=True,
         ).start()
-        # FFGear has no `framerate` attr; VideoGear should fall back to 0.0
         assert stream.framerate == 0.0
-        frame = stream.read()
-        assert frame is not None
+        frame_count = 0
+        while True:
+            frame = stream.read()
+            if frame is None:
+                break
+            frame_count += 1
         stream.stop()
+        assert frame_count > 0
     except Exception as e:
         pytest.fail(str(e))
 
