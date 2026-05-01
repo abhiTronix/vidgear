@@ -388,8 +388,8 @@ async def test_netgear_async_options(pattern, options):
         if client is not None:
             client.close(skip_loop=True)
 
-
-def test_netgear_async_enablePiCamera_deprecated():
+@pytest.mark.asyncio(scope="module")
+async def test_netgear_async_enablePiCamera_deprecated():
     """
     `enablePiCamera=False` must route to CamGear and emit a DeprecationWarning.
     """
