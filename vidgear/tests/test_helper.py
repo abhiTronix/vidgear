@@ -388,7 +388,9 @@ def test_validate_video(path, result):
     Testing validate_video function
     """
     try:
-        results = validate_video(return_static_ffmpeg(), video_path=path)
+        # Use static ffmpeg if not on Linux
+        ffmpeg_path = "ffmpeg" if platform.system() == "Linux" else return_static_ffmpeg()
+        results = validate_video(ffmpeg_path, video_path=path)
         if result:
             assert results is not None, "Video path validity test Failed!"
     except Exception as e:
