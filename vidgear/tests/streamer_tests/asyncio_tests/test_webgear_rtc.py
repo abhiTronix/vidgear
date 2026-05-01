@@ -25,6 +25,7 @@ import logging as log
 import os
 import platform
 import tempfile
+import warnings
 
 import cv2
 import numpy as np
@@ -46,7 +47,7 @@ from starlette.routing import Route
 
 from vidgear.gears import VideoGear
 from vidgear.gears.asyncio import WebGear_RTC
-from vidgear.gears.helper import logger_handler
+from vidgear.gears.helper import Backend, logger_handler
 from vidgear.tests.utils.helpers import get_testing_dir, return_testvideo_path
 
 # define test logger
@@ -593,3 +594,55 @@ async def test_webgear_rtc_routes_validity():
     finally:
         # close
         web.shutdown()
+
+
+@pytest.mark.asyncio(scope="module")
+async def test_webgear_rtc_ffgear_backend():
+    """
+    Test WebGear_RTC API with FFGear backend
+    """
+    try:
+        options = {"frame_size_reduction": 40}
+        web = WebGear_RTC(
+            api=Backend.FFGEAR,
+            source=return_testvideo_path(),
+            logging=True,
+            **options,
+        )
+        async with AsyncClient(
+            transport=ASGITransport(app=web()), base_url="http://testserver"
+        ) as client:
+            response = await client.get("/")
+            assert response.status_code == 200
+            (offer_pc, data) = await get_RTCPeer_payload()
+            response_rtc_answer = await client.post(
+                "/offer",
+                content=data,
+                headers={"Content-Type": "application/json"},
+            )
+            params = response_rtc_answer.json()
+            answer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+            await offer_pc.setRemoteDescription(answer)
+            await offer_pc.close()
+        web.shutdown()
+    except Exception as e:
+        if not isinstance(e, MediaStreamError):
+            pytest.fail(str(e))
+
+
+@pytest.mark.asyncio(scope="module")
+async def test_webgear_rtc_enablePiCamera_deprecated():
+    """
+    Test that `enablePiCamera` triggers DeprecationWarning in WebGear_RTC
+    """
+    try:
+        with pytest.warns(DeprecationWarning, match="enablePiCamera"):
+            web = WebGear_RTC(
+                enablePiCamera=False,
+                source=return_testvideo_path(),
+                logging=True,
+            )
+        web.shutdown()
+    except Exception as e:
+        if not isinstance(e, MediaStreamError):
+            pytest.fail(str(e))
