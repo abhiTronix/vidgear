@@ -25,14 +25,14 @@ import logging as log
 import os
 import platform
 import queue
-import tempfile
+import warnings
 
 import cv2
 import numpy as np
 import pytest
 
 from vidgear.gears.asyncio import NetGear_Async
-from vidgear.gears.helper import logger_handler
+from vidgear.gears.helper import Backend, logger_handler
 from vidgear.tests.utils.helpers import return_testvideo_path
 
 # define test logger
@@ -387,3 +387,45 @@ async def test_netgear_async_options(pattern, options):
     finally:
         if client is not None:
             client.close(skip_loop=True)
+
+
+def test_netgear_async_enablePiCamera_deprecated():
+    """
+    `enablePiCamera=False` must route to CamGear and emit a DeprecationWarning.
+    """
+    try:
+        with pytest.warns(DeprecationWarning, match="enablePiCamera"):
+            server = NetGear_Async(
+                enablePiCamera=False,
+                source=return_testvideo_path(),
+                logging=True,
+            )
+        server.close(skip_loop=True)
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+@pytest.mark.asyncio(scope="module")
+async def test_netgear_async_ffgear_backend():
+    """
+    `api=Backend.FFGEAR` must route through FFGear and transfer frames successfully.
+    """
+    pytest.importorskip("deffcode", reason="`deffcode` is required for FFGear backend")
+    try:
+        client = NetGear_Async(
+            logging=True, receive_mode=True, timeout=7.0
+        ).launch()
+        server = NetGear_Async(
+            api=Backend.FFGEAR,
+            source=return_testvideo_path(),
+            logging=True,
+            timeout=7.0,
+        ).launch()
+        input_coroutines = [server.task, client_iterator(client)]
+        await asyncio.gather(*input_coroutines, return_exceptions=True)
+    except Exception as e:
+        if isinstance(e, queue.Empty):
+            pytest.fail(str(e))
+    finally:
+        server.close(skip_loop=True)
+        client.close(skip_loop=True)
