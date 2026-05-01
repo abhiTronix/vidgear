@@ -69,7 +69,7 @@ def extract_meta_video(file):
     """
     logger.debug("Extracting Metadata from {}".format(file))
     if platform.system() == "Linux":
-        with open(file) as f:
+        with open(file, encoding='utf-8') as f:
             lines = f.read().splitlines()
             logger.debug("Metadata Debug: {}".format(lines))
     meta = validate_video(return_static_ffmpeg(), file, logging=True)
