@@ -24,6 +24,7 @@ import os
 import platform
 import queue
 import tempfile
+import time
 
 import cv2
 import m3u8
@@ -73,6 +74,8 @@ def extract_meta_video(file):
     Extracts metadata from a valid video file
     """
     logger.debug("Extracting Metadata from {}".format(file))
+    time.sleep(2) # Delay for processing
+    logger.debug("Listdirs: {}".format(os.listdir(os.path.dirname(file))))
     meta = validate_video(return_static_ffmpeg(), file, logging=True)
     return meta
 
