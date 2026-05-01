@@ -69,8 +69,9 @@ def extract_meta_video(file):
     """
     logger.debug("Extracting Metadata from {}".format(file))
     if platform.system() == "Linux":
-        time.sleep(2) # Delay for processing
-        logger.debug("Listdirs: {}".format(os.listdir(os.path.dirname(file))))
+        with open(file) as f:
+            lines = f.read().splitlines()
+            logger.debug("Metadata Debug: {}".format(lines))
     meta = validate_video(return_static_ffmpeg(), file, logging=True)
     return meta
 
