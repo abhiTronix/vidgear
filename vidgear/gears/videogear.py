@@ -44,11 +44,12 @@ T = TypeVar("T", bound="VideoGear")
 class VideoGear:
     """
     VideoGear API provides a special internal wrapper around VidGear's exclusive Video Stabilizer class.
-    VideoGear also acts as a Common Video-Capture API that provides internal access for both CamGear and PiGear APIs and
-    their parameters with an exclusive enablePiCamera boolean flag.
+    VideoGear also acts as a Common Video-Capture API that provides unified internal access to CamGear,
+    PiGear, and FFGear APIs and their parameters, selectable via the `api` parameter using the `Backend`
+    enum (`Backend.CAMGEAR`, `Backend.PIGEAR`, `Backend.FFGEAR`).
 
-    VideoGear is ideal when you need to switch to different video sources without changing your code much. Also, it enables
-    easy stabilization for various video-streams (real-time or not)
+    VideoGear is ideal when you need to switch between different video-capture backends without changing
+    your code much. It also enables easy stabilization for various video-streams (real-time or not)
     with minimum effort and writing way fewer lines of code.
     """
 
@@ -81,22 +82,28 @@ class VideoGear:
         This constructor method initializes the object state and attributes of the VideoGear class.
 
         Parameters:
-            api (Backend): selects the capture backend (`Backend.CAMGEAR`, `Backend.PIGEAR`, `Backend.FFGEAR`).
+            api (Backend): selects the capture backend. Accepted values are `Backend.CAMGEAR` _(default)_,
+                `Backend.PIGEAR`, and `Backend.FFGEAR`. Raises `TypeError` if an invalid value is given.
             stabilize (bool): enable access to Stabilizer Class for stabilizing frames.
-            camera_num (int): [PiGear] selects the camera module index.
-            resolution (tuple): [PiGear] sets `(width, height)` of the source.
-            framerate (int/float): [PiGear] sets the framerate of the source.
-            source (Any): [CamGear/FFGear] defines the source for the input stream.
-            stream_mode (bool): [CamGear/FFGear] enables Stream-Mode for streaming URLs.
-            backend (int): [CamGear] selects the backend for OpenCV's VideoCapture class.
-            source_demuxer (str): [FFGear] specifies the demuxer for the source.
-            frame_format (str): [FFGear] specifies the pixel layout (e.g. `bgr24`).
-            custom_ffmpeg (str): [FFGear] specifies a custom FFmpeg executable path.
-            colorspace (str): [CamGear/PiGear] selects the colorspace of the input stream.
-            logging (bool): enables/disables logging.
-            time_delay (int): [CamGear/PiGear] time delay (in sec) before reading frames.
-            enablePiCamera (bool): **DEPRECATED** — use `api=Backend.PIGEAR` instead.
-            options (dict): tweak parameters forwarded to the selected gear and Stabilizer.
+            camera_num (int): [PiGear only] selects the camera module index. Must be `>= 0`.
+            resolution (tuple): [PiGear only] sets `(width, height)` of the source. Default: `(640, 480)`.
+            framerate (int/float): [PiGear only] sets the framerate of the source. Default: `30`.
+            source (Any): [CamGear/FFGear] defines the source for the input stream (device index,
+                filepath, network URL, or image-sequence glob). Default: `0`.
+            stream_mode (bool): [CamGear/FFGear] enables Stream-Mode for `yt_dlp`-backed streaming URLs.
+            backend (int): [CamGear only] selects the OpenCV VideoCapture backend (e.g. `cv2.CAP_DSHOW`).
+            source_demuxer (str): [FFGear only] specifies the FFmpeg demuxer for the source
+                (e.g. `"v4l2"`, `"dshow"`, `"avfoundation"`). Default: `None` (auto-detect).
+            frame_format (str): [FFGear only] specifies the pixel layout for decoded frames
+                (any FFmpeg-supported pix_fmt, e.g. `"bgr24"`, `"gray"`, `"yuv420p"`). Default: `"bgr24"`.
+            custom_ffmpeg (str): [FFGear only] path to a custom FFmpeg executable. Default: `""` (use PATH).
+            colorspace (str): [CamGear/PiGear only] selects the colorspace of the input stream.
+            logging (bool): enables/disables logging. Default: `False`.
+            time_delay (int): [CamGear/PiGear only] time delay (in seconds) before reading frames.
+            enablePiCamera (bool): **DEPRECATED** — use `api=Backend.PIGEAR` instead. Will be removed
+                in a future release.
+            options (dict): additional tweak parameters forwarded to the selected backend gear
+                and/or the Stabilizer class.
         """
         # enable logging if specified
         self.__logging = logging if isinstance(logging, bool) else False
