@@ -184,7 +184,7 @@ def test_ss_stream(format):
     Testing Single-Source Mode
     """
     assets_file_path = os.path.join(
-        return_assets_path(format == "dash"),
+        return_assets_path(format == "hls"),
         "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
     )
     try:
@@ -200,7 +200,7 @@ def test_ss_stream(format):
             stream_params.update(
                 {
                     "-hls_base_url": return_assets_path(
-                        format == "dash"
+                        format == "hls"
                     )
                     + os.sep
                 }
@@ -224,7 +224,7 @@ def test_ss_livestream(format):
     Testing Single-Source Mode with livestream.
     """
     assets_file_path = os.path.join(
-        return_assets_path(format == "dash"),
+        return_assets_path(format == "hls"),
         "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
     )
     try:
@@ -250,7 +250,7 @@ def test_rtf_stream(conversion, format):
     """
     Testing Real-Time Frames Mode
     """
-    assets_file_path = return_assets_path(format == "dash")
+    assets_file_path = return_assets_path(format == "hls")
 
     try:
         # Open stream
@@ -266,7 +266,7 @@ def test_rtf_stream(conversion, format):
             stream_params.update(
                 {
                     "-hls_base_url": return_assets_path(
-                        format == "dash"
+                        format == "hls"
                     )
                     + os.sep
                 }
@@ -304,7 +304,7 @@ def test_rtf_livestream(format):
     """
     Testing Real-Time Frames Mode with livestream.
     """
-    assets_file_path = return_assets_path(format == "dash")
+    assets_file_path = return_assets_path(format == "hls")
 
     try:
         # Open stream
@@ -335,7 +335,7 @@ def test_input_framerate_rtf(format):
     """
     try:
         assets_file_path = os.path.join(
-            return_assets_path(format == "dash"),
+            return_assets_path(format == "hls"),
             "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
         )
         stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
@@ -351,7 +351,7 @@ def test_input_framerate_rtf(format):
             stream_params.update(
                 {
                     "-hls_base_url": return_assets_path(
-                        format == "dash"
+                        format == "hls"
                     )
                     + os.sep
                 }
@@ -453,14 +453,14 @@ def test_params(stream_params, format):
     """
     try:
         assets_file_path = os.path.join(
-            return_assets_path(format == "dash"),
+            return_assets_path(format == "hls"),
             "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
         )
         if format == "hls":
             stream_params.update(
                 {
                     "-hls_base_url": return_assets_path(
-                        format == "dash"
+                        format == "hls"
                     )
                     + os.sep
                 }
@@ -544,7 +544,7 @@ def test_audio(stream_params, format):
     Testing external and audio audio for stream.
     """
     assets_file_path = os.path.join(
-        return_assets_path(format == "dash"),
+        return_assets_path(format == "hls"),
         "format_test{}".format(".mpd" if format == "dash" else ".m3u8"),
     )
     try:
@@ -552,7 +552,7 @@ def test_audio(stream_params, format):
             stream_params.update(
                 {
                     "-hls_base_url": return_assets_path(
-                        format == "dash"
+                        format == "hls"
                     )
                     + os.sep
                 }
@@ -698,7 +698,7 @@ def test_multistreams(format, stream_params):
     Testing Support for additional Secondary Streams of variable bitrate or spatial resolutions.
     """
     assets_file_path = os.path.join(
-        return_assets_path(format == "dash"),
+        return_assets_path(format == "hls"),
         "asset_test.{}".format("mpd" if format == "dash" else "m3u8"),
     )
     results = extract_resolutions(
