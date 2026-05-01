@@ -646,7 +646,7 @@ def validate_video(
         path (string): absolute path of FFmpeg binaries
         video_path (string): absolute path to Video.
 
-    **Returns:** A dictionary of retieved Video resolution _(as tuple(width, height))_ and framerate _(as float)_.
+    **Returns:** A dictionary of retrieved Video resolution _(as tuple(width, height))_ and framerate _(as float)_.
     """
     if video_path is None or not (video_path):
         logger.warning("Video path is empty!")

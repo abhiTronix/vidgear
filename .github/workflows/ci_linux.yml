@@ -54,9 +54,9 @@ jobs:
       - name: prepare bash_scripts
         run: |
           dos2unix scripts/bash/prepare_dataset.sh
-          sudo chmod +x scripts/bash/prepare_dataset.sh
+          chmod +x scripts/bash/prepare_dataset.sh
           dos2unix scripts/bash/install_opencv.sh
-          sudo chmod +x scripts/bash/install_opencv.sh
+          chmod +x scripts/bash/install_opencv.sh
       - name: install pip_dependencies
         run: |
           python -m pip install -U pip wheel numpy cython
@@ -70,15 +70,14 @@ jobs:
         shell: bash
       - name: recheck and install pip_dependencies
         run: |
-          sudo python -c 'import cv2; print(cv2.__version__)'
-          sudo python -m pip install -U six httpx yt-dlp[default] paramiko
-          sudo python -m pip install .[asyncio]
-          sudo python -m pip install -U ruff codecov pytest pytest-asyncio pytest-cov mpegdash m3u8 async-asgi-testclient
-      - name: pytest
+          python -c 'import cv2; print(cv2.__version__)'
+          python -m pip install -U six httpx yt-dlp[default] paramiko
+          python -m pip install .[asyncio]
+          python -m pip install -U ruff codecov pytest pytest-asyncio pytest-cov mpegdash m3u8 async-asgi-testclient
+      - name: Run pytest tests
         run: |
-          mkdir -p $HOME/logs
-          export VIDGEAR_LOGFILE="$HOME/logs"
-          timeout 1200 sudo pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "EXIT_CODE=$code" >>$GITHUB_ENV; fi
+          PYTHONBINARYPATH=$(which python)
+          timeout 1200 sudo $PYTHONBINARYPATH -m pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "EXIT_CODE=$code" >>$GITHUB_ENV; fi
           ruff check . --select=E9,F63,F7,F82 --statistics
         if: success()
       - name: Display exit code
