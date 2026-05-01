@@ -652,14 +652,10 @@ def validate_video(
     if not (video_path):
         logger.warning("Video path is empty!")
         return None
-    # convert to path object and check file exists
-    _video_path = Path(video_path)
-    if not _video_path.is_file():
-        logger.warning("Video path is not a valid file!")
-        return None
     # extract metadata
     metadata = check_output(
-        [path, "-hide_banner", "-i", str(_video_path.resolve())], force_retrieve_stderr=True
+        [path, "-hide_banner", "-i", str(video_path).strip()],
+        force_retrieve_stderr=True,
     )
     # clean and search
     stripped_data = [x.decode("utf-8").strip() for x in metadata.split(b"\n")]
@@ -696,7 +692,7 @@ def create_blank_frame(
     if frame is None or not (isinstance(frame, np.ndarray)):
         raise ValueError("[Helper:ERROR] :: Input frame is invalid!")
     # grab the frame size
-    (height, width) = frame.shape[:2]
+    height, width = frame.shape[:2]
     # create blank frame
     blank_frame = np.zeros(frame.shape, frame.dtype)
     # setup text
@@ -997,7 +993,7 @@ def reducer(
         )
 
     # grab the frame size
-    (height, width) = frame.shape[:2]
+    height, width = frame.shape[:2]
 
     # calculate the ratio of the width from percentage
     reduction = ((100 - percentage) / 100) * width
@@ -1201,7 +1197,9 @@ def download_ffmpeg_binaries(
                         if "content-length" in response.headers
                         else len(response.content)
                     )
-                    assert total_length is not None, "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
+                    assert (
+                        total_length is not None
+                    ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
                     bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
                     for data in response.iter_content(chunk_size=4096):
                         f.write(data)
@@ -1435,4 +1433,4 @@ def validate_auth_keys(path: str, extension: str) -> bool:
     len(keys_buffer) == 1 and delete_file_safe(os.path.join(path, keys_buffer[0]))
 
     # return results
-    return (len(keys_buffer) == 2)
+    return len(keys_buffer) == 2
