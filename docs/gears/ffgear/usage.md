@@ -221,7 +221,7 @@ FFGear internally implements the [`yt_dlp`][yt_dlp] backend for seamlessly pipel
     import cv2
 
     # set desired quality as 720p and video decoder as `libdav1d`
-    options = {"STREAM_RESOLUTION": "360p", "-vcodec": "libdav1d"}
+    options = {"STREAM_RESOLUTION": "720p", "-vcodec": "libdav1d"}
 
     # Add YouTube Video URL as source and enable Stream Mode
     stream = FFGear(
