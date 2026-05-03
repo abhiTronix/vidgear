@@ -20,26 +20,61 @@ limitations under the License.
 
 # NetGear_Async API Parameters
 
-!!! cite "NetGear_Async provides a special internal wrapper around [VideoGear](../../videogear/), which itself provides internal access to both [CamGear](../../camgear/) and [PiGear](../../pigear/) APIs and their parameters."
+!!! cite "NetGear_Async provides a special internal wrapper around [VideoGear](../../videogear/), which itself provides internal access to [CamGear](../../camgear/), [PiGear](../../pigear/), and [FFGear](../../ffgear/) APIs and their parameters."
 
 &thinsp;
 
-## **`enablePiCamera`** 
+## **`api`**
 
-This parameter provide access to [PiGear](../../pigear/) or [CamGear](../../camgear/) APIs respectively. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
+This parameter selects the underlying capture backend for NetGear_Async using the `Backend` enum.
 
-**Data-Type:** Boolean
+**Data-Type:** `Backend` enum
 
-**Default Value:** Its default value is `False`. 
+**Default Value:** `Backend.CAMGEAR`
+
+**Accepted Values:**
+
+| Value | Underlying Gear | Description |
+|:-----:|:---------------:|:------------|
+| `Backend.CAMGEAR` | [CamGear](../../camgear/) | Multi-threaded OpenCV-backed capture for webcams, files, and network/streaming URLs |
+| `Backend.PIGEAR` | [PiGear](../../pigear/) | Raspberry Pi camera module capture via picamera2/picamera |
+| `Backend.FFGEAR` | [FFGear](../../ffgear/) | FFmpeg-powered hardware-accelerated decoding with filtergraph support |
 
 **Usage:**
 
 ```python
-NetGear_Async(enablePiCamera=True) # enable access to PiGear API
+from vidgear.gears.asyncio import NetGear_Async
+from vidgear.gears.helper import Backend
+
+NetGear_Async(source="foo.mp4", api=Backend.CAMGEAR)  # default — CamGear backend
+NetGear_Async(api=Backend.PIGEAR)                      # PiGear backend
+NetGear_Async(source="foo.mp4", api=Backend.FFGEAR)    # FFGear backend
 ```
 
-!!! example "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
+!!! failure "NetGear_Async will raise `TypeError` if `api` is not a valid `Backend` enum member."
 
+&nbsp;
+
+## **`enablePiCamera`** _(Deprecated)_
+
+!!! danger "**Deprecated since v0.3.5** — use [`api=Backend.PIGEAR`](#api) instead. This parameter will be removed in a future release."
+
+This parameter previously provided direct access to [PiGear](../../pigear/) or [CamGear](../../camgear/) APIs respectively. If `True`, the PiGear API was accessed; if `False`, the CamGear API was accessed.
+
+**Data-Type:** Boolean
+
+**Default Value:** `None`
+
+**Migration:**
+
+```python
+# Old (deprecated)
+NetGear_Async(enablePiCamera=True)
+
+# New
+from vidgear.gears.helper import Backend
+NetGear_Async(api=Backend.PIGEAR)
+```
 
 &nbsp; 
 
@@ -244,7 +279,7 @@ This parameter can be used in addition, to pass user-defined parameters supporte
 
 ## Parameters for CamGear backend
 
-!!! summary "Enable this backend with [`enablePiCamera=False`](#enablepicamera) in NetGear_Async. Default is also `False`."
+!!! summary "Enable this backend with [`api=Backend.CAMGEAR`](#api) in NetGear_Async. This is the default."
 
 ### **`source`**
 
@@ -282,7 +317,7 @@ Its valid input can be one of the following:
         The complete list of all supported Streaming Websites URLs can be found [here ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites)
 
     ```python
-    CamGear(source='https://www.twitch.tv/shroud', stream_mode=True)
+    NetGear_Async(source='https://www.twitch.tv/shroud', stream_mode=True)
     ```
 
 - [x] **Network Address (*string*):** _Valid (`http(s)`, `rtp`, `rtsp`, `rtmp`, `mms`, etc.) incoming network stream address such as `'rtsp://192.168.31.163:554/'` as input:_
@@ -293,7 +328,7 @@ Its valid input can be one of the following:
 
 - [x] **GStreamer Pipeline:** 
    
-    CamGear API also supports GStreamer Pipeline.
+    NetGear_Async (via CamGear) also supports GStreamer Pipeline.
 
     !!! warning "Requirements for GStreamer Pipelining"
 
@@ -319,7 +354,7 @@ Its valid input can be one of the following:
 
 ### **`stream_mode`**
 
-This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), the CamGear API will interpret the given `source` input as YouTube URL address. 
+This parameter controls the Stream Mode, i.e. if enabled(`stream_mode=True`), the CamGear/FFGear API will interpret the given `source` input as a streaming service URL. 
 
 !!! bug "Due to a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend](#backend) for any livestream videos. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
 
@@ -392,7 +427,7 @@ NetGear_Async(source=0, **options)
 
 ## Parameters for PiGear backend 
 
-!!! summary "Enable this backend with [`enablePiCamera=True`](#enablepicamera) in NetGear_Async."
+!!! summary "Enable this backend with [`api=Backend.PIGEAR`](#api) in NetGear_Async."
 
 ### **`camera_num`** 
 
@@ -405,8 +440,9 @@ This parameter selects the camera index to be used as the source, allowing you t
 **Usage:**
 
 ```python
+from vidgear.gears.helper import Backend
 # select Camera Module at index `1`
-NetGear_Async(enablePiCamera=True, camera_num=1)
+NetGear_Async(api=Backend.PIGEAR, camera_num=1)
 ```
 
 !!! example "The complete usage example demonstrating the usage of the `camera_num` parameter is available [here ➶](../../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)."
@@ -430,7 +466,8 @@ This parameter controls the **resolution** - a tuple _(i.e. `(width,height)`)_ o
 **Usage:**
 
 ```python
-NetGear_Async(enablePiCamera=True, resolution=(1280,720)) # sets 1280x720 resolution
+from vidgear.gears.helper import Backend
+NetGear_Async(api=Backend.PIGEAR, resolution=(1280,720)) # sets 1280x720 resolution
 ```
 
 &nbsp;
@@ -442,12 +479,13 @@ This parameter controls the framerate of the source.
 
 **Data-Type:** integer/float
 
-**Default Value:**  Its default value is `30`. 
+**Default Value:**  Its default value is `25`. 
 
 **Usage:**
 
 ```python
-NetGear_Async(enablePiCamera=True, framerate=60) # sets 60fps framerate
+from vidgear.gears.helper import Backend
+NetGear_Async(api=Backend.PIGEAR, framerate=60) # sets 60fps framerate
 ```
 
 &nbsp;
@@ -467,6 +505,119 @@ This dictionary parameter in the internal PiGear API backend allows you to contr
 - [x] These user-defined parameters control specific internal behaviors of the API and perform certain tasks on the camera objects.
 - [x] All supported User-defined Parameters are listed [here ➶](../../pigear/params/#b-user-defined-parameters)
 
+
+&nbsp;
+
+&nbsp;
+
+
+## Parameters for FFGear backend
+
+!!! summary "Enable this backend with [`api=Backend.FFGEAR`](#api) in NetGear_Async."
+
+!!! info "FFGear parameters are a subset of the [FFGear API parameters](../../ffgear/params/). `colorspace` and `time_delay` are **not** forwarded to FFGear."
+
+### **`source`**
+
+!!! warning "NetGear_Async API will throw `RuntimeError` if `source` provided is invalid or unreadable."
+
+Defines the source for FFGear input. Passed directly to [FFdecoder API](https://abhitronix.github.io/deffcode/latest/reference/ffdecoder/params/#source).
+
+**Data-Type:** Any
+
+**Default Value:** `None`
+
+Valid inputs: device index, filepath, network URL (`http(s)`, `rtsp`, `rtp`, `rtmp`), image-sequence glob, or streaming URL _(with `stream_mode=True`)_.
+
+```python
+from vidgear.gears.helper import Backend
+NetGear_Async(api=Backend.FFGEAR, source="myvideo.mp4")
+NetGear_Async(api=Backend.FFGEAR, source="rtsp://192.168.1.10:554/stream")
+```
+
+&nbsp;
+
+### **`stream_mode`**
+
+Enables `yt_dlp`-backed Stream Mode for streaming service URLs.
+
+**Data-Type:** Boolean
+
+**Default Value:** `False`
+
+```python
+from vidgear.gears.helper import Backend
+NetGear_Async(api=Backend.FFGEAR, source="https://youtu.be/bvetuLwJIkA", stream_mode=True)
+```
+
+&nbsp;
+
+### **`source_demuxer`**
+
+Specifies the FFmpeg demuxer for the source. Required when the source type cannot be auto-detected.
+
+**Data-Type:** String or `None`
+
+**Default Value:** `None` _(auto-detect)_
+
+| Platform | Demuxer |
+|:--------:|:--------|
+| :fontawesome-brands-windows: Windows | `dshow` |
+| :material-linux: Linux | `v4l2` |
+| :material-apple: macOS | `avfoundation` |
+
+```python
+from vidgear.gears.helper import Backend
+NetGear_Async(api=Backend.FFGEAR, source="/dev/video0", source_demuxer="v4l2")
+```
+
+&nbsp;
+
+### **`frame_format`**
+
+Specifies the pixel layout for decoded frames. Accepts any FFmpeg-supported pixel format string.
+
+**Data-Type:** String
+
+**Default Value:** `"bgr24"`
+
+```python
+from vidgear.gears.helper import Backend
+NetGear_Async(api=Backend.FFGEAR, source="myvideo.mp4", frame_format="gray")
+```
+
+!!! tip "Run `ffmpeg -pix_fmts` to list all supported pixel formats."
+
+&nbsp;
+
+### **`custom_ffmpeg`**
+
+Path to a custom FFmpeg executable. Useful when FFmpeg is not on `PATH`.
+
+**Data-Type:** String
+
+**Default Value:** `""` _(uses system FFmpeg)_
+
+```python
+from vidgear.gears.helper import Backend
+NetGear_Async(api=Backend.FFGEAR, source="myvideo.mp4", custom_ffmpeg="/opt/ffmpeg/bin/ffmpeg")
+```
+
+&nbsp;
+
+### **`options`**
+
+Passes additional FFdecoder parameters and FFGear queue-tuning parameters. See [FFGear options ➶](../../ffgear/params/#options) for full details.
+
+**Data-Type:** Dictionary
+
+**Default Value:** `{}`
+
+```python
+from vidgear.gears.helper import Backend
+options = {"-vf": "scale=1280:720", "QUEUE_SIZE": 128}
+NetGear_Async(api=Backend.FFGEAR, source="myvideo.mp4", **options)
+```
 
 &nbsp;
 
