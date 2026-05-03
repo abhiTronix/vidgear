@@ -219,9 +219,10 @@ nav:
   - Home:
       - index.md
       - Installation:
-          - installation.md
-          - Install using pip: installation/pip_install.md
-          - Install from source: installation/source_install.md
+          - installation/index.md
+          - Install using Pip: installation/pip_install.md
+          - Install using Poetry: installation/poetry_install.md
+          - Install from Source: installation/source_install.md
       - Switching from OpenCV: switch_from_cv.md
       - Contribution Guidelines:
           - contribution.md
@@ -231,7 +232,7 @@ nav:
       - Our Sponsors: sponsors.md
       - License: license.md
   - Gears:
-      - Introduction: gears.md
+      - gears/index.md
       - CamGear:
           - gears/camgear/index.md
           - Usage Examples: gears/camgear/usage.md
@@ -249,6 +250,7 @@ nav:
               - FFGear API Parameters: gears/ffgear/params.md
               - FFGear Bonus Examples: help/ffgear_ex.md
               - FFGear FAQs: help/ffgear_faqs.md
+              - FFmpeg Installation: gears/ffgear/advanced/ffmpeg_install.md
       - PiGear:
           - gears/pigear/index.md
           - Usage Examples: gears/pigear/usage.md
