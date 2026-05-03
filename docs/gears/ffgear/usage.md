@@ -175,7 +175,7 @@ FFGear API directly supports any network stream URL that FFmpeg supports, includ
 
 ## Using FFGear with Streaming Websites
 
-FFGear internally implements the [`yt_dlp`][yt_dlp] backend for seamlessly pipelining live video-frames and metadata from various streaming services like [YouTube](https://youtube.com/), [Twitch](https://www.twitch.tv/), [Dailymotion](https://www.dailymotion.com), and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites). Enable it by setting `stream_mode=True`.
+FFGear internally implements the [`yt_dlp`][yt_dlp] backend for seamlessly pipelining live video-frames and metadata from various streaming services like [YouTube](https://youtube.com/), [Twitch](https://www.twitch.tv/), [PeerTube](https://peertube.tv/), and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites). Enable it by setting `stream_mode=True`.
 
 ??? info "Supported Streaming Websites"
 
@@ -189,7 +189,7 @@ FFGear internally implements the [`yt_dlp`][yt_dlp] backend for seamlessly pipel
     from vidgear.gears import FFGear
 
     stream = FFGear(
-        source="https://youtu.be/uCy5OuSQnyA", stream_mode=True, logging=True
+        source="https://youtu.be/QDia3e12czc", stream_mode=True, logging=True
     ).start()
 
     # access video metadata
@@ -200,22 +200,32 @@ FFGear internally implements the [`yt_dlp`][yt_dlp] backend for seamlessly pipel
 
 === "YouTube :fontawesome-brands-youtube:"
 
+    ???+ warning "AV1 Dependency in FFmpeg"
+
+        Most of the time, YouTube defaults to the AV1 video format. Therefore, you need an FFmpeg build that includes `libdav1d` for software AV1 decoding, which requires it to be compiled using the flag: `--enable-libdav1d`.
+
+        **Check if you already have it:** Run this command in your terminal or command prompt:
+        
+        ```bash
+        ffmpeg -decoders | grep dav1d
+        ```
+
+        If you see `V....D libdav1d`, the library is installed and ready to use.
+
+
     !!! failure "YouTube Playlists are not supported."
 
-    ```python linenums="1" hl_lines="6 10-11"
+    ```python linenums="1" hl_lines="6 10"
     # import required libraries
     from vidgear.gears import FFGear
     import cv2
 
-    # set desired quality as 720p
-    options = {"STREAM_RESOLUTION": "720p"}
+    # set desired quality as 720p and video decoder as `libdav1d`
+    options = {"STREAM_RESOLUTION": "360p", "-vcodec": "libdav1d"}
 
     # Add YouTube Video URL as source and enable Stream Mode
     stream = FFGear(
-        source="https://youtu.be/uCy5OuSQnyA",
-        stream_mode=True,
-        logging=True,
-        **options
+        source="https://youtu.be/QDia3e12czc", stream_mode=True, logging=True, **options
     ).start()
 
     # loop over
@@ -292,19 +302,19 @@ FFGear internally implements the [`yt_dlp`][yt_dlp] backend for seamlessly pipel
     stream.stop()
     ```
 
-=== "Dailymotion :fontawesome-brands-dailymotion:"
+=== "PeerTube :simple-peertube:"
 
     ```python linenums="1" hl_lines="6 10-11"
     # import required libraries
     from vidgear.gears import FFGear
     import cv2
 
-    # set desired quality as 720p
-    options = {"STREAM_RESOLUTION": "720p"}
+    # set desired quality as 480p
+    options = {"STREAM_RESOLUTION": "480p"}
 
-    # Add Dailymotion Video URL as source and enable Stream Mode
+    # Add PeerTube stream URL as source and enable Stream Mode
     stream = FFGear(
-        source="https://www.dailymotion.com/video/x2yrnum",
+        source="https://peertube.tv/w/q4GM7HcfUnqeBAj3urTUCv",
         stream_mode=True,
         logging=True,
         **options
