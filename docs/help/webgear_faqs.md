@@ -95,3 +95,26 @@ For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"
 **Answer:** All modern browser with Javascript support are supported by WebGear. If not, then discuss with us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &thinsp;
+
+## Is `enablePiCamera` parameter still supported in WebGear?
+
+**Answer:** `enablePiCamera` is **deprecated** in WebGear. Use `api=Backend.PIGEAR` instead. Example:
+
+```python
+from vidgear.gears.asyncio import WebGear
+from vidgear.gears.helper import Backend
+
+# ✅ new way
+web = WebGear(api=Backend.PIGEAR, ...)
+
+# ❌ old/deprecated way
+web = WebGear(enablePiCamera=True, ...)
+```
+
+&thinsp;
+
+## How do I use the FFGear backend with WebGear?
+
+**Answer:** Pass `api=Backend.FFGEAR` to WebGear to use [FFGear](../../gears/ffgear/) for hardware-accelerated FFmpeg-powered decoding. See [Bonus Examples ➶](../../help/webgear_ex/#using-webgear-with-ffgear-backend) for usage.
+
+&thinsp;
