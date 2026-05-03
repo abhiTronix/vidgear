@@ -43,11 +43,11 @@ VidGear focuses on simplicity, and thereby lets programmers and software develop
 
 !!! tip "In case you're run into any problems, consult the [Help](help/get_help) section."
 
-- [x] If this is your first time using VidGear, head straight to the [**Installation**](installation.md) to install VidGear.
+- [x] If this is your first time using VidGear, head straight to the [**Installation**](installation/) to install VidGear.
 
-- [x] Once you have VidGear installed, Checkout its **[Function-Specific Gears](gears.md)**.
+- [x] Once you have VidGear installed, Checkout its **[Function-Specific Gears](gears/)**.
 
-- [x] Also, if you're already familar with [**OpenCV**][opencv] library, then see **[Switching from OpenCV Library](switch_from_cv.md)**.
+- [x] Also, if you're already familiar with [**OpenCV**][opencv] library, then see **[Switching from OpenCV Library](switch_from_cv.md)**.
 
 !!! alert "If you're just getting started with OpenCV-Python programming, then refer this [FAQ ➶](help/general_faqs/#im-new-to-python-programming-or-its-usage-in-opencv-library-how-to-use-vidgear-in-my-projects)"
 
@@ -67,18 +67,18 @@ These Gears can be classified as follows:
 #### VideoCapture Gears
 
 * [CamGear](gears/camgear/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
-* [FFGear](gears/ffgear/): Multi-Threaded API for hardware-accelerated FFmpeg-powered video decoding with full filtergraph support.
+* [FFGear](gears/ffgear/): Multi-Threaded API for hardware-accelerated :simple-ffmpeg: FFmpeg-powered video decoding with full filtergraph support.
 * [PiGear](gears/pigear/): Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis :fontawesome-brands-raspberry-pi:.
 * [ScreenGear](gears/screengear/): High-performance API targeting rapid Screencasting Capabilities.    
 * [VideoGear](gears/videogear/): Common Video-Capture API with internal [_Video Stabilizer_](gears/stabilizer/) wrapper.
 
 #### VideoWriter Gears
 
-* [WriteGear](gears/writegear/introduction/): Handles Lossless Video-Writer for file/stream/frames Encoding and Compression.
+* [WriteGear](gears/writegear/introduction/): Handles :simple-ffmpeg: FFmpeg-powered Lossless Video-Writer for file/stream/frames Encoding and Compression.
 
 #### Streaming Gears
 
-* [StreamGear](gears/streamgear/introduction/): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
+* [StreamGear](gears/streamgear/introduction/): Handles :simple-ffmpeg: FFmpeg-powered Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
 
 * **Asynchronous I/O Streaming Gear:**
 

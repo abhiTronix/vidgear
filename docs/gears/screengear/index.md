@@ -36,7 +36,7 @@ ScreenGear API implements a multi-threaded wrapper around [**dxcam**](https://gi
 
 !!! tip "Helpful Tips"
 
-	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV Library ➶](../../switch_from_cv/#switching-the-videocapture-apis)
+	* If you're already familiar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV Library ➶](../../switch_from_cv/#switching-the-videocapture-apis)
 
 	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 
