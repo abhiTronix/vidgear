@@ -49,7 +49,7 @@ TQM offloads the frame-decoding task to a dedicated [**Background Thread**](http
 
 > While multithreading is powerful, shared memory can lead to race conditions or memory leaks if not handled correctly. 
 
-TQM solves this by using [**Thread-Safe, Fixed-Size Queues**`](https://docs.python.org/3/library/queue.html#module-queue). These queues act as a synchronized buffer between the "producer" (the decoding thread) and the "consumer" (your main program). This provides a layer of thread isolation, ensuring that even if the decoding thread fluctuates in speed, your main process remains stable.
+TQM solves this by using [**Thread-Safe, Fixed-Size Queues**](https://docs.python.org/3/library/queue.html#module-queue). These queues act as a synchronized buffer between the "producer" (the decoding thread) and the "consumer" (your main program). This provides a layer of thread isolation, ensuring that even if the decoding thread fluctuates in speed, your main process remains stable.
 
 ### C. Accelerates Frame Processing
 
