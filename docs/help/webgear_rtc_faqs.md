@@ -102,3 +102,26 @@ For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.
 **Answer:** Yes, but you've to follow [these rules ➶](../../gears/webgear_rtc/advanced/#rules-for-altering-webgear_rtc-files-and-folders)
 
 &thinsp;
+
+## Is `enablePiCamera` parameter still supported in WebGear_RTC?
+
+**Answer:** `enablePiCamera` is **deprecated** in WebGear_RTC. Use `api=Backend.PIGEAR` instead. Example:
+
+```python
+from vidgear.gears.asyncio import WebGear_RTC
+from vidgear.gears.helper import Backend
+
+# ✅ new way
+web = WebGear_RTC(api=Backend.PIGEAR, ...)
+
+# ❌ old/deprecated way
+web = WebGear_RTC(enablePiCamera=True, ...)
+```
+
+&thinsp;
+
+## How do I use the FFGear backend with WebGear_RTC?
+
+**Answer:** Pass `api=Backend.FFGEAR` to WebGear_RTC to use [FFGear](../../gears/ffgear/) for hardware-accelerated FFmpeg-powered decoding. See [Bonus Examples ➶](../../help/webgear_rtc_ex/#using-webgear_rtc-with-ffgear-backend) for usage.
+
+&thinsp;
