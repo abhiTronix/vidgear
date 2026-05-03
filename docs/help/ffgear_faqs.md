@@ -36,7 +36,7 @@ limitations under the License.
 pip install deffcode
 ```
 
-For FFmpeg installation, follow the [dedicated FFmpeg Installation guide ➶](https://abhitronix.github.io/deffcode/latest/installation/ffmpeg_install/).
+For FFmpeg installation, follow the [dedicated FFmpeg Installation guide ➶](../../gears/ffgear/advanced/ffmpeg_install/).
 
 &thinsp;
 
