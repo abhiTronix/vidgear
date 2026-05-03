@@ -645,6 +645,7 @@ def validate_video(
     Parameters:
         path (string): absolute path of FFmpeg binaries
         video_path (string): absolute path to Video.
+        logging (bool): enables logging for its operations
 
     **Returns:** A dictionary of retrieved Video resolution _(as tuple(width, height))_ and framerate _(as float)_.
     """
