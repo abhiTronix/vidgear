@@ -22,106 +22,6 @@ limitations under the License.
 
 &thinsp;
 
-## Using FFGear with WriteGear's Compression Mode
-
-FFGear integrates seamlessly with WriteGear's Compression Mode for high-quality FFmpeg-powered re-encoding of decoded frames.
-
-```python linenums="1" hl_lines="4 7 10-14 17"
-# import required libraries
-from vidgear.gears import FFGear
-from vidgear.gears import WriteGear
-import cv2
-
-# open any valid video source with FFGear
-stream = FFGear(source="myvideo.mp4", frame_format="bgr24", logging=True).start()
-
-# define WriteGear Compression Mode parameters
-output_params = {
-    "-vcodec": "libx264",
-    "-crf": "23",
-    "-preset": "fast",
-}
-
-# define WriteGear writer
-writer = WriteGear(output="output.mp4", logging=True, **output_params)
-
-# loop over
-while True:
-
-    # read frames from stream
-    frame = stream.read()
-
-    # check for frame if Nonetype
-    if frame is None:
-        break
-
-    # {do something with the frame here}
-
-    # write frame to writer
-    writer.write(frame)
-
-# safely close video stream
-stream.stop()
-
-# safely close writer
-writer.close()
-```
-
-&thinsp;
-
-## Using FFGear with WriteGear for RTSP/RTP Live-Streaming
-
-You can pipeline FFGear's decoded frames directly into WriteGear for re-streaming to an RTSP server:
-
-???+ tip "Creating your own RTSP Server locally"
-    Checkout [**MediaMTX (formerly rtsp-simple-server)**](https://github.com/bluenviron/mediamtx) — a ready-to-use, zero-dependency real-time media server.
-
-!!! warning "This example assumes you already have an RTSP Server running at `rtsp://localhost:8554/mystream`."
-
-!!! danger "Make sure to change RTSP address `rtsp://localhost:8554/mystream` with yours before running!"
-
-```python linenums="1" hl_lines="7 10-11 14-16"
-# import required libraries
-from vidgear.gears import FFGear
-from vidgear.gears import WriteGear
-import cv2
-
-# open any valid video source with FFGear
-stream = FFGear(source="myvideo.mp4", frame_format="bgr24", logging=True).start()
-
-# define WriteGear RTSP streaming parameters
-output_params = {"-f": "rtsp", "-rtsp_transport": "tcp"}
-
-# Define WriteGear writer with RTSP output address
-# [WARNING] Change RTSP address with yours!
-writer = WriteGear(
-    output="rtsp://localhost:8554/mystream", logging=True, **output_params
-)
-
-# loop over
-while True:
-
-    # read frames from stream
-    frame = stream.read()
-
-    # check for frame if Nonetype
-    if frame is None:
-        break
-
-    # {do something with the frame here}
-
-    # write frame to writer
-    writer.write(frame)
-
-# safely close video stream
-stream.stop()
-
-# safely close writer
-writer.close()
-```
-
-&thinsp;
-
 ## Using FFGear with WriteGear for YouTube-Live Streaming
 
 You can use FFGear with WriteGear to transcode and publish to YouTube Live:
@@ -130,7 +30,7 @@ You can use FFGear with WriteGear to transcode and publish to YouTube Live:
 
 !!! danger "Make sure to replace [_YouTube-Live Stream Key_](https://support.google.com/youtube/answer/2907883) with yours before running!"
 
-```python linenums="1" hl_lines="7 10-19 22-24"
+```python linenums="1" hl_lines="11-17 21 25"
 # import required libraries
 from vidgear.gears import FFGear
 from vidgear.gears import WriteGear
@@ -194,7 +94,7 @@ You can use FFGear as a high-performance video source on a **NetGear Server** to
 
 Open a terminal on the **Server** machine and run:
 
-```python linenums="1" hl_lines="4 7 11-17"
+```python linenums="1" hl_lines="2 7 24 33"
 # import required libraries
 from vidgear.gears import FFGear
 from vidgear.gears import NetGear
@@ -243,7 +143,7 @@ server.close()
 
 Open a terminal on the **Client** machine and run:
 
-```python linenums="1" hl_lines="8-14"
+```python linenums="1"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
@@ -371,7 +271,7 @@ Open a terminal on the **Server** machine:
 
 !!! note "Replace `192.168.x.xxx` with the Client's IP address you noted earlier."
 
-```python linenums="1"
+```python linenums="1" hl_lines="2 15 33 42"
 # import required libraries
 from vidgear.gears import FFGear
 from vidgear.gears import NetGear
@@ -427,75 +327,114 @@ server.close()
 
 &thinsp;
 
-## Synchronizing Two FFGear Sources
+## Using FFGear with Live Custom watermark image overlay
 
-You can run two independent FFGear instances simultaneously for synchronized multi-source processing:
+<figure markdown>
+  ![Big Buck Bunny with watermark](https://abhitronix.github.io/deffcode/latest/assets/gifs/watermark_overlay.gif)
+  <figcaption>Big Buck Bunny with custom watermark</figcaption>
+</figure>
 
-!!! danger "Using the same source file path with more than one FFGear instance may cause [GIL](https://wiki.python.org/moin/GlobalInterpreterLock) contention. Use different sources where possible."
+In this example, we apply a watermark image _(say `watermark.png` with transparent background)_ overlay to the `10` seconds of video file _(say `foo.mp4`)_ using FFmpeg's [`overlay`](https://ffmpeg.org/ffmpeg-filters.html#toc-overlay-1) filter with some additional filtering:
 
-```python linenums="1"
-# import required libraries
+!!! info "You can use FFGear API's [`stream.metadata`](../../reference/ffdecoder/#deffcode.ffdecoder.FFdecoder.metadata) property object that dumps Source Metadata as JSON to retrieve source framerate and frame-size."
+
+!!! alert "Remember to replace `watermark.png` watermark image file-path with yours before using this recipe."
+
+```python linenums="1" hl_lines="8-18 27"
+# import the necessary packages
 from vidgear.gears import FFGear
-import cv2
+from vidgear.gears import WriteGear
+import json, cv2
 
-# open first video source with FFGear
-stream1 = FFGear(source="myvideo1.mp4", frame_format="bgr24", logging=True).start()
+# define the Complex Video Filter with additional `watermark.png` image input
+options = {
+    "-ffprefixes": ["-t", "10"],  # playback time of 10 seconds
+    "-clones": [
+        "-i",
+        "watermark.png",  # !!! [WARNING] define your `watermark.png` here.
+    ],
+    "-filter_complex": "[1]format=rgba,"  # change 2nd(image) input format to yuv444p
+    + "colorchannelmixer=aa=0.7[logo];"  # apply colorchannelmixer to image for controlling alpha [logo]
+    + "[0][logo]overlay=W-w-{pixel}:H-h-{pixel}:format=auto,".format(  # apply overlay to 1st(video) with [logo]
+        pixel=5  # at 5 pixels from the bottom right corner of the input video
+    )
+    + "format=bgr24",  # change output format to `bgr24`
+}
 
-# open second video source with FFGear
-stream2 = FFGear(source="myvideo2.mp4", frame_format="bgr24", logging=True).start()
+# open source with FFGear and BGR frames with given params
+stream = FFGear(source="foo.mp4", frame_format="bgr24", logging=True).start()
 
-# infinite loop
+# retrieve framerate from source JSON Metadata and pass it as `-input_framerate` 
+# parameter for controlled framerate
+output_params = {
+    "-input_framerate": json.loads(stream.stream.metadata)["source_video_framerate"]
+}
+
+# Define writer with default parameters and suitable
+# output filename for e.g. `output_foo.mp4`
+writer = WriteGear(output="output_foo.mp4", **output_params)
+
+# loop over
 while True:
 
-    # read frames from both streams
-    frameA = stream1.read()
-    frameB = stream2.read()
+    # read frames from stream
+    frame = stream.read()
 
-    # check if either frame is None
-    if frameA is None or frameB is None:
+    # check for frame if Nonetype
+    if frame is None:
         break
 
-    # {do something with frameA and frameB here}
+    # {do something with the frame here}
 
-    # show output windows
-    cv2.imshow("Output Stream1", frameA)
-    cv2.imshow("Output Stream2", frameB)
+    # write frame to output
+    writer.write(frame)
 
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+# safely close writer
+writer.close()
 
-    # press 'w' to save both frames simultaneously
-    if key == ord("w"):
-        cv2.imwrite("Image-1.jpg", frameA)
-        cv2.imwrite("Image-2.jpg", frameB)
-
-# close output windows
-cv2.destroyAllWindows()
-
-# safely close both FFGear streams
-stream1.stop()
-stream2.stop()
+# safely close stream
+stream.stop()
 ```
 
 &thinsp;
 
-## Using FFGear with Variable `yt_dlp` Parameters in Stream Mode
+## Using FFGear to generate Mandelbrot test pattern with vectorscope & waveforms
 
-FFGear provides exclusive `STREAM_RESOLUTION` and `STREAM_PARAMS` attributes with its [`options`](../../gears/ffgear/params/#options) dictionary parameter for fine-grained control over streaming URL resolution and `yt_dlp` behavior.
+> The [`mandelbrot`](https://ffmpeg.org/ffmpeg-filters.html#toc-mandelbrot) graph generate a [**Mandelbrot set fractal**](https://en.wikipedia.org/wiki/Mandelbrot_set), that progressively zoom towards a specific point.
 
-```python linenums="1" hl_lines="6"
+<figure markdown>
+  ![mandelbrot test pattern](https://abhitronix.github.io/deffcode/latest/assets/gifs/mandelbrot_vectorscope_waveforms.gif){ width="500" }
+  <figcaption>Mandelbrot pattern with a Vectorscope & two Waveforms</figcaption>
+</figure>
+
+
+In this example we generate `30` seconds of a **Mandelbrot test pattern** _(`1280x720` frame size & `30` framerate)_ using [`mandelbrot`](https://ffmpeg.org/ffmpeg-filters.html#toc-mandelbrot) graph source with `lavfi` input virtual device with a [vectorscope](https://www.studiobinder.com/blog/what-is-a-vectorscope-definition/) _(plots 2 color component values)_ & two [waveforms](https://ffmpeg.org/ffmpeg-filters.html#toc-waveform) _(plots YUV color component intensity)_ stacked to it: 
+
+
+```python linenums="1" hl_lines="7-15 21-22"
 # import required libraries
 from vidgear.gears import FFGear
 import cv2
 
-# specify stream quality and custom yt_dlp parameters
-options = {"STREAM_RESOLUTION": "720p", "STREAM_PARAMS": {"nocheckcertificate": True}}
+# define parameters
+options = {
+    "-ffprefixes": ["-t", "20"],  # playback time of 20 seconds
+    "-vf": "format=yuv444p," # change input format to yuv444p
+    + "split=4[a][b][c][d]," # split input into 4 identical outputs.
+    + "[a]waveform[aa],"  # apply waveform on first output
+    + "[b][aa]vstack[V],"  # vertical stack 2nd output with waveform [V]
+    + "[c]waveform=m=0[cc],"  # apply waveform on 3rd output
+    + "[d]vectorscope=color4[dd],"  # apply vectorscope on 4th output
+    + "[cc][dd]vstack[V2],"  # vertical stack waveform and vectorscope [V2]
+    + "[V][V2]hstack",  # horizontal stack [V] and [V2] vertical stacks
+}
 
-# Add YouTube Video URL as source and enable Stream Mode
+# stream with "mandelbrot" source of
+# `1280x720` frame size and `30` framerate for BGR24 output
 stream = FFGear(
-    source="https://youtu.be/bvetuLwJIkA",
-    stream_mode=True,
+    source="mandelbrot=size=1280x720:rate=30",
+    source_demuxer="lavfi",
+    frame_format="bgr24",
     logging=True,
     **options
 ).start()
@@ -525,58 +464,6 @@ cv2.destroyAllWindows()
 
 # safely close video stream
 stream.stop()
-```
-
-&thinsp;
-
-## Using FFGear with WriteGear for MP4 Segmentation
-
-You can use FFGear as a source for WriteGear's segment muxer to split a video stream into fixed-duration MP4 segments:
-
-```python linenums="1" hl_lines="7 10-18 21"
-# import required libraries
-from vidgear.gears import FFGear
-from vidgear.gears import WriteGear
-import cv2
-
-# open source video with FFGear
-stream = FFGear(source="myvideo.mp4", frame_format="bgr24", logging=True).start()
-
-# define WriteGear parameters for MP4 segmentation
-output_params = {
-    "-c:v": "libx264",
-    "-crf": 22,
-    "-map": 0,
-    "-segment_time": 9,
-    "-g": 9,
-    "-sc_threshold": 0,
-    "-force_key_frames": "expr:gte(t,n_forced*9)",
-    "-clones": ["-f", "segment"],
-}
-
-# Define WriteGear writer with segment output pattern
-writer = WriteGear(output="output%03d.mp4", logging=True, **output_params)
-
-# loop over
-while True:
-
-    # read frames from FFGear stream
-    frame = stream.read()
-
-    # check for frame if Nonetype
-    if frame is None:
-        break
-
-    # {do something with the frame here}
-
-    # write frame to writer
-    writer.write(frame)
-
-# safely close video stream
-stream.stop()
-
-# safely close writer
-writer.close()
 ```
 
 &thinsp;
