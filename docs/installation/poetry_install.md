@@ -18,94 +18,31 @@ limitations under the License.
 ===============================================
 -->
 
-# Install from source
+# Install using Poetry
 
+> _Best option for managing VidGear as a dependency in a [Poetry](https://python-poetry.org/)-managed project._
 
-> _Best option for trying latest patches(maybe experimental), forking for Pull Requests, or automatically installing all prerequisites(with a few exceptions)._
+VidGear's [`pyproject.toml`](https://github.com/abhiTronix/vidgear/blob/master/pyproject.toml) is PEP 517/621 compliant, so it can be consumed directly by [Poetry](https://python-poetry.org/docs/#installation).
 
+??? info "Don't have Poetry installed?"
+
+    Follow the [official Poetry installation guide](https://python-poetry.org/docs/#installation) before proceeding. You can verify your install with:
+
+    ```sh
+    poetry --version
+    ```
+
+&thinsp;
 
 ## Prerequisites
 
-When installing VidGear from source, following are Critical and some API specific prerequisites you may need to install manually:
-
-!!! danger ":material-bomb: Breaking Changes in `v0.3.4`"
-
-    From version `v0.3.4` onwards, VidGear **NO LONGER** installs OpenCV python binaries automatically as a dependency during installation from source. So you must install it manually before using any VidGear API.
-
-!!! question "What about rest of the prerequisites?"
-
-    Any other python prerequisites _(Critical/API specific)_ will be automatically installed based on your OS/System specifications.
-    
-
-??? alert ":fontawesome-brands-python: Upgrade your `pip`"
-
-    ==It strongly advised to upgrade to latest `pip` before installing vidgear to avoid any undesired installation error(s).==
-
-    There are two mechanisms to upgrade `pip`:
-
-    === "`pip`"
-
-        You can use existing `pip` to upgrade itself:
-
-        ??? info "Install `pip` if not present"
-
-            * Download the script, from https://bootstrap.pypa.io/get-pip.py.
-            * Open a terminal/command prompt, `cd` to the folder containing the `get-pip.py` file and run:
-
-            === "Linux/MacOS"
-
-                ```sh
-                python get-pip.py
-                
-                ```
-
-            === "Windows"
-
-                ```sh
-                py get-pip.py
-                
-                ```
-            More details about this script can be found in [pypa/get-pip’s README](https://github.com/pypa/get-pip).
-
-
-        === "Linux/MacOS"
-
-            ```sh
-            python -m pip install pip --upgrade
-            
-            ```
-
-        === "Windows"
-
-            ```sh
-            py -m pip install pip --upgrade
-            
-            ```
-
-    === "`ensurepip`"
-
-        Python also comes with an [`ensurepip`](https://docs.python.org/3/library/ensurepip.html#module-ensurepip) module[^1], which can easily upgrade/install `pip` in any Python environment.
-
-        === "Linux/MacOS"
-
-            ```sh
-            python -m ensurepip --upgrade
-            
-            ```
-
-        === "Windows"
-
-            ```sh
-            py -m ensurepip --upgrade
-            
-            ```
-    
+When installing VidGear with Poetry, you need to manually install the following prerequisites:
 
 ### Critical Prerequisites :warning:
 
 * #### :simple-opencv: OpenCV
 
-    Must require OpenCV(3.0+) python binaries installed for all core functions. You easily install it directly via [pip](https://pypi.org/project/opencv-python/):
+    Must require OpenCV(3.0+) python binaries installed for all core functions. You can easily install it directly via [pip](https://pypi.org/project/opencv-python/):
 
     ??? tip "OpenCV installation from source"
 
@@ -117,13 +54,13 @@ When installing VidGear from source, following are Critical and some API specifi
 
         OpenCV maintainers also provide additional binaries via pip that contains both main modules and contrib/extra modules [`opencv-contrib-python`](https://pypi.org/project/opencv-contrib-python/), and for server (headless) environments like [`opencv-python-headless`](https://pypi.org/project/opencv-python-headless/) and [`opencv-contrib-python-headless`](https://pypi.org/project/opencv-contrib-python-headless/). You can also install ==any one of them== in similar manner. More information can be found [here](https://github.com/opencv/opencv-python#installation-and-usage).
 
-
     ```sh
     pip install opencv-python       
     ```
 
+&thinsp;
 
-### API Specific Prerequisites
+### API Specific Prerequisites 
 
 * #### :simple-ffmpeg: FFmpeg 
 
@@ -135,7 +72,6 @@ When installing VidGear from source, following are Critical and some API specifi
         * **For StreamGear API**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/streamgear/ffmpeg_install/) for its installation.
         * **For FFGear API**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/ffgear/advanced/ffmpeg_install/) for its installation.
 
-
 &thinsp;
 
 * #### :simple-raspberrypi: Picamera2
@@ -144,11 +80,11 @@ When installing VidGear from source, following are Critical and some API specifi
 
     ??? tip "Using Legacy `picamera` library with PiGear (`v0.3.3` and above)"
 
-        PiGear API _(version `0.3.3` onwards)_ prioritizes the newer Picamera2 library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. However, if your operating system doesn't support Picamera2, you can still use the  legacy [`picamera`](https://picamera.readthedocs.io/en/release-1.13/) library. Here's how to easily install it using pip:
+        PiGear API _(version `0.3.3` onwards)_ prioritizes the newer Picamera2 library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. However, if your operating system doesn't support Picamera2, you can still use the legacy [`picamera`](https://picamera.readthedocs.io/en/release-1.13/) library. Here's how to easily install it using pip:
 
         ```sh
         pip install picamera
-        ```  
+        ```
 
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
 
@@ -215,46 +151,34 @@ When installing VidGear from source, following are Critical and some API specifi
         pip3 install picamera2
         ```
 
-&nbsp;
 
+&nbsp;
 
 ## Installation
 
+**Add VidGear to an existing Poetry project:**
 
-**If you want to checkout the latest beta [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch , you can do so with the following commands:**
+??? example "Adding vidgear with only selective dependencies"
 
+    Starting with version `v0.2.2`, you can run any VidGear API by installing only the specific dependencies required by the API in use (except for some Core dependencies).
 
-!!! info "This can be useful if you want to provide feedback for a new feature or bug fix in the `testing` branch."
+    This is useful when you want to manually review, select and install minimal API-specific dependencies on bare-minimum vidgear from scratch:
 
-!!! danger "DO NOT clone or install any other branch other than `testing` unless advised, as it is not tested with CI environments and possibly very unstable or unusable."
-
-??? example "Installing vidgear with only selective dependencies"
-
-    Starting with version `v0.2.2`, you can now run any VidGear API by installing only just specific dependencies required by the API in use(except for some Core dependencies). 
-
-    This is useful when you want to manually review, select and install minimal API-specific dependencies on bare-minimum vidgear from scratch on your system:
-    
-    - To clone and install bare-minimum vidgear without any dependencies do as follows:
+    - Add bare-minimum vidgear as follows:
 
         ```sh
-        # clone the repository and get inside
-        git clone https://github.com/abhiTronix/vidgear.git && cd vidgear
-
-        # checkout the latest testing branch
-        git checkout testing
-
-        # Install stable release with bare-minimum dependencies
-        pip install .
+        # Add stable release with bare-minimum dependencies
+        poetry add vidgear
         ```
 
-    - Then, you must install **Critical dependencies**(if not already):
+    - Then, you must install **Critical dependencies** (if not already):
 
         ```sh
-        # Install opencv(only if not installed previously)
+        # Install opencv (only if not installed previously)
         pip install opencv-python 
         ```
 
-    - Finally, manually install your **API-specific dependencies** as required by your API(in use):
+    - Finally, manually install your **API-specific dependencies** as required by your API (in use):
 
         ```sh
         # Just copy-&-paste from table below
@@ -275,58 +199,41 @@ When installing VidGear from source, following are Critical and some API specifi
         | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
         | NetGear_Async | `pyzmq`, `msgpack`, `msgpack_numpy`, `uvloop` |
         | Stabilizer Class | - |
-                    
 
-??? warning ":fontawesome-brands-windows: Windows Installation"
 
-    If you are using Windows, some of the commands given below, may not work out-of-the-box.
+```sh
+# Add latest stable release with all Core dependencies
+poetry add vidgear[core]
 
-    A quick solution may be to preface every Python command with `python -m` like this:
+# Or add latest stable release with all Core & Asyncio dependencies
+poetry add vidgear[asyncio]
+```
 
-    ```sh
-    # Install latest stable release with all Core dependencies
-    python -m pip install -U .[core]
-
-    # Or Install latest stable release with all Core & Asyncio dependencies
-    python -m pip install -U .[asyncio]
-    ```
-
-    And, If you don't have the privileges to the directory you're installing package. Then use `--user` flag, that makes pip install packages in your home directory instead:
-
-    ```sh
-    # Install latest stable release with all Core dependencies
-    python -m pip install --upgrade --user .[core]
-
-    # Or Install latest stable release with all Core & Asyncio dependencies
-    python -m pip install --upgrade --user .[asyncio]
-    ```
-
-    Or, If you're using `py` as alias for installed python, then:
-
-    ```sh
-    # Install latest stable release with all Core dependencies
-    py -m pip install --upgrade --user .[core]
-
-    # Or Install latest stable release with all Core & Asyncio dependencies
-    py -m pip install --upgrade --user .[asyncio]
-    ```
-    
+**Or, install directly from source in a Poetry-managed environment:**
 
 ```sh
 # clone the repository and get inside
 git clone https://github.com/abhiTronix/vidgear.git && cd vidgear
 
-# checkout the latest testing branch
-git checkout testing
+# Install it into Poetry's virtualenv with all Core dependencies
+poetry install --extras core
 
-# Install latest stable release with all Core dependencies
-pip install -U .[core]
-
-# Or Install latest stable release with all Core & Asyncio dependencies
-pip install -U .[asyncio]
+# Or with all Core & Asyncio dependencies
+poetry install --extras asyncio
 ```
 
-&nbsp;
+??? tip "Running commands inside Poetry's virtualenv"
 
+    Use `poetry run` to execute VidGear-powered scripts without activating the shell:
 
-[^1]: :warning: The `ensurepip` module is missing/disabled on Ubuntu. Use `pip` method only.
+    ```sh
+    poetry run python your_script.py
+    ```
+
+    Or spawn a shell inside the virtualenv:
+
+    ```sh
+    poetry shell
+    ```
+
+&thinsp;

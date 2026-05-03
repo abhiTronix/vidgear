@@ -94,7 +94,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
 ### Critical Prerequisites :warning:
 
-* #### OpenCV
+* #### :simple-opencv: OpenCV
 
     Must require OpenCV(3.0+) python binaries installed for all core functions. You easily install it directly via [pip](https://pypi.org/project/opencv-python/):
 
@@ -117,18 +117,19 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
 ### API Specific Prerequisites 
 
-* #### FFmpeg 
+* #### :simple-ffmpeg: FFmpeg 
 
-    Require only for the video compression and encoding compatibility within [**StreamGear API**](../../gears/streamgear/introduction/) and [**WriteGear API's Compression Mode**](../../gears/writegear/compression/). 
+    Require only for the video compression and encoding compatibility within [**StreamGear API**](../../gears/streamgear/introduction/) and [**WriteGear API's Compression Mode**](../../gears/writegear/compression/), and for hardware-accelerated decoding within [**FFGear API**](../../gears/ffgear/). 
 
     !!! tip "FFmpeg Installation"
 
         * **For WriteGear API's Compression Mode**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
         * **For StreamGear API**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/streamgear/ffmpeg_install/) for its installation.
+        * **For FFGear API**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/ffgear/advanced/ffmpeg_install/) for its installation.
 
 &thinsp;
 
-* #### Picamera2
+* #### :simple-raspberrypi: Picamera2
 
     Required only if you're using Raspberry Pi :fontawesome-brands-raspberry-pi: Camera Modules _(or USB webcams)_ with the [**PiGear**](../../gears/pigear/) API. Here's how to install [Picamera2](https://github.com/raspberrypi/picamera2) python library:
 
@@ -234,32 +235,6 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 ## Installation
 
 
-??? danger "Installation command with `pip` has been changed in `v0.2.4`"
-
-    The legacy `#!sh  pip install vidgear` command now installs critical bare-minimum dependencies only. Therefore in order to automatically install all the API specific dependencies as previous versions, use `#!sh  pip install vidgear[core]` command instead.
-
-    === "`v0.2.4` and newer"
-
-        ```sh
-        # Install latest stable release with all Core dependencies
-        pip install -U vidgear[core]
-        ```
-
-    === "Older"
-
-        !!! failure "`[core]` keyword isn't available in versions older than `v0.2.4`"
-
-        ```sh
-        # Install older stable release with all Core dependencies
-        pip install vidgear<0.2.4
-        ```
-
-    Similarly in your python project files like `pyproject.toml` or `requirements.txt`, use vidgear dependency as `#!sh  vidgear[core]>=0.2.4`  instead.
-
-    !!! note "This change does not affects `#!sh pip install vidgear[asyncio]` command."
-
-
-
 **Installation is as simple as:**
 
 ??? example "Installing vidgear with only selective dependencies"
@@ -270,39 +245,17 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
     
     - Install bare-minimum vidgear as follows:
 
-        
-        === "`v0.2.4` and newer"
-
-            ```sh
-            # Install stable release with bare-minimum dependencies
-            pip install -U vidgear
-            ```
-
-        === "Older"
-
-            ```sh
-            # Install stable without any dependencies
-            pip install --no-deps vidgear<0.2.4
-            ```
+        ```sh
+        # Install stable release with bare-minimum dependencies
+        pip install -U vidgear
+        ```
 
     - Then, you must install **Critical dependencies**(if not already):
 
-        === "`v0.2.4` and newer"
-
-            ```sh
-            # Install opencv(only if not installed previously)
-            pip install opencv-python 
-            ```
-
-        === "Older"
-
-            ```sh
-            # Install critical dependencies
-            pip install cython, numpy, requests, tqdm, colorlog
-
-            # Install opencv(only if not installed previously)
-            pip install opencv-python 
-            ```
+        ```sh
+        # Install opencv(only if not installed previously)
+        pip install opencv-python 
+        ```
 
     - Finally, manually install your **API-specific dependencies** as required by your API(in use):
 
@@ -311,38 +264,21 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
         pip install <API-specific dependencies>
         ```
 
-        === "`v0.2.4` and newer"
+        | APIs | Dependencies |
+        |:---:|:---|
+        | CamGear | `yt_dlp` |
+        | PiGear | `picamera`, `picamera2` _(see [this](#picamera2) for its installation)_ |
+        | VideoGear | *Based on CamGear or PiGear or FFGear backend in use*  |
+        | ScreenGear | `dxcam`, `mss`, `pyscreenshot`, `Pillow` |
+        | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
+        | StreamGear | **FFmpeg:** See [this doc ➶](../../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
+        | FFGear | **FFmpeg:** See [this doc ➶](../../gears/ffgear/advanced/ffmpeg_install/#ffmpeg-installation-instructions) |
+        | NetGear | `pyzmq`, `simplejpeg` |
+        | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
+        | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
+        | NetGear_Async | `pyzmq`, `msgpack`, `msgpack_numpy`, `uvloop` |
+        | Stabilizer Class | - |
 
-            | APIs | Dependencies |
-            |:---:|:---|
-            | CamGear | `yt_dlp` |
-            | PiGear | `picamera`, `picamera2` _(see [this](#picamera2) for its installation)_ |
-            | VideoGear | *Based on CamGear or PiGear backend in use*  |
-            | ScreenGear | `dxcam`, `mss`, `pyscreenshot`, `Pillow` |
-            | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
-            | StreamGear | **FFmpeg:** See [this doc ➶](../../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
-            | NetGear | `pyzmq`, `simplejpeg` |
-            | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
-            | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
-            | NetGear_Async | `pyzmq`, `msgpack`, `msgpack_numpy`, `uvloop` |
-            | Stabilizer Class | - |
-
-        === "Older"
-
-            | APIs | Dependencies |
-            |:---:|:---|
-            | CamGear | `pafy`, `yt_dlp`, `streamlink` |
-            | PiGear | `picamera` |
-            | VideoGear | *Based on CamGear or PiGear backend in use* |
-            | ScreenGear | `mss`, `pyscreenshot`, `Pillow` |
-            | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
-            | StreamGear | **FFmpeg:** See [this doc ➶](../../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
-            | NetGear | `pyzmq`, `simplejpeg` |
-            | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
-            | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
-            | NetGear_Async | `pyzmq`, `msgpack`, `msgpack_numpy`, `uvloop` |
-            | Stabilizer Class | - |
-                    
 
 ??? warning ":fontawesome-brands-windows: Windows Installation"
 

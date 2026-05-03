@@ -43,16 +43,17 @@ VidGear is well-tested and supported on the following systems(but not limited to
 
     Python-3.9 legacies support has been dropped from Vidgear.
 
-:fontawesome-brands-python: [**Python 3.10+**](https://www.python.org/downloads/) are only supported legacies for installing Vidgear `v0.3.4` and above.
+:fontawesome-brands-python: [**Python 3.10+**](https://www.python.org/downloads/) are only supported legacies for installing Vidgear `v0.3.5` and above.
 
 &thinsp;
 
 ## Installation methods
 
-* [Install using pip :simple-pypi:](../installation/pip_install/) _(recommended)_
-* [Install from source :material-hammer-wrench:](../installation/source_install/)
+* [Install using Pip :simple-pypi:](../installation/pip_install/) _(recommended)_
+* [Install using Poetry :simple-poetry:](../installation/poetry_install/)
+* [Install from Source :simple-opensourcehardware:](../installation/source_install/)
 
 ??? example "Looking for containerizing VidGear with :simple-docker: Docker?"
-    Checkout this guide that addresses the unique challenges of containerizing VidGear applications, particularly around building OpenCV with proper GStreamer and FFmpeg support. Learn the patterns and pitfalls before you start: [**Containerizing VidGear with Docker ➶**](bonus/docker_example.md)
+    Checkout this guide that addresses the unique challenges of containerizing VidGear applications, particularly around building OpenCV with proper GStreamer and FFmpeg support. Learn the patterns and pitfalls before you start: [**Containerizing VidGear with Docker ➶**](../bonus/docker_example.md)
 
 &thinsp;
