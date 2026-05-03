@@ -38,7 +38,7 @@ WebGear_RTC can handle [multiple consumers](../webgear_rtc/advanced/#using-webge
 
 WebGear_RTC API works in conjunction with [**Starlette**](https://www.starlette.io/) ASGI application and can also flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
 
-Additionally, WebGear_RTC API also provides internal wrapper around [VideoGear](../videogear/), which itself provides internal access to both [CamGear](../camgear/) and [PiGear](../pigear/) APIs.
+Additionally, WebGear_RTC API also provides internal wrapper around [VideoGear](../videogear/), which itself provides internal access to [CamGear](../camgear/), [PiGear](../pigear/), and [FFGear](../ffgear/) APIs.
 
 &thinsp;
 
