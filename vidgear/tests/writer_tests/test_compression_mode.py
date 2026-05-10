@@ -351,3 +351,37 @@ def test_WriteGear_customFFmpeg(ffmpeg_cmd, logging, output_params):
             pytest.xfail("Test Passed!")
         else:
             logger.exception(str(e))
+
+
+@pytest.mark.parametrize("vcodec_key", ["-vcodec", "-c:v"])
+def test_skip_vcodec(vcodec_key):
+    """
+    Testing `-vcodec`/`-c:v` set to `None` to discard `-vcodec` FFmpeg parameter
+    entirely from the encoding pipeline (e.g. for GIF output, letting FFmpeg
+    auto-select the best available video encoder).
+    """
+    stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
+    output_params = {vcodec_key: None}
+    output_path = os.path.join(get_testing_dir(), "Output_skipv.gif")
+    try:
+        writer = WriteGear(
+            output=output_path,
+            custom_ffmpeg=return_static_ffmpeg(),
+            logging=True,
+            **output_params,
+        )  # Define writer
+        while True:
+            (grabbed, frame) = stream.read()
+            if not grabbed:
+                break
+            writer.write(frame)
+        stream.release()
+        writer.close()
+        # assert output file is created successfully
+        assert (
+            os.path.isfile(output_path) and os.path.getsize(output_path) > 0
+        ), "Output file was not created or is empty!"
+    except Exception as e:
+        pytest.fail(str(e))
+    finally:
+        remove_file_safe(output_path)
