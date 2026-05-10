@@ -22,6 +22,93 @@ limitations under the License.
 
 &thinsp;
 
+## Using FFGear for Real-Time AI/ML Video Inference
+
+FFGear can be used for real-time AI/ML video inference with several built-in optimization techniques for improving throughput, reducing latency, and lowering compute usage.
+
+<figure>
+  <img src="https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/vidgear/ffgear-yolo10n.gif" alt="FFGear Keyframes (I-frames) optimization in action!" loading="lazy" width=85%/>
+  <figcaption>FFGear Keyframes (I-frames) optimization in action!</figcaption>
+</figure>
+
+Here's an example of using FFGear to optimize [**YOLOv10-Nano** model inference](https://docs.ultralytics.com/models/yolov10/) by processing only Keyframes (I-frames) while skipping all non-keyframes (P/B-frames), reducing unnecessary compute usage and saving the annotated output as an **Optimized GIF** with the WriteGear API:
+
+???+ warning "This example requires the latest `ultralytics` package"
+
+    Install or upgrade the `ultralytics` package with pip:
+
+    ```sh
+    pip install -U ultralytics
+    ```
+
+    Explore additional installation methods [here ➶](https://docs.ultralytics.com/quickstart/).
+
+
+```python linenums="1" hl_lines="3-4 7 15-16 20 44-54"
+# import required libraries
+from vidgear.gears import FFGear
+from vidgear.gears import WriteGear
+from ultralytics import YOLO
+
+# Initialize YOLOv10-Nano model
+model = YOLO("yolov10n.pt")
+
+# Configure FFGear with per-frame metadata extraction enable
+options = {"-extract_metadata": True}
+stream = FFGear(source="myvideo.mp4", frame_format="bgr24", logging=True, **options).start()
+
+# Add additional required FFmpeg parameters for Optimized GIF
+output_params = {
+    "-filter_complex": "[0:v] fps=10,scale=640:-1:flags=lanczos,split [a][b];[a] palettegen [p];[b][p] paletteuse",
+    "-vcodec": None,  # let FFmpeg auto-select the best video encoder for the output (e.g. GIF)
+}
+
+# Define writer with defined parameters
+writer = WriteGear(output="output_foo.gif", **output_params)
+
+# loop over
+while True:
+
+    # read data from stream
+    output = stream.read()
+
+    # check if end of stream
+    if output is None:
+        break
+
+    # Unpack the frame and its associated metadata
+    frame, meta = output
+
+    # --- OPTIMIZATION STEP ---
+    # We skip all non-keyframes to save processing power.
+    # This ensures the model only runs on the most information-dense frames.
+    if meta and not meta["is_keyframe"]:
+        continue  # <-- Skips Non-key frames (P, B-frames)
+
+    # Log keyframe details
+    print(f"Keyframe #{meta['frame_num']} at {meta['pts_time']:.3f}s")
+
+    # Perform AI Inference on keyframes (I-frames) only
+    # Because we skip non-keyframes, this heavy task runs significantly less often.
+    results = model(frame)
+
+    # Annotate the frame with detection boxes and labels
+    annotated_frame = results[0].plot()
+
+    # {Insert your custom logic here, e.g., displaying/saving frames or triggering an alert}
+
+    # writing Annotated frame to writer
+    writer.write(annotated_frame)
+
+# safely close video stream
+stream.stop()
+
+# safely close writer
+writer.close()
+```
+
+&thinsp;
+
 ## Using FFGear with WriteGear for YouTube-Live Streaming
 
 You can use FFGear with WriteGear to transcode and publish to YouTube Live:
@@ -323,147 +410,6 @@ stream.stop()
 
 # safely close NetGear server
 server.close()
-```
-
-&thinsp;
-
-## Using FFGear with Live Custom watermark image overlay
-
-<figure markdown>
-  ![Big Buck Bunny with watermark](https://abhitronix.github.io/deffcode/latest/assets/gifs/watermark_overlay.gif)
-  <figcaption>Big Buck Bunny with custom watermark</figcaption>
-</figure>
-
-In this example, we apply a watermark image _(say `watermark.png` with transparent background)_ overlay to the `10` seconds of video file _(say `foo.mp4`)_ using FFmpeg's [`overlay`](https://ffmpeg.org/ffmpeg-filters.html#toc-overlay-1) filter with some additional filtering:
-
-!!! info "You can use FFGear API's [`stream.metadata`](../../reference/ffdecoder/#deffcode.ffdecoder.FFdecoder.metadata) property object that dumps Source Metadata as JSON to retrieve source framerate and frame-size."
-
-!!! alert "Remember to replace `watermark.png` watermark image file-path with yours before using this recipe."
-
-```python linenums="1" hl_lines="8-18 27"
-# import the necessary packages
-from vidgear.gears import FFGear
-from vidgear.gears import WriteGear
-import json, cv2
-
-# define the Complex Video Filter with additional `watermark.png` image input
-options = {
-    "-ffprefixes": ["-t", "10"],  # playback time of 10 seconds
-    "-clones": [
-        "-i",
-        "watermark.png",  # !!! [WARNING] define your `watermark.png` here.
-    ],
-    "-filter_complex": "[1]format=rgba,"  # change 2nd(image) input format to yuv444p
-    + "colorchannelmixer=aa=0.7[logo];"  # apply colorchannelmixer to image for controlling alpha [logo]
-    + "[0][logo]overlay=W-w-{pixel}:H-h-{pixel}:format=auto,".format(  # apply overlay to 1st(video) with [logo]
-        pixel=5  # at 5 pixels from the bottom right corner of the input video
-    )
-    + "format=bgr24",  # change output format to `bgr24`
-}
-
-# open source with FFGear and BGR frames with given params
-stream = FFGear(source="foo.mp4", frame_format="bgr24", logging=True).start()
-
-# retrieve framerate from source JSON Metadata and pass it as `-input_framerate` 
-# parameter for controlled framerate
-output_params = {
-    "-input_framerate": json.loads(stream.stream.metadata)["source_video_framerate"]
-}
-
-# Define writer with default parameters and suitable
-# output filename for e.g. `output_foo.mp4`
-writer = WriteGear(output="output_foo.mp4", **output_params)
-
-# loop over
-while True:
-
-    # read frames from stream
-    frame = stream.read()
-
-    # check for frame if Nonetype
-    if frame is None:
-        break
-
-    # {do something with the frame here}
-
-    # write frame to output
-    writer.write(frame)
-
-# safely close writer
-writer.close()
-
-# safely close stream
-stream.stop()
-```
-
-&thinsp;
-
-## Using FFGear to generate Mandelbrot test pattern with vectorscope & waveforms
-
-> The [`mandelbrot`](https://ffmpeg.org/ffmpeg-filters.html#toc-mandelbrot) graph generate a [**Mandelbrot set fractal**](https://en.wikipedia.org/wiki/Mandelbrot_set), that progressively zoom towards a specific point.
-
-<figure markdown>
-  ![mandelbrot test pattern](https://abhitronix.github.io/deffcode/latest/assets/gifs/mandelbrot_vectorscope_waveforms.gif){ width="500" }
-  <figcaption>Mandelbrot pattern with a Vectorscope & two Waveforms</figcaption>
-</figure>
-
-
-In this example we generate `30` seconds of a **Mandelbrot test pattern** _(`1280x720` frame size & `30` framerate)_ using [`mandelbrot`](https://ffmpeg.org/ffmpeg-filters.html#toc-mandelbrot) graph source with `lavfi` input virtual device with a [vectorscope](https://www.studiobinder.com/blog/what-is-a-vectorscope-definition/) _(plots 2 color component values)_ & two [waveforms](https://ffmpeg.org/ffmpeg-filters.html#toc-waveform) _(plots YUV color component intensity)_ stacked to it: 
-
-
-```python linenums="1" hl_lines="7-15 21-22"
-# import required libraries
-from vidgear.gears import FFGear
-import cv2
-
-# define parameters
-options = {
-    "-ffprefixes": ["-t", "20"],  # playback time of 20 seconds
-    "-vf": "format=yuv444p," # change input format to yuv444p
-    + "split=4[a][b][c][d]," # split input into 4 identical outputs.
-    + "[a]waveform[aa],"  # apply waveform on first output
-    + "[b][aa]vstack[V],"  # vertical stack 2nd output with waveform [V]
-    + "[c]waveform=m=0[cc],"  # apply waveform on 3rd output
-    + "[d]vectorscope=color4[dd],"  # apply vectorscope on 4th output
-    + "[cc][dd]vstack[V2],"  # vertical stack waveform and vectorscope [V2]
-    + "[V][V2]hstack",  # horizontal stack [V] and [V2] vertical stacks
-}
-
-# stream with "mandelbrot" source of
-# `1280x720` frame size and `30` framerate for BGR24 output
-stream = FFGear(
-    source="mandelbrot=size=1280x720:rate=30",
-    source_demuxer="lavfi",
-    frame_format="bgr24",
-    logging=True,
-    **options
-).start()
-
-# loop over
-while True:
-
-    # read frames from stream
-    frame = stream.read()
-
-    # check for frame if Nonetype
-    if frame is None:
-        break
-
-    # {do something with the frame here}
-
-    # Show output window
-    cv2.imshow("Output", frame)
-
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
-
-# close output window
-cv2.destroyAllWindows()
-
-# safely close video stream
-stream.stop()
 ```
 
 &thinsp;
