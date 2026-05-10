@@ -44,15 +44,20 @@ limitations under the License.
 
 ???+ alert "Example Assumptions"
 
-    FFmpeg provide set of specific Demuxers on different platforms to read the multimedia streams from a particular type of Video Capture source/device. Please note that following recipe explicitly assumes: 
+    FFmpeg provides a set of platform-specific demuxers to read multimedia streams from different types of video capture devices/sources. Please note that the following example explicitly assumes:
 
-    - You're running Linux Machine with USB webcam connected to it at node/path `/dev/video0`. 
-    - You already have appropriate Linux video drivers and related softwares installed on your machine.
-    - You machine uses FFmpeg binaries built with `--enable-libv4l2` flag to support `video4linux2, v4l2` demuxer. BTW, you can list all supported demuxers using the `#!sh ffmpeg --list-demuxers` terminal command.
+    - You're running a :material-linux: Linux machine with a USB webcam connected at the device node/path `/dev/video0`.
+    - You already have the appropriate Linux video drivers and related software installed on your machine.
+    - Your machine uses FFmpeg binaries built with the `--enable-libv4l2` flag to support the `video4linux2` (or simply `v4l2`) demuxer. You can list all supported demuxers using the terminal command:
 
-    These assumptions **MAY/MAY NOT** suit your current setup. Kindly use suitable parameters based your system platform and hardware settings only.
+    ```sh
+    ffmpeg --list-demuxers
+    ```
 
-In this example we output **BGR24** video frames from a USB webcam device connected at path `/dev/video0` on a Linux Machine with `video4linux2` _(or simply `v4l2`)_ demuxer:
+    These assumptions **MAY/MAY NOT** suit your current setup. Kindly use parameters appropriate for your system platform and hardware configuration only.
+
+
+In this example, we output **BGR24** video frames from a USB webcam device connected at `/dev/video0` on a Linux machine using the `video4linux2` (or simply `v4l2`) demuxer:
 
 ??? tip "Identifying and Specifying Video Capture Device Name/Path/Index and suitable Demuxer on different OS platforms"
 
@@ -234,14 +239,17 @@ stream.stop()
 
 ???+ alert "Example Assumptions"
 
-    Similar to Webcam capturing, FFmpeg provide set of specific Demuxers on different platforms for capturing your desktop _(Screen recording)_. Please note that following recipe explicitly assumes: 
+    Similar to webcam capturing, FFmpeg provides a set of platform-specific demuxers for desktop capture _(screen recording)_. Please note that the following example explicitly assumes:
+    - You're running a :material-linux: Linux machine with the `libxcb` module installed properly.
+    - Your machine uses FFmpeg binaries built with the `--enable-libxcb` flag to support the `x11grab` demuxer. You can list all supported demuxers using the terminal command:
 
-    - You're running Linux Machine with `libxcb` module installed properly on your machine.
-    - You machine uses FFmpeg binaries built with `--enable-libxcb` flag to support `x11grab` demuxer. BTW, you can list all supported demuxers using the `#!sh ffmpeg --list-demuxers` terminal command.
+    ```sh
+    ffmpeg --list-demuxers
+    ```
+    These assumptions **MAY/MAY NOT** suit your current setup. Kindly use parameters appropriate for your system platform and hardware configuration only.
 
-    These assumptions **MAY/MAY NOT** suit your current setup. Kindly use suitable parameters based your system platform and hardware settings only.
 
-FFGear API supports screen capture from your entire screen as well as specific regions. Under the hood, it uses platform-specific FFmpeg demuxers for this purpose.
+FFGear API supports screen capture from your entire desktop as well as specific screen regions. Under the hood, it uses platform-specific FFmpeg demuxers for this purpose.
 
 ??? tip "Specifying suitable Parameter(s) and Demuxer for Capturing your Desktop on different OS platforms"
 
@@ -320,7 +328,6 @@ FFGear API supports screen capture from your entire screen as well as specific r
 
         !!! note "QTKit is also available for stream grabbing on Mac OS X 10.4 (Tiger) and later, but has been marked deprecated since OS X 10.7 (Lion) and may not be available on future releases."
 
-
         - [x] **Identify Video Devices:**  You can enumerate all the available input devices including screens ready to be captured using `avfoundation` as follows:
 
             ```sh
@@ -341,7 +348,6 @@ FFGear API supports screen capture from your entire screen as well as specific r
             [AVFoundation input device @ 0x7f8e2540ef20] [0] Blackmagic Audio
             [AVFoundation input device @ 0x7f8e2540ef20] [1] Built-in Microphone
             ```
-
 
         - [x] **Capturing entire desktop:** Then, you can specify and initialize your located screens in FFGear API using its index shown:
 
@@ -476,7 +482,7 @@ FFGear exposes FFdecoder's full hardware acceleration support via the `options` 
 
 ???+ alert "Example Assumptions"
 
-    **Please note that following recipe explicitly assumes:**
+    **Please note that following example explicitly assumes:**
 
     - You're running :fontawesome-brands-linux: Linux operating system with a [**supported NVIDIA GPU**](https://developer.nvidia.com/nvidia-video-codec-sdk).
     - You're using FFmpeg 4.4 or newer, configured with at least ` --enable-nonfree --enable-cuda-nvcc --enable-libnpp --enable-cuvid --enable-nvenc` configuration flags during compilation. For compilation follow [these instructions ➶](https://docs.nvidia.com/video-technologies/video-codec-sdk/ffmpeg-with-nvidia-gpu/#prerequisites)
@@ -519,7 +525,7 @@ import cv2
 # use H.264 CUVID hardware decoder; enable OpenCV patch for YUV frames
 options = {
     "-vcodec": "h264_cuvid",    # NVIDIA CUVID hardware decoder
-    "-enforce_cv_patch": True,  # auto-convert YUV420p → BGR in FFGear
+    "-enforce_cv_patch": True,  # auto-convert YUV420p → OpenCV Compatible in FFGear
 }
 
 stream = FFGear(
@@ -564,10 +570,9 @@ stream.stop()
 
 ???+ alert "Example Assumptions"
 
-    **Please note that following recipe explicitly assumes:**
-
+    The following example explicitly assumes:
     - You're running :fontawesome-brands-linux: Linux operating system with a [**supported NVIDIA GPU**](https://developer.nvidia.com/nvidia-video-codec-sdk).
-    - You're using FFmpeg 4.4 or newer, configured with at least ` --enable-nonfree --enable-cuda-nvcc --enable-libnpp  --enable-cuvid --enable-nvenc` configuration flags during compilation. For compilation follow [these instructions ➶](https://docs.nvidia.com/video-technologies/video-codec-sdk/ffmpeg-with-nvidia-gpu/#prerequisites)
+    - You're using FFmpeg 4.4 or newer, configured with at least `--enable-nonfree --enable-cuda-nvcc --enable-libnpp  --enable-cuvid --enable-nvenc` configuration flags during compilation. For compilation follow [these instructions ➶](https://docs.nvidia.com/video-technologies/video-codec-sdk/ffmpeg-with-nvidia-gpu/#prerequisites)
 
         ??? danger "Verifying NVDEC/CUDA support in FFmpeg"
 
@@ -605,7 +610,7 @@ In this example, we use Nvidia's **CUDA Internal hwaccel Video decoder(`cuda`)**
 
 !!! note "More information on Nvidia's GPU Accelerated Decoding can be found [here ➶](https://developer.nvidia.com/blog/nvidia-ffmpeg-transcoding-guide/)"
 
-```python linenums="1" hl_lines="7-21 26"
+```python linenums="1" hl_lines="7-21 26 44"
 # import required libraries
 from vidgear.gears import FFGear
 import cv2
@@ -613,7 +618,7 @@ import cv2
 # CUDA hwaccel: decode in GPU memory, scale & fps in GPU, download as NV12
 options = {
     "-vcodec": None,               # skip source decoder, let FFmpeg choose
-    "-enforce_cv_patch": True,     # auto-convert NV12 → BGR in FFGear
+    "-enforce_cv_patch": True,     # auto-convert NV12 → OpenCV Compatible in FFGear
     "-ffprefixes": [
         "-vsync", "0",             # prevent duplicate frames
         "-hwaccel", "cuda",        # use CUDA accelerator
@@ -630,7 +635,7 @@ options = {
 }
 
 stream = FFGear(
-    source="myvideo.mp4",
+    source=VIDEO,
     frame_format="null",           # discard source pixel format
     logging=True,
     **options
@@ -639,7 +644,7 @@ stream = FFGear(
 # loop over
 while True:
 
-    # read BGR frames (auto-converted from NV12)
+    # read NV12 frames
     frame = stream.read()
 
     # check for frame if Nonetype
@@ -647,6 +652,11 @@ while True:
         break
 
     # {do something with the frame here}
+
+    # convert it to OpenCV compatible frame
+    frame = cv2.cvtColor(frame, cv2.COLOR_YUV2BGR_NV12)
+
+    # {do something with the BGR frame here}
 
     # Show output window
     cv2.imshow("Output", frame)
@@ -665,6 +675,393 @@ stream.stop()
 
 &nbsp;
 
+## Hardware-Accelerated Video Transcoding
+
+FFGear, in conjunction with WriteGear, provides direct access to FFmpeg’s powerful transcoding capabilities while still allowing real-time frame processing with immense flexibility. Together, these APIs can leverage GPU-backed hardware-accelerated decoding and encoding pipelines, dramatically improving video transcoding performance for real-time multimedia workloads.
+
+??? danger "Performance Bottleneck in Hardware-Accelerated Video Transcoding with Real-Time Frame Processing"
+
+    When using FFmpeg with `-hwaccel cuda -hwaccel_output_format cuda`, decoded frames remain in GPU memory. This avoids expensive GPU ↔ CPU memory transfers and enables near-optimal transcoding performance on supported hardware.
+
+    <figure markdown>
+    ![HW Acceleration](https://abhitronix.github.io/deffcode/latest/assets/images/hw_accel.png){ width="350" }
+    <figcaption>Memory Flow with Hardware Acceleration</figcaption>
+    </figure>
+
+    However, when performing real-time frame processing in Python with FFGear and WriteGear, decoded frames must be transferred from GPU memory back to system memory so Python can access and process them.
+
+    This introduces several performance bottlenecks:
+
+    - **Explicit GPU ↔ CPU memory transfers** over the PCIe bus  
+    - **Increased latency** from continuous frame movement  
+    - **Higher PCIe bandwidth utilization**, especially with uncompressed frames  
+    - **Potential PCIe bus saturation**, limiting overall throughput  
+
+    As a result, real-time processing pipelines incur additional overhead that can impact performance.
+
+    <figure markdown>
+    ![HW Acceleration Limitation](https://abhitronix.github.io/deffcode/latest/assets/images/hw_accel_limitation.png){ width="350" }
+    <figcaption>Memory Flow with Hardware Acceleration and Real-Time Processing</figcaption>
+    </figure>
+
+    Even with these limitations, hardware acceleration still provides major advantages over software-only transcoding:
+
+    - **Lower CPU utilization**, since most processing stays on the GPU  
+    - **Faster execution** compared to CPU-based pipelines  
+    - **Accelerated video operations**, including scaling, filtering, and deinterlacing  
+    - **Better overall system resource utilization**, freeing CPU resources for parallel workloads  
+
+    In contrast, software transcoding is entirely CPU-bound and generally less efficient for high-throughput or real-time workloads.
+
+    !!! summary "Although GPU ↔ CPU memory transfers introduce unavoidable overhead in real-time processing pipelines, hardware acceleration still delivers substantial performance and efficiency gains—making it the preferred choice for most modern video workflows."
+
+### CUDA-accelerated Transcoding with OpenCV's VideoWriter API 
+
+???+ alert "Example Assumptions"
+
+    The following example explicitly assumes:
+
+    - You're running :fontawesome-brands-linux: Linux operating system with a [**supported NVIDIA GPU**](https://developer.nvidia.com/nvidia-video-codec-sdk).
+    - You're using FFmpeg 4.4 or newer, configured with at least `--enable-nonfree --enable-cuda-nvcc --enable-libnpp  --enable-cuvid --enable-nvenc` configuration flags during compilation. For compilation follow [these instructions ➶](https://docs.nvidia.com/video-technologies/video-codec-sdk/ffmpeg-with-nvidia-gpu/#prerequisites)
+
+        ??? danger "Verifying NVDEC/CUDA support in FFmpeg"
+
+            To use CUDA Video-decoder(`cuda`), remember to check if your FFmpeg compiled with it by executing following commands in your terminal, and observing if output contains something similar as follows:
+
+            ```sh
+            $ ffmpeg  -hide_banner -pix_fmts | grep cuda
+            ..H.. cuda                   0              0      0
+            
+            $ ffmpeg  -hide_banner -filters | egrep "cuda|npp"
+            ... bilateral_cuda    V->V       GPU accelerated bilateral filter
+            ... chromakey_cuda    V->V       GPU accelerated chromakey filter
+            ... colorspace_cuda   V->V       CUDA accelerated video color converter
+            ... hwupload_cuda     V->V       Upload a system memory frame to a CUDA device.
+            ... overlay_cuda      VV->V      Overlay one video on top of another using CUDA
+            ... scale_cuda        V->V       GPU accelerated video resizer
+            ... scale_npp         V->V       NVIDIA Performance Primitives video scaling and format conversion
+            ... scale2ref_npp     VV->VV     NVIDIA Performance Primitives video scaling and format conversion to the given reference.
+            ... sharpen_npp       V->V       NVIDIA Performance Primitives video sharpening filter.
+            ... thumbnail_cuda    V->V       Select the most representative frame in a given sequence of consecutive frames.
+            ... transpose_npp     V->V       NVIDIA Performance Primitives video transpose
+            T.. yadif_cuda        V->V       Deinterlace CUDA frames
+            ```
+
+        ??? danger "Verifying H.264 NVENC encoder support in FFmpeg"
+
+            To use NVENC Video-encoder(`cuda`), remember to check if your FFmpeg compiled with H.264 NVENC encoder support. You can easily do this by executing following one-liner command in your terminal, and observing if output contains something similar as follows:
+
+            ```sh
+            $ ffmpeg  -hide_banner -encoders | grep nvenc 
+
+            V....D av1_nvenc            NVIDIA NVENC av1 encoder (codec av1)
+            V....D h264_nvenc           NVIDIA NVENC H.264 encoder (codec h264)
+            V....D hevc_nvenc           NVIDIA NVENC hevc encoder (codec hevc)
+            ```
+
+            !!! note "You can also use other NVENC encoder in the similar way, if supported."
+        
+
+    - You already have appropriate Nvidia video drivers and related softwares installed on your machine.
+    - If the stream is not decodable in hardware (for example, it is an unsupported codec or profile) then it will still be decoded in software automatically, but hardware filters won't be applicable.
+
+    These assumptions **MAY/MAY NOT** suit your current setup. Kindly use suitable parameters based your system platform and hardware settings only.
+
+
+In this example, we will:
+
+1. Use NVIDIA’s **CUDA internal hardware-accelerated decoder (`cuda`)** with the FFGear API to automatically select the best NV-accelerated video codec while keeping decoded frames in GPU memory for hardware-accelerated filtering.
+2. Apply GPU-accelerated scaling and cropping directly in GPU memory.
+3. Download processed frames into system memory as patched **NV12** frames.
+4. Convert **NV12** frames into the **BGR24** pixel format using the [`-enforce_cv_patch`](../params/#b-ffdecoder-parameters) flag together with OpenCV’s `cvtColor()` method for OpenCV compatibility.
+5. Encode the resulting **BGR24** frames using OpenCV’s `VideoWriter` API.
+
+!!! tip "You can use FFGear's [`stream.stream.metadata`](../../params/#a-ffgear-parameters) property object that dumps source Video's metadata information _(as JSON string)_ to retrieve source framerate."
+
+!!! info "More information on Nvidia's NVENC Encoder can be found [here ➶](https://developer.nvidia.com/blog/nvidia-ffmpeg-transcoding-guide/)"
+
+```python linenums="1" hl_lines="7-20 26 32 54 59"
+# import the necessary packages
+from vidgear.gears import FFGear
+import cv2, json
+
+# CUDA hwaccel: decode in GPU memory, scale & crop in GPU, download as NV12
+options = {
+    "-vcodec": None,               # skip source decoder, let FFmpeg choose
+    "-enforce_cv_patch": True,     # auto-convert NV12 → OpenCV Compatible in FFGear
+    "-ffprefixes": [
+        "-vsync", "0",             # prevent duplicate frames
+        "-hwaccel", "cuda",        # use CUDA accelerator
+        "-hwaccel_output_format", "cuda",  # keep frames in GPU memory
+    ],
+    "-custom_resolution": "null",  # discard source resolution param
+    "-framerate": "null",          # discard source framerate param
+    "-vf": (
+        "scale_cuda=640:360,"      # scale to 640x360 in GPU memory
+        "crop=80:60:200:100,"      # crop a 80×60 section from position (200, 100) in GPU memory
+        "hwdownload,"              # download to system memory
+        "format=nv12"              # convert to NV12 pixel format
+    ),
+}
+
+stream = FFGear(
+    source="foo.mp4",
+    frame_format="null",           # discard source pixel format
+    logging=True,
+    **options
+).start()
+
+# retrieve JSON Metadata and convert it to dict
+metadata_dict = json.loads(stream.stream.metadata)
+
+# prepare OpenCV parameters
+FOURCC = cv2.VideoWriter_fourcc("M", "J", "P", "G")
+FRAMERATE = metadata_dict["output_framerate"]
+FRAMESIZE = tuple(metadata_dict["output_frames_resolution"])
+
+# Define writer with parameters and suitable output filename for e.g. `output_foo.avi`
+writer = cv2.VideoWriter("output_foo.avi", FOURCC, FRAMERATE, FRAMESIZE)
+
+# loop over
+while True:
+
+    # read NV12 frames (auto-converted from NV12)
+    frame = stream.read()
+
+    # check if frame is None
+    if frame is None:
+        break
+
+    # convert it to `BGR` pixel format,
+    # since write() method only accepts `BGR` frames
+    frame = cv2.cvtColor(frame, cv2.COLOR_YUV2BGR_NV12)
+
+    # {do something with the BGR frame here}
+
+    # writing BGR frame to writer
+    writer.write(frame)
+
+# safely close video stream
+stream.stop()
+
+# safely close writer
+writer.release()
+```
+
+### CUDA-NVENC-accelerated Transcoding with WriteGear API (Compression Mode)
+
+> FFGear API in conjunction with WriteGear API (Compression Mode) creates a high-level **High-performance Lossless FFmpeg Transcoding _(Decoding + Encoding)_ Pipeline** :fire: that is able to exploit almost any FFmpeg parameter for achieving anything imaginable with multimedia video data all while allow us to manipulate the real-time video frames with immense flexibility.
+
+???+ alert "Example Assumptions"
+
+    The following example explicitly assumes:
+
+    - You're running :fontawesome-brands-linux: Linux operating system with a [**supported NVIDIA GPU**](https://developer.nvidia.com/nvidia-video-codec-sdk).
+    - You're using FFmpeg 4.4 or newer, configured with at least `--enable-nonfree --enable-cuda-nvcc --enable-libnpp  --enable-cuvid --enable-nvenc` configuration flags during compilation. For compilation follow [these instructions ➶](https://docs.nvidia.com/video-technologies/video-codec-sdk/ffmpeg-with-nvidia-gpu/#prerequisites)
+
+        ??? danger "Verifying NVDEC/CUDA support in FFmpeg"
+
+            To use CUDA Video-decoder(`cuda`), remember to check if your FFmpeg compiled with it by executing following commands in your terminal, and observing if output contains something similar as follows:
+
+            ```sh
+            $ ffmpeg  -hide_banner -pix_fmts | grep cuda
+            ..H.. cuda                   0              0      0
+            
+            $ ffmpeg  -hide_banner -filters | egrep "cuda|npp"
+            ... bilateral_cuda    V->V       GPU accelerated bilateral filter
+            ... chromakey_cuda    V->V       GPU accelerated chromakey filter
+            ... colorspace_cuda   V->V       CUDA accelerated video color converter
+            ... hwupload_cuda     V->V       Upload a system memory frame to a CUDA device.
+            ... overlay_cuda      VV->V      Overlay one video on top of another using CUDA
+            ... scale_cuda        V->V       GPU accelerated video resizer
+            ... scale_npp         V->V       NVIDIA Performance Primitives video scaling and format conversion
+            ... scale2ref_npp     VV->VV     NVIDIA Performance Primitives video scaling and format conversion to the given reference.
+            ... sharpen_npp       V->V       NVIDIA Performance Primitives video sharpening filter.
+            ... thumbnail_cuda    V->V       Select the most representative frame in a given sequence of consecutive frames.
+            ... transpose_npp     V->V       NVIDIA Performance Primitives video transpose
+            T.. yadif_cuda        V->V       Deinterlace CUDA frames
+            ```
+
+        ??? danger "Verifying H.264 NVENC encoder support in FFmpeg"
+
+            To use NVENC Video-encoder(`cuda`), remember to check if your FFmpeg compiled with H.264 NVENC encoder support. You can easily do this by executing following one-liner command in your terminal, and observing if output contains something similar as follows:
+
+            ```sh
+            $ ffmpeg  -hide_banner -encoders | grep nvenc 
+
+            V....D av1_nvenc            NVIDIA NVENC av1 encoder (codec av1)
+            V....D h264_nvenc           NVIDIA NVENC H.264 encoder (codec h264)
+            V....D hevc_nvenc           NVIDIA NVENC hevc encoder (codec hevc)
+            ```
+
+            !!! note "You can also use other NVENC encoder in the similar way, if supported."
+        
+
+    - You already have appropriate Nvidia video drivers and related softwares installed on your machine.
+    - If the stream is not decodable in hardware (for example, it is an unsupported codec or profile) then it will still be decoded in software automatically, but hardware filters won't be applicable.
+
+    These assumptions **MAY/MAY NOT** suit your current setup. Kindly use suitable parameters based your system platform and hardware settings only.
+
+??? info "Additional Parameters in WriteGear API"
+    WriteGear API only requires a valid Output filename _(e.g. `output_foo.mp4`)_ as input, but you can easily control any output specifications _(such as bitrate, codec, framerate, resolution, subtitles, etc.)_ supported by FFmpeg _(in use)_.
+
+!!! tip "You can use FFGear's [`stream.stream.metadata`](../../params/#a-ffgear-parameters) property object that dumps source Video's metadata information _(as JSON string)_ to retrieve source framerate."
+
+=== "Transcoding BGR frames"
+
+    In this example, we will:
+
+    1. Use NVIDIA’s **CUDA internal hardware-accelerated decoder (`cuda`)** with the FFGear API to automatically select the best NV-accelerated video codec while keeping decoded frames in GPU memory for hardware-accelerated filtering.
+    2. Apply GPU-accelerated scaling and cropping directly in GPU memory.
+    3. Download processed frames into system memory as patched **NV12** frames.
+    4. Convert **NV12** frames into the **BGR24** pixel format using the [`-enforce_cv_patch`](../params/#b-ffdecoder-parameters) flag together with OpenCV’s `cvtColor()` method for OpenCV compatibility.
+    5. Encode the resulting **BGR24** frames with the WriteGear API using NVIDIA’s hardware-accelerated **H.264 NVENC video encoder (`h264_nvenc`)** to generate a lossless output video.
+
+    ```python linenums="1" hl_lines="8-21 27 35-36 54 59"
+    # import the necessary packages
+    from vidgear.gears import FFGear
+    from vidgear.gears import WriteGear
+    import cv2, json
+
+    # CUDA hwaccel: decode in GPU memory, scale & crop in GPU, download as NV12
+    options = {
+        "-vcodec": None,               # skip source decoder, let FFmpeg choose
+        "-enforce_cv_patch": True,     # auto-convert NV12 → OpenCV Compatible in FFGear
+        "-ffprefixes": [
+            "-vsync", "0",             # prevent duplicate frames
+            "-hwaccel", "cuda",        # use CUDA accelerator
+            "-hwaccel_output_format", "cuda",  # keep frames in GPU memory
+        ],
+        "-custom_resolution": "null",  # discard source resolution param
+        "-framerate": "null",          # discard source framerate param
+        "-vf": (
+            "scale_cuda=640:360,"      # scale to 640x360 in GPU memory
+            "crop=80:60:200:100,"      # crop a 80×60 section from position (200, 100) in GPU memory
+            "hwdownload,"              # download to system memory
+            "format=nv12"              # convert to NV12 pixel format
+        ),
+    }
+
+    stream = FFGear(
+        source="foo.mp4",
+        frame_format="null",           # discard source pixel format
+        logging=True,
+        **options
+    ).start()
+
+    # retrieve framerate from JSON Metadata and pass it as
+    # `-input_framerate` parameter for controlled framerate
+    output_params = {
+        "-input_framerate": json.loads(stream.stream.metadata)["output_framerate"],
+        "-vcodec": "h264_nvenc", # H.264 NVENC Video-encoder
+    }
+
+    # Define writer with default parameters and suitable
+    # output filename for e.g. `output_foo.mp4`
+    writer = WriteGear(output="output_foo.mp4", logging=True, **output_params)
+
+    # loop over
+    while True:
+
+        # read NV12 frames (auto-converted from NV12)
+        frame = stream.read()
+
+        # check if frame is None
+        if frame is None:
+            break
+
+        # convert it to `BGR` pixel format
+        frame = cv2.cvtColor(frame, cv2.COLOR_YUV2BGR_NV12)
+
+        # {do something with the BGR frame here}
+
+        # writing BGR frame to writer
+        writer.write(frame)
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close writer
+    writer.close()
+    ```
+    
+=== "Transcoding NV12 frames :material-rocket-launch:"
+
+    In this example, we will:
+
+    1. Use NVIDIA’s **CUDA internal hardware-accelerated decoder (`cuda`)** with the FFGear API to automatically select the best NV-accelerated video codec while keeping decoded frames in GPU memory for hardware-accelerated filtering.
+    2. Apply GPU-accelerated scaling and cropping directly in GPU memory.
+    3. Download processed frames into system memory as patched **NV12** frames.
+    4. Encode the resulting **NV12** frames directly with the WriteGear API using NVIDIA’s hardware-accelerated **H.264 NVENC video encoder (`h264_nvenc`)** to generate a lossless output video.
+
+
+    ```python linenums="1" hl_lines="8-21 26 34-36 57"
+    # import the necessary packages
+    from vidgear.gears import FFGear
+    from vidgear.gears import WriteGear
+    import json
+
+    # CUDA hwaccel: decode in GPU memory, scale & crop in GPU, download as NV12
+    options = {
+        "-vcodec": None,               # skip source decoder, let FFmpeg choose
+        "-ffprefixes": [
+            "-vsync", "0",             # prevent duplicate frames
+            "-hwaccel", "cuda",        # use CUDA accelerator
+            "-hwaccel_output_format", "cuda",  # keep frames in GPU memory
+        ],
+        "-custom_resolution": "null",  # discard source resolution param
+        "-framerate": "null",          # discard source framerate param
+        "-vf": (
+            "scale_cuda=640:360,"      # scale to 640x360 in GPU memory
+            "crop=80:60:200:100,"      # crop a 80×60 section from position (200, 100) in GPU memory
+            "hwdownload,"              # download to system memory
+            "format=nv12"              # convert to NV12 pixel format
+        ),
+    }
+
+    stream = FFGear(
+        source="foo.mp4",
+        frame_format="null",           # discard source pixel format
+        logging=True,
+        **options
+    ).start()
+
+    # retrieve framerate from JSON Metadata and pass it as
+    # `-input_framerate` parameter for controlled framerate
+    output_params = {
+        "-input_framerate": json.loads(stream.stream.metadata)["output_framerate"],
+        "-vcodec": "h264_nvenc", # H.264 NVENC Video-encoder
+        "-input_pixfmt": "nv12", # input frames pixel format as `NV12`
+    }
+
+    # Define writer with default parameters and suitable
+    # output filename for e.g. `output_foo.mp4`
+    writer = WriteGear(output="output_foo.mp4", logging=True, **output_params)
+
+    # loop over
+    while True:
+
+        # read NV12 frames
+        frame = stream.read()
+
+        # check if frame is None
+        if frame is None:
+            break
+
+        # {do something with the NV12 frame here}
+
+        # writing NV12 frame to writer
+        writer.write(frame)
+
+    # safely close video stream
+    stream.stop()
+
+    # safely close writer
+    writer.close()
+    ```
+
+&nbsp;
+
 ## Per-Frame Metadata Extraction
 
 > The `-extract_metadata` option enables FFGear to yield `(frame, metadata)` tuples from `read()`, where `metadata` is parsed from FFmpeg's [`showinfo`](https://ffmpeg.org/ffmpeg-filters.html#showinfo) filter via an asynchronous background daemon — leaving the main frame pipe fully unthrottled.
@@ -678,17 +1075,17 @@ The `metadata` dict contains the following keys:
 | `is_keyframe` | bool | `True` if the frame is a keyframe (I-frame). |
 | `frame_type` | str | One of `"I"` (keyframe), `"P"` (predictive), `"B"` (bi-predictive), `"?"` (unknown). |
 
-!!! warning "Incompatible with `-filter_complex`"
+??? warning "Incompatible with `-filter_complex`"
 
-    `-extract_metadata` cannot be combined with the `-filter_complex` attribute. If both are supplied, a warning is logged and metadata extraction is silently disabled. A pre-existing `-vf` is fine — `showinfo` is automatically comma-chained onto it.
+    The `-extract_metadata` cannot be combined with the `-filter_complex` attribute. If both are supplied, a warning is logged and metadata extraction is silently disabled. A pre-existing `-vf` is fine — `showinfo` is automatically appended onto it.
 
 ### Keyframe-Only Decoding for AI Inference
 
-> Many Computer Vision workflows — perceptual hashing, scene-change detection, heavyweight AI-model inference _(YOLO, ResNet, etc.)_ — only care about **Keyframes (I-frames)**. Without `-extract_metadata` you'd decode and run your model on every P/B frame, wasting 98%+ of compute.
+> Many Computer Vision workflows — perceptual hashing, scene-change detection, and AI model inference *(YOLO, ResNet, etc.)* — only need to process **Keyframes (I-frames)**. Running inference on every P/B frame wastes compute, since most frames contain only small incremental changes. With the `-extract_metadata` option, you can detect keyframes and run inference only on those frames while skipping all non-keyframes. This can reduce unnecessary decoding and inference workloads by **upto 98%**, significantly improving pipeline efficiency and lowering compute usage.
 
-!!! success "Depending on the GOP size, this pattern reduces downstream processing time by **10–50×** without skipping any scene-boundary information."
+In this example we run heavy AI model on keyframes only and skipping all non-keyframes:
 
-```python linenums="1" hl_lines="5 17-32"
+```python linenums="1" hl_lines="5 17-33"
 # import required libraries
 from vidgear.gears import FFGear
 
@@ -705,26 +1102,31 @@ stream = FFGear(
 # loop over
 while True:
 
-    # read returns (frame, metadata) tuple when -extract_metadata is enabled
+    # returns (frame, metadata) tuple when `-extract_metadata` is enabled
     output = stream.read()
 
     # check if output is None (end of stream)
     if output is None:
         break
-
+    
+    # Unpacking tuple
     frame, meta = output
 
-    # OPTIMIZATION: skip non-keyframes entirely
-    if not meta["is_keyframe"]:
-        continue
+    # [OPTIMIZATION]: skip non-keyframes entirely
+    if meta and not meta["is_keyframe"]: 
+        continue # <-- Skips Non-key frames (P, B-frames)
 
-    # run heavy AI model on keyframes only (~1-2 fps worth of data)
-    # results = heavy_ai_model.predict(frame)
+    # Run Heavy AI model inference/Prediction on keyframes (I-frames) only 
+    # results = my_heavy_ai_model.predict(frame)
     print(f"Keyframe #{meta['frame_num']} at {meta['pts_time']:.3f}s")
 
 # safely close video stream
 stream.stop()
 ```
+
+!!! success "Depending on the GOP size (Group of Pictures), the optimization pattern shown above can reduce downstream processing time by **10–50×** without missing any scene-boundary information."
+
+!!! example "Checkout this [bonus example ➶](../../../help/ffgear_ex/#using-ffgear-for-real-time-aiml-video-inference) demonstrating FFGear optimizing **YOLOv10-Nano** model inference by processing only Keyframes (I-frames) while skipping all non-keyframes (P/B-frames)."
 
 &nbsp;
 
@@ -732,7 +1134,7 @@ stream.stop()
 
 > Most modern video sources — smartphones, screen recordings, webcams — are **Variable-Frame-Rate**. Assuming a constant frame rate will drift out of sync very quickly.
 
-With `meta["pts_time"]` you know the **exact presentation timestamp** of every frame:
+In this example we use `meta["pts_time"]` to get the **exact presentation timestamp** of every frame and skip frames based on the actual time difference between frames:
 
 ```python linenums="1" hl_lines="5 18-36"
 # import required libraries
@@ -786,30 +1188,52 @@ For advanced multi-input or multi-output pipelines, FFGear supports `-filter_com
 
 !!! warning "Complex filtergraphs (`-filter_complex`) are incompatible with `-extract_metadata`. Both cannot be active simultaneously."
 
-### Overlay Two Video Sources
+### Apply custom Watermark Image Overlay Filter
 
-In this example, we overlay a watermark video on top of a primary source:
+<figure markdown>
+  <img src="https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/vidgear/ffgear_watermark.gif" alt="Big Buck Bunny with watermark" loading="lazy" width=85%/>
+  <figcaption>Big Buck Bunny with custom watermark</figcaption>
+</figure>
 
-```python linenums="1" hl_lines="7-11"
-# import required libraries
+In this example, we apply a watermark image _(say `watermark.png` with transparent background)_ overlay to the `10` seconds of video file _(say `foo.mp4`)_ using FFmpeg's [`overlay`](https://ffmpeg.org/ffmpeg-filters.html#toc-overlay-1) filter with some additional filtering:
+
+!!! info "You can use FFGear API's [`stream.stream.metadata`](../../params/#a-ffgear-parameters) property object that dumps Source Metadata as JSON to retrieve source framerate and frame-size."
+
+!!! danger "Remember to replace `watermark.png` watermark image absolute file path with yours before executing this example."
+
+```python linenums="1" hl_lines="8-18 27"
+# import the necessary packages
 from vidgear.gears import FFGear
-import cv2
+from vidgear.gears import WriteGear
+import json, cv2
 
-# overlay watermark.mp4 on top of primary source at position (10, 10)
+# define the Complex Video Filter with additional `watermark.png` image input
 options = {
-    "-i": "watermark.mp4",         # second input source
-    "-filter_complex": (
-        "[0:v][1:v]overlay=10:10"  # overlay second input onto first
-    ),
-    "-map": "0:a?",                # keep audio from primary (if any)
+    "-ffprefixes": ["-t", "10"],  # playback time of 10 seconds
+    "-clones": [
+        "-i",
+        "watermark.png",  # !!! [WARNING] define your absolute `watermark.png` path here.
+    ],
+    "-filter_complex": "[1]scale=256:-1,format=rgba,"  # change 2nd(image) input to 256 pixels wide and yuv444p format
+    + "colorchannelmixer=aa=0.7[logo];"  # apply colorchannelmixer to image for controlling alpha [logo]
+    + "[0][logo]overlay=W-w-{pixel}:H-h-{pixel}:format=auto,".format(  # apply overlay to 1st(video) with [logo]
+        pixel=5  # at 5 pixels from the bottom right corner of the input video
+    )
+    + "format=bgr24",  # change output format to `bgr24`
 }
 
-stream = FFGear(
-    source="myvideo.mp4",
-    frame_format="bgr24",
-    logging=True,
-    **options
-).start()
+# open source with FFGear and BGR frames with given params
+stream = FFGear(source="myvideo.mp4", frame_format="bgr24", logging=True, **options).start()
+
+# retrieve framerate from source JSON Metadata and pass it as `-input_framerate`
+# parameter for controlled framerate
+output_params = {
+    "-input_framerate": json.loads(stream.stream.metadata)["source_video_framerate"]
+}
+
+# Define writer with default parameters and suitable
+# output filename for e.g. `output_foo.mp4`
+writer = WriteGear(output="output_foo.mp4", **output_params)
 
 # loop over
 while True:
@@ -823,304 +1247,86 @@ while True:
 
     # {do something with the frame here}
 
-    # Show output window
-    cv2.imshow("Output", frame)
+    # write frame to output
+    writer.write(frame)
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
-
-# close output window
-cv2.destroyAllWindows()
-
-# safely close video stream
+# safely close stream
 stream.stop()
+
+# safely close writer
+writer.close()
 ```
 
-&nbsp;
-
-## Using FFGear with WriteGear API (Compression Mode)
-
-???+ danger "High CPU Usage when chaining FFGear with WriteGear"
-
-    When chaining FFGear with WriteGear, both FFmpeg processes _(decoding + encoding)_ run **as fast as your hardware allows** with no artificial pacing between them. This causes the pipeline to max out your CPU to process the video in the shortest time possible, which may be undesirable.
-
-    You can mitigate this in two ways depending on your use case:
-
-    === "Throttle to Real-Time Speed"
-
-        Pass the `-re` flag via FFGear's `-ffprefixes` parameter to force FFmpeg to read the input at its native framerate. This naturally paces the pipeline to real-time speed and **drastically reduces CPU usage**:
-
-        ```python
-        # force input to be read at native framerate
-        stream = FFGear(source="foo.mp4", frame_format="bgr24", **{"-ffprefixes": ["-re"]})
-        ```
-
-    === "Limit FFmpeg Threads"
-
-        Pass `-threads` to both FFGear and WriteGear to cap the number of CPU threads each FFmpeg process may use. This leaves headroom for other system tasks:
-
-        ```python
-        # limit decoder to 2 threads
-        stream = FFGear(source="foo.mp4", frame_format="bgr24", **{"-threads": 2})
-
-        # limit encoder to 2 threads
-        writer = WriteGear(output="output_foo.mp4", **{"-input_framerate": fps, "-threads": 2})
-        ```
-
-    !!! tip "Hardware Acceleration"
-        If your machine has a dedicated GPU, you can offload encoding to the GPU entirely — for example by passing `"-vcodec": "h264_nvenc"` to WriteGear _(NVIDIA)_ — shifting the heavy lifting off the CPU.
-
-FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode for high-quality re-encoding of decoded frames:
-
-!!! tip "You can use FFGear API's `stream.metadata` property object that dumps source Video's metadata information _(as JSON string)_ to retrieve source framerate."
-
-=== "BGR frames"
-
-    WriteGear API by default expects `BGR` format frames in its `write()` class method.
-
-    ```python linenums="1" hl_lines="3 12 17 32 38"
-    # import required libraries
-    from vidgear.gears import FFGear
-    from vidgear.gears import WriteGear
-    import cv2, json
-
-    # open source with FFGear and BGR frames
-    stream = FFGear(source="myvideo.mp4", frame_format="bgr24", logging=True).start()
-
-    # retrieve framerate from source JSON Metadata and pass it as `-input_framerate` 
-    # parameter for controlled framerate
-    output_params = {
-        "-input_framerate": json.loads(stream.stream.metadata)["source_video_framerate"]
-    }
-
-    # Define writer with default parameters and suitable
-    # output filename for e.g. `output_foo.mp4`
-    writer = WriteGear(output="output_foo.mp4", **output_params)
-
-    # loop over
-    while True:
-
-        # read frames from stream
-        frame = stream.read()
-
-        # check for frame if Nonetype
-        if frame is None:
-            break
-
-        # {do something with the frame here}
-
-        # write frame to output
-        writer.write(frame)
-
-    # safely close stream
-    stream.stop()
-
-    # safely close writer
-    writer.close()
-    ```
-
-=== "RGB frames"
-
-    In WriteGear API, you can use [`rgb_mode`](https://abhitronix.github.io/vidgear/latest/bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.write) parameter in  `write()` class method to write `RGB` format frames instead of default `BGR` as follows:
-
-    ```python linenums="1" hl_lines="3 12 17 32 38"
-    # import required libraries
-    from vidgear.gears import FFGear
-    from vidgear.gears import WriteGear
-    import cv2, json
-
-    # open source with FFGear and RGB frames
-    stream = FFGear(source="myvideo.mp4", frame_format="rgb24", logging=True).start()
-
-    # retrieve framerate from source JSON Metadata and pass it as `-input_framerate` 
-    # parameter for controlled framerate
-    output_params = {
-        "-input_framerate": json.loads(stream.stream.metadata)["source_video_framerate"]
-    }
-
-    # Define writer with default parameters and suitable
-    # output filename for e.g. `output_foo_rgb.mp4`
-    writer = WriteGear(output="output_foo_rgb.mp4", **output_params)
-
-    # loop over
-    while True:
-
-        # read frames from stream
-        frame = stream.read()
-
-        # check for frame if Nonetype
-        if frame is None:
-            break
-
-        # {do something with the frame here}
-
-        # write frame to output
-        writer.write(frame, rgb_mode=True)
-
-    # safely close stream
-    stream.stop()
-
-    # safely close writer
-    writer.close()
-    ```
-
-=== "Grayscale frames"
-
-    WriteGear API also directly consumes `GRAYSCALE` format frames in its `write()` class method. 
-
-    ```python linenums="1" hl_lines="3 12 17 32 38"
-    # import required libraries
-    from vidgear.gears import FFGear
-    from vidgear.gears import WriteGear
-    import cv2, json
-
-    # open source with FFGear and GRAYSCALE frames
-    stream = FFGear(source="myvideo.mp4", frame_format="gray", logging=True).start()
-
-    # retrieve framerate from source JSON Metadata and pass it as `-input_framerate` 
-    # parameter for controlled framerate
-    output_params = {
-        "-input_framerate": json.loads(stream.stream.metadata)["source_video_framerate"]
-    }
-
-    # Define writer with default parameters and suitable
-    # output filename for e.g. `output_foo_gray.mp4`
-    writer = WriteGear(output="output_foo_gray.mp4", **output_params)
-
-    # loop over
-    while True:
-
-        # read frames from stream
-        frame = stream.read()
-
-        # check for frame if Nonetype
-        if frame is None:
-            break
-
-        # {do something with the frame here}
-
-        # write frame to output
-        writer.write(frame)
-
-    # safely close stream
-    stream.stop()
-
-    # safely close writer
-    writer.close()
-    ```
-
-=== "YUV420p (Performance Mode) :material-speedometer:"
-
-    !!! success "Performance Mode :zap: — Faster Decoding via YUV420p"
-
-        Ingesting frames as 12-bit **YUV 4:2:0** instead of 24-bit **BGR** halves the bytes moving through the FFmpeg pipe. Enable `-enforce_cv_patch` to auto-convert frames inside FFGear for seamless OpenCV compatibility.
-
-    WriteGear API also directly consume `YUV` _(or basically any other supported pixel format)_ frames in its `write()` class method with its `-input_pixfmt` attribute in compression mode. 
-
-    !!! note "You can also use `yuv422p`(4:2:2 subsampling) or `yuv444p`(4:4:4 subsampling) instead for more higher dynamic ranges."
-
-    ```python linenums="1" hl_lines="3 13-14 19 34 40"
-    # import required libraries
-    from vidgear.gears import FFGear
-    from vidgear.gears import WriteGear
-    import cv2, json
-
-    # open source with FFGear stream for YUV420 output
-    stream = FFGear(source="myvideo.mp4", frame_format="yuv420p", logging=True).start()
-
-    # retrieve framerate from source JSON Metadata and pass it as 
-    # `-input_framerate` parameter for controlled framerate
-    # and also add input pixfmt as yuv420p 
-    output_params = {
-        "-input_framerate": json.loads(stream.stream.metadata)["output_framerate"],
-        "-input_pixfmt": "yuv420p"
-    }
-
-    # Define writer with default parameters and suitable
-    # output filename for e.g. `output_foo_yuv.mp4`
-    writer = WriteGear(output="output_foo_yuv.mp4", logging=True, **output_params)
-
-    # loop over
-    while True:
-
-        # read OpenCV compatible YUV420p frames
-        frame = stream.read()
-
-        # check for frame if NoneType
-        if frame is None:
-            break
-
-        # {do something with the YUV420p frame here}
-
-        # write frame to output
-        writer.write(frame)
-
-    # safely close stream
-    stream.stop()
-
-    # safely close writer
-    writer.close()
-    ```
-
-=== "Grayscale via YUV (fastest) :material-invoice-fast-outline:"
-
-    !!! success "Fastest :zap: RAW-to-Grayscale via `-extract_luma`"
-
-        Every YUV/NV bytestream stores the **Luma (Y) plane** uncompressed at the top of each frame. The exclusive [`-extract_luma`](../params/#b-exclusive-parameters) boolean attribute makes FFGear slice that Y-plane directly and hand back a 2D `(H, W)` grayscale ndarray — **no colorspace conversion in FFmpeg, no `cv2.cvtColor` in Python**. This is strictly faster than `frame_format="gray"`, which still asks FFmpeg to do a `yuv→gray` conversion on every frame.
-
-        Combined with the reduced pipe-bytes of YUV 4:2:0 ingest, this is the fastest :fontawesome-solid-tachometer-alt-fast: grayscale pipeline the API can produce.
-
-    Similar to normal `GRAYSCALE` format frames, you can directly consume these frames in WriteGear API’s `write()` class method:
-
-    ```python linenums="1" hl_lines="3 7 12 20 25 39 45"
-    # import required libraries
-    from vidgear.gears import FFGear
-    from vidgear.gears import WriteGear
-    import cv2, json
-
-    # enable direct Luma (Y-plane) extraction
-    options = {"-extract_luma": True}
-
-    # stream Grayscale via YUV frames
-    stream = FFGear(
-        source="myvideo.mp4",
-        frame_format="yuv420p",
-        logging=True,
-        **options
-    ).start()
-
-    # retrieve framerate from source JSON Metadata and pass it as `-input_framerate` 
-    # parameter for controlled framerate
-    output_params = {
-        "-input_framerate": json.loads(stream.stream.metadata)["source_video_framerate"]
-    }
-
-    # Define writer with default parameters and suitable
-    # output filename for e.g. `output_foo_yuv_gray.mp4`
-    writer = WriteGear(output="output_foo_yuv_gray.mp4", **output_params)
-
-    # loop over
-    while True:
-        # read grayscale frames
-        frame = stream.read()
-
-        # check for frame if NoneType
-        if frame is None:
-            break
-
-        # {do something with Luma (Y-plane) extracted grayscale frame here}
-
-        # write frame to output
-        writer.write(frame)
-
-    # safely close stream
-    stream.stop()
-
-    # safely close writer
-    writer.close()
-    ```
+### Generate Mandelbrot test pattern with Vectorscope & Waveforms
+
+> The [`mandelbrot`](https://ffmpeg.org/ffmpeg-filters.html#toc-mandelbrot) graph generate a [**Mandelbrot set fractal**](https://en.wikipedia.org/wiki/Mandelbrot_set), that progressively zoom towards a specific point.
+
+<figure markdown>
+  <img src="https://abhitronix.github.io/deffcode/latest/assets/gifs/mandelbrot_vectorscope_waveforms.gif" alt="Mandelbrot Test Pattern" loading="lazy" />
+  <figcaption>Mandelbrot pattern with a Vectorscope & two Waveforms</figcaption>
+</figure>
+
+In this example, we generate a `10`-second **Mandelbrot test pattern** *(`1280x720` resolution at `30 FPS`)* using the [`mandelbrot`](https://ffmpeg.org/ffmpeg-filters.html#toc-mandelbrot) filter source with the `lavfi` virtual input device. We then stack a [vectorscope](https://www.studiobinder.com/blog/what-is-a-vectorscope-definition/) *(visualizes color component relationships)* and two [waveform](https://ffmpeg.org/ffmpeg-filters.html#toc-waveform) monitors *(visualize YUV color intensity levels)* alongside the video, and save the final output using the WriteGear API:
+
+
+```python linenums="1" hl_lines="8-16 22-23 32"
+# import required libraries
+from vidgear.gears import FFGear
+from vidgear.gears import WriteGear
+import json
+
+# define parameters
+options = {
+    "-ffprefixes": ["-t", "10"],  # playback time of 10 seconds
+    "-vf": "format=yuv444p," # change input format to yuv444p
+    + "split=4[a][b][c][d]," # split input into 4 identical outputs.
+    + "[a]waveform[aa],"  # apply waveform on first output
+    + "[b][aa]vstack[V],"  # vertical stack 2nd output with waveform [V]
+    + "[c]waveform=m=0[cc],"  # apply waveform on 3rd output
+    + "[d]vectorscope=color4[dd],"  # apply vectorscope on 4th output
+    + "[cc][dd]vstack[V2],"  # vertical stack waveform and vectorscope [V2]
+    + "[V][V2]hstack",  # horizontal stack [V] and [V2] vertical stacks
+}
+
+# stream with "mandelbrot" source of
+# `1280x720` frame size and `30` framerate for BGR24 output
+stream = FFGear(
+    source="mandelbrot=size=1280x720:rate=30",
+    source_demuxer="lavfi",
+    frame_format="bgr24",
+    logging=True,
+    **options
+).start()
+
+# retrieve framerate from source JSON Metadata and pass it as `-input_framerate`
+# parameter for controlled framerate
+output_params = {
+    "-input_framerate": json.loads(stream.stream.metadata)["source_video_framerate"]
+}
+
+# Define writer with default parameters and suitable
+# output filename for e.g. `output_foo.mp4`
+writer = WriteGear(output="output_foo.mp4", **output_params)
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # write frame to output
+    writer.write(frame)
+
+# safely close stream
+stream.stop()
+
+# safely close writer
+writer.close()
+```
 
 &nbsp;
 
@@ -1128,6 +1334,6 @@ FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode fo
 
 !!! example "Checkout more advanced FFGear examples with unusual configuration [here ➶](../../../help/ffgear_ex/)"
 
-&nbsp;
+&thinsp;
 
 [deffcode]:https://github.com/abhiTronix/deffcode
