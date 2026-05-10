@@ -98,10 +98,10 @@ class FFGear:
             options (dict): FFdecoder configuration (like -hwaccel, -enforce_cv_patch, -extract_metadata)
                             and FFGear queue tweaks.
         """
-        if deffcode is None:
-            raise ImportError(
-                "[FFGear:ERROR] :: `deffcode` is not installed! Please install it via `pip install deffcode`."
-            )
+        # raise error for critical import
+        import_dependency_safe(
+            "deffcode" if deffcode is None else "", min_version="0.2.7"
+        )
 
         self.__logging = logging if isinstance(logging, bool) else False
         logcurr_vidgear_ver(logging=self.__logging)
@@ -347,6 +347,7 @@ class FFGear:
         # Cleanup deffcode pipeline (similar to WriteGear close process)
         if self.stream is not None:
             self.stream.terminate()
+            self.stream = None
 
     def read(self) -> NDArray | tuple[NDArray, dict] | None:
         """
@@ -400,3 +401,4 @@ class FFGear:
         # Forcibly teardown FFdecoder process safely
         if self.stream is not None:
             self.stream.terminate()
+            self.stream = None
