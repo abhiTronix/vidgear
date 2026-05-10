@@ -355,6 +355,54 @@ FFGear supports decoding frames in any FFmpeg pixel format via the [`frame_forma
 
 !!! tip "Use `ffmpeg -pix_fmts` terminal command to list all supported pixel formats."
 
+=== "YUV420p (Performance Mode) :material-speedometer:"
+
+    !!! success "Performance Mode :zap: — Faster Decoding via YUV420p"
+
+        Ingesting frames as 12-bit **YUV 4:2:0** instead of 24-bit **BGR** halves the bytes moving through the FFmpeg pipe. Enable `-enforce_cv_patch` to auto-convert YUV/NV pixel formats frames inside FFGear for seamless OpenCV compatibility.
+
+    ```python linenums="1" hl_lines="6 11"
+    # import required libraries
+    from vidgear.gears import FFGear
+    import cv2
+
+    # IMPORTANT: enable OpenCV patch for YUV420p frames
+    options = {"-enforce_cv_patch": True}
+
+    # stream YUV420p frames
+    stream = FFGear(
+        source="myvideo.mp4",
+        frame_format="yuv420p",
+        logging=True,
+        **options
+    ).start()
+
+    # loop over
+    while True:
+        # read OpenCV compatible YUV420p frames
+        frame = stream.read()
+
+        # check for frame if NoneType
+        if frame is None:
+            break
+
+        # {do something with frame here}
+
+        # show output window
+        cv2.imshow("Output", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+    ```
+
 === "Grayscale"
 
     ```python linenums="1" hl_lines="6"
@@ -390,60 +438,6 @@ FFGear supports decoding frames in any FFmpeg pixel format via the [`frame_forma
     stream.stop()
     ```
 
-=== "YUV420p (Performance Mode) :material-speedometer:"
-
-    !!! success "Performance Mode :zap: — Faster Decoding via YUV420p"
-
-        Ingesting frames as 12-bit **YUV 4:2:0** instead of 24-bit **BGR** halves the bytes moving through the FFmpeg pipe. Enable `-enforce_cv_patch` to auto-convert frames inside FFGear for seamless OpenCV compatibility.
-
-    ```python linenums="1" hl_lines="6 11 27-29"
-    # import required libraries
-    from vidgear.gears import FFGear
-    import cv2
-
-    # enable OpenCV patch for YUV420p frames
-    options = {"-enforce_cv_patch": True}
-
-    # stream YUV420p frames
-    stream = FFGear(
-        source="myvideo.mp4",
-        frame_format="yuv420p",
-        logging=True,
-        **options
-    ).start()
-
-    # loop over
-    while True:
-        # read OpenCV compatible YUV420p frames
-        frame = stream.read()
-
-        # check for frame if NoneType
-        if frame is None:
-            break
-
-        # {do something with the YUV420p frame here}
-
-        # NOTE: If you do not need previewing frames, comment following lines
-        # convert it to `BGR` pixel format, since imshow() method only accepts `BGR` frames
-        frame_bgr = cv2.cvtColor(frame, cv2.COLOR_YUV2BGR_I420)
-
-        # {do something with the BGR frame here}
-
-        # show output window
-        cv2.imshow("Output", frame_bgr)
-
-        # check for 'q' key if pressed
-        key = cv2.waitKey(1) & 0xFF
-        if key == ord("q"):
-            break
-
-    # close output window
-    cv2.destroyAllWindows()
-
-    # safely close video stream
-    stream.stop()
-    ```
-
 === "Grayscale via YUV (fastest) :material-invoice-fast-outline:"
 
     !!! success "Fastest :zap: RAW-to-Grayscale via `-extract_luma`"
@@ -452,9 +446,10 @@ FFGear supports decoding frames in any FFmpeg pixel format via the [`frame_forma
 
         Combined with the reduced pipe-bytes of YUV 4:2:0 ingest, this is the fastest :fontawesome-solid-tachometer-alt-fast: grayscale pipeline the API can produce.
 
-    ```python linenums="1" hl_lines="5 10"
+    ```python linenums="1" hl_lines="6 11"
     # import required libraries
     from vidgear.gears import FFGear
+    import cv2
 
     # enable direct Luma (Y-plane) extraction
     options = {"-extract_luma": True}
@@ -696,8 +691,11 @@ FFGear supports **Image Sequences** such as Sequential(`img%03d.png`) and Glob p
         options = {"-ffprefixes":["-start_number", "5"]}
 
         # initialize and formulate the stream with define parameters
-        stream = FFGear(source="img%03d.png", logging=True, **options).formulate()
+        stream = FFGear(source="/absolute/path/to/image-%03d.png", logging=True, **options).formulate()
         ```
+    !!! warning "Ensure `source` points to an absolute image sequence **folder** path"
+
+        Furthermore, Use the exact filename pattern (for example, `image-%03d.png`) that was used when extracting the images. An incorrect or relative pattern may cause the FFGear API to raise a `RuntimeError`.
 
     ```python linenums="1" hl_lines="6"
     # import required libraries
@@ -705,10 +703,9 @@ FFGear supports **Image Sequences** such as Sequential(`img%03d.png`) and Glob p
     import cv2
 
     stream = FFGear(
-        source="/path/to/pngs/img%03d.png",
+        source="/absolute/path/to/image-%03d.png",
         frame_format="bgr24",
-        logging=True,
-        **options
+        logging=True
     ).start()
 
     # loop over
@@ -742,7 +739,9 @@ FFGear supports **Image Sequences** such as Sequential(`img%03d.png`) and Glob p
 
     !!! abstract "Bash-style globbing _(`*` represents any number of any characters)_ is useful if your images are sequential but not necessarily in a numerically sequential order."
 
-    !!! warning "The glob pattern is not available on Windows FFmpeg builds."
+    !!! warning "Ensure `source` points to an absolute image sequence **folder** path"
+
+    !!! fail "The glob pattern may not be available on :fontawesome-brands-windows: Windows FFmpeg builds."
 
     ```python linenums="1" hl_lines="7 11"
     # import required libraries
@@ -755,7 +754,7 @@ FFGear supports **Image Sequences** such as Sequential(`img%03d.png`) and Glob p
     }
 
     stream = FFGear(
-        source="/path/to/pngs/img*.png",
+        source="/absolute/path/to/*.png", # Glob pattern
         frame_format="bgr24",
         logging=True,
         **options
@@ -796,7 +795,11 @@ In this example we stream **BGR24** video frames from looping video using FFGear
 
 === "Using `-stream_loop` option"
 
-    The recommended way to loop a video is to use the `-stream_loop` option via the `-ffprefixes` list attribute of the `options` dictionary parameter in the FFGear API. **Possible values are integer values:** `> 0` specifies the number of loops, `0` means no loop, and `-1` means an infinite loop.
+    The `-stream_loop` flag is a high-level FFmpeg command that **repeats the entire input file** a specified number of times before any filtering occurs. The recommended way to use the `-stream_loop` flag with the FFGear API is through the `-ffprefixes` list attribute of the `options` dictionary parameter.
+    
+    !!! info "Possible `-stream_loop` values are integer values"
+
+        Integer values `> 0` specify the number of loops, `0` means no looping, and `-1` enables infinite looping.
 
     !!! note "Using `-stream_loop 3` will loop the video `4` times in total."
 
@@ -847,7 +850,7 @@ In this example we stream **BGR24** video frames from looping video using FFGear
 
 === "Using `loop` filter"
 
-    Another way to loop a video is to use the `loop` complex filter via the `-filter_complex` FFmpeg flag as an attribute of the `options` dictionary parameter in the FFGear API.
+    The `loop` filter is used within an FFmpeg filtergraph (`-filter_complex`) to **repeat a specific segment** of video frames. In the FFGear API, it can be configured as an attribute of the `options` dictionary parameter.
 
     !!! danger "This filter places all frames into memory (RAM), so applying [`trim`](https://ffmpeg.org/ffmpeg-filters.html#toc-trim) filter first is strongly recommended. Otherwise, you might run out of memory."
 
@@ -859,6 +862,8 @@ In this example we stream **BGR24** video frames from looping video using FFGear
         * `size`: Sets the maximum size in number of frames. Default is `0`.
         * `start`: Sets the first frame of the loop. Default is `0`.
 
+        !!! info "You must often include `setpts` to fix the timestamps, otherwise frames may be dropped or playback may stutter."
+
     !!! note "Using `loop=3` will loop the video `4` times in total."
 
     ```python linenums="1" hl_lines="7"
@@ -868,7 +873,7 @@ In this example we stream **BGR24** video frames from looping video using FFGear
 
     # define loop 4 times, each loop is 15 frames, each loop skips the first 25 frames
     options = {
-        "-filter_complex": "loop=loop=3:size=15:start=25" # Or use: `loop=3:15:25`
+        "-filter_complex": "loop=loop=3:size=15:start=25,setpts=N/FRAME_RATE/TB" # Or use: `loop=3:15:25`
     }  
 
     # stream with suitable source
@@ -910,7 +915,7 @@ In this example we stream **BGR24** video frames from looping video using FFGear
 
 ## Using FFGear with OpenCV VideoWriter API
 
-FFGear integrates seamlessly with OpenCV's [`VideoWriter()`](https://docs.opencv.org/3.4/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) class to encode video frames into a multimedia file. However, it lacks fine-grained control over output quality, bitrate, compression, and other advanced parameters—features that are readily available with WriteGear API's Compression Mode.
+FFGear integrates seamlessly with OpenCV's [`VideoWriter()`](https://docs.opencv.org/3.4/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) class to encode video frames into a multimedia file. However, it lacks fine-grained control over output quality, bitrate, compression, and other advanced parameters—features that are readily available with **WriteGear API's Compression Mode**.
 
 !!! tip "You can use FFGear API's `stream.metadata` property object that dumps source Video's metadata information _(as JSON string)_ to retrieve source framerate and resolution."
 
@@ -937,7 +942,7 @@ FFGear integrates seamlessly with OpenCV's [`VideoWriter()`](https://docs.opencv
     FRAMESIZE = tuple(metadata_dict["output_frames_resolution"])
 
     # Define writer with parameters and suitable output filename for e.g. `output_foo.avi`
-    writer = cv2.VideoWriter("output_foo.avi", FOURCC, FRAMERATE, FRAMESIZE)
+    writer = cv2.VideoWriter("output_foo.avi", FOURCC, FRAMERATE, FRAMESIZE, isColor=False))
 
     # loop over
     while True:
@@ -1035,6 +1040,8 @@ FFGear integrates seamlessly with OpenCV's [`VideoWriter()`](https://docs.opencv
 
     OpenCV also directly consumes `GRAYSCALE` frames in its `cv2.write()` method.
 
+    !!! note "When writing a grayscale video, don't forget to add that flag (`isColor=False`) to the `VideoWriter`."
+
     ```python linenums="1" hl_lines="9 12-14 17 32 49"
     # import the necessary packages
     from vidgear.gears import FFGear
@@ -1095,7 +1102,7 @@ FFGear integrates seamlessly with OpenCV's [`VideoWriter()`](https://docs.opencv
 
     !!! info "You can also use other YUV pixel-formats such `yuv422p`(4:2:2 subsampling) or `yuv444p`(4:4:4 subsampling) etc. instead for more higher dynamic range in the similar manner."
 
-    ```python linenums="1" hl_lines="6 17 20-22 25 40 45 62"
+    ```python linenums="1" hl_lines="6 17 20-22 25 40"
     # import the necessary packages
     from vidgear.gears import FFGear
     import json, cv2
@@ -1112,7 +1119,7 @@ FFGear integrates seamlessly with OpenCV's [`VideoWriter()`](https://docs.opencv
     ).start()
 
     # retrieve JSON Metadata and convert it to dict
-    metadata_dict = json.loads(decoder.metadata)
+    metadata_dict = json.loads(stream.stream.metadata)
 
     # prepare OpenCV parameters
     FOURCC = cv2.VideoWriter_fourcc("M", "J", "P", "G")
@@ -1125,25 +1132,20 @@ FFGear integrates seamlessly with OpenCV's [`VideoWriter()`](https://docs.opencv
     # loop over
     while True:
 
-        # read frames from stream
+        # read OpenCV compatible YUV420 frames
         frame = stream.read()
 
         # check for frame if Nonetype
         if frame is None:
             break
 
-        # {do something with the YUV frame here}
-
-        # convert it to `BGR` pixel format,
-        bgr_frame = cv2.cvtColor(yuv, cv2.COLOR_YUV2BGR_I420)
-
-        # {do something with the BGR frame here}
+        # {do something with frame here}
 
         # writing BGR frame to writer
-        writer.write(bgr_frame)
+        writer.write(frame)
 
         # let's also show output window
-        cv2.imshow("Output", bgr_frame)
+        cv2.imshow("Output", frame)
 
         # check for 'q' key if pressed
         key = cv2.waitKey(1) & 0xFF
@@ -1161,6 +1163,291 @@ FFGear integrates seamlessly with OpenCV's [`VideoWriter()`](https://docs.opencv
     ```
 
 &nbsp;
+
+## Using FFGear with WriteGear API (Compression Mode)
+
+???+ danger "High CPU Usage when chaining FFGear with WriteGear"
+
+    When chaining FFGear with WriteGear, both FFmpeg processes _(decoding + encoding)_ run **as fast as your hardware allows** with no artificial pacing between them. This causes the pipeline to max out your CPU to process the video in the shortest time possible, which may be undesirable.
+
+    You can mitigate this in two ways depending on your use case:
+
+    === "Throttle to Real-Time Speed"
+
+        Pass the `-re` flag via FFGear's `-ffprefixes` parameter to force FFmpeg to read the input at its native framerate. This naturally paces the pipeline to real-time speed and **drastically reduces CPU usage**:
+
+        ```python
+        # force input to be read at native framerate
+        stream = FFGear(source="foo.mp4", frame_format="bgr24", **{"-ffprefixes": ["-re"]})
+        ```
+
+    === "Limit FFmpeg Threads"
+
+        Pass `-threads` to both FFGear and WriteGear to cap the number of CPU threads each FFmpeg process may use. This leaves headroom for other system tasks:
+
+        ```python
+        # limit decoder to 2 threads
+        stream = FFGear(source="foo.mp4", frame_format="bgr24", **{"-threads": 2})
+
+        # limit encoder to 2 threads
+        writer = WriteGear(output="output_foo.mp4", **{"-input_framerate": fps, "-threads": 2})
+        ```
+
+    !!! tip ":fontawesome-solid-microchip: Hardware Acceleration"
+        
+        If your machine has a dedicated GPU, you can offload video encoding entirely to the GPU. See [CUDA-NVENC-accelerated Transcoding with WriteGear API (Compression Mode) ➶](advanced/#cuda-nvenc-accelerated-transcoding-with-writegear-api-compression-mode) example for reference, which demonstrates shifting the heavy encoding workload away from the CPU.
+
+FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode for high-quality re-encoding of decoded frames:
+
+!!! tip "You can use FFGear API's `stream.metadata` property object that dumps source Video's metadata information _(as JSON string)_ to retrieve source framerate."
+
+=== "BGR frames"
+
+    WriteGear API by default expects `BGR` format frames in its `write()` class method.
+
+    ```python linenums="1" hl_lines="3 12 17 32 38"
+    # import required libraries
+    from vidgear.gears import FFGear
+    from vidgear.gears import WriteGear
+    import json
+
+    # open source with FFGear and BGR frames
+    stream = FFGear(source="myvideo.mp4", frame_format="bgr24", logging=True).start()
+
+    # retrieve framerate from source JSON Metadata and pass it as `-input_framerate` 
+    # parameter for controlled framerate
+    output_params = {
+        "-input_framerate": json.loads(stream.stream.metadata)["source_video_framerate"]
+    }
+
+    # Define writer with default parameters and suitable
+    # output filename for e.g. `output_foo.mp4`
+    writer = WriteGear(output="output_foo.mp4", **output_params)
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # write frame to output
+        writer.write(frame)
+
+    # safely close stream
+    stream.stop()
+
+    # safely close writer
+    writer.close()
+    ```
+
+=== "RGB frames"
+
+    In WriteGear API, you can use [`rgb_mode`](https://abhitronix.github.io/vidgear/latest/bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.write) parameter in  `write()` class method to write `RGB` format frames instead of default `BGR` as follows:
+
+    ```python linenums="1" hl_lines="3 12 17 32 38"
+    # import required libraries
+    from vidgear.gears import FFGear
+    from vidgear.gears import WriteGear
+    import json
+
+    # open source with FFGear and RGB frames
+    stream = FFGear(source="myvideo.mp4", frame_format="rgb24", logging=True).start()
+
+    # retrieve framerate from source JSON Metadata and pass it as `-input_framerate` 
+    # parameter for controlled framerate
+    output_params = {
+        "-input_framerate": json.loads(stream.stream.metadata)["source_video_framerate"]
+    }
+
+    # Define writer with default parameters and suitable
+    # output filename for e.g. `output_foo_rgb.mp4`
+    writer = WriteGear(output="output_foo_rgb.mp4", **output_params)
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # write frame to output
+        writer.write(frame, rgb_mode=True)
+
+    # safely close stream
+    stream.stop()
+
+    # safely close writer
+    writer.close()
+    ```
+
+=== "Grayscale frames"
+
+    WriteGear API also directly consumes `GRAYSCALE` format frames in its `write()` class method. 
+
+    ```python linenums="1" hl_lines="3 12 17 32 38"
+    # import required libraries
+    from vidgear.gears import FFGear
+    from vidgear.gears import WriteGear
+    import json
+
+    # open source with FFGear and GRAYSCALE frames
+    stream = FFGear(source="myvideo.mp4", frame_format="gray", logging=True).start()
+
+    # retrieve framerate from source JSON Metadata and pass it as `-input_framerate` 
+    # parameter for controlled framerate
+    output_params = {
+        "-input_framerate": json.loads(stream.stream.metadata)["source_video_framerate"]
+    }
+
+    # Define writer with default parameters and suitable
+    # output filename for e.g. `output_foo_gray.mp4`
+    writer = WriteGear(output="output_foo_gray.mp4", **output_params)
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # write frame to output
+        writer.write(frame)
+
+    # safely close stream
+    stream.stop()
+
+    # safely close writer
+    writer.close()
+    ```
+
+=== "YUV420p (Performance Mode) :material-speedometer:"
+
+    !!! success "Performance Mode :zap: — Faster Decoding via YUV420p"
+
+        Ingesting frames as 12-bit **YUV 4:2:0** instead of 24-bit **BGR** halves the bytes moving through the FFmpeg pipe. Enable `-enforce_cv_patch` to auto-convert YUV/NV pixel formats frames inside FFGear for seamless OpenCV compatibility.
+
+    WriteGear API also directly consume `YUV` _(or basically any other supported pixel format)_ frames in its `write()` class method with its `-input_pixfmt` attribute in compression mode. 
+
+    !!! note "You can also use `yuv422p`(4:2:2 subsampling) or `yuv444p`(4:4:4 subsampling) instead for more higher dynamic ranges."
+
+    ```python linenums="1" hl_lines="3 13-14 19 34 40"
+    # import required libraries
+    from vidgear.gears import FFGear
+    from vidgear.gears import WriteGear
+    import json
+
+    # open source with FFGear stream for YUV420 output
+    stream = FFGear(source="myvideo.mp4", frame_format="yuv420p", logging=True).start()
+
+    # retrieve framerate from source JSON Metadata and pass it as 
+    # `-input_framerate` parameter for controlled framerate
+    # and also add input pixfmt as yuv420p 
+    output_params = {
+        "-input_framerate": json.loads(stream.stream.metadata)["output_framerate"],
+        "-input_pixfmt": "yuv420p"
+    }
+
+    # Define writer with default parameters and suitable
+    # output filename for e.g. `output_foo_yuv.mp4`
+    writer = WriteGear(output="output_foo_yuv.mp4", logging=True, **output_params)
+
+    # loop over
+    while True:
+
+        # read OpenCV compatible YUV420p frames
+        frame = stream.read()
+
+        # check for frame if NoneType
+        if frame is None:
+            break
+
+        # {do something with the YUV420p frame here}
+
+        # write frame to output
+        writer.write(frame)
+
+    # safely close stream
+    stream.stop()
+
+    # safely close writer
+    writer.close()
+    ```
+
+=== "Grayscale via YUV (fastest) :material-invoice-fast-outline:"
+
+    !!! success "Fastest :zap: RAW-to-Grayscale via `-extract_luma`"
+
+        Every YUV/NV bytestream stores the **Luma (Y) plane** uncompressed at the top of each frame. The exclusive [`-extract_luma`](../params/#b-exclusive-parameters) boolean attribute makes FFGear slice that Y-plane directly and hand back a 2D `(H, W)` grayscale ndarray — **no colorspace conversion in FFmpeg, no `cv2.cvtColor` in Python**. This is strictly faster than `frame_format="gray"`, which still asks FFmpeg to do a `yuv→gray` conversion on every frame.
+
+        Combined with the reduced pipe-bytes of YUV 4:2:0 ingest, this is the fastest :fontawesome-solid-tachometer-alt-fast: grayscale pipeline the API can produce.
+
+    Similar to normal `GRAYSCALE` format frames, you can directly consume these frames in WriteGear API’s `write()` class method:
+
+    ```python linenums="1" hl_lines="3 7 12 20 25 39 45"
+    # import required libraries
+    from vidgear.gears import FFGear
+    from vidgear.gears import WriteGear
+    import json
+
+    # enable direct Luma (Y-plane) extraction
+    options = {"-extract_luma": True}
+
+    # stream Grayscale via YUV frames
+    stream = FFGear(
+        source="myvideo.mp4",
+        frame_format="yuv420p",
+        logging=True,
+        **options
+    ).start()
+
+    # retrieve framerate from source JSON Metadata and pass it as `-input_framerate` 
+    # parameter for controlled framerate
+    output_params = {
+        "-input_framerate": json.loads(stream.stream.metadata)["source_video_framerate"]
+    }
+
+    # Define writer with default parameters and suitable
+    # output filename for e.g. `output_foo_yuv_gray.mp4`
+    writer = WriteGear(output="output_foo_yuv_gray.mp4", **output_params)
+
+    # loop over
+    while True:
+        # read grayscale frames
+        frame = stream.read()
+
+        # check for frame if NoneType
+        if frame is None:
+            break
+
+        # {do something with Luma (Y-plane) extracted grayscale frame here}
+
+        # write frame to output
+        writer.write(frame)
+
+    # safely close stream
+    stream.stop()
+
+    # safely close writer
+    writer.close()
+    ```
+
+&thinsp;
 
 [yt_dlp]:https://github.com/yt-dlp/yt-dlp
 [deffcode]:https://github.com/abhiTronix/deffcode
