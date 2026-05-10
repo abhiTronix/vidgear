@@ -135,7 +135,7 @@ FFGear(source="myvideo.mp4", frame_format="bgr24")
 FFGear(source="myvideo.mp4", frame_format="gray")
 
 # decode as YUV420p (fastest throughput; requires -enforce_cv_patch for OpenCV compatibility)
-FFGear(source="myvideo.mp4", frame_format="yuv420p")
+FFGear(source="myvideo.mp4", frame_format="yuv420p") # auto-convert YUV420p → OpenCV Compatible in FFGear
 ```
 
 !!! example "YUV420p + `-enforce_cv_patch` usage example is given [here ➶](advanced/#hardware-accelerated-decoding-with-yuv420p-output)."
