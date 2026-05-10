@@ -27,9 +27,11 @@ limitations under the License.
 
 ## Overview
 
-> *VideoGear API provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**](../stabilizer/) class.*
+> *VideoGear is ideal when you need to switch between multiple video-capture backends with minimal code changes. It also simplifies video stabilization for both live streams and video files, requiring very little effort and fewer lines of code.*
 
-VideoGear also serves as a common video-capture API, providing unified access to [CamGear](../camgear/), [PiGear](../pigear/), and [FFGear](../ffgear/) along with their respective parameters. You can switch between these backends using the [`api`](params/#api) parameter.
+VideoGear API provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer** :material-video-stabilization:](../stabilizer/) class.
+
+VideoGear also serves as a common video-capture API, providing unified access to [**CamGear**](../camgear/), [**PiGear**](../pigear/), and [**FFGear**](../ffgear/) along with their respective parameters. You can switch between these backends using the [`api`](params/#api) parameter.
 
 ???+ info "Supported Backends"
 
@@ -38,8 +40,6 @@ VideoGear also serves as a common video-capture API, providing unified access to
     | `Backend.CAMGEAR` _(default)_ | [CamGear](../camgear/) | Webcams, files, network streams, streaming sites |
     | `Backend.PIGEAR` | [PiGear](../pigear/) | Raspberry Pi camera modules |
     | `Backend.FFGEAR` | [FFGear](../ffgear/) | Hardware-accelerated decoding, complex FFmpeg filtergraphs |
-
-VideoGear is ideal when you need to switch between different video-capture backends with minimal code changes. It also simplifies video stabilization for both real-time and non-real-time streams, requiring minimal effort and fewer lines of code.
 
 &thinsp; 
 
