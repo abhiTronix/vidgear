@@ -560,33 +560,41 @@ class WriteGear:
         if "-vcodec" not in output_params:
             # auto-assign default video-encoder (if not assigned by user).
             output_params["-vcodec"] = default_vcodec
-        if (
-            default_vcodec != "unknown"
-            and output_params["-vcodec"] not in supported_vcodecs
-        ):
-            # reset to default if not supported
+        # check if user wants to discard `-vcodec` parameter entirely
+        # (e.g. for GIF output, let FFmpeg auto-select best video encoder)
+        if(output_params["-vcodec"] is None):
+            output_params.pop("-vcodec", None)
             logger.critical(
-                "Provided FFmpeg does not support `{}` video-encoder. Switching to default supported `{}` encoder!".format(
-                    output_params["-vcodec"], default_vcodec
-                )
+                "Discarding `-vcodec` parameter from FFmpeg pipeline. FFmpeg will auto-select best video encoder for the given output."
             )
-            output_params["-vcodec"] = default_vcodec
-
-        # assign optimizations based on selected video encoder(if any)
-        if output_params["-vcodec"] in supported_vcodecs:
-            if output_params["-vcodec"] in ["libx265", "libx264"]:
-                if "-crf" not in output_params:
-                    output_params["-crf"] = "18"
-                if "-preset" not in output_params:
-                    output_params["-preset"] = "fast"
-            if output_params["-vcodec"] in ["libxvid", "mpeg4"] and "-qscale:v" not in output_params:
-                    output_params["-qscale:v"] = "3"
         else:
-            # raise error otherwise
-            raise RuntimeError(
-                "[WriteGear:ERROR] :: Provided FFmpeg does not support any suitable/usable video-encoders for compression."
-                " Kindly disable compression mode or switch to another FFmpeg binaries(if available)."
-            )
+            if (
+                default_vcodec != "unknown"
+                and output_params["-vcodec"] not in supported_vcodecs
+            ):
+                # reset to default if not supported
+                logger.critical(
+                    "Provided FFmpeg does not support `{}` video-encoder. Switching to default supported `{}` encoder!".format(
+                        output_params["-vcodec"], default_vcodec
+                    )
+                )
+                output_params["-vcodec"] = default_vcodec
+
+            # assign optimizations based on selected video encoder(if any)
+            if output_params["-vcodec"] in supported_vcodecs:
+                if output_params["-vcodec"] in ["libx265", "libx264"]:
+                    if "-crf" not in output_params:
+                        output_params["-crf"] = "18"
+                    if "-preset" not in output_params:
+                        output_params["-preset"] = "fast"
+                if output_params["-vcodec"] in ["libxvid", "mpeg4"] and "-qscale:v" not in output_params:
+                        output_params["-qscale:v"] = "3"
+            else:
+                # raise error otherwise
+                raise RuntimeError(
+                    "[WriteGear:ERROR] :: Provided FFmpeg does not support any suitable/usable video-encoders for compression."
+                    " Kindly disable compression mode or switch to another FFmpeg binaries(if available)."
+                )
 
         # convert output parameters to argument list
         output_parameters = dict2Args(output_params)
