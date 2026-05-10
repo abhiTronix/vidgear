@@ -46,8 +46,8 @@ from vidgear.gears import CamGear
 from vidgear.gears import WriteGear
 import cv2
 
-# open any valid video stream(for e.g `myvideo.avi` file)
-stream = CamGear(source="myvideo.avi").start()
+# open any valid video stream(for e.g `myvideo.mp4` file)
+stream = CamGear(source="myvideo.mp4").start()
 
 # Define writer with Non-compression mode and suitable output filename for e.g. `Output.mp4`
 writer = WriteGear(output="Output.mp4", compression_mode=False)
