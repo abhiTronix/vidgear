@@ -38,8 +38,8 @@ from vidgear.gears.helper import Backend
 import cv2
 
 
-# open any valid video stream(for e.g `myvideo.avi` file)
-stream = VideoGear(api=Backend.CAMGEAR, source="myvideo.avi").start()
+# open any valid video stream(for e.g `myvideo.mp4` file)
+stream = VideoGear(api=Backend.CAMGEAR, source="myvideo.mp4").start()
 
 # loop over
 while True:
@@ -98,8 +98,8 @@ from vidgear.gears.helper import Backend
 import cv2
 
 # select FFGear backend via api parameter
-# and open any valid video stream(for e.g `myvideo.avi` file)
-stream = VideoGear(api=Backend.FFGear, source="myvideo.avi").start()
+# and open any valid video stream(for e.g `myvideo.mp4` file)
+stream = VideoGear(api=Backend.FFGEAR, source="myvideo.mp4").start()
 
 # loop over
 while True:

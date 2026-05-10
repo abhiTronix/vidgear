@@ -34,8 +34,8 @@ from vidgear.gears import CamGear
 import cv2
 
 
-# open any valid video stream(for e.g `myvideo.avi` file)
-stream = CamGear(source="myvideo.avi").start()
+# open any valid video stream(for e.g `myvideo.mp4` file)
+stream = CamGear(source="myvideo.mp4").start()
 
 # loop over
 while True:
