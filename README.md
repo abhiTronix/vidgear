@@ -177,7 +177,7 @@ Each API is designed exclusively to handle/control/process different data-specif
   <img src="https://abhitronix.github.io/vidgear/latest/assets/images/camgear.png" alt="CamGear Functional Block Diagram" width="45%"/>
 </p>
 
-> _CamGear can grab ultra-fast frames from a diverse range of file-formats/devices/streams, which includes almost any IP-USB Cameras, multimedia video file-formats ([*upto 4k tested*][test-4k]), various network stream protocols such as `http(s), rtp, rtsp, rtmp, mms, etc.`, and GStreamer's pipelines, plus direct support for live video streaming sites like YouTube, Twitch, LiveStream, Dailymotion etc._
+> _CamGear can grab ultra-fast frames from a diverse range of file-formats/devices/streams, which includes almost any IP-USB Cameras, multimedia video file-formats, various network stream protocols such as `http(s), rtp, rtsp, rtmp, mms, etc.`, and GStreamer's pipelines, plus direct support for live video streaming sites like YouTube, Twitch, LiveStream, Dailymotion etc._
 
 CamGear provides a flexible, high-level, multi-threaded framework around OpenCV's [VideoCapture class][opencv-vc] with access almost all of its available parameters. CamGear internally implements [`yt_dlp`][yt_dlp] backend class for seamlessly pipelining live video-frames and metadata from various streaming services like [YouTube][youtube-doc], [Twitch][piping-live-videos], and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites). Furthermore, its framework relies exclusively on [**Threaded Queue mode**][tqm-doc] for ultra-fast, error-free, and synchronized video-frame handling.
 
@@ -195,51 +195,72 @@ CamGear provides a flexible, high-level, multi-threaded framework around OpenCV'
   <img src="https://abhitronix.github.io/vidgear/latest/assets/images/ffgear.png" alt="FFGear Functional Block Diagram" width="80%"/>
 </p>
 
-> _FFGear is a multi-threaded, high-performance wrapper around [DeFFcode's FFdecoder API][deffcode-doc] that compiles and executes an FFmpeg pipeline inside a subprocess pipe for generating real-time, low-overhead, lightning-fast decoded video frames in Python._
+> _FFGear is a multi-threaded, high-performance wrapper around [DeFFcode's FFdecoder API][deffcode-doc] that compiles and executes an **FFmpeg** pipeline inside a subprocess pipe for generating real-time, low-overhead, lightning-fast decoded video frames in Python._
 
-FFGear API provides **direct, transparent access** to the full FFdecoder feature set, including:
+FFGear API provides **direct, transparent access** to the full **FFdecoder** feature set, including:
 
-* [**Hardware-Accelerated Decoding**][hardware-accelerated-decoding] — CUDA/CUVID and other `-hwaccel` backends for GPU-powered decoding ⚡
-* [**Flexible Pixel Formats**][flexible-pixel-formats] — any FFmpeg-supported `-pix_fmt` (e.g., `bgr24`, `yuv420p`, `gray`), with an optional OpenCV compatibility patch (`-enforce_cv_patch`) for YUV/NV layouts.
-* [**Per-Frame Metadata Extraction**][per-frame-metadata-extraction] — asynchronous `showinfo` filter integration via `-extract_metadata`, yielding `(frame, metadata)` tuples with `frame_num`, `pts_time`, `is_keyframe`, and `frame_type`.
-* [**Complex Filtergraphs**][complex-filtergraphs] — live simple (`-vf`) and complex (`-filter_complex`) FFmpeg filter pipelines.
+* [**Hardware-Accelerated Decoding**][hardware-accelerated-decoding] — GPU-powered decoding with CUDA/CUVID and other hardware-accelerated backends ⚡
+* [**Flexible Pixel Formats**][flexible-pixel-formats] — support for any FFmpeg pixel format *(e.g., `bgr24`, `yuv420p`, `gray`)* with optional OpenCV compatibility patches for YUV/NV layouts.
+* [**Per-Frame Metadata Extraction**][per-frame-metadata-extraction] — asynchronous frame metadata extraction through the `showinfo` filter.
+* [**Live Complex Filtergraphs**][complex-filtergraphs] — support for live simple and complex FFmpeg filter pipelines.
+* **Wide Source Support** — capture [USB, virtual, and IP camera][cameras-ff] feeds by index similar to OpenCV, along with support for [multimedia files][multimedia-files-ff], [image sequences][image-sequences-ff], [desktop screen capture][desktop-screen-capture], and [network streams][network-streams-ff] *(HTTP(s), RTSP/RTP, etc.)*.
 
-It also provides **wide source support** — [USB/Virtual/IP camera feeds][cameras-ff], [multimedia files][multimedia-files-ff], [image sequences][image-sequences-ff], [desktop screen][desktop-screen-capture], and [network streams][network-streams-ff] (`HTTP(s)`, `RTSP/RTP`, etc.).
+Similar to CamGear, FFGear also supports the `yt_dlp` backend for seamlessly [pipelining live video frames from streaming services][streaming-services-ff] like YouTube, Twitch, and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites)
 
-Similar to CamGear, FFGear also supports the `yt_dlp` backend via `stream_mode=True` for seamlessly [pipelining live video frames from streaming services][streaming-services-ff] like YouTube, Twitch, and [many more](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites).
+**Below is a snapshot of FFGear optimizing Real-time [*YOLOv10-Nano* model inference](https://docs.ultralytics.com/models/yolov10/) by processing only Keyframes (I-frames) while skipping all non-keyframes (P/B-frames), reducing unnecessary decoding and inference workloads by *up to 98%*.**
 
-**Code to get started with FFGear:**
+<p align="center">
+  <img src="https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/vidgear/ffgear-yolo10n.gif" alt="FFGear Keyframes (I-frames) optimization in action!"/>
+  <br>
+  <sub><i>FFGear Keyframes (I-frames) optimization in action!</i></sub>
+</p>
+
+**Code to generate above result:**
 
 ```python
 # import required libraries
 from vidgear.gears import FFGear
-import cv2
+from ultralytics import YOLO
 
-# open any valid video file with FFGear (default: bgr24 output)
-stream = FFGear(source="myvideo.mp4", logging=True).start()
+# Initialize YOLOv10-Nano model
+model = YOLO("yolov10n.pt")
+
+# Configure FFGear with per-frame metadata extraction enable
+options = {"-extract_metadata": True}
+stream = FFGear(
+    source="test.mp4", frame_format="bgr24", logging=True, **options
+).start()
 
 # loop over
 while True:
 
-    # read frames from stream
-    frame = stream.read()
+    # read data from stream
+    output = stream.read()
 
-    # check for frame if Nonetype
-    if frame is None:
+    # check if end of stream
+    if output is None:
         break
 
-    # {do something with the frame here}
+    # Unpack the frame and its associated metadata
+    frame, meta = output
 
-    # Show output window
-    cv2.imshow("Output", frame)
+    # --- OPTIMIZATION STEP ---
+    # We skip all non-keyframes to save processing power.
+    # This ensures the model only runs on the most information-dense frames.
+    if not meta.get("is_keyframe"):
+        continue  # <-- Skips Non-key frames (P, B-frames)
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+    # Log keyframe details
+    print(f"Keyframe #{meta['frame_num']} at {meta['pts_time']:.3f}s")
 
-# close output window
-cv2.destroyAllWindows()
+    # Perform AI Inference on keyframes (I-frames) only
+    # Because we skip non-keyframes, this heavy task runs significantly less often.
+    results = model(frame)
+
+    # Annotate the frame with detection boxes and labels
+    annotated_frame = results[0].plot()
+
+    # {Insert your custom logic here, e.g., displaying/saving frames or triggering an alert}
 
 # safely close video stream
 stream.stop()
