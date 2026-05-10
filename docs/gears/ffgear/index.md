@@ -29,18 +29,18 @@ limitations under the License.
 
 > FFGear is a **multi-threaded , high-performance :zap:** wrapper around [**DeFFcode's FFdecoder API**](https://abhitronix.github.io/deffcode/latest/reference/ffdecoder/) that compiles and executes an :simple-ffmpeg: FFmpeg pipeline inside a subprocess pipe for generating real-time, low-overhead, lightning-fast decoded video frames in Python.
 
-FFGear API provides **direct, transparent access** to the full FFdecoder feature-set, including:
+FFGear API provides **direct, transparent access** to the full **FFdecoder** feature-set, including:
 
-- [x] **Hardware-Accelerated Decoding** — CUDA/CUVID and other `-hwaccel` backends for GPU-powered decoding :zap:
-- [x] **Flexible Pixel Formats** — any FFmpeg-supported `-pix_fmt` (e.g. `bgr24`, `yuv420p`, `gray`), with an optional OpenCV-compatibility patch (`-enforce_cv_patch`) for YUV/NV layouts.
-- [x] **Per-Frame Metadata Extraction** — asynchronous `showinfo` filter integration via `-extract_metadata`, yielding `(frame, metadata)` tuples with `frame_num`, `pts_time`, `is_keyframe`, and `frame_type`.
-- [x] **Complex Filtergraphs** — live simple (`-vf`) and complex (`-filter_complex`) FFmpeg filter pipelines.
+- [x] **Hardware-Accelerated Decoding** — GPU-powered decoding with CUDA/CUVID and other hardware-accelerated backends :zap:
+- [x] **Flexible Pixel Formats** — support for any FFmpeg pixel format *(e.g., `bgr24`, `yuv420p`, `gray`)* with optional OpenCV compatibility patches for YUV/NV layouts.
+- [x] **Per-Frame Metadata Extraction** — asynchronous frame metadata extraction through the `showinfo` filter.
+- [x] **Live Complex Filtergraphs** — support for live simple and complex FFmpeg filter pipelines.
 - [x] **Multi-Input Sources** — multiple simultaneous inputs routed via `-map` or `-filter_complex`.
-- [x] **Wide Source Support** — USB/Virtual/IP camera feeds, multimedia files, image sequences, desktop screen, and network protocols (`HTTP(s)`, `RTP/RTSP`, etc.).
+- [x] **Wide Source Support** — capture USB, virtual, and IP camera feeds by index similar to OpenCV, along with support for multimedia files, image sequences, desktop screen capture, and network streams *(HTTP(s), RTSP/RTP, etc.)*.
 
 Internally, FFGear employs the [**Threaded Queue mode**](../../bonus/TQM/) (configurable via `QUEUE_SIZE`, `THREADED_QUEUE_MODE`, `THREAD_TIMEOUT`) for zero-bottleneck asynchronous frame delivery, and maintains the standard OpenCV-Python coding syntax for drop-in integration.
 
-Similar to CamGear, FFGear also supports the `yt_dlp` backend via `stream_mode=True` for seamlessly pipelining live video-frames and metadata from streaming services like YouTube, Dailymotion, Twitch, and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites).
+Similar to CamGear, FFGear also supports the `yt_dlp` backend for seamlessly pipelining live video frames from streaming services like YouTube, Twitch, and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites)
 
 &thinsp;
 
