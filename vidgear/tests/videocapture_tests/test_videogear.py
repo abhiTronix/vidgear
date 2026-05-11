@@ -29,6 +29,7 @@ import pytest
 
 from vidgear.gears import VideoGear
 from vidgear.gears.helper import Backend, logger_handler
+from vidgear.gears.stabilizer import StabilizerMode
 from vidgear.tests.utils.helpers import return_testvideo_path
 
 # define test logger
@@ -210,6 +211,17 @@ test_data = [
         },
     ),
     (return_testvideo_path(), {"BORDER_TYPE": "im_wrong"}),
+    (
+        return_testvideo_path(),
+        {
+            "STABILIZER_MODE": StabilizerMode.ASW,
+            "SMOOTHING_RADIUS": 5,
+        },
+    ),
+    (
+        return_testvideo_path(),
+        {"STABILIZER_MODE": "not-an-enum"},
+    ),
 ]
 
 
