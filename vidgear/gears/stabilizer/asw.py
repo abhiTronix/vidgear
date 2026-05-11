@@ -61,16 +61,26 @@ class ASWStabilizer(_StabilizerBase):
             logging=logging,
         )
 
-        # bounded buffers (size = smoothing window)
+        # bounded frame buffer (size = smoothing window)
         self.__frame_queue = deque(maxlen=smoothing_radius)
-        self.__frame_queue_indexes = deque(maxlen=smoothing_radius)
+
+        # Bounded deque for prev_to_cur transforms [dx, dy, da].
+        # A box filter of width `smoothing_radius` at the output position needs
+        # transforms within a half-window of `smoothing_radius/2` around it.
+        # The output frame lags the newest by `smoothing_radius - 1` frames,
+        # so keeping the last `2 * smoothing_radius + 1` transforms always covers
+        # the window with margin. Older entries can be dropped because the
+        # `smoothed_path - path` subtraction is invariant to the absolute offset
+        # of the cumulative sum. Caps memory at O(smoothing_radius) regardless
+        # of stream length.
+        self.__transforms = deque(maxlen=2 * smoothing_radius + 1)
 
         # ASW-specific state
         self.__smoothing_radius = smoothing_radius  # averaging window
-        self.__smoothed_path = None  # box-filter-smoothed path
-        self.__path = None  # cumulative sum of previous_2_current transforms
-        self.__transforms = []  # previous_2_current transforms [dx,dy,da]
-        self.__frame_transforms_smoothed = None  # smoothed transforms per frame
+        # latches True once the frame queue first fills; from then on every
+        # frame emits an output. Replaces the original monotonic counter that
+        # leaked memory by tracking every index forever.
+        self.__buildup_complete = False
         self.__previous_gray = None  # previous gray frame
         self.__previous_keypoints = None  # previous GFTT keypoints
 
@@ -106,33 +116,59 @@ class ASWStabilizer(_StabilizerBase):
             )
             self._frame_height, self._frame_width = frame.shape[:2]
             self.__frame_queue.append(frame)
-            self.__frame_queue_indexes.append(0)
             self.__previous_gray = previous_gray[:]
+            return None
 
-        elif self.__frame_queue_indexes[-1] < self.__smoothing_radius - 1:
-            # buffering remaining frames in window
-            self.__frame_queue.append(frame)
-            self.__frame_queue_indexes.append(self.__frame_queue_indexes[-1] + 1)
-            self.__generate_transformations()
-        else:
-            # window full → start emitting stabilized frames
-            self.__frame_queue.append(frame)
-            self.__frame_queue_indexes.append(self.__frame_queue_indexes[-1] + 1)
-            self.__generate_transformations()
-            # smooth path with normalized box filter (per axis)
-            for i in range(3):
-                self.__smoothed_path[:, i] = self.__box_filter_convolve(
-                    (self.__path[:, i]), window_size=self.__smoothing_radius
-                )
-            # deviation of path from smoothed path
-            deviation = self.__smoothed_path - self.__path
-            self.__frame_transforms_smoothed = self.frame_transform + deviation
-            return self.__apply_transformations()
+        # Latch `buildup_complete` the first time the queue is observed at
+        # capacity (the upcoming append will be the first to drop an old
+        # frame). Once latched, stays True: every subsequent frame emits.
+        if (
+            not self.__buildup_complete
+            and len(self.__frame_queue) == self.__frame_queue.maxlen
+        ):
+            self.__buildup_complete = True
+
+        # buffer the new frame and compute its prev->cur transform
+        self.__frame_queue.append(frame)
+        self.__generate_transformations()
+
+        # still warming up — no output yet
+        if not self.__buildup_complete:
+            return None
+
+        # Build path + smoothed path from the BOUNDED transform window.
+        # O(smoothing_radius) work per frame regardless of stream length;
+        # the original code was O(total_frames_seen) per frame.
+        transforms_arr = np.asarray(self.__transforms, dtype="float32")
+        path = np.cumsum(transforms_arr, axis=0)
+        smoothed_path = np.copy(path)
+        for i in range(3):
+            smoothed_path[:, i] = self.__box_filter_convolve(
+                path[:, i], window_size=self.__smoothing_radius
+            )
+        # deviation is translation-invariant w.r.t. absolute path offset, so
+        # rebasing the cumsum to start at the current deque head is harmless.
+        deviation = smoothed_path - path
+        frame_transforms_smoothed = transforms_arr + deviation
+
+        # Locate the output frame's transform row inside the bounded window.
+        # After processing frame index k (0-indexed), the newest transform in
+        # the deque is T_{k-1->k} at position len(deque)-1. The output frame
+        # (leftmost of frame_queue after the append-and-drop) has global index
+        # k - smoothing_radius + 1, so its outgoing transform sits
+        # `smoothing_radius - 2` steps back from the newest, i.e. at position
+        # `len(deque) - 1 - (smoothing_radius - 2)`.
+        output_transform_idx = len(self.__transforms) - self.__smoothing_radius + 1
+
+        return self.__apply_transformations(
+            frame_transforms_smoothed, output_transform_idx
+        )
 
     def __generate_transformations(self):
         """
-        Generates previous-to-current transformations [dx, dy, da] for the
-        latest frame in the queue.
+        Generates previous-to-current transformation [dx, dy, da] for the
+        latest frame in the queue and appends it to the bounded transforms
+        deque (oldest is auto-dropped on overflow).
         """
         frame_gray = cv2.cvtColor(self.__frame_queue[-1], cv2.COLOR_BGR2GRAY)
         frame_gray = self._clahe.apply(frame_gray)
@@ -171,11 +207,6 @@ class ASWStabilizer(_StabilizerBase):
 
         self.__transforms.append([dx, dy, da])
 
-        # cumulative path
-        self.frame_transform = np.array(self.__transforms, dtype="float32")
-        self.__path = np.cumsum(self.frame_transform, axis=0)
-        self.__smoothed_path = np.copy(self.__path)
-
         # refresh GFTT keypoints for next iteration
         self.__previous_keypoints = cv2.goodFeaturesToTrack(
             frame_gray,
@@ -199,18 +230,17 @@ class ASWStabilizer(_StabilizerBase):
         assert path.shape == path_smoothed.shape
         return path_smoothed
 
-    def __apply_transformations(self):
+    def __apply_transformations(self, frame_transforms_smoothed, transform_idx):
         """
         Pops the oldest frame from the queue and applies its smoothed
         transformation via the shared affine warp.
         """
         queue_frame = self.__frame_queue.popleft()
-        queue_frame_index = self.__frame_queue_indexes.popleft()
 
-        # extracting Transformations w.r.t frame index
-        dx = self.__frame_transforms_smoothed[queue_frame_index, 0]
-        dy = self.__frame_transforms_smoothed[queue_frame_index, 1]
-        da = self.__frame_transforms_smoothed[queue_frame_index, 2]
+        # extracting Transformations w.r.t row in bounded smoothed window
+        dx = frame_transforms_smoothed[transform_idx, 0]
+        dy = frame_transforms_smoothed[transform_idx, 1]
+        da = frame_transforms_smoothed[transform_idx, 2]
 
         return self._apply_warp(queue_frame, dx, dy, da)
 
@@ -221,4 +251,6 @@ class ASWStabilizer(_StabilizerBase):
         if self.__frame_queue:
             logger.critical("Cleaning Resources...")
             self.__frame_queue.clear()
-            self.__frame_queue_indexes.clear()
+            self.__transforms.clear()
+            # reset buildup flag so the instance can be reused cleanly
+            self.__buildup_complete = False
