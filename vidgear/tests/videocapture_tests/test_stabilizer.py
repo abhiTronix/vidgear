@@ -90,6 +90,45 @@ def test_asw_border_padding_shape():
     s.clean()
 
 
+def test_asw_transforms_buffer_is_bounded():
+    """
+    Regression for issue #363: `__transforms` must stay bounded over a long
+    stream. Previously a plain list that grew unbounded with frame count.
+    Bound is `2 * smoothing_radius + 1` by design.
+    """
+    smoothing_radius = 5
+    s = Stabilizer(smoothing_radius=smoothing_radius)
+    rng = np.random.default_rng(3)
+    # name-mangled private attrs
+    transforms = s._ASWStabilizer__transforms
+    frame_queue = s._ASWStabilizer__frame_queue
+    for _ in range(500):
+        s.stabilize(rng.integers(0, 255, (120, 160, 3), dtype=np.uint8))
+    assert len(transforms) <= 2 * smoothing_radius + 1
+    assert transforms.maxlen == 2 * smoothing_radius + 1
+    assert len(frame_queue) <= smoothing_radius
+    s.clean()
+
+
+def test_asw_long_stream_emits_continuously():
+    """
+    After the smoothing window fills, every subsequent `stabilize` call must
+    return a frame. Regression against the original counter-based buildup
+    check that broke once the bounded refactor removed the global index.
+    """
+    smoothing_radius = 5
+    s = Stabilizer(smoothing_radius=smoothing_radius)
+    rng = np.random.default_rng(4)
+    emitted = 0
+    total = 50
+    for _ in range(total):
+        if s.stabilize(rng.integers(0, 255, (120, 160, 3), dtype=np.uint8)) is not None:
+            emitted += 1
+    # first `smoothing_radius` calls warm up, rest emit
+    assert emitted == total - smoothing_radius
+    s.clean()
+
+
 def test_asw_crop_n_zoom_preserves_shape():
     """`crop_n_zoom=True` crops borders and resizes back to input dims."""
     s = Stabilizer(smoothing_radius=5, border_size=10, crop_n_zoom=True)
