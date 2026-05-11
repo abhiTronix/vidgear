@@ -76,7 +76,7 @@ class VideoGear:
         logging: bool = False,
         # deprecated
         enablePiCamera: bool | None = None,
-        **options: dict
+        **options: dict,
     ):
         """
         This constructor method initializes the object state and attributes of the VideoGear class.
@@ -135,7 +135,14 @@ class VideoGear:
         options = {str(k).strip(): v for k, v in options.items()}
 
         if self.__stabilization_mode:
-            from .stabilizer import Stabilizer
+            from .stabilizer import Stabilizer, StabilizerMode
+
+            stabilizer_mode = options.pop("STABILIZER_MODE", StabilizerMode.ASW)
+            if not isinstance(stabilizer_mode, StabilizerMode):
+                stabilizer_mode = StabilizerMode.ASW
+            self.__logging and logger.debug(
+                f"Setting Stabilizer Mode: {stabilizer_mode.name}"
+            )
 
             s_radius = options.pop("SMOOTHING_RADIUS", 25)
             if not isinstance(s_radius, int):
@@ -154,6 +161,7 @@ class VideoGear:
                 crop_n_zoom = False
 
             self.__stabilizer_obj = Stabilizer(
+                mode=stabilizer_mode,
                 smoothing_radius=s_radius,
                 border_type=border_type,
                 border_size=border_size,
@@ -204,7 +212,9 @@ class VideoGear:
         self.framerate = getattr(self.stream, "framerate", 0.0)
 
     @staticmethod
-    def __build_pigear(*, camera_num, resolution, framerate, colorspace, logging, time_delay, options):
+    def __build_pigear(
+        *, camera_num, resolution, framerate, colorspace, logging, time_delay, options
+    ):
         from .pigear import PiGear
 
         return PiGear(
@@ -218,7 +228,16 @@ class VideoGear:
         )
 
     @staticmethod
-    def __build_ffgear(*, source, stream_mode, source_demuxer, frame_format, custom_ffmpeg, logging, options):
+    def __build_ffgear(
+        *,
+        source,
+        stream_mode,
+        source_demuxer,
+        frame_format,
+        custom_ffmpeg,
+        logging,
+        options,
+    ):
         from .ffgear import FFGear
 
         return FFGear(
