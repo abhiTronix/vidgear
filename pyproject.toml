@@ -96,8 +96,9 @@ Source = "https://github.com/abhiTronix/vidgear"
 Documentation = "https://abhitronix.github.io/vidgear"
 Changelog = "https://abhitronix.github.io/vidgear/latest/changelog/"
 
-[tool.setuptools]
-packages = ["vidgear", "vidgear.gears", "vidgear.gears.asyncio"]
+[tool.setuptools.packages.find]
+include = ["vidgear*"]
+exclude = ["vidgear.tests*", "docs*"]
 
 [tool.setuptools.package-data]
 vidgear = ["py.typed"]
