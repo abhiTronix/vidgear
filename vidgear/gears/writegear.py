@@ -549,10 +549,13 @@ class WriteGear:
         supported_vcodecs = get_supported_vencoders(self.__ffmpeg)
         # dynamically select default encoder
         default_vcodec = next(
-            vcodec
-            for vcodec in ["libx264", "libx265", "libxvid", "mpeg4"]
-            if vcodec in supported_vcodecs
-        ) or "unknown"
+            (
+                vcodec
+                for vcodec in ["libx264", "libx265", "libxvid", "mpeg4"]
+                if vcodec in supported_vcodecs
+            ),
+            "unknown",
+        )
         # extract any user-defined encoder
         if "-c:v" in output_params:
             # assign it to the pipeline
