@@ -148,12 +148,8 @@ if yt_dlp is not None:
                 stream_dim = stream.get("resolution", "")
                 stream_url = stream.get("url", "")
                 stream_protocol = stream.get("protocol", "")
-                stream_with_video = (
-                    stream.get("vcodec", "none") != "none"
-                )
-                stream_with_audio = (
-                    stream.get("acodec", "none") != "none"
-                )
+                stream_with_video = stream.get("vcodec", "none") != "none"
+                stream_with_audio = stream.get("acodec", "none") != "none"
                 # streams must contain video
                 if (
                     stream_with_video
@@ -174,10 +170,13 @@ if yt_dlp is not None:
                     if (
                         not stream_with_audio  # prefer audioless
                         or stream_protocol in ["https", "http"]  # prefer http/https
-                        or stream_dim not in streams_copy  # check if already not in dict
+                        or stream_dim
+                        not in streams_copy  # check if already not in dict
                     ):
                         streams_copy[stream_dim] = stream_url
             # use copy to decide best or worst
+            if not streams_copy:
+                return {}
             streams["best"] = streams_copy[list(streams_copy.keys())[-1]]
             streams["worst"] = streams_copy[next(iter(streams_copy.keys()))]
             return streams
