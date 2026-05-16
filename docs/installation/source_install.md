@@ -220,13 +220,30 @@ When installing VidGear from source, following are Critical and some API specifi
 
 ## Installation
 
-
 **If you want to checkout the latest beta [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch , you can do so with the following commands:**
 
+??? danger "Clean stale installs when switching branches or upgrading from source"
 
-!!! info "This can be useful if you want to provide feedback for a new feature or bug fix in the `testing` branch."
+    `pip install .` (and `pip install -U .`) **does NOT remove files from a prior install** that no longer exist in the new source tree. When the codebase reorganizes a module into a sub-package, the old files or sub-packages can linger. Always uninstall first when switching between branches or pulling a major refactor:
 
-!!! danger "DO NOT clone or install any other branch other than `testing` unless advised, as it is not tested with CI environments and possibly very unstable or unusable."
+    ```sh
+    # uninstall any prior install (repeat until "not installed" reported)
+    pip uninstall -y vidgear
+
+    # then reinstall fresh
+    pip install -U .
+    ```
+
+??? tip "Use editable installs for active development"
+
+    If you're contributing or testing patches locally, install in **editable mode** so changes in the cloned repo take effect immediately — no reinstall per edit:
+
+    ```sh
+    pip install -e .[core]
+    ```
+
+    ==Still clean the old install first== (`pip uninstall -y vidgear`) if you previously did a non-editable `pip install .`.
+
 
 ??? example "Installing vidgear with only selective dependencies"
 
@@ -277,7 +294,7 @@ When installing VidGear from source, following are Critical and some API specifi
         | Stabilizer Class | - |
                     
 
-??? warning ":fontawesome-brands-windows: Windows Installation"
+??? note ":fontawesome-brands-windows: Windows Installation"
 
     If you are using Windows, some of the commands given below, may not work out-of-the-box.
 
@@ -311,7 +328,6 @@ When installing VidGear from source, following are Critical and some API specifi
     py -m pip install --upgrade --user .[asyncio]
     ```
     
-
 ```sh
 # clone the repository and get inside
 git clone https://github.com/abhiTronix/vidgear.git && cd vidgear

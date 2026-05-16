@@ -280,7 +280,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
         | Stabilizer Class | - |
 
 
-??? warning ":fontawesome-brands-windows: Windows Installation"
+??? note ":fontawesome-brands-windows: Windows Installation"
 
     If you are using Windows, some of the commands given below, may not work out-of-the-box.
 
