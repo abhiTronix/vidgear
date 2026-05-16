@@ -68,7 +68,7 @@ You'll also need to install an ASGI Server to run following WebGear_RTC usage ex
 
 Let's implement a Bare-Minimum usage example:
 
-### Running Programmatically
+### Running Programmatically :fontawesome-brands-python:
 
 You can access and run WebGear_RTC VideoStreamer Server programmatically in your python script in just a few lines of code, as follows:
 
@@ -99,7 +99,7 @@ web.shutdown()
 which can be accessed on any browser on your machine at http://localhost:8000/.
 
 
-### Running from Terminal
+### Running from Terminal :fontawesome-solid-terminal:
 
 You can also access and run WebGear_RTC Server directly from the terminal commandline. The following command will run a WebGear_RTC VideoStreamer server at http://localhost:8000/:
 
@@ -108,7 +108,7 @@ You can also access and run WebGear_RTC Server directly from the terminal comman
 !!! warning "If you're using `--options/-op` flag, then kindly wrap your dictionary value in single `''` quotes."
 
 ```sh
-python3 -m vidgear.gears.asyncio --mode webrtc --source test.avi --logging True --options '{"frame_size_reduction": 50, "frame_jpeg_quality": 80, "frame_jpeg_optimize": True, "frame_jpeg_progressive": False}'
+python3 -m vidgear.gears.asyncio --mode webrtc --source test.avi --logging --options '{"frame_size_reduction": 50, "frame_jpeg_quality": 80, "frame_jpeg_optimize": True, "frame_jpeg_progressive": False}'
 ```
 
 which can also be accessed on any browser on the network at http://localhost:8000/.
@@ -119,53 +119,51 @@ which can also be accessed on any browser on the network at http://localhost:800
     You can run `#!py3 python3 -m vidgear.gears.asyncio -h` help command to see all the advanced settings, as follows:
 
     ```sh
-    usage: python -m vidgear.gears.asyncio [-h] [-m MODE] [-s SOURCE] [-ep ENABLEPICAMERA] [-S STABILIZE]
-                [-cn CAMERA_NUM] [-yt stream_mode] [-b BACKEND] [-cs COLORSPACE]
-                [-r RESOLUTION] [-f FRAMERATE] [-td TIME_DELAY]
-                [-ip IPADDRESS] [-pt PORT] [-l LOGGING] [-op OPTIONS]
+    usage: python -m vidgear.gears.asyncio [-h] [-m MODE] [-s SOURCE] [-a API] [-S] [-b BACKEND]
+                    [-cs COLORSPACE] [-cn CAMERA_NUM] [-r RESOLUTION] [-f FRAMERATE]
+                    [-yt] [-sd SOURCE_DEMUXER] [-ff FRAME_FORMAT] [-cf CUSTOM_FFMPEG]
+                    [-td TIME_DELAY] [-ip IPADDRESS] [-pt PORT] [-l] [-op OPTIONS]
 
     Runs WebGear/WebGear_RTC Video Server through terminal.
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      -m {mjpeg,webrtc}, --mode {mjpeg,webrtc}
+    options:
+    -h, --help            show this help message and exit
+    -m {mjpeg,webrtc}, --mode {mjpeg,webrtc}
                             Whether to use "MJPEG" or "WebRTC" mode for streaming.
-      -s SOURCE, --source SOURCE
-                            Path to input source for CamGear API.
-      -ep ENABLEPICAMERA, --enablePiCamera ENABLEPICAMERA
-                            Sets the flag to access PiGear(if True) or otherwise
-                            CamGear API respectively.
-      -S STABILIZE, --stabilize STABILIZE
-                            Enables/disables real-time video stabilization.
-      -cn CAMERA_NUM, --camera_num CAMERA_NUM
-                            Sets the camera module index that will be used by
-                            PiGear API.
-      -yt STREAM_MODE, --stream_mode STREAM_MODE
-                            Enables YouTube Mode in CamGear API.
-      -b BACKEND, --backend BACKEND
-                            Sets the backend of the video source in CamGear API.
-      -cs COLORSPACE, --colorspace COLORSPACE
+    -a {camgear,pigear,ffgear}, --api {camgear,pigear,ffgear}
+                            Selects the capture backend for VideoGear. Choices: camgear, pigear, ffgear. Default: camgear.
+    -ep, --enablePiCamera
+                            [DEPRECATED] Use `--api pigear` instead. Sets the flag to access PiGear API.
+    -S, --stabilize       Enables real-time video stabilization.
+    -s SOURCE, --source SOURCE
+                            Path to input source (device index, filepath, URL, or glob pattern).
+    -yt, --stream_mode    Enables YouTube/yt_dlp Stream Mode in CamGear/FFGear API.
+    -b BACKEND, --backend BACKEND
+                            Sets the backend of the video source in CamGear API (e.g. cv2.CAP_DSHOW).
+    -sd SOURCE_DEMUXER, --source_demuxer SOURCE_DEMUXER
+                            [FFGear only] FFmpeg demuxer for the source (e.g. "v4l2", "dshow"). Default: auto-detect.
+    -ff FRAME_FORMAT, --frame_format FRAME_FORMAT
+                            [FFGear only] Pixel format for decoded frames (e.g. "bgr24", "gray"). Default: bgr24.
+    -cf CUSTOM_FFMPEG, --custom_ffmpeg CUSTOM_FFMPEG
+                            [FFGear only] Path to a custom FFmpeg executable. Default: use PATH.
+    -cn CAMERA_NUM, --camera_num CAMERA_NUM
+                            [PiGear only] Sets the camera module index.
+    -r RESOLUTION, --resolution RESOLUTION
+                            [PiGear only] Sets the resolution (width,height) for the camera module.
+    -f FRAMERATE, --framerate FRAMERATE
+                            [PiGear only] Sets the framerate for the camera module.
+    -cs COLORSPACE, --colorspace COLORSPACE
                             Sets the colorspace of the output video stream.
-      -r RESOLUTION, --resolution RESOLUTION
-                            Sets the resolution (width,height) for camera module
-                            in PiGear API.
-      -f FRAMERATE, --framerate FRAMERATE
-                            Sets the framerate for camera module in PiGear API.
-      -td TIME_DELAY, --time_delay TIME_DELAY
-                            Sets the time delay(in seconds) before start reading
-                            the frames.
-      -ip IPADDRESS, --ipaddress IPADDRESS
+    -td TIME_DELAY, --time_delay TIME_DELAY
+                            Sets the time delay (in seconds) before start reading the frames.
+    -ip IPADDRESS, --ipaddress IPADDRESS
                             Uvicorn binds the socket to this ipaddress.
-      -pt PORT, --port PORT
+    -pt PORT, --port PORT
                             Uvicorn binds the socket to this port.
-      -l LOGGING, --logging LOGGING
-                            Enables/disables error logging, essential for
-                            debugging.
-      -op OPTIONS, --options OPTIONS
-                            Sets the parameters supported by APIs(whichever being
-                            accessed) to the input videostream, But make sure to
-                            wrap your dict value in single or double quotes.
-
+    -l, --logging         Enables/disables error logging, essential for debugging.
+    -op OPTIONS, --options OPTIONS
+                            Sets the parameters supported by APIs (whichever being accessed) to the input videostream. Wrap your dict value in
+                            single or double quotes.
     ```
 
 &nbsp; 
