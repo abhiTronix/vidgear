@@ -37,9 +37,24 @@ limitations under the License.
 
 > Stabilizer is an auxiliary class that enables Video Stabilization for vidgear with minimalistic latency, and at the expense of little to no additional computational requirements. 
 
-The basic idea behind it is to tracks and save the salient feature array for the given number of frames and then uses these anchor point to cancel out all perturbations relative to it for the incoming frames in the queue. This class relies on [**Fixed-Size Python Queues**](../../bonus/TQM/#b-utilizes-fixed-size-queues) for error-free & ultra-fast frame handling. 
+The basic idea behind it is to track and save the salient feature array for the given number of frames and then use these anchor points to cancel out all perturbations relative to it for the incoming frames in the queue. This class relies on **bounded fixed-size deques** for error-free & ultra-fast frame handling, with memory capped at `O(smoothing_radius)` regardless of stream length.
 
 !!! tip "For more detailed information on Stabilizer working, See [this blogpost ➶](https://learnopencv.com/video-stabilization-using-point-feature-matching-in-opencv/)"
+
+???+ alert "Architecture changes in `v0.3.5`"
+
+    Starting with `v0.3.5`, the Stabilizer module follows a flexible, plugin-style design. Different stabilization methods can plug into a shared foundation for easier extensibility and future improvements.
+
+    The `Stabilizer` interface automatically selects the appropriate backend based on the [`mode`](params/#mode) parameter, keeping usage simple and consistent.
+
+    **Available modes**:
+
+    | Mode | Backend | Status |
+    |:----:|:--------|:-------|
+    | `StabilizerMode.ASW` | [`ASWStabilizer`](../../bonus/reference/stabilizer/#aswstabilizer) — Average Sliding-Window | **Default** |
+    | `StabilizerMode.KALMAN` | *Kalman-filter-based* | *Planned for a future release* |
+
+    !!! success "The public `Stabilizer` API remains unchanged, so existing code continues to work as before while automatically using the default ASW backend."
 
 &thinsp; 
 

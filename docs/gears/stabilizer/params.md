@@ -22,6 +22,38 @@ limitations under the License.
 
 &thinsp;
 
+## **`mode`**
+
+??? new "New in v0.3.5"
+    This parameter was added in `v0.3.5`.
+
+This parameter selects the underlying stabilization algorithm via the [`StabilizerMode`](../../../bonus/reference/stabilizer/#stabilizermode)` enum. The `Stabilizer` class factory dispatches to the matching backend.
+
+**Data-Type:** [`StabilizerMode`](../../../bonus/reference/stabilizer/#stabilizermode) enum
+
+**Default Value:** [`StabilizerMode.ASW`](../../../bonus/reference/stabilizer/#aswstabilizer)
+
+**Accepted Values:**
+
+| Value | Backend | Notes |
+|:-----:|:--------|:------|
+| `StabilizerMode.ASW` | Average Sliding-Window stabilizer | **Default**. _Bounded `O(smoothing_radius)` memory_ |
+| `StabilizerMode.KALMAN` | Kalman-filter stabilizer | _Reserved_ |
+
+!!! failure "Selecting `StabilizerMode.KALMAN` raises `NotImplementedError` until the Kalman backend lands."
+
+**Usage:**
+
+```python
+from vidgear.gears.stabilizer import Stabilizer, StabilizerMode
+
+# default — ASW backend
+stab = Stabilizer(mode=StabilizerMode.ASW, smoothing_radius=30)
+```
+
+&nbsp;
+
+
 ## **`smoothing_radius`**
 
 This parameter can be used to alter averaging window size. It basically handles the quality of stabilization at the expense of latency and sudden panning. Larger its value, less will be panning, more will be latency and vice-versa.
