@@ -483,6 +483,57 @@ stream.stop()
 
 &nbsp;
 
+## Advanced VideoGear usage with Stabilizer Backend
+
+??? new "New in v0.3.5"
+    The `STABILIZER_MODE` option and the `StabilizerMode` enum were added in `v0.3.5`. Omitting `STABILIZER_MODE` keeps the previous behavior — VideoGear defaults to `StabilizerMode.ASW`.
+
+When stabilization is enabled, VideoGear forwards Stabilizer parameters via the [`options`](../params/#options) dictionary:
+
+```python linenums="1" hl_lines="2 8-11"
+# import required libraries
+from vidgear.gears.stabilizer import StabilizerMode
+from vidgear.gears import VideoGear
+import cv2
+
+# configure the stabilizer backend + tuning parameters
+options = {
+    "STABILIZER_MODE": StabilizerMode.ASW,  # default
+    "SMOOTHING_RADIUS": 30,
+    "BORDER_SIZE": 5,
+    "CROP_N_ZOOM": True,
+}
+
+# open any valid video stream with stabilization enabled
+stream_stab = VideoGear(
+    source="test.mp4", stabilize=True, logging=True, **options
+).start()
+
+# loop over
+while True:
+
+    # read stabilized frames
+    frame_stab = stream_stab.read()
+
+    # check for stabilized frame if None-type
+    if frame_stab is None:
+        break
+
+    # {do something with the frame here}
+
+    cv2.imshow("Stabilized Output", frame_stab)
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+cv2.destroyAllWindows()
+stream_stab.stop()
+```
+
+!!! warning "`StabilizerMode.KALMAN` is reserved for a future release and currently raises `NotImplementedError`. Non-`StabilizerMode` values passed via `STABILIZER_MODE` silently fall back to `StabilizerMode.ASW`."
+
+&nbsp;
+
 ## Using VideoGear with Colorspace Manipulation
 
 VideoGear API also supports **Colorspace Manipulation** but **NOT Direct** like other VideoCapture Gears. 
@@ -497,12 +548,13 @@ VideoGear API also supports **Colorspace Manipulation** but **NOT Direct** like 
 In following example code, we will convert source colorspace to [**HSV**](https://en.wikipedia.org/wiki/HSL_and_HSV) on initialization:
 
 
-```python linenums="1" hl_lines="6"
+```python linenums="1" hl_lines="7"
 # import required libraries
 from vidgear.gears import VideoGear
 import cv2
 
-# Open any source of your choice, like Webcam first index(i.e. 0) and change its colorspace to `HSV`
+# Open any source of your choice, like Webcam first index(i.e. 0) 
+# and change its colorspace to `HSV`
 stream = VideoGear(source=0, colorspace="COLOR_BGR2HSV", logging=True).start()
 
 # loop over
