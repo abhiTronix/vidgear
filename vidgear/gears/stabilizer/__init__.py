@@ -28,6 +28,11 @@ from .base import _StabilizerBase
 class StabilizerMode(Enum):
     """
     Selects the video stabilization algorithm.
+
+    | Value | Backend | Notes |
+    |:-----:|:--------|:------|
+    | `StabilizerMode.ASW` | Average Sliding-Window stabilizer | **Default** |
+    | `StabilizerMode.KALMAN` | Kalman-filter stabilizer | _Reserved_ - raises `NotImplementedError` |
     """
 
     ASW = "asw"  # Average Sliding-Window (default)
@@ -36,7 +41,7 @@ class StabilizerMode(Enum):
 
 def Stabilizer(
     mode: StabilizerMode = StabilizerMode.ASW,
-    **kwargs,
+    **kwargs: dict,
 ) -> _StabilizerBase:
     """
     Factory that returns a stabilizer instance for the requested `mode`.
