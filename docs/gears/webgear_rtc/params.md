@@ -210,6 +210,24 @@ This parameter can be used in addition, to pass user-defined parameters supporte
 
 **Supported dictionary attributes for Stabilizer Class are:**
 
+* **`STABILIZER_MODE`** (_[`StabilizerMode`](../../../bonus/reference/stabilizer/#stabilizermode) enum_): This attribute selects the underlying stabilization algorithm. 
+    
+    **Accepted values are:**
+    
+    - [x] `StabilizerMode.ASW` _(Average Sliding-Window — default)_
+    - [x] `StabilizerMode.KALMAN` _(reserved; raises `NotImplementedError` until a future release)_. 
+    - [ ] Invalid values silently fall back to `StabilizerMode.ASW`. 
+
+    You can easily pass this attribute as follows:
+
+    ??? new "New in v0.3.5"
+        The `STABILIZER_MODE` option and the `StabilizerMode` enum were added in `v0.3.5`. Omitting `STABILIZER_MODE` keeps the previous behavior — WebGear_RTC defaults to `StabilizerMode.ASW`.
+
+    ```python
+    from vidgear.gears.stabilizer import StabilizerMode
+    options = {'STABILIZER_MODE': StabilizerMode.ASW}
+    ```
+
 * **`SMOOTHING_RADIUS`** (_integer_) : This attribute can be used to alter averaging window size. It basically handles the quality of stabilization at the expense of latency and sudden panning. Larger its value, less will be panning, more will be latency and vice-versa. Its default value is `25`. You can easily pass this attribute as follows:
 
     ```python
