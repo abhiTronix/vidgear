@@ -62,11 +62,11 @@ if __name__ == "__main__":
         help="Selects the capture backend for VideoGear. Choices: %(choices)s. Default: camgear.",
     )
     # deprecated --enablePiCamera flag (kept for backward compatibility)
-    _ep_kwargs = dict(
-        action="store_true",
-        default=False,
-        help="[DEPRECATED] Use `--api pigear` instead. Sets the flag to access PiGear API.",
-    )
+    _ep_kwargs = {
+        "action": "store_true",
+        "default": False,
+        "help": "[DEPRECATED] Use `--api pigear` instead. Sets the flag to access PiGear API.",
+    }
     if sys.version_info >= (3, 13):
         _ep_kwargs["deprecated"] = True
     ap.add_argument("-ep", "--enablePiCamera", **_ep_kwargs)
