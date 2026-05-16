@@ -51,3 +51,21 @@ limitations under the License.
 **Answer:** The Stabilizer may not perform well against High-frequency jitter in video. But,you can check if increasing [`smoothing_radius`](../../gears/stabilizer/params/#smoothing_radius) parameter value helps but it will add latency too.
 
 &thinsp;
+
+## Which stabilization algorithms are available, and how do I switch between them?
+
+**Answer:** Since `v0.3.5`, the Stabilizer module ships as a plugin-style package with a `Stabilizer(...)` factory backed by a `StabilizerMode` enum. The default is `StabilizerMode.ASW` _(Average Sliding-Window)_, which is what older versions used. `StabilizerMode.KALMAN` is reserved as a placeholder and currently raises `NotImplementedError` — it will be implemented in a future release. _For more info. see the [`mode`](../../gears/stabilizer/params/#mode) parameter._
+
+```python
+from vidgear.gears.stabilizer import Stabilizer, StabilizerMode
+
+stab = Stabilizer(mode=StabilizerMode.ASW, smoothing_radius=30)
+```
+
+&thinsp;
+
+## Does the Stabilizer's memory grow unbounded on long streams?
+
+**Answer:** No. Since `v0.3.5`, the ASW backend stores its transform window in bounded fixed-size deques, capping memory at `O(smoothing_radius)` regardless of how many frames have been processed. Earlier versions kept an unbounded list that grew with `total_frames_seen`.
+
+&thinsp;
