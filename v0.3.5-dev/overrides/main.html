@@ -20,8 +20,9 @@
 
 {% block announce %}
 <!-- Add announcement here, including arbitrary HTML -->
+{% set announcement_link = config.site_url ~ '/gears/ffgear/' %}
 <b><span class="twemoji"> {% include ".icons/fontawesome/solid/bolt-lightning.svg" %} </span> Introducing
-  <a href="/vidgear/gears/ffgear/" style="color: yellow; text-decoration: none;">FFGear</a> —
+  <a href="{{ announcement_link }}" style="color: yellow; text-decoration: none;">FFGear</a> —
   VidGear's new hardware-accelerated, FFmpeg-powered VideoCapture API with GPU decoding, live filtergraphs &amp; per-frame metadata. <a href="/vidgear/gears/ffgear/usage/" style="color: yellow; text-decoration: underline;"><span class="twemoji"> {% include ".icons/fontawesome/solid/hiking.svg" %} </span></a></b>
 {% endblock %}
 
