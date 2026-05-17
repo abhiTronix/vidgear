@@ -142,7 +142,7 @@ Each API is designed exclusively to handle/control/process different data-specif
 
 - [**CamGear:**](#camgear) Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
 - [**FFGear:**](#ffgear) Multi-Threaded API for hardware-accelerated FFmpeg-powered video decoding with full filtergraph support.
-- [**PiGear:**](#pigear) Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis :grapes:.
+- [**PiGear:**](#pigear) Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis 🍇.
 - [**ScreenGear:**](#screengear) High-performance API targeting rapid Screencasting Capabilities.
 - [**VideoGear:**](#videogear) Common Video-Capture API with internal [Video Stabilizer](https://abhitronix.github.io/vidgear/latest/gears/stabilizer/) wrapper.
 
