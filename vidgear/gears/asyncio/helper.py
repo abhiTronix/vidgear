@@ -69,13 +69,12 @@ def create_blank_frame(
     frame: NDArray = None, text: str = "", logging: bool = False
 ) -> NDArray:
     """
-    ## create_blank_frame
-
     Create blank frames of given frame size with text
 
     Parameters:
         frame (numpy.ndarray): inputs numpy array(frame).
         text (str): Text to be written on frame.
+
     **Returns:**  A reduced numpy ndarray array.
     """
     # check if frame is valid
@@ -112,8 +111,6 @@ async def reducer(
     interpolation: int = cv2.INTER_LANCZOS4,
 ) -> NDArray:
     """
-    ## reducer
-
     Asynchronous method that reduces frame size by given percentage.
 
     Parameters:
@@ -158,8 +155,6 @@ def generate_webdata(
     logging: bool = False,
 ) -> str:
     """
-    ## generate_webdata
-
     Auto-Generates, and Auto-validates default data for WebGear and WebGear_RTC APIs.
 
     Parameters:
@@ -241,8 +236,6 @@ def download_webdata(
     path: str, c_name: str = "webgear", files: list | None = None, logging: bool = False
 ) -> str:
     """
-    ## download_webdata
-
     Downloads given list of files for WebGear and WebGear_RTC APIs(if not available) from GitHub/Gitlab Servers,
     and also Validates them.
 
@@ -341,8 +334,6 @@ def download_webdata(
 
 def validate_webdata(path: str, files: list | None = None, logging: bool = False) -> bool:
     """
-    ## validate_auth_keys
-
     Validates, and also maintains downloaded list of files.
 
     Parameters:
@@ -350,7 +341,7 @@ def validate_webdata(path: str, files: list | None = None, logging: bool = False
         files (list): list of files to be validated
         logging (bool): enables logging for its operations
 
-    **Returns:** A  boolean value, confirming whether tests passed, or not?.
+    **Returns:** A  boolean value, confirming whether tests passed, or not.
     """
     # check if valid path or directory empty
     if files is None:
