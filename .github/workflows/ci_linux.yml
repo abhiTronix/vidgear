@@ -82,7 +82,7 @@ jobs:
           if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "EXIT_CODE=$code" >>$GITHUB_ENV; fi
         if: success()
       - name: Lint with ruff
-        run: ruff check vidgear --statistics
+        run: ruff check vidgear --diff
       - name: Display exit code
         run: echo "Exit code was = $EXIT_CODE"
       - name: Upload coverage to Codecov
