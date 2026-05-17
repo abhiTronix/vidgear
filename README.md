@@ -75,6 +75,7 @@ The following **functional block diagram** clearly depicts the generalized funct
 - [**Getting Started**](#getting-started)
 - [**Gears: What are these?**](#gears-what-are-these)
   - [**CamGear**](#camgear)
+  - [**FFGear**](#ffgear)
   - [**PiGear**](#pigear)
   - [**VideoGear**](#videogear)
   - [**ScreenGear**](#screengear)
@@ -140,6 +141,7 @@ Each API is designed exclusively to handle/control/process different data-specif
 **A. Video-Capture Gears:**
 
 - [**CamGear:**](#camgear) Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
+- [**FFGear:**](#ffgear) Multi-Threaded API for hardware-accelerated FFmpeg-powered video decoding with full filtergraph support.
 - [**PiGear:**](#pigear) Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis :grapes:.
 - [**ScreenGear:**](#screengear) High-performance API targeting rapid Screencasting Capabilities.
 - [**VideoGear:**](#videogear) Common Video-Capture API with internal [Video Stabilizer](https://abhitronix.github.io/vidgear/latest/gears/stabilizer/) wrapper.
@@ -175,7 +177,7 @@ Each API is designed exclusively to handle/control/process different data-specif
   <img src="https://abhitronix.github.io/vidgear/latest/assets/images/camgear.png" alt="CamGear Functional Block Diagram" width="45%"/>
 </p>
 
-> _CamGear can grab ultra-fast frames from a diverse range of file-formats/devices/streams, which includes almost any IP-USB Cameras, multimedia video file-formats ([*upto 4k tested*][test-4k]), various network stream protocols such as `http(s), rtp, rtsp, rtmp, mms, etc.`, and GStreamer's pipelines, plus direct support for live video streaming sites like YouTube, Twitch, LiveStream, Dailymotion etc._
+> _CamGear can grab ultra-fast frames from a diverse range of file-formats/devices/streams, which includes almost any IP-USB Cameras, multimedia video file-formats, various network stream protocols such as `http(s), rtp, rtsp, rtmp, mms, etc.`, and GStreamer's pipelines, plus direct support for live video streaming sites like YouTube, Twitch, LiveStream, Dailymotion etc._
 
 CamGear provides a flexible, high-level, multi-threaded framework around OpenCV's [VideoCapture class][opencv-vc] with access almost all of its available parameters. CamGear internally implements [`yt_dlp`][yt_dlp] backend class for seamlessly pipelining live video-frames and metadata from various streaming services like [YouTube][youtube-doc], [Twitch][piping-live-videos], and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites). Furthermore, its framework relies exclusively on [**Threaded Queue mode**][tqm-doc] for ultra-fast, error-free, and synchronized video-frame handling.
 
@@ -187,13 +189,98 @@ CamGear provides a flexible, high-level, multi-threaded framework around OpenCV'
 
 &nbsp;
 
+## FFGear
+
+<p align="center">
+  <img src="https://abhitronix.github.io/vidgear/latest/assets/images/ffgear.png" alt="FFGear Functional Block Diagram" width="80%"/>
+</p>
+
+> _FFGear is a multi-threaded, high-performance wrapper around [DeFFcode's FFdecoder API][deffcode-doc] that compiles and executes an **FFmpeg** pipeline inside a subprocess pipe for generating real-time, low-overhead, lightning-fast decoded video frames in Python._
+
+FFGear API provides **direct, transparent access** to the full **FFdecoder** feature set, including:
+
+* [**Hardware-Accelerated Decoding**][hardware-accelerated-decoding] — GPU-powered decoding with CUDA/CUVID and other hardware-accelerated backends ⚡
+* [**Flexible Pixel Formats**][flexible-pixel-formats] — support for any FFmpeg pixel format *(e.g., `bgr24`, `yuv420p`, `gray`)* with optional OpenCV compatibility patches for YUV/NV layouts.
+* [**Per-Frame Metadata Extraction**][per-frame-metadata-extraction] — asynchronous frame metadata extraction through the `showinfo` filter.
+* [**Live Complex Filtergraphs**][complex-filtergraphs] — support for live simple and complex FFmpeg filter pipelines.
+* **Wide Source Support** — capture [USB, virtual, and IP camera][cameras-ff] feeds by index similar to OpenCV, along with support for [multimedia files][multimedia-files-ff], [image sequences][image-sequences-ff], [desktop screen capture][desktop-screen-capture], and [network streams][network-streams-ff] *(HTTP(s), RTSP/RTP, etc.)*.
+
+Similar to CamGear, FFGear also supports the `yt_dlp` backend for seamlessly [pipelining live video frames from streaming services][streaming-services-ff] like YouTube, Twitch, and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites)
+
+**Below is a snapshot of FFGear optimizing Real-time [*YOLOv10-Nano* model inference](https://docs.ultralytics.com/models/yolov10/) by processing only Keyframes (I-frames) while skipping all non-keyframes (P/B-frames), reducing unnecessary decoding and inference workloads by *up to 98%*.**
+
+<p align="center">
+  <img src="https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/vidgear/ffgear-yolo10n.gif" alt="FFGear Keyframes (I-frames) optimization in action!"/>
+  <br>
+  <sub><i>FFGear Keyframes (I-frames) optimization in action!</i></sub>
+</p>
+
+**Code to generate above result:**
+
+```python
+# import required libraries
+from vidgear.gears import FFGear
+from ultralytics import YOLO
+
+# Initialize YOLOv10-Nano model
+model = YOLO("yolov10n.pt")
+
+# Configure FFGear with per-frame metadata extraction enable
+options = {"-extract_metadata": True}
+stream = FFGear(
+    source="test.mp4", frame_format="bgr24", logging=True, **options
+).start()
+
+# loop over
+while True:
+
+    # read data from stream
+    output = stream.read()
+
+    # check if end of stream
+    if output is None:
+        break
+
+    # Unpack the frame and its associated metadata
+    frame, meta = output
+
+    # --- OPTIMIZATION STEP ---
+    # We skip all non-keyframes to save processing power.
+    # This ensures the model only runs on the most information-dense frames.
+    if not meta.get("is_keyframe"):
+        continue  # <-- Skips Non-key frames (P, B-frames)
+
+    # Log keyframe details
+    print(f"Keyframe #{meta['frame_num']} at {meta['pts_time']:.3f}s")
+
+    # Perform AI Inference on keyframes (I-frames) only
+    # Because we skip non-keyframes, this heavy task runs significantly less often.
+    results = model(frame)
+
+    # Annotate the frame with detection boxes and labels
+    annotated_frame = results[0].plot()
+
+    # {Insert your custom logic here, e.g., displaying/saving frames or triggering an alert}
+
+# safely close video stream
+stream.stop()
+```
+
+### FFGear API Guide:
+
+[**>>> Usage Guide**][ffgear-doc]
+
+&nbsp;
+
+&nbsp;
+
 ## VideoGear
 
-> _VideoGear API provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**][stabilizer-doc] class._
+> *VideoGear API provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**][stabilizer-doc] class.*
 
-VideoGear also acts as a Common Video-Capture API that provides internal access for both [CamGear](#camgear) and [PiGear](#pigear) APIs and their parameters with an exclusive `enablePiCamera` boolean flag.
+VideoGear also serves as a unified video-capture API, offering seamless access to [CamGear](#camgear), [PiGear](#pigear), and [FFGear](#ffgear) along with their respective parameters. You can switch between these backends using the `api` parameter (defaults to `Backend.CAMGEAR`).
 
-VideoGear is ideal when you need to switch to different video sources without changing your code much. Also, it enables easy stabilization for various video-streams _(real-time or not)_ with minimum effort and writing way fewer lines of code.
+It is especially useful when you want to toggle between different video-capture backends without significant code changes. Additionally, it simplifies video stabilization for both real-time and non-real-time streams, requiring minimal effort and fewer lines of code.
 
 **Below is a snapshot of a VideoGear Stabilizer in action (_See its detailed usage [here][stabilizer-doc-ex]_):**
 
@@ -513,7 +600,7 @@ WebGear API works on [**Starlette**](https://www.starlette.io/)'s ASGI applicati
 
 WebGear API uses an intraframe-only compression scheme under the hood where the sequence of video-frames are first encoded as JPEG-DIB (JPEG with Device-Independent Bit compression) and then streamed over HTTP using Starlette's Multipart [Streaming Response](https://www.starlette.io/responses/#streamingresponse) and a [Uvicorn](https://www.uvicorn.org/#quickstart) ASGI Server. This method imposes lower processing and memory requirements, but the quality is not the best, since JPEG compression is not very efficient for motion video.
 
-In layman's terms, WebGear acts as a powerful **Video Broadcaster** that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs, thereby granting it exclusive power of broadcasting frames from any incoming stream. It also allows us to define our custom Server as source to transform frames easily before sending them across the network(see this [doc][webgear-cs] example).
+In layman's terms, WebGear acts as a powerful **Video Broadcaster** that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to [CamGear](#camgear), [PiGear](#pigear), and [FFGear](#ffgear) APIs _(via the `api` parameter)_, thereby granting it exclusive power of broadcasting frames from any incoming stream. It also allows us to define our custom Server as source to transform frames easily before sending them across the network _(see this [doc][webgear-cs] example)_.
 
 **Below is a snapshot of a WebGear Video Server in action on Chrome browser:**
 
@@ -566,7 +653,7 @@ WebGear_RTC can handle [multiple consumers][webgear_rtc-mc] seamlessly and provi
 
 WebGear_RTC API works in conjunction with [**Starlette**][starlette]'s ASGI application and provides easy access to its complete framework. WebGear_RTC can also flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc.
 
-Additionally, WebGear_RTC API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to both [CamGear](#camgear) and [PiGear](#pigear) APIs.
+Additionally, WebGear_RTC API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to [CamGear](#camgear), [PiGear](#pigear), and [FFGear](#ffgear) APIs, selectable via the `api` parameter.
 
 **Below is a snapshot of a WebGear_RTC Media Server in action on Chrome browser:**
 
@@ -618,6 +705,8 @@ web.shutdown()
 NetGear_Async is built on [`zmq.asyncio`][asyncio-zmq], and powered by a high-performance asyncio event loop called [**`uvloop`**][uvloop] to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. NetGear_Async can transfer thousands of frames in just a few seconds without causing any significant load on your system.
 
 NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to [NetGear API](#netgear). Furthermore, NetGear_Async allows us to define our custom Server as source to transform frames easily before sending them across the network(see this [doc][netgear_async-cs] example).
+
+NetGear_Async also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to [CamGear](#camgear), [PiGear](#pigear), and [FFGear](#ffgear) APIs, selectable via the `api` parameter.
 
 NetGear_Async now supports additional [**bidirectional data transmission**][btm_netgear_async] between receiver(client) and sender(server) while transferring video-frames. Users can easily build complex applications such as like [Real-Time Video Chat][rtvc] in just few lines of code.
 
@@ -681,7 +770,7 @@ _Thanks a million! 💖_
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5388925.svg)](https://doi.org/10.5281/zenodo.5388925)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17586698.svg)](https://doi.org/10.5281/zenodo.17586698)
 
 ```BibTeX
 @software{vidgear,
@@ -692,17 +781,24 @@ Here is a Bibtex entry you can use to cite this project in a publication:
                   Ian Max Andolina and
                   Kyle Ahn and
                   freol35241 and
+                  Abhishek Suran and
                   Benjamin Lowe and
                   Mickaël Schoentgen and
                   Renaud Bouckenooghe and
                   Ibtsam Ahmad},
-  title        = {abhiTronix/vidgear: VidGear Stable v0.3.3},
-  month        = jun,
-  year         = 2024,
+  title        = {abhiTronix/vidgear: VidGear Stable v0.3.4},
+  month        = nov,
+  year         = 2025,
   publisher    = {Zenodo},
-  version      = {vidgear-0.3.3},
-  doi          = {10.5281/zenodo.5388925},
-  url          = {https://doi.org/10.5281/zenodo.5388925},
+  version      = {vidgear-0.3.4},
+  doi          = {10.5281/zenodo.17586698},
+  url          = {https://doi.org/10.5281/zenodo.17586698},
+  swhid        = {swh:1:dir:cd4e557ff277da86fb252ab7983e8b9d2be39065
+                   ;origin=https://doi.org/10.5281/zenodo.4718615;vis
+                   it=swh:1:snp:6bd11960231209999e32066a75196a96818d4
+                   1b8;anchor=swh:1:rel:a930455cfcd23d1098834cce7f6d8
+                   8dd58cad2e8;path=abhiTronix-vidgear-84d99c3
+                  },
 }
 ```
 
@@ -762,6 +858,8 @@ Internal URLs
 [youtube-doc]: https://abhitronix.github.io/vidgear/latest/gears/camgear/usage/#using-camgear-with-youtube-videos
 [tqm-doc]: https://abhitronix.github.io/vidgear/latest/bonus/TQM/#threaded-queue-mode
 [camgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/camgear/
+[ffgear-doc]: https://abhitronix.github.io/vidgear/latest/gears/ffgear/
+[deffcode-doc]: https://abhitronix.github.io/deffcode/latest/reference/ffdecoder/
 [stabilizer-doc]: https://abhitronix.github.io/vidgear/latest/gears/stabilizer/
 [stabilizer-doc-ex]: https://abhitronix.github.io/vidgear/latest/gears/videogear/usage/#using-videogear-with-video-stabilizer-backend
 [videogear-doc]: https://abhitronix.github.io/vidgear/latest/gears/videogear/
@@ -795,6 +893,16 @@ Internal URLs
 [webgear-cs]: https://abhitronix.github.io/vidgear/latest/gears/webgear/advanced/#using-webgear-with-a-custom-sourceopencv
 [webgear_rtc-cs]: https://abhitronix.github.io/vidgear/latest/gears/webgear_rtc/advanced/#using-webgear_rtc-with-a-custom-sourceopencv
 [webgear_rtc-mc]: https://abhitronix.github.io/vidgear/latest/gears/webgear_rtc/advanced/#using-webgear_rtc-as-real-time-broadcaster
+[hardware-accelerated-decoding]:https://abhitronix.github.io/vidgear/latest/gears/ffgear/advanced/#hardware-accelerated-decoding
+[flexible-pixel-formats]:https://abhitronix.github.io/vidgear/latest/gears/ffgear/usage/#using-ffgear-with-different-pixel-formats
+[per-frame-metadata-extraction]:https://abhitronix.github.io/vidgear/latest/gears/ffgear/advanced/#per-frame-metadata-extraction
+[complex-filtergraphs]:https://abhitronix.github.io/vidgear/latest/gears/ffgear/advanced/#complex-ffmpeg-filtergraphs
+[cameras-ff]:https://abhitronix.github.io/vidgear/latest/gears/ffgear/usage/#using-ffgear-with-camera-devices-indexes
+[multimedia-files-ff]:https://abhitronix.github.io/vidgear/latest/gears/ffgear/usage/#bare-minimum-usage
+[image-sequences-ff]:https://abhitronix.github.io/vidgear/latest/gears/ffgear/usage/#using-ffgear-with-sequence-of-images
+[network-streams-ff]:https://abhitronix.github.io/vidgear/latest/gears/ffgear/usage/#using-ffgear-with-network-streams
+[streaming-services-ff]:https://abhitronix.github.io/vidgear/latest/gears/ffgear/usage/#using-ffgear-with-streaming-websites
+[desktop-screen-capture]:https://abhitronix.github.io/vidgear/latest/gears/ffgear/advanced/#using-ffgear-with-desktop-screen-capturing
 [docs]: https://abhitronix.github.io/vidgear
 
 <!--

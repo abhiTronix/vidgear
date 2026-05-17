@@ -21,37 +21,51 @@ limitations under the License.
 # Contains all the support functions/modules required by Vidgear packages
 
 # import the necessary packages
-import os
-import re
-import sys
-import cv2
-import types
 import errno
-import stat
-import shutil
 import importlib
-import requests
-import numpy as np
 import logging as log
+import os
 import platform
+import re
+import shutil
 import socket
+import stat
+import sys
+import types
 import warnings
-from functools import wraps
-from tqdm import tqdm
 from contextlib import closing
+from enum import Enum
+from functools import wraps
 from pathlib import Path
+
+import cv2
+import numpy as np
+import requests
 from colorlog import ColoredFormatter
+from numpy.typing import NDArray
 from packaging.version import parse
 from requests.adapters import HTTPAdapter, Retry
+from tqdm import tqdm
+
 from ..version import __version__
-from typing import List, Optional, Union
-from numpy.typing import NDArray
+
+
+class Backend(Enum):
+    """
+    Selects the underlying capture backend for VideoGear:
+
+    * `Backend.CAMGEAR` : CamGear API
+    * `Backend.PIGEAR` : PiGear API
+    * `Backend.FFGEAR` : FFGear API
+    """
+
+    CAMGEAR = "camgear"
+    PIGEAR = "pigear"
+    FFGEAR = "ffgear"
 
 
 def logger_handler():
     """
-    ## logger_handler
-
     Returns the logger handler
 
     **Returns:** A logger handler
@@ -106,10 +120,8 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
-def logcurr_vidgear_ver(logging=False):
+def logcurr_vidgear_ver(logging: bool = False) -> None:
     """
-    ## logcurr_vidgear_ver
-
     A auxiliary function to log current vidgear version for debugging.
 
     Parameters:
@@ -126,19 +138,17 @@ def logcurr_vidgear_ver(logging=False):
         ver_is_logged = True
 
 
-def get_module_version(module=None):
+def get_module_version(module: types.ModuleType | None = None) -> str | None:
     """
-    ## get_module_version
-
-    Retrieves version of specified module
+    Retrieves version of specified module.
 
     Parameters:
-        name (ModuleType): module of datatype `ModuleType`.
+        module (ModuleType): module of datatype `ModuleType`.
 
-    **Returns:** version of specified module as string
+    **Returns:** The version of specified module as string.
     """
     # check if module type is valid
-    assert not (module is None) and isinstance(
+    assert module is not None and isinstance(
         module, types.ModuleType
     ), "[Vidgear:ERROR] :: Invalid module!"
 
@@ -158,10 +168,12 @@ def get_module_version(module=None):
     return str(version)
 
 
-def deprecated(parameter=None, message=None, stacklevel=2):
+def deprecated(
+    parameter: str | None = None,
+    message: str | None = None,
+    stacklevel: int = 2,
+) -> callable:
     """
-    ### deprecated
-
     Decorator to mark a parameter or function as deprecated.
 
     Parameters:
@@ -195,15 +207,13 @@ def deprecated(parameter=None, message=None, stacklevel=2):
 
 
 def import_dependency_safe(
-    name,
-    error="raise",
-    pkg_name=None,
-    min_version=None,
-    custom_message=None,
-):
+    name: str,
+    error: str = "raise",
+    pkg_name: str | None = None,
+    min_version: str | None = None,
+    custom_message: str | None = None,
+) -> types.ModuleType:
     """
-    ## import_dependency_safe
-
     Imports specified dependency safely. By default(`error = raise`), if a dependency is missing,
     an ImportError with a meaningful message will be raised. Otherwise if `error = log` a warning
     will be logged and on `error = silent` everything will be quit. But If a dependency is present,
@@ -211,12 +221,15 @@ def import_dependency_safe(
 
     Parameters:
         name (string): name of dependency to be imported.
-        error (string): raise or Log or silence ImportError. Possible values are `"raise"`, `"log"` and `silent`. Default is `"raise"`.
+        error (string): raise or Log or silent ImportError. Possible values are `"raise"`, `"log"` and `silent`. Default is `"raise"`.
         pkg_name (string): (Optional) package name of dependency(if different `pip` name). Otherwise `name` will be used.
         min_version (string): (Optional) required minimum version of the dependency to be imported.
         custom_message (string): (Optional) custom Import error message to be raised or logged.
 
     **Returns:** The imported module, when found and the version is correct(if specified). Otherwise `None`.
+
+    **Raises:**
+        ImportError: If the dependency is not found or the version is older than specified.
     """
     # check specified parameters
     sub_class = ""
@@ -236,12 +249,12 @@ def import_dependency_safe(
     ], "[Vidgear:ERROR] :: Invalid value at `error` parameter."
 
     # specify package name of dependency(if defined). Otherwise use name
-    install_name = pkg_name if not (pkg_name is None) else name
+    install_name = pkg_name if pkg_name is not None else name
 
     # create message
     msg = (
         custom_message
-        if not (custom_message is None)
+        if custom_message is not None
         else "Failed to find required dependency '{}'. Install it with  `pip install {}` command.".format(
             name, install_name
         )
@@ -265,7 +278,7 @@ def import_dependency_safe(
             return None
 
     # check if minimum required version
-    if not (min_version) is None:
+    if (min_version) is not None:
         # Handle submodules
         parent_module = name.split(".")[0]
         if parent_module != name:
@@ -278,9 +291,9 @@ def import_dependency_safe(
         # verify
         if parse(version) < parse(min_version):
             # create message
-            msg = """Unsupported version '{}' found. Vidgear requires '{}' dependency installed with version '{}' or greater. 
+            msg = """Unsupported version '{}' found. Vidgear requires '{}' dependency installed with version '{}' or greater.
             Update it with  `pip install -U {}` command.""".format(
-                parent_module, min_version, version, install_name
+                version, parent_module, min_version, install_name
             )
             # handle errors.
             if error == "silent":
@@ -317,7 +330,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 
 def check_CV_version() -> int:
     """
-    ## check_CV_version
+    Check installed OpenCV version.
 
     **Returns:** OpenCV's version first bit
     """
@@ -329,8 +342,6 @@ def check_CV_version() -> int:
 
 def check_open_port(address: str, port: int = 22) -> bool:
     """
-    ## check_open_port
-
     Checks whether specified port open at given IP address.
 
     Parameters:
@@ -342,18 +353,13 @@ def check_open_port(address: str, port: int = 22) -> bool:
     if not address:
         return False
     with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
-        if sock.connect_ex((address, port)) == 0:
-            return True
-        else:
-            return False
+        return sock.connect_ex((address, port)) == 0
 
 
 def check_WriteAccess(
     path: str, is_windows: bool = False, logging: bool = False
 ) -> bool:
     """
-    ## check_WriteAccess
-
     Checks whether given path directory has Write-Access.
 
     Parameters:
@@ -409,8 +415,6 @@ def check_WriteAccess(
 
 def check_gstreamer_support(logging: bool = False) -> bool:
     """
-    ## check_gstreamer_support
-
     Checks whether OpenCV is compiled with Gstreamer(`>=1.0.0`) support.
 
     Parameters:
@@ -433,9 +437,9 @@ def check_gstreamer_support(logging: bool = False) -> bool:
         return False
 
 
-def get_supported_resolution(value: str, logging=False) -> str:
+def get_supported_resolution(value: str, logging: bool = False) -> str:
     """
-    ## get_supported_resolution
+    Get supported resolution from given FFMPEG stream string.
 
     Parameters:
         value (string): value to be validated
@@ -445,7 +449,7 @@ def get_supported_resolution(value: str, logging=False) -> str:
     """
     # default to best
     stream_resolution = "best"
-    supported_stream_qualities = [
+    supported_stream_qualities: list[str] = [
         "144p",
         "240p",
         "360p",
@@ -479,9 +483,9 @@ def get_supported_resolution(value: str, logging=False) -> str:
     return stream_resolution
 
 
-def dimensions_to_resolutions(value: List[str]) -> List[str]:
+def dimensions_to_resolutions(value: list[str]) -> list[str]:
     """
-    ## dimensions_to_resolutions
+    Convert list of dimensions to list of resolutions.
 
     Parameters:
         value (list): list of dimensions (e.g. `640x360`)
@@ -506,10 +510,8 @@ def dimensions_to_resolutions(value: List[str]) -> List[str]:
     )
 
 
-def get_supported_vencoders(path: str) -> List[str]:
+def get_supported_vencoders(path: str) -> list[str]:
     """
-    ## get_supported_vencoders
-
     Find and returns FFmpeg's supported video encoders
 
     Parameters:
@@ -530,13 +532,11 @@ def get_supported_vencoders(path: str) -> List[str]:
     # find all outputs
     outputs = finder.findall("\n".join(supported_vencoders))
     # return output findings
-    return [[s for s in o.split(" ")][-1] for o in outputs]
+    return [list(o.split(" "))[-1] for o in outputs]
 
 
-def get_supported_demuxers(path: str) -> List[str]:
+def get_supported_demuxers(path: str) -> list[str]:
     """
-    ## get_supported_demuxers
-
     Find and returns FFmpeg's supported demuxers
 
     Parameters:
@@ -546,19 +546,26 @@ def get_supported_demuxers(path: str) -> List[str]:
     """
     demuxers = check_output([path, "-hide_banner", "-demuxers"])
     splitted = [x.decode("utf-8").strip() for x in demuxers.split(b"\n")]
-    split_index = [idx for idx, s in enumerate(splitted) if "--" in s][0]
+    split_index = next((idx for idx, s in enumerate(splitted) if "--" in s), -1)
+    if split_index < 0:
+        return []
     supported_demuxers = splitted[split_index + 1 : len(splitted) - 1]
     # search all demuxers
     outputs = [re.search(r"\s[a-z0-9_,-]{2,}\s", d) for d in supported_demuxers]
     outputs = [o.group(0) for o in outputs if o]
-    # return demuxers output
-    return [o.strip() if not ("," in o) else o.split(",")[-1].strip() for o in outputs]
+    # flatten comma-separated aliases (e.g. "rtsp,rtsps") so membership checks
+    # don't miss aliases
+    flat = []
+    for o in outputs:
+        if "," in o:
+            flat.extend(alias.strip() for alias in o.split(",") if alias.strip())
+        else:
+            flat.append(o.strip())
+    return flat
 
 
-def get_supported_pixfmts(path: str) -> List[str]:
+def get_supported_pixfmts(path: str) -> list[str]:
     """
-    ## get_supported_pixfmts
-
     Find and returns all FFmpeg's supported pixel formats.
 
     Parameters:
@@ -580,15 +587,12 @@ def get_supported_pixfmts(path: str) -> List[str]:
     # find all outputs
     outputs = finder.findall("\n".join(supported_pxfmts))
     # return output findings
-    return [[s for s in o[0].split(" ")][-1] for o in outputs if len(o) == 3]
+    return [list(o[0].split(" "))[-1] for o in outputs if len(o) == 3]
 
 
-def is_valid_url(path: str, url: str = None, logging: bool = False) -> bool:
+def is_valid_url(path: str, url: str | None = None, logging: bool = False) -> bool:
     """
-    ## is_valid_url
-
-    Checks URL validity by testing its scheme against
-    FFmpeg's supported protocols
+    Checks URL validity by testing its scheme against FFmpeg's supported protocols
 
     Parameters:
         path (string): absolute path of FFmpeg binaries
@@ -625,26 +629,26 @@ def is_valid_url(path: str, url: str = None, logging: bool = False) -> bool:
 
 
 def validate_video(
-    path: str, video_path: str = None, logging: bool = False
-) -> Optional[dict]:
+    path: str, video_path: str | None = None, logging: bool = False
+) -> dict | None:
     """
-    ## validate_video
-
     Validates video by retrieving resolution/size and framerate from file.
 
     Parameters:
         path (string): absolute path of FFmpeg binaries
         video_path (string): absolute path to Video.
+        logging (bool): enables logging for its operations
 
-    **Returns:** A dictionary of retieved Video resolution _(as tuple(width, height))_ and framerate _(as float)_.
+    **Returns:** A dictionary of retrieved Video resolution _(as tuple(width, height))_ and framerate _(as float)_.
     """
-    if video_path is None or not (video_path):
+    # check video path is not empty
+    if not (video_path):
         logger.warning("Video path is empty!")
         return None
-
     # extract metadata
     metadata = check_output(
-        [path, "-hide_banner", "-i", video_path], force_retrieve_stderr=True
+        [path, "-hide_banner", "-i", str(video_path).strip()],
+        force_retrieve_stderr=True,
     )
     # clean and search
     stripped_data = [x.decode("utf-8").strip() for x in metadata.split(b"\n")]
@@ -655,9 +659,9 @@ def validate_video(
         output_b = re.findall(r"\d+(?:\.\d+)?\sfps", data)
         if len(result) == 2:
             break
-        if output_b and not "framerate" in result:
+        if output_b and "framerate" not in result:
             result["framerate"] = re.findall(r"[\d\.\d]+", output_b[0])[0]
-        if output_a and not "resolution" in result:
+        if output_a and "resolution" not in result:
             result["resolution"] = output_a[-1]
 
     # return values
@@ -668,9 +672,7 @@ def create_blank_frame(
     frame: NDArray = None, text: str = "", logging: bool = False
 ) -> NDArray:
     """
-    ## create_blank_frame
-
-    Create blank frames of given frame size with text
+    Create blank frames of given frame size with text.
 
     Parameters:
         frame (numpy.ndarray): inputs numpy array(frame).
@@ -681,7 +683,7 @@ def create_blank_frame(
     if frame is None or not (isinstance(frame, np.ndarray)):
         raise ValueError("[Helper:ERROR] :: Input frame is invalid!")
     # grab the frame size
-    (height, width) = frame.shape[:2]
+    height, width = frame.shape[:2]
     # create blank frame
     blank_frame = np.zeros(frame.shape, frame.dtype)
     # setup text
@@ -706,8 +708,6 @@ def create_blank_frame(
 
 def extract_time(value: str) -> int:
     """
-    ## extract_time
-
     Extract time from give string value.
 
     Parameters:
@@ -731,10 +731,8 @@ def extract_time(value: str) -> int:
         )
 
 
-def validate_audio(path: str, source: Union[str, list] = None) -> str:
+def validate_audio(path: str, source: str | list | None = None) -> str:
     """
-    ## validate_audio
-
     Validates audio by retrieving audio-bitrate from file.
 
     Parameters:
@@ -759,38 +757,55 @@ def validate_audio(path: str, source: Union[str, list] = None) -> str:
         for line in metadata.decode("utf-8").split("\n")
         if "Audio:" in line
     ]
-    audio_bitrate = (
-        re.findall(r"([0-9]+)\s(kb|mb|gb)\/s", audio_bitrate_meta[0])[-1]
-        if audio_bitrate_meta
-        else ""
-    )
-    # extract samplerate
-    audio_samplerate_metadata = [
+    audio_bitrate = ""
+    if audio_bitrate_meta:
+        _br_matches = re.findall(r"([0-9]+)\s(kb|mb|gb)\/s", audio_bitrate_meta[0])
+        if _br_matches:
+            audio_bitrate = _br_matches[-1]
+    # extract sample_rate
+    audio_sample_rate_metadata = [
         line.strip()
         for line in metadata.decode("utf-8").split("\n")
         if all(x in line for x in ["Audio:", "Hz"])
     ]
-    audio_samplerate = (
-        re.findall(r"[0-9]+\sHz", audio_samplerate_metadata[0])[0]
-        if audio_samplerate_metadata
+    audio_sample_rate = (
+        re.findall(r"[0-9]+\sHz", audio_sample_rate_metadata[0])[0]
+        if audio_sample_rate_metadata
         else ""
     )
     # format into actual readable bitrate value
     if audio_bitrate:
         # return bitrate directly
         return "{}{}".format(int(audio_bitrate[0].strip()), audio_bitrate[1].strip()[0])
-    elif audio_samplerate:
-        # convert samplerate to bitrate first
-        sample_rate_value = int(audio_samplerate.split(" ")[0])
-        channels_value = 1 if "mono" in audio_samplerate_metadata[0] else 2
-        bit_depth_value = re.findall(
-            r"(u|s|f)([0-9]+)(le|be)", audio_samplerate_metadata[0]
-        )[0][1]
+    elif audio_sample_rate:
+        # convert sample_rate to bitrate first
+        sample_rate_value = int(audio_sample_rate.split(" ")[0])
+        channels_value = 1 if "mono" in audio_sample_rate_metadata[0] else 2
+        bit_depth_value = None
+        match = re.search(
+            r"(u|s|f)([0-9]+)(le|be)", audio_sample_rate_metadata[0]
+        )
+        if match:
+            bit_depth_value = int(match.group(2))
+        else:
+            fmt_match = re.search(
+                r"Audio:\s*[^,]+,\s*[^,]+,\s*[^,]+,\s*([a-z0-9]+)",
+                audio_sample_rate_metadata[0],
+            )
+            if fmt_match:
+                fmt = fmt_match.group(1).rstrip("p")
+                if fmt.startswith("f"):
+                    digits = re.search(r"([0-9]+)", fmt)
+                    bit_depth_value = int(digits.group(1)) if digits else 32
+                elif fmt.startswith(("s", "u")):
+                    digits = re.search(r"([0-9]+)", fmt)
+                    if digits:
+                        bit_depth_value = int(digits.group(1))
         return (
             (
                 str(
                     get_audio_bitrate(
-                        sample_rate_value, channels_value, int(bit_depth_value)
+                        sample_rate_value, channels_value, bit_depth_value
                     )
                 )
                 + "k"
@@ -802,27 +817,23 @@ def validate_audio(path: str, source: Union[str, list] = None) -> str:
         return ""
 
 
-def get_audio_bitrate(samplerate: int, channels: int, bit_depth: float) -> int:
+def get_audio_bitrate(sample_rate: int, channels: int, bit_depth: float) -> int:
     """
-    ## get_audio_bitrate
-
-    Calculate optimum bitrate from audio samplerate, channels, bit-depth values
+    Calculate optimum bitrate from audio sample_rate, channels, bit-depth values
 
     Parameters:
-        samplerate (int): audio samplerate value
+        sample_rate (int): audio sample_rate value
         channels (int): number of channels
         bit_depth (float): audio bit depth value
 
-    **Returns:** Audio bitrate _(in Kbps)_ as integer.
+    **Returns:** Audio bitrate (in Kbps) as integer.
     """
-    return round((samplerate * channels * bit_depth) / 1000)
+    return round((sample_rate * channels * bit_depth) / 1000)
 
 
 def get_video_bitrate(width: int, height: int, fps: float, bpp: float) -> int:
     """
-    ## get_video_bitrate
-
-    Calculate optimum Bitrate from resolution, framerate, bits-per-pixels values
+    Calculate optimum bitrate from resolution, framerate, bits-per-pixels values.
 
     Parameters:
         width (int): video-width
@@ -837,8 +848,6 @@ def get_video_bitrate(width: int, height: int, fps: float, bpp: float) -> int:
 
 def delete_file_safe(file_path: str) -> None:
     """
-    ## delete_ext_safe
-
     Safely deletes files at given path.
 
     Parameters:
@@ -853,8 +862,6 @@ def delete_file_safe(file_path: str) -> None:
 
 def mkdir_safe(dir_path: str, logging: bool = False) -> None:
     """
-    ## mkdir_safe
-
     Safely creates directory at given path.
 
     Parameters:
@@ -865,17 +872,15 @@ def mkdir_safe(dir_path: str, logging: bool = False) -> None:
     try:
         os.makedirs(dir_path)
         logging and logger.debug("Created directory at `{}`".format(dir_path))
-    except (OSError, IOError) as e:
+    except OSError as e:
         if e.errno != errno.EACCES and e.errno != errno.EEXIST:
             raise
 
 
 def delete_ext_safe(
-    dir_path: str, extensions: list = [], logging: bool = False
+    dir_path: str, extensions: list | None = None, logging: bool = False
 ) -> None:
     """
-    ## delete_ext_safe
-
     Safely deletes files with given extensions at given path.
 
     Parameters:
@@ -884,6 +889,8 @@ def delete_ext_safe(
         logging (bool): enables logging for its operations
 
     """
+    if extensions is None:
+        extensions = []
     if not extensions or not os.path.exists(dir_path):
         logger.warning("Invalid input provided for deleting!")
         return
@@ -910,8 +917,6 @@ def delete_ext_safe(
 
 def capPropId(property: str, logging: bool = True) -> int:
     """
-    ## capPropId
-
     Retrieves the OpenCV property's Integer(Actual) value from string.
 
     Parameters:
@@ -930,32 +935,30 @@ def capPropId(property: str, logging: bool = True) -> int:
     return integer_value
 
 
-def retrieve_best_interpolation(interpolations: list) -> Optional[int]:
+def retrieve_best_interpolation(interpolations: list) -> int | None:
     """
-    ## retrieve_best_interpolation
-    Retrieves best interpolation for resizing
+    Retrieves best interpolation for resizing.
 
     Parameters:
         interpolations (list): list of interpolations as string.
-    **Returns:**  Resultant integer value of found interpolation.
+
+    **Returns:** Resultant integer value of found interpolation.
     """
     if isinstance(interpolations, list):
         for intp in interpolations:
             interpolation = capPropId(intp, logging=False)
-            if not (interpolation is None):
+            if interpolation is not None:
                 return interpolation
     return None
 
 
 def reducer(
     frame: NDArray = None,
-    percentage: Union[int, float] = 0,
+    percentage: int | float = 0,
     interpolation: int = cv2.INTER_LANCZOS4,
 ) -> NDArray:
     """
-    ## reducer
-
-    Reduces frame size by given percentage
+    Reduces frame size by given percentage.
 
     Parameters:
         frame (numpy.ndarray): inputs numpy array(frame).
@@ -980,7 +983,7 @@ def reducer(
         )
 
     # grab the frame size
-    (height, width) = frame.shape[:2]
+    height, width = frame.shape[:2]
 
     # calculate the ratio of the width from percentage
     reduction = ((100 - percentage) / 100) * width
@@ -994,9 +997,7 @@ def reducer(
 
 def dict2Args(param_dict: dict) -> list:
     """
-    ## dict2Args
-
-    Converts dictionary attributes to list(args)
+    Converts dictionary attributes to list(args).
 
     Parameters:
         param_dict (dict): Parameters dictionary
@@ -1004,7 +1005,7 @@ def dict2Args(param_dict: dict) -> list:
     **Returns:** Arguments list
     """
     args = []
-    for key in param_dict.keys():
+    for key in param_dict:
         if key in ["-clones"] or key.startswith("-core"):
             if isinstance(param_dict[key], list):
                 args.extend(param_dict[key])
@@ -1026,10 +1027,8 @@ def get_valid_ffmpeg_path(
     is_windows: bool = False,
     ffmpeg_download_path: str = "",
     logging: bool = False,
-) -> Union[str, bool]:
+) -> str | bool:
     """
-    ## get_valid_ffmpeg_path
-
     Validate the given FFmpeg path/binaries, and returns a valid FFmpeg executable path.
 
     Parameters:
@@ -1121,9 +1120,7 @@ def download_ffmpeg_binaries(
     path: str, os_windows: bool = False, os_bit: str = ""
 ) -> str:
     """
-    ## download_ffmpeg_binaries
-
-    Generates FFmpeg Static Binaries for windows(if not available)
+    Generates FFmpeg Static Binaries for windows(if not available).
 
     Parameters:
         path (string): path for downloading custom FFmpeg executables
@@ -1184,8 +1181,8 @@ def download_ffmpeg_binaries(
                         if "content-length" in response.headers
                         else len(response.content)
                     )
-                    assert not (
-                        total_length is None
+                    assert (
+                        total_length is not None
                     ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
                     bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
                     for data in response.iter_content(chunk_size=4096):
@@ -1194,7 +1191,7 @@ def download_ffmpeg_binaries(
                     bar.close()
             logger.debug("Extracting executables.")
             with zipfile.ZipFile(file_name, "r") as zip_ref:
-                zip_fname, _ = os.path.split(zip_ref.infolist()[0].filename)
+                _zip_fname, _ = os.path.split(zip_ref.infolist()[0].filename)
                 zip_ref.extractall(base_path)
             # perform cleaning
             delete_file_safe(file_name)
@@ -1206,15 +1203,13 @@ def download_ffmpeg_binaries(
 
 def validate_ffmpeg(path: str, logging: bool = False) -> bool:
     """
-    ## validate_ffmpeg
-
     Validate FFmeg Binaries. returns `True` if tests are passed.
 
     Parameters:
         path (string): absolute path of FFmpeg binaries
         logging (bool): enables logging for its operations
 
-    **Returns:** A boolean value, confirming whether tests passed, or not?.
+    **Returns:** A boolean value, confirming whether tests passed, or not.
     """
     try:
         # get the FFmpeg version
@@ -1234,11 +1229,15 @@ def validate_ffmpeg(path: str, logging: bool = False) -> bool:
     return True
 
 
-def check_output(*args: Union[list, tuple], **kwargs: dict) -> bytes:
+def check_output(*args: list | tuple, **kwargs: dict) -> bytes:
     """
-    ## check_output
+    Returns stdin output from subprocess module.
 
-    Returns stdin output from subprocess module
+    Parameters:
+        *args (list | tuple): arguments
+        **kwargs (dict): keyword arguments
+
+    **Returns:** stdin output from subprocess module.
     """
     # import libs
     import subprocess as sp
@@ -1253,9 +1252,9 @@ def check_output(*args: Union[list, tuple], **kwargs: dict) -> bytes:
 
     # execute command in subprocess
     process = sp.Popen(
+        *args,
         stdout=sp.PIPE,
         stderr=sp.DEVNULL if not (retrieve_stderr) else sp.PIPE,
-        *args,
         **kwargs,
     )
     output, stderr = process.communicate()
@@ -1277,8 +1276,6 @@ def generate_auth_certificates(
     path: str, overwrite: bool = False, logging: bool = False
 ) -> tuple:
     """
-    ## generate_auth_certificates
-
     Auto-Generates, and Auto-validates CURVE ZMQ key-pairs for NetGear API's Secure Mode.
 
     Parameters:
@@ -1312,10 +1309,10 @@ def generate_auth_certificates(
             mkdir_safe(dirs, logging=logging)
 
         # generate new keys
-        server_public_file, server_secret_file = zmq.auth.create_certificates(
+        _server_public_file, _server_secret_file = zmq.auth.create_certificates(
             keys_dir, "server"
         )
-        client_public_file, client_secret_file = zmq.auth.create_certificates(
+        _client_public_file, _client_secret_file = zmq.auth.create_certificates(
             keys_dir, "client"
         )
 
@@ -1348,10 +1345,10 @@ def generate_auth_certificates(
             mkdir_safe(secret_keys_dir, logging=logging)
 
         # generate new keys
-        server_public_file, server_secret_file = zmq.auth.create_certificates(
+        _server_public_file, _server_secret_file = zmq.auth.create_certificates(
             keys_dir, "server"
         )
-        client_public_file, client_secret_file = zmq.auth.create_certificates(
+        _client_public_file, _client_secret_file = zmq.auth.create_certificates(
             keys_dir, "client"
         )
 
@@ -1389,15 +1386,13 @@ def generate_auth_certificates(
 
 def validate_auth_keys(path: str, extension: str) -> bool:
     """
-    ## validate_auth_keys
-
     Validates, and also maintains generated ZMQ CURVE Key-pairs.
 
     Parameters:
         path (string): path of generated CURVE key-pairs
         extension (string): type of key-pair to be validated
 
-    **Returns:** A boolean value, confirming whether tests passed, or not?.
+    **Returns:** A boolean value, confirming whether tests passed, or not.
     """
     # check for valid path
     if not (os.path.exists(path)):
@@ -1420,4 +1415,4 @@ def validate_auth_keys(path: str, extension: str) -> bool:
     len(keys_buffer) == 1 and delete_file_safe(os.path.join(path, keys_buffer[0]))
 
     # return results
-    return True if (len(keys_buffer) == 2) else False
+    return len(keys_buffer) == 2

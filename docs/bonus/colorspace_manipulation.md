@@ -35,6 +35,8 @@ limitations under the License.
   
 Primarily, the safest way is by **`colorspace`** _(string)_ parameter of the respective VideoCapture API, that can be used to easily alter the colorspace of the input source, during initialization. But on the downside, `colorspace` parameter value **CANNOT** be changed/altered at runtime. 
 
+!!! warning "Not supported with `api=Backend.FFGEAR` in VideoGear, WebGear, and WebGear_RTC APIs. Applies to CamGear and PiGear backends only."
+
 All possible values for this parameter are discussed [below ➶](#supported-colorspace-parameter-values)
 
 ### Using `color_space` global variable

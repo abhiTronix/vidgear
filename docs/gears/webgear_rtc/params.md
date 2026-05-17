@@ -20,26 +20,61 @@ limitations under the License.
 
 # WebGear_RTC API Parameters 
 
-!!! cite "WebGear_RTC provides a special internal wrapper around [VideoGear](../../videogear/), which itself provides internal access to both [CamGear](../../camgear/) and [PiGear](../../pigear/) APIs and their parameters."
+!!! cite "WebGear_RTC provides a special internal wrapper around [VideoGear](../../videogear/), which itself provides internal access to [CamGear](../../camgear/), [PiGear](../../pigear/), and [FFGear](../../ffgear/) APIs and their parameters."
 
 &thinsp;
 
-## **`enablePiCamera`** 
+## **`api`**
 
-This parameter provide direct access to [PiGear](../../pigear/) or [CamGear](../../camgear/) APIs respectively in WebGear_RTC. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
+This parameter selects the underlying capture backend for WebGear_RTC using the [`Backend`](../../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum.
 
-**Data-Type:** Boolean
+**Data-Type:** [`Backend`](../../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum
 
-**Default Value:** Its default value is `False`. 
+**Default Value:** `Backend.CAMGEAR`
+
+**Accepted Values:**
+
+| Value | Underlying Gear | Description |
+|:-----:|:---------------:|:------------|
+| `Backend.CAMGEAR` | [CamGear](../../camgear/) | Multi-threaded OpenCV-backed capture for webcams, files, and network/streaming URLs |
+| `Backend.PIGEAR` | [PiGear](../../pigear/) | Raspberry Pi camera module capture via picamera2/picamera |
+| `Backend.FFGEAR` | [FFGear](../../ffgear/) | FFmpeg-powered hardware-accelerated decoding with filtergraph support |
 
 **Usage:**
 
 ```python
-WebGear_RTC(enablePiCamera=True) # enable access to PiGear API
+from vidgear.gears.asyncio import WebGear_RTC
+from vidgear.gears.helper import Backend
+
+WebGear_RTC(source="foo.mp4", api=Backend.CAMGEAR)  # default — CamGear backend
+WebGear_RTC(api=Backend.PIGEAR)                      # PiGear backend
+WebGear_RTC(source="foo.mp4", api=Backend.FFGEAR)    # FFGear backend
 ```
 
-!!! example "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
+!!! failure "WebGear_RTC will raise `TypeError` if `api` is not a valid `Backend` enum member."
 
+&nbsp;
+
+## **`enablePiCamera`** _(Deprecated)_
+
+!!! danger "**Deprecated since v0.3.5** — use [`api=Backend.PIGEAR`](#api) instead. This parameter will be removed in a future release."
+
+This parameter previously provided direct access to [PiGear](../../pigear/) or [CamGear](../../camgear/) APIs respectively. If `True`, the PiGear API was accessed; if `False`, the CamGear API was accessed.
+
+**Data-Type:** Boolean
+
+**Default Value:** `None`
+
+**Migration:**
+
+```python
+# Old (deprecated)
+WebGear_RTC(enablePiCamera=True)
+
+# New
+from vidgear.gears.helper import Backend
+WebGear_RTC(api=Backend.PIGEAR)
+```
 
 &nbsp; 
 
@@ -175,6 +210,24 @@ This parameter can be used in addition, to pass user-defined parameters supporte
 
 **Supported dictionary attributes for Stabilizer Class are:**
 
+* **`STABILIZER_MODE`** (_[`StabilizerMode`](../../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum_): This attribute selects the underlying stabilization algorithm. 
+    
+    **Accepted values are:**
+    
+    - [x] `StabilizerMode.ASW` _(Average Sliding-Window — default)_
+    - [x] `StabilizerMode.KALMAN` _(reserved; raises `NotImplementedError` until a future release)_. 
+    - [ ] Invalid values silently fall back to `StabilizerMode.ASW`. 
+
+    You can easily pass this attribute as follows:
+
+    ??? new "New in v0.3.5"
+        The `STABILIZER_MODE` option and the `StabilizerMode` enum were added in `v0.3.5`. Omitting `STABILIZER_MODE` keeps the previous behavior — WebGear_RTC defaults to `StabilizerMode.ASW`.
+
+    ```python
+    from vidgear.gears.stabilizer import StabilizerMode
+    options = {'STABILIZER_MODE': StabilizerMode.ASW}
+    ```
+
 * **`SMOOTHING_RADIUS`** (_integer_) : This attribute can be used to alter averaging window size. It basically handles the quality of stabilization at the expense of latency and sudden panning. Larger its value, less will be panning, more will be latency and vice-versa. Its default value is `25`. You can easily pass this attribute as follows:
 
     ```python
@@ -209,7 +262,7 @@ This parameter can be used in addition, to pass user-defined parameters supporte
 
 ## Parameters for CamGear backend
 
-!!! summary "Enable this backend with [`enablePiCamera=False`](#enablepicamera) in WebGear_RTC."
+!!! summary "Enable this backend with [`api=Backend.CAMGEAR`](#api) in WebGear_RTC. This is the default."
 
 ### **`source`**
 
@@ -239,7 +292,7 @@ Its valid input can be one of the following:
 
 - [x] **Streaming Services URL Address (*string*):** _Valid Video URL as input when Stream Mode is enabled(*i.e. `stream_mode=True`*)_ 
 
-    CamGear internally implements `yt_dlp` backend class for pipelining live video-frames and metadata from various streaming services. For example Twitch URL can be used as follows:
+    CamGear internally supports `yt_dlp` backend class for pipelining live video-frames and metadata from various streaming services. For example Twitch URL can be used as follows:
 
     !!! info "Supported Streaming Websites"
 
@@ -354,7 +407,7 @@ WebGear_RTC(source=0, **options)
 
 ## Parameters for PiGear backend 
 
-!!! summary "Enable this backend with [`enablePiCamera=True`](#enablepicamera) in WebGear_RTC."
+!!! summary "Enable this backend with [`api=Backend.PIGEAR`](#api) in WebGear_RTC."
 
 ### **`camera_num`** 
 
@@ -476,11 +529,126 @@ You can format these user-defined and configurational parameters as attributes o
 
 &nbsp;
 
+## Parameters for FFGear backend
+
+!!! summary "Enable this backend with [`api=Backend.FFGEAR`](#api) in WebGear_RTC."
+
+!!! info "FFGear parameters are a subset of the [FFGear API parameters](../../ffgear/params/). `colorspace` and `time_delay` are **not** forwarded to FFGear."
+
+### **`source`**
+
+!!! warning "WebGear_RTC API will throw `RuntimeError` if `source` provided is invalid or unreadable."
+
+Defines the source for FFGear input. Passed directly to [FFdecoder API](https://abhitronix.github.io/deffcode/latest/reference/ffdecoder/params/#source).
+
+**Data-Type:** Any
+
+**Default Value:** `None`
+
+Valid inputs: device index, filepath, network URL (`http(s)`, `rtsp`, `rtp`, `rtmp`), image-sequence glob, or streaming URL _(with `stream_mode=True`)_.
+
+```python
+from vidgear.gears.helper import Backend
+WebGear_RTC(api=Backend.FFGEAR, source="myvideo.mp4")
+WebGear_RTC(api=Backend.FFGEAR, source="rtsp://192.168.1.10:554/stream")
+```
+
+&nbsp;
+
+### **`stream_mode`**
+
+Enables `yt_dlp`-backed Stream Mode for streaming service URLs.
+
+**Data-Type:** Boolean
+
+**Default Value:** `False`
+
+```python
+from vidgear.gears.helper import Backend
+WebGear_RTC(api=Backend.FFGEAR, source="https://youtu.be/bvetuLwJIkA", stream_mode=True)
+```
+
+&nbsp;
+
+### **`source_demuxer`**
+
+Specifies the FFmpeg demuxer for the source. Required when the source type cannot be auto-detected.
+
+**Data-Type:** String or `None`
+
+**Default Value:** `None` _(auto-detect)_
+
+| Platform | Demuxer |
+|:--------:|:--------|
+| :fontawesome-brands-windows: Windows | `dshow` |
+| :material-linux: Linux | `v4l2` |
+| :material-apple: macOS | `avfoundation` |
+
+```python
+from vidgear.gears.helper import Backend
+WebGear_RTC(api=Backend.FFGEAR, source="/dev/video0", source_demuxer="v4l2")
+```
+
+&nbsp;
+
+### **`frame_format`**
+
+Specifies the pixel layout for decoded frames. Accepts any FFmpeg-supported pixel format string.
+
+**Data-Type:** String
+
+**Default Value:** `"bgr24"`
+
+```python
+from vidgear.gears.helper import Backend
+WebGear_RTC(api=Backend.FFGEAR, source="myvideo.mp4", frame_format="gray")
+```
+
+!!! tip "Run `ffmpeg -pix_fmts` to list all supported pixel formats."
+
+&nbsp;
+
+### **`custom_ffmpeg`**
+
+Path to a custom FFmpeg executable. Useful when FFmpeg is not on `PATH`.
+
+**Data-Type:** String
+
+**Default Value:** `""` _(uses system FFmpeg)_
+
+```python
+from vidgear.gears.helper import Backend
+WebGear_RTC(api=Backend.FFGEAR, source="myvideo.mp4", custom_ffmpeg="/opt/ffmpeg/bin/ffmpeg")
+```
+
+&nbsp;
+
+### **`options`**
+
+Passes additional FFdecoder parameters and FFGear queue-tuning parameters. See [FFGear options ➶](../../ffgear/params/#options) for full details.
+
+**Data-Type:** Dictionary
+
+**Default Value:** `{}`
+
+```python
+from vidgear.gears.helper import Backend
+options = {"-vf": "scale=1280:720", "QUEUE_SIZE": 128}
+WebGear_RTC(api=Backend.FFGEAR, source="myvideo.mp4", **options)
+```
+
+&nbsp;
+
+&nbsp;
+
+
 ## Common Parameters
 
 !!! summary "These are common parameters that works with every backend in WebGear_RTC."
 
 ### **`colorspace`**
+
+!!! warning "Not supported with `api=Backend.FFGEAR`. Applies to CamGear and PiGear backends only."
 
 This parameter selects the colorspace of the source stream. 
 
@@ -518,6 +686,8 @@ WebGear_RTC(logging=True)
 &nbsp;
 
 ### **`time_delay`** 
+
+!!! warning "Not supported with `api=Backend.FFGEAR`. Applies to CamGear and PiGear backends only."
 
 This parameter set the time delay _(in seconds)_ before the WebGear_RTC API start reading the frames. This delay is only required if the source required some warm-up delay before starting up. 
 

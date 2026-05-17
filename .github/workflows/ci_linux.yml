@@ -36,7 +36,7 @@ on:
 jobs:
   test:
     name: CI Test vidgear
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13"]
@@ -50,11 +50,11 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -qq unzip wget -y
           sudo apt-get install -qq dos2unix -y
-          sudo apt-get install ffmpeg linux-modules-extra-$(uname -r) -y
+          sudo apt-get install ffmpeg v4l2loopback-dkms v4l2loopback-utils linux-modules-extra-$(uname -r) -y
       - name: prepare bash_scripts
         run: |
           dos2unix scripts/bash/prepare_dataset.sh
-          chmod +x scripts/bash/prepare_dataset.sh
+          sudo chmod +x scripts/bash/prepare_dataset.sh
           dos2unix scripts/bash/install_opencv.sh
           chmod +x scripts/bash/install_opencv.sh
       - name: install pip_dependencies
@@ -73,21 +73,18 @@ jobs:
           python -c 'import cv2; print(cv2.__version__)'
           python -m pip install -U six httpx yt-dlp[default] paramiko
           python -m pip install .[asyncio]
-          python -m pip install -U flake8 codecov pytest pytest-asyncio pytest-cov mpegdash m3u8 async-asgi-testclient
-          python -m pip install -U deffcode
-      - name: pytest with_ENV
+          python -m pip install -U ruff codecov pytest pytest-asyncio pytest-cov mpegdash m3u8 async-asgi-testclient
+      - name: Lint with ruff
         run: |
-          mkdir -p $HOME/logs
-          export VIDGEAR_LOGFILE="$HOME/logs"
-          timeout 1200 pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "EXIT_CODE=$code" >>$GITHUB_ENV; fi
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        if: success() && matrix.python-version == '3.11'
-      - name: pytest without_ENV
+          echo "Using Ruff = $(python -m ruff --version)"
+          python -m ruff check vidgear
+      - name: Run pytest tests
         run: |
-          sudo modprobe v4l2loopback devices=1 video_nr=0 exclusive_caps=1 card_label='VCamera'
-          timeout 1200 pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?; if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "EXIT_CODE=$code" >>$GITHUB_ENV; fi
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        if: success() && matrix.python-version != '3.11'
+          PYTHONBINARYPATH=$(which python)
+          code=0
+          timeout 1200 sudo $PYTHONBINARYPATH -m pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?
+          if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "EXIT_CODE=$code" >>$GITHUB_ENV; fi
+        if: success()
       - name: Display exit code
         run: echo "Exit code was = $EXIT_CODE"
       - name: Upload coverage to Codecov

@@ -27,17 +27,25 @@ limitations under the License.
 
 ## Overview
 
-> VideoGear API provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**](../stabilizer/) class. 
+> *VideoGear is ideal when you need to switch between multiple video-capture backends with minimal code changes. It also simplifies video stabilization for both live streams and video files, requiring very little effort and fewer lines of code.*
 
-VideoGear also acts as a Common Video-Capture API that provides internal access for both [CamGear](../camgear/) and [PiGear](../pigear/) APIs and their parameters with an exclusive [`enablePiCamera`](params/#enablepicamera) boolean flag.
+VideoGear API provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer** :material-video-stabilization:](../stabilizer/) class.
 
-VideoGear is ideal when you need to switch to different video sources without changing your code much. Also, it enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort and writing way fewer lines of code.
+VideoGear also serves as a common video-capture API, providing unified access to [**CamGear**](../camgear/), [**PiGear**](../pigear/), and [**FFGear**](../ffgear/) along with their respective parameters. You can switch between these backends using the [`api`](params/#api) parameter.
+
+???+ info "Supported Backends"
+
+    | [API](params/#api) | Backend | Best for |
+    |:-----------|:---------------:|:---------|
+    | `Backend.CAMGEAR` _(default)_ | [CamGear](../camgear/) | Webcams, files, network streams, streaming sites |
+    | `Backend.PIGEAR` | [PiGear](../pigear/) | Raspberry Pi camera modules |
+    | `Backend.FFGEAR` | [FFGear](../ffgear/) | Hardware-accelerated decoding, complex FFmpeg filtergraphs |
 
 &thinsp; 
 
 !!! tip "Helpful Tips"
 
-	* If you're already familar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../switch_from_cv/#switching-the-videocapture-apis)
+	* If you're already familiar with [OpenCV](https://github.com/opencv/opencv) library, then see [Switching from OpenCV ➶](../../switch_from_cv/#switching-the-videocapture-apis)
 
 	* It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 

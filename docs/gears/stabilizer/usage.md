@@ -41,7 +41,11 @@ Following is the bare-minimum code you need to get started with Stabilizer Class
 
 !!! tip "You can use any VideoCapture Gear instead of CamGear in the similar manner, as shown in this usage example." 
 
-```python linenums="1"
+!!! success "Performance Improvement in v0.3.5 :material-lightning-bolt:"
+
+    Starting from v0.3.5, the `Stabilizer` class has been refactored to bound the Average Sliding-Window (ASW) memory to `O(smoothing_radius)` and real-time streaming is now possible without memory issues.
+
+```python linenums="1" hl_lines="2 10 23 26-27 43"
 # import required libraries
 from vidgear.gears.stabilizer import Stabilizer
 from vidgear.gears import CamGear
@@ -150,9 +154,13 @@ stream.release()
 
 Stabilizer class provide certain [parameters](../params/) which you can use to tweak its internal properties. The complete usage example is as follows:
 
-```python linenums="1" hl_lines="10"
+??? new "New in v0.3.5"
+    
+    The [`mode`](../params/#mode) parameter and the [`StabilizerMode`](../../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum were added in `v0.3.5`. Existing code that does not pass `mode` keeps working - defaults to `StabilizerMode.ASW`.
+
+```python linenums="1" hl_lines="2 11-14"
 # import required libraries
-from vidgear.gears.stabilizer import Stabilizer
+from vidgear.gears.stabilizer import Stabilizer, StabilizerMode
 from vidgear.gears import CamGear
 import cv2
 
@@ -160,7 +168,13 @@ import cv2
 stream = CamGear(source=0).start()
 
 # initiate stabilizer object with defined parameters
-stab = Stabilizer(smoothing_radius=30, crop_n_zoom=True, border_size=5, logging=True)
+stab = Stabilizer(
+    mode=StabilizerMode.ASW,
+    smoothing_radius=30,
+    crop_n_zoom=True,
+    border_size=5,
+    logging=True,
+)
 
 # loop over
 while True:
@@ -266,7 +280,6 @@ stream.stop()
 # safely close writer
 writer.close()
 ```
-
 
 &nbsp;
 

@@ -20,18 +20,20 @@ limitations under the License.
 
 # import the necessary packages
 
-import os
-import cv2
-import queue
-import platform
-import numpy as np
-import pytest
 import asyncio
 import logging as log
-import tempfile
+import os
+import platform
+import queue
+import warnings
+
+import cv2
+import numpy as np
+import pytest
 
 from vidgear.gears.asyncio import NetGear_Async
-from vidgear.gears.helper import logger_handler
+from vidgear.gears.helper import Backend, logger_handler
+from vidgear.tests.utils.helpers import return_testvideo_path
 
 # define test logger
 logger = log.getLogger("Test_NetGear_Async")
@@ -49,14 +51,7 @@ def event_loop_policy(request):
         return asyncio.DefaultEventLoopPolicy()
 
 
-def return_testvideo_path():
-    """
-    returns Test Video path
-    """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
-    )
-    return os.path.abspath(path)
+
 
 
 # Create a async frame generator as custom source
@@ -86,7 +81,7 @@ class Custom_Generator:
 
     def __init__(self, server=None, data=""):
         # initialize global params
-        assert not (server is None), "Invalid Value"
+        assert server is not None, "Invalid Value"
         # assign server
         self.server = server
         # data
@@ -106,7 +101,7 @@ class Custom_Generator:
 
             # recieve client's data
             recv_data = await self.server.transceive_data()
-            if not (recv_data is None):
+            if recv_data is not None:
                 if isinstance(recv_data, np.ndarray):
                     assert not (
                         recv_data is None or np.shape(recv_data) == ()
@@ -138,7 +133,7 @@ async def client_iterator(client, data=False):
 async def client_dataframe_iterator(client, data=""):
     # loop over Client's Asynchronous Data and Frame Generator
     async for recvd_data, frame in client.recv_generator():
-        if not (recvd_data is None):
+        if recvd_data is not None:
             # {do something with received server recv_data here}
             logger.debug(recvd_data)
 
@@ -174,9 +169,9 @@ async def test_netgear_async_playback(pattern):
         # gather and run tasks
         input_coroutines = [
             server.task,
-            client_iterator(client, data=True if pattern == 4 else False),
+            client_iterator(client, data=(pattern == 4)),
         ]
-        res = await asyncio.gather(*input_coroutines, return_exceptions=True)
+        await asyncio.gather(*input_coroutines, return_exceptions=True)
     except Exception as e:
         if isinstance(e, queue.Empty):
             pytest.fail(str(e))
@@ -205,7 +200,7 @@ async def test_netgear_async_custom_server_generator(generator, result):
         client = NetGear_Async(logging=True, receive_mode=True, timeout=5.0).launch()
         # gather and run tasks
         input_coroutines = [server.task, client_iterator(client)]
-        res = await asyncio.gather(*input_coroutines, return_exceptions=True)
+        await asyncio.gather(*input_coroutines, return_exceptions=True)
     except Exception as e:
         if result:
             pytest.fail(str(e))
@@ -269,7 +264,7 @@ async def test_netgear_async_bidirectionalmode(
         ).launch()
         # gather and run tasks
         input_coroutines = [server.task, client_dataframe_iterator(client, data=data)]
-        res = await asyncio.gather(*input_coroutines, return_exceptions=True)
+        await asyncio.gather(*input_coroutines, return_exceptions=True)
     except Exception as e:
         if result:
             pytest.fail(str(e))
@@ -326,7 +321,7 @@ async def test_netgear_async_addresses(address, port):
         else:
             pytest.fail(str(e))
     finally:
-        if (address is None or address == "172.31.11.33.44") and not (server is None):
+        if (address is None or address == "172.31.11.33.44") and server is not None:
             server.close(skip_loop=True)
         client.close(skip_loop=True)
 
@@ -339,7 +334,7 @@ async def test_netgear_async_recv_generator():
         server = NetGear_Async(
             source=return_testvideo_path(), timeout=5.0, logging=True
         )
-        async for frame in server.recv_generator():
+        async for _frame in server.recv_generator():
             logger.warning("Failed")
     except Exception as e:
         if isinstance(e, (ValueError, asyncio.TimeoutError)):
@@ -347,7 +342,7 @@ async def test_netgear_async_recv_generator():
         else:
             pytest.fail(str(e))
     finally:
-        if not (server is None):
+        if server is not None:
             server.close(skip_loop=True)
 
 
@@ -368,7 +363,7 @@ async def test_netgear_async_options(pattern, options):
         client = NetGear_Async(
             source=(
                 None
-                if options["bidirectional_mode"] != True
+                if not options["bidirectional_mode"]
                 else return_testvideo_path()
             ),
             receive_mode=True,
@@ -377,7 +372,7 @@ async def test_netgear_async_options(pattern, options):
             logging=True,
             **options
         )
-        async for frame in client.recv_generator():
+        async for _frame in client.recv_generator():
             if not options["bidirectional_mode"]:
                 # create target data
                 target_data = "Client here."
@@ -390,5 +385,47 @@ async def test_netgear_async_options(pattern, options):
         else:
             pytest.fail(str(e))
     finally:
-        if not (client is None):
+        if client is not None:
             client.close(skip_loop=True)
+
+@pytest.mark.asyncio(scope="module")
+async def test_netgear_async_enablePiCamera_deprecated():
+    """
+    `enablePiCamera=False` must route to CamGear and emit a DeprecationWarning.
+    """
+    try:
+        with pytest.warns(DeprecationWarning, match="enablePiCamera"):
+            server = NetGear_Async(
+                enablePiCamera=False,
+                source=return_testvideo_path(),
+                logging=True,
+            )
+        server.close(skip_loop=True)
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+@pytest.mark.asyncio(scope="module")
+async def test_netgear_async_ffgear_backend():
+    """
+    `api=Backend.FFGEAR` must route through FFGear and transfer frames successfully.
+    """
+    pytest.importorskip("deffcode", reason="`deffcode` is required for FFGear backend")
+    try:
+        client = NetGear_Async(
+            logging=True, receive_mode=True, timeout=7.0
+        ).launch()
+        server = NetGear_Async(
+            api=Backend.FFGEAR,
+            source=return_testvideo_path(),
+            logging=True,
+            timeout=7.0,
+        ).launch()
+        input_coroutines = [server.task, client_iterator(client)]
+        await asyncio.gather(*input_coroutines, return_exceptions=True)
+    except Exception as e:
+        if isinstance(e, queue.Empty):
+            pytest.fail(str(e))
+    finally:
+        server.close(skip_loop=True)
+        client.close(skip_loop=True)

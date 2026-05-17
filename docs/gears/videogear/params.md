@@ -20,30 +20,69 @@ limitations under the License.
 
 # VideoGear API Parameters
 
-!!! cite "VideoGear acts as a Common Video-Capture API that provides internal access for both [CamGear](../../camgear/) and [PiGear](../../pigear/) APIs and their parameters."
+!!! cite "VideoGear acts as a Common Video-Capture API that provides unified internal access to [CamGear](../../camgear/), [PiGear](../../pigear/), and [FFGear](../../ffgear/) APIs and their parameters."
 
 &thinsp;
 
-## **`enablePiCamera`** 
+## **`api`**
 
-This parameter provide direct access to [PiGear](../../pigear/) or [CamGear](../../camgear/) APIs respectively in VideoGear. This means the if `enablePiCamera` flag is `True`, the PiGear API will be accessed, and if `False`, the CamGear API will be accessed. 
+This parameter selects the underlying capture backend for VideoGear using the [`Backend`](../../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum.
 
-**Data-Type:** Boolean
+**Data-Type:** [`Backend`](../../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum
 
-**Default Value:** Its default value is `False`. 
+**Default Value:** `Backend.CAMGEAR`
+
+**Accepted Values:**
+
+| Value | Underlying Gear | Description |
+|:-----:|:---------------:|:------------|
+| `Backend.CAMGEAR` | [CamGear](../../camgear/) | Multi-threaded OpenCV-backed capture for webcams, files, and network/streaming URLs |
+| `Backend.PIGEAR` | [PiGear](../../pigear/) | Raspberry Pi camera module capture via picamera2/picamera |
+| `Backend.FFGEAR` | [FFGear](../../ffgear/) | FFmpeg-powered hardware-accelerated decoding with filtergraph support |
 
 **Usage:**
 
 ```python
-VideoGear(enablePiCamera=True) # enable access to PiGear API
+from vidgear.gears import VideoGear
+from vidgear.gears.helper import Backend
+
+VideoGear(api=Backend.CAMGEAR)  # default — CamGear backend
+VideoGear(api=Backend.PIGEAR)   # PiGear backend
+VideoGear(api=Backend.FFGEAR)   # FFGear backend
 ```
 
-!!! example "Its complete usage example is given [here ➶](../usage/#bare-minimum-usage-with-pigear-backend)."
+!!! failure "VideoGear will raise `TypeError` if `api` is not a valid `Backend` enum member."
 
+!!! example "Its complete usage examples are given [here ➶](../usage/)."
 
-&nbsp; 
+&nbsp;
 
-&nbsp; 
+&nbsp;
+
+## **`enablePiCamera`** _(Deprecated)_
+
+!!! danger "**Deprecated since v0.3.5** — use [`api=Backend.PIGEAR`](#api) instead. This parameter will be removed in a future release."
+
+This parameter previously provided direct access to [PiGear](../../pigear/) or [CamGear](../../camgear/) APIs respectively. If `True`, the PiGear API was accessed; if `False`, the CamGear API was accessed.
+
+**Data-Type:** Boolean
+
+**Default Value:** `None`
+
+**Migration:**
+
+```python
+# Old (deprecated)
+VideoGear(enablePiCamera=True)
+
+# New
+from vidgear.gears.helper import Backend
+VideoGear(api=Backend.PIGEAR)
+```
+
+&nbsp;
+
+&nbsp;
 
 
 ## Parameters for Stabilizer Backend
@@ -75,6 +114,24 @@ VideoGear(stabilize=True) # enable stablization
 This parameter can be used in addition, to pass user-defined parameters supported by [Stabilizer Class](../../stabilizer/). These parameters can be formatted as this parameter's attribute.
 
 **Supported dictionary attributes for Stabilizer Class are:**
+
+* **`STABILIZER_MODE`** (_[`StabilizerMode`](../../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum_): This attribute selects the underlying stabilization algorithm. 
+    
+    **Accepted values are:**
+    
+    - [x] `StabilizerMode.ASW` _(Average Sliding-Window — default)_
+    - [x] `StabilizerMode.KALMAN` _(reserved; raises `NotImplementedError` until a future release)_. 
+    - [ ] Invalid values silently fall back to `StabilizerMode.ASW`. 
+
+    You can easily pass this attribute as follows:
+
+    ??? new "New in v0.3.5"
+        The `STABILIZER_MODE` option and the `StabilizerMode` enum were added in `v0.3.5`. Omitting `STABILIZER_MODE` keeps the previous behavior — VideoGear defaults to `StabilizerMode.ASW`.
+
+    ```python
+    from vidgear.gears.stabilizer import StabilizerMode
+    options = {'STABILIZER_MODE': StabilizerMode.ASW}
+    ```
 
 * **`SMOOTHING_RADIUS`** (_integer_) : This attribute can be used to alter averaging window size. It basically handles the quality of stabilization at the expense of latency and sudden panning. Larger its value, less will be panning, more will be latency and vice-versa. Its default value is `25`. You can easily pass this attribute as follows:
 
@@ -110,7 +167,7 @@ This parameter can be used in addition, to pass user-defined parameters supporte
 
 ## Parameters for CamGear backend
 
-!!! summary "Enable this backend with [`enablePiCamera=False`](#enablepicamera) in VideoGear. Default is also `False`."
+!!! summary "Enable this backend with [`api=Backend.CAMGEAR`](#api) in VideoGear. This is the default."
 
 ### **`source`**
 
@@ -141,7 +198,7 @@ Its valid input can be one of the following:
 
 - [x] **Streaming Services URL Address (*string*):** _Valid Video URL as input when Stream Mode is enabled(*i.e. `stream_mode=True`*)_ 
 
-    CamGear internally implements `yt_dlp` backend class for pipelining live video-frames and metadata from various streaming services. For example Twitch URL can be used as follows:
+    CamGear internally supports `yt_dlp` backend class for pipelining live video-frames and metadata from various streaming services. For example Twitch URL can be used as follows:
 
     !!! info "Supported Streaming Websites"
 
@@ -256,7 +313,7 @@ VideoGear(source=0, **options)
 
 ## Parameters for PiGear backend 
 
-!!! summary "Enable this backend with [`enablePiCamera=True`](#enablepicamera) in VideoGear."
+!!! summary "Enable this backend with [`api=Backend.PIGEAR`](#api) in VideoGear."
 
 ### **`camera_num`** 
 
@@ -269,8 +326,9 @@ This parameter selects the camera index to be used as the source, allowing you t
 **Usage:**
 
 ```python
+from vidgear.gears.helper import Backend
 # select Camera Module at index `1`
-VideoGear(enablePiCamera=True, camera_num=1)
+VideoGear(api=Backend.PIGEAR, camera_num=1)
 ```
 
 !!! example "The complete usage example demonstrating the usage of the `camera_num` parameter is available [here ➶](../../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)."
@@ -294,7 +352,8 @@ This parameter controls the **resolution** - a tuple _(i.e. `(width,height)`)_ o
 **Usage:**
 
 ```python
-VideoGear(enablePiCamera=True, resolution=(1280,720)) # sets 1280x720 resolution
+from vidgear.gears.helper import Backend
+VideoGear(api=Backend.PIGEAR, resolution=(1280,720)) # sets 1280x720 resolution
 ```
 
 &nbsp;
@@ -311,7 +370,8 @@ This parameter controls the framerate of the source.
 **Usage:**
 
 ```python
-VideoGear(enablePiCamera=True, framerate=60) # sets 60fps framerate
+from vidgear.gears.helper import Backend
+VideoGear(api=Backend.PIGEAR, framerate=60) # sets 60fps framerate
 ```
 
 &nbsp;
@@ -355,12 +415,13 @@ You can format these user-defined and configurational parameters as attributes o
     }
 
     # open pi video stream with defined parameters
-    stream = VideoGear(enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options).start()
+    stream = VideoGear(api=Backend.PIGEAR, resolution=(640, 480), framerate=60, logging=True, **options).start()
     ```
 
 === "Legacy Picamera backend"
 
     ```python
+    from vidgear.gears.helper import Backend
     # formulate various Picamera API parameters
     options = {
         "hflip": True,
@@ -372,12 +433,119 @@ You can format these user-defined and configurational parameters as attributes o
     }
 
     # open pi video stream with defined parameters
-    stream = VideoGear(enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options).start()
+    stream = VideoGear(api=Backend.PIGEAR, resolution=(640, 480), framerate=60, logging=True, **options).start()
     ```
 
 &nbsp;
 
 &nbsp;
+
+## Parameters for FFGear backend
+
+!!! summary "Enable this backend with [`api=Backend.FFGEAR`](#api) in VideoGear."
+
+!!! info "FFGear parameters are a subset of the [FFGear API parameters](../../ffgear/params/). `colorspace` and `time_delay` are **not** forwarded to FFGear."
+
+### **`source`**
+
+!!! warning "VideoGear API will throw `RuntimeError` if `source` provided is invalid or unreadable."
+
+Defines the source for FFGear input. Passed directly to [FFdecoder API](https://abhitronix.github.io/deffcode/latest/reference/ffdecoder/params/#source).
+
+**Data-Type:** Any
+
+**Default Value:** `0`
+
+Valid inputs: device index, filepath, network URL (`http(s)`, `rtsp`, `rtp`, `rtmp`), image-sequence glob, or streaming URL _(with `stream_mode=True`)_.
+
+```python
+VideoGear(api=Backend.FFGEAR, source="myvideo.mp4")
+VideoGear(api=Backend.FFGEAR, source="rtsp://192.168.1.10:554/stream")
+```
+
+&nbsp;
+
+### **`stream_mode`**
+
+Enables `yt_dlp`-backed Stream Mode for streaming service URLs.
+
+**Data-Type:** Boolean
+
+**Default Value:** `False`
+
+```python
+VideoGear(api=Backend.FFGEAR, source="https://youtu.be/bvetuLwJIkA", stream_mode=True)
+```
+
+&nbsp;
+
+### **`source_demuxer`**
+
+Specifies the FFmpeg demuxer for the source. Required when the source type cannot be auto-detected.
+
+**Data-Type:** String or `None`
+
+**Default Value:** `None` _(auto-detect)_
+
+| Platform | Demuxer |
+|:--------:|:--------|
+| :fontawesome-brands-windows: Windows | `dshow` |
+| :material-linux: Linux | `v4l2` |
+| :material-apple: macOS | `avfoundation` |
+
+```python
+VideoGear(api=Backend.FFGEAR, source="/dev/video0", source_demuxer="v4l2")
+```
+
+&nbsp;
+
+### **`frame_format`**
+
+Specifies the pixel layout for decoded frames. Accepts any FFmpeg-supported pixel format string.
+
+**Data-Type:** String
+
+**Default Value:** `"bgr24"`
+
+```python
+VideoGear(api=Backend.FFGEAR, source="myvideo.mp4", frame_format="gray")
+```
+
+!!! tip "Run `ffmpeg -pix_fmts` to list all supported pixel formats."
+
+&nbsp;
+
+### **`custom_ffmpeg`**
+
+Path to a custom FFmpeg executable. Useful when FFmpeg is not on `PATH`.
+
+**Data-Type:** String
+
+**Default Value:** `""` _(uses system FFmpeg)_
+
+```python
+VideoGear(api=Backend.FFGEAR, source="myvideo.mp4", custom_ffmpeg="/opt/ffmpeg/bin/ffmpeg")
+```
+
+&nbsp;
+
+### **`options`**
+
+Passes additional FFdecoder parameters and FFGear queue-tuning parameters. See [FFGear options ➶](../../ffgear/params/#options) for full details.
+
+**Data-Type:** Dictionary
+
+**Default Value:** `{}`
+
+```python
+options = {"-vf": "scale=1280:720", "QUEUE_SIZE": 128}
+VideoGear(api=Backend.FFGEAR, source="myvideo.mp4", **options)
+```
+
+&nbsp;
+
+&nbsp;
+
 
 ## Common Parameters
 
@@ -387,11 +555,13 @@ You can format these user-defined and configurational parameters as attributes o
 
 ### **`colorspace`**
 
-This parameter selects the colorspace of the source stream. 
+!!! warning "Not supported with `api=Backend.FFGEAR`. Applies to CamGear and PiGear backends only."
+
+This parameter selects the colorspace of the source stream.
 
 **Data-Type:** String
 
-**Default Value:** Its default value is `None`. 
+**Default Value:** `None`
 
 **Usage:**
 
@@ -408,11 +578,11 @@ VideoGear(colorspace="COLOR_BGR2HSV")
 
 ### **`logging`**
 
-This parameter enables logging _(if `True`)_, essential for debugging. 
+This parameter enables logging _(if `True`)_, essential for debugging.
 
 **Data-Type:** Boolean
 
-**Default Value:** Its default value is `False`.
+**Default Value:** `False`
 
 **Usage:**
 
@@ -424,16 +594,18 @@ VideoGear(logging=True)
 
 ### **`time_delay`** 
 
-This parameter set the time delay _(in seconds)_ before the VideoGear API start reading the frames. This delay is only required if the source required some warm-up delay before starting up. 
+!!! warning "Not supported with `api=Backend.FFGEAR`. Applies to CamGear and PiGear backends only."
+
+This parameter sets the time delay _(in seconds)_ before the VideoGear API starts reading frames. Required only if the source needs a warm-up delay before starting.
 
 **Data-Type:** Integer
 
-**Default Value:** Its default value is `0`.
+**Default Value:** `0`
 
 **Usage:**
 
 ```python
-VideoGear(time_delay=1)  # set 1 seconds time delay
+VideoGear(time_delay=1)  # 1 second warm-up delay
 ```
 
-&nbsp; 
+&nbsp;

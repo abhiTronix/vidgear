@@ -14,10 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#determining system specific temp directory
+# Determining system specific temp directory
 TMPFOLDER=$(python -c 'import tempfile; print(tempfile.gettempdir())')
+TMPFOLDER="$TMPFOLDER/testing_dir"
 
 # Creating necessary directories
+mkdir -p "$TMPFOLDER" # Create testing directory
+chmod -R 777 "$TMPFOLDER" # 777 permission to all files (Necessary for sudo commands)
+
 mkdir -p "$TMPFOLDER"/temp_mpd    # MPD assets temp path
 mkdir -p "$TMPFOLDER"/temp_m3u8   # M3U8 assets temp path
 mkdir -p "$TMPFOLDER"/temp_write  # For testing WriteGear Assets.
@@ -83,8 +87,17 @@ echo "Downloading Test-Data..."
 curl https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/big_buck_bunny_720p_1mb.mp4 -o BigBuckBunny_4sec.mp4
 curl https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/big_buck_bunny_720p_1mb_vo.mp4 -o BigBuckBunny_4sec_VO.mp4
 curl https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/big_buck_bunny_720p_1mb_ao.aac -o BigBuckBunny_4sec_AO.aac
-curl -L https://github.com/abhiTronix/Imbakup/releases/download/vid-001/BigBuckBunny.mp4 -o BigBuckBunny.mp4
-curl -L https://github.com/abhiTronix/Imbakup/releases/download/vid-001/jellyfish-50-mbps-hd-h264.mkv -o 50_mbps_hd_h264.mkv
-curl -L https://github.com/abhiTronix/Imbakup/releases/download/vid-001/jellyfish-90-mbps-hd-hevc-10bit.mkv -o 90_mbps_hd_hevc_10bit.mkv
-curl -L https://github.com/abhiTronix/Imbakup/releases/download/vid-001/jellyfish-120-mbps-4k-uhd-h264.mkv -o 120_mbps_4k_uhd_h264.mkv
 echo "Done Downloading Test-Data!"
+
+if [ "$OS_NAME" = "linux" ]; then
+  echo "Setting up ffmpeg with v4l2loopback"
+  sudo modprobe v4l2loopback devices=1 video_nr=0 exclusive_caps=1 card_label='VCamera'
+  sudo usermod -aG video "$USER"
+  nohup sudo ffmpeg -hide_banner -loglevel error -re -stream_loop -1 -i "$TMPFOLDER"/Downloads/Test_videos/BigBuckBunny_4sec_VO.mp4 -f v4l2 -pix_fmt yuv420p /dev/video0 &
+  echo "$USER ALL=NOPASSWD:$(which v4l2-ctl)" | (sudo su -c 'EDITOR="tee" visudo -f /etc/sudoers.d/v4l2ctl')
+  v4l2-ctl --list-devices
+  echo "Done"
+fi
+
+# Set permissions for the testing directory
+chmod -R 777 "$TMPFOLDER" # 777 permission to all files (Necessary for sudo commands)

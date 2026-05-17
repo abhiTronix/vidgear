@@ -20,21 +20,13 @@ limitations under the License.
 
 # import the necessary packages
 import os
-import pytest
-import tempfile
 import subprocess
+import tempfile
+
+import pytest
 
 from vidgear.gears import StreamGear
-
-
-def return_testvideo_path():
-    """
-    returns Test video path
-    """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
-    )
-    return os.path.abspath(path)
+from vidgear.tests.utils.helpers import get_testing_dir, return_testvideo_path
 
 
 @pytest.mark.xfail(raises=(AssertionError, ValueError))
@@ -56,7 +48,7 @@ def test_failedextensionsource():
     with pytest.raises(RuntimeError):
         # 'garbage' extension does not exist
         stream_params = {"-video_source": "garbage.garbage"}
-        streamer = StreamGear(output="output.mpd", logging=True, **stream_params)
+        streamer = StreamGear(output=os.path.join(get_testing_dir(), "output.mpd"), logging=True, **stream_params)
         streamer.transcode_source()
         streamer.close()
 
@@ -87,19 +79,8 @@ def test_paths_ss(path, format):
         else:
             pytest.fail(str(e))
     finally:
-        if not streamer is None:
+        if streamer is not None:
             streamer.close()
-
-
-@pytest.mark.xfail(raises=RuntimeError)
-def test_method_call_ss():
-    """
-    Method calling Test - Made to fail by calling method in the wrong context.
-    """
-    stream_params = {"-video_source": return_testvideo_path()}
-    streamer = StreamGear(output="output.mpd", logging=True, **stream_params)
-    streamer.stream("garbage.garbage")
-    streamer.close()
 
 
 @pytest.mark.xfail(raises=(AttributeError, RuntimeError))
@@ -108,7 +89,7 @@ def test_method_call_ss():
     Method calling Test - Made to fail by calling method in the wrong context.
     """
     stream_params = {"-video_source": return_testvideo_path()}
-    streamer = StreamGear(output="output.mpd", logging=True, **stream_params)
+    streamer = StreamGear(output=os.path.join(get_testing_dir(), "output.mpd"), logging=True, **stream_params)
     streamer.stream("garbage.garbage")
     streamer.close()
 
@@ -121,7 +102,7 @@ def test_invalid_params_ss(format):
     """
     stream_params = {"-video_source": return_testvideo_path(), "-vcodec": "unknown"}
     streamer = StreamGear(
-        output="output{}".format(".mpd" if format == "dash" else ".m3u8"),
+        output=os.path.join(get_testing_dir(), "output{}".format(".mpd" if format == "dash" else ".m3u8")),
         format=format,
         logging=True,
         **stream_params

@@ -20,15 +20,16 @@ limitations under the License.
 
 # import the necessary packages
 
-import cv2
 import asyncio
-import numpy as np
-import pytest
 import logging as log
 
+import cv2
+import numpy as np
+import pytest
+
 from vidgear.gears.asyncio.helper import (
-    reducer,
     create_blank_frame,
+    reducer,
 )
 from vidgear.gears.helper import logger_handler, retrieve_best_interpolation
 
@@ -69,12 +70,12 @@ async def test_reducer_asyncio(frame, percentage, interpolation, result):
     """
     Testing frame size reducer function
     """
-    if not (frame is None):
+    if frame is not None:
         org_size = frame.shape[:2]
     try:
         reduced_frame = await reducer(frame, percentage, interpolation)
         logger.debug(reduced_frame.shape)
-        assert not (reduced_frame is None)
+        assert reduced_frame is not None
         reduced_frame_size = reduced_frame.shape[:2]
         assert (
             100 * reduced_frame_size[0] // (100 - percentage) == org_size[0]
@@ -106,9 +107,9 @@ async def test_create_blank_frame_asyncio(frame, text):
     try:
         text_frame = create_blank_frame(frame=frame, text=text, logging=True)
         logger.debug(text_frame.shape)
-        assert not (text_frame is None)
+        assert text_frame is not None
     except Exception as e:
-        if not (frame is None):
+        if frame is not None:
             pytest.fail(str(e))
 
 

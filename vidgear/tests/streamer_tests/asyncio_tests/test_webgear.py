@@ -20,22 +20,24 @@ limitations under the License.
 
 # import the necessary packages
 
-import os
-import cv2
-import pytest
 import asyncio
 import logging as log
-import requests
+import os
 import tempfile
-from starlette.routing import Route
-from starlette.responses import JSONResponse
+import warnings
+
+import cv2
+import pytest
+import requests
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
-from starlette.responses import PlainTextResponse
+from starlette.responses import JSONResponse, PlainTextResponse
+from starlette.routing import Route
 from starlette.testclient import TestClient
 
 from vidgear.gears.asyncio import WebGear
-from vidgear.gears.helper import logger_handler
+from vidgear.gears.helper import Backend, logger_handler
+from vidgear.tests.utils.helpers import get_testing_dir, return_testvideo_path
 
 # define test logger
 logger = log.getLogger("Test_webgear")
@@ -44,14 +46,7 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
-def return_testvideo_path():
-    """
-    returns Test Video path
-    """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
-    )
-    return os.path.abspath(path)
+
 
 
 def hello_webpage(request):
@@ -133,7 +128,7 @@ def test_webgear_class(source, stabilize, colorspace, time_delay):
             "jpeg_compression_fastupsample": True,
             "overwrite_default_files": True,
             "enable_infinite_frames": False,
-            "custom_data_location": tempfile.gettempdir(),
+            "custom_data_location": get_testing_dir(),
             "custom_video_endpoint": "x x",
         },
         {
@@ -180,10 +175,10 @@ def test_webgear_options(options):
         assert response_video.status_code == 200
         web.shutdown()
     except Exception as e:
-        if isinstance(e, AssertionError) or isinstance(e, os.access):
+        if isinstance(e, (AssertionError, PermissionError)):
             pytest.xfail(str(e))
         elif isinstance(e, requests.exceptions.Timeout):
-            logger.exceptions(str(e))
+            logger.error(str(e))
         else:
             pytest.fail(str(e))
 
@@ -306,6 +301,47 @@ def test_webgear_routes_validity():
     # modify route
     web.routes.clear()
     # test
-    client = TestClient(web(), raise_server_exceptions=True)
+    TestClient(web(), raise_server_exceptions=True)
     # shutdown
     web.shutdown()
+
+
+def test_webgear_ffgear_backend():
+    """
+    Test WebGear API with FFGear backend
+    """
+    try:
+        options = {
+            "frame_size_reduction": 40,
+            "jpeg_compression_quality": 80,
+        }
+        web = WebGear(
+            api=Backend.FFGEAR,
+            source=return_testvideo_path(),
+            logging=True,
+            **options,
+        )
+        client = TestClient(web(), raise_server_exceptions=True)
+        response = client.get("/")
+        assert response.status_code == 200
+        response_video = client.get("/video")
+        assert response_video.status_code == 200
+        web.shutdown()
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+def test_webgear_enablePiCamera_deprecated():
+    """
+    Test that `enablePiCamera` triggers DeprecationWarning in WebGear
+    """
+    try:
+        with pytest.warns(DeprecationWarning, match="enablePiCamera"):
+            web = WebGear(
+                enablePiCamera=False,
+                source=return_testvideo_path(),
+                logging=True,
+            )
+        web.shutdown()
+    except Exception as e:
+        pytest.fail(str(e))

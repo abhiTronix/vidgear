@@ -20,18 +20,20 @@ limitations under the License.
 
 # import the necessary packages
 
+import logging as log
 import os
-import cv2
-import time
+import platform
 import queue
+import tempfile
+import time
+
+import cv2
 import numpy as np
 import pytest
-import logging as log
-import platform
-import tempfile
 
 from vidgear.gears import CamGear
 from vidgear.gears.helper import logger_handler
+from vidgear.tests.utils.helpers import return_testvideo_path
 
 # define test logger
 logger = log.getLogger("Test_camgear")
@@ -40,7 +42,7 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 # define machine os
-_windows = True if os.name == "nt" else False
+_windows = (os.name == "nt")
 
 
 def return_youtubevideo_params(url):
@@ -64,14 +66,7 @@ def return_youtubevideo_params(url):
     return (int(result["width"]), int(result["height"]), float(result["fps"]))
 
 
-def return_testvideo_path():
-    """
-    returns Test Video path
-    """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
-    )
-    return os.path.abspath(path)
+
 
 
 def return_total_frame_count():
@@ -81,7 +76,7 @@ def return_total_frame_count():
     stream = cv2.VideoCapture(return_testvideo_path())
     num_cv = 0
     while True:
-        (grabbed, frame) = stream.read()
+        (grabbed, _) = stream.read()
         if not grabbed:
             logger.debug("Total frames: {}".format(num_cv))
             break

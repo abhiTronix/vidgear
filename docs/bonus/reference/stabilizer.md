@@ -22,7 +22,14 @@ limitations under the License.
 
 !!! info "Stabilizer API parameters are explained [here ➶](../../../gears/stabilizer/params/)"
 
-::: vidgear.gears.stabilizer.Stabilizer	
-	
-    
+::: vidgear.gears.stabilizer.Stabilizer
+
+&nbsp;
+
+::: vidgear.gears.stabilizer.StabilizerMode
+
+&nbsp;
+
+::: vidgear.gears.stabilizer.ASWStabilizer
+
 &nbsp;

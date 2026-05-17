@@ -40,6 +40,7 @@ These Gears can be classified as follows:
 > **Basic Function:** Retrieves [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames from various sources.
 
 * [CamGear](camgear/): Multi-Threaded API targeting various IP-USB-Cameras/Network-Streams/Streaming-Sites-URLs.
+* [FFGear](ffgear/): Multi-Threaded API for hardware-accelerated :simple-ffmpeg: FFmpeg-powered video decoding with full filtergraph support.
 * [PiGear](pigear/): Multi-Threaded API targeting various Camera Modules and _(limited)_ USB cameras on Raspberry Pis :fontawesome-brands-raspberry-pi:.
 * [ScreenGear](screengear/): High-performance API targeting rapid Screencasting Capabilities.
 * [VideoGear](videogear/): Common Video-Capture API with internal [Video Stabilizer](stabilizer/) wrapper. 
@@ -48,7 +49,7 @@ These Gears can be classified as follows:
 
 > **Basic Function:** Writes [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames to a video file or network stream.
 
-* [WriteGear](writegear/introduction/): Handles Lossless Video-Writer for file/stream/frames Encoding and Compression.
+* [WriteGear](writegear/introduction/): Handles :simple-ffmpeg: FFmpeg-powered Lossless Video-Writer for file/stream/frames Encoding and Compression.
 
 ### C. Streaming Gears
 
@@ -56,7 +57,7 @@ These Gears can be classified as follows:
 
 !!! tip "You can also use [WriteGear](writegear/introduction/) for :material-video-wireless: streaming with traditional protocols such as RTMP, RTSP/RTP."
 
-* [StreamGear](streamgear/introduction/): Handles Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
+* [StreamGear](streamgear/introduction/): Handles :simple-ffmpeg: FFmpeg-powered Transcoding of High-Quality, Dynamic & Adaptive Streaming Formats.
 
 * **Asynchronous I/O Streaming Gear:**
 

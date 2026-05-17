@@ -19,9 +19,11 @@ limitations under the License.
 """
 
 if __name__ == "__main__":
-    # import neccessary libs
-    import yaml
+    # import necessary libs
     import argparse
+    import sys
+
+    import yaml
 
     try:
         import uvicorn
@@ -30,11 +32,13 @@ if __name__ == "__main__":
             "[VidGear:ERROR] :: Failed to detect correct uvicorn executables, install it with `pip3 install uvicorn` command."
         )
 
+    from ..helper import Backend
+
     # define argument parser and parse command line arguments
-    usage = """python -m vidgear.gears.asyncio [-h] [-m MODE] [-s SOURCE] [-ep ENABLEPICAMERA] [-S STABILIZE]
-                [-cn CAMERA_NUM] [-yt stream_mode] [-b BACKEND] [-cs COLORSPACE]
-                [-r RESOLUTION] [-f FRAMERATE] [-td TIME_DELAY]
-                [-ip IPADDRESS] [-pt PORT] [-l LOGGING] [-op OPTIONS]"""
+    usage = """python -m vidgear.gears.asyncio [-h] [-m MODE] [-s SOURCE] [-a API] [-S] [-b BACKEND]
+                [-cs COLORSPACE] [-cn CAMERA_NUM] [-r RESOLUTION] [-f FRAMERATE]
+                [-yt] [-sd SOURCE_DEMUXER] [-ff FRAME_FORMAT] [-cf CUSTOM_FFMPEG]
+                [-td TIME_DELAY] [-ip IPADDRESS] [-pt PORT] [-l] [-op OPTIONS]"""
 
     ap = argparse.ArgumentParser(
         usage=usage,
@@ -48,74 +52,112 @@ if __name__ == "__main__":
         choices=["mjpeg", "webrtc"],
         help='Whether to use "MJPEG" or "WebRTC" mode for streaming.',
     )
-    # VideoGear API specific params
+    # VideoGear API backend selection
+    ap.add_argument(
+        "-a",
+        "--api",
+        type=str,
+        default="camgear",
+        choices=[b.value for b in Backend],
+        help="Selects the capture backend for VideoGear. Choices: %(choices)s. Default: camgear.",
+    )
+    # deprecated --enablePiCamera flag (kept for backward compatibility)
+    _ep_kwargs = {
+        "action": "store_true",
+        "default": False,
+        "help": "[DEPRECATED] Use `--api pigear` instead. Sets the flag to access PiGear API.",
+    }
+    if sys.version_info >= (3, 13):
+        _ep_kwargs["deprecated"] = True
+    ap.add_argument("-ep", "--enablePiCamera", **_ep_kwargs)
+    ap.add_argument(
+        "-S",
+        "--stabilize",
+        action="store_true",
+        default=False,
+        help="Enables real-time video stabilization.",
+    )
+    # CamGear/FFGear parameters
     ap.add_argument(
         "-s",
         "--source",
         default=0,
         type=str,
-        help="Path to input source for CamGear API.",
-    )
-    ap.add_argument(
-        "-ep",
-        "--enablePiCamera",
-        type=bool,
-        default=False,
-        help="Sets the flag to access PiGear(if True) or otherwise CamGear API respectively.",
-    )
-    ap.add_argument(
-        "-S",
-        "--stabilize",
-        type=bool,
-        default=False,
-        help="Enables/disables real-time video stabilization.",
-    )
-    ap.add_argument(
-        "-cn",
-        "--camera_num",
-        default=0,
-        help="Sets the camera module index that will be used by PiGear API.",
+        help="Path to input source (device index, filepath, URL, or glob pattern).",
     )
     ap.add_argument(
         "-yt",
         "--stream_mode",
+        action="store_true",
         default=False,
-        type=bool,
-        help="Enables YouTube Mode in CamGear API.",
+        help="Enables YouTube/yt_dlp Stream Mode in CamGear/FFGear API.",
     )
     ap.add_argument(
         "-b",
         "--backend",
         default=0,
         type=int,
-        help="Sets the backend of the video source in CamGear API.",
+        help="Sets the backend of the video source in CamGear API (e.g. cv2.CAP_DSHOW).",
+    )
+    # FFGear parameters
+    ap.add_argument(
+        "-sd",
+        "--source_demuxer",
+        type=str,
+        default=None,
+        help='[FFGear only] FFmpeg demuxer for the source (e.g. "v4l2", "dshow"). Default: auto-detect.',
     )
     ap.add_argument(
-        "-cs",
-        "--colorspace",
+        "-ff",
+        "--frame_format",
         type=str,
-        help="Sets the colorspace of the output video stream.",
+        default="bgr24",
+        help='[FFGear only] Pixel format for decoded frames (e.g. "bgr24", "gray"). Default: bgr24.',
+    )
+    ap.add_argument(
+        "-cf",
+        "--custom_ffmpeg",
+        type=str,
+        default="",
+        help="[FFGear only] Path to a custom FFmpeg executable. Default: use PATH.",
+    )
+    # PiGear parameters
+    ap.add_argument(
+        "-cn",
+        "--camera_num",
+        default=0,
+        type=int,
+        help="[PiGear only] Sets the camera module index.",
     )
     ap.add_argument(
         "-r",
         "--resolution",
         default=(640, 480),
-        help="Sets the resolution (width,height) for camera module in PiGear API.",
+        help="[PiGear only] Sets the resolution (width,height) for the camera module.",
     )
     ap.add_argument(
         "-f",
         "--framerate",
         default=30,
         type=int,
-        help="Sets the framerate for camera module in PiGear API.",
+        help="[PiGear only] Sets the framerate for the camera module.",
+    )
+    # common parameters
+    ap.add_argument(
+        "-cs",
+        "--colorspace",
+        type=str,
+        default=None,
+        help="Sets the colorspace of the output video stream.",
     )
     ap.add_argument(
         "-td",
         "--time_delay",
         default=0,
-        help="Sets the time delay(in seconds) before start reading the frames.",
+        type=int,
+        help="Sets the time delay (in seconds) before start reading the frames.",
     )
-    # define WebGear exclusive params
+    # WebGear/WebGear_RTC server params
     ap.add_argument(
         "-ip",
         "--ipaddress",
@@ -130,63 +172,77 @@ if __name__ == "__main__":
         default=8000,
         help="Uvicorn binds the socket to this port.",
     )
-    # define common params
     ap.add_argument(
         "-l",
         "--logging",
-        type=bool,
+        action="store_true",
         default=False,
-        help="Enables/disables error logging, essential for debugging.",
+        help="Enables error logging (disabled by default), essential for debugging.",
     )
     ap.add_argument(
         "-op",
         "--options",
         type=str,
-        help="Sets the parameters supported by APIs(whichever being accessed) to the input videostream, \
-                    But make sure to wrap your dict value in single or double quotes.",
+        default=None,
+        help="Sets the parameters supported by APIs (whichever being accessed) to the input videostream. "
+        "Wrap your dict value in single or double quotes.",
     )
     args = vars(ap.parse_args())
 
     options = {}
     # handle `options` params
-    if not (args["options"] is None):
-        options = yaml.safe_load(args["options"])
+    if args["options"] is not None:
+        parsed = yaml.safe_load(args["options"])
+        if isinstance(parsed, dict):
+            options = parsed
+
+    # resolve Backend enum from CLI --api value
+    # (enablePiCamera, if set, is handled downstream by VideoGear)
+    api = Backend(args["api"])
 
     if args["mode"] == "mjpeg":
         from .webgear import WebGear
 
         # initialize WebGear object
         web = WebGear(
-            enablePiCamera=args["enablePiCamera"],
+            enablePiCamera=args["enablePiCamera"] or None,
+            api=api,
             stabilize=args["stabilize"],
             source=args["source"],
             camera_num=args["camera_num"],
             stream_mode=args["stream_mode"],
             backend=args["backend"],
+            source_demuxer=args["source_demuxer"],
+            frame_format=args["frame_format"],
+            custom_ffmpeg=args["custom_ffmpeg"],
             colorspace=args["colorspace"],
             resolution=args["resolution"],
             framerate=args["framerate"],
             logging=args["logging"],
             time_delay=args["time_delay"],
-            **options
+            **options,
         )
     else:
         from .webgear_rtc import WebGear_RTC
 
-        # initialize WebGear object
+        # initialize WebGear_RTC object
         web = WebGear_RTC(
-            enablePiCamera=args["enablePiCamera"],
+            enablePiCamera=args["enablePiCamera"] or None,
+            api=api,
             stabilize=args["stabilize"],
             source=args["source"],
             camera_num=args["camera_num"],
             stream_mode=args["stream_mode"],
             backend=args["backend"],
+            source_demuxer=args["source_demuxer"],
+            frame_format=args["frame_format"],
+            custom_ffmpeg=args["custom_ffmpeg"],
             colorspace=args["colorspace"],
             resolution=args["resolution"],
             framerate=args["framerate"],
             logging=args["logging"],
             time_delay=args["time_delay"],
-            **options
+            **options,
         )
     # run this object on Uvicorn server
     uvicorn.run(web(), host=args["ipaddress"], port=args["port"])

@@ -34,8 +34,8 @@ from vidgear.gears import CamGear
 import cv2
 
 
-# open any valid video stream(for e.g `myvideo.avi` file)
-stream = CamGear(source="myvideo.avi").start()
+# open any valid video stream(for e.g `myvideo.mp4` file)
+stream = CamGear(source="myvideo.mp4").start()
 
 # loop over
 while True:
@@ -68,7 +68,7 @@ stream.stop()
 
 ## Using Camgear with Streaming Websites
 
-CamGear internally implements [`yt_dlp`]() backend class for seamlessly pipelining live video-frames and metadata from various streaming services like [Twitch](https://www.twitch.tv/), [Vimeo](https://vimeo.com/), [Dailymotion](https://www.dailymotion.com), and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites). All you have to do is to provide the desired Video's URL to its `source` parameter, and enable its [`stream_mode`](../params/#stream_mode) parameter. 
+CamGear internally implements [`yt_dlp`]() backend class for seamlessly pipelining live video-frames and metadata from various streaming services like [Twitch](https://www.twitch.tv/), [Vimeo](https://vimeo.com/), [PeerTube](https://peertube.tv/), and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites). All you have to do is to provide the desired Video's URL to its `source` parameter, and enable its [`stream_mode`](../params/#stream_mode) parameter. 
 
 The complete usage example for Dailymotion and Twitch URLs are as follows:
 
@@ -107,10 +107,10 @@ The complete usage example for Dailymotion and Twitch URLs are as follows:
     # import required libraries
     from vidgear.gears import CamGear
 
-    # Add YouTube Video URL as input source (for e.g https://www.dailymotion.com/video/x2yrnum)
+    # Add YouTube Video URL as input source (for e.g https://peertube.tv/w/q4GM7HcfUnqeBAj3urTUCv)
     # and enable Stream Mode (`stream_mode = True`)
     stream = CamGear(
-        source="https://www.dailymotion.com/video/x2yrnum", stream_mode=True, logging=True, **options
+        source="https://peertube.tv/w/q4GM7HcfUnqeBAj3urTUCv", stream_mode=True, logging=True, **options
     ).start()
 
     # get Video's metadata as JSON object
@@ -123,21 +123,19 @@ The complete usage example for Dailymotion and Twitch URLs are as follows:
     print(video_metadata["title"])
     ```
 
-=== "Dailymotion :fontawesome-brands-dailymotion:"
+=== "PeerTube :simple-peertube:"
 
-    ```python linenums="1"  hl_lines="12-13"
+    ```python linenums="1" hl_lines="6 10-11"
     # import required libraries
     from vidgear.gears import CamGear
     import cv2
 
-    # set desired quality as 720p
-    options = {"STREAM_RESOLUTION": "720p"}
+    # set desired quality as 480p
+    options = {"STREAM_RESOLUTION": "480p"}
 
-    # Add any desire Video URL as input source
-    # for e.g https://vimeo.com/151666798
-    # and enable Stream Mode (`stream_mode = True`)
+    # Add PeerTube stream URL as source and enable Stream Mode
     stream = CamGear(
-        source="https://www.dailymotion.com/video/x2yrnum",
+        source="https://peertube.tv/w/q4GM7HcfUnqeBAj3urTUCv",
         stream_mode=True,
         logging=True,
         **options
@@ -169,6 +167,7 @@ The complete usage example for Dailymotion and Twitch URLs are as follows:
     # safely close video stream
     stream.stop()
     ```
+
 === "Twitch :fontawesome-brands-twitch:"
 
     !!! warning "If Twitch user is offline, CamGear will throw ValueError."
@@ -259,10 +258,10 @@ The complete usage example is as follows:
     # import required libraries
     from vidgear.gears import CamGear
 
-    # Add YouTube Video URL as input source (for e.g https://youtu.be/uCy5OuSQnyA)
+    # Add YouTube Video URL as input source (for e.g https://youtu.be/QDia3e12czc)
     # and enable Stream Mode (`stream_mode = True`)
     stream = CamGear(
-        source="https://youtu.be/uCy5OuSQnyA", stream_mode=True, logging=True, **options
+        source="https://youtu.be/QDia3e12czc", stream_mode=True, logging=True, **options
     ).start()
 
     # get Video's metadata as JSON object
@@ -280,10 +279,10 @@ The complete usage example is as follows:
 from vidgear.gears import CamGear
 import cv2
 
-# Add YouTube Video URL as input source (for e.g https://youtu.be/uCy5OuSQnyA)
+# Add YouTube Video URL as input source (for e.g https://youtu.be/QDia3e12czc)
 # and enable Stream Mode (`stream_mode = True`)
 stream = CamGear(
-    source="https://youtu.be/uCy5OuSQnyA", 
+    source="https://youtu.be/QDia3e12czc", 
     stream_mode=True,
     logging=True
 ).start()

@@ -20,14 +20,16 @@ limitations under the License.
 
 # import the necessary packages
 import logging as log
-from typing import TypeVar, Tuple, Union, Any
-from numpy.typing import NDArray
+import warnings
+from typing import Any, TypeVar
 
-# import helper packages
-from .helper import logger_handler, logcurr_vidgear_ver
+from numpy.typing import NDArray
 
 # import additional API(s)
 from .camgear import CamGear
+
+# import helper packages
+from .helper import Backend, logcurr_vidgear_ver, logger_handler
 
 # define logger
 logger = log.getLogger("VideoGear")
@@ -42,55 +44,89 @@ T = TypeVar("T", bound="VideoGear")
 class VideoGear:
     """
     VideoGear API provides a special internal wrapper around VidGear's exclusive Video Stabilizer class.
-    VideoGear also acts as a Common Video-Capture API that provides internal access for both CamGear and PiGear APIs and
-    their parameters with an exclusive enablePiCamera boolean flag.
+    VideoGear also acts as a Common Video-Capture API that provides unified internal access to CamGear,
+    PiGear, and FFGear APIs and their parameters, selectable via the `api` parameter using the `Backend`
+    enum (`Backend.CAMGEAR`, `Backend.PIGEAR`, `Backend.FFGEAR`).
 
-    VideoGear is ideal when you need to switch to different video sources without changing your code much. Also, it enables
-    easy stabilization for various video-streams (real-time or not)
+    VideoGear is ideal when you need to switch between different video-capture backends without changing
+    your code much. It also enables easy stabilization for various video-streams (real-time or not)
     with minimum effort and writing way fewer lines of code.
     """
 
     def __init__(
         self,
         # VideoGear parameters
-        enablePiCamera: bool = False,
+        api: Backend = Backend.CAMGEAR,
         stabilize: bool = False,
         # PiGear parameters
         camera_num: int = 0,
-        resolution: Tuple[int, int] = (640, 480),
-        framerate: Union[int, float] = 30,
-        # CamGear parameters
+        resolution: tuple[int, int] = (640, 480),
+        framerate: int | float = 30,
+        # CamGear/FFGear parameters
         source: Any = 0,
         stream_mode: bool = False,
         backend: int = 0,
+        # FFGear parameters
+        source_demuxer: str | None = None,
+        frame_format: str = "bgr24",
+        custom_ffmpeg: str = "",
         # common parameters
         time_delay: int = 0,
-        colorspace: str = None,
+        colorspace: str | None = None,
         logging: bool = False,
-        **options: dict
+        # deprecated
+        enablePiCamera: bool | None = None,
+        **options: dict,
     ):
         """
         This constructor method initializes the object state and attributes of the VideoGear class.
 
         Parameters:
-            enablePiCamera (bool): provide access to PiGear(if True) or CamGear(if False) APIs respectively.
+            api (Backend): selects the capture backend. Accepted values are `Backend.CAMGEAR` _(default)_,
+                `Backend.PIGEAR`, and `Backend.FFGEAR`. Raises `TypeError` if an invalid value is given.
             stabilize (bool): enable access to Stabilizer Class for stabilizing frames.
-            camera_num (int): selects the camera module index which will be used as Rpi source.
-            resolution (tuple): sets the resolution (i.e. `(width,height)`) of the Rpi source.
-            framerate (int/float): sets the framerate of the Rpi source.
-            source (based on input): defines the source for the input stream.
-            stream_mode (bool): controls the exclusive YouTube Mode.
-            backend (int): selects the backend for OpenCV's VideoCapture class.
-            colorspace (str): selects the colorspace of the input stream.
-            logging (bool): enables/disables logging.
-            time_delay (int): time delay (in sec) before start reading the frames.
-            options (dict): provides ability to alter Tweak Parameters of CamGear, PiGear & Stabilizer.
+            camera_num (int): [PiGear only] selects the camera module index. Must be `>= 0`.
+            resolution (tuple): [PiGear only] sets `(width, height)` of the source. Default: `(640, 480)`.
+            framerate (int/float): [PiGear only] sets the framerate of the source. Default: `30`.
+            source (Any): [CamGear/FFGear] defines the source for the input stream (device index,
+                filepath, network URL, or image-sequence glob). Default: `0`.
+            stream_mode (bool): [CamGear/FFGear] enables Stream-Mode for `yt_dlp`-backed streaming URLs.
+            backend (int): [CamGear only] selects the OpenCV VideoCapture backend (e.g. `cv2.CAP_DSHOW`).
+            source_demuxer (str): [FFGear only] specifies the FFmpeg demuxer for the source
+                (e.g. `"v4l2"`, `"dshow"`, `"avfoundation"`). Default: `None` (auto-detect).
+            frame_format (str): [FFGear only] specifies the pixel layout for decoded frames
+                (any FFmpeg-supported pix_fmt, e.g. `"bgr24"`, `"gray"`, `"yuv420p"`). Default: `"bgr24"`.
+            custom_ffmpeg (str): [FFGear only] path to a custom FFmpeg executable. Default: `""` (use PATH).
+            colorspace (str): [CamGear/PiGear only] selects the colorspace of the input stream.
+            logging (bool): enables/disables logging. Default: `False`.
+            time_delay (int): [CamGear/PiGear only] time delay (in seconds) before reading frames.
+            enablePiCamera (bool): **DEPRECATED** — use `api=Backend.PIGEAR` instead. Will be removed
+                in a future release.
+            options (dict): additional tweak parameters forwarded to the selected backend gear
+                and/or the Stabilizer class.
         """
         # enable logging if specified
         self.__logging = logging if isinstance(logging, bool) else False
 
         # print current version
         logcurr_vidgear_ver(logging=self.__logging)
+
+        # handle deprecated `enablePiCamera`
+        if enablePiCamera is not None:
+            warnings.warn(
+                "`enablePiCamera` is deprecated; use `api=Backend.PIGEAR` instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            api = Backend.PIGEAR if enablePiCamera else Backend.CAMGEAR
+
+        # validate api selection
+        if not isinstance(api, Backend):
+            raise TypeError(
+                "[VideoGear:ERROR] :: `api` must be a `Backend` enum member, got `{}`.".format(
+                    type(api).__name__
+                )
+            )
 
         # initialize stabilizer
         self.__stabilization_mode = stabilize
@@ -99,7 +135,14 @@ class VideoGear:
         options = {str(k).strip(): v for k, v in options.items()}
 
         if self.__stabilization_mode:
-            from .stabilizer import Stabilizer
+            from .stabilizer import Stabilizer, StabilizerMode
+
+            stabilizer_mode = options.pop("STABILIZER_MODE", StabilizerMode.ASW)
+            if not isinstance(stabilizer_mode, StabilizerMode):
+                stabilizer_mode = StabilizerMode.ASW
+            self.__logging and logger.debug(
+                f"Setting Stabilizer Mode: {stabilizer_mode.name}"
+            )
 
             s_radius = options.pop("SMOOTHING_RADIUS", 25)
             if not isinstance(s_radius, int):
@@ -118,6 +161,7 @@ class VideoGear:
                 crop_n_zoom = False
 
             self.__stabilizer_obj = Stabilizer(
+                mode=stabilizer_mode,
                 smoothing_radius=s_radius,
                 border_type=border_type,
                 border_size=border_size,
@@ -128,35 +172,83 @@ class VideoGear:
                 "Enabling Stabilization Mode for the current video source!"
             )  # log info
 
-        if enablePiCamera:
-            # only import the pigear module only if required
-            from .pigear import PiGear
-
-            # initialize the picamera stream by enabling PiGear API
-            self.stream = PiGear(
-                camera_num=camera_num,
-                resolution=resolution,
-                framerate=framerate,
-                colorspace=colorspace,
-                logging=logging,
-                time_delay=time_delay,
-                **options
-            )
-        else:
-            # otherwise, we are using OpenCV so initialize the webcam
-            # stream by activating CamGear API
-            self.stream = CamGear(
+        # dispatch table — register new gears here
+        gear_builders = {
+            Backend.CAMGEAR: lambda: CamGear(
                 source=source,
                 stream_mode=stream_mode,
                 backend=backend,
                 colorspace=colorspace,
                 logging=logging,
                 time_delay=time_delay,
-                **options
-            )
+                **options,
+            ),
+            Backend.PIGEAR: lambda: self.__build_pigear(
+                camera_num=camera_num,
+                resolution=resolution,
+                framerate=framerate,
+                colorspace=colorspace,
+                logging=logging,
+                time_delay=time_delay,
+                options=options,
+            ),
+            Backend.FFGEAR: lambda: self.__build_ffgear(
+                source=source,
+                stream_mode=stream_mode,
+                source_demuxer=source_demuxer,
+                frame_format=frame_format,
+                custom_ffmpeg=custom_ffmpeg,
+                logging=logging,
+                options=options,
+            ),
+        }
 
-        # initialize framerate variable
-        self.framerate = self.stream.framerate
+        self.__logging and logger.debug(
+            "Selecting `{}` backend for VideoGear.".format(api.value)
+        )
+        self.stream = gear_builders[api]()
+
+        # initialize framerate variable (FFGear has no `framerate` attr)
+        self.framerate = getattr(self.stream, "framerate", 0.0)
+
+    @staticmethod
+    def __build_pigear(
+        *, camera_num, resolution, framerate, colorspace, logging, time_delay, options
+    ):
+        from .pigear import PiGear
+
+        return PiGear(
+            camera_num=camera_num,
+            resolution=resolution,
+            framerate=framerate,
+            colorspace=colorspace,
+            logging=logging,
+            time_delay=time_delay,
+            **options,
+        )
+
+    @staticmethod
+    def __build_ffgear(
+        *,
+        source,
+        stream_mode,
+        source_demuxer,
+        frame_format,
+        custom_ffmpeg,
+        logging,
+        options,
+    ):
+        from .ffgear import FFGear
+
+        return FFGear(
+            source=source,
+            stream_mode=stream_mode,
+            source_demuxer=source_demuxer,
+            frame_format=frame_format,
+            custom_ffmpeg=custom_ffmpeg,
+            logging=logging,
+            **options,
+        )
 
     def start(self) -> T:
         """
@@ -179,7 +271,7 @@ class VideoGear:
             if frame is None:
                 break
             frame_stab = self.__stabilizer_obj.stabilize(frame)
-            if not (frame_stab is None):
+            if frame_stab is not None:
                 return frame_stab
         return self.stream.read()
 

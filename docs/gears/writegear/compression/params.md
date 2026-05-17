@@ -137,6 +137,16 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
      output_params = {"-vcodec":"libx264", "-crf": 0, "-preset": "fast", "-tune": "zerolatency"} 
     ```
 
+    ??? info "Discarding `-vcodec` parameter entirely"
+
+        Setting `-vcodec` _(or its alias `-c:v`)_ to `None` in `output_params` will discard the `-vcodec` FFmpeg parameter entirely from WriteGear's encoding pipeline. This allows FFmpeg itself to auto-select the best available video encoder for the given output _(e.g. for GIF outputs)_:
+
+        ```python
+        # let FFmpeg auto-select the best video encoder for the output (e.g. GIF)
+        output_params = {"-vcodec": None}
+        # equivalent using `-c:v` alias
+        output_params = {"-c:v": None}
+        ```
 
 * **Special Internal Parameters:** In addition to FFmpeg parameters, WriteGear API also supports some Special Parameters to tweak its internal properties. These parameters are discussed below:
 

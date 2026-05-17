@@ -27,48 +27,43 @@ limitations under the License.
   <figcaption>Threaded-Queue-Mode: generalized timing diagram</figcaption>
 </figure>
 
-> Threaded Queue Mode is designed exclusively for VidGear's Videocapture Gears _(namely CamGear, VideoGear)_ and few Network Gears _(such as NetGear(Client's end))_ for achieving high-performance, asynchronous, error-free video-frames handling. 
+> Threaded Queue Mode is designed exclusively for VidGear's VideoCapture Gears (namely **FFGear, CamGear, and VideoGear**) and select Network Gears (such as **NetGear** Client-end) to achieve high-performance, asynchronous, and error-free video frame handling.
 
-!!! tip "Threaded-Queue-Mode is enabled by default, but [can be disabled](#manually-disabling-threaded-queue-mode), only if extremely necessary."
+!!! tip "Threaded-Queue-Mode is enabled by default. It should only be [disabled](#manually-disabling-threaded-queue-mode) if strictly necessary for specific debugging purposes."
 
-!!! info "Threaded-Queue-Mode is **NOT** required and thereby automatically disabled for Live feed such as Camera Devices/Modules, since ."
+!!! info "Threaded-Queue-Mode is **NOT** required for live feeds (such as Camera Modules) and is automatically disabled to ensure minimum latency and real-time synchronization."
 
 &nbsp; 
 
-## What does Threaded-Queue-Mode exactly do?
+## What does Threaded-Queue-Mode actually do?
 
 Threaded-Queue-Mode helps VidGear do the Threaded Video-Processing tasks in highly optimized, well-organized, and most competent way possible: 
 
 ### A. Enables Multi-Threading
 
-> In case you don't already know, OpenCV's' [`read()`](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a473055e77dd7faa4d26d686226b292c1) is a [**Blocking I/O**](https://luminousmen.com/post/asynchronous-programming-blocking-and-non-blocking) function for reading and decoding the next video-frame, and consumes much of the I/O bound memory depending upon our video source properties & system hardware. This essentially means, the corresponding thread that reads data from it, is continuously blocked from retrieving the next frame. As a result, our python program appears slow and sluggish even without any type of computationally expensive image processing operations. This problem is far more severe on low memory SBCs like Raspberry Pis.
+> OpenCV's [`read()`](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a473055e77dd7faa4d26d686226b292c1) is a [**Blocking I/O**](https://luminousmen.com/post/asynchronous-programming-blocking-and-non-blocking) function. When it fetches and decodes a frame, it halts the execution of the thread until the frame is ready. This often results in "sluggish" performance, especially on resource-constrained devices like Raspberry Pis.
 
-In Threaded-Queue-Mode, VidGear creates several [**Python Threads**](https://docs.python.org/3/library/threading.html) within one process to offload the frame-decoding task to a different thread. Thereby,  VidGear is able to execute different Video I/O-bounded operations at the same time by overlapping there waiting times. Moreover,  threads are managed by operating system itself and is capable of distributing them between available CPU cores efficiently. In this way, Threaded-Queue-Mode keeps on processing frames faster in the [background](https://en.wikipedia.org/wiki/Daemon_(computing)) without affecting by sluggishness in our main python program thread.
+TQM offloads the frame-decoding task to a dedicated [**Background Thread**](https://docs.python.org/3/library/threading.html). By overlapping I/O wait times with your main program's logic, VidGear ensures that the CPU isn't sitting idle. While one thread waits for the next frame to decode, your main thread is free to process the current one.
 
 ### B. Utilizes Fixed-Size Queues
 
-> Although Multi-threading is fast, easy, and efficient, it can lead to some serious undesired effects like frame-skipping, [**Global Interpreter Lock**](https://realpython.com/python-gil/), race conditions, etc. This is because there is no isolation whatsoever in python threads, and in case there is any crash it will cause the whole process to crash. That's not all, the memory of the process is shared by different threads and that may result in random process crashes due to unwanted race conditions.
+> While multithreading is powerful, shared memory can lead to race conditions or memory leaks if not handled correctly. 
 
-These problems are avoided in Threaded-Queue-Mode by utilizing **Thread-Safe, Memory-Efficient, and Fixed-Size [`Queues`](https://docs.python.org/3/library/queue.html#module-queue)** _(with approximately same O(1) performance in both directions)_, that isolates the frame-decoding thread from other parallel threads and provide synchronized access to incoming frames without any obstruction. 
+TQM solves this by using [**Thread-Safe, Fixed-Size Queues**](https://docs.python.org/3/library/queue.html#module-queue). These queues act as a synchronized buffer between the "producer" (the decoding thread) and the "consumer" (your main program). This provides a layer of thread isolation, ensuring that even if the decoding thread fluctuates in speed, your main process remains stable.
 
 ### C. Accelerates Frame Processing
 
-With queues, VidGear always maintains a fixed-length frames buffer in the memory and blocks the thread temporarily if the queue is full to avoid possible frame drops or otherwise pops out the frames synchronously without any obstructions. This significantly accelerates frame processing rate (and therefore our overall video processing pipeline) comes from dramatically reducing latency — since we don’t have to wait for the `read()` method to finish reading and decoding a frame; instead, there is always a pre-decoded frame ready for us to process.
-
+By maintaining a pre-decoded buffer in memory, TQM dramatically reduces **latency**. Instead of your code asking for a frame and waiting for the hardware to decode it, the frame is already sitting in the queue, ready to be "popped" instantly.
 
 &nbsp; 
 
 ## What are the advantages of Threaded-Queue-Mode?
 
-- [x] _Enables Blocking, Sequential and Threaded LIFO Frame Handling._
-
-- [x] _Sequentially adds and releases frames from `queues` and handles the overflow._
-
-- [x] _Utilizes thread-safe, memory efficient `queues` that appends and pops frames with same O(1) performance from either side._
-
-- [x] _Faster frame access due to buffered frames in the `queue`._
-
-- [x] _Provides isolation for source thread and prevents GIL._
+- [x] **Asynchronous FIFO Handling:** _Ensures frames are processed in the correct sequential order without blocking the main loop._
+- [x] **Overflow Management:** _Automatically handles synchronization between producer and consumer threads to prevent memory bloat._
+- [x] **O(1) Performance:** _Utilizes efficient data structures for nearly instantaneous frame retrieval._
+- [x] **Reduced Latency:** _Buffered frames ensure the "next" frame is always ready before your code asks for it._
+- [x] **GIL Mitigation:** _Optimizes performance by utilizing Python’s ability to release the GIL during I/O-bound tasks._
 
 
 &nbsp;
@@ -78,17 +73,14 @@ With queues, VidGear always maintains a fixed-length frames buffer in the memory
 
 To manually disable Threaded-Queue-Mode, VidGear provides `THREADED_QUEUE_MODE` boolean attribute for `options` dictionary parameter in respective [VideoCapture APIs](../../gears/#a-videocapture-gears):  
 
-!!! warning "Important Warnings"
+???+ warning "Important Warnings"
 
 	* Disabling Threaded-Queue-Mode does **NOT disables Multi-Threading.**
-
 	* `THREADED_QUEUE_MODE` attribute does **NOT** work with Live feed, such as Camera Devices/Modules.
-
 	* `THREADED_QUEUE_MODE` attribute is **NOT** supported by ScreenGear & NetGear APIs, as Threaded Queue Mode is essential for their core operations.
 
 
-!!! danger "Disabling Threaded-Queue-Mode may lead to Random Intermittent Bugs that can be quite difficult to discover. More insight can be found [here ➶](https://github.com/abhiTronix/vidgear/issues/20#issue-452339596)"
-
+!!! danger "Disabling Threaded-Queue-Mode may lead to **Random Intermittent Bugs** or dropped frames that are difficult to debug. Only disable this if you are performing custom low-level thread management. More insight can be found [here ➶](https://github.com/abhiTronix/vidgear/issues/20#issue-452339596)""
 
 **`THREADED_QUEUE_MODE`** _(boolean)_: This attribute can be used to override Threaded-Queue-Mode mode to manually disable it:
 

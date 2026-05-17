@@ -20,17 +20,87 @@ limitations under the License.
 
 # Release Notes
 
+## v0.3.5 (2026-05-16)
+
+???+ tip "New Features"
+    - [x] ✨ **FFGear API:**
+        * Introduced a brand-new high-performance, multi-threaded video decoding Gear built on top of DeFFcode's `FFdecoder` API.
+        * Supports real-time FFmpeg subprocess pipelines, low-overhead hardware-accelerated decoding (e.g., CUDA/NVDEC), flexible pixel format conversions, and asynchronous per-frame metadata extraction.
+        * Includes dedicated parameters: `source_demuxer`, `frame_format`, `custom_ffmpeg`, and `extract_metadata`.
+    - [x] ⚡️ **Unified Backend Selection (`Backend` Enum):**
+        * Introduced a unified `api` parameter accepting a new `Backend` enum (`Backend.CAMGEAR`, `Backend.PIGEAR`, `Backend.FFGEAR`) across `VideoGear`, `WebGear`, `WebGear_RTC`, and `NetGear_Async`.
+        * Replaces the legacy `enablePiCamera` boolean flag with a clean, explicit enumeration-based backend selection.
+    - [x] ⚡️ **Plugin-Ready Stabilizer Architecture:**
+        * Refactored the monolithic `Stabilizer` class into a plugin-style `stabilizer/` sub-package with a shared `_StabilizerBase`, an `ASWStabilizer` implementation, and a factory `Stabilizer()` function.
+        * Added a new `StabilizerMode` enum for selecting stabilization backends via `VideoGear`'s `STABILIZER_MODE` option, with clean provisions for upcoming real-time backends (e.g., Kalman tracking).
+    - [x] 🚩 **WriteGear: Discard `-vcodec` via `None`:**
+        * Setting `-vcodec` or `-c:v` to `None` in `output_params` now cleanly omits the video codec parameter, letting FFmpeg auto-select the encoder (useful for GIF output and similar workflows).
+    - [x] 📦️ **Poetry Package Management:**
+        * Added an official Poetry installation guide and ecosystem support for Poetry-managed environments.
+
+??? success "Updates/Improvements"
+    - [x] **Packaging Infrastructure Modernization:**
+        * Migrated build and metadata configurations from legacy `setup.py`/`setup.cfg` to modern `pyproject.toml` configuration standards.
+        * Switched to automatic package discovery via setuptools, excluding tests and docs from distribution builds.
+    - [x] **Toolchain Overhaul (Ruff Migration):**
+        * Completely replaced `flake8` and `black` with `ruff` for unified, high-speed linting and formatting across the entire codebase.
+    - [x] **Type Hint Modernization:**
+        * Systematically updated type hints to leverage native Python 3.10+ structures, including PEP 604 union types (`X | Y`) and built-in collection generics.
+    - [x] **PEP 561 Compliance:**
+        * Added a `py.typed` marker file so external type checkers (e.g., `pyright`, `mypy`) properly recognize VidGear as an inline-typed package.
+    - [x] **CamGear YouTube Backend Refactor:**
+        * Extracted `YT_backend` into a dedicated `yt_backend` module for cleaner separation of concerns and improved maintainability.
+    - [x] **Asyncio CLI Updates:**
+        * Replaced boolean string arguments with proper `store_true` flags for `-S`, `-yt`, `-l`, and `-ep`.
+        * Added `-a`/`--api` flag for backend selection (`camgear`/`pigear`/`ffgear`) and FFGear-specific arguments (`-sd`, `-ff`, `-cf`).
+        * Marked `--enablePiCamera` as a deprecated CLI flag with a runtime warning.
+    - [x] **CI & Pipeline Enhancements:**
+        * Upgraded AppVeyor CI testing images to Visual Studio 2022 environments.
+        * Integrated path-filtering flags to intelligently skip docs-only CI pipeline runs.
+        * Centralized test utility paths into a shared `vidgear/tests/utils/helpers.py` module.
+    - [x] **Documentation Updates:**
+        * Added comprehensive FFGear documentation: overview, usage examples, advanced guides (CUDA transcoding, camera/screen capture, WriteGear integration), FAQs, and API reference.
+        * Updated `VideoGear`, `WebGear`, `WebGear_RTC`, and `NetGear_Async` docs to reflect the new `Backend` enum API and FFGear backend parameters.
+        * Added `StabilizerMode` usage examples, FAQs, and parameter documentation across all relevant Gears.
+
+??? danger "Breaking Updates/Changes"
+    - [ ] **Deprecated `enablePiCamera`:**
+        * The `enablePiCamera` boolean flag has been officially deprecated across all core capture APIs (`VideoGear`, `WebGear`, `WebGear_RTC`, `NetGear_Async`) in favor of the explicit `api=Backend.PIGEAR` enumeration syntax.
+        * Using the old flag will emit a `DeprecationWarning` at runtime. It will be removed in a future release.
+
+??? bug "Bug-fixes"
+    - [x] **Stabilizer Memory Leak:**
+        * Fixed a severe memory bottleneck where `self.__transforms` tracking records grew unbounded over the entire runtime duration (O(total_frames) → O(smoothing_radius)), eliminating an out-of-memory hazard for long-running sessions.
+    - [x] **FFGear Metadata Tuple Handling:**
+        * Fixed `read()` to correctly enqueue and return `(frame, metadata)` tuples when `extract_metadata` mode is enabled.
+    - [x] **Helper Utilities:**
+        * Fixed `validate_video` to verify file path existence before processing.
+        * Fixed missing demuxer header handling in `get_supported_demuxers`.
+        * Corrected `StopIteration` handling in default video codec selection logic.
+        * Fixed `IndexError` in `validate_audio` bit-depth parsing by replacing bare `re.findall` indexing with guarded `re.search` and adding a fallback parser for planar sample formats (`fltp`, `s16p`, `u8p`, etc.).
+        * Fixed `get_supported_demuxers` to expand all comma-separated demuxer aliases (e.g. `"matroska,webm"` now yields both entries instead of only the last).
+
+??? question "Pull Requests"
+    * PR #451
+    * PR #449
+    * PR #448
+    * PR #447
+    * PR #445
+
+??? new "New Contributors"
+    * @markovejnovic
+
 
 ## v0.3.4 (2025-11-11)
 
-???+ tip "New Features"
+??? tip "New Features"
     - [x] **Type Hints:**
-        * ⚡️ Added comprehensive type hints to function signatures and return types across all API modules for improved code readability and IDE support.
+        * Added comprehensive type hints to function signatures and return types across all API modules for improved code readability and IDE support.
     - [x] **Docker Guide:**
-        * 📦 Added a comprehensive new guide, `docs/bonus/docker_example.md`, detailing the challenges of containerizing VidGear, particularly around building OpenCV with correct GStreamer and FFmpeg support.
+        * Added a comprehensive new guide, `docs/bonus/docker_example.md`, detailing the challenges of containerizing VidGear, particularly around building OpenCV with correct GStreamer and FFmpeg support.
         * Provides three distinct approaches for Dockerization, complete with Dockerfile examples, dependency breakdowns, application configuration patterns, and troubleshooting sections.
     - [x] **Sponsor Recognition:**
-        * 🤝 Added prominent sponsor section in the `README.md` and a new dedicated "Our Sponsors" page (`docs/sponsors.md`) to highlight and thank supporters.
+        * Added prominent sponsor section in the `README.md` and a new dedicated "Our Sponsors" page (`docs/sponsors.md`) to highlight and thank supporters.
 
 ??? success "Updates/Improvements" 
     - [x] **Core:**

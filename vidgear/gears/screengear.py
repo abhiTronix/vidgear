@@ -19,27 +19,28 @@ limitations under the License.
 """
 
 # import the necessary packages
-import cv2
 import json
-import platform
-import numpy as np
 import logging as log
-from threading import Thread, Event
+import platform
 from collections import OrderedDict
+from threading import Event, Thread
 from typing import TypeVar
+
+import cv2
+import numpy as np
 from numpy.typing import NDArray
 
 # import helper packages
 from .helper import (
-    import_dependency_safe,
     capPropId,
-    logger_handler,
+    import_dependency_safe,
     logcurr_vidgear_ver,
+    logger_handler,
 )
 
 # safe import critical Class modules
 mss = import_dependency_safe("from mss import mss", error="silent")
-if not (mss is None):
+if mss is not None:
     from mss.exception import ScreenShotError
 pysct = import_dependency_safe("pyscreenshot", error="silent")
 dxcam = import_dependency_safe("dxcam", error="silent")
@@ -67,9 +68,9 @@ class ScreenGear:
 
     def __init__(
         self,
-        monitor: int = None,
-        backend: str = None,
-        colorspace: str = None,
+        monitor: int | None = None,
+        backend: str | None = None,
+        colorspace: str | None = None,
         logging: bool = False,
         **options: dict
     ):
@@ -95,7 +96,7 @@ class ScreenGear:
 
         # validate monitor instance
         assert (
-            monitor is None or monitor and isinstance(monitor, (int, tuple))
+            monitor is None or (monitor and isinstance(monitor, (int, tuple)))
         ), "[ScreenGear:ERROR] :: Invalid `monitor` value detected!"
 
         # initialize backend
@@ -212,7 +213,7 @@ class ScreenGear:
         # separately handle colorspace value to int conversion
         if colorspace:
             self.color_space = capPropId(colorspace.strip())
-            self.__logging and not (self.color_space is None) and logger.debug(
+            self.__logging and self.color_space is not None and logger.debug(
                 "Enabling `{}` colorspace for this video stream!".format(
                     colorspace.strip()
                 )
@@ -259,11 +260,11 @@ class ScreenGear:
             # convert to bgr frame if applicable
             self.frame = (
                 self.frame[:, :, ::-1]
-                if self.__backend == "dxcam" or not (pysct is None)
+                if self.__backend == "dxcam" or pysct is not None
                 else self.frame
             )
             # render colorspace if defined
-            if not (self.frame is None) and not (self.color_space is None):
+            if self.frame is not None and self.color_space is not None:
                 self.frame = cv2.cvtColor(self.frame, self.color_space)
         except Exception as e:
             if isinstance(e, ScreenShotError):
@@ -335,7 +336,7 @@ class ScreenGear:
                 # convert to bgr frame if applicable
                 frame = (
                     frame[:, :, ::-1]
-                    if self.__backend == "dxcam" or not (pysct is None)
+                    if self.__backend == "dxcam" or pysct is not None
                     else frame
                 )
             except Exception as e:
@@ -346,7 +347,7 @@ class ScreenGear:
                 self.__terminate.set()
                 continue
 
-            if not (self.color_space is None):
+            if self.color_space is not None:
                 # apply colorspace to frames
                 color_frame = None
                 try:
@@ -357,7 +358,7 @@ class ScreenGear:
                     self.color_space = None
                     self.__logging and logger.exception(str(e))
                     logger.warning("Assigned colorspace value is invalid. Discarding!")
-                self.frame = color_frame if not (color_frame is None) else frame
+                self.frame = color_frame if color_frame is not None else frame
             else:
                 self.frame = frame
 
@@ -391,4 +392,4 @@ class ScreenGear:
         self.__terminate.set()
 
         # wait until stream resources are released (producer thread might be still grabbing frame)
-        not (self.__thread is None) and self.__thread.join()
+        self.__thread is not None and self.__thread.join()

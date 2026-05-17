@@ -18,6 +18,10 @@ limitations under the License.
 ===============================================
 -->
 
+::: vidgear.gears.helper.Backend
+
+&nbsp;
+
 ::: vidgear.gears.helper.logger_handler
 
 &nbsp;

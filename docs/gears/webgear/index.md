@@ -33,7 +33,7 @@ WebGear API works on [**Starlette**](https://www.starlette.io/)'s ASGI applicati
 
 WebGear API uses an intraframe-only compression scheme under the hood where the sequence of video-frames are first encoded as JPEG-DIB (JPEG with Device-Independent Bit compression) and then streamed over HTTP using Starlette's Multipart [Streaming Response](https://www.starlette.io/responses/#streamingresponse) and a [Uvicorn](https://www.uvicorn.org/#quickstart) ASGI Server. This method imposes lower processing and memory requirements, but the quality is not the best, since JPEG compression is not very efficient for motion video.
 
-In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides internal wrapper around [VideoGear](../videogear/), which itself provides internal access to both [CamGear](../camgear/) and [PiGear](../pigear/) APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
+In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides internal wrapper around [VideoGear](../videogear/), which itself provides internal access to [CamGear](../camgear/), [PiGear](../pigear/), and [FFGear](../ffgear/) APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
 
 &thinsp;
 

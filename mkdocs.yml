@@ -112,11 +112,11 @@ plugins:
               - "!^_"
               - "^__init__$"
               - "^__call__$"
-            extra:
-              show_root_heading: false
-              show_root_toc_entry: false
-              show_source: true
-              heading_level: 3
+            show_root_heading: true
+            show_root_full_path: false
+            show_symbol_type_toc: true
+            show_source: true
+            heading_level: 3
 
 # Logging
 validation:
@@ -219,9 +219,10 @@ nav:
   - Home:
       - index.md
       - Installation:
-          - installation.md
-          - Install using pip: installation/pip_install.md
-          - Install from source: installation/source_install.md
+          - installation/index.md
+          - Install using Pip: installation/pip_install.md
+          - Install using Poetry: installation/poetry_install.md
+          - Install from Source: installation/source_install.md
       - Switching from OpenCV: switch_from_cv.md
       - Contribution Guidelines:
           - contribution.md
@@ -231,7 +232,7 @@ nav:
       - Our Sponsors: sponsors.md
       - License: license.md
   - Gears:
-      - Introduction: gears.md
+      - gears/index.md
       - CamGear:
           - gears/camgear/index.md
           - Usage Examples: gears/camgear/usage.md
@@ -241,6 +242,16 @@ nav:
             - CamGear Bonus Examples: help/camgear_ex.md
             - CamGear FAQs: help/camgear_faqs.md
             - Source Tweak Parameters: gears/camgear/advanced/source_params.md
+      - FFGear:
+          - gears/ffgear/index.md
+          - Usage Examples: gears/ffgear/usage.md
+          - Advanced Usage: gears/ffgear/advanced/index.md
+          - API Resources:
+              - FFGear API Parameters: gears/ffgear/params.md
+              - FFGear API References: bonus/reference/ffgear.md
+              - FFGear Bonus Examples: help/ffgear_ex.md
+              - FFGear FAQs: help/ffgear_faqs.md
+              - FFmpeg Installation: gears/ffgear/advanced/ffmpeg_install.md
       - PiGear:
           - gears/pigear/index.md
           - Usage Examples: gears/pigear/usage.md
@@ -353,6 +364,7 @@ nav:
       - API References:
           - vidgear.gears:
               - CamGear API: bonus/reference/camgear.md
+              - FFGear API: bonus/reference/ffgear.md
               - PiGear API: bonus/reference/pigear.md
               - VideoGear API: bonus/reference/videogear.md
               - ScreenGear API: bonus/reference/screengear.md
@@ -376,6 +388,7 @@ nav:
       - Frequently Asked Questions:
           - General FAQs: help/general_faqs.md
           - CamGear FAQs: help/camgear_faqs.md
+          - FFGear FAQs: help/ffgear_faqs.md
           - PiGear FAQs: help/pigear_faqs.md
           - VideoGear FAQs: help/videogear_faqs.md
           - ScreenGear FAQs: help/screengear_faqs.md
@@ -388,6 +401,7 @@ nav:
           - Stabilizer Class FAQs: help/stabilizer_faqs.md
       - Bonus Examples:
           - CamGear Examples: help/camgear_ex.md
+          - FFGear Examples: help/ffgear_ex.md
           - PiGear Examples: help/pigear_ex.md
           - VideoGear Examples: help/videogear_ex.md
           - ScreenGear Examples: help/screengear_ex.md

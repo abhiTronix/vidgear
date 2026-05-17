@@ -20,9 +20,10 @@ limitations under the License.
 
 # import the necessary packages
 
-import pytest
 import logging as log
 import platform
+
+import pytest
 
 from vidgear.gears import ScreenGear
 from vidgear.gears.helper import logger_handler

@@ -103,7 +103,7 @@ When installing VidGear from source, following are Critical and some API specifi
 
 ### Critical Prerequisites :warning:
 
-* #### OpenCV
+* #### :simple-opencv: OpenCV
 
     Must require OpenCV(3.0+) python binaries installed for all core functions. You easily install it directly via [pip](https://pypi.org/project/opencv-python/):
 
@@ -125,19 +125,20 @@ When installing VidGear from source, following are Critical and some API specifi
 
 ### API Specific Prerequisites
 
-* #### FFmpeg 
+* #### :simple-ffmpeg: FFmpeg 
 
-    Require only for the video compression and encoding compatibility within [**StreamGear API**](../../gears/streamgear/introduction/) and [**WriteGear API's Compression Mode**](../../gears/writegear/compression/). 
+    Require only for the video compression and encoding compatibility within [**StreamGear API**](../../gears/streamgear/introduction/) and [**WriteGear API's Compression Mode**](../../gears/writegear/compression/), and for hardware-accelerated decoding within [**FFGear API**](../../gears/ffgear/). 
 
     !!! tip "FFmpeg Installation"
 
         * **For WriteGear API's Compression Mode**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
         * **For StreamGear API**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/streamgear/ffmpeg_install/) for its installation.
+        * **For FFGear API**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/ffgear/advanced/ffmpeg_install/) for its installation.
 
 
 &thinsp;
 
-* #### Picamera2
+* #### :simple-raspberrypi: Picamera2
 
     Required only if you're using Raspberry Pi :fontawesome-brands-raspberry-pi: Camera Modules _(or USB webcams)_ with the [**PiGear**](../../gears/pigear/) API. Here's how to install [Picamera2](https://github.com/raspberrypi/picamera2) python library:
 
@@ -219,13 +220,30 @@ When installing VidGear from source, following are Critical and some API specifi
 
 ## Installation
 
-
 **If you want to checkout the latest beta [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch , you can do so with the following commands:**
 
+??? danger "Clean stale installs when switching branches or upgrading from source"
 
-!!! info "This can be useful if you want to provide feedback for a new feature or bug fix in the `testing` branch."
+    `pip install .` (and `pip install -U .`) **does NOT remove files from a prior install** that no longer exist in the new source tree. When the codebase reorganizes a module into a sub-package, the old files or sub-packages can linger. Always uninstall first when switching between branches or pulling a major refactor:
 
-!!! danger "DO NOT clone or install any other branch other than `testing` unless advised, as it is not tested with CI environments and possibly very unstable or unusable."
+    ```sh
+    # uninstall any prior install (repeat until "not installed" reported)
+    pip uninstall -y vidgear
+
+    # then reinstall fresh
+    pip install -U .
+    ```
+
+??? tip "Use editable installs for active development"
+
+    If you're contributing or testing patches locally, install in **editable mode** so changes in the cloned repo take effect immediately — no reinstall per edit:
+
+    ```sh
+    pip install -e .[core]
+    ```
+
+    ==Still clean the old install first== (`pip uninstall -y vidgear`) if you previously did a non-editable `pip install .`.
+
 
 ??? example "Installing vidgear with only selective dependencies"
 
@@ -263,11 +281,12 @@ When installing VidGear from source, following are Critical and some API specifi
         | APIs | Dependencies |
         |:---:|:---|
         | CamGear | `yt_dlp` |
-        | PiGear | `picamera`, `picamera2` _(see [this](#picamera2) for its installation)_ |
-        | VideoGear | *Based on CamGear or PiGear backend in use*  |
+        | PiGear | `picamera`, `picamera2` _(see [pip install doc](pip_install.md#picamera2) for its installation)_ |
+        | VideoGear | *Based on CamGear or PiGear or FFGear backend in use*  |
         | ScreenGear | `dxcam`, `mss`, `pyscreenshot`, `Pillow` |
-        | WriteGear | **FFmpeg:** See [this doc ➶](https://abhitronix.github.io/vidgear/dev/gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
-        | StreamGear | **FFmpeg:** See [this doc ➶](https://abhitronix.github.io/vidgear/dev/gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
+        | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
+        | StreamGear | **FFmpeg:** See [this doc ➶](../../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
+        | FFGear | **FFmpeg:** See [this doc ➶](../../gears/ffgear/advanced/ffmpeg_install/#ffmpeg-installation-instructions) |
         | NetGear | `pyzmq`, `simplejpeg` |
         | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
         | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
@@ -275,7 +294,7 @@ When installing VidGear from source, following are Critical and some API specifi
         | Stabilizer Class | - |
                     
 
-??? warning ":fontawesome-brands-windows: Windows Installation"
+??? note ":fontawesome-brands-windows: Windows Installation"
 
     If you are using Windows, some of the commands given below, may not work out-of-the-box.
 
@@ -309,7 +328,6 @@ When installing VidGear from source, following are Critical and some API specifi
     py -m pip install --upgrade --user .[asyncio]
     ```
     
-
 ```sh
 # clone the repository and get inside
 git clone https://github.com/abhiTronix/vidgear.git && cd vidgear

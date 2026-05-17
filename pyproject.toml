@@ -1,0 +1,156 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vidgear"
+description = "High-performance cross-platform Video Processing Python framework powerpacked with unique trailblazing features."
+authors = [{name = "Abhishek Thakur", email = "abhi.una12@gmail.com"}]
+license = {text = "Apache License 2.0"}
+requires-python = ">=3.10"
+keywords = [
+    "OpenCV",
+    "multithreading",
+    "FFmpeg",
+    "picamera",
+    "starlette",
+    "mss",
+    "pyzmq",
+    "dxcam",
+    "aiortc",
+    "uvicorn",
+    "uvloop",
+    "yt-dlp",
+    "asyncio",
+    "dash",
+    "hls",
+    "Video Processing",
+    "Video Stabilization",
+    "Computer Vision",
+    "Video Streaming",
+    "raspberrypi",
+    "YouTube",
+    "Twitch",
+    "WebRTC",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Operating System :: POSIX",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Scientific/Engineering",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+    "cython",
+    "numpy",
+    "requests",
+    "colorlog",
+    "tqdm",
+    "packaging",
+]
+dynamic = ["version", "readme"]
+
+[project.optional-dependencies]
+core = [
+    "yt-dlp[default]>=2026.4.10.235301.dev0",
+    "pyzmq>=27.1.0",
+    "Pillow",
+    "simplejpeg>=1.9.0",
+    "deffcode>=0.2.7",
+    "mss>=10.2.0",
+    "pyscreenshot>=3.1",
+    "dxcam>=0.0.5; sys_platform == 'win32'",
+]
+asyncio = [
+    "yt-dlp[default]>=2026.4.10.235301.dev0",
+    "pyzmq>=27.1.0",
+    "simplejpeg>=1.9.0",
+    "deffcode>=0.2.7",
+    "mss>=10.2.0",
+    "Pillow",
+    "pyscreenshot>=3.1",
+    "starlette>=1.0.0",
+    "jinja2",
+    "msgpack>=1.1.2",
+    "msgpack_numpy>=0.4.8",
+    "aiortc>=1.14.0",
+    "uvicorn>=0.46.0",
+    "dxcam>=0.0.5; sys_platform == 'win32'",
+    "uvloop>=0.22.1; sys_platform != 'win32'",
+]
+
+[project.urls]
+Homepage = "https://abhitronix.github.io/vidgear"
+"Bug Reports" = "https://github.com/abhiTronix/vidgear/issues"
+Funding = "https://ko-fi.com/W7W8WTYO"
+Source = "https://github.com/abhiTronix/vidgear"
+Documentation = "https://abhitronix.github.io/vidgear"
+Changelog = "https://abhitronix.github.io/vidgear/latest/changelog/"
+
+[tool.setuptools.packages.find]
+include = ["vidgear*"]
+exclude = ["vidgear.tests*", "docs*"]
+
+[tool.setuptools.package-data]
+vidgear = ["py.typed"]
+
+[tool.setuptools.dynamic]
+version = {attr = "vidgear.version.__version__"}
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = [
+    "build",
+    "dist",
+    ".venv",
+    "venv",
+    "docs",
+    "*.egg-info",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # Pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "UP",   # pyupgrade
+    "C4",   # flake8-comprehensions
+    "SIM",  # flake8-simplify
+    "PIE",  # flake8-pie
+    "RUF",  # Ruff-specific rules
+]
+ignore = [
+    "E501",   # line-too-long (handled by formatter)
+    "B008",   # function calls in argument defaults
+    "B904",   # raise ... from ...
+    "SIM105", # contextlib.suppress (pattern clarity)
+    "SIM108", # ternary-in-place
+    "UP032",  # f-strings (keep .format() calls for readability in logs)
+    "RUF012", # mutable class attrs with ClassVar
+    "E722",   # bare except (kept intentional in a few places)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"vidgear/tests/*" = ["B011", "E402", "F401"]
+"vidgear/__init__.py" = ["F401"]
+"vidgear/gears/__init__.py" = ["E402"]
+
+[tool.ruff.lint.isort]
+known-third-party = ["deffcode"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"

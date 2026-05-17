@@ -20,15 +20,17 @@ limitations under the License.
 
 # import the necessary packages
 
-import os
-import pytest
 import logging as log
+import os
 import platform
 import tempfile
 from os.path import expanduser
 
+import pytest
+
 from vidgear.gears import StreamGear
 from vidgear.gears.helper import logger_handler
+from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg
 
 # define test logger
 logger = log.getLogger("Test_init")
@@ -37,24 +39,7 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
-def return_static_ffmpeg():
-    """
-    returns system specific FFmpeg static path
-    """
-    path = ""
-    if platform.system() == "Windows":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe"
-        )
-    elif platform.system() == "Darwin":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg"
-        )
-    else:
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/ffmpeg"
-        )
-    return os.path.abspath(path)
+
 
 
 @pytest.mark.xfail(raises=RuntimeError)
@@ -63,7 +48,7 @@ def test_custom_ffmpeg(c_ffmpeg):
     """
     Testing custom FFmpeg for StreamGear
     """
-    streamer = StreamGear(output="output.mpd", custom_ffmpeg=c_ffmpeg, logging=True)
+    streamer = StreamGear(output=os.path.join(get_testing_dir(), "output.mpd"), custom_ffmpeg=c_ffmpeg, logging=True)
     streamer.close()
 
 
@@ -73,33 +58,34 @@ def test_formats(format):
     """
     Testing different formats for StreamGear
     """
-    streamer = StreamGear(output="output.mpd", format=format, logging=True)
+    streamer = StreamGear(output=os.path.join(get_testing_dir(), "output.mpd"), format=format, logging=True)
     streamer.close()
 
 
 @pytest.mark.parametrize(
     "output",
-    [None, "output.mpd", "output.m3u8"],
+    [None, os.path.join(get_testing_dir(), "output.mpd"), os.path.join(get_testing_dir(), "output.m3u8")],
 )
 def test_outputs(output):
     """
     Testing different output for StreamGear
     """
+    _m3u8 = os.path.join(get_testing_dir(), "output.m3u8")
     stream_params = (
         {"-clear_prev_assets": True}
-        if (output and output == "output.mpd")
+        if (output and not output.endswith("m3u8"))
         else {"-clear_prev_assets": "invalid"}
     )
     try:
         streamer = StreamGear(
             output=output,
-            format="hls" if output == "output.m3u8" else "dash",
+            format="hls" if output == _m3u8 else "dash",
             logging=True,
             **stream_params
         )
         streamer.close()
     except Exception as e:
-        if output is None or output.endswith("m3u8"):
+        if output is None or (isinstance(output, str) and output.endswith("m3u8")):
             pytest.xfail(str(e))
         else:
             pytest.fail(str(e))

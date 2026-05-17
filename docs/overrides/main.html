@@ -20,10 +20,10 @@
 
 {% block announce %}
 <!-- Add announcement here, including arbitrary HTML -->
-<b><span class="twemoji"> {% include ".icons/fontawesome/solid/bullhorn.svg" %} </span> We're excited to announce our
-  new <a href="https://abhitronix.github.io/deffcode" style="color: yellow; text-decoration: none;">Deffcode</a>
-  library,
-  which will be integrated with VidGear soon. We value your feedback and would love to hear your thoughts!</b>
+{% set announcement_link = config.site_url ~ '/gears/ffgear/' %}
+{% set announcement_link2 = config.site_url ~ '/gears/ffgear/usage/' %}
+<b>Introducing <a href="{{ announcement_link }}" style="color: yellow; text-decoration: none;">FFGear</a> —
+  VidGear's new hardware-accelerated, <span class="twemoji"> {% include ".icons/simple/ffmpeg.svg" %} </span> FFmpeg-powered VideoCapture API with GPU decoding, live filtergraphs &amp; per-frame metadata. <a href="{{ announcement_link2 }}" style="color: yellow; text-decoration: underline;"><span class="twemoji"> {% include ".icons/fontawesome/solid/fire-flame-curved.svg" %} </span></a></b>
 {% endblock %}
 
 {% block outdated %}

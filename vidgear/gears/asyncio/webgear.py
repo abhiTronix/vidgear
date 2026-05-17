@@ -19,40 +19,44 @@ limitations under the License.
 """
 
 # import the necessary packages
-import os
 import asyncio
-import inspect
 import contextlib
-import numpy as np
+import inspect
 import logging as log
+import os
+import warnings
 from os.path import expanduser
-from typing import Any, Tuple, Union
+from typing import Any
 
-# import helper packages
-from .helper import (
-    reducer,
-    generate_webdata,
-    create_blank_frame,
-)
+import numpy as np
+
 from ..helper import (
-    logger_handler,
-    retrieve_best_interpolation,
+    Backend,
     import_dependency_safe,
     logcurr_vidgear_ver,
+    logger_handler,
+    retrieve_best_interpolation,
 )
 
 # import additional API(s)
 from ..videogear import VideoGear
 
+# import helper packages
+from .helper import (
+    create_blank_frame,
+    generate_webdata,
+    reducer,
+)
+
 # safe import critical Class modules
 starlette = import_dependency_safe("starlette", error="silent")
-if not (starlette is None):
-    from starlette.routing import Mount, Route
-    from starlette.responses import StreamingResponse, JSONResponse
-    from starlette.templating import Jinja2Templates
-    from starlette.staticfiles import StaticFiles
+if starlette is not None:
     from starlette.applications import Starlette
     from starlette.middleware import Middleware
+    from starlette.responses import JSONResponse, StreamingResponse
+    from starlette.routing import Mount, Route
+    from starlette.staticfiles import StaticFiles
+    from starlette.templating import Jinja2Templates
 simplejpeg = import_dependency_safe("simplejpeg", error="silent", min_version="1.6.1")
 
 # define logger
@@ -80,41 +84,70 @@ class WebGear:
 
     def __init__(
         self,
-        enablePiCamera: bool = False,
+        # VideoGear parameters
+        api: Backend = Backend.CAMGEAR,
         stabilize: bool = False,
-        source: Any = None,
+        # PiGear parameters
         camera_num: int = 0,
+        resolution: tuple[int, int] = (640, 480),
+        framerate: int | float = 25,
+        # CamGear/FFGear parameters
+        source: Any = None,
         stream_mode: bool = False,
         backend: int = 0,
-        colorspace: str = None,
-        resolution: Tuple[int, int] = (640, 480),
-        framerate: Union[int, float] = 25,
+        # FFGear parameters
+        source_demuxer: str | None = None,
+        frame_format: str = "bgr24",
+        custom_ffmpeg: str = "",
+        # common parameters
+        colorspace: str | None = None,
         logging: bool = False,
         time_delay: int = 0,
+        # deprecated
+        enablePiCamera: bool | None = None,
         **options: dict
     ):
         """
         This constructor method initializes the object state and attributes of the WebGear class.
 
         Parameters:
-            enablePiCamera (bool): provide access to PiGear(if True) or CamGear(if False) APIs respectively.
+            api (Backend): selects the capture backend. Accepted values are `Backend.CAMGEAR` _(default)_,
+                `Backend.PIGEAR`, and `Backend.FFGEAR`. Raises `TypeError` if an invalid value is given.
             stabilize (bool): enable access to Stabilizer Class for stabilizing frames.
-            camera_num (int): selects the camera module index which will be used as Rpi source.
-            resolution (tuple): sets the resolution (i.e. `(width,height)`) of the Rpi source.
-            framerate (int/float): sets the framerate of the Rpi source.
-            source (based on input): defines the source for the input stream.
-            stream_mode (bool): controls the exclusive YouTube Mode.
-            backend (int): selects the backend for OpenCV's VideoCapture class.
-            colorspace (str): selects the colorspace of the input stream.
-            logging (bool): enables/disables logging.
-            time_delay (int): time delay (in sec) before start reading the frames.
-            options (dict): provides ability to alter Tweak Parameters of WebGear, CamGear, PiGear & Stabilizer.
+            camera_num (int): [PiGear only] selects the camera module index. Must be `>= 0`.
+            resolution (tuple): [PiGear only] sets `(width, height)` of the source. Default: `(640, 480)`.
+            framerate (int/float): [PiGear only] sets the framerate of the source. Default: `25`.
+            source (Any): [CamGear/FFGear] defines the source for the input stream (device index,
+                filepath, network URL, or image-sequence glob). Default: `None`.
+            stream_mode (bool): [CamGear/FFGear] enables Stream-Mode for `yt_dlp`-backed streaming URLs.
+            backend (int): [CamGear only] selects the OpenCV VideoCapture backend (e.g. `cv2.CAP_DSHOW`).
+            source_demuxer (str): [FFGear only] specifies the FFmpeg demuxer for the source
+                (e.g. `"v4l2"`, `"dshow"`, `"avfoundation"`). Default: `None` (auto-detect).
+            frame_format (str): [FFGear only] specifies the pixel layout for decoded frames
+                (any FFmpeg-supported pix_fmt, e.g. `"bgr24"`, `"gray"`, `"yuv420p"`). Default: `"bgr24"`.
+            custom_ffmpeg (str): [FFGear only] path to a custom FFmpeg executable. Default: `""` (use PATH).
+            colorspace (str): [CamGear/PiGear only] selects the colorspace of the input stream.
+            logging (bool): enables/disables logging. Default: `False`.
+            time_delay (int): [CamGear/PiGear only] time delay (in seconds) before reading frames.
+            enablePiCamera (bool): **DEPRECATED** — use `api=Backend.PIGEAR` instead. Will be removed
+                in a future release.
+            options (dict): additional tweak parameters forwarded to the selected backend gear
+                and/or WebGear and the Stabilizer class.
         """
         # enable logging if specified
         self.__logging = logging if isinstance(logging, bool) else False
 
         # print current version
         logcurr_vidgear_ver(logging=self.__logging)
+
+        # handle deprecated `enablePiCamera`
+        if enablePiCamera is not None:
+            warnings.warn(
+                "`enablePiCamera` is deprecated in WebGear; use `api=Backend.PIGEAR` instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            api = Backend.PIGEAR if enablePiCamera else Backend.CAMGEAR
 
         # raise error(s) for critical Class imports
         import_dependency_safe("starlette" if starlette is None else "")
@@ -336,12 +369,15 @@ class WebGear:
         else:
             # define stream with necessary params
             self.__stream = VideoGear(
-                enablePiCamera=enablePiCamera,
+                api=api,
                 stabilize=stabilize,
                 source=source,
                 camera_num=camera_num,
                 stream_mode=stream_mode,
                 backend=backend,
+                source_demuxer=source_demuxer,
+                frame_format=frame_format,
+                custom_ffmpeg=custom_ffmpeg,
                 colorspace=colorspace,
                 resolution=resolution,
                 framerate=framerate,
@@ -384,14 +420,14 @@ class WebGear:
         Implements a custom Callable method for WebGear application.
         """
         # validate routing tables
-        assert not (self.routes is None), "Routing tables are NoneType!"
+        assert self.routes is not None, "Routing tables are NoneType!"
         if not isinstance(self.routes, list) or not all(
             x in self.routes for x in self.__rt_org_copy
         ):
             raise RuntimeError("[WebGear:ERROR] :: Routing tables are not valid!")
 
         # validate middlewares
-        assert not (self.middleware is None), "Middlewares are NoneType!"
+        assert self.middleware is not None, "Middlewares are NoneType!"
         if self.middleware and (
             not isinstance(self.middleware, list)
             or not all(isinstance(x, Middleware) for x in self.middleware)
@@ -414,12 +450,12 @@ class WebGear:
 
         # initiate stream
         self.__logging and logger.debug("Initiating Video Streaming.")
-        if not (self.__stream is None):
+        if self.__stream is not None:
             self.__stream.start()
         # return Starlette application
         self.__logging and logger.debug("Running Starlette application.")
         return Starlette(
-            debug=(True if self.__logging else False),
+            debug=(bool(self.__logging)),
             routes=self.routes,
             middleware=self.middleware,
             exception_handlers=self.__exception_handlers,
@@ -559,7 +595,7 @@ class WebGear:
         """
         Implements a Callable to be run on application shutdown
         """
-        if not (self.__stream is None):
+        if self.__stream is not None:
             self.__logging and logger.debug("Closing Video Streaming.")
             # stops producer
             self.__isrunning = False

@@ -20,43 +20,51 @@ limitations under the License.
 
 # import the necessary packages
 
+import logging as log
 import os
+import platform
+import shutil
+import tempfile
+from os.path import expanduser
+
 import cv2
 import numpy as np
 import pytest
-import shutil
-import logging as log
-import platform
 import requests
-import tempfile
-from os.path import expanduser
 from mpegdash.parser import MPEGDASHParser
 
+from vidgear.gears.asyncio.helper import generate_webdata, validate_webdata
 from vidgear.gears.helper import (
-    reducer,
-    dict2Args,
-    mkdir_safe,
-    delete_ext_safe,
+    Backend,
+    check_gstreamer_support,
     check_output,
-    extract_time,
     create_blank_frame,
+    delete_ext_safe,
+    delete_file_safe,
+    dict2Args,
+    dimensions_to_resolutions,
+    download_ffmpeg_binaries,
+    extract_time,
+    generate_auth_certificates,
+    get_supported_demuxers,
+    get_supported_resolution,
+    get_valid_ffmpeg_path,
+    get_video_bitrate,
+    import_dependency_safe,
     is_valid_url,
     logger_handler,
-    delete_file_safe,
-    validate_audio,
-    validate_video,
-    validate_ffmpeg,
-    get_video_bitrate,
-    get_valid_ffmpeg_path,
-    import_dependency_safe,
-    download_ffmpeg_binaries,
-    check_gstreamer_support,
-    generate_auth_certificates,
-    get_supported_resolution,
-    dimensions_to_resolutions,
+    mkdir_safe,
+    reducer,
     retrieve_best_interpolation,
+    validate_audio,
+    validate_ffmpeg,
+    validate_video,
 )
-from vidgear.gears.asyncio.helper import generate_webdata, validate_webdata
+from vidgear.tests.utils.helpers import (
+    get_testing_dir,
+    return_static_ffmpeg,
+    return_testvideo_path,
+)
 
 # define test logger
 logger = log.getLogger("Test_helper")
@@ -66,43 +74,7 @@ logger.setLevel(log.DEBUG)
 
 
 # define machine os
-_windows = True if os.name == "nt" else False
-
-
-def return_static_ffmpeg():
-    """
-    returns system specific FFmpeg static path
-    """
-    path = ""
-    if platform.system() == "Windows":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe"
-        )
-    elif platform.system() == "Darwin":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg"
-        )
-    else:
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/ffmpeg"
-        )
-    return os.path.abspath(path)
-
-
-def return_testvideo_path(fmt="av"):
-    """
-    returns Test video path
-    """
-    supported_fmts = {
-        "av": "BigBuckBunny_4sec.mp4",
-        "vo": "BigBuckBunny_4sec_VO.mp4",
-        "ao": "BigBuckBunny_4sec_AO.mp4",
-    }
-    req_fmt = fmt if (fmt in supported_fmts) else "av"
-    path = "{}/Downloads/Test_videos/{}".format(
-        tempfile.gettempdir(), supported_fmts[req_fmt]
-    )
-    return os.path.abspath(path)
+_windows = os.name == "nt"
 
 
 def check_valid_mpd(file="", exp_reps=1):
@@ -121,7 +93,7 @@ def check_valid_mpd(file="", exp_reps=1):
     except Exception as e:
         logger.error(str(e))
         return False
-    return True if (len(all_reprs) >= exp_reps) else False
+    return len(all_reprs) >= exp_reps
 
 
 def getframe():
@@ -194,11 +166,11 @@ def test_dict2Args(dictionary):
 
 test_data = [
     (
-        os.path.join(tempfile.gettempdir(), "temp_ffmpeg"),
+        os.path.join(get_testing_dir(), "temp_ffmpeg"),
         "win32" if _windows else "",
     ),
     (
-        os.path.join(tempfile.gettempdir(), "temp_ffmpeg"),
+        os.path.join(get_testing_dir(), "temp_ffmpeg"),
         "win64" if _windows else "",
     ),
     ("wrong_test_path", "wrong_bit"),
@@ -246,7 +218,7 @@ test_data = [
     ("", "", True),
     ("wrong_test_path", "", False),
     ("", "wrong_test_path", False),
-    ("", os.path.join(tempfile.gettempdir(), "temp_ffmpeg"), True),
+    ("", os.path.join(get_testing_dir(), "temp_ffmpeg"), True),
     (return_static_ffmpeg(), "", True),
     (os.path.dirname(return_static_ffmpeg()), "", True),
 ]
@@ -276,7 +248,7 @@ def test_get_valid_ffmpeg_path(paths, ffmpeg_download_paths, results):
         if paths == "wrong_test_path" or ffmpeg_download_paths == "wrong_test_path":
             pass
         elif isinstance(e, requests.exceptions.Timeout):
-            logger.exceptions(str(e))
+            logger.error(str(e))
         else:
             pytest.fail(str(e))
 
@@ -284,8 +256,8 @@ def test_get_valid_ffmpeg_path(paths, ffmpeg_download_paths, results):
 test_data = [
     (os.path.join(expanduser("~"), ".vidgear"), False, True),
     ("test_folder", False, True),
-    (os.path.join(tempfile.gettempdir(), "temp_ffmpeg"), False, True),
-    (os.path.join(tempfile.gettempdir(), "temp_ffmpeg"), True, True),
+    (os.path.join(get_testing_dir(), "temp_ffmpeg"), False, True),
+    (os.path.join(get_testing_dir(), "temp_ffmpeg"), True, True),
 ]
 
 
@@ -326,7 +298,7 @@ def test_generate_webdata(paths, overwrite_default, results):
         assert bool(output) == results
     except Exception as e:
         if isinstance(e, requests.exceptions.Timeout):
-            logger.exceptions(str(e))
+            logger.error(str(e))
         else:
             pytest.fail(str(e))
 
@@ -365,12 +337,12 @@ def test_reducer(frame, percentage, interpolation, result):
     """
     Testing frame size reducer function
     """
-    if not (frame is None):
+    if frame is not None:
         org_size = frame.shape[:2]
     try:
         reduced_frame = reducer(frame, percentage, interpolation)
         logger.debug(reduced_frame.shape)
-        assert not (reduced_frame is None)
+        assert reduced_frame is not None
         reduced_frame_size = reduced_frame.shape[:2]
         assert (
             100 * reduced_frame_size[0] // (100 - percentage) == org_size[0]
@@ -408,6 +380,7 @@ def test_is_valid_url(URL, result):
     "path, result",
     [
         (return_testvideo_path(), True),
+        ("https://gitlab.com/abhiTronix/Imbakup/-/raw/master/Images/input.mp4", True),
         (None, False),
     ],
 )
@@ -416,9 +389,11 @@ def test_validate_video(path, result):
     Testing validate_video function
     """
     try:
-        results = validate_video(return_static_ffmpeg(), video_path=path)
+        # Use static ffmpeg if not on Linux
+        ffmpeg_path = "ffmpeg" if platform.system() == "Linux" else return_static_ffmpeg()
+        results = validate_video(ffmpeg_path, video_path=path)
         if result:
-            assert not (results is None), "Video path validity test Failed!"
+            assert results is not None, "Video path validity test Failed!"
     except Exception as e:
         pytest.fail(str(e))
 
@@ -444,6 +419,63 @@ def test_validate_audio(path, result):
 
 
 @pytest.mark.parametrize(
+    "audio_line, expected_suffix",
+    [
+        # std le/be: regex hit
+        (b"Stream #0:1: Audio: pcm_s16le, 44100 Hz, stereo, s16, 1411 kb/s", "k"),
+        # planar float fltp: fallback → 32
+        (b"Stream #0:1: Audio: aac, 48000 Hz, stereo, fltp", "k"),
+        # planar s16p: fallback → 16
+        (b"Stream #0:1: Audio: mp3, 22050 Hz, mono, s16p", "k"),
+        # planar u8p: fallback → 8
+        (b"Stream #0:1: Audio: pcm_u8, 8000 Hz, mono, u8p", "k"),
+        # unknown fmt no digits: no bit_depth → ""
+        (b"Stream #0:1: Audio: foo, 48000 Hz, stereo, xyz", ""),
+    ],
+)
+def test_validate_audio_bit_depth_fallback(audio_line, expected_suffix, monkeypatch):
+    """
+    Test bit_depth fallback for planar/non-le-be sample formats.
+    Regression: re.findall(...)[0][1] used to IndexError on fltp/s16p.
+    """
+    from vidgear.gears import helper as _helper
+
+    def fake_check_output(*args, **kwargs):
+        return b"Input #0, foo, from 'x':\n  " + audio_line + b"\n"
+
+    monkeypatch.setattr(_helper, "check_output", fake_check_output)
+    out = _helper.validate_audio("ffmpeg", source="dummy")
+    if expected_suffix:
+        assert out.endswith(expected_suffix) and out[:-1].isdigit(), (
+            f"bit_depth fallback failed: got {out!r}"
+        )
+    else:
+        assert out == "", f"expected empty on unparseable fmt, got {out!r}"
+
+
+def test_get_supported_demuxers_flattens_aliases(monkeypatch):
+    """
+    Regression: comma-separated demuxer aliases (e.g. "matroska,webm",
+    "mov,mp4,m4a,3gp,3g2,mj2") were collapsed to last alias only.
+    """
+    from vidgear.gears import helper as _helper
+
+    fake = (
+        b"Demuxers:\n"
+        b" D. = Demuxing supported\n"
+        b" --\n"
+        b" D  matroska,webm    Matroska / WebM\n"
+        b" D  mov,mp4,m4a,3gp,3g2,mj2  QuickTime / MOV\n"
+        b" D  rtsp             RTSP input\n"
+        b"\n"
+    )
+    monkeypatch.setattr(_helper, "check_output", lambda *a, **k: fake)
+    out = get_supported_demuxers("ffmpeg")
+    for alias in ("matroska", "webm", "mov", "mp4", "m4a", "3gp", "3g2", "mj2", "rtsp"):
+        assert alias in out, f"missing alias {alias!r} in {out!r}"
+
+
+@pytest.mark.parametrize(
     "frame , text",
     [
         (getframe(), "ok"),
@@ -459,9 +491,9 @@ def test_create_blank_frame(frame, text):
     try:
         text_frame = create_blank_frame(frame=frame, text=text, logging=True)
         logger.debug(text_frame.shape)
-        assert not (text_frame is None)
+        assert text_frame is not None
     except Exception as e:
-        if not (frame is None):
+        if frame is not None:
             pytest.fail(str(e))
 
 
@@ -608,3 +640,27 @@ def test_delete_file_safe():
         delete_file_safe(os.path.join(expanduser("~"), "invalid"))
     except Exception as e:
         pytest.fail(str(e))
+
+
+def test_backend_enum_members():
+    """
+    All three Backend members must exist with the expected string values.
+    """
+    assert Backend.CAMGEAR.value == "camgear"
+    assert Backend.PIGEAR.value == "pigear"
+    assert Backend.FFGEAR.value == "ffgear"
+
+
+def test_backend_enum_completeness():
+    """
+    Backend enum must contain exactly three members — catches accidental deletions.
+    """
+    assert set(Backend) == {Backend.CAMGEAR, Backend.PIGEAR, Backend.FFGEAR}
+
+
+@pytest.mark.parametrize("member", list(Backend))
+def test_backend_enum_is_enum(member):
+    """
+    Every Backend member must be an instance of Backend.
+    """
+    assert isinstance(member, Backend)

@@ -20,16 +20,18 @@ limitations under the License.
 
 # import the necessary packages
 
-import os
-import cv2
-import pytest
 import logging as log
+import os
 import platform
 import tempfile
 
+import cv2
+import pytest
 from six import string_types
+
 from vidgear.gears import WriteGear
 from vidgear.gears.helper import capPropId, check_output, logger_handler
+from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg, return_testvideo_path
 
 # define test logger
 logger = log.getLogger("Test_non_commpression_mode")
@@ -39,37 +41,10 @@ logger.setLevel(log.DEBUG)
 
 
 # define machine os
-_windows = True if os.name == "nt" else False
+_windows = (os.name == "nt")
 
 
-def return_static_ffmpeg():
-    """
-    returns system specific FFmpeg static path
-    """
-    path = ""
-    if platform.system() == "Windows":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe"
-        )
-    elif platform.system() == "Darwin":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg"
-        )
-    else:
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/ffmpeg"
-        )
-    return os.path.abspath(path)
 
-
-def return_testvideo_path():
-    """
-    returns Test Video path
-    """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
-    )
-    return os.path.abspath(path)
 
 
 def remove_file_safe(path):
@@ -90,7 +65,8 @@ def test_write(conversion):
     Testing VidGear Non-Compression(OpenCV) Mode Writer
     """
     stream = cv2.VideoCapture(return_testvideo_path())
-    writer = WriteGear(output="Output_twc.avi", compression_mode=False)  # Define writer
+    output_path = os.path.join(get_testing_dir(), "Output_twc.avi")
+    writer = WriteGear(output=output_path, compression_mode=False)  # Define writer
     while True:
         (grabbed, frame) = stream.read()
         # read frames
@@ -114,7 +90,7 @@ def test_write(conversion):
             "error",
             "-count_frames",
             "-i",
-            os.path.abspath("Output_twc.avi"),
+            output_path,
         ]
     )
     if result:
@@ -122,15 +98,15 @@ def test_write(conversion):
             result = result.decode()
         logger.debug("Result: {}".format(result))
         for i in ["Error", "Invalid", "error", "invalid"]:
-            assert not (i in result)
-    remove_file_safe("Output_twc.avi")
+            assert i not in result
+    remove_file_safe(output_path)
 
 
 test_data_class = [
     ("", {"-gst_pipeline_mode": "invalid"}, False),
-    (os.path.join(tempfile.gettempdir(), "temp_write"), {}, True),
+    (os.path.join(get_testing_dir(), "temp_write"), {}, True),
     (
-        "Output_twc.mp4",
+        os.path.join(get_testing_dir(), "Output_twc.mp4"),
         {
             "-fourcc": "DIVX",
             "-fps": 25,
@@ -142,7 +118,7 @@ test_data_class = [
         True,
     ),
     (
-        "Output_twc.avi",
+        os.path.join(get_testing_dir(), "Output_twc.avi"),
         {
             "-fourcc": ["NULL"],
             "-backend": "INVALID",
@@ -158,7 +134,7 @@ test_data_class = [
             if platform.system() == "Linux"
             else {"-gst_pipeline_mode": "invalid"}
         ),
-        True if platform.system() == "Linux" else False,
+        platform.system() == "Linux",
     ),
 ]
 
@@ -181,8 +157,7 @@ def test_WriteGear_compression(f_name, output_params, result):
             stream.release()
         remove_file_safe(
             "foo.html"
-            if "-gst_pipeline_mode" in output_params
-            and output_params["-gst_pipeline_mode"] == True
+            if output_params.get("-gst_pipeline_mode")
             else f_name
         )
     except Exception as e:

@@ -20,19 +20,21 @@ limitations under the License.
 
 # import the necessary packages
 
+import logging as log
 import os
 import platform
 import queue
+import random
+import tempfile
+
 import cv2
 import numpy as np
 import pytest
-import random
-import logging as log
-import tempfile
 from zmq.error import ZMQError
 
 from vidgear.gears import NetGear, VideoGear
 from vidgear.gears.helper import logger_handler
+from vidgear.tests.utils.helpers import get_testing_dir, return_testvideo_path
 
 # define test logger
 logger = log.getLogger("Test_netgear")
@@ -41,17 +43,10 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 # define machine os
-_windows = True if os.name == "nt" else False
+_windows = (os.name == "nt")
 
 
-def return_testvideo_path():
-    """
-    returns Test Video path
-    """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
-    )
-    return os.path.abspath(path)
+
 
 
 @pytest.mark.parametrize("address, port", [("172.31.11.15.77", "5555"), (None, "5555")])
@@ -74,7 +69,7 @@ def test_playback(address, port):
             if not grabbed:
                 break
             server.send(frame_server)  # send
-            frame_client = client.recv()  # recv
+            _ = client.recv()  # recv
     except Exception as e:
         if (
             isinstance(e, (ZMQError, ValueError, RuntimeError))
@@ -85,9 +80,9 @@ def test_playback(address, port):
             pytest.fail(str(e))
     finally:
         # clean resources
-        not (stream is None) and stream.release()
-        not (server is None) and server.close()
-        not (client is None) and client.close()
+        stream is not None and stream.release()
+        server is not None and server.close()
+        client is not None and client.close()
 
 
 @pytest.mark.parametrize("receive_mode", [True, False])
@@ -107,7 +102,7 @@ def test_primary_mode(receive_mode):
         if receive_mode:
             conn.send(frame)
         else:
-            frame_client = conn.recv()
+            conn.recv()
     except Exception as e:
         if isinstance(e, ValueError):
             pytest.xfail("Test Passed!")
@@ -117,8 +112,8 @@ def test_primary_mode(receive_mode):
             pytest.fail(str(e))
     finally:
         # clean resources
-        not (stream is None) and stream.stop()
-        not (conn is None) and conn.close()
+        stream is not None and stream.stop()
+        conn is not None and conn.close()
 
 
 @pytest.mark.parametrize(
@@ -150,10 +145,10 @@ def test_patterns(pattern):
         i = 0
         random_cutoff = random.randint(10, 100)
         while i < random_cutoff:
-            (grabbed, frame_server) = stream.read()
+            (_, frame_server) = stream.read()
             i += 1
         # check if input frame is valid
-        assert not (frame_server is None)
+        assert frame_server is not None
         # send frame over network
         server.send(frame_server)
         frame_client = client.recv(return_data=[1, 2, 3] if pattern == 2 else None)
@@ -166,9 +161,9 @@ def test_patterns(pattern):
             pytest.fail(str(e))
     finally:
         # clean resources
-        not (stream is None) and stream.release()
-        not (server is None) and server.close(kill=True)
-        not (client is None) and client.close(kill=True)
+        stream is not None and stream.release()
+        server is not None and server.close(kill=True)
+        client is not None and client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -235,13 +230,13 @@ def test_compression(options_server):
             pytest.fail(str(e))
     finally:
         # clean resources
-        not (stream is None) and stream.stop()
-        not (server is None) and server.close(kill=True)
-        not (client is None) and client.close(kill=True)
+        stream is not None and stream.stop()
+        server is not None and server.close(kill=True)
+        client is not None and client.close(kill=True)
 
 
 test_data_class = [
-    (1, 1, tempfile.gettempdir(), True),
+    (1, 1, get_testing_dir(), True),
     (1, 2, ["invalid"], True),
     (
         1,
@@ -290,10 +285,10 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
         # select random input frame from stream
         i = 0
         while i < random.randint(10, 100):
-            (grabbed, frame_server) = stream.read()
+            (_, frame_server) = stream.read()
             i += 1
         # check input frame is valid
-        assert not (frame_server is None)
+        assert frame_server is not None
         # send and recv input frame
         server.send(frame_server)
         frame_client = client.recv()
@@ -306,9 +301,9 @@ def test_secure_mode(pattern, security_mech, custom_cert_location, overwrite_cer
             pytest.fail(str(e))
     finally:
         # clean resources
-        not (stream is None) and stream.release()
-        not (server is None) and server.close(kill=True)
-        not (client is None) and client.close(kill=True)
+        stream is not None and stream.release()
+        server is not None and server.close(kill=True)
+        client is not None and client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -392,11 +387,11 @@ def test_bidirectional_mode(pattern, target_data, options):
             # server receives the data and cycle continues
             client_data = server.send(target_data)
             # test if received successfully
-            assert not (client_data is None), "Test Failed!"
+            assert client_data is not None, "Test Failed!"
         else:
             # get frame from stream
             frame_server = stream.read()
-            assert not (frame_server is None)
+            assert frame_server is not None
             # sent frame and data from server to client
             server.send(frame_server, message=target_data)
             # client receives the data and frame and send its data
@@ -404,7 +399,7 @@ def test_bidirectional_mode(pattern, target_data, options):
             # server receives the data and cycle continues
             client_data = server.send(frame_server, message=target_data)
             # check if received frame exactly matches input frame
-            if not options["jpeg_compression"] in [True, "GRAY", ["invalid"]]:
+            if options["jpeg_compression"] not in [True, "GRAY", ["invalid"]]:
                 assert np.array_equal(frame_server, frame_client)
             # logger.debug data received at client-end and server-end
             logger.debug("Data received at Server-end: {}".format(server_data))
@@ -417,9 +412,9 @@ def test_bidirectional_mode(pattern, target_data, options):
             pytest.fail(str(e))
     finally:
         # clean resources
-        not (stream is None) and stream.stop()
-        not (server is None) and server.close(kill=True)
-        not (client is None) and client.close(kill=True)
+        stream is not None and stream.stop()
+        server is not None and server.close(kill=True)
+        client is not None and client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -495,10 +490,10 @@ def test_multiserver_mode(pattern, options):
         )  # at port `5558`
         i = 0
         while i < random.randint(10, 100):
-            (grabbed, frame_server) = stream.read()
+            (_, frame_server) = stream.read()
             i += 1
         # check if input frame is valid
-        assert not (frame_server is None)
+        assert frame_server is not None
 
         # send frame from Server-1 to client and save it in dict
         server_1.send(frame_server)
@@ -526,7 +521,7 @@ def test_multiserver_mode(pattern, options):
         client_frame_dict[unique_address] = frame
 
         # check if received frames from each unique server exactly matches input frame
-        for key in client_frame_dict.keys():
+        for key in client_frame_dict:
             assert np.array_equal(frame_server, client_frame_dict[key])
 
     except Exception as e:
@@ -536,11 +531,11 @@ def test_multiserver_mode(pattern, options):
             pytest.fail(str(e))
     finally:
         # clean resources
-        not (stream is None) and stream.release()
-        not (server_1 is None) and server_1.close(kill=True)
-        not (server_2 is None) and server_2.close(kill=True)
-        not (server_3 is None) and server_3.close(kill=True)
-        not (client is None) and client.close(kill=True)
+        stream is not None and stream.release()
+        server_1 is not None and server_1.close(kill=True)
+        server_2 is not None and server_2.close(kill=True)
+        server_3 is not None and server_3.close(kill=True)
+        client is not None and client.close(kill=True)
 
 
 @pytest.mark.parametrize("pattern", [0, 1])
@@ -585,7 +580,7 @@ def test_multiclient_mode(pattern):
             frame_client = stream.read()
             i += 1
         # check if input frame is valid
-        assert not (frame_client is None)
+        assert frame_client is not None
 
         # send frame from 1 server to multiple clients
         server.send(
@@ -616,11 +611,11 @@ def test_multiclient_mode(pattern):
             pytest.fail(str(e))
     finally:
         # clean resources
-        not (stream is None) and stream.stop()
-        not (server is None) and server.close(kill=True)
-        not (client_1 is None) and client_1.close(kill=True)
-        not (client_2 is None) and client_2.close(kill=True)
-        not (client_3 is None) and client_3.close(kill=True)
+        stream is not None and stream.stop()
+        server is not None and server.close(kill=True)
+        client_1 is not None and client_1.close(kill=True)
+        client_2 is not None and client_2.close(kill=True)
+        client_3 is not None and client_3.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -649,8 +644,8 @@ def test_client_reliability(options):
     try:
         # define params
         client = NetGear(
-            pattern=2 if "subscriber_timeout" in options.keys() else 1,
-            port=[5587] if "multiserver_mode" in options.keys() else 6657,
+            pattern=2 if "subscriber_timeout" in options else 1,
+            port=[5587] if "multiserver_mode" in options else 6657,
             receive_mode=True,
             logging=True,
             **options
@@ -667,7 +662,7 @@ def test_client_reliability(options):
             logger.exception(str(e))
     finally:
         # clean resources
-        not (client is None) and client.close(kill=True)
+        client is not None and client.close(kill=True)
 
 
 @pytest.mark.parametrize(
@@ -707,17 +702,17 @@ def test_server_reliability(options):
         server = NetGear(
             address="127.0.0.1" if "ssh_tunnel_mode" in options else None,
             pattern=1,
-            port=[5585] if "multiclient_mode" in options.keys() else 6654,
+            port=[5585] if "multiclient_mode" in options else 6654,
             logging=True,
             **options
         )
         stream = cv2.VideoCapture(return_testvideo_path())
         i = 0
         while i < random.randint(10, 100):
-            (grabbed, frame_client) = stream.read()
+            (_, frame_client) = stream.read()
             i += 1
         # check if input frame is valid
-        assert not (frame_client is None)
+        assert frame_client is not None
         # send frame without connection
         server.send(frame_client)
         server.send(frame_client)
@@ -728,8 +723,8 @@ def test_server_reliability(options):
             logger.exception(str(e))
     finally:
         # clean resources
-        not (stream is None) and stream.release()
-        not (server is None) and server.close(kill=True)
+        stream is not None and stream.release()
+        server is not None and server.close(kill=True)
 
 
 @pytest.mark.parametrize(

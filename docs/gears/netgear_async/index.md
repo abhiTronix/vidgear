@@ -34,7 +34,7 @@ NetGear_Async provides complete server-client handling and options to use variab
 
 NetGear_Async now supports additional [**bidirectional data transmission**](advanced/bidirectional_mode) between receiver(client) and sender(server) while transferring frames. Users can easily build complex applications such as like [Real-Time Video Chat](advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer) in just few lines of code.
 
-In addition to all this, NetGear_Async API also provides internal wrapper around [VideoGear](../videogear/), which itself provides internal access to both [CamGear](../camgear/) and [PiGear](../pigear/) APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
+In addition to all this, NetGear_Async API also provides internal wrapper around [VideoGear](../videogear/), which itself provides internal access to [CamGear](../camgear/), [PiGear](../pigear/), and [FFGear](../ffgear/) APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
 
 NetGear_Async as of now supports four ZeroMQ messaging patterns:
 

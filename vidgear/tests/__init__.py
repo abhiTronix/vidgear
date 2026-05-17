@@ -1,5 +1,6 @@
 # Faking
 import sys
+
 from .utils import fake_picamera
 
 sys.modules["picamera"] = fake_picamera.picamera

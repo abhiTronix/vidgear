@@ -20,18 +20,21 @@ limitations under the License.
 
 # import the necessary packages
 
+import logging as log
 import os
+import platform
 import re
+import subprocess
+import tempfile
+
 import cv2
 import pytest
-import logging as log
-import platform
-import tempfile
-import subprocess
-from six import string_types
 from deffcode import FFdecoder
+from six import string_types
+
 from vidgear.gears import WriteGear
 from vidgear.gears.helper import check_output, logger_handler
+from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg, return_testvideo_path
 
 # define test logger
 logger = log.getLogger("Test_commpression_mode")
@@ -41,43 +44,10 @@ logger.setLevel(log.DEBUG)
 
 
 # define machine os
-_windows = True if os.name == "nt" else False
+_windows = os.name == "nt"
 
 
-def return_static_ffmpeg():
-    """
-    returns system specific FFmpeg static path
-    """
-    path = ""
-    if platform.system() == "Windows":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe"
-        )
-    elif platform.system() == "Darwin":
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg"
-        )
-    else:
-        path += os.path.join(
-            tempfile.gettempdir(), "Downloads/FFmpeg_static/ffmpeg/ffmpeg"
-        )
-    return os.path.abspath(path)
 
-
-def return_testvideo_path(fmt="av"):
-    """
-    returns Test video path
-    """
-    supported_fmts = {
-        "av": "BigBuckBunny_4sec.mp4",
-        "vo": "BigBuckBunny_4sec_VO.mp4",
-        "ao": "BigBuckBunny_4sec_AO.mp4",
-    }
-    req_fmt = fmt if (fmt in supported_fmts) else "av"
-    path = "{}/Downloads/Test_videos/{}".format(
-        tempfile.gettempdir(), supported_fmts[req_fmt]
-    )
-    return os.path.abspath(path)
 
 
 def remove_file_safe(path):
@@ -111,9 +81,10 @@ def test_download_ffmpeg():
     Auxilary test to simply delete old ffmpeg binaries.
     """
     try:
-        import glob, shutil
+        import glob
+        import shutil
 
-        found = glob.glob(os.path.join(tempfile.gettempdir(), "ffmpeg-static*"))
+        found = glob.glob(os.path.join(get_testing_dir(), "ffmpeg-static*"))
         if found and os.path.isdir(found[0]):
             shutil.rmtree(found[0])
     except Exception as e:
@@ -134,8 +105,9 @@ def test_input_framerate(c_ffmpeg):
         if (c_ffmpeg != "wrong_path")
         else {"-input_framerate": "wrong_input"}
     )
+    output_path = os.path.join(get_testing_dir(), "Output_tif.mp4")
     writer = WriteGear(
-        output="Output_tif.mp4", custom_ffmpeg=c_ffmpeg, logging=True, **output_params
+        output=output_path, custom_ffmpeg=c_ffmpeg, logging=True, **output_params
     )  # Define writer
     while True:
         (grabbed, frame) = stream.read()
@@ -144,9 +116,9 @@ def test_input_framerate(c_ffmpeg):
         writer.write(frame)
     stream.release()
     writer.close()
-    output_video_framerate = getFrameRate(os.path.abspath("Output_tif.mp4"))
+    output_video_framerate = getFrameRate(output_path)
     assert test_video_framerate == output_video_framerate
-    remove_file_safe("Output_tif.mp4")
+    remove_file_safe(output_path)
 
 
 @pytest.mark.parametrize(
@@ -174,16 +146,17 @@ def test_write(pixfmts):
                 custom_ffmpeg=return_static_ffmpeg(),
             )
             # assign manually pix-format via `metadata` property object {special case}
-            decoder.metadata = dict(output_frames_pixfmt="yuvj422p")
+            decoder.metadata = {"output_frames_pixfmt": "yuvj422p"}
             # formulate decoder
             decoder.formulate()
             output_params = {
                 "-input_pixfmt": "yuvj422p",
             }
+        output_path = os.path.join(get_testing_dir(), "Output_tw.mp4")
         writer = WriteGear(
-            output="Output_tw.mp4",
+            output=output_path,
             custom_ffmpeg=return_static_ffmpeg(),
-            **output_params
+            **output_params,
         )  # Define writer
         # grab RGB24(default) 3D frames from decoder
         for frame in decoder.generateFrame():
@@ -203,7 +176,7 @@ def test_write(pixfmts):
                 "error",
                 "-count_frames",
                 "-i",
-                os.path.abspath("Output_tw.mp4"),
+                output_path,
             ]
         )
         if result:
@@ -215,7 +188,7 @@ def test_write(pixfmts):
     except Exception as e:
         pytest.fail(str(e))
     finally:
-        remove_file_safe("Output_tw.mp4")
+        remove_file_safe(output_path)
 
 
 @pytest.mark.xfail(raises=AssertionError)
@@ -229,16 +202,17 @@ def test_output_dimensions():
     if platform.system() == "Windows":
         output_params = {
             "-output_dimensions": dimensions,
-            "-ffmpeg_download_path": tempfile.gettempdir(),
+            "-ffmpeg_download_path": get_testing_dir(),
             "-disable_ffmpeg_window": True,
         }
     else:
         output_params = {"-output_dimensions": dimensions}
+    output_path = os.path.join(get_testing_dir(), "Output_tod.mp4")
     writer = WriteGear(
-        output="Output_tod.mp4",
+        output=output_path,
         custom_ffmpeg=return_static_ffmpeg(),
         logging=True,
-        **output_params
+        **output_params,
     )  # Define writer
     while True:
         (grabbed, frame) = stream.read()
@@ -248,7 +222,7 @@ def test_output_dimensions():
     stream.release()
     writer.close()
 
-    output = cv2.VideoCapture(os.path.abspath("Output_tod.mp4"))
+    output = cv2.VideoCapture(output_path)
     output_dim = (
         output.get(cv2.CAP_PROP_FRAME_WIDTH),
         output.get(cv2.CAP_PROP_FRAME_HEIGHT),
@@ -256,15 +230,15 @@ def test_output_dimensions():
     assert output_dim[0] == 640 and output_dim[1] == 480
     output.release()
 
-    remove_file_safe("Output_tod.mp4")
+    remove_file_safe(output_path)
 
 
 test_data_class = [
     ("", "", {}, False),
-    ("Output1.mp4", "", {}, True),
-    (os.path.join(tempfile.gettempdir(), "temp_write"), "", {}, True),
+    (os.path.join(get_testing_dir(), "Output1.mp4"), "", {}, True),
+    (os.path.join(get_testing_dir(), "temp_write"), "", {}, True),
     (
-        "Output2.mp4",
+        os.path.join(get_testing_dir(), "Output2.mp4"),
         "",
         {
             "-vcodec": "libx264",
@@ -276,7 +250,7 @@ test_data_class = [
         True,
     ),
     (
-        "Output3.mp4",
+        os.path.join(get_testing_dir(), "Output3.mp4"),
         return_static_ffmpeg(),
         {
             "-c:v": "libx265",
@@ -358,10 +332,10 @@ def test_WriteGear_customFFmpeg(ffmpeg_cmd, logging, output_params):
     try:
         # define writer
         writer = WriteGear(
-            output="Output.mp4",
-            compression_mode=(True if ffmpeg_cmd != ["invalid"] else False),
+            output=os.path.join(get_testing_dir(), "Output.mp4"),
+            compression_mode=(ffmpeg_cmd != ["invalid"]),
             logging=logging,
-            **output_params
+            **output_params,
         )  # Define writer
 
         # execute FFmpeg command
@@ -377,3 +351,37 @@ def test_WriteGear_customFFmpeg(ffmpeg_cmd, logging, output_params):
             pytest.xfail("Test Passed!")
         else:
             logger.exception(str(e))
+
+
+@pytest.mark.parametrize("vcodec_key", ["-vcodec", "-c:v"])
+def test_skip_vcodec(vcodec_key):
+    """
+    Testing `-vcodec`/`-c:v` set to `None` to discard `-vcodec` FFmpeg parameter
+    entirely from the encoding pipeline (e.g. for GIF output, letting FFmpeg
+    auto-select the best available video encoder).
+    """
+    stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
+    output_params = {vcodec_key: None}
+    output_path = os.path.join(get_testing_dir(), "Output_skipv.gif")
+    try:
+        writer = WriteGear(
+            output=output_path,
+            custom_ffmpeg=return_static_ffmpeg(),
+            logging=True,
+            **output_params,
+        )  # Define writer
+        while True:
+            (grabbed, frame) = stream.read()
+            if not grabbed:
+                break
+            writer.write(frame)
+        stream.release()
+        writer.close()
+        # assert output file is created successfully
+        assert (
+            os.path.isfile(output_path) and os.path.getsize(output_path) > 0
+        ), "Output file was not created or is empty!"
+    except Exception as e:
+        pytest.fail(str(e))
+    finally:
+        remove_file_safe(output_path)

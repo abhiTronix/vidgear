@@ -20,15 +20,17 @@ limitations under the License.
 
 # import the necessary packages
 
-import os
-import sys
-import pytest
-import platform
 import logging as log
-import tempfile
+import os
+import platform
+import sys
+
+import pytest
 
 from vidgear.gears import VideoGear
-from vidgear.gears.helper import logger_handler
+from vidgear.gears.helper import Backend, logger_handler
+from vidgear.gears.stabilizer import StabilizerMode
+from vidgear.tests.utils.helpers import return_testvideo_path
 
 # define test logger
 logger = log.getLogger("Test_videogear")
@@ -38,23 +40,15 @@ logger.setLevel(log.DEBUG)
 
 
 # define machine os
-_windows = True if os.name == "nt" else False
+_windows = (os.name == "nt")
 
-
-def return_testvideo_path():
-    """
-    returns Test video path
-    """
-    path = "{}/Downloads/Test_videos/BigBuckBunny_4sec.mp4".format(
-        tempfile.gettempdir()
-    )
-    return os.path.abspath(path)
 
 
 @pytest.mark.skipif((platform.system() != "Linux"), reason="Not Implemented")
 def test_PiGear_import():
     """
     Testing VideoGear Import -> assign to fail when PiGear class is imported
+    via the new `api=Backend.PIGEAR` selector.
     """
     # cleanup environment
 
@@ -65,13 +59,127 @@ def test_PiGear_import():
         pass
 
     try:
-        stream = VideoGear(enablePiCamera=True, logging=True).start()
+        stream = VideoGear(api=Backend.PIGEAR, logging=True).start()
         stream.stop()
     except Exception as e:
         if isinstance(e, ImportError):
             pytest.xfail(str(e))
         else:
             pytest.fail(str(e))
+
+
+@pytest.mark.skipif((platform.system() != "Linux"), reason="Not Implemented")
+def test_enablePiCamera_deprecation():
+    """
+    Legacy `enablePiCamera=True` must still route to PiGear and emit a
+    DeprecationWarning.
+    """
+    try:
+        del sys.modules["picamera"]
+        del sys.modules["picamera.array"]
+    except KeyError:
+        pass
+
+    try:
+        with pytest.warns(DeprecationWarning):
+            stream = VideoGear(enablePiCamera=True, logging=True).start()
+        stream.stop()
+    except Exception as e:
+        if isinstance(e, ImportError):
+            pytest.xfail(str(e))
+        else:
+            pytest.fail(str(e))
+
+
+def test_enablePiCamera_false_deprecation():
+    """
+    Legacy `enablePiCamera=False` must route to CamGear, emit a DeprecationWarning,
+    and deliver frames (framerate > 0).
+    """
+    try:
+        with pytest.warns(DeprecationWarning):
+            stream = VideoGear(
+                enablePiCamera=False,
+                source=return_testvideo_path(),
+                logging=True,
+            ).start()
+        framerate = stream.framerate
+        while True:
+            frame = stream.read()
+            if frame is None:
+                break
+        stream.stop()
+        assert framerate > 0
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+def test_invalid_api_type():
+    """
+    Non-`Backend` value passed to `api` must raise TypeError.
+    """
+    with pytest.raises(TypeError):
+        VideoGear(api="camgear", logging=True)
+
+
+def test_camgear_default_backend():
+    """
+    Default backend (CAMGEAR) playback smoke test.
+    """
+    try:
+        stream = VideoGear(source=return_testvideo_path(), logging=True).start()
+        framerate = stream.framerate
+        while True:
+            frame = stream.read()
+            if frame is None:
+                break
+        stream.stop()
+        assert framerate > 0
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+def test_camgear_explicit_backend():
+    """
+    Explicit `api=Backend.CAMGEAR` must behave identically to default.
+    """
+    try:
+        stream = VideoGear(
+            api=Backend.CAMGEAR, source=return_testvideo_path(), logging=True
+        ).start()
+        while True:
+            frame = stream.read()
+            if frame is None:
+                break
+        stream.stop()
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+def test_ffgear_backend():
+    """
+    `api=Backend.FFGEAR` must route to FFGear, deliver frames, and expose
+    framerate=0.0 (FFGear has no framerate attr; VideoGear falls back to 0.0).
+    """
+    pytest.importorskip("deffcode", reason="`deffcode` is required for FFGear backend")
+    try:
+        stream = VideoGear(
+            api=Backend.FFGEAR,
+            source=return_testvideo_path(),
+            frame_format="bgr24",
+            logging=True,
+        ).start()
+        assert stream.framerate == 0.0
+        frame_count = 0
+        while True:
+            frame = stream.read()
+            if frame is None:
+                break
+            frame_count += 1
+        stream.stop()
+        assert frame_count > 0
+    except Exception as e:
+        pytest.fail(str(e))
 
 
 # Video credit: http://www.liushuaicheng.org/CVPR2014/index.html
@@ -103,6 +211,17 @@ test_data = [
         },
     ),
     (return_testvideo_path(), {"BORDER_TYPE": "im_wrong"}),
+    (
+        return_testvideo_path(),
+        {
+            "STABILIZER_MODE": StabilizerMode.ASW,
+            "SMOOTHING_RADIUS": 5,
+        },
+    ),
+    (
+        return_testvideo_path(),
+        {"STABILIZER_MODE": "not-an-enum"},
+    ),
 ]
 
 

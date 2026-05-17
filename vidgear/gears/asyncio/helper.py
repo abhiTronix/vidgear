@@ -21,17 +21,16 @@ limitations under the License.
 # Contains all the support functions/modules required by Vidgear Asyncio packages
 
 # import the necessary packages
-import os
-import cv2
-import requests
-import numpy as np
 import logging as log
-from tqdm import tqdm
-from colorlog import ColoredFormatter
+import os
+
+import cv2
+import numpy as np
+import requests
+from numpy.typing import NDArray
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
-from numpy.typing import NDArray
-from typing import Union
+from tqdm import tqdm
 
 # import helper packages
 from ..helper import logger_handler, mkdir_safe
@@ -70,20 +69,19 @@ def create_blank_frame(
     frame: NDArray = None, text: str = "", logging: bool = False
 ) -> NDArray:
     """
-    ## create_blank_frame
-
     Create blank frames of given frame size with text
 
     Parameters:
         frame (numpy.ndarray): inputs numpy array(frame).
         text (str): Text to be written on frame.
+
     **Returns:**  A reduced numpy ndarray array.
     """
     # check if frame is valid
     if frame is None or not (isinstance(frame, np.ndarray)):
         raise ValueError("[Helper:ERROR] :: Input frame is invalid!")
     # grab the frame size
-    (height, width) = frame.shape[:2]
+    height, width = frame.shape[:2]
     # create blank frame
     blank_frame = np.zeros(frame.shape, frame.dtype)
     # setup text
@@ -109,12 +107,10 @@ def create_blank_frame(
 
 async def reducer(
     frame: NDArray = None,
-    percentage: Union[int, float] = 0,
+    percentage: int | float = 0,
     interpolation: int = cv2.INTER_LANCZOS4,
 ) -> NDArray:
     """
-    ## reducer
-
     Asynchronous method that reduces frame size by given percentage.
 
     Parameters:
@@ -140,7 +136,7 @@ async def reducer(
         )
 
     # grab the frame size
-    (height, width) = frame.shape[:2]
+    height, width = frame.shape[:2]
 
     # calculate the ratio of the width from percentage
     reduction = ((100 - percentage) / 100) * width
@@ -159,8 +155,6 @@ def generate_webdata(
     logging: bool = False,
 ) -> str:
     """
-    ## generate_webdata
-
     Auto-Generates, and Auto-validates default data for WebGear and WebGear_RTC APIs.
 
     Parameters:
@@ -239,11 +233,9 @@ def generate_webdata(
 
 
 def download_webdata(
-    path: str, c_name: str = "webgear", files: list = [], logging: bool = False
+    path: str, c_name: str = "webgear", files: list | None = None, logging: bool = False
 ) -> str:
     """
-    ## download_webdata
-
     Downloads given list of files for WebGear and WebGear_RTC APIs(if not available) from GitHub/Gitlab Servers,
     and also Validates them.
 
@@ -255,6 +247,8 @@ def download_webdata(
 
     **Returns:** A valid path as string.
     """
+    if files is None:
+        files = []
     basename = os.path.basename(path)
     if logging:
         logger.debug("Downloading {} data-files at `{}`".format(basename, path))
@@ -302,8 +296,8 @@ def download_webdata(
                             if "content-length" in response.headers
                             else len(response.content)
                         )
-                        assert not (
-                            total_length is None
+                        assert (
+                            total_length is not None
                         ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
                         bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
                         for data in response.iter_content(chunk_size=256):
@@ -320,7 +314,7 @@ def download_webdata(
                 # log event if necessary
                 url != reg_urls[1] and logger.error(
                     "Download failed for Gitlab Server! Retrying from GitHub Server: {}".format(
-                        url, "https://github.com/abhiTronix/vidgear-vitals"
+                        url
                     )
                 )
             else:
@@ -341,10 +335,10 @@ def download_webdata(
         )
 
 
-def validate_webdata(path: str, files: list = [], logging: bool = False) -> bool:
+def validate_webdata(
+    path: str, files: list | None = None, logging: bool = False
+) -> bool:
     """
-    ## validate_auth_keys
-
     Validates, and also maintains downloaded list of files.
 
     Parameters:
@@ -352,9 +346,11 @@ def validate_webdata(path: str, files: list = [], logging: bool = False) -> bool
         files (list): list of files to be validated
         logging (bool): enables logging for its operations
 
-    **Returns:** A  boolean value, confirming whether tests passed, or not?.
+    **Returns:** A  boolean value, confirming whether tests passed, or not.
     """
     # check if valid path or directory empty
+    if files is None:
+        files = []
     if not (os.path.exists(path)) or not (os.listdir(path)):
         return False
 

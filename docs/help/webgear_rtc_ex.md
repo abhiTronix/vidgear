@@ -37,11 +37,12 @@ Here's a bare-minimum example of using WebGear_RTC API with the Raspberry Pi cam
 
 === "New Picamera2 backend"
 
-    ```python linenums="1" hl_lines="19"
+    ```python linenums="1" hl_lines="5 20"
     # import libs
     import uvicorn
     from libcamera import Transform
     from vidgear.gears.asyncio import WebGear_RTC
+    from vidgear.gears.helper import Backend
 
     # various WebGear_RTC performance 
     # and Picamera2 API tweaks
@@ -56,7 +57,7 @@ Here's a bare-minimum example of using WebGear_RTC API with the Raspberry Pi cam
 
     # initialize WebGear app
     web = WebGear_RTC(
-        enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options
+        api=Backend.PIGEAR, resolution=(640, 480), framerate=60, logging=True, **options
     )
 
     # run this app on Uvicorn server at address http://localhost:8000/
@@ -78,10 +79,11 @@ Here's a bare-minimum example of using WebGear_RTC API with the Raspberry Pi cam
 
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
 
-    ```python linenums="1" hl_lines="18"
+    ```python linenums="1" hl_lines="4 19"
     # import libs
     import uvicorn
     from vidgear.gears.asyncio import WebGear_RTC
+    from vidgear.gears.helper import Backend
 
     # various WebGear_RTC performance and Picamera API tweaks
     options = {
@@ -96,7 +98,7 @@ Here's a bare-minimum example of using WebGear_RTC API with the Raspberry Pi cam
 
     # initialize WebGear app
     web = WebGear_RTC(
-        enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options
+        api=Backend.PIGEAR, resolution=(640, 480), framerate=60, logging=True, **options
     )
 
     # run this app on Uvicorn server at address http://localhost:8000/
@@ -105,6 +107,38 @@ Here's a bare-minimum example of using WebGear_RTC API with the Raspberry Pi cam
     # close app safely
     web.shutdown()
     ```
+
+&thinsp;
+
+## Using WebGear_RTC with FFGear backend
+
+Here's a bare-minimum example of using WebGear_RTC API with the [FFGear backend](../../gears/ffgear/) for hardware-accelerated FFmpeg-powered video decoding:
+
+```python linenums="1" hl_lines="4 13"
+# import libs
+import uvicorn
+from vidgear.gears.asyncio import WebGear_RTC
+from vidgear.gears.helper import Backend
+
+# various WebGear_RTC performance tweaks
+options = {
+    "frame_size_reduction": 25,
+}
+
+# initialize WebGear_RTC app with FFGear backend
+web = WebGear_RTC(
+    api=Backend.FFGEAR,
+    source="foo.mp4",
+    logging=True,
+    **options,
+)
+
+# run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host="localhost", port=8000)
+
+# close app safely
+web.shutdown()
+```
 
 &thinsp;
 
