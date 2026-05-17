@@ -147,6 +147,9 @@ ignore = [
 "vidgear/__init__.py" = ["F401"]
 "vidgear/gears/__init__.py" = ["E402"]
 
+[tool.ruff.lint.isort]
+known-third-party = ["deffcode"]
+
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"

@@ -29,9 +29,9 @@ import tempfile
 
 import cv2
 import pytest
+from deffcode import FFdecoder
 from six import string_types
 
-from deffcode import FFdecoder
 from vidgear.gears import WriteGear
 from vidgear.gears.helper import check_output, logger_handler
 from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg, return_testvideo_path
