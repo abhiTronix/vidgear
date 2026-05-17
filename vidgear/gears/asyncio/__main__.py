@@ -177,7 +177,7 @@ if __name__ == "__main__":
         "--logging",
         action="store_true",
         default=False,
-        help="Enables/disables error logging, essential for debugging.",
+        help="Enables error logging (disabled by default), essential for debugging.",
     )
     ap.add_argument(
         "-op",
