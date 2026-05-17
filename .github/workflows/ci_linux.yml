@@ -74,6 +74,8 @@ jobs:
           python -m pip install -U six httpx yt-dlp[default] paramiko
           python -m pip install .[asyncio]
           python -m pip install -U ruff codecov pytest pytest-asyncio pytest-cov mpegdash m3u8 async-asgi-testclient
+      - name: Lint with ruff
+        run: ruff check vidgear --diff
       - name: Run pytest tests
         run: |
           PYTHONBINARYPATH=$(which python)
@@ -81,8 +83,6 @@ jobs:
           timeout 1200 sudo $PYTHONBINARYPATH -m pytest --verbose --cov=vidgear --cov-report=xml  --cov-report term-missing vidgear/tests/ || code=$?
           if [[ $code -ne 124 && $code -ne 0 ]]; then exit $code; else echo "EXIT_CODE=$code" >>$GITHUB_ENV; fi
         if: success()
-      - name: Lint with ruff
-        run: ruff check vidgear --diff
       - name: Display exit code
         run: echo "Exit code was = $EXIT_CODE"
       - name: Upload coverage to Codecov
