@@ -600,7 +600,7 @@ WebGear API works on [**Starlette**](https://www.starlette.io/)'s ASGI applicati
 
 WebGear API uses an intraframe-only compression scheme under the hood where the sequence of video-frames are first encoded as JPEG-DIB (JPEG with Device-Independent Bit compression) and then streamed over HTTP using Starlette's Multipart [Streaming Response](https://www.starlette.io/responses/#streamingresponse) and a [Uvicorn](https://www.uvicorn.org/#quickstart) ASGI Server. This method imposes lower processing and memory requirements, but the quality is not the best, since JPEG compression is not very efficient for motion video.
 
-In layman's terms, WebGear acts as a powerful **Video Broadcaster** that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to [CamGear](#camgear), [PiGear](#pigear), and [FFGear](#ffgear) APIs, thereby granting it exclusive power of broadcasting frames from any incoming stream. It also allows us to define our custom Server as source to transform frames easily before sending them across the network(see this [doc][webgear-cs] example).
+In layman's terms, WebGear acts as a powerful **Video Broadcaster** that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to [CamGear](#camgear), [PiGear](#pigear), and [FFGear](#ffgear) APIs _(via the `api` parameter)_, thereby granting it exclusive power of broadcasting frames from any incoming stream. It also allows us to define our custom Server as source to transform frames easily before sending them across the network _(see this [doc][webgear-cs] example)_.
 
 **Below is a snapshot of a WebGear Video Server in action on Chrome browser:**
 
@@ -653,7 +653,7 @@ WebGear_RTC can handle [multiple consumers][webgear_rtc-mc] seamlessly and provi
 
 WebGear_RTC API works in conjunction with [**Starlette**][starlette]'s ASGI application and provides easy access to its complete framework. WebGear_RTC can also flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc.
 
-Additionally, WebGear_RTC API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to [CamGear](#camgear), [PiGear](#pigear), and [FFGear](#ffgear) APIs.
+Additionally, WebGear_RTC API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to [CamGear](#camgear), [PiGear](#pigear), and [FFGear](#ffgear) APIs, selectable via the `api` parameter.
 
 **Below is a snapshot of a WebGear_RTC Media Server in action on Chrome browser:**
 
@@ -706,7 +706,7 @@ NetGear_Async is built on [`zmq.asyncio`][asyncio-zmq], and powered by a high-pe
 
 NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to [NetGear API](#netgear). Furthermore, NetGear_Async allows us to define our custom Server as source to transform frames easily before sending them across the network(see this [doc][netgear_async-cs] example).
 
-NetGear_Async also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to [CamGear](#camgear), [PiGear](#pigear), and [FFGear](#ffgear) APIs, selectable via the `api` parameter using the `Backend` enum (`Backend.CAMGEAR`, `Backend.PIGEAR`, `Backend.FFGEAR`).
+NetGear_Async also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to [CamGear](#camgear), [PiGear](#pigear), and [FFGear](#ffgear) APIs, selectable via the `api` parameter.
 
 NetGear_Async now supports additional [**bidirectional data transmission**][btm_netgear_async] between receiver(client) and sender(server) while transferring video-frames. Users can easily build complex applications such as like [Real-Time Video Chat][rtvc] in just few lines of code.
 
