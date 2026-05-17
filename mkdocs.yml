@@ -112,11 +112,11 @@ plugins:
               - "!^_"
               - "^__init__$"
               - "^__call__$"
-            extra:
-              show_root_heading: false
-              show_root_toc_entry: false
-              show_source: true
-              heading_level: 3
+            show_root_heading: true
+            show_root_full_path: false
+            show_symbol_type_toc: true
+            show_source: true
+            heading_level: 3
 
 # Logging
 validation:
@@ -248,6 +248,7 @@ nav:
           - Advanced Usage: gears/ffgear/advanced/index.md
           - API Resources:
               - FFGear API Parameters: gears/ffgear/params.md
+              - FFGear API References: bonus/reference/ffgear.md
               - FFGear Bonus Examples: help/ffgear_ex.md
               - FFGear FAQs: help/ffgear_faqs.md
               - FFmpeg Installation: gears/ffgear/advanced/ffmpeg_install.md
