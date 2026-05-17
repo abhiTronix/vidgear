@@ -24,7 +24,7 @@ limitations under the License.
 
 ## What is VideoGear API and what does it do?
 
-**Answer:** VideoGear provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**](../../gears/stabilizer/) class. It also acts as a Common Video-Capture API that provides unified internal access to [CamGear](../../gears/camgear/), [PiGear](../../gears/pigear/), and [FFGear](../../gears/ffgear/) APIs and their parameters, selectable via the [`api`](../../gears/videogear/params/#api) parameter using the `Backend` enum. _For more info. see [VideoGear doc ➶](../../gears/videogear/)_
+**Answer:** VideoGear provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**](../../gears/stabilizer/) class. It also acts as a Common Video-Capture API that provides unified internal access to [CamGear](../../gears/camgear/), [PiGear](../../gears/pigear/), and [FFGear](../../gears/ffgear/) APIs and their parameters, selectable via the [`api`](../../gears/videogear/params/#api) parameter using the [`Backend`](../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum. _For more info. see [VideoGear doc ➶](../../gears/videogear/)_
 
 &thinsp;
 
@@ -42,7 +42,7 @@ limitations under the License.
 
 ## How do I select a specific backend in VideoGear?
 
-**Answer:** Use the `api` parameter with the `Backend` enum from `vidgear.gears.helper`:
+**Answer:** Use the [`api`](../../gears/pigear/param/#api) parameter with the [`Backend`](../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum:
 
 ```python
 from vidgear.gears import VideoGear

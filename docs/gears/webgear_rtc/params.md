@@ -26,9 +26,9 @@ limitations under the License.
 
 ## **`api`**
 
-This parameter selects the underlying capture backend for WebGear_RTC using the `Backend` enum.
+This parameter selects the underlying capture backend for WebGear_RTC using the [`Backend`](../../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum.
 
-**Data-Type:** `Backend` enum
+**Data-Type:** [`Backend`](../../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum
 
 **Default Value:** `Backend.CAMGEAR`
 
@@ -210,7 +210,7 @@ This parameter can be used in addition, to pass user-defined parameters supporte
 
 **Supported dictionary attributes for Stabilizer Class are:**
 
-* **`STABILIZER_MODE`** (_[`StabilizerMode`](../../../bonus/reference/stabilizer/#stabilizermode) enum_): This attribute selects the underlying stabilization algorithm. 
+* **`STABILIZER_MODE`** (_[`StabilizerMode`](../../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum_): This attribute selects the underlying stabilization algorithm. 
     
     **Accepted values are:**
     

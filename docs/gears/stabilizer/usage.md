@@ -156,7 +156,7 @@ Stabilizer class provide certain [parameters](../params/) which you can use to t
 
 ??? new "New in v0.3.5"
     
-    The [`mode`](../params/#mode) parameter and the [`StabilizerMode`](../../../bonus/reference/stabilizer/#stabilizermode) enum were added in `v0.3.5`. Existing code that does not pass `mode` keeps working - defaults to `StabilizerMode.ASW`.
+    The [`mode`](../params/#mode) parameter and the [`StabilizerMode`](../../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum were added in `v0.3.5`. Existing code that does not pass `mode` keeps working - defaults to `StabilizerMode.ASW`.
 
 ```python linenums="1" hl_lines="2 11-14"
 # import required libraries
