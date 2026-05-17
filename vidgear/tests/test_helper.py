@@ -46,6 +46,7 @@ from vidgear.gears.helper import (
     download_ffmpeg_binaries,
     extract_time,
     generate_auth_certificates,
+    get_supported_demuxers,
     get_supported_resolution,
     get_valid_ffmpeg_path,
     get_video_bitrate,
@@ -450,6 +451,28 @@ def test_validate_audio_bit_depth_fallback(audio_line, expected_suffix, monkeypa
         )
     else:
         assert out == "", f"expected empty on unparseable fmt, got {out!r}"
+
+
+def test_get_supported_demuxers_flattens_aliases(monkeypatch):
+    """
+    Regression: comma-separated demuxer aliases (e.g. "matroska,webm",
+    "mov,mp4,m4a,3gp,3g2,mj2") were collapsed to last alias only.
+    """
+    from vidgear.gears import helper as _helper
+
+    fake = (
+        b"Demuxers:\n"
+        b" D. = Demuxing supported\n"
+        b" --\n"
+        b" D  matroska,webm    Matroska / WebM\n"
+        b" D  mov,mp4,m4a,3gp,3g2,mj2  QuickTime / MOV\n"
+        b" D  rtsp             RTSP input\n"
+        b"\n"
+    )
+    monkeypatch.setattr(_helper, "check_output", lambda *a, **k: fake)
+    out = get_supported_demuxers("ffmpeg")
+    for alias in ("matroska", "webm", "mov", "mp4", "m4a", "3gp", "3g2", "mj2", "rtsp"):
+        assert alias in out, f"missing alias {alias!r} in {out!r}"
 
 
 @pytest.mark.parametrize(

@@ -553,8 +553,15 @@ def get_supported_demuxers(path: str) -> list[str]:
     # search all demuxers
     outputs = [re.search(r"\s[a-z0-9_,-]{2,}\s", d) for d in supported_demuxers]
     outputs = [o.group(0) for o in outputs if o]
-    # return demuxers output
-    return [o.strip() if "," not in o else o.split(",")[-1].strip() for o in outputs]
+    # flatten comma-separated aliases (e.g. "rtsp,rtsps") so membership checks
+    # don't miss aliases
+    flat = []
+    for o in outputs:
+        if "," in o:
+            flat.extend(alias.strip() for alias in o.split(",") if alias.strip())
+        else:
+            flat.append(o.strip())
+    return flat
 
 
 def get_supported_pixfmts(path: str) -> list[str]:
