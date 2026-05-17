@@ -418,6 +418,41 @@ def test_validate_audio(path, result):
 
 
 @pytest.mark.parametrize(
+    "audio_line, expected_suffix",
+    [
+        # std le/be: regex hit
+        (b"Stream #0:1: Audio: pcm_s16le, 44100 Hz, stereo, s16, 1411 kb/s", "k"),
+        # planar float fltp: fallback → 32
+        (b"Stream #0:1: Audio: aac, 48000 Hz, stereo, fltp", "k"),
+        # planar s16p: fallback → 16
+        (b"Stream #0:1: Audio: mp3, 22050 Hz, mono, s16p", "k"),
+        # planar u8p: fallback → 8
+        (b"Stream #0:1: Audio: pcm_u8, 8000 Hz, mono, u8p", "k"),
+        # unknown fmt no digits: no bit_depth → ""
+        (b"Stream #0:1: Audio: foo, 48000 Hz, stereo, xyz", ""),
+    ],
+)
+def test_validate_audio_bit_depth_fallback(audio_line, expected_suffix, monkeypatch):
+    """
+    Test bit_depth fallback for planar/non-le-be sample formats.
+    Regression: re.findall(...)[0][1] used to IndexError on fltp/s16p.
+    """
+    from vidgear.gears import helper as _helper
+
+    def fake_check_output(*args, **kwargs):
+        return b"Input #0, foo, from 'x':\n  " + audio_line + b"\n"
+
+    monkeypatch.setattr(_helper, "check_output", fake_check_output)
+    out = _helper.validate_audio("ffmpeg", source="dummy")
+    if expected_suffix:
+        assert out.endswith(expected_suffix) and out[:-1].isdigit(), (
+            f"bit_depth fallback failed: got {out!r}"
+        )
+    else:
+        assert out == "", f"expected empty on unparseable fmt, got {out!r}"
+
+
+@pytest.mark.parametrize(
     "frame , text",
     [
         (getframe(), "ok"),

@@ -293,7 +293,7 @@ def import_dependency_safe(
             # create message
             msg = """Unsupported version '{}' found. Vidgear requires '{}' dependency installed with version '{}' or greater.
             Update it with  `pip install -U {}` command.""".format(
-                parent_module, min_version, version, install_name
+                version, parent_module, min_version, install_name
             )
             # handle errors.
             if error == "silent":
@@ -750,11 +750,11 @@ def validate_audio(path: str, source: str | list | None = None) -> str:
         for line in metadata.decode("utf-8").split("\n")
         if "Audio:" in line
     ]
-    audio_bitrate = (
-        re.findall(r"([0-9]+)\s(kb|mb|gb)\/s", audio_bitrate_meta[0])[-1]
-        if audio_bitrate_meta
-        else ""
-    )
+    audio_bitrate = ""
+    if audio_bitrate_meta:
+        _br_matches = re.findall(r"([0-9]+)\s(kb|mb|gb)\/s", audio_bitrate_meta[0])
+        if _br_matches:
+            audio_bitrate = _br_matches[-1]
     # extract sample_rate
     audio_sample_rate_metadata = [
         line.strip()
@@ -774,14 +774,31 @@ def validate_audio(path: str, source: str | list | None = None) -> str:
         # convert sample_rate to bitrate first
         sample_rate_value = int(audio_sample_rate.split(" ")[0])
         channels_value = 1 if "mono" in audio_sample_rate_metadata[0] else 2
-        bit_depth_value = re.findall(
+        bit_depth_value = None
+        match = re.search(
             r"(u|s|f)([0-9]+)(le|be)", audio_sample_rate_metadata[0]
-        )[0][1]
+        )
+        if match:
+            bit_depth_value = int(match.group(2))
+        else:
+            fmt_match = re.search(
+                r"Audio:\s*[^,]+,\s*[^,]+,\s*[^,]+,\s*([a-z0-9]+)",
+                audio_sample_rate_metadata[0],
+            )
+            if fmt_match:
+                fmt = fmt_match.group(1).rstrip("p")
+                if fmt.startswith("f"):
+                    digits = re.search(r"([0-9]+)", fmt)
+                    bit_depth_value = int(digits.group(1)) if digits else 32
+                elif fmt.startswith(("s", "u")):
+                    digits = re.search(r"([0-9]+)", fmt)
+                    if digits:
+                        bit_depth_value = int(digits.group(1))
         return (
             (
                 str(
                     get_audio_bitrate(
-                        sample_rate_value, channels_value, int(bit_depth_value)
+                        sample_rate_value, channels_value, bit_depth_value
                     )
                 )
                 + "k"
