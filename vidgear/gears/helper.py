@@ -138,7 +138,7 @@ def logcurr_vidgear_ver(logging: bool = False) -> None:
         ver_is_logged = True
 
 
-def get_module_version(module: types.ModuleType = None) -> str | None:
+def get_module_version(module: types.ModuleType | None = None) -> str | None:
     """
     Retrieves version of specified module.
 

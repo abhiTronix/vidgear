@@ -81,7 +81,7 @@ def create_blank_frame(
     if frame is None or not (isinstance(frame, np.ndarray)):
         raise ValueError("[Helper:ERROR] :: Input frame is invalid!")
     # grab the frame size
-    (height, width) = frame.shape[:2]
+    height, width = frame.shape[:2]
     # create blank frame
     blank_frame = np.zeros(frame.shape, frame.dtype)
     # setup text
@@ -136,7 +136,7 @@ async def reducer(
         )
 
     # grab the frame size
-    (height, width) = frame.shape[:2]
+    height, width = frame.shape[:2]
 
     # calculate the ratio of the width from percentage
     reduction = ((100 - percentage) / 100) * width
@@ -296,7 +296,9 @@ def download_webdata(
                             if "content-length" in response.headers
                             else len(response.content)
                         )
-                        assert total_length is not None, "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
+                        assert (
+                            total_length is not None
+                        ), "[Helper:ERROR] :: Failed to retrieve files, check your Internet connectivity!"
                         bar = tqdm(total=int(total_length), unit="B", unit_scale=True)
                         for data in response.iter_content(chunk_size=256):
                             f.write(data)
@@ -312,7 +314,8 @@ def download_webdata(
                 # log event if necessary
                 url != reg_urls[1] and logger.error(
                     "Download failed for Gitlab Server! Retrying from GitHub Server: {}".format(
-                        url, )
+                        url
+                    )
                 )
             else:
                 # break otherwise
@@ -332,7 +335,9 @@ def download_webdata(
         )
 
 
-def validate_webdata(path: str, files: list | None = None, logging: bool = False) -> bool:
+def validate_webdata(
+    path: str, files: list | None = None, logging: bool = False
+) -> bool:
     """
     Validates, and also maintains downloaded list of files.
 
