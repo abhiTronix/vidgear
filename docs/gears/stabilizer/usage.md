@@ -41,7 +41,7 @@ Following is the bare-minimum code you need to get started with Stabilizer Class
 
 !!! tip "You can use any VideoCapture Gear instead of CamGear in the similar manner, as shown in this usage example." 
 
-!!! success "Performance Improvment in v0.3.5 :material-lightning-bolt:"
+!!! success "Performance Improvement in v0.3.5 :material-lightning-bolt:"
 
     Starting from v0.3.5, the `Stabilizer` class has been refactored to bound the Average Sliding-Window (ASW) memory to `O(smoothing_radius)` and real-time streaming is now possible without memory issues.
 

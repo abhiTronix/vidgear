@@ -942,7 +942,7 @@ FFGear integrates seamlessly with OpenCV's [`VideoWriter()`](https://docs.opencv
     FRAMESIZE = tuple(metadata_dict["output_frames_resolution"])
 
     # Define writer with parameters and suitable output filename for e.g. `output_foo.avi`
-    writer = cv2.VideoWriter("output_foo.avi", FOURCC, FRAMERATE, FRAMESIZE, isColor=False))
+    writer = cv2.VideoWriter("output_foo.avi", FOURCC, FRAMERATE, FRAMESIZE)
 
     # loop over
     while True:
@@ -1059,7 +1059,7 @@ FFGear integrates seamlessly with OpenCV's [`VideoWriter()`](https://docs.opencv
     FRAMESIZE = tuple(metadata_dict["output_frames_resolution"])
 
     # Define writer with parameters and suitable output filename for e.g. `output_foo_gray.avi`
-    writer = cv2.VideoWriter("output_foo_gray.avi", FOURCC, FRAMERATE, FRAMESIZE)
+    writer = cv2.VideoWriter("output_foo_gray.avi", FOURCC, FRAMERATE, FRAMESIZE, isColor=False) 
 
     # loop over
     while True:
