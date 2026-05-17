@@ -52,7 +52,7 @@ if deffcode is not None:
 class FFGear:
     """
     FFGear API is a multi-threaded, high-performance wrapper around
-    [DeFFcode's FFdecoder API](https://abhitronix.github.io/deffcode/latest/reference/ffdecoder/)
+    [**DeFFcode's FFdecoder API**](https://abhitronix.github.io/deffcode/latest/reference/ffdecoder/)
     that compiles and executes an FFmpeg pipeline inside a subprocess pipe for generating
     real-time, low-overhead, lightning-fast decoded video frames in Python.
 
@@ -70,9 +70,7 @@ class FFGear:
     maintains the standard OpenCV-Python coding syntax for drop-in integration.
 
     Similar to CamGear, FFGear also supports the `yt_dlp` backend via `stream_mode=True` for
-    seamlessly pipelining live video-frames and metadata from streaming services like YouTube,
-    Dailymotion, Twitch, and
-    [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites).
+    seamlessly pipelining live video-frames and metadata from streaming services.
     """
 
     def __init__(
@@ -354,14 +352,11 @@ class FFGear:
         Consumer Thread: Pops frames symmetrically from the queue block.
 
         **Returns:**
-            NDArray | tuple[NDArray, dict] | None: When ``-extract_metadata``
-            is *disabled* (default), returns an N-dimensional ``numpy.ndarray``
-            representing the decoded frame, or ``None`` when the stream has
-            ended. When ``-extract_metadata`` is *enabled*, returns a
-            ``(frame, metadata)`` tuple where *frame* is a ``numpy.ndarray``
-            and *metadata* is a ``dict`` with keys ``frame_num``, ``pts_time``,
-            ``is_keyframe``, and ``frame_type``; or ``None`` when the stream
-            has ended.
+            NDArray | tuple[NDArray, dict] | None: A decoded ``numpy.ndarray``
+            frame, or a ``(frame, metadata)`` tuple when ``-extract_metadata``
+            is enabled (metadata keys: ``frame_num``, ``pts_time``,
+            ``is_keyframe``, ``frame_type``). Returns ``None`` when the
+            stream has ended.
         """
         while self.__threaded_queue_mode and not self.__terminate.is_set():
             try:
