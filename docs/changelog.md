@@ -77,6 +77,8 @@ limitations under the License.
         * Fixed `validate_video` to verify file path existence before processing.
         * Fixed missing demuxer header handling in `get_supported_demuxers`.
         * Corrected `StopIteration` handling in default video codec selection logic.
+        * Fixed `IndexError` in `validate_audio` bit-depth parsing by replacing bare `re.findall` indexing with guarded `re.search` and adding a fallback parser for planar sample formats (`fltp`, `s16p`, `u8p`, etc.).
+        * Fixed `get_supported_demuxers` to expand all comma-separated demuxer aliases (e.g. `"matroska,webm"` now yields both entries instead of only the last).
 
 ??? question "Pull Requests"
     * PR #451
