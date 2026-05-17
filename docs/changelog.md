@@ -33,7 +33,7 @@ limitations under the License.
     - [x] ⚡️ **Plugin-Ready Stabilizer Architecture:**
         * Refactored the monolithic `Stabilizer` class into a plugin-style `stabilizer/` sub-package with a shared `_StabilizerBase`, an `ASWStabilizer` implementation, and a factory `Stabilizer()` function.
         * Added a new `StabilizerMode` enum for selecting stabilization backends via `VideoGear`'s `STABILIZER_MODE` option, with clean provisions for upcoming real-time backends (e.g., Kalman tracking).
-    - [x] 🚩 **WritGear: Discard `-vcodec` via `None`:**
+    - [x] 🚩 **WriteGear: Discard `-vcodec` via `None`:**
         * Setting `-vcodec` or `-c:v` to `None` in `output_params` now cleanly omits the video codec parameter, letting FFmpeg auto-select the encoder (useful for GIF output and similar workflows).
     - [x] 📦️ **Poetry Package Management:**
         * Added an official Poetry installation guide and ecosystem support for Poetry-managed environments.
