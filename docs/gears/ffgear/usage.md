@@ -1248,7 +1248,7 @@ FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode fo
 
 === "RGB frames"
 
-    In WriteGear API, you can use [`rgb_mode`](https://abhitronix.github.io/vidgear/latest/bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.write) parameter in  `write()` class method to write `RGB` format frames instead of default `BGR` as follows:
+    In WriteGear API, you can use [`rgb_mode`](../../../bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.write) parameter in  `write()` class method to write `RGB` format frames instead of default `BGR` as follows:
 
     ```python linenums="1" hl_lines="3 12 17 32 38"
     # import required libraries
