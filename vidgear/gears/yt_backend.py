@@ -41,7 +41,7 @@ if yt_dlp is not None:
         Parameters:
             source_url (string): defines the URL of source stream
             logging (bool): enables/disables logging.
-            options (dict): provides ability to alter yt-dlp backend params.
+            stream_params (dict): provides ability to alter yt-dlp backend params.
         """
 
         def __init__(
@@ -54,7 +54,7 @@ if yt_dlp is not None:
             self.streams = {}
 
             # define supported resolution values
-            self.supported_resolutions = {
+            self.supported_resolutions : dict[str, str] = {
                 "256x144": "144p",
                 "426x240": "240p",
                 "640x360": "360p",
