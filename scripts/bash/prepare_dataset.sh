@@ -20,7 +20,7 @@ TMPFOLDER="$TMPFOLDER/testing_dir"
 
 # Creating necessary directories
 mkdir -p "$TMPFOLDER" # Create testing directory
-chmod -R 777 "$TMPFOLDER" # 777 permission to all files (Necessary for sudo commands)
+chmod -R u+rwX,go-rwx "$TMPFOLDER" # (Necessary for sudo commands)
 
 mkdir -p "$TMPFOLDER"/temp_mpd    # MPD assets temp path
 mkdir -p "$TMPFOLDER"/temp_m3u8   # M3U8 assets temp path
@@ -100,4 +100,4 @@ if [ $OS_NAME = "linux" ]; then
 fi
 
 # Set permissions for the testing directory
-chmod -R 777 "$TMPFOLDER" # 777 permission to all files (Necessary for sudo commands)
+chmod -R u+rwX,go-rwx "$TMPFOLDER" # (Necessary for sudo commands)
