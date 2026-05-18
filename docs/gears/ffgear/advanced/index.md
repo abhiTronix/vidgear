@@ -995,7 +995,7 @@ writer.release()
     4. Encode the resulting **NV12** frames directly with the WriteGear API using NVIDIA’s hardware-accelerated **H.264 NVENC video encoder (`h264_nvenc`)** to generate a lossless output video.
 
 
-    ```python linenums="1" hl_lines="8-21 26 34-36 57"
+    ```python linenums="1" hl_lines="8-21 26 34-36 56"
     # import the necessary packages
     from vidgear.gears import FFGear
     from vidgear.gears import WriteGear
