@@ -42,20 +42,20 @@ When installing VidGear with Poetry, you need to manually install the following 
 
 * #### :simple-opencv: OpenCV
 
-    Must require OpenCV(3.0+) python binaries installed for all core functions. You can easily install it directly via [pip](https://pypi.org/project/opencv-python/):
+    Must require OpenCV(3.0+) python binaries installed for all core functions. You can easily install it directly via `poetry`:
 
     ??? tip "OpenCV installation from source"
 
         You can also follow online tutorials for building & installing OpenCV on [Windows](https://www.learnopencv.com/install-opencv3-on-windows/), [Linux](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/), [MacOS](https://www.pyimagesearch.com/2018/08/17/install-opencv-4-on-macos/) and [Raspberry Pi](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/) machines manually from its source. 
 
-        :warning: Make sure not to install both *pip* and *source* version together. Otherwise installation will fail to work!
+        :warning: Make sure not to install both *poetry* and *source* version together. Otherwise installation will fail to work!
 
     ??? info "Other OpenCV binaries"
 
-        OpenCV maintainers also provide additional binaries via pip that contains both main modules and contrib/extra modules [`opencv-contrib-python`](https://pypi.org/project/opencv-contrib-python/), and for server (headless) environments like [`opencv-python-headless`](https://pypi.org/project/opencv-python-headless/) and [`opencv-contrib-python-headless`](https://pypi.org/project/opencv-contrib-python-headless/). You can also install ==any one of them== in similar manner. More information can be found [here](https://github.com/opencv/opencv-python#installation-and-usage).
+        OpenCV maintainers also provide additional binaries via *poetry* that contains both main modules and contrib/extra modules [`opencv-contrib-python`](https://pypi.org/project/opencv-contrib-python/), and for server (headless) environments like [`opencv-python-headless`](https://pypi.org/project/opencv-python-headless/) and [`opencv-contrib-python-headless`](https://pypi.org/project/opencv-contrib-python-headless/). You can also install ==any one of them== in similar manner. More information can be found [here](https://github.com/opencv/opencv-python#installation-and-usage).
 
     ```sh
-    pip install opencv-python       
+    poetry add opencv-python       
     ```
 
 &thinsp;
@@ -80,10 +80,10 @@ When installing VidGear with Poetry, you need to manually install the following 
 
     ??? tip "Using Legacy `picamera` library with PiGear (`v0.3.3` and above)"
 
-        PiGear API _(version `0.3.3` onwards)_ prioritizes the newer Picamera2 library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. However, if your operating system doesn't support Picamera2, you can still use the legacy [`picamera`](https://picamera.readthedocs.io/en/release-1.13/) library. Here's how to easily install it using pip:
+        PiGear API _(version `0.3.3` onwards)_ prioritizes the newer Picamera2 library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. However, if your operating system doesn't support Picamera2, you can still use the legacy [`picamera`](https://picamera.readthedocs.io/en/release-1.13/) library. Here's how to easily install it using poetry:
 
         ```sh
-        pip install picamera
+        poetry add picamera
         ```
 
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
@@ -113,7 +113,7 @@ When installing VidGear with Poetry, you need to manually install the following 
         sudo apt update && upgrade
         ```
 
-        !!! failure "If you have installed Picamera2 previously using pip, then you should also uninstall this (`pip3 uninstall picamera2`)."
+        !!! failure "If you have installed Picamera2 previously using pip, then you should also uninstall this (`#!sh python3 -m pip uninstall picamera2`)."
 
         Thereafter, you can install Picamera2 with all the GUI (Qt and OpenGL) dependencies using:
 
@@ -127,18 +127,18 @@ When installing VidGear with Poetry, you need to manually install the following 
         sudo apt install -y python3-picamera2 --no-install-recommends
         ```
 
-    === "Installation using `pip`"
+    === "Installation using `poetry`"
 
         !!! danger "This is **NOT** the recommended way to install Picamera2."
         
-        However, if you wish to install Picamera2 with all the GUI (Qt and OpenGL) dependencies with pip, use:
+        However, if you wish to install Picamera2 with all the GUI (Qt and OpenGL) dependencies with poetry, use:
 
         ```sh
         sudo apt install -y python3-libcamera python3-kms++
         sudo apt install -y python3-pyqt5 python3-prctl 
         sudo apt install -y libatlas-base-dev ffmpeg python3-pip
-        pip3 install numpy --upgrade
-        pip3 install picamera2[gui]
+        python3 -m poetry add numpy
+        python3 -m poetry add picamera2[gui]
         ```
 
         Or, If you **DON'T** want the GUI dependencies, use:
@@ -147,8 +147,8 @@ When installing VidGear with Poetry, you need to manually install the following 
         sudo apt install -y python3-libcamera python3-kms++
         sudo apt install -y python3-prctl libatlas-base-dev
         sudo apt install -y ffmpeg libopenjp2-7 python3-pip
-        pip3 install numpy --upgrade
-        pip3 install picamera2
+        python3 -m poetry add numpy
+        python3 -m poetry add picamera2
         ```
 
 
@@ -175,20 +175,20 @@ When installing VidGear with Poetry, you need to manually install the following 
 
         ```sh
         # Install opencv (only if not installed previously)
-        pip install opencv-python 
+        poetry add opencv-python 
         ```
 
     - Finally, manually install your **API-specific dependencies** as required by your API (in use):
 
         ```sh
         # Just copy-&-paste from table below
-        pip install <API-specific dependencies>
+        poetry add <API-specific dependencies>
         ```
 
         | APIs | Dependencies |
         |:---:|:---|
         | CamGear | `yt_dlp` |
-        | PiGear | `picamera`, `picamera2` _(see [pip install doc](pip_install.md#picamera2) for its installation)_ |
+        | PiGear | `picamera`, `picamera2` |
         | VideoGear | *Based on CamGear or PiGear or FFGear backend in use*  |
         | ScreenGear | `dxcam`, `mss`, `pyscreenshot`, `Pillow` |
         | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
