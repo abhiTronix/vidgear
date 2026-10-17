@@ -202,3 +202,45 @@ def test_kalman_reduces_jitter():
     s.clean()
     # skip filter warm-up
     assert _mean_shift(out[10:]) < 0.5 * _mean_shift(frames[10:])
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"process_noise": 0},
+        {"process_noise": -1e-3},
+        {"measurement_noise": float("nan")},
+        {"measurement_noise": float("inf")},
+        {"measurement_noise": [0.1, 0.2]},
+        {"process_noise": "bad"},
+    ],
+)
+def test_kalman_invalid_noise(kwargs):
+    """Invalid Kalman noise config fails fast at init."""
+    with pytest.raises(ValueError):
+        KalmanStabilizer(**kwargs)
+
+
+def test_kalman_per_axis_noise():
+    """Per-axis `[x, y, a]` noise is accepted."""
+    s = KalmanStabilizer(process_noise=[1e-3, 1e-3, 1e-4], measurement_noise=0.5)
+    for f in _jittered_frames(5):
+        assert s.stabilize(f) is not None
+    s.clean()
+
+
+@pytest.mark.parametrize("keypoints", [None, np.empty((0, 1, 2), np.float32)])
+def test_estimate_motion_no_keypoints(keypoints):
+    """No keypoints to track -> zero motion, no crash."""
+    s = KalmanStabilizer()
+    gray = np.zeros((120, 160), np.uint8)
+    assert s._estimate_motion(gray, keypoints, gray) == [0.0, 0.0, 0.0]
+
+
+def test_kalman_featureless_frames():
+    """Blank frames (no GFTT features) still emit every frame."""
+    s = KalmanStabilizer()
+    blank = np.zeros((120, 160, 3), np.uint8)
+    for _ in range(3):
+        assert s.stabilize(blank).shape == (120, 160, 3)
+    s.clean()
