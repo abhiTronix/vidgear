@@ -578,7 +578,19 @@ cv2.destroyAllWindows()
 stream_stab.stop()
 ```
 
-!!! warning "`StabilizerMode.KALMAN` is reserved for a future release and currently raises `NotImplementedError`. Non-`StabilizerMode` values passed via `STABILIZER_MODE` silently fall back to `StabilizerMode.ASW`."
+!!! tip "For zero-latency real-time stabilization, switch to the Kalman backend with `PROCESS_NOISE`/`MEASUREMENT_NOISE` tuning instead of `SMOOTHING_RADIUS`:"
+
+    ```python
+    options = {
+        "STABILIZER_MODE": StabilizerMode.KALMAN,
+        "PROCESS_NOISE": 4e-3,  # default
+        "MEASUREMENT_NOISE": 0.25,  # default
+        "BORDER_SIZE": 5,
+        "CROP_N_ZOOM": True,
+    }
+    ```
+
+!!! warning "Non-`StabilizerMode` values passed via `STABILIZER_MODE` silently fall back to `StabilizerMode.ASW`."
 
 &nbsp;
 

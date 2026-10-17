@@ -215,7 +215,7 @@ This parameter can be used in addition, to pass user-defined parameters supporte
     **Accepted values are:**
     
     - [x] `StabilizerMode.ASW` _(Average Sliding-Window — default)_
-    - [x] `StabilizerMode.KALMAN` _(reserved; raises `NotImplementedError` until a future release)_. 
+    - [x] `StabilizerMode.KALMAN` _(zero-latency Kalman filter — real-time, no frame buffering)_. 
     - [ ] Invalid values silently fall back to `StabilizerMode.ASW`. 
 
     You can easily pass this attribute as follows:
@@ -228,10 +228,22 @@ This parameter can be used in addition, to pass user-defined parameters supporte
     options = {'STABILIZER_MODE': StabilizerMode.ASW}
     ```
 
-* **`SMOOTHING_RADIUS`** (_integer_) : This attribute can be used to alter averaging window size. It basically handles the quality of stabilization at the expense of latency and sudden panning. Larger its value, less will be panning, more will be latency and vice-versa. Its default value is `25`. You can easily pass this attribute as follows:
+* **`SMOOTHING_RADIUS`** (_integer_) : _(`StabilizerMode.ASW` only)_ This attribute can be used to alter averaging window size. It basically handles the quality of stabilization at the expense of latency and sudden panning. Larger its value, less will be panning, more will be latency and vice-versa. Its default value is `25`. You can easily pass this attribute as follows:
 
     ```python
     options = {'SMOOTHING_RADIUS': 30}
+    ```
+
+* **`PROCESS_NOISE`** (_float_) : _(`StabilizerMode.KALMAN` only)_ This attribute sets the Kalman filter's process noise covariance. Larger values follow intentional camera motion (panning) faster with less smoothing. Its default value is `4e-3`. You can easily pass this attribute as follows:
+
+    ```python
+    options = {'PROCESS_NOISE': 1e-3}
+    ```
+
+* **`MEASUREMENT_NOISE`** (_float_) : _(`StabilizerMode.KALMAN` only)_ This attribute sets the Kalman filter's measurement noise covariance. Larger values smooth harder at the cost of more lag on panning. Its default value is `0.25`. You can easily pass this attribute as follows:
+
+    ```python
+    options = {'MEASUREMENT_NOISE': 0.5}
     ```
 
 * **`BORDER_SIZE`** (_integer_) : This attribute enables the feature to extend border size that compensates for stabilized output video frames motions. Its default value is `0`(no borders). You can easily pass this attribute as follows:

@@ -23,7 +23,6 @@ limitations under the License.
 # import the necessary packages
 from collections import deque
 
-import cv2
 import numpy as np
 
 from .base import _StabilizerBase, logger
@@ -102,18 +101,8 @@ class ASWStabilizer(_StabilizerBase):
         # initiate transformations capturing
         if not self.__frame_queue:
             # for first frame
-            previous_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            previous_gray = self._clahe.apply(previous_gray)
-            self.__previous_keypoints = cv2.goodFeaturesToTrack(
-                previous_gray,
-                maxCorners=200,
-                qualityLevel=0.05,
-                minDistance=30.0,
-                blockSize=3,
-                mask=None,
-                useHarrisDetector=False,
-                k=0.04,
-            )
+            previous_gray = self._to_gray(frame)
+            self.__previous_keypoints = self._detect_keypoints(previous_gray)
             self._frame_height, self._frame_width = frame.shape[:2]
             self.__frame_queue.append(frame)
             self.__previous_gray = previous_gray[:]
@@ -170,54 +159,15 @@ class ASWStabilizer(_StabilizerBase):
         latest frame in the queue and appends it to the bounded transforms
         deque (oldest is auto-dropped on overflow).
         """
-        frame_gray = cv2.cvtColor(self.__frame_queue[-1], cv2.COLOR_BGR2GRAY)
-        frame_gray = self._clahe.apply(frame_gray)
-
-        transformation = None
-        try:
-            # Lucas-Kanade optical flow
-            curr_kps, status, _error = cv2.calcOpticalFlowPyrLK(
-                self.__previous_gray, frame_gray, self.__previous_keypoints, None
+        frame_gray = self._to_gray(self.__frame_queue[-1])
+        self.__transforms.append(
+            self._estimate_motion(
+                self.__previous_gray, self.__previous_keypoints, frame_gray
             )
-
-            # keep only valid key-points
-            valid_curr_kps = curr_kps[status == 1]
-            valid_previous_keypoints = self.__previous_keypoints[status == 1]
-
-            # affine estimate between previous_2_current key-points
-            if self._cv2_version == 3:
-                # backward compatibility with OpenCV3
-                transformation = cv2.estimateRigidTransform(
-                    valid_previous_keypoints, valid_curr_kps, False
-                )
-            else:
-                transformation = cv2.estimateAffinePartial2D(
-                    valid_previous_keypoints, valid_curr_kps
-                )[0]
-        except cv2.error:
-            logger.warning("Video-Frame is too dark to generate any transformations!")
-            transformation = None
-
-        if transformation is not None:
-            dx = transformation[0, 2]
-            dy = transformation[1, 2]
-            da = np.arctan2(transformation[1, 0], transformation[0, 0])
-        else:
-            dx = dy = da = 0
-
-        self.__transforms.append([dx, dy, da])
+        )
 
         # refresh GFTT keypoints for next iteration
-        self.__previous_keypoints = cv2.goodFeaturesToTrack(
-            frame_gray,
-            maxCorners=200,
-            qualityLevel=0.05,
-            minDistance=30.0,
-            blockSize=3,
-            mask=None,
-            useHarrisDetector=False,
-            k=0.04,
-        )
+        self.__previous_keypoints = self._detect_keypoints(frame_gray)
         self.__previous_gray = frame_gray[:]
 
     def __box_filter_convolve(self, path, window_size):
