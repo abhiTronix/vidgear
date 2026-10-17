@@ -146,6 +146,10 @@ class _StabilizerBase:
         Estimates previous-to-current rigid motion `[dx, dy, da]` via Lucas-Kanade
         optical flow + partial affine fit. Returns zero motion if none is found.
         """
+        # nothing to track (e.g. blank/featureless previous frame)
+        if previous_keypoints is None or not len(previous_keypoints):
+            return [0.0, 0.0, 0.0]
+
         transformation = None
         try:
             # Lucas-Kanade optical flow
