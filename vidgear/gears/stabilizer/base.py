@@ -45,8 +45,8 @@ class _StabilizerBase:
     """
     Internal base class shared by all Stabilizer implementations
     (ASW, Kalman, ...). Holds common config: border handling, crop+zoom,
-    CLAHE, interpolation, OpenCV version, and the affine warp routine.
-    Subclasses implement `stabilize()` and the per-frame transform estimation.
+    CLAHE, interpolation, OpenCV version, feature tracking + motion
+    estimation, and the affine warp routine. Subclasses implement `stabilize()`.
     """
 
     def __init__(
@@ -114,6 +114,69 @@ class _StabilizerBase:
         self._interpolation = retrieve_best_interpolation(
             ["INTER_LINEAR_EXACT", "INTER_LINEAR", "INTER_AREA"]
         )
+
+    def _to_gray(self, frame: np.ndarray) -> np.ndarray:
+        """
+        Converts BGR `frame` to CLAHE-equalized grayscale. Shared across all modes.
+        """
+        return self._clahe.apply(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY))
+
+    def _detect_keypoints(self, gray: np.ndarray) -> np.ndarray | None:
+        """
+        Detects GFTT keypoints on `gray` for tracking into the next frame.
+        """
+        return cv2.goodFeaturesToTrack(
+            gray,
+            maxCorners=200,
+            qualityLevel=0.05,
+            minDistance=30.0,
+            blockSize=3,
+            mask=None,
+            useHarrisDetector=False,
+            k=0.04,
+        )
+
+    def _estimate_motion(
+        self,
+        previous_gray: np.ndarray,
+        previous_keypoints: np.ndarray | None,
+        gray: np.ndarray,
+    ) -> list:
+        """
+        Estimates previous-to-current rigid motion `[dx, dy, da]` via Lucas-Kanade
+        optical flow + partial affine fit. Returns zero motion if none is found.
+        """
+        transformation = None
+        try:
+            # Lucas-Kanade optical flow
+            curr_kps, status, _error = cv2.calcOpticalFlowPyrLK(
+                previous_gray, gray, previous_keypoints, None
+            )
+
+            # keep only valid key-points
+            valid_curr_kps = curr_kps[status == 1]
+            valid_previous_keypoints = previous_keypoints[status == 1]
+
+            # affine estimate between previous_2_current key-points
+            if self._cv2_version == 3:
+                # backward compatibility with OpenCV3
+                transformation = cv2.estimateRigidTransform(
+                    valid_previous_keypoints, valid_curr_kps, False
+                )
+            else:
+                transformation = cv2.estimateAffinePartial2D(
+                    valid_previous_keypoints, valid_curr_kps
+                )[0]
+        except cv2.error:
+            logger.warning("Video-Frame is too dark to generate any transformations!")
+
+        if transformation is None:
+            return [0.0, 0.0, 0.0]
+        return [
+            transformation[0, 2],
+            transformation[1, 2],
+            np.arctan2(transformation[1, 0], transformation[0, 0]),
+        ]
 
     def _apply_warp(
         self, frame: np.ndarray, dx: float, dy: float, da: float
