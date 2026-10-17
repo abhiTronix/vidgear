@@ -23,6 +23,7 @@ from enum import Enum
 
 from .asw import ASWStabilizer
 from .base import _StabilizerBase
+from .kalman import KalmanStabilizer
 
 
 class StabilizerMode(Enum):
@@ -32,11 +33,11 @@ class StabilizerMode(Enum):
     | Value | Backend | Notes |
     |:-----:|:--------|:------|
     | `StabilizerMode.ASW` | Average Sliding-Window stabilizer | **Default** |
-    | `StabilizerMode.KALMAN` | Kalman-filter stabilizer | _Reserved_ - raises `NotImplementedError` |
+    | `StabilizerMode.KALMAN` | Zero-latency Kalman-filter stabilizer | Real-time, no frame buffering |
     """
 
     ASW = "asw"  # Average Sliding-Window (default)
-    KALMAN = "kalman"  # reserved; implementation coming in a future release
+    KALMAN = "kalman"  # zero-latency Kalman filter
 
 
 def Stabilizer(
@@ -50,8 +51,9 @@ def Stabilizer(
         mode (StabilizerMode): selects the stabilization algorithm.
             Defaults to `StabilizerMode.ASW`.
         **kwargs: forwarded to the selected backend's constructor (e.g.
-            `smoothing_radius`, `border_type`, `border_size`, `crop_n_zoom`,
-            `logging`).
+            `smoothing_radius` for ASW; `process_noise`, `measurement_noise`
+            for KALMAN; `border_type`, `border_size`, `crop_n_zoom`, `logging`
+            for both).
 
     Returns:
         An instance of the chosen stabilizer (subclass of `_StabilizerBase`).
@@ -67,14 +69,11 @@ def Stabilizer(
         return ASWStabilizer(**kwargs)
 
     if mode is StabilizerMode.KALMAN:
-        raise NotImplementedError(
-            "[Stabilizer:ERROR] :: `KalmanStabilizer` is not yet implemented; "
-            "use `StabilizerMode.ASW` for now."
-        )
+        return KalmanStabilizer(**kwargs)
 
     raise ValueError(
         "[Stabilizer:ERROR] :: Unsupported stabilizer mode `{}`.".format(mode)
     )
 
 
-__all__ = ["ASWStabilizer", "Stabilizer", "StabilizerMode"]
+__all__ = ["ASWStabilizer", "KalmanStabilizer", "Stabilizer", "StabilizerMode"]
