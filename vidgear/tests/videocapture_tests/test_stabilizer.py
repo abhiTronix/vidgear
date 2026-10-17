@@ -20,12 +20,19 @@ limitations under the License.
 
 # import the necessary packages
 import logging as log
+from itertools import pairwise
 
+import cv2
 import numpy as np
 import pytest
 
 from vidgear.gears.helper import logger_handler
-from vidgear.gears.stabilizer import ASWStabilizer, Stabilizer, StabilizerMode
+from vidgear.gears.stabilizer import (
+    ASWStabilizer,
+    KalmanStabilizer,
+    Stabilizer,
+    StabilizerMode,
+)
 
 # define test logger
 logger = log.getLogger("Test_stabilizer")
@@ -46,10 +53,12 @@ def test_factory_explicit_asw():
     assert isinstance(s, ASWStabilizer)
 
 
-def test_factory_kalman_not_implemented():
-    """`StabilizerMode.KALMAN` is reserved; must raise NotImplementedError for now."""
-    with pytest.raises(NotImplementedError):
-        Stabilizer(mode=StabilizerMode.KALMAN)
+def test_factory_kalman():
+    """`StabilizerMode.KALMAN` returns KalmanStabilizer and forwards kwargs."""
+    s = Stabilizer(
+        mode=StabilizerMode.KALMAN, process_noise=1e-3, measurement_noise=0.5
+    )
+    assert isinstance(s, KalmanStabilizer)
 
 
 def test_factory_bad_mode_type():
@@ -143,3 +152,53 @@ def test_asw_crop_n_zoom_preserves_shape():
             got_frame = True
     assert got_frame
     s.clean()
+
+
+def _jittered_frames(n, seed=5):
+    """Textured scene shifted by random per-frame jitter (simulated shaky cam)."""
+    rng = np.random.default_rng(seed)
+    scene = cv2.GaussianBlur(
+        rng.integers(0, 255, (240, 320, 3), dtype=np.uint8), (5, 5), 0
+    )
+    for _ in range(n):
+        tx, ty = rng.uniform(-6, 6, 2)
+        yield cv2.warpAffine(
+            scene,
+            np.float32([[1, 0, tx], [0, 1, ty]]),
+            (320, 240),
+            borderMode=cv2.BORDER_REFLECT,
+        )
+
+
+def _mean_shift(frames):
+    """Mean frame-to-frame translation magnitude via phase correlation."""
+    gray = [np.float32(cv2.cvtColor(f, cv2.COLOR_BGR2GRAY)) for f in frames]
+    return np.mean([np.hypot(*cv2.phaseCorrelate(a, b)[0]) for a, b in pairwise(gray)])
+
+
+@pytest.mark.parametrize(
+    "kwargs, shape",
+    [
+        ({}, (240, 320, 3)),
+        ({"border_size": 10, "border_type": "reflect"}, (260, 340, 3)),
+        ({"border_size": 10, "crop_n_zoom": True}, (240, 320, 3)),
+    ],
+)
+def test_kalman_zero_latency(kwargs, shape):
+    """Kalman emits a frame on every call (no warm-up) with expected shape."""
+    s = Stabilizer(mode=StabilizerMode.KALMAN, **kwargs)
+    for f in _jittered_frames(20):
+        r = s.stabilize(f)
+        assert r is not None and r.shape == shape
+    assert s.stabilize(None) is None
+    s.clean()
+
+
+def test_kalman_reduces_jitter():
+    """Stabilized output must shake noticeably less than jittered input."""
+    frames = list(_jittered_frames(60))
+    s = KalmanStabilizer()
+    out = [s.stabilize(f) for f in frames]
+    s.clean()
+    # skip filter warm-up
+    assert _mean_shift(out[10:]) < 0.5 * _mean_shift(frames[10:])
