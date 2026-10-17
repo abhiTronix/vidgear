@@ -23,7 +23,7 @@ import logging as log
 import queue
 import time
 from threading import Event, Thread
-from typing import Any, TypeVar
+from typing import Any, Self
 
 import cv2
 from numpy.typing import NDArray
@@ -49,8 +49,6 @@ yt_dlp = import_dependency_safe("yt_dlp", error="silent")
 
 
 # Type variable `T` representing class `CamGear`.
-T = TypeVar("T", bound="CamGear")
-
 
 class CamGear:
     """
@@ -268,7 +266,7 @@ class CamGear:
         # initialize stream read flag event
         self.__stream_read = Event()
 
-    def start(self) -> T:
+    def start(self) -> Self:
         """
         Launches the internal *Threaded Frames Extractor* daemon.
 
