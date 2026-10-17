@@ -28,6 +28,28 @@ import numpy as np
 from .base import _StabilizerBase, logger
 
 
+def _validate_noise(name: str, value) -> np.ndarray:
+    """
+    Returns `value` as a float64 scalar or length-3 array, raising `ValueError`
+    unless every element is finite and positive.
+    """
+    try:
+        arr = np.asarray(value, dtype=np.float64)
+    except (TypeError, ValueError):
+        arr = None
+    if (
+        arr is None
+        or arr.shape not in ((), (3,))
+        or not np.all(np.isfinite(arr))
+        or not np.all(arr > 0)
+    ):
+        raise ValueError(
+            "[Stabilizer:ERROR] :: `{}` must be a finite positive scalar or "
+            "3-element [x, y, a] sequence, got `{}`.".format(name, value)
+        )
+    return arr
+
+
 class KalmanStabilizer(_StabilizerBase):
     """
     Zero-Latency Kalman-filter Video Stabilizer.
@@ -64,8 +86,8 @@ class KalmanStabilizer(_StabilizerBase):
             logging=logging,
         )
         # scalar or per-axis `[x, y, a]` covariances; broadcast against state
-        self.__Q = np.asarray(process_noise, dtype=np.float64)
-        self.__R = np.asarray(measurement_noise, dtype=np.float64)
+        self.__Q = _validate_noise("process_noise", process_noise)
+        self.__R = _validate_noise("measurement_noise", measurement_noise)
         self._logging and logger.debug(
             "Setting Kalman noise: Q={}, R={}".format(self.__Q, self.__R)
         )
