@@ -24,7 +24,7 @@ limitations under the License.
 
 ## What is the Stabilizer Class and what does it do?
 
-**Answer:** The Stabilizer Class is an auxiliary class that enables video stabilization for Vidgear with minimal latency and little to no additional computational overhead. Since `v0.3.5`, the Stabilizer module follows a plugin-style design with a `Stabilizer(...)` factory function backed by a [`StabilizerMode`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum. The default (and currently only) backend is the **Average Sliding-Window (ASW)** stabilizer. For more details, see the [Stabilizer Class documentation ➶](../../gears/stabilizer/).
+**Answer:** The Stabilizer Class is an auxiliary class that enables video stabilization for Vidgear with minimal latency and little to no additional computational overhead. Since `v0.3.5`, the Stabilizer module follows a plugin-style design with a `Stabilizer(...)` factory function backed by a [`StabilizerMode`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum. The default backend is the **Average Sliding-Window (ASW)** stabilizer, with a zero-latency **Kalman** backend also available. For more details, see the [Stabilizer Class documentation ➶](../../gears/stabilizer/).
 
 &thinsp;
 
@@ -33,7 +33,7 @@ limitations under the License.
 **Answer:** Since `v0.3.5`, the Stabilizer module is implemented as a plugin-style package with a [`Stabilizer(...)`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.Stabilizer) factory backed by a [`StabilizerMode`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum.
 
 * The default mode is `StabilizerMode.ASW` (Average Sliding-Window), which matches the behavior of earlier versions.
-* `StabilizerMode.KALMAN` is currently a placeholder and raises `NotImplementedError`. It is planned for a future release.
+* `StabilizerMode.KALMAN` smooths the camera path with a Kalman filter and stabilizes every frame immediately (zero latency), tuned via `process_noise` and `measurement_noise`.
 
 Refer to the [`mode`](../../gears/stabilizer/params/#mode) for more details.
 
@@ -41,6 +41,7 @@ Refer to the [`mode`](../../gears/stabilizer/params/#mode) for more details.
 from vidgear.gears.stabilizer import Stabilizer, StabilizerMode
 
 stab = Stabilizer(mode=StabilizerMode.ASW, smoothing_radius=30)
+stab = Stabilizer(mode=StabilizerMode.KALMAN, measurement_noise=0.5)
 ```
 
 &thinsp;
@@ -50,9 +51,23 @@ stab = Stabilizer(mode=StabilizerMode.ASW, smoothing_radius=30)
 **Answer:** The [`Stabilizer(...)`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.Stabilizer) factory strictly validates the [`mode`](../../gears/stabilizer/params/#mode) parameter.
 
 * Passing a value that is not a [`StabilizerMode`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum member raises a `TypeError`.
-* Selecting `StabilizerMode.KALMAN` raises a `NotImplementedError`, as it is reserved for a future implementation.
 
 Always use a valid enum value.
+
+&thinsp;
+
+## Which mode should I pick: ASW or Kalman?
+
+**Answer:** Pick by latency budget.
+
+* **`StabilizerMode.KALMAN`** — every `stabilize()` call returns the current frame stabilized, no warm-up and no buffering. Use for live streams, video calls, robotics, or anything latency-sensitive.
+* **`StabilizerMode.ASW`** — looks `smoothing_radius` frames ahead, so it returns `None` for the first `smoothing_radius` frames and lags by that much afterwards, but smooths slightly better as it sees future motion. Use for offline/file processing.
+
+&thinsp;
+
+## How does the Kalman stabilizer work?
+
+**Answer:** Per frame, it estimates the rigid motion `[dx, dy, da]` from the previous frame (GFTT keypoints + Lucas-Kanade optical flow + partial affine fit), accumulates it into a raw camera trajectory, and feeds that trajectory to a vectorized constant-position Kalman filter (one independent filter per axis). The current frame is then warped by `smoothed - raw`, moving it onto the filtered path. Based on `videostabKalman` by Chen Jia, itself derived from [Nghia Ho's video stabilization](http://nghiaho.com/?p=2093).
 
 &thinsp;
 

@@ -20,6 +20,18 @@ limitations under the License.
 
 # Release Notes
 
+## v0.3.6 (In Progress)
+
+???+ tip "New Features"
+    - [x] ✨ **Zero-Latency Kalman Stabilizer:**
+        * Added `KalmanStabilizer` backend, selectable via `StabilizerMode.KALMAN`, that smooths the camera trajectory online with a vectorized Kalman filter and stabilizes every frame immediately (no frame buffering), ideal for live streams.
+        * Added `process_noise` and `measurement_noise` tuning parameters, exposed in `VideoGear` (and gears wrapping it) as `PROCESS_NOISE` and `MEASUREMENT_NOISE` options.
+
+??? success "Updates/Improvements"
+    - [x] **Stabilizer:** Moved shared feature tracking and motion estimation into `_StabilizerBase` for reuse across all backends.
+    - [x] **Tests:** Added Kalman stabilizer tests, including a jitter-reduction check on synthetic shaky footage.
+    - [x] **Documentation:** Documented the Kalman backend across Stabilizer, VideoGear, WebGear, WebGear_RTC, and NetGear_Async docs.
+
 ## v0.3.5 (2026-05-16)
 
 ???+ tip "New Features"

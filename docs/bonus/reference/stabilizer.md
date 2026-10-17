@@ -33,3 +33,7 @@ limitations under the License.
 ::: vidgear.gears.stabilizer.ASWStabilizer
 
 &nbsp;
+
+::: vidgear.gears.stabilizer.KalmanStabilizer
+
+&nbsp;
