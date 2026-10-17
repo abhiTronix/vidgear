@@ -280,7 +280,7 @@ stream.stop()
 
 VideoGear also serves as a unified video-capture API, offering seamless access to [CamGear](#camgear), [PiGear](#pigear), and [FFGear](#ffgear) along with their respective parameters. You can switch between these backends using the `api` parameter (defaults to `Backend.CAMGEAR`).
 
-It is especially useful when you want to toggle between different video-capture backends without significant code changes. Additionally, it simplifies video stabilization for both real-time and non-real-time streams, requiring minimal effort and fewer lines of code.
+It is especially useful when you want to toggle between different video-capture backends without significant code changes. Additionally, it simplifies video stabilization for both real-time and non-real-time streams, requiring minimal effort and fewer lines of code. The Stabilizer offers two backends: the default **Average Sliding-Window** _(`StabilizerMode.ASW`)_ and a **zero-latency Kalman filter** _(`StabilizerMode.KALMAN`)_ for live streams.
 
 **Below is a snapshot of a VideoGear Stabilizer in action (_See its detailed usage [here][stabilizer-doc-ex]_):**
 

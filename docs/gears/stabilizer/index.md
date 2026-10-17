@@ -37,7 +37,10 @@ limitations under the License.
 
 > Stabilizer is an auxiliary class that enables Video Stabilization for vidgear with minimalistic latency, and at the expense of little to no additional computational requirements. 
 
-The basic idea behind it is to track and save the salient feature array for the given number of frames and then use these anchor points to cancel out all perturbations relative to it for the incoming frames in the queue. This class relies on **bounded fixed-size deques** for error-free & ultra-fast frame handling, with memory capped at `O(smoothing_radius)` regardless of stream length.
+The basic idea behind it is to track salient features between consecutive frames, accumulate their motion into a camera trajectory, smooth that trajectory, and warp each frame onto the smoothed path to cancel out perturbations. Two backends are available:
+
+- **Average Sliding-Window (ASW)** _(default)_: smooths the trajectory with a box filter over a queue of `smoothing_radius` frames. Relies on **bounded fixed-size deques** with memory capped at `O(smoothing_radius)`, at the cost of `smoothing_radius` frames of latency.
+- **Kalman** : smooths the trajectory online with a vectorized Kalman filter, so every frame is stabilized immediately — **zero latency**, no frame buffering, `O(1)` memory. Ideal for live streams.
 
 !!! tip "For more detailed information on Stabilizer working, See [this blogpost ➶](https://learnopencv.com/video-stabilization-using-point-feature-matching-in-opencv/)"
 
@@ -52,7 +55,7 @@ The basic idea behind it is to track and save the salient feature array for the 
     | Mode | Backend | Status |
     |:----:|:--------|:-------|
     | `StabilizerMode.ASW` | [`ASWStabilizer`](../../bonus/reference/stabilizer/#aswstabilizer) — Average Sliding-Window | **Default** |
-    | `StabilizerMode.KALMAN` | *Kalman-filter-based* | *Planned for a future release* |
+    | `StabilizerMode.KALMAN` | [`KalmanStabilizer`](../../bonus/reference/stabilizer/#kalmanstabilizer) — Zero-latency Kalman filter | Real-time |
 
     !!! success "The public `Stabilizer` API remains unchanged, so existing code continues to work as before while automatically using the default ASW backend."
 
@@ -61,6 +64,8 @@ The basic idea behind it is to track and save the salient feature array for the 
 ## Features
 
 - [x] _Real-time stabilization with low latency and no extra resources._
+
+- [x] _Zero-latency Kalman backend for live streams._
 
 - [x] _Works exceptionally well with low-frequency jitter._
 
