@@ -741,15 +741,15 @@ files = [
 
 [[package]]
 name = "deffcode"
-version = "0.2.7"
+version = "0.2.8"
 description = "A cross-platform High-performance & Flexible Real-time Video Frames Decoder in Python."
 optional = true
-python-versions = ">=3.10"
+python-versions = ">=3.11"
 groups = ["main"]
 markers = "extra == \"core\" or extra == \"asyncio\""
 files = [
-    {file = "deffcode-0.2.7-py3-none-any.whl", hash = "sha256:39d068f4811a752e72d78dc78b3b8fc82f89bd96db554baa30879e22bfcf5275"},
-    {file = "deffcode-0.2.7.tar.gz", hash = "sha256:c083f625291667f9794a3b3e53b16a46c14197ac36b1e443587b544c9ae0abea"},
+    {file = "deffcode-0.2.8-py3-none-any.whl", hash = "sha256:b588f0cfba04abb4f0a0589a2eac3c03e29c9aed44e0212652f09b77a00cac23"},
+    {file = "deffcode-0.2.8.tar.gz", hash = "sha256:c14e62c0c522ac2c45bab436ad81483bba6fffd60e261a6e41752e9f78003091"},
 ]
 
 [package.dependencies]
@@ -2257,4 +2257,4 @@ core = ["Pillow", "deffcode", "dxcam", "mss", "pyscreenshot", "pyzmq", "simplejp
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11"
-content-hash = "38604fcdc709961d85852c713b22323a34d07c82ddfcf64caf03ce938f9f78ca"
+content-hash = "708a176e67910086ae2b4537762d57107a916ee82f3dde24bdf417597fe99c07"

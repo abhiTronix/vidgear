@@ -61,31 +61,31 @@ dynamic = ["version", "readme"]
 
 [project.optional-dependencies]
 core = [
-    "yt-dlp[default]>=2026.4.10.235301.dev0",
-    "pyzmq>=27.1.0",
-    "Pillow",
+    "yt-dlp[default]>=2026.8.19",
+    "pyzmq>=27.2.0",
+    "Pillow>=13.0.0",
     "simplejpeg>=1.9.0",
-    "deffcode>=0.2.7",
+    "deffcode>=0.2.8",
     "mss>=10.2.0",
     "pyscreenshot>=3.1",
-    "dxcam>=0.0.5; sys_platform == 'win32'",
+    "dxcam>=0.3.0; sys_platform == 'win32'",
 ]
 asyncio = [
-    "yt-dlp[default]>=2026.4.10.235301.dev0",
-    "pyzmq>=27.1.0",
+    "yt-dlp[default]>=2026.8.19",
+    "pyzmq>=27.2.0",
     "simplejpeg>=1.9.0",
-    "deffcode>=0.2.7",
+    "deffcode>=0.2.8",
     "mss>=10.2.0",
-    "Pillow",
+    "Pillow>=13.0.0",
     "pyscreenshot>=3.1",
-    "starlette>=1.0.0",
-    "jinja2",
-    "msgpack>=1.1.2",
+    "starlette>=1.8.0",
+    "jinja2>=3.1.6",
+    "msgpack>=1.2.3",
     "msgpack_numpy>=0.4.8",
-    "aiortc>=1.14.0",
-    "uvicorn>=0.46.0",
-    "dxcam>=0.0.5; sys_platform == 'win32'",
-    "uvloop>=0.22.1; sys_platform != 'win32'",
+    "aiortc>=1.15.0",
+    "uvicorn>=0.54.0",
+    "dxcam>=0.3.0; sys_platform == 'win32'",
+    "uvloop>=0.23.0; sys_platform != 'win32'",
 ]
 
 [project.urls]
