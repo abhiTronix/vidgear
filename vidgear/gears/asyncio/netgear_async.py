@@ -27,7 +27,7 @@ import secrets
 import string
 import warnings
 from collections.abc import AsyncGenerator
-from typing import Any, TypeVar
+from typing import Any, Self
 
 import numpy as np
 from numpy.typing import NDArray
@@ -53,8 +53,6 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 # Type variable `T` representing class `NetGear_Async`.
-T = TypeVar("T", bound="NetGear_Async")
-
 
 class NetGear_Async:
     """
@@ -353,7 +351,7 @@ class NetGear_Async:
         # create asyncio queue if bidirectional mode activated
         self.__queue = asyncio.Queue() if self.__bi_mode else None
 
-    def launch(self) -> T:
+    def launch(self) -> Self:
         """
         Launches an asynchronous generators and loop executors for respective task.
         """

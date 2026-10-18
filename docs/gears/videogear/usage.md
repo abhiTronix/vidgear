@@ -196,41 +196,89 @@ The usage example is as follows:
 
 !!! warning "The stabilizer might be slower for High-Quality/Resolution videos-frames."
 
-```python linenums="1" hl_lines="7"
-# import required libraries
-from vidgear.gears import VideoGear
-import numpy as np
-import cv2
+=== ":material-window-shutter: Average Sliding-Window (ASW)"
 
-# open any valid video stream with stabilization enabled(`stabilize = True`)
-stream_stab = VideoGear(source="test.mp4", stabilize=True).start()
+    ```python linenums="1" hl_lines="7"
+    # import required libraries
+    from vidgear.gears import VideoGear
+    import numpy as np
+    import cv2
 
-# loop over
-while True:
+    # open any valid video stream with stabilization enabled(`stabilize = True`)
+    stream_stab = VideoGear(source="test.mp4", stabilize=True).start()
 
-    # read stabilized frames
-    frame_stab = stream_stab.read()
+    # loop over
+    while True:
 
-    # check for stabilized frame if None-type
-    if frame_stab is None:
-        break
+        # read stabilized frames
+        frame_stab = stream_stab.read()
 
-    # {do something with the frame here}
+        # check for stabilized frame if None-type
+        if frame_stab is None:
+            break
 
-    # Show output window
-    cv2.imshow("Stabilized Output", frame_stab)
+        # {do something with the frame here}
 
-    # check for 'q' key if pressed
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord("q"):
-        break
+        # Show output window
+        cv2.imshow("Stabilized Output", frame_stab)
 
-# close output window
-cv2.destroyAllWindows()
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
 
-# safely close streams
-stream_stab.stop()
-```
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close streams
+    stream_stab.stop()
+    ```
+
+=== ":material-lightning-bolt: Kalman (Zero-Latency)"
+
+    ??? new "New in v0.3.6"
+        The Kalman backend _(`StabilizerMode.KALMAN`)_ was added in `v0.3.6`.
+
+    !!! success "Kalman backend stabilizes every frame immediately, with no `SMOOTHING_RADIUS` frames of startup delay or lag. Ideal for live streams."
+
+    ```python linenums="1" hl_lines="2 7 10"
+    # import required libraries
+    from vidgear.gears.stabilizer import StabilizerMode
+    from vidgear.gears import VideoGear
+    import cv2
+
+    # select zero-latency Kalman stabilizer backend
+    options = {"STABILIZER_MODE": StabilizerMode.KALMAN}
+
+    # open any valid video stream with stabilization enabled(`stabilize = True`)
+    stream_stab = VideoGear(source="test.mp4", stabilize=True, **options).start()
+
+    # loop over
+    while True:
+
+        # read stabilized frames
+        frame_stab = stream_stab.read()
+
+        # check for stabilized frame if None-type
+        if frame_stab is None:
+            break
+
+        # {do something with the frame here}
+
+        # Show output window
+        cv2.imshow("Stabilized Output", frame_stab)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close streams
+    stream_stab.stop()
+    ```
 
 &nbsp;
 

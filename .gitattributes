@@ -1,7 +1,7 @@
 # Basic .gitattributes for a vidgear repo.
 
 # Set the default behavior, in case people don't have core.autocrlf set.
-* text=auto
+* text=auto eol=lf
 
 # Binary data types
 *.gif binary
@@ -28,14 +28,3 @@
 *.css linguist-language=CSS
 *.html linguist-language=HTML
 *.yml linguist-language=YAML
-
-# Override LF on some files
-*.js    text eol=lf
-*.md    text eol=lf
-*.css   text eol=lf
-*.html  text eol=lf
-*.cfg   text eol=lf
-*.json  text eol=lf
-*.sh    text eol=lf
-*.yml   text eol=lf
-*.manifest   text eol=lf

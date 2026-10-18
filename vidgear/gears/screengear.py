@@ -24,7 +24,7 @@ import logging as log
 import platform
 from collections import OrderedDict
 from threading import Event, Thread
-from typing import TypeVar
+from typing import Self
 
 import cv2
 import numpy as np
@@ -52,8 +52,6 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 # Type variable `T` representing class `ScreenGear`.
-T = TypeVar("T", bound="ScreenGear")
-
 
 class ScreenGear:
     """
@@ -284,7 +282,7 @@ class ScreenGear:
         # initialize termination flag
         self.__terminate = Event()
 
-    def start(self) -> T:
+    def start(self) -> Self:
         """
         Launches the internal *Threaded Frames Extractor* daemon
 

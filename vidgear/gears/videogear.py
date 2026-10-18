@@ -21,7 +21,7 @@ limitations under the License.
 # import the necessary packages
 import logging as log
 import warnings
-from typing import Any, TypeVar
+from typing import Any, Self
 
 from numpy.typing import NDArray
 
@@ -38,8 +38,6 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 # Type variable `T` representing class `VideoGear`.
-T = TypeVar("T", bound="VideoGear")
-
 
 class VideoGear:
     """
@@ -265,7 +263,7 @@ class VideoGear:
             **options,
         )
 
-    def start(self) -> T:
+    def start(self) -> Self:
         """
         Launches the internal *Threaded Frames Extractor* daemon of API in use.
 
