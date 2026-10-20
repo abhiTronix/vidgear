@@ -18,7 +18,7 @@ limitations under the License.
 ===============================================
 -->
 
-<img src="docs/overrides/assets/images/contribute.webp" alt="VidGear Contribution" loading="lazy" class="center" />
+<img src="docs/assets/images/contribute.webp" alt="VidGear Contribution" loading="lazy" class="center" />
 
 
 # Contribution Overview
