@@ -47,9 +47,8 @@ jobs:
         if: success()
       - name: install_dependencies
         run: |
-          pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin          
-          pip install -U mike mkdocstrings mkdocstrings-python
-          pip install -U mkdocs-git-authors-plugin
+          pip install -U zensical mkdocstrings-python
+          pip install -U "git+https://github.com/squidfunk/mike.git"
         if: success()
       - name: git configure
         run: |
@@ -89,9 +88,8 @@ jobs:
         if: success()
       - name: install_dependencies
         run: |
-          pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin          
-          pip install -U mike mkdocstrings mkdocstrings-python
-          pip install -U mkdocs-git-authors-plugin          
+          pip install -U zensical mkdocstrings-python
+          pip install -U "git+https://github.com/squidfunk/mike.git"
         if: success()
       - name: git configure
         run: |
@@ -133,9 +131,8 @@ jobs:
         if: success()
       - name: install_dependencies
         run: |
-          pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin          
-          pip install -U mike mkdocstrings mkdocstrings-python
-          pip install -U mkdocs-git-authors-plugin          
+          pip install -U zensical mkdocstrings-python
+          pip install -U "git+https://github.com/squidfunk/mike.git"
         if: success()
       - name: git configure
         run: |
