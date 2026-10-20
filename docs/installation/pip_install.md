@@ -129,7 +129,7 @@ When installing VidGear with [pip](https://pip.pypa.io/en/stable/installing/), y
 
 &thinsp;
 
-* #### :simple-raspberrypi: Picamera2
+* #### :simple-raspberrypi: Picamera2 { #picamera2 }
 
     Required only if you're using Raspberry Pi :fontawesome-brands-raspberry-pi: Camera Modules _(or USB webcams)_ with the [**PiGear**](../../gears/pigear/) API. Here's how to install [Picamera2](https://github.com/raspberrypi/picamera2) python library:
 

@@ -30,6 +30,7 @@ copyright: Copyright &copy; 2019 Abhishek Thakur(@abhiTronix)
 # Configuration
 theme:
   name: material
+  variant: classic
   custom_dir: docs/overrides
 
   # Default values, taken from mkdocs_theme.yml
@@ -99,9 +100,6 @@ theme:
 # Plugins
 plugins:
   - search
-  - git-revision-date-localized:
-      enable_creation_date: true
-      fallback_to_build_date: true
   - minify:
       minify_html: true
   - mkdocstrings:
@@ -159,10 +157,10 @@ extra_css:
 
 extra_javascript:
   - assets/javascripts/extra.js
-  - https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js
-  - https://cdn.jsdelivr.net/gh/clappr/clappr-level-selector-plugin@latest/dist/level-selector.min.js
-  - https://cdn.jsdelivr.net/gh/clappr/dash-shaka-playback@latest/dist/dash-shaka-playback.js
-  - https://cdn.jsdelivr.net/npm/@clappr/hlsjs-playback@latest/dist/hlsjs-playback.min.js
+  - https://cdn.jsdelivr.net/npm/@clappr/player@0.14.7/dist/clappr.min.js
+  - https://cdn.jsdelivr.net/npm/@clappr/level-selector@1.1.2/dist/level-selector.min.js
+  - https://cdn.jsdelivr.net/npm/shaka-player@4.16.53/dist/shaka-player.compiled.js
+  - https://cdn.jsdelivr.net/npm/dash-shaka-playback@4.1.8/dist/dash-shaka-playback.min.js
 
 # Extensions
 markdown_extensions:
@@ -185,8 +183,8 @@ markdown_extensions:
   - pymdownx.caret
   - pymdownx.details
   - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_index: !!python/name:zensical.extensions.emoji.twemoji
+      emoji_generator: !!python/name:zensical.extensions.emoji.to_svg
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
@@ -212,7 +210,7 @@ markdown_extensions:
   - pymdownx.tilde
 
 exclude_docs: |
-  overrides/assets/README.md
+  assets/README.md
 
 # Page tree
 nav:
