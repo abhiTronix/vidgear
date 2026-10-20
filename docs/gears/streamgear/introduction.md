@@ -110,7 +110,7 @@ StreamGear primarily operates in following independent modes for transcoding:
         </div>
       </div>
     </div>
-    <p align="middle">Powered by <a href="https://github.com/clappr/clappr" title="clappr">clappr</a> & <a href="https://github.com/clappr/hlsjs-playback" title="hlsjs-playback">HlsjsPlayback</a></p>
+    <p align="middle">Powered by <a href="https://github.com/clappr/clappr" title="clappr">clappr</a> & <a href="https://github.com/video-dev/hls.js" title="hls.js">hls.js</a></p>
 
     !!! info  "This video assets _(Playlist and segments)_ are hosted on [GitHub Repository](https://github.com/abhiTronix/vidgear-docs-additionals) and served with [raw.githack.com](https://raw.githack.com)" 
 

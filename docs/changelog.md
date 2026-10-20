@@ -31,6 +31,17 @@ limitations under the License.
     - [x] **Stabilizer:** Moved shared feature tracking and motion estimation into `_StabilizerBase` for reuse across all backends.
     - [x] **Tests:** Added Kalman stabilizer tests, including a jitter-reduction check on synthetic shaky footage.
     - [x] **Documentation:** Documented the Kalman backend across Stabilizer, VideoGear, WebGear, WebGear_RTC, and NetGear_Async docs.
+    - [x] **Docs Engine Migration (MkDocs → Zensical):**
+        * Migrated documentation builds from MkDocs + Material for MkDocs to [Zensical](https://zensical.org), reusing the existing `mkdocs.yml` configuration.
+        * Switched emoji extension namespace from `material.extensions.emoji` to `zensical.extensions.emoji` and dropped the unsupported `git-revision-date-localized` plugin.
+        * Moved static assets from `docs/overrides/assets` to `docs/assets`, since Zensical only reads templates from `custom_dir`.
+        * Updated docs deployment CI to install `zensical`, `mkdocstrings-python`, and the Zensical-compatible `mike` fork, replacing all MkDocs dependencies.
+        * Switched archived Clappr plugin repos (`dash-shaka-playback`, `clappr-level-selector-plugin`) to their Clappr monorepo npm packages (`dash-shaka-playback`, `@clappr/level-selector`) with `shaka-player` loaded as a peer, and pinned all CDN script versions in `mkdocs.yml` instead of `@latest`.
+
+??? bug "Bug-fixes"
+    - [x] **Docs Video Demos:**
+        * Fixed broken StreamGear HLS and Stabilizer DASH demo players caused by `@clappr/hlsjs-playback` v3 requiring a separately loaded `hls.js`; now uses the HLS playback bundled in `@clappr/player`.
+    - [x] **Docs Links:** Fixed broken `#picamera2` anchor links in pip and source installation docs.
 
 ## v0.3.5 (2026-05-16)
 
