@@ -52,7 +52,7 @@ document$.subscribe(function () {
   // HLS StremGear demo
   var player_hls = new Clappr.Player({
     source: 'https://bbcdn.githack.com/abhi_uno/vidgear-docs-additionals/raw/abc0c193ab26e21f97fa30c9267de6beb8a72295/streamgear_video_segments/HLS/streamgear_hls.m3u8',
-    plugins: [HlsjsPlayback, LevelSelector],
+    plugins: [LevelSelector], // HLS playback is built into @clappr/player
     hlsUseNextLevel: false,
     hlsMinimumDvrSize: 60,
     hlsRecoverAttempts: 16,

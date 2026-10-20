@@ -157,10 +157,10 @@ extra_css:
 
 extra_javascript:
   - assets/javascripts/extra.js
-  - https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js
-  - https://cdn.jsdelivr.net/gh/clappr/clappr-level-selector-plugin@latest/dist/level-selector.min.js
-  - https://cdn.jsdelivr.net/gh/clappr/dash-shaka-playback@latest/dist/dash-shaka-playback.js
-  - https://cdn.jsdelivr.net/npm/@clappr/hlsjs-playback@latest/dist/hlsjs-playback.min.js
+  - https://cdn.jsdelivr.net/npm/@clappr/player@0.14.7/dist/clappr.min.js
+  - https://cdn.jsdelivr.net/npm/@clappr/level-selector@1.1.2/dist/level-selector.min.js
+  - https://cdn.jsdelivr.net/npm/shaka-player@4.16.53/dist/shaka-player.compiled.js
+  - https://cdn.jsdelivr.net/npm/dash-shaka-playback@4.1.8/dist/dash-shaka-playback.min.js
 
 # Extensions
 markdown_extensions:
