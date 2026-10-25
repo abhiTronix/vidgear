@@ -61,7 +61,7 @@ To send data bidirectionally, NetGear_Async API provides following exclusive met
 
 !!! alert "`transceive_data` only works when Bidirectional Mode is enabled."
 
-* [`transceive_data`](../../../bonus/reference/NetGear_Async/#vidgear.gears.asyncio.NetGear_Async.transceive_data): It's a bidirectional mode exclusive method to transmit data _(in Receive mode)_ and receive data _(in Send mode)_, all while transferring frames in real-time. 
+* [`transceive_data`](../../../bonus/reference/netgear_async/#vidgear.gears.asyncio.NetGear_Async.transceive_data): It's a bidirectional mode exclusive method to transmit data _(in Receive mode)_ and receive data _(in Send mode)_, all while transferring frames in real-time. 
 
     * `data`: In `transceive_data` method, this parameter enables user to inputs data _(of **ANY**[^1] datatype)_ for sending back to Server at Client's end. 
 
@@ -690,7 +690,7 @@ if __name__ == "__main__":
 
 [^1]: 
     
-    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype is **ONLY SUPPORTED** at Client's end with [`transceive_data`](../../../bonus/reference/NetGear_Async/#vidgear.gears.asyncio.NetGear_Async.transceive_data) method using its `data` parameter. Whereas Server end can only send [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype as frame but not as data."
+    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype is **ONLY SUPPORTED** at Client's end with [`transceive_data`](../../../bonus/reference/netgear_async/#vidgear.gears.asyncio.NetGear_Async.transceive_data) method using its `data` parameter. Whereas Server end can only send [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype as frame but not as data."
 
 
 &nbsp;
