@@ -146,6 +146,11 @@ jobs:
           echo "RELEASE_NAME=$(python -c 'import vidgear; print(vidgear.__version__)')" >>$GITHUB_ENV
         shell: bash
         if: success()
+      - name: check docs links
+        run: |
+          zensical build -c
+          sh scripts/bash/check_links.sh site
+        if: success()
       - name: mike deploy docs dev
         run: |
           echo "Releasing ${{ env.NAME_DEV }}"
