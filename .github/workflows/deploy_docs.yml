@@ -32,7 +32,7 @@ jobs:
   deploy-docs-release:
     name: Deploy Release Docs
     if: github.event_name == 'release' && github.event.action == 'published'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
         with:
@@ -73,7 +73,7 @@ jobs:
   deploy-docs-stable:
     name: Deploy Latest Docs
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
         with:
@@ -115,7 +115,7 @@ jobs:
   deploy-docs-dev:
     name: Deploy Development Docs
     if: github.event_name == 'push' && github.ref == 'refs/heads/testing'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
         with:
