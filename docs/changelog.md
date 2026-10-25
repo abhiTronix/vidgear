@@ -20,28 +20,70 @@ limitations under the License.
 
 # Release Notes
 
-## v0.3.6 (In Progress)
+## v0.3.6 (2026-10-26)
 
 ???+ tip "New Features"
     - [x] ✨ **Zero-Latency Kalman Stabilizer:**
         * Added `KalmanStabilizer` backend, selectable via `StabilizerMode.KALMAN`, that smooths the camera trajectory online with a vectorized Kalman filter and stabilizes every frame immediately (no frame buffering), ideal for live streams.
         * Added `process_noise` and `measurement_noise` tuning parameters, exposed in `VideoGear` (and gears wrapping it) as `PROCESS_NOISE` and `MEASUREMENT_NOISE` options.
+        * Noise parameters are validated at initialization, raising `ValueError` unless a finite positive scalar or a 3-element `[x, y, a]` sequence is given.
+    - [x] ⬆️ **Python 3.14 Support:**
+        * Added official support for Python 3.14 across package classifiers and all CI pipelines (test matrix now covers Python 3.11–3.14).
 
 ??? success "Updates/Improvements"
     - [x] **Stabilizer:** Moved shared feature tracking and motion estimation into `_StabilizerBase` for reuse across all backends.
-    - [x] **Tests:** Added Kalman stabilizer tests, including a jitter-reduction check on synthetic shaky footage.
-    - [x] **Documentation:** Documented the Kalman backend across Stabilizer, VideoGear, WebGear, WebGear_RTC, and NetGear_Async docs.
+    - [x] **Dependencies:**
+        * Raised minimum versions of core and asyncio dependencies: `yt-dlp>=2026.8.19`, `pyzmq>=27.2.0`, `Pillow>=13.0.0`, `deffcode>=0.2.8`, `dxcam>=0.3.0`, `starlette>=1.8.0`, `jinja2>=3.1.6`, `msgpack>=1.2.3`, `aiortc>=1.15.0`, `uvicorn>=0.54.0`, and `uvloop>=0.23.0`.
+        * Previously unpinned `Pillow` and `jinja2` now have lower bounds.
+    - [x] **Packaging:**
+        * Added `poetry.lock` to the repository and a static `[tool.poetry]` version to `pyproject.toml`, since Poetry can't read setuptools' dynamic version.
+        * Enforced LF line endings project-wide via `.gitattributes` (`* text=auto eol=lf`) and renormalized existing CRLF files.
+    - [x] **Typing:** Replaced the `TypeVar` self-bound workaround with `typing.Self` for fluent `start()`/`launch()` return types in CamGear, VideoGear, ScreenGear, PiGear, and NetGear_Async.
+    - [x] **CI:**
+        * Updated CI test matrices (GitHub Actions, AppVeyor, Azure Pipelines) to Python 3.11–3.14.
+        * Bumped `actions/checkout` and `actions/setup-python` to `v7`.
+        * Pinned GitHub Actions runners to `ubuntu-24.04` instead of `ubuntu-latest` so runner upgrades don't unexpectedly break builds.
+        * Added `scripts/bash/check_links.sh` relative link checker (with glob whitelist in `check_links_whitelist.txt`) that fails on unresolved, case-mismatched relative `href`/`src` in the built docs site, and run it before deploying dev docs.
+        * Added a GIF to the `no-response` bot close comment.
+    - [x] **Tests:**
+        * Added Kalman stabilizer tests, including a jitter-reduction check on synthetic shaky footage, noise parameter validation, and featureless frames.
+        * Switched from `httpx` to `httpx2` for Starlette `TestClient` (Starlette 1.8+ deprecates the `httpx` fallback).
+        * Replaced `asyncio.TimeoutError` with builtin `TimeoutError`.
+    - [x] **Documentation:**
+        * Documented the Kalman backend across Stabilizer, VideoGear, WebGear, WebGear_RTC, and NetGear_Async docs, with zero-latency mode usage examples for Stabilizer and VideoGear.
+        * Added FFGear advanced recipes for multi-input decoding: a 2x2 mosaic grid using FFmpeg's `xstack` filter, and a crossfade between two inputs using the `xfade` filter.
+        * Updated supported Python versions to 3.11+ in installation docs.
+        * Updated `poetry_install.md` to use `poetry` commands instead of `pip`.
+        * Updated citation to VidGear v0.3.5 with new Zenodo DOI.
+        * Updated PiGear description in README.
     - [x] **Docs Engine Migration (MkDocs → Zensical):**
         * Migrated documentation builds from MkDocs + Material for MkDocs to [Zensical](https://zensical.org), reusing the existing `mkdocs.yml` configuration.
         * Switched emoji extension namespace from `material.extensions.emoji` to `zensical.extensions.emoji` and dropped the unsupported `git-revision-date-localized` plugin.
         * Moved static assets from `docs/overrides/assets` to `docs/assets`, since Zensical only reads templates from `custom_dir`.
         * Updated docs deployment CI to install `zensical`, `mkdocstrings-python`, and the Zensical-compatible `mike` fork, replacing all MkDocs dependencies.
         * Switched archived Clappr plugin repos (`dash-shaka-playback`, `clappr-level-selector-plugin`) to their Clappr monorepo npm packages (`dash-shaka-playback`, `@clappr/level-selector`) with `shaka-player` loaded as a peer, and pinned all CDN script versions in `mkdocs.yml` instead of `@latest`.
+        * Adapted relative links and images on all non-index pages to Zensical's source-file-based path resolution.
+
+??? danger "Breaking Updates/Changes"
+    - [ ] **Dropped Python 3.10 Support:**
+        * Python 3.10 has reached end-of-life; VidGear now requires **Python 3.11 or newer** (`requires-python = ">=3.11"`). _(Fixes #453)_
 
 ??? bug "Bug-fixes"
+    - [x] **Stabilizer:**
+        * Fixed `stabilize()` crashing with an uncaught `TypeError` on an empty keypoint array, and logging a misleading "too dark" warning when no keypoints were found; both cases now short-circuit to zero motion before optical flow.
     - [x] **Docs Video Demos:**
         * Fixed broken StreamGear HLS and Stabilizer DASH demo players caused by `@clappr/hlsjs-playback` v3 requiring a separately loaded `hls.js`; now uses the HLS playback bundled in `@clappr/player`.
-    - [x] **Docs Links:** Fixed broken `#picamera2` anchor links in pip and source installation docs.
+        * Credited `hls.js` instead of `HlsjsPlayback` for the StreamGear HLS demo.
+    - [x] **Docs Links:**
+        * Fixed broken `#picamera2` anchor links in pip and source installation docs.
+        * Fixed pre-existing wrong-depth and wrong-target internal links in FFGear, StreamGear, WriteGear, NetGear, NetGear_Async, and help pages.
+        * Fixed case of `NetGear_Async` reference link.
+        * Fixed line highlight number in FFGear NVENC example.
+
+??? question "Pull Requests"
+    * PR #457
+    * PR #455
+    * PR #452
 
 ## v0.3.5 (2026-05-16)
 
