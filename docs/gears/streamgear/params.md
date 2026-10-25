@@ -282,7 +282,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
-* **`-input_framerate`** _(float/int)_ :  ***(optional)*** This parameter specifies the assumed input video source framerate and only works in [Real-time Frames Mode](usage/#b-real-time-frames-mode). Its default value is `25.0` fps. Its value can be a float or integer, as shown below:
+* **`-input_framerate`** _(float/int)_ :  ***(optional)*** This parameter specifies the assumed input video source framerate and only works in [Real-time Frames Mode](rtfm/). Its default value is `25.0` fps. Its value can be a float or integer, as shown below:
 
     ```python
     # set input video source framerate to 60fps

@@ -45,7 +45,7 @@ For this mode, StreamGear API provides exclusive [`stream()`](../../../bonus/ref
 
 
 !!! alert "Real-time Frames Mode itself is NOT Live-Streaming :material-video-wireless-outline:"
-    To enable live-streaming in Real-time Frames Mode, use the exclusive [`-livestream`](params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter in the StreamGear API. Checkout [this usage example ➶](usage/#bare-minimum-usage-with-live-streaming) for more information.
+    To enable live-streaming in Real-time Frames Mode, use the exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter in the StreamGear API. Checkout [this usage example ➶](usage/#bare-minimum-usage-with-live-streaming) for more information.
 
 
 !!! danger "Please Remember :material-police-badge-outline:"

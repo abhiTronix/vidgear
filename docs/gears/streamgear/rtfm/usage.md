@@ -23,7 +23,7 @@ limitations under the License.
 
 !!! alert "Real-time Frames Mode itself is NOT Live-Streaming :material-video-wireless-outline:"
 
-    To enable live-streaming in Real-time Frames Mode, use the exclusive [`-livestream`](params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter in the StreamGear API. Checkout following [usage example ➶](#bare-minimum-usage-with-live-streaming) for more information.
+    To enable live-streaming in Real-time Frames Mode, use the exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter in the StreamGear API. Checkout following [usage example ➶](#bare-minimum-usage-with-live-streaming) for more information.
 
 !!! warning "Important Information :fontawesome-solid-person-military-pointing:"
     
@@ -36,9 +36,9 @@ limitations under the License.
 ??? danger "DEPRECATION NOTICES for `v0.3.3` and above"
     
     - [ ] The `terminate()` method in StreamGear is now deprecated and will be removed in a future release. Developers should use the new [`close()`](../../../bonus/reference/streamgear/#vidgear.gears.StreamGear.close) method instead, as it offers a more descriptive name, similar to the WriteGear API, for safely terminating StreamGear processes.
-    - [ ] The `rgb_mode` parameter in [`stream()`](../../bonus/reference/streamgear/#vidgear.gears.StreamGear.stream) method, which earlier used to support RGB frames in Real-time Frames Mode is now deprecated, and will be removed in a future version. Only BGR format frames will be supported going forward. Please update your code to handle BGR format frames.
+    - [ ] The `rgb_mode` parameter in [`stream()`](../../../bonus/reference/streamgear/#vidgear.gears.StreamGear.stream) method, which earlier used to support RGB frames in Real-time Frames Mode is now deprecated, and will be removed in a future version. Only BGR format frames will be supported going forward. Please update your code to handle BGR format frames.
 
-!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../help/streamgear_ex/)"
+!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
 
 
 &thinsp;

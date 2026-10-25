@@ -35,7 +35,7 @@ limitations under the License.
     pip install deffcode
     ```
 
-    For FFmpeg installation, see [FFmpeg Installation ➶](../ffmpeg_install/)
+    For FFmpeg installation, see [FFmpeg Installation ➶](ffmpeg_install/)
 
 
 &thinsp;
@@ -776,7 +776,7 @@ In this example, we will:
 4. Convert **NV12** frames into the **BGR24** pixel format using the [`-enforce_cv_patch`](../params/#b-ffdecoder-parameters) flag together with OpenCV’s `cvtColor()` method for OpenCV compatibility.
 5. Encode the resulting **BGR24** frames using OpenCV’s `VideoWriter` API.
 
-!!! tip "You can use FFGear's [`stream.stream.metadata`](../../params/#a-ffgear-parameters) property object that dumps source Video's metadata information _(as JSON string)_ to retrieve source framerate."
+!!! tip "You can use FFGear's [`stream.stream.metadata`](../params/#a-ffgear-parameters) property object that dumps source Video's metadata information _(as JSON string)_ to retrieve source framerate."
 
 !!! info "More information on Nvidia's NVENC Encoder can be found [here ➶](https://developer.nvidia.com/blog/nvidia-ffmpeg-transcoding-guide/)"
 
@@ -905,7 +905,7 @@ writer.release()
 ??? info "Additional Parameters in WriteGear API"
     WriteGear API only requires a valid Output filename _(e.g. `output_foo.mp4`)_ as input, but you can easily control any output specifications _(such as bitrate, codec, framerate, resolution, subtitles, etc.)_ supported by FFmpeg _(in use)_.
 
-!!! tip "You can use FFGear's [`stream.stream.metadata`](../../params/#a-ffgear-parameters) property object that dumps source Video's metadata information _(as JSON string)_ to retrieve source framerate."
+!!! tip "You can use FFGear's [`stream.stream.metadata`](../params/#a-ffgear-parameters) property object that dumps source Video's metadata information _(as JSON string)_ to retrieve source framerate."
 
 === "Transcoding BGR frames"
 
@@ -1197,7 +1197,7 @@ For advanced multi-input or multi-output pipelines, FFGear supports `-filter_com
 
 In this example, we apply a watermark image _(say `watermark.png` with transparent background)_ overlay to the `10` seconds of video file _(say `foo.mp4`)_ using FFmpeg's [`overlay`](https://ffmpeg.org/ffmpeg-filters.html#toc-overlay-1) filter with some additional filtering:
 
-!!! info "You can use FFGear API's [`stream.stream.metadata`](../../params/#a-ffgear-parameters) property object that dumps Source Metadata as JSON to retrieve source framerate and frame-size."
+!!! info "You can use FFGear API's [`stream.stream.metadata`](../params/#a-ffgear-parameters) property object that dumps Source Metadata as JSON to retrieve source framerate and frame-size."
 
 !!! danger "Remember to replace `watermark.png` watermark image absolute file path with yours before executing this example."
 

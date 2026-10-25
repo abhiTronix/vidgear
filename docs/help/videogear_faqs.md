@@ -42,7 +42,7 @@ limitations under the License.
 
 ## How do I select a specific backend in VideoGear?
 
-**Answer:** Use the [`api`](../gears/pigear/param/#api) parameter with the [`Backend`](../bonus/reference/helper/#vidgear.gears.helper.Backend) enum:
+**Answer:** Use the [`api`](../gears/videogear/params/#api) parameter with the [`Backend`](../bonus/reference/helper/#vidgear.gears.helper.Backend) enum:
 
 ```python
 from vidgear.gears import VideoGear

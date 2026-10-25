@@ -110,7 +110,7 @@ In this example, we will be Live-Streaming video-frames from Raspberry Pi _(with
 
             !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-            !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](params) user-defined optional parameter boolean attribute."
+            !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../gears/pigear/params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
 
         ```python linenums="1"
         # import required libraries
@@ -246,7 +246,7 @@ In this example, we will be Live-Streaming video-frames from Raspberry Pi _(with
 
             !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-            !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](params) user-defined optional parameter boolean attribute."
+            !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../gears/pigear/params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
 
         ```python linenums="1"
         # import required libraries

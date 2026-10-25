@@ -504,7 +504,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../installation/pip_install/#picamera2) for its installation."
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../../installation/pip_install/#picamera2) for its installation."
 
 !!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
@@ -592,7 +592,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
         !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../gears/pigear/params) user-defined optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../pigear/params) user-defined optional parameter boolean attribute."
 
     ```python linenums="1" hl_lines="47-60"
     # import required libraries
@@ -821,7 +821,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../installation/pip_install/#picamera2) for its installation."
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../../installation/pip_install/#picamera2) for its installation."
 
 !!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
@@ -916,7 +916,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
         !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../gears/pigear/params) user-defined optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../pigear/params) user-defined optional parameter boolean attribute."
 
     ```python linenums="1" hl_lines="19 48-64"
     # import required libraries

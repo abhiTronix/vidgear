@@ -28,7 +28,7 @@ FFGear API **MUST** have a valid FFmpeg executable installed for its core functi
 
 
 !!! warning "FFGear API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system."
-!!! tip "Enable logging _([`logging=True`](params/#logging))_ for debugging FFmpeg validation process."
+!!! tip "Enable logging _([`logging=True`](../params/#logging))_ for debugging FFmpeg validation process."
 
 &thinsp;
 
@@ -40,7 +40,7 @@ The FFGear API supports _Auto-Detection_ and _Manual Configuration_ methods on a
 
 !!! quote "This is a recommended approach on Linux Machines"
 
-If FFGear API not receives any input from the user on [**`custom_ffmpeg`**](params/#custom_ffmpeg) parameter, then on Linux system, it tries to **auto-detects** the required FFmpeg installed binaries through validation test that employs `subprocess` python module. 
+If FFGear API not receives any input from the user on [**`custom_ffmpeg`**](../params/#custom_ffmpeg) parameter, then on Linux system, it tries to **auto-detects** the required FFmpeg installed binaries through validation test that employs `subprocess` python module. 
 
 **Installation:** You can install easily install official FFmpeg according to your Linux Distro by following [this post ➶](https://www.tecmint.com/install-ffmpeg-in-linux/)
 
@@ -51,7 +51,7 @@ If FFGear API not receives any input from the user on [**`custom_ffmpeg`**](para
 
     *Linux Static Binaries:* http://johnvansickle.com/ffmpeg/
 
-* **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'ffmpeg/bin'`)  or path of `ffmpeg` executable itself to the [**`custom_ffmpeg`**](params/#custom_ffmpeg) parameter in the FFGear API.
+* **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'ffmpeg/bin'`)  or path of `ffmpeg` executable itself to the [**`custom_ffmpeg`**](../params/#custom_ffmpeg) parameter in the FFGear API.
 
     !!! warning "If binaries were not found at the manually specified path, FFGear API will throw **RuntimeError**!"
 
@@ -67,13 +67,13 @@ The FFGear API supports _Auto-Installation_ and _Manual Configuration_ methods o
 
 !!! quote "This is a recommended approach on Windows Machines"
 
-If FFGear API not receives any input from the user on [**`custom_ffmpeg`**](params/#custom_ffmpeg) parameter, then on Windows system FFGear API **auto-generates** the required FFmpeg Static Binaries from a dedicated [**Github Server**](https://github.com/abhiTronix/FFmpeg-Builds) into the temporary directory _(for e.g. `C:\Temp`)_ of your machine.
+If FFGear API not receives any input from the user on [**`custom_ffmpeg`**](../params/#custom_ffmpeg) parameter, then on Windows system FFGear API **auto-generates** the required FFmpeg Static Binaries from a dedicated [**Github Server**](https://github.com/abhiTronix/FFmpeg-Builds) into the temporary directory _(for e.g. `C:\Temp`)_ of your machine.
 
 !!! warning Important Information
 
     * The files downloaded to temporary directory _(for e.g. `C:\TEMP`)_, may get erased if your machine shutdowns/restarts.
 
-    * You can also provide a custom save path for auto-downloading **FFmpeg Static Binaries** through [`-ffmpeg_download_path`](params/#a-exclusive-parameters) parameter.
+    * You can also provide a custom save path for auto-downloading **FFmpeg Static Binaries** through [`-ffmpeg_download_path`](../params/#a-exclusive-parameters) parameter.
 
     * If binaries were found at the specified path, FFGear automatically skips the auto-installation step.
 
@@ -86,7 +86,7 @@ If FFGear API not receives any input from the user on [**`custom_ffmpeg`**](para
    
       *Windows Static Binaries:* https://ffmpeg.org/download.html#build-windows
 
-*  **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'C:/foo/Downloads/ffmpeg/bin'`) or path of `ffmpeg.exe` executable itself to the [**`custom_ffmpeg`**](params/#custom_ffmpeg) parameter in the FFGear API.
+*  **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'C:/foo/Downloads/ffmpeg/bin'`) or path of `ffmpeg.exe` executable itself to the [**`custom_ffmpeg`**](../params/#custom_ffmpeg) parameter in the FFGear API.
 
     !!! warning "If binaries were not found at the manually specified path, FFGear API will throw **RuntimeError**!"
 
@@ -103,7 +103,7 @@ The FFGear API supports _Auto-Detection_ and _Manual Configuration_ methods on a
 
 !!! quote "This is a recommended approach on MacOS Machines"
 
-If FFGear API not receives any input from the user on [**`custom_ffmpeg`**](params/#custom_ffmpeg) parameter, then on macOS system, it tries to **auto-detects** the required FFmpeg installed binaries through validation test that employs `subprocess` python module.
+If FFGear API not receives any input from the user on [**`custom_ffmpeg`**](../params/#custom_ffmpeg) parameter, then on macOS system, it tries to **auto-detects** the required FFmpeg installed binaries through validation test that employs `subprocess` python module.
 
 **Installation:** You can easily install FFmpeg on your macOS machine by following [this tutorial ➶](https://trac.ffmpeg.org/wiki/CompilationGuide/macOS)
 
@@ -113,7 +113,7 @@ If FFGear API not receives any input from the user on [**`custom_ffmpeg`**](para
   
     *MacOS Static Binaries:* http://johnvansickle.com/ffmpeg/
 
-* **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'ffmpeg/bin'`) or path of `ffmpeg` executable itself to the [**`custom_ffmpeg`**](params/#custom_ffmpeg) parameter in the FFGear API.
+* **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'ffmpeg/bin'`) or path of `ffmpeg` executable itself to the [**`custom_ffmpeg`**](../params/#custom_ffmpeg) parameter in the FFGear API.
 
 
     !!! warning "If binaries were not found at the manually specified path, FFGear API will throw **RuntimeError**!"
