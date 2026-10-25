@@ -83,11 +83,11 @@ stream2.stop()
 
 ## Using variable `yt_dlp` parameters in CamGear
 
-CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `yt_dlp`) parameters)_ with its [`options`](../../gears/camgear/params/#options) dictionary parameter. 
+CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `yt_dlp`) parameters)_ with its [`options`](../gears/camgear/params/#options) dictionary parameter. 
 
 The complete usage example is as follows: 
 
-!!! tip "More information on `STREAM_RESOLUTION` & `STREAM_PARAMS` attributes can be found [here ➶](../../gears/camgear/advanced/source_params/#exclusive-camgear-parameters)"
+!!! tip "More information on `STREAM_RESOLUTION` & `STREAM_PARAMS` attributes can be found [here ➶](../gears/camgear/advanced/source_params/#exclusive-camgear-parameters)"
 
 ```python linenums="1" hl_lines="6"
 # import required libraries
@@ -136,7 +136,7 @@ stream.stop()
 
 ## Using CamGear for capturing RTSP/RTMP URLs
 
-You can open any network stream _(such as RTSP/RTMP)_ just by providing its URL directly to CamGear's [`source`](../../gears/camgear/params/#source) parameter. 
+You can open any network stream _(such as RTSP/RTMP)_ just by providing its URL directly to CamGear's [`source`](../gears/camgear/params/#source) parameter. 
 
 Here's a high-level wrapper code around CamGear API to enable auto-reconnection during capturing: 
 
@@ -155,7 +155,7 @@ Here's a high-level wrapper code around CamGear API to enable auto-reconnection 
     os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
     ```
 
-    Finally, use [`backend`](../../gears/camgear/params/#backend) parameter value as `backend=cv2.CAP_FFMPEG` in CamGear.
+    Finally, use [`backend`](../gears/camgear/params/#backend) parameter value as `backend=cv2.CAP_FFMPEG` in CamGear.
 
 
 ```python linenums="1"

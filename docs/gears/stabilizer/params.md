@@ -27,11 +27,11 @@ limitations under the License.
 ??? new "New in v0.3.5"
     This parameter was added in `v0.3.5`.
 
-This parameter selects the underlying stabilization algorithm via the [`StabilizerMode`](../../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode)` enum. The `Stabilizer` class factory dispatches to the matching backend.
+This parameter selects the underlying stabilization algorithm via the [`StabilizerMode`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode)` enum. The `Stabilizer` class factory dispatches to the matching backend.
 
-**Data-Type:** [`StabilizerMode`](../../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum
+**Data-Type:** [`StabilizerMode`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum
 
-**Default Value:** [`StabilizerMode.ASW`](../../../bonus/reference/stabilizer/#aswstabilizer)
+**Default Value:** [`StabilizerMode.ASW`](../../bonus/reference/stabilizer/#aswstabilizer)
 
 **Accepted Values:**
 

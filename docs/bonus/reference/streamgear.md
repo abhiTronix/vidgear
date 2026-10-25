@@ -18,9 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-!!! example "StreamGear API usage examples for: [Single-Source Mode ➶](../../../gears/streamgear/ssm/usage/) and [Real-time Frames Mode ➶](../../../gears/streamgear/rtfm/usage/)"
+!!! example "StreamGear API usage examples for: [Single-Source Mode ➶](../../gears/streamgear/ssm/usage/) and [Real-time Frames Mode ➶](../../gears/streamgear/rtfm/usage/)"
 
-!!! info "StreamGear API parameters are explained [here ➶](../../../gears/streamgear/params/)"
+!!! info "StreamGear API parameters are explained [here ➶](../../gears/streamgear/params/)"
 
 ::: vidgear.gears.StreamGear
 	

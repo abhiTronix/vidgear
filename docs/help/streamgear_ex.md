@@ -30,9 +30,9 @@ In this example, we will be Live-Streaming video-frames from Raspberry Pi _(with
 
 !!! alert "After every few chunks _(equal to the sum of `-window_size` & `-extra_window_size` values)_, all chunks will be overwritten in Live-Streaming. Thereby, since newer chunks in manifest/playlist will contain NO information of any older ones, and therefore resultant DASH/HLS stream will play only the most recent frames."
 
-!!! note "In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../gears/streamgear/params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
+!!! note "In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../gears/streamgear/params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
 
-!!! new "PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
+!!! new "PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../installation/pip_install/#picamera2) for its installation."
 
 !!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using the PiGear API, otherwise nothing will work."
 
@@ -110,7 +110,7 @@ In this example, we will be Live-Streaming video-frames from Raspberry Pi _(with
 
             !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-            !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params) user-defined optional parameter boolean attribute."
+            !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](params) user-defined optional parameter boolean attribute."
 
         ```python linenums="1"
         # import required libraries
@@ -246,7 +246,7 @@ In this example, we will be Live-Streaming video-frames from Raspberry Pi _(with
 
             !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-            !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params) user-defined optional parameter boolean attribute."
+            !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](params) user-defined optional parameter boolean attribute."
 
         ```python linenums="1"
         # import required libraries

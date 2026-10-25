@@ -20,7 +20,7 @@ limitations under the License.
 
 # Custom FFmpeg Commands in WriteGear API
 
-WriteGear API now provides the **[`execute_ffmpeg_cmd`](../../../../../bonus/reference/writegear/#vidgear.gears.WriteGear.execute_ffmpeg_cmd) Method** in [Compression Mode](../../) that enables the user to pass any custom FFmpeg CLI _(Command Line Interface)_ commands as input to its internal FFmpeg Pipeline by formating it as a list. 
+WriteGear API now provides the **[`execute_ffmpeg_cmd`](../../../../bonus/reference/writegear/#vidgear.gears.WriteGear.execute_ffmpeg_cmd) Method** in [Compression Mode](../) that enables the user to pass any custom FFmpeg CLI _(Command Line Interface)_ commands as input to its internal FFmpeg Pipeline by formating it as a list. 
 
 This opens endless possibilities of exploiting every FFmpeg params within WriteGear without relying on a third-party API to do the same and while doing that it robustly handles all errors/warnings quietly.
 
@@ -30,7 +30,7 @@ This opens endless possibilities of exploiting every FFmpeg params within WriteG
 
 !!! warning "Important Information"
 
-    * This Feature Requires WriteGear's [Compression Mode enabled(`compression_mode = True`)](../../params/#compression_mode). Follow these dedicated [Installation Instructions ➶](../../advanced/ffmpeg_install/) for its installation.
+    * This Feature Requires WriteGear's [Compression Mode enabled(`compression_mode = True`)](../params/#compression_mode). Follow these dedicated [Installation Instructions ➶](../advanced/ffmpeg_install/) for its installation.
 
     * ==Only **python list** is a valid datatype as input for this function, any other value will throw `ValueError`.==
 
@@ -57,7 +57,7 @@ This opens endless possibilities of exploiting every FFmpeg params within WriteG
 
 ## Methods
 
-### **[`execute_ffmpeg_cmd`](../../../../../bonus/reference/writegear/#vidgear.gears.WriteGear.execute_ffmpeg_cmd)** 
+### **[`execute_ffmpeg_cmd`](../../../../bonus/reference/writegear/#vidgear.gears.WriteGear.execute_ffmpeg_cmd)** 
 
 This method allows the users to pass the custom FFmpeg terminal commands as a _**formatted list**_ directly to WriteGear API's FFmpeg pipeline for processing/execution. Its usage is as follows: 
   
@@ -75,7 +75,7 @@ execute_ffmpeg_cmd(ffmpeg_command)
 
 ## Usage Examples
 
-!!! abstract "Following usage examples is just an idea of what can be done with this powerful function. So just Tinker with various FFmpeg parameters/commands yourself and see it working. Also, if you're unable to run any terminal FFmpeg command, then [report an issue](../../../../../contribution/issue/)."
+!!! abstract "Following usage examples is just an idea of what can be done with this powerful function. So just Tinker with various FFmpeg parameters/commands yourself and see it working. Also, if you're unable to run any terminal FFmpeg command, then [report an issue](../../../../contribution/issue/)."
 
 
 ### Using WriteGear to separate Audio from Video
@@ -117,7 +117,7 @@ After running this script, You will get the final `'output_audio.aac'` audio fil
 
 In this example, we will merge audio with video:
 
-!!! tip "You can also directly add external audio input to video-frames in WriteGear. For more information, See [this FAQ example ➶](../../../../../help/writegear_faqs/#how-add-external-audio-file-input-to-video-frames)"
+!!! tip "You can also directly add external audio input to video-frames in WriteGear. For more information, See [this FAQ example ➶](../../../../help/writegear_faqs/#how-add-external-audio-file-input-to-video-frames)"
 
 !!! alert "Example Assumptions"
 

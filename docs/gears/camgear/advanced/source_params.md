@@ -21,12 +21,12 @@ limitations under the License.
 # Source Tweak Parameters for CamGear API 
 
 <figure>
-  <img src="../../../../assets/images/stream_tweak.png" loading="lazy" alt="Source Tweak Parameters" />
+  <img src="../../../assets/images/stream_tweak.png" loading="lazy" alt="Source Tweak Parameters" />
 </figure>
 
 ## Overview
 
-With CamGear's [`options`](../../params/#options) dictionary parameter, the user has the ability to alter various tweak parameters available within [OpenCV's VideoCapture Class](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80) by formatting them as its attributes. 
+With CamGear's [`options`](../params/#options) dictionary parameter, the user has the ability to alter various tweak parameters available within [OpenCV's VideoCapture Class](https://docs.opencv.org/master/d8/dfe/classcv_1_1VideoCapture.html#a57c0e81e83e60f36c83027dc2a188e80) by formatting them as its attributes. 
 
 These tweak parameters can be used to transform input Camera-Source properties _(such as its brightness, saturation, resolution, iso, gain etc.)_ seamlessly. All parameters supported by CamGear API are disscussed in this document.
 
@@ -37,7 +37,7 @@ These tweak parameters can be used to transform input Camera-Source properties _
 
 ??? abstract "CamGear's Exclusive Attributes"
 
-	In addition to Source Tweak Parameters, CamGear also provides some exclusive attributes for its [`options`](../../params/#options) dictionary parameters. 
+	In addition to Source Tweak Parameters, CamGear also provides some exclusive attributes for its [`options`](../params/#options) dictionary parameters. 
 
 	These attributes are as follows:
 
@@ -49,7 +49,7 @@ These tweak parameters can be used to transform input Camera-Source properties _
 		options = {"STREAM_RESOLUTION": "720p"} # 720p stream will be used. 
 		```
 
-		!!! example "Its complete usage example is given [here ➶](../../../../help/camgear_faqs/#how-to-change-quality-and-parameters-of-youtube-streams-with-camgear)"
+		!!! example "Its complete usage example is given [here ➶](../../../help/camgear_faqs/#how-to-change-quality-and-parameters-of-youtube-streams-with-camgear)"
 
 	- [X] `STREAM_PARAMS` _(dict)_: This dictionary attribute can be used in CamGear's Stream Mode (`stream_mode=True`) for specifying parameters for its internal `yt_dlp` backend class. Its usage is as follows:
 
@@ -62,7 +62,7 @@ These tweak parameters can be used to transform input Camera-Source properties _
 
 	- [X] `THREADED_QUEUE_MODE` _(boolean)_: This attribute can be used to override Threaded-Queue-Mode mode to manually disable it:
 
-	   	!!! danger "Disabling Threaded-Queue-Mode can be dangerous! Read more [here ➶](../../../../bonus/TQM/#manually-disabling-threaded-queue-mode)"
+	   	!!! danger "Disabling Threaded-Queue-Mode can be dangerous! Read more [here ➶](../../../bonus/TQM/#manually-disabling-threaded-queue-mode)"
 
 		```python
 		options = {"THREADED_QUEUE_MODE": False} # disable Threaded Queue Mode. 
@@ -89,7 +89,7 @@ These tweak parameters can be used to transform input Camera-Source properties _
 
 !!! tip "You can easily check parameter values supported by your webcam, by hooking it to a Linux machine, and using the command `#!sh v4l2-ctl -d 0 --list-formats-ext` _(where 0 is an index of the given camera)_ to list the supported video parameters and their values. If that doesn't works, refer to its datasheet _(if available)_."
 
-!!! info "These parameters can be passed to CamGear's [`options`](../../params/#options) dictionary parameter by formatting them as its string attributes. Its complete usage example is [here ➶](../../usage/#using-camgear-with-variable-camera-properties)"
+!!! info "These parameters can be passed to CamGear's [`options`](../params/#options) dictionary parameter by formatting them as its string attributes. Its complete usage example is [here ➶](../usage/#using-camgear-with-variable-camera-properties)"
 
 &thinsp;
 

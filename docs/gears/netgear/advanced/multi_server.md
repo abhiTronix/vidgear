@@ -21,14 +21,14 @@ limitations under the License.
 # Multi-Servers Mode for NetGear API 
 
 <figure>
-  <img src="../../../../assets/images/multi_server.png" alt="NetGear's Multi-Servers Mode" loading="lazy" title="NetGear's Multi-Servers Mode"/>
+  <img src="../../../assets/images/multi_server.png" alt="NetGear's Multi-Servers Mode" loading="lazy" title="NetGear's Multi-Servers Mode"/>
 </figure>
 
 ## Overview
 
 In Multi-Servers Mode, NetGear API robustly handles Multiple Servers at once, thereby providing seamless access to frames and unidirectional data transfer across multiple Publishers/Servers in the network at the same time. Each new server connects to a single client can be identified by its unique port address on the network. 
 
-The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`) and can be easily activated in NetGear API through `multiserver_mode` attribute of its [`options`](../../params/#options) dictionary parameter during initialization.
+The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`) and can be easily activated in NetGear API through `multiserver_mode` attribute of its [`options`](../params/#options) dictionary parameter during initialization.
 
 
 &nbsp;
@@ -36,15 +36,15 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
 !!! danger "Important Information regarding Multi-Servers Mode"
 
-    * A unique PORT address **MUST** be assigned to each Server on the network using its [`port`](../../params/#port) parameter.
+    * A unique PORT address **MUST** be assigned to each Server on the network using its [`port`](../params/#port) parameter.
     
-    * A list/tuple of PORT addresses of all unique Servers **MUST** be assigned at Client's end using its [`port`](../../params/#port) parameter for a successful connection.
+    * A list/tuple of PORT addresses of all unique Servers **MUST** be assigned at Client's end using its [`port`](../params/#port) parameter for a successful connection.
 
     * Patterns `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ and `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ are the only supported values for this Mode. Therefore, calling any other pattern value with is mode will result in `ValueError`.
 
     * Multi-Servers and Multi-Clients exclusive modes **CANNOT** be enabled simultaneously, Otherwise NetGear API will throw `ValueError`.
 
-    * The [`address`](../../params/#address) parameter value of each Server **MUST** exactly match the Client. 
+    * The [`address`](../params/#address) parameter value of each Server **MUST** exactly match the Client. 
 
 &nbsp;
 
@@ -52,7 +52,7 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
 - [x] Enables Multiple Server(s) connection with a single Client.
 
-- [x] Ability to [send any additional data](../../advanced/multi_server/#using-multi-servers-mode-with-custom-data-transfer) of any[^1] datatype along with frames in real-time.
+- [x] Ability to [send any additional data](../advanced/multi_server/#using-multi-servers-mode-with-custom-data-transfer) of any[^1] datatype along with frames in real-time.
 
 - [x] Number of Servers can be extended to several numbers depending upon your system's hardware limit.
 
@@ -95,7 +95,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Server(s) end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Note down the local IP-address of this system(required at all Server(s) end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Servers you are going to connect to this system. 
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
@@ -294,7 +294,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Server(s) end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Note down the local IP-address of this system(required at all Server(s) end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Servers you are going to connect to this system. 
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
@@ -497,7 +497,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Server(s) end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Note down the local IP-address of this system(required at all Server(s) end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Servers you are going to connect to this system. 
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
@@ -659,7 +659,7 @@ Finally, Open the terminal on another Server System _(this time a Raspberry Pi w
 
 !!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../installation/pip_install/#picamera2) for its installation."
 
 !!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
@@ -738,7 +738,7 @@ Finally, Open the terminal on another Server System _(this time a Raspberry Pi w
 
         !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../gears/pigear/params) user-defined optional parameter boolean attribute."
 
     ```python linenums="1" hl_lines="50"
     # import libraries
@@ -810,11 +810,11 @@ Finally, Open the terminal on another Server System _(this time a Raspberry Pi w
 ### Using Multi-Servers Mode with Bidirectional Mode
 
 !!! abstract
-    Multi-Servers Mode now also compatible with [Bidirectional Mode](../../advanced/bidirectional_mode/), which lets you send additional data of ***any datatype***[^1]  along with frame in real-time bidirectionally between a single Client and all connected Server(s).
+    Multi-Servers Mode now also compatible with [Bidirectional Mode](../advanced/bidirectional_mode/), which lets you send additional data of ***any datatype***[^1]  along with frame in real-time bidirectionally between a single Client and all connected Server(s).
 
 !!! warning "Important Information"
     * Bidirectional data transfer **ONLY** works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_, and **NOT** with pattern `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_
-    * Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server(s) with their [`message`](../../../../bonus/reference/netgear/#vidgear.gears.NetGear.send) parameter.
+    * Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server(s) with their [`message`](../../../bonus/reference/netgear/#vidgear.gears.NetGear.send) parameter.
     * Bidirectional Mode may lead to additional **LATENCY** depending upon the size of data being transfer bidirectionally. User discretion is advised!
 
 ??? new "New in v0.2.5" 
@@ -828,7 +828,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Server(s) end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Note down the local IP-address of this system(required at all Server(s) end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Servers you are going to connect to this system. 
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
@@ -995,7 +995,7 @@ Finally, Open the terminal on another Server System _(this time a Raspberry Pi w
 
 !!! tip "You can terminate stream anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../installation/pip_install/#picamera2) for its installation."
 
 !!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
@@ -1078,7 +1078,7 @@ Finally, Open the terminal on another Server System _(this time a Raspberry Pi w
 
         !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../gears/pigear/params) user-defined optional parameter boolean attribute."
 
     ```python linenums="1" hl_lines="20 46-54"
     # import libraries
@@ -1152,4 +1152,4 @@ Finally, Open the terminal on another Server System _(this time a Raspberry Pi w
 
 [^1]: 
     
-    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server(s) with their [`message`](../../../../bonus/reference/netgear/#vidgear.gears.NetGear.send) parameter."
+    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server(s) with their [`message`](../../../bonus/reference/netgear/#vidgear.gears.NetGear.send) parameter."

@@ -21,7 +21,7 @@ limitations under the License.
 # Colorspace Manipulation for VideoCapture Gears
 
 <figure>
-  <img src="../../assets/images/colorspace.png" alt="Colorspace" loading="lazy" class="center" title="Colorspace" />
+  <img src="../assets/images/colorspace.png" alt="Colorspace" loading="lazy" class="center" title="Colorspace" />
 </figure>
 
 
@@ -56,7 +56,7 @@ Alternatively, a more direct approach is by using **`color_space`** _(integer)_ 
 
 	* Any incorrect or None-type value, will immediately revert the colorspace to default _(i.e. `BGR`)_.
 
-	* Using `color_space` global variable with [Threaded Queue Mode](../../bonus/TQM/) may have minor lag, User discretion is advised.
+	* Using `color_space` global variable with [Threaded Queue Mode](../bonus/TQM/) may have minor lag, User discretion is advised.
 
 !!! tip "It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors."
 
@@ -99,21 +99,21 @@ All supported string values for `colorspace` parameter are as follows:
 ## Usage examples
 
 ### Using CamGear with Direct Colorspace Manipulation
-[The complete usage example can be found here ➶](../../gears/camgear/usage/#using-camgear-with-direct-colorspace-manipulation)
+[The complete usage example can be found here ➶](../gears/camgear/usage/#using-camgear-with-direct-colorspace-manipulation)
 
 &nbsp; 
 
 ### Using PiGear with Direct Colorspace Manipulation
-[The complete usage example can be found here ➶](../../gears/pigear/usage/#using-pigear-with-direct-colorspace-manipulation)
+[The complete usage example can be found here ➶](../gears/pigear/usage/#using-pigear-with-direct-colorspace-manipulation)
 
 &nbsp; 
 
 ### Using VideoGear with Colorspace Manipulation
-[The complete usage example can be found here ➶](../../gears/videogear/usage/#using-videogear-with-colorspace-manipulation)
+[The complete usage example can be found here ➶](../gears/videogear/usage/#using-videogear-with-colorspace-manipulation)
 
 &nbsp; 
 
 ### Using ScreenGear with Direct Colorspace Manipulation
-[The complete usage example can be found here ➶](../../gears/screengear/usage/#using-screengear-with-direct-colorspace-manipulation)
+[The complete usage example can be found here ➶](../gears/screengear/usage/#using-screengear-with-direct-colorspace-manipulation)
 
 &nbsp; 

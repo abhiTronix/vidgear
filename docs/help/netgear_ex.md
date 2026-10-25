@@ -33,13 +33,13 @@ The complete usage example is as follows:
 
 Open a terminal on Client System where you want to display the input frames _(and setup WebGear server)_ received from the Server and execute the following python code:
 
-!!! danger "After running this code, Make sure to open Browser immediately otherwise NetGear will soon exit with `RuntimeError`. You can also try setting [`max_retries`](../../gears/netgear/params/#options) and [`request_timeout`](../../gears/netgear/params/#options) like attributes to a higher value to avoid this."
+!!! danger "After running this code, Make sure to open Browser immediately otherwise NetGear will soon exit with `RuntimeError`. You can also try setting [`max_retries`](../gears/netgear/params/#options) and [`request_timeout`](../gears/netgear/params/#options) like attributes to a higher value to avoid this."
 
 !!! warning "Make sure you use different `port` value for NetGear and WebGear API."
 
 !!! alert "High CPU utilization may occur on Client's end. User discretion is advised."
 
-!!! info "Note down the local IP-address of this system (required at Server's end) and also replace it in the following code. You can follow [this FAQ](../netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
+!!! info "Note down the local IP-address of this system (required at Server's end) and also replace it in the following code. You can follow [this FAQ](netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
 ```python linenums="1"
 # import necessary libs
@@ -186,13 +186,13 @@ The complete usage example is as follows:
 
 Open a terminal on Client System where you want to display the input frames _(and setup WebGear_RTC server)_ received from the Server and execute the following python code:
 
-!!! danger "After running this code, Make sure to open Browser immediately otherwise NetGear will soon exit with `RuntimeError`. You can also try setting [`max_retries`](../../gears/netgear/params/#options) and [`request_timeout`](../../gears/netgear/params/#options) like attributes to a higher value to avoid this."
+!!! danger "After running this code, Make sure to open Browser immediately otherwise NetGear will soon exit with `RuntimeError`. You can also try setting [`max_retries`](../gears/netgear/params/#options) and [`request_timeout`](../gears/netgear/params/#options) like attributes to a higher value to avoid this."
 
 !!! warning "Make sure you use different `port` value for NetGear and WebGear_RTC API."
 
 !!! alert "High CPU utilization may occur on Client's end. User discretion is advised."
 
-!!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](../netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
+!!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
 !!! failure "For VideoCapture APIs you also need to implement `start()` in addition to `read()` and `stop()` methods in your Custom Streaming Class as shown in following example, otherwise WebGear_RTC will fail to work!"
 

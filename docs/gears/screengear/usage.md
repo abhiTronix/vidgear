@@ -20,7 +20,7 @@ limitations under the License.
 
 # ScreenGear API Usage Examples:
 
-!!! example "After going through ScreenGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/screengear_ex/)"
+!!! example "After going through ScreenGear Usage Examples, Checkout more of its advanced configurations [here ➶](../../help/screengear_ex/)"
 
 !!! success "Recommended: Install DXcam library on Windows :fontawesome-brands-windows: Machines"
 
@@ -75,7 +75,7 @@ stream.stop()
 
 ## Using ScreenGear with Variable Screen Dimensions
 
-ScreenGear API provides us the flexibility to directly set the dimensions of capturing-area of the screen. These dimensions can be easily applied to ScreenGear API through its [`options`](../params/#options) dictionary parameter by formatting them as its attributes. 
+ScreenGear API provides us the flexibility to directly set the dimensions of capturing-area of the screen. These dimensions can be easily applied to ScreenGear API through its [`options`](params/#options) dictionary parameter by formatting them as its attributes. 
 
 
 ??? info "Supported Dimensional Attributes"
@@ -83,7 +83,7 @@ ScreenGear API provides us the flexibility to directly set the dimensions of cap
 	ScreenGear API takes `left`, `top`, `width`, `height` coordinates of the bounding box of capture screen area(ROI), similar to [PIL.ImageGrab.grab](https://pillow.readthedocs.io/en/stable/reference/ImageGrab.html), defined below:
 
     <h2 align="center">
-    <img src="../../../assets/images/screengear_region.png" loading="lazy" alt="ScreenGear ROI region" width="80%"/>
+    <img src="../../assets/images/screengear_region.png" loading="lazy" alt="ScreenGear ROI region" width="80%"/>
     </h2>
 
 	* **`left`:** the x-coordinate of the upper-left corner of the region
@@ -136,13 +136,13 @@ stream.stop()
 
 ## Using ScreenGear with Multiple Screens
 
-ScreenGear API provides us the flexibility to select any connected display for fetching frames, with its [`monitor`](../params/#monitor) parameter:
+ScreenGear API provides us the flexibility to select any connected display for fetching frames, with its [`monitor`](params/#monitor) parameter:
 
 !!! warning "Implication of using `monitor` parameter"
     Any value on `monitor` parameter other than `None` in ScreenGear API: 
     
     * Will enforce `dxcam` library backend on Windows platform _(if installed)_, and `mss` library backend otherwise.
-    * Will discard any value on its [`backend`](../params/#backend) parameter.
+    * Will discard any value on its [`backend`](params/#backend) parameter.
 
 
 === "With `dxcam` on Windows :fontawesome-brands-windows:"
@@ -248,7 +248,7 @@ ScreenGear API provides us the flexibility to select any connected display for f
 
 ## Using ScreenGear with Variable Backend
 
-With ScreenGear API, you can select from many different backends that generates best performance as well as the most compatible with our machine by employing its [`backend`](../params/#backend) parameter that supports many different backends:
+With ScreenGear API, you can select from many different backends that generates best performance as well as the most compatible with our machine by employing its [`backend`](params/#backend) parameter that supports many different backends:
 
 ??? tip "Supported `backend` values" 
 
@@ -302,7 +302,7 @@ stream.stop()
 
 ScreenGear API also supports **Direct Colorspace Manipulation**, which is ideal for changing source colorspace on the run. 
 
-!!! info "A more detailed  information on colorspace manipulation can be found [here ➶](../../../bonus/colorspace_manipulation/)"
+!!! info "A more detailed  information on colorspace manipulation can be found [here ➶](../../bonus/colorspace_manipulation/)"
 
 In following example code, we will start with [**HSV**](https://en.wikipedia.org/wiki/HSL_and_HSV) as source colorspace, and then we will switch to [**GRAY**](https://en.wikipedia.org/wiki/Grayscale)  colorspace when ++"W"++ key is pressed, and then [**LAB**](https://en.wikipedia.org/wiki/CIELAB_color_space) colorspace when ++"E"++ key is pressed, finally default colorspace _(i.e. **BGR**)_ when ++"S"++ key is pressed. Also, quit when ++"Q"++ key is pressed:
 

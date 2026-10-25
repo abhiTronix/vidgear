@@ -20,14 +20,14 @@ limitations under the License.
 
 # VideoGear API Usage Examples:
 
-!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/videogear_ex/)"
+!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../help/videogear_ex/)"
 
 &thinsp;
 
 
 ## Bare-Minimum Usage with CamGear backend
 
-!!! abstract "VideoGear by **default** provides direct internal access to [CamGear API](../../camgear/). Explicitly select it with `api=Backend.CAMGEAR`."
+!!! abstract "VideoGear by **default** provides direct internal access to [CamGear API](../camgear/). Explicitly select it with `api=Backend.CAMGEAR`."
 
 Following is the bare-minimum code you need to access CamGear API with VideoGear:
 
@@ -73,7 +73,7 @@ stream.stop()
 
 ## Bare-Minimum Usage with FFGear backend
 
-!!! abstract "Select FFGear backend with `api=Backend.FFGEAR` to access [FFGear API](../../ffgear/) for hardware-accelerated FFmpeg-powered decoding."
+!!! abstract "Select FFGear backend with `api=Backend.FFGEAR` to access [FFGear API](../ffgear/) for hardware-accelerated FFmpeg-powered decoding."
 
 Following is the bare-minimum code you need to access FFGear API with VideoGear:
 
@@ -87,7 +87,7 @@ Following is the bare-minimum code you need to access FFGear API with VideoGear:
     pip install deffcode
     ```
 
-    For FFmpeg installation, see [FFmpeg Installation ➶](../../ffgear/advanced/ffmpeg_install/)
+    For FFmpeg installation, see [FFmpeg Installation ➶](../ffgear/advanced/ffmpeg_install/)
 
 !!! note "FFGear API Backend does **not** support `colorspace` or `time_delay` parameters. Use its `options` dict for advanced FFmpeg configuration."
 
@@ -132,7 +132,7 @@ stream.stop()
 
 ## Bare-Minimum Usage with PiGear backend
 
-!!! abstract "Select PiGear backend with `api=Backend.PIGEAR` to access [PiGear API](../../pigear/)."
+!!! abstract "Select PiGear backend with `api=Backend.PIGEAR` to access [PiGear API](../pigear/)."
 
 Following is the bare-minimum code you need to access PiGear API with VideoGear:
 
@@ -144,7 +144,7 @@ Following is the bare-minimum code you need to access PiGear API with VideoGear:
 
     !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-    !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params) user-defined optional parameter boolean attribute."
+    !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](params) user-defined optional parameter boolean attribute."
 
 !!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this API, otherwise nothing will work."
 
@@ -188,11 +188,11 @@ stream.stop()
 
 ## Using VideoGear with Video Stabilizer backend
 
-!!! abstract "VideoGear API provides a special internal wrapper around VidGear's Exclusive [**Video Stabilizer**](../../stabilizer/) class and provides easy way of activating stabilization for various video-streams _(real-time or not)_ with its [`stabilize`](../params/#stabilize) boolean parameter during initialization."
+!!! abstract "VideoGear API provides a special internal wrapper around VidGear's Exclusive [**Video Stabilizer**](../stabilizer/) class and provides easy way of activating stabilization for various video-streams _(real-time or not)_ with its [`stabilize`](params/#stabilize) boolean parameter during initialization."
 
 The usage example is as follows:
 
-!!! tip "For a more detailed information on Video-Stabilizer Class, Read [here ➶](../../stabilizer/)"
+!!! tip "For a more detailed information on Video-Stabilizer Class, Read [here ➶](../stabilizer/)"
 
 !!! warning "The stabilizer might be slower for High-Quality/Resolution videos-frames."
 
@@ -288,9 +288,9 @@ The usage example is as follows:
 
 The usage example of VideoGear API with Variable Camera Properties is as follows:
 
-!!! info "This example demonstrates how to use the VideoGear API in a similar manner to the CamGear's [example](../../camgear/usage/#using-camgear-with-variable-camera-properties) for controlling variable source properties. Any [CamGear usage example](../../camgear/usage/) can be implemented using the VideoGear API in a similar way."
+!!! info "This example demonstrates how to use the VideoGear API in a similar manner to the CamGear's [example](../camgear/usage/#using-camgear-with-variable-camera-properties) for controlling variable source properties. Any [CamGear usage example](../camgear/usage/) can be implemented using the VideoGear API in a similar way."
 
-!!! tip "All the supported Source Tweak Parameters can be found [here ➶](../../camgear/advanced/source_params/#source-tweak-parameters-for-camgear-api)"
+!!! tip "All the supported Source Tweak Parameters can be found [here ➶](../camgear/advanced/source_params/#source-tweak-parameters-for-camgear-api)"
 
 ```python linenums="1" hl_lines="9-11"
 # import required libraries
@@ -341,13 +341,13 @@ stream.stop()
 
 ## Advanced VideoGear usage with PiGear Backend
 
-!!! abstract "VideoGear provides internal access to both CamGear and PiGear APIs, and thereby all additional parameters of [PiGear API](../params/#parameters-with-pigear-backend) or [CamGear API](../params/#parameters-with-camgear-backend) are also easily accessible within VideoGear API."
+!!! abstract "VideoGear provides internal access to both CamGear and PiGear APIs, and thereby all additional parameters of [PiGear API](params/#parameters-with-pigear-backend) or [CamGear API](params/#parameters-with-camgear-backend) are also easily accessible within VideoGear API."
 
 The usage example of VideoGear API with Variable Camera Properties is as follows:
 
-!!! info "This example demonstrates how to use the VideoGear API in a similar manner to the PiGear's [example](../../pigear/usage/#using-pigear-with-variable-camera-properties) for using variable camera properties. Any [PiGear usage example](../../pigear/usage/) can be implemented using the VideoGear API in a similar way."
+!!! info "This example demonstrates how to use the VideoGear API in a similar manner to the PiGear's [example](../pigear/usage/#using-pigear-with-variable-camera-properties) for using variable camera properties. Any [PiGear usage example](../pigear/usage/) can be implemented using the VideoGear API in a similar way."
 
-!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../../installation/pip_install/#picamera2) for its installation."
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
 
 !!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
@@ -411,7 +411,7 @@ The usage example of VideoGear API with Variable Camera Properties is as follows
 
         !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params) user-defined optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](params) user-defined optional parameter boolean attribute."
 
     ```python linenums="1" hl_lines="9-14"
     # import required libraries
@@ -475,13 +475,13 @@ The usage example of VideoGear API with Variable Camera Properties is as follows
     pip install deffcode
     ```
 
-    For FFmpeg installation, see [FFmpeg Installation ➶](../../ffgear/advanced/ffmpeg_install/)
+    For FFmpeg installation, see [FFmpeg Installation ➶](../ffgear/advanced/ffmpeg_install/)
 
 The usage example below demonstrates hardware-accelerated decoding and stabilization together using the FFGear backend:
 
-!!! info "This example demonstrates how to use the VideoGear API in a similar manner to the FFGear's [NVIDIA CUVID Decoding example](../../ffgear/advanced/#nvidia-cuvid-decoding). Any [FFGear usage example](../../ffgear/usage/) can be implemented using the VideoGear API in a similar way."
+!!! info "This example demonstrates how to use the VideoGear API in a similar manner to the FFGear's [NVIDIA CUVID Decoding example](../ffgear/advanced/#nvidia-cuvid-decoding). Any [FFGear usage example](../ffgear/usage/) can be implemented using the VideoGear API in a similar way."
 
-!!! tip "For hardware-accelerated decoding options (CUDA/CUVID etc.) and advanced FFmpeg filter pipelines, see [FFGear Hardware-Accelerated Decoding ➶](../../ffgear/advanced/#hardware-accelerated-decoding)"
+!!! tip "For hardware-accelerated decoding options (CUDA/CUVID etc.) and advanced FFmpeg filter pipelines, see [FFGear Hardware-Accelerated Decoding ➶](../ffgear/advanced/#hardware-accelerated-decoding)"
 
 ```python linenums="1" hl_lines="9-11 16"
 # import required libraries
@@ -536,7 +536,7 @@ stream.stop()
 ??? new "New in v0.3.5"
     The `STABILIZER_MODE` option and the `StabilizerMode` enum were added in `v0.3.5`. Omitting `STABILIZER_MODE` keeps the previous behavior — VideoGear defaults to `StabilizerMode.ASW`.
 
-When stabilization is enabled, VideoGear forwards Stabilizer parameters via the [`options`](../params/#options) dictionary:
+When stabilization is enabled, VideoGear forwards Stabilizer parameters via the [`options`](params/#options) dictionary:
 
 ```python linenums="1" hl_lines="2 8-11"
 # import required libraries
@@ -600,10 +600,10 @@ VideoGear API also supports **Colorspace Manipulation** but **NOT Direct** like 
 
 !!! failure "Important: `color_space` global variable is NOT Supported in VideoGear API"
 
-    * `color_space` global variable is **NOT Supported** in VideoGear API, calling it will result in `AttribueError`. More details can be found [here ➶](../../../bonus/colorspace_manipulation/#source-colorspace-manipulation)
-    * Any incorrect or None-type value on [`colorspace`](../params/#colorspace) parameter will be skipped automatically.
+    * `color_space` global variable is **NOT Supported** in VideoGear API, calling it will result in `AttribueError`. More details can be found [here ➶](../../bonus/colorspace_manipulation/#source-colorspace-manipulation)
+    * Any incorrect or None-type value on [`colorspace`](params/#colorspace) parameter will be skipped automatically.
 
-!!! danger "FFGear API Backend does **not** support `colorspace` parameter. See [this ➶](../../ffgear/usage/#using-ffgear-with-different-pixel-formats) for source pixel-format conversions."
+!!! danger "FFGear API Backend does **not** support `colorspace` parameter. See [this ➶](../ffgear/usage/#using-ffgear-with-different-pixel-formats) for source pixel-format conversions."
 
 In following example code, we will convert source colorspace to [**HSV**](https://en.wikipedia.org/wiki/HSL_and_HSV) on initialization:
 
@@ -650,7 +650,7 @@ stream.stop()
 
 ## Bonus Examples
 
-!!! example "Checkout more advanced VideoGear examples with unusual configuration [here ➶](../../../help/videogear_ex/)"
+!!! example "Checkout more advanced VideoGear examples with unusual configuration [here ➶](../../help/videogear_ex/)"
 
 &nbsp;
 

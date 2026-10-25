@@ -30,7 +30,7 @@ This parameter enforces [`dxcam`](https://github.com/ra1nty/DXcam) _(if installe
     Any value on `monitor` parameter other than `None` in ScreenGear API: 
     
     * Will enforce `dxcam` library backend on Windows platform _(if installed)_, and `mss` library backend otherwise.
-    * Will discard any value on its [`backend`](../params/#backend) parameter.
+    * Will discard any value on its [`backend`](params/#backend) parameter.
 
 
 
@@ -116,13 +116,13 @@ This parameter selects the colorspace of the source stream.
 
 **Usage:**
 
-!!! tip "All supported `colorspace` values are given [here ➶](../../../bonus/colorspace_manipulation/)."
+!!! tip "All supported `colorspace` values are given [here ➶](../../bonus/colorspace_manipulation/)."
 
 ```python
 ScreenGear(colorspace="COLOR_BGR2HSV")
 ```
 
-!!! example "Its complete usage example is given [here ➶](../usage/#using-screengear-with-direct-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](usage/#using-screengear-with-direct-colorspace-manipulation)"
 
 &nbsp;
 
@@ -136,7 +136,7 @@ This parameter provides the flexibility to manually set the dimensions of captur
 	ScreenGear API takes `left`, `top`, `width`, `height` coordinates of the bounding box of capture screen area(ROI), similar to [PIL.ImageGrab.grab](https://pillow.readthedocs.io/en/stable/reference/ImageGrab.html), defined below:
 
     <h2 align="center">
-    <img src="../../../assets/images/screengear_region.png" loading="lazy" alt="ScreenGear ROI region" width="80%"/>
+    <img src="../../assets/images/screengear_region.png" loading="lazy" alt="ScreenGear ROI region" width="80%"/>
     </h2>
 
 	* **`left`:** the x-coordinate of the upper-left corner of the region

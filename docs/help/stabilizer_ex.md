@@ -172,7 +172,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
 
 !!! danger "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."
 
-!!! warning "You **MUST** use [`-input_framerate`](../../gears/writegear/compression/params/#supported-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
+!!! warning "You **MUST** use [`-input_framerate`](../gears/writegear/compression/params/#supported-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
 ```python linenums="1" hl_lines="14-19"
 # import required libraries
@@ -245,9 +245,9 @@ In this example code, we will be directly merging the audio from a Video-File _(
 
 !!! danger "Make sure this input video-file _(to be stabilized)_ contains valid audio source, otherwise you could encounter multiple errors or no output at all."
 
-!!! warning "You **MUST** use [`-input_framerate`](../../gears/writegear/compression/params/#supported-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
+!!! warning "You **MUST** use [`-input_framerate`](../gears/writegear/compression/params/#supported-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
-!!! alert "Use [`-disable_force_termination`](../../gears/writegear/compression/params/#supported-parameters) flag when video duration is too short(<60sec), otherwise WriteGear will not produce any valid output."
+!!! alert "Use [`-disable_force_termination`](../gears/writegear/compression/params/#supported-parameters) flag when video duration is too short(<60sec), otherwise WriteGear will not produce any valid output."
 
 ```python linenums="1"  hl_lines="17-22 49"
 # import required libraries

@@ -24,7 +24,7 @@ limitations under the License.
 
 ## What is FFGear API and what does it do?
 
-**Answer:** FFGear is a multi-threaded, high-performance wrapper around [DeFFcode's FFdecoder API](https://abhitronix.github.io/deffcode/latest/reference/ffdecoder/) that compiles and executes an FFmpeg pipeline inside a subprocess pipe for generating real-time, low-overhead, lightning-fast decoded video frames in Python. It supports hardware-accelerated decoding, flexible pixel formats, per-frame metadata extraction, complex filtergraphs, and wide source support (cameras, files, network streams, streaming services). _For more info. see [FFGear doc ➶](../../gears/ffgear/)._
+**Answer:** FFGear is a multi-threaded, high-performance wrapper around [DeFFcode's FFdecoder API](https://abhitronix.github.io/deffcode/latest/reference/ffdecoder/) that compiles and executes an FFmpeg pipeline inside a subprocess pipe for generating real-time, low-overhead, lightning-fast decoded video frames in Python. It supports hardware-accelerated decoding, flexible pixel formats, per-frame metadata extraction, complex filtergraphs, and wide source support (cameras, files, network streams, streaming services). _For more info. see [FFGear doc ➶](../gears/ffgear/)._
 
 &thinsp;
 
@@ -36,7 +36,7 @@ limitations under the License.
 pip install deffcode
 ```
 
-For FFmpeg installation, follow the [dedicated FFmpeg Installation guide ➶](../../gears/ffgear/advanced/ffmpeg_install/).
+For FFmpeg installation, follow the [dedicated FFmpeg Installation guide ➶](../gears/ffgear/advanced/ffmpeg_install/).
 
 &thinsp;
 
@@ -53,31 +53,31 @@ Use FFGear when you need GPU decoding, advanced FFmpeg pipelines, or YUV pixel f
 
 ## I'm only familiar with OpenCV, how do I get started with FFGear?
 
-**Answer:** FFGear maintains the same OpenCV-like coding syntax as CamGear. First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-the-videocapture-apis) guide, then go through [FFGear documentation ➶](../../gears/ffgear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** FFGear maintains the same OpenCV-like coding syntax as CamGear. First, refer to the [Switching from OpenCV](../switch_from_cv/#switching-the-videocapture-apis) guide, then go through [FFGear documentation ➶](../gears/ffgear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &thinsp;
 
 ## How to change the pixel format of decoded frames in FFGear?
 
-**Answer:** Use the [`frame_format`](../../gears/ffgear/params/#frame_format) parameter. It accepts any FFmpeg-supported pixel format string (e.g. `"bgr24"`, `"rgb24"`, `"gray"`, `"yuv420p"`). The default is `"bgr24"` for direct OpenCV compatibility. See [Usage Examples ➶](../../gears/ffgear/usage/#using-ffgear-with-different-pixel-formats).
+**Answer:** Use the [`frame_format`](../gears/ffgear/params/#frame_format) parameter. It accepts any FFmpeg-supported pixel format string (e.g. `"bgr24"`, `"rgb24"`, `"gray"`, `"yuv420p"`). The default is `"bgr24"` for direct OpenCV compatibility. See [Usage Examples ➶](../gears/ffgear/usage/#using-ffgear-with-different-pixel-formats).
 
 &thinsp;
 
 ## How to use a hardware decoder (GPU) in FFGear?
 
-**Answer:** Pass the `-vcodec` FFmpeg parameter via the `options` dictionary to specify a hardware decoder like `h264_cuvid` (NVIDIA CUVID) or use `-hwaccel cuda` via `-ffprefixes`. See the [Hardware-Accelerated Decoding ➶](../../gears/ffgear/advanced/#hardware-accelerated-decoding) advanced examples.
+**Answer:** Pass the `-vcodec` FFmpeg parameter via the `options` dictionary to specify a hardware decoder like `h264_cuvid` (NVIDIA CUVID) or use `-hwaccel cuda` via `-ffprefixes`. See the [Hardware-Accelerated Decoding ➶](../gears/ffgear/advanced/#hardware-accelerated-decoding) advanced examples.
 
 &thinsp;
 
 ## What is `-enforce_cv_patch` and when do I need it?
 
-**Answer:** `-enforce_cv_patch` is an exclusive FFdecoder parameter that makes YUV/NV pixel-format frames (e.g. `yuv420p`, `nv12`) directly compatible with OpenCV. When enabled, FFGear automatically converts these frames to BGR colorspace internally — so `read()` returns standard BGR frames ready for `cv2.imshow()` or `cv2.imwrite()`. Enable it whenever you use `frame_format="yuv420p"` or similar YUV formats. See [params ➶](../../gears/ffgear/params/#b-ffdecoder-parameters).
+**Answer:** `-enforce_cv_patch` is an exclusive FFdecoder parameter that makes YUV/NV pixel-format frames (e.g. `yuv420p`, `nv12`) directly compatible with OpenCV. When enabled, FFGear automatically converts these frames to BGR colorspace internally — so `read()` returns standard BGR frames ready for `cv2.imshow()` or `cv2.imwrite()`. Enable it whenever you use `frame_format="yuv420p"` or similar YUV formats. See [params ➶](../gears/ffgear/params/#b-ffdecoder-parameters).
 
 &thinsp;
 
 ## What is `-extract_metadata` and what does `read()` return when it's enabled?
 
-**Answer:** `-extract_metadata` enables asynchronous per-frame metadata extraction via FFmpeg's `showinfo` filter. When enabled, FFGear's `read()` returns `(frame, metadata)` tuples instead of bare frames. The `metadata` dict contains `frame_num`, `pts_time`, `is_keyframe`, and `frame_type`. This is useful for keyframe-only AI inference, VFR synchronization, and timestamped pipelines. See [advanced examples ➶](../../gears/ffgear/advanced/#per-frame-metadata-extraction).
+**Answer:** `-extract_metadata` enables asynchronous per-frame metadata extraction via FFmpeg's `showinfo` filter. When enabled, FFGear's `read()` returns `(frame, metadata)` tuples instead of bare frames. The `metadata` dict contains `frame_num`, `pts_time`, `is_keyframe`, and `frame_type`. This is useful for keyframe-only AI inference, VFR synchronization, and timestamped pipelines. See [advanced examples ➶](../gears/ffgear/advanced/#per-frame-metadata-extraction).
 
 !!! warning "`-extract_metadata` is incompatible with `-filter_complex`. Both cannot be active simultaneously."
 
@@ -85,19 +85,19 @@ Use FFGear when you need GPU decoding, advanced FFmpeg pipelines, or YUV pixel f
 
 ## How to apply FFmpeg filters in FFGear?
 
-**Answer:** Pass the `-vf` FFmpeg parameter (for simple filtergraphs) or `-filter_complex` (for multi-input graphs) via the `options` dictionary. See [Usage Examples ➶](../../gears/ffgear/usage/#using-ffgear-with-simple-ffmpeg-filtergraphs) and [Advanced Usage ➶](../../gears/ffgear/advanced/#complex-ffmpeg-filtergraphs).
+**Answer:** Pass the `-vf` FFmpeg parameter (for simple filtergraphs) or `-filter_complex` (for multi-input graphs) via the `options` dictionary. See [Usage Examples ➶](../gears/ffgear/usage/#using-ffgear-with-simple-ffmpeg-filtergraphs) and [Advanced Usage ➶](../gears/ffgear/advanced/#complex-ffmpeg-filtergraphs).
 
 &thinsp;
 
 ## How to open RTSP/RTP network streams with FFGear?
 
-**Answer:** Simply provide the RTSP/RTP URL as the `source` parameter. You can also pass FFmpeg transport parameters via `options` (e.g. `{"-rtsp_transport": "tcp"}`). See [Usage Examples ➶](../../gears/ffgear/usage/#using-ffgear-with-network-streams).
+**Answer:** Simply provide the RTSP/RTP URL as the `source` parameter. You can also pass FFmpeg transport parameters via `options` (e.g. `{"-rtsp_transport": "tcp"}`). See [Usage Examples ➶](../gears/ffgear/usage/#using-ffgear-with-network-streams).
 
 &thinsp;
 
 ## How to change quality and parameters of YouTube Streams with FFGear?
 
-**Answer:** FFGear provides exclusive `STREAM_RESOLUTION` _(for specifying stream resolution)_ and `STREAM_PARAMS` _(for specifying underlying `yt_dlp` parameters)_ attributes with its [`options`](../../gears/ffgear/params/#a-ffgear-exclusive-parameters) dictionary parameter. See [this Bonus Example ➶](../ffgear_ex/#using-ffgear-with-variable-yt_dlp-parameters-in-stream-mode).
+**Answer:** FFGear provides exclusive `STREAM_RESOLUTION` _(for specifying stream resolution)_ and `STREAM_PARAMS` _(for specifying underlying `yt_dlp` parameters)_ attributes with its [`options`](../gears/ffgear/params/#a-ffgear-exclusive-parameters) dictionary parameter. See [this Bonus Example ➶](ffgear_ex/#using-ffgear-with-variable-yt_dlp-parameters-in-stream-mode).
 
 &thinsp;
 
@@ -110,31 +110,31 @@ options = {"-ffprefixes": ["-stream_loop", "-1"]}
 FFGear(source="myvideo.mp4", **options).start()
 ```
 
-See [Usage Examples ➶](../../gears/ffgear/usage/#using-ffgear-with-video-looping).
+See [Usage Examples ➶](../gears/ffgear/usage/#using-ffgear-with-video-looping).
 
 &thinsp;
 
 ## Can I use FFGear with multiple camera devices at the same time?
 
-**Answer:** Yes. Simply create separate FFGear instances for each device. See [this Bonus Example ➶](../ffgear_ex/#synchronizing-two-ffgear-sources).
+**Answer:** Yes. Simply create separate FFGear instances for each device. See [this Bonus Example ➶](ffgear_ex/#synchronizing-two-ffgear-sources).
 
 &thinsp;
 
 ## How to use FFGear with WriteGear?
 
-**Answer:** FFGear follows the same read-loop pattern as CamGear, so it integrates directly with WriteGear. See [this Bonus Example ➶](../ffgear_ex/#using-ffgear-with-writegears-compression-mode).
+**Answer:** FFGear follows the same read-loop pattern as CamGear, so it integrates directly with WriteGear. See [this Bonus Example ➶](ffgear_ex/#using-ffgear-with-writegears-compression-mode).
 
 &thinsp;
 
 ## How to use FFGear with NetGear for network streaming?
 
-**Answer:** Use FFGear on the server side to decode frames and send them via NetGear. See [this Bonus Example ➶](../ffgear_ex/#using-ffgear-with-netgear-server).
+**Answer:** Use FFGear on the server side to decode frames and send them via NetGear. See [this Bonus Example ➶](ffgear_ex/#using-ffgear-with-netgear-server).
 
 &thinsp;
 
 ## How to configure the internal queue in FFGear?
 
-**Answer:** Use `QUEUE_SIZE` (int, default `96`), `THREADED_QUEUE_MODE` (bool, default `True`), and `THREAD_TIMEOUT` (float or None, default `None`) in the `options` dictionary. See [params ➶](../../gears/ffgear/params/#a-ffgear-exclusive-parameters).
+**Answer:** Use `QUEUE_SIZE` (int, default `96`), `THREADED_QUEUE_MODE` (bool, default `True`), and `THREAD_TIMEOUT` (float or None, default `None`) in the `options` dictionary. See [params ➶](../gears/ffgear/params/#a-ffgear-exclusive-parameters).
 
 &thinsp;
 
@@ -167,6 +167,6 @@ pip install deffcode
 
 ## Why is FFGear throwing warning that Threaded Queue Mode is disabled?
 
-**Answer:** That's normal behavior when `THREADED_QUEUE_MODE=False` is set in `options`. Please read about [Threaded Queue Mode ➶](../../bonus/TQM/) to understand its implications.
+**Answer:** That's normal behavior when `THREADED_QUEUE_MODE=False` is set in `options`. Please read about [Threaded Queue Mode ➶](../bonus/TQM/) to understand its implications.
 
 &thinsp;

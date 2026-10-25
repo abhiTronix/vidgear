@@ -61,7 +61,7 @@ Its valid input can be one of the following:
 
 ## **`compression_mode`**
 
-This parameter selects the WriteGear's **[Primary Mode of Operation](../introduction/#modes-of-operation)**, i.e. if you want to use Compression Mode, then set this parameter to `True`, otherwise set it to `False` for Non-Compression Mode. 
+This parameter selects the WriteGear's **[Primary Mode of Operation](introduction/#modes-of-operation)**, i.e. if you want to use Compression Mode, then set this parameter to `True`, otherwise set it to `False` for Non-Compression Mode. 
 
 !!! info "In Compression Mode, WriteGear API will use [**FFmpeg's Video Encoding API**](https://ffmpeg.org/ffmpeg.html#Video-Options) to encode output video, and in Non-Compression Mode, it will use [**OpenCV's VideoWriter API**](https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) to encode output video."
 
@@ -88,7 +88,7 @@ This parameter assigns the _path_ or _directory_ where the custom FFmpeg executa
 
 **Usage:**
 
-!!! info "See Compression Mode's [`custom_ffmpeg` ➶](../compression/params/#custom_ffmpeg) for more information on its usage."
+!!! info "See Compression Mode's [`custom_ffmpeg` ➶](compression/params/#custom_ffmpeg) for more information on its usage."
 
 &nbsp;
 
@@ -105,7 +105,7 @@ This parameter allows to customize the output video encoding parameters both in 
 
 **Usage:**
 
-!!! info "See [Compression Mode Parameter ➶](../compression/params#output_params) and [Non-Compression Mode Parameter ➶](../non_compression/params#output_params) for more information on its usage and supported parameters."
+!!! info "See [Compression Mode Parameter ➶](compression/params#output_params) and [Non-Compression Mode Parameter ➶](non_compression/params#output_params) for more information on its usage and supported parameters."
 
 &nbsp; 
 

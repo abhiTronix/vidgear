@@ -21,16 +21,16 @@ limitations under the License.
 # Bidirectional Mode for NetGear API 
 
 <h3 align="center">
-  <img src="../../../../assets/images/bidir.png" alt="Bidirectional Mode" loading="lazy" class="center" title="NetGear's Bidirectional Mode"/>
+  <img src="../../../assets/images/bidir.png" alt="Bidirectional Mode" loading="lazy" class="center" title="NetGear's Bidirectional Mode"/>
 </h3>
 
 ## Overview
 
 Bidirectional Mode enables seamless support for Bidirectional data transmission between Client/Consumer and Sender/Publisher along with video-frames through its synchronous messaging patterns such as `zmq.PAIR` (ZMQ Pair Pattern) & `zmq.REQ/zmq.REP` (ZMQ Request/Reply Pattern).
 
-In Bidirectional Mode, we utilizes the NetGear API's [`message`](../../../../bonus/reference/netgear/#vidgear.gears.NetGear.send) parameter of `send()` method for sending data from Server-to-Client, and [`return_data`](../../../../bonus/reference/netgear/#vidgear.gears.NetGear.recv) parameter of `recv()` method to return data back from Client-to-Server all while transferring frames in real-time. 
+In Bidirectional Mode, we utilizes the NetGear API's [`message`](../../../bonus/reference/netgear/#vidgear.gears.NetGear.send) parameter of `send()` method for sending data from Server-to-Client, and [`return_data`](../../../bonus/reference/netgear/#vidgear.gears.NetGear.recv) parameter of `recv()` method to return data back from Client-to-Server all while transferring frames in real-time. 
 
-This mode can be easily activated in NetGear through `bidirectional_mode` attribute of its [`options`](../../params/#options) dictionary parameter during initialization.
+This mode can be easily activated in NetGear through `bidirectional_mode` attribute of its [`options`](../params/#options) dictionary parameter during initialization.
 
 &nbsp;
 
@@ -45,7 +45,7 @@ This mode can be easily activated in NetGear through `bidirectional_mode` attrib
 
     * Bidirectional Mode is smart enough to sense data _(if available or not)_, and **DOES NOT** interfere with transferring of video-frames _(unless data is huge)_, as both mechanisms works independently.
 
-    * Bidirectional Mode is now compatibile with both [Multi-Servers mode](../../advanced/multi_server/) and [Multi-Clients mode](../../advanced/multi_client/) exclusive modes.
+    * Bidirectional Mode is now compatibile with both [Multi-Servers mode](../advanced/multi_server/) and [Multi-Clients mode](../advanced/multi_client/) exclusive modes.
 
 
 &nbsp;
@@ -72,9 +72,9 @@ This mode can be easily activated in NetGear through `bidirectional_mode` attrib
 
 To send data bidirectionally, NetGear API provides two exclusive parameters for its methods:
 
-* [`message`](../../../../bonus/reference/netgear/#vidgear.gears.NetGear.send): It enables user to send data to Client, directly through `send()` method at Server's end. 
+* [`message`](../../../bonus/reference/netgear/#vidgear.gears.NetGear.send): It enables user to send data to Client, directly through `send()` method at Server's end. 
 
-* [`return_data`](../../../../bonus/reference/netgear/#vidgear.gears.NetGear.recv): It enables user to send data back to Server, directly through `recv()` method at Client's end.
+* [`return_data`](../../../bonus/reference/netgear/#vidgear.gears.NetGear.recv): It enables user to send data back to Server, directly through `recv()` method at Client's end.
 
 
 &nbsp;
@@ -214,7 +214,7 @@ client.close()
 
 Open a terminal on Client System _(where you want to display the input frames received from the Server)_ and execute the following python code: 
 
-!!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
+!!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -289,7 +289,7 @@ Now, Open the terminal on another Server System _(a Raspberry Pi with Camera Mod
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../installation/pip_install/#picamera2) for its installation."
 
 !!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
@@ -375,7 +375,7 @@ Now, Open the terminal on another Server System _(a Raspberry Pi with Camera Mod
 
         !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../gears/pigear/params) user-defined optional parameter boolean attribute."
 
     ```python linenums="1" hl_lines="25-30"
     # import required libraries
@@ -458,7 +458,7 @@ In this example we are going to implement a bare-minimum example, where we will 
 
 !!! tip "This example is useful for building applications like Real-Time Video Chat."
 
-!!! info "We're also using [`reducer`](../../../../bonus/reference/helper/#vidgear.gears.helper.reducer) method for reducing frame-size on-the-go for additional performance."
+!!! info "We're also using [`reducer`](../../../bonus/reference/helper/#vidgear.gears.helper.reducer) method for reducing frame-size on-the-go for additional performance."
 
 !!! warning "Remember, Sending large HQ video-frames may required more network bandwidth and packet size which may lead to video latency!"
 
@@ -606,13 +606,13 @@ client.close()
 
 ### Using Bidirectional Mode for Video-Frames Transfer with Frame Compression :fire:
 
-!!! example "This usage examples can be found [here ➶](../../advanced/compression/#using-bidirectional-mode-for-video-frames-transfer-with-frame-compression)"
+!!! example "This usage examples can be found [here ➶](../advanced/compression/#using-bidirectional-mode-for-video-frames-transfer-with-frame-compression)"
 
 &nbsp;
 
 [^1]: 
     
-    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **ONLY SUPPORTED** at Client's end with its [`return_data`](../../../../bonus/reference/netgear/#vidgear.gears.NetGear.recv) parameter."
+    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **ONLY SUPPORTED** at Client's end with its [`return_data`](../../../bonus/reference/netgear/#vidgear.gears.NetGear.recv) parameter."
 
 
 &nbsp;

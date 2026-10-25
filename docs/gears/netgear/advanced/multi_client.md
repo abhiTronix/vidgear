@@ -21,32 +21,32 @@ limitations under the License.
 # Multi-Clients Mode for NetGear API 
 
 <figure>
-  <img src="../../../../assets/images/multi_client.png" alt="NetGear's Multi-Clients Mode" loading="lazy" title="NetGear's Multi-Clients Mode"/>
+  <img src="../../../assets/images/multi_client.png" alt="NetGear's Multi-Clients Mode" loading="lazy" title="NetGear's Multi-Clients Mode"/>
 </figure>
 
 ## Overview
 
-In Multi-Clients Mode, NetGear robustly handles Multiple Clients at once thereby able to broadcast frames and data across multiple Clients/Consumers in the network at same time. This mode works contrary to [Multi-Servers Mode](../multi_server/) such that every new Client that connects to single Server can be identified by its unique port address on the network. 
+In Multi-Clients Mode, NetGear robustly handles Multiple Clients at once thereby able to broadcast frames and data across multiple Clients/Consumers in the network at same time. This mode works contrary to [Multi-Servers Mode](multi_server/) such that every new Client that connects to single Server can be identified by its unique port address on the network. 
 
-The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`) and can be easily activated in NetGear API through `multiclient_mode` attribute of its [`options`](../../params/#options) dictionary parameter during initialization.
+The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`) and can be easily activated in NetGear API through `multiclient_mode` attribute of its [`options`](../params/#options) dictionary parameter during initialization.
 
 
-!!! alert "Multi-Clients Mode is best for broadcasting **Meta-Data with Video-frames** to specific limited number of clients in real time. But if you're looking to scale broadcast to a very large pool of clients, then see our [WebGear](../../../webgear/) or [WebGear_RTC](../../../webgear_rtc/) APIs."
+!!! alert "Multi-Clients Mode is best for broadcasting **Meta-Data with Video-frames** to specific limited number of clients in real time. But if you're looking to scale broadcast to a very large pool of clients, then see our [WebGear](../../webgear/) or [WebGear_RTC](../../webgear_rtc/) APIs."
 
 &nbsp;
 
 
 !!! danger "Important Information regarding Multi-Clients Mode"
 
-    * A unique PORT address **MUST** be assigned to each Client on the network using its [`port`](../../params/#port) parameter.
+    * A unique PORT address **MUST** be assigned to each Client on the network using its [`port`](../params/#port) parameter.
     
-    * A list/tuple of PORT addresses of all unique Clients **MUST** be assigned at Server's end using its [`port`](../../params/#port) parameter for a successful connection.
+    * A list/tuple of PORT addresses of all unique Clients **MUST** be assigned at Server's end using its [`port`](../params/#port) parameter for a successful connection.
 
     * Patterns `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ and `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ are the only supported pattern values for this Mode. Therefore, calling any other pattern value with is mode will result in `ValueError`.
 
     * Multi-Clients and Multi-Servers exclusive modes **CANNOT** be enabled simultaneously, Otherwise NetGear API will throw `ValueError`.
 
-    * The [`address`](../../params/#address) parameter value of each Client **MUST** exactly match the Server. 
+    * The [`address`](../params/#address) parameter value of each Client **MUST** exactly match the Server. 
 
 &nbsp;
 
@@ -54,7 +54,7 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
 - [x] Enables Multiple Client(s) connection with a single Server.
 
-- [x] Ability to [send any additional data](../../advanced/multi_client/#using-multi-clients-mode-with-custom-data-transfer) of any datatype along with frames in real-time.
+- [x] Ability to [send any additional data](../advanced/multi_client/#using-multi-clients-mode-with-custom-data-transfer) of any datatype along with frames in real-time.
 
 - [x] Number of Clients can be extended to several numbers depending upon your system's hardware limit.
 
@@ -94,7 +94,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Client(s) end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Note down the local IP-address of this system(required at all Client(s) end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
 
 !!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
@@ -294,7 +294,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Client(s) end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Note down the local IP-address of this system(required at all Client(s) end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
 
 !!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
@@ -497,14 +497,14 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Client(s) end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Note down the local IP-address of this system(required at all Client(s) end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
 
 !!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
 
 !!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../installation/pip_install/#picamera2) for its installation."
 
 !!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
@@ -592,7 +592,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
         !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../gears/pigear/params) user-defined optional parameter boolean attribute."
 
     ```python linenums="1" hl_lines="47-60"
     # import required libraries
@@ -796,11 +796,11 @@ client.close()
 ### Using Multi-Clients Mode with Bidirectional Mode
 
 !!! abstract
-    Multi-Clients Mode now also compatible with [Bidirectional Mode](../../advanced/bidirectional_mode/), which lets you send additional data of ***any datatype***[^1]  along with frame in real-time bidirectionally between a single Server and all connected Client(s).
+    Multi-Clients Mode now also compatible with [Bidirectional Mode](../advanced/bidirectional_mode/), which lets you send additional data of ***any datatype***[^1]  along with frame in real-time bidirectionally between a single Server and all connected Client(s).
 
 !!! warning "Important Information"
     * Bidirectional data transfer **ONLY** works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_, and **NOT** with pattern `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_
-    * Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server's end with its [`message`](../../../../bonus/reference/netgear/#vidgear.gears.NetGear.send) parameter.
+    * Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server's end with its [`message`](../../../bonus/reference/netgear/#vidgear.gears.NetGear.send) parameter.
     * Bidirectional Mode may lead to additional **LATENCY** depending upon the size of data being transfer bidirectionally. User discretion is advised!
 
 ??? new "New in v0.2.5" 
@@ -814,14 +814,14 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Client(s) end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Note down the local IP-address of this system(required at all Client(s) end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
 
 !!! alert "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
 
 !!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../installation/pip_install/#picamera2) for its installation."
 
 !!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
@@ -916,7 +916,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
         !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../gears/pigear/params) user-defined optional parameter boolean attribute."
 
     ```python linenums="1" hl_lines="19 48-64"
     # import required libraries
@@ -1145,4 +1145,4 @@ client.close()
 
 [^1]: 
     
-    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server's end with its [`message`](../../../../bonus/reference/netgear/#vidgear.gears.NetGear.send) parameter."
+    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server's end with its [`message`](../../../bonus/reference/netgear/#vidgear.gears.NetGear.send) parameter."

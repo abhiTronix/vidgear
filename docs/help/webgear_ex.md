@@ -26,11 +26,11 @@ limitations under the License.
 
 Because of WebGear API's flexible internal wapper around VideoGear, it can easily access any parameter of CamGear and PiGear videocapture APIs.
 
-!!! info "Following usage examples are just an idea of what can be done with WebGear API, you can try various [VideoGear](../../gears/videogear/params/), [CamGear](../../gears/camgear/params/) and [PiGear](../../gears/pigear/params/) parameters directly in WebGear API in the similar manner."
+!!! info "Following usage examples are just an idea of what can be done with WebGear API, you can try various [VideoGear](../gears/videogear/params/), [CamGear](../gears/camgear/params/) and [PiGear](../gears/pigear/params/) parameters directly in WebGear API in the similar manner."
 
 Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera module while tweaking its various properties in few lines of python code:
 
-!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../installation/pip_install/#picamera2) for its installation."
 
 !!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
@@ -80,7 +80,7 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
 
         !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../gears/pigear/params) user-defined optional parameter boolean attribute."
 
     ```python linenums="1" hl_lines="4 22"
     # import libs
@@ -118,7 +118,7 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
 
 ## Using WebGear with FFGear backend
 
-Here's a bare-minimum example of using WebGear API with the [FFGear backend](../../gears/ffgear/) for hardware-accelerated FFmpeg-powered video decoding:
+Here's a bare-minimum example of using WebGear API with the [FFGear backend](../gears/ffgear/) for hardware-accelerated FFmpeg-powered video decoding:
 
 ```python linenums="1" hl_lines="4 16"
 # import libs
@@ -188,7 +188,7 @@ In this example, we'll be displaying two video feeds side-by-side simultaneously
 ??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
-**Step-1 (Trigger Auto-Generation Process):** Firstly, run this bare-minimum code to trigger the [**Auto-generation**](../../gears/webgear/#auto-generation-process) process, this will create `.vidgear` directory at current location _(directory where you'll run this code)_:
+**Step-1 (Trigger Auto-Generation Process):** Firstly, run this bare-minimum code to trigger the [**Auto-generation**](../gears/webgear/#auto-generation-process) process, this will create `.vidgear` directory at current location _(directory where you'll run this code)_:
 
 ```python linenums="1" hl_lines="6"
 # import required libraries

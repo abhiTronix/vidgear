@@ -304,7 +304,7 @@ Checkout this detailed script that automates building OpenCV with GStreamer and 
 
 !!! tip "You could integrate this script into a multi-stage Dockerfile similar to [Approach 1](#approach-1-use-pre-built-opencv-with-video-support-simplest), ensuring all dependencies are installed in the builder stage before running the script."
 
-!!! info "You could also find useful resources for building OpenCV from source with GStreamer support in our FAQ section: [**Building OpenCV with GStreamer Support ➶**](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support)"
+!!! info "You could also find useful resources for building OpenCV from source with GStreamer support in our FAQ section: [**Building OpenCV with GStreamer Support ➶**](../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support)"
 
 &thinsp;
 

@@ -37,7 +37,7 @@ This parameter selects the camera index to be used as the source, allowing you t
 PiGear(camera_num=1)
 ```
 
-!!! example "The complete usage example demonstrating the usage of the `camera_num` parameter is available [here ➶](../../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)."
+!!! example "The complete usage example demonstrating the usage of the `camera_num` parameter is available [here ➶](../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)."
 
   
 &nbsp;
@@ -84,7 +84,7 @@ PiGear(framerate=60) # sets 60fps framerate
 
 This parameter controls the colorspace of the output frames. 
 
-!!! example "With the Picamera2 backend, you can also define a custom `format` _(format of output frame pixels)_ in PiGear API. Checkout this [Bonus Example ➶](../../../help/pigear_ex/#changing-output-pixel-format-in-pigear-api-with-picamera2-backend)"
+!!! example "With the Picamera2 backend, you can also define a custom `format` _(format of output frame pixels)_ in PiGear API. Checkout this [Bonus Example ➶](../../help/pigear_ex/#changing-output-pixel-format-in-pigear-api-with-picamera2-backend)"
 
 **Data-Type:** String
 
@@ -92,13 +92,13 @@ This parameter controls the colorspace of the output frames.
 
 **Usage:**
 
-!!! tip "All supported `colorspace` values are described [here ➶](../../../bonus/colorspace_manipulation/)"
+!!! tip "All supported `colorspace` values are described [here ➶](../../bonus/colorspace_manipulation/)"
 
 ```python
 PiGear(colorspace="COLOR_BGR2HSV")
 ```
 
-!!! example "Its complete usage example is given [here ➶](../usage/#using-pigear-with-direct-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](usage/#using-pigear-with-direct-colorspace-manipulation)"
 
 &nbsp;
 
@@ -109,7 +109,7 @@ This dictionary parameter in the PiGear API allows you to control various camera
 ### A. Configurational Camera Parameters
 - [x] These parameters are provided by the underlying backend library _(depending upon backend in use)_, and must be applied to the camera system before the camera can be started.
 - [x] **These parameter include:** _Brightness, Contrast, Saturation, Exposure, Colour Temperature, Colour Gains, etc._ 
-- [x] All supported parameters are listed in this [Usage example ➶](../usage/#using-pigear-with-variable-camera-properties)
+- [x] All supported parameters are listed in this [Usage example ➶](usage/#using-pigear-with-variable-camera-properties)
 
 
 ### B. User-defined Parameters
@@ -166,7 +166,7 @@ This dictionary parameter in the PiGear API allows you to control various camera
 
 **Usage:**
 
-!!! example "The complete usage example demonstrating the usage of the `options` parameter is available [here ➶](../usage/#using-pigear-with-variable-camera-properties)."
+!!! example "The complete usage example demonstrating the usage of the `options` parameter is available [here ➶](usage/#using-pigear-with-variable-camera-properties)."
 
 You can format these user-defined and configurational parameters as attributes of this `options` dictionary parameter as follows:
 

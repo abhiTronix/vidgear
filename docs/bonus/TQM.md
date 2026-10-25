@@ -23,7 +23,7 @@ limitations under the License.
 ## Overview
 
 <figure>
-  <img src="../../assets/images/tqm.webp" loading="lazy" alt="Threading timing diagram" class="center"/>
+  <img src="../assets/images/tqm.webp" loading="lazy" alt="Threading timing diagram" class="center"/>
   <figcaption>Threaded-Queue-Mode: generalized timing diagram</figcaption>
 </figure>
 
@@ -71,7 +71,7 @@ By maintaining a pre-decoded buffer in memory, TQM dramatically reduces **latenc
 
 ## Manually disabling Threaded-Queue-Mode
 
-To manually disable Threaded-Queue-Mode, VidGear provides `THREADED_QUEUE_MODE` boolean attribute for `options` dictionary parameter in respective [VideoCapture APIs](../../gears/#a-videocapture-gears):  
+To manually disable Threaded-Queue-Mode, VidGear provides `THREADED_QUEUE_MODE` boolean attribute for `options` dictionary parameter in respective [VideoCapture APIs](../gears/#a-videocapture-gears):  
 
 ???+ warning "Important Warnings"
 

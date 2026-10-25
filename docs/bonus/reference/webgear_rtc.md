@@ -18,9 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-!!! example "WebGear_RTC API usage examples can be found [here ➶](../../../gears/webgear_rtc/usage/)"
+!!! example "WebGear_RTC API usage examples can be found [here ➶](../../gears/webgear_rtc/usage/)"
 
-!!! info "WebGear_RTC API parameters are explained [here ➶](../../../gears/webgear_rtc/params/)"
+!!! info "WebGear_RTC API parameters are explained [here ➶](../../gears/webgear_rtc/params/)"
 
 ::: vidgear.gears.asyncio.WebGear_RTC	
 	

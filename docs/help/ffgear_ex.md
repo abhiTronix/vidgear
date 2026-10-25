@@ -175,7 +175,7 @@ writer.close()
 
 You can use FFGear as a high-performance video source on a **NetGear Server** to stream decoded frames over the network:
 
-!!! info "Note down the local IP-address of the Server (required at Client's end). You can follow [this FAQ](../netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
+!!! info "Note down the local IP-address of the Server (required at Client's end). You can follow [this FAQ](netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
 ### Server
 

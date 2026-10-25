@@ -24,25 +24,25 @@ limitations under the License.
 
 ## What is VideoGear API and what does it do?
 
-**Answer:** VideoGear provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**](../../gears/stabilizer/) class. It also acts as a Common Video-Capture API that provides unified internal access to [CamGear](../../gears/camgear/), [PiGear](../../gears/pigear/), and [FFGear](../../gears/ffgear/) APIs and their parameters, selectable via the [`api`](../../gears/videogear/params/#api) parameter using the [`Backend`](../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum. _For more info. see [VideoGear doc ➶](../../gears/videogear/)_
+**Answer:** VideoGear provides a special internal wrapper around VidGear's exclusive [**Video Stabilizer**](../gears/stabilizer/) class. It also acts as a Common Video-Capture API that provides unified internal access to [CamGear](../gears/camgear/), [PiGear](../gears/pigear/), and [FFGear](../gears/ffgear/) APIs and their parameters, selectable via the [`api`](../gears/videogear/params/#api) parameter using the [`Backend`](../bonus/reference/helper/#vidgear.gears.helper.Backend) enum. _For more info. see [VideoGear doc ➶](../gears/videogear/)_
 
 &thinsp;
 
 ## What's the need of VideoGear API?
 
-**Answer:** VideoGear is basically ideal when you need to switch between different video-capture backends without changing your code much. Also, it enables easy stabilization for various video-streams _(real-time or not)_ with minimum effort and using way fewer lines of code. It also serves as backend for other powerful APIs, such as [WebGear](../../gears/webgear/) and [NetGear_Async](../../gears/netgear_async/).
+**Answer:** VideoGear is basically ideal when you need to switch between different video-capture backends without changing your code much. Also, it enables easy stabilization for various video-streams _(real-time or not)_ with minimum effort and using way fewer lines of code. It also serves as backend for other powerful APIs, such as [WebGear](../gears/webgear/) and [NetGear_Async](../gears/netgear_async/).
 
 &thinsp;
 
 ## Which APIs are accessible with VideoGear API?
 
-**Answer:** VideoGear provides internal access to [CamGear](../../gears/camgear/), [PiGear](../../gears/pigear/), and [FFGear](../../gears/ffgear/) APIs and their parameters via the `Backend` enum (`Backend.CAMGEAR`, `Backend.PIGEAR`, `Backend.FFGEAR`). It also contains a wrapper around the [**Video Stabilizer**](../../gears/stabilizer/) class.
+**Answer:** VideoGear provides internal access to [CamGear](../gears/camgear/), [PiGear](../gears/pigear/), and [FFGear](../gears/ffgear/) APIs and their parameters via the `Backend` enum (`Backend.CAMGEAR`, `Backend.PIGEAR`, `Backend.FFGEAR`). It also contains a wrapper around the [**Video Stabilizer**](../gears/stabilizer/) class.
 
 &thinsp;
 
 ## How do I select a specific backend in VideoGear?
 
-**Answer:** Use the [`api`](../../gears/pigear/param/#api) parameter with the [`Backend`](../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum:
+**Answer:** Use the [`api`](../gears/pigear/param/#api) parameter with the [`Backend`](../bonus/reference/helper/#vidgear.gears.helper.Backend) enum:
 
 ```python
 from vidgear.gears import VideoGear

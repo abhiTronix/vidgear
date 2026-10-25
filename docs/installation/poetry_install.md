@@ -64,19 +64,19 @@ When installing VidGear with Poetry, you need to manually install the following 
 
 * #### :simple-ffmpeg: FFmpeg 
 
-    Require only for the video compression and encoding compatibility within [**StreamGear API**](../../gears/streamgear/introduction/) and [**WriteGear API's Compression Mode**](../../gears/writegear/compression/), and for hardware-accelerated decoding within [**FFGear API**](../../gears/ffgear/). 
+    Require only for the video compression and encoding compatibility within [**StreamGear API**](../gears/streamgear/introduction/) and [**WriteGear API's Compression Mode**](../gears/writegear/compression/), and for hardware-accelerated decoding within [**FFGear API**](../gears/ffgear/). 
 
     !!! tip "FFmpeg Installation"
 
-        * **For WriteGear API's Compression Mode**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
-        * **For StreamGear API**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/streamgear/ffmpeg_install/) for its installation.
-        * **For FFGear API**: Follow this dedicated [**FFmpeg Installation doc**](../../gears/ffgear/advanced/ffmpeg_install/) for its installation.
+        * **For WriteGear API's Compression Mode**: Follow this dedicated [**FFmpeg Installation doc**](../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
+        * **For StreamGear API**: Follow this dedicated [**FFmpeg Installation doc**](../gears/streamgear/ffmpeg_install/) for its installation.
+        * **For FFGear API**: Follow this dedicated [**FFmpeg Installation doc**](../gears/ffgear/advanced/ffmpeg_install/) for its installation.
 
 &thinsp;
 
 * #### :simple-raspberrypi: Picamera2
 
-    Required only if you're using Raspberry Pi :fontawesome-brands-raspberry-pi: Camera Modules _(or USB webcams)_ with the [**PiGear**](../../gears/pigear/) API. Here's how to install [Picamera2](https://github.com/raspberrypi/picamera2) python library:
+    Required only if you're using Raspberry Pi :fontawesome-brands-raspberry-pi: Camera Modules _(or USB webcams)_ with the [**PiGear**](../gears/pigear/) API. Here's how to install [Picamera2](https://github.com/raspberrypi/picamera2) python library:
 
     ??? tip "Using Legacy `picamera` library with PiGear (`v0.3.3` and above)"
 
@@ -86,7 +86,7 @@ When installing VidGear with Poetry, you need to manually install the following 
         poetry add picamera
         ```
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../gears/pigear/params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
 
     
     ??? warning "Picamera2 is only supported on Raspberry Pi OS Bullseye (or later) images, both 32 and 64-bit."
@@ -191,9 +191,9 @@ When installing VidGear with Poetry, you need to manually install the following 
         | PiGear | `picamera`, `picamera2` |
         | VideoGear | *Based on CamGear or PiGear or FFGear backend in use*  |
         | ScreenGear | `dxcam`, `mss`, `pyscreenshot`, `Pillow` |
-        | WriteGear | **FFmpeg:** See [this doc ➶](../../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
-        | StreamGear | **FFmpeg:** See [this doc ➶](../../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
-        | FFGear | **FFmpeg:** See [this doc ➶](../../gears/ffgear/advanced/ffmpeg_install/#ffmpeg-installation-instructions) |
+        | WriteGear | **FFmpeg:** See [this doc ➶](../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
+        | StreamGear | **FFmpeg:** See [this doc ➶](../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
+        | FFGear | **FFmpeg:** See [this doc ➶](../gears/ffgear/advanced/ffmpeg_install/#ffmpeg-installation-instructions) |
         | NetGear | `pyzmq`, `simplejpeg` |
         | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
         | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |

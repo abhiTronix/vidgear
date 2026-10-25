@@ -20,11 +20,11 @@ limitations under the License.
 
 # PiGear API Usage Examples:
 
-!!! new "PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../../installation/pip_install/#picamera2) for its installation."
+!!! new "PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
 
 !!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this API, otherwise nothing will work."
 
-!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/pigear_ex/)"
+!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../help/pigear_ex/)"
 
 
 
@@ -43,7 +43,7 @@ Following is the bare-minimum code you need to get started with PiGear API:
 
     !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-    !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
+    !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
 
 ??? danger "Disabling common `libcamera` API messages in silent mode."
     
@@ -117,13 +117,13 @@ stream.stop()
 
     ??? info "All supported Picamera2 Library Configurational Parameters [IMPORTANT]"
 
-        Following are the list of Picamera2 parameters, i.e. if supported, can be applied to the source stream in PiGear API through its [`options`](../params/#options) dictionary parameter by formatting them as its attributes.
+        Following are the list of Picamera2 parameters, i.e. if supported, can be applied to the source stream in PiGear API through its [`options`](params/#options) dictionary parameter by formatting them as its attributes.
 
         ???+ warning "Few Important points"
-            - These PiCamera2 parameters must be formatted as PiGear API's [`options`](../params/#options) dictionary parameter keys, and their values **MUST** strictly adhere to the specified data types _(see table below)_. If the values do not follow the specified data types, they will be discarded.
+            - These PiCamera2 parameters must be formatted as PiGear API's [`options`](params/#options) dictionary parameter keys, and their values **MUST** strictly adhere to the specified data types _(see table below)_. If the values do not follow the specified data types, they will be discarded.
             - PiGear API only defines the default `main` stream configuration that is delivered to the PiCamera2 API. You **CANNOT** define other streams _(such as `lores`, `raw`)_ manually.
-            -  The `FrameDuration` and `FrameDurationLimits` properties of [`control` configurational parameter](../params/#a-configurational-camera-parameters) are **NOT** supported and will be discarded, since camera FPS is handled by [`framerate`](../params/#framerate) parameter in PiGear API. 
-            - The [`resolution`](../params/#resolution) parameter will be **OVERRIDDEN**, if the user explicitly defines the `output_size` property of the [`sensor` configurational parameter](../params/#a-configurational-camera-parameters) in PiGear API.
+            -  The `FrameDuration` and `FrameDurationLimits` properties of [`control` configurational parameter](params/#a-configurational-camera-parameters) are **NOT** supported and will be discarded, since camera FPS is handled by [`framerate`](params/#framerate) parameter in PiGear API. 
+            - The [`resolution`](params/#resolution) parameter will be **OVERRIDDEN**, if the user explicitly defines the `output_size` property of the [`sensor` configurational parameter](params/#a-configurational-camera-parameters) in PiGear API.
 
         | Parameters | Datatype | Description | Supported | Supported on USB Cameras| Remarks |
         |:----------:|:-----:|:-------------:|:-----------:|:--------:|:-------:|
@@ -131,10 +131,10 @@ stream.stop()
         | `queue` |  `bool` | whether the system is allowed to queue up a frame ready for a capture request | :white_check_mark: | :x: | Read Docs [here ➶](https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf)|
         | `controls` | `dict` | specify a set of runtime controls that can be regarded as part of the camera configuration | :white_check_mark: | :x: | Read Docs [here ➶](https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf) |
         | `sensor` | `dict` | allow to select a particular mode of operation for the sensor | :white_check_mark: | :white_check_mark: | Read Docs [here ➶](https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf) |
-        | `format` | `str` | Pixel formats | :white_check_mark: | :white_check_mark: | Read Docs [here ➶](https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf) and see [Bonus Example ➶](../../../help/pigear_ex/#changing-output-pixel-format-in-pigear-api-with-picamera2-backend) |
+        | `format` | `str` | Pixel formats | :white_check_mark: | :white_check_mark: | Read Docs [here ➶](https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf) and see [Bonus Example ➶](../../help/pigear_ex/#changing-output-pixel-format-in-pigear-api-with-picamera2-backend) |
         | `transform` | `Transform`[^1] | The 2D plane transform that is applied to all images from all the configured streams.  | :white_check_mark: | :x: | Read Docs [here ➶](https://datasheets.raspberrypi.com/camera/picamera2-manual.pdf) |
-        | `colour_space` | :octicons-dash-16: | colour space of the output images |  :x: | :no_entry_sign: | Handled by [`colorspace`](../params/#colorspace) parameter of PiGear API |
-        | `size` | :octicons-dash-16: | A tuple of two values giving the width and height of the output image. _(Both numbers should be no less than 64)_ | :x: | :no_entry_sign: | Handled by [`resolution`](../params/#resolution)  parameter of PiGear API |
+        | `colour_space` | :octicons-dash-16: | colour space of the output images |  :x: | :no_entry_sign: | Handled by [`colorspace`](params/#colorspace) parameter of PiGear API |
+        | `size` | :octicons-dash-16: | A tuple of two values giving the width and height of the output image. _(Both numbers should be no less than 64)_ | :x: | :no_entry_sign: | Handled by [`resolution`](params/#resolution)  parameter of PiGear API |
         | `display` | :octicons-dash-16: | name of the stream that will be displayed in the preview window.  | :x: | :no_entry_sign: | Not-Required |
         | `encode` | :octicons-dash-16: | name of the stream that will be used for video recording.   | :x: | :no_entry_sign: | Not-Required |
 
@@ -146,9 +146,9 @@ stream.stop()
         - Hot-plugging of USB cameras is also **NOT** supported - PiGear API should be completely shut down and restarted when cameras are added or removed.
 
     ??? tip "Enabling verbose logs for backend PiCamera2 Library"
-        The PiGear API allows you to enable more detailed logging from the `picamera2` backend library using the [`enable_verbose_logs`](../params/#b-user-defined-parameters) user-defined optional parameter attribute. This can be used in conjunction with enabling general logging (`logging=True`) in the PiGear API for even more granular control over logging output.
+        The PiGear API allows you to enable more detailed logging from the `picamera2` backend library using the [`enable_verbose_logs`](params/#b-user-defined-parameters) user-defined optional parameter attribute. This can be used in conjunction with enabling general logging (`logging=True`) in the PiGear API for even more granular control over logging output.
 
-    !!! example "PiGear also support changing parameter at runtime. Checkout this bonus example [here ➶](../../../help/pigear_ex/#dynamically-adjusting-raspberry-pi-camera-parameters-at-runtime-in-pigear-api)"
+    !!! example "PiGear also support changing parameter at runtime. Checkout this bonus example [here ➶](../../help/pigear_ex/#dynamically-adjusting-raspberry-pi-camera-parameters-at-runtime-in-pigear-api)"
 
     ```python linenums="1" hl_lines="3 9-14"
     # import required libraries
@@ -205,13 +205,13 @@ stream.stop()
 
         !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
 
-    PiGear also supports almost every parameter available within [`picamera`](https://picamera.readthedocs.io/en/release-1.13/api_camera.html) python library. These parameters can be easily applied to the source stream in PiGear API through its [`options`](../params/#options) dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
+    PiGear also supports almost every parameter available within [`picamera`](https://picamera.readthedocs.io/en/release-1.13/api_camera.html) python library. These parameters can be easily applied to the source stream in PiGear API through its [`options`](params/#options) dictionary parameter by formatting them as its attributes. The complete usage example is as follows:
 
     !!! tip "All supported parameters are listed in [PiCamera Docs ➶](https://picamera.readthedocs.io/en/release-1.13/api_camera.html)"
 
-    !!! example "PiGear also support changing parameter at runtime. Checkout this bonus example [here ➶](../../../help/pigear_ex/#dynamically-adjusting-raspberry-pi-camera-parameters-at-runtime-in-pigear-api)"
+    !!! example "PiGear also support changing parameter at runtime. Checkout this bonus example [here ➶](../../help/pigear_ex/#dynamically-adjusting-raspberry-pi-camera-parameters-at-runtime-in-pigear-api)"
 
     ```python linenums="1" hl_lines="8-13"
     # import required libraries
@@ -265,7 +265,7 @@ stream.stop()
 
 PiGear API also supports **Direct Colorspace Manipulation**, which is ideal for changing source colorspace on the run. 
 
-!!! info "A more detailed  information on colorspace manipulation can be found [here ➶](../../../bonus/colorspace_manipulation/)"
+!!! info "A more detailed  information on colorspace manipulation can be found [here ➶](../../bonus/colorspace_manipulation/)"
 
 In following example code, we will start with [**HSV**](https://en.wikipedia.org/wiki/HSL_and_HSV) as source colorspace, and then we will switch to [**GRAY**](https://en.wikipedia.org/wiki/Grayscale)  colorspace when ++"W"++ key is pressed, and then [**LAB**](https://en.wikipedia.org/wiki/CIELAB_color_space) colorspace when ++"E"++ key is pressed, finally default colorspace _(i.e. **BGR**)_ when ++"S"++ key is pressed. Also, quit when ++"Q"++ key is pressed:
 
@@ -407,7 +407,7 @@ PiGear can be easily used with WriteGear API directly without any compatibility 
 
         !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
 
     ```python linenums="1"
     # import required libraries

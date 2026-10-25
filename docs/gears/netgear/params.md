@@ -28,7 +28,7 @@ This parameter sets the valid Network IP address for Server/Client. Network addr
 
 **Data-Type:** String
 
-**Default Value:** Its default value is based on selected [primary mode](../#primary-modes), _i.e `'localhost'` for Send Mode and `'*'` for Receive Mode_ on a local machine.
+**Default Value:** Its default value is based on selected [primary mode](./#primary-modes), _i.e `'localhost'` for Send Mode and `'*'` for Receive Mode_ on a local machine.
 
 **Usage:**
 
@@ -45,17 +45,17 @@ This parameter sets the valid Network Port for Server/Client. Network port is a 
 
 !!! danger "Exception for Exclusive Modes"
     
-    [**In Multi-Servers Mode**](../advanced/multi_server/):
+    [**In Multi-Servers Mode**](advanced/multi_server/):
 
       * A unique port number **MUST** be assigned to each Server on the network using this parameter. 
       * At Client end, a List/Tuple of all available Server(s) ports **MUST** be assigned using this same parameter. 
-      * See its usage example [here ➶](../advanced/multi_server/#bare-minimum-usage).
+      * See its usage example [here ➶](advanced/multi_server/#bare-minimum-usage).
 
-    [**In Multi-Client Mode**](../advanced/multi_client/):
+    [**In Multi-Client Mode**](advanced/multi_client/):
 
       * A unique port number **MUST** be assigned to each Client on the network using this parameter. 
       * At Server end, a List/Tuple of all available Client(s) ports **MUST** be assigned using this same parameter. 
-      * See its usage example [here ➶](../advanced/multi_client/#bare-minimum-usage).
+      * See its usage example [here ➶](advanced/multi_client/#bare-minimum-usage).
 
 **Data-Type:** String or List/Tuple
 
@@ -141,31 +141,31 @@ This parameter provides the flexibility to alter various NetGear API's internal 
 
 !!! abstract "Supported dictionary attributes for NetGear API"
 
-    * **`multiserver_mode`** (_boolean_) : This internal attribute activates the exclusive [**Multi-Servers Mode**](../advanced/multi_server/), if enabled(`True`).
+    * **`multiserver_mode`** (_boolean_) : This internal attribute activates the exclusive [**Multi-Servers Mode**](advanced/multi_server/), if enabled(`True`).
 
-    * **`multiclient_mode`** (_boolean_) : This internal attribute activates the exclusive [**Multi-Clients Mode**](../advanced/multi_client/), if enabled(`True`).
+    * **`multiclient_mode`** (_boolean_) : This internal attribute activates the exclusive [**Multi-Clients Mode**](advanced/multi_client/), if enabled(`True`).
 
-    * **`secure_mode`** (_integer_) : This internal attribute selects the exclusive [**Secure Mode**](../advanced/secure_mode/). Its possible values are: `0`_(i.e. Grassland(no security))_ or `1`_(i.e. StoneHouse)_ or `2`_(i.e. IronHouse)_.
+    * **`secure_mode`** (_integer_) : This internal attribute selects the exclusive [**Secure Mode**](advanced/secure_mode/). Its possible values are: `0`_(i.e. Grassland(no security))_ or `1`_(i.e. StoneHouse)_ or `2`_(i.e. IronHouse)_.
 
-    * **`bidirectional_mode`** (_boolean_) : This internal attribute activates the exclusive [**Bidirectional Mode**](../advanced/bidirectional_mode/), if enabled(`True`).
+    * **`bidirectional_mode`** (_boolean_) : This internal attribute activates the exclusive [**Bidirectional Mode**](advanced/bidirectional_mode/), if enabled(`True`).
 
-    * **`ssh_tunnel_mode`** (_string_) : This internal attribute activates the exclusive [**SSH Tunneling Mode**](../advanced/ssh_tunnel/) ==at the Server-end only==.
+    * **`ssh_tunnel_mode`** (_string_) : This internal attribute activates the exclusive [**SSH Tunneling Mode**](advanced/ssh_tunnel/) ==at the Server-end only==.
 
-    * **`ssh_tunnel_pwd`** (_string_): In SSH Tunneling Mode, This internal attribute sets the password required to authorize Host for SSH Connection ==at the Server-end only==. More information can be found [here ➶](../advanced/ssh_tunnel/#supported-attributes)
+    * **`ssh_tunnel_pwd`** (_string_): In SSH Tunneling Mode, This internal attribute sets the password required to authorize Host for SSH Connection ==at the Server-end only==. More information can be found [here ➶](advanced/ssh_tunnel/#supported-attributes)
 
-    * **`ssh_tunnel_keyfile`** (_string_): In SSH Tunneling Mode, This internal attribute sets path to Host key that provide another way to authenticate host for SSH Connection ==at the Server-end only==. More information can be found [here ➶](../advanced/ssh_tunnel/#supported-attributes)
+    * **`ssh_tunnel_keyfile`** (_string_): In SSH Tunneling Mode, This internal attribute sets path to Host key that provide another way to authenticate host for SSH Connection ==at the Server-end only==. More information can be found [here ➶](advanced/ssh_tunnel/#supported-attributes)
 
-    * **`custom_cert_location`** (_string_) : In Secure Mode, This internal attribute assigns user-defined location/path to directory for generating/storing Public+Secret Keypair necessary for encryption. More information can be found [here ➶](../advanced/secure_mode/#supported-attributes)
+    * **`custom_cert_location`** (_string_) : In Secure Mode, This internal attribute assigns user-defined location/path to directory for generating/storing Public+Secret Keypair necessary for encryption. More information can be found [here ➶](advanced/secure_mode/#supported-attributes)
 
-    * **`overwrite_cert`** (_boolean_) : In Secure Mode, This internal attribute decides whether to overwrite existing Public+Secret Keypair/Certificates or not, ==at the Server-end only==. More information can be found [here ➶](../advanced/secure_mode/#supported-attributes)
+    * **`overwrite_cert`** (_boolean_) : In Secure Mode, This internal attribute decides whether to overwrite existing Public+Secret Keypair/Certificates or not, ==at the Server-end only==. More information can be found [here ➶](advanced/secure_mode/#supported-attributes)
 
-    * **`jpeg_compression`**(_bool/str_): This internal attribute is used to activate(if `True`)/deactivate(if `False`) JPEG Frame Compression as well as to specify incoming frames colorspace with compression. By default colorspace is `BGR` and compression is enabled(`True`). More information can be found [here ➶](../advanced/compression/#supported-attributes)
+    * **`jpeg_compression`**(_bool/str_): This internal attribute is used to activate(if `True`)/deactivate(if `False`) JPEG Frame Compression as well as to specify incoming frames colorspace with compression. By default colorspace is `BGR` and compression is enabled(`True`). More information can be found [here ➶](advanced/compression/#supported-attributes)
 
-    * **`jpeg_compression_quality`**(_int/float_): This internal attribute controls the JPEG quantization factor in JPEG Frame Compression. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
+    * **`jpeg_compression_quality`**(_int/float_): This internal attribute controls the JPEG quantization factor in JPEG Frame Compression. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. More information can be found [here ➶](advanced/compression/#supported-attributes)
 
-    * **`jpeg_compression_fastdct`**(_bool_): This internal attributee if True, use fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality in JPEG Frame Compression. Its default value is also `True`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
+    * **`jpeg_compression_fastdct`**(_bool_): This internal attributee if True, use fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality in JPEG Frame Compression. Its default value is also `True`. More information can be found [here ➶](advanced/compression/#supported-attributes)
 
-    * **`jpeg_compression_fastupsample`**(_bool_): This internal attribute if True, use fastest color upsampling method. Its default value is `False`. More information can be found [here ➶](../advanced/compression/#supported-attributes)
+    * **`jpeg_compression_fastupsample`**(_bool_): This internal attribute if True, use fastest color upsampling method. Its default value is `False`. More information can be found [here ➶](advanced/compression/#supported-attributes)
 
     * **`max_retries`**(_integer_): This internal attribute controls the maximum retries before Server/Client exit itself, if it's unable to get any response/reply from the socket before a certain amount of time, when synchronous messaging patterns like (`zmq.PAIR` & `zmq.REQ/zmq.REP`) are being used. It's value can anything greater than `0`, and its default value is `3`.
 

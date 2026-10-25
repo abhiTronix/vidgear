@@ -20,7 +20,7 @@ limitations under the License.
 
 # Stabilizer Class Usage Examples:
 
-!!! new "Stabilizer Class now includes a new **zero-latency Kalman filter** backend _(`StabilizerMode.KALMAN`)_ in `v0.3.6` for real-time stabilization of live streams. It stabilizes every frame immediately with no frame buffering. See the `Kalman (Zero-Latency)` tabs in the examples below, and its [parameters ➶](../params/#process_noise)."
+!!! new "Stabilizer Class now includes a new **zero-latency Kalman filter** backend _(`StabilizerMode.KALMAN`)_ in `v0.3.6` for real-time stabilization of live streams. It stabilizes every frame immediately with no frame buffering. See the `Kalman (Zero-Latency)` tabs in the examples below, and its [parameters ➶](params/#process_noise)."
 
 &thinsp;
 
@@ -30,7 +30,7 @@ limitations under the License.
 
 !!! tip "It is advised to enable logging on the first run for easily identifying any runtime errors."
 
-!!! example "After going through Stabilizer Class Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/stabilizer_ex/)"
+!!! example "After going through Stabilizer Class Usage Examples, Checkout more of its advanced configurations [here ➶](../../help/stabilizer_ex/)"
 
 
 &thinsp;
@@ -261,11 +261,11 @@ The VidGear's stabilizer class can also work standalone easily with any Computer
 
 ## Using Stabilizer with Variable Parameters
 
-Stabilizer class provide certain [parameters](../params/) which you can use to tweak its internal properties. The complete usage example is as follows:
+Stabilizer class provide certain [parameters](params/) which you can use to tweak its internal properties. The complete usage example is as follows:
 
 ??? new "New in v0.3.5"
     
-    The [`mode`](../params/#mode) parameter and the [`StabilizerMode`](../../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum were added in `v0.3.5`. Existing code that does not pass `mode` keeps working - defaults to `StabilizerMode.ASW`.
+    The [`mode`](params/#mode) parameter and the [`StabilizerMode`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum were added in `v0.3.5`. Existing code that does not pass `mode` keeps working - defaults to `StabilizerMode.ASW`.
 
 === ":material-window-shutter: Average Sliding-Window (ASW)"
 
@@ -390,7 +390,7 @@ Stabilizer class provide certain [parameters](../params/) which you can use to t
 
 VideoGear's stabilizer can be used in conjunction with WriteGear API directly without any compatibility issues. The complete usage example is as follows:
 
-!!! example "You can also add live audio input to WriteGear pipeline. See this [bonus example  ➶](../../../help)"
+!!! example "You can also add live audio input to WriteGear pipeline. See this [bonus example  ➶](../../help)"
 
 === ":material-window-shutter: Average Sliding-Window (ASW)"
 
@@ -519,8 +519,8 @@ VideoGear's stabilizer can be used in conjunction with WriteGear API directly wi
 
 ## Using VideoGear with Stabilizer backend
 
-[VideoGear API](../../videogear/) provides a special internal wrapper around Stabilizer class that enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort and writing way fewer lines of code.
+[VideoGear API](../videogear/) provides a special internal wrapper around Stabilizer class that enables easy stabilization for various video-streams _(real-time or not)_  with minimum effort and writing way fewer lines of code.
 
-!!! example "The complete usage example can be found [here ➶](../../videogear/usage/#using-videogear-with-video-stabilizer-backend)"
+!!! example "The complete usage example can be found [here ➶](../videogear/usage/#using-videogear-with-video-stabilizer-backend)"
 
 &nbsp;
