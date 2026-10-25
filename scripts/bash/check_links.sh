@@ -22,7 +22,7 @@ SITE_DIR="${1:-site}"
 WHITELIST="${2:-$(dirname "$0")/check_links_whitelist.txt}"
 
 python - "$SITE_DIR" "$WHITELIST" <<'EOF'
-import re, sys, pathlib, fnmatch
+import re, os, sys, pathlib, fnmatch
 
 site = pathlib.Path(sys.argv[1]).resolve()
 wl = pathlib.Path(sys.argv[2])
@@ -40,7 +40,12 @@ for f in sorted(site.rglob("*.html")):
             continue
         p = u.split("#")[0].split("?")[0]
         tgt = (f.parent / p).resolve()
-        if not (tgt.is_file() or (tgt / "index.html").is_file()):
+        # exact-case match, so case-insensitive filesystems (Windows/macOS) fail like CI
+        exact = site in tgt.parents and all(
+            part in os.listdir(site.joinpath(*tgt.relative_to(site).parts[:i]))
+            for i, part in enumerate(tgt.relative_to(site).parts)
+        )
+        if not (exact and (tgt.is_file() or (tgt / "index.html").is_file())):
             broken.append(f"{page}: {u}")
 print(*broken, f"{len(broken)} broken link(s)", sep="\n")
 sys.exit(1 if broken else 0)
