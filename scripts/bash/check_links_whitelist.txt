@@ -1,0 +1,3 @@
+# Globs ignored by check_links.sh, matched against page path or link URL.
+overrides/*
+404.html
