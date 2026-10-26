@@ -125,7 +125,7 @@ This parameter assigns the custom _path/directory_ where the custom/downloaded F
 
 !!! info "Behavior on :fontawesome-brands-windows: Windows Systems"
 
-    On Windows, if a custom FFmpeg executable's path/directory is not provided through this `custom_ffmpeg` parameter, the StreamGear API will automatically attempt to download and extract suitable Static FFmpeg binaries at a suitable location on your Windows machine. More information can be found [here ➶](../ffmpeg_install/#a-auto-installation).
+    On Windows, if a custom FFmpeg executable's path/directory is not provided through this `custom_ffmpeg` parameter, the StreamGear API will automatically attempt to download and extract suitable Static FFmpeg binaries at a suitable location on your Windows machine. More information can be found [here ➶](ffmpeg_install/#a-auto-installation).
     
 
 **Data-Type:** String
@@ -206,11 +206,11 @@ StreamGear API provides some exclusive internal parameters to easily generate St
         }
     ```
 
-    !!! example "Its usage example can be found [here ➶](../ssm/usage/#usage-with-additional-streams)"
+    !!! example "Its usage example can be found [here ➶](ssm/usage/#usage-with-additional-streams)"
 
 &ensp;
 
-* **`-video_source`** _(string)_: This attribute takes a valid video path as input and activates [**Single-Source Mode**](../ssm/#overview), for transcoding it into multiple smaller chunks/segments for streaming after successful validation. Its value can be one of the following:
+* **`-video_source`** _(string)_: This attribute takes a valid video path as input and activates [**Single-Source Mode**](ssm/#overview), for transcoding it into multiple smaller chunks/segments for streaming after successful validation. Its value can be one of the following:
 
     * **Video Filename**: Valid path to a video file as follows:
 
@@ -228,7 +228,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
         stream_params = {"-video_source": "http://livefeed.com:5050"} 
         ``` 
 
-    !!! example "Its usage example can be found [here ➶](../ssm/usage/#bare-minimum-usage)"
+    !!! example "Its usage example can be found [here ➶](ssm/usage/#bare-minimum-usage)"
 
 &ensp;
 
@@ -243,7 +243,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
         stream_params = {"-audio": "/home/foo/foo1.aac"} 
         ```
 
-        !!! example "Its usage examples can be found [here ➶](../ssm/usage/#usage-with-custom-audio) and [here ➶](../ssm/usage/#usage-with-file-audio-input)"
+        !!! example "Its usage examples can be found [here ➶](ssm/usage/#usage-with-custom-audio) and [here ➶](ssm/usage/#usage-with-file-audio-input)"
 
     * **Audio URL** _(string)_: Valid URL of a network audio stream as follows:
 
@@ -266,30 +266,30 @@ StreamGear API provides some exclusive internal parameters to easily generate St
         ]} 
         ``` 
 
-        !!! example "Its usage example can be found [here ➶](../rtfm/usage/#usage-with-device-audio--input)"
+        !!! example "Its usage example can be found [here ➶](rtfm/usage/#usage-with-device-audio--input)"
 
 &ensp;
 
-* **`-livestream`** _(bool)_: ***(optional)*** specifies whether to enable **Low-latency Live-Streaming :material-video-wireless-outline:** in [**Real-time Frames Mode**](../rtfm/#overview) only, where chunks will contain information for new frames only and forget previous ones, or not. The default value is `False`. It can be used as follows: 
+* **`-livestream`** _(bool)_: ***(optional)*** specifies whether to enable **Low-latency Live-Streaming :material-video-wireless-outline:** in [**Real-time Frames Mode**](rtfm/#overview) only, where chunks will contain information for new frames only and forget previous ones, or not. The default value is `False`. It can be used as follows: 
     
-    !!! warning "The `-livestream` optional parameter is **NOT** supported in [Single-Source mode](../ssm/#overview)."
+    !!! warning "The `-livestream` optional parameter is **NOT** supported in [Single-Source mode](ssm/#overview)."
 
     ```python
     stream_params = {"-livestream": True} # enable live-streaming
     ```
 
-    !!! example "Its usage example can be found [here ➶](../rtfm/usage/#bare-minimum-usage-with-live-streaming)" 
+    !!! example "Its usage example can be found [here ➶](rtfm/usage/#bare-minimum-usage-with-live-streaming)" 
 
 &ensp;
 
-* **`-input_framerate`** _(float/int)_ :  ***(optional)*** This parameter specifies the assumed input video source framerate and only works in [Real-time Frames Mode](../usage/#b-real-time-frames-mode). Its default value is `25.0` fps. Its value can be a float or integer, as shown below:
+* **`-input_framerate`** _(float/int)_ :  ***(optional)*** This parameter specifies the assumed input video source framerate and only works in [Real-time Frames Mode](rtfm/). Its default value is `25.0` fps. Its value can be a float or integer, as shown below:
 
     ```python
     # set input video source framerate to 60fps
     stream_params = {"-input_framerate": 60.0} 
     ```
 
-    !!! example "Its usage example can be found [here ➶](../rtfm/usage/#bare-minimum-usage-with-controlled-input-framerate)" 
+    !!! example "Its usage example can be found [here ➶](rtfm/usage/#bare-minimum-usage-with-controlled-input-framerate)" 
 
 &ensp;
 
@@ -330,7 +330,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
-* **`-ffmpeg_download_path`** _(string)_: ***(optional)*** This parameter sets a custom directory for downloading FFmpeg static binaries in Compression Mode during the [**Auto-Installation**](../ffmpeg_install/#a-auto-installation) step on Windows machines only. If this parameter is not altered, the binaries will be saved to the default temporary directory _(e.g., `C:/User/foo/temp`)_ on your Windows machine. It can be used as follows:
+* **`-ffmpeg_download_path`** _(string)_: ***(optional)*** This parameter sets a custom directory for downloading FFmpeg static binaries in Compression Mode during the [**Auto-Installation**](ffmpeg_install/#a-auto-installation) step on Windows machines only. If this parameter is not altered, the binaries will be saved to the default temporary directory _(e.g., `C:/User/foo/temp`)_ on your Windows machine. It can be used as follows:
 
     ```python
     # download FFmpeg static binaries to `C:/User/foo/bar`
@@ -384,9 +384,9 @@ All encoders and decoders compiled with the FFmpeg in use are supported by the S
 
 ???+ tip "Faster Transcoding with Stream Copy in Single Source Mode"
     
-    For faster transcoding of input video, utilize Stream copy (`-vcodec copy`) as the input video encoder in the [**Single-Source Mode**](../ssm/#overview) for creating HLS/DASH chunks of the primary stream efficiently. However, consider the following points:
+    For faster transcoding of input video, utilize Stream copy (`-vcodec copy`) as the input video encoder in the [**Single-Source Mode**](ssm/#overview) for creating HLS/DASH chunks of the primary stream efficiently. However, consider the following points:
 
-    - :warning: Stream copy is **NOT** compatible with [**Real-time Frames Mode**](../rtfm/#overview), as this mode necessitates re-encoding of incoming frames. Therefore, the `-vcodec copy` parameter will be ignored.
+    - :warning: Stream copy is **NOT** compatible with [**Real-time Frames Mode**](rtfm/#overview), as this mode necessitates re-encoding of incoming frames. Therefore, the `-vcodec copy` parameter will be ignored.
     - :warning: Stream copying **NOT** compatible with Custom Streams ([`-streams`](#a-exclusive-parameters)), which also require re-encoding for each additional stream. Consequently, the `-vcodec copy` parameter will be ignored.
     - When using the audio stream from the input video, the Audio Stream copy (`-acodec copy`) encoder will be automatically applied.
 
@@ -418,4 +418,4 @@ StreamGear(logging=True)
 &nbsp; 
 
 [^1]: 
-    :bulb: In Real-time Frames Mode, the Primary Stream's framerate defaults to [`-input_framerate`](../params/#a-exclusive-parameters) attribute value, if defined, else it will be 25fps.
+    :bulb: In Real-time Frames Mode, the Primary Stream's framerate defaults to [`-input_framerate`](params/#a-exclusive-parameters) attribute value, if defined, else it will be 25fps.

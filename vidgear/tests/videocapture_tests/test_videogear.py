@@ -222,6 +222,24 @@ test_data = [
         return_testvideo_path(),
         {"STABILIZER_MODE": "not-an-enum"},
     ),
+    (
+        return_testvideo_path(),
+        {
+            "STABILIZER_MODE": StabilizerMode.KALMAN,
+            "PROCESS_NOISE": 1e-3,
+            "MEASUREMENT_NOISE": 0.5,
+            "BORDER_SIZE": 10,
+            "CROP_N_ZOOM": True,
+        },
+    ),
+    (
+        return_testvideo_path(),
+        {
+            "STABILIZER_MODE": StabilizerMode.KALMAN,
+            "PROCESS_NOISE": "bad",
+            "MEASUREMENT_NOISE": -1,
+        },
+    ),
 ]
 
 

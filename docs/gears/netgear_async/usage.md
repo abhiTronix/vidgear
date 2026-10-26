@@ -25,9 +25,9 @@ limitations under the License.
 
     * It is advised to enable logging(`logging = True`) on the first run for easily identifying any runtime errors.
 
-    * It is advised to comprehend [NetGear API](../../netgear/) before using this API.
+    * It is advised to comprehend [NetGear API](../netgear/) before using this API.
 
-!!! example "After going through following Usage Examples, Checkout more bonus examples [here ➶](../../../help/netgear_async_ex/)"
+!!! example "After going through following Usage Examples, Checkout more bonus examples [here ➶](../../help/netgear_async_ex/)"
 
 
 ## Requirement
@@ -77,7 +77,7 @@ if __name__ == "__main__":
 
 Then open another terminal on the same system and execute the following python code and see the output:
 
-!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](params/#timeout) value!"
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -128,9 +128,9 @@ if __name__ == "__main__":
 
 Open a terminal on Client System _(where you want to display the input frames received from the Server)_ and execute the following python code: 
 
-!!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
+!!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
-!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](params/#timeout) value!"
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -291,7 +291,7 @@ if __name__ == "__main__":
 
 Then open another terminal on the same system and execute the following python code and see the output:
 
-!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](params/#timeout) value!"
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -341,7 +341,7 @@ if __name__ == "__main__":
 
 NetGear_Async can be used with any other Gears without any compatibility issues. 
 
-Let's implement a bare-minimum example where we are sending [Stabilized](../../stabilizer/) frames from Server-end and saving them at Client's end with [WriteGear](../../writegear/introduction/) as follows:
+Let's implement a bare-minimum example where we are sending [Stabilized](../stabilizer/) frames from Server-end and saving them at Client's end with [WriteGear](../writegear/introduction/) as follows:
 
 ### Server's End
 
@@ -377,7 +377,7 @@ if __name__ == "__main__":
 
 Then open another terminal on the same system and execute the following python code and see the output:
 
-!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](../params/#timeout) value!"
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](params/#timeout) value!"
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 

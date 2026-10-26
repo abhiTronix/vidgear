@@ -24,31 +24,31 @@ limitations under the License.
 
 ## What is WebGear_RTC API and what does it do?
 
-**Answer:** WebGear_RTC utilizes [WebRTC](https://webrtc.org/) technology under the hood, which makes it suitable for building powerful video-streaming solutions for all modern browsers as well as native clients available on all major platforms. _For more info. see [WebGear_RTC doc ➶](../../gears/webgear_rtc/)_
+**Answer:** WebGear_RTC utilizes [WebRTC](https://webrtc.org/) technology under the hood, which makes it suitable for building powerful video-streaming solutions for all modern browsers as well as native clients available on all major platforms. _For more info. see [WebGear_RTC doc ➶](../gears/webgear_rtc/)_
 
 &thinsp;
 
 ## How to get started with WebGear_RTC API?
 
-**Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-the-videocapture-apis) guide, then go through [WebGear_RTC documentation](../../gears/webgear_rtc/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, refer to the [Switching from OpenCV](../switch_from_cv/#switching-the-videocapture-apis) guide, then go through [WebGear_RTC documentation](../gears/webgear_rtc/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &thinsp;
 
 ## How WebGear_RTC is different to WebGear API, which should I choose?
 
-**Answer:** WebGear_RTC is similar to [WeGear API](../../gears/webgear/) in many aspects but utilizes [WebRTC](https://webrtc.org/) technology under the hood instead of Motion JPEG. You can choose any API according to your application, but the quality would be better on WebGear API, on-the-other-hand latency would be better on WebGear_RTC API. Also, WebRTC protocol accepts a wide range of devices, whereas WebGear is limited only to modern browsers. 
+**Answer:** WebGear_RTC is similar to [WeGear API](../gears/webgear/) in many aspects but utilizes [WebRTC](https://webrtc.org/) technology under the hood instead of Motion JPEG. You can choose any API according to your application, but the quality would be better on WebGear API, on-the-other-hand latency would be better on WebGear_RTC API. Also, WebRTC protocol accepts a wide range of devices, whereas WebGear is limited only to modern browsers. 
 
 &thinsp;
 
 ## "WebGear_RTC is throwing `ModuleNotFoundError` on importing", Why?
 
-**Answer:** This error means, VidGear is installed **WITHOUT asyncio package support** on your machine. For this support, see [Requirements ➶](../../gears/webgear_rtc/usage/#requirements).
+**Answer:** This error means, VidGear is installed **WITHOUT asyncio package support** on your machine. For this support, see [Requirements ➶](../gears/webgear_rtc/usage/#requirements).
 
 &thinsp;
 
 ## Can WebGear_RTC always need Active Internet Connection?
 
-**Answer:** No, it just need internet only once during its [Auto-Generation Process ➶](../../gears/webgear_rtc/#auto-generation-process) to download default data-files and it takes few seconds. You can also download files manually from [**Github Server**](https://github.com/abhiTronix/vidgear-vitals), otherwise you can also add [your own custom files](../../gears/webgear_rtc/advanced/#rules-for-altering-webgear_rtc-files-and-folders). _For more information see [Data-Files Auto-Generation WorkFlow ➶](../../gears/webgear_rtc/#data-files-auto-generation-workflow-for-webgear_rtc)_
+**Answer:** No, it just need internet only once during its [Auto-Generation Process ➶](../gears/webgear_rtc/#auto-generation-process) to download default data-files and it takes few seconds. You can also download files manually from [**Github Server**](https://github.com/abhiTronix/vidgear-vitals), otherwise you can also add [your own custom files](../gears/webgear_rtc/advanced/#rules-for-altering-webgear_rtc-files-and-folders). _For more information see [Data-Files Auto-Generation WorkFlow ➶](../gears/webgear_rtc/#data-files-auto-generation-workflow-for-webgear_rtc)_
 
 &thinsp;
 
@@ -62,44 +62,44 @@ For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.
 
 ## Can I manually place default files for WebGear_RTC?
 
-**Answer:** Yes, you can either download default files from [Github Server](https://github.com/abhiTronix/webgear_data), and manually place at [default location](../../gears/webgear_rtc/#default-location), OR, you can yourself create the require three critical files _(i.e `index.html`, `404.html` & `500.html`)_  inside `templates` folder at the [default location](../../gears/webgear_rtc/#default-location), thereby you don't need any internet connection at all. _For more information see [Data-Files Auto-Generation WorkFlow ➶](../../gears/webgear_rtc/#data-files-auto-generation-workflow)_
+**Answer:** Yes, you can either download default files from [Github Server](https://github.com/abhiTronix/webgear_data), and manually place at [default location](../gears/webgear_rtc/#default-location), OR, you can yourself create the require three critical files _(i.e `index.html`, `404.html` & `500.html`)_  inside `templates` folder at the [default location](../gears/webgear_rtc/#default-location), thereby you don't need any internet connection at all. _For more information see [Data-Files Auto-Generation WorkFlow ➶](../gears/webgear_rtc/#data-files-auto-generation-workflow)_
 
 &thinsp;
 
 ## How to stream Webgear_RTC Server output to multiple clients?
 
-**Answer:** See [this usage example ➶](../../gears/webgear_rtc/advanced/#using-webgear_rtc-as-real-time-broadcaster).
+**Answer:** See [this usage example ➶](../gears/webgear_rtc/advanced/#using-webgear_rtc-as-real-time-broadcaster).
 
 &thinsp;
 
 ## How to send OpenCV frames directly to Webgear_RTC Server?
 
-**Answer:** See [this usage example ➶](../../gears/webgear_rtc/advanced/#using-webgear_rtc-with-a-custom-sourceopencv).
+**Answer:** See [this usage example ➶](../gears/webgear_rtc/advanced/#using-webgear_rtc-with-a-custom-sourceopencv).
 
 &thinsp;
 
 ## How can I add my custom WebPage to WebGear_RTC?
 
-**Answer:** See [this usage example ➶](../../gears/webgear_rtc/advanced/#using-webgear_rtc-with-custom-webpage-routes).
+**Answer:** See [this usage example ➶](../gears/webgear_rtc/advanced/#using-webgear_rtc-with-custom-webpage-routes).
 
 &thinsp;
 
 ## How can to add CORS headers to WebGear_RTC?
 
-**Answer:** See [this usage example ➶](../../gears/webgear_rtc/advanced/#using-webgear_rtc-with-middlewares).
+**Answer:** See [this usage example ➶](../gears/webgear_rtc/advanced/#using-webgear_rtc-with-middlewares).
 
 &thinsp;
 
 
 ## Can I change the default location?
 
-**Answer:** Yes, you can use WebGear_RTC's [`custom_data_location`](../../gears/webgear_rtc/params/#webgear_rtc-specific-attributes) attribute of `option` parameter in WebGear_RTC API, to change [default location](../../gears/webgear_rtc/#default-location) to somewhere else.
+**Answer:** Yes, you can use WebGear_RTC's [`custom_data_location`](../gears/webgear_rtc/params/#webgear_rtc-specific-attributes) attribute of `option` parameter in WebGear_RTC API, to change [default location](../gears/webgear_rtc/#default-location) to somewhere else.
 
 &thinsp;
 
 ## Can I delete/rename the WebGear_RTC default data?
 
-**Answer:** Yes, but you've to follow [these rules ➶](../../gears/webgear_rtc/advanced/#rules-for-altering-webgear_rtc-files-and-folders)
+**Answer:** Yes, but you've to follow [these rules ➶](../gears/webgear_rtc/advanced/#rules-for-altering-webgear_rtc-files-and-folders)
 
 &thinsp;
 
@@ -122,6 +122,6 @@ web = WebGear_RTC(enablePiCamera=True, ...)
 
 ## How do I use the FFGear backend with WebGear_RTC?
 
-**Answer:** Pass `api=Backend.FFGEAR` to WebGear_RTC to use [FFGear](../../gears/ffgear/) for hardware-accelerated FFmpeg-powered decoding. See [Bonus Examples ➶](../../help/webgear_rtc_ex/#using-webgear_rtc-with-ffgear-backend) for usage.
+**Answer:** Pass `api=Backend.FFGEAR` to WebGear_RTC to use [FFGear](../gears/ffgear/) for hardware-accelerated FFmpeg-powered decoding. See [Bonus Examples ➶](../help/webgear_rtc_ex/#using-webgear_rtc-with-ffgear-backend) for usage.
 
 &thinsp;

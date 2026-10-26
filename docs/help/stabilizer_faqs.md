@@ -24,35 +24,50 @@ limitations under the License.
 
 ## What is the Stabilizer Class and what does it do?
 
-**Answer:** The Stabilizer Class is an auxiliary class that enables video stabilization for Vidgear with minimal latency and little to no additional computational overhead. Since `v0.3.5`, the Stabilizer module follows a plugin-style design with a `Stabilizer(...)` factory function backed by a [`StabilizerMode`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum. The default (and currently only) backend is the **Average Sliding-Window (ASW)** stabilizer. For more details, see the [Stabilizer Class documentation ➶](../../gears/stabilizer/).
+**Answer:** The Stabilizer Class is an auxiliary class that enables video stabilization for Vidgear with minimal latency and little to no additional computational overhead. Since `v0.3.5`, the Stabilizer module follows a plugin-style design with a `Stabilizer(...)` factory function backed by a [`StabilizerMode`](../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum. The default backend is the **Average Sliding-Window (ASW)** stabilizer, with a zero-latency **Kalman** backend also available. For more details, see the [Stabilizer Class documentation ➶](../gears/stabilizer/).
 
 &thinsp;
 
 ## Which stabilization algorithms are available, and how do I switch between them?
 
-**Answer:** Since `v0.3.5`, the Stabilizer module is implemented as a plugin-style package with a [`Stabilizer(...)`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.Stabilizer) factory backed by a [`StabilizerMode`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum.
+**Answer:** Since `v0.3.5`, the Stabilizer module is implemented as a plugin-style package with a [`Stabilizer(...)`](../bonus/reference/stabilizer/#vidgear.gears.stabilizer.Stabilizer) factory backed by a [`StabilizerMode`](../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum.
 
 * The default mode is `StabilizerMode.ASW` (Average Sliding-Window), which matches the behavior of earlier versions.
-* `StabilizerMode.KALMAN` is currently a placeholder and raises `NotImplementedError`. It is planned for a future release.
+* `StabilizerMode.KALMAN` smooths the camera path with a Kalman filter and stabilizes every frame immediately (zero latency), tuned via `process_noise` and `measurement_noise`.
 
-Refer to the [`mode`](../../gears/stabilizer/params/#mode) for more details.
+Refer to the [`mode`](../gears/stabilizer/params/#mode) for more details.
 
 ```python
 from vidgear.gears.stabilizer import Stabilizer, StabilizerMode
 
 stab = Stabilizer(mode=StabilizerMode.ASW, smoothing_radius=30)
+stab = Stabilizer(mode=StabilizerMode.KALMAN, measurement_noise=0.5)
 ```
 
 &thinsp;
 
 ## What happens if I pass an invalid or unsupported `mode` value?
 
-**Answer:** The [`Stabilizer(...)`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.Stabilizer) factory strictly validates the [`mode`](../../gears/stabilizer/params/#mode) parameter.
+**Answer:** The [`Stabilizer(...)`](../bonus/reference/stabilizer/#vidgear.gears.stabilizer.Stabilizer) factory strictly validates the [`mode`](../gears/stabilizer/params/#mode) parameter.
 
-* Passing a value that is not a [`StabilizerMode`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum member raises a `TypeError`.
-* Selecting `StabilizerMode.KALMAN` raises a `NotImplementedError`, as it is reserved for a future implementation.
+* Passing a value that is not a [`StabilizerMode`](../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum member raises a `TypeError`.
 
 Always use a valid enum value.
+
+&thinsp;
+
+## Which mode should I pick: ASW or Kalman?
+
+**Answer:** Pick by latency budget.
+
+* **`StabilizerMode.KALMAN`** — every `stabilize()` call returns the current frame stabilized, no warm-up and no buffering. Use for live streams, video calls, robotics, or anything latency-sensitive.
+* **`StabilizerMode.ASW`** — looks `smoothing_radius` frames ahead, so it returns `None` for the first `smoothing_radius` frames and lags by that much afterwards, but smooths slightly better as it sees future motion. Use for offline/file processing.
+
+&thinsp;
+
+## How does the Kalman stabilizer work?
+
+**Answer:** Per frame, it estimates the rigid motion `[dx, dy, da]` from the previous frame (GFTT keypoints + Lucas-Kanade optical flow + partial affine fit), accumulates it into a raw camera trajectory, and feeds that trajectory to a vectorized constant-position Kalman filter (one independent filter per axis). The current frame is then warped by `smoothed - raw`, moving it onto the filtered path. Based on `videostabKalman` by Chen Jia, itself derived from [Nghia Ho's video stabilization](http://nghiaho.com/?p=2093).
 
 &thinsp;
 
@@ -61,7 +76,7 @@ Always use a valid enum value.
 **Answer:** The ASW backend tracks salient feature points using OpenCV’s *goodFeaturesToTrack* across consecutive frames and computes affine transformations using Lucas-Kanade optical flow.
 
 * Per-frame transformations are accumulated into a trajectory (path).
-* This path is smoothed using a **normalized box filter** of width [`smoothing_radius`](../../gears/stabilizer/params/#smoothing_radius).
+* This path is smoothed using a **normalized box filter** of width [`smoothing_radius`](../gears/stabilizer/params/#smoothing_radius).
 * The difference between the smoothed path and the original path is applied back to each frame to reduce jitter while preserving intentional motion.
 
 &thinsp;
@@ -70,13 +85,13 @@ Always use a valid enum value.
 
 **Answer:** The ASW Stabilizer introduces:
 
-* A warm-up latency of [`smoothing_radius`](../../gears/stabilizer/params/#smoothing_radius) frames, during which [`stabilize`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.ASWStabilizer.stabilize) method returns `None`.
+* A warm-up latency of [`smoothing_radius`](../gears/stabilizer/params/#smoothing_radius) frames, during which [`stabilize`](../bonus/reference/stabilizer/#vidgear.gears.stabilizer.ASWStabilizer.stabilize) method returns `None`.
 * Per-frame processing time proportional to `O(smoothing_radius)`.
 
 **Performance considerations:** Higher-resolution frames increase processing time. You can reduce latency by:
 
-- [x] Resizing frames using the [`reducer`](../../bonus/reference/helper/#vidgear.gears.helper.reducer) method before stabilization.
-- [x] The [`smoothing_radius`](../../gears/stabilizer/params/#smoothing_radius) parameter balances quality and latency:
+- [x] Resizing frames using the [`reducer`](../bonus/reference/helper/#vidgear.gears.helper.reducer) method before stabilization.
+- [x] The [`smoothing_radius`](../gears/stabilizer/params/#smoothing_radius) parameter balances quality and latency:
    * **Larger values:** smoother output, higher latency, reduced sudden panning
    * **Smaller values:** lower latency, less smoothing
 
@@ -92,18 +107,18 @@ Earlier versions used unbounded lists that grew with the total number of process
 
 ## Why does the `stabilize` method return `None` for the first several frames?
 
-**Answer:** The ASW Stabilizer requires a full sliding window of size [`smoothing_radius`](../../gears/stabilizer/params/#smoothing_radius) before it can compute a smoothed trajectory.
+**Answer:** The ASW Stabilizer requires a full sliding window of size [`smoothing_radius`](../gears/stabilizer/params/#smoothing_radius) before it can compute a smoothed trajectory.
 
-* Until the window is filled, [`stabilize`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.ASWStabilizer.stabilize) returns `None`.
+* Until the window is filled, [`stabilize`](../bonus/reference/stabilizer/#vidgear.gears.stabilizer.ASWStabilizer.stabilize) returns `None`.
 * This is expected behavior. Skip `None` outputs and continue processing frames.
 
 &thinsp;
 
 ## How can I remove black borders after stabilization?
 
-**Answer:** Use the [`crop_n_zoom`](../../gears/stabilizer/params/#crop_n_zoom) parameter to crop and zoom frames back to their original size, reducing visible black borders _(similar to effects in Adobe After Effects)_.
+**Answer:** Use the [`crop_n_zoom`](../gears/stabilizer/params/#crop_n_zoom) parameter to crop and zoom frames back to their original size, reducing visible black borders _(similar to effects in Adobe After Effects)_.
 
-* Works together with [`border_size`](../../gears/stabilizer/params/#border_size).
+* Works together with [`border_size`](../gears/stabilizer/params/#border_size).
 * When enabled, `border_size` is used for cropping instead of padding.
 * Default value: `False`.
 
@@ -111,7 +126,7 @@ Earlier versions used unbounded lists that grew with the total number of process
 
 ## Can I use Stabilizer directly with OpenCV?
 
-**Answer:** Yes. Refer to the [bare minimum OpenCV usage example ➶](../../gears/stabilizer/usage/#bare-minimum-usage-with-opencv).
+**Answer:** Yes. Refer to the [bare minimum OpenCV usage example ➶](../gears/stabilizer/usage/#bare-minimum-usage-with-opencv).
 
 &thinsp;
 
@@ -120,14 +135,14 @@ Earlier versions used unbounded lists that grew with the total number of process
 **Answer:** The ASW Stabilizer is designed for **low-frequency motion** and may not perform well with high-frequency jitter.
 
 Possible causes and solutions:
-* Increase [`smoothing_radius`](../../gears/stabilizer/params/#smoothing_radius) for stronger smoothing (at the cost of latency)
+* Increase [`smoothing_radius`](../gears/stabilizer/params/#smoothing_radius) for stronger smoothing (at the cost of latency)
 * Very dark frames may prevent feature detection. Enable `logging=True` to check for `"Video-Frame is too dark"` warnings
 
 &thinsp;
 
 ## Can I reuse a Stabilizer instance after calling `clean()`?
 
-**Answer:** Yes. Calling [`clean()`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.ASWStabilizer.clean):
+**Answer:** Yes. Calling [`clean()`](../bonus/reference/stabilizer/#vidgear.gears.stabilizer.ASWStabilizer.clean):
 
 - [x] Clears the internal frame queue
 - [x] Resets transform history
@@ -157,7 +172,7 @@ No manual configuration is required.
 
 **Answer:** Yes. The `Stabilizer(...)` API is fully backward-compatible.
 
-- [x] If [`mode`](../../gears/stabilizer/params/#mode) is not specified, it defaults to `StabilizerMode.ASW`
+- [x] If [`mode`](../gears/stabilizer/params/#mode) is not specified, it defaults to `StabilizerMode.ASW`
 - [x] Behavior remains consistent with the earlier monolithic implementation
 
 !!! success "No migration is required for existing users."

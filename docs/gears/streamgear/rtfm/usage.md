@@ -27,15 +27,15 @@ limitations under the License.
 
 !!! warning "Important Information :fontawesome-solid-person-military-pointing:"
     
-    - [x] StreamGear API **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../../ffmpeg_install/) for its installation. API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system.
+    - [x] StreamGear API **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../ffmpeg_install/) for its installation. API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system.
     - [x] In this mode, ==API by default generates a primary stream _(at the index `0`)_ of same resolution as the input frames and at default framerate[^1].==
-    - [x] In this mode, API **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter.
+    - [x] In this mode, API **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter.
     - [x] In this mode, Stream copy (`-vcodec copy`) encoder is unsupported as it requires re-encoding of incoming frames.
     - [x] Always use `close()` function at the very end of the main code.
 
 ??? danger "DEPRECATION NOTICES for `v0.3.3` and above"
     
-    - [ ] The `terminate()` method in StreamGear is now deprecated and will be removed in a future release. Developers should use the new [`close()`](../../../../bonus/reference/streamgear/#vidgear.gears.StreamGear.close) method instead, as it offers a more descriptive name, similar to the WriteGear API, for safely terminating StreamGear processes.
+    - [ ] The `terminate()` method in StreamGear is now deprecated and will be removed in a future release. Developers should use the new [`close()`](../../../bonus/reference/streamgear/#vidgear.gears.StreamGear.close) method instead, as it offers a more descriptive name, similar to the WriteGear API, for safely terminating StreamGear processes.
     - [ ] The `rgb_mode` parameter in [`stream()`](../../../bonus/reference/streamgear/#vidgear.gears.StreamGear.stream) method, which earlier used to support RGB frames in Real-time Frames Mode is now deprecated, and will be removed in a future version. Only BGR format frames will be supported going forward. Please update your code to handle BGR format frames.
 
 !!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
@@ -48,9 +48,9 @@ limitations under the License.
 
 Following is the bare-minimum code you need to get started with StreamGear API in Real-time Frames Mode:
 
-!!! note "We are using [CamGear](../../../camgear/) in this Bare-Minimum example, but any [VideoCapture Gear](../../../#a-videocapture-gears) will work in the similar manner."
+!!! note "We are using [CamGear](../../camgear/) in this Bare-Minimum example, but any [VideoCapture Gear](../../#a-videocapture-gears) will work in the similar manner."
 
-!!! danger "In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
+!!! danger "In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
 
 === "DASH"
 
@@ -156,7 +156,7 @@ Following is the bare-minimum code you need to get started with StreamGear API i
 
 ## Bare-Minimum Usage with controlled Input-framerate
 
-> In Real-time Frames Mode, StreamGear API provides the exclusive [`-input_framerate`](../../params/#a-exclusive-parameters) attribute for the `stream_params` dictionary parameter, which allows you to set the assumed constant framerate for incoming frames.
+> In Real-time Frames Mode, StreamGear API provides the exclusive [`-input_framerate`](../params/#a-exclusive-parameters) attribute for the `stream_params` dictionary parameter, which allows you to set the assumed constant framerate for incoming frames.
 
 In this example, we will retrieve the framerate from a webcam video stream and set it as the value for the `-input_framerate` attribute in StreamGear.
 
@@ -266,10 +266,10 @@ In this example, we will retrieve the framerate from a webcam video stream and s
 
 ## Bare-Minimum Usage with Live-Streaming
 
-You can easily activate **Low-latency Live-Streaming :material-video-wireless-outline:** in Real-time Frames Mode, where chunks will contain information for new frames only and forget previous ones, using the exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter.
+You can easily activate **Low-latency Live-Streaming :material-video-wireless-outline:** in Real-time Frames Mode, where chunks will contain information for new frames only and forget previous ones, using the exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter.
 The complete example is as follows:
 
-!!! danger "In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
+!!! danger "In this mode, StreamGear **DOES NOT** automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
 
 === "DASH"
 
@@ -494,13 +494,13 @@ The following is a complete StreamGear API usage example with OpenCV:
 
 ## Usage with Additional Streams
 
-> Similar to Single-Source Mode, in addition to the Primary Stream, you can easily generate any number of additional Secondary Streams with variable bitrate or spatial resolution, using the exclusive [`-streams`](../../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter.
+> Similar to Single-Source Mode, in addition to the Primary Stream, you can easily generate any number of additional Secondary Streams with variable bitrate or spatial resolution, using the exclusive [`-streams`](../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter.
 
 To generate Secondary Streams, add each desired resolution and bitrate/framerate as a list of dictionaries to the `-streams` attribute. StreamGear will handle the rest automatically. The complete example is as follows:
 
-!!! info "A more detailed information on `-streams` attribute can be found [here ➶](../../params/#a-exclusive-parameters)" 
+!!! info "A more detailed information on `-streams` attribute can be found [here ➶](../params/#a-exclusive-parameters)" 
 
-!!! alert "In this mode, StreamGear DOES NOT automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
+!!! alert "In this mode, StreamGear DOES NOT automatically maps video-source audio to generated streams. You need to manually assign separate audio-source through [`-audio`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
 
 ???+ danger "Important Information about `-streams` attribute :material-file-document-alert-outline:"
 
@@ -629,15 +629,15 @@ To generate Secondary Streams, add each desired resolution and bitrate/framerate
 
 ## Usage with File Audio-Input
 
-> In Real-time Frames Mode, if you want to add audio to your streams, you need to use the exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter.
+> In Real-time Frames Mode, if you want to add audio to your streams, you need to use the exclusive [`-audio`](../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter.
 
 To add a audio source, provide the path to your audio file as a string to the `-audio` attribute. The API will automatically validate and map the audio to all generated streams. The complete example is as follows:
 
 !!! failure "Ensure the provided `-audio` audio source is compatible with the input video source. Incompatibility can cause multiple errors or result in no output at all."
 
-!!! warning "You **MUST** use [`-input_framerate`](../../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
+!!! warning "You **MUST** use [`-input_framerate`](../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
-!!! tip "You can also assign a valid audio URL as input instead of a file path. More details can be found [here ➶](../../params/#a-exclusive-parameters)"
+!!! tip "You can also assign a valid audio URL as input instead of a file path. More details can be found [here ➶](../params/#a-exclusive-parameters)"
 
 === "DASH"
 
@@ -763,7 +763,7 @@ To add a audio source, provide the path to your audio file as a string to the `-
 
 ## Usage with Device Audio-Input
 
-> In Real-time Frames Mode, you can also use the exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter for streaming live audio from an external device.
+> In Real-time Frames Mode, you can also use the exclusive [`-audio`](../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter for streaming live audio from an external device.
 
 To stream live audio, format your audio device name followed by a suitable demuxer as a list, and assign it to the `-audio` attribute. The API will automatically validate and map the audio to all generated streams. The complete example is as follows:
 
@@ -890,11 +890,11 @@ To stream live audio, format your audio device name followed by a suitable demux
 
         !!! failure "If audio still doesn't work then reach us out on [Gitter ➶](https://gitter.im/vidgear/community) Community channel"
 
-!!! tip "It is advised to use this example with live-streaming enabled(`True`) by using StreamGear API's exclusive [`-livestream`](../../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
+!!! tip "It is advised to use this example with live-streaming enabled(`True`) by using StreamGear API's exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of `stream_params` dictionary parameter."
 
 !!! failure "Ensure the provided `-audio` audio source is compatible with the video source device. Incompatibility can cause multiple errors or result in no output at all."
 
-!!! warning "You **MUST** use [`-input_framerate`](../../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
+!!! warning "You **MUST** use [`-input_framerate`](../params/#a-exclusive-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
 === "DASH"
 
@@ -1180,4 +1180,4 @@ In this example, we will be using `h264_vaapi` as our Hardware Encoder and speci
 &nbsp;
 
 [^1]: 
-    :bulb: In Real-time Frames Mode, the Primary Stream's framerate defaults to the value of the [`-input_framerate`](../../params/#a-exclusive-parameters) attribute, if defined. Otherwise, it will be set to 25 fps.
+    :bulb: In Real-time Frames Mode, the Primary Stream's framerate defaults to the value of the [`-input_framerate`](../params/#a-exclusive-parameters) attribute, if defined. Otherwise, it will be set to 25 fps.

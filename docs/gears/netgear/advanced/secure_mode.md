@@ -21,7 +21,7 @@ limitations under the License.
 # Secure Mode for NetGear API 
 
 <figure>
-  <img src="../../../../assets/images/secure_mode.webp" alt="Secure Mode" loading="lazy" title="NetGear's Secure Mode" class="center"/>
+  <img src="../../../assets/images/secure_mode.webp" alt="Secure Mode" loading="lazy" title="NetGear's Secure Mode" class="center"/>
 </figure>
 
 
@@ -31,7 +31,7 @@ Secure Mode provides easy access to powerful, smart & secure ZeroMQ's Security L
 
 Secure Mode uses a new wire protocol, [**ZMTP 3.0**](http://zmtp.org/) that adds a security handshake to all ZeroMQ connections and a new security protocol, [**CurveZMQ**](http://curvezmq.org/), that implements "perfect forward security" between two ZeroMQ peers over a TCP connection. 
 
-Secure Mode can be easily activated in NetGear API through `secure_mode` attribute of its [`options`](../../params/#options) dictionary parameter, during initialization. Furthermore, for managing this mode, NetGear API provides additional `custom_cert_location` & `overwrite_cert` like attribute too.
+Secure Mode can be easily activated in NetGear API through `secure_mode` attribute of its [`options`](../params/#options) dictionary parameter, during initialization. Furthermore, for managing this mode, NetGear API provides additional `custom_cert_location` & `overwrite_cert` like attribute too.
 
 &nbsp;
 
@@ -54,9 +54,9 @@ Secure mode supports the two most powerful ZMQ security layers:
     
     * The Public+Secret Keypairs generated at the Server end **MUST** be made available at the Client's end too for successful authentication. If mismatched, connection failure will occur.
 
-    * By Default, the Public+Secret Keypairs will be generated/stored at the `$HOME/.vidgear/keys` directory of your machine _(e.g. `/home/foo/.vidgear/keys` on Linux)_. But you can also use [`custom_cert_location`](../../params/#options) attribute to set your own Custom-Path for a directory to generate/store these Keypairs.
+    * By Default, the Public+Secret Keypairs will be generated/stored at the `$HOME/.vidgear/keys` directory of your machine _(e.g. `/home/foo/.vidgear/keys` on Linux)_. But you can also use [`custom_cert_location`](../params/#options) attribute to set your own Custom-Path for a directory to generate/store these Keypairs.
 
-    * ==**DO NOT** share generated public+secret Keypairs with anyone else on the network to avoid any potential security breach.== At the Server End, You can easily use the [`'overwrite_cert'`](../../params/#options) attribute for regenerating New-Keypairs on initialization. But make sure those newly generated Keypairs at the Server-End **MUST** be made available at Client's End for successful authentication.
+    * ==**DO NOT** share generated public+secret Keypairs with anyone else on the network to avoid any potential security breach.== At the Server End, You can easily use the [`'overwrite_cert'`](../params/#options) attribute for regenerating New-Keypairs on initialization. But make sure those newly generated Keypairs at the Server-End **MUST** be made available at Client's End for successful authentication.
 
     * **IronHouse** is the strongest Security Layer available, but it involves certain security checks that lead to  **ADDITIONAL LATENCY**.
 
@@ -88,7 +88,7 @@ Secure mode supports the two most powerful ZMQ security layers:
 
 ## Exclusive Attributes
 
-For implementing Secure Mode, NetGear API currently provide following exclusive attribute for its [`options`](../../params/#options) dictionary parameter:
+For implementing Secure Mode, NetGear API currently provide following exclusive attribute for its [`options`](../params/#options) dictionary parameter:
 
 
 * `secure_mode` (_integer_) : This attribute activates and sets the ZMQ security Mechanism. Its possible values are: `1`(_StoneHouse_) & `2`(_IronHouse_), and its default value is `0`(_Grassland(no security)_). Its usage is as follows:
@@ -235,7 +235,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! alert "In Secure Mode, Client's end MUST run before the Server's end to establish a secure connection!"
 
-!!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
+!!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
 !!! danger "You need to paste the Public+Secret Keypairs _(generated at the Server End)_ at the `$HOME/.vidgear/keys` directory of your Client machine for a successful authentication!"
 

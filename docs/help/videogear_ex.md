@@ -127,7 +127,7 @@ Here's a high-level wrapper code around VideoGear API to enable auto-reconnectio
     os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
     ```
 
-    Finally, use [`backend`](../../gears/videogear/params/#backend) parameter value as `backend=cv2.CAP_FFMPEG` in VideoGear.
+    Finally, use [`backend`](../gears/videogear/params/#backend) parameter value as `backend=cv2.CAP_FFMPEG` in VideoGear.
 
 
 ```python linenums="1"

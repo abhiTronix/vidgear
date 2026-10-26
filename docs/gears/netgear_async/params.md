@@ -20,15 +20,15 @@ limitations under the License.
 
 # NetGear_Async API Parameters
 
-!!! cite "NetGear_Async provides a special internal wrapper around [VideoGear](../../videogear/), which itself provides internal access to [CamGear](../../camgear/), [PiGear](../../pigear/), and [FFGear](../../ffgear/) APIs and their parameters."
+!!! cite "NetGear_Async provides a special internal wrapper around [VideoGear](../videogear/), which itself provides internal access to [CamGear](../camgear/), [PiGear](../pigear/), and [FFGear](../ffgear/) APIs and their parameters."
 
 &thinsp;
 
 ## **`api`**
 
-This parameter selects the underlying capture backend for NetGear_Async using the [`Backend`](../../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum.
+This parameter selects the underlying capture backend for NetGear_Async using the [`Backend`](../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum.
 
-**Data-Type:** [`Backend`](../../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum
+**Data-Type:** [`Backend`](../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum
 
 **Default Value:** `Backend.CAMGEAR`
 
@@ -36,9 +36,9 @@ This parameter selects the underlying capture backend for NetGear_Async using th
 
 | Value | Underlying Gear | Description |
 |:-----:|:---------------:|:------------|
-| `Backend.CAMGEAR` | [CamGear](../../camgear/) | Multi-threaded OpenCV-backed capture for webcams, files, and network/streaming URLs |
-| `Backend.PIGEAR` | [PiGear](../../pigear/) | Raspberry Pi camera module capture via picamera2/picamera |
-| `Backend.FFGEAR` | [FFGear](../../ffgear/) | FFmpeg-powered hardware-accelerated decoding with filtergraph support |
+| `Backend.CAMGEAR` | [CamGear](../camgear/) | Multi-threaded OpenCV-backed capture for webcams, files, and network/streaming URLs |
+| `Backend.PIGEAR` | [PiGear](../pigear/) | Raspberry Pi camera module capture via picamera2/picamera |
+| `Backend.FFGEAR` | [FFGear](../ffgear/) | FFmpeg-powered hardware-accelerated decoding with filtergraph support |
 
 **Usage:**
 
@@ -59,7 +59,7 @@ NetGear_Async(source="foo.mp4", api=Backend.FFGEAR)    # FFGear backend
 
 !!! danger "**Deprecated since v0.3.5** — use [`api=Backend.PIGEAR`](#api) instead. This parameter will be removed in a future release."
 
-This parameter previously provided direct access to [PiGear](../../pigear/) or [CamGear](../../camgear/) APIs respectively. If `True`, the PiGear API was accessed; if `False`, the CamGear API was accessed.
+This parameter previously provided direct access to [PiGear](../pigear/) or [CamGear](../camgear/) APIs respectively. If `True`, the PiGear API was accessed; if `False`, the CamGear API was accessed.
 
 **Data-Type:** Boolean
 
@@ -198,7 +198,7 @@ This parameter provides the flexibility to alter various NetGear_Async API's int
 
 !!! abstract "Supported dictionary attributes for NetGear_Async API"
 
-    * **`bidirectional_mode`** (_boolean_) : This internal attribute activates the exclusive [**Bidirectional Mode**](../advanced/bidirectional_mode/), if enabled(`True`).
+    * **`bidirectional_mode`** (_boolean_) : This internal attribute activates the exclusive [**Bidirectional Mode**](advanced/bidirectional_mode/), if enabled(`True`).
 
         The desired attributes can be passed to NetGear_Async API as follows:
 
@@ -223,7 +223,7 @@ This parameter provides the flexibility to alter various NetGear_Async API's int
 
 ### **`stabilize`**
 
-This parameter enable access to [Stabilizer Class](../../stabilizer/) for stabilizing frames, i.e. can be set to `True`(_to enable_) or unset to `False`(_to disable_). 
+This parameter enable access to [Stabilizer Class](../stabilizer/) for stabilizing frames, i.e. can be set to `True`(_to enable_) or unset to `False`(_to disable_). 
 
 **Data-Type:** Boolean
 
@@ -235,22 +235,22 @@ This parameter enable access to [Stabilizer Class](../../stabilizer/) for stabil
 NetGear_Async(stabilize=True) # enable stablization
 ```
 
-!!! example "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
+!!! example "Its complete usage example is given [here ➶](usage/#using-videogear-with-video-stabilizer-backend)."
 
 &nbsp; 
 
 ### **`options`**
 
-This parameter can be used in addition, to pass user-defined parameters supported by [Stabilizer Class](../../stabilizer/). These parameters can be formatted as this parameter's attribute.
+This parameter can be used in addition, to pass user-defined parameters supported by [Stabilizer Class](../stabilizer/). These parameters can be formatted as this parameter's attribute.
 
 **Supported dictionary attributes for Stabilizer Class are:**
 
-* **`STABILIZER_MODE`** (_[`StabilizerMode`](../../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum_): This attribute selects the underlying stabilization algorithm. 
+* **`STABILIZER_MODE`** (_[`StabilizerMode`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum_): This attribute selects the underlying stabilization algorithm. 
     
     **Accepted values are:**
     
     - [x] `StabilizerMode.ASW` _(Average Sliding-Window — default)_
-    - [x] `StabilizerMode.KALMAN` _(reserved; raises `NotImplementedError` until a future release)_. 
+    - [x] `StabilizerMode.KALMAN` _(zero-latency Kalman filter — real-time, no frame buffering)_. 
     - [ ] Invalid values silently fall back to `StabilizerMode.ASW`. 
 
     You can easily pass this attribute as follows:
@@ -263,10 +263,22 @@ This parameter can be used in addition, to pass user-defined parameters supporte
     options = {'STABILIZER_MODE': StabilizerMode.ASW}
     ```
 
-* **`SMOOTHING_RADIUS`** (_integer_) : This attribute can be used to alter averaging window size. It basically handles the quality of stabilization at the expense of latency and sudden panning. Larger its value, less will be panning, more will be latency and vice-versa. Its default value is `25`. You can easily pass this attribute as follows:
+* **`SMOOTHING_RADIUS`** (_integer_) : _(`StabilizerMode.ASW` only)_ This attribute can be used to alter averaging window size. It basically handles the quality of stabilization at the expense of latency and sudden panning. Larger its value, less will be panning, more will be latency and vice-versa. Its default value is `25`. You can easily pass this attribute as follows:
 
     ```python
     options = {'SMOOTHING_RADIUS': 30}
+    ```
+
+* **`PROCESS_NOISE`** (_float_) : _(`StabilizerMode.KALMAN` only)_ This attribute sets the Kalman filter's process noise covariance. Larger values follow intentional camera motion (panning) faster with less smoothing. Its default value is `4e-3`. You can easily pass this attribute as follows:
+
+    ```python
+    options = {'PROCESS_NOISE': 1e-3}
+    ```
+
+* **`MEASUREMENT_NOISE`** (_float_) : _(`StabilizerMode.KALMAN` only)_ This attribute sets the Kalman filter's measurement noise covariance. Larger values smooth harder at the cost of more lag on panning. Its default value is `0.25`. You can easily pass this attribute as follows:
+
+    ```python
+    options = {'MEASUREMENT_NOISE': 0.5}
     ```
 
 * **`BORDER_SIZE`** (_integer_) : This attribute enables the feature to extend border size that compensates for stabilized output video frames motions. Its default value is `0`(no borders). You can easily pass this attribute as follows:
@@ -350,7 +362,7 @@ Its valid input can be one of the following:
 
     !!! warning "Requirements for GStreamer Pipelining"
 
-        Successful GStreamer Pipelining needs your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
+        Successful GStreamer Pipelining needs your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
 
         Thereby, You can easily check GStreamer support by running `print(cv2.getBuildInformation())` python command and see if output contains something similar as follows:
 
@@ -374,7 +386,7 @@ Its valid input can be one of the following:
 
 This parameter controls the Stream Mode, i.e. if enabled(`stream_mode=True`), the CamGear/FFGear API will interpret the given `source` input as a streaming service URL. 
 
-!!! bug "Due to a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend](#backend) for any livestream videos. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
+!!! bug "Due to a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend](#backend) for any livestream videos. Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
 
 **Data-Type:** Boolean
 
@@ -391,7 +403,7 @@ This parameter controls the Stream Mode, i.e. if enabled(`stream_mode=True`), th
 NetGear_Async(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
-!!! example "Its complete usage example is given [here ➶](../../camgear/usage/#using-camgear-with-youtube-videos)."
+!!! example "Its complete usage example is given [here ➶](../camgear/usage/#using-camgear-with-youtube-videos)."
 
 
 &nbsp;
@@ -428,7 +440,7 @@ This parameter provides the ability to alter various **Source Tweak Parameters**
 
 **Usage:**
 
-!!! tip "All supported parameters are listed [here ➶](../../camgear/advanced/source_params/)"
+!!! tip "All supported parameters are listed [here ➶](../camgear/advanced/source_params/)"
 
 The desired parameters can be passed to NetGear_Async API by formatting them as this parameter's attributes, as follows:
 
@@ -463,7 +475,7 @@ from vidgear.gears.helper import Backend
 NetGear_Async(api=Backend.PIGEAR, camera_num=1)
 ```
 
-!!! example "The complete usage example demonstrating the usage of the `camera_num` parameter is available [here ➶](../../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)."
+!!! example "The complete usage example demonstrating the usage of the `camera_num` parameter is available [here ➶](../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)."
 
   
 &nbsp;
@@ -516,12 +528,12 @@ This dictionary parameter in the internal PiGear API backend allows you to contr
 #### A. Configurational Camera Parameters
 - [x] These parameters are provided by the underlying backend library _(depending upon backend in use)_, and must be applied to the camera system before the camera can be started.
 - [x] **These parameter include:** _Brightness, Contrast, Saturation, Exposure, Colour Temperature, Colour Gains, etc._ 
-- [x] All supported parameters are listed in this [Usage example ➶](../../pigear/usage/#using-pigear-with-variable-camera-properties)
+- [x] All supported parameters are listed in this [Usage example ➶](../pigear/usage/#using-pigear-with-variable-camera-properties)
 
 
 #### B. User-defined Parameters
 - [x] These user-defined parameters control specific internal behaviors of the API and perform certain tasks on the camera objects.
-- [x] All supported User-defined Parameters are listed [here ➶](../../pigear/params/#b-user-defined-parameters)
+- [x] All supported User-defined Parameters are listed [here ➶](../pigear/params/#b-user-defined-parameters)
 
 
 &nbsp;
@@ -533,7 +545,7 @@ This dictionary parameter in the internal PiGear API backend allows you to contr
 
 !!! summary "Enable this backend with [`api=Backend.FFGEAR`](#api) in NetGear_Async."
 
-!!! info "FFGear parameters are a subset of the [FFGear API parameters](../../ffgear/params/). `colorspace` and `time_delay` are **not** forwarded to FFGear."
+!!! info "FFGear parameters are a subset of the [FFGear API parameters](../ffgear/params/). `colorspace` and `time_delay` are **not** forwarded to FFGear."
 
 ### **`source`**
 
@@ -625,7 +637,7 @@ NetGear_Async(api=Backend.FFGEAR, source="myvideo.mp4", custom_ffmpeg="/opt/ffmp
 
 ### **`options`**
 
-Passes additional FFdecoder parameters and FFGear queue-tuning parameters. See [FFGear options ➶](../../ffgear/params/#options) for full details.
+Passes additional FFdecoder parameters and FFGear queue-tuning parameters. See [FFGear options ➶](../ffgear/params/#options) for full details.
 
 **Data-Type:** Dictionary
 
@@ -656,13 +668,13 @@ This parameter selects the colorspace of the source stream.
 
 **Usage:**
 
-!!! tip "All supported `colorspace` values are given [here ➶](../../../bonus/colorspace_manipulation/)"
+!!! tip "All supported `colorspace` values are given [here ➶](../../bonus/colorspace_manipulation/)"
 
 ```python
 NetGear_Async(colorspace="COLOR_BGR2HSV")
 ```
 
-!!! example "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](usage/#using-videogear-with-colorspace-manipulation)"
 
 &nbsp;
 

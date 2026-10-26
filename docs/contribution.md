@@ -19,7 +19,7 @@ limitations under the License.
 -->
 
 
-<img src="../assets/images/contribute.webp" alt="VidGear Contribution" loading="lazy" class="center-small" />
+<img src="assets/images/contribute.webp" alt="VidGear Contribution" loading="lazy" class="center-small" />
 
 
 # Contribution Overview
@@ -35,8 +35,8 @@ limitations under the License.
 
 ## Submission Guidelines
 
-- [Submitting an Issue Guidelines ➶](../contribution/issue/)
-- [Submitting Pull Request(PR) Guidelines ➶](../contribution/PR/)
+- [Submitting an Issue Guidelines ➶](contribution/issue/)
+- [Submitting Pull Request(PR) Guidelines ➶](contribution/PR/)
 
 &thinsp;
 
@@ -44,7 +44,7 @@ limitations under the License.
 
 ### Got a question or problem? :material-lightbulb-question:
 
-For quick questions, please refrain from opening an issue, instead read our [FAQ & Troubleshooting](../help/get_help/#frequently-asked-questions) section or you can reach us on [Gitter](https://gitter.im/vidgear/community) community channel.
+For quick questions, please refrain from opening an issue, instead read our [FAQ & Troubleshooting](help/get_help/#frequently-asked-questions) section or you can reach us on [Gitter](https://gitter.im/vidgear/community) community channel.
 
 
 ### Found a typo? :material-eraser:
@@ -54,7 +54,7 @@ There's no need to contribute for some typos. Just reach us on [Gitter ➶](http
 
 ### Found a bug? :material-bug-outline: 
 
-If you encountered a bug, you can help us by [submitting an issue](../contribution/issue/) in our GitHub repository. Even better, you can submit a Pull Request(PR) with a fix, but make sure to read the [guidelines ➶](#submission-guidelines).
+If you encountered a bug, you can help us by [submitting an issue](contribution/issue/) in our GitHub repository. Even better, you can submit a Pull Request(PR) with a fix, but make sure to read the [guidelines ➶](#submission-guidelines).
 
 
 ### Request for a feature/improvement? :material-new-box: 
@@ -67,8 +67,8 @@ You can request our GitHub Repository for a new feature/improvement based on the
 
 !!! note "Please [submit an issue with a proposal template](https://github.com/abhiTronix/vidgear/issues/new?labels=issue%3A+proposal&template=proposal.md) for your request to explain how it benefits everyone in the community."
 
-* **Major Feature Requests:** If you require a major feature for VidGear, then first [open an issue](../contribution/issue/) and outline your proposal so that it can be discussed. This will also allow us to better coordinate our efforts, prevent duplication of work, and help you to craft the change so that it is successfully accepted into the project. The purposed feature, if accepted, may take time based on its complexity and availability/time-schedule of our maintainers, but once it's completed, you will be notified right away. Please be patient! 
+* **Major Feature Requests:** If you require a major feature for VidGear, then first [open an issue](contribution/issue/) and outline your proposal so that it can be discussed. This will also allow us to better coordinate our efforts, prevent duplication of work, and help you to craft the change so that it is successfully accepted into the project. The purposed feature, if accepted, may take time based on its complexity and availability/time-schedule of our maintainers, but once it's completed, you will be notified right away. Please be patient! 
 
-* **Minor Feature Requests:**  Small features and bugs resolved on priority. You just have to [submit an issue](../contribution/issue/) to our GitHub Repository.
+* **Minor Feature Requests:**  Small features and bugs resolved on priority. You just have to [submit an issue](contribution/issue/) to our GitHub Repository.
 
 &thinsp;

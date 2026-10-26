@@ -56,7 +56,7 @@ Its valid input can be one of the following:
 
     !!! warning "Requirement for GStreamer Pipelining"
 
-        GStreamer Pipelining in WriteGear requires your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
+        GStreamer Pipelining in WriteGear requires your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
 
 
     ??? new "New in v0.2.5" 
@@ -75,7 +75,7 @@ Its valid input can be one of the following:
 
 ## **`compression_mode`**
 
-This parameter selects the WriteGear's Primary [Mode of Operation](../../introduction/#modes-of-operation), i.e. if this parameter is enabled _(.i.e `compression_mode = True`)_ WriteGear will use **FFmpeg** to encode output video, and if disabled _(.i.e `compression_mode = False`)_, the **OpenCV's VideoWriter API** will be used for encoding files/streams. 
+This parameter selects the WriteGear's Primary [Mode of Operation](../introduction/#modes-of-operation), i.e. if this parameter is enabled _(.i.e `compression_mode = True`)_ WriteGear will use **FFmpeg** to encode output video, and if disabled _(.i.e `compression_mode = False`)_, the **OpenCV's VideoWriter API** will be used for encoding files/streams. 
 
 **Data-Type:** Boolean
 
@@ -101,7 +101,7 @@ WriteGear(output = 'output.mp4', compression_mode=False)
 This parameter allows us to exploit almost all [**OpenCV's VideoWriter API**](https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) supported parameters effortlessly and flexibly for video-encoding in Non-Compression Mode, by formatting desired FFmpeg Parameters as this parameter's attributes. All supported parameters and FOURCC codecs for compression mode discussed below:
 
 
-!!! info "Remember, Non-Compression mode lacks the ability to control output quality and other important features like _lossless video compression, audio encoding, etc._, which are available with WriteGear's [Compression Mode](../../compression/) only."
+!!! info "Remember, Non-Compression mode lacks the ability to control output quality and other important features like _lossless video compression, audio encoding, etc._, which are available with WriteGear's [Compression Mode](../compression/) only."
 
 
 **Data-Type:** Dictionary
@@ -138,7 +138,7 @@ In addition to OpenCV Parameters, WriteGear API also provides few exclusive attr
     ??? new "New in v0.2.5" 
         `-gst_pipeline_mode` attribute was added in `v0.2.5`.
 
-    !!! example "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-gstreamer-pipeline)."
+    !!! example "Its usage example can be found [here ➶](usage/#using-non-compression-mode-with-gstreamer-pipeline)."
 
 
 **Usage:**
@@ -152,7 +152,7 @@ output_params = {"-fps":30}
 WriteGear(output = 'output.mp4', compression_mode=False, **output_params)
 ```
 
-!!! example "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-videocapture-gears)."
+!!! example "Its usage example can be found [here ➶](usage/#using-non-compression-mode-with-videocapture-gears)."
 
 &thinsp;
 
@@ -173,7 +173,7 @@ output_params = {"-fourcc":"MJPG"}
 WriteGear(output = 'output.mp4', compression_mode=False, **output_params)
 ```
 
-!!! example "Its usage example can be found [here ➶](../usage/#using-non-compression-mode-with-videocapture-gears)."
+!!! example "Its usage example can be found [here ➶](usage/#using-non-compression-mode-with-videocapture-gears)."
 
 &nbsp; 
 

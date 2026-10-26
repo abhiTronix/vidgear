@@ -24,19 +24,19 @@ limitations under the License.
 
 ## What is NetGear API and what does it do?
 
-**Answer:** NetGear is exclusively designed to transfer video frames & data synchronously (Pair & Request/Reply) as well as asynchronously (Publish/Subscribe) between various interconnecting systems over the network in real-time. _For more info. see [NetGear doc ➶](../../gears/netgear/)_
+**Answer:** NetGear is exclusively designed to transfer video frames & data synchronously (Pair & Request/Reply) as well as asynchronously (Publish/Subscribe) between various interconnecting systems over the network in real-time. _For more info. see [NetGear doc ➶](../gears/netgear/)_
 
 &thinsp;
 
 ## How to get started with NetGear API?
 
-**Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-the-videocapture-apis) guide, then go through [NetGear documentation ➶](../../gears/netgear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, refer to the [Switching from OpenCV](../switch_from_cv/#switching-the-videocapture-apis) guide, then go through [NetGear documentation ➶](../gears/netgear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &thinsp;
 
 ## What Exclusive Modes are compatible with each other in NetGear API?
 
-Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netgear/#exclusive-modes):
+Here's the compatibility chart for NetGear's [Exclusive Modes](../gears/netgear/#exclusive-modes):
 
 
 | Exclusive Modes | Multi-Servers | Multi-Clients | Secure | Bidirectional | SSH Tunneling |
@@ -60,19 +60,19 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
     sudo pip3 install -U pyzmq
     ``` 
 
-* **Install testing branch:** The [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch may contain many latest performance updates, which are not yet merged into master branch. Therefore, you can try them earlier, by [installing `testing` branch directly ➶](../../installation/source_install/#installation).
+* **Install testing branch:** The [`testing`](https://github.com/abhiTronix/vidgear/tree/testing) branch may contain many latest performance updates, which are not yet merged into master branch. Therefore, you can try them earlier, by [installing `testing` branch directly ➶](../installation/source_install/#installation).
 
-* **Use PUB/SUB pattern if you're live streaming**:  Try different [`pattern`](../../gears/netgear/params/#pattern) values, as each of them suits different settings. For example, you can use its [**Publisher/Subscriber pattern**](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html) _(i.e. `pattern=2`)_ for asynchronous high-speed transmission over real-time streams, and it works faster than other synchronous patterns for this scenario.
+* **Use PUB/SUB pattern if you're live streaming**:  Try different [`pattern`](../gears/netgear/params/#pattern) values, as each of them suits different settings. For example, you can use its [**Publisher/Subscriber pattern**](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html) _(i.e. `pattern=2`)_ for asynchronous high-speed transmission over real-time streams, and it works faster than other synchronous patterns for this scenario.
 
 * **Use Wired connection instead of Wireless connection**: Remember typical 802.11g Wireless has a theoretical maximum of 54Mbps. Typical wired 10/100/1000 Ethernet has a theoretical maximum of 100 Gbps. So in theory wired is faster. However, these speeds are only on your local network. So chose your network configuration wisely.
 
-* **Enable all Performance Attributes with Frame Compression**: You can also try enabling [Frame Compression](../../gears/netgear/advanced/compression/) with its all [Performance Attributes](../../gears/netgear/advanced/compression/#performance-attributes) for NetGear API.
+* **Enable all Performance Attributes with Frame Compression**: You can also try enabling [Frame Compression](../gears/netgear/advanced/compression/) with its all [Performance Attributes](../gears/netgear/advanced/compression/#performance-attributes) for NetGear API.
 
-* **Reduce Frame Size:** Use VidGear's real-time _Frame-Size Reducer_(`reducer`) method for reducing frame-size on-the-go for additional performance _(see [this usage example ➶](../../gears/netgear/advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer-with-frame-compression))_. Remember, sending large HQ video-frames may required more network bandwidth and packet size, which can lead to additional latency!
+* **Reduce Frame Size:** Use VidGear's real-time _Frame-Size Reducer_(`reducer`) method for reducing frame-size on-the-go for additional performance _(see [this usage example ➶](../gears/netgear/advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer-with-frame-compression))_. Remember, sending large HQ video-frames may required more network bandwidth and packet size, which can lead to additional latency!
 
 * Systematically, **check for [Hardware/Network Issues ➶](https://github.com/abhiTronix/vidgear/issues/137)**
 
-* Finally, if nothing works then, **checkout [**NetGear_Async API ➶**](../../gears/netgear_async/)**
+* Finally, if nothing works then, **checkout [**NetGear_Async API ➶**](../gears/netgear_async/)**
 
 &thinsp;
 
@@ -96,26 +96,26 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
 
 ## How to send data along with frames in Multi-Servers and Multi-Clients Modes?
 
-**Answer:** See [Multi-Servers usage example ➶](../../gears/netgear/advanced/multi_server/#using-multi-servers-mode-with-custom-data-transfer) and [Multi-Clients usage example ➶](../../gears/netgear/advanced/multi_client/#using-multi-clients-mode-with-custom-data-transfer)
+**Answer:** See [Multi-Servers usage example ➶](../gears/netgear/advanced/multi_server/#using-multi-servers-mode-with-custom-data-transfer) and [Multi-Clients usage example ➶](../gears/netgear/advanced/multi_client/#using-multi-clients-mode-with-custom-data-transfer)
 
 &thinsp;
 
 ## How to use enable Encryption and Authentication in NetGear API?
 
-**Answer:** See its [Secure Mode doc ➶](../../gears/netgear/advanced/secure_mode/).
+**Answer:** See its [Secure Mode doc ➶](../gears/netgear/advanced/secure_mode/).
 
 &thinsp;
 
 ## How to send custom data along with frames bidirectionally in NetGear API?
 
-**Answer:** See its [Bidirectional Mode doc ➶](../../gears/netgear/advanced/bidirectional_mode/).
+**Answer:** See its [Bidirectional Mode doc ➶](../gears/netgear/advanced/bidirectional_mode/).
 
 &thinsp;
 
 
 ## How to access NetGear API outside network or remotely?
 
-**Answer:** See its [SSH Tunneling Mode doc ➶](../../gears/netgear/advanced/ssh_tunnel/).
+**Answer:** See its [SSH Tunneling Mode doc ➶](../gears/netgear/advanced/ssh_tunnel/).
 
 &thinsp;
 
@@ -128,7 +128,7 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../../gears/netge
 
 ## Why NetGear API not working correctly?
 
-**Answer:** First, carefully go through [NetGear doc ➶](../../gears/netgear/) that contains detailed information. Also, checkout [PyZmq Docs ➶](https://pyzmq.readthedocs.io/en/latest/) for its various settings/parameters. If still it doesn't work for you, then let us know on [Gitter ➶](https://gitter.im/vidgear/community)
+**Answer:** First, carefully go through [NetGear doc ➶](../gears/netgear/) that contains detailed information. Also, checkout [PyZmq Docs ➶](https://pyzmq.readthedocs.io/en/latest/) for its various settings/parameters. If still it doesn't work for you, then let us know on [Gitter ➶](https://gitter.im/vidgear/community)
 
 &thinsp;
 

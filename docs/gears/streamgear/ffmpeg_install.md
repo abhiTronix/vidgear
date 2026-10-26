@@ -21,7 +21,7 @@ limitations under the License.
 # FFmpeg Installation Instructions
 
 <figure>
-  <a href="http://ffmpeg.org/"><img src="../../../assets/images/ffmpeg.png" loading="lazy" alt="FFmpeg"/></a>
+  <a href="http://ffmpeg.org/"><img src="../../assets/images/ffmpeg.png" loading="lazy" alt="FFmpeg"/></a>
 </figure>
 
 
@@ -29,7 +29,7 @@ StreamGear must requires FFmpeg executables for transcoding Media Chunks. You ca
 
 
 !!! warning "StreamGear API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system."
-!!! tip "Enable logging _([`logging=True`](../params/#logging))_ for debugging FFmpeg validation process."
+!!! tip "Enable logging _([`logging=True`](params/#logging))_ for debugging FFmpeg validation process."
 
 &thinsp;
 
@@ -41,7 +41,7 @@ The StreamGear API supports _Auto-Detection_ and _Manual Configuration_ methods 
 
 !!! quote "This is a recommended approach on Linux Machines"
 
-If StreamGear API not receives any input from the user on [**`custom_ffmpeg`**](../params/#custom_ffmpeg) parameter, then on Linux system, it tries to **auto-detects** the required FFmpeg installed binaries through validation test that employs `subprocess` python module. 
+If StreamGear API not receives any input from the user on [**`custom_ffmpeg`**](params/#custom_ffmpeg) parameter, then on Linux system, it tries to **auto-detects** the required FFmpeg installed binaries through validation test that employs `subprocess` python module. 
 
 **Installation:** You can install easily install official FFmpeg according to your Linux Distro by following [this post ➶](https://www.tecmint.com/install-ffmpeg-in-linux/)
 
@@ -52,7 +52,7 @@ If StreamGear API not receives any input from the user on [**`custom_ffmpeg`**](
 
     *Linux Static Binaries:* http://johnvansickle.com/ffmpeg/
 
-* **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'ffmpeg/bin'`)  or path of `ffmpeg` executable itself to the [**`custom_ffmpeg`**](../params/#custom_ffmpeg) parameter in the StreamGear API.
+* **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'ffmpeg/bin'`)  or path of `ffmpeg` executable itself to the [**`custom_ffmpeg`**](params/#custom_ffmpeg) parameter in the StreamGear API.
 
     !!! warning "If binaries were not found at the manually specified path, StreamGear API will throw **RuntimeError**!"
 
@@ -68,13 +68,13 @@ The StreamGear API supports _Auto-Installation_ and _Manual Configuration_ metho
 
 !!! quote "This is a recommended approach on Windows Machines"
 
-If StreamGear API not receives any input from the user on [**`custom_ffmpeg`**](../params/#custom_ffmpeg) parameter, then on Windows system StreamGear API **auto-generates** the required FFmpeg Static Binaries from a dedicated [**Github Server**](https://github.com/abhiTronix/FFmpeg-Builds) into the temporary directory _(for e.g. `C:\Temp`)_ of your machine.
+If StreamGear API not receives any input from the user on [**`custom_ffmpeg`**](params/#custom_ffmpeg) parameter, then on Windows system StreamGear API **auto-generates** the required FFmpeg Static Binaries from a dedicated [**Github Server**](https://github.com/abhiTronix/FFmpeg-Builds) into the temporary directory _(for e.g. `C:\Temp`)_ of your machine.
 
 !!! warning Important Information
 
     * The files downloaded to temporary directory _(for e.g. `C:\TEMP`)_, may get erased if your machine shutdowns/restarts.
 
-    * You can also provide a custom save path for auto-downloading **FFmpeg Static Binaries** through [`-ffmpeg_download_path`](../params/#a-exclusive-parameters) parameter.
+    * You can also provide a custom save path for auto-downloading **FFmpeg Static Binaries** through [`-ffmpeg_download_path`](params/#a-exclusive-parameters) parameter.
 
     * If binaries were found at the specified path, StreamGear automatically skips the auto-installation step.
 
@@ -87,7 +87,7 @@ If StreamGear API not receives any input from the user on [**`custom_ffmpeg`**](
    
       *Windows Static Binaries:* https://ffmpeg.org/download.html#build-windows
 
-*  **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'C:/foo/Downloads/ffmpeg/bin'`) or path of `ffmpeg.exe` executable itself to the [**`custom_ffmpeg`**](../params/#custom_ffmpeg) parameter in the StreamGear API.
+*  **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'C:/foo/Downloads/ffmpeg/bin'`) or path of `ffmpeg.exe` executable itself to the [**`custom_ffmpeg`**](params/#custom_ffmpeg) parameter in the StreamGear API.
 
     !!! warning "If binaries were not found at the manually specified path, StreamGear API will throw **RuntimeError**!"
 
@@ -104,7 +104,7 @@ The StreamGear API supports _Auto-Detection_ and _Manual Configuration_ methods 
 
 !!! quote "This is a recommended approach on MacOS Machines"
 
-If StreamGear API not receives any input from the user on [**`custom_ffmpeg`**](../params/#custom_ffmpeg) parameter, then on macOS system, it tries to **auto-detects** the required FFmpeg installed binaries through validation test that employs `subprocess` python module.
+If StreamGear API not receives any input from the user on [**`custom_ffmpeg`**](params/#custom_ffmpeg) parameter, then on macOS system, it tries to **auto-detects** the required FFmpeg installed binaries through validation test that employs `subprocess` python module.
 
 **Installation:** You can easily install FFmpeg on your macOS machine by following [this tutorial ➶](https://trac.ffmpeg.org/wiki/CompilationGuide/macOS)
 
@@ -114,7 +114,7 @@ If StreamGear API not receives any input from the user on [**`custom_ffmpeg`**](
   
     *MacOS Static Binaries:* http://johnvansickle.com/ffmpeg/
 
-* **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'ffmpeg/bin'`) or path of `ffmpeg` executable itself to the [**`custom_ffmpeg`**](../params/#custom_ffmpeg) parameter in the StreamGear API.
+* **Assignment:** Then, you can easily assign the custom path to the folder containing FFmpeg executables(`for e.g 'ffmpeg/bin'`) or path of `ffmpeg` executable itself to the [**`custom_ffmpeg`**](params/#custom_ffmpeg) parameter in the StreamGear API.
 
 
     !!! warning "If binaries were not found at the manually specified path, StreamGear API will throw **RuntimeError**!"

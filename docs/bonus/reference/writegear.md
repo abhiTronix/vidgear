@@ -18,9 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-!!! example "WriteGear API usage examples for: [Compression Mode ➶](../../../gears/writegear/compression/usage/) and [Non-Compression Mode ➶](../../../gears/writegear/non_compression/usage/)"
+!!! example "WriteGear API usage examples for: [Compression Mode ➶](../../gears/writegear/compression/usage/) and [Non-Compression Mode ➶](../../gears/writegear/non_compression/usage/)"
 
-!!! info "WriteGear API parameters are explained for: [Compression Mode ➶](../../../gears/writegear/compression/params/) and [Non-Compression Mode ➶](../../../gears/writegear/non_compression/params/)"
+!!! info "WriteGear API parameters are explained for: [Compression Mode ➶](../../gears/writegear/compression/params/) and [Non-Compression Mode ➶](../../gears/writegear/non_compression/params/)"
 
 ::: vidgear.gears.WriteGear	
 	

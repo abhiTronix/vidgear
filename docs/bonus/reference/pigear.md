@@ -18,9 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-!!! example "PiGear API usage examples can be found [here ➶](../../../gears/pigear/usage/)"
+!!! example "PiGear API usage examples can be found [here ➶](../../gears/pigear/usage/)"
 
-!!! info "PiGear API parameters are explained [here ➶](../../../gears/pigear/params/)"
+!!! info "PiGear API parameters are explained [here ➶](../../gears/pigear/params/)"
 
 ::: vidgear.gears.PiGear	
 	

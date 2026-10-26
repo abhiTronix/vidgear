@@ -18,9 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-!!! example "ScreenGear API usage examples can be found [here ➶](../../../gears/screengear/usage/)"
+!!! example "ScreenGear API usage examples can be found [here ➶](../../gears/screengear/usage/)"
 
-!!! info "ScreenGear API parameters are explained [here ➶](../../../gears/screengear/params/)"
+!!! info "ScreenGear API parameters are explained [here ➶](../../gears/screengear/params/)"
 
 ::: vidgear.gears.ScreenGear	
 	

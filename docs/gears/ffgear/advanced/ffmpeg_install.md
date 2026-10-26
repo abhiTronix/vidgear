@@ -21,7 +21,7 @@ limitations under the License.
 # FFmpeg Installation Instructions
 
 <figure>
-  <a href="http://ffmpeg.org/"><img src="../../../../assets/images/ffmpeg.png" loading="lazy" alt="FFmpeg"/></a>
+  <a href="http://ffmpeg.org/"><img src="../../../assets/images/ffmpeg.png" loading="lazy" alt="FFmpeg"/></a>
 </figure>
 
 FFGear API **MUST** have a valid FFmpeg executable installed for its core functions. You can following machine-specific instructions for its installation:

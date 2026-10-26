@@ -32,12 +32,12 @@ jobs:
   deploy-docs-release:
     name: Deploy Release Docs
     if: github.event_name == 'release' && github.event.action == 'published'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: install_vidgear
@@ -47,9 +47,8 @@ jobs:
         if: success()
       - name: install_dependencies
         run: |
-          pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin          
-          pip install -U mike mkdocstrings mkdocstrings-python
-          pip install -U mkdocs-git-authors-plugin
+          pip install -U zensical mkdocstrings-python
+          pip install -U "git+https://github.com/squidfunk/mike.git"
         if: success()
       - name: git configure
         run: |
@@ -74,12 +73,12 @@ jobs:
   deploy-docs-stable:
     name: Deploy Latest Docs
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: install_vidgear
@@ -89,9 +88,8 @@ jobs:
         if: success()
       - name: install_dependencies
         run: |
-          pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin          
-          pip install -U mike mkdocstrings mkdocstrings-python
-          pip install -U mkdocs-git-authors-plugin          
+          pip install -U zensical mkdocstrings-python
+          pip install -U "git+https://github.com/squidfunk/mike.git"
         if: success()
       - name: git configure
         run: |
@@ -117,13 +115,13 @@ jobs:
   deploy-docs-dev:
     name: Deploy Development Docs
     if: github.event_name == 'push' && github.ref == 'refs/heads/testing'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - run: git checkout testing
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: install_vidgear
@@ -133,9 +131,8 @@ jobs:
         if: success()
       - name: install_dependencies
         run: |
-          pip install -U mkdocs mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocs-minify-plugin          
-          pip install -U mike mkdocstrings mkdocstrings-python
-          pip install -U mkdocs-git-authors-plugin          
+          pip install -U zensical mkdocstrings-python
+          pip install -U "git+https://github.com/squidfunk/mike.git"
         if: success()
       - name: git configure
         run: |
@@ -148,6 +145,11 @@ jobs:
         run: |
           echo "RELEASE_NAME=$(python -c 'import vidgear; print(vidgear.__version__)')" >>$GITHUB_ENV
         shell: bash
+        if: success()
+      - name: check docs links
+        run: |
+          zensical build -c
+          sh scripts/bash/check_links.sh site
         if: success()
       - name: mike deploy docs dev
         run: |

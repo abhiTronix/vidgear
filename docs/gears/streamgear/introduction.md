@@ -23,7 +23,7 @@ limitations under the License.
 
 
 <figure>
-  <img src="../../../assets/images/streamgear_flow.webp" loading="lazy" alt="StreamGear Flow Diagram" />
+  <img src="../../assets/images/streamgear_flow.webp" loading="lazy" alt="StreamGear Flow Diagram" />
   <figcaption>StreamGear API's generalized workflow</figcaption>
 </figure>
 
@@ -40,7 +40,7 @@ SteamGear currently supports both [**MPEG-DASH**](https://www.encoding.com/mpeg-
 
 Additionally, StreamGear generates a manifest file _(such as MPD for DASH)_ or a master playlist _(such as M3U8 for Apple HLS)_ alongside the segments. These files contain essential segment information, _including timing, URLs, and media characteristics like video resolution and adaptive bitrate_. They are provided to the client before the streaming session begins.
 
-!!! alert "For streaming with older traditional protocols such as RTMP, RTSP/RTP you could use [WriteGear](../../writegear/introduction/) API instead."
+!!! alert "For streaming with older traditional protocols such as RTMP, RTSP/RTP you could use [WriteGear](../writegear/introduction/) API instead."
 
 &thinsp;
 
@@ -51,11 +51,11 @@ Additionally, StreamGear generates a manifest file _(such as MPD for DASH)_ or a
 
 !!! danger "Important"
 	
-	* StreamGear **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../ffmpeg_install/) for its installation.
+	* StreamGear **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](ffmpeg_install/) for its installation.
 
 	* :warning: StreamGear API will throw **RuntimeError**, if it fails to detect valid FFmpeg executable on your system.
 
-	* It is advised to enable logging _([`logging=True`](../params/#logging))_ on the first run for easily identifying any runtime errors.
+	* It is advised to enable logging _([`logging=True`](params/#logging))_ on the first run for easily identifying any runtime errors.
 
 !!! tip "Useful Links"
     
@@ -72,11 +72,11 @@ StreamGear primarily operates in following independent modes for transcoding:
 
 
 ???+ alert "Real-time Frames Mode itself is NOT Live-Streaming :material-video-wireless-outline:"
-    To enable live-streaming in Real-time Frames Mode, use the exclusive [`-livestream`](../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter in the StreamGear API. Checkout [this usage example ➶](../rtfm/usage/#bare-minimum-usage-with-live-streaming) for more information.
+    To enable live-streaming in Real-time Frames Mode, use the exclusive [`-livestream`](params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter in the StreamGear API. Checkout [this usage example ➶](rtfm/usage/#bare-minimum-usage-with-live-streaming) for more information.
 
-- [**Single-Source Mode :material-file-video-outline:**](../ssm/#overview) : In this mode, StreamGear **transcodes entire video file** _(as opposed to frame-by-frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well when you're transcoding long-duration lossless videos(with audio) for streaming that required no interruptions. But on the downside, the provided source cannot be flexibly manipulated or transformed before sending onto FFmpeg Pipeline for processing. 
+- [**Single-Source Mode :material-file-video-outline:**](ssm/#overview) : In this mode, StreamGear **transcodes entire video file** _(as opposed to frame-by-frame)_ into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well when you're transcoding long-duration lossless videos(with audio) for streaming that required no interruptions. But on the downside, the provided source cannot be flexibly manipulated or transformed before sending onto FFmpeg Pipeline for processing. 
 
-- [**Real-time Frames Mode :material-camera-burst:**](../rtfm/#overview) : In this mode, StreamGear directly **transcodes frame-by-frame** _(as opposed to a entire video file)_, into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well when you desire to flexibility manipulate or transform [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames in real-time before sending them onto FFmpeg Pipeline for processing. But on the downside, audio has to added manually _(as separate source)_ for streams. 
+- [**Real-time Frames Mode :material-camera-burst:**](rtfm/#overview) : In this mode, StreamGear directly **transcodes frame-by-frame** _(as opposed to a entire video file)_, into a sequence of multiple smaller chunks/segments for streaming. This mode works exceptionally well when you desire to flexibility manipulate or transform [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) frames in real-time before sending them onto FFmpeg Pipeline for processing. But on the downside, audio has to added manually _(as separate source)_ for streams. 
 
 &thinsp; 
 
@@ -110,7 +110,7 @@ StreamGear primarily operates in following independent modes for transcoding:
         </div>
       </div>
     </div>
-    <p align="middle">Powered by <a href="https://github.com/clappr/clappr" title="clappr">clappr</a> & <a href="https://github.com/clappr/hlsjs-playback" title="hlsjs-playback">HlsjsPlayback</a></p>
+    <p align="middle">Powered by <a href="https://github.com/clappr/clappr" title="clappr">clappr</a> & <a href="https://github.com/video-dev/hls.js" title="hls.js">hls.js</a></p>
 
     !!! info  "This video assets _(Playlist and segments)_ are hosted on [GitHub Repository](https://github.com/abhiTronix/vidgear-docs-additionals) and served with [raw.githack.com](https://raw.githack.com)" 
 
@@ -142,20 +142,20 @@ StreamGear primarily operates in following independent modes for transcoding:
 ## Parameters
 
 <div>
-<a href="../params/">See here 🚀</a>
+<a href="params/">See here 🚀</a>
 </div>
 
 ## References
 
 <div>
-<a href="../../../bonus/reference/streamgear/">See here 🚀</a>
+<a href="../../bonus/reference/streamgear/">See here 🚀</a>
 </div>
 
 
 ## FAQs
 
 <div>
-<a href="../../../help/streamgear_faqs/">See here 🚀</a>
+<a href="../../help/streamgear_faqs/">See here 🚀</a>
 </div>
 
 &thinsp;

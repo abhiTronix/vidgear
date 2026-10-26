@@ -18,9 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-!!! example "FFGear API usage examples can be found [here ➶](../../../gears/ffgear/usage/)"
+!!! example "FFGear API usage examples can be found [here ➶](../../gears/ffgear/usage/)"
 
-!!! info "FFGear API parameters are explained [here ➶](../../../gears/ffgear/params/)"
+!!! info "FFGear API parameters are explained [here ➶](../../gears/ffgear/params/)"
 
 ::: vidgear.gears.FFGear
 

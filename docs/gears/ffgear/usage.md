@@ -34,7 +34,7 @@ limitations under the License.
     pip install deffcode
     ```
 
-    For FFmpeg installation, see [FFmpeg Installation ➶](../advanced/ffmpeg_install/)
+    For FFmpeg installation, see [FFmpeg Installation ➶](advanced/ffmpeg_install/)
 
 &thinsp;
 
@@ -127,7 +127,7 @@ FFGear API directly supports any network stream URL that FFmpeg supports, includ
 
     !!! alert "This example assumes you already have an RTSP server running at the specified address."
 
-    !!! tip "For creating your own RTSP server locally, see [WriteGear's RTSP/RTP bonus example ➶](../../../help/writegear_ex/#using-writegears-compression-mode-for-rtsprtp-live-streaming)"
+    !!! tip "For creating your own RTSP server locally, see [WriteGear's RTSP/RTP bonus example ➶](../../help/writegear_ex/#using-writegears-compression-mode-for-rtsprtp-live-streaming)"
 
     ```python linenums="1" hl_lines="6 10"
     # import required libraries
@@ -351,7 +351,7 @@ FFGear internally implements the [`yt_dlp`][yt_dlp] backend for seamlessly pipel
 
 ## Using FFGear with Different Pixel Formats
 
-FFGear supports decoding frames in any FFmpeg pixel format via the [`frame_format`](../params/#frame_format) parameter.
+FFGear supports decoding frames in any FFmpeg pixel format via the [`frame_format`](params/#frame_format) parameter.
 
 !!! tip "Use `ffmpeg -pix_fmts` terminal command to list all supported pixel formats."
 
@@ -442,7 +442,7 @@ FFGear supports decoding frames in any FFmpeg pixel format via the [`frame_forma
 
     !!! success "Fastest :zap: RAW-to-Grayscale via `-extract_luma`"
 
-        Every YUV/NV bytestream stores the **Luma (Y) plane** uncompressed at the top of each frame. The exclusive [`-extract_luma`](../params/#b-exclusive-parameters) boolean attribute makes FFGear slice that Y-plane directly and hand back a 2D `(H, W)` grayscale ndarray — **no colorspace conversion in FFmpeg, no `cv2.cvtColor` in Python**. This is strictly faster than `frame_format="gray"`, which still asks FFmpeg to do a `yuv→gray` conversion on every frame.
+        Every YUV/NV bytestream stores the **Luma (Y) plane** uncompressed at the top of each frame. The exclusive [`-extract_luma`](params/#b-exclusive-parameters) boolean attribute makes FFGear slice that Y-plane directly and hand back a 2D `(H, W)` grayscale ndarray — **no colorspace conversion in FFmpeg, no `cv2.cvtColor` in Python**. This is strictly faster than `frame_format="gray"`, which still asks FFmpeg to do a `yuv→gray` conversion on every frame.
 
         Combined with the reduced pipe-bytes of YUV 4:2:0 ingest, this is the fastest :fontawesome-solid-tachometer-alt-fast: grayscale pipeline the API can produce.
 
@@ -546,8 +546,8 @@ FFGear supports decoding frames in any FFmpeg pixel format via the [`frame_forma
         | :material-apple: Mac OS | [`avfoundation`](https://ffmpeg.org/ffmpeg-devices.html#avfoundation) |
 
         **:warning: Important:** Kindly make sure your FFmpeg binaries support these platform specific demuxers as well as system have the appropriate video drivers and related softwares installed.
-    - [x] The [`source`](../params/#source) parameter value **MUST be exactly the probed Camera Device index** _(Use DeFFcode's [Sourcer API](https://abhitronix.github.io/deffcode/latest/reference/sourcer/) `enumerate_devices` to list them)_.
-    - [x] The [`source_demuxer`](../params/#source_demuxer) parameter value  **MUST be either `None`_(also means empty)_ or `"auto"`**. 
+    - [x] The [`source`](params/#source) parameter value **MUST be exactly the probed Camera Device index** _(Use DeFFcode's [Sourcer API](https://abhitronix.github.io/deffcode/latest/reference/sourcer/) `enumerate_devices` to list them)_.
+    - [x] The [`source_demuxer`](params/#source_demuxer) parameter value  **MUST be either `None`_(also means empty)_ or `"auto"`**. 
 
 In this example we stream **BGR24** video frames from **Integrated Camera at index `0`** on a :fontawesome-brands-windows: Windows Machine:
 
@@ -919,7 +919,7 @@ FFGear integrates seamlessly with OpenCV's [`VideoWriter()`](https://docs.opencv
 
 !!! tip "You can use FFGear API's `stream.metadata` property object that dumps source Video's metadata information _(as JSON string)_ to retrieve source framerate and resolution."
 
-!!! info "You could also use the [WriteGear API's Non-compression mode](../../../gears/writegear/non_compression/), which provides flexible access to OpenCV's VideoWriter API for encoding video frames without compression. See this document for [switching from VideoWriter API to WriteGear API ➶](../../../switch_from_cv/#switching-the-videowriter-api)."
+!!! info "You could also use the [WriteGear API's Non-compression mode](../../gears/writegear/non_compression/), which provides flexible access to OpenCV's VideoWriter API for encoding video frames without compression. See this document for [switching from VideoWriter API to WriteGear API ➶](../../switch_from_cv/#switching-the-videowriter-api)."
 
 === "BGR frames"
 
@@ -1248,7 +1248,7 @@ FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode fo
 
 === "RGB frames"
 
-    In WriteGear API, you can use [`rgb_mode`](../../../bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.write) parameter in  `write()` class method to write `RGB` format frames instead of default `BGR` as follows:
+    In WriteGear API, you can use [`rgb_mode`](../../bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.write) parameter in  `write()` class method to write `RGB` format frames instead of default `BGR` as follows:
 
     ```python linenums="1" hl_lines="3 12 17 32 38"
     # import required libraries
@@ -1393,7 +1393,7 @@ FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode fo
 
     !!! success "Fastest :zap: RAW-to-Grayscale via `-extract_luma`"
 
-        Every YUV/NV bytestream stores the **Luma (Y) plane** uncompressed at the top of each frame. The exclusive [`-extract_luma`](../params/#b-exclusive-parameters) boolean attribute makes FFGear slice that Y-plane directly and hand back a 2D `(H, W)` grayscale ndarray — **no colorspace conversion in FFmpeg, no `cv2.cvtColor` in Python**. This is strictly faster than `frame_format="gray"`, which still asks FFmpeg to do a `yuv→gray` conversion on every frame.
+        Every YUV/NV bytestream stores the **Luma (Y) plane** uncompressed at the top of each frame. The exclusive [`-extract_luma`](params/#b-exclusive-parameters) boolean attribute makes FFGear slice that Y-plane directly and hand back a 2D `(H, W)` grayscale ndarray — **no colorspace conversion in FFmpeg, no `cv2.cvtColor` in Python**. This is strictly faster than `frame_format="gray"`, which still asks FFmpeg to do a `yuv→gray` conversion on every frame.
 
         Combined with the reduced pipe-bytes of YUV 4:2:0 ingest, this is the fastest :fontawesome-solid-tachometer-alt-fast: grayscale pipeline the API can produce.
 

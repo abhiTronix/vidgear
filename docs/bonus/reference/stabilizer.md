@@ -18,9 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-!!! example "Stabilizer API usage examples can be found [here ➶](../../../gears/stabilizer/usage/)"
+!!! example "Stabilizer API usage examples can be found [here ➶](../../gears/stabilizer/usage/)"
 
-!!! info "Stabilizer API parameters are explained [here ➶](../../../gears/stabilizer/params/)"
+!!! info "Stabilizer API parameters are explained [here ➶](../../gears/stabilizer/params/)"
 
 ::: vidgear.gears.stabilizer.Stabilizer
 
@@ -31,5 +31,9 @@ limitations under the License.
 &nbsp;
 
 ::: vidgear.gears.stabilizer.ASWStabilizer
+
+&nbsp;
+
+::: vidgear.gears.stabilizer.KalmanStabilizer
 
 &nbsp;

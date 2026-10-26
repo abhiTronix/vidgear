@@ -30,7 +30,7 @@ limitations under the License.
     * Always use `writer.close()` at the very end of the main code. **NEVER USE IT INBETWEEN CODE** to avoid undesired behavior.
 
 
-!!! example "After going through WriteGear Usage Examples, Checkout more bonus examples [here ➶](../../../../help/writegear_ex/)"
+!!! example "After going through WriteGear Usage Examples, Checkout more bonus examples [here ➶](../../../help/writegear_ex/)"
 
 
 &thinsp;
@@ -93,7 +93,7 @@ writer.close()
 
 In Non-Compression mode, WriteGear API provides flexible control over [**OpenCV's VideoWriter API**](https://docs.opencv.org/master/dd/d9e/classcv_1_1VideoWriter.html#ad59c61d8881ba2b2da22cff5487465b5) parameters through its `output_param` dictionary parameter by formating them as dictionary attributes. Moreover, WriteGear API can be used in conjunction with any other Gears/APIs effortlessly. 
 
-!!! info "All supported attributes for `output_param` can be found  [here ➶](../params/#a-opencv-parameters)"
+!!! info "All supported attributes for `output_param` can be found  [here ➶](params/#a-opencv-parameters)"
 
 The complete usage example is as follows:
 
@@ -218,10 +218,10 @@ writer.close()
 
 ## Using Non-Compression Mode with GStreamer Pipeline
 
-  WriteGear API's Non-Compression Mode also supports GStreamer Pipeline as input to its `output` parameter, when [GStreamer Pipeline Mode](../params/#b-exclusive-parameters) is enabled. This provides flexible way to write video frames to file or network stream with controlled framerate and bitrate. The complete usage example is as follows:
+  WriteGear API's Non-Compression Mode also supports GStreamer Pipeline as input to its `output` parameter, when [GStreamer Pipeline Mode](params/#b-exclusive-parameters) is enabled. This provides flexible way to write video frames to file or network stream with controlled framerate and bitrate. The complete usage example is as follows:
 
 !!! warning "Requirement for GStreamer Pipelining"
-    GStreamer Pipelining in WriteGear requires your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
+    GStreamer Pipelining in WriteGear requires your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
 
 ??? new "New in v0.2.5" 
     This example was added in `v0.2.5`.

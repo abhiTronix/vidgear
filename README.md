@@ -280,7 +280,7 @@ stream.stop()
 
 VideoGear also serves as a unified video-capture API, offering seamless access to [CamGear](#camgear), [PiGear](#pigear), and [FFGear](#ffgear) along with their respective parameters. You can switch between these backends using the `api` parameter (defaults to `Backend.CAMGEAR`).
 
-It is especially useful when you want to toggle between different video-capture backends without significant code changes. Additionally, it simplifies video stabilization for both real-time and non-real-time streams, requiring minimal effort and fewer lines of code.
+It is especially useful when you want to toggle between different video-capture backends without significant code changes. Additionally, it simplifies video stabilization for both real-time and non-real-time streams, requiring minimal effort and fewer lines of code. The Stabilizer offers two backends: the default **Average Sliding-Window** _(`StabilizerMode.ASW`)_ and a **zero-latency Kalman filter** _(`StabilizerMode.KALMAN`)_ for live streams.
 
 **Below is a snapshot of a VideoGear Stabilizer in action (_See its detailed usage [here][stabilizer-doc-ex]_):**
 
@@ -770,13 +770,14 @@ _Thanks a million! 💖_
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17586698.svg)](https://doi.org/10.5281/zenodo.17586698)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20260985.svg)](https://doi.org/10.5281/zenodo.20260985)
 
 ```BibTeX
 @software{vidgear,
   author       = {Abhishek Thakur and
                   Zoe Papakipos and
                   Christian Clauss and
+                  ss-cric and
                   Christian Hollinger and
                   Ian Max Andolina and
                   Kyle Ahn and
@@ -786,19 +787,13 @@ Here is a Bibtex entry you can use to cite this project in a publication:
                   Mickaël Schoentgen and
                   Renaud Bouckenooghe and
                   Ibtsam Ahmad},
-  title        = {abhiTronix/vidgear: VidGear Stable v0.3.4},
-  month        = nov,
-  year         = 2025,
+  title        = {abhiTronix/vidgear: VidGear Stable v0.3.5},
+  month        = may,
+  year         = 2026,
   publisher    = {Zenodo},
-  version      = {vidgear-0.3.4},
-  doi          = {10.5281/zenodo.17586698},
-  url          = {https://doi.org/10.5281/zenodo.17586698},
-  swhid        = {swh:1:dir:cd4e557ff277da86fb252ab7983e8b9d2be39065
-                   ;origin=https://doi.org/10.5281/zenodo.4718615;vis
-                   it=swh:1:snp:6bd11960231209999e32066a75196a96818d4
-                   1b8;anchor=swh:1:rel:a930455cfcd23d1098834cce7f6d8
-                   8dd58cad2e8;path=abhiTronix-vidgear-84d99c3
-                  },
+  version      = {vidgear-0.3.5},
+  doi          = {10.5281/zenodo.20260985},
+  url          = {https://doi.org/10.5281/zenodo.20260985},
 }
 ```
 

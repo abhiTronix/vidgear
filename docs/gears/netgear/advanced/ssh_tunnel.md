@@ -21,7 +21,7 @@ limitations under the License.
 # SSH Tunneling Mode for NetGear API 
 
 <h3 align="center">
-  <img src="../../../../assets/images/ssh_tunnel.png" alt="NetGear's SSH Tunneling Mode" loading="lazy" class="center" title="NetGear's SSH Tunneling Mode"/>
+  <img src="../../../assets/images/ssh_tunnel.png" alt="NetGear's SSH Tunneling Mode" loading="lazy" class="center" title="NetGear's SSH Tunneling Mode"/>
 </h3>
 
 
@@ -38,16 +38,16 @@ This mode implements [SSH Remote Port Forwarding](https://www.ssh.com/academy/ss
 ??? danger "Beware ☠️"
     Cybercriminals or malware could exploit SSH tunnels to hide their unauthorized communications, or to exfiltrate stolen data from the network. More information can be found [here ➶](https://www.ssh.com/academy/ssh/tunneling)
 
-All patterns are valid for this mode and it can be easily activated in NetGear API at server end through `ssh_tunnel_mode` string attribute of its [`options`](../../params/#options) dictionary parameter during initialization.
+All patterns are valid for this mode and it can be easily activated in NetGear API at server end through `ssh_tunnel_mode` string attribute of its [`options`](../params/#options) dictionary parameter during initialization.
 
 !!! warning "Important"
     * ==SSH tunneling mode can only be enabled on Server-end to establish remote SSH connection with Client.==
     * SSH tunneling mode requires Client's SSH Port(default `22`) to be TCP Port Forwarded by its Router, which allows Server machine to connect to it remotely.   
-    * SSH tunneling mode is **NOT** compatible with [Multi-Servers](../../advanced/multi_server) and [Multi-Clients](../../advanced/multi_client) Exclusive Modes yet.
+    * SSH tunneling mode is **NOT** compatible with [Multi-Servers](../advanced/multi_server) and [Multi-Clients](../advanced/multi_client) Exclusive Modes yet.
     
 !!! tip "Useful Tips"
     * It is advise to use `pattern=2` to overcome random disconnection due to delays in network.
-    * SSH tunneling Mode is fully supports [Bidirectional Mode](../../advanced/multi_server), [Secure Mode](../../advanced/secure_mode/) and [JPEG-Frame Compression](../../advanced/compression/).
+    * SSH tunneling Mode is fully supports [Bidirectional Mode](../advanced/multi_server), [Secure Mode](../advanced/secure_mode/) and [JPEG-Frame Compression](../advanced/compression/).
     * It is advised to enable logging (`logging = True`) on the first run, to easily identify any runtime errors.
 
 
@@ -86,7 +86,7 @@ SSH Tunnel Mode requires [`pexpect`](http://www.noah.org/wiki/pexpect) or [`para
 
 !!! warning "All these attributes will work on Server end only whereas Client end will simply discard them."
 
-For implementing SSH Tunneling Mode, NetGear API currently provide following exclusive attribute for its [`options`](../../params/#options) dictionary parameter:
+For implementing SSH Tunneling Mode, NetGear API currently provide following exclusive attribute for its [`options`](../params/#options) dictionary parameter:
 
 * **`ssh_tunnel_mode`** (_string_) : This attribute activates SSH Tunneling Mode and assigns the `"<ssh-username>@<client-public-ip-address>:<tcp-forwarded-port>"` SSH URL for tunneling at Server end. Its usage is as follows:
   
@@ -165,7 +165,7 @@ For implementing SSH Tunneling Mode, NetGear API currently provide following exc
         Assumed setup can be visualized throw diagram as follows:
 
         <figure markdown>
-          <img src="../../../../assets/images/ssh_tunnel_ex.png" alt="Setup Diagram"/>
+          <img src="../../../assets/images/ssh_tunnel_ex.png" alt="Setup Diagram"/>
           <figcaption>Setup Diagram</figcaption>
         </figure>
 

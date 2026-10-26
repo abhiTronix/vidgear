@@ -21,7 +21,7 @@ limitations under the License.
 # Bidirectional Mode for NetGear_Async API 
 
 <h3 align="center">
-  <img src="../../../../assets/images/bidir_async.png" alt="Bidirectional Mode" loading="lazy" class="center" title="NetGear_Async's Bidirectional Mode"/>
+  <img src="../../../assets/images/bidir_async.png" alt="Bidirectional Mode" loading="lazy" class="center" title="NetGear_Async's Bidirectional Mode"/>
 </h3>
 
 ## Overview
@@ -31,9 +31,9 @@ limitations under the License.
 
 Bidirectional Mode enables seamless support for Bidirectional data transmission between Client and Sender along with video-frames through its synchronous messaging patterns such as `zmq.PAIR` (ZMQ Pair Pattern) & `zmq.REQ/zmq.REP` (ZMQ Request/Reply Pattern) in NetGear_Async API.
 
-In Bidirectional Mode, we utilizes the NetGear_Async API's [`transceive_data`](../../../../bonus/reference/netgear_async/#vidgear.gears.asyncio.NetGear_Async.transceive_data) method for transmitting data _(at Client's end)_ and receiving data _(in Server's end)_  all while transferring frames in real-time. 
+In Bidirectional Mode, we utilizes the NetGear_Async API's [`transceive_data`](../../../bonus/reference/netgear_async/#vidgear.gears.asyncio.NetGear_Async.transceive_data) method for transmitting data _(at Client's end)_ and receiving data _(in Server's end)_  all while transferring frames in real-time. 
 
-This mode can be easily activated in NetGear_Async through `bidirectional_mode` attribute of its [`options`](../../params/#options) dictionary parameter during initialization.
+This mode can be easily activated in NetGear_Async through `bidirectional_mode` attribute of its [`options`](../params/#options) dictionary parameter during initialization.
 
 &nbsp;
 
@@ -42,7 +42,7 @@ This mode can be easily activated in NetGear_Async through `bidirectional_mode` 
 
     * In Bidirectional Mode, `zmq.PAIR`(ZMQ Pair) & `zmq.REQ/zmq.REP`(ZMQ Request/Reply) are **ONLY** Supported messaging patterns. Accessing this mode with any other messaging pattern, will result in `ValueError`.
 
-    * Bidirectional Mode ==only works with [**User-defined Custom Source**](../../usage/#using-netgear_async-with-a-custom-sourceopencv) on Server end==. Otherwise, NetGear_Async API will throw `ValueError`.
+    * Bidirectional Mode ==only works with [**User-defined Custom Source**](../usage/#using-netgear_async-with-a-custom-sourceopencv) on Server end==. Otherwise, NetGear_Async API will throw `ValueError`.
 
     * Bidirectional Mode enables you to send data of **ANY**[^1] Data-type along with frame bidirectionally.
 
@@ -61,7 +61,7 @@ To send data bidirectionally, NetGear_Async API provides following exclusive met
 
 !!! alert "`transceive_data` only works when Bidirectional Mode is enabled."
 
-* [`transceive_data`](../../../../bonus/reference/NetGear_Async/#vidgear.gears.asyncio.NetGear_Async.transceive_data): It's a bidirectional mode exclusive method to transmit data _(in Receive mode)_ and receive data _(in Send mode)_, all while transferring frames in real-time. 
+* [`transceive_data`](../../../bonus/reference/netgear_async/#vidgear.gears.asyncio.NetGear_Async.transceive_data): It's a bidirectional mode exclusive method to transmit data _(in Receive mode)_ and receive data _(in Send mode)_, all while transferring frames in real-time. 
 
     * `data`: In `transceive_data` method, this parameter enables user to inputs data _(of **ANY**[^1] datatype)_ for sending back to Server at Client's end. 
 
@@ -73,7 +73,7 @@ To send data bidirectionally, NetGear_Async API provides following exclusive met
 ## Usage Examples
 
 
-!!! warning "For Bidirectional Mode, NetGear_Async must need [User-defined Custom Source](../../usage/#using-netgear_async-with-a-custom-sourceopencv) at its Server end otherwise it will throw ValueError."
+!!! warning "For Bidirectional Mode, NetGear_Async must need [User-defined Custom Source](../usage/#using-netgear_async-with-a-custom-sourceopencv) at its Server end otherwise it will throw ValueError."
 
 
 ### Bare-Minimum Usage with OpenCV
@@ -228,7 +228,7 @@ if __name__ == "__main__":
 
 Open a terminal on Client System _(where you want to display the input frames received from the Server)_ and execute the following python code: 
 
-!!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
+!!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -304,7 +304,7 @@ Now, Open the terminal on another Server System _(a Raspberry Pi with Camera Mod
 
 !!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../../installation/pip_install/#picamera2) for its installation."
 
 !!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
@@ -410,7 +410,7 @@ Now, Open the terminal on another Server System _(a Raspberry Pi with Camera Mod
 
         !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../pigear/params) user-defined optional parameter boolean attribute."
 
 
     ```python linenums="1" hl_lines="12-18 22-67 74"
@@ -515,7 +515,7 @@ In this example we are going to implement a bare-minimum example, where we will 
 
 !!! tip "This feature is great for building applications like Real-Time Video Chat."
 
-!!! info "We're also using [`reducer`](../../../../bonus/reference/helper/#vidgear.gears.helper.reducer) method for reducing frame-size on-the-go for additional performance."
+!!! info "We're also using [`reducer`](../../../bonus/reference/helper/#vidgear.gears.helper.reducer) method for reducing frame-size on-the-go for additional performance."
 
 !!! warning "Remember, Sending large HQ video-frames may required more network bandwidth and packet size which may lead to video latency!"
 
@@ -690,7 +690,7 @@ if __name__ == "__main__":
 
 [^1]: 
     
-    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype is **ONLY SUPPORTED** at Client's end with [`transceive_data`](../../../../bonus/reference/NetGear_Async/#vidgear.gears.asyncio.NetGear_Async.transceive_data) method using its `data` parameter. Whereas Server end can only send [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype as frame but not as data."
+    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype is **ONLY SUPPORTED** at Client's end with [`transceive_data`](../../../bonus/reference/netgear_async/#vidgear.gears.asyncio.NetGear_Async.transceive_data) method using its `data` parameter. Whereas Server end can only send [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype as frame but not as data."
 
 
 &nbsp;

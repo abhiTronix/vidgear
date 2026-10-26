@@ -27,7 +27,7 @@ limitations under the License.
 > With the Picamera2 backend, you can also define a custom `format` _(format of output frame pixels)_ in PiGear API. 
 
 ??? info "Handling output frames with a custom pixel format correctly"
-    While defining custom `format` as an optional parameter, it is advised to also define the [`colorspace`](../params/#colorspace) parameter in the PiGear API. This is required only under **TWO** conditions:
+    While defining custom `format` as an optional parameter, it is advised to also define the [`colorspace`](../gears/pigear/params/#colorspace) parameter in the PiGear API. This is required only under **TWO** conditions:
     
     - If `format` value is not **MPEG** for USB cameras.
     - If `format` value is not **BGR** _(i.e., `RGB888`)_ or **BGRA** _(i.e., `XRGB8888`)_ for Raspberry Pi camera modules.
@@ -45,7 +45,7 @@ limitations under the License.
 
     In this example we will be defining custom `YUV420` _(or `YVU420`)_ pixels format of output frame, and converting it back to `BGR` to be able to display with OpenCV.
 
-    !!! tip "You could also instead define [`colorspace="COLOR_YUV420p2RGB"`](../params/#colorspace) parameter in PiGear API for converting it back to `BGR` similarly."
+    !!! tip "You could also instead define [`colorspace="COLOR_YUV420p2RGB"`](../gears/pigear/params/#colorspace) parameter in PiGear API for converting it back to `BGR` similarly."
 
     ```python linenums="1" hl_lines="8 27"
     # import required libraries
@@ -101,7 +101,7 @@ limitations under the License.
 
     In this example we will be defining custom `YUYV` pixels format of output frame, and converting it back to `BGR` to be able to display with OpenCV.
 
-    !!! tip "You could also instead define [`colorspace="COLOR_YUV2BGR_YUYV"`](../params/#colorspace) parameter in PiGear API for converting it back to `BGR` similarly."
+    !!! tip "You could also instead define [`colorspace="COLOR_YUV2BGR_YUYV"`](../gears/pigear/params/#colorspace) parameter in PiGear API for converting it back to `BGR` similarly."
 
     ```python linenums="1" hl_lines="8 27"
     # import required libraries
@@ -264,7 +264,7 @@ limitations under the License.
 
         !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params/#options) optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../gears/pigear/params/#options) optional parameter boolean attribute."
 
     In this example we will set initial Camera Module's `brightness` value `80` _(brighter)_, and will change it `30` _(darker)_ when ++"Z"++ key is pressed at runtime:
 
@@ -316,7 +316,7 @@ limitations under the License.
 
 ## Accessing Multiple Camera through its Index in PiGear API 
 
-> With the [`camera_num`](../params/#camera_num) parameter in the PiGear API, you can easily select the camera index to be used as the source, allowing you to drive these multiple cameras simultaneously from within a single Python session. 
+> With the [`camera_num`](../gears/pigear/params/#camera_num) parameter in the PiGear API, you can easily select the camera index to be used as the source, allowing you to drive these multiple cameras simultaneously from within a single Python session. 
 
 !!! failure "The `camera_num` value can only be zero or greater, otherwise, PiGear API will throw `ValueError` for any negative value."
 
@@ -416,7 +416,7 @@ limitations under the License.
 
         !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../params/#options) optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../gears/pigear/params/#options) optional parameter boolean attribute."
 
     In this example, we will select the Camera Module connected at index `1` on the Raspberry Pi as the primary source for extracting frames in PiGear API:
 

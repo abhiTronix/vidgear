@@ -33,7 +33,7 @@ The complete usage example is as follows:
 
 Open a terminal on Client System where you want to display the input frames _(and setup WebGear server)_ received from the Server and execute the following python code:
 
-!!! danger "After running this code, Make sure to open Browser immediately otherwise NetGear_Async will soon exit with `TimeoutError`. You can also try setting [`timeout`](../../gears/netgear_async/params/#timeout) parameter to a higher value to extend this timeout."
+!!! danger "After running this code, Make sure to open Browser immediately otherwise NetGear_Async will soon exit with `TimeoutError`. You can also try setting [`timeout`](../gears/netgear_async/params/#timeout) parameter to a higher value to extend this timeout."
 
 !!! warning "Make sure you use different `port` value for NetGear_Async and WebGear API."
 

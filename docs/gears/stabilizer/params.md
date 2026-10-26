@@ -27,20 +27,18 @@ limitations under the License.
 ??? new "New in v0.3.5"
     This parameter was added in `v0.3.5`.
 
-This parameter selects the underlying stabilization algorithm via the [`StabilizerMode`](../../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode)` enum. The `Stabilizer` class factory dispatches to the matching backend.
+This parameter selects the underlying stabilization algorithm via the [`StabilizerMode`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode)` enum. The `Stabilizer` class factory dispatches to the matching backend.
 
-**Data-Type:** [`StabilizerMode`](../../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum
+**Data-Type:** [`StabilizerMode`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum
 
-**Default Value:** [`StabilizerMode.ASW`](../../../bonus/reference/stabilizer/#aswstabilizer)
+**Default Value:** [`StabilizerMode.ASW`](../../bonus/reference/stabilizer/#aswstabilizer)
 
 **Accepted Values:**
 
 | Value | Backend | Notes |
 |:-----:|:--------|:------|
 | `StabilizerMode.ASW` | Average Sliding-Window stabilizer | **Default**. _Bounded `O(smoothing_radius)` memory_ |
-| `StabilizerMode.KALMAN` | Kalman-filter stabilizer | _Reserved_ |
-
-!!! failure "Selecting `StabilizerMode.KALMAN` raises `NotImplementedError` until the Kalman backend lands."
+| `StabilizerMode.KALMAN` | Kalman-filter stabilizer | _Zero-latency_, no frame buffering |
 
 **Usage:**
 
@@ -49,12 +47,17 @@ from vidgear.gears.stabilizer import Stabilizer, StabilizerMode
 
 # default — ASW backend
 stab = Stabilizer(mode=StabilizerMode.ASW, smoothing_radius=30)
+
+# zero-latency Kalman backend
+stab = Stabilizer(mode=StabilizerMode.KALMAN, measurement_noise=0.5)
 ```
 
 &nbsp;
 
 
 ## **`smoothing_radius`**
+
+!!! info "Only applies to `StabilizerMode.ASW`."
 
 This parameter can be used to alter averaging window size. It basically handles the quality of stabilization at the expense of latency and sudden panning. Larger its value, less will be panning, more will be latency and vice-versa.
 
@@ -68,6 +71,50 @@ You can easily pass this parameter as follows:
 
 ```python
 Stabilizer(smoothing_radius=30)
+```
+
+&nbsp;
+
+
+## **`process_noise`**
+
+??? new "New in v0.3.6"
+    This parameter was added in `v0.3.6`.
+
+!!! info "Only applies to `StabilizerMode.KALMAN`."
+
+This parameter sets the Kalman filter's process noise covariance _(`Q`)_, i.e. how much the true camera path is expected to move between frames. Larger values follow intentional camera motion _(panning)_ faster but smooth less. Accepts a scalar, or a 3-element sequence for per-axis `[x, y, angle]` values.
+
+**Data-Type:** Float _(or sequence of 3 floats)_
+
+**Default Value:** Its default value is `4e-3`.
+
+**Usage:**
+
+```python
+Stabilizer(mode=StabilizerMode.KALMAN, process_noise=1e-3)
+```
+
+&nbsp;
+
+
+## **`measurement_noise`**
+
+??? new "New in v0.3.6"
+    This parameter was added in `v0.3.6`.
+
+!!! info "Only applies to `StabilizerMode.KALMAN`."
+
+This parameter sets the Kalman filter's measurement noise covariance _(`R`)_, i.e. how much the measured per-frame motion is trusted. Larger values smooth harder at the cost of more lag on panning. Accepts a scalar, or a 3-element sequence for per-axis `[x, y, angle]` values.
+
+**Data-Type:** Float _(or sequence of 3 floats)_
+
+**Default Value:** Its default value is `0.25`.
+
+**Usage:**
+
+```python
+Stabilizer(mode=StabilizerMode.KALMAN, measurement_noise=0.5)
 ```
 
 &nbsp;

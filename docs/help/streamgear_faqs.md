@@ -24,13 +24,13 @@ limitations under the License.
 
 ## What is StreamGear API and what does it do?
 
-**Answer:** StreamGear automates transcoding workflow for generating _Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH)_ in just few lines of python code. _For more info. see [StreamGear doc ➶](../../gears/streamgear/introduction/)_
+**Answer:** StreamGear automates transcoding workflow for generating _Ultra-Low Latency, High-Quality, Dynamic & Adaptive Streaming Formats (such as MPEG-DASH)_ in just few lines of python code. _For more info. see [StreamGear doc ➶](../gears/streamgear/introduction/)_
 
 &thinsp;
 
 ## How to get started with StreamGear API?
 
-**Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-the-videocapture-apis) guide, then go through [StreamGear documentation](../../gears/streamgear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** First, refer to the [Switching from OpenCV](../switch_from_cv/#switching-the-videocapture-apis) guide, then go through [StreamGear documentation](../gears/streamgear/introduction/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &thinsp;
 
@@ -42,7 +42,7 @@ limitations under the License.
 
 ## How to play Streaming Assets created with StreamGear API?
 
-**Answer:** You can easily feed Manifest file(`.mpd`) to DASH Supported Players Input but sure encoded chunks are present along with it. See this list of [recommended players ➶](../../gears/streamgear/introduction/#recommended-stream-players)
+**Answer:** You can easily feed Manifest file(`.mpd`) to DASH Supported Players Input but sure encoded chunks are present along with it. See this list of [recommended players ➶](../gears/streamgear/introduction/#recommended-stream-players)
 
 &thinsp;
 
@@ -60,25 +60,25 @@ limitations under the License.
 
 ## How to create additional streams in StreamGear API?
 
-**Answer:** [See this example ➶](../../gears/streamgear/ssm/usage/#usage-with-additional-streams)
+**Answer:** [See this example ➶](../gears/streamgear/ssm/usage/#usage-with-additional-streams)
 
 &thinsp;
 
 
 ## How to use StreamGear API with OpenCV?
 
-**Answer:** [See this example ➶](../../gears/streamgear/rtfm/usage/#bare-minimum-usage-with-opencv)
+**Answer:** [See this example ➶](../gears/streamgear/rtfm/usage/#bare-minimum-usage-with-opencv)
 
 &thinsp;
 
 ## How to use StreamGear API with real-time frames?
 
-**Answer:** See [Real-time Frames Mode ➶](../../gears/streamgear/rtfm/#overview)
+**Answer:** See [Real-time Frames Mode ➶](../gears/streamgear/rtfm/#overview)
 
 &thinsp;
 
 ## How to use Hardware/GPU encoder for transcoding in StreamGear API?
 
-**Answer:** [See this example ➶](../../gears/streamgear/rtfm/usage/#usage-with-hardware-video-encoder)
+**Answer:** [See this example ➶](../gears/streamgear/rtfm/usage/#usage-with-hardware-video-encoder)
 
 &thinsp;

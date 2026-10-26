@@ -54,7 +54,7 @@ if yt_dlp is not None:
             self.streams = {}
 
             # define supported resolution values
-            self.supported_resolutions : dict[str, str] = {
+            self.supported_resolutions: dict[str, str] = {
                 "256x144": "144p",
                 "426x240": "240p",
                 "640x360": "360p",

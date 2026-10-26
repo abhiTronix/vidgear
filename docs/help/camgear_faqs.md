@@ -24,26 +24,26 @@ limitations under the License.
 
 ## What is CamGear API and what does it do?
 
-**Answer:** CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format (upto 4k tested), any network stream URL such as http(s), rtp, rtsp, rtmp, mms, etc. In addition to this, it also supports live Gstreamer's RAW pipelines and YouTube video/livestreams URLs. _For more info. see [CamGear doc ➶](../../gears/camgear/)._
+**Answer:** CamGear supports a diverse range of video streams which can handle/control video stream almost any IP/USB Cameras, multimedia video file format (upto 4k tested), any network stream URL such as http(s), rtp, rtsp, rtmp, mms, etc. In addition to this, it also supports live Gstreamer's RAW pipelines and YouTube video/livestreams URLs. _For more info. see [CamGear doc ➶](../gears/camgear/)._
 
 &thinsp;
 
 ## I'm only familiar with OpenCV, how to get started with CamGear API?
 
-**Answer:** **Answer:** First, refer to the [Switching from OpenCV](../../switch_from_cv/#switching-the-videocapture-apis) guide, then go through [CamGear documentation ➶](../../gears/camgear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** **Answer:** First, refer to the [Switching from OpenCV](../switch_from_cv/#switching-the-videocapture-apis) guide, then go through [CamGear documentation ➶](../gears/camgear/). If you still have doubts, ask us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
 
 &thinsp;
 
 
 ## How to change OpenCV source backend in CamGear API?
 
-**Answer:** See [its Parameters ➶](../../gears/camgear/params/). Its, `backend`(int) parameter sets the backend of the source. Its value can be for e.g. `backend = cv2.CAP_DSHOW` in case of Direct Show.
+**Answer:** See [its Parameters ➶](../gears/camgear/params/). Its, `backend`(int) parameter sets the backend of the source. Its value can be for e.g. `backend = cv2.CAP_DSHOW` in case of Direct Show.
 
 &thinsp;
 
 ## How to get framerate of the source in CamGear API?
 
-**Answer:** CamGear's `framerate` global variable can be used to retrieve framerate of the input video stream.  See [this example ➶](../../gears/writegear/compression/usage/#using-compression-mode-with-controlled-framerate).
+**Answer:** CamGear's `framerate` global variable can be used to retrieve framerate of the input video stream.  See [this example ➶](../gears/writegear/compression/usage/#using-compression-mode-with-controlled-framerate).
 
 &thinsp;
 
@@ -70,7 +70,7 @@ limitations under the License.
 
 ## How to change quality and parameters of YouTube Streams with CamGear?
 
-**Answer:** CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `yt_dlp`) parameters)_ with its [`options`](../../gears/camgear/params/#options) dictionary parameter. See [this Bonus Example ➶](../camgear_ex/#using-variable-yt_dlp-parameters-in-camgear).
+**Answer:** CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying stream resolution)_ & `STREAM_PARAMS` _(for specifying underlying API(e.g. `yt_dlp`) parameters)_ with its [`options`](../gears/camgear/params/#options) dictionary parameter. See [this Bonus Example ➶](camgear_ex/#using-variable-yt_dlp-parameters-in-camgear).
 
 
 &thinsp;
@@ -78,13 +78,13 @@ limitations under the License.
 
 ## How to open RTSP network streams with CamGear?
 
-**Answer:** You can open any local network stream _(such as RTSP)_ just by providing its URL directly to CamGear's [`source`](../../gears/camgear/params/#source) parameter. See [this Bonus Example ➶](../camgear_ex/#using-camgear-for-capturing-rtsprtmp-urls).
+**Answer:** You can open any local network stream _(such as RTSP)_ just by providing its URL directly to CamGear's [`source`](../gears/camgear/params/#source) parameter. See [this Bonus Example ➶](camgear_ex/#using-camgear-for-capturing-rtsprtmp-urls).
 
 &thinsp;
 
 ## How to set Camera Settings with CamGear?
 
-**Answer:** See [this usage example ➶](../../gears/camgear/usage/#using-camgear-with-variable-camera-properties).
+**Answer:** See [this usage example ➶](../gears/camgear/usage/#using-camgear-with-variable-camera-properties).
 
 &thinsp;
 
@@ -96,7 +96,7 @@ limitations under the License.
 
 ## How to synchronize between two cameras?
 
-**Answer:** See [this Bonus Example ➶](../camgear_ex/#synchronizing-two-sources-in-camgear).
+**Answer:** See [this Bonus Example ➶](camgear_ex/#synchronizing-two-sources-in-camgear).
 
 &thinsp;
 
@@ -108,6 +108,6 @@ limitations under the License.
 
 ## Why CamGear is throwing warning that Threaded Queue Mode is disabled?
 
-**Answer:** That's a normal behavior. Please read about [Threaded Queue Mode ➶](../../bonus/TQM/)
+**Answer:** That's a normal behavior. Please read about [Threaded Queue Mode ➶](../bonus/TQM/)
 
 &thinsp;

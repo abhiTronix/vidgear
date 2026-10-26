@@ -22,7 +22,7 @@ limitations under the License.
 
 
 <figure>
-  <img src="../../../../assets/images/compression.webp" alt="Frame Compression" loading="lazy" title="NetGear's Frame Compression" width="75%" class="center" />
+  <img src="../../../assets/images/compression.webp" alt="Frame Compression" loading="lazy" title="NetGear's Frame Compression" width="75%" class="center" />
 </figure>
 
 
@@ -32,7 +32,7 @@ NetGear API enables real-time **JPEG Frame Compression** capabilities for optimi
 
 For enabling Frame Compression, NetGear uses powerful [`simplejpeg`](https://gitlab.com/jfolz/simplejpeg) library at its backend, which is based on recent versions of [libjpeg-turbo](https://libjpeg-turbo.org/) JPEG image codec, to accelerate baseline JPEG compression and decompression on all modern systems. NetGear API employs its exposed `decode_jpeg` and `encode_jpeg` methods to encode video-frames to [JFIF](https://en.wikipedia.org/wiki/JPEG_File_Interchange_Format) format  before sending it at Server, and cleverly decode it at the Client(s) all in real-time, thereby leveraging performance at cost of minor loss in frame quality.
 
-Frame Compression is enabled by default in NetGear, and can be easily controlled through `jpeg_compression_quality`, `jpeg_compression_fastdct`, `jpeg_compression_fastupsample` like attributes of its [`options`](../../params/#options) dictionary parameter during initialization.
+Frame Compression is enabled by default in NetGear, and can be easily controlled through `jpeg_compression_quality`, `jpeg_compression_fastdct`, `jpeg_compression_fastupsample` like attributes of its [`options`](../params/#options) dictionary parameter during initialization.
 
 &nbsp;
 
@@ -51,7 +51,7 @@ Frame Compression is enabled by default in NetGear, and can be easily controlled
 
 ## Exclusive Attributes
 
-For implementing Frame Compression, NetGear API currently provide following exclusive attribute for its [`options`](../../params/#options) dictionary parameter to leverage performance with Frame Compression:
+For implementing Frame Compression, NetGear API currently provide following exclusive attribute for its [`options`](../params/#options) dictionary parameter to leverage performance with Frame Compression:
 
 * `jpeg_compression`:  _(bool/str)_ This internal attribute is used to activate/deactivate JPEG Frame Compression as well as to specify incoming frames colorspace with compression. Its usage is as follows:
 
@@ -220,7 +220,7 @@ Frame Compression also supports specify incoming frames colorspace with compress
 ??? new "New in v0.2.2" 
     This example was added in `v0.2.2`.
 
-!!! example "This example works in conjunction with [Source ColorSpace manipulation for VideoCapture Gears ➶](../../../../bonus/colorspace_manipulation/#source-colorspace-manipulation)"
+!!! example "This example works in conjunction with [Source ColorSpace manipulation for VideoCapture Gears ➶](../../../bonus/colorspace_manipulation/#source-colorspace-manipulation)"
 
 !!! info "Supported colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
 
@@ -334,7 +334,7 @@ client.close()
 
 Open a terminal on Client System _(where you want to display the input frames received from the Server)_ and execute the following python code: 
 
-!!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](../../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
+!!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
 !!! note "If compression is enabled at Server, then Client will automatically enforce Frame Compression with its performance attributes."
 
@@ -458,13 +458,13 @@ server.close()
 
 NetGear now supports ==Dual Frame Compression== for transferring video-frames with its exclusive Bidirectional Mode for achieving unmatchable performance bidirectionally. You can easily enable Frame Compression with its performance attributes at both ends to boost performance bidirectionally.
 
-In this example we are going to implement a bare-minimum example, where we will be sending video-frames _(3-Dimensional numpy arrays)_ of the same Video bidirectionally at the same time for testing the real-time performance and synchronization between the Server and Client using [**Bidirectional Mode**](../bidirectional_mode). Furthermore, we're going to use optimal Dual Frame Compression Setting for Sending and Receiving frames at both Server and Client end.
+In this example we are going to implement a bare-minimum example, where we will be sending video-frames _(3-Dimensional numpy arrays)_ of the same Video bidirectionally at the same time for testing the real-time performance and synchronization between the Server and Client using [**Bidirectional Mode**](bidirectional_mode). Furthermore, we're going to use optimal Dual Frame Compression Setting for Sending and Receiving frames at both Server and Client end.
 
 !!! example "This example is great for building applications like **Real-time Video Chat System**."
 
-!!! note "This Dual Frame Compression feature also available for [Multi-Clients](../../advanced/multi_client/) Mode."
+!!! note "This Dual Frame Compression feature also available for [Multi-Clients](../advanced/multi_client/) Mode."
 
-!!! info "We're also using [`reducer`](../../../../bonus/reference/helper/#vidgear.gears.helper.reducer) Helper method for reducing frame-size on-the-go for additional performance."
+!!! info "We're also using [`reducer`](../../../bonus/reference/helper/#vidgear.gears.helper.reducer) Helper method for reducing frame-size on-the-go for additional performance."
 
 !!! success "Remember to define Frame Compression's [performance attributes](#performance-attributes) both on Server and Client ends in Dual Frame Compression to boost performance bidirectionally!"
 

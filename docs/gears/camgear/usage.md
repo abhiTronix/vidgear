@@ -20,7 +20,7 @@ limitations under the License.
 
 # CamGear API Usage Examples:
 
-!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/camgear_ex/)"
+!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../help/camgear_ex/)"
 
 &thinsp;
 
@@ -68,16 +68,16 @@ stream.stop()
 
 ## Using Camgear with Streaming Websites
 
-CamGear internally implements [`yt_dlp`]() backend class for seamlessly pipelining live video-frames and metadata from various streaming services like [Twitch](https://www.twitch.tv/), [Vimeo](https://vimeo.com/), [PeerTube](https://peertube.tv/), and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites). All you have to do is to provide the desired Video's URL to its `source` parameter, and enable its [`stream_mode`](../params/#stream_mode) parameter. 
+CamGear internally implements [`yt_dlp`]() backend class for seamlessly pipelining live video-frames and metadata from various streaming services like [Twitch](https://www.twitch.tv/), [Vimeo](https://vimeo.com/), [PeerTube](https://peertube.tv/), and [many more ➶](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md#supported-sites). All you have to do is to provide the desired Video's URL to its `source` parameter, and enable its [`stream_mode`](params/#stream_mode) parameter. 
 
 The complete usage example for Dailymotion and Twitch URLs are as follows:
 
 
 ??? bug "Bug in OpenCV's FFmpeg"
 
-    To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend](../params/#backend) for Livestream videos.
+    To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend](params/#backend) for Livestream videos.
 
-    **Checkout [this FAQ ➶](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.**
+    **Checkout [this FAQ ➶](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.**
 
     !!! failure "Not all resolutions are supported with GStreamer Backend. See issue #244"
 
@@ -88,7 +88,7 @@ The complete usage example for Dailymotion and Twitch URLs are as follows:
     - `STREAM_RESOLUTION` _(for specifying stream resolution)_
     - `STREAM_PARAMS` _(for specifying  `yt_dlp` parameters)_ 
     
-    with its [`options`](../params/#options) dictionary parameter. **More information can be found [here ➶](../advanced/source_params/#exclusive-camgear-parameters)**
+    with its [`options`](params/#options) dictionary parameter. **More information can be found [here ➶](advanced/source_params/#exclusive-camgear-parameters)**
 
 
 ??? note "Supported Streaming Websites"
@@ -230,9 +230,9 @@ The complete usage example is as follows:
 
 ??? bug "Bug in OpenCV's FFmpeg"
 
-    To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend](../params/#backend) for Livestream videos.
+    To workaround a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend](params/#backend) for Livestream videos.
 
-    **Checkout [this FAQ ➶](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.**
+    **Checkout [this FAQ ➶](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.**
 
     !!! failure "Not all resolutions are supported with GStreamer Backend. See issue #244"
     
@@ -244,7 +244,7 @@ The complete usage example is as follows:
     - `STREAM_RESOLUTION` _(for specifying stream resolution)_
     - `STREAM_PARAMS` _(for specifying  `yt_dlp` parameters)_ 
     
-    with its [`options`](../params/#options) dictionary parameter. **More information can be found [here ➶](../advanced/source_params/#exclusive-camgear-parameters)**
+    with its [`options`](params/#options) dictionary parameter. **More information can be found [here ➶](advanced/source_params/#exclusive-camgear-parameters)**
 
 
 ??? tip "Accessing Stream's Metadata :material-database-eye:"
@@ -323,7 +323,7 @@ CamGear API also flexibly support various **Source Tweak Parameters** available 
 
 The complete usage example is as follows:
 
-!!! tip "All the supported Source Tweak Parameters can be found [here ➶](../advanced/source_params/#source-tweak-parameters-for-camgear-api)"
+!!! tip "All the supported Source Tweak Parameters can be found [here ➶](advanced/source_params/#source-tweak-parameters-for-camgear-api)"
 
 ```python linenums="1" hl_lines="8-10"
 # import required libraries
@@ -375,7 +375,7 @@ stream.stop()
 
 CamGear API also supports **Direct Colorspace Manipulation**, which is ideal for changing source colorspace on the run. 
 
-!!! info "A more detailed  information on colorspace manipulation can be found [here ➶](../../../bonus/colorspace_manipulation/)"
+!!! info "A more detailed  information on colorspace manipulation can be found [here ➶](../../bonus/colorspace_manipulation/)"
 
 In following example code, we will start with [**HSV**](https://en.wikipedia.org/wiki/HSL_and_HSV) as source colorspace, and then we will switch to [**GRAY**](https://en.wikipedia.org/wiki/Grayscale)  colorspace when ++"W"++ key is pressed, and then [**LAB**](https://en.wikipedia.org/wiki/CIELAB_color_space) colorspace when ++"E"++ key is pressed, finally default colorspace _(i.e. **BGR**)_ when ++"S"++ key is pressed. Also, quit when ++"Q"++ key is pressed:
 

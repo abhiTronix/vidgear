@@ -22,24 +22,24 @@ limitations under the License.
 
 !!! warning "Important Information :fontawesome-solid-person-military-pointing:"
     
-    - [x] StreamGear **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../../ffmpeg_install/) for its installation. API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system.
+    - [x] StreamGear **MUST** requires FFmpeg executables for its core operations. Follow these dedicated [Platform specific Installation Instructions ➶](../ffmpeg_install/) for its installation. API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system.
     - [x] In this mode, ==API auto generates a primary stream of same resolution and framerate[^1] as the input video  _(at the index `0`)_.==
     - [x] In this mode, if input video-source _(i.e. `-video_source`)_ contains any audio stream/channel, then it automatically gets mapped to all generated streams.
     - [x] Always use `close()` function at the very end of the main code.
 
 ??? danger "DEPRECATION NOTICES for `v0.3.3` and above"
     
-    - [ ] The `terminate()` method in StreamGear is now deprecated and will be removed in a future release. Developers should use the new [`close()`](../../../../bonus/reference/streamgear/#vidgear.gears.StreamGear.close) method instead, as it offers a more descriptive name, similar to the WriteGear API, for safely terminating StreamGear processes.
-    - [ ] The [`-livestream`](../../params/#a-exclusive-parameters) optional parameter is NOT supported in this Single-Source Mode.
+    - [ ] The `terminate()` method in StreamGear is now deprecated and will be removed in a future release. Developers should use the new [`close()`](../../../bonus/reference/streamgear/#vidgear.gears.StreamGear.close) method instead, as it offers a more descriptive name, similar to the WriteGear API, for safely terminating StreamGear processes.
+    - [ ] The [`-livestream`](../params/#a-exclusive-parameters) optional parameter is NOT supported in this Single-Source Mode.
 
 ??? tip "Faster Transcoding of Primary Stream with Stream Copy in Single Source Mode"
     
     For faster transcoding of input video in this mode, utilize Stream copy (`-vcodec copy`) as the input video encoder for creating HLS/DASH chunks of the primary stream efficiently. However, consider the following points:
     
-    - :warning: Stream copying **NOT** compatible with Custom Streams ([`-streams`](../../params/#a-exclusive-parameters)), which require re-encoding for each additional stream. Therefore, the `-vcodec copy` parameter will be ignored.
+    - :warning: Stream copying **NOT** compatible with Custom Streams ([`-streams`](../params/#a-exclusive-parameters)), which require re-encoding for each additional stream. Therefore, the `-vcodec copy` parameter will be ignored.
     - When using the audio stream from the input video, the Audio Stream copy (`-acodec copy`) encoder will be automatically applied.
 
-!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../../help/streamgear_ex/)"
+!!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
 
 
 &thinsp;
@@ -91,11 +91,11 @@ Following is the bare-minimum code you need to get started with StreamGear API i
 
 ## Usage with Additional Streams
 
-> In addition to the Primary Stream, you can easily generate any number of additional Secondary Streams with variable bitrate or spatial resolutions, using the exclusive [`-streams`](../../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter. 
+> In addition to the Primary Stream, you can easily generate any number of additional Secondary Streams with variable bitrate or spatial resolutions, using the exclusive [`-streams`](../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter. 
 
 To generate Secondary Streams, add each desired resolution and bitrate/framerate as a list of dictionaries to the `-streams` attribute. StreamGear will handle the rest automatically. The complete example is as follows:
 
-!!! info "A more detailed information on `-streams` attribute can be found [here ➶](../../params/#a-exclusive-parameters)" 
+!!! info "A more detailed information on `-streams` attribute can be found [here ➶](../params/#a-exclusive-parameters)" 
 
 !!! note "If input video-source _(i.e. `-video_source`)_ contains any audio stream/channel, then it automatically gets mapped to all generated streams without any extra efforts."
 
@@ -162,13 +162,13 @@ To generate Secondary Streams, add each desired resolution and bitrate/framerate
 
 ## Usage with Custom Audio-Input
 
-> In single source mode, by default, if the input video source (i.e., `-video_source`) contains audio, it gets automatically mapped to all generated streams. However, if you want to add a custom audio source, you can use the exclusive [`-audio`](../../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter.
+> In single source mode, by default, if the input video source (i.e., `-video_source`) contains audio, it gets automatically mapped to all generated streams. However, if you want to add a custom audio source, you can use the exclusive [`-audio`](../params/#a-exclusive-parameters) attribute of the `stream_params` dictionary parameter.
 
 To add a custom audio source, provide the path to your audio file as a string to the `-audio` attribute. The API will automatically validate and map the audio to all generated streams. The complete example is as follows:
 
 !!! failure "Ensure the provided `-audio` audio source is compatible with the input video source (`-video_source`). Incompatibility can cause multiple errors or result in no output at all."
 
-!!! tip "You can also assign a valid audio URL as input instead of a file path. More details can be found [here ➶](../../params/#a-exclusive-parameters)"
+!!! tip "You can also assign a valid audio URL as input instead of a file path. More details can be found [here ➶](../params/#a-exclusive-parameters)"
 
 
 === "DASH"
@@ -292,4 +292,4 @@ In this example, we'll use the [H.265/HEVC](https://trac.ffmpeg.org/wiki/Encode/
 &nbsp;
 
 [^1]: 
-    :bulb: In Real-time Frames Mode, the Primary Stream's framerate defaults to [`-input_framerate`](../../params/#a-exclusive-parameters) attribute value, if defined, else it will be 25fps.
+    :bulb: In Real-time Frames Mode, the Primary Stream's framerate defaults to [`-input_framerate`](../params/#a-exclusive-parameters) attribute value, if defined, else it will be 25fps.

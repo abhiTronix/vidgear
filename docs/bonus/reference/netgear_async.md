@@ -18,9 +18,9 @@ limitations under the License.
 ===============================================
 -->
 
-!!! example "NetGear_Async API usage examples can be found [here ➶](../../../gears/netgear_async/usage/)"
+!!! example "NetGear_Async API usage examples can be found [here ➶](../../gears/netgear_async/usage/)"
 
-!!! info "NetGear_Async API parameters are explained [here ➶](../../../gears/netgear_async/params/)"
+!!! info "NetGear_Async API parameters are explained [here ➶](../../gears/netgear_async/params/)"
 
 ::: vidgear.gears.asyncio.NetGear_Async	
 	

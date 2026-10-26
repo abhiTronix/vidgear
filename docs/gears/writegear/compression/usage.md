@@ -23,22 +23,22 @@ limitations under the License.
 
 !!! warning "Important Information"
 
-    * WriteGear **MUST** requires FFmpeg executables for its Compression capabilities in Compression Mode. Follow these dedicated [Installation Instructions ➶](../advanced/ffmpeg_install/) for its installation.
+    * WriteGear **MUST** requires FFmpeg executables for its Compression capabilities in Compression Mode. Follow these dedicated [Installation Instructions ➶](advanced/ffmpeg_install/) for its installation.
 
-    * ==In case WriteGear API fails to detect valid FFmpeg executables on your system _(even if Compression Mode is enabled)_, it automatically fallbacks to [Non-Compression Mode](../../non_compression/).==
+    * ==In case WriteGear API fails to detect valid FFmpeg executables on your system _(even if Compression Mode is enabled)_, it automatically fallbacks to [Non-Compression Mode](../non_compression/).==
 
     * **DO NOT** feed frames with different dimensions or channels to WriteGear, otherwise WriteGear will exit with `ValueError`.
 
     * When using the `-i` FFmpeg parameter in `output_params` to provide an additional audio or video source, ensure it **DOES NOT** interfere with WriteGear's internal frame pipeline. Interference can cause the pipeline to break.
 
-    * To ensure WriteGear produces valid output when using an additional stream `-i` parameter with videos shorter than `60` seconds, use the [`-disable_force_termination`](../params/#supported-parameters) flag.
+    * To ensure WriteGear produces valid output when using an additional stream `-i` parameter with videos shorter than `60` seconds, use the [`-disable_force_termination`](params/#supported-parameters) flag.
 
     * Encoding heavy resolution multimedia files can take up to _~0.2 to 2 seconds_. Please wait for the WriteGear API to terminate itself and **DO NOT** kill the process manually.
 
     * Always use `writer.close()` at the very end of the main code. **NEVER USE IT INBETWEEN CODE** to avoid undesired behavior.
 
 
-!!! example "After going through WriteGear Usage Examples, Checkout more bonus examples [here ➶](../../../../help/writegear_ex/)"
+!!! example "After going through WriteGear Usage Examples, Checkout more bonus examples [here ➶](../../../help/writegear_ex/)"
 
 &thinsp;
 
@@ -96,7 +96,7 @@ writer.close()
 
 ## Using Compression Mode in RGB Mode
 
-In Compression Mode, WriteGear API contains [`rgb_mode`](../../../../bonus/reference/writegear/#vidgear.gears.WriteGear.write) boolean parameter for RGB Mode, which when enabled _(i.e. `rgb_mode=True`)_, specifies that incoming frames are of RGB format _(instead of default BGR format)_. This mode makes WriteGear directly compatible with libraries that only supports RGB format. 
+In Compression Mode, WriteGear API contains [`rgb_mode`](../../../bonus/reference/writegear/#vidgear.gears.WriteGear.write) boolean parameter for RGB Mode, which when enabled _(i.e. `rgb_mode=True`)_, specifies that incoming frames are of RGB format _(instead of default BGR format)_. This mode makes WriteGear directly compatible with libraries that only supports RGB format. 
 
 The complete usage example is as follows:
 
@@ -150,7 +150,7 @@ writer.close()
 
 ## Using Compression Mode with controlled FrameRate
 
-WriteGear API provides [`-input_framerate`](../params/#supported-parameters)  attribute for its `options` dictionary parameter in Compression Mode, which allow us to control/set the constant framerate of the output video. 
+WriteGear API provides [`-input_framerate`](params/#supported-parameters)  attribute for its `options` dictionary parameter in Compression Mode, which allow us to control/set the constant framerate of the output video. 
 
 ??? tip "Advanced Tip for setting constant framerate"
 
@@ -221,13 +221,13 @@ writer.close()
 
 ## Using Compression Mode for live streaming
 
-In Compression Mode, WriteGear also allows URL strings _(as output)_ for live streaming realtime frames with its [`output`](../params/#output) parameter.  
+In Compression Mode, WriteGear also allows URL strings _(as output)_ for live streaming realtime frames with its [`output`](params/#output) parameter.  
 
 In this example, we will stream live camera frames directly to Twitch :fontawesome-brands-twitch::
 
-!!! tip "For streaming with traditional protocols such as :material-video-wireless: RTSP/RTP, Checkout this [WriteGear's Bonus Examples ➶](../../../../../help/writegear_ex/#using-writegears-compression-mode-for-rtsprtp-live-streaming)."
+!!! tip "For streaming with traditional protocols such as :material-video-wireless: RTSP/RTP, Checkout this [WriteGear's Bonus Examples ➶](../../../help/writegear_ex/#using-writegears-compression-mode-for-rtsprtp-live-streaming)."
 
-!!! example ":fontawesome-brands-youtube: YouTube-Live Streaming example code also available in [WriteGear's Bonus Examples ➶](../../../../../help/writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming)"
+!!! example ":fontawesome-brands-youtube: YouTube-Live Streaming example code also available in [WriteGear's Bonus Examples ➶](../../../help/writegear_ex/#using-writegears-compression-mode-for-youtube-live-streaming)"
 
 !!! warning "This example assume you already have a [**Twitch Account**](https://www.twitch.tv/) for publishing video."
 
@@ -300,7 +300,7 @@ writer.close()
 ## Using Compression Mode with Hardware encoders
 
 
-By default, WriteGear API uses `libx264` encoder for encoding output files in Compression Mode. But you can easily change encoder to your suitable [supported encoder](../params/#supported-encoders) by passing `-vcodec` FFmpeg parameter as an attribute with its [*output_param*](../params/#output_params) dictionary parameter. In addition to this, you can also specify the additional properties/features of your system's GPU :octicons-cpu-16: easily. 
+By default, WriteGear API uses `libx264` encoder for encoding output files in Compression Mode. But you can easily change encoder to your suitable [supported encoder](params/#supported-encoders) by passing `-vcodec` FFmpeg parameter as an attribute with its [*output_param*](params/#output_params) dictionary parameter. In addition to this, you can also specify the additional properties/features of your system's GPU :octicons-cpu-16: easily. 
 
 ??? warning "User Discretion Advised"
 
@@ -582,7 +582,7 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
 
 !!! danger "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."
 
-!!! warning "You **MUST** use [`-input_framerate`](../params/#supported-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
+!!! warning "You **MUST** use [`-input_framerate`](params/#supported-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
 ```python linenums="1" hl_lines="11-16"
 # import required libraries

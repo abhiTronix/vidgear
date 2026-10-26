@@ -32,15 +32,15 @@ limitations under the License.
 
 - There's also the official [**OpenCV Tutorials** ➶](https://docs.opencv.org/master/d6/d00/tutorial_py_root.html) curated by the OpenCV developers.
 
-Once done, visit [Switching from OpenCV ➶](../../switch_from_cv/) to easily replace OpenCV APIs with suitable [Gears ➶](../../gears/#gears-what-are-these) in your project. All the best! :smiley:
+Once done, visit [Switching from OpenCV ➶](../switch_from_cv/) to easily replace OpenCV APIs with suitable [Gears ➶](../gears/#gears-what-are-these) in your project. All the best! :smiley:
 
-!!! tip "If you run into any trouble or have any questions, then refer our [**Help**](../get_help) section."
+!!! tip "If you run into any trouble or have any questions, then refer our [**Help**](get_help) section."
 
 &thinsp;
 
 ## "VidGear is using Multi-threading, but Python is notorious for its poor performance in multithreading?"
 
-**Answer:** Refer vidgear's [Threaded-Queue-Mode ➶](../../bonus/TQM/)
+**Answer:** Refer vidgear's [Threaded-Queue-Mode ➶](../bonus/TQM/)
 
 &thinsp;
 
@@ -120,19 +120,19 @@ Once done, visit [Switching from OpenCV ➶](../../switch_from_cv/) to easily re
 
 ## How to contribute to VidGear development?
 
-**Answer:** See our [Contribution Guidelines ➶](../../contribution/PR/)
+**Answer:** See our [Contribution Guidelines ➶](../contribution/PR/)
 
 &thinsp;
 
 ## What OSes are supported by VidGear?
 
-**Answer:** See [Supported Systems ➶](../../installation/#supported-systems)
+**Answer:** See [Supported Systems ➶](../installation/#supported-systems)
 
 &thinsp;
 
 ## What Python versions are supported by VidGear?
 
-**Answer:** See [Supported Python legacies ➶](../../installation/#supported-python-legacies)
+**Answer:** See [Supported Python legacies ➶](../installation/#supported-python-legacies)
 
 &thinsp;
 
@@ -144,6 +144,6 @@ Once done, visit [Switching from OpenCV ➶](../../switch_from_cv/) to easily re
 
 ## "I Love using VidGear for my projects", How can I support it?
 
-**Answer:** See [Helping VidGear ➶](../../help/#helping-vidgear)  
+**Answer:** See [Helping VidGear ➶](../help/#helping-vidgear)  
 
 &thinsp;

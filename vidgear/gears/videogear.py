@@ -21,7 +21,7 @@ limitations under the License.
 # import the necessary packages
 import logging as log
 import warnings
-from typing import Any, TypeVar
+from typing import Any, Self
 
 from numpy.typing import NDArray
 
@@ -38,8 +38,6 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 # Type variable `T` representing class `VideoGear`.
-T = TypeVar("T", bound="VideoGear")
-
 
 class VideoGear:
     """
@@ -148,6 +146,21 @@ class VideoGear:
             if not isinstance(s_radius, int):
                 s_radius = 25
 
+            p_noise = options.pop("PROCESS_NOISE", 4e-3)
+            if not isinstance(p_noise, (int, float)) or p_noise <= 0:
+                p_noise = 4e-3
+
+            m_noise = options.pop("MEASUREMENT_NOISE", 0.25)
+            if not isinstance(m_noise, (int, float)) or m_noise <= 0:
+                m_noise = 0.25
+
+            # mode-specific tuning parameters
+            mode_params = (
+                {"process_noise": p_noise, "measurement_noise": m_noise}
+                if stabilizer_mode is StabilizerMode.KALMAN
+                else {"smoothing_radius": s_radius}
+            )
+
             border_size = options.pop("BORDER_SIZE", 0)
             if not isinstance(border_size, int):
                 border_size = 0
@@ -162,7 +175,7 @@ class VideoGear:
 
             self.__stabilizer_obj = Stabilizer(
                 mode=stabilizer_mode,
-                smoothing_radius=s_radius,
+                **mode_params,
                 border_type=border_type,
                 border_size=border_size,
                 crop_n_zoom=crop_n_zoom,
@@ -250,7 +263,7 @@ class VideoGear:
             **options,
         )
 
-    def start(self) -> T:
+    def start(self) -> Self:
         """
         Launches the internal *Threaded Frames Extractor* daemon of API in use.
 

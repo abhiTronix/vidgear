@@ -24,7 +24,7 @@ import os
 import sys
 import time
 from threading import Thread
-from typing import TypeVar
+from typing import Self
 
 import cv2
 from numpy.typing import NDArray
@@ -56,8 +56,6 @@ logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
-
-PIGear = TypeVar("PIGear", bound="PiGear")
 
 
 class PiGear:
@@ -503,7 +501,7 @@ class PiGear:
         # initialize termination flag
         self.__terminate = False
 
-    def start(self) -> PIGear:
+    def start(self) -> Self:
         """
         Launches the internal *Threaded Frames Extractor* daemon
 

@@ -75,7 +75,7 @@ Its valid input can be one of the following:
 
     !!! warning "Requirements for GStreamer Pipelining"
 
-        GStreamer Pipelining in WriteGear your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
+        GStreamer Pipelining in WriteGear your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
 
         Thereby, You can easily check GStreamer support by running `print(cv2.getBuildInformation())` python command and see if output contains something similar as follows:
 
@@ -98,7 +98,7 @@ Its valid input can be one of the following:
 
 This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), the CamGear API will interpret the given `source` input as YouTube URL address. 
 
-!!! bug "Due to a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend](#backend) for any livestream videos. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
+!!! bug "Due to a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend](#backend) for any livestream videos. Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
 
 **Data-Type:** Boolean
 
@@ -114,7 +114,7 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 CamGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
-!!! example "Its complete usage example is given [here ➶](../usage/#using-camgear-with-youtube-videos)."
+!!! example "Its complete usage example is given [here ➶](usage/#using-camgear-with-youtube-videos)."
 
 
 &nbsp;
@@ -129,13 +129,13 @@ This parameter selects the colorspace of the input stream.
 
 **Usage:**
 
-!!! tip "All supported `colorspace` values are given [here ➶](../../../bonus/colorspace_manipulation/)"
+!!! tip "All supported `colorspace` values are given [here ➶](../../bonus/colorspace_manipulation/)"
 
 ```python
 CamGear(source=0, colorspace="COLOR_BGR2HSV")
 ```
 
-!!! example "Its complete usage example is given [here ➶](../usage/#using-camgear-with-direct-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](usage/#using-camgear-with-direct-colorspace-manipulation)"
 
 &nbsp;
 
@@ -170,7 +170,7 @@ This parameter provides the ability to alter various **Source Tweak Parameters**
 
 **Usage:**
 
-!!! tip "All supported parameters are listed [here ➶](../advanced/source_params/)"
+!!! tip "All supported parameters are listed [here ➶](advanced/source_params/)"
 
 The desired parameters can be passed to CamGear API by formatting them as this parameter's attributes, as follows:
 

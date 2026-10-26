@@ -20,15 +20,15 @@ limitations under the License.
 
 # WebGear API Parameters 
 
-!!! cite "WebGear provides a special internal wrapper around [VideoGear](../../videogear/), which itself provides internal access to [CamGear](../../camgear/), [PiGear](../../pigear/), and [FFGear](../../ffgear/) APIs and their parameters."
+!!! cite "WebGear provides a special internal wrapper around [VideoGear](../videogear/), which itself provides internal access to [CamGear](../camgear/), [PiGear](../pigear/), and [FFGear](../ffgear/) APIs and their parameters."
 
 &thinsp;
 
 ## **`api`**
 
-This parameter selects the underlying capture backend for WebGear using the [`Backend`](../../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum.
+This parameter selects the underlying capture backend for WebGear using the [`Backend`](../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum.
 
-**Data-Type:** [`Backend`](../../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum
+**Data-Type:** [`Backend`](../../bonus/reference/helper/#vidgear.gears.helper.Backend) enum
 
 **Default Value:** `Backend.CAMGEAR`
 
@@ -36,9 +36,9 @@ This parameter selects the underlying capture backend for WebGear using the [`Ba
 
 | Value | Underlying Gear | Description |
 |:-----:|:---------------:|:------------|
-| `Backend.CAMGEAR` | [CamGear](../../camgear/) | Multi-threaded OpenCV-backed capture for webcams, files, and network/streaming URLs |
-| `Backend.PIGEAR` | [PiGear](../../pigear/) | Raspberry Pi camera module capture via picamera2/picamera |
-| `Backend.FFGEAR` | [FFGear](../../ffgear/) | FFmpeg-powered hardware-accelerated decoding with filtergraph support |
+| `Backend.CAMGEAR` | [CamGear](../camgear/) | Multi-threaded OpenCV-backed capture for webcams, files, and network/streaming URLs |
+| `Backend.PIGEAR` | [PiGear](../pigear/) | Raspberry Pi camera module capture via picamera2/picamera |
+| `Backend.FFGEAR` | [FFGear](../ffgear/) | FFmpeg-powered hardware-accelerated decoding with filtergraph support |
 
 **Usage:**
 
@@ -59,7 +59,7 @@ WebGear(source="foo.mp4", api=Backend.FFGEAR)    # FFGear backend
 
 !!! danger "**Deprecated since v0.3.5** — use [`api=Backend.PIGEAR`](#api) instead. This parameter will be removed in a future release."
 
-This parameter previously provided direct access to [PiGear](../../pigear/) or [CamGear](../../camgear/) APIs respectively. If `True`, the PiGear API was accessed; if `False`, the CamGear API was accessed.
+This parameter previously provided direct access to [PiGear](../pigear/) or [CamGear](../camgear/) APIs respectively. If `True`, the PiGear API was accessed; if `False`, the CamGear API was accessed.
 
 **Data-Type:** Boolean
 
@@ -90,7 +90,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 
 ### WebGear Specific attributes
 
-* **`custom_data_location`** _(string)_ : Can be used to change/alter [*default location*](../#default-location) path to somewhere else. Its usage is as follows:
+* **`custom_data_location`** _(string)_ : Can be used to change/alter [*default location*](./#default-location) path to somewhere else. Its usage is as follows:
 
     ```python
     # set default location to '/home/foo/foo1'
@@ -116,9 +116,9 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 	```
 	Hence, default video endpoint will now be available at `/xyz` path.
 
-* **`overwrite_default_files`** _(boolean)_ : Can be used to force trigger the [Auto-generation process](../#auto-generation-process) to overwrite existing data-files. Its usage is as follows:
+* **`overwrite_default_files`** _(boolean)_ : Can be used to force trigger the [Auto-generation process](./#auto-generation-process) to overwrite existing data-files. Its usage is as follows:
 
-    !!! danger "Remember only [downloaded files](../#auto-generation-process) will be overwritten in this process, and any other file/folder will NOT be affected/overwritten."
+    !!! danger "Remember only [downloaded files](./#auto-generation-process) will be overwritten in this process, and any other file/folder will NOT be affected/overwritten."
 
     ```python
     # force trigger the Auto-generation process
@@ -223,7 +223,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 
 ### **`stabilize`**
 
-This parameter enable access to [Stabilizer Class](../../stabilizer/) for stabilizing frames, i.e. can be set to `True`(_to enable_) or unset to `False`(_to disable_). 
+This parameter enable access to [Stabilizer Class](../stabilizer/) for stabilizing frames, i.e. can be set to `True`(_to enable_) or unset to `False`(_to disable_). 
 
 **Data-Type:** Boolean
 
@@ -235,22 +235,22 @@ This parameter enable access to [Stabilizer Class](../../stabilizer/) for stabil
 WebGear(stabilize=True) # enable stablization
 ```
 
-!!! example "Its complete usage example is given [here ➶](../usage/#using-videogear-with-video-stabilizer-backend)."
+!!! example "Its complete usage example is given [here ➶](usage/#using-videogear-with-video-stabilizer-backend)."
 
 &nbsp; 
 
 ### **`options`**
 
-This parameter can be used in addition, to pass user-defined parameters supported by [Stabilizer Class](../../stabilizer/). These parameters can be formatted as this parameter's attribute.
+This parameter can be used in addition, to pass user-defined parameters supported by [Stabilizer Class](../stabilizer/). These parameters can be formatted as this parameter's attribute.
 
 **Supported dictionary attributes for Stabilizer Class are:**
 
-* **`STABILIZER_MODE`** (_[`StabilizerMode`](../../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum_): This attribute selects the underlying stabilization algorithm. 
+* **`STABILIZER_MODE`** (_[`StabilizerMode`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum_): This attribute selects the underlying stabilization algorithm. 
     
     **Accepted values are:**
     
     - [x] `StabilizerMode.ASW` _(Average Sliding-Window — default)_
-    - [x] `StabilizerMode.KALMAN` _(reserved; raises `NotImplementedError` until a future release)_. 
+    - [x] `StabilizerMode.KALMAN` _(zero-latency Kalman filter — real-time, no frame buffering)_. 
     - [ ] Invalid values silently fall back to `StabilizerMode.ASW`. 
 
     You can easily pass this attribute as follows:
@@ -263,10 +263,22 @@ This parameter can be used in addition, to pass user-defined parameters supporte
     options = {'STABILIZER_MODE': StabilizerMode.ASW}
     ```
 
-* **`SMOOTHING_RADIUS`** (_integer_) : This attribute can be used to alter averaging window size. It basically handles the quality of stabilization at the expense of latency and sudden panning. Larger its value, less will be panning, more will be latency and vice-versa. Its default value is `25`. You can easily pass this attribute as follows:
+* **`SMOOTHING_RADIUS`** (_integer_) : _(`StabilizerMode.ASW` only)_ This attribute can be used to alter averaging window size. It basically handles the quality of stabilization at the expense of latency and sudden panning. Larger its value, less will be panning, more will be latency and vice-versa. Its default value is `25`. You can easily pass this attribute as follows:
 
     ```python
     options = {'SMOOTHING_RADIUS': 30}
+    ```
+
+* **`PROCESS_NOISE`** (_float_) : _(`StabilizerMode.KALMAN` only)_ This attribute sets the Kalman filter's process noise covariance. Larger values follow intentional camera motion (panning) faster with less smoothing. Its default value is `4e-3`. You can easily pass this attribute as follows:
+
+    ```python
+    options = {'PROCESS_NOISE': 1e-3}
+    ```
+
+* **`MEASUREMENT_NOISE`** (_float_) : _(`StabilizerMode.KALMAN` only)_ This attribute sets the Kalman filter's measurement noise covariance. Larger values smooth harder at the cost of more lag on panning. Its default value is `0.25`. You can easily pass this attribute as follows:
+
+    ```python
+    options = {'MEASUREMENT_NOISE': 0.5}
     ```
 
 * **`BORDER_SIZE`** (_integer_) : This attribute enables the feature to extend border size that compensates for stabilized output video frames motions. Its default value is `0`(no borders). You can easily pass this attribute as follows:
@@ -349,7 +361,7 @@ Its valid input can be one of the following:
 
     !!! warning "Requirements for GStreamer Pipelining"
 
-        Successful GStreamer Pipelining needs your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
+        Successful GStreamer Pipelining needs your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
 
         Thereby, You can easily check GStreamer support by running `print(cv2.getBuildInformation())` python command and see if output contains something similar as follows:
 
@@ -372,7 +384,7 @@ Its valid input can be one of the following:
 
 This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), the CamGear API will interpret the given `source` input as YouTube URL address. 
 
-!!! bug "Due to a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend](#backend) for any livestream videos. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
+!!! bug "Due to a [**FFmpeg bug**](https://github.com/abhiTronix/vidgear/issues/133#issuecomment-638263225) that causes video to freeze frequently in OpenCV, It is advised to always use [GStreamer backend](#backend) for any livestream videos. Checkout [this FAQ](../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support."
 
 **Data-Type:** Boolean
 
@@ -388,7 +400,7 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 WebGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
-!!! example "Its complete usage example is given [here ➶](../../camgear/usage/#using-camgear-with-youtube-videos)."
+!!! example "Its complete usage example is given [here ➶](../camgear/usage/#using-camgear-with-youtube-videos)."
 
 
 &nbsp;
@@ -425,7 +437,7 @@ This parameter provides the ability to alter various **Source Tweak Parameters**
 
 **Usage:**
 
-!!! tip "All supported parameters are listed [here ➶](../../camgear/advanced/source_params/)"
+!!! tip "All supported parameters are listed [here ➶](../camgear/advanced/source_params/)"
 
 The desired parameters can be passed to WebGear API by formatting them as this parameter's attributes, as follows:
 
@@ -459,7 +471,7 @@ This parameter selects the camera index to be used as the source, allowing you t
 WebGear(enablePiCamera=True, camera_num=1)
 ```
 
-!!! example "The complete usage example demonstrating the usage of the `camera_num` parameter is available [here ➶](../../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)."
+!!! example "The complete usage example demonstrating the usage of the `camera_num` parameter is available [here ➶](../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)."
 
   
 &nbsp;
@@ -510,12 +522,12 @@ This dictionary parameter in the internal PiGear API backend allows you to contr
 #### A. Configurational Camera Parameters
 - [x] These parameters are provided by the underlying backend library _(depending upon backend in use)_, and must be applied to the camera system before the camera can be started.
 - [x] **These parameter include:** _Brightness, Contrast, Saturation, Exposure, Colour Temperature, Colour Gains, etc._ 
-- [x] All supported parameters are listed in this [Usage example ➶](../../pigear/usage/#using-pigear-with-variable-camera-properties)
+- [x] All supported parameters are listed in this [Usage example ➶](../pigear/usage/#using-pigear-with-variable-camera-properties)
 
 
 #### B. User-defined Parameters
 - [x] These user-defined parameters control specific internal behaviors of the API and perform certain tasks on the camera objects.
-- [x] All supported User-defined Parameters are listed [here ➶](../../pigear/params/#b-user-defined-parameters)
+- [x] All supported User-defined Parameters are listed [here ➶](../pigear/params/#b-user-defined-parameters)
 
 
 **Data-Type:** Dictionary
@@ -524,7 +536,7 @@ This dictionary parameter in the internal PiGear API backend allows you to contr
 
 **Usage:**
 
-!!! example "The complete usage example demonstrating the usage of the `options` parameter is available [here ➶](../usage/#using-pigear-with-variable-camera-properties)."
+!!! example "The complete usage example demonstrating the usage of the `options` parameter is available [here ➶](usage/#using-pigear-with-variable-camera-properties)."
 
 You can format these user-defined and configurational parameters as attributes of this `options` dictionary parameter as follows:
 
@@ -569,7 +581,7 @@ You can format these user-defined and configurational parameters as attributes o
 
 !!! summary "Enable this backend with [`api=Backend.FFGEAR`](#api) in WebGear."
 
-!!! info "FFGear parameters are a subset of the [FFGear API parameters](../../ffgear/params/). `colorspace` and `time_delay` are **not** forwarded to FFGear."
+!!! info "FFGear parameters are a subset of the [FFGear API parameters](../ffgear/params/). `colorspace` and `time_delay` are **not** forwarded to FFGear."
 
 ### **`source`**
 
@@ -661,7 +673,7 @@ WebGear(api=Backend.FFGEAR, source="myvideo.mp4", custom_ffmpeg="/opt/ffmpeg/bin
 
 ### **`options`**
 
-Passes additional FFdecoder parameters and FFGear queue-tuning parameters. See [FFGear options ➶](../../ffgear/params/#options) for full details.
+Passes additional FFdecoder parameters and FFGear queue-tuning parameters. See [FFGear options ➶](../ffgear/params/#options) for full details.
 
 **Data-Type:** Dictionary
 
@@ -694,13 +706,13 @@ This parameter selects the colorspace of the source stream.
 
 **Usage:**
 
-!!! tip "All supported `colorspace` values are given [here ➶](../../../bonus/colorspace_manipulation/)"
+!!! tip "All supported `colorspace` values are given [here ➶](../../bonus/colorspace_manipulation/)"
 
 ```python
 WebGear(colorspace="COLOR_BGR2HSV")
 ```
 
-!!! example "Its complete usage example is given [here ➶](../usage/#using-videogear-with-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](usage/#using-videogear-with-colorspace-manipulation)"
 
 &nbsp;
 

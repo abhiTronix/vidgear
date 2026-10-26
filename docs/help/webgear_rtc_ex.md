@@ -26,11 +26,11 @@ limitations under the License.
 
 Because of WebGear_RTC API's flexible internal wapper around VideoGear, it can easily access any parameter of CamGear and PiGear videocapture APIs.
 
-!!! info "Following usage examples are just an idea of what can be done with WebGear_RTC API, you can try various [VideoGear](../../gears/videogear/params/), [CamGear](../../gears/camgear/params/) and [PiGear](../../gears/pigear/params/) parameters directly in WebGear_RTC API in the similar manner."
+!!! info "Following usage examples are just an idea of what can be done with WebGear_RTC API, you can try various [VideoGear](../gears/videogear/params/), [CamGear](../gears/camgear/params/) and [PiGear](../gears/pigear/params/) parameters directly in WebGear_RTC API in the similar manner."
  
 Here's a bare-minimum example of using WebGear_RTC API with the Raspberry Pi camera module while tweaking its various properties in just one-liner:
 
-!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../installation/pip_install/#picamera2) for its installation."
+!!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../installation/pip_install/#picamera2) for its installation."
 
 !!! warning "Make sure to [complete Raspberry Pi Camera Hardware-specific settings](https://www.raspberrypi.com/documentation/accessories/camera.html#installing-a-raspberry-pi-camera) prior using this backend, otherwise nothing will work."
 
@@ -77,7 +77,7 @@ Here's a bare-minimum example of using WebGear_RTC API with the Raspberry Pi cam
 
         !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../gears/pigear/params) user-defined optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../gears/pigear/params) user-defined optional parameter boolean attribute."
 
     ```python linenums="1" hl_lines="4 19"
     # import libs
@@ -112,7 +112,7 @@ Here's a bare-minimum example of using WebGear_RTC API with the Raspberry Pi cam
 
 ## Using WebGear_RTC with FFGear backend
 
-Here's a bare-minimum example of using WebGear_RTC API with the [FFGear backend](../../gears/ffgear/) for hardware-accelerated FFmpeg-powered video decoding:
+Here's a bare-minimum example of using WebGear_RTC API with the [FFGear backend](../gears/ffgear/) for hardware-accelerated FFmpeg-powered video decoding:
 
 ```python linenums="1" hl_lines="4 13"
 # import libs
