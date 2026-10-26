@@ -130,14 +130,14 @@ It is something I am doing with my own free time. But so much more needs to be d
 
 Here is a Bibtex entry you can use to cite this project in a publication:
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20260985.svg)](https://doi.org/10.5281/zenodo.20260985)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23656015.svg)](https://doi.org/10.5281/zenodo.23656015)
 
 ```BibTeX
 @software{vidgear,
   author       = {Abhishek Thakur and
                   Zoe Papakipos and
                   Christian Clauss and
-                  ss-cric and
+                  Shail and
                   Christian Hollinger and
                   Ian Max Andolina and
                   Kyle Ahn and
@@ -147,13 +147,13 @@ Here is a Bibtex entry you can use to cite this project in a publication:
                   Mickaël Schoentgen and
                   Renaud Bouckenooghe and
                   Ibtsam Ahmad},
-  title        = {abhiTronix/vidgear: VidGear Stable v0.3.5},
-  month        = may,
+  title        = {abhiTronix/vidgear: VidGear Stable v0.3.6},
+  month        = oct,
   year         = 2026,
   publisher    = {Zenodo},
-  version      = {vidgear-0.3.5},
-  doi          = {10.5281/zenodo.20260985},
-  url          = {https://doi.org/10.5281/zenodo.20260985},
+  version      = {vidgear-0.3.6},
+  doi          = {10.5281/zenodo.23656015},
+  url          = {https://doi.org/10.5281/zenodo.23656015},
 }
 ```
 
