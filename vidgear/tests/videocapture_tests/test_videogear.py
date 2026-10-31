@@ -25,6 +25,7 @@ import os
 import platform
 import sys
 
+import cv2
 import pytest
 
 from vidgear.gears import VideoGear
@@ -159,7 +160,7 @@ def test_camgear_explicit_backend():
 def test_ffgear_backend():
     """
     `api=Backend.FFGEAR` must route to FFGear, deliver frames, and expose
-    framerate=0.0 (FFGear has no framerate attr; VideoGear falls back to 0.0).
+    the source framerate from FFdecoder metadata.
     """
     pytest.importorskip("deffcode", reason="`deffcode` is required for FFGear backend")
     try:
@@ -169,7 +170,7 @@ def test_ffgear_backend():
             frame_format="bgr24",
             logging=True,
         ).start()
-        assert stream.framerate == 0.0
+        assert stream.framerate == 25.0
         frame_count = 0
         while True:
             frame = stream.read()
@@ -265,3 +266,33 @@ def test_video_stablization(source, options):
         assert framerate > 0
     except Exception as e:
         pytest.fail(str(e))
+
+
+def test_stabilizer_flush():
+    """`STABILIZER_FLUSH` makes stabilized VideoGear return every source frame (but ASW's sacrificed first)."""
+    stream = VideoGear(
+        source=return_testvideo_path(),
+        stabilize=True,
+        SMOOTHING_RADIUS=5,
+        STABILIZER_FLUSH=True,
+    ).start()
+    frames = 0
+    while stream.read() is not None:
+        frames += 1
+    stream.stop()
+    cap = cv2.VideoCapture(return_testvideo_path())
+    total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    cap.release()
+    assert frames == total - 1
+
+
+def test_stabilize_with_extract_metadata():
+    """`stabilize=True` rejects `-extract_metadata` up front."""
+    pytest.importorskip("deffcode", reason="`deffcode` is required for FFGear backend")
+    with pytest.raises(ValueError):
+        VideoGear(
+            api=Backend.FFGEAR,
+            source=return_testvideo_path(),
+            stabilize=True,
+            **{"-extract_metadata": True},
+        )

@@ -23,11 +23,14 @@ import logging as log
 import os
 import platform
 import queue
+import subprocess
 import tempfile
+import threading
 import time
 
 import cv2
 import m3u8
+import numpy as np
 import pytest
 from mpegdash.parser import MPEGDASHParser
 
@@ -753,3 +756,92 @@ def test_multistreams(format, stream_params):
                     ), "Height check failed!"
     except Exception as e:
         pytest.fail(str(e))
+
+
+def test_ss_progress_callback():
+    """
+    Testing Single-Source Mode `-progress_callback` and `returncode`
+    """
+    progress = []
+    streamer = StreamGear(
+        output=os.path.join(return_assets_path(), "format_test.mpd"),
+        **{
+            "-video_source": return_testvideo_path(),
+            "-vcodec": "copy",
+            "-clear_prev_assets": True,
+            "-progress_callback": lambda done, total: progress.append((done, total)),
+        },
+    )
+    streamer.transcode_source()
+    streamer.close()
+    assert streamer.returncode == 0
+    assert progress and progress[-1][1] > 0
+    assert progress[-1][0] == pytest.approx(progress[-1][1], abs=0.5)
+
+
+def test_ss_close_cancels_transcode():
+    """
+    Testing `close()` from another thread stops a running `transcode_source()` without raising
+    """
+    streamer = StreamGear(
+        output=os.path.join(return_assets_path(), "format_test.mpd"),
+        **{
+            "-video_source": os.path.join(
+                os.path.dirname(return_testvideo_path()), "BigBuckBunny.mp4"
+            ),
+            "-clear_prev_assets": True,
+        },
+    )
+    errors = queue.Queue()
+
+    def transcode():
+        try:
+            streamer.transcode_source()
+        except Exception as e:
+            errors.put(e)
+
+    worker = threading.Thread(target=transcode)
+    worker.start()
+    time.sleep(2)
+    start = time.time()
+    streamer.close()
+    worker.join(10)
+    assert not worker.is_alive() and errors.empty()
+    assert time.time() - start < 10
+    assert streamer.returncode not in (None, 0)
+
+
+def test_rtf_window_sizes(monkeypatch):
+    """
+    Testing Real-time Frames Mode passes `-window_size` & `-extra_window_size` as given
+    """
+    commands = []
+    popen = subprocess.Popen
+    monkeypatch.setattr(
+        subprocess, "Popen", lambda cmd, **kw: commands.append(cmd) or popen(cmd, **kw)
+    )
+    streamer = StreamGear(
+        output=os.path.join(return_assets_path(), "format_test.mpd"),
+        **{"-livestream": True, "-window_size": 3, "-extra_window_size": 7},
+    )
+    streamer.stream(np.zeros((48, 64, 3), np.uint8))
+    streamer.close()
+    cmd = commands[-1]
+    assert cmd[cmd.index("-window_size") + 1] == "3"
+    assert cmd[cmd.index("-extra_window_size") + 1] == "7"
+
+
+def test_rtf_capture_stderr():
+    """
+    Testing Real-time Frames Mode `-capture_stderr` surfaces FFmpeg's stderr on early death
+    """
+    streamer = StreamGear(
+        output=os.path.join(return_assets_path(), "format_test.mpd"),
+        **{"-capture_stderr": True, "-invalid_flag": "1"},
+    )
+    with pytest.raises(ValueError, match="invalid_flag"):
+        for _ in range(500):
+            streamer.stream(np.zeros((48, 64, 3), np.uint8))
+            time.sleep(0.01)
+    streamer.close()
+    assert streamer.returncode not in (None, 0)

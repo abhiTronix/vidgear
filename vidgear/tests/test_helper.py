@@ -24,7 +24,10 @@ import logging as log
 import os
 import platform
 import shutil
+import subprocess
 import tempfile
+import threading
+import time
 from os.path import expanduser
 
 import cv2
@@ -56,6 +59,7 @@ from vidgear.gears.helper import (
     mkdir_safe,
     reducer,
     retrieve_best_interpolation,
+    run_ffmpeg,
     validate_audio,
     validate_ffmpeg,
     validate_video,
@@ -321,6 +325,45 @@ def test_check_output():
     Testing validation function of WebGear API
     """
     check_output(["ffmpeg", "-Vv"])
+
+
+def test_check_output_timeout():
+    """
+    Testing `check_output` stops a never-ending FFmpeg on `timeout` and returns its output
+    """
+    start = time.time()
+    check_output(
+        ["ffmpeg", "-re", "-f", "lavfi", "-i", "testsrc", "-f", "null", "-"],
+        timeout=1,
+    )
+    assert time.time() - start < 5
+
+
+def test_run_ffmpeg():
+    """
+    Testing `run_ffmpeg` exit code, stderr tail, progress, timeout and cancellation
+    """
+    endless = ["ffmpeg", "-re", "-f", "lavfi", "-i", "testsrc", "-f", "null", "-"]
+    # success with progress
+    progress = []
+    result = run_ffmpeg(
+        ["ffmpeg", "-f", "lavfi", "-i", "testsrc=d=2", "-f", "null", "-"],
+        progress=lambda done, total: progress.append(done),
+    )
+    assert result.returncode == 0 and "time=" in result.stderr
+    assert progress and progress[-1] == 2.0
+    # failure keeps stderr tail
+    result = run_ffmpeg(["ffmpeg", "-i", "non_existent_file.mp4"])
+    assert result.returncode != 0 and "non_existent_file.mp4" in result.stderr
+    # timeout
+    with pytest.raises(subprocess.TimeoutExpired):
+        run_ffmpeg(endless, timeout=1)
+    # cancellation
+    cancel = threading.Event()
+    threading.Timer(1, cancel.set).start()
+    start = time.time()
+    assert run_ffmpeg(endless, cancel=cancel).returncode != 0
+    assert time.time() - start < 5
 
 
 @pytest.mark.parametrize(

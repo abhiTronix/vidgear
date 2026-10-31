@@ -244,3 +244,43 @@ def test_kalman_featureless_frames():
     for _ in range(3):
         assert s.stabilize(blank).shape == (120, 160, 3)
     s.clean()
+
+
+@pytest.mark.parametrize("mode", [StabilizerMode.ASW, StabilizerMode.KALMAN])
+def test_gray_frames(mode):
+    """Single-channel (gray) frames are stabilized and stay single-channel."""
+    s = Stabilizer(mode=mode, border_size=4)
+    rng = np.random.default_rng(6)
+    out = [
+        s.stabilize(rng.integers(0, 255, (120, 160), dtype=np.uint8))
+        for _ in range(30)
+    ]
+    out = [f for f in out if f is not None]
+    assert out and all(f.shape == (128, 168) for f in out)
+    s.clean()
+
+
+@pytest.mark.parametrize("total", [3, 50])
+def test_asw_flush_yields_buffered_frames(total):
+    """
+    `flush()` yields every frame ASW buffered at end of stream. Only the very first
+    frame is sacrificed (by design) once the smoothing window fills.
+    """
+    s = Stabilizer(smoothing_radius=5)
+    rng = np.random.default_rng(7)
+    emitted = sum(
+        s.stabilize(rng.integers(0, 255, (120, 160, 3), dtype=np.uint8)) is not None
+        for _ in range(total)
+    )
+    flushed = list(s.flush())
+    assert emitted + len(flushed) == total - (total > 5)
+    assert all(f.shape == (120, 160, 3) for f in flushed)
+    assert not list(s.flush())  # exhausted
+    s.clean()
+
+
+def test_kalman_flush_is_empty():
+    """Zero-latency Kalman buffers nothing to flush."""
+    s = Stabilizer(mode=StabilizerMode.KALMAN)
+    s.stabilize(np.zeros((120, 160, 3), dtype=np.uint8))
+    assert not list(s.flush())

@@ -747,3 +747,20 @@ def test_ports(server_ports, client_ports, options):
             port=client_ports, pattern=1, receive_mode=True, logging=True, **options
         )
         client.close()
+
+
+def test_kill_keeps_other_instances():
+    """
+    Tests `close(kill=True)` on one NetGear doesn't break another NetGear's sockets in the same process
+    """
+    doomed = NetGear(port="5560", receive_mode=True)
+    client = NetGear(port="5561", receive_mode=True)
+    server = NetGear(port="5561")
+    try:
+        doomed.close(kill=True)
+        frame = np.zeros((48, 64, 3), np.uint8)
+        server.send(frame)
+        assert client.recv().shape == frame.shape
+    finally:
+        server.close()
+        client.close()
