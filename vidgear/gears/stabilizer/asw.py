@@ -125,20 +125,7 @@ class ASWStabilizer(_StabilizerBase):
         if not self.__buildup_complete:
             return None
 
-        # Build path + smoothed path from the BOUNDED transform window.
-        # O(smoothing_radius) work per frame regardless of stream length;
-        # the original code was O(total_frames_seen) per frame.
-        transforms_arr = np.asarray(self.__transforms, dtype="float32")
-        path = np.cumsum(transforms_arr, axis=0)
-        smoothed_path = np.copy(path)
-        for i in range(3):
-            smoothed_path[:, i] = self.__box_filter_convolve(
-                path[:, i], window_size=self.__smoothing_radius
-            )
-        # deviation is translation-invariant w.r.t. absolute path offset, so
-        # rebasing the cumsum to start at the current deque head is harmless.
-        deviation = smoothed_path - path
-        frame_transforms_smoothed = transforms_arr + deviation
+        frame_transforms_smoothed = self.__smooth_transforms()
 
         # Locate the output frame's transform row inside the bounded window.
         # After processing frame index k (0-indexed), the newest transform in
@@ -152,6 +139,42 @@ class ASWStabilizer(_StabilizerBase):
         return self.__apply_transformations(
             frame_transforms_smoothed, output_transform_idx
         )
+
+    def flush(self):
+        """
+        Yields the stabilized frames still buffered in the smoothing window
+        (or never emitted, for streams shorter than it). Call at end of stream.
+        """
+        while self.__frame_queue:
+            if not self.__transforms:
+                # single buffered frame: nothing to smooth against
+                yield self._apply_warp(self.__frame_queue.popleft(), 0.0, 0.0, 0.0)
+                continue
+            # same row lookup as `stabilize()`, clamped for the last frame
+            # which has no outgoing transform
+            transform_idx = min(
+                len(self.__transforms) - len(self.__frame_queue) + 1,
+                len(self.__transforms) - 1,
+            )
+            yield self.__apply_transformations(
+                self.__smooth_transforms(), max(transform_idx, 0)
+            )
+
+    def __smooth_transforms(self):
+        """
+        Returns smoothed transforms for the BOUNDED transform window.
+        O(smoothing_radius) work per frame regardless of stream length.
+        """
+        transforms_arr = np.asarray(self.__transforms, dtype="float32")
+        path = np.cumsum(transforms_arr, axis=0)
+        smoothed_path = np.copy(path)
+        for i in range(3):
+            smoothed_path[:, i] = self.__box_filter_convolve(
+                path[:, i], window_size=self.__smoothing_radius
+            )
+        # deviation is translation-invariant w.r.t. absolute path offset, so
+        # rebasing the cumsum to start at the current deque head is harmless.
+        return transforms_arr + (smoothed_path - path)
 
     def __generate_transformations(self):
         """

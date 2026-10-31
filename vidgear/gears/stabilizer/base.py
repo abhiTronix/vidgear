@@ -22,6 +22,7 @@ limitations under the License.
 """
 # import the necessary packages
 import logging as log
+from collections.abc import Iterator
 
 import cv2
 import numpy as np
@@ -117,9 +118,10 @@ class _StabilizerBase:
 
     def _to_gray(self, frame: np.ndarray) -> np.ndarray:
         """
-        Converts BGR `frame` to CLAHE-equalized grayscale. Shared across all modes.
+        Converts BGR (or already gray) `frame` to CLAHE-equalized grayscale. Shared across all modes.
         """
-        return self._clahe.apply(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY))
+        gray = frame if frame.ndim == 2 else cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        return self._clahe.apply(gray)
 
     def _detect_keypoints(self, gray: np.ndarray) -> np.ndarray | None:
         """
@@ -200,7 +202,10 @@ class _StabilizerBase:
             value=[0, 0, 0],
         )
         # create alpha channel
-        alpha_bordered_frame = cv2.cvtColor(bordered_frame, cv2.COLOR_BGR2BGRA)
+        alpha_bordered_frame = cv2.cvtColor(
+            bordered_frame,
+            cv2.COLOR_GRAY2BGRA if frame.ndim == 2 else cv2.COLOR_BGR2BGRA,
+        )
         alpha_bordered_frame[:, :, 3] = 0
         alpha_bordered_frame[
             self._border_size : self._border_size + self._frame_height,
@@ -225,8 +230,10 @@ class _StabilizerBase:
             borderMode=self._border_mode,
         )
 
-        # drop alpha channel
-        frame_stabilized = frame_wrapped[:, :, :3]
+        # drop alpha channel (back to single channel for gray input)
+        frame_stabilized = (
+            frame_wrapped[:, :, 0] if frame.ndim == 2 else frame_wrapped[:, :, :3]
+        )
 
         # crop and zoom
         if self._crop_n_zoom:
@@ -247,6 +254,12 @@ class _StabilizerBase:
         stabilized one (or `None` while buffering/warming up).
         """
         raise NotImplementedError
+
+    def flush(self) -> Iterator[np.ndarray]:
+        """
+        Yields stabilized frames still buffered at end of stream. Zero-latency modes buffer nothing.
+        """
+        return iter(())
 
     def clean(self) -> None:
         """
