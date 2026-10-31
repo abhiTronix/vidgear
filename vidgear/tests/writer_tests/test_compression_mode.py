@@ -422,7 +422,7 @@ def test_capture_stderr():
         for _ in range(500):
             writer.write(frame)
             time.sleep(0.01)
-    assert "invalid_flag" in writer.stderr_tail
+    assert "invalid_flag" in "\n".join(writer.stderr_tail)
     writer.close()
     assert writer.returncode not in (None, 0)
 
