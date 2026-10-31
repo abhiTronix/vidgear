@@ -244,7 +244,7 @@ class WebGear:
 
             if "frame_size_reduction" in options:
                 value = options["frame_size_reduction"]
-                if isinstance(value, (int, float)) and value >= 0 and value <= 90:
+                if isinstance(value, (int, float)) and value >= 0 and value < 90:
                     self.__frame_size_reduction = value
                 else:
                     logger.warning("Skipped invalid `frame_size_reduction` value!")
