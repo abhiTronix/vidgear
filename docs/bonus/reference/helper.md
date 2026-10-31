@@ -134,3 +134,7 @@ limitations under the License.
 ::: vidgear.gears.helper.validate_auth_keys
 
 &nbsp;
+
+::: vidgear.gears.helper.run_ffmpeg
+
+&nbsp;
