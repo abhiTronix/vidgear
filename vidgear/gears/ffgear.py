@@ -18,6 +18,7 @@ limitations under the License.
 ===============================================
 """
 
+import json
 import logging as log
 import queue
 from threading import Event, Thread
@@ -227,6 +228,14 @@ class FFGear:
                 f"[FFGear:ERROR] :: Failed to initialize FFdecoder pipeline: {e!s}"
             )
 
+        # source framerate (`0.0` when unknown)
+        self.framerate = float(
+            json.loads(self.stream.metadata).get("output_framerate") or 0.0
+        )
+        # FFmpeg exit status (copied from FFdecoder on `stop()`)
+        self.returncode = None
+        self.stderr_tail = []
+
         # Initialize the generator
         self.__generator = self.stream.generateFrame()
 
@@ -300,33 +309,19 @@ class FFGear:
 
             try:
                 out = next(self.__generator)
+            except (StopIteration, RuntimeError):
+                # end of stream (or pipe torn down by `stop()`)
+                break
 
-                # Separate frame and metadata if recipe is activated
-                if self.__extract_metadata and isinstance(out, tuple):
-                    frame, self.frame_metadata = out[0], out[1]
-                else:
-                    frame = out
-
-                grabbed = True
-            except StopIteration:
-                frame = None
-                grabbed = False
-
-            self.__stream_read.set()
-
-            if not grabbed or frame is None:
-                if self.__threaded_queue_mode:
-                    if self.__queue.empty():
-                        break
-                    else:
-                        continue
-                else:
-                    break
-
-            self.frame = frame
+            # Separate frame and metadata if recipe is activated
+            if self.__extract_metadata and isinstance(out, tuple):
+                self.frame, self.frame_metadata = out[0], out[1]
+            else:
+                self.frame = out
 
             # Apply any OpenCV colorspace logic based on format choices
             self.__process_frame_format()
+            self.__stream_read.set()
 
             # push frame (or frame+meta tuple) onto the producer queue
             if self.__threaded_queue_mode:
@@ -335,21 +330,24 @@ class FFGear:
                 else:
                     self.__queue.put(self.frame)
 
-        # Poison pill for the queue signaling termination
-        self.__threaded_queue_mode and self.__queue.put(None)
-        self.__threaded_queue_mode = False
-
-        self.__terminate.set()
+        if self.__threaded_queue_mode:
+            # Poison pill: `read()` drains queued frames first, then terminates.
+            # Blocks at EOF until there's room; best-effort when stopping.
+            try:
+                self.__queue.put(None, block=not self.__terminate.is_set())
+            except queue.Full:
+                pass
+        else:
+            self.__terminate.set()
         self.__stream_read.set()
 
-        # Cleanup deffcode pipeline (similar to WriteGear close process)
-        if self.stream is not None:
-            self.stream.terminate()
-            self.stream = None
-
-    def read(self) -> NDArray | tuple[NDArray, dict] | None:
+    def read(self, timeout: float | None = None) -> NDArray | tuple[NDArray, dict] | None:
         """
         Consumer Thread: Pops frames symmetrically from the queue block.
+
+        Parameters:
+            timeout (float): seconds to wait for a frame before raising `TimeoutError`
+                _(e.g. on a stalled source)_. Waits indefinitely by default.
 
         **Returns:**
             NDArray | tuple[NDArray, dict] | None: A decoded ``numpy.ndarray``
@@ -358,19 +356,43 @@ class FFGear:
             ``is_keyframe``, ``frame_type``). Returns ``None`` when the
             stream has ended.
         """
+        wait = self.__thread_timeout if timeout is None else timeout
         while self.__threaded_queue_mode and not self.__terminate.is_set():
             try:
-                return self.__queue.get(timeout=self.__thread_timeout)
+                out = self.__queue.get(timeout=wait)
             except queue.Empty:
+                if timeout is not None:
+                    raise TimeoutError(
+                        "[FFGear:ERROR] :: No frame received within {}s!".format(timeout)
+                    ) from None
                 continue
+            if out is None:
+                # end of stream
+                self.__terminate.set()
+                break
+            return out
 
-        if not self.__terminate.is_set() and self.__stream_read.wait(
-            timeout=self.__thread_timeout
-        ):
-            if self.__extract_metadata:
-                return (self.frame, self.frame_metadata)
-            return self.frame
-        return None
+        if self.__terminate.is_set():
+            return None
+        if not self.__stream_read.wait(timeout=wait):
+            if timeout is not None:
+                raise TimeoutError(
+                    "[FFGear:ERROR] :: No frame received within {}s!".format(timeout)
+                )
+            return None
+        if self.__terminate.is_set():
+            return None
+        if self.__extract_metadata:
+            return (self.frame, self.frame_metadata)
+        return self.frame
+
+    def __drain_queue(self):
+        """Empties the frame queue to unblock the producer."""
+        while self.__queue is not None and not self.__queue.empty():
+            try:
+                self.__queue.get_nowait()
+            except queue.Empty:
+                break
 
     def stop(self) -> None:
         """
@@ -382,18 +404,26 @@ class FFGear:
         self.__stream_read.set()
         self.__terminate.set()
 
-        # Flush the remainder of the queue to unblock the producer
         if self.__thread is not None:
-            if self.__queue is not None:
-                while not self.__queue.empty():
-                    try:
-                        self.__queue.get_nowait()
-                    except queue.Empty:
-                        continue
-                    self.__queue.task_done()
-            self.__thread.join()
+            # Flush the remainder of the queue to unblock the producer
+            self.__drain_queue()
+            self.__thread.join(self.__thread_timeout or 1.0)
+            if self.__thread.is_alive():
+                # Producer is stuck reading a stalled pipe. Closing that pipe blocks
+                # while it's being read (as FFdecoder.terminate() does), so kill FFmpeg
+                # first, making the read return EOF.
+                # ponytail: reaches into FFdecoder's private process; drop once
+                # FFdecoder.terminate() stops FFmpeg before closing its pipes.
+                process = getattr(self.stream, "_FFdecoder__process", None)
+                process is not None and process.kill()
+                self.__drain_queue()
+                self.__thread.join()
+            self.__thread = None
 
         # Forcibly teardown FFdecoder process safely
         if self.stream is not None:
             self.stream.terminate()
+            # retain exit status before dropping FFdecoder
+            self.returncode = getattr(self.stream, "returncode", None)
+            self.stderr_tail = getattr(self.stream, "stderr_tail", [])
             self.stream = None
