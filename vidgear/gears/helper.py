@@ -30,9 +30,14 @@ import re
 import shutil
 import socket
 import stat
+import subprocess as sp
 import sys
+import threading
+import time
 import types
 import warnings
+from collections import deque
+from collections.abc import Callable
 from contextlib import closing
 from enum import Enum
 from functools import wraps
@@ -1235,13 +1240,12 @@ def check_output(*args: list | tuple, **kwargs: dict) -> bytes:
 
     Parameters:
         *args (list | tuple): arguments
-        **kwargs (dict): keyword arguments
+        **kwargs (dict): keyword arguments. Also accepts `force_retrieve_stderr` (bool)
+            and `timeout` (float, seconds; on expiry FFmpeg is terminated, then killed,
+            and whatever output was gathered is returned). `stdin` defaults to `DEVNULL`.
 
     **Returns:** stdin output from subprocess module.
     """
-    # import libs
-    import subprocess as sp
-
     # workaround for python bug: https://bugs.python.org/issue37380
     if platform.system() == "Windows":
         # see comment https://bugs.python.org/msg370334
@@ -1249,6 +1253,9 @@ def check_output(*args: list | tuple, **kwargs: dict) -> bytes:
 
     # handle additional params
     retrieve_stderr = kwargs.pop("force_retrieve_stderr", False)
+    timeout = kwargs.pop("timeout", None)
+    # never let FFmpeg inherit (and grab) the parent's stdin
+    kwargs.setdefault("stdin", sp.DEVNULL)
 
     # execute command in subprocess
     process = sp.Popen(
@@ -1257,11 +1264,18 @@ def check_output(*args: list | tuple, **kwargs: dict) -> bytes:
         stderr=sp.DEVNULL if not (retrieve_stderr) else sp.PIPE,
         **kwargs,
     )
-    output, stderr = process.communicate()
+    timed_out = False
+    try:
+        output, stderr = process.communicate(timeout=timeout)
+    except sp.TimeoutExpired:
+        timed_out = True
+        logger.warning("Process exceeded timeout of {}s. Terminating!".format(timeout))
+        _stop_process(process)
+        output, stderr = process.communicate()
     retcode = process.poll()
 
     # handle return code
-    if retcode and not (retrieve_stderr):
+    if retcode and not (retrieve_stderr) and not timed_out:
         cmd = kwargs.get("args")
         if cmd is None:
             cmd = args[0]
@@ -1270,6 +1284,116 @@ def check_output(*args: list | tuple, **kwargs: dict) -> bytes:
         raise error
 
     return output if not (retrieve_stderr) else stderr
+
+
+def _stop_process(proc: sp.Popen, grace: float = 2.0) -> None:
+    """
+    Terminates a subprocess, escalating to kill if it ignores `SIGTERM` for `grace` seconds.
+    """
+    if proc.poll() is not None:
+        return
+    proc.terminate()
+    try:
+        proc.wait(grace)
+    except sp.TimeoutExpired:
+        proc.kill()
+        proc.wait()
+
+
+def _pump_stderr(
+    pipe,
+    tail: deque,
+    echo: bool = False,
+    progress: Callable[[float, float], None] | None = None,
+) -> None:
+    """
+    Drains FFmpeg's `stderr` pipe until EOF into the `tail` deque (split on CR/LF,
+    so in-place progress updates are seen live), optionally mirroring it to `sys.stderr`
+    and reporting `progress(done_s, total_s)` from its `Duration:`/`time=` lines.
+    """
+    total = 0.0
+
+    def ingest(raw):
+        nonlocal total
+        line = raw.decode("utf-8", "replace").strip()
+        if not line:
+            return
+        tail.append(line)
+        if progress is None:
+            return
+        if not total and "Duration:" in line:
+            total = extract_time(line)
+        elif "time=" in line:
+            progress(extract_time(line), total)
+
+    buf = b""
+    try:
+        for chunk in iter(lambda: pipe.read1(4096), b""):
+            if echo:
+                sys.stderr.write(chunk.decode("utf-8", "replace"))
+                sys.stderr.flush()
+            *lines, buf = re.split(rb"[\r\n]", buf + chunk)
+            for raw in lines:
+                ingest(raw)
+        ingest(buf)
+    except (OSError, ValueError):
+        pass  # pipe closed underneath us
+    finally:
+        pipe.close()
+
+
+def run_ffmpeg(
+    cmd: list[str],
+    timeout: float | None = None,
+    progress: Callable[[float, float], None] | None = None,
+    cancel: threading.Event | None = None,
+    echo: bool = False,
+    tail_lines: int = 50,
+    creationflags: int = 0,
+) -> sp.CompletedProcess:
+    """
+    Runs a one-shot FFmpeg command to completion.
+
+    Parameters:
+        cmd (list): complete FFmpeg command (binary path included).
+        timeout (float): seconds before FFmpeg is stopped and `sp.TimeoutExpired` raised.
+        progress (callable): called as `progress(done_s, total_s)`; `total_s` is `0` when unknown.
+        cancel (threading.Event): when set, FFmpeg is stopped and its returncode returned
+            (`255` when FFmpeg exits on `SIGTERM`, negative if killed).
+        echo (bool): mirror FFmpeg's `stderr` to `sys.stderr`.
+        tail_lines (int): number of trailing `stderr` lines retained.
+        creationflags (int): forwarded to `subprocess.Popen`.
+
+    **Returns:** `CompletedProcess(cmd, returncode, None, stderr_tail)`. Raises `sp.TimeoutExpired`
+    _(with `.stderr` set to the tail)_ when `timeout` elapses.
+    """
+    proc = sp.Popen(
+        cmd,
+        stdin=sp.DEVNULL,
+        stdout=sp.DEVNULL,
+        stderr=sp.PIPE,
+        creationflags=creationflags,
+    )
+    tail = deque(maxlen=tail_lines)
+    reader = threading.Thread(
+        target=_pump_stderr, args=(proc.stderr, tail, echo, progress), daemon=True
+    )
+    reader.start()
+    deadline = None if timeout is None else time.monotonic() + timeout
+    timed_out = False
+    while True:
+        try:
+            proc.wait(0.2)
+            break
+        except sp.TimeoutExpired:
+            timed_out = deadline is not None and time.monotonic() > deadline
+            if timed_out or (cancel is not None and cancel.is_set()):
+                _stop_process(proc)
+                break
+    reader.join(1.0)
+    if timed_out:
+        raise sp.TimeoutExpired(cmd, timeout, stderr="\n".join(tail))
+    return sp.CompletedProcess(cmd, proc.returncode, None, "\n".join(tail))
 
 
 def generate_auth_certificates(
