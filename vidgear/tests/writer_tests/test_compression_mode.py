@@ -26,8 +26,10 @@ import platform
 import re
 import subprocess
 import tempfile
+import time
 
 import cv2
+import numpy as np
 import pytest
 from deffcode import FFdecoder
 from six import string_types
@@ -385,3 +387,58 @@ def test_skip_vcodec(vcodec_key):
         pytest.fail(str(e))
     finally:
         remove_file_safe(output_path)
+
+
+def test_execute_ffmpeg_cmd_result():
+    """
+    Testing `execute_ffmpeg_cmd` returns exit status/stderr, and honors `check` and `timeout`
+    """
+    writer = WriteGear(output=os.path.join(get_testing_dir(), "Output.mp4"))
+    assert writer.execute_ffmpeg_cmd([]) is None
+    result = writer.execute_ffmpeg_cmd(
+        ["-f", "lavfi", "-i", "testsrc=d=1", "-f", "null", "-"]
+    )
+    assert result.returncode == 0
+    with pytest.raises(subprocess.CalledProcessError) as e:
+        writer.execute_ffmpeg_cmd(["-i", "non_existent_file.mp4"], check=True)
+    assert "non_existent_file.mp4" in e.value.stderr
+    with pytest.raises(subprocess.TimeoutExpired):
+        writer.execute_ffmpeg_cmd(
+            ["-re", "-f", "lavfi", "-i", "testsrc", "-f", "null", "-"], timeout=1
+        )
+    writer.close()
+
+
+def test_capture_stderr():
+    """
+    Testing `-capture_stderr` surfaces FFmpeg's stderr on early encoder death, and `returncode` on close
+    """
+    writer = WriteGear(
+        output=os.path.join(get_testing_dir(), "Output.mp4"),
+        **{"-capture_stderr": True, "-invalid_flag": "1"},
+    )
+    frame = np.zeros((48, 64, 3), np.uint8)
+    with pytest.raises(ValueError, match="invalid_flag"):
+        for _ in range(500):
+            writer.write(frame)
+            time.sleep(0.01)
+    assert "invalid_flag" in writer.stderr_tail
+    writer.close()
+    assert writer.returncode not in (None, 0)
+
+
+def test_close_timeout():
+    """
+    Testing `close(timeout)` stops an FFmpeg that won't finish in time
+    """
+    # `-re` at 1 fps makes FFmpeg take seconds to drain the buffered frames
+    writer = WriteGear(
+        output=os.path.join(get_testing_dir(), "Output.mp4"),
+        **{"-input_framerate": 1, "-ffpreheaders": ["-re"]},
+    )
+    for _ in range(6):
+        writer.write(np.zeros((48, 64, 3), np.uint8))
+    start = time.time()
+    writer.close(timeout=0.5)
+    assert time.time() - start < 4
+    assert writer.returncode is not None

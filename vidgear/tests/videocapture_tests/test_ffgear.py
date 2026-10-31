@@ -478,3 +478,55 @@ def test_camera_capture(source, source_demuxer, result):
             pytest.xfail(str(e))
     finally:
         stream is not None and stream.stop()
+
+
+# ---------------------------------------------------------------------------
+# EOF / timeout / stall handling
+# ---------------------------------------------------------------------------
+
+
+def test_framerate_and_returncode():
+    """FFGear exposes source framerate, and retains FFmpeg exit status after stop()."""
+    stream = FFGear(source=return_testvideo_path()).start()
+    assert stream.framerate == 25.0
+    while stream.read() is not None:
+        pass
+    stream.stop()
+    assert stream.returncode == 0
+    assert isinstance(stream.stderr_tail, list)
+
+
+def test_eof_no_busy_spin():
+    """Producer must exit at EOF (poison pill) instead of spinning until the queue drains."""
+    stream = FFGear(source=return_testvideo_path(), QUEUE_SIZE=200).start()
+    try:
+        time.sleep(1.5)  # let producer hit EOF while frames are still queued
+        cpu = time.process_time()
+        time.sleep(1.0)
+        assert time.process_time() - cpu < 0.5, "producer is busy-spinning at EOF"
+        frames = 0
+        while stream.read() is not None:
+            frames += 1
+        assert frames == actual_frame_count_n_frame_size(return_testvideo_path())[0]
+        assert stream.read() is None
+    finally:
+        stream.stop()
+
+
+@pytest.mark.parametrize("queue_mode", [True, False])
+def test_stalled_source_read_timeout_and_stop(queue_mode):
+    """read(timeout) raises on a stalled source, and stop() doesn't deadlock on the blocked pipe."""
+    # one frame every 20s, read in real-time: second frame never arrives in time
+    stream = FFGear(
+        source="testsrc=size=64x48:rate=0.05",
+        source_demuxer="lavfi",
+        THREADED_QUEUE_MODE=queue_mode,
+        **{"-ffprefixes": ["-re"]},
+    ).start()
+    queue_mode and stream.read()  # first frame was pre-queued
+    with pytest.raises(TimeoutError):
+        stream.read(timeout=0.5)
+    start = time.time()
+    stream.stop()
+    assert time.time() - start < 10
+    assert stream.read() is None
