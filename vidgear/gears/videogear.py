@@ -135,6 +135,12 @@ class VideoGear:
         if self.__stabilization_mode:
             from .stabilizer import Stabilizer, StabilizerMode
 
+            # Stabilizer needs plain frames, not (frame, metadata) pairs
+            if options.get("-extract_metadata"):
+                raise ValueError(
+                    "[VideoGear:ERROR] :: `-extract_metadata` is unsupported with `stabilize=True`!"
+                )
+
             stabilizer_mode = options.pop("STABILIZER_MODE", StabilizerMode.ASW)
             if not isinstance(stabilizer_mode, StabilizerMode):
                 stabilizer_mode = StabilizerMode.ASW
@@ -172,6 +178,10 @@ class VideoGear:
             crop_n_zoom = options.pop("CROP_N_ZOOM", False)
             if not isinstance(crop_n_zoom, bool):
                 crop_n_zoom = False
+
+            # yield frames still buffered by the stabilizer at end of stream
+            self.__flusher = None
+            self.__stabilizer_flush = options.pop("STABILIZER_FLUSH", False) is True
 
             self.__stabilizer_obj = Stabilizer(
                 mode=stabilizer_mode,
@@ -221,7 +231,7 @@ class VideoGear:
         )
         self.stream = gear_builders[api]()
 
-        # initialize framerate variable (FFGear has no `framerate` attr)
+        # initialize framerate variable
         self.framerate = getattr(self.stream, "framerate", 0.0)
 
     @staticmethod
@@ -286,6 +296,10 @@ class VideoGear:
             frame_stab = self.__stabilizer_obj.stabilize(frame)
             if frame_stab is not None:
                 return frame_stab
+        if self.__stabilization_mode and self.__stabilizer_flush:
+            # end of stream: drain stabilizer's buffered frames
+            self.__flusher = self.__flusher or self.__stabilizer_obj.flush()
+            return next(self.__flusher, None)
         return self.stream.read()
 
     def stop(self) -> None:
