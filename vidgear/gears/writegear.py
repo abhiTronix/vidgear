@@ -25,12 +25,16 @@ import pathlib
 import platform
 import subprocess as sp
 import time
+from collections import deque
+from threading import Thread
 
 import cv2
 from numpy.typing import NDArray
 
 # import helper packages
 from .helper import (
+    _pump_stderr,
+    _stop_process,
     capPropId,
     check_gstreamer_support,
     check_WriteAccess,
@@ -41,6 +45,7 @@ from .helper import (
     is_valid_url,
     logcurr_vidgear_ver,
     logger_handler,
+    run_ffmpeg,
 )
 
 # define logger
@@ -130,6 +135,10 @@ class WriteGear:
         )
         self.__out_file = None  # handles output
         gstpipeline_mode = False  # handles GStreamer Pipeline Mode
+        self.__capture_stderr = False  # handles FFmpeg stderr capturing
+        self.__stderr = None  # handles captured FFmpeg stderr tail
+        self.__stderr_reader = None  # handles stderr reader thread
+        self.returncode = None  # FFmpeg exit code (set on close)
 
         # handles output
         if not output:
@@ -247,6 +256,11 @@ class WriteGear:
                 self.__forced_termination = (
                     "-i" in self.__output_parameters
                 )
+
+            # handle capturing of FFmpeg's stderr tail (only for Compression mode)
+            self.__capture_stderr = (
+                self.__output_parameters.pop("-capture_stderr", False) is True
+            )
 
             # handles disabling window for ffmpeg subprocess on Windows OS (only for Compression mode)
             # this patch prevents ffmpeg creation window from opening when building exe files
@@ -435,7 +449,9 @@ class WriteGear:
                 logger.error(
                     "BrokenPipeError caught, Wrong values passed to FFmpeg Pipe. Kindly Refer Docs!"
                 )
-                raise ValueError  # for testing purpose only
+                # let the reader drain FFmpeg's last words
+                self.__stderr_reader and self.__stderr_reader.join(1.0)
+                raise ValueError(self.stderr_tail)  # for testing purpose only
         else:
             # otherwise initiate OpenCV's VideoWriter Class process
             if self.__initiate_process:
@@ -607,9 +623,28 @@ class WriteGear:
             [self.__ffmpeg, "-y", *self.__ffmpeg_preheaders, "-f", "rawvideo", "-vcodec", "rawvideo", *input_parameters, "-i", "-", *output_parameters, self.__out_file]
         )
         # Launch the process with FFmpeg command
-        if self.__logging:
-            # log command in logging mode
-            logger.debug("Executing FFmpeg command: `{}`".format(" ".join(cmd)))
+        self.__logging and logger.debug(
+            "Executing FFmpeg command: `{}`".format(" ".join(cmd))
+        )
+        if self.__capture_stderr:
+            # capture stderr tail (mirrored to console in logging mode)
+            self.__stderr = deque(maxlen=50)
+            self.__process = sp.Popen(
+                cmd,
+                stdin=sp.PIPE,
+                stdout=sp.DEVNULL,
+                stderr=sp.PIPE,
+                creationflags=(
+                    sp.DETACHED_PROCESS if self.__ffmpeg_window_disabler_patch else 0
+                ),
+            )
+            self.__stderr_reader = Thread(
+                target=_pump_stderr,
+                args=(self.__process.stderr, self.__stderr, self.__logging),
+                daemon=True,
+            )
+            self.__stderr_reader.start()
+        elif self.__logging:
             # In logging mode
             self.__process = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
         else:
@@ -638,19 +673,34 @@ class WriteGear:
         """
         self.close()
 
-    def execute_ffmpeg_cmd(self, command: list | None = None) -> None:
+    @property
+    def stderr_tail(self) -> str:
+        """
+        Last lines of FFmpeg's stderr _(Compression Mode with `-capture_stderr` only, else empty)_.
+        """
+        return "\n".join(self.__stderr) if self.__stderr else ""
+
+    def execute_ffmpeg_cmd(
+        self,
+        command: list | None = None,
+        check: bool = False,
+        timeout: float | None = None,
+    ) -> sp.CompletedProcess | None:
         """
 
         Executes user-defined FFmpeg Terminal command, formatted as a python list(in Compression Mode only).
 
         Parameters:
             command (list): inputs list data-type command.
+            check (bool): raise `subprocess.CalledProcessError` _(with FFmpeg's stderr tail)_ on non-zero exit.
+            timeout (float): seconds after which FFmpeg is stopped and `subprocess.TimeoutExpired` raised.
 
+        **Returns:** A `subprocess.CompletedProcess` _(with `returncode` and FFmpeg's stderr tail as `stderr`)_, or `None` if command is empty.
         """
         # check if valid command
         if command is None or not (command):
             logger.warning("Input command is empty, Nothing to execute!")
-            return
+            return None
         else:
             if not (isinstance(command, list)):
                 raise ValueError(
@@ -667,26 +717,27 @@ class WriteGear:
         # add configured FFmpeg path
         cmd = [self.__ffmpeg, *command]
 
+        # log command in logging mode
+        self.__logging and logger.debug(
+            "Executing FFmpeg command: `{}`".format(" ".join(cmd))
+        )
         try:
-            # write frames to pipeline
-            if self.__logging:
-                # log command in logging mode
-                logger.debug("Executing FFmpeg command: `{}`".format(" ".join(cmd)))
-                # In logging mode
-                sp.run(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
-            else:
-                # In silent mode
-                sp.run(cmd, stdin=sp.PIPE, stdout=sp.DEVNULL, stderr=sp.STDOUT)
+            result = run_ffmpeg(
+                cmd,
+                timeout=timeout,
+                echo=self.__logging,
+                creationflags=(
+                    sp.DETACHED_PROCESS if self.__ffmpeg_window_disabler_patch else 0
+                ),
+            )
         except OSError as e:
             # re-raise error
-            if self.__logging:
-                raise ValueError(
-                    "BrokenPipeError caught, Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!"
-                ) from None
-            else:
-                raise ValueError(
-                    "BrokenPipeError caught, Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!"
-                ) from e
+            raise ValueError(
+                "BrokenPipeError caught, Wrong command passed to FFmpeg Pipe, Kindly Refer Docs!"
+            ) from e
+        if check and result.returncode:
+            raise sp.CalledProcessError(result.returncode, cmd, stderr=result.stderr)
+        return result
 
     def __start_CVProcess(self):
         """
@@ -762,27 +813,41 @@ class WriteGear:
             self.__process.isOpened()
         ), "[WriteGear:ERROR] :: Failed to initialize OpenCV Writer!"
 
-    def close(self) -> None:
+    def close(self, timeout: float | None = None) -> None:
         """
         Safely terminates various WriteGear process.
+
+        Parameters:
+            timeout (float): seconds to wait for FFmpeg to finish, before stopping it forcefully _(Compression Mode only)_.
         """
         # log termination
         self.__logging and logger.debug("Terminating WriteGear Processes.")
         # handle termination separately
         if self.__compression:
             # when Compression Mode is enabled
-            if self.__process is None or self.__process.poll() is not None:
+            if self.__process is None:
                 # return if no process initiated
                 # at first place
                 return
-            # close `stdin` output
-            self.__process.stdin and self.__process.stdin.close()
-            # close `stdout` output
-            self.__process.stdout and self.__process.stdout.close()
-            # forced termination if specified.
-            self.__forced_termination and self.__process.terminate()
-            # wait if process is still processing
-            self.__process.wait()
+            if self.__process.poll() is None:
+                # close `stdin` output
+                self.__process.stdin and self.__process.stdin.close()
+                # close `stdout` output
+                self.__process.stdout and self.__process.stdout.close()
+                # forced termination if specified.
+                self.__forced_termination and self.__process.terminate()
+                # wait if process is still processing
+                try:
+                    self.__process.wait(timeout)
+                except sp.TimeoutExpired:
+                    logger.warning(
+                        "FFmpeg didn't exit within {}s. Stopping it forcefully!".format(
+                            timeout
+                        )
+                    )
+                    _stop_process(self.__process)
+            self.__stderr_reader and self.__stderr_reader.join(1.0)
+            self.returncode = self.__process.returncode
         else:
             # when Compression Mode is disabled
             if self.__process is None:

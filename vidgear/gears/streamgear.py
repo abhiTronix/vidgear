@@ -26,23 +26,26 @@ import os
 import signal
 import subprocess as sp
 import time
-from collections import OrderedDict
+from collections import OrderedDict, deque
+from threading import Event, Thread
 
 from numpy.typing import NDArray
 from tqdm import tqdm
 
 # import helper packages
 from .helper import (
+    _pump_stderr,
+    _stop_process,
     check_WriteAccess,
     delete_ext_safe,
     deprecated,
     dict2Args,
-    extract_time,
     get_valid_ffmpeg_path,
     get_video_bitrate,
     is_valid_url,
     logcurr_vidgear_ver,
     logger_handler,
+    run_ffmpeg,
     validate_audio,
     validate_video,
 )
@@ -110,6 +113,13 @@ class StreamGear:
         self.__ffmpeg = ""
         # handle one time process for valid process initialization
         self.__initiate_stream = True
+        # handle cancellation of single-source transcoding
+        self.__cancel = Event()
+        # handle captured FFmpeg stderr tail and its reader thread
+        self.__stderr = None
+        self.__stderr_reader = None
+        # FFmpeg exit code (set on completion/close)
+        self.returncode = None
 
         # cleans and reformat user-defined parameters
         self.__params = {
@@ -285,6 +295,15 @@ class StreamGear:
         else:
             # handle improper values
             self.__forced_termination = False
+
+        # handle capturing of FFmpeg's stderr tail (Real-time Frames Mode)
+        self.__capture_stderr = self.__params.pop("-capture_stderr", False) is True
+
+        # handle user-defined progress callback (Single-Source Mode)
+        self.__progress_callback = self.__params.pop("-progress_callback", None)
+        if not callable(self.__progress_callback):
+            # reset improper values
+            self.__progress_callback = None
 
         # handle streaming format
         supported_formats = ["dash", "hls"]  # TODO will be extended in future
@@ -466,7 +485,9 @@ class StreamGear:
             logger.error(
                 "BrokenPipeError caught, Wrong values passed to FFmpeg Pipe, Kindly Refer Docs!"
             )
-            raise ValueError  # for testing purpose only
+            # let the reader drain FFmpeg's last words
+            self.__stderr_reader and self.__stderr_reader.join(1.0)
+            raise ValueError(self.stderr_tail)  # for testing purpose only
 
     def transcode_source(self) -> None:
         """
@@ -1022,7 +1043,7 @@ class StreamGear:
             # `extra_window_size` must be greater than or equal to 0
             extra_window_size = self.__params.pop("-extra_window_size", 5)
             if isinstance(extra_window_size, int) and extra_window_size >= 0:
-                output_params["-extra_window_size"] = window_size
+                output_params["-extra_window_size"] = extra_window_size
             else:
                 # otherwise reset to default
                 logger.warning("Invalid `-extra_window_size` value skipped!")
@@ -1145,62 +1166,36 @@ class StreamGear:
         ffmpeg_cmd.extend(hls_commands if hls_commands else [self.__out_file])
         # Launch the FFmpeg pipeline with built command
         logger.critical("Transcoding streaming chunks. Please wait...")  # log it
-        self.__process = sp.Popen(
-            ffmpeg_cmd,
-            stdin=sp.PIPE,
-            stdout=(
-                sp.DEVNULL
-                if (not self.__video_source and not self.__logging)
-                else sp.PIPE
-            ),
-            stderr=None if self.__logging else sp.STDOUT,
-        )
-        # post handle progress bar and runtime errors in case of video_source
         if self.__video_source:
-            return_code = 0
+            # run single-source transcoding to completion
             pbar = None
-            sec_prev = 0
-            if self.__logging:
-                self.__process.communicate()
-                return_code = self.__process.returncode
-            else:
-                # iterate until stdout runs out
-                while True:
-                    # read and process data
-                    data = self.__process.stdout.readline()
-                    if data:
-                        data = data.decode("utf-8")
-                        # extract duration and time-left
-                        if pbar is None and "Duration:" in data:
-                            # extract time in seconds
-                            sec_duration = extract_time(data)
-                            # initiate progress bar
-                            pbar = tqdm(
-                                total=sec_duration,
-                                desc="Processing Frames",
-                                unit="frame",
-                            )
-                        elif "time=" in data:
-                            # extract time in seconds
-                            sec_current = extract_time(data)
-                            # update progress bar
-                            if sec_current:
-                                pbar.update(sec_current - sec_prev)
-                                sec_prev = sec_current
-                    else:
-                        # poll if no data
-                        if self.__process.poll() is not None:
-                            break
-                return_code = self.__process.poll()
+
+            def progress(done, total):
+                nonlocal pbar
+                # drive progress bar in silent mode
+                if not self.__logging and total:
+                    if pbar is None:
+                        pbar = tqdm(total=total, desc="Processing Frames", unit="frame")
+                    pbar.update(done - pbar.n)
+                self.__progress_callback and self.__progress_callback(done, total)
+
+            result = run_ffmpeg(
+                ffmpeg_cmd, progress=progress, cancel=self.__cancel, echo=self.__logging
+            )
             # close progress bar
             pbar is not None and pbar.close()
-            # handle return_code
-            if return_code != 0:
-                # log and raise error if return_code is `1`
+            self.returncode = result.returncode
+            if self.__cancel.is_set():
+                # stopped by `close()`
+                logger.warning("Transcoding cancelled by user!")
+            elif result.returncode != 0:
+                # log and raise error if return_code is non-zero
                 logger.error(
                     "StreamGear failed to initiate stream for this video source!"
                 )
-                raise sp.CalledProcessError(return_code, ffmpeg_cmd)
+                raise sp.CalledProcessError(
+                    result.returncode, ffmpeg_cmd, stderr=result.stderr
+                )
             else:
                 # log if successful
                 logger.critical(
@@ -1208,6 +1203,33 @@ class StreamGear:
                         self.__format.upper()
                     )
                 )
+        elif self.__capture_stderr:
+            # pipe frames, capture stderr tail (mirrored to console in logging mode)
+            self.__stderr = deque(maxlen=50)
+            self.__process = sp.Popen(
+                ffmpeg_cmd, stdin=sp.PIPE, stdout=sp.DEVNULL, stderr=sp.PIPE
+            )
+            self.__stderr_reader = Thread(
+                target=_pump_stderr,
+                args=(self.__process.stderr, self.__stderr, self.__logging),
+                daemon=True,
+            )
+            self.__stderr_reader.start()
+        else:
+            # pipe frames
+            self.__process = sp.Popen(
+                ffmpeg_cmd,
+                stdin=sp.PIPE,
+                stdout=sp.DEVNULL,
+                stderr=None if self.__logging else sp.STDOUT,
+            )
+
+    @property
+    def stderr_tail(self) -> str:
+        """
+        Last lines of FFmpeg's stderr _(Real-time Frames Mode with `-capture_stderr` only, else empty)_.
+        """
+        return "\n".join(self.__stderr) if self.__stderr else ""
 
     def __enter__(self):
         """
@@ -1237,30 +1259,44 @@ class StreamGear:
 
         self.close()
 
-    def close(self) -> None:
+    def close(self, timeout: float | None = None) -> None:
         """
-        Safely terminates various StreamGear process.
+        Safely terminates various StreamGear process. Can be called from another thread to stop a running `transcode_source()`.
+
+        Parameters:
+            timeout (float): seconds to wait for FFmpeg to finish, before stopping it forcefully _(Real-time Frames Mode only)_.
         """
         # log termination
         self.__logging and logger.debug("Terminating StreamGear Processes.")
+        # stop any running single-source transcoding
+        self.__cancel.set()
 
         # return if no process was initiated at first place
-        if self.__process is None or self.__process.poll() is not None:
+        if self.__process is None:
             return
-        # close `stdin` output
-        self.__process.stdin and self.__process.stdin.close()
-        # close `stdout` output
-        self.__process.stdout and self.__process.stdout.close()
-        # forced termination if specified.
-        if self.__forced_termination:
-            self.__process.terminate()
-        # handle device audio streams
-        elif self.__audio and isinstance(self.__audio, list):
-            # send `CTRL_BREAK_EVENT` signal if Windows else `SIGINT`
-            self.__process.send_signal(
-                signal.CTRL_BREAK_EVENT if self.__os_windows else signal.SIGINT
-            )
-        # wait if process is still processing
-        self.__process.wait()
+        if self.__process.poll() is None:
+            # close `stdin` output
+            self.__process.stdin and self.__process.stdin.close()
+            # forced termination if specified.
+            if self.__forced_termination:
+                self.__process.terminate()
+            # handle device audio streams
+            elif self.__audio and isinstance(self.__audio, list):
+                # send `CTRL_BREAK_EVENT` signal if Windows else `SIGINT`
+                self.__process.send_signal(
+                    signal.CTRL_BREAK_EVENT if self.__os_windows else signal.SIGINT
+                )
+            # wait if process is still processing
+            try:
+                self.__process.wait(timeout)
+            except sp.TimeoutExpired:
+                logger.warning(
+                    "FFmpeg didn't exit within {}s. Stopping it forcefully!".format(
+                        timeout
+                    )
+                )
+                _stop_process(self.__process)
+        self.__stderr_reader and self.__stderr_reader.join(1.0)
+        self.returncode = self.__process.returncode
         # discard process
         self.__process = None
