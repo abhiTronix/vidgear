@@ -499,8 +499,9 @@ class NetGear:
             asyncio.WindowsSelectorEventLoopPolicy()
         )
 
-        # define ZMQ messaging context instance
-        self.__msg_context = zmq.Context.instance()
+        # define ZMQ messaging context (per-instance, so `close(kill=True)`
+        # can't tear down sockets of other NetGear instances in this process)
+        self.__msg_context = zmq.Context()
 
         # initialize and assign receive mode to global variable
         self.__receive_mode = receive_mode
@@ -1528,6 +1529,8 @@ class NetGear:
                     self.__msg_socket.close(linger=0)
                     self.__thread.join()
                 self.__thread = None
+            # release ZMQ context
+            self.__msg_context.destroy(linger=0)
             self.__logging and logger.debug("Terminated Successfully!")
         else:
             # indicate that process should be terminated
@@ -1552,6 +1555,8 @@ class NetGear:
                     self.__msg_socket.close()
                 except ZMQError:
                     pass
+                # release ZMQ context
+                self.__msg_context.destroy(linger=0)
                 # exit
                 return
 
@@ -1582,4 +1587,6 @@ class NetGear:
                 # properly close the socket
                 self.__msg_socket.setsockopt(zmq.LINGER, 0)
                 self.__msg_socket.close()
+                # release ZMQ context
+                self.__msg_context.destroy(linger=0)
                 self.__logging and logger.debug("Terminated Successfully!")
