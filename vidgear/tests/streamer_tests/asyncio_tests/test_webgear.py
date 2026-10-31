@@ -108,6 +108,7 @@ def test_webgear_class(source, stabilize, colorspace, time_delay):
 @pytest.mark.parametrize(
     "options",
     [
+        {"frame_size_reduction": 90},  # out of range (reducer needs < 90): reverts to default
         {
             "jpeg_compression_colorspace": "invalid",
             "jpeg_compression_quality": 5,
