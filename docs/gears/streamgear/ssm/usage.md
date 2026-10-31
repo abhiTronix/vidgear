@@ -26,6 +26,7 @@ limitations under the License.
     - [x] In this mode, ==API auto generates a primary stream of same resolution and framerate[^1] as the input video  _(at the index `0`)_.==
     - [x] In this mode, if input video-source _(i.e. `-video_source`)_ contains any audio stream/channel, then it automatically gets mapped to all generated streams.
     - [x] Always use `close()` function at the very end of the main code.
+    - [x] Calling `close()` from another thread stops a running `transcode_source()` gracefully, without raising _(New in v0.3.7)_. FFmpeg's exit code is then available as `returncode`.
 
 ??? danger "DEPRECATION NOTICES for `v0.3.3` and above"
     

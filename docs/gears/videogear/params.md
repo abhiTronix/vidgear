@@ -171,6 +171,17 @@ This parameter can be used in addition, to pass user-defined parameters supporte
     options = {'BORDER_TYPE': 'black'}
     ```
 
+* **`STABILIZER_FLUSH`** (_boolean_) : _(`StabilizerMode.ASW` only)_ When enabled, `read()` keeps returning the frames still buffered in the stabilizer's smoothing window at end of stream _(otherwise the last `SMOOTHING_RADIUS - 1` frames are dropped)_, before finally returning `None`. Its default value is `False`. You can easily pass this attribute as follows:
+
+    ??? new "New in v0.3.7" 
+        This feature was added in `v0.3.7`.
+
+    ```python
+    options = {'STABILIZER_FLUSH': True}
+    ```
+
+!!! failure "Stabilization accepts plain BGR or grayscale frames only. Combining `stabilize=True` with the FFGear backend's `-extract_metadata` option raises `ValueError`."
+
 
 &nbsp;
 

@@ -217,6 +217,15 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
         output_params = {"-disable_force_termination": True} # disable the default forced-termination behaviour
         ```
 
+    * **`-capture_stderr`** _(bool)_: captures the last 50 lines of FFmpeg's stderr _(still mirrored to console when `logging=True`)_, exposed via WriteGear's `stderr_tail` property and appended to the `ValueError` raised by `write()` when FFmpeg dies early _(e.g. on invalid parameters)_. FFmpeg's exit code is always available via the `returncode` attribute after `close()`. Its default value is `False`. Its usage is as follows:
+
+        ??? new "New in v0.3.7" 
+            This feature was added in `v0.3.7`.
+
+        ```python
+        output_params = {"-capture_stderr": True} # capture FFmpeg's stderr tail
+        ```
+
 ### Supported Encoders
 
 All the encoders that are compiled with FFmpeg in use, are supported by WriteGear API. You can easily check the compiled encoders by running following command in your terminal:

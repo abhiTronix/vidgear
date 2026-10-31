@@ -359,6 +359,26 @@ StreamGear API provides some exclusive internal parameters to easily generate St
     stream_params = {"-enable_force_termination": True} 
     ```
 
+* **`-progress_callback`** _(callable)_: ***(optional)*** This parameter sets a function called as `callback(done_s, total_s)` while [Single-Source Mode](ssm/#overview) transcodes, alongside the built-in progress bar, where `done_s` is seconds of source transcoded so far and `total_s` is the source duration _(`0` when unknown)_. The default value is `None`. Its usage is as follows:
+
+    ??? new "New in v0.3.7" 
+        This feature was added in `v0.3.7`.
+
+    ```python
+    # print transcoding progress
+    stream_params = {"-progress_callback": lambda done, total: print(f"{done:.1f}/{total:.1f}s")} 
+    ```
+
+* **`-capture_stderr`** _(bool)_: ***(optional)*** This parameter captures the last 50 lines of FFmpeg's stderr in [Real-time Frames Mode](rtfm/#overview) _(still mirrored to console when `logging=True`)_, exposed via StreamGear's `stderr_tail` property and appended to the `ValueError` raised by `stream()` when FFmpeg dies early. FFmpeg's exit code is always available via the `returncode` attribute after `close()` _(or after `transcode_source()` in Single-Source Mode)_. The default value is `False`. Its usage is as follows:
+
+    ??? new "New in v0.3.7" 
+        This feature was added in `v0.3.7`.
+
+    ```python
+    # capture FFmpeg's stderr tail
+    stream_params = {"-capture_stderr": True} 
+    ```
+
 &ensp;
 
 #### B. FFmpeg Parameters 
