@@ -83,6 +83,16 @@ stream.stop()
 
 FFGear API directly supports any network stream URL that FFmpeg supports, including `HTTP(s)`, `RTSP/RTP`, `RTMP`, and more.
 
+??? tip "Handling stalled network sources _(New in v0.3.7)_"
+    A network source can stall forever _(e.g. a killed UDP sender)_. Use `read(timeout=seconds)` to raise `TimeoutError` instead of waiting indefinitely for the next frame; `stop()` then safely tears down the stalled FFmpeg pipeline. After `stop()`, FFmpeg's exit code is available as `stream.returncode` _(and its stderr tail as `stream.stderr_tail` with the `-capture_stderr` option)_. The source framerate is available as `stream.framerate`.
+
+    ```python
+    try:
+        frame = stream.read(timeout=5.0)
+    except TimeoutError:
+        stream.stop()  # source stalled
+    ```
+
 === "HTTP(s) Stream"
 
     ```python linenums="1" hl_lines="7"

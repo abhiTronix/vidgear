@@ -35,7 +35,7 @@ limitations under the License.
 
     * Encoding heavy resolution multimedia files can take up to _~0.2 to 2 seconds_. Please wait for the WriteGear API to terminate itself and **DO NOT** kill the process manually.
 
-    * Always use `writer.close()` at the very end of the main code. **NEVER USE IT INBETWEEN CODE** to avoid undesired behavior.
+    * Always use `writer.close()` at the very end of the main code. **NEVER USE IT INBETWEEN CODE** to avoid undesired behavior. To bound the wait, use `writer.close(timeout=seconds)`: FFmpeg is stopped forcefully if it doesn't finish in time _(New in v0.3.7)_. FFmpeg's exit code is then available as `writer.returncode`.
 
 
 !!! example "After going through WriteGear Usage Examples, Checkout more bonus examples [here ➶](../../../help/writegear_ex/)"
