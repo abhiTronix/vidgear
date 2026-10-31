@@ -487,7 +487,7 @@ class StreamGear:
             )
             # let the reader drain FFmpeg's last words
             self.__stderr_reader and self.__stderr_reader.join(1.0)
-            raise ValueError(self.stderr_tail)  # for testing purpose only
+            raise ValueError("\n".join(self.stderr_tail))  # for testing purpose only
 
     def transcode_source(self) -> None:
         """
@@ -1225,11 +1225,11 @@ class StreamGear:
             )
 
     @property
-    def stderr_tail(self) -> str:
+    def stderr_tail(self) -> list[str]:
         """
         Last lines of FFmpeg's stderr _(Real-time Frames Mode with `-capture_stderr` only, else empty)_.
         """
-        return "\n".join(self.__stderr) if self.__stderr else ""
+        return list(self.__stderr)
 
     def __enter__(self):
         """
