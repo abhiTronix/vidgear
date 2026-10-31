@@ -30,6 +30,8 @@ limitations under the License.
 
 !!! tip "It is advised to enable logging on the first run for easily identifying any runtime errors."
 
+!!! info "Stabilizer accepts both BGR and single-channel grayscale frames _(returned in the same layout)_. The ASW backend buffers `smoothing_radius` frames; call `stab.flush()` at end of stream to retrieve the buffered stabilized frames _(New in v0.3.7)_, e.g. `for stabilized_frame in stab.flush(): ...`. The zero-latency Kalman backend buffers nothing, so its `flush()` yields nothing."
+
 !!! example "After going through Stabilizer Class Usage Examples, Checkout more of its advanced configurations [here ➶](../../help/stabilizer_ex/)"
 
 

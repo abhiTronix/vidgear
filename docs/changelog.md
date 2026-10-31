@@ -20,6 +20,41 @@ limitations under the License.
 
 # Release Notes
 
+## v0.3.7 (In Progress)
+
+???+ tip "New Features"
+    - [x] ✨ **Unified FFmpeg Execution (`helper.run_ffmpeg`):**
+        * Added a shared primitive for one-shot FFmpeg runs, capturing exit code, a bounded stderr tail, progress, timeout and cancellation in one place. Used by WriteGear's `execute_ffmpeg_cmd` and StreamGear's Single-Source Mode.
+    - [x] **WriteGear:**
+        * `execute_ffmpeg_cmd` now returns a `subprocess.CompletedProcess` _(was `None`)_, and accepts `check` and `timeout` parameters.
+        * Added `-capture_stderr` output parameter, `stderr_tail` property and `returncode` attribute; `write()` errors now include FFmpeg's stderr tail when capturing.
+        * Added `timeout` parameter to `close()`.
+    - [x] **StreamGear:**
+        * Added `-progress_callback` and `-capture_stderr` stream parameters, `stderr_tail` property and `returncode` attribute.
+        * Added `timeout` parameter to `close()`; calling `close()` from another thread now cleanly cancels a running `transcode_source()`.
+    - [x] **FFGear:**
+        * Added `timeout` parameter to `read()`, raising `TimeoutError` on stalled sources.
+        * Added `framerate` attribute, and `returncode`/`stderr_tail` attributes retained from FFdecoder on `stop()`.
+    - [x] **Stabilizer:**
+        * Added `flush()` to retrieve frames still buffered by the ASW backend at end of stream, exposed in VideoGear via the `STABILIZER_FLUSH` option.
+        * Added support for single-channel grayscale frames.
+
+??? success "Updates/Improvements"
+    - [x] **Helper:** `check_output` now defaults FFmpeg's `stdin` to `DEVNULL` and supports a `timeout` _(terminate, then kill)_.
+    - [x] **Tests:** Added tests for all of the above, plus regressions for the bug-fixes below.
+
+??? bug "Bug-fixes"
+    - [x] **FFGear:**
+        * Fixed `stop()` deadlocking when the producer thread was blocked reading a stalled source.
+        * Fixed 100% CPU busy-spin of the producer thread at end of stream in Threaded Queue Mode.
+        * Fixed `VideoGear(api=Backend.FFGEAR).framerate` always being `0.0`.
+    - [x] **StreamGear:**
+        * Fixed `-extra_window_size` being assigned the `-window_size` value.
+        * Fixed Single-Source Mode progress bar updating only at the end _(FFmpeg's `\r`-terminated progress lines)_, and crashing when source duration is unknown.
+    - [x] **VideoGear:** `stabilize=True` with `-extract_metadata` now raises `ValueError` at init, instead of crashing on the first `read()`.
+    - [x] **WebGear/WebGear_RTC:** Fixed `frame_size_reduction` accepting `90`, which crashed at runtime.
+    - [x] **NetGear:** Each instance now owns its ZMQ context, so `close(kill=True)` no longer breaks other NetGear instances in the same process.
+
 ## v0.3.6 (2026-10-26)
 
 ???+ tip "New Features"

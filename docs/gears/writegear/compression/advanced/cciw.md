@@ -69,6 +69,18 @@ ffmpeg_command = ["-y", "-i", source_video, "-acodec", "copy", "input_audio.aac"
 execute_ffmpeg_cmd(ffmpeg_command)
 ```
 
+??? new "New in v0.3.7" 
+    `execute_ffmpeg_cmd` now returns a [`subprocess.CompletedProcess`](https://docs.python.org/3/library/subprocess.html#subprocess.CompletedProcess) _(or `None` for an empty command)_ holding FFmpeg's exit code as `returncode` and the last 50 lines of its stderr as `stderr`, and accepts two optional parameters:
+
+    * **`check`** _(bool)_: raise [`subprocess.CalledProcessError`](https://docs.python.org/3/library/subprocess.html#subprocess.CalledProcessError) _(with FFmpeg's stderr tail as `stderr`)_ if FFmpeg exits with a non-zero code. Default is `False`.
+    * **`timeout`** _(float)_: seconds after which FFmpeg is stopped and [`subprocess.TimeoutExpired`](https://docs.python.org/3/library/subprocess.html#subprocess.TimeoutExpired) is raised. Default is `None` _(wait indefinitely)_.
+
+    ```python
+    # fail loudly on FFmpeg errors, and never wait more than 60 seconds
+    result = writer.execute_ffmpeg_cmd(ffmpeg_command, check=True, timeout=60)
+    print(result.returncode)
+    ```
+
 
 &nbsp;
 

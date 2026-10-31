@@ -192,7 +192,7 @@ The following `options` keys are consumed by FFGear itself and are **not** forwa
 |:----------|:----:|:-------:|:------------|
 | `THREADED_QUEUE_MODE` | bool | `True` | Enables producer-consumer threaded queue for zero-bottleneck frame delivery. Disable only for single-threaded pipelines. |
 | `QUEUE_SIZE` | int | `96` | Maximum number of frames buffered in the queue. Increase for smoother playback on high-latency sources. |
-| `THREAD_TIMEOUT` | float or None | `None` | Timeout (in seconds) for queue `get()` and thread `join()` calls. `None` means block indefinitely. |
+| `THREAD_TIMEOUT` | float or None | `None` | Polling interval (in seconds) for queue `get()` calls, and grace period for the producer thread to exit on `stop()` _(`1` second when `None`)_, after which FFmpeg is killed to unblock a stalled source. To bound how long `read()` waits for a frame, use `read(timeout=...)` instead. |
 | `STREAM_RESOLUTION` | str | `"best"` | _(Stream Mode only)_ Desired stream resolution, e.g. `"720p"`, `"1080p"`, `"best"`. |
 | `STREAM_PARAMS` | dict | `{}` | _(Stream Mode only)_ Extra `yt_dlp` parameters forwarded to the `YT_backend`. |
 
@@ -222,6 +222,7 @@ All remaining keys in `options` are forwarded **directly** to [FFdecoder's `ffpa
 | `-enforce_cv_patch` | bool | Enables OpenCV-compatibility patch for YUV/NV pixel formats. |
 | `-extract_metadata` | bool | Enables per-frame metadata extraction via `showinfo` filter. `read()` returns `(frame, metadata)` tuples. |
 | `-ffprefixes` | list | Additional FFmpeg CLI prefixes (e.g. `["-stream_loop", "-1"]`). |
+| `-capture_stderr` | bool | Captures the last 50 lines of FFmpeg's stderr, retained as FFGear's `stderr_tail` after `stop()` _(requires DeFFcode with `-capture_stderr` support)_. |
 
 !!! tip "Full list of all FFdecoder parameters can be found [here ➶](https://abhitronix.github.io/deffcode/latest/reference/ffdecoder/params/)"
 
