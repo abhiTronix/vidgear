@@ -61,26 +61,26 @@ dynamic = ["version", "readme"]
 
 [project.optional-dependencies]
 core = [
-    "yt-dlp[default]>=2026.8.19",
+    "yt-dlp[default]>=2026.10.26",
     "pyzmq>=27.2.0",
     "Pillow>=13.0.0",
     "simplejpeg>=1.9.0",
-    "deffcode>=0.2.8",
+    "deffcode>=0.2.9",
     "mss>=10.2.0",
     "pyscreenshot>=3.1",
     "dxcam>=0.3.0; sys_platform == 'win32'",
 ]
 asyncio = [
-    "yt-dlp[default]>=2026.8.19",
+    "yt-dlp[default]>=2026.10.26",
     "pyzmq>=27.2.0",
     "simplejpeg>=1.9.0",
-    "deffcode>=0.2.8",
+    "deffcode>=0.2.9",
     "mss>=10.2.0",
     "Pillow>=13.0.0",
     "pyscreenshot>=3.1",
-    "starlette>=1.8.0",
+    "starlette>=1.10.0",
     "jinja2>=3.1.6",
-    "msgpack>=1.2.3",
+    "msgpack>=1.2.4",
     "msgpack_numpy>=0.4.8",
     "aiortc>=1.15.0",
     "uvicorn>=0.54.0",
