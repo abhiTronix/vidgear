@@ -331,9 +331,10 @@ def test_check_output_timeout():
     """
     Testing `check_output` stops a never-ending FFmpeg on `timeout` and returns its output
     """
+    ffmpeg = "ffmpeg" if platform.system() == "Linux" else return_static_ffmpeg()
     start = time.time()
     check_output(
-        ["ffmpeg", "-re", "-f", "lavfi", "-i", "testsrc", "-f", "null", "-"],
+        [ffmpeg, "-re", "-f", "lavfi", "-i", "testsrc", "-f", "null", "-"],
         timeout=1,
     )
     assert time.time() - start < 5
@@ -343,17 +344,18 @@ def test_run_ffmpeg():
     """
     Testing `run_ffmpeg` exit code, stderr tail, progress, timeout and cancellation
     """
-    endless = ["ffmpeg", "-re", "-f", "lavfi", "-i", "testsrc", "-f", "null", "-"]
+    ffmpeg = "ffmpeg" if platform.system() == "Linux" else return_static_ffmpeg()
+    endless = [ffmpeg, "-re", "-f", "lavfi", "-i", "testsrc", "-f", "null", "-"]
     # success with progress
     progress = []
     result = run_ffmpeg(
-        ["ffmpeg", "-f", "lavfi", "-i", "testsrc=d=2", "-f", "null", "-"],
+        [ffmpeg, "-f", "lavfi", "-i", "testsrc=d=2", "-f", "null", "-"],
         progress=lambda done, total: progress.append(done),
     )
     assert result.returncode == 0 and "time=" in result.stderr
     assert progress and progress[-1] == pytest.approx(2.0, abs=0.1)  # last frame pts on older FFmpeg
     # failure keeps stderr tail
-    result = run_ffmpeg(["ffmpeg", "-i", "non_existent_file.mp4"])
+    result = run_ffmpeg([ffmpeg, "-i", "non_existent_file.mp4"])
     assert result.returncode != 0 and "non_existent_file.mp4" in result.stderr
     # timeout
     with pytest.raises(subprocess.TimeoutExpired):
