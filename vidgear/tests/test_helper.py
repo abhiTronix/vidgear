@@ -351,7 +351,7 @@ def test_run_ffmpeg():
         progress=lambda done, total: progress.append(done),
     )
     assert result.returncode == 0 and "time=" in result.stderr
-    assert progress and progress[-1] == 2.0
+    assert progress and progress[-1] == pytest.approx(2.0, abs=0.1)  # last frame pts on older FFmpeg
     # failure keeps stderr tail
     result = run_ffmpeg(["ffmpeg", "-i", "non_existent_file.mp4"])
     assert result.returncode != 0 and "non_existent_file.mp4" in result.stderr
