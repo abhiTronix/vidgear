@@ -786,9 +786,8 @@ def test_ss_close_cancels_transcode():
     streamer = StreamGear(
         output=os.path.join(return_assets_path(), "format_test.mpd"),
         **{
-            "-video_source": os.path.join(
-                os.path.dirname(return_testvideo_path()), "BigBuckBunny.mp4"
-            ),
+            "-video_source": return_testvideo_path(),
+            "-vf": "realtime,format=yuv420p",  # throttle 4sec clip to wall-clock speed
             "-clear_prev_assets": True,
         },
     )
