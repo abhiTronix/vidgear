@@ -64,6 +64,7 @@ class FFGear:
     - **Per-Frame Metadata Extraction** — asynchronous `showinfo` filter integration via `-extract_metadata`, yielding `(frame, metadata)` tuples with `frame_num`, `pts_time`, `is_keyframe`, and `frame_type`.
     - **Complex Filtergraphs** — live simple (`-vf`) and complex (`-filter_complex`) FFmpeg filter pipelines.
     - **Multi-Input Sources** — multiple simultaneous inputs routed via `-map` or `-filter_complex`.
+    - **Multi-Output Pipelines** — record, transcode or stream the same decode in parallel via `-extra_outputs`.
     - **Wide Source Support** — USB/Virtual/IP camera feeds, multimedia files, image sequences, screen recordings, and network protocols (HTTP(s), RTP/RTSP, etc.).
 
     Internally, FFGear employs a Producer-Consumer threaded queue (configurable via `QUEUE_SIZE`,
@@ -99,7 +100,7 @@ class FFGear:
         """
         # raise error for critical import
         import_dependency_safe(
-            "deffcode" if deffcode is None else "", min_version="0.2.7"
+            "deffcode" if deffcode is None else "", min_version="0.2.9"
         )
 
         self.__logging = logging if isinstance(logging, bool) else False
