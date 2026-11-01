@@ -678,7 +678,7 @@ class WriteGear:
         """
         Last lines of FFmpeg's stderr _(Compression Mode with `-capture_stderr` only, else empty)_.
         """
-        return list(self.__stderr)
+        return list(self.__stderr or ())
 
     def execute_ffmpeg_cmd(
         self,
