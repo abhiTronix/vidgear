@@ -1229,7 +1229,7 @@ class StreamGear:
         """
         Last lines of FFmpeg's stderr _(Real-time Frames Mode with `-capture_stderr` only, else empty)_.
         """
-        return list(self.__stderr)
+        return list(self.__stderr or ())
 
     def __enter__(self):
         """
