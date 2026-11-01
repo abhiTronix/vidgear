@@ -383,6 +383,69 @@ def test_vf_preserved_with_extract_metadata():
 
 
 # ---------------------------------------------------------------------------
+# Multi-outputs (-extra_outputs)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "ffparams, extra_outputs, check_shape",
+    [
+        # same filtering for multiple outputs
+        (
+            {
+                "-filter_complex": "[0:v]yadif,split=2[main][rec];[main]scale=320:240[main];[rec]scale=160:120[rec]",
+                "-map": "[main]",
+            },
+            ["-map", "[rec]", "-map", "0:a?", "-c:v", "libx264", "-crf", 23, "-c:a", "aac"],
+            (240, 320, 3),
+        ),
+        # different filtering for multiple outputs
+        (
+            {
+                "-filter_complex": "[0:v]split=2[in1][in2];[in1]boxblur=5[out1];[in2]negate[out2]",
+                "-map": "[out1]",
+            },
+            ["-map", "[out2]", "-c:v", "libx264"],
+            None,
+        ),
+    ],
+)
+def test_extra_outputs(ffparams, extra_outputs, check_shape):
+    """
+    -extra_outputs writes additional outputs from the same FFmpeg pipeline,
+    without altering the frames delivered to read().
+    """
+    stream = None
+    source = return_testvideo_path()
+    actual_count, _ = actual_frame_count_n_frame_size(source)
+    output = os.path.join(tempfile.mkdtemp(), "extra_output.mkv")
+    try:
+        stream = FFGear(
+            source=source,
+            frame_format="bgr24",
+            logging=True,
+            **ffparams,
+            **{"-extra_outputs": ["-y", *extra_outputs, output]},
+        ).start()
+        count = 0
+        while True:
+            frame = stream.read()
+            if frame is None:
+                break
+            if check_shape is not None:
+                assert frame.shape == check_shape
+            count += 1
+        stream.stop()
+        assert stream.returncode == 0
+        assert count == actual_count
+        assert actual_frame_count_n_frame_size(output)[0] == actual_count
+    except Exception as e:
+        pytest.fail(str(e))
+    finally:
+        stream is not None and stream.stop()
+
+
+# ---------------------------------------------------------------------------
 # Stream mode (yt_dlp backend)
 # ---------------------------------------------------------------------------
 
