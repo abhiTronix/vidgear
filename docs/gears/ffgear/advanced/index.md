@@ -1455,6 +1455,117 @@ cv2.destroyAllWindows()
 stream.stop()
 ```
 
+### Decoding with same filtering for multiple outputs
+
+> FFmpeg can write [any number of outputs](https://trac.ffmpeg.org/wiki/Creating%20multiple%20outputs) from a single process, decoding the source only **once**. FFGear's `-extra_outputs` parameter appends these outputs **after** its rawvideo pipe, so you keep reading frames in Python while the same pipeline records, transcodes or streams in parallel — without altering the frames delivered to `read()`.
+
+In this example, we deinterlace a video file _(say `foo.mp4`)_ once with the [`yadif`](https://ffmpeg.org/ffmpeg-filters.html#yadif) filter, then [`split`](https://ffmpeg.org/ffmpeg-filters.html#split_002c-asplit) it: **BGR24** frames scaled to 720p are decoded by FFGear, while a 480p copy _(with source audio, if any)_ is encoded into an `output_480p.mp4` file in parallel:
+
+!!! warning "Multi-output mode requires `deffcode>=0.2.9`"
+
+    The `-extra_outputs` parameter must be a flat list, and should always include `"-y"`, otherwise FFmpeg exits on its overwrite prompt if an output file already exists and no frames are decoded. See [DeFFcode's Multi-Outputs recipes ➶](https://abhitronix.github.io/deffcode/latest/recipes/advanced/multi_output/) for more details.
+
+!!! tip "Label your `-filter_complex` outputs _(e.g. `[main]` and `[rec]`)_, select the one FFGear decodes via `-map`, and consume the others with `-map` inside `-extra_outputs`."
+
+```python linenums="1" hl_lines="6-15"
+# import required libraries
+from vidgear.gears import FFGear
+import cv2
+
+# deinterlace once, then split into a 720p decoded and a 480p encoded output
+options = {
+    "-filter_complex": "[0:v]yadif,split=2[main][rec];[main]scale=-2:720[main];[rec]scale=-2:480[rec]",
+    "-map": "[main]",  # decode the labeled 720p output
+    "-extra_outputs": [
+        "-y",
+        "-map", "[rec]", "-map", "0:a?",  # filtered video + source audio (if any)
+        "-c:v", "libx264", "-crf", 23, "-c:a", "aac",
+        "output_480p.mp4",
+    ],
+}
+
+# stream 720p BGR24 frames
+stream = FFGear(source="foo.mp4", frame_format="bgr24", logging=True, **options).start()
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # Show output window
+    cv2.imshow("Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream (also finalizes `output_480p.mp4`)
+stream.stop()
+```
+
+### Decoding with different filtering for multiple outputs
+
+> Each labeled output of a `-filter_complex` graph can carry its own filter chain, so the frames decoded by FFGear and the ones written by `-extra_outputs` can be processed completely differently from the same single decode.
+
+In this example, we decode blurred **BGR24** frames from a video file _(say `foo.mp4`)_ via FFmpeg's [`boxblur`](https://ffmpeg.org/ffmpeg-filters.html#boxblur) filter, while a [`negate`](https://ffmpeg.org/ffmpeg-filters.html#negate)d copy is encoded into a `negated.mp4` file in parallel:
+
+!!! info "Extra outputs run at the speed of your `read()` loop — FFmpeg blocks until FFGear consumes each frame _(buffering at most `QUEUE_SIZE` frames)_, so keep the loop fast. Calling `stop()` early finalizes the extra outputs gracefully, truncated at the last consumed frame."
+
+!!! note "`-frames:v`/`-t` in `options` only limit frames decoded by FFGear, repeat them inside `-extra_outputs` to limit the extra outputs too."
+
+```python linenums="1" hl_lines="6-10"
+# import required libraries
+from vidgear.gears import FFGear
+import cv2
+
+# one filter chain per labeled output
+options = {
+    "-filter_complex": "[0:v]split=2[in1][in2];[in1]boxblur=5[out1];[in2]negate[out2]",
+    "-map": "[out1]",  # decode the labeled blurred output
+    "-extra_outputs": ["-y", "-map", "[out2]", "-c:v", "libx264", "negated.mp4"],
+}
+
+# stream blurred BGR24 frames
+stream = FFGear(source="foo.mp4", frame_format="bgr24", logging=True, **options).start()
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # Show output window
+    cv2.imshow("Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream (also finalizes `negated.mp4`)
+stream.stop()
+```
+
 &nbsp;
 
 ## Bonus Examples
