@@ -50,7 +50,15 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -qq unzip wget -y
           sudo apt-get install -qq dos2unix -y
-          sudo apt-get install ffmpeg v4l2loopback-dkms v4l2loopback-utils linux-modules-extra-$(uname -r) -y
+          set -euo pipefail
+          kernel="$(uname -r)"
+          if (( ${kernel%%.*} < 7 )); then
+            sudo apt-get install -y "linux-modules-extra-${kernel}"
+          else
+            # Fallback or check available packages dynamically
+            sudo apt-get install -y "linux-modules-extra-${kernel}" || echo "linux-modules-extra-${kernel} not found in repos yet"
+          fi
+          sudo apt-get install ffmpeg v4l2loopback-dkms v4l2loopback-utils -y
       - name: prepare bash_scripts
         run: |
           dos2unix scripts/bash/prepare_dataset.sh
