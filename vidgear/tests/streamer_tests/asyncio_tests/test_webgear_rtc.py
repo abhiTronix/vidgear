@@ -57,18 +57,6 @@ logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
 
 
-@pytest.fixture(scope="module")
-def event_loop_policy(request):
-    if platform.system() == "Windows":
-        logger.info("Setting WindowsSelectorEventLoopPolicy!")
-        return asyncio.WindowsSelectorEventLoopPolicy()
-    else:
-        return asyncio.DefaultEventLoopPolicy()
-
-
-
-
-
 class VideoTransformTrack(MediaStreamTrack):
     """
     A video stream track that transforms frames from an another track.
@@ -231,7 +219,7 @@ test_data = [
 ]
 
 
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 @pytest.mark.parametrize("source, stabilize, colorspace, time_delay", test_data)
 async def test_webgear_rtc_class(source, stabilize, colorspace, time_delay):
     """
@@ -299,7 +287,7 @@ test_data = [
 ]
 
 
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 @pytest.mark.parametrize("options", test_data)
 async def test_webgear_rtc_options(options):
     """
@@ -361,7 +349,7 @@ test_data = [
     ),
     reason="Random Failures!",
 )
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 @pytest.mark.parametrize("options", test_data)
 async def test_webpage_reload(options):
     """
@@ -450,7 +438,7 @@ test_stream_classes = [
 ]
 
 
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 @pytest.mark.parametrize("stream_class, result", test_stream_classes)
 async def test_webgear_rtc_custom_stream_class(stream_class, result):
     """
@@ -502,7 +490,7 @@ test_data_class = [
 ]
 
 
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 @pytest.mark.parametrize("middleware, result", test_data_class)
 async def test_webgear_rtc_custom_middleware(middleware, result):
     """
@@ -524,7 +512,7 @@ async def test_webgear_rtc_custom_middleware(middleware, result):
             pytest.xfail(str(e))
 
 
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 async def test_webgear_rtc_routes():
     """
     Test for WebGear_RTC API's custom routes
@@ -571,7 +559,7 @@ async def test_webgear_rtc_routes():
             pytest.fail(str(e))
 
 
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 async def test_webgear_rtc_routes_validity():
     """
     Test WebGear_RTC Routes
@@ -596,7 +584,7 @@ async def test_webgear_rtc_routes_validity():
         web.shutdown()
 
 
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 async def test_webgear_rtc_ffgear_backend():
     """
     Test WebGear_RTC API with FFGear backend
@@ -630,7 +618,7 @@ async def test_webgear_rtc_ffgear_backend():
             pytest.fail(str(e))
 
 
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 async def test_webgear_rtc_enablePiCamera_deprecated():
     """
     Test that `enablePiCamera` triggers DeprecationWarning in WebGear_RTC

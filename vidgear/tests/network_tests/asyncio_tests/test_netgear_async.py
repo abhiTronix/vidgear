@@ -23,7 +23,6 @@ limitations under the License.
 import asyncio
 import logging as log
 import os
-import platform
 import queue
 import warnings
 
@@ -40,18 +39,6 @@ logger = log.getLogger("Test_NetGear_Async")
 logger.propagate = False
 logger.addHandler(logger_handler())
 logger.setLevel(log.DEBUG)
-
-
-@pytest.fixture(scope="module")
-def event_loop_policy(request):
-    if platform.system() == "Windows":
-        logger.info("Setting WindowsSelectorEventLoopPolicy!")
-        return asyncio.WindowsSelectorEventLoopPolicy()
-    else:
-        return asyncio.DefaultEventLoopPolicy()
-
-
-
 
 
 # Create a async frame generator as custom source
@@ -151,7 +138,7 @@ async def client_dataframe_iterator(client, data=""):
     "pattern",
     [1, 2, 3, 4],
 )
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 async def test_netgear_async_playback(pattern):
     try:
         # define and launch Client with `receive_mode = True`
@@ -187,7 +174,7 @@ test_data_class = [
 ]
 
 
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 @pytest.mark.parametrize("generator, result", test_data_class)
 async def test_netgear_async_custom_server_generator(generator, result):
     try:
@@ -243,7 +230,7 @@ test_data_class = [
 ]
 
 
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 @pytest.mark.parametrize(
     "generator, data, options_server, options_client, result",
     test_data_class,
@@ -275,7 +262,7 @@ async def test_netgear_async_bidirectionalmode(
         client.close(skip_loop=True)
 
 
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 @pytest.mark.parametrize(
     "address, port",
     [("172.31.11.15.77", "5555"), ("172.31.11.33.44", "5555"), (None, "5555")],
@@ -326,7 +313,7 @@ async def test_netgear_async_addresses(address, port):
         client.close(skip_loop=True)
 
 
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 async def test_netgear_async_recv_generator():
     server = None
     try:
@@ -346,7 +333,7 @@ async def test_netgear_async_recv_generator():
             server.close(skip_loop=True)
 
 
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 @pytest.mark.parametrize(
     "pattern, options",
     [
@@ -388,7 +375,7 @@ async def test_netgear_async_options(pattern, options):
         if client is not None:
             client.close(skip_loop=True)
 
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 async def test_netgear_async_enablePiCamera_deprecated():
     """
     `enablePiCamera=False` must route to CamGear and emit a DeprecationWarning.
@@ -405,7 +392,7 @@ async def test_netgear_async_enablePiCamera_deprecated():
         pytest.fail(str(e))
 
 
-@pytest.mark.asyncio(scope="module")
+@pytest.mark.asyncio(loop_scope="module")
 async def test_netgear_async_ffgear_backend():
     """
     `api=Backend.FFGEAR` must route through FFGear and transfer frames successfully.
