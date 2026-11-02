@@ -39,7 +39,7 @@ from .helper import (
 )
 
 # safe import critical Class modules
-mss = import_dependency_safe("from mss import mss", error="silent")
+mss = import_dependency_safe("from mss import MSS", error="silent")
 if mss is not None:
     from mss.exception import ScreenShotError
 pysct = import_dependency_safe("pyscreenshot", error="silent")
@@ -193,7 +193,7 @@ class ScreenGear:
                 ), "[ScreenGear:ERROR] :: Invalid `monitor` value must be integer with mss backend."
                 # raise error(s) for critical Class imports
                 import_dependency_safe(
-                    "from mss import mss" if mss is None else "", pkg_name="mss"
+                    "from mss import MSS" if mss is None else "", pkg_name="mss"
                 )
                 # create capture object
                 self.__capture_object = mss()
