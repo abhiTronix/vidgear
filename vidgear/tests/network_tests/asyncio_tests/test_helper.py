@@ -29,6 +29,7 @@ import pytest
 
 from vidgear.gears.asyncio.helper import (
     create_blank_frame,
+    h264_access_units,
     reducer,
 )
 from vidgear.gears.helper import logger_handler, retrieve_best_interpolation
@@ -131,3 +132,27 @@ def test_retrieve_best_interpolation(interpolations):
             assert output, "Test failed"
     except Exception as e:
         pytest.fail(str(e))
+
+
+def nal(nal_type, first_mb=True, payload=b"\xaa\xbb", long_code=True):
+    """
+    returns Annex-B NAL unit; slices carry `first_mb_in_slice == 0` flag in MSB of first payload byte
+    """
+    body = (b"\x80" if first_mb else b"\x00") + payload if nal_type in (1, 5) else payload
+    return (b"\x00\x00\x00\x01" if long_code else b"\x00\x00\x01") + bytes([0x60 | nal_type]) + body
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("chunk_size", [1, 3, 7, 65536])
+async def test_h264_access_units(chunk_size):
+    """
+    Testing H.264 Annex-B access-unit assembly: keyframe bundling, multi-slice pictures, chunk boundaries & EOF flush
+    """
+    keyframe = nal(7) + nal(8) + nal(6, long_code=False) + nal(5) + nal(5, first_mb=False)
+    delta1 = nal(1) + nal(1, first_mb=False, long_code=False)
+    delta2 = nal(1)
+    reader = asyncio.StreamReader()
+    reader.feed_data(keyframe + delta1 + delta2)
+    reader.feed_eof()
+    units = [u async for u in h264_access_units(reader, chunk_size=chunk_size)]
+    assert units == [keyframe, delta1, delta2]
