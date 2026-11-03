@@ -40,6 +40,8 @@ with open("README.md", encoding="utf-8") as fh:
     # patch for unicodes
     long_description = long_description.replace("➶", ">>").replace("©", "(c)")
 
+# render your description correctly
+# on PyPI using Markdown
 setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
