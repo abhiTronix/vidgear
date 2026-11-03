@@ -20,6 +20,8 @@ limitations under the License.
 
 # WebGear Bonus Examples
 
+!!! tip "Following examples explicitly use WebGear's [MJPEG Mode](../gears/webgear/#modes-of-operation) with JPEG performance tweaks. To use default low-latency H.264 Mode instead, set `"streaming_mode": "h264"` and drop all `jpeg_compression_*` attributes _(except Custom Sources, which only work in MJPEG Mode)_."
+
 &thinsp;
 
 ## Using WebGear with RaspberryPi Camera Module
@@ -37,16 +39,17 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
 
 === "New Picamera2 backend"
 
-    ```python linenums="1" hl_lines="5 23"
+    ```python linenums="1" hl_lines="5 10 24"
     # import libs
     import uvicorn
     from libcamera import Transform
     from vidgear.gears.asyncio import WebGear
     from vidgear.gears.helper import Backend
 
-    # various WebGear_RTC performance 
+    # MJPEG mode with various WebGear performance
     # and Picamera2 API tweaks
     options = {
+        "streaming_mode": "mjpeg",
         "frame_size_reduction": 40,
         "jpeg_compression_quality": 80,
         "jpeg_compression_fastdct": True,
@@ -82,14 +85,15 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
 
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../gears/pigear/params) user-defined optional parameter boolean attribute."
 
-    ```python linenums="1" hl_lines="4 22"
+    ```python linenums="1" hl_lines="4 8 23"
     # import libs
     import uvicorn
     from vidgear.gears.asyncio import WebGear
     from vidgear.gears.helper import Backend
 
-    # various webgear performance and Picamera API tweaks
+    # MJPEG mode with various webgear performance and Picamera API tweaks
     options = {
+        "streaming_mode": "mjpeg",
         "frame_size_reduction": 40,
         "jpeg_compression_quality": 80,
         "jpeg_compression_fastdct": True,
@@ -120,14 +124,15 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
 
 Here's a bare-minimum example of using WebGear API with the [FFGear backend](../gears/ffgear/) for hardware-accelerated FFmpeg-powered video decoding:
 
-```python linenums="1" hl_lines="4 16"
+```python linenums="1" hl_lines="4 8 17"
 # import libs
 import uvicorn
 from vidgear.gears.asyncio import WebGear
 from vidgear.gears.helper import Backend
 
-# various WebGear performance tweaks
+# MJPEG mode with various WebGear performance tweaks
 options = {
+    "streaming_mode": "mjpeg",
     "frame_size_reduction": 40,
     "jpeg_compression_quality": 80,
     "jpeg_compression_fastdct": True,
@@ -155,13 +160,14 @@ web.shutdown()
  
 Here's an example of using WebGear API with real-time Video Stabilization enabled:
 
-```python linenums="1" hl_lines="14"
+```python linenums="1" hl_lines="7 15"
 # import libs
 import uvicorn
 from vidgear.gears.asyncio import WebGear
 
-# various webgear performance tweaks
+# MJPEG mode with various webgear performance tweaks
 options = {
+    "streaming_mode": "mjpeg",
     "frame_size_reduction": 40,
     "jpeg_compression_quality": 80,
     "jpeg_compression_fastdct": True,
@@ -220,7 +226,7 @@ web.shutdown()
 
 **Step-3 (Build your own Frame Producers):** Now, create a python script code with OpenCV source, as follows:
 
-```python linenums="1"  hl_lines="9 15-38 42-65 68-77 81 84-86"
+```python linenums="1"  hl_lines="10 16-39 43-66 69-78 82 85-87"
 # import necessary libs
 import uvicorn, asyncio, cv2
 from vidgear.gears.asyncio import WebGear
@@ -228,8 +234,9 @@ from vidgear.gears.asyncio.helper import reducer
 from starlette.responses import StreamingResponse
 from starlette.routing import Route
 
-# provide current directory to load data files
-options = {"custom_data_location": "./"}
+# provide current directory to load data files, and use MJPEG mode
+# (custom sources only work in MJPEG mode)
+options = {"custom_data_location": "./", "streaming_mode": "mjpeg"}
 
 # initialize WebGear app without any source
 web = WebGear(logging=True, **options)
