@@ -292,8 +292,9 @@ from vidgear.gears import NetGear
 from vidgear.gears.asyncio import WebGear
 from vidgear.gears.asyncio.helper import reducer
 
-# initialize WebGear app without any source
-web = WebGear(logging=True)
+# initialize WebGear app without any source in MJPEG mode
+# (custom sources only work in MJPEG mode)
+web = WebGear(logging=True, streaming_mode="mjpeg")
 
 # activate JPEG compression for performance
 options = {
