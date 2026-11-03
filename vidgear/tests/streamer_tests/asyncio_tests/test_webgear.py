@@ -32,7 +32,7 @@ import requests
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse, PlainTextResponse
-from starlette.routing import Route
+from starlette.routing import Route, WebSocketRoute
 from starlette.testclient import TestClient
 
 from vidgear.gears.asyncio import WebGear
@@ -330,6 +330,78 @@ def test_webgear_ffgear_backend():
         web.shutdown()
     except Exception as e:
         pytest.fail(str(e))
+
+
+def nal_types(unit):
+    """
+    returns H.264 NAL unit types inside Annex-B access unit
+    """
+    return [
+        unit[i + 3] & 0x1F
+        for i in range(len(unit) - 3)
+        if unit[i : i + 3] == b"\x00\x00\x01"
+    ]
+
+
+@pytest.mark.parametrize(
+    "options",
+    [
+        {"streaming_mode": "h264"},
+        {
+            "streaming_mode": " H264 ",
+            "h264_options": {"-crf": 30, "-g": 10},
+            "frame_size_reduction": 35,  # odd frame dimensions get cropped
+            "custom_video_endpoint": "xyz",
+        },
+    ],
+)
+def test_webgear_h264_streaming(options):
+    """
+    Test WebGear API's low-latency H.264 WebSocket streaming
+    """
+    try:
+        web = WebGear(source=return_testvideo_path(), logging=True, **options)
+        endpoint = "/xyz" if "custom_video_endpoint" in options else "/video"
+        client = TestClient(web(), raise_server_exceptions=True)
+        response = client.get("/")
+        assert response.status_code == 200
+        assert 'data-mode="h264"' in response.text
+        with client.websocket_connect("/ws{}".format(endpoint)) as ws:
+            keyframe = ws.receive_bytes()
+            delta = ws.receive_bytes()
+        # MJPEG route stays available as fallback (drains source, so tested last)
+        assert client.get(endpoint).status_code == 200
+        assert keyframe.startswith(b"\x00\x00\x00\x01")
+        assert {7, 8, 5} <= set(nal_types(keyframe))
+        assert set(nal_types(delta)) == {1}
+        web.shutdown()
+    except Exception as e:
+        pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "source, options",
+    [
+        (return_testvideo_path(), {"streaming_mode": "invalid", "h264_options": "invalid"}),
+        (None, {"streaming_mode": "h264"}),  # custom generators stay MJPEG
+        (return_testvideo_path(), {"streaming_mode": "h264", "skip_generate_webdata": True}),
+    ],
+)
+def test_webgear_h264_fallback(source, options):
+    """
+    Test WebGear API's H.264 streaming fallback & routes
+    """
+    web = WebGear(source=source, logging=True, **options)
+    if source is None:
+        web.config["generator"] = custom_frame_generator
+    ws_routes = [r.path for r in web.routes if isinstance(r, WebSocketRoute)]
+    if options.get("skip_generate_webdata"):
+        assert ws_routes == ["/ws/video"]
+    else:
+        assert not ws_routes
+        client = TestClient(web(), raise_server_exceptions=True)
+        assert 'data-mode="mjpeg"' in client.get("/").text
+    web.shutdown()
 
 
 def test_webgear_enablePiCamera_deprecated():
