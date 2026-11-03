@@ -23,6 +23,17 @@ limitations under the License.
 ## v0.3.7 (In Progress)
 
 ???+ tip "New Features"
+    - [x] ⚡️ **WebGear: Low-Latency H.264 Streaming:**
+        * Added `streaming_mode` _(`"mjpeg"`/`"h264"`)_ and `h264_options` attributes. In `"h264"` mode, frames are encoded with FFmpeg _(`libx264 -preset ultrafast -tune zerolatency`, baseline profile)_ and streamed as complete H.264 Annex-B access units over a WebSocket at `/ws/<video endpoint>`, while `/video` MJPEG endpoint stays available as fallback.
+        * Added `h264_access_units` async helper that groups NAL units into whole frames _(SPS/PPS/SEI bundled with IDR, multi-slice pictures kept together)_.
+        * Reuses `custom_ffmpeg` parameter for the encoder, and falls back to MJPEG with a warning when FFmpeg or `source` is unavailable.
+        * Homepage template now receives `streaming_mode` and `video_endpoint` context, so Default Theme follows `custom_video_endpoint` too.
+        * Up to ~9x _(high-motion)_ to ~38x _(static)_ lower bandwidth than MJPEG at 1080p30, with ~50ms server-to-canvas latency on localhost.
+    - [x] 💄 **WebGear Default Theme `v0.2.0`** _(vidgear-vitals)_:
+        * Added off-thread WebCodecs `VideoDecoder` worker _(`videoFrameDecoderWorker.js`)_ with SPS-derived codec string and backlog dropping, `<canvas>` renderer, and automatic MJPEG fallback.
+        * Added live telemetry HUD _(status, codec, resolution, FPS, bandwidth, decode latency)_.
+        * Modernized dark theme with zero external dependencies _(native Fullscreen API, inline SVG icons, system fonts)_.
+        * Added Playwright CI tests covering all streaming & fallback paths.
     - [x] ✨ **Unified FFmpeg Execution (`helper.run_ffmpeg`):**
         * Added a shared primitive for one-shot FFmpeg runs, capturing exit code, a bounded stderr tail, progress, timeout and cancellation in one place. Used by WriteGear's `execute_ffmpeg_cmd` and StreamGear's Single-Source Mode.
     - [x] **WriteGear:**
@@ -42,6 +53,13 @@ limitations under the License.
 ??? success "Updates/Improvements"
     - [x] **Helper:** `check_output` now defaults FFmpeg's `stdin` to `DEVNULL` and supports a `timeout` _(terminate, then kill)_.
     - [x] **Tests:** Added tests for all of the above, plus regressions for the bug-fixes below.
+    - [x] **WebGear:** `generate_webdata` now also validates and downloads `videoFrameDecoderWorker.js` for WebGear, and shares the raw-frame pipeline between MJPEG and H.264 modes.
+    - [x] **Tests:** Added WebGear H.264 WebSocket streaming/fallback tests and `h264_access_units` parser tests.
+    - [x] **Docs:** Added Low-Latency H.264 Streaming usage, parameters, benchmarks & FAQs, and updated WebGear Default Theme screenshots.
+
+??? danger "Breaking Updates/Changes"
+    - [ ] **Removed WebGear/WebGear_RTC terminal CLI:**
+        * Removed outdated `vidgear/gears/asyncio/__main__.py` _(i.e. `python -m vidgear.gears.asyncio`)_ and its docs. Run WebGear/WebGear_RTC programmatically with Uvicorn instead.
 
 ??? bug "Bug-fixes"
     - [x] **FFGear:**
