@@ -32,6 +32,8 @@ import numpy as np
 
 from ..helper import (
     Backend,
+    dict2Args,
+    get_valid_ffmpeg_path,
     import_dependency_safe,
     logcurr_vidgear_ver,
     logger_handler,
@@ -45,6 +47,7 @@ from ..videogear import VideoGear
 from .helper import (
     create_blank_frame,
     generate_webdata,
+    h264_access_units,
     reducer,
 )
 
@@ -54,7 +57,7 @@ if starlette is not None:
     from starlette.applications import Starlette
     from starlette.middleware import Middleware
     from starlette.responses import JSONResponse, StreamingResponse
-    from starlette.routing import Mount, Route
+    from starlette.routing import Mount, Route, WebSocketRoute
     from starlette.staticfiles import StaticFiles
     from starlette.templating import Jinja2Templates
 simplejpeg = import_dependency_safe("simplejpeg", error="silent", min_version="1.6.1")
@@ -76,7 +79,8 @@ class WebGear:
 
     WebGear API uses an intraframe-only compression scheme under the hood where the sequence of video-frames are first encoded as JPEG-DIB (JPEG with Device-Independent Bit compression)
     and then streamed over HTTP using Starlette's Multipart Streaming Response and a Uvicorn ASGI Server. This method imposes lower processing and memory requirements, but the quality
-    is not the best, since JPEG compression is not very efficient for motion video.
+    is not the best, since JPEG compression is not very efficient for motion video. Therefore, WebGear also provides an optional low-latency H.264 streaming mode
+    (`streaming_mode="h264"`) where frames are encoded with FFmpeg and delivered over WebSockets to the browser's WebCodecs decoder, with automatic MJPEG fallback.
 
     In layman's terms, WebGear acts as a powerful Video Broadcaster that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides internal
     wrapper around VideoGear, which itself provides internal access to both CamGear and PiGear APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
@@ -125,7 +129,7 @@ class WebGear:
                 (e.g. `"v4l2"`, `"dshow"`, `"avfoundation"`). Default: `None` (auto-detect).
             frame_format (str): [FFGear only] specifies the pixel layout for decoded frames
                 (any FFmpeg-supported pix_fmt, e.g. `"bgr24"`, `"gray"`, `"yuv420p"`). Default: `"bgr24"`.
-            custom_ffmpeg (str): [FFGear only] path to a custom FFmpeg executable. Default: `""` (use PATH).
+            custom_ffmpeg (str): [FFGear & H.264 streaming] path to a custom FFmpeg executable. Default: `""` (use PATH).
             colorspace (str): [CamGear/PiGear only] selects the colorspace of the input stream.
             logging (bool): enables/disables logging. Default: `False`.
             time_delay (int): [CamGear/PiGear only] time delay (in seconds) before reading frames.
@@ -173,6 +177,15 @@ class WebGear:
         data_path = ""  # path to WebGear data-files
         overwrite_default = False
         self.__enable_inf = False  # continue frames even when video ends.
+        self.__streaming_mode = "mjpeg"  # MJPEG by default, or low-latency "h264"
+        # default low-latency H.264 FFmpeg encoder parameters
+        self.__h264_params = {
+            "-c:v": "libx264",
+            "-preset": "ultrafast",
+            "-tune": "zerolatency",
+            "-profile:v": "baseline",
+            "-pix_fmt": "yuv420p",
+        }
 
         # reformat dictionary
         options = {str(k).strip(): v for k, v in options.items()}
@@ -295,6 +308,47 @@ class WebGear:
                     logger.warning("Skipped invalid `enable_infinite_frames` value!")
                 del options["enable_infinite_frames"]  # clean
 
+            if "streaming_mode" in options:
+                value = options["streaming_mode"]
+                if isinstance(value, str) and value.strip().lower() in ["mjpeg", "h264"]:
+                    self.__streaming_mode = value.strip().lower()
+                else:
+                    logger.warning("Skipped invalid `streaming_mode` value!")
+                del options["streaming_mode"]  # clean
+
+            if "h264_options" in options:
+                value = options["h264_options"]
+                if isinstance(value, dict):
+                    # user-defined FFmpeg output parameters override defaults
+                    self.__h264_params.update(
+                        {str(k).strip(): v for k, v in value.items()}
+                    )
+                else:
+                    logger.warning("Skipped invalid `h264_options` value!")
+                del options["h264_options"]  # clean
+
+        # validate low-latency H.264 streaming prerequisites
+        self.__ffmpeg = ""
+        if self.__streaming_mode == "h264":
+            if source is None:
+                # custom generators yield ready-made JPEG bytes, not frames
+                logger.warning(
+                    "H.264 streaming needs a valid `source`. Falling back to MJPEG streaming!"
+                )
+                self.__streaming_mode = "mjpeg"
+            else:
+                self.__ffmpeg = get_valid_ffmpeg_path(
+                    custom_ffmpeg, os.name == "nt", logging=self.__logging
+                )
+                if not self.__ffmpeg:
+                    logger.warning(
+                        "Failed to find valid FFmpeg executable. Falling back to MJPEG streaming!"
+                    )
+                    self.__streaming_mode = "mjpeg"
+        self.__video_endpoint = "/{}".format(
+            custom_video_endpoint if custom_video_endpoint else "video"
+        )
+
         # check if disable Data-Files Auto-Generation WorkFlow is disabled
         if not self.__skip_generate_webdata:
             # check if custom data path is specified
@@ -327,12 +381,7 @@ class WebGear:
             # define routing tables
             self.routes = [
                 Route("/", endpoint=self.__homepage),
-                Route(
-                    "/{}".format(
-                        custom_video_endpoint if custom_video_endpoint else "video"
-                    ),
-                    endpoint=self.__video,
-                ),
+                Route(self.__video_endpoint, endpoint=self.__video),
                 Mount(
                     "/static",
                     app=StaticFiles(directory="{}/static".format(data_path)),
@@ -345,17 +394,24 @@ class WebGear:
                 "WebGear Data-Files Auto-Generation WorkFlow has been manually disabled."
             )
             # define routing tables
-            self.routes = [
-                Route(
-                    "/{}".format(
-                        custom_video_endpoint if custom_video_endpoint else "video"
-                    ),
-                    endpoint=self.__video,
-                ),
-            ]
+            self.routes = [Route(self.__video_endpoint, endpoint=self.__video)]
             # log exceptions
             self.__logging and logger.warning(
-                "Only `/video` route is available for this instance."
+                "Only `{}` route is available for this instance.".format(
+                    self.__video_endpoint
+                )
+            )
+        # add low-latency H.264 WebSocket route (MJPEG route stays as fallback)
+        if self.__streaming_mode == "h264":
+            self.routes.append(
+                WebSocketRoute(
+                    "/ws{}".format(self.__video_endpoint), endpoint=self.__ws_video
+                )
+            )
+            self.__logging and logger.debug(
+                "Enabling low-latency H.264 streaming at `/ws{}` with FFmpeg parameters: `{}`.".format(
+                    self.__video_endpoint, self.__h264_params
+                )
             )
 
         # define custom exception handlers
@@ -462,9 +518,9 @@ class WebGear:
             lifespan=self.__lifespan,
         )
 
-    async def __producer(self):
+    async def __frames(self):
         """
-        WebGear's default asynchronous frame producer/generator.
+        WebGear's asynchronous raw frame generator, shared by MJPEG and H.264 streaming.
         """
         # loop over frames
         while self.__isrunning:
@@ -496,7 +552,13 @@ class WebGear:
                     percentage=self.__frame_size_reduction,
                     interpolation=self.__interpolation,
                 )
+            yield frame
 
+    async def __producer(self):
+        """
+        WebGear's default asynchronous frame producer/generator.
+        """
+        async for frame in self.__frames():
             # handle JPEG encoding
             if self.__jpeg_compression_colorspace == "GRAY":
                 if frame.ndim == 2:
@@ -534,12 +596,95 @@ class WebGear:
             media_type="multipart/x-mixed-replace; boundary=frame",
         )
 
+    async def __ws_video(self, websocket):
+        """
+        Streams low-latency H.264 Annex-B access units over WebSocket, encoded with FFmpeg.
+        """
+        await websocket.accept()
+        frames = self.__frames()
+        frame = await anext(frames, None)
+        if frame is None:
+            await websocket.close()
+            return
+        # yuv420p needs even dimensions
+        height, width = frame.shape[:2]
+        height, width = height - height % 2, width - width % 2
+        fps = getattr(self.__stream, "framerate", 0) or 30
+        pix_fmt = (
+            "gray"
+            if frame.ndim == 2 or self.__jpeg_compression_colorspace == "GRAY"
+            else {
+                "RGB": "rgb24",
+                "RGBA": "rgba",
+                "BGRA": "bgra",
+                "ARGB": "argb",
+                "ABGR": "abgr",
+                "RGBX": "rgb0",
+                "BGRX": "bgr0",
+                "XRGB": "0rgb",
+                "XBGR": "0bgr",
+            }.get(self.__jpeg_compression_colorspace, "bgr24")
+        )
+        # ponytail: one encoder per client, share one with forced IDR on join if many viewers
+        process = await asyncio.create_subprocess_exec(
+            self.__ffmpeg,
+            *["-hide_banner", "-loglevel", "error"],
+            *["-f", "rawvideo", "-pix_fmt", pix_fmt],
+            *["-s", "{}x{}".format(width, height), "-framerate", str(fps)],
+            *["-i", "-"],
+            *dict2Args({"-g": int(fps * 2), **self.__h264_params}),
+            *["-flush_packets", "1", "-f", "h264", "-"],
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.DEVNULL,
+        )
+
+        async def feeder(frame):
+            # pace raw frames at source framerate, EOF lets FFmpeg flush
+            loop = asyncio.get_running_loop()
+            deadline = loop.time()
+            try:
+                while frame is not None:
+                    process.stdin.write(frame[:height, :width].tobytes())
+                    await process.stdin.drain()
+                    deadline += 1 / fps
+                    await asyncio.sleep(max(0, deadline - loop.time()))
+                    frame = await anext(frames, None)
+            except (BrokenPipeError, ConnectionResetError):
+                pass
+            finally:
+                process.stdin.close()
+
+        feeding = asyncio.create_task(feeder(frame))
+        try:
+            async for unit in h264_access_units(process.stdout):
+                await websocket.send_bytes(unit)
+        except Exception as e:
+            # client gone mid-stream
+            self.__logging and logger.debug("H.264 client disconnected: {}".format(e))
+        finally:
+            feeding.cancel()
+            await asyncio.gather(feeding, return_exceptions=True)
+            if process.returncode is None:
+                process.kill()
+            await process.wait()
+            await frames.aclose()
+            with contextlib.suppress(Exception):
+                await websocket.close()
+
     async def __homepage(self, request):
         """
         Returns an HTML index page.
         """
         return (
-            self.__templates.TemplateResponse(request, "index.html")
+            self.__templates.TemplateResponse(
+                request,
+                "index.html",
+                {
+                    "streaming_mode": self.__streaming_mode,
+                    "video_endpoint": self.__video_endpoint,
+                },
+            )
             if not self.__skip_generate_webdata
             else JSONResponse(
                 {

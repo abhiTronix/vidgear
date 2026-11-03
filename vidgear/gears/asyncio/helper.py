@@ -148,6 +148,54 @@ async def reducer(
     return cv2.resize(frame, dimensions, interpolation=interpolation)
 
 
+async def h264_access_units(reader, chunk_size: int = 65536):
+    """
+    Asynchronous generator that splits a raw H.264 Annex-B byte-stream into complete access units (frames),
+    so parameter sets (SPS/PPS), SEI and IDR slices travel together as one keyframe payload and multi-slice
+    pictures are never split across payloads.
+
+    Parameters:
+        reader (asyncio.StreamReader): Annex-B byte-stream source (e.g. FFmpeg's stdout).
+        chunk_size (int): bytes to read per iteration.
+
+    **Yields:** Annex-B access unit as bytes.
+    """
+    start_code = b"\x00\x00\x01"
+    buffer, unit, has_vcl = b"", [], False
+    while True:
+        data = await reader.read(chunk_size)
+        buffer += data
+        while buffer:
+            # NAL ends where next start code begins (skip own start code + header byte)
+            end = buffer.find(start_code, 4)
+            if end < 0:
+                if data:
+                    break  # wait for more data
+                end = len(buffer)  # EOF: flush tail
+            elif buffer[end - 1] == 0:
+                end -= 1  # keep 4-byte start code intact
+            nal, buffer = buffer[:end], buffer[end:]
+            header = nal.find(start_code) + 3
+            if header < 3 or header >= len(nal):
+                continue  # no NAL header
+            nal_type = nal[header] & 0x1F
+            is_vcl = nal_type in (1, 5)
+            # new access unit starts on AUD/SEI/SPS/PPS, or on slice with `first_mb_in_slice == 0`
+            # ponytail: AU end is only known when next AU starts (~1 frame latency), fine at >=15fps
+            if has_vcl and (
+                nal_type in (6, 7, 8, 9)
+                or (is_vcl and len(nal) > header + 1 and nal[header + 1] & 0x80)
+            ):
+                yield b"".join(unit)
+                unit, has_vcl = [], False
+            unit.append(nal)
+            has_vcl = has_vcl or is_vcl
+        if not data:
+            if unit:
+                yield b"".join(unit)
+            return
+
+
 def generate_webdata(
     path: str,
     c_name: str = "webgear",
@@ -187,16 +235,25 @@ def generate_webdata(
     mkdir_safe(css_static_dir, logging=logging)
     mkdir_safe(favicon_dir, logging=logging)
 
+    # WebGear additionally needs its H.264 WebCodecs decoder worker
+    js_files = (
+        ["custom.js", "videoFrameDecoderWorker.js"]
+        if c_name == "webgear"
+        else ["custom.js"]
+    )
+
     # check if overwriting is enabled
-    if overwrite_default or not validate_webdata(
-        template_dir, ["index.html", "404.html", "500.html"]
+    if (
+        overwrite_default
+        or not validate_webdata(template_dir, ["index.html", "404.html", "500.html"])
+        or not validate_webdata(js_static_dir, js_files)
     ):
         logger.critical(
             "Overwriting existing {} data-files with default data-files from the server!".format(
                 c_name.capitalize()
             )
             if overwrite_default
-            else "Failed to detect critical {} data-files: index.html, 404.html & 500.html!".format(
+            else "Failed to detect critical {} data-files!".format(
                 c_name.capitalize()
             )
         )
@@ -218,7 +275,7 @@ def generate_webdata(
         download_webdata(
             js_static_dir,
             c_name=c_name,
-            files=["custom.js"],
+            files=js_files,
             logging=logging,
         )
         download_webdata(
