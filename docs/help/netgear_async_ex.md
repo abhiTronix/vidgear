@@ -80,8 +80,9 @@ if __name__ == "__main__":
     # Set event loop to client's
     asyncio.set_event_loop(client.loop)
 
-    # initialize WebGear app without any source
-    web = WebGear(logging=True)
+    # initialize WebGear app without any source in MJPEG mode
+    # (custom sources only work in MJPEG mode)
+    web = WebGear(logging=True, streaming_mode="mjpeg")
 
     # add your custom frame producer to config with adequate IP address
     web.config["generator"] = my_frame_producer
