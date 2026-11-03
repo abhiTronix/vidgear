@@ -40,66 +40,29 @@ You'll also need to install an ASGI Server to run following WebGear usage exampl
 &thinsp;
 
 
-## Performance Enhancements :fire:
-
-WebGear provides certain performance enhancing attributes for its [`options`](params/#options) dictionary parameter to cope with performance-throttling.
-
-!!! tip "Performance Enhancing Attributes"
-
-    * **`frame_size_reduction`**: _(int/float)_ _This attribute controls the size reduction(in percentage) of the frame to be streamed on Server._ Its value has the most significant effect on WebGear performance: More its value, smaller will be frame size and faster will be live streaming. The value defaults to `25`, and must be lower than `90` _(higher values are faster, with max compression and barely visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40~60`. Its usage is as follows:
-
-        ```python
-        options={"frame_size_reduction": 50} #frame-size will be reduced by 50%
-        ```
-     
-    * **Various Encoding Parameters:**
-
-        In WebGear API, the input video frames are first encoded into [**Motion JPEG (M-JPEG or MJPEG**)](https://en.wikipedia.org/wiki/Motion_JPEG) compression format, in which each video frame or interlaced field of a digital video sequence is compressed separately as a JPEG image using [`simplejpeg`](https://gitlab.com/jfolz/simplejpeg) library, before sending onto a server. Therefore, WebGear API provides various attributes to have full control over JPEG encoding performance and quality, which are as follows:
-
-        * **`jpeg_compression_quality`**: _(int/float)_ This attribute controls the JPEG quantization factor. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. Its usage is as follows:
-
-            ```python
-            # activate jpeg encoding and set quality 95%
-            options = {"jpeg_compression_quality": 95}
-            ```
-
-        * **`jpeg_compression_fastdct`**: _(bool)_ This attribute if True, WebGear API uses fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`, and its usage is as follows:
-        
-            ```python
-            # activate jpeg encoding and enable fast dct
-            options = {"jpeg_compression_fastdct": True}
-            ```
-
-        * **`jpeg_compression_fastupsample`**: _(bool)_ This attribute if True, WebGear API use fastest color upsampling method. Its default value is `False`, and its usage is as follows:
-        
-            ```python
-            # activate jpeg encoding and enable fast upsampling
-            options = {"jpeg_compression_fastupsample": True}
-            ```
-
-&nbsp; 
-
-
 ## Low-Latency H.264 Streaming :zap:
 
 ??? new "New in v0.3.7"
     Low-Latency H.264 Streaming was added in `v0.3.7`.
 
-With [`streaming_mode="h264"`](params/#webgear-specific-attributes), WebGear encodes frames with FFmpeg _(`libx264 -preset ultrafast -tune zerolatency`)_ and pushes each complete H.264 frame as a binary WebSocket message at `/ws/video`. WebGear's Default Theme decodes them with the browser's hardware-accelerated **WebCodecs** `VideoDecoder` inside a Web Worker and paints them on a `<canvas>`, while a telemetry HUD shows live FPS, bandwidth and decode latency.
+By default _([`streaming_mode="h264"`](params/#webgear-specific-attributes))_, WebGear encodes frames with FFmpeg _(`libx264 -preset ultrafast -tune zerolatency`)_ and pushes each complete H.264 frame as a binary WebSocket message at `/ws/video`. WebGear's Default Theme decodes them with the browser's hardware-accelerated **WebCodecs** `VideoDecoder` inside a Web Worker and paints them on a `<canvas>`, while a telemetry HUD shows live FPS, bandwidth and decode latency.
+
+!!! danger "Higher Server CPU usage"
+    Every connected viewer starts its own FFmpeg encoder process in this mode, so server CPU usage grows with the number of viewers. Use [MJPEG Mode](#bare-minimum-usage-with-mjpeg-mode-performance-enhancements) for many simultaneous viewers on a low-power server. See [Modes of Operation ➶](../#modes-of-operation) for more details.
 
 !!! warning "Requirements"
-    * **Server:** FFmpeg with `libx264` encoder must be installed _(or set via [`custom_ffmpeg`](params/#custom_ffmpeg))_.
+    * **Server:** FFmpeg with `libx264` encoder must be installed _(or set via [`custom_ffmpeg`](params/#custom_ffmpeg))_. On Windows :fontawesome-brands-windows:, WebGear looks for FFmpeg on startup, and may download a static FFmpeg build if none is found.
     * **Browser:** WebCodecs support _(Chrome/Edge 94+, Safari 16.4+, Firefox 130+)_ inside a [Secure Context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts), i.e. `https://` or `http://localhost`.
 
 !!! info "Automatic MJPEG Fallback"
-    The `/video` MJPEG endpoint stays available, and the Default Theme automatically falls back to it whenever WebCodecs is unavailable _(including plain `http://` on non-localhost hosts)_ or WebSocket stream fails. MJPEG [Performance Enhancing Attributes](#performance-enhancements) therefore still apply to the fallback stream.
+    The `/video` MJPEG endpoint stays available, and the Default Theme automatically falls back to it whenever WebCodecs is unavailable _(including plain `http://` on non-localhost hosts)_ or WebSocket stream fails. MJPEG [Performance Enhancing Attributes](#mjpeg-performance-enhancing-attributes) therefore still apply to the fallback stream.
 
-```python linenums="1" hl_lines="7-8"
+```python linenums="1" hl_lines="6-7"
 # import required libraries
 import uvicorn
 from vidgear.gears.asyncio import WebGear
 
-# enable H.264 streaming, and keep frames at original size
+# H.264 mode (default), tweak encoder, and keep frames at original size
 options = {
     "streaming_mode": "h264",
     "h264_options": {"-crf": 23},  # optional encoder tweaks
@@ -134,24 +97,65 @@ which can be accessed on any WebCodecs-capable browser on your machine at http:/
 
 &nbsp;
 
-## Bare-Minimum Usage with Performance Enhancements
+## Bare-Minimum Usage with MJPEG Mode Performance Enhancements
 
-Let's implement our Bare-Minimum usage example with these [**Performance Enhancing Attributes** ➶](#performance-enhancements) for speeding up the output.
+When [`streaming_mode="mjpeg"`](params/#webgear-specific-attributes), WebGear only streams JPEG-encoded frames over HTTP at `/video` endpoint, with no FFmpeg dependency. See [Modes of Operation ➶](../#modes-of-operation) for its pros and cons.
+
+!!! warning "Following JPEG Performance Enhancing Attributes only work in MJPEG Mode _(and in H.264 Mode's MJPEG fallback stream)_, and have no effect on H.264 encoding, except `frame_size_reduction`."
+
+### MJPEG Performance Enhancing Attributes :fire:
+
+In MJPEG Mode, WebGear provides certain performance enhancing attributes for its [`options`](params/#options) dictionary parameter to cope with performance-throttling.
+
+!!! tip "Performance Enhancing Attributes"
+
+    * **`frame_size_reduction`**: _(int/float)_ _This attribute controls the size reduction(in percentage) of the frame to be streamed on Server._ Its value has the most significant effect on WebGear performance: More its value, smaller will be frame size and faster will be live streaming. The value defaults to `25`, and must be lower than `90` _(higher values are faster, with max compression and barely visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40~60`. This attribute downsizes frames in H.264 Mode too. Its usage is as follows:
+
+        ```python
+        options={"frame_size_reduction": 50} #frame-size will be reduced by 50%
+        ```
+     
+    * **Various Encoding Parameters:**
+
+        In MJPEG Mode, the input video frames are first encoded into [**Motion JPEG (M-JPEG or MJPEG**)](https://en.wikipedia.org/wiki/Motion_JPEG) compression format, in which each video frame or interlaced field of a digital video sequence is compressed separately as a JPEG image using [`simplejpeg`](https://gitlab.com/jfolz/simplejpeg) library, before sending onto a server. Therefore, WebGear API provides various attributes to have full control over JPEG encoding performance and quality, which are as follows:
+
+        * **`jpeg_compression_quality`**: _(int/float)_ This attribute controls the JPEG quantization factor. Its value varies from `10` to `100` (the higher is the better quality but performance will be lower). Its default value is `90`. Its usage is as follows:
+
+            ```python
+            # activate jpeg encoding and set quality 95%
+            options = {"jpeg_compression_quality": 95}
+            ```
+
+        * **`jpeg_compression_fastdct`**: _(bool)_ This attribute if True, WebGear API uses fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`, and its usage is as follows:
+        
+            ```python
+            # activate jpeg encoding and enable fast dct
+            options = {"jpeg_compression_fastdct": True}
+            ```
+
+        * **`jpeg_compression_fastupsample`**: _(bool)_ This attribute if True, WebGear API use fastest color upsampling method. Its default value is `False`, and its usage is as follows:
+        
+            ```python
+            # activate jpeg encoding and enable fast upsampling
+            options = {"jpeg_compression_fastupsample": True}
+            ```
+
 
 ### Running Programmatically :fontawesome-brands-python:
 
-You can access and run WebGear VideoStreamer Server programmatically in your python script in just a few lines of code, as follows:
+Let's implement our Bare-Minimum usage example in MJPEG Mode with these [**Performance Enhancing Attributes** ➶](#mjpeg-performance-enhancing-attributes) for speeding up the output, as follows:
 
 !!! tip "For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](../../help/webgear_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear)"
 
 
-```python linenums="1" hl_lines="7-10"
+```python linenums="1" hl_lines="7-11"
 # import required libraries
 import uvicorn
 from vidgear.gears.asyncio import WebGear
 
-# various performance tweaks
+# MJPEG mode with various performance tweaks
 options = {
+    "streaming_mode": "mjpeg",
     "frame_size_reduction": 40,
     "jpeg_compression_quality": 80,
     "jpeg_compression_fastdct": True,
