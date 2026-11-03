@@ -79,7 +79,7 @@ class WebGear:
 
     WebGear API uses an intraframe-only compression scheme under the hood where the sequence of video-frames are first encoded as JPEG-DIB (JPEG with Device-Independent Bit compression)
     and then streamed over HTTP using Starlette's Multipart Streaming Response and a Uvicorn ASGI Server. This method imposes lower processing and memory requirements, but the quality
-    is not the best, since JPEG compression is not very efficient for motion video. Therefore, WebGear also provides an optional low-latency H.264 streaming mode
+    is not the best, since JPEG compression is not very efficient for motion video. Therefore, WebGear by default uses a low-latency H.264 streaming mode
     (`streaming_mode="h264"`) where frames are encoded with FFmpeg and delivered over WebSockets to the browser's WebCodecs decoder, with automatic MJPEG fallback.
 
     In layman's terms, WebGear acts as a powerful Video Broadcaster that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides internal
@@ -177,7 +177,7 @@ class WebGear:
         data_path = ""  # path to WebGear data-files
         overwrite_default = False
         self.__enable_inf = False  # continue frames even when video ends.
-        self.__streaming_mode = "mjpeg"  # MJPEG by default, or low-latency "h264"
+        self.__streaming_mode = ""  # low-latency "h264" by default, or "mjpeg"
         # default low-latency H.264 FFmpeg encoder parameters
         self.__h264_params = {
             "-c:v": "libx264",
@@ -329,10 +329,12 @@ class WebGear:
 
         # validate low-latency H.264 streaming prerequisites
         self.__ffmpeg = ""
+        explicit_h264 = self.__streaming_mode == "h264"
+        self.__streaming_mode = self.__streaming_mode or "h264"
         if self.__streaming_mode == "h264":
             if source is None:
                 # custom generators yield ready-made JPEG bytes, not frames
-                logger.warning(
+                (logger.warning if explicit_h264 else logger.debug)(
                     "H.264 streaming needs a valid `source`. Falling back to MJPEG streaming!"
                 )
                 self.__streaming_mode = "mjpeg"
