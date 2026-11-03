@@ -24,8 +24,10 @@ import contextlib
 import inspect
 import logging as log
 import os
+import subprocess
 import warnings
 from os.path import expanduser
+from types import SimpleNamespace
 from typing import Any
 
 import numpy as np
@@ -627,19 +629,26 @@ class WebGear:
                 "XBGR": "0bgr",
             }.get(self.__jpeg_compression_colorspace, "bgr24")
         )
-        # ponytail: one encoder per client, share one with forced IDR on join if many viewers
-        process = await asyncio.create_subprocess_exec(
-            self.__ffmpeg,
-            *["-hide_banner", "-loglevel", "error"],
-            *["-f", "rawvideo", "-pix_fmt", pix_fmt],
-            *["-s", "{}x{}".format(width, height), "-framerate", str(fps)],
-            *["-i", "-"],
-            *dict2Args({"-g": int(fps * 2), **self.__h264_params}),
-            *["-flush_packets", "1", "-f", "h264", "-"],
-            stdin=asyncio.subprocess.PIPE,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.DEVNULL,
+        # ponytail: one encoder (+2 pipe threads) per client, share one with forced IDR on join if many viewers
+        # blocking pipes on threads, since asyncio subprocesses need Proactor loop on Windows
+        process = subprocess.Popen(
+            [
+                self.__ffmpeg,
+                *["-hide_banner", "-loglevel", "error"],
+                *["-f", "rawvideo", "-pix_fmt", pix_fmt],
+                *["-s", "{}x{}".format(width, height), "-framerate", str(fps)],
+                *["-i", "-"],
+                *dict2Args({"-g": int(fps * 2), **self.__h264_params}),
+                *["-flush_packets", "1", "-f", "h264", "-"],
+            ],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
         )
+
+        def write(data):
+            process.stdin.write(data)
+            process.stdin.flush()
 
         async def feeder(frame):
             # pace raw frames at source framerate, EOF lets FFmpeg flush
@@ -647,29 +656,35 @@ class WebGear:
             deadline = loop.time()
             try:
                 while frame is not None:
-                    process.stdin.write(frame[:height, :width].tobytes())
-                    await process.stdin.drain()
+                    await asyncio.to_thread(write, frame[:height, :width].tobytes())
                     deadline += 1 / fps
                     await asyncio.sleep(max(0, deadline - loop.time()))
                     frame = await anext(frames, None)
-            except (BrokenPipeError, ConnectionResetError):
-                pass
+            except OSError:
+                pass  # FFmpeg gone (broken pipe)
             finally:
-                process.stdin.close()
+                with contextlib.suppress(OSError):
+                    process.stdin.close()
+
+        # `read1` returns whatever is available instead of waiting for full chunk
+        reader = SimpleNamespace(
+            read=lambda n: asyncio.to_thread(process.stdout.read1, n)
+        )
 
         feeding = asyncio.create_task(feeder(frame))
         try:
-            async for unit in h264_access_units(process.stdout):
+            async for unit in h264_access_units(reader):
                 await websocket.send_bytes(unit)
         except Exception as e:
             # client gone mid-stream
             self.__logging and logger.debug("H.264 client disconnected: {}".format(e))
         finally:
+            # reap before any await (handler may be cancelled), killing also unblocks pipe threads
+            process.poll() is None and process.kill()
+            process.wait()
+            process.stdout.close()
             feeding.cancel()
             await asyncio.gather(feeding, return_exceptions=True)
-            if process.returncode is None:
-                process.kill()
-            await process.wait()
             await frames.aclose()
             with contextlib.suppress(Exception):
                 await websocket.close()
