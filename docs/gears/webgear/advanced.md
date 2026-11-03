@@ -39,33 +39,64 @@ Let's implement a bare-minimum example using WebGear, where we will be sending [
 
 !!! example "This example works in conjunction with [Source ColorSpace manipulation for VideoCapture Gears ➶](../../bonus/colorspace_manipulation/#source-colorspace-manipulation)"
 
+!!! info "In H.264 Mode, `jpeg_compression_colorspace` only tells FFmpeg the input frames' pixel format, while JPEG attributes apply to the MJPEG fallback stream only."
+
 !!! info "Supported `jpeg_compression_colorspace` colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
 
-```python linenums="1" hl_lines="8" 
-# import required libraries
-import uvicorn
-from vidgear.gears.asyncio import WebGear
+=== ":material-video: H.264 Mode _(Default)_"
 
-# various performance tweaks and enable grayscale input
-options = {
-    "frame_size_reduction": 25,
-    "jpeg_compression_colorspace": "GRAY",  # set grayscale
-    "jpeg_compression_quality": 90,
-    "jpeg_compression_fastdct": True,
-    "jpeg_compression_fastupsample": True,
-}
+    ```python linenums="1" hl_lines="6-10"
+    # import required libraries
+    import uvicorn
+    from vidgear.gears.asyncio import WebGear
 
-# initialize WebGear app and change its colorspace to grayscale
-web = WebGear(
-    source="foo.mp4", colorspace="COLOR_BGR2GRAY", logging=True, **options
-)
+    # H.264 mode and enable grayscale input
+    options = {
+        "streaming_mode": "h264",
+        "frame_size_reduction": 25,
+        "jpeg_compression_colorspace": "GRAY",  # set grayscale
+    }
 
-# run this app on Uvicorn server at address http://0.0.0.0:8000/
-uvicorn.run(web(), host="0.0.0.0", port=8000)
+    # initialize WebGear app and change its colorspace to grayscale
+    web = WebGear(
+        source="foo.mp4", colorspace="COLOR_BGR2GRAY", logging=True, **options
+    )
 
-# close app safely
-web.shutdown()
-```
+    # run this app on Uvicorn server at address http://0.0.0.0:8000/
+    uvicorn.run(web(), host="0.0.0.0", port=8000)
+
+    # close app safely
+    web.shutdown()
+    ```
+
+=== ":material-image-multiple: MJPEG Mode"
+
+    ```python linenums="1" hl_lines="6-13"
+    # import required libraries
+    import uvicorn
+    from vidgear.gears.asyncio import WebGear
+
+    # MJPEG mode with various performance tweaks, and enable grayscale input
+    options = {
+        "streaming_mode": "mjpeg",
+        "frame_size_reduction": 25,
+        "jpeg_compression_colorspace": "GRAY",  # set grayscale
+        "jpeg_compression_quality": 90,
+        "jpeg_compression_fastdct": True,
+        "jpeg_compression_fastupsample": True,
+    }
+
+    # initialize WebGear app and change its colorspace to grayscale
+    web = WebGear(
+        source="foo.mp4", colorspace="COLOR_BGR2GRAY", logging=True, **options
+    )
+
+    # run this app on Uvicorn server at address http://0.0.0.0:8000/
+    uvicorn.run(web(), host="0.0.0.0", port=8000)
+
+    # close app safely
+    web.shutdown()
+    ```
 
 **And that's all, Now you can see output at [`http://localhost:8000/`](http://localhost:8000/) address on your local machine.**
 
@@ -78,21 +109,21 @@ web.shutdown()
 
 WebGear allows you to easily define your own custom Source that you want to use to transform your frames before sending them onto the browser. 
 
-!!! warning "JPEG Frame-Compression and all of its [performance enhancing attributes](usage/#performance-enhancements) are disabled with a Custom Source!"
+!!! warning "JPEG Frame-Compression and all of its [performance enhancing attributes](usage/#mjpeg-performance-enhancing-attributes) are disabled with a Custom Source!"
 
-!!! info "Custom Sources always stream MJPEG, since they yield ready-made JPEG bytes. Thereby [`streaming_mode="h264"`](params/#webgear-specific-attributes) falls back to MJPEG with a Custom Source."
+!!! info "Custom Sources only work in [MJPEG Mode](./#modes-of-operation), since they yield ready-made JPEG bytes. Thereby set [`streaming_mode="mjpeg"`](params/#webgear-specific-attributes) explicitly, otherwise default H.264 Mode falls back to MJPEG with a Custom Source anyway."
 
 Let's implement a bare-minimum example with a Custom Source using WebGear API and OpenCV:
 
 
-```python linenums="1" hl_lines="10-34 38"
+```python linenums="1" hl_lines="7 10-34 38"
 # import necessary libs
 import uvicorn, asyncio, cv2
 from vidgear.gears.asyncio import WebGear
 from vidgear.gears.asyncio.helper import reducer
 
-# initialize WebGear app without any source
-web = WebGear(logging=True)
+# initialize WebGear app without any source in MJPEG mode
+web = WebGear(logging=True, streaming_mode="mjpeg")
 
 # create your own custom frame producer
 async def my_frame_producer():
@@ -141,37 +172,73 @@ web.shutdown()
 
 With our highly extensible WebGear API, you can add your own mounting points, where additional files located, as follows:
 
-```python linenums="1" hl_lines="21-23"
-# import libs
-import uvicorn
-from starlette.routing import Mount
-from starlette.staticfiles import StaticFiles
-from vidgear.gears.asyncio import WebGear
+=== ":material-video: H.264 Mode _(Default)_"
 
-# various performance tweaks
-options = {
-    "frame_size_reduction": 40,
-    "jpeg_compression_quality": 80,
-    "jpeg_compression_fastdct": True,
-    "jpeg_compression_fastupsample": False,
-}
+    ```python linenums="1" hl_lines="8-12 20-22"
+    # import libs
+    import uvicorn
+    from starlette.routing import Mount
+    from starlette.staticfiles import StaticFiles
+    from vidgear.gears.asyncio import WebGear
 
-# initialize WebGear app
-web = WebGear(
-    source="foo.mp4", logging=True, **options
-)  # enable source i.e. `test.mp4` and enable `logging` for debugging
+    # H.264 mode with encoder tweaks
+    options = {
+        "streaming_mode": "h264",
+        "frame_size_reduction": 40,
+        "h264_options": {"-crf": 23},
+    }
 
-# append new route i.e. mount another folder called `test` located at `/home/foo/.vidgear/test` directory
-web.routes.append(
-    Mount("/test", app=StaticFiles(directory="/home/foo/.vidgear/test"), name="test")
-)
+    # initialize WebGear app
+    web = WebGear(
+        source="foo.mp4", logging=True, **options
+    )  # enable source i.e. `test.mp4` and enable `logging` for debugging
 
-# run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host="localhost", port=8000)
+    # append new route i.e. mount another folder called `test` located at `/home/foo/.vidgear/test` directory
+    web.routes.append(
+        Mount("/test", app=StaticFiles(directory="/home/foo/.vidgear/test"), name="test")
+    )
 
-# close app safely
-web.shutdown()
-```
+    # run this app on Uvicorn server at address http://localhost:8000/
+    uvicorn.run(web(), host="localhost", port=8000)
+
+    # close app safely
+    web.shutdown()
+    ```
+
+=== ":material-image-multiple: MJPEG Mode"
+
+    ```python linenums="1" hl_lines="8-14 22-24"
+    # import libs
+    import uvicorn
+    from starlette.routing import Mount
+    from starlette.staticfiles import StaticFiles
+    from vidgear.gears.asyncio import WebGear
+
+    # MJPEG mode with various performance tweaks
+    options = {
+        "streaming_mode": "mjpeg",
+        "frame_size_reduction": 40,
+        "jpeg_compression_quality": 80,
+        "jpeg_compression_fastdct": True,
+        "jpeg_compression_fastupsample": False,
+    }
+
+    # initialize WebGear app
+    web = WebGear(
+        source="foo.mp4", logging=True, **options
+    )  # enable source i.e. `test.mp4` and enable `logging` for debugging
+
+    # append new route i.e. mount another folder called `test` located at `/home/foo/.vidgear/test` directory
+    web.routes.append(
+        Mount("/test", app=StaticFiles(directory="/home/foo/.vidgear/test"), name="test")
+    )
+
+    # run this app on Uvicorn server at address http://localhost:8000/
+    uvicorn.run(web(), host="localhost", port=8000)
+
+    # close app safely
+    web.shutdown()
+    ```
 
 Then you can use this folder in your HTML page, to host data-files. For example, if we have jQuery script `jquery-3.3.1.slim.min.js` in this folder and  want to integrate it, then, we can do something like this:
 
@@ -202,45 +269,89 @@ Suppose we want to add a simple **`hello world` webpage** to our WebGear server.
  
 Then in our application code, we can integrate this webpage route, as follows:
 
-```python linenums="1" hl_lines="11-14 31"
-# import libs
-import uvicorn, asyncio
-from starlette.templating import Jinja2Templates
-from starlette.routing import Route
-from vidgear.gears.asyncio import WebGear
+=== ":material-video: H.264 Mode _(Default)_"
 
-# Build out Jinja2 template render at `/home/foo/.vidgear/custom_template` path in which our `hello.html` file is located
-template = Jinja2Templates(directory="/home/foo/.vidgear/custom_template")
+    ```python linenums="1" hl_lines="11-14 18-22 30"
+    # import libs
+    import uvicorn, asyncio
+    from starlette.templating import Jinja2Templates
+    from starlette.routing import Route
+    from vidgear.gears.asyncio import WebGear
 
-# render and return our webpage template
-async def hello_world(request):
-    page = "hello.html"
-    context = {"request": request}
-    return template.TemplateResponse(page, context)
+    # Build out Jinja2 template render at `/home/foo/.vidgear/custom_template` path in which our `hello.html` file is located
+    template = Jinja2Templates(directory="/home/foo/.vidgear/custom_template")
+
+    # render and return our webpage template
+    async def hello_world(request):
+        page = "hello.html"
+        context = {"request": request}
+        return template.TemplateResponse(page, context)
 
 
-# add various performance tweaks as usual
-options = {
-    "frame_size_reduction": 40,
-    "jpeg_compression_quality": 80,
-    "jpeg_compression_fastdct": True,
-    "jpeg_compression_fastupsample": False,
-}
+    # H.264 mode with encoder tweaks
+    options = {
+        "streaming_mode": "h264",
+        "frame_size_reduction": 40,
+        "h264_options": {"-crf": 23},
+    }
 
-# initialize WebGear app with a valid source
-web = WebGear(
-    source="/home/foo/foo1.mp4", logging=True, **options
-)  # enable source i.e. `test.mp4` and enable `logging` for debugging
+    # initialize WebGear app with a valid source
+    web = WebGear(
+        source="/home/foo/foo1.mp4", logging=True, **options
+    )  # enable source i.e. `test.mp4` and enable `logging` for debugging
 
-# append new route to point our rendered webpage
-web.routes.append(Route("/hello", endpoint=hello_world))
+    # append new route to point our rendered webpage
+    web.routes.append(Route("/hello", endpoint=hello_world))
 
-# run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host="localhost", port=8000)
+    # run this app on Uvicorn server at address http://localhost:8000/
+    uvicorn.run(web(), host="localhost", port=8000)
 
-# close app safely
-web.shutdown()
-```
+    # close app safely
+    web.shutdown()
+    ```
+
+=== ":material-image-multiple: MJPEG Mode"
+
+    ```python linenums="1" hl_lines="11-14 18-24 32"
+    # import libs
+    import uvicorn, asyncio
+    from starlette.templating import Jinja2Templates
+    from starlette.routing import Route
+    from vidgear.gears.asyncio import WebGear
+
+    # Build out Jinja2 template render at `/home/foo/.vidgear/custom_template` path in which our `hello.html` file is located
+    template = Jinja2Templates(directory="/home/foo/.vidgear/custom_template")
+
+    # render and return our webpage template
+    async def hello_world(request):
+        page = "hello.html"
+        context = {"request": request}
+        return template.TemplateResponse(page, context)
+
+
+    # MJPEG mode with various performance tweaks
+    options = {
+        "streaming_mode": "mjpeg",
+        "frame_size_reduction": 40,
+        "jpeg_compression_quality": 80,
+        "jpeg_compression_fastdct": True,
+        "jpeg_compression_fastupsample": False,
+    }
+
+    # initialize WebGear app with a valid source
+    web = WebGear(
+        source="/home/foo/foo1.mp4", logging=True, **options
+    )  # enable source i.e. `test.mp4` and enable `logging` for debugging
+
+    # append new route to point our rendered webpage
+    web.routes.append(Route("/hello", endpoint=hello_world))
+
+    # run this app on Uvicorn server at address http://localhost:8000/
+    uvicorn.run(web(), host="localhost", port=8000)
+
+    # close app safely
+    web.shutdown()
+    ```
 **And that's all, Now you can see output at [`http://localhost:8000/hello`](http://localhost:8000/hello) address.**
 
 &nbsp;
@@ -260,43 +371,85 @@ For this example, let's use [`CORSMiddleware`](https://www.starlette.io/middlewa
 
 !!! tip "Starlette provides several arguments for enabling origins, methods, or headers for CORSMiddleware API. More information can be found [here ➶](https://www.starlette.io/middleware/#corsmiddleware)"
 
-```python linenums="1" hl_lines="21-29"
-# import libs
-import uvicorn, asyncio
-from starlette.middleware import Middleware
-from starlette.middleware.cors import CORSMiddleware
-from vidgear.gears.asyncio import WebGear
+=== ":material-video: H.264 Mode _(Default)_"
 
-# add various performance tweaks as usual
-options = {
-    "frame_size_reduction": 40,
-    "jpeg_compression_quality": 80,
-    "jpeg_compression_fastdct": True,
-    "jpeg_compression_fastupsample": False,
-}
+    ```python linenums="1" hl_lines="8-12 20-28"
+    # import libs
+    import uvicorn, asyncio
+    from starlette.middleware import Middleware
+    from starlette.middleware.cors import CORSMiddleware
+    from vidgear.gears.asyncio import WebGear
 
-# initialize WebGear app with a valid source
-web = WebGear(
-    source="/home/foo/foo1.mp4", logging=True, **options
-)  # enable source i.e. `test.mp4` and enable `logging` for debugging
+    # H.264 mode with encoder tweaks
+    options = {
+        "streaming_mode": "h264",
+        "frame_size_reduction": 40,
+        "h264_options": {"-crf": 23},
+    }
 
-# define and assign suitable cors middlewares
-web.middleware = [
-    Middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-]
+    # initialize WebGear app with a valid source
+    web = WebGear(
+        source="/home/foo/foo1.mp4", logging=True, **options
+    )  # enable source i.e. `test.mp4` and enable `logging` for debugging
 
-# run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host="localhost", port=8000)
+    # define and assign suitable cors middlewares
+    web.middleware = [
+        Middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
+    ]
 
-# close app safely
-web.shutdown()
-```
+    # run this app on Uvicorn server at address http://localhost:8000/
+    uvicorn.run(web(), host="localhost", port=8000)
+
+    # close app safely
+    web.shutdown()
+    ```
+
+=== ":material-image-multiple: MJPEG Mode"
+
+    ```python linenums="1" hl_lines="8-14 22-30"
+    # import libs
+    import uvicorn, asyncio
+    from starlette.middleware import Middleware
+    from starlette.middleware.cors import CORSMiddleware
+    from vidgear.gears.asyncio import WebGear
+
+    # MJPEG mode with various performance tweaks
+    options = {
+        "streaming_mode": "mjpeg",
+        "frame_size_reduction": 40,
+        "jpeg_compression_quality": 80,
+        "jpeg_compression_fastdct": True,
+        "jpeg_compression_fastupsample": False,
+    }
+
+    # initialize WebGear app with a valid source
+    web = WebGear(
+        source="/home/foo/foo1.mp4", logging=True, **options
+    )  # enable source i.e. `test.mp4` and enable `logging` for debugging
+
+    # define and assign suitable cors middlewares
+    web.middleware = [
+        Middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
+    ]
+
+    # run this app on Uvicorn server at address http://localhost:8000/
+    uvicorn.run(web(), host="localhost", port=8000)
+
+    # close app safely
+    web.shutdown()
+    ```
 **And that's all, Now you can see output at [`http://localhost:8000`](http://localhost:8000) address.**
 
 &nbsp;

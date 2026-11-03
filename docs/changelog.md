@@ -24,7 +24,7 @@ limitations under the License.
 
 ???+ tip "New Features"
     - [x] ⚡️ **WebGear: Low-Latency H.264 Streaming:**
-        * Added `streaming_mode` _(`"mjpeg"`/`"h264"`)_ and `h264_options` attributes. In `"h264"` mode, frames are encoded with FFmpeg _(`libx264 -preset ultrafast -tune zerolatency`, baseline profile)_ and streamed as complete H.264 Annex-B access units over a WebSocket at `/ws/<video endpoint>`, while `/video` MJPEG endpoint stays available as fallback.
+        * Added `streaming_mode` _(`"h264"` default/`"mjpeg"`)_ and `h264_options` attributes. In `"h264"` mode, frames are encoded with FFmpeg _(`libx264 -preset ultrafast -tune zerolatency`, baseline profile)_ and streamed as complete H.264 Annex-B access units over a WebSocket at `/ws/<video endpoint>`, while `/video` MJPEG endpoint stays available as fallback.
         * Added `h264_access_units` async helper that groups NAL units into whole frames _(SPS/PPS/SEI bundled with IDR, multi-slice pictures kept together)_.
         * Reuses `custom_ffmpeg` parameter for the encoder, and falls back to MJPEG with a warning when FFmpeg or `source` is unavailable.
         * Homepage template now receives `streaming_mode` and `video_endpoint` context, so Default Theme follows `custom_video_endpoint` too.
@@ -58,6 +58,8 @@ limitations under the License.
     - [x] **Docs:** Added Low-Latency H.264 Streaming usage, parameters, benchmarks & FAQs, and updated WebGear Default Theme screenshots.
 
 ??? danger "Breaking Updates/Changes"
+    - [ ] **WebGear now streams H.264 by default:**
+        * Default `streaming_mode` is now `"h264"`, which spawns one FFmpeg encoder per connected client. Set `streaming_mode="mjpeg"` to restore previous MJPEG-only behavior. Falls back to MJPEG automatically without FFmpeg or with Custom Sources.
     - [ ] **Removed WebGear/WebGear_RTC terminal CLI:**
         * Removed outdated `vidgear/gears/asyncio/__main__.py` _(i.e. `python -m vidgear.gears.asyncio`)_ and its docs. Run WebGear/WebGear_RTC programmatically with Uvicorn instead.
 
