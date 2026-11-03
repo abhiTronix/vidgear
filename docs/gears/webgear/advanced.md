@@ -80,6 +80,8 @@ WebGear allows you to easily define your own custom Source that you want to use 
 
 !!! warning "JPEG Frame-Compression and all of its [performance enhancing attributes](usage/#performance-enhancements) are disabled with a Custom Source!"
 
+!!! info "Custom Sources always stream MJPEG, since they yield ready-made JPEG bytes. Thereby [`streaming_mode="h264"`](params/#webgear-specific-attributes) falls back to MJPEG with a Custom Source."
+
 Let's implement a bare-minimum example with a Custom Source using WebGear API and OpenCV:
 
 
@@ -306,7 +308,7 @@ WebGear gives us complete freedom of altering data files generated in [**Auto-Ge
 ### Rules for Altering Data Files
   
 - [x] You allowed to alter/change code in all existing [default downloaded files](./#auto-generation-process) at your convenience without any restrictions.
-- [x] You allowed to delete/rename all existing data files, except remember **NOT** to delete/rename three critical data-files (i.e `index.html`, `404.html` & `500.html`) present in `templates` folder inside the `webgear` directory at the [default location](./#default-location), otherwise, it will trigger [Auto-generation process](./#auto-generation-process), and it will overwrite the existing files with Server ones.
+- [x] You allowed to delete/rename all existing data files, except remember **NOT** to delete/rename three critical data-files (i.e `index.html`, `404.html` & `500.html`) present in `templates` folder, and two script files (i.e `custom.js` & `videoFrameDecoderWorker.js`) present in `static/js` folder inside the `webgear` directory at the [default location](./#default-location), otherwise, it will trigger [Auto-generation process](./#auto-generation-process), and it will overwrite the existing files with Server ones.
 - [x] You're allowed to add your own additional `.html`, `.css`, `.js`, etc. files in the respective folders at the [**default location**](./#default-location) and [custom mounted Data folders](#using-webgear-with-custom-mounting-points).
 
 ### Rules for Altering Data Folders 

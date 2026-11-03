@@ -27,11 +27,14 @@ limitations under the License.
 
 ## Overview
 
-> _WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-Broadcaster API ideal for transmitting [Motion-JPEG](https://en.wikipedia.org/wiki/Motion_JPEG)-frames from a single source to multiple recipients via the browser._
+> _WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-Broadcaster API ideal for transmitting [Motion-JPEG](https://en.wikipedia.org/wiki/Motion_JPEG)-frames _(or low-latency H.264 video)_ from a single source to multiple recipients via the browser._
 
 WebGear API works on [**Starlette**](https://www.starlette.io/)'s ASGI application and provides a highly extensible and flexible async wrapper around its complete framework. WebGear can flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc.
 
 WebGear API uses an intraframe-only compression scheme under the hood where the sequence of video-frames are first encoded as JPEG-DIB (JPEG with Device-Independent Bit compression) and then streamed over HTTP using Starlette's Multipart [Streaming Response](https://www.starlette.io/responses/#streamingresponse) and a [Uvicorn](https://www.uvicorn.org/#quickstart) ASGI Server. This method imposes lower processing and memory requirements, but the quality is not the best, since JPEG compression is not very efficient for motion video.
+
+!!! new "Low-Latency H.264 Streaming — New in v0.3.7"
+    WebGear can now also encode frames into **H.264** with FFmpeg _(`libx264`, `-tune zerolatency`)_ and stream them over **WebSockets** to the browser, where they are decoded off main-thread by the [**WebCodecs**](https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API) `VideoDecoder` inside a Web Worker. This uses **~9x _(high-motion)_ to ~38x _(static scenes)_ less bandwidth** than MJPEG, while automatically falling back to MJPEG on unsupported browsers. Enable it with [`streaming_mode="h264"`](params/#webgear-specific-attributes) attribute. **See [this usage example ➶](usage/#low-latency-h264-streaming)**
 
 In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides internal wrapper around [VideoGear](../videogear/), which itself provides internal access to [CamGear](../camgear/), [PiGear](../pigear/), and [FFGear](../ffgear/) APIs, thereby granting it exclusive power for transferring frames incoming from any source to the network.
 
@@ -50,7 +53,7 @@ In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that tra
 
 	!!! failure "Only alphanumeric string with no space in between are allowed as `custom_video_endpoint` value. Any other value will be discarded."
 
-	!!! warning "WebGear's Default Theme which expects only default `/video` video endpoint path, will fail to work, if it is customized to any other value using this `custom_video_endpoint` attribute."
+	!!! info "WebGear's Default Theme _(v0.2.0+)_ automatically follows the customized video endpoint path _(including H.264's `/ws/<endpoint>` WebSocket path)_."
 
 	```py
 	# custom alphanumeric video endpoint string
@@ -61,7 +64,7 @@ In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that tra
 	```
 	Hence, default video endpoint will now be available at `/xyz` path.
 
-On initializing WebGear API, it automatically checks for three critical **data files**(i.e `index.html`, `404.html` & `500.html`) inside the `templates` folder of the `webgear` directory at the [_default location_](#default-location) which gives rise to the following two possible scenario:
+On initializing WebGear API, it automatically checks for three critical **data files**(i.e `index.html`, `404.html` & `500.html`) inside the `templates` folder, and two **script files**(i.e `custom.js` & `videoFrameDecoderWorker.js`) inside the `static/js` folder of the `webgear` directory at the [_default location_](#default-location) which gives rise to the following two possible scenario:
 
 - [x] **If data-files found:** it will proceed normally for instantiating the Starlette application.
 - [ ] **If data-files not found:** it will trigger the [**Auto-Generation process**](#auto-generation-process)
@@ -100,13 +103,14 @@ On initializing WebGear API, it automatically checks for three critical **data f
 	    │   ├── img
 	    │   │   └── favicon-32x32.png
 	    │   └── js
-	    │       └── custom.js
+	    │       ├── custom.js
+	    │       └── videoFrameDecoderWorker.js
 	    └── templates
 	        ├── 404.html
 	        ├── 500.html
 	        ├── base.html
 	        └── index.html
-	6 directories, 7 files
+	6 directories, 8 files
 	```
 
 - Finally these downloaded files thereby are verified for errors and API proceeds for instantiating the Starlette application normally.
@@ -118,6 +122,9 @@ On initializing WebGear API, it automatically checks for three critical **data f
 ??? new "New in v0.2.1"
 	New Standalone **WebGear's Default Theme** was added in `v0.2.1`.
 
+??? new "Modernized in v0.3.7"
+    WebGear's Default Theme `v0.2.0` adds the H.264 WebCodecs streaming engine with automatic MJPEG fallback, a live telemetry HUD _(status, codec, resolution, FPS, bandwidth & decode latency)_, and a modern dark UI with **zero external dependencies** _(no CDN fonts, icons or scripts)_.
+
 The WebGear API by default uses simple & elegant [**WebGear's Default Theme**](https://github.com/abhiTronix/vidgear-vitals#webgear-default-theme) which looks like something as follows:
 
 ### Index.html
@@ -125,7 +132,7 @@ The WebGear API by default uses simple & elegant [**WebGear's Default Theme**](h
 _Can be accessed by visiting WebGear app server, running at http://localhost:8000/:_
 
 <h2 align="center">
-  <img src="../../assets/images/webgear_temp_index.png" loading="lazy" alt="WebGear default Index page"/>
+  <img src="../../assets/images/webgear_temp_index.jpg" loading="lazy" alt="WebGear default Index page"/>
 </h2>
 
 ### 404.html
@@ -133,7 +140,7 @@ _Can be accessed by visiting WebGear app server, running at http://localhost:800
 _Appears when respective URL is not found, for example http://localhost:8000/ok:_
 
 <h2 align="center">
-  <img src="../../assets/images/webgear_temp_404.png" loading="lazy" alt="WebGear default 404 page"/>
+  <img src="../../assets/images/webgear_temp_404.jpg" loading="lazy" alt="WebGear default 404 page"/>
 </h2>
 
 ### 500.html
@@ -143,7 +150,7 @@ _Appears when an API Error is encountered:_
 !!! warning "If [`logging`](params/#logging) is enabled and an error occurs, then instead of displaying this 500 handler, WebGear will respond with a traceback response."
 
 <h2 align="center">
-  <img src="../../assets/images/webgear_temp_500.png" loading="lazy" alt="WebGear default 500 page"/>
+  <img src="../../assets/images/webgear_temp_500.jpg" loading="lazy" alt="WebGear default 500 page"/>
 </h2>
 
 &thinsp;

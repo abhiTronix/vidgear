@@ -56,7 +56,7 @@ For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"
 
 ## Can I manually place default files for WebGear?
 
-**Answer:** Yes, you can either download default files from [Github Server](https://github.com/abhiTronix/webgear_data), and manually place at [default location](../gears/webgear/#default-location), OR, you can yourself create the require three critical files _(i.e `index.html`, `404.html` & `500.html`)_  inside `templates` folder at the [default location](../gears/webgear/#default-location), thereby you don't need any internet connection at all. _For more information see [Data-Files Auto-Generation WorkFlow ➶](../gears/webgear/#data-files-auto-generation-workflow)_
+**Answer:** Yes, you can either download default files from [Github Server](https://github.com/abhiTronix/webgear_data), and manually place at [default location](../gears/webgear/#default-location), OR, you can yourself create the require three critical files _(i.e `index.html`, `404.html` & `500.html`)_  inside `templates` folder, and two script files _(i.e `custom.js` & `videoFrameDecoderWorker.js`)_ inside `static/js` folder at the [default location](../gears/webgear/#default-location), thereby you don't need any internet connection at all. _For more information see [Data-Files Auto-Generation WorkFlow ➶](../gears/webgear/#data-files-auto-generation-workflow)_
 
 &thinsp;
 
@@ -92,7 +92,19 @@ For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"
 
 ## What Web browser are supported by WebGear API?
 
-**Answer:** All modern browser with Javascript support are supported by WebGear. If not, then discuss with us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+**Answer:** All modern browser with Javascript support are supported by WebGear in MJPEG mode. Low-latency [H.264 streaming](../gears/webgear/usage/#low-latency-h264-streaming) additionally needs [WebCodecs](https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API) support _(Chrome/Edge 94+, Safari 16.4+, Firefox 130+)_, otherwise WebGear's Default Theme automatically falls back to MJPEG. If not, then discuss with us on [Gitter ➶](https://gitter.im/vidgear/community) Community channel.
+
+&thinsp;
+
+## How to stream low-latency H.264 video with WebGear?
+
+**Answer:** Set [`streaming_mode="h264"`](../gears/webgear/params/#webgear-specific-attributes) in WebGear's `options`, and make sure FFmpeg with `libx264` is installed. See [this usage example ➶](../gears/webgear/usage/#low-latency-h264-streaming).
+
+&thinsp;
+
+## Why does WebGear show MJPEG instead of H.264 on other devices in my network?
+
+**Answer:** Browsers only expose the WebCodecs API in [Secure Contexts](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts) _(i.e. `https://` or `http://localhost`)_. Accessing WebGear via plain `http://<ip-address>:8000` from another device therefore falls back to MJPEG _(HUD shows `fallback` status, and browser console logs the reason)_. Serve WebGear over HTTPS with Uvicorn's `ssl_keyfile`/`ssl_certfile` parameters to use H.264 on the network.
 
 &thinsp;
 
