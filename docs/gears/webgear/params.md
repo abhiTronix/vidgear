@@ -106,7 +106,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 
     !!! failure "Only alphanumeric string with no space in between are allowed as `custom_video_endpoint` value. Any other value will be discarded."
 
-	!!! warning "WebGear's Default Theme which expects only default `/video` video endpoint path, will fail to work, if it is customized to any other value using this `custom_video_endpoint` attribute."
+	!!! info "WebGear's Default Theme _(v0.2.0+)_ automatically follows the customized video endpoint path. In H.264 streaming mode, the WebSocket endpoint becomes `/ws/<custom_video_endpoint>` _(e.g. `/ws/xyz`)_."
 
 	```py
 	# custom alphanumeric video endpoint string
@@ -115,6 +115,50 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 	web = WebGear(logging=True, **options)
 	```
 	Hence, default video endpoint will now be available at `/xyz` path.
+
+* **`streaming_mode`** _(string)_ : Selects WebGear's streaming mode. Its possible values are `"mjpeg"` _(default)_ and `"h264"`. Its usage is as follows:
+
+    ??? new "New in v0.3.7"
+        `streaming_mode` attribute was added in `v0.3.7`.
+
+    - `"mjpeg"`: Streams JPEG-encoded frames over HTTP at `/video` endpoint _(classic behavior)_.
+    - `"h264"`: Additionally encodes frames into low-latency H.264 _(Annex-B)_ with FFmpeg, and streams one complete access unit _(frame)_ per binary message over a WebSocket at `/ws/video` endpoint. The `/video` MJPEG endpoint remains available as fallback, which WebGear's Default Theme uses automatically whenever WebCodecs is unavailable or WebSocket fails.
+
+    !!! warning "H.264 mode requires a valid [`source`](#source) and a FFmpeg executable with `libx264` encoder _(or any other H.264 encoder set via `h264_options`)_. Otherwise, WebGear logs a warning and falls back to `"mjpeg"` mode. Custom Sources _(i.e. `config["generator"]`)_ always use MJPEG, since they yield ready-made JPEG bytes."
+
+    !!! danger "Browsers only expose WebCodecs in [Secure Contexts](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts), i.e. `https://` or `http://localhost`. Plain `http://` on other devices in the network falls back to MJPEG, unless WebGear is served over HTTPS _(e.g. `uvicorn.run(..., ssl_keyfile=..., ssl_certfile=...)`)_."
+
+    ```python
+    # enable low-latency H.264 streaming
+    options = {"streaming_mode": "h264"}
+    # assign it
+    WebGear(source="foo.mp4", logging=True, **options)
+    ```
+
+* **`h264_options`** _(dict)_ : Overrides FFmpeg's H.264 output parameters used in `"h264"` [`streaming_mode`](#webgear-specific-attributes). It accepts any FFmpeg output parameter as dictionary attributes, which are merged over the following defaults:
+
+    ??? new "New in v0.3.7"
+        `h264_options` attribute was added in `v0.3.7`.
+
+    ```python
+    {
+        "-c:v": "libx264",
+        "-preset": "ultrafast",
+        "-tune": "zerolatency",
+        "-profile:v": "baseline",
+        "-pix_fmt": "yuv420p",
+        "-g": 2 * framerate,  # keyframe every 2 seconds
+    }
+    ```
+
+    !!! tip "Encoder must not emit B-frames _(i.e. keep `-tune zerolatency` or `-bf 0`)_, and output pixel format must stay `yuv420p` for maximum browser compatibility. The browser derives its codec string from the stream itself, so other H.264 profiles/levels work too."
+
+    ```python
+    # lower bandwidth with higher CRF, and keyframe every 30 frames
+    options = {"streaming_mode": "h264", "h264_options": {"-crf": 28, "-g": 30}}
+    # assign it
+    WebGear(source="foo.mp4", logging=True, **options)
+    ```
 
 * **`overwrite_default_files`** _(boolean)_ : Can be used to force trigger the [Auto-generation process](./#auto-generation-process) to overwrite existing data-files. Its usage is as follows:
 
@@ -658,7 +702,7 @@ WebGear(api=Backend.FFGEAR, source="myvideo.mp4", frame_format="gray")
 
 ### **`custom_ffmpeg`**
 
-Path to a custom FFmpeg executable. Useful when FFmpeg is not on `PATH`.
+Path to a custom FFmpeg executable. Useful when FFmpeg is not on `PATH`. This executable is also used for encoding in H.264 [`streaming_mode`](#webgear-specific-attributes) with any backend.
 
 **Data-Type:** String
 
