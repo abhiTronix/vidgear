@@ -67,7 +67,8 @@ limitations under the License.
 <span class=normal><a href=#__codelineno-0-49>49</a></span>
 <span class=normal><a href=#__codelineno-0-50>50</a></span>
 <span class=normal><a href=#__codelineno-0-51>51</a></span>
-<span class=normal><a href=#__codelineno-0-52>52</a></span></pre></div></td><td class=code><div><pre><span></span><code><span id=__span-0-1><a id=__codelineno-0-1 name=__codelineno-0-1></a><span class=c1># import libraries</span>
+<span class=normal><a href=#__codelineno-0-52>52</a></span>
+<span class=normal><a href=#__codelineno-0-53>53</a></span></pre></div></td><td class=code><div><pre><span></span><code><span id=__span-0-1><a id=__codelineno-0-1 name=__codelineno-0-1></a><span class=c1># import libraries</span>
 </span><span id=__span-0-2><a id=__codelineno-0-2 name=__codelineno-0-2></a><span class=kn>from</span><span class=w> </span><span class=nn>vidgear.gears.asyncio</span><span class=w> </span><span class=kn>import</span> <span class=n>NetGear_Async</span>
 </span><span id=__span-0-3><a id=__codelineno-0-3 name=__codelineno-0-3></a><span class=kn>from</span><span class=w> </span><span class=nn>vidgear.gears.asyncio</span><span class=w> </span><span class=kn>import</span> <span class=n>WebGear</span>
 </span><span id=__span-0-4><a id=__codelineno-0-4 name=__codelineno-0-4></a><span class=kn>from</span><span class=w> </span><span class=nn>vidgear.gears.asyncio.helper</span><span class=w> </span><span class=kn>import</span> <span class=n>reducer</span>
@@ -105,20 +106,21 @@ limitations under the License.
 </span><span id=__span-0-36><a id=__codelineno-0-36 name=__codelineno-0-36></a>    <span class=c1># Set event loop to client's</span>
 </span><span id=__span-0-37><a id=__codelineno-0-37 name=__codelineno-0-37></a>    <span class=n>asyncio</span><span class=o>.</span><span class=n>set_event_loop</span><span class=p>(</span><span class=n>client</span><span class=o>.</span><span class=n>loop</span><span class=p>)</span>
 </span><span id=__span-0-38><a id=__codelineno-0-38 name=__codelineno-0-38></a>
-</span><span id=__span-0-39><a id=__codelineno-0-39 name=__codelineno-0-39></a>    <span class=c1># initialize WebGear app without any source</span>
-</span><span id=__span-0-40><a id=__codelineno-0-40 name=__codelineno-0-40></a><span class=hll>    <span class=n>web</span> <span class=o>=</span> <span class=n>WebGear</span><span class=p>(</span><span class=n>logging</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
-</span></span><span id=__span-0-41><a id=__codelineno-0-41 name=__codelineno-0-41></a>
-</span><span id=__span-0-42><a id=__codelineno-0-42 name=__codelineno-0-42></a>    <span class=c1># add your custom frame producer to config with adequate IP address</span>
-</span><span id=__span-0-43><a id=__codelineno-0-43 name=__codelineno-0-43></a><span class=hll>    <span class=n>web</span><span class=o>.</span><span class=n>config</span><span class=p>[</span><span class=s2>"generator"</span><span class=p>]</span> <span class=o>=</span> <span class=n>my_frame_producer</span>
-</span></span><span id=__span-0-44><a id=__codelineno-0-44 name=__codelineno-0-44></a>
-</span><span id=__span-0-45><a id=__codelineno-0-45 name=__codelineno-0-45></a>    <span class=c1># run this app on Uvicorn server at address http://localhost:8000/</span>
-</span><span id=__span-0-46><a id=__codelineno-0-46 name=__codelineno-0-46></a><span class=hll>    <span class=n>uvicorn</span><span class=o>.</span><span class=n>run</span><span class=p>(</span><span class=n>web</span><span class=p>(),</span> <span class=n>host</span><span class=o>=</span><span class=s2>"localhost"</span><span class=p>,</span> <span class=n>port</span><span class=o>=</span><span class=mi>8000</span><span class=p>)</span>
-</span></span><span id=__span-0-47><a id=__codelineno-0-47 name=__codelineno-0-47></a>
-</span><span id=__span-0-48><a id=__codelineno-0-48 name=__codelineno-0-48></a>    <span class=c1># safely close client</span>
-</span><span id=__span-0-49><a id=__codelineno-0-49 name=__codelineno-0-49></a>    <span class=n>client</span><span class=o>.</span><span class=n>close</span><span class=p>()</span>
-</span><span id=__span-0-50><a id=__codelineno-0-50 name=__codelineno-0-50></a>
-</span><span id=__span-0-51><a id=__codelineno-0-51 name=__codelineno-0-51></a>    <span class=c1># close app safely</span>
-</span><span id=__span-0-52><a id=__codelineno-0-52 name=__codelineno-0-52></a>    <span class=n>web</span><span class=o>.</span><span class=n>shutdown</span><span class=p>()</span>
+</span><span id=__span-0-39><a id=__codelineno-0-39 name=__codelineno-0-39></a>    <span class=c1># initialize WebGear app without any source in MJPEG mode</span>
+</span><span id=__span-0-40><a id=__codelineno-0-40 name=__codelineno-0-40></a><span class=hll>    <span class=c1># (custom sources only work in MJPEG mode)</span>
+</span></span><span id=__span-0-41><a id=__codelineno-0-41 name=__codelineno-0-41></a>    <span class=n>web</span> <span class=o>=</span> <span class=n>WebGear</span><span class=p>(</span><span class=n>logging</span><span class=o>=</span><span class=kc>True</span><span class=p>,</span> <span class=n>streaming_mode</span><span class=o>=</span><span class=s2>"mjpeg"</span><span class=p>)</span>
+</span><span id=__span-0-42><a id=__codelineno-0-42 name=__codelineno-0-42></a>
+</span><span id=__span-0-43><a id=__codelineno-0-43 name=__codelineno-0-43></a><span class=hll>    <span class=c1># add your custom frame producer to config with adequate IP address</span>
+</span></span><span id=__span-0-44><a id=__codelineno-0-44 name=__codelineno-0-44></a>    <span class=n>web</span><span class=o>.</span><span class=n>config</span><span class=p>[</span><span class=s2>"generator"</span><span class=p>]</span> <span class=o>=</span> <span class=n>my_frame_producer</span>
+</span><span id=__span-0-45><a id=__codelineno-0-45 name=__codelineno-0-45></a>
+</span><span id=__span-0-46><a id=__codelineno-0-46 name=__codelineno-0-46></a><span class=hll>    <span class=c1># run this app on Uvicorn server at address http://localhost:8000/</span>
+</span></span><span id=__span-0-47><a id=__codelineno-0-47 name=__codelineno-0-47></a>    <span class=n>uvicorn</span><span class=o>.</span><span class=n>run</span><span class=p>(</span><span class=n>web</span><span class=p>(),</span> <span class=n>host</span><span class=o>=</span><span class=s2>"localhost"</span><span class=p>,</span> <span class=n>port</span><span class=o>=</span><span class=mi>8000</span><span class=p>)</span>
+</span><span id=__span-0-48><a id=__codelineno-0-48 name=__codelineno-0-48></a>
+</span><span id=__span-0-49><a id=__codelineno-0-49 name=__codelineno-0-49></a>    <span class=c1># safely close client</span>
+</span><span id=__span-0-50><a id=__codelineno-0-50 name=__codelineno-0-50></a>    <span class=n>client</span><span class=o>.</span><span class=n>close</span><span class=p>()</span>
+</span><span id=__span-0-51><a id=__codelineno-0-51 name=__codelineno-0-51></a>
+</span><span id=__span-0-52><a id=__codelineno-0-52 name=__codelineno-0-52></a>    <span class=c1># close app safely</span>
+</span><span id=__span-0-53><a id=__codelineno-0-53 name=__codelineno-0-53></a>    <span class=n>web</span><span class=o>.</span><span class=n>shutdown</span><span class=p>()</span>
 </span></code></pre></div></td></tr></table></div> <div class="admonition success"> <p class=admonition-title>On successfully running this code, the output stream will be displayed at address <a href=http://localhost:8000/>http://localhost:8000/</a> in your Client's Browser.</p> </div> <h3 id=server>Server<a class=headerlink href=#server title="Permanent link">¶</a></h3> <p>Now, Open the terminal on another Server System <em>(with a webcam connected to it at index 0)</em>, and execute the following python code:</p> <div class="admonition note"> <p class=admonition-title>Replace the IP address in the following code with Client's IP address you noted earlier.</p> </div> <div class="language-python highlight"><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal><a href=#__codelineno-1-1> 1</a></span>
 <span class=normal><a href=#__codelineno-1-2> 2</a></span>
 <span class=normal><a href=#__codelineno-1-3> 3</a></span>
