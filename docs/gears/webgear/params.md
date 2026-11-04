@@ -79,6 +79,40 @@ WebGear(api=Backend.PIGEAR)
 &nbsp; 
 
 
+## **`streaming_mode`**
+
+This parameter selects WebGear's [Mode of Operation ➶](../#modes-of-operation).
+
+??? new "New in v0.3.7"
+    `streaming_mode` parameter was added in `v0.3.7`.
+
+**Data-Type:** String
+
+**Default Value:** Its default value is `"mjpeg"`.
+
+**Accepted Values:**
+
+- `"mjpeg"`: Only streams JPEG-encoded frames over HTTP at `/video` endpoint _(classic behavior)_.
+- `"h264"`: Additionally encodes frames into low-latency H.264 _(Annex-B)_ with FFmpeg, and streams one complete access unit _(frame)_ per binary message over a WebSocket at `/ws/video` endpoint. The `/video` MJPEG endpoint remains available as fallback, which WebGear's Default Theme uses automatically whenever WebCodecs is unavailable or WebSocket fails.
+
+!!! failure "Any other value is discarded with a warning, and WebGear falls back to `"mjpeg"` mode."
+
+!!! warning "H.264 mode requires a valid [`source`](#source) and a FFmpeg executable with `libx264` encoder _(or any other H.264 encoder set via [`h264_options`](#webgear-specific-attributes))_. Otherwise, WebGear falls back to `"mjpeg"` mode. Custom Sources _(i.e. `config["generator"]`)_ always use MJPEG, since they yield ready-made JPEG bytes."
+
+!!! danger "In `"h264"` mode, every connected viewer starts its own FFmpeg encoder process, so server CPU usage grows with the number of viewers. On Windows, WebGear also looks for FFmpeg on startup, and may download a static FFmpeg build if none is found."
+
+!!! danger "Browsers only expose WebCodecs in [Secure Contexts](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts), i.e. `https://` or `http://localhost`. Plain `http://` on other devices in the network falls back to MJPEG, unless WebGear is served over HTTPS _(e.g. `uvicorn.run(..., ssl_keyfile=..., ssl_certfile=...)`)_."
+
+**Usage:**
+
+```python
+WebGear(source="foo.mp4", streaming_mode="h264")  # low-latency H.264 over WebSockets
+WebGear(source="foo.mp4", streaming_mode="mjpeg")  # default — MJPEG over HTTP
+```
+
+&nbsp;
+
+
 ## **`options`** 
 
 This parameter can be used to pass user-defined parameter to WebGear API by formatting them as this parameter's attribute. 
@@ -116,28 +150,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
 	```
 	Hence, default video endpoint will now be available at `/xyz` path.
 
-* **`streaming_mode`** _(string)_ : Selects WebGear's [Mode of Operation ➶](../#modes-of-operation). Its possible values are `"h264"` _(default)_ and `"mjpeg"`. Its usage is as follows:
-
-    ??? new "New in v0.3.7"
-        `streaming_mode` attribute was added in `v0.3.7`.
-
-    - `"h264"`: Additionally encodes frames into low-latency H.264 _(Annex-B)_ with FFmpeg, and streams one complete access unit _(frame)_ per binary message over a WebSocket at `/ws/video` endpoint. The `/video` MJPEG endpoint remains available as fallback, which WebGear's Default Theme uses automatically whenever WebCodecs is unavailable or WebSocket fails.
-    - `"mjpeg"`: Only streams JPEG-encoded frames over HTTP at `/video` endpoint _(classic behavior)_.
-
-    !!! warning "H.264 mode requires a valid [`source`](#source) and a FFmpeg executable with `libx264` encoder _(or any other H.264 encoder set via `h264_options`)_. Otherwise, WebGear falls back to `"mjpeg"` mode. Custom Sources _(i.e. `config["generator"]`)_ always use MJPEG, since they yield ready-made JPEG bytes."
-
-    !!! danger "In `"h264"` mode, every connected viewer starts its own FFmpeg encoder process, so server CPU usage grows with the number of viewers. On Windows, WebGear also looks for FFmpeg on startup, and may download a static FFmpeg build if none is found. Use `"mjpeg"` mode to avoid both."
-
-    !!! danger "Browsers only expose WebCodecs in [Secure Contexts](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts), i.e. `https://` or `http://localhost`. Plain `http://` on other devices in the network falls back to MJPEG, unless WebGear is served over HTTPS _(e.g. `uvicorn.run(..., ssl_keyfile=..., ssl_certfile=...)`)_."
-
-    ```python
-    # disable H.264 and only stream MJPEG
-    options = {"streaming_mode": "mjpeg"}
-    # assign it
-    WebGear(source="foo.mp4", logging=True, **options)
-    ```
-
-* **`h264_options`** _(dict)_ : Overrides FFmpeg's H.264 output parameters used in `"h264"` [`streaming_mode`](#webgear-specific-attributes). It accepts any FFmpeg output parameter as dictionary attributes, which are merged over the following defaults:
+* **`h264_options`** _(dict)_ : Overrides FFmpeg's H.264 output parameters used in `"h264"` [`streaming_mode`](#streaming_mode). It accepts any FFmpeg output parameter as dictionary attributes, which are merged over the following defaults:
 
     ??? new "New in v0.3.7"
         `h264_options` attribute was added in `v0.3.7`.
@@ -159,7 +172,7 @@ This parameter can be used to pass user-defined parameter to WebGear API by form
     # lower bandwidth with higher CRF, and keyframe every 30 frames
     options = {"h264_options": {"-crf": 28, "-g": 30}}
     # assign it
-    WebGear(source="foo.mp4", logging=True, **options)
+    WebGear(source="foo.mp4", streaming_mode="h264", logging=True, **options)
     ```
 
 * **`overwrite_default_files`** _(boolean)_ : Can be used to force trigger the [Auto-generation process](./#auto-generation-process) to overwrite existing data-files. Its usage is as follows:
@@ -704,7 +717,7 @@ WebGear(api=Backend.FFGEAR, source="myvideo.mp4", frame_format="gray")
 
 ### **`custom_ffmpeg`**
 
-Path to a custom FFmpeg executable. Useful when FFmpeg is not on `PATH`. This executable is also used for encoding in H.264 [`streaming_mode`](#webgear-specific-attributes) with any backend.
+Path to a custom FFmpeg executable. Useful when FFmpeg is not on `PATH`. This executable is also used for encoding in H.264 [`streaming_mode`](#streaming_mode) with any backend.
 
 **Data-Type:** String
 

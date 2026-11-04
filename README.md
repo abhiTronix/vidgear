@@ -156,7 +156,7 @@ Each API is designed exclusively to handle/control/process different data-specif
 
 - **Asynchronous I/O Streaming Gear:**
 
-  - [**WebGear:**](#webgear) ASGI Video-Server that broadcasts low-latency H.264 video _(or MJPEG-Frames)_ to any web-browser on the network.
+  - [**WebGear:**](#webgear) ASGI Video-Server that broadcasts Live MJPEG-Frames _(or low-latency H.264 video)_ to any web-browser on the network.
   - [**WebGear_RTC:**](#webgear_rtc) Real-time Asyncio WebRTC media server for streaming directly to peer clients over the network.
 
 **D. Network Gears:**
@@ -594,11 +594,11 @@ Whereas supported protocol are: `tcp` and `ipc`.
 
 ## WebGear
 
-> _WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-Broadcaster API ideal for transmitting low-latency H.264 video _(or [Motion-JPEG](https://en.wikipedia.org/wiki/Motion_JPEG)-frames)_ from a single source to multiple recipients via the browser._
+> _WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-Broadcaster API ideal for transmitting [Motion-JPEG](https://en.wikipedia.org/wiki/Motion_JPEG)-frames _(or low-latency H.264 video)_ from a single source to multiple recipients via the browser._
 
 WebGear API works on [**Starlette**](https://www.starlette.io/)'s ASGI application and provides a highly extensible and flexible async wrapper around its complete framework. WebGear can flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc.
 
-WebGear API operates in two modes: **H.264 Mode** _(default)_ encodes frames with FFmpeg into low-latency H.264 and streams them over WebSockets, where browser decodes them with hardware-accelerated WebCodecs, using ~9-38x less bandwidth than MJPEG, but starting one FFmpeg encoder per connected viewer. Whereas **MJPEG Mode** _(`streaming_mode="mjpeg"`)_ uses an intraframe-only compression scheme where each video-frame is encoded as JPEG and streamed over HTTP using Starlette's Multipart [Streaming Response](https://www.starlette.io/responses/#streamingresponse), which needs no FFmpeg and imposes lower processing requirements, but uses more bandwidth. Both are served by a [Uvicorn](https://www.uvicorn.org/#quickstart) ASGI Server.
+WebGear API operates in two modes: **MJPEG Mode** _(default)_ uses an intraframe-only compression scheme where each video-frame is encoded as JPEG and streamed over HTTP using Starlette's Multipart [Streaming Response](https://www.starlette.io/responses/#streamingresponse), which needs no FFmpeg and imposes lower processing requirements, but uses more bandwidth. Whereas **H.264 Mode** _(`streaming_mode="h264"`)_ encodes frames with FFmpeg into low-latency H.264 and streams them over WebSockets, where browser decodes them with hardware-accelerated WebCodecs, using ~9-38x less bandwidth than MJPEG, but starting one FFmpeg encoder per connected viewer. Both are served by a [Uvicorn](https://www.uvicorn.org/#quickstart) ASGI Server.
 
 In layman's terms, WebGear acts as a powerful **Video Broadcaster** that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to [CamGear](#camgear), [PiGear](#pigear), and [FFGear](#ffgear) APIs _(via the `api` parameter)_, thereby granting it exclusive power of broadcasting frames from any incoming stream. It also allows us to define our custom Server as source to transform frames easily before sending them across the network _(see this [doc][webgear-cs] example)_.
 
@@ -617,14 +617,13 @@ In layman's terms, WebGear acts as a powerful **Video Broadcaster** that transmi
 import uvicorn
 from vidgear.gears.asyncio import WebGear
 
-# low-latency H.264 mode (default), or use "mjpeg"
+# low-latency H.264 mode, or use "mjpeg" (default)
 options = {
-    "streaming_mode": "h264",
     "frame_size_reduction": 40,
 }
 
 # initialize WebGear app
-web = WebGear(source="foo.mp4", logging=True, **options)
+web = WebGear(source="foo.mp4", streaming_mode="h264", logging=True, **options)
 
 # run this app on Uvicorn server at address http://localhost:8000/
 uvicorn.run(web(), host="localhost", port=8000)

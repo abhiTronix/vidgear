@@ -40,66 +40,9 @@ You'll also need to install an ASGI Server to run following WebGear usage exampl
 &thinsp;
 
 
-## Low-Latency H.264 Streaming :zap:
-
-??? new "New in v0.3.7"
-    Low-Latency H.264 Streaming was added in `v0.3.7`.
-
-By default _([`streaming_mode="h264"`](params/#webgear-specific-attributes))_, WebGear encodes frames with FFmpeg _(`libx264 -preset ultrafast -tune zerolatency`)_ and pushes each complete H.264 frame as a binary WebSocket message at `/ws/video`. WebGear's Default Theme decodes them with the browser's hardware-accelerated **WebCodecs** `VideoDecoder` inside a Web Worker and paints them on a `<canvas>`, while a telemetry HUD shows live FPS, bandwidth and decode latency.
-
-!!! danger "Higher Server CPU usage"
-    Every connected viewer starts its own FFmpeg encoder process in this mode, so server CPU usage grows with the number of viewers. Use [MJPEG Mode](#bare-minimum-usage-with-mjpeg-mode-performance-enhancements) for many simultaneous viewers on a low-power server. See [Modes of Operation ➶](../#modes-of-operation) for more details.
-
-!!! warning "Requirements"
-    * **Server:** FFmpeg with `libx264` encoder must be installed _(or set via [`custom_ffmpeg`](params/#custom_ffmpeg))_. On Windows :fontawesome-brands-windows:, WebGear looks for FFmpeg on startup, and may download a static FFmpeg build if none is found.
-    * **Browser:** WebCodecs support _(Chrome/Edge 94+, Safari 16.4+, Firefox 130+)_ inside a [Secure Context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts), i.e. `https://` or `http://localhost`.
-
-!!! info "Automatic MJPEG Fallback"
-    The `/video` MJPEG endpoint stays available, and the Default Theme automatically falls back to it whenever WebCodecs is unavailable _(including plain `http://` on non-localhost hosts)_ or WebSocket stream fails. MJPEG [Performance Enhancing Attributes](#mjpeg-performance-enhancing-attributes) therefore still apply to the fallback stream.
-
-```python linenums="1" hl_lines="6-7"
-# import required libraries
-import uvicorn
-from vidgear.gears.asyncio import WebGear
-
-# H.264 mode (default), tweak encoder, and keep frames at original size
-options = {
-    "streaming_mode": "h264",
-    "h264_options": {"-crf": 23},  # optional encoder tweaks
-    "frame_size_reduction": 0,
-}
-
-# initialize WebGear app
-web = WebGear(source="foo.mp4", logging=True, **options)
-
-# run this app on Uvicorn server at address http://localhost:8000/
-uvicorn.run(web(), host="localhost", port=8000)
-
-# close app safely
-web.shutdown()
-```
-
-which can be accessed on any WebCodecs-capable browser on your machine at http://localhost:8000/.
-
-??? abstract "Benchmarks: MJPEG vs H.264"
-
-    Measured on a 16-core x86-64 Linux machine with FFmpeg 4.4 `libx264` defaults above, against WebGear's default MJPEG settings _(`simplejpeg`, quality `90`, `4:2:2`, `fastdct`)_, on identical 30fps frames _(Big Buck Bunny for motion, a repeated frame for static scene)_:
-
-    | Source | MJPEG | H.264 _(keyframe / median delta)_ | Bandwidth Saving |
-    |:--|:--|:--|:--|
-    | 720p30, high-motion | 6.32 MB/s | 0.80 MB/s _(168 KB / 25.8 KB)_ | **7.9x** _(87.3%)_ |
-    | 1080p30, high-motion | 11.24 MB/s | 1.27 MB/s _(296 KB / 40.1 KB)_ | **8.8x** _(88.7%)_ |
-    | 1080p30, static scene | 12.22 MB/s | 0.32 MB/s _(296 KB / 0.22 KB)_ | **38.0x** _(97.4%)_ |
-
-    **Latency:** Server-side frame-in → H.264-frame-out takes **~44-49ms** median _(p95 ≤ 55ms)_, which includes one frame-interval for detecting frame boundaries, plus **~3ms** browser decode on `localhost` _(i.e. ~50ms server-to-canvas, excluding camera capture, network and display)_.
-
-    !!! note "Results vary with content, resolution, CPU and network. Real-world cameras usually lie between the high-motion and static rows."
-
-&nbsp;
-
 ## Bare-Minimum Usage with MJPEG Mode Performance Enhancements
 
-When [`streaming_mode="mjpeg"`](params/#webgear-specific-attributes), WebGear only streams JPEG-encoded frames over HTTP at `/video` endpoint, with no FFmpeg dependency. See [Modes of Operation ➶](../#modes-of-operation) for its pros and cons.
+By default _([`streaming_mode="mjpeg"`](params/#streaming_mode))_, WebGear only streams JPEG-encoded frames over HTTP at `/video` endpoint, with no FFmpeg dependency. See [Modes of Operation ➶](../#modes-of-operation) for its pros and cons.
 
 !!! warning "Following JPEG Performance Enhancing Attributes only work in MJPEG Mode _(and in H.264 Mode's MJPEG fallback stream)_, and have no effect on H.264 encoding, except `frame_size_reduction`."
 
@@ -148,14 +91,13 @@ Let's implement our Bare-Minimum usage example in MJPEG Mode with these [**Perfo
 !!! tip "For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](../../help/webgear_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear)"
 
 
-```python linenums="1" hl_lines="7-11"
+```python linenums="1" hl_lines="7-10 14"
 # import required libraries
 import uvicorn
 from vidgear.gears.asyncio import WebGear
 
 # MJPEG mode with various performance tweaks
 options = {
-    "streaming_mode": "mjpeg",
     "frame_size_reduction": 40,
     "jpeg_compression_quality": 80,
     "jpeg_compression_fastdct": True,
@@ -163,7 +105,7 @@ options = {
 }
 
 # initialize WebGear app
-web = WebGear(source="foo.mp4", logging=True, **options)
+web = WebGear(source="foo.mp4", streaming_mode="mjpeg", logging=True, **options)
 
 # run this app on Uvicorn server at address http://localhost:8000/
 uvicorn.run(web(), host="localhost", port=8000)
@@ -174,4 +116,60 @@ web.shutdown()
 
 which can be accessed on any browser on your machine at http://localhost:8000/.
 
-&nbsp; 
+&nbsp;
+
+## Low-Latency H.264 Streaming :zap:
+
+??? new "New in v0.3.7"
+    Low-Latency H.264 Streaming was added in `v0.3.7`.
+
+When [`streaming_mode="h264"`](params/#streaming_mode), WebGear encodes frames with FFmpeg _(`libx264 -preset ultrafast -tune zerolatency`)_ and pushes each complete H.264 frame as a binary WebSocket message at `/ws/video`. WebGear's Default Theme decodes them with the browser's hardware-accelerated **WebCodecs** `VideoDecoder` inside a Web Worker and paints them on a `<canvas>`, while a telemetry HUD shows live FPS, bandwidth and decode latency.
+
+!!! danger "Higher Server CPU usage"
+    Every connected viewer starts its own FFmpeg encoder process in this mode, so server CPU usage grows with the number of viewers. Use [MJPEG Mode](#bare-minimum-usage-with-mjpeg-mode-performance-enhancements) for many simultaneous viewers on a low-power server. See [Modes of Operation ➶](../#modes-of-operation) for more details.
+
+!!! warning "Requirements"
+    * **Server:** FFmpeg with `libx264` encoder must be installed _(or set via [`custom_ffmpeg`](params/#custom_ffmpeg))_. On Windows :fontawesome-brands-windows:, WebGear looks for FFmpeg on startup, and may download a static FFmpeg build if none is found.
+    * **Browser:** WebCodecs support _(Chrome/Edge 94+, Safari 16.4+, Firefox 130+)_ inside a [Secure Context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts), i.e. `https://` or `http://localhost`.
+
+!!! info "Automatic MJPEG Fallback"
+    The `/video` MJPEG endpoint stays available, and the Default Theme automatically falls back to it whenever WebCodecs is unavailable _(including plain `http://` on non-localhost hosts)_ or WebSocket stream fails. MJPEG [Performance Enhancing Attributes](#mjpeg-performance-enhancing-attributes) therefore still apply to the fallback stream.
+
+```python linenums="1" hl_lines="7 12"
+# import required libraries
+import uvicorn
+from vidgear.gears.asyncio import WebGear
+
+# H.264 mode, tweak encoder, and keep frames at original size
+options = {
+    "h264_options": {"-crf": 23},  # optional encoder tweaks
+    "frame_size_reduction": 0,
+}
+
+# initialize WebGear app
+web = WebGear(source="foo.mp4", streaming_mode="h264", logging=True, **options)
+
+# run this app on Uvicorn server at address http://localhost:8000/
+uvicorn.run(web(), host="localhost", port=8000)
+
+# close app safely
+web.shutdown()
+```
+
+which can be accessed on any WebCodecs-capable browser on your machine at http://localhost:8000/.
+
+??? abstract "Benchmarks: MJPEG vs H.264"
+
+    Measured on a 16-core x86-64 Linux machine with FFmpeg 4.4 `libx264` defaults above, against WebGear's default MJPEG settings _(`simplejpeg`, quality `90`, `4:2:2`, `fastdct`)_, on identical 30fps frames _(Big Buck Bunny for motion, a repeated frame for static scene)_:
+
+    | Source | MJPEG | H.264 _(keyframe / median delta)_ | Bandwidth Saving |
+    |:--|:--|:--|:--|
+    | 720p30, high-motion | 6.32 MB/s | 0.80 MB/s _(168 KB / 25.8 KB)_ | **7.9x** _(87.3%)_ |
+    | 1080p30, high-motion | 11.24 MB/s | 1.27 MB/s _(296 KB / 40.1 KB)_ | **8.8x** _(88.7%)_ |
+    | 1080p30, static scene | 12.22 MB/s | 0.32 MB/s _(296 KB / 0.22 KB)_ | **38.0x** _(97.4%)_ |
+
+    **Latency:** Server-side frame-in → H.264-frame-out takes **~44-49ms** median _(p95 ≤ 55ms)_, which includes one frame-interval for detecting frame boundaries, plus **~3ms** browser decode on `localhost` _(i.e. ~50ms server-to-canvas, excluding camera capture, network and display)_.
+
+    !!! note "Results vary with content, resolution, CPU and network. Real-world cameras usually lie between the high-motion and static rows."
+
+&nbsp;

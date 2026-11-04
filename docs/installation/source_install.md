@@ -127,13 +127,14 @@ When installing VidGear from source, following are Critical and some API specifi
 
 * #### :simple-ffmpeg: FFmpeg 
 
-    Require only for the video compression and encoding compatibility within [**StreamGear API**](../gears/streamgear/introduction/) and [**WriteGear API's Compression Mode**](../gears/writegear/compression/), and for hardware-accelerated decoding within [**FFGear API**](../gears/ffgear/). 
+    Require only for the video compression and encoding compatibility within [**StreamGear API**](../gears/streamgear/introduction/) and [**WriteGear API's Compression Mode**](../gears/writegear/compression/), for hardware-accelerated decoding within [**FFGear API**](../gears/ffgear/), and for low-latency H.264 encoding within [**WebGear API's H.264 Mode**](../gears/webgear/#modes-of-operation). 
 
     !!! tip "FFmpeg Installation"
 
         * **For WriteGear API's Compression Mode**: Follow this dedicated [**FFmpeg Installation doc**](../gears/writegear/compression/advanced/ffmpeg_install/) for its installation.
         * **For StreamGear API**: Follow this dedicated [**FFmpeg Installation doc**](../gears/streamgear/ffmpeg_install/) for its installation.
         * **For FFGear API**: Follow this dedicated [**FFmpeg Installation doc**](../gears/ffgear/advanced/ffmpeg_install/) for its installation.
+        * **For WebGear API's H.264 Mode**: FFmpeg with `libx264` encoder is required. Follow FFGear's [**FFmpeg Installation doc**](../gears/ffgear/advanced/ffmpeg_install/) for its installation.
 
 
 &thinsp;
@@ -288,7 +289,7 @@ When installing VidGear from source, following are Critical and some API specifi
         | StreamGear | **FFmpeg:** See [this doc ➶](../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
         | FFGear | **FFmpeg:** See [this doc ➶](../gears/ffgear/advanced/ffmpeg_install/#ffmpeg-installation-instructions) |
         | NetGear | `pyzmq`, `simplejpeg` |
-        | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` |
+        | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` _(H.264 Mode also needs **FFmpeg:** See [this doc ➶](../gears/ffgear/advanced/ffmpeg_install/#ffmpeg-installation-instructions))_ |
         | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
         | NetGear_Async | `pyzmq`, `msgpack`, `msgpack_numpy`, `uvloop` |
         | Stabilizer Class | - |

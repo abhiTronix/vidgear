@@ -20,7 +20,7 @@ limitations under the License.
 
 # WebGear Bonus Examples
 
-!!! tip "Following examples explicitly use WebGear's [MJPEG Mode](../gears/webgear/#modes-of-operation) with JPEG performance tweaks. To use default low-latency H.264 Mode instead, set `"streaming_mode": "h264"` and drop all `jpeg_compression_*` attributes _(except Custom Sources, which only work in MJPEG Mode)_."
+!!! tip "Following examples explicitly use WebGear's [MJPEG Mode](../gears/webgear/#modes-of-operation) with JPEG performance tweaks. To use low-latency H.264 Mode instead, set `streaming_mode="h264"` and drop all `jpeg_compression_*` attributes _(except Custom Sources, which only work in MJPEG Mode)_."
 
 &thinsp;
 
@@ -39,7 +39,7 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
 
 === "New Picamera2 backend"
 
-    ```python linenums="1" hl_lines="5 10 24"
+    ```python linenums="1" hl_lines="5 23 26"
     # import libs
     import uvicorn
     from libcamera import Transform
@@ -49,7 +49,6 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
     # MJPEG mode with various WebGear performance
     # and Picamera2 API tweaks
     options = {
-        "streaming_mode": "mjpeg",
         "frame_size_reduction": 40,
         "jpeg_compression_quality": 80,
         "jpeg_compression_fastdct": True,
@@ -63,7 +62,12 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
 
     # initialize WebGear app
     web = WebGear(
-        api=Backend.PIGEAR, resolution=(640, 480), framerate=60, logging=True, **options
+        api=Backend.PIGEAR,
+        resolution=(640, 480),
+        framerate=60,
+        streaming_mode="mjpeg",
+        logging=True,
+        **options,
     )
 
     # run this app on Uvicorn server at address http://localhost:8000/
@@ -85,7 +89,7 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
 
         !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../gears/pigear/params) user-defined optional parameter boolean attribute."
 
-    ```python linenums="1" hl_lines="4 8 23"
+    ```python linenums="1" hl_lines="4 22 25"
     # import libs
     import uvicorn
     from vidgear.gears.asyncio import WebGear
@@ -93,7 +97,6 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
 
     # MJPEG mode with various webgear performance and Picamera API tweaks
     options = {
-        "streaming_mode": "mjpeg",
         "frame_size_reduction": 40,
         "jpeg_compression_quality": 80,
         "jpeg_compression_fastdct": True,
@@ -108,7 +111,12 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
 
     # initialize WebGear app
     web = WebGear(
-        api=Backend.PIGEAR, resolution=(640, 480), framerate=60, logging=True, **options
+        api=Backend.PIGEAR,
+        resolution=(640, 480),
+        framerate=60,
+        streaming_mode="mjpeg",
+        logging=True,
+        **options,
     )
 
     # run this app on Uvicorn server at address http://localhost:8000/
@@ -124,7 +132,7 @@ Here's a bare-minimum example of using WebGear API with the Raspberry Pi camera 
 
 Here's a bare-minimum example of using WebGear API with the [FFGear backend](../gears/ffgear/) for hardware-accelerated FFmpeg-powered video decoding:
 
-```python linenums="1" hl_lines="4 8 17"
+```python linenums="1" hl_lines="4 16 18"
 # import libs
 import uvicorn
 from vidgear.gears.asyncio import WebGear
@@ -132,7 +140,6 @@ from vidgear.gears.helper import Backend
 
 # MJPEG mode with various WebGear performance tweaks
 options = {
-    "streaming_mode": "mjpeg",
     "frame_size_reduction": 40,
     "jpeg_compression_quality": 80,
     "jpeg_compression_fastdct": True,
@@ -143,6 +150,7 @@ options = {
 web = WebGear(
     api=Backend.FFGEAR,
     source="foo.mp4",
+    streaming_mode="mjpeg",
     logging=True,
     **options,
 )
@@ -160,14 +168,13 @@ web.shutdown()
  
 Here's an example of using WebGear API with real-time Video Stabilization enabled:
 
-```python linenums="1" hl_lines="7 15"
+```python linenums="1" hl_lines="14"
 # import libs
 import uvicorn
 from vidgear.gears.asyncio import WebGear
 
 # MJPEG mode with various webgear performance tweaks
 options = {
-    "streaming_mode": "mjpeg",
     "frame_size_reduction": 40,
     "jpeg_compression_quality": 80,
     "jpeg_compression_fastdct": True,
@@ -175,7 +182,7 @@ options = {
 }
 
 # initialize WebGear app  with a raw source and enable video stabilization(`stabilize=True`)
-web = WebGear(source="foo.mp4", stabilize=True, logging=True, **options)
+web = WebGear(source="foo.mp4", stabilize=True, streaming_mode="mjpeg", logging=True, **options)
 
 # run this app on Uvicorn server at address http://localhost:8000/
 uvicorn.run(web(), host="localhost", port=8000)
@@ -226,7 +233,7 @@ web.shutdown()
 
 **Step-3 (Build your own Frame Producers):** Now, create a python script code with OpenCV source, as follows:
 
-```python linenums="1"  hl_lines="10 16-39 43-66 69-78 82 85-87"
+```python linenums="1"  hl_lines="10 13 16-39 43-66 69-78 82 85-87"
 # import necessary libs
 import uvicorn, asyncio, cv2
 from vidgear.gears.asyncio import WebGear
@@ -236,10 +243,10 @@ from starlette.routing import Route
 
 # provide current directory to load data files, and use MJPEG mode
 # (custom sources only work in MJPEG mode)
-options = {"custom_data_location": "./", "streaming_mode": "mjpeg"}
+options = {"custom_data_location": "./"}
 
 # initialize WebGear app without any source
-web = WebGear(logging=True, **options)
+web = WebGear(streaming_mode="mjpeg", logging=True, **options)
 
 # create your own custom frame producer
 async def my_frame_producer1():

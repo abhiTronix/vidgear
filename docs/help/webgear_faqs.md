@@ -98,7 +98,7 @@ For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"
 
 ## How to stream low-latency H.264 video with WebGear?
 
-**Answer:** WebGear streams H.264 by default _([`streaming_mode="h264"`](../gears/webgear/params/#webgear-specific-attributes))_, just make sure FFmpeg with `libx264` is installed. See [this usage example ➶](../gears/webgear/usage/#low-latency-h264-streaming).
+**Answer:** Set [`streaming_mode="h264"`](../gears/webgear/params/#streaming_mode) parameter, and make sure FFmpeg with `libx264` is installed. See [this usage example ➶](../gears/webgear/usage/#low-latency-h264-streaming).
 
 &thinsp;
 
