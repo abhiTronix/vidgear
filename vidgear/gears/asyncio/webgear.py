@@ -81,7 +81,7 @@ class WebGear:
 
     WebGear API uses an intraframe-only compression scheme under the hood where the sequence of video-frames are first encoded as JPEG-DIB (JPEG with Device-Independent Bit compression)
     and then streamed over HTTP using Starlette's Multipart Streaming Response and a Uvicorn ASGI Server. This method imposes lower processing and memory requirements, but the quality
-    is not the best, since JPEG compression is not very efficient for motion video. Therefore, WebGear by default uses a low-latency H.264 streaming mode
+    is not the best, since JPEG compression is not very efficient for motion video. Therefore, WebGear also provides a low-latency H.264 streaming mode
     (`streaming_mode="h264"`) where frames are encoded with FFmpeg and delivered over WebSockets to the browser's WebCodecs decoder, with automatic MJPEG fallback.
 
     In layman's terms, WebGear acts as a powerful Video Broadcaster that transmits live video-frames to any web-browser in the network. Additionally, WebGear API also provides internal
@@ -109,6 +109,8 @@ class WebGear:
         colorspace: str | None = None,
         logging: bool = False,
         time_delay: int = 0,
+        # WebGear parameters
+        streaming_mode: str = "mjpeg",
         # deprecated
         enablePiCamera: bool | None = None,
         **options: dict
@@ -135,6 +137,7 @@ class WebGear:
             colorspace (str): [CamGear/PiGear only] selects the colorspace of the input stream.
             logging (bool): enables/disables logging. Default: `False`.
             time_delay (int): [CamGear/PiGear only] time delay (in seconds) before reading frames.
+            streaming_mode (str): selects streaming mode, either `"mjpeg"` _(default)_ or low-latency `"h264"`.
             enablePiCamera (bool): **DEPRECATED** — use `api=Backend.PIGEAR` instead. Will be removed
                 in a future release.
             options (dict): additional tweak parameters forwarded to the selected backend gear
@@ -179,7 +182,6 @@ class WebGear:
         data_path = ""  # path to WebGear data-files
         overwrite_default = False
         self.__enable_inf = False  # continue frames even when video ends.
-        self.__streaming_mode = ""  # low-latency "h264" by default, or "mjpeg"
         # default low-latency H.264 FFmpeg encoder parameters
         self.__h264_params = {
             "-c:v": "libx264",
@@ -310,14 +312,6 @@ class WebGear:
                     logger.warning("Skipped invalid `enable_infinite_frames` value!")
                 del options["enable_infinite_frames"]  # clean
 
-            if "streaming_mode" in options:
-                value = options["streaming_mode"]
-                if isinstance(value, str) and value.strip().lower() in ["mjpeg", "h264"]:
-                    self.__streaming_mode = value.strip().lower()
-                else:
-                    logger.warning("Skipped invalid `streaming_mode` value!")
-                del options["streaming_mode"]  # clean
-
             if "h264_options" in options:
                 value = options["h264_options"]
                 if isinstance(value, dict):
@@ -331,12 +325,16 @@ class WebGear:
 
         # validate low-latency H.264 streaming prerequisites
         self.__ffmpeg = ""
-        explicit_h264 = self.__streaming_mode == "h264"
-        self.__streaming_mode = self.__streaming_mode or "h264"
+        self.__streaming_mode = (
+            streaming_mode.strip().lower() if isinstance(streaming_mode, str) else ""
+        )
+        if self.__streaming_mode not in ["mjpeg", "h264"]:
+            logger.warning("Skipped invalid `streaming_mode` value!")
+            self.__streaming_mode = "mjpeg"
         if self.__streaming_mode == "h264":
             if source is None:
                 # custom generators yield ready-made JPEG bytes, not frames
-                (logger.warning if explicit_h264 else logger.debug)(
+                logger.warning(
                     "H.264 streaming needs a valid `source`. Falling back to MJPEG streaming!"
                 )
                 self.__streaming_mode = "mjpeg"

@@ -346,7 +346,7 @@ def nal_types(unit):
 @pytest.mark.parametrize(
     "options",
     [
-        {},  # H.264 by default
+        {"streaming_mode": "h264"},
         {
             "streaming_mode": " H264 ",
             "h264_options": {"-crf": 30, "-g": 10},
@@ -383,9 +383,10 @@ def test_webgear_h264_streaming(options):
     "source, options",
     [
         (return_testvideo_path(), {"streaming_mode": "mjpeg", "h264_options": "invalid"}),
-        (None, {}),  # custom generators stay MJPEG
-        (None, {"streaming_mode": "h264"}),
-        (return_testvideo_path(), {"streaming_mode": "invalid", "skip_generate_webdata": True}),
+        (return_testvideo_path(), {}),  # MJPEG by default
+        (return_testvideo_path(), {"streaming_mode": "invalid"}),
+        (None, {"streaming_mode": "h264"}),  # custom generators stay MJPEG
+        (return_testvideo_path(), {"streaming_mode": "h264", "skip_generate_webdata": True}),
     ],
 )
 def test_webgear_h264_fallback(source, options):
