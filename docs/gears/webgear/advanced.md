@@ -41,9 +41,9 @@ Let's implement a bare-minimum example using WebGear, where we will be sending [
 
 !!! info "In H.264 Mode, `jpeg_compression_colorspace` only tells FFmpeg the input frames' pixel format, while JPEG attributes apply to the MJPEG fallback stream only."
 
-!!! info "Supported `jpeg_compression_colorspace` colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
+!!! tip "Supported `jpeg_compression_colorspace` colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
 
-=== ":material-image-multiple: MJPEG Mode _(Default)_"
+=== ":octicons-stack-16: MJPEG Mode _(Default)_"
 
     ```python linenums="1" hl_lines="6-12"
     # import required libraries
@@ -71,7 +71,7 @@ Let's implement a bare-minimum example using WebGear, where we will be sending [
     web.shutdown()
     ```
 
-=== ":material-video: H.264 Mode"
+=== ":octicons-device-camera-video-16: H.264 Mode"
 
     ```python linenums="1" hl_lines="6-9"
     # import required libraries
@@ -109,7 +109,7 @@ WebGear allows you to easily define your own custom Source that you want to use 
 
 !!! warning "JPEG Frame-Compression and all of its [performance enhancing attributes](usage/#mjpeg-performance-enhancing-attributes) are disabled with a Custom Source!"
 
-!!! info "Custom Sources only work in [MJPEG Mode](./#modes-of-operation), since they yield ready-made JPEG bytes. Setting [`streaming_mode="h264"`](params/#streaming_mode) with a Custom Source falls back to MJPEG anyway."
+!!! failure "Custom Sources only work in [MJPEG Mode](./#modes-of-operation), since they yield ready-made JPEG bytes. Setting [`streaming_mode="h264"`](params/#streaming_mode) with a Custom Source falls back to MJPEG anyway."
 
 Let's implement a bare-minimum example with a Custom Source using WebGear API and OpenCV:
 
@@ -170,7 +170,7 @@ web.shutdown()
 
 With our highly extensible WebGear API, you can add your own mounting points, where additional files located, as follows:
 
-=== ":material-image-multiple: MJPEG Mode _(Default)_"
+=== ":octicons-stack-16: MJPEG Mode _(Default)_"
 
     ```python linenums="1" hl_lines="8-13 21-23"
     # import libs
@@ -204,7 +204,7 @@ With our highly extensible WebGear API, you can add your own mounting points, wh
     web.shutdown()
     ```
 
-=== ":material-video: H.264 Mode"
+=== ":octicons-device-camera-video-16: H.264 Mode"
 
     ```python linenums="1" hl_lines="8-11 19-21"
     # import libs
@@ -265,7 +265,7 @@ Suppose we want to add a simple **`hello world` webpage** to our WebGear server.
  
 Then in our application code, we can integrate this webpage route, as follows:
 
-=== ":material-image-multiple: MJPEG Mode _(Default)_"
+=== ":octicons-stack-16: MJPEG Mode _(Default)_"
 
     ```python linenums="1" hl_lines="11-14 18-23 31"
     # import libs
@@ -307,7 +307,7 @@ Then in our application code, we can integrate this webpage route, as follows:
     web.shutdown()
     ```
 
-=== ":material-video: H.264 Mode"
+=== ":octicons-device-camera-video-16: H.264 Mode"
 
     ```python linenums="1" hl_lines="11-14 18-21 29"
     # import libs
@@ -355,9 +355,6 @@ Then in our application code, we can integrate this webpage route, as follows:
 
 WebGear natively supports ASGI middleware classes with Starlette for implementing behavior that is applied across your entire ASGI application easily.
 
-??? new "New in v0.2.2" 
-    This example was added in `v0.2.2`.
-
 !!! info "All supported middlewares can be found [here ➶](https://www.starlette.io/middleware/)"
 
 For this example, let's use [`CORSMiddleware`](https://www.starlette.io/middleware/#corsmiddleware) for implementing appropriate [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) to outgoing responses in our application in order to allow cross-origin requests from browsers, as follows:
@@ -366,7 +363,7 @@ For this example, let's use [`CORSMiddleware`](https://www.starlette.io/middlewa
 
 !!! tip "Starlette provides several arguments for enabling origins, methods, or headers for CORSMiddleware API. More information can be found [here ➶](https://www.starlette.io/middleware/#corsmiddleware)"
 
-=== ":material-image-multiple: MJPEG Mode _(Default)_"
+=== ":octicons-stack-16: MJPEG Mode _(Default)_"
 
     ```python linenums="1" hl_lines="8-13 21-29"
     # import libs
@@ -406,7 +403,7 @@ For this example, let's use [`CORSMiddleware`](https://www.starlette.io/middlewa
     web.shutdown()
     ```
 
-=== ":material-video: H.264 Mode"
+=== ":octicons-device-camera-video-16: H.264 Mode"
 
     ```python linenums="1" hl_lines="8-11 19-27"
     # import libs

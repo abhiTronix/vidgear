@@ -27,7 +27,7 @@ limitations under the License.
 
 ## Overview
 
-> _WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-Broadcaster API ideal for transmitting [Motion-JPEG](https://en.wikipedia.org/wiki/Motion_JPEG)-frames _(or low-latency H.264 video)_ from a single source to multiple recipients via the browser._
+> WebGear is a powerful [ASGI](https://asgi.readthedocs.io/en/latest/) Video-Broadcaster API ideal for transmitting [Motion-JPEG](https://en.wikipedia.org/wiki/Motion_JPEG)-frames _(or low-latency H.264 video)_ from a single source to multiple recipients via the browser.
 
 WebGear API works on [**Starlette**](https://www.starlette.io/)'s ASGI application and provides a highly extensible and flexible async wrapper around its complete framework. WebGear can flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc.
 
@@ -39,12 +39,12 @@ In layman's terms, WebGear acts as a powerful ==**Video Broadcaster**== that tra
 
 ## Modes of Operation
 
-??? new "New in v0.3.7"
+!!! new "New in v0.3.7"
     H.264 Mode was added in `v0.3.7`. Previous versions only streamed in MJPEG Mode.
 
 WebGear primarily operates in following modes, selectable with its [`streaming_mode`](params/#streaming_mode) parameter:
 
-=== ":material-image-multiple: MJPEG Mode _(Default)_"
+=== ":octicons-stack-16: MJPEG Mode _(Default)_"
 
     When `streaming_mode="mjpeg"` _(default)_, WebGear uses an intraframe-only compression scheme, where each video-frame is separately encoded as a JPEG image with [`simplejpeg`](https://gitlab.com/jfolz/simplejpeg) library, and then streamed as [Motion-JPEG](https://en.wikipedia.org/wiki/Motion_JPEG) over HTTP at `/video` endpoint using Starlette's Multipart [Streaming Response](https://www.starlette.io/responses/#streamingresponse).
 
@@ -58,9 +58,9 @@ WebGear primarily operates in following modes, selectable with its [`streaming_m
         * Many times more bandwidth than H.264, since every frame is a complete JPEG image.
         * Lower visual quality at same bandwidth, and choppier playback on slower networks.
 
-=== ":material-video: H.264 Mode"
+=== ":octicons-device-camera-video-16: H.264 Mode"
 
-    When `streaming_mode="h264"`, WebGear encodes frames into low-latency **H.264** video with [**FFmpeg**](https://ffmpeg.org/) _(`libx264 -preset ultrafast -tune zerolatency`)_, and pushes one complete frame per binary message over **WebSockets** at `/ws/video` endpoint. WebGear's Default Theme then decodes them off main-thread with browser's hardware-accelerated [**WebCodecs**](https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API) `VideoDecoder` inside a Web Worker, and paints them on a `<canvas>`. The `/video` MJPEG endpoint stays available as well, and the Default Theme automatically falls back to it whenever H.264 can't be played.
+    When `streaming_mode="h264"`, WebGear encodes frames into low-latency **H.264** video with [**FFmpeg**](https://ffmpeg.org/) _(`-preset ultrafast -tune zerolatency`)_, and pushes one complete frame per binary message over **WebSockets** at `/ws/video` endpoint. WebGear's Default Theme then decodes them off main-thread with browser's hardware-accelerated [**WebCodecs**](https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API) `VideoDecoder` inside a Web Worker, and paints them on a `<canvas>`. The `/video` MJPEG endpoint stays available as well, and the Default Theme automatically falls back to it whenever H.264 can't be played.
 
     !!! success "Pros"
         * **~9x _(high-motion)_ to ~38x _(static scenes)_ less bandwidth** than MJPEG, since H.264 only encodes changes between frames _(interframe compression)_.
@@ -77,6 +77,21 @@ WebGear primarily operates in following modes, selectable with its [`streaming_m
 
 !!! tip "Which one to choose?"
     Stick with default **MJPEG Mode** for many simultaneous viewers on a low-power server, plain `http://` access across the network, or when FFmpeg is unavailable. Switch to **H.264 Mode** _(`streaming_mode="h264"`)_ for few viewers, high resolutions, or bandwidth-constrained networks.
+
+???+ abstract "Benchmarks: MJPEG vs H.264 :material-horse-variant-fast:"
+
+    Measured on a 16-core x86-64 Linux machine with FFmpeg 4.4 `libx264` defaults above, against WebGear's default MJPEG settings _(`simplejpeg`, quality `90`, `4:2:2`, `fastdct`)_, on identical 30fps frames _(Big Buck Bunny for motion, a repeated frame for static scene)_:
+
+    | Source | MJPEG | H.264 _(keyframe / median delta)_ | Bandwidth Saving |
+    |:--|:--|:--|:--|
+    | 720p30, high-motion | 6.32 MB/s | 0.80 MB/s _(168 KB / 25.8 KB)_ | **7.9x** _(87.3%)_ |
+    | 1080p30, high-motion | 11.24 MB/s | 1.27 MB/s _(296 KB / 40.1 KB)_ | **8.8x** _(88.7%)_ |
+    | 1080p30, static scene | 12.22 MB/s | 0.32 MB/s _(296 KB / 0.22 KB)_ | **38.0x** _(97.4%)_ |
+
+    **Latency:** Server-side frame-in → H.264-frame-out takes **~44-49ms** median _(p95 ≤ 55ms)_, which includes one frame-interval for detecting frame boundaries, plus **~3ms** browser decode on `localhost` _(i.e. ~50ms server-to-canvas, excluding camera capture, network and display)_.
+
+    !!! note "Results vary with content, resolution, CPU and network. Real-world cameras usually lie between the high-motion and static rows."
+
 
 &thinsp;
 
