@@ -99,7 +99,7 @@ This parameter selects WebGear's [Mode of Operation ➶](../#modes-of-operation)
 
 !!! warning "H.264 mode requires a valid [`source`](#source) and a FFmpeg executable with `libx264` encoder _(or any other H.264 encoder set via [`h264_options`](#webgear-specific-attributes))_. Otherwise, WebGear falls back to `"mjpeg"` mode. Custom Sources _(i.e. `config["generator"]`)_ always use MJPEG, since they yield ready-made JPEG bytes."
 
-!!! danger "In `"h264"` mode, every connected viewer starts its own FFmpeg encoder process, so server CPU usage grows with the number of viewers. On Windows, WebGear also looks for FFmpeg on startup, and may download a static FFmpeg build if none is found."
+!!! info "In `"h264"` mode, every connected viewer starts its own FFmpeg encoder process, so server CPU usage grows with the number of viewers. On Windows, WebGear also looks for FFmpeg on startup, and may download a static FFmpeg build if none is found."
 
 !!! danger "Browsers only expose WebCodecs in [Secure Contexts](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts), i.e. `https://` or `http://localhost`. Plain `http://` on other devices in the network falls back to MJPEG, unless WebGear is served over HTTPS _(e.g. `uvicorn.run(..., ssl_keyfile=..., ssl_certfile=...)`)_."
 
