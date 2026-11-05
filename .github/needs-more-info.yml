@@ -34,6 +34,6 @@ pullRequest:
     @{{ author }} Please provide us with more info about this pr title.
 
   badBodyComment: |
-    @{{ author }} We would appreciate it if you could provide us with more info about this pr!
+    Hi @{{ author }}, We would appreciate it if you could provide us with more info about this pr!
 
     ![Alt Text](https://media.giphy.com/media/pqnY0eDsO7nvgHvjSv/giphy.gif)
