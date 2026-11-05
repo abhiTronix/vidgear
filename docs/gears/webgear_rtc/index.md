@@ -34,7 +34,7 @@ limitations under the License.
 
 WebGear_RTC is implemented with the help of [**aiortc**](https://aiortc.readthedocs.io/en/latest/) library which is built on top of asynchronous I/O framework for Web Real-Time Communication (WebRTC) and Object Real-Time Communication (ORTC) and supports many features like SDP generation/parsing, Interactive Connectivity Establishment with half-trickle and mDNS support, DTLS key and certificate generation, DTLS handshake, etc.
 
-WebGear_RTC can handle [multiple consumers](../webgear_rtc/advanced/#using-webgear_rtc-as-real-time-broadcaster) seamlessly and provides native support for ICE _(Interactive Connectivity Establishment)_ protocol, STUN _(Session Traversal Utilities for NAT)_, and TURN _(Traversal Using Relays around NAT)_ servers that help us to seamlessly establish direct media connection with the remote peers for uninterrupted data flow. It also allows us to define our custom streaming class with suitable source to transform frames easily before sending them across the network(see this [doc](../webgear_rtc/advanced/#using-webgear_rtc-with-a-custom-sourceopencv) example).
+WebGear_RTC can handle [multiple consumers](../webgear_rtc/advanced/#using-webgear_rtc-as-real-time-broadcaster) seamlessly _(every peer gets every frame)_ and supports ICE _(Interactive Connectivity Establishment)_ protocol with user-defined STUN _(Session Traversal Utilities for NAT)_, and TURN _(Traversal Using Relays around NAT)_ servers _(via [`ice_servers`](params/#webgear_rtc-specific-attributes) attribute)_ that help us to seamlessly establish direct media connection with the remote peers for uninterrupted data flow. It also allows us to define our custom streaming class with suitable source to transform frames easily before sending them across the network(see this [doc](../webgear_rtc/advanced/#using-webgear_rtc-with-a-custom-sourceopencv) example).
 
 WebGear_RTC API works in conjunction with [**Starlette**](https://www.starlette.io/) ASGI application and can also flexibly interact with Starlette's ecosystem of shared middleware, mountable applications, [Response classes](https://www.starlette.io/responses/), [Routing tables](https://www.starlette.io/routing/), [Static Files](https://www.starlette.io/staticfiles/), [Templating engine(with Jinja2)](https://www.starlette.io/templates/), etc. 
 
@@ -44,7 +44,7 @@ Additionally, WebGear_RTC API also provides internal wrapper around [VideoGear](
 
 ## Data-Files Auto-Generation WorkFlow for WebGear_RTC
 
-Same as [WebGear](../webgear_rtc/), WebGear_RTC API automatically checks for three critical **data files**(i.e `index.html`, `404.html` & `500.html`) on initialization inside the `templates` folder of the `webgear_rtc` directory at the [*default location*](#default-location) which gives rise to the following two possible scenario:
+Same as [WebGear](../webgear/), WebGear_RTC API automatically checks for critical **data files**(i.e `index.html`, `404.html` & `500.html` inside the `templates` folder, and `custom.js` inside the `static/js` folder) on initialization of the `webgear_rtc` directory at the [*default location*](#default-location) which gives rise to the following two possible scenario:
 
 - [x] **If data-files found:** it will proceed normally for instantiating the WebRTC media server through Starlette application.
 - [ ] **If data-files not found:** it will trigger the [**Auto-Generation process**](#auto-generation-process)
@@ -73,7 +73,7 @@ Same as [WebGear](../webgear_rtc/), WebGear_RTC API automatically checks for thr
 
 
 * On triggering this process, WebGear_RTC API creates `webgear_rtc` directory, and `templates` and `static` folders inside along with `js`, `css`, `img` sub-folders at the assigned [*default location*](#default-location).
-* Thereby at this [*default location*](#default-location), the necessary default data files will be downloaded from a dedicated [**Github Server**](https://github.com/abhiTronix/vidgear-vitals) inside respective folders in the following order:
+* Thereby at this [*default location*](#default-location), the necessary default data files will be downloaded from dedicated [**vidgear-vitals**](https://github.com/abhiTronix/vidgear-vitals) repository _(GitLab mirror first, GitHub as fallback)_ inside respective folders in the following order:
 
 	```sh
 		.vidgear
@@ -100,6 +100,14 @@ Same as [WebGear](../webgear_rtc/), WebGear_RTC API automatically checks for thr
 ## WebGear_RTC's Default Template
 
 The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Theme**](https://github.com/abhiTronix/vidgear-vitals#webgear_rtc-default-theme) which looks like something as follows:
+
+??? new "New in Default Theme v0.2.0"
+    - [x] **Real-time Performance Overlay:** live status, codec, resolution, FPS, bitrate, round-trip time, jitter-buffer delay and packet-loss pills, read from browser's WebRTC `getStats()`.
+    - [x] **Auto-Reconnect:** reconnects with backoff when connection fails or stream stalls, frees its server peer on page reload/close, and shows `ended` once stream is over.
+    - [x] **Zero external dependencies:** no CDN fonts, icon packs or scripts, and no hard-coded public STUN server. Endpoints are relative, so it also works behind reverse-proxy sub-paths.
+    - [x] Modern dark UI _(same as WebGear's theme)_ with click-to-toggle fullscreen.
+
+    Existing installs keep their old files, so use [`overwrite_default_files`](params/#webgear_rtc-specific-attributes) attribute once to get it.
 
 ### Index.html
 
@@ -128,6 +136,16 @@ The WebGear_RTC API by default uses simple & elegant [**WebGear_RTC's Default Th
 <h2 align="center">
   <img src="../../assets/images/webgear_rtc_temp_500.png" loading="lazy" alt="WebGear_RTC default 500 page"/>
 </h2>
+
+&thinsp;
+
+## Limitations
+
+- [x] **Codecs:** only VP8 and H.264 video _(aiortc's encoders)_, with aiortc's own bitrate ranges _(H.264: `0.5-3 Mbps`, VP8: `0.25-1.5 Mbps`)_. Use [`codec`](params/#webgear_rtc-specific-attributes) attribute to force one. Frames with odd width/height are cropped by one pixel to even dimensions.
+- [x] **Framerate:** frames are paced at source's framerate _(if reported by the source, up to `120`)_, otherwise at `30` fps.
+- [x] **Video only:** no audio or data channels.
+- [x] **Source is paused** while no peer is connected, and once the source ends _(without [`enable_infinite_frames`](params/#webgear_rtc-specific-attributes))_, new peers are refused with HTTP `503` until the app is restarted.
+- [x] **No authentication:** `/`, `/offer` and `/close_connection` endpoints are public, see [native clients ➶](advanced/#using-webgear_rtc-with-nativenon-browser-clients).
 
 &thinsp;
 
