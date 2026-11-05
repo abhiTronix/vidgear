@@ -34,6 +34,16 @@ limitations under the License.
         * Added live telemetry HUD _(status, codec, resolution, FPS, bandwidth, decode latency)_.
         * Modernized dark theme with zero external dependencies _(native Fullscreen API, inline SVG icons, system fonts)_.
         * Added Playwright CI tests covering all streaming & fallback paths.
+    - [x] 🌐 **WebGear_RTC:**
+        * Added `codec` attribute _(`"VP8"`/`"H264"`)_ to force the negotiated video codec, replacing the no-op H265 codec-preference hack.
+        * Added `ice_servers` attribute for STUN/TURN servers, applied to server-side peers and passed to the homepage template context _(`ice_servers`)_ for the browser.
+        * `/offer` now returns a peer `id`, and `/close_connection` closes only the peer with that `id`.
+        * Frames are paced at the source's `framerate` _(fallback 30fps)_, and FFGear `rgb24`/`rgba` frame formats stream with correct colors.
+    - [x] 💄 **WebGear_RTC Default Theme `v0.2.0`** _(vidgear-vitals)_:
+        * Added real-time performance overlay from WebRTC `getStats()` _(status, codec, resolution, FPS, bitrate, RTT, jitter-buffer, packet-loss)_ with stall detection.
+        * Added auto-reconnect with backoff, `sendBeacon` peer close on page hide, capped ICE gathering, `ended` status on `503`, and relative endpoints _(reverse-proxy sub-paths)_.
+        * Same modern dark theme as WebGear with zero external dependencies _(no axios, Font-Awesome, Google Fonts or hard-coded Google STUN)_.
+        * Added Playwright CI tests.
     - [x] ✨ **Unified FFmpeg Execution (`helper.run_ffmpeg`):**
         * Added a shared primitive for one-shot FFmpeg runs, capturing exit code, a bounded stderr tail, progress, timeout and cancellation in one place. Used by WriteGear's `execute_ffmpeg_cmd` and StreamGear's Single-Source Mode.
     - [x] **WriteGear:**
@@ -56,10 +66,21 @@ limitations under the License.
     - [x] **WebGear:** `generate_webdata` now also validates and downloads `videoFrameDecoderWorker.js` for WebGear, and shares the raw-frame pipeline between MJPEG and H.264 modes.
     - [x] **Tests:** Added WebGear H.264 WebSocket streaming/fallback tests and `h264_access_units` parser tests.
     - [x] **Docs:** Added Low-Latency H.264 Streaming usage, parameters, benchmarks & FAQs, and updated WebGear Default Theme screenshots.
+    - [x] **WebGear_RTC:**
+        * Every peer now gets frames through aiortc's `MediaRelay` _(latest-frame, unbuffered)_, source is read off the event-loop, and is paused while no peer is connected.
+        * Peers are dropped on `failed`/`closed` connection state, and on shutdown via app lifespan.
+        * `from __future__ import annotations`, so missing `starlette` raises vidgear's friendly import error on Python 3.11-3.13.
+    - [x] **Tests:** Rewrote WebGear_RTC tests to receive real frames over loopback _(no STUN)_, covering multi-peer framerate, odd dimensions, invalid offers, per-peer close & reconnect, peer pruning, stream end and lifespan.
+    - [x] **Docs:** Added WebGear_RTC `codec`/`ice_servers` attributes, STUN/TURN and native-client examples, endpoints contract and limitations; fixed stale `TemplateResponse` example, `.start()` and deprecated `enablePiCamera` usages, and misc. links.
 
 ??? danger "Breaking Updates/Changes"
     - [ ] **Removed WebGear/WebGear_RTC terminal CLI:**
         * Removed outdated `vidgear/gears/asyncio/__main__.py` _(i.e. `python -m vidgear.gears.asyncio`)_ and its docs. Run WebGear/WebGear_RTC programmatically with Uvicorn instead.
+    - [ ] **WebGear_RTC:**
+        * `/offer` accepts only `POST`, and answers invalid offers with `400` and offers after stream end/shutdown with `503` _(was `500`)_.
+        * `/close_connection` no longer closes every peer for legacy `1`/`0` bodies _(answers `DISABLED`)_; send `{"id": "<peer id>"}` instead.
+        * Removed `RTC_VideoServer.reset()`; the pacing clock now resyncs by itself after pauses.
+        * Default Theme `v0.2.0` uses no STUN server by default; pass `ice_servers` to restore one.
 
 ??? bug "Bug-fixes"
     - [x] **FFGear:**
@@ -71,6 +92,12 @@ limitations under the License.
         * Fixed Single-Source Mode progress bar updating only at the end _(FFmpeg's `\r`-terminated progress lines)_, and crashing when source duration is unknown.
     - [x] **VideoGear:** `stabilize=True` with `-extract_metadata` now raises `ValueError` at init, instead of crashing on the first `read()`.
     - [x] **WebGear/WebGear_RTC:** Fixed `frame_size_reduction` accepting `90`, which crashed at runtime.
+    - [x] **WebGear_RTC:**
+        * Fixed multiple peers without `enable_live_broadcast` silently splitting frames among themselves.
+        * Fixed odd-sized frames _(e.g. from `frame_size_reduction`)_ producing no video with H.264.
+        * Fixed peer-connection leaks _(closed/failed peers, and peers of rejected offers)_.
+        * Fixed blocking `read()` of the source stalling the whole event loop.
+        * Fixed `frame_size_reduction=True` being accepted as `1`, and errors in custom streams hanging peers instead of ending the stream.
     - [x] **NetGear:** Each instance now owns its ZMQ context, so `close(kill=True)` no longer breaks other NetGear instances in the same process.
 
 ## v0.3.6 (2026-10-26)

@@ -30,7 +30,9 @@ limitations under the License.
 
 ## Using WebGear_RTC as Real-time Broadcaster 
 
-WebGear_RTC by default only supports one-to-one peer connection with a single consumer or client. But you can use [`enable_live_broadcast`](params/#webgear_rtc-specific-attributes) boolean attribute through its options dictionary parameter to easily enable live broadcast/stream to multiple peer consumers/clients at the same time.
+WebGear_RTC streams every frame to every connected peer consumer/client _(through aiortc's `MediaRelay`)_. Additionally, you can use [`enable_live_broadcast`](params/#webgear_rtc-specific-attributes) boolean attribute through its options dictionary parameter to turn it into a never-ending live broadcast, that keeps streaming _(with "No Input" frames)_ even when the source disconnects, so peers joining later always get a stream.
+
+!!! warning "Before `v0.3.7`, multiple consumers without `enable_live_broadcast` silently split frames among themselves _(each one got only a fraction of frames)_. This is fixed now, so `enable_live_broadcast` is no longer needed for multiple consumers."
 
 Let's implement a bare-minimum example using WebGear_RTC as Real-time Broadcaster:
 
@@ -73,7 +75,7 @@ Let's implement a bare-minimum example with a Custom Source using WebGear_RTC AP
 ??? new "New in v0.2.4" 
     This implementation was added in `v0.2.4`.
 
-!!! success "Auto-Reconnection or Auto-Refresh works out-of-the-box with this implementation."
+!!! success "Auto-Reconnection or Auto-Refresh works out-of-the-box with this implementation: Default Theme closes its own peer (`/close_connection`) when the page is hidden/reloaded, and reconnects with backoff when connection fails or the stream stalls, while WebGear_RTC also drops failed/closed peers by itself."
 
 !!! danger "Make sure your Custom Streaming Class at-least implements `read()` and `stop()` methods as shown in following example, otherwise WebGear_RTC will throw ValueError!"
 
@@ -159,6 +161,102 @@ web.shutdown()
 &nbsp;
 
 
+## Using WebGear_RTC with STUN/TURN Servers
+
+On localhost and LAN, WebGear_RTC needs no ICE servers. But when peers are behind different NATs _(e.g. WebGear_RTC server behind a router, accessed over Internet)_, you can define STUN and TURN servers with [`ice_servers`](params/#webgear_rtc-specific-attributes) attribute, which are used both by WebGear_RTC's server-side peers and the browser _(Default Theme reads them from the homepage)_:
+
+??? new "New in v0.3.7" 
+    This example was added in `v0.3.7`.
+
+!!! danger "ICE servers including TURN `username`/`credential` are sent to every browser visiting the homepage, so only use credentials meant for clients."
+
+```python linenums="1" hl_lines="7-11"
+# import required libraries
+import uvicorn
+from vidgear.gears.asyncio import WebGear_RTC
+
+# define STUN & TURN servers, and force H.264 codec
+options = {
+    "ice_servers": [
+        {"urls": "stun:stun.l.google.com:19302"},
+        {"urls": "turn:turn.example.org:3478", "username": "foo", "credential": "bar"},
+    ],
+    "codec": "H264",
+}
+
+# initialize WebGear_RTC app
+web = WebGear_RTC(source="foo.mp4", logging=True, **options)
+
+# run this app on Uvicorn server at address http://0.0.0.0:8000/
+uvicorn.run(web(), host="0.0.0.0", port=8000)
+
+# close app safely
+web.shutdown()
+```
+
+&nbsp;
+
+
+## Using WebGear_RTC with Native(Non-Browser) Clients
+
+WebGear_RTC's signaling is plain HTTP+JSON, so any WebRTC client can connect to it, using following endpoints:
+
+| Endpoint | Request _(JSON body)_ | Response |
+|:---|:---|:---|
+| `POST /offer` | `{"sdp": "...", "type": "offer"}`, with a `recvonly` _(or `sendrecv`)_ video transceiver | `200`: `{"sdp": "...", "type": "answer", "id": "<peer id>"}`, `400`: `{"error": "..."}` for invalid offers, `503`: `{"error": "..."}` when stream has ended |
+| `POST /close_connection` | `{"id": "<peer id>"}` | `OK` if that peer was closed, otherwise `DISABLED` |
+
+!!! warning "These endpoints are unauthenticated, like the homepage. Use a Starlette [authentication middleware](https://www.starlette.io/authentication/) or a reverse-proxy if your stream isn't public. A peer can only be closed by whoever knows its `id`."
+
+For example, a Python client using [aiortc](https://aiortc.readthedocs.io/en/latest/) and [httpx](https://www.python-httpx.org/) is as follows:
+
+??? new "New in v0.3.7" 
+    The peer `id` and `400`/`503` responses were added in `v0.3.7`.
+
+```python linenums="1"
+# import required libraries
+import asyncio
+import httpx
+from aiortc import RTCPeerConnection, RTCSessionDescription
+
+
+async def main(url="http://localhost:8000"):
+    pc = RTCPeerConnection()
+
+    @pc.on("track")
+    def on_track(track):
+        async def show():
+            while True:
+                frame = await track.recv()  # av.VideoFrame
+                print(frame.width, frame.height, frame.pts)
+
+        asyncio.ensure_future(show())
+
+    # create offer with a receive-only video transceiver
+    pc.addTransceiver("video", direction="recvonly")
+    await pc.setLocalDescription(await pc.createOffer())
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            url + "/offer",
+            json={"sdp": pc.localDescription.sdp, "type": pc.localDescription.type},
+        )
+        answer = response.raise_for_status().json()
+        await pc.setRemoteDescription(
+            RTCSessionDescription(sdp=answer["sdp"], type=answer["type"])
+        )
+        # receive frames for 10 seconds
+        await asyncio.sleep(10)
+        # close our peer on server too
+        await client.post(url + "/close_connection", json={"id": answer["id"]})
+    await pc.close()
+
+
+asyncio.run(main())
+```
+
+&nbsp;
+
+
 ## Using WebGear_RTC with Custom Mounting Points
 
 With our highly extensible WebGear_RTC API, you can add your own mounting points, where additional files located, as follows:
@@ -221,7 +319,7 @@ Suppose we want to add a simple **`hello world` webpage** to our WebGear_RTC ser
  
 Then in our application code, we can integrate this webpage route, as follows:
 
-```python linenums="1" hl_lines="11-14 28"
+```python linenums="1" hl_lines="11-12 26"
 # import libs
 import uvicorn, asyncio
 from starlette.templating import Jinja2Templates
@@ -233,9 +331,7 @@ template = Jinja2Templates(directory="/home/foo/.vidgear/custom_template")
 
 # render and return our webpage template
 async def hello_world(request):
-    page = "hello.html"
-    context = {"request": request}
-    return template.TemplateResponse(page, context)
+    return template.TemplateResponse(request, "hello.html")
 
 
 # add various performance tweaks as usual
@@ -322,7 +418,7 @@ WebGear_RTC gives us complete freedom of altering data files generated in [**Aut
 ### Rules for Altering Data Files
   
 - [x] You allowed to alter/change code in all existing [default downloaded files](./#auto-generation-process) at your convenience without any restrictions.
-- [x] You allowed to delete/rename all existing data files, except remember **NOT** to delete/rename three critical data-files (i.e `index.html`, `404.html` & `500.html`) present in `templates` folder inside the `webgear_rtc` directory at the [default location](./#default-location), otherwise, it will trigger [Auto-generation process](./#auto-generation-process), and it will overwrite the existing files with Server ones.
+- [x] You allowed to delete/rename all existing data files, except remember **NOT** to delete/rename three critical data-files (i.e `index.html`, `404.html` & `500.html`) present in `templates` folder, and `custom.js` present in `static/js` folder inside the `webgear_rtc` directory at the [default location](./#default-location), otherwise, it will trigger [Auto-generation process](./#auto-generation-process), and it will overwrite the existing files with Server ones.
 - [x] You're allowed to add your own additional `.html`, `.css`, `.js`, etc. files in the respective folders at the [**default location**](./#default-location) and [custom mounted Data folders](#using-webgear_rtc-with-custom-mounting-points).
 
 ### Rules for Altering Data Folders 

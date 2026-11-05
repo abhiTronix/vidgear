@@ -134,6 +134,8 @@ This parameter can be used to pass user-defined parameter to WebGear_RTC API by 
 
 * **`frame_size_reduction`** _(int/float)_ : This attribute controls the size reduction _(in percentage)_ of the frame to be streamed on Server and it has the  most significant effect on performance. The value defaults to `20`, and must be lower than `90` _(higher values are faster, with max compression and barely visible frame-size)_ and no lower than `0` _(slowest, no compression, Original frame-size)_. Its recommended value is between `40-60`. Its usage is as follows:
 
+    !!! info "Since `v0.3.7`, WebGear_RTC crops any odd width/height _(e.g. `339x254` from a reduction, or odd-sized sources)_ by one pixel to even dimensions, as H.264 encoders & decoders need them."
+
     ```python
     # frame-size will be reduced by 50%
     options = {"frame_size_reduction": 50} 
@@ -141,9 +143,11 @@ This parameter can be used to pass user-defined parameter to WebGear_RTC API by 
     WebGear_RTC(logging=True, **options)
     ```
 
-* **`enable_live_broadcast`** _(boolean)_ : WebGear_RTC by default only supports one-to-one peer connection with a single consumer/client, Hence this boolean attribute can be used to enable live broadcast to multiple peer consumers/clients at same time. Its default value is `False`. Its usage is as follows:
+* **`enable_live_broadcast`** _(boolean)_ : Can be used to turn WebGear_RTC into a never-ending live broadcast, by enforcing `enable_infinite_frames`, so the stream keeps running _(with "No Input" frames)_ even when the source disconnects, and newly joining peers always get a stream. Its default value is `False`. Its usage is as follows:
 
     !!! note "`enable_infinite_frames` is enforced by default when this attribute is enabled(`True`)."
+
+    !!! info "Since `v0.3.7`, every peer connection _(with or without this attribute)_ gets every frame through aiortc's `MediaRelay`, so multiple browser tabs/clients work in both modes. Previously, without this attribute, multiple consumers silently split frames among themselves."
 
     !!! tip "For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](../../help/webgear_rtc_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear_rtc)"
 
@@ -163,7 +167,9 @@ This parameter can be used to pass user-defined parameter to WebGear_RTC API by 
 * **`enable_infinite_frames`** _(boolean)_ : Can be used to continue streaming _(instead of terminating immediately)_ with emulated blank frames with text "No Input", whenever the input source disconnects. Its default value is `False`. Its usage is as follows:
 
 
-    !!! warning "`enable_infinite_frames` is disabled when `enable_live_broadcast` attribute is enabled(`True`)."
+    !!! warning "`enable_infinite_frames` is always enabled when `enable_live_broadcast` attribute is enabled(`True`)."
+
+    !!! note "When stream ends without this attribute, WebGear_RTC refuses new peer connections with HTTP `503` _(Default Theme shows `ended` status)_. Restart the app to stream again."
 
     ??? new "New in v0.2.1" 
         `enable_infinite_frames` attribute was added in `v0.2.1`.
@@ -171,6 +177,43 @@ This parameter can be used to pass user-defined parameter to WebGear_RTC API by 
     ```python
     # emulate infinite frames
     options = {"enable_infinite_frames": True}
+    # assign it
+    WebGear_RTC(logging=True, **options)
+    ```
+
+* **`codec`** _(string)_ : Can be used to force the video codec negotiated with every peer. Accepted values are `"VP8"` and `"H264"` _(case-insensitive)_, these being the only video codecs supported by aiortc. By default, the codec is negotiated by the browser's preference _(usually VP8 on Chrome/Firefox, H.264 on Safari)_. Its usage is as follows:
+
+    !!! warning "Peers that don't support the forced codec _(e.g. some Chromium builds without H.264)_ will be rejected with HTTP `400`."
+
+    !!! info "aiortc encodes H.264 at `0.5-3 Mbps` and VP8 at `0.25-1.5 Mbps`, adapted by REMB feedback. These bitrate ranges aren't configurable via WebGear_RTC."
+
+    ??? new "New in v0.3.7" 
+        `codec` attribute was added in `v0.3.7`.
+
+    ```python
+    # force H.264 codec, for hardware-decoding on clients
+    options = {"codec": "H264"}
+    # assign it
+    WebGear_RTC(logging=True, **options)
+    ```
+
+* **`ice_servers`** _(list of dicts)_ : Can be used to define STUN/TURN servers for ICE, used by both WebGear_RTC's server-side peers and the browser _(the Default Theme reads them from the homepage, as `data-ice-servers`)_. Each dict accepts aiortc's [`RTCIceServer`](https://aiortc.readthedocs.io/en/latest/api.html#aiortc.RTCIceServer) keys: `urls` _(string or list)_, `username`, and `credential`. Its default value is `[]` _(no ICE servers, enough for localhost and LAN)_. Its usage is as follows:
+
+    !!! danger "ICE servers including TURN `username`/`credential` are sent to every browser visiting the homepage, so only use credentials meant for clients."
+
+    !!! note "Since `v0.3.7`, the Default Theme no longer hard-codes Google's public STUN server. Set `ice_servers=[{"urls": "stun:stun.l.google.com:19302"}]` to restore previous behavior."
+
+    ??? new "New in v0.3.7" 
+        `ice_servers` attribute was added in `v0.3.7`.
+
+    ```python
+    # define STUN and TURN servers
+    options = {
+        "ice_servers": [
+            {"urls": "stun:stun.l.google.com:19302"},
+            {"urls": "turn:turn.example.org:3478", "username": "foo", "credential": "bar"},
+        ]
+    }
     # assign it
     WebGear_RTC(logging=True, **options)
     ```
@@ -433,7 +476,7 @@ This parameter selects the camera index to be used as the source, allowing you t
 
 ```python
 # select Camera Module at index `1`
-WebGear_RTC(enablePiCamera=True, camera_num=1)
+WebGear_RTC(api=Backend.PIGEAR, camera_num=1)
 ```
 
 !!! example "The complete usage example demonstrating the usage of the `camera_num` parameter is available [here ➶](../../help/pigear_ex/#accessing-multiple-camera-through-its-index-in-pigear-api)."
@@ -457,7 +500,7 @@ This parameter controls the **resolution** - a tuple _(i.e. `(width,height)`)_ o
 **Usage:**
 
 ```python
-WebGear_RTC(enablePiCamera=True, resolution=(1280,720)) # sets 1280x720 resolution
+WebGear_RTC(api=Backend.PIGEAR, resolution=(1280,720)) # sets 1280x720 resolution
 ```
 
 &nbsp;
@@ -474,7 +517,7 @@ This parameter controls the framerate of the source.
 **Usage:**
 
 ```python
-WebGear_RTC(enablePiCamera=True, framerate=60) # sets 60fps framerate
+WebGear_RTC(api=Backend.PIGEAR, framerate=60) # sets 60fps framerate
 ```
 
 &nbsp;
@@ -517,7 +560,7 @@ You can format these user-defined and configurational parameters as attributes o
     }
 
     # open pi video stream with defined parameters
-    stream = WebGear_RTC(enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options).start()
+    web = WebGear_RTC(api=Backend.PIGEAR, resolution=(640, 480), framerate=60, logging=True, **options)
     ```
 
 === "Legacy Picamera backend"
@@ -534,7 +577,7 @@ You can format these user-defined and configurational parameters as attributes o
     }
 
     # open pi video stream with defined parameters
-    stream = WebGear_RTC(enablePiCamera=True, resolution=(640, 480), framerate=60, logging=True, **options).start()
+    web = WebGear_RTC(api=Backend.PIGEAR, resolution=(640, 480), framerate=60, logging=True, **options)
     ```
 
 &nbsp;
@@ -605,7 +648,7 @@ WebGear_RTC(api=Backend.FFGEAR, source="/dev/video0", source_demuxer="v4l2")
 
 ### **`frame_format`**
 
-Specifies the pixel layout for decoded frames. Accepts any FFmpeg-supported pixel format string.
+Specifies the pixel layout for decoded frames. WebGear_RTC streams `"bgr24"`, `"rgb24"`, `"bgra"`, `"rgba"` and `"gray"` frames _(channels are mapped correctly for RGB layouts)_, and logs a warning for any other FFmpeg pixel format _(e.g. planar `"yuv420p"`)_, which can't be streamed.
 
 **Data-Type:** String
 
@@ -616,7 +659,6 @@ from vidgear.gears.helper import Backend
 WebGear_RTC(api=Backend.FFGEAR, source="myvideo.mp4", frame_format="gray")
 ```
 
-!!! tip "Run `ffmpeg -pix_fmts` to list all supported pixel formats."
 
 &nbsp;
 
