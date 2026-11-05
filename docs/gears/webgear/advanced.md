@@ -267,7 +267,7 @@ Then in our application code, we can integrate this webpage route, as follows:
 
 === ":octicons-stack-16: MJPEG Mode _(Default)_"
 
-    ```python linenums="1" hl_lines="11-14 18-23 31"
+    ```python linenums="1" hl_lines="11-12 16-21 29"
     # import libs
     import uvicorn, asyncio
     from starlette.templating import Jinja2Templates
@@ -279,9 +279,7 @@ Then in our application code, we can integrate this webpage route, as follows:
 
     # render and return our webpage template
     async def hello_world(request):
-        page = "hello.html"
-        context = {"request": request}
-        return template.TemplateResponse(page, context)
+        return template.TemplateResponse(request, "hello.html")
 
 
     # MJPEG mode with various performance tweaks
@@ -309,7 +307,7 @@ Then in our application code, we can integrate this webpage route, as follows:
 
 === ":octicons-device-camera-video-16: H.264 Mode"
 
-    ```python linenums="1" hl_lines="11-14 18-21 29"
+    ```python linenums="1" hl_lines="11-12 16-19 27"
     # import libs
     import uvicorn, asyncio
     from starlette.templating import Jinja2Templates
@@ -321,9 +319,7 @@ Then in our application code, we can integrate this webpage route, as follows:
 
     # render and return our webpage template
     async def hello_world(request):
-        page = "hello.html"
-        context = {"request": request}
-        return template.TemplateResponse(page, context)
+        return template.TemplateResponse(request, "hello.html")
 
 
     # H.264 mode with encoder tweaks
