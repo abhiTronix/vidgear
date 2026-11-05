@@ -19,12 +19,15 @@ limitations under the License.
 """
 
 # import the necessary packages
+from __future__ import annotations
+
 import asyncio
 import contextlib
 import fractions
 import logging as log
 import os
 import time
+import uuid
 import warnings
 from os.path import expanduser
 from typing import Any
@@ -67,12 +70,14 @@ logger.setLevel(log.DEBUG)
 
 # add global vars
 VIDEO_CLOCK_RATE = 90000
-VIDEO_PTIME = 1 / 30  # 30fps
+VIDEO_PTIME = 1 / 30  # fallback 30fps, when source framerate is unknown
 VIDEO_TIME_BASE = fractions.Fraction(1, VIDEO_CLOCK_RATE)
 
 aiortc = import_dependency_safe("aiortc", error="silent")
 if aiortc is not None:
     from aiortc import (
+        RTCConfiguration,
+        RTCIceServer,
         RTCPeerConnection,
         RTCSessionDescription,
         VideoStreamTrack,
@@ -112,7 +117,7 @@ if aiortc is not None:
             time_delay: int = 0,
             # deprecated
             enablePiCamera: bool | None = None,
-            **options: dict
+            **options: Any
         ):
             """
             This constructor method initializes the object state and attributes of the RTC_VideoServer class.
@@ -168,7 +173,12 @@ if aiortc is not None:
             if options:
                 if "frame_size_reduction" in options:
                     value = options["frame_size_reduction"]
-                    if isinstance(value, (int, float)) and value >= 0 and value < 90:
+                    if (
+                        isinstance(value, (int, float))
+                        and not isinstance(value, bool)
+                        and value >= 0
+                        and value < 90
+                    ):
                         self.__frame_size_reduction = value
                     else:
                         logger.warning("Skipped invalid `frame_size_reduction` value!")
@@ -188,7 +198,7 @@ if aiortc is not None:
                         hasattr(value, "stop") and callable(value.stop)
                     ):
                         self.__stream = value
-                        logger.critical(
+                        self.__logging and logger.debug(
                             "Using custom stream for its Default Internal Video-Server."
                         )
                     else:
@@ -225,11 +235,35 @@ if aiortc is not None:
                 )
             )
 
-            # initialize blank frame
-            self.blank_frame = None
+            # pace frames at source framerate if known (VideoGear/custom stream `framerate`)
+            fps = getattr(self.__stream, "framerate", 0)
+            self.__ptime = (
+                1 / fps
+                if isinstance(fps, (int, float)) and 0 < fps <= 120
+                else VIDEO_PTIME
+            )
 
-            # handles reset signal
-            self.__reset_enabled = False
+            # FFGear can output RGB pixel layouts, everything else is BGR
+            self.__rgb = api == Backend.FFGEAR and frame_format in ("rgb24", "rgba")
+            if api == Backend.FFGEAR and frame_format not in (
+                "bgr24",
+                "rgb24",
+                "bgra",
+                "rgba",
+                "gray",
+            ):
+                logger.warning(
+                    "`frame_format={}` isn't supported by WebGear_RTC, use `bgr24`, `rgb24`, `bgra`, `rgba` or `gray`!".format(
+                        frame_format
+                    )
+                )
+
+            # initialize blank & last frame
+            self.blank_frame = None
+            self.__last_frame = None
+
+            # source is read only while peers are connected
+            self.has_viewers = asyncio.Event()
 
         def launch(self) -> None:
             """
@@ -245,58 +279,64 @@ if aiortc is not None:
             """
             VideoStreamTrack internal method for generating accurate timestamp.
             """
-            # check if ready state not live
             if self.readyState != "live":
-                # otherwise reset
-                self.stop()
-            if hasattr(self, "_timestamp") and not self.__reset_enabled:
-                self._timestamp += int(VIDEO_PTIME * VIDEO_CLOCK_RATE)
+                raise MediaStreamError
+            if hasattr(self, "_timestamp"):
+                self._timestamp += int(self.__ptime * VIDEO_CLOCK_RATE)
                 wait = self._start + (self._timestamp / VIDEO_CLOCK_RATE) - time.time()
-                await asyncio.sleep(wait)
+                if wait < -0.5:
+                    # resync clock after a pause (no viewers, slow source) instead of bursting frames
+                    self._start = time.time() - self._timestamp / VIDEO_CLOCK_RATE
+                else:
+                    await asyncio.sleep(wait)
             else:
-                self.__logging and logger.debug(
-                    "{} timestamps".format(
-                        "Resetting" if self.__reset_enabled else "Setting"
-                    )
-                )
                 self._start = time.time()
                 self._timestamp = 0
-                if self.__reset_enabled:
-                    self.__reset_enabled = False
-                    self.is_running = True
             return self._timestamp, VIDEO_TIME_BASE
 
         async def recv(self) -> AVFrame:
             """
             A coroutine function that yields `av.frame.Frame`.
             """
+            try:
+                return await self.__recv()
+            except MediaStreamError:
+                raise
+            except Exception as e:
+                # MediaRelay only stops cleanly on `MediaStreamError`
+                logger.exception(str(e))
+                self.terminate()
+                raise MediaStreamError from e
+
+        async def __recv(self) -> AVFrame:
+            # pause reading source until a peer is connected
+            await self.has_viewers.wait()
+
             # get next time-stamp
             pts, time_base = await self.next_timestamp()
 
-            # read video frame
-            f_stream = None
-            if self.__stream is None:
+            # read video frame off event-loop, as `read()` can block
+            stream = self.__stream
+            if stream is None:
                 raise MediaStreamError
-            else:
-                f_stream = self.__stream.read()
+            f_stream = await asyncio.to_thread(stream.read)
 
             # display blank if NoneType
             if f_stream is None:
-                if self.blank_frame is None or not self.is_running:
+                if self.__last_frame is None or not self.is_running:
                     raise MediaStreamError
-                else:
-                    f_stream = self.blank_frame[:]
-                if not self.__enable_inf and not self.__reset_enabled:
-                    self.__logging and logger.debug("Video-Stream Ended.")
-                    self.terminate()
-            else:
-                # create blank
                 if self.blank_frame is None:
                     self.blank_frame = create_blank_frame(
-                        frame=f_stream,
+                        frame=self.__last_frame,
                         text="No Input" if self.__enable_inf else "The End",
                         logging=self.__logging,
                     )
+                f_stream = self.blank_frame[:]
+                if not self.__enable_inf:
+                    self.__logging and logger.debug("Video-Stream Ended.")
+                    self.terminate()
+            else:
+                self.__last_frame = f_stream
 
             # reducer frames size if specified
             if self.__frame_size_reduction:
@@ -306,39 +346,36 @@ if aiortc is not None:
                     interpolation=self.__interpolation,
                 )
 
+            # H.264 (and most HW decoders) need even dimensions, so crop odd row/column
+            height, width = f_stream.shape[:2]
+            f_stream = f_stream[: height - height % 2, : width - width % 2]
+
             # construct `av.frame.Frame` from `numpy.nd.array`
             # based on available channels in frames
             if f_stream.ndim == 3 and f_stream.shape[-1] == 4:
-                f_format = "bgra"
+                f_format = "rgba" if self.__rgb else "bgra"
             elif f_stream.ndim == 2 or (f_stream.ndim == 3 and f_stream.shape[-1] == 1):
                 # drop third dimension if defined, as only `ndim==2`
                 # grayscale is supported by PyAV
-                f_stream = (
-                    f_stream[:, :, 0]
-                    if f_stream.ndim == 3 and f_stream.shape[-1] == 1
-                    else f_stream
-                )
+                f_stream = f_stream[:, :, 0] if f_stream.ndim == 3 else f_stream
                 f_format = "gray"
-            elif f_stream.ndim == 3:
-                f_format = "bgr24"
+            elif f_stream.ndim == 3 and f_stream.shape[-1] == 3:
+                f_format = "rgb24" if self.__rgb else "bgr24"
             else:
                 raise ValueError(
                     "Input frame of shape: {}, Isn't supported!".format(f_stream.shape)
                 )
 
-            frame = VideoFrame.from_ndarray(f_stream, format=f_format)
+            # convert to encoders' `yuv420p` once here, as relayed frame is shared by every peer's
+            # encoder thread, and concurrent `reformat()` of same frame segfaults PyAV
+            frame = VideoFrame.from_ndarray(f_stream, format=f_format).reformat(
+                format="yuv420p"
+            )
             frame.pts = pts
             frame.time_base = time_base
 
             # return `av.frame.Frame`
             return frame
-
-        async def reset(self) -> None:
-            """
-            Resets timestamp clock
-            """
-            self.__reset_enabled = True
-            self.is_running = False
 
         def terminate(self) -> None:
             """
@@ -351,6 +388,8 @@ if aiortc is not None:
                 # terminate
                 self.__stream.stop()
                 self.__stream = None
+            # release paused reader, so relay sees the end
+            self.has_viewers.set()
 
 
 class WebGear_RTC:
@@ -398,7 +437,7 @@ class WebGear_RTC:
         time_delay: int = 0,
         # deprecated
         enablePiCamera: bool | None = None,
-        **options: dict
+        **options: Any
     ):
         """
         This constructor method initializes the object state and attributes of the WebGear_RTC class.
@@ -450,7 +489,9 @@ class WebGear_RTC:
         custom_data_location = ""  # path to save data-files to custom location
         data_path = ""  # path to WebGear_RTC data-files
         overwrite_default = False
-        self.__relay = None  # act as broadcaster
+        self.__relay = MediaRelay()  # fans out video-server frames to every peer
+        self.__codec = []  # preferred codec capabilities, empty = negotiate
+        self.__ice_servers = []  # ICE servers for both, server and browser peers
 
         # reformat dictionary
         options = {str(k).strip(): v for k, v in options.items()}
@@ -485,18 +526,45 @@ class WebGear_RTC:
                 value = options["enable_live_broadcast"]
                 if isinstance(value, bool):
                     if value:
-                        self.__relay = MediaRelay()
                         options["enable_infinite_frames"] = (
                             True  # enforce infinite frames
                         )
-                        logger.critical(
+                        self.__logging and logger.debug(
                             "Enabled live broadcasting for Peer connection(s)."
                         )
-                    else:
-                        pass
                 else:
                     logger.warning("Skipped invalid `enable_live_broadcast` value!")
                 del options["enable_live_broadcast"]  # clean
+
+            if "codec" in options:
+                value = options["codec"]
+                capabilities = RTCRtpSender.getCapabilities("video").codecs
+                if isinstance(value, str) and value.upper() in ("VP8", "H264"):
+                    # keep `rtx` too, for retransmissions
+                    self.__codec = [
+                        c
+                        for c in capabilities
+                        if c.mimeType.lower()
+                        in ("video/" + value.lower(), "video/rtx")
+                    ]
+                else:
+                    logger.warning(
+                        "Skipped invalid `codec` value, use `VP8` or `H264`!"
+                    )
+                del options["codec"]  # clean
+
+            if "ice_servers" in options:
+                value = options["ice_servers"]
+                try:
+                    servers = list(value)
+                    # validates keys/values via aiortc's own `RTCIceServer`
+                    [RTCIceServer(**x) for x in servers]
+                    self.__ice_servers = servers
+                except Exception:
+                    logger.warning(
+                        "Skipped invalid `ice_servers` value, use list of `RTCIceServer` dicts!"
+                    )
+                del options["ice_servers"]  # clean
 
         # check if custom certificates path is specified
         if custom_data_location:
@@ -530,7 +598,8 @@ class WebGear_RTC:
         # define routing tables
         self.routes = [
             Route("/", endpoint=self.__homepage),
-            Route("/offer", self.__offer, methods=["GET", "POST"]),
+            Route("/offer", self.__offer, methods=["POST"]),
+            Route("/close_connection", self.__close_connection, methods=["POST"]),
             Mount(
                 "/static",
                 app=StaticFiles(directory="{}/static".format(data_path)),
@@ -561,10 +630,6 @@ class WebGear_RTC:
                 time_delay=time_delay,
                 **options
             )
-            # add exclusive reset connection node
-            self.routes.append(
-                Route("/close_connection", self.__reset_connections, methods=["POST"])
-            )
         else:
             raise ValueError(
                 "[WebGear_RTC:ERROR] :: Source cannot be NoneType without Custom Stream(`custom_stream`) defined!"
@@ -572,8 +637,8 @@ class WebGear_RTC:
 
         # copying original routing tables for further validation
         self.__rt_org_copy = self.routes[:]
-        # collects peer RTC connections
-        self.__pcs = set()
+        # collects peer RTC connections by id
+        self.__pcs = {}
 
     def __call__(self) -> Starlette:
         """
@@ -608,68 +673,92 @@ class WebGear_RTC:
         """
         Generates JSON Response with a WebRTC Peer Connection of Video Server.
         """
-        # get offer from params
-        params = await request.json()
-        offer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+        server = self.__default_rtc_server
+        if server is None or (server.is_launched and not server.is_running):
+            return JSONResponse({"error": "Video stream has ended."}, status_code=503)
 
-        # initiate stream
-        if self.__default_rtc_server is not None and not (
-            self.__default_rtc_server.is_launched
-        ):
-            self.__logging and logger.debug("Initiating Video Streaming.")
-            self.__default_rtc_server.launch()
+        # get offer from params
+        try:
+            params = await request.json()
+            offer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
+            if offer.type != "offer" or not isinstance(offer.sdp, str):
+                raise ValueError("not an SDP offer")
+        except Exception:
+            return JSONResponse({"error": "Invalid SDP offer."}, status_code=400)
 
         # setup RTC peer connection - interface represents a WebRTC connection
         # between the local computer and a remote peer.
-        pc = RTCPeerConnection()
-        self.__pcs.add(pc)
+        pc = RTCPeerConnection(
+            RTCConfiguration(iceServers=[RTCIceServer(**x) for x in self.__ice_servers])
+        )
+        pc_id = uuid.uuid4().hex
+
+        # drop peer once connection fails or closes
+        @pc.on("connectionstatechange")
+        async def on_connectionstatechange():
+            self.__logging and logger.debug(
+                "Peer `{}` connection state is {}".format(pc_id, pc.connectionState)
+            )
+            if pc.connectionState in ("failed", "closed"):
+                await self.__close_peer(pc_id)
+
+        # every peer gets its own latest-frame proxy of video server
+        proxy = self.__relay.subscribe(server, buffered=False)
+        try:
+            # add track (and codec preferences) before offer, so offer's video m-line gets matched to it
+            sender = pc.addTrack(proxy)
+            video = next(t for t in pc.getTransceivers() if t.sender == sender)
+            if self.__codec:
+                video.setCodecPreferences(self.__codec)
+            # Change the remote description associated with the connection.
+            await pc.setRemoteDescription(offer)
+            if video.mid is None:
+                raise ValueError("offer has no video transceiver")
+            # Create & set an SDP answer to an offer received from a remote peer
+            await pc.setLocalDescription(await pc.createAnswer())
+        except Exception as e:
+            proxy.stop()
+            await pc.close()
+            self.__logging and logger.warning("Rejected SDP offer: {}".format(e))
+            return JSONResponse({"error": "Invalid SDP offer."}, status_code=400)
+
+        # initiate stream
+        if not server.is_launched:
+            self.__logging and logger.debug("Initiating Video Streaming.")
+            server.launch()
+        self.__pcs[pc_id] = pc
+        server.has_viewers.set()
         self.__logging and logger.info("Created WebRTC Peer Connection.")
-
-        # track ICE connection state changes
-        @pc.on("iceconnectionstatechange")
-        async def on_iceconnectionstatechange():
-            if pc.iceConnectionState == "failed":
-                logger.error("ICE connection state failed.")
-                # check if Live Broadcasting is enabled
-                if self.__relay is None:
-                    # if not, close connection.
-                    await pc.close()
-                    self.__pcs.discard(pc)
-            else:
-                logger.debug("ICE connection state is {}".format(pc.iceConnectionState))
-
-        # Change the remote description associated with the connection.
-        await pc.setRemoteDescription(offer)
-        # retrieve list of RTCRtpTransceiver objects that are currently attached to the connection
-        for t in pc.getTransceivers():
-            # Increments performance significantly, IDK why this works as H265 codec is not even supported :D
-            capabilities = RTCRtpSender.getCapabilities("video")
-            preferences = list(filter(lambda x: x.name == "H265", capabilities.codecs))
-            t.setCodecPreferences(preferences)
-            # add video server to peer track
-            if t.kind == "video":
-                pc.addTrack(
-                    self.__relay.subscribe(self.__default_rtc_server)
-                    if self.__relay is not None
-                    else self.__default_rtc_server
-                )
-
-        # Create an SDP answer to an offer received from a remote peer
-        answer = await pc.createAnswer()
-
-        # Change the local description for the answer
-        await pc.setLocalDescription(answer)
 
         # return Starlette json response
         return JSONResponse(
-            {"sdp": pc.localDescription.sdp, "type": pc.localDescription.type}
+            {
+                "sdp": pc.localDescription.sdp,
+                "type": pc.localDescription.type,
+                "id": pc_id,
+            }
         )
+
+    async def __close_peer(self, pc_id: str) -> None:
+        """
+        Closes a peer connection and its relay proxy, and pauses video server when no peers are left.
+        """
+        pc = self.__pcs.pop(pc_id, None)
+        if pc is None:
+            return
+        for sender in pc.getSenders():
+            sender.track and sender.track.stop()
+        await pc.close()
+        if not self.__pcs and self.__default_rtc_server is not None:
+            self.__default_rtc_server.has_viewers.clear()
 
     async def __homepage(self, request):
         """
         Return an HTML index page.
         """
-        return self.__templates.TemplateResponse(request, "index.html")
+        return self.__templates.TemplateResponse(
+            request, "index.html", {"ice_servers": self.__ice_servers}
+        )
 
     async def __not_found(self, request, exc):
         """
@@ -683,45 +772,29 @@ class WebGear_RTC:
         """
         return self.__templates.TemplateResponse(request, "500.html", status_code=500)
 
-    async def __reset_connections(self, request):
+    async def __close_connection(self, request):
         """
-        Resets all connections and recreates VideoServer timestamps
+        Closes the peer connection with given `id` (as returned by `/offer`).
         """
-        # get additional parameter
-        parameter = await request.json()
-        # check if Live Broadcasting is enabled
-        if (
-            self.__relay is None
-            and self.__default_rtc_server is not None
-            and (self.__default_rtc_server.is_running)
-        ):
-            logger.critical("Resetting Server")
-            # close old peer connections
-            if parameter != 0:  # disable if specified explicitly
-                coros = [
-                    pc.close() for pc in self.__pcs if pc.iceConnectionState != "closed"
-                ]
-                await asyncio.gather(*coros)
-                self.__pcs.clear()
-            await self.__default_rtc_server.reset()
+        try:
+            body = await request.json()
+        except ValueError:
+            body = None
+        pc_id = body.get("id") if isinstance(body, dict) else None
+        if isinstance(pc_id, str) and pc_id in self.__pcs:
+            await self.__close_peer(pc_id)
             return PlainTextResponse("OK")
-        else:
-            # if does, then do nothing
-            return PlainTextResponse("DISABLED")
+        return PlainTextResponse("DISABLED")
 
     @contextlib.asynccontextmanager
     async def __lifespan(self, context):
         try:
             yield
         finally:
+            # close peer connections
+            await asyncio.gather(*(self.__close_peer(x) for x in list(self.__pcs)))
             # close Video Server
             self.shutdown()
-            # collects peer RTC connections
-            coros = [
-                pc.close() for pc in self.__pcs if pc.iceConnectionState != "closed"
-            ]
-            await asyncio.gather(*coros)
-            self.__pcs.clear()
 
     def shutdown(self) -> None:
         """
@@ -731,5 +804,3 @@ class WebGear_RTC:
             self.__logging and logger.debug("Closing Video Server.")
             self.__default_rtc_server.terminate()
             self.__default_rtc_server = None
-        # terminate internal server aswell.
-        self.__default_rtc_server = None
