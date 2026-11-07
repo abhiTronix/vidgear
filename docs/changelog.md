@@ -196,7 +196,7 @@ limitations under the License.
 
 ## v0.3.5 (2026-05-16)
 
-???+ tip "New Features"
+??? tip "New Features"
     - [x] ✨ **FFGear API:**
         * Introduced a brand-new high-performance, multi-threaded video decoding Gear built on top of DeFFcode's `FFdecoder` API.
         * Supports real-time FFmpeg subprocess pipelines, low-overhead hardware-accelerated decoding (e.g., CUDA/NVDEC), flexible pixel format conversions, and asynchronous per-frame metadata extraction.
