@@ -2,48 +2,42 @@
 
 [[package]]
 name = "aioice"
-version = "0.10.2"
+version = "0.13.0"
 description = "An implementation of Interactive Connectivity Establishment (RFC 5245)"
 optional = true
-python-versions = ">=3.9"
+python-versions = ">=3.11"
 groups = ["main"]
 markers = "extra == \"asyncio\""
 files = [
-    {file = "aioice-0.10.2-py3-none-any.whl", hash = "sha256:14911c15ab12d096dd14d372ebb4aecbb7420b52c9b76fdfcf54375dec17fcbf"},
-    {file = "aioice-0.10.2.tar.gz", hash = "sha256:bf236c6829ee33c8e540535d31cd5a066b531cb56de2be94c46be76d68b1a806"},
+    {file = "aioice-0.13.0-py3-none-any.whl", hash = "sha256:15937b43f5f7a3587148049f1c93ff95fe4add1b7e0f5931eeec6408bc188d06"},
+    {file = "aioice-0.13.0.tar.gz", hash = "sha256:02c2dee812f1a68602689a444bd5125a144b6ee43bca74229a1e0f7842d1897c"},
 ]
 
 [package.dependencies]
 dnspython = ">=2.0.0"
 ifaddr = ">=0.2.0"
 
-[package.extras]
-dev = ["coverage[toml] (>=7.2.2)", "mypy", "pyopenssl", "ruff", "websockets"]
-
 [[package]]
 name = "aiortc"
-version = "1.15.0"
+version = "1.16.0"
 description = "An implementation of WebRTC and ORTC"
 optional = true
-python-versions = ">=3.10"
+python-versions = ">=3.11"
 groups = ["main"]
 markers = "extra == \"asyncio\""
 files = [
-    {file = "aiortc-1.15.0-py3-none-any.whl", hash = "sha256:4e1e54bff31a9c2cb654c7b7edc068085a7df53365e5df24a5cb24168e3f95f7"},
-    {file = "aiortc-1.15.0.tar.gz", hash = "sha256:ee6c0757ca070cf6d6bee441936d6ede24eef51211bbff6653409c540f72e625"},
+    {file = "aiortc-1.16.0-py3-none-any.whl", hash = "sha256:084844ba0542fc9f9a41d135e2c718c2122746e2d70e62974435de9b98ec92b2"},
+    {file = "aiortc-1.16.0.tar.gz", hash = "sha256:892a1d22ec500a41c6a2377a372db575929d9e9f614e9a2276b145cf40924798"},
 ]
 
 [package.dependencies]
-aioice = ">=0.10.2,<1.0.0"
-av = ">=14.0.0,<18.0.0"
+aioice = ">=0.12.0,<1.0.0"
+av = ">=14.0.0,<20.0.0"
 cryptography = ">=44.0.0"
 google-crc32c = ">=1.1"
 pyee = ">=13.0.0"
 pylibsrtp = ">=0.10.0"
 pyopenssl = ">=25.0.0"
-
-[package.extras]
-dev = ["aiohttp (>=3.7.0)", "coverage[toml] (>=7.2.2)", "numpy (>=1.19.0)"]
 
 [[package]]
 name = "anyio"
@@ -2304,4 +2298,4 @@ core = ["Pillow", "deffcode", "dxcam", "mss", "pyscreenshot", "pyzmq", "simplejp
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11"
-content-hash = "fb2c54199da5a3ccfce18395582b27c62cd934c8fdfc20764a6fdc6d3777f5fe"
+content-hash = "323e0c6bbf2140e53725143690e191ca037a86eae74507f3adbab00a6fe47c21"

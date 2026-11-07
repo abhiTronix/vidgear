@@ -82,7 +82,7 @@ asyncio = [
     "jinja2>=3.1.6",
     "msgpack>=1.2.4",
     "msgpack_numpy>=0.4.8",
-    "aiortc>=1.15.0",
+    "aiortc>=1.16.0",
     "uvicorn>=0.54.0",
     "dxcam>=0.3.0; sys_platform == 'win32'",
     "uvloop>=0.23.0; sys_platform != 'win32'",
@@ -109,7 +109,7 @@ version = {attr = "vidgear.version.__version__"}
 [tool.poetry]
 # Poetry can't read setuptools' dynamic version, 
 # keep in sync with vidgear/version.py
-version = "0.3.7"
+version = "0.3.8"
 
 [tool.ruff]
 line-length = 100
