@@ -20,7 +20,7 @@ limitations under the License.
 
 # Release Notes
 
-## v0.3.7 (In Progress)
+## v0.3.7 (2026-11-07)
 
 ???+ tip "New Features"
     - [x] ⚡️ **WebGear: Low-Latency H.264 Streaming:**
@@ -62,16 +62,38 @@ limitations under the License.
 
 ??? success "Updates/Improvements"
     - [x] **Helper:** `check_output` now defaults FFmpeg's `stdin` to `DEVNULL` and supports a `timeout` _(terminate, then kill)_.
-    - [x] **Tests:** Added tests for all of the above, plus regressions for the bug-fixes below.
-    - [x] **WebGear:** `generate_webdata` now also validates and downloads `videoFrameDecoderWorker.js` for WebGear, and shares the raw-frame pipeline between MJPEG and H.264 modes.
-    - [x] **Tests:** Added WebGear H.264 WebSocket streaming/fallback tests and `h264_access_units` parser tests.
-    - [x] **Docs:** Added Low-Latency H.264 Streaming usage, parameters, benchmarks & FAQs, and updated WebGear Default Theme screenshots.
+    - [x] **WriteGear/StreamGear:** `stderr_tail` now returns a `list[str]` of lines _(empty when `-capture_stderr` is off)_, matching FFdecoder and FFGear.
+    - [x] **FFGear:** Now requires `deffcode>=0.2.9` at runtime, which adds `-extra_outputs` multi-output pipelines.
+    - [x] **WebGear:**
+        * `generate_webdata` now also validates and downloads `videoFrameDecoderWorker.js` for WebGear, and re-downloads when critical js files are missing.
+        * Raw-frame pipeline is shared between MJPEG and H.264 modes.
+        * H.264 encoder runs via `subprocess.Popen` with pipe I/O in threads, so it works on any event loop _(incl. Windows `SelectorEventLoop` set by NetGear and uvicorn reload/workers)_, and FFmpeg is killed and reaped on client disconnect.
+        * Invalid `streaming_mode` values warn and fall back to MJPEG.
     - [x] **WebGear_RTC:**
         * Every peer now gets frames through aiortc's `MediaRelay` _(latest-frame, unbuffered)_, source is read off the event-loop, and is paused while no peer is connected.
         * Peers are dropped on `failed`/`closed` connection state, and on shutdown via app lifespan.
         * `from __future__ import annotations`, so missing `starlette` raises vidgear's friendly import error on Python 3.11-3.13.
-    - [x] **Tests:** Rewrote WebGear_RTC tests to receive real frames over loopback _(no STUN)_, covering multi-peer framerate, odd dimensions, invalid offers, per-peer close & reconnect, peer pruning, stream end and lifespan.
-    - [x] **Docs:** Added WebGear_RTC `codec`/`ice_servers` attributes, STUN/TURN and native-client examples, endpoints contract and limitations; fixed stale `TemplateResponse` example, `.start()` and deprecated `enablePiCamera` usages, and misc. links.
+    - [x] **ScreenGear:** Switched to `mss.MSS` class instead of deprecated `mss.mss` factory.
+    - [x] **Dependencies:** Raised minimum versions of core and asyncio dependencies: `yt-dlp>=2026.10.26`, `deffcode>=0.2.9`, `starlette>=1.10.0` and `msgpack>=1.2.4`, and updated `poetry.lock`.
+    - [x] **CI:**
+        * Install `linux-modules-extra` only when available on the runner, tolerating its absence on kernel 7+.
+        * Softened greeting in `needs-more-info` bot comment.
+    - [x] **Tests:**
+        * Added tests for all of the above, plus regressions for the bug-fixes below.
+        * Added WebGear H.264 WebSocket streaming/fallback tests and `h264_access_units` parser tests.
+        * Rewrote WebGear_RTC tests to receive real frames over loopback _(no STUN)_, covering multi-peer framerate, odd dimensions, invalid offers, per-peer close & reconnect, peer pruning, stream end and lifespan.
+        * Added FFGear multi-output `-extra_outputs` tests.
+        * Migrated asyncio tests to pytest-asyncio `loop_scope` API with a shared `SelectorEventLoop` factory in `conftest.py`.
+        * Use static FFmpeg binary on non-Linux in helper tests, tolerate last-frame progress time in `test_run_ffmpeg`, and use CI test clip in `test_ss_close_cancels_transcode`.
+        * Ignore `rgb_mode`, `terminate()` and `mss.mss` deprecation warnings in pytest.
+    - [x] **Docs:**
+        * Added WebGear Modes of Operation _(MJPEG default vs H.264)_, `streaming_mode` parameter, Low-Latency H.264 Streaming usage, benchmarks & FAQs, and set explicit `streaming_mode` in all WebGear examples.
+        * Added WebGear_RTC `codec`/`ice_servers` attributes, STUN/TURN and native-client examples, endpoints contract and limitations; fixed stale `TemplateResponse` examples _(WebGear & WebGear_RTC)_, `.start()` and deprecated `enablePiCamera` usages, and misc. links.
+        * Documented FFmpeg execution, timeout and stabilizer updates across WriteGear, StreamGear, FFGear, VideoGear and Stabilizer, and added `run_ffmpeg` to Helper API reference.
+        * Added FFGear multi-output filtergraph examples _(same/different filtering)_.
+        * Noted FFmpeg prerequisite for WebGear H.264 Mode in installation docs.
+        * Refreshed WebGear and WebGear_RTC Default Theme screenshots.
+        * Updated citation to VidGear v0.3.6 with new Zenodo DOI.
 
 ??? danger "Breaking Updates/Changes"
     - [ ] **Removed WebGear/WebGear_RTC terminal CLI:**
@@ -99,6 +121,13 @@ limitations under the License.
         * Fixed blocking `read()` of the source stalling the whole event loop.
         * Fixed `frame_size_reduction=True` being accepted as `1`, and errors in custom streams hanging peers instead of ending the stream.
     - [x] **NetGear:** Each instance now owns its ZMQ context, so `close(kill=True)` no longer breaks other NetGear instances in the same process.
+
+??? question "Pull Requests"
+    * PR #471
+    * PR #470
+    * PR #468
+    * PR #467
+    * PR #465
 
 ## v0.3.6 (2026-10-26)
 
