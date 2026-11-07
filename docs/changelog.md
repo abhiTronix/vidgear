@@ -44,19 +44,19 @@ limitations under the License.
         * Added auto-reconnect with backoff, `sendBeacon` peer close on page hide, capped ICE gathering, `ended` status on `503`, and relative endpoints _(reverse-proxy sub-paths)_.
         * Same modern dark theme as WebGear with zero external dependencies _(no axios, Font-Awesome, Google Fonts or hard-coded Google STUN)_.
         * Added Playwright CI tests.
-    - [x] ✨ **Unified FFmpeg Execution (`helper.run_ffmpeg`):**
+    - [x] 🏗️ **Helper: Unified FFmpeg Execution (`helper.run_ffmpeg`):**
         * Added a shared primitive for one-shot FFmpeg runs, capturing exit code, a bounded stderr tail, progress, timeout and cancellation in one place. Used by WriteGear's `execute_ffmpeg_cmd` and StreamGear's Single-Source Mode.
-    - [x] **WriteGear:**
+    - [x] 🏗️ **WriteGear:**
         * `execute_ffmpeg_cmd` now returns a `subprocess.CompletedProcess` _(was `None`)_, and accepts `check` and `timeout` parameters.
         * Added `-capture_stderr` output parameter, `stderr_tail` property and `returncode` attribute; `write()` errors now include FFmpeg's stderr tail when capturing.
         * Added `timeout` parameter to `close()`.
-    - [x] **StreamGear:**
+    - [x] 🚩 **StreamGear:**
         * Added `-progress_callback` and `-capture_stderr` stream parameters, `stderr_tail` property and `returncode` attribute.
         * Added `timeout` parameter to `close()`; calling `close()` from another thread now cleanly cancels a running `transcode_source()`.
-    - [x] **FFGear:**
+    - [x] 🚩 **FFGear:**
         * Added `timeout` parameter to `read()`, raising `TimeoutError` on stalled sources.
         * Added `framerate` attribute, and `returncode`/`stderr_tail` attributes retained from FFdecoder on `stop()`.
-    - [x] **Stabilizer:**
+    - [x] 🚩**Stabilizer:**
         * Added `flush()` to retrieve frames still buffered by the ASW backend at end of stream, exposed in VideoGear via the `STABILIZER_FLUSH` option.
         * Added support for single-channel grayscale frames.
 
@@ -96,9 +96,9 @@ limitations under the License.
         * Updated citation to VidGear v0.3.6 with new Zenodo DOI.
 
 ??? danger "Breaking Updates/Changes"
-    - [ ] **Removed WebGear/WebGear_RTC terminal CLI:**
+    - [ ] 💥 **Removed WebGear/WebGear_RTC terminal CLI:**
         * Removed outdated `vidgear/gears/asyncio/__main__.py` _(i.e. `python -m vidgear.gears.asyncio`)_ and its docs. Run WebGear/WebGear_RTC programmatically with Uvicorn instead.
-    - [ ] **WebGear_RTC:**
+    - [ ] 💥 **WebGear_RTC:**
         * `/offer` accepts only `POST`, and answers invalid offers with `400` and offers after stream end/shutdown with `503` _(was `500`)_.
         * `/close_connection` no longer closes every peer for legacy `1`/`0` bodies _(answers `DISABLED`)_; send `{"id": "<peer id>"}` instead.
         * Removed `RTC_VideoServer.reset()`; the pacing clock now resyncs by itself after pauses.
@@ -131,7 +131,7 @@ limitations under the License.
 
 ## v0.3.6 (2026-10-26)
 
-???+ tip "New Features"
+??? tip "New Features"
     - [x] ✨ **Zero-Latency Kalman Stabilizer:**
         * Added `KalmanStabilizer` backend, selectable via `StabilizerMode.KALMAN`, that smooths the camera trajectory online with a vectorized Kalman filter and stabilizes every frame immediately (no frame buffering), ideal for live streams.
         * Added `process_noise` and `measurement_noise` tuning parameters, exposed in `VideoGear` (and gears wrapping it) as `PROCESS_NOISE` and `MEASUREMENT_NOISE` options.
