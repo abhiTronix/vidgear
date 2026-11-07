@@ -26,6 +26,7 @@ import contextlib
 import fractions
 import logging as log
 import os
+import threading
 import time
 import uuid
 import warnings
@@ -163,6 +164,7 @@ if aiortc is not None:
             self.is_launched = False  # check if launched already
             self.is_running = False  # check if running
             self.__stream = None
+            self.__read_lock = threading.Lock()  # serializes `read()` and `stop()`
 
             self.__frame_size_reduction = 20  # 20% reduction
             # retrieve interpolation for reduction
@@ -316,10 +318,9 @@ if aiortc is not None:
             pts, time_base = await self.next_timestamp()
 
             # read video frame off event-loop, as `read()` can block
-            stream = self.__stream
-            if stream is None:
+            if self.__stream is None:
                 raise MediaStreamError
-            f_stream = await asyncio.to_thread(stream.read)
+            f_stream = await asyncio.to_thread(self.__read)
 
             # display blank if NoneType
             if f_stream is None:
@@ -377,17 +378,28 @@ if aiortc is not None:
             # return `av.frame.Frame`
             return frame
 
+        def __read(self) -> Any:
+            # runs in a worker thread; lock keeps `stop()` from releasing the source mid-read
+            with self.__read_lock:
+                return None if self.__stream is None else self.__stream.read()
+
         def terminate(self) -> None:
             """
             Gracefully terminates VideoGear stream
             """
-            if self.__stream is not None:
+            # wait for any in-flight `read()`, as stopping the source under it
+            # crashes native backends (e.g. `cv2.VideoCapture` on Windows).
+            # ponytail: bounded wait, so a source stuck in `read()` can't hang shutdown
+            locked = self.__read_lock.acquire(timeout=5)
+            stream, self.__stream = self.__stream, None
+            if locked:
+                self.__read_lock.release()
+            if stream is not None:
                 # terminate running flag
                 self.is_running = False
                 self.__logging and logger.debug("Terminating Internal RTC Video-Server")
                 # terminate
-                self.__stream.stop()
-                self.__stream = None
+                stream.stop()
             # release paused reader, so relay sees the end
             self.has_viewers.set()
 
