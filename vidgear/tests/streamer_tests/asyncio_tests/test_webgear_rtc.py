@@ -133,6 +133,24 @@ class Synthetic:
         self.count = 0
 
 
+class SlowRead(Synthetic):
+    """
+    Synthetic stream with a slow `read()`, failing if `stop()` lands mid-read.
+    """
+
+    reading = stopped_mid_read = False
+
+    def read(self):
+        self.reading = True
+        time.sleep(0.2)
+        self.reading = False
+        return super().read()
+
+    def stop(self):
+        self.stopped_mid_read = self.reading
+        super().stop()
+
+
 # create your own custom streaming class
 class Custom_Stream_Class:
     """
@@ -505,6 +523,22 @@ async def test_webgear_rtc_custom_stream_class(stream_class):
         await peer.wait_frames(3)
         await peer.pc.close()
     web.shutdown()
+
+
+async def test_webgear_rtc_stop_waits_for_read():
+    """
+    `shutdown()` must not stop the source while a worker thread is inside `read()`
+    (released `cv2.VideoCapture` mid-read crashes on Windows).
+    """
+    stream = SlowRead()
+    web = WebGear_RTC(custom_stream=stream, logging=True)
+    async with client_for(web) as client:
+        peer = Peer()
+        await peer.connect(client)
+        await wait_for(lambda: stream.reading)
+        web.shutdown()
+        await peer.pc.close()
+    assert not stream.stopped_mid_read
 
 
 @pytest.mark.parametrize("stream_class", [None, Invalid_Custom_Stream_Class()])
