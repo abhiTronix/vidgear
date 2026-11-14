@@ -29,6 +29,7 @@ FFGear API **MUST** have a valid FFmpeg executable installed for its core functi
 
 !!! warning "FFGear API will throw **RuntimeError**, if it fails to detect valid FFmpeg executables on your system."
 !!! tip "Enable logging _([`logging=True`](../params/#logging))_ for debugging FFmpeg validation process."
+!!! info "FFmpeg `6.0` or newer is recommended, as it reports richer source metadata _(rotation, color, aspect ratio)_ that FFGear relies on."
 
 &thinsp;
 
