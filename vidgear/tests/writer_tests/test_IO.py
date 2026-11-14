@@ -28,7 +28,7 @@ import numpy as np
 import pytest
 
 from vidgear.gears import WriteGear
-from vidgear.tests.utils.helpers import probe_video, return_static_ffmpeg
+from vidgear.tests.utils.helpers import decode_frames, probe_video, return_static_ffmpeg
 
 
 def test_failedextension(tmp_path):
@@ -102,13 +102,15 @@ def test_paths(tmp_path, compression_mode, path, valid):
             WriteGear(output=path, compression_mode=compression_mode, logging=True)
 
 
-@pytest.mark.parametrize("v_codec", ["unknown", "mpeg4", "copy"])
-def test_invalid_encoder(tmp_path, v_codec):
+@pytest.mark.parametrize(
+    "v_codec, ext", [("unknown", "mp4"), ("mpeg4", "mp4"), ("copy", "nut")]
+)
+def test_invalid_encoder(tmp_path, v_codec, ext):
     """
     Unknown encoders must raise, valid ones (and `copy`) must be used as is
     """
-    output = str(tmp_path / "output.avi")
-    frame = np.zeros((48, 64, 3), np.uint8)
+    output = str(tmp_path / "output.{}".format(ext))
+    frames = [np.full((48, 64, 3), i * 50, np.uint8) for i in range(5)]
     with WriteGear(
         output=output,
         custom_ffmpeg=return_static_ffmpeg(),
@@ -117,8 +119,18 @@ def test_invalid_encoder(tmp_path, v_codec):
     ) as writer:
         if v_codec == "unknown":
             with pytest.raises(ValueError, match="unknown"):
-                writer.write(frame)
+                writer.write(frames[0])
             return
-        for _ in range(5):
+        for frame in frames:
             writer.write(frame)
-    assert probe_video(output)["approx_video_nframes"] == 5
+    assert probe_video(output)["source_video_decoder"] == (
+        "rawvideo" if v_codec == "copy" else v_codec
+    )
+    decoded = decode_frames(output)
+    if v_codec == "copy":
+        # raw copy is lossless; deffcode 0.3.0 drops the last `.nut` frame,
+        # since NUT's reported duration excludes it
+        assert len(decoded) >= 4
+        assert all((d == f).all() for d, f in zip(decoded, frames[: len(decoded)], strict=True))
+    else:
+        assert len(decoded) == 5
