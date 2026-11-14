@@ -43,7 +43,7 @@ Its valid input can be one of the following:
     writer = WriteGear(output = '/home/foo/foo1') #Define writer 
     ```
 
-* **Filename** _(with/without path)_: Valid filename(_with valid extension_) of the output video file. In case filename is provided without path, then current working directory will be used.
+* **Filename** _(with/without path)_: Valid filename(_with valid extension_) of the output video file. In case filename is provided without path, then current working directory will be used. Its parent directory must already exist _(WriteGear doesn't create it)_, and an existing file is overwritten _(FFmpeg's `-y`)_.
 
     ```python
     writer = WriteGear(output = 'output.mp4') #Define writer 
@@ -88,7 +88,7 @@ This parameter assigns the _path_ or _directory_ where the custom FFmpeg executa
 
 **Data-Type:** String
 
-**Default Value:** Its default value is `None`.
+**Default Value:** Its default value is `""` _(empty string)_.
 
 **Usage:**
 
@@ -127,7 +127,15 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
 
 * **FFmpeg Parameters:** All parameters based on selected [encoder](#supported-encoders) in use, are supported, and can be passed as dictionary attributes in `output_param`. For example, for using `libx264 encoder` to produce a lossless output video, we can pass required FFmpeg parameters as dictionary attributes, as follows:
 
-    !!! warning "While providing additional av-source with `-i` FFmpeg parameter in `output_params` make sure it don't interfere with WriteGear's frame pipeline otherwise it will break things!"
+    ??? info "Extra inputs (`-i`) only add audio, and end with your frames"
+
+        When an extra input is given with `-i` _(in `output_params`, `-clones` or `-ffpreheaders`)_ and you set no `-map`/`-filter_complex`, WriteGear keeps the piped frames as the only video _(`-map <pipe>:v:0`)_, adds audio from every extra input _(`-map <n>:a?`)_, pads shorter audio with silence _(`-af apad`, unless you set an audio filter)_ and adds `-shortest`. So every frame is written, and infinite inputs _(live microphone, `anullsrc`)_ end with your frames on `close()`.
+
+        With copied audio _(`-acodec copy`)_, which can't be padded, WriteGear adds neither `-af apad` nor `-shortest`: a finite audio file then simply ends early, but an infinite input never ends, so add `-shortest` yourself and accept that it cuts the video at the audio's end.
+
+    ??? tip "Valueless FFmpeg flags"
+
+        Set a flag's value to `None` to pass it without a value _(e.g. `{"-shortest": None}` → `-shortest`)_. `-vcodec`/`-c:v` set to `None` is the exception (see below).
 
     !!! failure "All ffmpeg parameters are case-sensitive. Remember to double check every parameter if any error occurs."
 
@@ -156,18 +164,28 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
         output_params = {"-ffmpeg_download_path": "C:/User/foo/foo1"} # will be saved to "C:/User/foo/foo1"
         ```
 
-    * **`-input_framerate`** _(float/int)_ : sets the constant framerate of the output. It can be used as follows: 
+    * **`-input_framerate`** _(float/int)_ : sets the framerate of the incoming frames _(FFmpeg's `-framerate` for the raw pipe input)_, i.e. how many frames make one second of video. ==It defaults to `25` fps when omitted or invalid==, so set it to your source's real framerate. It can be used as follows: 
 
         ```python
-        output_params = {"-input_framerate": 60.0} # set the constant framerate to 60fps
+        output_params = {"-input_framerate": 60.0} # 60 frames make one second of video
         ```
+
+        !!! tip "For live sources that don't deliver frames at a steady rate, timestamp frames by arrival time instead: `{"-ffpreheaders": ["-use_wallclock_as_timestamps", "1"], "-fps_mode": "cfr", "-r": 30}` _(use `-vsync cfr` instead of `-fps_mode cfr` on FFmpeg older than 5.1)_."
 
         !!! tip "Its usage example can be found [here ➶](usage/#using-compression-mode-with-controlled-framerate)"
       
-    * **`-output_dimensions`** _(tuple/list)_ : sets the custom dimensions(*size/resolution*) of the output video _(otherwise input video-frame size will be used)_. Its value can either be a **tuple** => `(width,height)` or a **list** => `[width, height]`, Its usage is as follows: 
+    * **`-output_dimensions`** _(tuple/list)_ : scales the output video to custom dimensions(*size/resolution*) _(otherwise input video-frame size will be used)_. Its value can either be a **tuple** => `(width,height)` or a **list** => `[width, height]`, Its usage is as follows: 
     
         ```python
         output_params = {"-output_dimensions": (1280,720)} # to produce a 1280x720 resolution/scale output video
+        ```
+
+        !!! note "With the default `yuv420p` output of `libx264`/`libx265`, odd dimensions are rounded up to the next even number."
+
+    * **`-input_pixfmt`** _(string)_ : sets the pixel format of the incoming frames _(otherwise auto-derived from their channels and datatype, e.g. `bgr24` for 3-channel `uint8` frames)_. It must be a format supported by your FFmpeg _(else it is discarded with a warning)_, and must match the frames' size, else `write()` raises a `ValueError`. Its usage is as follows:
+
+        ```python
+        output_params = {"-input_pixfmt": "yuv444p"} # frames are `yuv444p` (3-channel `uint8`)
         ```
 
     * **`-clones`** _(list)_: required to set special FFmpeg parameters that are repeated more than once in the command _(For more info., see [this issue](https://github.com/abhiTronix/vidgear/issues/141))_ or in cases where you want to preserve order of multiple FFmpeg parameters. This attribute only accepts **list** datatype as value. Its usage is as follows:
@@ -209,22 +227,15 @@ This parameter allows us to exploit almost all FFmpeg supported parameters effor
         output_params = {"-disable_ffmpeg_window": True} # disables FFmpeg creation window
         ```
         
-    * **`-disable_force_termination`** _(bool)_: sets a special flag to manually disable the default forced termination of FFmpeg process in WriteGear API when `-i` FFmpeg parameter is used _(For more details, see issue: #149)_. Its usage is as follows:
+    * **`-disable_force_termination`** _(bool)_: **Deprecated, has no effect.** WriteGear no longer force-terminates FFmpeg on `close()` _(which dropped buffered frames)_. Extra inputs get `-shortest` instead _(see above)_.
 
-        !!! warning "The `-disable_force_termination` flag is a absolute necessity when video duration is too short(`< 60sec`), otherwise WriteGear may produce invalid or no output."
+        ??? danger "Deprecated in v0.3.8" 
+            This flag is accepted but ignored since `v0.3.8`, with a warning.
 
-        ```python
-        output_params = {"-disable_force_termination": True} # disable the default forced-termination behaviour
-        ```
+    * **`-capture_stderr`** _(bool)_: **Deprecated, has no effect.** FFmpeg's stderr is now always captured: its last 50 lines _(still mirrored to console when `logging=True`)_ are exposed via WriteGear's `stderr_tail` property and appended to the `ValueError` raised by `write()` when FFmpeg dies early _(e.g. on invalid parameters)_. FFmpeg's exit code is available via the `returncode` attribute after `close()`.
 
-    * **`-capture_stderr`** _(bool)_: captures the last 50 lines of FFmpeg's stderr _(still mirrored to console when `logging=True`)_, exposed via WriteGear's `stderr_tail` property and appended to the `ValueError` raised by `write()` when FFmpeg dies early _(e.g. on invalid parameters)_. FFmpeg's exit code is always available via the `returncode` attribute after `close()`. Its default value is `False`. Its usage is as follows:
-
-        ??? new "New in v0.3.7" 
-            This feature was added in `v0.3.7`.
-
-        ```python
-        output_params = {"-capture_stderr": True} # capture FFmpeg's stderr tail
-        ```
+        ??? danger "Deprecated in v0.3.8" 
+            Added in `v0.3.7`, always on since `v0.3.8`.
 
 ### Supported Encoders
 
@@ -235,6 +246,10 @@ All the encoders that are compiled with FFmpeg in use, are supported by WriteGea
 ```sh
 ffmpeg -encoders           # use `ffmpeg.exe -encoders` on windows
 ``` 
+
+!!! warning "An encoder not listed by your FFmpeg raises a `ValueError` on first `write()` _(it was silently replaced with `libx264` before `v0.3.8`)_. `copy` is also accepted, to store raw frames _(e.g. in `.nut`/`.avi`)_."
+
+!!! info "When no encoder is set, WriteGear picks the first available of `libx264`, `libx265`, `libxvid`, `mpeg4`. For `libx264`/`libx265` it defaults to `-crf 18 -preset fast` and, for 8-bit frames, `-pix_fmt yuv420p` _(playable in browsers, QuickTime and hardware decoders)_. Any of these can be overridden in `output_params` _(`-c:v` wins over `-vcodec` if both are given)_."
 
 &nbsp; 
 

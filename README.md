@@ -504,7 +504,7 @@ stream.stop()
 
 > _WriteGear handles various powerful Video-Writer Tools that provide us the freedom to do almost anything imaginable with multimedia data._
 
-WriteGear API provides a complete, flexible, and robust wrapper around [**FFmpeg**][ffmpeg], a leading multimedia framework. WriteGear can process real-time frames into a lossless compressed video-file with any suitable specifications _(such as`bitrate, codec, framerate, resolution, subtitles,  etc.`)_.
+WriteGear API provides a complete, flexible, and robust wrapper around [**FFmpeg**][ffmpeg], a leading multimedia framework. WriteGear can process real-time frames into a compressed _(or lossless)_ video-file with any suitable specifications _(such as`bitrate, codec, framerate, resolution, subtitles,  etc.`)_.
 
 WriteGear also supports streaming with traditional protocols such as [RTSP/RTP][rtsp-ex], RTMP. It is powerful enough to perform complex tasks such as [Live-Streaming][live-stream] _(such as for Twitch, YouTube etc.)_ and [Multiplexing Video-Audio][live-audio-doc] with real-time frames in just few lines of code.
 
@@ -514,7 +514,7 @@ In addition to this, WriteGear also provides flexible access to [**OpenCV's Vide
 
 **WriteGear primarily operates in the following two modes:**
 
-- **Compression Mode:** In this mode, WriteGear utilizes powerful [**FFmpeg**][ffmpeg] inbuilt encoders to encode lossless multimedia files. This mode provides us the ability to exploit almost any parameter available within FFmpeg, effortlessly and flexibly, and while doing that it robustly handles all errors/warnings quietly. **You can find more about this mode [here ➶][cm-writegear-doc]**
+- **Compression Mode:** In this mode, WriteGear utilizes powerful [**FFmpeg**][ffmpeg] inbuilt encoders to encode multimedia files. This mode provides us the ability to exploit almost any parameter available within FFmpeg, effortlessly and flexibly. **You can find more about this mode [here ➶][cm-writegear-doc]**
 
 - **Non-Compression Mode:** In this mode, WriteGear utilizes basic [**OpenCV's inbuilt VideoWriter API**][opencv-vw] tools. This mode also supports all parameter transformations available within OpenCV's VideoWriter API, but it lacks the ability to manipulate encoding parameters and other important features like video compression, audio encoding, etc. **You can learn about this mode [here ➶][ncm-writegear-doc]**
 
