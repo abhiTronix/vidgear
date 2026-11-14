@@ -20,62 +20,26 @@ limitations under the License.
 
 # import the necessary packages
 
-import logging as log
+import gc
 import os
 import platform
-import re
 import subprocess
-import tempfile
 import time
 
 import cv2
 import numpy as np
 import pytest
 from deffcode import FFdecoder
-from six import string_types
 
 from vidgear.gears import WriteGear
-from vidgear.gears.helper import check_output, logger_handler
-from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg, return_testvideo_path
-
-# define test logger
-logger = log.getLogger("Test_commpression_mode")
-logger.propagate = False
-logger.addHandler(logger_handler())
-logger.setLevel(log.DEBUG)
-
-
-# define machine os
-_windows = os.name == "nt"
-
-
-
-
-
-def remove_file_safe(path):
-    """
-    Remove file safely
-    """
-    try:
-        if path and os.path.isfile(os.path.abspath(path)):
-            os.remove(path)
-    except Exception as e:
-        logger.exception(e)
-
-
-def getFrameRate(path):
-    """
-    Returns framerate of video(at path provided) using FFmpeg
-    """
-    process = subprocess.Popen(
-        [return_static_ffmpeg(), "-i", path],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-    )
-    stdout, _ = process.communicate()
-    output = stdout.decode()
-    match_dict = re.search(r"\s(?P<fps>[\d\.]+?)\stbr", output).groupdict()
-    return float(match_dict["fps"])
+from vidgear.gears.helper import delete_file_safe
+from vidgear.tests.utils.helpers import (
+    decode_frames,
+    get_testing_dir,
+    probe_video,
+    return_static_ffmpeg,
+    return_testvideo_path,
+)
 
 
 def test_download_ffmpeg():
@@ -94,145 +58,163 @@ def test_download_ffmpeg():
             pytest.fail(str(e))
 
 
-@pytest.mark.xfail(raises=AssertionError)
-@pytest.mark.parametrize("c_ffmpeg", [return_static_ffmpeg(), "wrong_path"])
-def test_input_framerate(c_ffmpeg):
+@pytest.mark.parametrize(
+    "framerate, expected", [(30, 30.0), (29.97, 29.97), ("wrong_input", 25.0)]
+)
+def test_input_framerate(tmp_path, framerate, expected):
     """
-    Testing "-input_framerate" parameter provided by WriteGear(in Compression Mode)
+    Testing "-input_framerate" parameter (defaults to 25 fps when invalid/omitted)
     """
-    stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
-    test_video_framerate = stream.get(cv2.CAP_PROP_FPS)
-    output_params = (
-        {"-input_framerate": test_video_framerate}
-        if (c_ffmpeg != "wrong_path")
-        else {"-input_framerate": "wrong_input"}
-    )
-    output_path = os.path.join(get_testing_dir(), "Output_tif.mp4")
-    writer = WriteGear(
-        output=output_path, custom_ffmpeg=c_ffmpeg, logging=True, **output_params
-    )  # Define writer
-    while True:
-        (grabbed, frame) = stream.read()
-        if not grabbed:
-            break
-        writer.write(frame)
-    stream.release()
-    writer.close()
-    output_video_framerate = getFrameRate(output_path)
-    assert test_video_framerate == output_video_framerate
-    remove_file_safe(output_path)
+    output_path = str(tmp_path / "Output_tif.mp4")
+    with WriteGear(
+        output=output_path,
+        custom_ffmpeg=return_static_ffmpeg(),
+        logging=True,
+        **{"-input_framerate": framerate},
+    ) as writer:
+        for _ in range(30):
+            writer.write(np.zeros((48, 64, 3), np.uint8))
+    assert probe_video(output_path)["source_video_framerate"] == expected
 
 
 @pytest.mark.parametrize(
     "pixfmts", ["bgr24", "rgba", "invalid", "invalid2", "yuv444p", "bgr48be"]
 )
-def test_write(pixfmts):
+def test_write(tmp_path, pixfmts):
     """
-    Testing `frame_format` with different pixel formats.
+    Testing `-input_pixfmt` with different pixel formats.
     """
     source = return_testvideo_path(fmt="vo")
+    if pixfmts != "invalid2":
+        decoder = FFdecoder(
+            source, frame_format=pixfmts, custom_ffmpeg=return_static_ffmpeg()
+        ).formulate()
+        output_params = {"-input_pixfmt": pixfmts}
+    else:
+        # `rgb24` frames declared as `yuvj422p`, which must be rejected
+        decoder = FFdecoder(source, custom_ffmpeg=return_static_ffmpeg()).formulate()
+        output_params = {"-input_pixfmt": "yuvj422p"}
+    output_path = str(tmp_path / "Output_tw.mp4")
+    writer = WriteGear(
+        output=output_path, custom_ffmpeg=return_static_ffmpeg(), **output_params
+    )
+    count = 0
     try:
-        # formulate the decoder with suitable source(for e.g. foo.mp4)
-        if pixfmts != "invalid2":
-            decoder = FFdecoder(
-                source,
-                frame_format=pixfmts,
-                custom_ffmpeg=return_static_ffmpeg(),
-            ).formulate()
-            output_params = {
-                "-input_pixfmt": pixfmts,
-            }
-        else:
-            decoder = FFdecoder(
-                source,
-                custom_ffmpeg=return_static_ffmpeg(),
-            )
-            # assign manually pix-format via `metadata` property object {special case}
-            decoder.metadata = {"output_frames_pixfmt": "yuvj422p"}
-            # formulate decoder
-            decoder.formulate()
-            output_params = {
-                "-input_pixfmt": "yuvj422p",
-            }
-        output_path = os.path.join(get_testing_dir(), "Output_tw.mp4")
-        writer = WriteGear(
-            output=output_path,
-            custom_ffmpeg=return_static_ffmpeg(),
-            **output_params,
-        )  # Define writer
-        # grab RGB24(default) 3D frames from decoder
         for frame in decoder.generateFrame():
-            # lets write it
             writer.write(frame)
+            count += 1
+    except ValueError as e:
+        assert pixfmts == "invalid2" and "don't match" in str(e)
+    finally:
         decoder.terminate()
         writer.close()
-        basepath, _ = os.path.split(return_static_ffmpeg())
-        ffprobe_path = os.path.join(
-            basepath, "ffprobe.exe" if os.name == "nt" else "ffprobe"
-        )
-        assert os.path.isfile(ffprobe_path), "FFprobe not Found!"
-        result = check_output(
-            [
-                ffprobe_path,
-                "-v",
-                "error",
-                "-count_frames",
-                "-i",
-                output_path,
-            ]
-        )
-        if result:
-            if not isinstance(result, string_types):
-                result = result.decode()
-            assert not any(
-                x in result for x in ["Error", "Invalid", "error", "invalid"]
-            ), "Test failed!"
-    except Exception as e:
-        pytest.fail(str(e))
-    finally:
-        remove_file_safe(output_path)
+    if pixfmts != "invalid2":
+        meta = probe_video(output_path)
+        assert meta["source_video_resolution"] == [1280, 720]
+        assert meta["approx_video_nframes"] == count
 
 
-@pytest.mark.xfail(raises=AssertionError)
-def test_output_dimensions():
+@pytest.mark.parametrize(
+    "dimensions, expected", [((160, 120), [160, 120]), ((161, 121), [162, 122])]
+)
+def test_output_dimensions(tmp_path, dimensions, expected):
     """
-    Testing "-output_dimensions" special parameter provided by WriteGear(in Compression Mode)
+    Testing "-output_dimensions" resizes (odd sizes rounded up for yuv420p), not mis-slices frames
     """
-    dimensions = (640, 480)
-    stream = cv2.VideoCapture(return_testvideo_path())
-    output_params = {}
+    output_params = {"-output_dimensions": dimensions}
     if platform.system() == "Windows":
-        output_params = {
-            "-output_dimensions": dimensions,
-            "-ffmpeg_download_path": get_testing_dir(),
-            "-disable_ffmpeg_window": True,
-        }
-    else:
-        output_params = {"-output_dimensions": dimensions}
-    output_path = os.path.join(get_testing_dir(), "Output_tod.mp4")
-    writer = WriteGear(
+        output_params.update(
+            {
+                "-ffmpeg_download_path": get_testing_dir(),
+                "-disable_ffmpeg_window": True,
+            }
+        )
+    output_path = str(tmp_path / "Output_tod.mp4")
+    with WriteGear(
         output=output_path,
         custom_ffmpeg=return_static_ffmpeg(),
         logging=True,
         **output_params,
-    )  # Define writer
-    while True:
-        (grabbed, frame) = stream.read()
-        if not grabbed:
-            break
-        writer.write(frame)
-    stream.release()
-    writer.close()
+    ) as writer:
+        for _ in range(50):
+            writer.write(np.zeros((240, 320, 3), np.uint8))
+    meta = probe_video(output_path)
+    assert meta["source_video_resolution"] == expected
+    assert meta["source_video_pixfmt"] == "yuv420p"
+    assert len(decode_frames(output_path)) == 50
 
-    output = cv2.VideoCapture(output_path)
-    output_dim = (
-        output.get(cv2.CAP_PROP_FRAME_WIDTH),
-        output.get(cv2.CAP_PROP_FRAME_HEIGHT),
+
+@pytest.mark.parametrize(
+    "dtype, rgb_mode, size",
+    [
+        (np.uint8, False, (240, 320)),
+        (np.uint8, True, (240, 320)),
+        (np.uint16, False, (240, 320)),
+        (np.uint8, False, (241, 321)),
+    ],
+)
+def test_frame_roundtrip(tmp_path, dtype, rgb_mode, size):
+    """
+    Testing written frames decode back to same content (channel order, 16-bit, odd sizes)
+    """
+    height, width = size
+    # blue frame with red top half (BGR)
+    frame = np.zeros((height, width, 3), np.uint8)
+    frame[..., 0] = 200
+    frame[: height // 2, :, 2] = 100
+    data = frame.astype(dtype) * (257 if dtype == np.uint16 else 1)
+    if rgb_mode:
+        data = np.ascontiguousarray(data[..., ::-1])
+    output_path = str(tmp_path / "Output_rt.mp4")
+    with WriteGear(output=output_path, custom_ffmpeg=return_static_ffmpeg()) as writer:
+        for _ in range(10):
+            writer.write(data, rgb_mode=rgb_mode)
+    frames = decode_frames(output_path)
+    assert len(frames) == 10
+    assert frames[0].shape == (height + height % 2, width + width % 2, 3)
+    assert np.abs(frames[0][:height, :width].astype(int) - frame).mean() < 8
+
+
+@pytest.mark.parametrize(
+    "output_params",
+    [
+        {"-i": return_testvideo_path(fmt="ao")},
+        {"-i": return_testvideo_path(fmt="av")},
+        {"-i": return_testvideo_path(fmt="ao"), "-acodec": "copy"},
+        {"-clones": ["-f", "lavfi", "-i", "anullsrc"]},
+        {"-ffpreheaders": ["-f", "lavfi", "-i", "anullsrc"]},
+    ],
+)
+def test_extra_input(tmp_path, output_params):
+    """
+    Testing extra (audio) inputs keep piped video and every frame, and never hang `close()`
+    """
+    output_path = str(tmp_path / "Output_ei.mp4")
+    writer = WriteGear(
+        output=output_path, custom_ffmpeg=return_static_ffmpeg(), **output_params
     )
-    assert output_dim[0] == 640 and output_dim[1] == 480
-    output.release()
+    # 6s of video, longer than the 5.3s test audio
+    for _ in range(150):
+        writer.write(np.zeros((240, 320, 3), np.uint8))
+    start = time.time()
+    writer.close(timeout=10)
+    assert time.time() - start < 5 and writer.returncode == 0
+    meta = probe_video(output_path)
+    assert meta["source_video_resolution"] == [320, 240]
+    assert meta["source_has_audio"]
+    assert len(decode_frames(output_path)) == 150
 
-    remove_file_safe(output_path)
+
+@pytest.mark.parametrize("dtype", [np.float32, np.int16])
+def test_invalid_dtype(tmp_path, dtype):
+    """
+    Testing non `uint8`/`uint16` frames are rejected instead of written as garbage
+    """
+    with (
+        WriteGear(output=str(tmp_path / "Output.mp4")) as writer,
+        pytest.raises(ValueError, match="uint8"),
+    ):
+        writer.write(np.zeros((48, 64, 3), dtype))
 
 
 test_data_class = [
@@ -272,128 +254,91 @@ def test_WriteGear_compression(f_name, c_ffmpeg, output_params, result):
     """
     Testing WriteGear Compression-Mode(FFmpeg) with different parameters
     """
-    try:
-        stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
-        with WriteGear(output=f_name, compression_mode=True, **output_params) as writer:
-            while True:
-                (grabbed, frame) = stream.read()
-                if not grabbed:
-                    break
-                writer.write(frame)
-            stream.release()
-        remove_file_safe(f_name)
-    except Exception as e:
-        if result:
-            pytest.fail(str(e))
-
-
-@pytest.mark.parametrize(
-    "ffmpeg_cmd, logging, output_params",
-    [
-        (
-            [
-                "-y",
-                "-i",
-                return_testvideo_path(),
-                "-vn",
-                "-acodec",
-                "copy",
-                "input_audio.aac",
-            ],
-            False,
-            {"-i": None, "-disable_force_termination": True},
-        ),
-        (None, True, {"-i": None, "-disable_force_termination": "OK"}),
-        (["wrong_input", "invalid_flag", "break_things"], False, {}),
-        (
-            ["wrong_input", "invalid_flag", "break_things"],
-            True,
-            (
-                {"-ffmpeg_download_path": 53}
-                if (platform.system() == "Windows")
-                else {"-disable_force_termination": "OK"}
-            ),
-        ),
-        (
-            "wrong_input",
-            True,
-            {"-disable_force_termination": True},
-        ),
-        (
-            ["invalid"],
-            True,
-            {},
-        ),
-    ],
-)
-def test_WriteGear_customFFmpeg(ffmpeg_cmd, logging, output_params):
-    """
-    Testing WriteGear Compression-Mode(FFmpeg) custom FFmpeg Pipeline by seperating audio from video
-    """
-    writer = None
-    try:
-        # define writer
-        writer = WriteGear(
-            output=os.path.join(get_testing_dir(), "Output.mp4"),
-            compression_mode=(ffmpeg_cmd != ["invalid"]),
-            logging=logging,
-            **output_params,
-        )  # Define writer
-
-        # execute FFmpeg command
-        writer.execute_ffmpeg_cmd(ffmpeg_cmd)
-        writer.close()
-        # assert audio file is created successfully
-        if ffmpeg_cmd and isinstance(ffmpeg_cmd, list) and "-acodec" in ffmpeg_cmd:
-            assert os.path.isfile("input_audio.aac")
-    except Exception as e:
-        if isinstance(e, AssertionError):
-            pytest.fail(str(e))
-        elif isinstance(e, (ValueError, RuntimeError)):
-            pytest.xfail("Test Passed!")
-        else:
-            logger.exception(str(e))
-
-
-@pytest.mark.parametrize("vcodec_key", ["-vcodec", "-c:v"])
-def test_skip_vcodec(vcodec_key):
-    """
-    Testing `-vcodec`/`-c:v` set to `None` to discard `-vcodec` FFmpeg parameter
-    entirely from the encoding pipeline (e.g. for GIF output, letting FFmpeg
-    auto-select the best available video encoder).
-    """
+    if not result:
+        with pytest.raises(ValueError):
+            WriteGear(output=f_name, custom_ffmpeg=c_ffmpeg, **output_params)
+        return
     stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
-    output_params = {vcodec_key: None}
-    output_path = os.path.join(get_testing_dir(), "Output_skipv.gif")
-    try:
-        writer = WriteGear(
-            output=output_path,
-            custom_ffmpeg=return_static_ffmpeg(),
-            logging=True,
-            **output_params,
-        )  # Define writer
+    with WriteGear(
+        output=f_name, compression_mode=True, custom_ffmpeg=c_ffmpeg, **output_params
+    ) as writer:
         while True:
             (grabbed, frame) = stream.read()
             if not grabbed:
                 break
             writer.write(frame)
         stream.release()
-        writer.close()
-        # assert output file is created successfully
-        assert (
-            os.path.isfile(output_path) and os.path.getsize(output_path) > 0
-        ), "Output file was not created or is empty!"
-    except Exception as e:
-        pytest.fail(str(e))
-    finally:
-        remove_file_safe(output_path)
+    assert writer.returncode == 0
+    delete_file_safe(f_name)
 
 
-def test_execute_ffmpeg_cmd_result():
+@pytest.mark.parametrize("case", ["extract_audio", "empty", "failing", "str", "no_compression"])
+def test_WriteGear_customFFmpeg(tmp_path, case):
+    """
+    Testing WriteGear Compression-Mode(FFmpeg) custom FFmpeg Pipeline by seperating audio from video
+    """
+    audio = str(tmp_path / "input_audio.aac")
+    commands = {
+        "extract_audio": ["-y", "-i", return_testvideo_path(), "-vn", "-acodec", "copy", audio],
+        "empty": None,
+        "failing": ["wrong_input", "invalid_flag", "break_things"],
+        "str": "wrong_input",
+        "no_compression": ["invalid"],
+    }
+    writer = WriteGear(
+        output=str(tmp_path / "Output.mp4"),
+        compression_mode=case != "no_compression",
+        logging=case == "empty",
+        # deprecated, accepted as no-op
+        **{"-disable_force_termination": True},
+    )
+    if case == "str":
+        with pytest.raises(ValueError):
+            writer.execute_ffmpeg_cmd(commands[case])
+    elif case == "no_compression":
+        with pytest.raises(RuntimeError):
+            writer.execute_ffmpeg_cmd(commands[case])
+    else:
+        result = writer.execute_ffmpeg_cmd(commands[case])
+        if case == "empty":
+            assert result is None
+        elif case == "failing":
+            assert result.returncode != 0
+        else:
+            assert result.returncode == 0 and os.path.isfile(audio)
+    writer.close()
+
+
+@pytest.mark.parametrize("vcodec_key", ["-vcodec", "-c:v"])
+def test_skip_vcodec(tmp_path, vcodec_key):
+    """
+    Testing `-vcodec`/`-c:v` set to `None` to discard `-vcodec` FFmpeg parameter
+    entirely from the encoding pipeline (e.g. for GIF output, letting FFmpeg
+    auto-select the best available video encoder).
+    """
+    stream = cv2.VideoCapture(return_testvideo_path())  # Open stream
+    output_path = str(tmp_path / "Output_skipv.gif")
+    with WriteGear(
+        output=output_path,
+        custom_ffmpeg=return_static_ffmpeg(),
+        logging=True,
+        **{vcodec_key: None},
+    ) as writer:
+        while True:
+            (grabbed, frame) = stream.read()
+            if not grabbed:
+                break
+            writer.write(frame)
+        stream.release()
+    # assert output file is created successfully
+    assert os.path.isfile(output_path) and os.path.getsize(output_path) > 0
+
+
+def test_execute_ffmpeg_cmd_result(tmp_path):
     """
     Testing `execute_ffmpeg_cmd` returns exit status/stderr, and honors `check` and `timeout`
     """
-    writer = WriteGear(output=os.path.join(get_testing_dir(), "Output.mp4"))
+    writer = WriteGear(output=str(tmp_path / "Output.mp4"))
     assert writer.execute_ffmpeg_cmd([]) is None
     result = writer.execute_ffmpeg_cmd(
         ["-f", "lavfi", "-i", "testsrc=d=1", "-f", "null", "-"]
@@ -409,13 +354,17 @@ def test_execute_ffmpeg_cmd_result():
     writer.close()
 
 
-def test_capture_stderr():
+@pytest.mark.filterwarnings("error::pytest.PytestUnraisableExceptionWarning")
+@pytest.mark.parametrize("custom_ffmpeg", ["", return_static_ffmpeg()])
+def test_ffmpeg_death(tmp_path, custom_ffmpeg):
     """
-    Testing `-capture_stderr` surfaces FFmpeg's stderr on early encoder death, and `returncode` on close
+    Testing FFmpeg's stderr surfaces on early encoder death, `close()` doesn't raise
+    or leak the dead pipe, and writes after `close()` fail clearly
     """
     writer = WriteGear(
-        output=os.path.join(get_testing_dir(), "Output.mp4"),
-        **{"-capture_stderr": True, "-invalid_flag": "1"},
+        output=str(tmp_path / "Output.mp4"),
+        custom_ffmpeg=custom_ffmpeg,
+        **{"-invalid_flag": "1"},
     )
     frame = np.zeros((48, 64, 3), np.uint8)
     with pytest.raises(ValueError, match="invalid_flag"):
@@ -424,16 +373,19 @@ def test_capture_stderr():
             time.sleep(0.01)
     assert "invalid_flag" in "\n".join(writer.stderr_tail)
     writer.close()
+    gc.collect()
     assert writer.returncode not in (None, 0)
+    with pytest.raises(RuntimeError, match="closed"):
+        writer.write(frame)
 
 
-def test_close_timeout():
+def test_close_timeout(tmp_path):
     """
     Testing `close(timeout)` stops an FFmpeg that won't finish in time
     """
     # `-re` at 1 fps makes FFmpeg take seconds to drain the buffered frames
     writer = WriteGear(
-        output=os.path.join(get_testing_dir(), "Output.mp4"),
+        output=str(tmp_path / "Output.mp4"),
         **{"-input_framerate": 1, "-ffpreheaders": ["-re"]},
     )
     for _ in range(6):

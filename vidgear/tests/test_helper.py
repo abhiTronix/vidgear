@@ -168,6 +168,13 @@ def test_dict2Args(dictionary):
         pytest.fail("Failed to complete this test!")
 
 
+def test_dict2Args_valueless_flag():
+    """
+    Testing `None` value emits flag only.
+    """
+    assert dict2Args({"-shortest": None, "-crf": 18}) == ["-shortest", "-crf", "18"]
+
+
 test_data = [
     (
         os.path.join(get_testing_dir(), "temp_ffmpeg"),
