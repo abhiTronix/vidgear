@@ -62,7 +62,7 @@ dynamic = ["version", "readme"]
 [project.optional-dependencies]
 core = [
     "yt-dlp[default]>=2026.10.26",
-    "pyzmq>=27.2.0",
+    "pyzmq>=27.3.0",
     "Pillow>=13.0.0",
     "simplejpeg>=1.9.0",
     "deffcode>=0.3.0",
@@ -72,7 +72,7 @@ core = [
 ]
 asyncio = [
     "yt-dlp[default]>=2026.10.26",
-    "pyzmq>=27.2.0",
+    "pyzmq>=27.3.0",
     "simplejpeg>=1.9.0",
     "deffcode>=0.3.0",
     "mss>=10.2.0",
