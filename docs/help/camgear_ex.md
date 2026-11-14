@@ -87,7 +87,7 @@ CamGear provides exclusive attributes `STREAM_RESOLUTION` _(for specifying strea
 
 The complete usage example is as follows: 
 
-!!! tip "More information on `STREAM_RESOLUTION` & `STREAM_PARAMS` attributes can be found [here ➶](../gears/camgear/advanced/source_params/#exclusive-camgear-parameters)"
+!!! tip "More information on `STREAM_RESOLUTION` & `STREAM_PARAMS` attributes can be found [here ➶](../gears/camgear/advanced/source_params/#exclusive-camgear-attributes)"
 
 ```python linenums="1" hl_lines="6"
 # import required libraries

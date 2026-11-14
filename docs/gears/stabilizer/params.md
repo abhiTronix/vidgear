@@ -31,7 +31,7 @@ This parameter selects the underlying stabilization algorithm via the [`Stabiliz
 
 **Data-Type:** [`StabilizerMode`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.StabilizerMode) enum
 
-**Default Value:** [`StabilizerMode.ASW`](../../bonus/reference/stabilizer/#aswstabilizer)
+**Default Value:** [`StabilizerMode.ASW`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.ASWStabilizer)
 
 **Accepted Values:**
 

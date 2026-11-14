@@ -183,7 +183,7 @@ FFGear API directly supports any network stream URL that FFmpeg supports, includ
 
 === "HLS Stream (specific rendition)"
 
-    > A HLS **master playlist** _(`.m3u8`)_ usually carries several renditions of the same video at different resolutions, which FFmpeg exposes as **embedded video streams of one input**. ==Select the rendition explicitly== with FFdecoder's [`-default_stream_indexes`](../params/#b-ffdecoder-parameters) parameter.
+    > A HLS **master playlist** _(`.m3u8`)_ usually carries several renditions of the same video at different resolutions, which FFmpeg exposes as **embedded video streams of one input**. ==Select the rendition explicitly== with FFdecoder's [`-default_stream_indexes`](params/#b-ffdecoder-parameters) parameter.
 
     !!! warning "Behaviour change with `deffcode>=0.3.0` _(New in v0.3.8)_"
         Without a selection, FFGear now decodes the **first** rendition in playlist order _(often the lowest quality)_ and logs a warning, instead of the one FFmpeg picks automatically _(usually the highest resolution)_.
@@ -510,7 +510,7 @@ FFGear supports decoding frames in any FFmpeg pixel format via the [`frame_forma
 
     !!! success "Fastest :zap: RAW-to-Grayscale via `-extract_luma`"
 
-        Every YUV/NV bytestream stores the **Luma (Y) plane** uncompressed at the top of each frame. The exclusive [`-extract_luma`](params/#b-exclusive-parameters) boolean attribute makes FFGear slice that Y-plane directly and hand back a 2D `(H, W)` grayscale ndarray — **no colorspace conversion in FFmpeg, no `cv2.cvtColor` in Python**. This is strictly faster than `frame_format="gray"`, which still asks FFmpeg to do a `yuv→gray` conversion on every frame.
+        Every YUV/NV bytestream stores the **Luma (Y) plane** uncompressed at the top of each frame. The exclusive [`-extract_luma`](params/#b-ffdecoder-parameters) boolean attribute makes FFGear slice that Y-plane directly and hand back a 2D `(H, W)` grayscale ndarray — **no colorspace conversion in FFmpeg, no `cv2.cvtColor` in Python**. This is strictly faster than `frame_format="gray"`, which still asks FFmpeg to do a `yuv→gray` conversion on every frame.
 
         Combined with the reduced pipe-bytes of YUV 4:2:0 ingest, this is the fastest :fontawesome-solid-tachometer-alt-fast: grayscale pipeline the API can produce.
 
@@ -735,7 +735,7 @@ stream.stop()
 
 > Some sources carry **several embedded video streams** in a single input _(such as an `.mkv` with two video tracks, or an HLS playlist with several renditions)_. By default, FFGear decodes the **first** video stream _(skipping cover art)_ and logs a warning, instead of the one [FFmpeg would pick automatically](https://ffmpeg.org/ffmpeg.html#Automatic-stream-selection) _(`default` disposition, otherwise the highest resolution)_.
 
-In this example we will decode only the second video stream of a source with FFdecoder's [`-default_stream_indexes`](../params/#b-ffdecoder-parameters) parameter. To keep it runnable anywhere, the source is a [`lavfi`](https://ffmpeg.org/ffmpeg-devices.html#lavfi) graph that produces **one input with two video streams** _(red `320x240` and blue `160x120`)_. A file path such as `foo.mkv` works the same way.
+In this example we will decode only the second video stream of a source with FFdecoder's [`-default_stream_indexes`](params/#b-ffdecoder-parameters) parameter. To keep it runnable anywhere, the source is a [`lavfi`](https://ffmpeg.org/ffmpeg-devices.html#lavfi) graph that produces **one input with two video streams** _(red `320x240` and blue `160x120`)_. A file path such as `foo.mkv` works the same way.
 
 !!! new "New in v0.3.8"
     Stream selection requires `deffcode>=0.3.0`. Sources whose first video stream is cover art _(attached picture)_ now decode their real video stream too, instead of raising `RuntimeError`.
@@ -1453,7 +1453,7 @@ FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode fo
 
 === "RGB frames"
 
-    In WriteGear API, you can use [`rgb_mode`](../../bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.write) parameter in  `write()` class method to write `RGB` format frames instead of default `BGR` as follows:
+    In WriteGear API, you can use [`rgb_mode`](../../bonus/reference/writegear/#vidgear.gears.WriteGear.write) parameter in  `write()` class method to write `RGB` format frames instead of default `BGR` as follows:
 
     ```python linenums="1" hl_lines="3 11 16 31 37"
     # import required libraries
@@ -1595,7 +1595,7 @@ FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode fo
 
     !!! success "Fastest :zap: RAW-to-Grayscale via `-extract_luma`"
 
-        Every YUV/NV bytestream stores the **Luma (Y) plane** uncompressed at the top of each frame. The exclusive [`-extract_luma`](params/#b-exclusive-parameters) boolean attribute makes FFGear slice that Y-plane directly and hand back a 2D `(H, W)` grayscale ndarray — **no colorspace conversion in FFmpeg, no `cv2.cvtColor` in Python**. This is strictly faster than `frame_format="gray"`, which still asks FFmpeg to do a `yuv→gray` conversion on every frame.
+        Every YUV/NV bytestream stores the **Luma (Y) plane** uncompressed at the top of each frame. The exclusive [`-extract_luma`](params/#b-ffdecoder-parameters) boolean attribute makes FFGear slice that Y-plane directly and hand back a 2D `(H, W)` grayscale ndarray — **no colorspace conversion in FFmpeg, no `cv2.cvtColor` in Python**. This is strictly faster than `frame_format="gray"`, which still asks FFmpeg to do a `yuv→gray` conversion on every frame.
 
         Combined with the reduced pipe-bytes of YUV 4:2:0 ingest, this is the fastest :fontawesome-solid-tachometer-alt-fast: grayscale pipeline the API can produce.
 

@@ -243,7 +243,7 @@ This parameter enable access to [Stabilizer Class](../stabilizer/) for stabilizi
 WebGear_RTC(stabilize=True) # enable stablization
 ```
 
-!!! example "Its complete usage example is given [here ➶](usage/#using-videogear-with-video-stabilizer-backend)."
+!!! example "Its complete usage example is given [here ➶](../videogear/usage/#using-videogear-with-video-stabilizer-backend)."
 
 &nbsp; 
 
@@ -543,7 +543,7 @@ This dictionary parameter in the internal PiGear API backend allows you to contr
 
 **Usage:**
 
-!!! example "The complete usage example demonstrating the usage of the `options` parameter is available [here ➶](usage/#using-pigear-with-variable-camera-properties)."
+!!! example "The complete usage example demonstrating the usage of the `options` parameter is available [here ➶](../pigear/usage/#using-pigear-with-variable-camera-properties)."
 
 You can format these user-defined and configurational parameters as attributes of this `options` dictionary parameter as follows:
 
@@ -718,7 +718,7 @@ This parameter selects the colorspace of the source stream.
 WebGear_RTC(colorspace="COLOR_BGR2HSV")
 ```
 
-!!! example "Its complete usage example is given [here ➶](usage/#using-videogear-with-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](../videogear/usage/#using-videogear-with-colorspace-manipulation)"
 
 &nbsp;
 

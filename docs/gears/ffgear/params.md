@@ -138,7 +138,7 @@ FFGear(source="myvideo.mp4", frame_format="gray")
 FFGear(source="myvideo.mp4", frame_format="yuv420p") # auto-convert YUV420p → OpenCV Compatible in FFGear
 ```
 
-!!! example "YUV420p + `-enforce_cv_patch` usage example is given [here ➶](advanced/#hardware-accelerated-decoding-with-yuv420p-output)."
+!!! example "YUV420p + `-enforce_cv_patch` usage example is given [here ➶](advanced/#nvidia-cuvid-decoding)."
 
 &nbsp;
 

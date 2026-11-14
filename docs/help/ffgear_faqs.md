@@ -97,7 +97,7 @@ Use FFGear when you need GPU decoding, advanced FFmpeg pipelines, or YUV pixel f
 
 ## How to change quality and parameters of YouTube Streams with FFGear?
 
-**Answer:** FFGear provides exclusive `STREAM_RESOLUTION` _(for specifying stream resolution)_ and `STREAM_PARAMS` _(for specifying underlying `yt_dlp` parameters)_ attributes with its [`options`](../gears/ffgear/params/#a-ffgear-exclusive-parameters) dictionary parameter. See [this Bonus Example ➶](ffgear_ex/#using-ffgear-with-variable-yt_dlp-parameters-in-stream-mode).
+**Answer:** FFGear provides exclusive `STREAM_RESOLUTION` _(for specifying stream resolution)_ and `STREAM_PARAMS` _(for specifying underlying `yt_dlp` parameters)_ attributes with its [`options`](../gears/ffgear/params/#a-ffgear-exclusive-parameters) dictionary parameter. See [this Usage Example ➶](../gears/ffgear/usage/#using-ffgear-with-streaming-websites).
 
 &thinsp;
 
@@ -116,13 +116,13 @@ See [Usage Examples ➶](../gears/ffgear/usage/#using-ffgear-with-video-looping)
 
 ## Can I use FFGear with multiple camera devices at the same time?
 
-**Answer:** Yes. Simply create separate FFGear instances for each device. See [this Bonus Example ➶](ffgear_ex/#synchronizing-two-ffgear-sources).
+**Answer:** Yes. Simply create separate FFGear instances for each device. See [this CamGear Bonus Example ➶](camgear_ex/#synchronizing-two-sources-in-camgear), which works the same way with FFGear.
 
 &thinsp;
 
 ## How to use FFGear with WriteGear?
 
-**Answer:** FFGear follows the same read-loop pattern as CamGear, so it integrates directly with WriteGear. See [this Bonus Example ➶](ffgear_ex/#using-ffgear-with-writegears-compression-mode).
+**Answer:** FFGear follows the same read-loop pattern as CamGear, so it integrates directly with WriteGear. See [this Usage Example ➶](../gears/ffgear/usage/#using-ffgear-with-writegear-api-compression-mode).
 
 &thinsp;
 

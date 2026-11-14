@@ -64,7 +64,7 @@ limitations under the License.
 
 ## What OpenCV's FOURCC and parameters are supported by WriteGear in non-compression mode?
 
-**Answer:** See [Supported Parameters ➶](../gears/writegear/non_compression/params/#supported-parameters) and [Supported FOURCC ➶](../gears/writegear/non_compression/params/#supported-fourcc-codecs).
+**Answer:** See [Supported Parameters ➶](../gears/writegear/non_compression/params/#supported-attributes) and [Supported FOURCC ➶](../gears/writegear/non_compression/params/#supported-fourcc-codecs).
 
 &thinsp;
 
@@ -120,7 +120,7 @@ limitations under the License.
 
 ## How to create MP4 segments from a video stream with WriteGear?
 
-**Answer:** See [this Bonus Example ➶](writegear_ex/#using-writegears-compression-mode-creating-mp4-segments-from-a-video-stream).
+**Answer:** See [this Bonus Example ➶](writegear_ex/#using-writegears-compression-mode-for-creating-mp4-segments).
 
 &thinsp;
 

@@ -283,7 +283,7 @@ This parameter controls the Stream Mode, .i.e if enabled(`stream_mode=True`), th
 VideoGear(source='https://youtu.be/bvetuLwJIkA', stream_mode=True)
 ```
 
-!!! example "Its complete usage example is given [here ➶](usage/#using-camgear-with-youtube-videos)."
+!!! example "Its complete usage example is given [here ➶](../camgear/usage/#using-camgear-with-youtube-videos)."
 
 &nbsp;
 
@@ -421,7 +421,7 @@ This dictionary parameter in the internal PiGear API backend allows you to contr
 
 **Usage:**
 
-!!! example "The complete usage example demonstrating the usage of the `options` parameter is available [here ➶](usage/#using-pigear-with-variable-camera-properties)."
+!!! example "The complete usage example demonstrating the usage of the `options` parameter is available [here ➶](../pigear/usage/#using-pigear-with-variable-camera-properties)."
 
 You can format these user-defined and configurational parameters as attributes of this `options` dictionary parameter as follows:
 

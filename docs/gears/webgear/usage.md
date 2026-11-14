@@ -42,7 +42,7 @@ You'll also need to install an ASGI Server to run following WebGear usage exampl
 
 ## Bare-Minimum Usage with Default MJPEG Mode :octicons-stack-16: 
 
-By default _([`streaming_mode="mjpeg"`](params/#streaming_mode))_, WebGear only streams JPEG-encoded frames over HTTP at `/video` endpoint, with no FFmpeg dependency. See [Modes of Operation ➶](../#modes-of-operation) for its pros and cons.
+By default _([`streaming_mode="mjpeg"`](params/#streaming_mode))_, WebGear only streams JPEG-encoded frames over HTTP at `/video` endpoint, with no FFmpeg dependency. See [Modes of Operation ➶](./#modes-of-operation) for its pros and cons.
 
 !!! tip "MJPEG Performance Enhancing Attributes :fontawesome-solid-fire-flame-curved:"
 
@@ -81,7 +81,7 @@ By default _([`streaming_mode="mjpeg"`](params/#streaming_mode))_, WebGear only 
             options = {"jpeg_compression_fastupsample": True}
             ```
 
-Let's implement our Bare-Minimum usage example in MJPEG Mode with these [**Performance Enhancing Attributes** ➶](#mjpeg-performance-enhancing-attributes) for speeding up the output, as follows:
+Let's implement our Bare-Minimum usage example in MJPEG Mode with these [**Performance Enhancing Attributes** ➶](#bare-minimum-usage-with-default-mjpeg-mode) for speeding up the output, as follows:
 
 !!! tip "For accessing WebGear on different Client Devices on the network, use `"0.0.0.0"` as host value instead of `"localhost"` on Host Machine. More information can be found [here ➶](../../help/webgear_faqs/#is-it-possible-to-stream-on-a-different-device-on-the-network-with-webgear)"
 
@@ -121,14 +121,14 @@ which can be accessed on any browser on your machine at http://localhost:8000/.
 When [`streaming_mode="h264"`](params/#streaming_mode), WebGear encodes frames with FFmpeg _(`libx264 -preset ultrafast -tune zerolatency`)_ and pushes each complete H.264 frame as a binary WebSocket message at `/ws/video`. WebGear's Default Theme decodes them with the browser's hardware-accelerated **WebCodecs** `VideoDecoder` inside a Web Worker and paints them on a `<canvas>`, while a telemetry HUD shows live FPS, bandwidth and decode latency.
 
 !!! danger "Higher Server CPU usage :fontawesome-solid-fire-burner:"
-    Every connected viewer starts its own FFmpeg encoder process in this mode, so server CPU usage grows with the number of viewers. Use [MJPEG Mode](#bare-minimum-usage-with-mjpeg-mode-performance-enhancements) for many simultaneous viewers on a low-power server. See [Modes of Operation ➶](../#modes-of-operation) for more details.
+    Every connected viewer starts its own FFmpeg encoder process in this mode, so server CPU usage grows with the number of viewers. Use [MJPEG Mode](#bare-minimum-usage-with-default-mjpeg-mode) for many simultaneous viewers on a low-power server. See [Modes of Operation ➶](./#modes-of-operation) for more details.
 
 !!! warning "Critical Requirements"
     * **Server:** FFmpeg with `libx264` encoder must be installed _(or set via [`custom_ffmpeg`](params/#custom_ffmpeg))_. On Windows :fontawesome-brands-windows:, WebGear looks for FFmpeg on startup, and may download a static FFmpeg build if none is found.
     * **Browser:** WebCodecs support _(Chrome/Edge 94+, Safari 16.4+, Firefox 130+)_ inside a [Secure Context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts), i.e. `https://` or `http://localhost`.
 
 !!! info "Automatic MJPEG Fallback"
-    The `/video` MJPEG endpoint stays available, and the Default Theme automatically falls back to it whenever WebCodecs is unavailable _(including plain `http://` on non-localhost hosts)_ or WebSocket stream fails. MJPEG [Performance Enhancing Attributes](#mjpeg-performance-enhancing-attributes) therefore still apply to the fallback stream.
+    The `/video` MJPEG endpoint stays available, and the Default Theme automatically falls back to it whenever WebCodecs is unavailable _(including plain `http://` on non-localhost hosts)_ or WebSocket stream fails. MJPEG [Performance Enhancing Attributes](#bare-minimum-usage-with-default-mjpeg-mode) therefore still apply to the fallback stream.
 
 ```python linenums="1" hl_lines="7 12"
 # import required libraries

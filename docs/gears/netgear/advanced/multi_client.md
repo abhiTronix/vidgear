@@ -54,7 +54,7 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
 - [x] Enables Multiple Client(s) connection with a single Server.
 
-- [x] Ability to [send any additional data](../advanced/multi_client/#using-multi-clients-mode-with-custom-data-transfer) of any datatype along with frames in real-time.
+- [x] Ability to [send any additional data](../advanced/multi_client/#using-multi-clients-mode-for-unidirectional-custom-data-transfer) of any datatype along with frames in real-time.
 
 - [x] Number of Clients can be extended to several numbers depending upon your system's hardware limit.
 

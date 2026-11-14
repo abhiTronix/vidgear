@@ -54,8 +54,8 @@ The basic idea behind it is to track salient features between consecutive frames
 
     | Mode | Backend | Status |
     |:----:|:--------|:-------|
-    | `StabilizerMode.ASW` | [`ASWStabilizer`](../../bonus/reference/stabilizer/#aswstabilizer) — Average Sliding-Window | **Default** |
-    | `StabilizerMode.KALMAN` | [`KalmanStabilizer`](../../bonus/reference/stabilizer/#kalmanstabilizer) — Zero-latency Kalman filter | Real-time |
+    | `StabilizerMode.ASW` | [`ASWStabilizer`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.ASWStabilizer) — Average Sliding-Window | **Default** |
+    | `StabilizerMode.KALMAN` | [`KalmanStabilizer`](../../bonus/reference/stabilizer/#vidgear.gears.stabilizer.KalmanStabilizer) — Zero-latency Kalman filter | Real-time |
 
     !!! success "The public `Stabilizer` API remains unchanged, so existing code continues to work as before while automatically using the default ASW backend."
 

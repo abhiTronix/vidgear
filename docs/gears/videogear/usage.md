@@ -341,7 +341,7 @@ stream.stop()
 
 ## Advanced VideoGear usage with PiGear Backend
 
-!!! abstract "VideoGear provides internal access to both CamGear and PiGear APIs, and thereby all additional parameters of [PiGear API](params/#parameters-with-pigear-backend) or [CamGear API](params/#parameters-with-camgear-backend) are also easily accessible within VideoGear API."
+!!! abstract "VideoGear provides internal access to both CamGear and PiGear APIs, and thereby all additional parameters of [PiGear API](params/#parameters-for-pigear-backend) or [CamGear API](params/#parameters-for-camgear-backend) are also easily accessible within VideoGear API."
 
 The usage example of VideoGear API with Variable Camera Properties is as follows:
 
