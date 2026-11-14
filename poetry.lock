@@ -113,7 +113,7 @@ description = "Python bindings for the Brotli compression library"
 optional = true
 python-versions = "*"
 groups = ["main"]
-markers = "implementation_name == \"cpython\" and (extra == \"core\" or extra == \"asyncio\") and sys_platform != \"ios\""
+markers = "implementation_name == \"cpython\" and (extra == \"asyncio\" or extra == \"core\") and sys_platform != \"ios\""
 files = [
     {file = "brotli-1.2.1-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:09b560859a04d112d206639c7e444161ee2f413098aa6de11d43daf3ce883d24"},
     {file = "brotli-1.2.1-cp27-cp27m-manylinux1_i686.whl", hash = "sha256:66f171af80744c06f6b4e5b01fe6e40c70cc4e17570888746a281422fed83fc0"},
@@ -267,7 +267,7 @@ description = "Python CFFI bindings to the Brotli library"
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "(extra == \"core\" or extra == \"asyncio\") and implementation_name != \"cpython\""
+markers = "(extra == \"asyncio\" or extra == \"core\") and implementation_name != \"cpython\""
 files = [
     {file = "brotlicffi-1.2.1.0-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:fea6f5450a6bd73ec222e92282d4db25030943946190697c1f2cd41087c59bc6"},
     {file = "brotlicffi-1.2.1.0-cp314-cp314t-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:b77704eb33e345e00d0a2854abf7966b86e1709a1f89bcc143b6c8437256d7c7"},
@@ -315,7 +315,7 @@ description = "Foreign Function Interface for Python calling C code."
 optional = true
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "implementation_name != \"cpython\" and (extra == \"core\" or extra == \"asyncio\") or extra == \"asyncio\""
+markers = "implementation_name != \"cpython\" and (extra == \"asyncio\" or extra == \"core\") or extra == \"asyncio\""
 files = [
     {file = "cffi-2.1.1-cp310-cp310-macosx_10_15_x86_64.whl", hash = "sha256:baed1e86cc735622097354b9d1281406caf42ff42a886d29faa8e8d1630333be"},
     {file = "cffi-2.1.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:ca82be1a1d406ecfe1d25dc16cb33488e5a16bf4438c9fb590484ea29d92478b"},
@@ -655,7 +655,7 @@ description = "Pure Python COM package"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "sys_platform == \"win32\" and (extra == \"core\" or extra == \"asyncio\")"
+markers = "sys_platform == \"win32\" and (extra == \"asyncio\" or extra == \"core\")"
 files = [
     {file = "comtypes-1.4.17-py3-none-any.whl", hash = "sha256:4e0a221dde2c589b82977bed802efd71cd5eb67a380347b732e02735e597f586"},
     {file = "comtypes-1.4.17.tar.gz", hash = "sha256:3d9c1e92ad8daf7600d371e76ee16161a627a5fb70c3144f6e52e78af6034363"},
@@ -793,7 +793,7 @@ description = "A cross-platform High-performance & Flexible Real-time Video Fram
 optional = true
 python-versions = ">=3.11"
 groups = ["main"]
-markers = "extra == \"core\" or extra == \"asyncio\""
+markers = "extra == \"asyncio\" or extra == \"core\""
 files = [
     {file = "deffcode-0.2.9-py3-none-any.whl", hash = "sha256:bd49a22c9d04392028e93e7249875c4247d004546428458695bce05f6824650a"},
     {file = "deffcode-0.2.9.tar.gz", hash = "sha256:844cb5c53ea5cad2866b62cea6073422c7c5480dab2e09aac40c77985bc04b85"},
@@ -808,15 +808,15 @@ tqdm = "*"
 
 [[package]]
 name = "dnspython"
-version = "2.9.0"
+version = "2.9.2"
 description = "DNS toolkit"
 optional = true
 python-versions = ">=3.11"
 groups = ["main"]
 markers = "extra == \"asyncio\""
 files = [
-    {file = "dnspython-2.9.0-py3-none-any.whl", hash = "sha256:9a4aedb833c3c1b49214d04d44d3032ab7a9135f7c1d29a549b4ff78fd82fda9"},
-    {file = "dnspython-2.9.0.tar.gz", hash = "sha256:b44dc6b18f07a8b1c56676a19fbfdb5209415b046a9cece286baafa87ff3f7f1"},
+    {file = "dnspython-2.9.2-py3-none-any.whl", hash = "sha256:af15f7d385a6ae2fb35a796fde2138004c8c42c7389090e2addc83e3b3340fd8"},
+    {file = "dnspython-2.9.2.tar.gz", hash = "sha256:8d4d39a513e649d634004ce4d39ade2352efcea472a0247535a5c2d18a9d7ba9"},
 ]
 
 [package.extras]
@@ -835,7 +835,7 @@ description = "A Python high-performance screenshot library for Windows using De
 optional = true
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "sys_platform == \"win32\" and (extra == \"core\" or extra == \"asyncio\")"
+markers = "sys_platform == \"win32\" and (extra == \"asyncio\" or extra == \"core\")"
 files = [
     {file = "dxcam-0.3.0-cp310-cp310-win_amd64.whl", hash = "sha256:44024a1d4183b8ce402be2fef1723de41821d89eabb956df0c871e2943d23d40"},
     {file = "dxcam-0.3.0-cp311-cp311-win_amd64.whl", hash = "sha256:499aba3283349a19d09db67e98547c8cb686470491f0127463072bc45cf3d611"},
@@ -861,7 +861,7 @@ description = "Easy to use Python subprocess interface."
 optional = true
 python-versions = "*"
 groups = ["main"]
-markers = "extra == \"core\" or extra == \"asyncio\""
+markers = "extra == \"asyncio\" or extra == \"core\""
 files = [
     {file = "EasyProcess-1.1-py3-none-any.whl", hash = "sha256:82eed523a0a5eb12a81fa4eacd9f342caeb3f900eb4b798740e6696ad07e63f9"},
     {file = "EasyProcess-1.1.tar.gz", hash = "sha256:885898302a57aab948973e8b5d32a4229392b9fb2d986ab1d4ffd590e5ba90ec"},
@@ -874,7 +874,7 @@ description = "easy to use command-line interface for python modules"
 optional = true
 python-versions = "*"
 groups = ["main"]
-markers = "extra == \"core\" or extra == \"asyncio\""
+markers = "extra == \"asyncio\" or extra == \"core\""
 files = [
     {file = "entrypoint2-1.1-py2.py3-none-any.whl", hash = "sha256:eeb8c327bdb65cdd1668c023a6b110b7e3d1a046fb05e043861ebd9264b3a257"},
     {file = "entrypoint2-1.1.tar.gz", hash = "sha256:fc0b7fe7b21acdab47a585ab9407ca7e5c4f96cb6888575db6b0ceb91f0e105a"},
@@ -970,7 +970,7 @@ description = "Low-level, pure Python DBus protocol wrapper."
 optional = true
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "platform_system == \"Linux\" and (extra == \"core\" or extra == \"asyncio\")"
+markers = "platform_system == \"Linux\" and (extra == \"asyncio\" or extra == \"core\")"
 files = [
     {file = "jeepney-0.9.0-py3-none-any.whl", hash = "sha256:97e5714520c16fc0a45695e5365a2e11b81ea79bba796e26f9f1d178cb182683"},
     {file = "jeepney-0.9.0.tar.gz", hash = "sha256:cf0e9e845622b81e4a28df94c40345400256ec608d0e55bb8a3feaa9163f5732"},
@@ -1287,7 +1287,7 @@ description = "An ultra fast cross-platform multiple screenshots module in pure 
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"core\" or extra == \"asyncio\""
+markers = "extra == \"asyncio\" or extra == \"core\""
 files = [
     {file = "mss-10.2.0-py3-none-any.whl", hash = "sha256:e79f428899280e7e64e38365b5bfed683851ebea807eeaeadaf06eb8e0d67197"},
     {file = "mss-10.2.0.tar.gz", hash = "sha256:ab271860775545e62f29d7b11f82f279ac1048f5bbdd26cfad84830208dbd393"},
@@ -1305,7 +1305,7 @@ description = "read and write audio tags for many formats"
 optional = true
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "python_version >= \"3.13\" and (extra == \"core\" or extra == \"asyncio\")"
+markers = "python_version >= \"3.13\" and (extra == \"asyncio\" or extra == \"core\")"
 files = [
     {file = "mutagen-1.47.0-py3-none-any.whl", hash = "sha256:edd96f50c5907a9539d8e5bba7245f62c9f520aef333d13392a79a4f70aca719"},
     {file = "mutagen-1.47.0.tar.gz", hash = "sha256:719fadef0a978c31b4cf3c956261b3c58b6948b32023078a2117b1de09f0fc99"},
@@ -1318,7 +1318,7 @@ description = "read and write audio tags for many formats"
 optional = true
 python-versions = "<4,>=3.10"
 groups = ["main"]
-markers = "python_version < \"3.13\" and (extra == \"core\" or extra == \"asyncio\")"
+markers = "python_version < \"3.13\" and (extra == \"asyncio\" or extra == \"core\")"
 files = [
     {file = "mutagen-1.48.1-py3-none-any.whl", hash = "sha256:4f077fe87d3fc7fba259aa63d8c026b18382ca6a42ef37c61e16f1b1b5b82fe7"},
     {file = "mutagen-1.48.1.tar.gz", hash = "sha256:8f95637ab9f6f305cec6bd1294e197debe207998e3e068596563c74f86b0a173"},
@@ -1485,7 +1485,7 @@ description = "Python Imaging Library (fork)"
 optional = true
 python-versions = ">=3.11"
 groups = ["main"]
-markers = "extra == \"core\" or extra == \"asyncio\""
+markers = "extra == \"asyncio\" or extra == \"core\""
 files = [
     {file = "pillow-13.0.0-cp311-cp311-macosx_10_10_x86_64.whl", hash = "sha256:6f38f3f885a09cafc93fd667b1173a92f379e43785d635e7983c893f0da319fb"},
     {file = "pillow-13.0.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:37290fbef0c73e2d51d594eb78fded7dc7170d1c3ad0a890269e6fd8c8c4e061"},
@@ -1587,7 +1587,7 @@ description = "C parser in Python"
 optional = true
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "implementation_name != \"cpython\" and implementation_name != \"PyPy\" and (extra == \"core\" or extra == \"asyncio\") or extra == \"asyncio\" and implementation_name != \"PyPy\""
+markers = "implementation_name != \"cpython\" and implementation_name != \"PyPy\" and (extra == \"asyncio\" or extra == \"core\") or extra == \"asyncio\" and implementation_name != \"PyPy\""
 files = [
     {file = "pycparser-3.11-py3-none-any.whl", hash = "sha256:51d5a8ba2be0bbe440b99d2112604c95bbbc3c2748a64260186c541e1729cd80"},
     {file = "pycparser-3.11.tar.gz", hash = "sha256:d875f09c3507d00e1aba0eecc6dcadc1352f30fff09dc6bff2f1c2935e97c2bc"},
@@ -1600,7 +1600,7 @@ description = "Cryptographic library for Python"
 optional = true
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
 groups = ["main"]
-markers = "extra == \"core\" or extra == \"asyncio\""
+markers = "extra == \"asyncio\" or extra == \"core\""
 files = [
     {file = "pycryptodomex-3.24.1-cp27-cp27m-manylinux2010_i686.whl", hash = "sha256:77a48a855776101a61b932ddedbf522e1ead9e20b321bec0f64dd7434ac4fcc3"},
     {file = "pycryptodomex-3.24.1-cp27-cp27m-manylinux2010_x86_64.whl", hash = "sha256:637b4bbc8165921b13d2b9d706e3697a9c6077d7564bfb61a3b7005182b2a7ac"},
@@ -1739,7 +1739,7 @@ description = "python screenshot"
 optional = true
 python-versions = ">=3.4"
 groups = ["main"]
-markers = "extra == \"core\" or extra == \"asyncio\""
+markers = "extra == \"asyncio\" or extra == \"core\""
 files = [
     {file = "pyscreenshot-3.1-py3-none-any.whl", hash = "sha256:73d406d41a0977125bdfd2f6488f0caf1394e84d1d4c1065d5e8b1400b307096"},
     {file = "pyscreenshot-3.1.tar.gz", hash = "sha256:8c0e93f0aef66a6bfe55a86abfced6bd396ae4b4f6cc1e36f04a28ad2625594d"},
@@ -1758,7 +1758,7 @@ description = "Python bindings for 0MQ"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"core\" or extra == \"asyncio\""
+markers = "extra == \"asyncio\" or extra == \"core\""
 files = [
     {file = "pyzmq-27.2.0-cp310-cp310-macosx_10_15_universal2.whl", hash = "sha256:480dba27b145373b5e103890f17969d891bc9e86746d6b8b29dd70b0d4addc62"},
     {file = "pyzmq-27.2.0-cp310-cp310-manylinux2014_i686.manylinux_2_17_i686.whl", hash = "sha256:722f0a6940be1a483c81029a271d950e04dc2ff113a42e21b3d2b7a0d8e59638"},
@@ -1880,7 +1880,7 @@ description = "A simple package for fast JPEG encoding and decoding."
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"core\" or extra == \"asyncio\""
+markers = "extra == \"asyncio\" or extra == \"core\""
 files = [
     {file = "simplejpeg-1.9.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:3c114fec003c34eaeb9c945c3bf552bbaa510d67340f18556a683634b1892df0"},
     {file = "simplejpeg-1.9.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:598c187e2c22a0f27ebec497f749b0b3dd3757baebe11a928434b6f447715386"},
@@ -2098,7 +2098,7 @@ description = "An implementation of the WebSocket Protocol (RFC 6455 & 7692)"
 optional = true
 python-versions = ">=3.11"
 groups = ["main"]
-markers = "extra == \"core\" or extra == \"asyncio\""
+markers = "extra == \"asyncio\" or extra == \"core\""
 files = [
     {file = "websockets-17.2-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:569ed5db651e420b13279f9333443bb5b84a436cc66b599cbc535697ae4434a0"},
     {file = "websockets-17.2-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:3892d76754b5f36fb40619f3ef09c68e5c3091f1ab8840964518ae5a41f30952"},
@@ -2257,7 +2257,7 @@ description = "A feature-rich command-line audio/video downloader"
 optional = true
 python-versions = ">=3.11"
 groups = ["main"]
-markers = "extra == \"core\" or extra == \"asyncio\""
+markers = "extra == \"asyncio\" or extra == \"core\""
 files = [
     {file = "yt_dlp-2026.10.26-py3-none-any.whl", hash = "sha256:a05c5b5d8562f7e8a62f5334348b406af4930d56d3a65f8021d14af0e22339ae"},
     {file = "yt_dlp-2026.10.26.tar.gz", hash = "sha256:abe5c6b94c3b2f0560500add1c42e0a97641752743a5b65588ac2007a6e23eb6"},
@@ -2291,7 +2291,7 @@ description = "External JavaScript for yt-dlp supporting many runtimes"
 optional = true
 python-versions = ">=3.10"
 groups = ["main"]
-markers = "extra == \"core\" or extra == \"asyncio\""
+markers = "extra == \"asyncio\" or extra == \"core\""
 files = [
     {file = "yt_dlp_ejs-0.8.0-py3-none-any.whl", hash = "sha256:79300e5fca7f937a1eeede11f0456862c1b41107ce1d726871e0207424f4bdb4"},
     {file = "yt_dlp_ejs-0.8.0.tar.gz", hash = "sha256:d5fa1639f63b5c4af8d932495f60689d5370f1a095782c944f7f62a303eb104e"},
