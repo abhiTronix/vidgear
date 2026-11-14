@@ -181,6 +181,64 @@ FFGear API directly supports any network stream URL that FFmpeg supports, includ
     stream.stop()
     ```
 
+=== "HLS Stream (specific rendition)"
+
+    > A HLS **master playlist** _(`.m3u8`)_ usually carries several renditions of the same video at different resolutions, which FFmpeg exposes as **embedded video streams of one input**. ==Select the rendition explicitly== with FFdecoder's [`-default_stream_indexes`](../params/#b-ffdecoder-parameters) parameter.
+
+    !!! warning "Behaviour change with `deffcode>=0.3.0` _(New in v0.3.8)_"
+        Without a selection, FFGear now decodes the **first** rendition in playlist order _(often the lowest quality)_ and logs a warning, instead of the one FFmpeg picks automatically _(usually the highest resolution)_.
+
+    !!! info "Renditions are counted in playlist order: `(1, 0)` selects the second video stream _(FFmpeg's `0:v:1`)_, and `source_video_streams` metadata gives their number."
+
+    ```python linenums="1" hl_lines="10-14 17 20"
+    # import required libraries
+    from vidgear.gears import FFGear
+    from deffcode import Sourcer
+    import cv2
+
+    # [WARNING] replace with your actual HLS master playlist URL
+    source = "https://example.com/master.m3u8"
+
+    # list each rendition's resolution
+    sourcer = Sourcer(source)
+    count = sourcer.probe_stream().retrieve_metadata()["source_video_streams"]
+    for index in range(count):
+        metadata = sourcer.probe_stream(default_stream_indexes=(index, 0)).retrieve_metadata()
+        print(index, metadata["source_video_resolution"])
+
+    # select the second rendition (applies `-map 0:v:1` automatically)
+    options = {"-default_stream_indexes": (1, 0)}
+
+    # open the selected rendition
+    stream = FFGear(source=source, logging=True, **options).start()
+
+    # loop over
+    while True:
+
+        # read frames from stream
+        frame = stream.read()
+
+        # check for frame if Nonetype
+        if frame is None:
+            break
+
+        # {do something with the frame here}
+
+        # Show output window
+        cv2.imshow("Output", frame)
+
+        # check for 'q' key if pressed
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    # close output window
+    cv2.destroyAllWindows()
+
+    # safely close video stream
+    stream.stop()
+    ```
+
 &nbsp;
 
 ## Using FFGear with Streaming Websites
@@ -369,7 +427,7 @@ FFGear supports decoding frames in any FFmpeg pixel format via the [`frame_forma
 
     !!! success "Performance Mode :zap: — Faster Decoding via YUV420p"
 
-        Ingesting frames as 12-bit **YUV 4:2:0** instead of 24-bit **BGR** halves the bytes moving through the FFmpeg pipe. Enable `-enforce_cv_patch` to auto-convert YUV/NV pixel formats frames inside FFGear for seamless OpenCV compatibility.
+        Ingesting frames as 12-bit **YUV 4:2:0** instead of 24-bit **BGR** halves the bytes moving through the FFmpeg pipe. Enable `-enforce_cv_patch` to auto-convert `yuv420p`, `nv12` and `nv21` frames to BGR inside FFGear for seamless OpenCV compatibility. Other YUV pixel formats _(4:2:2, 4:4:4, 10-bit)_ are returned as stacked planes.
 
     ```python linenums="1" hl_lines="6 11"
     # import required libraries
@@ -673,6 +731,144 @@ stream.stop()
 
 &nbsp;
 
+## Using FFGear with Multi-Stream Sources
+
+> Some sources carry **several embedded video streams** in a single input _(such as an `.mkv` with two video tracks, or an HLS playlist with several renditions)_. By default, FFGear decodes the **first** video stream _(skipping cover art)_ and logs a warning, instead of the one [FFmpeg would pick automatically](https://ffmpeg.org/ffmpeg.html#Automatic-stream-selection) _(`default` disposition, otherwise the highest resolution)_.
+
+In this example we will decode only the second video stream of a source with FFdecoder's [`-default_stream_indexes`](../params/#b-ffdecoder-parameters) parameter. To keep it runnable anywhere, the source is a [`lavfi`](https://ffmpeg.org/ffmpeg-devices.html#lavfi) graph that produces **one input with two video streams** _(red `320x240` and blue `160x120`)_. A file path such as `foo.mkv` works the same way.
+
+!!! new "New in v0.3.8"
+    Stream selection requires `deffcode>=0.3.0`. Sources whose first video stream is cover art _(attached picture)_ now decode their real video stream too, instead of raising `RuntimeError`.
+
+!!! info "Stream indexes are **per type**: `1` means the second **video** stream _(same as FFmpeg's `0:v:1` specifier)_, not the absolute `Stream #0:1`. So audio streams placed before the video ones don't shift it."
+
+!!! tip "A plain `-map 0:v:1`, or a `-filter_complex` using only `[0:v:1]` _(e.g. `[0:v:1]hflip`)_, selects the stream too. See [DeFFcode's recipe ➶](https://abhitronix.github.io/deffcode/latest/recipes/basic/decode-video-files/#decoding-a-specific-video-stream-from-a-multi-stream-file) for more details."
+
+```python linenums="1" hl_lines="6 9 12-17 20-21"
+# import required libraries
+from vidgear.gears import FFGear
+import cv2
+
+# one input with two embedded video streams (or use e.g. "foo.mkv")
+source = "color=c=red:s=320x240:r=25:d=5[out0];color=c=blue:s=160x120:r=30:d=5[out1]"
+
+# select second video stream (`-map 0:v:1` is applied automatically)
+options = {"-default_stream_indexes": (1, 0)}
+
+# open the selected stream
+stream = FFGear(
+    source=source,
+    source_demuxer="lavfi",
+    logging=True,
+    **options
+).start()
+
+# FFdecoder metadata is available as a dict
+print(stream.metadata["source_video_streams"])  # 2
+print(stream.metadata["source_video_resolution"])  # [160, 120]
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # Show output window
+    cv2.imshow("Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+```
+
+&nbsp;
+
+## Using FFGear with Anamorphic, HDR and Rotated Videos
+
+> Some sources store **non-square pixels** _(anamorphic DVD, HDV or broadcast video, e.g. `1440x1080` shown as `1920x1080`)_ or **HDR** video _(PQ/HLG transfer)_. FFGear decodes their pixels as stored, so frames look **squeezed** or **washed out**, and FFdecoder logs a warning about each _(even with `logging=False`)_.
+
+In this example we will check a video file _(say `foo.mkv`)_ for both, using DeFFcode's Sourcer API `source_video_sar` and `source_video_color_transfer` metadata, and add the matching FFmpeg filters through the `-vf` parameter:
+
+!!! new "New in v0.3.8"
+    These metadata keys and warnings require `deffcode>=0.3.0`. The same metadata is also available as a dict from FFGear's `metadata` attribute after initialization _(retained after `stop()`)_.
+
+!!! warning "Tone-mapping uses the `zscale` filter, so it needs FFmpeg built with `libzimg` _(included in most static builds)_."
+
+!!! info "Color metadata is `\"\"` when the source doesn't tag it, and some FFmpeg versions report `unknown` _(also `\"\"`)_ for tags other versions print."
+
+??? tip "Portrait / rotated videos"
+    Sources flagged as rotated by ±90° _(e.g. phone portrait videos)_ are decoded **upright**, with width and height swapped _(a `1280x720` source rotated by 90° gives `(1280, 720, 3)` frames)_. To get frames in their coded orientation instead, disable FFmpeg's auto-rotation with `-noautorotate` _(not `-autorotate 0`)_:
+
+    ```python
+    stream = FFGear(source="portrait.mp4", **{"-ffprefixes": ["-noautorotate"]}).start()
+    ```
+
+```python linenums="1" hl_lines="7 11-20 23"
+# import required libraries
+from vidgear.gears import FFGear
+from deffcode import Sourcer
+import cv2
+
+# probe source metadata
+metadata = Sourcer("foo.mkv").probe_stream().retrieve_metadata()
+
+filters = []
+# tone-map HDR (PQ or HLG) to SDR BT.709
+if metadata["source_video_color_transfer"] in ("smpte2084", "arib-std-b67"):
+    filters.append(
+        "zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,"
+        "tonemap=hable:desat=0,zscale=t=bt709:m=bt709:r=tv"
+    )
+# stretch non-square pixels to display aspect ratio (e.g. 1440x1080 to 1920x1080)
+if metadata["source_video_sar"] != [1, 1]:
+    filters.append("scale=iw*sar:ih,setsar=1")
+options = {"-vf": ",".join(filters)} if filters else {}
+
+# open stream with the matching filters
+stream = FFGear(source="foo.mkv", logging=True, **options).start()
+
+# loop over
+while True:
+
+    # read frames from stream
+    frame = stream.read()
+
+    # check for frame if Nonetype
+    if frame is None:
+        break
+
+    # {do something with the frame here}
+
+    # Show output window
+    cv2.imshow("Output", frame)
+
+    # check for 'q' key if pressed
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord("q"):
+        break
+
+# close output window
+cv2.destroyAllWindows()
+
+# safely close video stream
+stream.stop()
+```
+
+&nbsp;
+
 ## Using FFGear with Sequence of images
 
 FFGear supports **Image Sequences** such as Sequential(`img%03d.png`) and Glob pattern(`*.png`) in real-time.
@@ -938,13 +1134,13 @@ FFGear integrates seamlessly with OpenCV's [`VideoWriter()`](https://docs.opencv
     ```python linenums="1" hl_lines="9 12-14 17 32 49"
     # import the necessary packages
     from vidgear.gears import FFGear
-    import json, cv2
+    import cv2
 
     # stream with BGR24 pixel format output
     stream = FFGear(source="myvideo.mp4", frame_format="bgr24", logging=True).start()
 
-    # retrieve JSON Metadata and convert it to dict
-    metadata_dict = json.loads(stream.stream.metadata)
+    # retrieve Metadata as dict
+    metadata_dict = stream.metadata
 
     # prepare OpenCV parameters
     FOURCC = cv2.VideoWriter_fourcc("M", "J", "P", "G")
@@ -994,13 +1190,13 @@ FFGear integrates seamlessly with OpenCV's [`VideoWriter()`](https://docs.opencv
     ```python linenums="1" hl_lines="9 12-14 17 32 35 52"
     # import the necessary packages
     from vidgear.gears import FFGear
-    import json, cv2
+    import cv2
 
     # stream with RGB24 pixel format output
     stream = FFGear(source="myvideo.mp4", frame_format="rgb24", logging=True).start()
 
-    # retrieve JSON Metadata and convert it to dict
-    metadata_dict = json.loads(stream.stream.metadata)
+    # retrieve Metadata as dict
+    metadata_dict = stream.metadata
 
     # prepare OpenCV parameters
     FOURCC = cv2.VideoWriter_fourcc("M", "J", "P", "G")
@@ -1055,13 +1251,13 @@ FFGear integrates seamlessly with OpenCV's [`VideoWriter()`](https://docs.opencv
     ```python linenums="1" hl_lines="9 12-14 17 32 49"
     # import the necessary packages
     from vidgear.gears import FFGear
-    import json, cv2
+    import cv2
 
     # stream with GRAYSCALE pixel format output
     stream = FFGear(source="myvideo.mp4", frame_format="gray", logging=True).start()
 
-    # retrieve JSON Metadata and convert it to dict
-    metadata_dict = json.loads(stream.stream.metadata)
+    # retrieve Metadata as dict
+    metadata_dict = stream.metadata
 
     # prepare OpenCV parameters
     FOURCC = cv2.VideoWriter_fourcc("M", "J", "P", "G")
@@ -1106,16 +1302,16 @@ FFGear integrates seamlessly with OpenCV's [`VideoWriter()`](https://docs.opencv
 
 === "YUV frames"
 
-    > With FFGear API, frames extracted with YUV pixel formats _(`yuv420p`, `yuv444p`, `nv12`, `nv21` etc.)_ are generally incompatible with OpenCV APIs. But you can make them easily compatible by using exclusive `-enforce_cv_patch` boolean attribute of its `options` dictionary parameter.
+    > With FFGear API, frames extracted with YUV pixel formats _(`yuv420p`, `nv12`, `nv21` etc.)_ are generally incompatible with OpenCV APIs. But you can make them easily compatible by using exclusive `-enforce_cv_patch` boolean attribute of its `options` dictionary parameter, which auto-converts `yuv420p`, `nv12` and `nv21` frames to BGR.
 
     Let's encode YUV420p pixel-format frames with OpenCV's `write()` method:
 
-    !!! info "You can also use other YUV pixel-formats such `yuv422p`(4:2:2 subsampling) or `yuv444p`(4:4:4 subsampling) etc. instead for more higher dynamic range in the similar manner."
+    !!! info "You can also use `nv12` or `nv21` pixel-formats in the similar manner. Other YUV pixel-formats such as `yuv422p`(4:2:2 subsampling), `yuv444p`(4:4:4 subsampling) or 10-bit ones have no OpenCV conversion, and are returned as stacked planes."
 
     ```python linenums="1" hl_lines="6 17 20-22 25 40"
     # import the necessary packages
     from vidgear.gears import FFGear
-    import json, cv2
+    import cv2
 
     # enable OpenCV patch for YUV420p frames
     options = {"-enforce_cv_patch": True}
@@ -1128,8 +1324,8 @@ FFGear integrates seamlessly with OpenCV's [`VideoWriter()`](https://docs.opencv
         **options
     ).start()
 
-    # retrieve JSON Metadata and convert it to dict
-    metadata_dict = json.loads(stream.stream.metadata)
+    # retrieve Metadata as dict
+    metadata_dict = stream.metadata
 
     # prepare OpenCV parameters
     FOURCC = cv2.VideoWriter_fourcc("M", "J", "P", "G")
@@ -1215,11 +1411,10 @@ FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode fo
 
     WriteGear API by default expects `BGR` format frames in its `write()` class method.
 
-    ```python linenums="1" hl_lines="3 12 17 32 38"
+    ```python linenums="1" hl_lines="3 11 16 31 37"
     # import required libraries
     from vidgear.gears import FFGear
     from vidgear.gears import WriteGear
-    import json
 
     # open source with FFGear and BGR frames
     stream = FFGear(source="myvideo.mp4", frame_format="bgr24", logging=True).start()
@@ -1227,7 +1422,7 @@ FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode fo
     # retrieve framerate from source JSON Metadata and pass it as `-input_framerate` 
     # parameter for controlled framerate
     output_params = {
-        "-input_framerate": json.loads(stream.stream.metadata)["source_video_framerate"]
+        "-input_framerate": stream.metadata["source_video_framerate"]
     }
 
     # Define writer with default parameters and suitable
@@ -1260,11 +1455,10 @@ FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode fo
 
     In WriteGear API, you can use [`rgb_mode`](../../bonus/reference/writegear/#vidgear.gears.writegear.WriteGear.write) parameter in  `write()` class method to write `RGB` format frames instead of default `BGR` as follows:
 
-    ```python linenums="1" hl_lines="3 12 17 32 38"
+    ```python linenums="1" hl_lines="3 11 16 31 37"
     # import required libraries
     from vidgear.gears import FFGear
     from vidgear.gears import WriteGear
-    import json
 
     # open source with FFGear and RGB frames
     stream = FFGear(source="myvideo.mp4", frame_format="rgb24", logging=True).start()
@@ -1272,7 +1466,7 @@ FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode fo
     # retrieve framerate from source JSON Metadata and pass it as `-input_framerate` 
     # parameter for controlled framerate
     output_params = {
-        "-input_framerate": json.loads(stream.stream.metadata)["source_video_framerate"]
+        "-input_framerate": stream.metadata["source_video_framerate"]
     }
 
     # Define writer with default parameters and suitable
@@ -1305,11 +1499,10 @@ FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode fo
 
     WriteGear API also directly consumes `GRAYSCALE` format frames in its `write()` class method. 
 
-    ```python linenums="1" hl_lines="3 12 17 32 38"
+    ```python linenums="1" hl_lines="3 11 16 31 37"
     # import required libraries
     from vidgear.gears import FFGear
     from vidgear.gears import WriteGear
-    import json
 
     # open source with FFGear and GRAYSCALE frames
     stream = FFGear(source="myvideo.mp4", frame_format="gray", logging=True).start()
@@ -1317,7 +1510,7 @@ FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode fo
     # retrieve framerate from source JSON Metadata and pass it as `-input_framerate` 
     # parameter for controlled framerate
     output_params = {
-        "-input_framerate": json.loads(stream.stream.metadata)["source_video_framerate"]
+        "-input_framerate": stream.metadata["source_video_framerate"]
     }
 
     # Define writer with default parameters and suitable
@@ -1350,17 +1543,16 @@ FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode fo
 
     !!! success "Performance Mode :zap: — Faster Decoding via YUV420p"
 
-        Ingesting frames as 12-bit **YUV 4:2:0** instead of 24-bit **BGR** halves the bytes moving through the FFmpeg pipe. Enable `-enforce_cv_patch` to auto-convert YUV/NV pixel formats frames inside FFGear for seamless OpenCV compatibility.
+        Ingesting frames as 12-bit **YUV 4:2:0** instead of 24-bit **BGR** halves the bytes moving through the FFmpeg pipe. Enable `-enforce_cv_patch` to auto-convert `yuv420p`, `nv12` and `nv21` frames to BGR inside FFGear for seamless OpenCV compatibility. Other YUV pixel formats _(4:2:2, 4:4:4, 10-bit)_ are returned as stacked planes.
 
     WriteGear API also directly consume `YUV` _(or basically any other supported pixel format)_ frames in its `write()` class method with its `-input_pixfmt` attribute in compression mode. 
 
     !!! note "You can also use `yuv422p`(4:2:2 subsampling) or `yuv444p`(4:4:4 subsampling) instead for more higher dynamic ranges."
 
-    ```python linenums="1" hl_lines="3 13-14 19 34 40"
+    ```python linenums="1" hl_lines="3 12-13 18 33 39"
     # import required libraries
     from vidgear.gears import FFGear
     from vidgear.gears import WriteGear
-    import json
 
     # open source with FFGear stream for YUV420 output
     stream = FFGear(source="myvideo.mp4", frame_format="yuv420p", logging=True).start()
@@ -1369,7 +1561,7 @@ FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode fo
     # `-input_framerate` parameter for controlled framerate
     # and also add input pixfmt as yuv420p 
     output_params = {
-        "-input_framerate": json.loads(stream.stream.metadata)["output_framerate"],
+        "-input_framerate": stream.metadata["output_framerate"],
         "-input_pixfmt": "yuv420p"
     }
 
@@ -1409,11 +1601,10 @@ FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode fo
 
     Similar to normal `GRAYSCALE` format frames, you can directly consume these frames in WriteGear API’s `write()` class method:
 
-    ```python linenums="1" hl_lines="3 7 12 20 25 39 45"
+    ```python linenums="1" hl_lines="3 6 11 19 24 38 44"
     # import required libraries
     from vidgear.gears import FFGear
     from vidgear.gears import WriteGear
-    import json
 
     # enable direct Luma (Y-plane) extraction
     options = {"-extract_luma": True}
@@ -1429,7 +1620,7 @@ FFGear integrates seamlessly with VidGear's WriteGear API in Compression Mode fo
     # retrieve framerate from source JSON Metadata and pass it as `-input_framerate` 
     # parameter for controlled framerate
     output_params = {
-        "-input_framerate": json.loads(stream.stream.metadata)["source_video_framerate"]
+        "-input_framerate": stream.metadata["source_video_framerate"]
     }
 
     # Define writer with default parameters and suitable

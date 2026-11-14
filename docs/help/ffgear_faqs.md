@@ -71,7 +71,7 @@ Use FFGear when you need GPU decoding, advanced FFmpeg pipelines, or YUV pixel f
 
 ## What is `-enforce_cv_patch` and when do I need it?
 
-**Answer:** `-enforce_cv_patch` is an exclusive FFdecoder parameter that makes YUV/NV pixel-format frames (e.g. `yuv420p`, `nv12`) directly compatible with OpenCV. When enabled, FFGear automatically converts these frames to BGR colorspace internally — so `read()` returns standard BGR frames ready for `cv2.imshow()` or `cv2.imwrite()`. Enable it whenever you use `frame_format="yuv420p"` or similar YUV formats. See [params ➶](../gears/ffgear/params/#b-ffdecoder-parameters).
+**Answer:** `-enforce_cv_patch` is an exclusive FFdecoder parameter that makes YUV/NV pixel-format frames directly compatible with OpenCV. When enabled, FFGear automatically converts `yuv420p`, `nv12` and `nv21` frames to BGR colorspace internally — so `read()` returns standard BGR frames ready for `cv2.imshow()` or `cv2.imwrite()`. Other YUV formats _(4:2:2, 4:4:4, 10-bit)_ have no OpenCV conversion and are returned as stacked planes. Enable it whenever you use `frame_format="yuv420p"`, `"nv12"` or `"nv21"`. See [params ➶](../gears/ffgear/params/#b-ffdecoder-parameters).
 
 &thinsp;
 
