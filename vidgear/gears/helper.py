@@ -40,7 +40,7 @@ from collections import deque
 from collections.abc import Callable
 from contextlib import closing
 from enum import Enum
-from functools import wraps
+from functools import cache, wraps
 from pathlib import Path
 
 import cv2
@@ -515,6 +515,7 @@ def dimensions_to_resolutions(value: list[str]) -> list[str]:
     )
 
 
+@cache
 def get_supported_vencoders(path: str) -> list[str]:
     """
     Find and returns FFmpeg's supported video encoders
@@ -569,30 +570,31 @@ def get_supported_demuxers(path: str) -> list[str]:
     return flat
 
 
-def get_supported_pixfmts(path: str) -> list[str]:
+@cache
+def get_supported_pixfmts(path: str) -> dict[str, int]:
     """
     Find and returns all FFmpeg's supported pixel formats.
 
     Parameters:
         path (string): absolute path of FFmpeg binaries
 
-    **Returns:** List of supported pixel formats.
+    **Returns:** Dictionary of supported pixel formats mapped to their bits per pixel.
     """
     pxfmts = check_output([path, "-hide_banner", "-pix_fmts"])
     splitted = pxfmts.split(b"\n")
     srtindex = [i for i, s in enumerate(splitted) if b"-----" in s]
-    # extract video encoders
+    # extract pixel formats
     supported_pxfmts = [
         x.decode("utf-8").strip()
         for x in splitted[srtindex[0] + 1 :]
         if x.decode("utf-8").strip()
     ]
-    # compile regex
-    finder = re.compile(r"([A-Z]*[\.]+[A-Z]*\s[a-z0-9_-]*)(\s+[0-4])(\s+[0-9]+)")
-    # find all outputs
-    outputs = finder.findall("\n".join(supported_pxfmts))
+    # compile regex (FLAGS NAME NB_COMPONENTS BITS_PER_PIXEL)
+    finder = re.compile(r"[A-Z]*[\.]+[A-Z]*\s([a-z0-9_-]*)\s+[0-4]\s+([0-9]+)")
     # return output findings
-    return [list(o[0].split(" "))[-1] for o in outputs if len(o) == 3]
+    return {
+        name: int(bpp) for name, bpp in finder.findall("\n".join(supported_pxfmts))
+    }
 
 
 def is_valid_url(path: str, url: str | None = None, logging: bool = False) -> bool:
@@ -1023,7 +1025,8 @@ def dict2Args(param_dict: dict) -> list:
                 )
         else:
             args.append(key)
-            args.append(str(param_dict[key]))
+            # `None` value means a valueless flag (e.g. `-shortest`)
+            param_dict[key] is not None and args.append(str(param_dict[key]))
     return args
 
 
