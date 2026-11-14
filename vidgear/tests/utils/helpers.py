@@ -74,3 +74,30 @@ def return_testvideo_path(fmt="av"):
         get_testing_dir(), "Downloads", "Test_videos", supported_fmts[req_fmt]
     )
     return os.path.abspath(path)
+
+
+def probe_video(path):
+    """
+    Returns deffcode `Sourcer` metadata of a video file (written by tests).
+    """
+    from deffcode import Sourcer
+
+    return (
+        Sourcer(str(path), custom_ffmpeg=return_static_ffmpeg())
+        .probe_stream()
+        .retrieve_metadata()
+    )
+
+
+def decode_frames(path):
+    """
+    Returns all `bgr24` frames of a video file, decoded with deffcode `FFdecoder`.
+    """
+    from deffcode import FFdecoder
+
+    decoder = FFdecoder(
+        str(path), frame_format="bgr24", custom_ffmpeg=return_static_ffmpeg()
+    ).formulate()
+    frames = list(decoder.generateFrame())
+    decoder.terminate()
+    return frames

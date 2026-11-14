@@ -21,131 +21,104 @@ limitations under the License.
 # import the necessary packages
 
 import os
+import pathlib
 import platform
 
 import numpy as np
 import pytest
 
 from vidgear.gears import WriteGear
-from vidgear.tests.utils.helpers import get_testing_dir
+from vidgear.tests.utils.helpers import probe_video, return_static_ffmpeg
 
 
-def test_failedextension():
+def test_failedextension(tmp_path):
     """
     IO Test - made to fail with filename with wrong extention
     """
-    np.random.seed(0)
-    # generate random data for 10 frames
-    random_data = np.random.random(size=(10, 480, 640, 3)) * 255
-    input_data = random_data.astype(np.uint8)
-
+    input_data = np.zeros((480, 640, 3), np.uint8)
     # 'garbage' extension does not exist
-    with pytest.raises(ValueError):
-        writer = WriteGear(output="garbage.garbage", logging=True)
-        writer.write(input_data)
-        writer.close()
+    writer = WriteGear(output=str(tmp_path / "garbage.garbage"), logging=True)
+    with pytest.raises(ValueError, match="pipe broke"):
+        for _ in range(100):
+            writer.write(input_data)
+    writer.close()
 
 
-@pytest.mark.xfail(raises=ValueError)
-@pytest.mark.parametrize("size", [(480, 640, 5), [(480, 640, 1), (480, 640, 3)]])
-def test_failedchannels(size):
+@pytest.mark.parametrize("size", [[(480, 640, 5)], [(480, 640, 1), (480, 640, 3)]])
+def test_failedchannels(tmp_path, size):
     """
     IO Test - made to fail with invalid channel lengths
     """
-    np.random.seed(0)
-    if len(size) > 1:
-        random_data_1 = np.random.random(size=size[0]) * 255
-        input_data_ch1 = random_data_1.astype(np.uint8)
-        random_data_2 = np.random.random(size=size[1]) * 255
-        input_data_ch3 = random_data_2.astype(np.uint8)
-        writer = WriteGear(output=os.path.join(get_testing_dir(), "output.mp4"), compression_mode=True)
-        writer.write(input_data_ch1)
-        writer.write(input_data_ch3)
-        writer.close()
-    else:
-        random_data = np.random.random(size=size) * 255
-        input_data = random_data.astype(np.uint8)
-        writer = WriteGear(output=os.path.join(get_testing_dir(), "output.mp4"), compression_mode=True, logging=True)
-        writer.write(input_data)
-        writer.close()
+    with (
+        WriteGear(output=str(tmp_path / "output.mp4"), logging=True) as writer,
+        pytest.raises(ValueError, match="channels"),
+    ):
+        for shape in size:
+            writer.write(np.zeros(shape, np.uint8))
 
 
 @pytest.mark.parametrize("compression_mode", [True, False])
-def test_fail_framedimension(compression_mode):
+def test_fail_framedimension(tmp_path, compression_mode):
     """
     IO Test - made to fail with multiple frame dimension
     """
-    np.random.seed(0)
-    # generate random data for 10 frames
-    random_data1 = np.random.random(size=(480, 640, 3)) * 255
-    input_data1 = random_data1.astype(np.uint8)
-
-    np.random.seed(0)
-    random_data2 = np.random.random(size=(580, 640, 3)) * 255
-    input_data2 = random_data2.astype(np.uint8)
-
-    writer = None
-    try:
-        writer = WriteGear(
-            output=os.path.join(get_testing_dir(), "output.mp4"), compression_mode=compression_mode, logging=True
-        )
+    with WriteGear(
+        output=str(tmp_path / "output.mp4"),
+        compression_mode=compression_mode,
+        logging=True,
+    ) as writer:
         writer.write(None)
-        writer.write(input_data1)
-        writer.write(input_data2)
-    except Exception as e:
-        if isinstance(e, ValueError):
-            pytest.xfail("Test Passed!")
-        else:
-            pytest.fail(str(e))
-    finally:
-        if writer is not None:
-            writer.close()
+        writer.write(np.zeros((480, 640, 3), np.uint8))
+        with pytest.raises(ValueError, match="same size"):
+            writer.write(np.zeros((580, 640, 3), np.uint8))
 
 
 @pytest.mark.parametrize(
-    "compression_mode, path",
+    "compression_mode, path, valid",
     [
-        (True, os.path.join(get_testing_dir(), "output.mp4")),
-        (platform.system() == "Linux", "/dev/video0"),
-        (True, "rtmp://live.twitch.tv/"),
-        (True, "unknown://invalid.com/"),
-        (False, os.path.join(get_testing_dir(), "output.mp4")),
-        (False, "rtmp://live.twitch.tv/"),
+        (True, "output.mp4", True),
+        (
+            True,
+            "/dev/video0",
+            platform.system() == "Linux" and pathlib.Path("/dev/video0").is_char_device(),
+        ),
+        (True, "rtmp://live.twitch.tv/", True),
+        (True, "unknown://invalid.com/", False),
+        (True, os.path.join("missing_dir", "output.mp4"), False),
+        (False, "output.mp4", True),
+        (False, "rtmp://live.twitch.tv/", False),
     ],
 )
-def test_paths(compression_mode, path):
+def test_paths(tmp_path, compression_mode, path, valid):
     """
     Paths Test - Test various paths/urls supported by WriteGear.
     """
-    writer = None
-    try:
-        writer = WriteGear(output=path, compression_mode=compression_mode, logging=True)
-    except Exception as e:
-        if isinstance(e, ValueError):
-            pytest.xfail("Test Passed!")
-        else:
-            pytest.fail(str(e))
-    finally:
-        if writer is not None:
-            writer.close()
+    if "://" not in path and not path.startswith("/dev"):
+        path = str(tmp_path / path)
+    if valid:
+        WriteGear(output=path, compression_mode=compression_mode, logging=True).close()
+    else:
+        with pytest.raises(ValueError, match="not supported"):
+            WriteGear(output=path, compression_mode=compression_mode, logging=True)
 
 
-@pytest.mark.parametrize("v_codec", ["unknown", "mpeg4"])
-def test_invalid_encoder(v_codec):
+@pytest.mark.parametrize("v_codec", ["unknown", "mpeg4", "copy"])
+def test_invalid_encoder(tmp_path, v_codec):
     """
-    Invalid encoder Failure Test
+    Unknown encoders must raise, valid ones (and `copy`) must be used as is
     """
-    np.random.seed(0)
-    # generate random data for 10 frames
-    random_data = np.random.random(size=(480, 640, 3)) * 255
-    input_data = random_data.astype(np.uint8)
-    try:
-        output_params = {"-vcodec": v_codec}
-        writer = WriteGear(
-            output=os.path.join(get_testing_dir(), "output.mp4"), compression_mode=True, logging=True, **output_params
-        )
-        writer.write(input_data)
-        writer.write(input_data)
-        writer.close()
-    except Exception as e:
-        pytest.fail(str(e))
+    output = str(tmp_path / "output.avi")
+    frame = np.zeros((48, 64, 3), np.uint8)
+    with WriteGear(
+        output=output,
+        custom_ffmpeg=return_static_ffmpeg(),
+        logging=True,
+        **{"-vcodec": v_codec},
+    ) as writer:
+        if v_codec == "unknown":
+            with pytest.raises(ValueError, match="unknown"):
+                writer.write(frame)
+            return
+        for _ in range(5):
+            writer.write(frame)
+    assert probe_video(output)["approx_video_nframes"] == 5
