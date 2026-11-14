@@ -247,7 +247,7 @@ All the encoders that are compiled with FFmpeg in use, are supported by WriteGea
 ffmpeg -encoders           # use `ffmpeg.exe -encoders` on windows
 ``` 
 
-!!! warning "An encoder not listed by your FFmpeg raises a `ValueError` on first `write()` _(it was silently replaced with `libx264` before `v0.3.8`)_. `copy` is also accepted, to store raw frames _(e.g. in `.nut`/`.avi`)_."
+!!! warning "An encoder not listed by your FFmpeg raises a `ValueError` on first `write()` _(it was silently replaced with `libx264` before `v0.3.8`)_. `copy` is also accepted, to store raw frames in a container that takes them _(e.g. `.nut`)_."
 
 !!! info "When no encoder is set, WriteGear picks the first available of `libx264`, `libx265`, `libxvid`, `mpeg4`. For `libx264`/`libx265` it defaults to `-crf 18 -preset fast` and, for 8-bit frames, `-pix_fmt yuv420p` _(playable in browsers, QuickTime and hardware decoders)_. Any of these can be overridden in `output_params` _(`-c:v` wins over `-vcodec` if both are given)_."
 
