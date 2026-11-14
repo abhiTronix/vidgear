@@ -20,86 +20,39 @@ limitations under the License.
 
 # import the necessary packages
 
-import logging as log
 import os
 import platform
-import tempfile
 
 import cv2
 import pytest
-from six import string_types
 
 from vidgear.gears import WriteGear
-from vidgear.gears.helper import capPropId, check_output, logger_handler
-from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg, return_testvideo_path
-
-# define test logger
-logger = log.getLogger("Test_non_commpression_mode")
-logger.propagate = False
-logger.addHandler(logger_handler())
-logger.setLevel(log.DEBUG)
+from vidgear.gears.helper import capPropId, check_gstreamer_support, delete_file_safe
+from vidgear.tests.utils.helpers import (
+    decode_frames,
+    get_testing_dir,
+    return_testvideo_path,
+)
 
 
-# define machine os
-_windows = (os.name == "nt")
-
-
-
-
-
-def remove_file_safe(path):
-    """
-    Remove file safely
-    """
-    try:
-        if path and os.path.isfile(os.path.abspath(path)):
-            os.remove(path)
-    except Exception as e:
-        logger.exception(e)
-
-
-@pytest.mark.xfail(raises=AssertionError)
 @pytest.mark.parametrize("conversion", ["COLOR_BGR2GRAY", "COLOR_BGR2YUV"])
-def test_write(conversion):
+def test_write(tmp_path, conversion):
     """
-    Testing VidGear Non-Compression(OpenCV) Mode Writer
+    Testing VidGear Non-Compression(OpenCV) Mode Writer (grayscale frames included)
     """
     stream = cv2.VideoCapture(return_testvideo_path())
-    output_path = os.path.join(get_testing_dir(), "Output_twc.avi")
+    output_path = str(tmp_path / "Output_twc.avi")
     writer = WriteGear(output=output_path, compression_mode=False)  # Define writer
+    count = 0
     while True:
         (grabbed, frame) = stream.read()
-        # read frames
-        # check if frame empty
         if not grabbed:
-            # if True break the infinite loop
             break
-        if conversion:
-            frame = cv2.cvtColor(frame, capPropId(conversion))
-        writer.write(frame)
+        writer.write(cv2.cvtColor(frame, capPropId(conversion)))
+        count += 1
     stream.release()
     writer.close()
-    basepath, _ = os.path.split(return_static_ffmpeg())
-    ffprobe_path = os.path.join(
-        basepath, "ffprobe.exe" if os.name == "nt" else "ffprobe"
-    )
-    result = check_output(
-        [
-            ffprobe_path,
-            "-v",
-            "error",
-            "-count_frames",
-            "-i",
-            output_path,
-        ]
-    )
-    if result:
-        if not isinstance(result, string_types):
-            result = result.decode()
-        logger.debug("Result: {}".format(result))
-        for i in ["Error", "Invalid", "error", "invalid"]:
-            assert i not in result
-    remove_file_safe(output_path)
+    assert len(decode_frames(output_path)) == count
 
 
 test_data_class = [
@@ -109,7 +62,7 @@ test_data_class = [
         os.path.join(get_testing_dir(), "Output_twc.mp4"),
         {
             "-fourcc": "DIVX",
-            "-fps": 25,
+            "-fps": 29.97,
             "-backend": "CAP_FFMPEG",
             "-disable_ffmpeg_window": True,
             "-color": True,
@@ -128,13 +81,15 @@ test_data_class = [
         False,
     ),
     (
-        "appsrc ! videoconvert ! avenc_mpeg4 bitrate=100000 ! mp4mux ! filesink location=foo.mp4",
+        "appsrc ! videoconvert ! avenc_mpeg4 bitrate=100000 ! mp4mux ! filesink location={}".format(
+            os.path.join(get_testing_dir(), "foo.mp4")
+        ),
         (
             {"-gst_pipeline_mode": True}
             if platform.system() == "Linux"
             else {"-gst_pipeline_mode": "invalid"}
         ),
-        platform.system() == "Linux",
+        platform.system() == "Linux" and check_gstreamer_support(),
     ),
 ]
 
@@ -155,8 +110,8 @@ def test_WriteGear_compression(f_name, output_params, result):
                     break
                 writer.write(frame)
             stream.release()
-        remove_file_safe(
-            "foo.html"
+        delete_file_safe(
+            os.path.join(get_testing_dir(), "foo.mp4")
             if output_params.get("-gst_pipeline_mode")
             else f_name
         )
