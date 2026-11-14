@@ -49,6 +49,13 @@ deffcode = import_dependency_safe("deffcode", error="silent")
 if deffcode is not None:
     from deffcode import FFdecoder
 
+# 8-bit 4:2:0 pixel formats OpenCV can convert from FFdecoder's `-enforce_cv_patch` layout
+_CV_PATCH_CODES = {
+    "yuv420p": cv2.COLOR_YUV2BGR_I420,
+    "nv12": cv2.COLOR_YUV2BGR_NV12,
+    "nv21": cv2.COLOR_YUV2BGR_NV21,
+}
+
 
 class FFGear:
     """
@@ -60,7 +67,7 @@ class FFGear:
     FFGear API provides direct, transparent access to the full FFdecoder feature-set, including:
 
     - **Hardware-Accelerated Decoding** — CUDA/CUVID and other `-hwaccel` backends.
-    - **Flexible Pixel Formats** — any FFmpeg-supported `-pix_fmt` (e.g. `bgr24`, `yuv420p`, `gray`), with an optional OpenCV-compatibility patch (`-enforce_cv_patch`) for YUV/NV layouts.
+    - **Flexible Pixel Formats** — any FFmpeg-supported `-pix_fmt` (e.g. `bgr24`, `yuv420p`, `gray`), with an optional OpenCV-compatibility patch (`-enforce_cv_patch`) auto-converting `yuv420p`/`nv12`/`nv21` frames to BGR.
     - **Per-Frame Metadata Extraction** — asynchronous `showinfo` filter integration via `-extract_metadata`, yielding `(frame, metadata)` tuples with `frame_num`, `pts_time`, `is_keyframe`, and `frame_type`.
     - **Complex Filtergraphs** — live simple (`-vf`) and complex (`-filter_complex`) FFmpeg filter pipelines.
     - **Multi-Input Sources** — multiple simultaneous inputs routed via `-map` or `-filter_complex`.
@@ -73,6 +80,9 @@ class FFGear:
 
     Similar to CamGear, FFGear also supports the `yt_dlp` backend via `stream_mode=True` for
     seamlessly pipelining live video-frames and metadata from streaming services.
+
+    FFdecoder's source/output metadata is available as a dict through the `metadata` attribute
+    _(retained after `stop()`)_.
     """
 
     def __init__(
@@ -100,7 +110,7 @@ class FFGear:
         """
         # raise error for critical import
         import_dependency_safe(
-            "deffcode" if deffcode is None else "", min_version="0.2.9"
+            "deffcode" if deffcode is None else "", min_version="0.3.0"
         )
 
         self.__logging = logging if isinstance(logging, bool) else False
@@ -204,14 +214,6 @@ class FFGear:
         self.__extract_metadata = options.get("-extract_metadata", False)
         self.frame_metadata = {}
 
-        # Handle OpenCV patch for YUV420p frames
-        # (This yields a H*1.5, W frame layout ready for cv2.cvtColor)
-        self.__enforce_cv_patch = options.get("-enforce_cv_patch", False)
-        if self.frame_format == "yuv420p" and self.__enforce_cv_patch:
-            self.__logging and logger.debug(
-                "Enforcing CV patch for yuv420p format. Frames will require OpenCV conversion."
-            )
-
         # -------------------------------------------------------------
         # Formulate FFdecoder Stream Pipeline
         # -------------------------------------------------------------
@@ -229,10 +231,24 @@ class FFGear:
                 f"[FFGear:ERROR] :: Failed to initialize FFdecoder pipeline: {e!s}"
             )
 
+        # FFdecoder metadata as dict (retained after `stop()`)
+        self.metadata = json.loads(self.stream.metadata)
         # source framerate (`0.0` when unknown)
-        self.framerate = float(
-            json.loads(self.stream.metadata).get("output_framerate") or 0.0
+        self.framerate = float(self.metadata.get("output_framerate") or 0.0)
+
+        # Handle OpenCV patch for YUV420p/NV12/NV21 frames
+        # (This yields a H*1.5, W frame layout, converted to BGR via cv2.cvtColor)
+        # Keyed on the decoded pixel format, which filters may set (`frame_format="null"`)
+        pixfmt = self.metadata.get("output_frames_pixfmt")
+        self.__cv_patch_code = (
+            _CV_PATCH_CODES.get(pixfmt)
+            if options.get("-enforce_cv_patch", False)
+            else None
         )
+        if self.__cv_patch_code is not None:
+            self.__logging and logger.debug(
+                f"Enforcing CV patch for {pixfmt} format. Frames will be converted to BGR."
+            )
         # FFmpeg exit status (copied from FFdecoder on `stop()`)
         self.returncode = None
         self.stderr_tail = []
@@ -281,14 +297,15 @@ class FFGear:
         if self.frame is None:
             return
 
-        # Automatically translate patched YUV420p data into standard BGR space via OpenCV
-        # if the user requested the patch but wants a ready-to-display frame output
-        if self.frame_format == "yuv420p" and self.__enforce_cv_patch:
+        # Automatically translate patched YUV420p/NV12/NV21 data into standard BGR space
+        # via OpenCV. Other YUV formats (4:2:2, 4:4:4, 10-bit) have no OpenCV conversion,
+        # and are returned as FFdecoder's stacked planes.
+        if self.__cv_patch_code is not None:
             try:
-                self.frame = cv2.cvtColor(self.frame, cv2.COLOR_YUV2BGR_I420)
+                self.frame = cv2.cvtColor(self.frame, self.__cv_patch_code)
             except Exception as e:
                 self.__logging and logger.warning(
-                    f"Failed to process patched YUV420p frame via OpenCV: {e!s}"
+                    f"Failed to process patched YUV frame via OpenCV: {e!s}"
                 )
 
     def start(self):
