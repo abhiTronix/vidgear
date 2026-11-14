@@ -21,6 +21,8 @@ limitations under the License.
 import logging as log
 import os
 import platform
+import struct
+import subprocess
 import tempfile
 import time
 
@@ -30,7 +32,11 @@ import pytest
 
 from vidgear.gears import FFGear
 from vidgear.gears.helper import logger_handler
-from vidgear.tests.utils.helpers import return_testvideo_path
+from vidgear.tests.utils.helpers import (
+    get_testing_dir,
+    return_static_ffmpeg,
+    return_testvideo_path,
+)
 
 # define test logger
 logger = log.getLogger("Test_FFGear")
@@ -49,8 +55,96 @@ pytest.importorskip("deffcode", reason="`deffcode` is required for FFGear tests"
 # Helpers
 # ---------------------------------------------------------------------------
 
+# one `lavfi` input carrying two embedded video streams: v0 red 320x240, v1 blue 160x120
+_MULTI_STREAM = "color=c=red:s=320x240:r=25:d=1[out0];color=c=blue:s=160x120:r=30:d=1[out1]"
 
 
+def _color(frame):
+    """Dominant colour of a BGR frame."""
+    return "red" if frame[..., 2].mean() > frame[..., 0].mean() else "blue"
+
+
+def _read_all(source, **params):
+    """Decodes whole source with FFGear, returning its (stopped) stream and frames."""
+    stream = FFGear(source=source, **params).start()
+    try:
+        frames = []
+        while (frame := stream.read()) is not None:
+            frames.append(frame)
+        return stream, frames
+    finally:
+        stream.stop()
+
+
+def _ffmpeg_raw(stream, *args):
+    """Raw `bgr24` frames bytes from the FFmpeg binary that FFGear `stream` used."""
+    cmd = [stream.metadata["ffmpeg_binary_path"], "-v", "error", *args]
+    cmd += ["-pix_fmt", "bgr24", "-f", "rawvideo", "-"]
+    return subprocess.run(cmd, capture_output=True).stdout
+
+
+def _clip(name, *args):
+    """Builds (once) a synthetic test clip with the static FFmpeg binary."""
+    path = os.path.join(get_testing_dir(), "temp_write", name)
+    if not os.path.isfile(path):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        subprocess.run(
+            [return_static_ffmpeg(), "-y", *args, path], check=True, capture_output=True
+        )
+    return path
+
+
+def _testsrc():
+    """320x240 lossless `testsrc2` clip with 25 frames."""
+    return _clip(
+        "ffgear_testsrc.mkv", "-f", "lavfi", "-i", "testsrc2=s=320x240:r=25:d=1",
+        "-pix_fmt", "yuv444p", "-c:v", "ffv1",
+    )  # fmt: skip
+
+
+def _rotated():
+    """320x240 clip flagged as rotated by 90° (portrait)."""
+    path = os.path.join(get_testing_dir(), "temp_write", "ffgear_rot.mkv")
+    if not os.path.isfile(path):
+        cmd = [return_static_ffmpeg(), "-y", "-i", _testsrc(), "-c", "copy"]
+        # `-display_rotation` needs FFmpeg 6.0+, older ones only honor the legacy `rotate` tag
+        if subprocess.run([*cmd[:2], "-display_rotation", "90", *cmd[2:], path]).returncode:
+            subprocess.run([*cmd, "-metadata:s:v:0", "rotate=90", path], check=True)
+    return path
+
+
+def _cover_first_mp4():
+    """
+    MP4 with red video + green cover art (attached pic). FFmpeg muxes cover art last;
+    moving `udta` before `trak` inside `moov` (after `mdat`, so offsets stay valid)
+    makes the demuxer expose it as stream 0, as some taggers do.
+    """
+    path = os.path.join(get_testing_dir(), "temp_write", "ffgear_cover_first.mp4")
+    if not os.path.isfile(path):
+        _clip(
+            "ffgear_cover_first.mp4", "-f", "lavfi", "-i", "color=c=red:s=320x240:r=25:d=1",
+            "-f", "lavfi", "-i", "color=c=green:s=64x64:r=1:d=1", "-map", "0", "-map", "1",
+            "-c:v:0", "mpeg4", "-c:v:1", "png", "-frames:v:1", "1",
+            "-disposition:v:1", "attached_pic",
+        )  # fmt: skip
+
+        def boxes(buf):
+            out, i = [], 0
+            while i < len(buf):
+                size, kind = struct.unpack(">I4s", buf[i : i + 8])
+                out.append((kind, buf[i : i + (size or len(buf) - i)]))
+                i += size or len(buf) - i
+            return out
+
+        with open(path, "rb") as f:
+            top = boxes(f.read())
+        assert [k for k, _ in top][-1] == b"moov"
+        order = {b"mvhd": 0, b"udta": 1}
+        moov = sorted(boxes(top[-1][1][8:]), key=lambda k: order.get(k[0], 2))
+        with open(path, "wb") as f:
+            f.write(b"".join(b for _, b in top[:-1]) + top[-1][1][:8])
+            f.write(b"".join(b for _, b in moov))
+    return path
 
 
 def actual_frame_count_n_frame_size(path):
@@ -231,6 +325,98 @@ def test_yuv420p_cv_patch_roundtrip():
         pytest.fail(str(e))
     finally:
         stream is not None and stream.stop()
+
+
+@pytest.mark.parametrize(
+    "frame_format, shape, dtype",
+    [
+        # 8-bit 4:2:0 formats are auto-converted to BGR
+        ("yuv420p", (240, 320, 3), "uint8"),
+        ("nv12", (240, 320, 3), "uint8"),
+        ("nv21", (240, 320, 3), "uint8"),
+        # pixel format set by filters (as in hardware-decoding pipelines)
+        ("null", (240, 320, 3), "uint8"),
+        # no OpenCV conversion: FFdecoder's stacked planes are returned as-is
+        ("yuv422p", (480, 320), "uint8"),
+        ("yuv420p10le", (360, 320), "uint16"),
+    ],
+)
+def test_enforce_cv_patch_formats(frame_format, shape, dtype):
+    """-enforce_cv_patch converts yuv420p/nv12/nv21 to BGR, and leaves other YUV formats planar."""
+    options = {"-enforce_cv_patch": True}
+    if frame_format == "null":
+        options["-vf"] = "format=nv12"
+    _, frames = _read_all(_testsrc(), frame_format=frame_format, **options)
+    assert len(frames) == 25
+    assert frames[0].shape == shape and frames[0].dtype == dtype
+    if len(shape) == 3:
+        # same picture as FFmpeg's own BGR conversion (guards swapped chroma planes)
+        _, expected = _read_all(_testsrc(), frame_format="bgr24")
+        assert cv2.absdiff(frames[0], expected[0]).mean() < 5
+
+
+# ---------------------------------------------------------------------------
+# Stream selection / cover art / rotation (deffcode 0.3.0)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "ffparams, shape, color",
+    [
+        ({}, (240, 320, 3), "red"),  # first video stream by default
+        ({"-default_stream_indexes": (1, 0)}, (120, 160, 3), "blue"),
+        ({"-map": "0:v:1"}, (120, 160, 3), "blue"),
+    ],
+)
+def test_multi_stream_selection(ffparams, shape, color):
+    """Selecting an embedded video stream decodes THAT stream at its own size."""
+    stream, frames = _read_all(_MULTI_STREAM, source_demuxer="lavfi", **ffparams)
+    assert frames and frames[0].shape == shape
+    assert _color(frames[0]) == color
+    assert stream.metadata["source_video_streams"] == 2
+
+
+def test_cover_art_first_source():
+    """Source whose first video stream is cover art decodes its real video stream."""
+    stream, frames = _read_all(_cover_first_mp4())
+    assert len(frames) == 25 and frames[0].shape == (240, 320, 3)
+    assert _color(frames[0]) == "red"
+    assert stream.metadata["source_video_attached_pics"] == [0]
+
+
+@pytest.mark.parametrize(
+    "ffparams, shape",
+    [
+        ({}, (320, 240, 3)),  # auto-rotated upright, not squeezed into coded size
+        ({"-ffprefixes": ["-noautorotate"]}, (240, 320, 3)),
+    ],
+)
+def test_rotated_source(ffparams, shape):
+    """±90° rotated sources decode as FFmpeg's own (auto-rotated) frames."""
+    path = _rotated()
+    stream, frames = _read_all(path, **ffparams)
+    assert len(frames) == 25 and frames[0].shape == shape
+    expected = _ffmpeg_raw(stream, *ffparams.get("-ffprefixes", []), "-i", path)
+    assert b"".join(f.tobytes() for f in frames) == expected
+
+
+def test_vf_scale_matches_ffmpeg():
+    """Frames resized by `-vf scale` match FFmpeg's own output (no second scaler)."""
+    stream, frames = _read_all(_testsrc(), **{"-vf": "scale=160:120"})
+    assert len(frames) == 25 and frames[0].shape == (120, 160, 3)
+    expected = _ffmpeg_raw(stream, "-i", _testsrc(), "-vf", "scale=160:120")
+    assert b"".join(f.tobytes() for f in frames) == expected
+
+
+def test_metadata_attribute():
+    """`metadata` exposes FFdecoder metadata as dict, and is retained after stop()."""
+    stream, _ = _read_all(return_testvideo_path())
+    assert stream.stream is None  # stopped
+    assert isinstance(stream.metadata, dict)
+    assert stream.metadata["output_framerate"] == stream.framerate
+    for key in ("source_video_streams", "source_video_sar", "source_video_dar",
+                "source_video_color_transfer", "source_video_orientation"):  # fmt: skip
+        assert key in stream.metadata
 
 
 # ---------------------------------------------------------------------------
@@ -521,6 +707,8 @@ _camera_test_data = [
 @pytest.mark.parametrize("source, source_demuxer, result", _camera_test_data)
 def test_camera_capture(source, source_demuxer, result):
     """Tests FFGear real-time webcam and device capture via source_demuxer."""
+    if result and not os.access("/dev/video0", os.R_OK | os.W_OK):
+        pytest.skip("No accessible `/dev/video0` (v4l2loopback) device on this machine")
     stream = None
     try:
         stream = FFGear(

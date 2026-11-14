@@ -43,20 +43,14 @@ def return_static_ffmpeg():
     Returns the system-specific path to the downloaded FFmpeg static binary
     located under ``<testing_dir>/Downloads/FFmpeg_static/``.
     """
-    testing_dir = get_testing_dir()
-    if platform.system() == "Windows":
-        path = os.path.join(
-            testing_dir, "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg.exe"
+    # every OS's static archive unpacks to `ffmpeg/bin/`
+    return os.path.abspath(
+        os.path.join(
+            get_testing_dir(),
+            "Downloads/FFmpeg_static/ffmpeg/bin",
+            "ffmpeg.exe" if platform.system() == "Windows" else "ffmpeg",
         )
-    elif platform.system() == "Darwin":
-        path = os.path.join(
-            testing_dir, "Downloads/FFmpeg_static/ffmpeg/bin/ffmpeg"
-        )
-    else:
-        path = os.path.join(
-            testing_dir, "Downloads/FFmpeg_static/ffmpeg/ffmpeg"
-        )
-    return os.path.abspath(path)
+    )
 
 
 def return_testvideo_path(fmt="av"):
