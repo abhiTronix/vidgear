@@ -29,9 +29,9 @@ limitations under the License.
 
     * **DO NOT** feed frames with different dimensions or channels to WriteGear, otherwise WriteGear will exit with `ValueError`.
 
-    * When using the `-i` FFmpeg parameter in `output_params` to provide an additional audio or video source, ensure it **DOES NOT** interfere with WriteGear's internal frame pipeline. Interference can cause the pipeline to break.
+    * **DO NOT** feed frames other than `uint8`/`uint16` _(e.g. `float32` after normalization)_, otherwise WriteGear will exit with `ValueError`.
 
-    * To ensure WriteGear produces valid output when using an additional stream `-i` parameter with videos shorter than `60` seconds, use the [`-disable_force_termination`](params/#supported-parameters) flag.
+    * When using the `-i` FFmpeg parameter in `output_params` to add an audio source, WriteGear keeps your frames as the only video, and ends the output with your last frame _(see [extra inputs](params/#supported-parameters))_.
 
     * Encoding heavy resolution multimedia files can take up to _~0.2 to 2 seconds_. Please wait for the WriteGear API to terminate itself and **DO NOT** kill the process manually.
 
@@ -583,6 +583,10 @@ In this example code, we will merging the audio from a Audio Device _(for e.g. W
 !!! danger "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."
 
 !!! warning "You **MUST** use [`-input_framerate`](params/#supported-parameters) attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
+
+!!! tip "Live sources rarely deliver frames at an exact rate, so video can drift from live audio even with `-input_framerate`. Timestamp frames by their arrival time instead, by adding `"-ffpreheaders": ["-use_wallclock_as_timestamps", "1"]`, `"-fps_mode": "cfr"` _(`"-vsync": "cfr"` on FFmpeg older than 5.1)_ and `"-r": 30` _(your output framerate)_ to `output_params`."
+
+!!! info "WriteGear ends the output with your last frame, even though a live audio device never ends _(it adds `-shortest`, see [extra inputs](params/#supported-parameters))_."
 
 ```python linenums="1" hl_lines="11-16"
 # import required libraries

@@ -44,7 +44,7 @@ Its valid input can be one of the following:
     writer = WriteGear(output = '/home/foo/foo1', compression_mode=False) # Define writer 
     ```
 
-* **Filename** _(with/without path)_: Valid filename(_with valid extension_) of the output video file. In case filename is provided without path, then current working directory will be used.
+* **Filename** _(with/without path)_: Valid filename(_with valid extension_) of the output video file. In case filename is provided without path, then current working directory will be used. Its parent directory must already exist _(WriteGear doesn't create it)_.
 
     ```python
     writer = WriteGear(output = 'output.mp4', compression_mode=False) # Define writer 
@@ -56,7 +56,7 @@ Its valid input can be one of the following:
 
     !!! warning "Requirement for GStreamer Pipelining"
 
-        GStreamer Pipelining in WriteGear requires your OpenCV to be built with GStreamer support. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
+        GStreamer Pipelining in WriteGear requires your OpenCV to be built with GStreamer support, else WriteGear raises a `RuntimeError`. Checkout [this FAQ](../../../help/camgear_faqs/#how-to-compile-opencv-with-gstreamer-support) for compiling OpenCV with GStreamer support.
 
 
     ??? new "New in v0.2.5" 
@@ -121,9 +121,9 @@ WriteGear provides access to all available [**OpenCV's VideoWriter API**](https:
 | Parameters | Description |
 |:-----------:|-------------|
 |`-fourcc`| _4-character code of codec used to encode frames_ |
-|`-fps`| _controls the framerate of output video(Default value: 25)_ |
+|`-fps`| _controls the framerate of output video, float accepted (Default value: 25)_ |
 |`-backend`| (optional) _In case of multiple backends, this parameter allows us to specify VideoWriter API's backends to use. Its valid values are `CAP_FFMPEG` or `CAP_GSTREAMER`(if enabled)_  |
-|`-color`| (optional) _If it is not zero(0), the encoder will expect and encode color frames, otherwise it will work with grayscale frames (the flag is currently supported on Windows only)_ |
+|`-color`| (optional, bool) _If `True`, the encoder will expect and encode color frames, otherwise grayscale frames (Default: auto-detected from the first frame's channels; non-bool values are ignored)_ |
 
 !!! warning "`-height` and `-width` parameter are no longer supported and are automatically derived from the input frames."
 
