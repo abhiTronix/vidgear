@@ -42,7 +42,7 @@ limitations under the License.
 
 ## How to play Streaming Assets created with StreamGear API?
 
-**Answer:** You can easily feed Manifest file(`.mpd`) to DASH Supported Players Input but sure encoded chunks are present along with it. See this list of [recommended players ➶](../gears/streamgear/introduction/#recommended-stream-players)
+**Answer:** You can easily feed Manifest file(`.mpd`) to DASH Supported Players Input but sure encoded chunks are present along with it. See this list of [recommended players ➶](../gears/streamgear/introduction/#recommended-players)
 
 &thinsp;
 

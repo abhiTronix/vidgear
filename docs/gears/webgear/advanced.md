@@ -107,7 +107,7 @@ Let's implement a bare-minimum example using WebGear, where we will be sending [
 
 WebGear allows you to easily define your own custom Source that you want to use to transform your frames before sending them onto the browser. 
 
-!!! warning "JPEG Frame-Compression and all of its [performance enhancing attributes](usage/#mjpeg-performance-enhancing-attributes) are disabled with a Custom Source!"
+!!! warning "JPEG Frame-Compression and all of its [performance enhancing attributes](usage/#bare-minimum-usage-with-default-mjpeg-mode) are disabled with a Custom Source!"
 
 !!! failure "Custom Sources only work in [MJPEG Mode](./#modes-of-operation), since they yield ready-made JPEG bytes. Setting [`streaming_mode="h264"`](params/#streaming_mode) with a Custom Source falls back to MJPEG anyway."
 

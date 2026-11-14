@@ -52,7 +52,7 @@ WebGear primarily operates in following modes, selectable with its [`streaming_m
         * **Lower server CPU:** No FFmpeg encoder process is spawned per viewer.
         * **No FFmpeg required** on the server, and nothing gets downloaded on Windows.
         * Plays on any browser over plain `http://` on any device in the network, without HTTPS.
-        * Supports [Custom Sources](advanced/#using-webgear-with-a-custom-sourceopencv), and [JPEG Performance Enhancing Attributes](usage/#bare-minimum-usage-with-mjpeg-mode-performance-enhancements).
+        * Supports [Custom Sources](advanced/#using-webgear-with-a-custom-sourceopencv), and [JPEG Performance Enhancing Attributes](usage/#bare-minimum-usage-with-default-mjpeg-mode).
 
     !!! failure "Cons"
         * Many times more bandwidth than H.264, since every frame is a complete JPEG image.

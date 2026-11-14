@@ -88,7 +88,7 @@ The complete usage example for Dailymotion and Twitch URLs are as follows:
     - `STREAM_RESOLUTION` _(for specifying stream resolution)_
     - `STREAM_PARAMS` _(for specifying  `yt_dlp` parameters)_ 
     
-    with its [`options`](params/#options) dictionary parameter. **More information can be found [here ➶](advanced/source_params/#exclusive-camgear-parameters)**
+    with its [`options`](params/#options) dictionary parameter. **More information can be found [here ➶](advanced/source_params/#exclusive-camgear-attributes)**
 
 
 ??? note "Supported Streaming Websites"
@@ -244,7 +244,7 @@ The complete usage example is as follows:
     - `STREAM_RESOLUTION` _(for specifying stream resolution)_
     - `STREAM_PARAMS` _(for specifying  `yt_dlp` parameters)_ 
     
-    with its [`options`](params/#options) dictionary parameter. **More information can be found [here ➶](advanced/source_params/#exclusive-camgear-parameters)**
+    with its [`options`](params/#options) dictionary parameter. **More information can be found [here ➶](advanced/source_params/#exclusive-camgear-attributes)**
 
 
 ??? tip "Accessing Stream's Metadata :material-database-eye:"

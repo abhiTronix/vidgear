@@ -96,7 +96,7 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../gears/netgear/
 
 ## How to send data along with frames in Multi-Servers and Multi-Clients Modes?
 
-**Answer:** See [Multi-Servers usage example ➶](../gears/netgear/advanced/multi_server/#using-multi-servers-mode-with-custom-data-transfer) and [Multi-Clients usage example ➶](../gears/netgear/advanced/multi_client/#using-multi-clients-mode-with-custom-data-transfer)
+**Answer:** See [Multi-Servers usage example ➶](../gears/netgear/advanced/multi_server/#using-multi-servers-mode-for-unidirectional-custom-data-transfer) and [Multi-Clients usage example ➶](../gears/netgear/advanced/multi_client/#using-multi-clients-mode-for-unidirectional-custom-data-transfer)
 
 &thinsp;
 

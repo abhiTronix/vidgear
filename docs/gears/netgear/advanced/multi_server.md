@@ -52,7 +52,7 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
 - [x] Enables Multiple Server(s) connection with a single Client.
 
-- [x] Ability to [send any additional data](../advanced/multi_server/#using-multi-servers-mode-with-custom-data-transfer) of any[^1] datatype along with frames in real-time.
+- [x] Ability to [send any additional data](../advanced/multi_server/#using-multi-servers-mode-for-unidirectional-custom-data-transfer) of any[^1] datatype along with frames in real-time.
 
 - [x] Number of Servers can be extended to several numbers depending upon your system's hardware limit.
 

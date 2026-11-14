@@ -243,7 +243,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
         stream_params = {"-audio": "/home/foo/foo1.aac"} 
         ```
 
-        !!! example "Its usage examples can be found [here ➶](ssm/usage/#usage-with-custom-audio) and [here ➶](ssm/usage/#usage-with-file-audio-input)"
+        !!! example "Its usage examples can be found [here ➶](ssm/usage/#usage-with-custom-audio-input) and [here ➶](rtfm/usage/#usage-with-file-audio-input)"
 
     * **Audio URL** _(string)_: Valid URL of a network audio stream as follows:
 
@@ -266,7 +266,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
         ]} 
         ``` 
 
-        !!! example "Its usage example can be found [here ➶](rtfm/usage/#usage-with-device-audio--input)"
+        !!! example "Its usage example can be found [here ➶](rtfm/usage/#usage-with-device-audio-input)"
 
 &ensp;
 

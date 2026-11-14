@@ -235,7 +235,7 @@ This parameter enable access to [Stabilizer Class](../stabilizer/) for stabilizi
 NetGear_Async(stabilize=True) # enable stablization
 ```
 
-!!! example "Its complete usage example is given [here ➶](usage/#using-videogear-with-video-stabilizer-backend)."
+!!! example "Its complete usage example is given [here ➶](../videogear/usage/#using-videogear-with-video-stabilizer-backend)."
 
 &nbsp; 
 
@@ -674,7 +674,7 @@ This parameter selects the colorspace of the source stream.
 NetGear_Async(colorspace="COLOR_BGR2HSV")
 ```
 
-!!! example "Its complete usage example is given [here ➶](usage/#using-videogear-with-colorspace-manipulation)"
+!!! example "Its complete usage example is given [here ➶](../videogear/usage/#using-videogear-with-colorspace-manipulation)"
 
 &nbsp;
 

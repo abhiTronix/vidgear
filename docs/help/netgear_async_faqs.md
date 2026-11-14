@@ -68,6 +68,6 @@ See [NetGear_Async doc ➶](../gears/netgear_async/). Still in doubt, then ask u
 
 ## Why NetGear_Async is running slow?
 
-**Answer:** Checkout tips suggested in [this answer ➶](netgear_faqs/#why-netgear-is-slow)
+**Answer:** Checkout tips suggested in [this answer ➶](netgear_faqs/#why-netgear-is-running-slow)
 
 &thinsp;

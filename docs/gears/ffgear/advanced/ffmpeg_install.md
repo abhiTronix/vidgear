@@ -74,7 +74,7 @@ If FFGear API not receives any input from the user on [**`custom_ffmpeg`**](../p
 
     * The files downloaded to temporary directory _(for e.g. `C:\TEMP`)_, may get erased if your machine shutdowns/restarts.
 
-    * You can also provide a custom save path for auto-downloading **FFmpeg Static Binaries** through [`-ffmpeg_download_path`](../params/#a-exclusive-parameters) parameter.
+    * You can also provide a custom save path for auto-downloading **FFmpeg Static Binaries** through [`-ffmpeg_download_path`](../params/#a-ffgear-exclusive-parameters) parameter.
 
     * If binaries were found at the specified path, FFGear automatically skips the auto-installation step.
 

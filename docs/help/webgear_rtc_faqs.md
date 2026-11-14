@@ -62,7 +62,7 @@ For accessing WebGear_RTC on different Client Devices on the network, use `"0.0.
 
 ## Can I manually place default files for WebGear_RTC?
 
-**Answer:** Yes, you can either download default files from [vidgear-vitals](https://github.com/abhiTronix/vidgear-vitals) repository, and manually place at [default location](../gears/webgear_rtc/#default-location), OR, you can yourself create the require critical files _(i.e `index.html`, `404.html` & `500.html` inside `templates` folder, and `custom.js` inside `static/js` folder)_ at the [default location](../gears/webgear_rtc/#default-location), thereby you don't need any internet connection at all. _For more information see [Data-Files Auto-Generation WorkFlow ➶](../gears/webgear_rtc/#data-files-auto-generation-workflow)_
+**Answer:** Yes, you can either download default files from [vidgear-vitals](https://github.com/abhiTronix/vidgear-vitals) repository, and manually place at [default location](../gears/webgear_rtc/#default-location), OR, you can yourself create the require critical files _(i.e `index.html`, `404.html` & `500.html` inside `templates` folder, and `custom.js` inside `static/js` folder)_ at the [default location](../gears/webgear_rtc/#default-location), thereby you don't need any internet connection at all. _For more information see [Data-Files Auto-Generation WorkFlow ➶](../gears/webgear_rtc/#data-files-auto-generation-workflow-for-webgear_rtc)_
 
 &thinsp;
 
