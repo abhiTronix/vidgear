@@ -32,7 +32,7 @@ limitations under the License.
 FFGear API provides **direct, transparent access** to the full **FFdecoder** feature-set, including:
 
 - [x] **Hardware-Accelerated Decoding** — GPU-powered decoding with CUDA/CUVID and other hardware-accelerated backends :zap:
-- [x] **Flexible Pixel Formats** — support for any FFmpeg pixel format *(e.g., `bgr24`, `yuv420p`, `gray`)* with optional OpenCV compatibility patches for YUV/NV layouts.
+- [x] **Flexible Pixel Formats** — support for any FFmpeg pixel format *(e.g., `bgr24`, `yuv420p`, `gray`)* with an optional OpenCV compatibility patch auto-converting `yuv420p`/`nv12`/`nv21` frames to BGR.
 - [x] **Per-Frame Metadata Extraction** — asynchronous frame metadata extraction through the `showinfo` filter.
 - [x] **Live Complex Filtergraphs** — support for live simple and complex FFmpeg filter pipelines.
 - [x] **Multi-Input Sources** — multiple simultaneous inputs routed via `-map` or `-filter_complex`.
@@ -46,12 +46,12 @@ Similar to CamGear, FFGear also supports the `yt_dlp` backend for seamlessly pip
 
 !!! warning "FFGear requires the `deffcode` library"
 
-    FFGear API **MUST** have the [`deffcode`][deffcode] library installed, along with a valid FFmpeg executable. Any failure in detection will raise `ImportError`/`RuntimeError` immediately.
+    FFGear API **MUST** have the [`deffcode`][deffcode] library _(`v0.3.0` or newer)_ installed, along with a valid FFmpeg executable. Any failure in detection will raise `ImportError`/`RuntimeError` immediately.
 
     Install via pip:
 
     ```sh
-    pip install deffcode
+    pip install "deffcode>=0.3.0"
     ```
 
     For FFmpeg installation, see [FFmpeg Installation ➶](advanced/ffmpeg_install/)

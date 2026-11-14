@@ -219,12 +219,21 @@ All remaining keys in `options` are forwarded **directly** to [FFdecoder's `ffpa
 | `-hwaccel` | str | Hardware acceleration backend (e.g. `"cuda"`, `"vaapi"`). |
 | `-vf` | str | Simple FFmpeg video filtergraph (e.g. `"scale=1280:720,hflip"`). |
 | `-filter_complex` | str | Complex FFmpeg filtergraph for multi-input routing. |
-| `-enforce_cv_patch` | bool | Enables OpenCV-compatibility patch for YUV/NV pixel formats. |
+| `-default_stream_indexes` | tuple | Per-type `(video, audio)` stream indexes selecting the decoded video stream of a multi-stream source _(e.g. `(1, 0)` for the second video stream)_. First video stream by default. _(requires `deffcode>=0.3.0`)_ |
+| `-map` | str | FFmpeg stream mapping _(e.g. `"0:v:1"`, or a labeled `-filter_complex` output like `"[out]"`)_. Wins over a conflicting `-default_stream_indexes` video index. |
+| `-custom_resolution` | list/tuple or `"null"` | Forces output frames size as `(width, height)`. `"null"` discards the size parameter. |
+| `-framerate` | float or `"null"` | Forces output framerate. `"null"` discards the framerate parameter. |
+| `-enforce_cv_patch` | bool | Enables OpenCV-compatibility patch for YUV/NV pixel formats. FFGear auto-converts `yuv420p`, `nv12` and `nv21` frames to BGR; other YUV formats _(4:2:2, 4:4:4, 10-bit)_ are returned as FFdecoder's stacked planes. |
+| `-extract_luma` | bool | Extracts only the luma _(Y plane)_ of YUV/NV pixel formats as grayscale frames. |
 | `-extract_metadata` | bool | Enables per-frame metadata extraction via `showinfo` filter. `read()` returns `(frame, metadata)` tuples. |
-| `-ffprefixes` | list | Additional FFmpeg CLI prefixes (e.g. `["-stream_loop", "-1"]`). |
+| `-ffprefixes` | list | Additional FFmpeg CLI prefixes (e.g. `["-stream_loop", "-1"]`, or `["-noautorotate"]` to keep rotated sources in coded orientation). |
+| `-extra_outputs` | list | Additional FFmpeg outputs _(record, transcode or stream)_ written by the same pipeline. See [usage example ➶](advanced/#decoding-with-same-filtering-for-multiple-outputs). |
 | `-capture_stderr` | bool | Captures the last 50 lines of FFmpeg's stderr, retained as FFGear's `stderr_tail` after `stop()` _(requires DeFFcode with `-capture_stderr` support)_. |
 
 !!! tip "Full list of all FFdecoder parameters can be found [here ➶](https://abhitronix.github.io/deffcode/latest/reference/ffdecoder/params/)"
+
+!!! new "FFdecoder metadata as `metadata` attribute _(New in v0.3.8)_"
+    FFGear's `metadata` attribute holds [FFdecoder's metadata](https://abhitronix.github.io/deffcode/latest/reference/ffdecoder/#deffcode.ffdecoder.FFdecoder.metadata) as a dict _(e.g. `stream.metadata["source_video_resolution"]`)_, including the `source_video_streams`, `source_video_attached_pics`, `source_video_sar`, `source_video_dar`, `source_video_color_*` and `source_start_sec` keys added in `deffcode` v0.3.0. It stays available after `stop()`.
 
 **Usage:**
 
