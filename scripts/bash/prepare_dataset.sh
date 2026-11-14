@@ -109,9 +109,5 @@ fi
 
 # Set permissions for the testing directories (Necessary for sudo commands)
 if [ "$OS_NAME" != "windows" ]; then
-  sudo chmod -R a+rw "$TMPFOLDER/temp_mpd" \
-    "$TMPFOLDER/temp_m3u8" \
-    "$TMPFOLDER/temp_write" \
-    "$TMPFOLDER/temp_ffmpeg" \
-    "$TMPFOLDER/Downloads/FFmpeg_static"
+  sudo chmod -R a+rw "$TMPFOLDER"
 fi
