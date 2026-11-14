@@ -37,7 +37,12 @@ limitations under the License.
 
 ## Why WriteGear is throwing `ValueError`?
 
-**Answer:** WriteGear will exit with `ValueError` if you feed frames of different dimensions or channels.
+**Answer:** WriteGear will exit with `ValueError` if:
+
+* you feed frames of different dimensions, channels or datatype, or frames that aren't `uint8`/`uint16` _(e.g. `float32`)_.
+* frames don't match the given `-input_pixfmt`, or the `-vcodec` encoder isn't supported by your FFmpeg.
+* the `output` isn't a path in an existing writable directory, nor a supported URL/device.
+* FFmpeg exits early _(e.g. on an invalid parameter)_: the error then includes FFmpeg's last stderr lines, also available as `writer.stderr_tail`.
 
 &thinsp;
 

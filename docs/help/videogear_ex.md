@@ -231,8 +231,6 @@ In this example code, we will be directly merging the audio from a Video-File _(
 
 !!! warning "You **MUST** use `-input_framerate` attribute to set exact value of input framerate when using external audio in Real-time Frames mode, otherwise audio delay will occur in output streams."
 
-!!! alert "Use `-disable_force_termination` flag when video duration is too short(<60sec), otherwise WriteGear will not produce any valid output."
-
 ```python linenums="1"
 # import required libraries
 from vidgear.gears import WriteGear
@@ -250,9 +248,6 @@ output_params = {
     "-i": unstabilized_videofile,
     "-c:a": "aac",
     "-input_framerate": stream_stab.framerate,
-    "-clones": ["-shortest"],
-    # !!! Uncomment following line if video duration is too short(<60sec). !!!
-    #"-disable_force_termination": True,
 }
 
 # Define writer with defined parameters and suitable output filename for e.g. `Output.mp4

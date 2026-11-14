@@ -394,6 +394,8 @@ You can also use WriteGear for merging external audio with live video-source:
 
 !!! failure "Make sure this `-i` audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all."
 
+!!! info "WriteGear uses only the audio of this `-i` source _(even if it also has video)_, pads it with silence if it's shorter than your frames, and ends the output with your last frame. See [extra inputs ➶](../gears/writegear/compression/params/#supported-parameters)."
+
 ```python linenums="1" hl_lines="11-12"
 # import required libraries
 from vidgear.gears import CamGear
@@ -451,7 +453,19 @@ writer.close()
 
 ## Using WriteGear's Compression Mode for generating Timely Accurate Video
 
-If you need timely accurate video with exactly same speed as real-time input, then you need to use FFmpeg directly through its `execute_ffmpeg_cmd` method: 
+If you need timely accurate video with exactly same speed as real-time input, you can timestamp your frames by their arrival time, while still writing them with `write()`:
+
+```python
+# frames are timestamped on arrival, then duplicated/dropped to a constant 30 fps
+output_params = {
+    "-ffpreheaders": ["-use_wallclock_as_timestamps", "1"],
+    "-fps_mode": "cfr",  # use `"-vsync": "cfr"` on FFmpeg older than 5.1
+    "-r": 30,
+}
+writer = WriteGear(output="Output.mp4", **output_params)
+```
+
+Or, if FFmpeg can capture the source itself _(e.g. desktop screen)_, use FFmpeg directly through its `execute_ffmpeg_cmd` method: 
 
 ??? new "New in v0.2.4" 
     This example was added in `v0.2.4`.
