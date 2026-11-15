@@ -48,7 +48,7 @@ This mode can be easily activated by assigning suitable video path as input to [
 !!! danger "Please Remember :material-police-badge-outline:"
 
     * Using [`stream()`](../../../bonus/reference/streamgear/#vidgear.gears.StreamGear.stream) function instead of [`transcode_source()`](../../../bonus/reference/streamgear/#vidgear.gears.StreamGear.transcode_source) in Single-Source Mode will instantly result in **`RuntimeError`**!
-    * Any invalid value to the [`-video_source`](../params/#a-exclusive-parameters) attribute will result in **`AssertionError`**! 
+    * Any invalid value to the [`-video_source`](../params/#a-exclusive-parameters) attribute will result in **`ValueError`**! 
 
 &thinsp;
 

@@ -31,14 +31,13 @@ limitations under the License.
 ??? danger "DEPRECATION NOTICES for `v0.3.3` and above"
     
     - [ ] The `terminate()` method in StreamGear is now deprecated and will be removed in a future release. Developers should use the new [`close()`](../../../bonus/reference/streamgear/#vidgear.gears.StreamGear.close) method instead, as it offers a more descriptive name, similar to the WriteGear API, for safely terminating StreamGear processes.
-    - [ ] The [`-livestream`](../params/#a-exclusive-parameters) optional parameter is NOT supported in this Single-Source Mode.
 
 ??? tip "Faster Transcoding of Primary Stream with Stream Copy in Single Source Mode"
     
     For faster transcoding of input video in this mode, utilize Stream copy (`-vcodec copy`) as the input video encoder for creating HLS/DASH chunks of the primary stream efficiently. However, consider the following points:
     
     - :warning: Stream copying **NOT** compatible with Custom Streams ([`-streams`](../params/#a-exclusive-parameters)), which require re-encoding for each additional stream. Therefore, the `-vcodec copy` parameter will be ignored.
-    - When using the audio stream from the input video, the Audio Stream copy (`-acodec copy`) encoder will be automatically applied.
+    - When using the AAC audio stream from the input video, the Audio Stream copy (`-acodec copy`) encoder will be automatically applied _(other audio codecs are encoded to `aac`)_.
 
 !!! example "After going through following Usage Examples, Checkout more of its advanced configurations [here ➶](../../../help/streamgear_ex/)"
 
@@ -85,7 +84,7 @@ Following is the bare-minimum code you need to get started with StreamGear API i
     streamer.close()
     ```
 
-    !!! success "After running this bare-minimum example, StreamGear will produce a Master Playlist file (`hls_out.mpd`) with streamable chunks, containing information about a Primary Stream with the same resolution and framerate as the input."
+    !!! success "After running this bare-minimum example, StreamGear will produce a Playlist file (`hls_out.m3u8`) with streamable chunks, containing information about a Primary Stream with the same resolution and framerate as the input."
 
 
 &thinsp;
@@ -123,7 +122,7 @@ To generate Secondary Streams, add each desired resolution and bitrate/framerate
         "-streams": [
             {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
             {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps framerate
-            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps framerate
+            {"-resolution": "640x360", "-framerate": 15.0},  # Stream3: 640x360 at 15fps framerate
             {"-resolution": "320x240", "-video_bitrate": "500k"},  # Stream3: 320x240 at 500kbs bitrate
         ],
     }
@@ -147,7 +146,7 @@ To generate Secondary Streams, add each desired resolution and bitrate/framerate
         "-streams": [
             {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
             {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps framerate
-            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps framerate
+            {"-resolution": "640x360", "-framerate": 15.0},  # Stream3: 640x360 at 15fps framerate
             {"-resolution": "320x240", "-video_bitrate": "500k"},  # Stream3: 320x240 at 500kbs bitrate
         ],
     }
@@ -183,7 +182,7 @@ To add a custom audio source, provide the path to your audio file as a string to
         "-video_source": "foo.mp4",
         "-streams": [
             {"-resolution": "1280x720", "-video_bitrate": "4000k"},  # Stream1: 1280x720 at 4000kbs bitrate
-            {"-resolution": "640x360", "-framerate": 60.0},  # Stream2: 640x360 at 60fps
+            {"-resolution": "640x360", "-framerate": 15.0},  # Stream2: 640x360 at 15fps
         ],
         "-audio": "/home/foo/foo1.aac", # define custom audio-source
         "-acodec": "copy", # define copy audio encoder
@@ -207,7 +206,7 @@ To add a custom audio source, provide the path to your audio file as a string to
         "-video_source": "foo.mp4",
         "-streams": [
             {"-resolution": "1280x720", "-video_bitrate": "4000k"},  # Stream1: 1280x720 at 4000kbs bitrate
-            {"-resolution": "640x360", "-framerate": 60.0},  # Stream2: 640x360 at 60fps
+            {"-resolution": "640x360", "-framerate": 15.0},  # Stream2: 640x360 at 15fps
         ],
         "-audio": "/home/foo/foo1.aac",  # define custom audio-source
         "-acodec": "copy", # define copy audio encoder
@@ -247,11 +246,11 @@ In this example, we'll use the [H.265/HEVC](https://trac.ffmpeg.org/wiki/Encode/
     stream_params = {
         "-video_source": "foo.mp4", # define Video-Source
         "-vcodec": "libx265", # specify H.265/HEVC video encoder
-        "-x265-params": "lossless=1", # enables Lossless encoding
+        "-x265-params": "crf=28", # x265 options, a quality target capped by each stream's bitrate (GOP is appended automatically)
         "-bpp": 0.15, # Bits-Per-Pixel(BPP), an Internal StreamGear parameter to ensure good quality of high motion scenes
         "-streams": [
-            {"-resolution": "640x360", "-video_bitrate": "4000k"}, # Stream1: 1280x720 at 4000kbs bitrate
-            {"-resolution": "320x240", "-framerate": 60.0},  # Stream2: 640x360 at 60fps
+            {"-resolution": "640x360", "-video_bitrate": "1000k"}, # Stream1: 640x360 at 1000kbs bitrate
+            {"-resolution": "320x240", "-framerate": 15.0},  # Stream2: 320x240 at 15fps
         ],
         "-acodec": "aac", # specify AAC audio encoder
     }
@@ -273,11 +272,11 @@ In this example, we'll use the [H.265/HEVC](https://trac.ffmpeg.org/wiki/Encode/
     stream_params = {
         "-video_source": "foo.mp4", # define Video-Source
         "-vcodec": "libx265", # specify H.265/HEVC video encoder
-        "-x265-params": "lossless=1", # enables Lossless encoding
+        "-x265-params": "crf=28", # x265 options, a quality target capped by each stream's bitrate (GOP is appended automatically)
         "-bpp": 0.15, # Bits-Per-Pixel(BPP), an Internal StreamGear parameter to ensure good quality of high motion scenes
         "-streams": [
-            {"-resolution": "640x360", "-video_bitrate": "4000k"}, # Stream1: 1280x720 at 4000kbs bitrate
-            {"-resolution": "320x240", "-framerate": 60.0},  # Stream2: 640x360 at 60fps
+            {"-resolution": "640x360", "-video_bitrate": "1000k"}, # Stream1: 640x360 at 1000kbs bitrate
+            {"-resolution": "320x240", "-framerate": 15.0},  # Stream2: 320x240 at 15fps
         ],
         "-acodec": "aac", # specify AAC audio encoder
     }
