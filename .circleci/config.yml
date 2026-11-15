@@ -25,7 +25,7 @@ workflows:
       # Matches: on: push: branches: [testing]
       - path-filtering/filter:
           name: filter-push-testing
-          base-revision: testing
+          base-revision: << pipeline.git.base_revision >>
           config-path: .circleci/continue_config.yml
           exclude: |
             .*\.md
@@ -49,4 +49,4 @@ workflows:
             docs/.*
           mapping: |
             .* run-tests true
-          filters: pipeline.event.name == "pull_request"
+          filters: pipeline.event.name == "pull_request" and pipeline.event.github.pull_request.base.ref == "testing"
