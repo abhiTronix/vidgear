@@ -40,29 +40,27 @@ jobs:
             choco install << parameters.python-package >> -y --no-progress
             refreshenv
 
-      # Restore Poetry & pip cache using poetry.lock checksum
+      # Restore only download caches (do NOT cache .venv on Windows)
       - restore_cache:
           keys:
-            - poetry-cache-v1-<< parameters.python-package >>-{{ checksum "poetry.lock" }}
-            - poetry-cache-v1-<< parameters.python-package >>-
+            - poetry-cache-v2-<< parameters.python-package >>-{{ checksum "poetry.lock" }}
 
       # Install Poetry, configure in-project venv, and install dependencies
       - run:
           name: Install Dependencies with Poetry
           command: |
-            SET PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
             python --version
             python -m pip install --upgrade pip poetry
             poetry config virtualenvs.in-project true
-            poetry install --all-extras
-            poetry run pip install --upgrade pytest codecov pytest-cov pytest-asyncio m3u8 async-asgi-testclient paramiko
-            poetry run pip install https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev2/mpegdash-0.3.0.dev2-py3-none-any.whl
+            poetry env use (Get-Command python).Source
+            poetry install --all-extras --no-interaction
+            poetry run pip install --no-deps https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev2/mpegdash-0.3.0.dev2-py3-none-any.whl
+            poetry run pip install pytest codecov pytest-cov pytest-asyncio m3u8 async-asgi-testclient paramiko
 
-      # Save local .venv, pip cache, and Poetry cache
+      # Save only pip and Poetry download caches
       - save_cache:
-          key: poetry-cache-v1-<< parameters.python-package >>-{{ checksum "poetry.lock" }}
+          key: poetry-cache-v2-<< parameters.python-package >>-{{ checksum "poetry.lock" }}
           paths:
-            - .venv
             - C:\Users\circleci\AppData\Local\pip\Cache
             - C:\Users\circleci\AppData\Local\pypoetry\Cache
 
