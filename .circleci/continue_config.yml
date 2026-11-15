@@ -1,0 +1,94 @@
+# Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#    http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+version: 2.1
+
+orbs:
+  win: circleci/windows@5.1.1
+  codecov: codecov/codecov@6.1.0
+
+parameters:
+  run-tests:
+    type: boolean
+    default: false
+
+jobs:
+  test-windows:
+    parameters:
+      python-package:
+        type: string
+    executor:
+      name: win/default
+    steps:
+      - checkout
+
+      # Install specific Python version on CircleCI Windows VM via Chocolatey
+      - run:
+          name: Install << parameters.python-package >>
+          command: |
+            choco install << parameters.python-package >> -y --no-progress
+            refreshenv
+
+      # Restore Poetry & pip cache using poetry.lock checksum
+      - restore_cache:
+          keys:
+            - poetry-cache-v1-<< parameters.python-package >>-{{ checksum "poetry.lock" }}
+            - poetry-cache-v1-<< parameters.python-package >>-
+
+      # Install Poetry, configure in-project venv, and install dependencies
+      - run:
+          name: Install Dependencies with Poetry
+          command: |
+            SET PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
+            python --version
+            python -m pip install --upgrade pip poetry
+            poetry config virtualenvs.in-project true
+            poetry install --all-extras
+            poetry run pip install --upgrade pytest codecov pytest-cov pytest-asyncio m3u8 async-asgi-testclient paramiko
+            poetry run pip install https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev2/mpegdash-0.3.0.dev2-py3-none-any.whl
+
+      # Save local .venv, pip cache, and Poetry cache
+      - save_cache:
+          key: poetry-cache-v1-<< parameters.python-package >>-{{ checksum "poetry.lock" }}
+          paths:
+            - .venv
+            - C:\Users\circleci\AppData\Local\pip\Cache
+            - C:\Users\circleci\AppData\Local\pypoetry\Cache
+
+      # Run bash script using Git Bash
+      - run:
+          name: Prepare Dataset
+          shell: bash.exe
+          command: |
+            chmod +x scripts/bash/prepare_dataset.sh
+            bash scripts/bash/prepare_dataset.sh
+
+      # Execute Pytest inside Poetry's virtual environment
+      - run:
+          name: Run Tests
+          command: |
+            poetry run pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/
+
+      # Upload Coverage via Codecov Orb
+      - codecov/upload
+
+workflows:
+  windows-test-matrix:
+    when: << pipeline.parameters.run-tests >>
+    jobs:
+      - test-windows:
+          name: << matrix.python-package >>
+          matrix:
+            parameters:
+              python-package: ["python311", "python312", "python313", "python314"]
