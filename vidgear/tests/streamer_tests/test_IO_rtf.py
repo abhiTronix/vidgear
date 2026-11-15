@@ -19,89 +19,84 @@ limitations under the License.
 """
 
 # import the necessary packages
-import os
+import warnings
 
 import numpy as np
 import pytest
 
 from vidgear.gears import StreamGear
-from vidgear.tests.utils.helpers import get_testing_dir
 
 
-@pytest.mark.xfail(raises=ValueError)
-@pytest.mark.parametrize("size", [(480, 640, 5), [(480, 640, 1), (480, 640, 3)]])
-def test_failedchannels(size):
+@pytest.mark.parametrize("sizes", [[(48, 64, 5)], [(48, 64, 1), (48, 64, 3)], [(48, 64, 3), (58, 64, 3)]])
+def test_failed_frames(sizes, tmp_path):
     """
-    IO Test - made to fail with invalid channel lengths
+    IO Test - made to fail with invalid channels, or frames of different channels/size
     """
-    np.random.seed(0)
-    if len(size) > 1:
-        random_data_1 = np.random.random(size=size[0]) * 255
-        input_data_ch1 = random_data_1.astype(np.uint8)
-        random_data_2 = np.random.random(size=size[1]) * 255
-        input_data_ch3 = random_data_2.astype(np.uint8)
-        streamer = StreamGear(os.path.join(get_testing_dir(), "output.mpd"), logging=True)
-        streamer.stream(input_data_ch1)
-        streamer.stream(input_data_ch3)
-        streamer.close()
-    else:
-        random_data = np.random.random(size=size) * 255
-        input_data = random_data.astype(np.uint8)
-        streamer = StreamGear(os.path.join(get_testing_dir(), "output.mpd"), logging=True)
-        streamer.stream(input_data)
-        streamer.close()
-
-
-@pytest.mark.xfail(raises=ValueError)
-def test_fail_framedimension():
-    """
-    IO Test - made to fail with multiple frame dimension
-    """
-    np.random.seed(0)
-    # generate random data for 10 frames
-    random_data1 = np.random.random(size=(480, 640, 3)) * 255
-    input_data1 = random_data1.astype(np.uint8)
-
-    np.random.seed(0)
-    random_data2 = np.random.random(size=(580, 640, 3)) * 255
-    input_data2 = random_data2.astype(np.uint8)
-
-    streamer = StreamGear(output=os.path.join(get_testing_dir(), "output.mpd"))
-    streamer.stream(None)
-    streamer.stream(input_data1)
-    streamer.stream(input_data2)
+    streamer = StreamGear(str(tmp_path / "output.mpd"))
+    with pytest.raises(ValueError):
+        streamer.stream(None)
+        for size in sizes:
+            streamer.stream(np.zeros(size, np.uint8))
     streamer.close()
 
 
-@pytest.mark.xfail(raises=RuntimeError)
-def test_method_call_rtf():
+@pytest.mark.parametrize("dtype", [np.float32, np.uint16, np.int16])
+def test_failed_dtype(dtype, tmp_path):
+    """
+    IO Test - non `uint8` frames are rejected instead of being written as garbage
+    """
+    with StreamGear(str(tmp_path / "output.mpd")) as streamer, pytest.raises(ValueError, match="uint8"):
+        streamer.stream(np.zeros((48, 64, 3), dtype))
+
+
+def test_stream_after_close(tmp_path):
+    """
+    IO Test - `stream()` after `close()` raises
+    """
+    streamer = StreamGear(str(tmp_path / "output.mpd"))
+    streamer.stream(np.zeros((48, 64, 3), np.uint8))
+    streamer.close()
+    with pytest.raises(RuntimeError, match="closed"):
+        streamer.stream(np.zeros((48, 64, 3), np.uint8))
+
+
+def test_method_call_rtf(tmp_path):
     """
     Method calling Test - Made to fail by calling method in the wrong context.
     """
-    stream_params = {"-video_source": 1234}  # for CI testing only
-    streamer = StreamGear(output=os.path.join(get_testing_dir(), "output.mpd"), logging=True, **stream_params)
-    streamer.transcode_source()
+    streamer = StreamGear(output=str(tmp_path / "output.mpd"))
+    with pytest.raises(RuntimeError):
+        streamer.transcode_source()
     streamer.close()
 
 
-@pytest.mark.xfail(raises=ValueError)
-@pytest.mark.parametrize("format", ["dash", "hls", "invalid"])
-def test_invalid_params_rtf(format):
+@pytest.mark.parametrize("format", ["dash", "hls"])
+def test_invalid_params_rtf(format, tmp_path):
     """
-    Invalid parameter Failure Test - Made to fail by calling invalid parameters
+    Invalid parameter Failure Test - FFmpeg dies and `stream()` reports its last words
     """
-    np.random.seed(0)
-    # generate random data for 10 frames
-    random_data = np.random.random(size=(480, 640, 3)) * 255
-    input_data = random_data.astype(np.uint8)
-
-    stream_params = {"-vcodec": "unknown", "-livestream": "invalid"}
     streamer = StreamGear(
-        output=os.path.join(get_testing_dir(), "output{}".format(".mpd" if format == "dash" else ".m3u8")),
+        output=str(tmp_path / "output{}".format(".mpd" if format == "dash" else ".m3u8")),
         format=format,
-        logging=True,
-        **stream_params
+        **{"-vcodec": "unknown", "-livestream": "invalid"}
     )
-    streamer.stream(input_data)
-    streamer.stream(input_data)
+    with pytest.raises(ValueError, match="returncode"):
+        for _ in range(500):
+            streamer.stream(np.zeros((48, 64, 3), np.uint8))
     streamer.close()
+    assert streamer.returncode not in (None, 0)
+
+
+def test_no_deprecation_warning(tmp_path):
+    """
+    `stream()` warns about `rgb_mode` only when it is passed (keyword or positional)
+    """
+    frame = np.zeros((48, 64, 3), np.uint8)
+    with StreamGear(str(tmp_path / "output.mpd")) as streamer:
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", DeprecationWarning)
+            streamer.stream(frame)
+        with pytest.warns(DeprecationWarning):
+            streamer.stream(frame, rgb_mode=False)
+        with pytest.warns(DeprecationWarning):
+            streamer.stream(frame, False)

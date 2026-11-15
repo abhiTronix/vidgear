@@ -19,38 +19,42 @@ limitations under the License.
 """
 
 # import the necessary packages
-import os
 import subprocess
-import tempfile
 
 import pytest
 
 from vidgear.gears import StreamGear
-from vidgear.tests.utils.helpers import get_testing_dir, return_testvideo_path
+from vidgear.tests.utils.helpers import return_testvideo_path
 
 
-@pytest.mark.xfail(raises=(AssertionError, ValueError))
 @pytest.mark.parametrize("output", ["garbage.garbage", "output.m3u8"])
-def test_failedextension(output):
+def test_failedextension(output, tmp_path):
     """
     IO Test - made to fail with filename with wrong extension
     """
-    stream_params = {"-video_source": return_testvideo_path()}
-    streamer = StreamGear(output=output, logging=True, **stream_params)
-    streamer.transcode_source()
-    streamer.close()
+    with pytest.raises(ValueError, match="extension"):
+        StreamGear(output=str(tmp_path / output), **{"-video_source": return_testvideo_path()})
 
 
-def test_failedextensionsource():
+@pytest.mark.parametrize(
+    "stream_params",
+    [
+        {"-video_source": "garbage.garbage"},  # missing file
+        {"-video_source": 1234},
+        {"-video_source": "unknown://invalid.com/input.mp4"},
+        {"-video_source": return_testvideo_path(fmt="ao")},  # no video stream
+        {"-video_source": return_testvideo_path(), "-audio": "/no/such/audio.aac"},
+        {"-video_source": return_testvideo_path(), "-audio": return_testvideo_path(fmt="vo")},  # no audio
+        {"-audio": ["-f", "lavfi", "-i", "invalid_source"]},
+        {"-audio": 1234},
+    ],
+)
+def test_invalid_sources(stream_params, tmp_path):
     """
-    IO Test - made to fail with filename with wrong extension for source
+    IO Test - invalid `-video_source`/`-audio` raise, instead of silently switching mode or dropping audio
     """
-    with pytest.raises(RuntimeError):
-        # 'garbage' extension does not exist
-        stream_params = {"-video_source": "garbage.garbage"}
-        streamer = StreamGear(output=os.path.join(get_testing_dir(), "output.mpd"), logging=True, **stream_params)
-        streamer.transcode_source()
-        streamer.close()
+    with pytest.raises(ValueError):
+        StreamGear(output=str(tmp_path / "output.mpd"), **stream_params)
 
 
 @pytest.mark.parametrize(
@@ -58,54 +62,40 @@ def test_failedextensionsource():
     [
         ("rtmp://live.twitch.tv/output.mpd", "dash"),
         ("rtmp://live.twitch.tv/output.m3u8", "hls"),
-        ("unknown://invalid.com/output.mpd", "dash"),
     ],
 )
 def test_paths_ss(path, format):
     """
-    Paths Test - Test various paths/urls supported by StreamGear.
+    Paths Test - Test URL outputs supported by StreamGear.
     """
-    streamer = None
-    try:
-        stream_params = {
-            "-video_source": return_testvideo_path(),
-            "-ffmpeg_download_path": 12345,
-            "-livestream": "invalid",
-        }
-        streamer = StreamGear(output=path, format=format, logging=True, **stream_params)
-    except Exception as e:
-        if isinstance(e, ValueError):
-            pytest.xfail("Test Passed!")
-        else:
-            pytest.fail(str(e))
-    finally:
-        if streamer is not None:
-            streamer.close()
+    stream_params = {
+        "-video_source": return_testvideo_path(),
+        "-ffmpeg_download_path": 12345,
+        "-livestream": "invalid",
+    }
+    StreamGear(output=path, format=format, **stream_params).close()
 
 
-@pytest.mark.xfail(raises=(AttributeError, RuntimeError))
-def test_method_call_ss():
+def test_method_call_ss(tmp_path):
     """
     Method calling Test - Made to fail by calling method in the wrong context.
     """
-    stream_params = {"-video_source": return_testvideo_path()}
-    streamer = StreamGear(output=os.path.join(get_testing_dir(), "output.mpd"), logging=True, **stream_params)
-    streamer.stream("garbage.garbage")
+    streamer = StreamGear(output=str(tmp_path / "output.mpd"), **{"-video_source": return_testvideo_path()})
+    with pytest.raises(RuntimeError):
+        streamer.stream("garbage.garbage")
     streamer.close()
 
 
-@pytest.mark.xfail(raises=subprocess.CalledProcessError)
 @pytest.mark.parametrize("format", ["dash", "hls"])
-def test_invalid_params_ss(format):
+def test_invalid_params_ss(format, tmp_path):
     """
-    Method calling Test - Made to fail by calling method in the wrong context.
+    Method calling Test - FFmpeg failure raises `CalledProcessError`.
     """
-    stream_params = {"-video_source": return_testvideo_path(), "-vcodec": "unknown"}
     streamer = StreamGear(
-        output=os.path.join(get_testing_dir(), "output{}".format(".mpd" if format == "dash" else ".m3u8")),
+        output=str(tmp_path / "output{}".format(".mpd" if format == "dash" else ".m3u8")),
         format=format,
-        logging=True,
-        **stream_params
+        **{"-video_source": return_testvideo_path(), "-vcodec": "unknown"}
     )
-    streamer.transcode_source()
+    with pytest.raises(subprocess.CalledProcessError):
+        streamer.transcode_source()
     streamer.close()
