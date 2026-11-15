@@ -140,8 +140,9 @@ def clips(tmp_path_factory):
         "rotated": make_clip(d / "rotated.mp4", "-display_rotation", "90", "-i", d / "plain.mp4", "-c", "copy"),
         "anamorphic": make_clip(d / "anamorphic.mp4", "-f", "lavfi", "-i", "testsrc2=s=480x360:d=2", "-vf", "setsar=4/3", *h264),
         "hdr": make_clip(
-            d / "hdr.mp4", *video, "-c:v", "libx265", "-pix_fmt", "yuv420p10le", "-color_primaries", "bt2020",
-            "-color_trc", "smpte2084", "-colorspace", "bt2020nc",
+            # tag frames via `setparams`: FFmpeg 8.1+ drops `-color_trc`/`-color_primaries` output options
+            d / "hdr.mp4", *video, "-vf", "setparams=color_primaries=bt2020:color_trc=smpte2084:colorspace=bt2020nc",
+            "-c:v", "libx265", "-pix_fmt", "yuv420p10le",
         ),
     }
 
