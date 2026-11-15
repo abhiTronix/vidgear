@@ -28,7 +28,7 @@ This parameter sets the valid filename/path for storing the StreamGear assets, i
 
 !!! warning "StreamGear API will throw `ValueError` if the provided `output` is empty or invalid."
 
-!!! failure "Make sure to provide a valid filename with a valid file extension for the selected `format` value _(such as `.mpd` for MPEG-DASH and `.m3u8` for APPLE-HLS)_, otherwise StreamGear will throw `AssertionError`."
+!!! failure "Make sure to provide a valid filename with a valid file extension for the selected `format` value _(such as `.mpd` for MPEG-DASH and `.m3u8` for APPLE-HLS)_, otherwise StreamGear will throw `ValueError`."
 
 !!! tip "You can easily delete all previous assets at the `output` location by using the [`-clear_prev_assets`](#a-exclusive-parameters) attribute of the [`stream_params`](#stream_params) dictionary parameter."
 
@@ -54,7 +54,7 @@ Its valid input can be one of the following:
         streamer = StreamGear(output = "/home/foo/bar", format="hls")  
         ```
 
-* **Filename** _(with/without path)_: Valid filename _(with a valid extension)_ of the output Manifest or Playlist file. If the filename is provided without a path, the current working directory will be used. This can be defined as follows:
+* **Filename** _(with/without path)_: Valid filename _(with a valid extension)_ of the output Manifest or Playlist file. If the filename is provided without a path, the current working directory will be used. Its parent directory must already exist _(StreamGear doesn't create it)_, and existing assets with the same names are overwritten _(FFmpeg's `-y`)_. This can be defined as follows:
 
     === "DASH"
 
@@ -92,7 +92,7 @@ Its valid input can be one of the following:
 
 This parameter enables the adaptive HTTP streaming format. This parameter currently supported these formats: `dash` _(i.e [**MPEG-DASH**](https://www.encoding.com/mpeg-dash/))_ and `hls` _(i.e [**Apple HLS**](https://developer.apple.com/documentation/http_live_streaming))_.
 
-!!! danger "Make sure to provide a valid filename with a valid file extension in the [`output`](#output) parameter for the selected `format` value _(i.e., `.mpd` for MPEG-DASH and `.m3u8` for APPLE-HLS)_, otherwise StreamGear will throw an `AssertionError`."
+!!! danger "Make sure to provide a valid filename with a valid file extension in the [`output`](#output) parameter for the selected `format` value _(i.e., `.mpd` for MPEG-DASH and `.m3u8` for APPLE-HLS)_, otherwise StreamGear will throw a `ValueError`."
 
 !!! warning "Any improper value assigned to `format` parameter will result in a `ValueError`!"
 
@@ -130,7 +130,9 @@ This parameter assigns the custom _path/directory_ where the custom/downloaded F
 
 **Data-Type:** String
 
-**Default Value:** Its default value is `None`.
+**Default Value:** Its default value is `""` _(empty string)_.
+
+!!! warning "StreamGear checks the FFmpeg in use has the `dash` muxer _(with `-seg_duration`)_ or `hls` muxer _(with `-var_stream_map`)_, and throws `RuntimeError` otherwise. FFmpeg **6.0 or newer** is recommended."
 
 **Usage:**
 
@@ -163,16 +165,19 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
     ???+ danger "Important Information about `-streams` attribute :material-file-document-alert-outline:"
 
-        * In addition to the user-defined Secondary Streams, ==StreamGear automatically generates a Primary Stream _(at index `0`)_ with the same resolution as the input frames and at default framerate[^1], at the index `0`.==  
+        * In addition to the user-defined Secondary Streams, ==StreamGear automatically generates a Primary Stream _(at index `0`)_ with the same resolution as the input frames and at default framerate[^1], at the index `0`.== Its resolution and bitrates can be overridden with the `-s:v:0`, `-b:v:0` and `-b:a:0` FFmpeg parameters _(e.g. `{"-s:v:0": "1280x720", "-b:v:0": "2500k"}`)_.
         * You **MUST** define the `-resolution` value for each stream; otherwise, the stream will be discarded.
         * You only need to define either the `-video_bitrate` or the `-framerate` for a valid stream. 
-            * If you specify the `-framerate`, the video bitrate will be calculated automatically.
-            * If you define both the `-video_bitrate` and the `-framerate`, the `-framerate` will get discard automatically.
+            * If you specify only the `-framerate`, the video bitrate will be calculated automatically _(see [`-bpp`](#a-exclusive-parameters))_.
+            * If you define both, the `-video_bitrate` is used as is, and the `-framerate` only sets the stream's framerate.
+        * ==Every stream is encoded at its bitrate _(capped with `-maxrate`/`-bufsize`)_==, so the bandwidth declared in the Manifest/Playlist is what clients actually get. StreamGear sets no `-crf` by default; a user-defined `-crf` is still capped by each stream's bitrate.
+        * Every stream maps only the first video stream of the source _(cover art and other video tracks are skipped)_ and its first audio stream _(or the [`-audio`](#a-exclusive-parameters) source)_, so subtitles, data tracks and extra audio tracks are left out.
+        * The given `-streams` dictionaries are not modified, so they can be reused.
 
 
     **To construct the additional stream dictionaries, you will need the following sub-attributes::**
 
-    * `-resolution` _(string)_: It is **compulsory** to define the required resolution/dimension/size for the stream, otherwise, the given stream will be rejected. Its value should be in the format `"{width}x{height}"`, as shown below:
+    * `-resolution` _(string)_: It is **compulsory** to define the required resolution/dimension/size for the stream, otherwise, the given stream will be rejected. Its value should be in the format `"{width}x{height}"` _(odd values are rounded up to even, as encoders require; a warning is logged when it doesn't match the source's display aspect ratio)_, as shown below:
         
         ```python
         # produce a 1280x720 resolution/scale stream
@@ -186,12 +191,15 @@ StreamGear API provides some exclusive internal parameters to easily generate St
         "-streams" : [{"-resolution": "1280x720", "-video_bitrate": "2000k"}] 
         ```
 
-    * `-framerate` _(float/int)_: This is another **optional** sub-attribute _(can be ignored if the `-video_bitrate` parameter is defined)_ that defines the assumed framerate for the stream. Its value can be a float or integer, as shown below:
+    * `-framerate` _(float/int)_: This is another **optional** sub-attribute _(can be ignored if the `-video_bitrate` parameter is defined)_ that sets the framerate of the stream _(FFmpeg's `-r` for this stream)_, and is used to calculate its bitrate when `-video_bitrate` is not given. It can't exceed the source framerate _(higher values are ignored with a warning)_; keyframes then follow time, so segments of all streams stay aligned. Its value can be a float or integer, as shown below:
 
         ```python
-        # produce a 1280x720 resolution and 60fps framerate stream
-        "-streams" : [{"-resolution": "1280x720", "-framerate": "60.0"}] 
+        # produce a 1280x720 resolution and 15fps framerate stream
+        "-streams" : [{"-resolution": "1280x720", "-framerate": 15.0}] 
         ```
+
+        ??? new "New in v0.3.8" 
+            The framerate is applied to the stream since `v0.3.8` _(it was only used for the bitrate before)_.
 
     **Usage:** You can easily define any number of streams using `-streams` attribute as follows:
 
@@ -200,8 +208,8 @@ StreamGear API provides some exclusive internal parameters to easily generate St
         {"-streams": 
             [
             {"-resolution": "1920x1080", "-video_bitrate": "4000k"}, # Stream1: 1920x1080 at 4000kbs bitrate
-            {"-resolution": "1280x720", "-framerate": 30}, # Stream2: 1280x720 at 30fps
-            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps 
+            {"-resolution": "1280x720", "-framerate": 30}, # Stream2: 1280x720 at 30fps (if source is >= 30fps)
+            {"-resolution": "640x360", "-framerate": 15.0},  # Stream3: 640x360 at 15fps 
             ]
         }
     ```
@@ -211,6 +219,14 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 &ensp;
 
 * **`-video_source`** _(string)_: This attribute takes a valid video path as input and activates [**Single-Source Mode**](ssm/#overview), for transcoding it into multiple smaller chunks/segments for streaming after successful validation. Its value can be one of the following:
+
+    !!! warning "StreamGear throws `ValueError` if the given `-video_source` is neither an existing file nor a supported URL, or has no readable video stream _(it silently switched to Real-time Frames Mode before `v0.3.8`)_."
+
+    ??? info "Source audio, rotation and HDR"
+
+        * Source audio is copied when it is AAC _(which every DASH/HLS client plays)_, and otherwise encoded to AAC _(e.g. PCM, Opus)_. With `-streams`, it is always encoded at each stream's `-audio_bitrate`.
+        * Rotated sources _(e.g. portrait phone videos)_ keep their display orientation: the Primary Stream gets the rotated dimensions _(e.g. `720x1280`)_.
+        * HDR sources _(PQ/HLG)_ are encoded as 8-bit SDR without tone-mapping and may look washed out, so StreamGear logs a warning. Add a tone-mapping filter yourself, e.g. `{"-vf": "zscale=t=linear,tonemap=hable,zscale=p=bt709:t=bt709:m=bt709,format=yuv420p"}` _(needs FFmpeg built with `--enable-libzimg`)_.
 
     * **Video Filename**: Valid path to a video file as follows:
 
@@ -235,6 +251,10 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 * **`-audio`** _(string/list)_: This attribute takes an external custom audio path _(as a string)_ or an audio device name followed by a suitable demuxer _(as a list)_ as the audio source input for all StreamGear streams. Its value can be one of the following:
 
     !!! failure "Ensure the provided `-audio` audio source is compatible with the input video source. Incompatibility can cause multiple errors or result in no output at all."
+
+    !!! warning "StreamGear throws `ValueError` if the given `-audio` is neither an existing file nor a supported URL, or has no readable audio stream _(it was silently dropped before `v0.3.8`)_."
+
+    !!! info "The `-audio` source replaces any audio of the `-video_source` _(in both DASH and HLS)_, is encoded with `aac` by default, and ends with the video: shorter audio is padded with silence _(`-af apad`, unless you set an audio filter)_ and `-shortest` is added. So infinite sources _(live microphone, `lavfi`)_ end with your frames on `close()`. With copied audio _(`-acodec copy`)_, neither is added."
 
     * **Audio Filename** _(string)_: Valid path to an audio file as follows:
 
@@ -270,9 +290,12 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
-* **`-livestream`** _(bool)_: ***(optional)*** specifies whether to enable **Low-latency Live-Streaming :material-video-wireless-outline:** in [**Real-time Frames Mode**](rtfm/#overview) only, where chunks will contain information for new frames only and forget previous ones, or not. The default value is `False`. It can be used as follows: 
+* **`-livestream`** _(bool)_: ***(optional)*** specifies whether to enable **Live-Streaming :material-video-wireless-outline:**, where chunks will contain information for new frames only and forget previous ones, or not. The default value is `False`. It can be used as follows: 
     
-    !!! warning "The `-livestream` optional parameter is **NOT** supported in [Single-Source mode](ssm/#overview)."
+    ??? new "New in v0.3.8" 
+        `-livestream` also works in [Single-Source mode](ssm/#overview) since `v0.3.8`, e.g. for restreaming a live RTSP/RTMP source. Local video files are then read at their native speed _(FFmpeg's `-re`)_.
+
+    !!! info "Live defaults: 4-second segments in both formats _(DASH `-seg_duration 4`, `-window_size 5`, `-extra_window_size 5`; HLS `-hls_time 4`, `-hls_list_size 6`, `-hls_flags delete_segments+independent_segments+temp_file`)_. Durations can be fractional _(e.g. `{"-seg_duration": 2.5}`)_. For lower latency, lower them and see FFmpeg's DASH `-ldash`, `-streaming`, `-target_latency` and HLS `-lhls` options, which can be passed in `stream_params`."
 
     ```python
     stream_params = {"-livestream": True} # enable live-streaming
@@ -282,7 +305,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
-* **`-input_framerate`** _(float/int)_ :  ***(optional)*** This parameter specifies the assumed input video source framerate and only works in [Real-time Frames Mode](rtfm/). Its default value is `25.0` fps. Its value can be a float or integer, as shown below:
+* **`-input_framerate`** _(float/int)_ :  ***(optional)*** This parameter specifies the framerate of the incoming frames _(i.e. how many frames make one second of video)_ and only works in [Real-time Frames Mode](rtfm/). Its default value is `25.0` fps _(also used when the value is invalid)_. Its value can be a float, integer or numeric string, as shown below:
 
     ```python
     # set input video source framerate to 60fps
@@ -296,7 +319,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 * **`-bpp`** _(float/int)_: ***(optional)*** This attribute controls the constant **BPP** _(Bits-Per-Pixel)_ value, which helps ensure good quality in high motion scenes by determining the desired video bitrate for streams. A higher BPP value improves motion quality. The default value is `0.1`. Increasing the BPP value helps fill the gaps between the current bitrate and the upload limit/ingest cap. Its value can be anything above `0.001` and can be used as follows:
 
     !!! tip "Important points while tweaking BPP"
-        * BPP is a sensitive value; start with `0.001` and make small increments (`0.0001`) to fine-tune.
+        * The resulting bitrate is `width × height × framerate × BPP`, e.g. `0.1` gives ~2304 kbps for 1280x720 at 25fps.
         * If your desired resolution/fps/audio combination is below the maximum service bitrate, raise BPP to match it for extra quality.
         * It is generally better to lower resolution _(and/or `fps`)_ and raise BPP than to raise resolution and lose BPP.
 
@@ -311,7 +334,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
     !!! tip "The larger the GOP size, the more efficient the compression and the less bandwidth you will need."
 
-    !!! info "By default, StreamGear automatically sets a recommended fixed GOP value _(i.e., every two seconds)_ based on the input framerate and selected encoder."
+    !!! info "By default, StreamGear automatically sets a recommended fixed GOP value _(i.e., every two seconds)_ based on the input framerate and selected encoder. Values below `1` are invalid. For `libx265`, the GOP is merged into your `-x265-params` _(e.g. `crf=28:keyint=50:min-keyint=50`)_."
 
     ```python
     # set GOP length to 70
@@ -339,9 +362,9 @@ StreamGear API provides some exclusive internal parameters to easily generate St
 
 &ensp;
 
-* **`-clear_prev_assets`** _(bool)_: ***(optional)*** This parameter specifies whether to remove/delete all previous copies of StreamGear assets files for selected [`format`](#format) _(i.e., manifest (`mpd`) in DASH, playlist (`mu38`) in HLS, and respective streaming chunks (`.ts`,`.m4s`), etc.)_ present at the path specified by the [`output`](#output) parameter. The default value is `False`. It can be enabled as follows:
+* **`-clear_prev_assets`** _(bool)_: ***(optional)*** This parameter specifies whether to remove/delete previous StreamGear assets in the directory of the [`output`](#output) parameter before transcoding. The default value is `False`. It can be enabled as follows:
 
-    !!! info "Additional segments _(such as `.webm`, `.mp4` chunks)_ are also removed automatically."
+    !!! warning "It deletes the output manifest/playlist itself, plus every file named like StreamGear's assets: `chunk-stream*`, `init-stream*` _(DASH segments)_, `stream_*.m3u8` _(HLS variant playlists)_ and `init*.mp4` _(HLS fMP4 init segments)_. Other files _(including other `.mpd`/`.m3u8`)_ are kept. Don't store your own files with these names there."
 
     ```python
     # delete all previous assets
@@ -359,7 +382,7 @@ StreamGear API provides some exclusive internal parameters to easily generate St
     stream_params = {"-enable_force_termination": True} 
     ```
 
-* **`-progress_callback`** _(callable)_: ***(optional)*** This parameter sets a function called as `callback(done_s, total_s)` while [Single-Source Mode](ssm/#overview) transcodes, alongside the built-in progress bar, where `done_s` is seconds of source transcoded so far and `total_s` is the source duration _(`0` when unknown)_. The default value is `None`. Its usage is as follows:
+* **`-progress_callback`** _(callable)_: ***(optional)*** This parameter sets a function called as `callback(done_s, total_s)` while [Single-Source Mode](ssm/#overview) transcodes, alongside the built-in progress bar, where `done_s` is seconds of source transcoded so far and `total_s` is the source duration _(`0` when unknown)_. If it raises, the error is logged and the callback is disabled for that run _(transcoding continues)_. The default value is `None`. Its usage is as follows:
 
     ??? new "New in v0.3.7" 
         This feature was added in `v0.3.7`.
@@ -369,21 +392,20 @@ StreamGear API provides some exclusive internal parameters to easily generate St
     stream_params = {"-progress_callback": lambda done, total: print(f"{done:.1f}/{total:.1f}s")} 
     ```
 
-* **`-capture_stderr`** _(bool)_: ***(optional)*** This parameter captures the last 50 lines of FFmpeg's stderr in [Real-time Frames Mode](rtfm/#overview) _(still mirrored to console when `logging=True`)_, exposed via StreamGear's `stderr_tail` property and appended to the `ValueError` raised by `stream()` when FFmpeg dies early. FFmpeg's exit code is always available via the `returncode` attribute after `close()` _(or after `transcode_source()` in Single-Source Mode)_. The default value is `False`. Its usage is as follows:
+* **`-capture_stderr`** _(bool)_: **Deprecated, has no effect.** FFmpeg's stderr is now always captured in [Real-time Frames Mode](rtfm/#overview): its last 50 lines _(still mirrored to console when `logging=True`)_ are exposed via StreamGear's `stderr_tail` property and appended to the `ValueError` raised by `stream()` when FFmpeg dies early. FFmpeg's exit code is available via the `returncode` attribute after `close()` _(or after `transcode_source()` in Single-Source Mode)_.
 
-    ??? new "New in v0.3.7" 
-        This feature was added in `v0.3.7`.
-
-    ```python
-    # capture FFmpeg's stderr tail
-    stream_params = {"-capture_stderr": True} 
-    ```
+    ??? danger "Deprecated in v0.3.8" 
+        Added in `v0.3.7`, always on since `v0.3.8`.
 
 &ensp;
 
 #### B. FFmpeg Parameters 
 
-Almost all FFmpeg parameters can be passed as dictionary attributes in `stream_params`. For example, to use the `libx264` encoder to produce a lossless output video, you can pass the required FFmpeg parameters as dictionary attributes as follows:
+Almost all FFmpeg parameters can be passed as dictionary attributes in `stream_params`. For example, to use the `libx264` encoder with a quality target _(capped by each stream's bitrate)_, you can pass the required FFmpeg parameters as dictionary attributes as follows:
+
+!!! info "Defaults: `libx264` with `-preset veryfast`, `-vf format=yuv420p`, GOP of 2 seconds _(`-g`, `-keyint_min`, `-sc_threshold 0`, `-bf 1`)_ and `-tune zerolatency` _(Real-time Frames Mode and live-streaming only)_. VOD segments are 5 seconds in DASH _(`-seg_duration`)_ and 2 seconds in HLS _(FFmpeg's `-hls_time` default)_. No `-crf` is set by default."
+
+!!! tip "Set a parameter's value to `None` to pass it as a valueless flag _(e.g. `{"-shortest": None}`)_."
 
 !!! tip "Please check the [H.264 documentation ➶](https://trac.ffmpeg.org/wiki/Encode/H.264) and [FFmpeg Documentation ➶](https://ffmpeg.org/documentation.html) for more information on following parameters."
 
@@ -393,7 +415,7 @@ Almost all FFmpeg parameters can be passed as dictionary attributes in `stream_p
 
 ```python
 # libx264 encoder and its supported parameters
-stream_params = {"-vcodec":"libx264", "-crf": 0, "-preset": "fast", "-tune": "zerolatency"} 
+stream_params = {"-vcodec":"libx264", "-crf": 20, "-preset": "fast", "-tune": "zerolatency"} 
 ```
 
 &ensp;
@@ -408,7 +430,7 @@ All encoders and decoders compiled with the FFmpeg in use are supported by the S
 
     - :warning: Stream copy is **NOT** compatible with [**Real-time Frames Mode**](rtfm/#overview), as this mode necessitates re-encoding of incoming frames. Therefore, the `-vcodec copy` parameter will be ignored.
     - :warning: Stream copying **NOT** compatible with Custom Streams ([`-streams`](#a-exclusive-parameters)), which also require re-encoding for each additional stream. Consequently, the `-vcodec copy` parameter will be ignored.
-    - When using the audio stream from the input video, the Audio Stream copy (`-acodec copy`) encoder will be automatically applied.
+    - When using the AAC audio stream from the input video, the Audio Stream copy (`-acodec copy`) encoder will be automatically applied _(other audio codecs are encoded to `aac`)_.
 
 ```sh
 # for checking encoder
