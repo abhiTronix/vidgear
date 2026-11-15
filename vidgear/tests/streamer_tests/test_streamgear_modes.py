@@ -35,11 +35,10 @@ from mpegdash.parser import MPEGDASHParser
 
 import vidgear.gears.streamgear as streamgear_module
 from vidgear.gears import CamGear, StreamGear
-from vidgear.gears.helper import logger_handler, validate_video
+from vidgear.gears.helper import logger_handler
 from vidgear.tests.utils.helpers import (
     make_clip,
     probe_video,
-    return_static_ffmpeg,
     return_testvideo_path,
     stream_lines,
 )
@@ -72,13 +71,6 @@ def check_valid_mpd(file="", exp_reps=1):
     return (all_adapts, all_reprs) if (len(all_reprs) >= exp_reps) else False
 
 
-def extract_meta_video(file):
-    """
-    Extracts metadata from a valid video file
-    """
-    return validate_video(return_static_ffmpeg(), str(file), logging=True)
-
-
 def output_path(tmp_path, format, name="output"):
     """
     returns manifest path for format
@@ -93,7 +85,7 @@ def check_valid_output(path, format):
     if format == "dash":
         assert check_valid_mpd(path), "Invalid MPD!"
     else:
-        assert extract_meta_video(path), "Invalid M3U8!"
+        assert video_lines(path), "Invalid M3U8!"
 
 
 def video_lines(path):

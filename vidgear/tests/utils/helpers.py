@@ -109,7 +109,13 @@ def stream_lines(path):
     Returns the `Stream #` lines of FFmpeg's banner for a file or manifest _(every rendition)_.
     """
     banner = subprocess.run(
-        [return_static_ffmpeg(), "-hide_banner", "-i", str(path)],
+        # system FFmpeg on Linux: static glibc build segfaults on MPEG-TS on newer hosts (Ubuntu 24.04)
+        [
+            "ffmpeg" if platform.system() == "Linux" else return_static_ffmpeg(),
+            "-hide_banner",
+            "-i",
+            str(path),
+        ],
         capture_output=True,
         text=True,
     ).stderr
