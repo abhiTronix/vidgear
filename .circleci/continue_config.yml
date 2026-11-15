@@ -16,7 +16,6 @@ version: 2.1
 
 orbs:
   win: circleci/windows@5.1.1
-  codecov: codecov/codecov@6.1.0
 
 parameters:
   run-tests:
@@ -77,10 +76,19 @@ jobs:
       - run:
           name: Run Tests
           command: |
-            poetry run pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/
+            poetry run pytest --verbose --capture=no --cov-report=term-missing --cov-report=xml --cov=vidgear vidgear/tests/
 
-      # Upload Coverage via Codecov Orb
-      - codecov/upload
+      # Upload Coverage
+      - run:
+          name: Upload Coverage
+          command: |
+            poetry run pip install codecov-cli
+            poetry run codecovcli --verbose upload-process `
+              --disable-search `
+              -t $env:CODECOV_TOKEN `
+              -n "windows-<< parameters.python-package >>-$env:CIRCLE_BUILD_NUM" `
+              -F "windows-<< parameters.python-package >>" `
+              -f coverage.xml
 
 workflows:
   windows-test-matrix:
