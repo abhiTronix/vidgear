@@ -1,0 +1,52 @@
+# Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#    http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+version: 2.1
+
+setup: true
+
+orbs:
+  path-filtering: circleci/path-filtering@3.0.0
+
+workflows:
+  setup-workflow:
+    jobs:
+      # Matches: on: push: branches: [testing]
+      - path-filtering/filter:
+          name: filter-push-testing
+          base-revision: testing
+          config-path: .circleci/continue_config.yml
+          exclude: |
+            .*\.md
+            .*\.html
+            .*\.js
+            .*\.css
+            docs/.*
+            mkdocs\.yml
+            README\.md
+          mapping: |
+            .* run-tests true
+          filters: pipeline.event.name == "push" and pipeline.git.branch == "testing"
+
+      # Matches: on: pull_request: branches: [testing]
+      - path-filtering/filter:
+          name: filter-pr-testing
+          base-revision: testing
+          config-path: .circleci/continue_config.yml
+          exclude: |
+            .*\.md
+            docs/.*
+          mapping: |
+            .* run-tests true
+          filters: pipeline.event.name == "pull_request"
