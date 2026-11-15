@@ -23,6 +23,7 @@ limitations under the License.
 # import the necessary packages
 import errno
 import importlib
+import inspect
 import logging as log
 import os
 import platform
@@ -188,19 +189,21 @@ def deprecated(
     """
 
     def decorator(func):
+        signature = inspect.signature(func)
+
         @wraps(func)
         def wrapper(*args, **kwargs):
-            if parameter and parameter in kwargs:
+            # warn only when the deprecated parameter is actually passed (by keyword or position)
+            if parameter is None or (
+                parameter in signature.bind_partial(*args, **kwargs).arguments
+            ):
                 warnings.warn(
                     message
-                    or f"Parameter '{parameter}' is deprecated and will be removed in future versions.",
-                    DeprecationWarning,
-                    stacklevel=stacklevel,
-                )
-            else:
-                warnings.warn(
-                    message
-                    or f"Function '{func.__name__}' is deprecated and will be removed in future versions.",
+                    or (
+                        f"Parameter '{parameter}' is deprecated and will be removed in future versions."
+                        if parameter
+                        else f"Function '{func.__name__}' is deprecated and will be removed in future versions."
+                    ),
                     DeprecationWarning,
                     stacklevel=stacklevel,
                 )
@@ -597,6 +600,33 @@ def get_supported_pixfmts(path: str) -> dict[str, int]:
     }
 
 
+@cache
+def has_muxer_option(ffmpeg: str, muxer: str, option: str) -> bool:
+    """
+    Checks FFmpeg has given muxer with given option _(`Unknown format` is printed otherwise)_.
+    """
+    return option.encode() in check_output(
+        [ffmpeg, "-hide_banner", "-h", "muxer={}".format(muxer)]
+    )
+
+
+def is_number(value) -> bool:
+    """
+    Checks value is a real `int`/`float` _(not `bool`)_.
+    """
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+
+def to_float(value) -> float:
+    """
+    Parses a number _(or numeric string)_ into float, `0.0` if invalid.
+    """
+    try:
+        return 0.0 if isinstance(value, bool) else float(value)
+    except (TypeError, ValueError):
+        return 0.0
+
+
 def is_valid_url(path: str, url: str | None = None, logging: bool = False) -> bool:
     """
     Checks URL validity by testing its scheme against FFmpeg's supported protocols
@@ -646,7 +676,8 @@ def validate_video(
         video_path (string): absolute path to Video.
         logging (bool): enables logging for its operations
 
-    **Returns:** A dictionary of retrieved Video resolution _(as tuple(width, height))_ and framerate _(as float)_.
+    **Returns:** A dictionary of retrieved Video resolution _(as tuple(width, height))_, framerate _(as string)_,
+    display `rotation` _(degrees)_, `dar` _(tuple or None)_, `hdr` _(bool)_ and first `audio_codec` _(string)_.
     """
     # check video path is not empty
     if not (video_path):
@@ -656,23 +687,37 @@ def validate_video(
     metadata = check_output(
         [path, "-hide_banner", "-i", str(video_path).strip()],
         force_retrieve_stderr=True,
+    ).decode("utf-8", "replace")
+    logging and logger.debug(metadata)
+    # first real video stream (cover art / attached pictures are skipped)
+    video = next(
+        (
+            x
+            for x in metadata.splitlines()
+            if "Video:" in x and "attached pic" not in x
+        ),
+        "",
     )
-    # clean and search
-    stripped_data = [x.decode("utf-8").strip() for x in metadata.split(b"\n")]
-    logging and logger.debug(stripped_data)
-    result = {}
-    for data in stripped_data:
-        output_a = re.findall(r"([1-9]\d+)x([1-9]\d+)", data)
-        output_b = re.findall(r"\d+(?:\.\d+)?\sfps", data)
-        if len(result) == 2:
-            break
-        if output_b and "framerate" not in result:
-            result["framerate"] = re.findall(r"[\d\.\d]+", output_b[0])[0]
-        if output_a and "resolution" not in result:
-            result["resolution"] = output_a[-1]
-
-    # return values
-    return result if (len(result) == 2) else None
+    resolution = re.search(r"\b([1-9]\d+)x([1-9]\d+)\b", video)
+    framerate = re.search(r"(\d+(?:\.\d+)?) (?:fps|tbr)", video)
+    if not (resolution and framerate):
+        return None
+    # ponytail: rotation is read from the whole banner, not just this stream's side data
+    rotation = re.search(r"rotation of (-?\d+(?:\.\d+)?)", metadata, re.IGNORECASE)
+    dar = re.search(r"DAR (\d+):(\d+)", video)
+    audio = re.search(r"Audio: (\w+)", metadata)
+    return {
+        "resolution": resolution.groups(),
+        "framerate": framerate.group(1),
+        # display rotation in degrees (FFmpeg auto-rotates while transcoding)
+        "rotation": float(rotation.group(1)) if rotation else 0.0,
+        # display aspect ratio as (num, den), if given
+        "dar": tuple(int(x) for x in dar.groups()) if dar else None,
+        # PQ or HLG transfer, i.e. HDR
+        "hdr": any(x in video for x in ("smpte2084", "arib-std-b67")),
+        # codec name of the first audio stream, or empty
+        "audio_codec": audio.group(1) if audio else "",
+    }
 
 
 def create_blank_frame(
