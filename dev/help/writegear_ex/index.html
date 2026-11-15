@@ -501,7 +501,7 @@ limitations under the License.
 </span><span id=__span-7-54><a id=__codelineno-7-54 name=__codelineno-7-54></a>
 </span><span id=__span-7-55><a id=__codelineno-7-55 name=__codelineno-7-55></a><span class=c1># safely close writer</span>
 </span><span id=__span-7-56><a id=__codelineno-7-56 name=__codelineno-7-56></a><span class=n>writer</span><span class=o>.</span><span class=n>close</span><span class=p>()</span>
-</span></code></pre></div></td></tr></table></div> <p> </p> <h2 id=using-writegears-compression-mode-to-add-external-audio-file-input-to-video-frames>Using WriteGear's Compression Mode to add external audio file input to video frames<a class=headerlink href=#using-writegears-compression-mode-to-add-external-audio-file-input-to-video-frames title="Permanent link">¶</a></h2> <p>You can also use WriteGear for merging external audio with live video-source: </p> <details class=new> <summary>New in v0.2.1</summary> <p>This example was added in <code>v0.2.1</code>.</p> </details> <div class="admonition failure"> <p class=admonition-title>Make sure this <code>-i</code> audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all.</p> </div> <div class="language-python highlight"><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal><a href=#__codelineno-8-1> 1</a></span>
+</span></code></pre></div></td></tr></table></div> <p> </p> <h2 id=using-writegears-compression-mode-to-add-external-audio-file-input-to-video-frames>Using WriteGear's Compression Mode to add external audio file input to video frames<a class=headerlink href=#using-writegears-compression-mode-to-add-external-audio-file-input-to-video-frames title="Permanent link">¶</a></h2> <p>You can also use WriteGear for merging external audio with live video-source: </p> <details class=new> <summary>New in v0.2.1</summary> <p>This example was added in <code>v0.2.1</code>.</p> </details> <div class="admonition failure"> <p class=admonition-title>Make sure this <code>-i</code> audio-source it compatible with provided video-source, otherwise you could encounter multiple errors or no output at all.</p> </div> <div class="admonition info"> <p class=admonition-title>WriteGear uses only the audio of this <code>-i</code> source <em>(even if it also has video)</em>, pads it with silence if it's shorter than your frames, and ends the output with your last frame. See <a href=../../gears/writegear/compression/params/#supported-parameters>extra inputs ➶</a>.</p> </div> <div class="language-python highlight"><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal><a href=#__codelineno-8-1> 1</a></span>
 <span class=normal><a href=#__codelineno-8-2> 2</a></span>
 <span class=normal><a href=#__codelineno-8-3> 3</a></span>
 <span class=normal><a href=#__codelineno-8-4> 4</a></span>
@@ -596,52 +596,14 @@ limitations under the License.
 </span><span id=__span-8-46><a id=__codelineno-8-46 name=__codelineno-8-46></a>
 </span><span id=__span-8-47><a id=__codelineno-8-47 name=__codelineno-8-47></a><span class=c1># safely close writer</span>
 </span><span id=__span-8-48><a id=__codelineno-8-48 name=__codelineno-8-48></a><span class=n>writer</span><span class=o>.</span><span class=n>close</span><span class=p>()</span>
-</span></code></pre></div></td></tr></table></div> <p> </p> <h2 id=using-writegears-compression-mode-for-generating-timely-accurate-video>Using WriteGear's Compression Mode for generating Timely Accurate Video<a class=headerlink href=#using-writegears-compression-mode-for-generating-timely-accurate-video title="Permanent link">¶</a></h2> <p>If you need timely accurate video with exactly same speed as real-time input, then you need to use FFmpeg directly through its <code>execute_ffmpeg_cmd</code> method: </p> <details class=new> <summary>New in v0.2.4</summary> <p>This example was added in <code>v0.2.4</code>.</p> </details> <p>In this example we are capturing video from desktop screen in a Timely Accurate manner.</p> <div class="tabbed-set tabbed-alternate" data-tabs=2:3><input checked=checked id=__tabbed_2_1 name=__tabbed_2 type=radio><input id=__tabbed_2_2 name=__tabbed_2 type=radio><input id=__tabbed_2_3 name=__tabbed_2 type=radio><div class=tabbed-labels><label for=__tabbed_2_1>Windows <span class=twemoji><svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill=currentColor d="m0 93.7 183.6-25.3v177.4H0zm0 324.6 183.6 25.3V268.4H0zm203.8 28L448 480V268.4H203.8zm0-380.6v180.1H448V32z"/></svg></span></label><label for=__tabbed_2_2>Linux <span class=twemoji><svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 24 24"><path d="M14.62 8.35c-.42.28-1.75 1.04-1.95 1.19-.39.31-.75.29-1.14-.01-.2-.16-1.53-.92-1.95-1.19-.48-.31-.45-.7.08-.92 1.64-.69 3.28-.64 4.91.03.49.21.51.6.05.9m7.22 7.28c-.93-2.09-2.2-3.99-3.84-5.66a4.3 4.3 0 0 1-1.06-1.88c-.1-.33-.17-.67-.24-1.01-.2-.88-.29-1.78-.7-2.61-.73-1.58-2-2.4-3.84-2.47-1.81.05-3.16.81-3.95 2.4-.21.43-.36.88-.46 1.34-.17.76-.32 1.55-.5 2.32-.15.65-.45 1.21-.96 1.71-1.61 1.57-2.9 3.37-3.88 5.35-.14.29-.28.58-.37.88-.19.66.29 1.12.99.96.44-.09.88-.18 1.3-.31.41-.15.57-.05.67.35.65 2.15 2.07 3.66 4.24 4.5 4.12 1.56 8.93-.66 9.97-4.58.07-.27.17-.37.47-.27.46.14.93.24 1.4.35.49.09.85-.16.92-.64.03-.26-.06-.49-.16-.73"/></svg></span></label><label for=__tabbed_2_3>MacOS <span class=twemoji><svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11"/></svg></span></label></div> <div class=tabbed-content> <div class=tabbed-block> <div class="language-python highlight"><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal><a href=#__codelineno-9-1> 1</a></span>
-<span class=normal><a href=#__codelineno-9-2> 2</a></span>
-<span class=normal><a href=#__codelineno-9-3> 3</a></span>
-<span class=normal><a href=#__codelineno-9-4> 4</a></span>
-<span class=normal><a href=#__codelineno-9-5> 5</a></span>
-<span class=normal><a href=#__codelineno-9-6> 6</a></span>
-<span class=normal><a href=#__codelineno-9-7> 7</a></span>
-<span class=normal><a href=#__codelineno-9-8> 8</a></span>
-<span class=normal><a href=#__codelineno-9-9> 9</a></span>
-<span class=normal><a href=#__codelineno-9-10>10</a></span>
-<span class=normal><a href=#__codelineno-9-11>11</a></span>
-<span class=normal><a href=#__codelineno-9-12>12</a></span>
-<span class=normal><a href=#__codelineno-9-13>13</a></span>
-<span class=normal><a href=#__codelineno-9-14>14</a></span>
-<span class=normal><a href=#__codelineno-9-15>15</a></span>
-<span class=normal><a href=#__codelineno-9-16>16</a></span>
-<span class=normal><a href=#__codelineno-9-17>17</a></span>
-<span class=normal><a href=#__codelineno-9-18>18</a></span>
-<span class=normal><a href=#__codelineno-9-19>19</a></span>
-<span class=normal><a href=#__codelineno-9-20>20</a></span>
-<span class=normal><a href=#__codelineno-9-21>21</a></span>
-<span class=normal><a href=#__codelineno-9-22>22</a></span>
-<span class=normal><a href=#__codelineno-9-23>23</a></span></pre></div></td><td class=code><div><pre><span></span><code><span id=__span-9-1><a id=__codelineno-9-1 name=__codelineno-9-1></a><span class=c1># import required libraries</span>
-</span><span id=__span-9-2><a id=__codelineno-9-2 name=__codelineno-9-2></a><span class=kn>from</span><span class=w> </span><span class=nn>vidgear.gears</span><span class=w> </span><span class=kn>import</span> <span class=n>WriteGear</span>
-</span><span id=__span-9-3><a id=__codelineno-9-3 name=__codelineno-9-3></a>
-</span><span id=__span-9-4><a id=__codelineno-9-4 name=__codelineno-9-4></a><span class=c1># Define writer with defined parameters and with some dummy name</span>
-</span><span id=__span-9-5><a id=__codelineno-9-5 name=__codelineno-9-5></a><span class=n>writer</span> <span class=o>=</span> <span class=n>WriteGear</span><span class=p>(</span><span class=n>output</span><span class=o>=</span><span class=s2>"Output.mp4"</span><span class=p>,</span> <span class=n>logging</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
-</span><span id=__span-9-6><a id=__codelineno-9-6 name=__codelineno-9-6></a>
-</span><span id=__span-9-7><a id=__codelineno-9-7 name=__codelineno-9-7></a><span class=c1># format FFmpeg command to generate time accurate video</span>
-</span><span id=__span-9-8><a id=__codelineno-9-8 name=__codelineno-9-8></a><span class=hll><span class=n>ffmpeg_command</span> <span class=o>=</span> <span class=p>[</span>
-</span></span><span id=__span-9-9><a id=__codelineno-9-9 name=__codelineno-9-9></a><span class=hll>    <span class=s2>"-y"</span><span class=p>,</span>
-</span></span><span id=__span-9-10><a id=__codelineno-9-10 name=__codelineno-9-10></a><span class=hll>    <span class=s2>"-f"</span><span class=p>,</span>
-</span></span><span id=__span-9-11><a id=__codelineno-9-11 name=__codelineno-9-11></a><span class=hll>    <span class=s2>"gdigrab"</span><span class=p>,</span>
-</span></span><span id=__span-9-12><a id=__codelineno-9-12 name=__codelineno-9-12></a><span class=hll>    <span class=s2>"-framerate"</span><span class=p>,</span>
-</span></span><span id=__span-9-13><a id=__codelineno-9-13 name=__codelineno-9-13></a><span class=hll>    <span class=s2>"30"</span><span class=p>,</span>
-</span></span><span id=__span-9-14><a id=__codelineno-9-14 name=__codelineno-9-14></a><span class=hll>    <span class=s2>"-i"</span><span class=p>,</span>
-</span></span><span id=__span-9-15><a id=__codelineno-9-15 name=__codelineno-9-15></a><span class=hll>    <span class=s2>"desktop"</span><span class=p>,</span>
-</span></span><span id=__span-9-16><a id=__codelineno-9-16 name=__codelineno-9-16></a><span class=hll>    <span class=s2>"Output.mkv"</span><span class=p>,</span>
-</span></span><span id=__span-9-17><a id=__codelineno-9-17 name=__codelineno-9-17></a><span class=hll><span class=p>]</span>  <span class=c1># `-y` parameter is to overwrite outputfile if exists</span>
-</span></span><span id=__span-9-18><a id=__codelineno-9-18 name=__codelineno-9-18></a>
-</span><span id=__span-9-19><a id=__codelineno-9-19 name=__codelineno-9-19></a><span class=c1># execute FFmpeg command</span>
-</span><span id=__span-9-20><a id=__codelineno-9-20 name=__codelineno-9-20></a><span class=n>writer</span><span class=o>.</span><span class=n>execute_ffmpeg_cmd</span><span class=p>(</span><span class=n>ffmpeg_command</span><span class=p>)</span>
-</span><span id=__span-9-21><a id=__codelineno-9-21 name=__codelineno-9-21></a>
-</span><span id=__span-9-22><a id=__codelineno-9-22 name=__codelineno-9-22></a><span class=c1># safely close writer</span>
-</span><span id=__span-9-23><a id=__codelineno-9-23 name=__codelineno-9-23></a><span class=n>writer</span><span class=o>.</span><span class=n>close</span><span class=p>()</span>
-</span></code></pre></div></td></tr></table></div> </div> <div class=tabbed-block> <div class="language-python highlight"><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal><a href=#__codelineno-10-1> 1</a></span>
+</span></code></pre></div></td></tr></table></div> <p> </p> <h2 id=using-writegears-compression-mode-for-generating-timely-accurate-video>Using WriteGear's Compression Mode for generating Timely Accurate Video<a class=headerlink href=#using-writegears-compression-mode-for-generating-timely-accurate-video title="Permanent link">¶</a></h2> <p>If you need timely accurate video with exactly same speed as real-time input, you can timestamp your frames by their arrival time, while still writing them with <code>write()</code>:</p> <div class="language-python highlight"><pre><span></span><code><span id=__span-9-1><a id=__codelineno-9-1 name=__codelineno-9-1 href=#__codelineno-9-1></a><span class=c1># frames are timestamped on arrival, then duplicated/dropped to a constant 30 fps</span>
+</span><span id=__span-9-2><a id=__codelineno-9-2 name=__codelineno-9-2 href=#__codelineno-9-2></a><span class=n>output_params</span> <span class=o>=</span> <span class=p>{</span>
+</span><span id=__span-9-3><a id=__codelineno-9-3 name=__codelineno-9-3 href=#__codelineno-9-3></a>    <span class=s2>"-ffpreheaders"</span><span class=p>:</span> <span class=p>[</span><span class=s2>"-use_wallclock_as_timestamps"</span><span class=p>,</span> <span class=s2>"1"</span><span class=p>],</span>
+</span><span id=__span-9-4><a id=__codelineno-9-4 name=__codelineno-9-4 href=#__codelineno-9-4></a>    <span class=s2>"-fps_mode"</span><span class=p>:</span> <span class=s2>"cfr"</span><span class=p>,</span>  <span class=c1># use `"-vsync": "cfr"` on FFmpeg older than 5.1</span>
+</span><span id=__span-9-5><a id=__codelineno-9-5 name=__codelineno-9-5 href=#__codelineno-9-5></a>    <span class=s2>"-r"</span><span class=p>:</span> <span class=mi>30</span><span class=p>,</span>
+</span><span id=__span-9-6><a id=__codelineno-9-6 name=__codelineno-9-6 href=#__codelineno-9-6></a><span class=p>}</span>
+</span><span id=__span-9-7><a id=__codelineno-9-7 name=__codelineno-9-7 href=#__codelineno-9-7></a><span class=n>writer</span> <span class=o>=</span> <span class=n>WriteGear</span><span class=p>(</span><span class=n>output</span><span class=o>=</span><span class=s2>"Output.mp4"</span><span class=p>,</span> <span class=o>**</span><span class=n>output_params</span><span class=p>)</span>
+</span></code></pre></div> <p>Or, if FFmpeg can capture the source itself <em>(e.g. desktop screen)</em>, use FFmpeg directly through its <code>execute_ffmpeg_cmd</code> method: </p> <details class=new> <summary>New in v0.2.4</summary> <p>This example was added in <code>v0.2.4</code>.</p> </details> <p>In this example we are capturing video from desktop screen in a Timely Accurate manner.</p> <div class="tabbed-set tabbed-alternate" data-tabs=2:3><input checked=checked id=__tabbed_2_1 name=__tabbed_2 type=radio><input id=__tabbed_2_2 name=__tabbed_2 type=radio><input id=__tabbed_2_3 name=__tabbed_2 type=radio><div class=tabbed-labels><label for=__tabbed_2_1>Windows <span class=twemoji><svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill=currentColor d="m0 93.7 183.6-25.3v177.4H0zm0 324.6 183.6 25.3V268.4H0zm203.8 28L448 480V268.4H203.8zm0-380.6v180.1H448V32z"/></svg></span></label><label for=__tabbed_2_2>Linux <span class=twemoji><svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 24 24"><path d="M14.62 8.35c-.42.28-1.75 1.04-1.95 1.19-.39.31-.75.29-1.14-.01-.2-.16-1.53-.92-1.95-1.19-.48-.31-.45-.7.08-.92 1.64-.69 3.28-.64 4.91.03.49.21.51.6.05.9m7.22 7.28c-.93-2.09-2.2-3.99-3.84-5.66a4.3 4.3 0 0 1-1.06-1.88c-.1-.33-.17-.67-.24-1.01-.2-.88-.29-1.78-.7-2.61-.73-1.58-2-2.4-3.84-2.47-1.81.05-3.16.81-3.95 2.4-.21.43-.36.88-.46 1.34-.17.76-.32 1.55-.5 2.32-.15.65-.45 1.21-.96 1.71-1.61 1.57-2.9 3.37-3.88 5.35-.14.29-.28.58-.37.88-.19.66.29 1.12.99.96.44-.09.88-.18 1.3-.31.41-.15.57-.05.67.35.65 2.15 2.07 3.66 4.24 4.5 4.12 1.56 8.93-.66 9.97-4.58.07-.27.17-.37.47-.27.46.14.93.24 1.4.35.49.09.85-.16.92-.64.03-.26-.06-.49-.16-.73"/></svg></span></label><label for=__tabbed_2_3>MacOS <span class=twemoji><svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11"/></svg></span></label></div> <div class=tabbed-content> <div class=tabbed-block> <div class="language-python highlight"><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal><a href=#__codelineno-10-1> 1</a></span>
 <span class=normal><a href=#__codelineno-10-2> 2</a></span>
 <span class=normal><a href=#__codelineno-10-3> 3</a></span>
 <span class=normal><a href=#__codelineno-10-4> 4</a></span>
@@ -673,11 +635,11 @@ limitations under the License.
 </span><span id=__span-10-8><a id=__codelineno-10-8 name=__codelineno-10-8></a><span class=hll><span class=n>ffmpeg_command</span> <span class=o>=</span> <span class=p>[</span>
 </span></span><span id=__span-10-9><a id=__codelineno-10-9 name=__codelineno-10-9></a><span class=hll>    <span class=s2>"-y"</span><span class=p>,</span>
 </span></span><span id=__span-10-10><a id=__codelineno-10-10 name=__codelineno-10-10></a><span class=hll>    <span class=s2>"-f"</span><span class=p>,</span>
-</span></span><span id=__span-10-11><a id=__codelineno-10-11 name=__codelineno-10-11></a><span class=hll>    <span class=s2>"x11grab"</span><span class=p>,</span>
+</span></span><span id=__span-10-11><a id=__codelineno-10-11 name=__codelineno-10-11></a><span class=hll>    <span class=s2>"gdigrab"</span><span class=p>,</span>
 </span></span><span id=__span-10-12><a id=__codelineno-10-12 name=__codelineno-10-12></a><span class=hll>    <span class=s2>"-framerate"</span><span class=p>,</span>
 </span></span><span id=__span-10-13><a id=__codelineno-10-13 name=__codelineno-10-13></a><span class=hll>    <span class=s2>"30"</span><span class=p>,</span>
 </span></span><span id=__span-10-14><a id=__codelineno-10-14 name=__codelineno-10-14></a><span class=hll>    <span class=s2>"-i"</span><span class=p>,</span>
-</span></span><span id=__span-10-15><a id=__codelineno-10-15 name=__codelineno-10-15></a><span class=hll>    <span class=s2>"default"</span><span class=p>,</span>
+</span></span><span id=__span-10-15><a id=__codelineno-10-15 name=__codelineno-10-15></a><span class=hll>    <span class=s2>"desktop"</span><span class=p>,</span>
 </span></span><span id=__span-10-16><a id=__codelineno-10-16 name=__codelineno-10-16></a><span class=hll>    <span class=s2>"Output.mkv"</span><span class=p>,</span>
 </span></span><span id=__span-10-17><a id=__codelineno-10-17 name=__codelineno-10-17></a><span class=hll><span class=p>]</span>  <span class=c1># `-y` parameter is to overwrite outputfile if exists</span>
 </span></span><span id=__span-10-18><a id=__codelineno-10-18 name=__codelineno-10-18></a>
@@ -718,7 +680,7 @@ limitations under the License.
 </span><span id=__span-11-8><a id=__codelineno-11-8 name=__codelineno-11-8></a><span class=hll><span class=n>ffmpeg_command</span> <span class=o>=</span> <span class=p>[</span>
 </span></span><span id=__span-11-9><a id=__codelineno-11-9 name=__codelineno-11-9></a><span class=hll>    <span class=s2>"-y"</span><span class=p>,</span>
 </span></span><span id=__span-11-10><a id=__codelineno-11-10 name=__codelineno-11-10></a><span class=hll>    <span class=s2>"-f"</span><span class=p>,</span>
-</span></span><span id=__span-11-11><a id=__codelineno-11-11 name=__codelineno-11-11></a><span class=hll>    <span class=s2>"avfoundation"</span><span class=p>,</span>
+</span></span><span id=__span-11-11><a id=__codelineno-11-11 name=__codelineno-11-11></a><span class=hll>    <span class=s2>"x11grab"</span><span class=p>,</span>
 </span></span><span id=__span-11-12><a id=__codelineno-11-12 name=__codelineno-11-12></a><span class=hll>    <span class=s2>"-framerate"</span><span class=p>,</span>
 </span></span><span id=__span-11-13><a id=__codelineno-11-13 name=__codelineno-11-13></a><span class=hll>    <span class=s2>"30"</span><span class=p>,</span>
 </span></span><span id=__span-11-14><a id=__codelineno-11-14 name=__codelineno-11-14></a><span class=hll>    <span class=s2>"-i"</span><span class=p>,</span>
@@ -731,7 +693,7 @@ limitations under the License.
 </span><span id=__span-11-21><a id=__codelineno-11-21 name=__codelineno-11-21></a>
 </span><span id=__span-11-22><a id=__codelineno-11-22 name=__codelineno-11-22></a><span class=c1># safely close writer</span>
 </span><span id=__span-11-23><a id=__codelineno-11-23 name=__codelineno-11-23></a><span class=n>writer</span><span class=o>.</span><span class=n>close</span><span class=p>()</span>
-</span></code></pre></div></td></tr></table></div> </div> </div> </div> <p> </p> <h2 id=using-writegear-with-rosrobot-operating-system>Using WriteGear with ROS(Robot Operating System)<a class=headerlink href=#using-writegear-with-rosrobot-operating-system title="Permanent link">¶</a></h2> <p>We will be using <a href=http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython><code>cv_bridge</code></a> to convert OpenCV frames to ROS image messages and vice-versa. </p> <p>In this example, we'll create a node that listens to a ROS image message topic, converts the received images messages into OpenCV frames, draws a circle on it, and then process these frames into a lossless compressed file format in real-time.</p> <details class=new> <summary>New in v0.2.2</summary> <p>This example was added in <code>v0.2.2</code>.</p> </details> <div class="admonition note"> <p class=admonition-title>This example is vidgear implementation of this <a href=http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython>wiki example</a>.</p> </div> <div class="language-python highlight"><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal><a href=#__codelineno-12-1> 1</a></span>
+</span></code></pre></div></td></tr></table></div> </div> <div class=tabbed-block> <div class="language-python highlight"><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal><a href=#__codelineno-12-1> 1</a></span>
 <span class=normal><a href=#__codelineno-12-2> 2</a></span>
 <span class=normal><a href=#__codelineno-12-3> 3</a></span>
 <span class=normal><a href=#__codelineno-12-4> 4</a></span>
@@ -753,113 +715,158 @@ limitations under the License.
 <span class=normal><a href=#__codelineno-12-20>20</a></span>
 <span class=normal><a href=#__codelineno-12-21>21</a></span>
 <span class=normal><a href=#__codelineno-12-22>22</a></span>
-<span class=normal><a href=#__codelineno-12-23>23</a></span>
-<span class=normal><a href=#__codelineno-12-24>24</a></span>
-<span class=normal><a href=#__codelineno-12-25>25</a></span>
-<span class=normal><a href=#__codelineno-12-26>26</a></span>
-<span class=normal><a href=#__codelineno-12-27>27</a></span>
-<span class=normal><a href=#__codelineno-12-28>28</a></span>
-<span class=normal><a href=#__codelineno-12-29>29</a></span>
-<span class=normal><a href=#__codelineno-12-30>30</a></span>
-<span class=normal><a href=#__codelineno-12-31>31</a></span>
-<span class=normal><a href=#__codelineno-12-32>32</a></span>
-<span class=normal><a href=#__codelineno-12-33>33</a></span>
-<span class=normal><a href=#__codelineno-12-34>34</a></span>
-<span class=normal><a href=#__codelineno-12-35>35</a></span>
-<span class=normal><a href=#__codelineno-12-36>36</a></span>
-<span class=normal><a href=#__codelineno-12-37>37</a></span>
-<span class=normal><a href=#__codelineno-12-38>38</a></span>
-<span class=normal><a href=#__codelineno-12-39>39</a></span>
-<span class=normal><a href=#__codelineno-12-40>40</a></span>
-<span class=normal><a href=#__codelineno-12-41>41</a></span>
-<span class=normal><a href=#__codelineno-12-42>42</a></span>
-<span class=normal><a href=#__codelineno-12-43>43</a></span>
-<span class=normal><a href=#__codelineno-12-44>44</a></span>
-<span class=normal><a href=#__codelineno-12-45>45</a></span>
-<span class=normal><a href=#__codelineno-12-46>46</a></span>
-<span class=normal><a href=#__codelineno-12-47>47</a></span>
-<span class=normal><a href=#__codelineno-12-48>48</a></span>
-<span class=normal><a href=#__codelineno-12-49>49</a></span>
-<span class=normal><a href=#__codelineno-12-50>50</a></span>
-<span class=normal><a href=#__codelineno-12-51>51</a></span>
-<span class=normal><a href=#__codelineno-12-52>52</a></span>
-<span class=normal><a href=#__codelineno-12-53>53</a></span>
-<span class=normal><a href=#__codelineno-12-54>54</a></span>
-<span class=normal><a href=#__codelineno-12-55>55</a></span>
-<span class=normal><a href=#__codelineno-12-56>56</a></span>
-<span class=normal><a href=#__codelineno-12-57>57</a></span>
-<span class=normal><a href=#__codelineno-12-58>58</a></span>
-<span class=normal><a href=#__codelineno-12-59>59</a></span>
-<span class=normal><a href=#__codelineno-12-60>60</a></span>
-<span class=normal><a href=#__codelineno-12-61>61</a></span>
-<span class=normal><a href=#__codelineno-12-62>62</a></span>
-<span class=normal><a href=#__codelineno-12-63>63</a></span>
-<span class=normal><a href=#__codelineno-12-64>64</a></span>
-<span class=normal><a href=#__codelineno-12-65>65</a></span>
-<span class=normal><a href=#__codelineno-12-66>66</a></span></pre></div></td><td class=code><div><pre><span></span><code><span id=__span-12-1><a id=__codelineno-12-1 name=__codelineno-12-1></a><span class=c1># import roslib</span>
-</span><span id=__span-12-2><a id=__codelineno-12-2 name=__codelineno-12-2></a><span class=kn>import</span><span class=w> </span><span class=nn>roslib</span>
+<span class=normal><a href=#__codelineno-12-23>23</a></span></pre></div></td><td class=code><div><pre><span></span><code><span id=__span-12-1><a id=__codelineno-12-1 name=__codelineno-12-1></a><span class=c1># import required libraries</span>
+</span><span id=__span-12-2><a id=__codelineno-12-2 name=__codelineno-12-2></a><span class=kn>from</span><span class=w> </span><span class=nn>vidgear.gears</span><span class=w> </span><span class=kn>import</span> <span class=n>WriteGear</span>
 </span><span id=__span-12-3><a id=__codelineno-12-3 name=__codelineno-12-3></a>
-</span><span id=__span-12-4><a id=__codelineno-12-4 name=__codelineno-12-4></a><span class=n>roslib</span><span class=o>.</span><span class=n>load_manifest</span><span class=p>(</span><span class=s2>"my_package"</span><span class=p>)</span>
-</span><span id=__span-12-5><a id=__codelineno-12-5 name=__codelineno-12-5></a>
-</span><span id=__span-12-6><a id=__codelineno-12-6 name=__codelineno-12-6></a><span class=c1># import other required libraries</span>
-</span><span id=__span-12-7><a id=__codelineno-12-7 name=__codelineno-12-7></a><span class=kn>import</span><span class=w> </span><span class=nn>sys</span>
-</span><span id=__span-12-8><a id=__codelineno-12-8 name=__codelineno-12-8></a><span class=kn>import</span><span class=w> </span><span class=nn>rospy</span>
-</span><span id=__span-12-9><a id=__codelineno-12-9 name=__codelineno-12-9></a><span class=kn>import</span><span class=w> </span><span class=nn>cv2</span>
-</span><span id=__span-12-10><a id=__codelineno-12-10 name=__codelineno-12-10></a><span class=kn>from</span><span class=w> </span><span class=nn>std_msgs.msg</span><span class=w> </span><span class=kn>import</span> <span class=n>String</span>
-</span><span id=__span-12-11><a id=__codelineno-12-11 name=__codelineno-12-11></a><span class=kn>from</span><span class=w> </span><span class=nn>sensor_msgs.msg</span><span class=w> </span><span class=kn>import</span> <span class=n>Image</span>
-</span><span id=__span-12-12><a id=__codelineno-12-12 name=__codelineno-12-12></a><span class=kn>from</span><span class=w> </span><span class=nn>cv_bridge</span><span class=w> </span><span class=kn>import</span> <span class=n>CvBridge</span><span class=p>,</span> <span class=n>CvBridgeError</span>
-</span><span id=__span-12-13><a id=__codelineno-12-13 name=__codelineno-12-13></a><span class=kn>from</span><span class=w> </span><span class=nn>vidgear.gears</span><span class=w> </span><span class=kn>import</span> <span class=n>WriteGear</span>
-</span><span id=__span-12-14><a id=__codelineno-12-14 name=__codelineno-12-14></a>
-</span><span id=__span-12-15><a id=__codelineno-12-15 name=__codelineno-12-15></a><span class=c1># custom publisher class</span>
-</span><span id=__span-12-16><a id=__codelineno-12-16 name=__codelineno-12-16></a><span class=k>class</span><span class=w> </span><span class=nc>image_subscriber</span><span class=p>:</span>
-</span><span id=__span-12-17><a id=__codelineno-12-17 name=__codelineno-12-17></a>    <span class=k>def</span><span class=w> </span><span class=fm>__init__</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>output</span><span class=o>=</span><span class=s2>"Output.mp4"</span><span class=p>):</span>
-</span><span id=__span-12-18><a id=__codelineno-12-18 name=__codelineno-12-18></a>        <span class=c1># create CV bridge</span>
-</span><span id=__span-12-19><a id=__codelineno-12-19 name=__codelineno-12-19></a>        <span class=bp>self</span><span class=o>.</span><span class=n>bridge</span> <span class=o>=</span> <span class=n>CvBridge</span><span class=p>()</span>
-</span><span id=__span-12-20><a id=__codelineno-12-20 name=__codelineno-12-20></a>        <span class=c1># define publisher topic</span>
-</span><span id=__span-12-21><a id=__codelineno-12-21 name=__codelineno-12-21></a>        <span class=bp>self</span><span class=o>.</span><span class=n>image_pub</span> <span class=o>=</span> <span class=n>rospy</span><span class=o>.</span><span class=n>Subscriber</span><span class=p>(</span><span class=s2>"image_topic_sub"</span><span class=p>,</span> <span class=n>Image</span><span class=p>,</span> <span class=bp>self</span><span class=o>.</span><span class=n>callback</span><span class=p>)</span>
-</span><span id=__span-12-22><a id=__codelineno-12-22 name=__codelineno-12-22></a>        <span class=c1># Define writer with default parameters</span>
-</span><span id=__span-12-23><a id=__codelineno-12-23 name=__codelineno-12-23></a>        <span class=bp>self</span><span class=o>.</span><span class=n>writer</span> <span class=o>=</span> <span class=n>WriteGear</span><span class=p>(</span><span class=n>output</span><span class=o>=</span><span class=n>output</span><span class=p>)</span>
-</span><span id=__span-12-24><a id=__codelineno-12-24 name=__codelineno-12-24></a>
-</span><span id=__span-12-25><a id=__codelineno-12-25 name=__codelineno-12-25></a>    <span class=k>def</span><span class=w> </span><span class=nf>callback</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>data</span><span class=p>):</span>
-</span><span id=__span-12-26><a id=__codelineno-12-26 name=__codelineno-12-26></a>        <span class=c1># convert received data to frame</span>
-</span><span id=__span-12-27><a id=__codelineno-12-27 name=__codelineno-12-27></a>        <span class=k>try</span><span class=p>:</span>
-</span><span id=__span-12-28><a id=__codelineno-12-28 name=__codelineno-12-28></a>            <span class=n>cv_image</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>bridge</span><span class=o>.</span><span class=n>imgmsg_to_cv2</span><span class=p>(</span><span class=n>data</span><span class=p>,</span> <span class=s2>"bgr8"</span><span class=p>)</span>
-</span><span id=__span-12-29><a id=__codelineno-12-29 name=__codelineno-12-29></a>        <span class=k>except</span> <span class=n>CvBridgeError</span> <span class=k>as</span> <span class=n>e</span><span class=p>:</span>
-</span><span id=__span-12-30><a id=__codelineno-12-30 name=__codelineno-12-30></a>            <span class=nb>print</span><span class=p>(</span><span class=n>e</span><span class=p>)</span>
-</span><span id=__span-12-31><a id=__codelineno-12-31 name=__codelineno-12-31></a>
-</span><span id=__span-12-32><a id=__codelineno-12-32 name=__codelineno-12-32></a>        <span class=c1># check if frame is valid</span>
-</span><span id=__span-12-33><a id=__codelineno-12-33 name=__codelineno-12-33></a>        <span class=k>if</span> <span class=n>cv_image</span><span class=p>:</span>
-</span><span id=__span-12-34><a id=__codelineno-12-34 name=__codelineno-12-34></a>
-</span><span id=__span-12-35><a id=__codelineno-12-35 name=__codelineno-12-35></a>            <span class=c1># {do something with the frame here}</span>
-</span><span id=__span-12-36><a id=__codelineno-12-36 name=__codelineno-12-36></a>            <span class=c1># let's add a circle</span>
-</span><span id=__span-12-37><a id=__codelineno-12-37 name=__codelineno-12-37></a>            <span class=p>(</span><span class=n>rows</span><span class=p>,</span> <span class=n>cols</span><span class=p>,</span> <span class=n>channels</span><span class=p>)</span> <span class=o>=</span> <span class=n>cv_image</span><span class=o>.</span><span class=n>shape</span>
-</span><span id=__span-12-38><a id=__codelineno-12-38 name=__codelineno-12-38></a>            <span class=k>if</span> <span class=n>cols</span> <span class=o>&gt;</span> <span class=mi>60</span> <span class=ow>and</span> <span class=n>rows</span> <span class=o>&gt;</span> <span class=mi>60</span><span class=p>:</span>
-</span><span id=__span-12-39><a id=__codelineno-12-39 name=__codelineno-12-39></a>                <span class=n>cv2</span><span class=o>.</span><span class=n>circle</span><span class=p>(</span><span class=n>cv_image</span><span class=p>,</span> <span class=p>(</span><span class=mi>50</span><span class=p>,</span> <span class=mi>50</span><span class=p>),</span> <span class=mi>10</span><span class=p>,</span> <span class=mi>255</span><span class=p>)</span>
-</span><span id=__span-12-40><a id=__codelineno-12-40 name=__codelineno-12-40></a>
-</span><span id=__span-12-41><a id=__codelineno-12-41 name=__codelineno-12-41></a>            <span class=c1># write frame to writer</span>
-</span><span id=__span-12-42><a id=__codelineno-12-42 name=__codelineno-12-42></a>            <span class=bp>self</span><span class=o>.</span><span class=n>writer</span><span class=o>.</span><span class=n>write</span><span class=p>(</span><span class=n>cv_image</span><span class=p>)</span>
-</span><span id=__span-12-43><a id=__codelineno-12-43 name=__codelineno-12-43></a>
-</span><span id=__span-12-44><a id=__codelineno-12-44 name=__codelineno-12-44></a>        <span class=k>def</span><span class=w> </span><span class=nf>close</span><span class=p>(</span><span class=bp>self</span><span class=p>):</span>
-</span><span id=__span-12-45><a id=__codelineno-12-45 name=__codelineno-12-45></a>            <span class=c1># safely close video stream</span>
-</span><span id=__span-12-46><a id=__codelineno-12-46 name=__codelineno-12-46></a>            <span class=bp>self</span><span class=o>.</span><span class=n>writer</span><span class=o>.</span><span class=n>close</span><span class=p>()</span>
-</span><span id=__span-12-47><a id=__codelineno-12-47 name=__codelineno-12-47></a>
-</span><span id=__span-12-48><a id=__codelineno-12-48 name=__codelineno-12-48></a>
-</span><span id=__span-12-49><a id=__codelineno-12-49 name=__codelineno-12-49></a><span class=k>def</span><span class=w> </span><span class=nf>main</span><span class=p>(</span><span class=n>args</span><span class=p>):</span>
-</span><span id=__span-12-50><a id=__codelineno-12-50 name=__codelineno-12-50></a>    <span class=c1># define publisher with suitable output filename</span>
-</span><span id=__span-12-51><a id=__codelineno-12-51 name=__codelineno-12-51></a>    <span class=c1># such as `Output.mp4` for saving output</span>
-</span><span id=__span-12-52><a id=__codelineno-12-52 name=__codelineno-12-52></a>    <span class=n>ic</span> <span class=o>=</span> <span class=n>image_subscriber</span><span class=p>(</span><span class=n>output</span><span class=o>=</span><span class=s2>"Output.mp4"</span><span class=p>)</span>
-</span><span id=__span-12-53><a id=__codelineno-12-53 name=__codelineno-12-53></a>    <span class=c1># initiate ROS node on publisher</span>
-</span><span id=__span-12-54><a id=__codelineno-12-54 name=__codelineno-12-54></a>    <span class=n>rospy</span><span class=o>.</span><span class=n>init_node</span><span class=p>(</span><span class=s2>"image_subscriber"</span><span class=p>,</span> <span class=n>anonymous</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
-</span><span id=__span-12-55><a id=__codelineno-12-55 name=__codelineno-12-55></a>    <span class=k>try</span><span class=p>:</span>
-</span><span id=__span-12-56><a id=__codelineno-12-56 name=__codelineno-12-56></a>        <span class=c1># run node</span>
-</span><span id=__span-12-57><a id=__codelineno-12-57 name=__codelineno-12-57></a>        <span class=n>rospy</span><span class=o>.</span><span class=n>spin</span><span class=p>()</span>
-</span><span id=__span-12-58><a id=__codelineno-12-58 name=__codelineno-12-58></a>    <span class=k>except</span> <span class=ne>KeyboardInterrupt</span><span class=p>:</span>
-</span><span id=__span-12-59><a id=__codelineno-12-59 name=__codelineno-12-59></a>        <span class=nb>print</span><span class=p>(</span><span class=s2>"Shutting down"</span><span class=p>)</span>
-</span><span id=__span-12-60><a id=__codelineno-12-60 name=__codelineno-12-60></a>    <span class=k>finally</span><span class=p>:</span>
-</span><span id=__span-12-61><a id=__codelineno-12-61 name=__codelineno-12-61></a>        <span class=c1># close publisher</span>
-</span><span id=__span-12-62><a id=__codelineno-12-62 name=__codelineno-12-62></a>        <span class=n>ic</span><span class=o>.</span><span class=n>close</span><span class=p>()</span>
-</span><span id=__span-12-63><a id=__codelineno-12-63 name=__codelineno-12-63></a>
-</span><span id=__span-12-64><a id=__codelineno-12-64 name=__codelineno-12-64></a>
-</span><span id=__span-12-65><a id=__codelineno-12-65 name=__codelineno-12-65></a><span class=k>if</span> <span class=vm>__name__</span> <span class=o>==</span> <span class=s2>"__main__"</span><span class=p>:</span>
-</span><span id=__span-12-66><a id=__codelineno-12-66 name=__codelineno-12-66></a>    <span class=n>main</span><span class=p>(</span><span class=n>sys</span><span class=o>.</span><span class=n>argv</span><span class=p>)</span>
+</span><span id=__span-12-4><a id=__codelineno-12-4 name=__codelineno-12-4></a><span class=c1># Define writer with defined parameters and with some dummy name</span>
+</span><span id=__span-12-5><a id=__codelineno-12-5 name=__codelineno-12-5></a><span class=n>writer</span> <span class=o>=</span> <span class=n>WriteGear</span><span class=p>(</span><span class=n>output</span><span class=o>=</span><span class=s2>"Output.mp4"</span><span class=p>,</span> <span class=n>logging</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</span><span id=__span-12-6><a id=__codelineno-12-6 name=__codelineno-12-6></a>
+</span><span id=__span-12-7><a id=__codelineno-12-7 name=__codelineno-12-7></a><span class=c1># format FFmpeg command to generate time accurate video</span>
+</span><span id=__span-12-8><a id=__codelineno-12-8 name=__codelineno-12-8></a><span class=hll><span class=n>ffmpeg_command</span> <span class=o>=</span> <span class=p>[</span>
+</span></span><span id=__span-12-9><a id=__codelineno-12-9 name=__codelineno-12-9></a><span class=hll>    <span class=s2>"-y"</span><span class=p>,</span>
+</span></span><span id=__span-12-10><a id=__codelineno-12-10 name=__codelineno-12-10></a><span class=hll>    <span class=s2>"-f"</span><span class=p>,</span>
+</span></span><span id=__span-12-11><a id=__codelineno-12-11 name=__codelineno-12-11></a><span class=hll>    <span class=s2>"avfoundation"</span><span class=p>,</span>
+</span></span><span id=__span-12-12><a id=__codelineno-12-12 name=__codelineno-12-12></a><span class=hll>    <span class=s2>"-framerate"</span><span class=p>,</span>
+</span></span><span id=__span-12-13><a id=__codelineno-12-13 name=__codelineno-12-13></a><span class=hll>    <span class=s2>"30"</span><span class=p>,</span>
+</span></span><span id=__span-12-14><a id=__codelineno-12-14 name=__codelineno-12-14></a><span class=hll>    <span class=s2>"-i"</span><span class=p>,</span>
+</span></span><span id=__span-12-15><a id=__codelineno-12-15 name=__codelineno-12-15></a><span class=hll>    <span class=s2>"default"</span><span class=p>,</span>
+</span></span><span id=__span-12-16><a id=__codelineno-12-16 name=__codelineno-12-16></a><span class=hll>    <span class=s2>"Output.mkv"</span><span class=p>,</span>
+</span></span><span id=__span-12-17><a id=__codelineno-12-17 name=__codelineno-12-17></a><span class=hll><span class=p>]</span>  <span class=c1># `-y` parameter is to overwrite outputfile if exists</span>
+</span></span><span id=__span-12-18><a id=__codelineno-12-18 name=__codelineno-12-18></a>
+</span><span id=__span-12-19><a id=__codelineno-12-19 name=__codelineno-12-19></a><span class=c1># execute FFmpeg command</span>
+</span><span id=__span-12-20><a id=__codelineno-12-20 name=__codelineno-12-20></a><span class=n>writer</span><span class=o>.</span><span class=n>execute_ffmpeg_cmd</span><span class=p>(</span><span class=n>ffmpeg_command</span><span class=p>)</span>
+</span><span id=__span-12-21><a id=__codelineno-12-21 name=__codelineno-12-21></a>
+</span><span id=__span-12-22><a id=__codelineno-12-22 name=__codelineno-12-22></a><span class=c1># safely close writer</span>
+</span><span id=__span-12-23><a id=__codelineno-12-23 name=__codelineno-12-23></a><span class=n>writer</span><span class=o>.</span><span class=n>close</span><span class=p>()</span>
+</span></code></pre></div></td></tr></table></div> </div> </div> </div> <p> </p> <h2 id=using-writegear-with-rosrobot-operating-system>Using WriteGear with ROS(Robot Operating System)<a class=headerlink href=#using-writegear-with-rosrobot-operating-system title="Permanent link">¶</a></h2> <p>We will be using <a href=http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython><code>cv_bridge</code></a> to convert OpenCV frames to ROS image messages and vice-versa. </p> <p>In this example, we'll create a node that listens to a ROS image message topic, converts the received images messages into OpenCV frames, draws a circle on it, and then process these frames into a lossless compressed file format in real-time.</p> <details class=new> <summary>New in v0.2.2</summary> <p>This example was added in <code>v0.2.2</code>.</p> </details> <div class="admonition note"> <p class=admonition-title>This example is vidgear implementation of this <a href=http://wiki.ros.org/cv_bridge/Tutorials/ConvertingBetweenROSImagesAndOpenCVImagesPython>wiki example</a>.</p> </div> <div class="language-python highlight"><table class=highlighttable><tr><td class=linenos><div class=linenodiv><pre><span></span><span class=normal><a href=#__codelineno-13-1> 1</a></span>
+<span class=normal><a href=#__codelineno-13-2> 2</a></span>
+<span class=normal><a href=#__codelineno-13-3> 3</a></span>
+<span class=normal><a href=#__codelineno-13-4> 4</a></span>
+<span class=normal><a href=#__codelineno-13-5> 5</a></span>
+<span class=normal><a href=#__codelineno-13-6> 6</a></span>
+<span class=normal><a href=#__codelineno-13-7> 7</a></span>
+<span class=normal><a href=#__codelineno-13-8> 8</a></span>
+<span class=normal><a href=#__codelineno-13-9> 9</a></span>
+<span class=normal><a href=#__codelineno-13-10>10</a></span>
+<span class=normal><a href=#__codelineno-13-11>11</a></span>
+<span class=normal><a href=#__codelineno-13-12>12</a></span>
+<span class=normal><a href=#__codelineno-13-13>13</a></span>
+<span class=normal><a href=#__codelineno-13-14>14</a></span>
+<span class=normal><a href=#__codelineno-13-15>15</a></span>
+<span class=normal><a href=#__codelineno-13-16>16</a></span>
+<span class=normal><a href=#__codelineno-13-17>17</a></span>
+<span class=normal><a href=#__codelineno-13-18>18</a></span>
+<span class=normal><a href=#__codelineno-13-19>19</a></span>
+<span class=normal><a href=#__codelineno-13-20>20</a></span>
+<span class=normal><a href=#__codelineno-13-21>21</a></span>
+<span class=normal><a href=#__codelineno-13-22>22</a></span>
+<span class=normal><a href=#__codelineno-13-23>23</a></span>
+<span class=normal><a href=#__codelineno-13-24>24</a></span>
+<span class=normal><a href=#__codelineno-13-25>25</a></span>
+<span class=normal><a href=#__codelineno-13-26>26</a></span>
+<span class=normal><a href=#__codelineno-13-27>27</a></span>
+<span class=normal><a href=#__codelineno-13-28>28</a></span>
+<span class=normal><a href=#__codelineno-13-29>29</a></span>
+<span class=normal><a href=#__codelineno-13-30>30</a></span>
+<span class=normal><a href=#__codelineno-13-31>31</a></span>
+<span class=normal><a href=#__codelineno-13-32>32</a></span>
+<span class=normal><a href=#__codelineno-13-33>33</a></span>
+<span class=normal><a href=#__codelineno-13-34>34</a></span>
+<span class=normal><a href=#__codelineno-13-35>35</a></span>
+<span class=normal><a href=#__codelineno-13-36>36</a></span>
+<span class=normal><a href=#__codelineno-13-37>37</a></span>
+<span class=normal><a href=#__codelineno-13-38>38</a></span>
+<span class=normal><a href=#__codelineno-13-39>39</a></span>
+<span class=normal><a href=#__codelineno-13-40>40</a></span>
+<span class=normal><a href=#__codelineno-13-41>41</a></span>
+<span class=normal><a href=#__codelineno-13-42>42</a></span>
+<span class=normal><a href=#__codelineno-13-43>43</a></span>
+<span class=normal><a href=#__codelineno-13-44>44</a></span>
+<span class=normal><a href=#__codelineno-13-45>45</a></span>
+<span class=normal><a href=#__codelineno-13-46>46</a></span>
+<span class=normal><a href=#__codelineno-13-47>47</a></span>
+<span class=normal><a href=#__codelineno-13-48>48</a></span>
+<span class=normal><a href=#__codelineno-13-49>49</a></span>
+<span class=normal><a href=#__codelineno-13-50>50</a></span>
+<span class=normal><a href=#__codelineno-13-51>51</a></span>
+<span class=normal><a href=#__codelineno-13-52>52</a></span>
+<span class=normal><a href=#__codelineno-13-53>53</a></span>
+<span class=normal><a href=#__codelineno-13-54>54</a></span>
+<span class=normal><a href=#__codelineno-13-55>55</a></span>
+<span class=normal><a href=#__codelineno-13-56>56</a></span>
+<span class=normal><a href=#__codelineno-13-57>57</a></span>
+<span class=normal><a href=#__codelineno-13-58>58</a></span>
+<span class=normal><a href=#__codelineno-13-59>59</a></span>
+<span class=normal><a href=#__codelineno-13-60>60</a></span>
+<span class=normal><a href=#__codelineno-13-61>61</a></span>
+<span class=normal><a href=#__codelineno-13-62>62</a></span>
+<span class=normal><a href=#__codelineno-13-63>63</a></span>
+<span class=normal><a href=#__codelineno-13-64>64</a></span>
+<span class=normal><a href=#__codelineno-13-65>65</a></span>
+<span class=normal><a href=#__codelineno-13-66>66</a></span></pre></div></td><td class=code><div><pre><span></span><code><span id=__span-13-1><a id=__codelineno-13-1 name=__codelineno-13-1></a><span class=c1># import roslib</span>
+</span><span id=__span-13-2><a id=__codelineno-13-2 name=__codelineno-13-2></a><span class=kn>import</span><span class=w> </span><span class=nn>roslib</span>
+</span><span id=__span-13-3><a id=__codelineno-13-3 name=__codelineno-13-3></a>
+</span><span id=__span-13-4><a id=__codelineno-13-4 name=__codelineno-13-4></a><span class=n>roslib</span><span class=o>.</span><span class=n>load_manifest</span><span class=p>(</span><span class=s2>"my_package"</span><span class=p>)</span>
+</span><span id=__span-13-5><a id=__codelineno-13-5 name=__codelineno-13-5></a>
+</span><span id=__span-13-6><a id=__codelineno-13-6 name=__codelineno-13-6></a><span class=c1># import other required libraries</span>
+</span><span id=__span-13-7><a id=__codelineno-13-7 name=__codelineno-13-7></a><span class=kn>import</span><span class=w> </span><span class=nn>sys</span>
+</span><span id=__span-13-8><a id=__codelineno-13-8 name=__codelineno-13-8></a><span class=kn>import</span><span class=w> </span><span class=nn>rospy</span>
+</span><span id=__span-13-9><a id=__codelineno-13-9 name=__codelineno-13-9></a><span class=kn>import</span><span class=w> </span><span class=nn>cv2</span>
+</span><span id=__span-13-10><a id=__codelineno-13-10 name=__codelineno-13-10></a><span class=kn>from</span><span class=w> </span><span class=nn>std_msgs.msg</span><span class=w> </span><span class=kn>import</span> <span class=n>String</span>
+</span><span id=__span-13-11><a id=__codelineno-13-11 name=__codelineno-13-11></a><span class=kn>from</span><span class=w> </span><span class=nn>sensor_msgs.msg</span><span class=w> </span><span class=kn>import</span> <span class=n>Image</span>
+</span><span id=__span-13-12><a id=__codelineno-13-12 name=__codelineno-13-12></a><span class=kn>from</span><span class=w> </span><span class=nn>cv_bridge</span><span class=w> </span><span class=kn>import</span> <span class=n>CvBridge</span><span class=p>,</span> <span class=n>CvBridgeError</span>
+</span><span id=__span-13-13><a id=__codelineno-13-13 name=__codelineno-13-13></a><span class=kn>from</span><span class=w> </span><span class=nn>vidgear.gears</span><span class=w> </span><span class=kn>import</span> <span class=n>WriteGear</span>
+</span><span id=__span-13-14><a id=__codelineno-13-14 name=__codelineno-13-14></a>
+</span><span id=__span-13-15><a id=__codelineno-13-15 name=__codelineno-13-15></a><span class=c1># custom publisher class</span>
+</span><span id=__span-13-16><a id=__codelineno-13-16 name=__codelineno-13-16></a><span class=k>class</span><span class=w> </span><span class=nc>image_subscriber</span><span class=p>:</span>
+</span><span id=__span-13-17><a id=__codelineno-13-17 name=__codelineno-13-17></a>    <span class=k>def</span><span class=w> </span><span class=fm>__init__</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>output</span><span class=o>=</span><span class=s2>"Output.mp4"</span><span class=p>):</span>
+</span><span id=__span-13-18><a id=__codelineno-13-18 name=__codelineno-13-18></a>        <span class=c1># create CV bridge</span>
+</span><span id=__span-13-19><a id=__codelineno-13-19 name=__codelineno-13-19></a>        <span class=bp>self</span><span class=o>.</span><span class=n>bridge</span> <span class=o>=</span> <span class=n>CvBridge</span><span class=p>()</span>
+</span><span id=__span-13-20><a id=__codelineno-13-20 name=__codelineno-13-20></a>        <span class=c1># define publisher topic</span>
+</span><span id=__span-13-21><a id=__codelineno-13-21 name=__codelineno-13-21></a>        <span class=bp>self</span><span class=o>.</span><span class=n>image_pub</span> <span class=o>=</span> <span class=n>rospy</span><span class=o>.</span><span class=n>Subscriber</span><span class=p>(</span><span class=s2>"image_topic_sub"</span><span class=p>,</span> <span class=n>Image</span><span class=p>,</span> <span class=bp>self</span><span class=o>.</span><span class=n>callback</span><span class=p>)</span>
+</span><span id=__span-13-22><a id=__codelineno-13-22 name=__codelineno-13-22></a>        <span class=c1># Define writer with default parameters</span>
+</span><span id=__span-13-23><a id=__codelineno-13-23 name=__codelineno-13-23></a>        <span class=bp>self</span><span class=o>.</span><span class=n>writer</span> <span class=o>=</span> <span class=n>WriteGear</span><span class=p>(</span><span class=n>output</span><span class=o>=</span><span class=n>output</span><span class=p>)</span>
+</span><span id=__span-13-24><a id=__codelineno-13-24 name=__codelineno-13-24></a>
+</span><span id=__span-13-25><a id=__codelineno-13-25 name=__codelineno-13-25></a>    <span class=k>def</span><span class=w> </span><span class=nf>callback</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>data</span><span class=p>):</span>
+</span><span id=__span-13-26><a id=__codelineno-13-26 name=__codelineno-13-26></a>        <span class=c1># convert received data to frame</span>
+</span><span id=__span-13-27><a id=__codelineno-13-27 name=__codelineno-13-27></a>        <span class=k>try</span><span class=p>:</span>
+</span><span id=__span-13-28><a id=__codelineno-13-28 name=__codelineno-13-28></a>            <span class=n>cv_image</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>bridge</span><span class=o>.</span><span class=n>imgmsg_to_cv2</span><span class=p>(</span><span class=n>data</span><span class=p>,</span> <span class=s2>"bgr8"</span><span class=p>)</span>
+</span><span id=__span-13-29><a id=__codelineno-13-29 name=__codelineno-13-29></a>        <span class=k>except</span> <span class=n>CvBridgeError</span> <span class=k>as</span> <span class=n>e</span><span class=p>:</span>
+</span><span id=__span-13-30><a id=__codelineno-13-30 name=__codelineno-13-30></a>            <span class=nb>print</span><span class=p>(</span><span class=n>e</span><span class=p>)</span>
+</span><span id=__span-13-31><a id=__codelineno-13-31 name=__codelineno-13-31></a>
+</span><span id=__span-13-32><a id=__codelineno-13-32 name=__codelineno-13-32></a>        <span class=c1># check if frame is valid</span>
+</span><span id=__span-13-33><a id=__codelineno-13-33 name=__codelineno-13-33></a>        <span class=k>if</span> <span class=n>cv_image</span><span class=p>:</span>
+</span><span id=__span-13-34><a id=__codelineno-13-34 name=__codelineno-13-34></a>
+</span><span id=__span-13-35><a id=__codelineno-13-35 name=__codelineno-13-35></a>            <span class=c1># {do something with the frame here}</span>
+</span><span id=__span-13-36><a id=__codelineno-13-36 name=__codelineno-13-36></a>            <span class=c1># let's add a circle</span>
+</span><span id=__span-13-37><a id=__codelineno-13-37 name=__codelineno-13-37></a>            <span class=p>(</span><span class=n>rows</span><span class=p>,</span> <span class=n>cols</span><span class=p>,</span> <span class=n>channels</span><span class=p>)</span> <span class=o>=</span> <span class=n>cv_image</span><span class=o>.</span><span class=n>shape</span>
+</span><span id=__span-13-38><a id=__codelineno-13-38 name=__codelineno-13-38></a>            <span class=k>if</span> <span class=n>cols</span> <span class=o>&gt;</span> <span class=mi>60</span> <span class=ow>and</span> <span class=n>rows</span> <span class=o>&gt;</span> <span class=mi>60</span><span class=p>:</span>
+</span><span id=__span-13-39><a id=__codelineno-13-39 name=__codelineno-13-39></a>                <span class=n>cv2</span><span class=o>.</span><span class=n>circle</span><span class=p>(</span><span class=n>cv_image</span><span class=p>,</span> <span class=p>(</span><span class=mi>50</span><span class=p>,</span> <span class=mi>50</span><span class=p>),</span> <span class=mi>10</span><span class=p>,</span> <span class=mi>255</span><span class=p>)</span>
+</span><span id=__span-13-40><a id=__codelineno-13-40 name=__codelineno-13-40></a>
+</span><span id=__span-13-41><a id=__codelineno-13-41 name=__codelineno-13-41></a>            <span class=c1># write frame to writer</span>
+</span><span id=__span-13-42><a id=__codelineno-13-42 name=__codelineno-13-42></a>            <span class=bp>self</span><span class=o>.</span><span class=n>writer</span><span class=o>.</span><span class=n>write</span><span class=p>(</span><span class=n>cv_image</span><span class=p>)</span>
+</span><span id=__span-13-43><a id=__codelineno-13-43 name=__codelineno-13-43></a>
+</span><span id=__span-13-44><a id=__codelineno-13-44 name=__codelineno-13-44></a>        <span class=k>def</span><span class=w> </span><span class=nf>close</span><span class=p>(</span><span class=bp>self</span><span class=p>):</span>
+</span><span id=__span-13-45><a id=__codelineno-13-45 name=__codelineno-13-45></a>            <span class=c1># safely close video stream</span>
+</span><span id=__span-13-46><a id=__codelineno-13-46 name=__codelineno-13-46></a>            <span class=bp>self</span><span class=o>.</span><span class=n>writer</span><span class=o>.</span><span class=n>close</span><span class=p>()</span>
+</span><span id=__span-13-47><a id=__codelineno-13-47 name=__codelineno-13-47></a>
+</span><span id=__span-13-48><a id=__codelineno-13-48 name=__codelineno-13-48></a>
+</span><span id=__span-13-49><a id=__codelineno-13-49 name=__codelineno-13-49></a><span class=k>def</span><span class=w> </span><span class=nf>main</span><span class=p>(</span><span class=n>args</span><span class=p>):</span>
+</span><span id=__span-13-50><a id=__codelineno-13-50 name=__codelineno-13-50></a>    <span class=c1># define publisher with suitable output filename</span>
+</span><span id=__span-13-51><a id=__codelineno-13-51 name=__codelineno-13-51></a>    <span class=c1># such as `Output.mp4` for saving output</span>
+</span><span id=__span-13-52><a id=__codelineno-13-52 name=__codelineno-13-52></a>    <span class=n>ic</span> <span class=o>=</span> <span class=n>image_subscriber</span><span class=p>(</span><span class=n>output</span><span class=o>=</span><span class=s2>"Output.mp4"</span><span class=p>)</span>
+</span><span id=__span-13-53><a id=__codelineno-13-53 name=__codelineno-13-53></a>    <span class=c1># initiate ROS node on publisher</span>
+</span><span id=__span-13-54><a id=__codelineno-13-54 name=__codelineno-13-54></a>    <span class=n>rospy</span><span class=o>.</span><span class=n>init_node</span><span class=p>(</span><span class=s2>"image_subscriber"</span><span class=p>,</span> <span class=n>anonymous</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</span><span id=__span-13-55><a id=__codelineno-13-55 name=__codelineno-13-55></a>    <span class=k>try</span><span class=p>:</span>
+</span><span id=__span-13-56><a id=__codelineno-13-56 name=__codelineno-13-56></a>        <span class=c1># run node</span>
+</span><span id=__span-13-57><a id=__codelineno-13-57 name=__codelineno-13-57></a>        <span class=n>rospy</span><span class=o>.</span><span class=n>spin</span><span class=p>()</span>
+</span><span id=__span-13-58><a id=__codelineno-13-58 name=__codelineno-13-58></a>    <span class=k>except</span> <span class=ne>KeyboardInterrupt</span><span class=p>:</span>
+</span><span id=__span-13-59><a id=__codelineno-13-59 name=__codelineno-13-59></a>        <span class=nb>print</span><span class=p>(</span><span class=s2>"Shutting down"</span><span class=p>)</span>
+</span><span id=__span-13-60><a id=__codelineno-13-60 name=__codelineno-13-60></a>    <span class=k>finally</span><span class=p>:</span>
+</span><span id=__span-13-61><a id=__codelineno-13-61 name=__codelineno-13-61></a>        <span class=c1># close publisher</span>
+</span><span id=__span-13-62><a id=__codelineno-13-62 name=__codelineno-13-62></a>        <span class=n>ic</span><span class=o>.</span><span class=n>close</span><span class=p>()</span>
+</span><span id=__span-13-63><a id=__codelineno-13-63 name=__codelineno-13-63></a>
+</span><span id=__span-13-64><a id=__codelineno-13-64 name=__codelineno-13-64></a>
+</span><span id=__span-13-65><a id=__codelineno-13-65 name=__codelineno-13-65></a><span class=k>if</span> <span class=vm>__name__</span> <span class=o>==</span> <span class=s2>"__main__"</span><span class=p>:</span>
+</span><span id=__span-13-66><a id=__codelineno-13-66 name=__codelineno-13-66></a>    <span class=n>main</span><span class=p>(</span><span class=n>sys</span><span class=o>.</span><span class=n>argv</span><span class=p>)</span>
 </span></code></pre></div></td></tr></table></div> <p> </p> <form class=md-feedback name=feedback hidden> <fieldset> <legend class=md-feedback__title> Was this page helpful? </legend> <div class=md-feedback__inner> <div class=md-feedback__list> <button class="md-feedback__icon md-icon" type=submit title="This page was helpful" data-md-value=1> <svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg> </button> <button class="md-feedback__icon md-icon" type=submit title="This page could be improved" data-md-value=0> <svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg> </button> </div> <div class=md-feedback__note> <div data-md-value=1 hidden> Thanks for your feedback! </div> <div data-md-value=0 hidden> Thanks for your feedback! Help us improve this page by using our <a href=... target=_blank rel=noopener>feedback form</a>. </div> </div> </div> </fieldset> </form> <footer class=sponsorship> <hr> <a href=https://ko-fi.com/W7W8WTYO> <span class="twemoji heart-throb-hover heart"> <svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill=currentColor d="m256 107.9-15-20.8C216 52.5 175.9 32 133.1 32 59.6 32 0 91.6 0 165.1v2.6c0 23.6 6.2 48 16.6 72.3h106c3.2 0 6.1-1.9 7.4-4.9l31.8-76.3c3.7-8.8 12.3-14.6 21.8-14.8s18.3 5.4 22.2 14.1L257.1 272l41.4-82.8c4.1-8.1 12.4-13.3 21.5-13.3s17.4 5.1 21.5 13.3l23.2 46.3c1.4 2.7 4.1 4.4 7.2 4.4h123.6c10.5-24.3 16.6-48.7 16.6-72.3V165C512 91.6 452.4 32 378.9 32 336.2 32 296 52.5 271 87.1l-15 20.7zM469.6 288h-97.8c-21.2 0-40.6-12-50.1-31l-1.7-3.4-42.5 85.1c-4.1 8.3-12.7 13.5-22 13.3s-17.6-5.7-21.4-14.1l-49.3-109.5-10.5 25.2c-8.7 20.9-29.1 34.5-51.7 34.5H42.4c47.2 73.8 123 141.7 170.4 177.9 12.4 9.4 27.6 14.1 43.1 14.1s30.8-4.6 43.1-14.1c47.6-36.3 123.4-104.2 170.6-178"/></svg> </span> </a> <hr> </footer> </article> </div> <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script> <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script> </div> <button type=button class="md-top md-icon" data-md-component=top hidden> <svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg> Back to top </button> </main> <footer class=md-footer> <div class="md-footer-meta md-typeset"> <div class="md-footer-meta__inner md-grid"> <div class=md-copyright> <div class=md-copyright__highlight> Copyright © 2019 Abhishek Thakur(@abhiTronix) </div> Made with <a href=https://zensical.org/ target=_blank rel=noopener> Zensical </a> </div> <div class=md-social> <a href=https://github.com/abhiTronix target=_blank rel=noopener title=github.com class=md-social__link> <svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill=currentColor d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg> </a> <a href=https://gitter.im/vidgear/community target=_blank rel=noopener title=gitter.im class=md-social__link> <svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 384 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill=currentColor d="M66.4 322.5H16V0h50.4zM166.9 76.1h-50.4V512h50.4zm100.6 0h-50.4V512h50.4zM368 76h-50.4v247H368z"/></svg> </a> <a href=https://www.linkedin.com/in/abhishek-singh-thakur-a37845a5 target=_blank rel=noopener title=www.linkedin.com class=md-social__link> <svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill=currentColor d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg> </a> <a href=https://dev.to/abhitronix target=_blank rel=noopener title=dev.to class=md-social__link> <svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill=currentColor d="M120.1 208.3c-3.9-2.9-7.8-4.3-11.6-4.3H91.1v104.5h17.4c3.9 0 7.8-1.4 11.6-4.3s5.8-7.3 5.8-13.1v-69.7c0-5.8-2-10.2-5.8-13.1M404.1 32H43.9C19.7 32 .1 51.6 0 75.8v360.4C.1 460.4 19.7 480 43.9 480h360.2c24.2 0 43.8-19.6 43.9-43.8V75.8c-.1-24.2-19.7-43.8-43.9-43.8M154.2 291.2c0 18.8-11.6 47.3-48.4 47.3H59.4V173h47.4c35.4 0 47.4 28.5 47.4 47.3zm100.7-88.7h-53.3v38.4h32.6v29.6h-32.6v38.4h53.3v29.6h-62.2c-11.2.3-20.4-8.5-20.7-19.7V193.7c-.3-11.1 8.6-20.4 19.7-20.7h63.2zm103.6 115.3c-13.2 30.7-36.8 24.6-47.4 0L272.6 173h32.6l29.7 113.7L364.5 173h32.6l-38.5 144.8z"/></svg> </a> </div> </div> </div> </footer> </div> <div class=md-dialog data-md-component=dialog role=status aria-atomic=true> <div class="md-dialog__inner md-typeset"></div> </div> <script id=__config type=application/json>{"annotate":null,"base":"../..","features":["announce.dismiss","navigation.indexes","navigation.prune","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","navigation.instant","search.suggest","search.highlight","search.share","content.code.annotate","content.code.copy","content.tabs.link","content.footnote.tooltips","content.action.view","content.action.edit","content.tooltips","toc.follow"],"redirect":null,"search":"../../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"default":"latest","provider":"mike"}}</script> <script src=../../assets/javascripts/bundle.3cb411a8.min.js></script> <script src=../../assets/javascripts/extra.js></script> <script src=https://cdn.jsdelivr.net/npm/@clappr/player@0.14.7/dist/clappr.min.js></script> <script src=https://cdn.jsdelivr.net/npm/@clappr/level-selector@1.1.2/dist/level-selector.min.js></script> <script src=https://cdn.jsdelivr.net/npm/shaka-player@4.16.53/dist/shaka-player.compiled.js></script> <script src=https://cdn.jsdelivr.net/npm/dash-shaka-playback@4.1.8/dist/dash-shaka-playback.min.js></script> </body> </html>
