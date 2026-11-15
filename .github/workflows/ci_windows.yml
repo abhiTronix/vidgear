@@ -1,0 +1,65 @@
+# Copyright (c) 2019 Abhishek Thakur(@abhiTronix) <abhi.una12@gmail.com>
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#    http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Run Windows CI-Tests for vidgear
+
+on:
+  push:
+    branches:
+      - testing
+    paths-ignore:
+      - "**/*.md"
+      - "**/*.html"
+      - "**/*.js"
+      - "**/*.css"
+      - "docs/**/*"
+      - README.md
+      - mkdocs.yml
+  pull_request:
+    branches:
+      - testing
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**/*"
+
+jobs:
+  test:
+    name: Windows CI Test vidgear
+    runs-on: blacksmith-2vcpu-windows-2025
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: useblacksmith/checkout@v1
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: install pip_dependencies
+        run: |
+          python -m pip install --upgrade pip wheel numpy cython opencv-python
+          python -m pip install --upgrade ".[asyncio]" six httpx2 "yt-dlp[default]" aiortc
+          python -m pip install --upgrade pytest codecov pytest-cov pytest-asyncio m3u8 async-asgi-testclient paramiko
+          python -m pip install --upgrade deffcode
+          python -m pip install https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev2/mpegdash-0.3.0.dev2-py3-none-any.whl
+        if: success()
+      - name: run prepare_dataset_script
+        run: bash scripts/bash/prepare_dataset.sh
+        shell: bash
+      - name: Run pytest tests
+        run: python -m pytest --verbose --capture=no --cov-report term-missing --cov=vidgear vidgear/tests/
+      - name: Upload coverage to Codecov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: python -m codecov
+        if: success()
