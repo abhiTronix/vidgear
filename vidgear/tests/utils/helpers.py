@@ -24,6 +24,7 @@ limitations under the License.
 
 import os
 import platform
+import subprocess
 import tempfile
 
 
@@ -101,3 +102,26 @@ def decode_frames(path):
     frames = list(decoder.generateFrame())
     decoder.terminate()
     return frames
+
+
+def stream_lines(path):
+    """
+    Returns the `Stream #` lines of FFmpeg's banner for a file or manifest _(every rendition)_.
+    """
+    banner = subprocess.run(
+        [return_static_ffmpeg(), "-hide_banner", "-i", str(path)],
+        capture_output=True,
+        text=True,
+    ).stderr
+    return [x.strip() for x in banner.splitlines() if x.strip().startswith("Stream #")]
+
+
+def make_clip(path, *args):
+    """
+    Writes a short synthetic clip with the static FFmpeg _(`args`: inputs and encoding options)_.
+    """
+    subprocess.run(
+        [return_static_ffmpeg(), "-hide_banner", "-loglevel", "error", "-y", *args, str(path)],
+        check=True,
+    )
+    return str(path)

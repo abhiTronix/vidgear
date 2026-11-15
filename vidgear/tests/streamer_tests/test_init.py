@@ -19,73 +19,69 @@ limitations under the License.
 """
 
 # import the necessary packages
-
-import logging as log
 import os
-import platform
-import tempfile
-from os.path import expanduser
 
 import pytest
 
 from vidgear.gears import StreamGear
-from vidgear.gears.helper import logger_handler
-from vidgear.tests.utils.helpers import get_testing_dir, return_static_ffmpeg
-
-# define test logger
-logger = log.getLogger("Test_init")
-logger.propagate = False
-logger.addHandler(logger_handler())
-logger.setLevel(log.DEBUG)
+from vidgear.tests.utils.helpers import return_static_ffmpeg
 
 
-
-
-
-@pytest.mark.xfail(raises=RuntimeError)
-@pytest.mark.parametrize("c_ffmpeg", [return_static_ffmpeg(), "wrong_path", 1234])
-def test_custom_ffmpeg(c_ffmpeg):
+def test_custom_ffmpeg(tmp_path):
     """
-    Testing custom FFmpeg for StreamGear
+    Testing valid custom FFmpeg for StreamGear
     """
-    streamer = StreamGear(output=os.path.join(get_testing_dir(), "output.mpd"), custom_ffmpeg=c_ffmpeg, logging=True)
-    streamer.close()
+    StreamGear(output=str(tmp_path / "output.mpd"), custom_ffmpeg=return_static_ffmpeg()).close()
 
 
-@pytest.mark.xfail(raises=(AssertionError, ValueError))
-@pytest.mark.parametrize("format", ["hls", "mash", 1234, None])
-def test_formats(format):
+@pytest.mark.parametrize("c_ffmpeg", ["wrong_path", 1234])
+def test_custom_ffmpeg_invalid(c_ffmpeg, tmp_path):
     """
-    Testing different formats for StreamGear
+    Testing invalid custom FFmpeg for StreamGear raises
     """
-    streamer = StreamGear(output=os.path.join(get_testing_dir(), "output.mpd"), format=format, logging=True)
-    streamer.close()
+    with pytest.raises(RuntimeError):
+        StreamGear(output=str(tmp_path / "output.mpd"), custom_ffmpeg=c_ffmpeg)
+
+
+@pytest.mark.parametrize("format, ext", [("dash", "mpd"), ("hls", "m3u8"), ("HLS ", "m3u8")])
+def test_formats(format, ext, tmp_path):
+    """
+    Testing supported formats for StreamGear
+    """
+    StreamGear(output=str(tmp_path / "output.{}".format(ext)), format=format).close()
 
 
 @pytest.mark.parametrize(
-    "output",
-    [None, os.path.join(get_testing_dir(), "output.mpd"), os.path.join(get_testing_dir(), "output.m3u8")],
+    "format, output",
+    [
+        ("hls", "output.mpd"),  # extension mismatch
+        ("mash", "output.mpd"),  # typo
+        (1234, "output.mpd"),
+        (None, "output.mpd"),
+        ("dash", None),
+        ("dash", "temp_mpd"),  # no extension dot
+        ("dash", "missing_dir/output.mpd"),  # parent must exist
+        ("dash", "unknown://invalid.com/output.mpd"),  # unsupported URL scheme
+    ],
 )
-def test_outputs(output):
+def test_invalid_outputs(format, output, tmp_path):
     """
-    Testing different output for StreamGear
+    Testing invalid formats/outputs for StreamGear raise
     """
-    _m3u8 = os.path.join(get_testing_dir(), "output.m3u8")
-    stream_params = (
-        {"-clear_prev_assets": True}
-        if (output and not output.endswith("m3u8"))
-        else {"-clear_prev_assets": "invalid"}
-    )
-    try:
-        streamer = StreamGear(
-            output=output,
-            format="hls" if output == _m3u8 else "dash",
-            logging=True,
-            **stream_params
+    with pytest.raises(ValueError):
+        StreamGear(
+            output=str(tmp_path / output) if output and "://" not in output else output,
+            format=format,
         )
-        streamer.close()
-    except Exception as e:
-        if output is None or (isinstance(output, str) and output.endswith("m3u8")):
-            pytest.xfail(str(e))
-        else:
-            pytest.fail(str(e))
+
+
+def test_clear_prev_assets(tmp_path):
+    """
+    Testing `-clear_prev_assets` removes StreamGear's own assets only, even for a new manifest name
+    """
+    stale = ["init-stream2.m4s", "chunk-stream0-00001.m4s", "chunk-stream1-001.ts", "stream_0.m3u8", "init_0.mp4"]
+    user = ["other.mpd", "notes.txt", "video.mp4"]
+    for name in stale + user:
+        (tmp_path / name).touch()
+    StreamGear(output=str(tmp_path / "new.mpd"), **{"-clear_prev_assets": True}).close()
+    assert sorted(os.listdir(tmp_path)) == sorted(user)

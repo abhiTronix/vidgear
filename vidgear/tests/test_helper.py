@@ -716,3 +716,47 @@ def test_backend_enum_is_enum(member):
     Every Backend member must be an instance of Backend.
     """
     assert isinstance(member, Backend)
+
+
+@pytest.mark.parametrize(
+    "banner, expected",
+    [
+        # cover art first is skipped, rotation (8.1+ `Display Matrix` spelling), AAC audio
+        (
+            b"  Stream #0:0: Video: png, rgb24, 600x600, 90k tbr, 90k tbn (attached pic)\n"
+            b"  Stream #0:1: Video: h264 (High), yuv420p(progressive), 1280x720 [SAR 1:1 DAR 16:9], 25 fps, 25 tbr\n"
+            b"      Display Matrix: rotation of -90.00 degrees\n"
+            b"  Stream #0:2: Audio: aac (LC), 44100 Hz, stereo, fltp, 128 kb/s\n",
+            {"resolution": ("1280", "720"), "framerate": "25", "rotation": -90.0, "dar": (16, 9), "hdr": False, "audio_codec": "aac"},
+        ),
+        # HDR (PQ), anamorphic, `displaymatrix:` spelling, no audio
+        (
+            b"  Stream #0:0: Video: hevc (Main 10), yuv420p10le(tv, bt2020nc/bt2020/smpte2084), 1440x1080 [SAR 4:3 DAR 16:9], 29.97 fps\n"
+            b"      displaymatrix: rotation of 90.00 degrees\n",
+            {"resolution": ("1440", "1080"), "framerate": "29.97", "rotation": 90.0, "dar": (16, 9), "hdr": True, "audio_codec": ""},
+        ),
+        # audio only
+        (b"  Stream #0:0: Audio: pcm_s16le, 44100 Hz, mono, s16, 705 kb/s\n", None),
+    ],
+)
+def test_validate_video_banner(banner, expected, monkeypatch):
+    """
+    Testing validate_video parses geometry, rotation, DAR, HDR and audio codec from FFmpeg's banner
+    """
+    from vidgear.gears import helper as _helper
+
+    monkeypatch.setattr(_helper, "check_output", lambda *a, **k: b"Input #0, foo, from 'x':\n" + banner)
+    assert _helper.validate_video("ffmpeg", video_path="dummy") == expected
+
+
+def test_has_muxer_option():
+    """
+    Testing has_muxer_option detects muxers and their options
+    """
+    from vidgear.gears.helper import has_muxer_option, is_number, to_float
+
+    assert has_muxer_option(return_static_ffmpeg(), "dash", "-seg_duration")
+    assert not has_muxer_option(return_static_ffmpeg(), "dash", "-no_such_option")
+    assert not has_muxer_option(return_static_ffmpeg(), "no_such_muxer", "-seg_duration")
+    assert is_number(2.5) and not is_number(True) and not is_number("2")
+    assert to_float("2.5") == 2.5 and to_float("x") == 0.0 and to_float(True) == 0.0
