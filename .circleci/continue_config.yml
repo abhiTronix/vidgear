@@ -53,7 +53,7 @@ jobs:
             python -m pip install --upgrade pip poetry
             poetry config virtualenvs.in-project true
             poetry env use (Get-Command python).Source
-            poetry run pip install six httpx2 numpy cython opencv-python
+            poetry run pip install six httpx2 future numpy cython opencv-python
             poetry install --all-extras --no-interaction
             poetry run pip install --no-deps https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev2/mpegdash-0.3.0.dev2-py3-none-any.whl
             poetry run pip install pytest codecov pytest-cov pytest-asyncio m3u8 async-asgi-testclient paramiko
