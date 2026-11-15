@@ -528,7 +528,7 @@ To generate Secondary Streams, add each desired resolution and bitrate/framerate
     stream_params = {
         "-streams": [
             {"-resolution": "1280x720", "-framerate": 30.0},  # Stream1: 1280x720 at 30fps framerate
-            {"-resolution": "640x360", "-framerate": 60.0},  # Stream2: 640x360 at 60fps framerate
+            {"-resolution": "640x360", "-framerate": 15.0},  # Stream2: 640x360 at 15fps framerate
             {"-resolution": "320x240", "-video_bitrate": "500k"},  # Stream3: 320x240 at 500kbs bitrate
         ],
     }
@@ -584,7 +584,7 @@ To generate Secondary Streams, add each desired resolution and bitrate/framerate
     stream_params = {
         "-streams": [
             {"-resolution": "1280x720", "-framerate": 30.0},  # Stream1: 1280x720 at 30fps framerate
-            {"-resolution": "640x360", "-framerate": 60.0},  # Stream2: 640x360 at 60fps framerate
+            {"-resolution": "640x360", "-framerate": 15.0},  # Stream2: 640x360 at 15fps framerate
             {"-resolution": "320x240", "-video_bitrate": "500k"},  # Stream3: 320x240 at 500kbs bitrate
         ],
     }
@@ -655,7 +655,7 @@ To add a audio source, provide the path to your audio file as a string to the `-
         "-streams": [
             {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
             {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
-            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps
+            {"-resolution": "640x360", "-framerate": 15.0},  # Stream3: 640x360 at 15fps
         ],
         "-input_framerate": stream.framerate, # controlled framerate for audio-video sync !!! don't forget this line !!!
         "-audio": "/home/foo/foo1.aac" # assign external audio-source
@@ -715,7 +715,7 @@ To add a audio source, provide the path to your audio file as a string to the `-
         "-streams": [
             {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
             {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
-            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps
+            {"-resolution": "640x360", "-framerate": 15.0},  # Stream3: 640x360 at 15fps
         ],
         "-input_framerate": stream.framerate, # controlled framerate for audio-video sync !!! don't forget this line !!!
         "-audio": "/home/foo/foo1.aac" # assign external audio-source
@@ -1071,7 +1071,7 @@ In this example, we will be using `h264_vaapi` as our Hardware Encoder and speci
         "-streams": [
             {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
             {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
-            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps
+            {"-resolution": "640x360", "-framerate": 15.0},  # Stream3: 640x360 at 15fps
         ],
         "-vcodec": "h264_vaapi", # define custom Video encoder
         "-vaapi_device": "/dev/dri/renderD128", # define device location
@@ -1132,7 +1132,7 @@ In this example, we will be using `h264_vaapi` as our Hardware Encoder and speci
         "-streams": [
             {"-resolution": "1920x1080", "-video_bitrate": "4000k"},  # Stream1: 1920x1080 at 4000kbs bitrate
             {"-resolution": "1280x720", "-framerate": 30.0},  # Stream2: 1280x720 at 30fps
-            {"-resolution": "640x360", "-framerate": 60.0},  # Stream3: 640x360 at 60fps
+            {"-resolution": "640x360", "-framerate": 15.0},  # Stream3: 640x360 at 15fps
         ],
         "-vcodec": "h264_vaapi", # define custom Video encoder
         "-vaapi_device": "/dev/dri/renderD128", # define device location
