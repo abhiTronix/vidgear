@@ -231,10 +231,10 @@ poetry install --extras asyncio
     poetry run python your_script.py
     ```
 
-    Or spawn a shell inside the virtualenv:
+    Or activate the virtualenv in your current shell _(`poetry shell` was removed in Poetry 2.0)_:
 
     ```sh
-    poetry shell
+    eval $(poetry env activate)
     ```
 
 &thinsp;
