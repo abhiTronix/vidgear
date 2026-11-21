@@ -33,7 +33,7 @@ limitations under the License.
 
 SSH Tunneling Mode allows you to connect NetGear client and server via secure SSH connection over the untrusted network and access its intranet services across firewalls. This mode works with pyzmq's [`zmq.ssh`](https://github.com/zeromq/pyzmq/tree/main/zmq/ssh) module for tunneling ZeroMQ connections over ssh.
 
-This mode implements [SSH Remote Port Forwarding](https://www.ssh.com/academy/ssh/tunneling/example) which enables accessing Host(client) machine outside the network by exposing port to the public Internet. Thereby, once you have established the tunnel, connections to local machine will actually be connections to remote machine as seen from the server.
+This mode implements [SSH Local Port Forwarding](https://www.ssh.com/academy/ssh/tunneling/example) _(i.e. `ssh -L`, see [pyzmq's SSH tunneling docs](https://pyzmq.readthedocs.io/en/latest/howto/ssh.html))_ at the Server end, which forwards a local port on the Server machine through an SSH server _(here, the Client machine)_ to NetGear's port on that machine. Thereby, once you have established the tunnel, the Server's connections to its local port will actually be connections to the Client's NetGear port, as seen from the SSH server.
 
 ??? danger "Beware ☠️"
     Cybercriminals or malware could exploit SSH tunnels to hide their unauthorized communications, or to exfiltrate stolen data from the network. More information can be found [here ➶](https://www.ssh.com/academy/ssh/tunneling)
@@ -43,11 +43,12 @@ All patterns are valid for this mode and it can be easily activated in NetGear A
 !!! warning "Important"
     * ==SSH tunneling mode can only be enabled on Server-end to establish remote SSH connection with Client.==
     * SSH tunneling mode requires Client's SSH Port(default `22`) to be TCP Port Forwarded by its Router, which allows Server machine to connect to it remotely.   
-    * SSH tunneling mode is **NOT** compatible with [Multi-Servers](../advanced/multi_server) and [Multi-Clients](../advanced/multi_client) Exclusive Modes yet.
+    * SSH tunneling mode is **NOT** compatible with [Multi-Servers](../advanced/multi_server/) and [Multi-Clients](../advanced/multi_client/) Exclusive Modes yet.
+    * SSH tunneling mode only supports `tcp` [protocol](../params/#protocol). Using it with `ipc` protocol will result in `ValueError`.
     
 !!! tip "Useful Tips"
-    * It is advise to use `pattern=2` to overcome random disconnection due to delays in network.
-    * SSH tunneling Mode is fully supports [Bidirectional Mode](../advanced/multi_server), [Secure Mode](../advanced/secure_mode/) and [JPEG-Frame Compression](../advanced/compression/).
+    * It is advise to use `pattern=2` to overcome random disconnection due to delays in network. Also, use [`receive_timeout`](../params/#options) at Client's end with it, as its termination signal is best-effort.
+    * SSH tunneling Mode is fully supports [Bidirectional Mode](../advanced/bidirectional_mode/), [Secure Mode](../advanced/secure_mode/) and [JPEG-Frame Compression](../advanced/compression/).
     * It is advised to enable logging (`logging = True`) on the first run, to easily identify any runtime errors.
 
 
@@ -56,14 +57,12 @@ All patterns are valid for this mode and it can be easily activated in NetGear A
 
 ## Prerequisites 
 
-SSH Tunnel Mode requires [`pexpect`](http://www.noah.org/wiki/pexpect) or [`paramiko`](http://www.lag.net/paramiko/) as an additional dependency which is not part of standard VidGear package. It can be easily installed via pypi as follows:
+SSH Tunnel Mode requires [`pexpect`](https://pexpect.readthedocs.io/) or [`paramiko`](https://www.paramiko.org/) as an additional dependency. pyzmq chooses the backend itself: `pexpect` on Linux/MacOS, and `paramiko` on Windows. The matching one is already included in VidGear's `core` and `asyncio` extras _(i.e. `pip install vidgear[core]`)_, otherwise it can be easily installed via pypi as follows:
 
 
-=== "Pramiko"
+=== "Paramiko"
 
-    !!! success "`paramiko` is compatible with all platforms."
-
-    !!! info "`paramiko` support is automatically enabled in ZeroMQ if installed."
+    !!! info "`paramiko` is used by pyzmq on Windows machines."
 
     ```sh
     # install paramiko
@@ -72,7 +71,7 @@ SSH Tunnel Mode requires [`pexpect`](http://www.noah.org/wiki/pexpect) or [`para
 
 === "Pexpect"
 
-    !!! failure "`pexpect` is NOT compatible with Windows Machines."
+    !!! info "`pexpect` is used by pyzmq on Linux/MacOS machines, and is NOT compatible with Windows Machines."
 
     ```sh
     # install pexpect
@@ -88,9 +87,9 @@ SSH Tunnel Mode requires [`pexpect`](http://www.noah.org/wiki/pexpect) or [`para
 
 For implementing SSH Tunneling Mode, NetGear API currently provide following exclusive attribute for its [`options`](../params/#options) dictionary parameter:
 
-* **`ssh_tunnel_mode`** (_string_) : This attribute activates SSH Tunneling Mode and assigns the `"<ssh-username>@<client-public-ip-address>:<tcp-forwarded-port>"` SSH URL for tunneling at Server end. Its usage is as follows:
+* **`ssh_tunnel_mode`** (_string_) : This attribute activates SSH Tunneling Mode and assigns the SSH server to tunnel through, as `"<ssh-username>@<ssh-server-ip-address>:<ssh-port>"` SSH URL at Server end _(here, the SSH server is the Client machine at its public IP address and TCP forwarded SSH port)_. It is **NOT** an allow-list. Its usage is as follows:
   
-    !!! failure "On Server end, NetGear automatically validates if the `port` is open at specified Client's Public IP Address or not, and if it fails _(i.e. port is closed)_, NetGear will throw `AssertionError`!"
+    !!! failure "On Server end, NetGear automatically validates if the SSH `port` is reachable at specified SSH server's IP Address or not _(via a TCP connect)_, and if it fails _(i.e. port is closed)_, NetGear will throw `AssertionError`!"
 
     === "With Default Port"
         
@@ -100,8 +99,8 @@ For implementing SSH Tunneling Mode, NetGear API currently provide following exc
         # activate SSH Tunneling and assign SSH URL
         options = {"ssh_tunnel_mode":"userid@52.194.1.73"}
 
-        # i.e. only connections from the Public IP address `52.194.1.73` 
-        # on default port 22 are allowed.
+        # i.e. tunnel through SSH server at `52.194.1.73` 
+        # on default SSH port 22, logging in as `userid`.
         ```
 
     === "With Custom Port"
@@ -114,11 +113,11 @@ For implementing SSH Tunneling Mode, NetGear API currently provide following exc
         # activate SSH Tunneling and assign SSH URL
         options = {"ssh_tunnel_mode":"userid@52.194.1.73:8080"}
 
-        # i.e. only connections from the Public IP address `52.194.1.73` 
-        # on custom port 8080 are allowed.
+        # i.e. tunnel through SSH server at `52.194.1.73` 
+        # on custom SSH port 8080, logging in as `userid`.
         ```
 
-* **`ssh_tunnel_pwd`** (_string_): This attribute sets the password required to authorize Host(client) for SSH Connection at Server end. This password grant access and controls SSH user can access what. It can be used as follows:
+* **`ssh_tunnel_pwd`** (_string_): This attribute sets the SSH user's password required to log in to the SSH server for SSH Connection at Server end. It can be used as follows:
 
     ```python
     # set password for our SSH conection
@@ -128,7 +127,9 @@ For implementing SSH Tunneling Mode, NetGear API currently provide following exc
     } 
     ```
 
-* **`ssh_tunnel_keyfile`** (_string_): This attribute sets path to Host key that provide another way to authenticate Host(client) for SSH Connection at Server end. Its purpose is to prevent man-in-the-middle attacks. It allows device authentication keys to be rotated and managed conveniently and every connection to be secured. It can be used as follows:
+* **`ssh_tunnel_keyfile`** (_string_): This attribute sets path to the SSH user's **private key** _(similar to `ssh -i`)_ that provide another way to log in to the SSH server for SSH Connection at Server end. Its corresponding public key must be present in the SSH user's `~/.ssh/authorized_keys` on the SSH server. It can be used as follows:
+
+    !!! warning "An invalid or non-existent key-file path is discarded with just a warning."
 
     !!! tip "You can use [Ssh-keygen](https://www.ssh.com/academy/ssh/keygen) tool for creating new authentication key pairs for SSH Tunneling."
 
@@ -157,7 +158,7 @@ For implementing SSH Tunneling Mode, NetGear API currently provide following exc
 
     - **Client:**
         * [x] Client end is a **Regular PC/Computer** located at `52.155.1.89` public IP address for displaying frames received from the remote Server.
-        * [x] Client's SSH Port(default `22`) is TCP Port Forwarded by its Router, which allows Server to connect to it remotely. This connection will then be tunneled back to our PC/Computer(Client) and makes TCP connection to it again via port `22` on localhost(`127.0.0.1`).
+        * [x] Client's SSH Port(default `22`) is TCP Port Forwarded by its Router, which allows Server to connect to it remotely. This connection will then be tunneled to our PC/Computer(Client), where the SSH server makes TCP connection to NetGear's port `5454` on localhost(`127.0.0.1`).
         * [x] Also, there's a username `test` present on the PC/Computer(Client) to SSH login with password `pas$wd`.
 
     - **Setup Diagram:**
@@ -231,9 +232,9 @@ Open a terminal on Client System _(A Regular PC where you want to display the in
 
 ??? failure "Secsh channel X open FAILED: open failed: Administratively prohibited"
 
-    **Error:** This error means that installed OpenSSH is preventing connections to forwarded ports from outside your Client Machine. 
+    **Error:** This error means that installed OpenSSH server is refusing TCP forwarding for your SSH user on Client Machine. 
 
-    **Solution:** You need to change `GatewayPorts no` option to `GatewayPorts yes` in the **OpenSSH server configuration file** [`sshd_config`](https://www.ssh.com/ssh/sshd_config/) to allows anyone to connect to the forwarded ports on Client Machine. 
+    **Solution:** You need to make sure `AllowTcpForwarding` option is set to `yes` _(or `local`)_ in the **OpenSSH server configuration file** [`sshd_config`](https://www.ssh.com/ssh/sshd_config/) _(and not denied by any `Match` block or `PermitOpen` option)_, and then restart the OpenSSH server. 
 
 
 !!! info "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
@@ -285,9 +286,9 @@ client.close()
 
 Now, Open the terminal on Remote Server System _(A Raspberry Pi with a webcam connected to it at index `0`)_, and execute the following python code: 
 
-!!! danger "Make sure to replace the Client's **Public IP Address** and **Forwarded TCP port(default is 22)** in SSH URL with yours in the following example."
+!!! danger "Make sure to replace the Client's **Public IP Address** and **Forwarded SSH TCP port(default is 22)** in SSH URL with yours in the following example."
 
-!!! warning "On Server end, NetGear automatically validates if the `port` is open at specified Client's Public IP Address or not, and if it fails _(i.e. port is closed)_, NetGear will throw `AssertionError`!"
+!!! warning "On Server end, NetGear automatically validates if the SSH `port` is open at specified Client's Public IP Address or not, and if it fails _(i.e. port is closed)_, NetGear will throw `AssertionError`!"
 
 !!! info "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
 

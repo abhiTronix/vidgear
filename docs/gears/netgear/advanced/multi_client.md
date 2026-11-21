@@ -26,12 +26,18 @@ limitations under the License.
 
 ## Overview
 
-In Multi-Clients Mode, NetGear robustly handles Multiple Clients at once thereby able to broadcast frames and data across multiple Clients/Consumers in the network at same time. This mode works contrary to [Multi-Servers Mode](multi_server/) such that every new Client that connects to single Server can be identified by its unique port address on the network. 
+In Multi-Clients Mode, NetGear robustly handles Multiple Clients at once thereby able to send frames and data across multiple Clients/Consumers in the network at same time. This mode works contrary to [Multi-Servers Mode](multi_server/) such that every new Client that connects to single Server can be identified by its unique port address on the network. 
 
-The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`) and can be easily activated in NetGear API through `multiclient_mode` attribute of its [`options`](../params/#options) dictionary parameter during initialization.
+The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`), Request/Reply(`zmq.REQ/zmq.REP`) and Push/Pull (`zmq.PUSH/zmq.PULL`) and can be easily activated in NetGear API through `multiclient_mode` attribute of its [`options`](../params/#options) dictionary parameter during initialization.
 
 
 !!! alert "Multi-Clients Mode is best for broadcasting **Meta-Data with Video-frames** to specific limited number of clients in real time. But if you're looking to scale broadcast to a very large pool of clients, then see our [WebGear](../../webgear/) or [WebGear_RTC](../../webgear_rtc/) APIs."
+
+!!! info "How frames are distributed among Clients depends on the selected pattern"
+
+    * **`1` _(i.e. `zmq.REQ/zmq.REP`)_:** Frames are distributed in **round-robin** manner, i.e. each Client gets every Nth frame _(for N clients)_.
+    * **`2` _(i.e. `zmq.PUB/zmq.SUB`)_:** Frames are **broadcast**, i.e. every Client gets every frame.
+    * **`3` _(i.e. `zmq.PUSH/zmq.PULL`)_:** Frames are **load-balanced** _(work distribution)_ in round-robin manner, i.e. each Client gets a subset of frames.
 
 &nbsp;
 
@@ -42,11 +48,13 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
     
     * A list/tuple of PORT addresses of all unique Clients **MUST** be assigned at Server's end using its [`port`](../params/#port) parameter for a successful connection.
 
-    * Patterns `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ and `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ are the only supported pattern values for this Mode. Therefore, calling any other pattern value with is mode will result in `ValueError`.
+    * Patterns `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_, `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ and `3` _(i.e. Push/Pull `zmq.PUSH/zmq.PULL`)_ are the only supported pattern values for this Mode. Therefore, calling any other pattern value with is mode will result in `ValueError`.
 
     * Multi-Clients and Multi-Servers exclusive modes **CANNOT** be enabled simultaneously, Otherwise NetGear API will throw `ValueError`.
 
     * The [`address`](../params/#address) parameter value of each Client **MUST** exactly match the Server. 
+
+    * Each Client **binds** its own `address:port`, whereas the Server **connects** its single [`address`](../params/#address) to every port in its list. Hence, ==all Clients **MUST** run on the same machine==, and the Server's `address` **MUST** be the IP address of that Clients' machine.
 
 &nbsp;
 
@@ -54,17 +62,17 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
 - [x] Enables Multiple Client(s) connection with a single Server.
 
-- [x] Ability to [send any additional data](../advanced/multi_client/#using-multi-clients-mode-for-unidirectional-custom-data-transfer) of any datatype along with frames in real-time.
+- [x] Ability to [send any additional data](../advanced/multi_client/#using-multi-clients-mode-for-unidirectional-custom-data-transfer) of any JSON-serializable datatype along with frames in real-time.
 
 - [x] Number of Clients can be extended to several numbers depending upon your system's hardware limit.
 
-- [x] Employs powerful **Publish/Subscribe & Request/Reply** messaging patterns.
+- [x] Employs powerful **Publish/Subscribe, Request/Reply & Push/Pull** messaging patterns.
 
 - [x] Each new Client on the network can be identified at Server's end by their unique port addresses.
 
 - [x] NetGear API actively tracks the state of each connected Client.
 
-- [x] If the server gets disconnected, all the clients will automatically exit to save resources.
+- [x] If the server terminates, all the clients will automatically exit to save resources _(best-effort only with patterns `2` and `3`, so use [`receive_timeout`](../params/#options) at Clients' end with them)_.
 
 
 &nbsp;
@@ -74,7 +82,7 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
 !!! alert "Important"
 
-    * ==Frame/Data transmission will **NOT START** until all given Client(s) are connected to the Server.==
+    * ==With pattern `1`, the Server raises `RuntimeError` after [`max_retries`](../params/#options) failed attempts if any given Client(s) doesn't respond, whereas with pattern `2` frames are dropped until Client(s) connect. With pattern `3`, the Server buffers up to [`send_hwm`](../params/#options) frames per Client, and `send()` raises `RuntimeError` after [`request_timeout`](../params/#options) once frames can't be queued.==
 
     * For sake of simplicity, in these examples we will use only two unique Clients, but the number of these Clients can be extended to **SEVERAL** numbers depending upon your Network bandwidth and System Capabilities.
 
@@ -84,7 +92,7 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
 ### Bare-Minimum Usage
 
-In this example, we will capturing live video-frames from a source _(a.k.a Server)_ with a webcam connected to it. Afterwards, those captured frame will be sent over the network to two independent system _(a.k.a Clients)_ using this Multi-Clients Mode in NetGear API. Finally, both Clients will be displaying received frames in Output Windows in real time.
+In this example, we will capturing live video-frames from a source _(a.k.a Server)_ with a webcam connected to it. Afterwards, those captured frame will be sent over the network to two independent Clients _(running on the same machine)_ using this Multi-Clients Mode in NetGear API. Finally, both Clients will be displaying received frames in Output Windows in real time.
 
 !!! tip "This example is useful for building applications like Real-Time Video Broadcasting to multiple clients in local network."
 
@@ -94,10 +102,10 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Client(s) end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Replace the IP address in the following code with the IP address of the Clients' machine _(all Clients run on the same machine)_. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
 
-!!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
+!!! warning "Make sure all given Client(s) are running. With pattern `1`, the Server raises `RuntimeError` after `max_retries` failed attempts if any of them doesn't respond, whereas with pattern `2` frames are dropped until Client(s) connect."
 
 !!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -113,9 +121,9 @@ stream = CamGear(source=0).start()
 # activate multiclient_mode mode
 options = {"multiclient_mode": True}
 
-# Define NetGear Client at given IP address and assign list/tuple of
-# all unique Server((5577,5578) in our case) and other parameters
-# !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Server at Clients' IP address and assign list/tuple of
+# all unique Client ports((5567,5577) in our case) and other parameters
+# !!! change following IP address '192.168.x.xxx' with Clients' IP address !!!
 server = NetGear(
     address="192.168.x.x",
     port=(5567, 5577),
@@ -171,7 +179,7 @@ server.close()
 
 Now, Open a terminal on another Client System _(where you want to display the input frames received from Server)_, let's name it Client-1. Execute the following python code: 
 
-!!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
+!!! info "Note down the local IP-address of this system _(required at Server's end, and same for all Clients)_ and also replace it in the following code, and also assign a unique port address _(required by Server to identify this Client)_."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -183,7 +191,7 @@ import cv2
 # activate Multi-Clients mode
 options = {"multiclient_mode": True}
 
-# Define NetGear Client at Server's IP address and assign a unique port address and other parameters
+# Define NetGear Client at this system's IP address and assign a unique port address and other parameters
 # !!! change following IP address '192.168.x.xxx' with yours !!!
 client = NetGear(
     address="192.168.x.x",
@@ -228,7 +236,7 @@ client.close()
 
 Finally, Open a terminal on another Client System _(where you want to display the input frames received from Server)_, let's name it Client-2. Execute the following python code: 
 
-!!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
+!!! info "Note down the local IP-address of this system _(required at Server's end, and same for all Clients)_ and also replace it in the following code, and also assign a unique port address _(required by Server to identify this Client)_."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -240,7 +248,7 @@ import cv2
 # activate Multi-Clients mode
 options = {"multiclient_mode": True}
 
-# Define NetGear Client at Server's IP address and assign a unique port address and other parameters
+# Define NetGear Client at this system's IP address and assign a unique port address and other parameters
  # !!! change following IP address '192.168.x.xxx' with yours !!!
 client = NetGear(
     address="192.168.x.x",
@@ -294,10 +302,10 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Client(s) end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Replace the IP address in the following code with the IP address of the Clients' machine _(all Clients run on the same machine)_. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
 
-!!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
+!!! warning "Make sure all given Client(s) are running. With pattern `1`, the Server raises `RuntimeError` after `max_retries` failed attempts if any of them doesn't respond, whereas with pattern `2` frames are dropped until Client(s) connect."
 
 !!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -312,8 +320,8 @@ stream = cv2.VideoCapture(0)
 # activate multiclient_mode mode
 options = {"multiclient_mode": True}
 
-# Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters
-# !!! change following IP address '192.168.x.xxx' with yours !!!
+# Define NetGear Server at Clients' IP address and assign list/tuple of all unique Client ports((5577,5578) in our case) and other parameters
+# !!! change following IP address '192.168.x.xxx' with Clients' IP address !!!
 server = NetGear(
     address="192.168.x.x",
     port=(5567, 5577),
@@ -369,7 +377,7 @@ server.close()
 
 Now, Open a terminal on another Client System _(where you want to display the input frames received from Server)_, let's name it Client-1. Execute the following python code: 
 
-!!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
+!!! info "Note down the local IP-address of this system _(required at Server's end, and same for all Clients)_ and also replace it in the following code, and also assign a unique port address _(required by Server to identify this Client)_."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -381,7 +389,7 @@ import cv2
 # activate Multi-Clients mode
 options = {"multiclient_mode": True}
 
-# Define NetGear Client at Server's IP address and assign a unique port address and other parameters
+# Define NetGear Client at this system's IP address and assign a unique port address and other parameters
 # !!! change following IP address '192.168.x.xxx' with yours !!!
 client = NetGear(
     address="192.168.x.x",
@@ -425,7 +433,7 @@ client.close()
 
 Finally, Open a terminal on another Client System _(also, where you want to display the input frames received from Server)_, let's name it Client-2. Execute the following python code: 
 
-!!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
+!!! info "Note down the local IP-address of this system _(required at Server's end, and same for all Clients)_ and also replace it in the following code, and also assign a unique port address _(required by Server to identify this Client)_."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -437,7 +445,7 @@ import cv2
 # activate Multi-Clients mode
 options = {"multiclient_mode": True}
 
-# Define NetGear Client at Server's IP address and assign a unique port address and other parameters
+# Define NetGear Client at this system's IP address and assign a unique port address and other parameters
 # !!! change following IP address '192.168.x.xxx' with yours !!!
 client = NetGear(
     address="192.168.x.x",
@@ -485,11 +493,13 @@ client.close()
 
 !!! abstract
 
-    With Multi-Clients Mode, you can also send additional data of any data-type _(such as list, tuple, string, int, ndarray etc.)_ along with frame, from all connected Clients(s) back to  a Server unidirectionally.
+    With Multi-Clients Mode, you can also send additional JSON-serializable data _(such as list, string, int, dict etc.)_ or `numpy.ndarray` frame along with frame, from all connected Clients(s) back to  a Server unidirectionally.
 
-    !!! warning "In Multi-Clients Mode, unidirectional data transfer **ONLY** works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_, and **NOT** with pattern `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_!"
+    !!! warning "In Multi-Clients Mode, unidirectional data transfer **ONLY** works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_, and **NOT** with patterns `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ and `3` _(i.e. Push/Pull `zmq.PUSH/zmq.PULL`)_!"
 
-In this example, We will be transferring video-frames from a single Server _(consisting of  Raspberry Pi with Camera Module)_ over the network to two independent Client for displaying them in real-time. At the same time, we will be sending data _(a Text String, for the sake of simplicity)_ from both the Client(s) back to our Server, which will be printed onto the terminal.
+    !!! note "The `return_data` value is sticky _(stays set until replaced)_, and is sent back with the reply to the **next** received frame, i.e. one frame late."
+
+In this example, We will be transferring video-frames from a single Server _(consisting of  Raspberry Pi with Camera Module)_ over the network to two independent Clients _(running on the same machine)_ for displaying them in real-time. At the same time, we will be sending data _(a Text String, for the sake of simplicity)_ from both the Client(s) back to our Server, which will be printed onto the terminal.
 
 #### Server's End
 
@@ -497,10 +507,10 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Client(s) end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Replace the IP address in the following code with the IP address of the Clients' machine _(all Clients run on the same machine)_. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
 
-!!! warning "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
+!!! warning "Make sure all given Client(s) are running. With pattern `1`, the Server raises `RuntimeError` after `max_retries` failed attempts if any of them doesn't respond, whereas with pattern `2` frames are dropped until Client(s) connect."
 
 !!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -511,10 +521,11 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 === "New Picamera2 backend"
 
-    ```python linenums="1" hl_lines="47-60"
+    ```python linenums="1" hl_lines="48-61"
     # import required libraries
     from vidgear.gears import PiGear
     from vidgear.gears import NetGear
+    from libcamera import Transform
 
     # add various Picamera2 tweak parameters
     options = {
@@ -531,7 +542,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
     # activate multiclient_mode mode
     options = {"multiclient_mode": True}
 
-    # Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters
+    # Define NetGear Server at Clients' IP address and assign list/tuple of all unique Client ports((5577,5578) in our case) and other parameters
     server = NetGear(
         address="192.168.x.x",
         port=(5577, 5578),
@@ -539,7 +550,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
         pattern=1,
         logging=True,
         **options
-    )  # !!! change following IP address '192.168.x.xxx' with yours !!!
+    )  # !!! change following IP address '192.168.x.xxx' with Clients' IP address !!!
 
     # Define received data dictionary
     data_dict = {}
@@ -615,7 +626,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
     # activate multiclient_mode mode
     options = {"multiclient_mode": True}
 
-    # Define NetGear Client at given IP address and assign list/tuple of all unique Server((5577,5578) in our case) and other parameters
+    # Define NetGear Server at Clients' IP address and assign list/tuple of all unique Client ports((5577,5578) in our case) and other parameters
     server = NetGear(
         address="192.168.x.x",
         port=(5577, 5578),
@@ -623,7 +634,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
         pattern=1,
         logging=True,
         **options
-    )  # !!! change following IP address '192.168.x.xxx' with yours !!!
+    )  # !!! change following IP address '192.168.x.xxx' with Clients' IP address !!!
 
     # Define received data dictionary
     data_dict = {}
@@ -673,7 +684,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 Now, Open a terminal on another Client System _(where you want to display the input frames received from Server)_, let's name it Client-1. Execute the following python code: 
 
-!!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
+!!! info "Note down the local IP-address of this system _(required at Server's end, and same for all Clients)_ and also replace it in the following code, and also assign a unique port address _(required by Server to identify this Client)_."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -685,7 +696,7 @@ import cv2
 # activate Multi-Clients mode
 options = {"multiclient_mode": True}
 
-# Define NetGear Client at Server's IP address and assign a unique port address and other parameters
+# Define NetGear Client at this system's IP address and assign a unique port address and other parameters
 # !!! change following IP address '192.168.x.xxx' with yours !!!
 client = NetGear(
     address="192.168.x.x",
@@ -733,7 +744,7 @@ client.close()
 
 Finally, Open a terminal on another Client System _(also, where you want to display the input frames received from Server)_, let's name it Client-2. Execute the following python code: 
 
-!!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
+!!! info "Note down the local IP-address of this system _(required at Server's end, and same for all Clients)_ and also replace it in the following code, and also assign a unique port address _(required by Server to identify this Client)_."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -746,7 +757,7 @@ import cv2
 # activate Multi-Clients mode
 options = {"multiclient_mode": True}
 
-# Define NetGear Client at Server's IP address and assign a unique port address and other parameters
+# Define NetGear Client at this system's IP address and assign a unique port address and other parameters
 # !!! change following IP address '192.168.x.xxx' with yours !!!
 client = NetGear(
     address="192.168.x.x",
@@ -796,17 +807,17 @@ client.close()
 ### Using Multi-Clients Mode with Bidirectional Mode
 
 !!! abstract
-    Multi-Clients Mode now also compatible with [Bidirectional Mode](../advanced/bidirectional_mode/), which lets you send additional data of ***any datatype***[^1]  along with frame in real-time bidirectionally between a single Server and all connected Client(s).
+    Multi-Clients Mode now also compatible with [Bidirectional Mode](../advanced/bidirectional_mode/), which lets you send additional ***JSON-serializable*** data[^1]  along with frame in real-time bidirectionally between a single Server and all connected Client(s).
 
 !!! warning "Important Information"
-    * Bidirectional data transfer **ONLY** works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_, and **NOT** with pattern `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_
+    * Bidirectional data transfer **ONLY** works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_, and **NOT** with patterns `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ and `3` _(i.e. Push/Pull `zmq.PUSH/zmq.PULL`)_
     * Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server's end with its [`message`](../../../bonus/reference/netgear/#vidgear.gears.NetGear.send) parameter.
     * Bidirectional Mode may lead to additional **LATENCY** depending upon the size of data being transfer bidirectionally. User discretion is advised!
 
 ??? new "New in v0.2.5" 
     This example was added in `v0.2.5`.
 
-In this example, We will be transferring video-frames and data _(a Text String, for the sake of simplicity)_ from a single Server _(In this case, Raspberry Pi with Camera Module)_ over the network to two independent Clients for displaying them both in real-time. At the same time, we will be sending data _(a Text String, for the sake of simplicity)_ back from both the Client(s) to our Server, which will be printed onto the terminal.
+In this example, We will be transferring video-frames and data _(a Text String, for the sake of simplicity)_ from a single Server _(In this case, Raspberry Pi with Camera Module)_ over the network to two independent Clients _(running on the same machine)_ for displaying them both in real-time. At the same time, we will be sending data _(a Text String, for the sake of simplicity)_ back from both the Client(s) to our Server, which will be printed onto the terminal.
 
 #### Server's End
 
@@ -814,10 +825,10 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 !!! info "Important Notes"
 
-    * Note down the local IP-address of this system(required at all Client(s) end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
+    * Replace the IP address in the following code with the IP address of the Clients' machine _(all Clients run on the same machine)_. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose.
     * Also, assign the tuple/list of port address of all Client you are going to connect to this system. 
 
-!!! alert "Frame/Data transmission will **NOT START** untill all given Client(s) are connected to this Server."
+!!! alert "Make sure all given Client(s) are running. With pattern `1`, the Server raises `RuntimeError` after `max_retries` failed attempts if any of them doesn't respond, whereas with pattern `2` frames are dropped until Client(s) connect."
 
 !!! tip "You can terminate streaming anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -849,8 +860,8 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
     # activate both multiclient and bidirectional modes
     options = {"multiclient_mode": True, "bidirectional_mode": True}
 
-    # Define NetGear Client at given IP address and assign list/tuple of 
-    # all unique Server((5577,5578) in our case) and other parameters
+    # Define NetGear Server at Clients' IP address and assign list/tuple of 
+    # all unique Client ports((5577,5578) in our case) and other parameters
     server = NetGear(
         address="192.168.x.x",
         port=(5577, 5578),
@@ -858,7 +869,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
         pattern=1,
         logging=True,
         **options
-    )  # !!! change following IP address '192.168.x.xxx' with yours !!!
+    )  # !!! change following IP address '192.168.x.xxx' with Clients' IP address !!!
 
     # Define received data dictionary
     data_dict = {}
@@ -939,8 +950,8 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
     # activate both multiclient and bidirectional modes
     options = {"multiclient_mode": True, "bidirectional_mode": True}
 
-    # Define NetGear Client at given IP address and assign list/tuple of 
-    # all unique Server((5577,5578) in our case) and other parameters
+    # Define NetGear Server at Clients' IP address and assign list/tuple of 
+    # all unique Client ports((5577,5578) in our case) and other parameters
     server = NetGear(
         address="192.168.x.x",
         port=(5577, 5578),
@@ -948,7 +959,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
         pattern=1,
         logging=True,
         **options
-    )  # !!! change following IP address '192.168.x.xxx' with yours !!!
+    )  # !!! change following IP address '192.168.x.xxx' with Clients' IP address !!!
 
     # Define received data dictionary
     data_dict = {}
@@ -1004,7 +1015,7 @@ Now, Open the terminal on a Server System _(with a webcam connected to it at ind
 
 Now, Open a terminal on another Client System _(where you want to display the input frames received from Server)_, let's name it Client-1. Execute the following python code: 
 
-!!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
+!!! info "Note down the local IP-address of this system _(required at Server's end, and same for all Clients)_ and also replace it in the following code, and also assign a unique port address _(required by Server to identify this Client)_."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -1016,7 +1027,7 @@ import cv2
 # activate both multiclient and bidirectional modes
 options = {"multiclient_mode": True, "bidirectional_mode": True}
 
-# Define NetGear Client at Server's IP address and assign a unique port address and other parameters
+# Define NetGear Client at this system's IP address and assign a unique port address and other parameters
 # !!! change following IP address '192.168.x.xxx' with yours !!!
 client = NetGear(
     address="192.168.x.x",
@@ -1075,7 +1086,7 @@ client.close()
 
 Finally, Open a terminal on another Client System _(also, where you want to display the input frames received from Server)_, let's name it Client-2. Execute the following python code: 
 
-!!! info "Replace the IP address in the following code with Server's IP address you noted earlier and also assign a unique port address _(required by Server to identify this system)_."
+!!! info "Note down the local IP-address of this system _(required at Server's end, and same for all Clients)_ and also replace it in the following code, and also assign a unique port address _(required by Server to identify this Client)_."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
@@ -1088,7 +1099,7 @@ import cv2
 # activate both multiclient and bidirectional modes
 options = {"multiclient_mode": True, "bidirectional_mode": True}
 
-# Define NetGear Client at Server's IP address and assign a unique port address and other parameters
+# Define NetGear Client at this system's IP address and assign a unique port address and other parameters
 # !!! change following IP address '192.168.x.xxx' with yours !!!
 client = NetGear(
     address="192.168.x.x",

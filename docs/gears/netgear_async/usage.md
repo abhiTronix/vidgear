@@ -49,7 +49,7 @@ Following is the bare-minimum code you need to get started with NetGear_Async AP
 
 Open your favorite terminal and execute the following python code:
 
-!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
+!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard! If the Client exits first, `server.close()` stops waiting for its confirmation after [`timeout`](params/#timeout) seconds."
 
 ```python linenums="1"  hl_lines="6 13"
 # import libraries
@@ -80,6 +80,8 @@ Then open another terminal on the same system and execute the following python c
 !!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](params/#timeout) value!"
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
+
+!!! note "In Receive Mode, `launch()` does nothing _(it just returns the instance)_, so calling it at Client's end is optional. Frames are received by iterating `recv_generator()`, and they are writeable `numpy.ndarray` arrays."
 
 ```python linenums="1"  hl_lines="6 9-20 27"
 # import libraries
@@ -187,7 +189,7 @@ Now, Open the terminal on another Server System _(with a webcam connected to it 
 
 !!! info "Replace the IP address in the following code with Client's IP address you noted earlier."
 
-!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
+!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard! If the Client exits first, `server.close()` stops waiting for its confirmation after [`timeout`](params/#timeout) seconds."
 
 ```python linenums="1" hl_lines="7-12"
 # import libraries
@@ -227,11 +229,13 @@ NetGear_Async allows you to easily define your own custom Source at Server-end t
 
 Let's implement a bare-minimum example with a Custom Source using NetGear_Async API and OpenCV:
 
+!!! info "The assigned `config["generator"]` must be an asynchronous generator. It is validated only when the Server's `task` starts running _(for e.g. in `run_until_complete(server.task)`)_, not at `launch()`, and any invalid value raises `ValueError` from that `task`."
+
 ### Server's End
 
 Open your favorite terminal and execute the following python code:
 
-!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
+!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard! If the Client exits first, `server.close()` stops waiting for its confirmation after [`timeout`](params/#timeout) seconds."
 
 ```python linenums="1" hl_lines="14-31 38"
 # import library
@@ -347,7 +351,7 @@ Let's implement a bare-minimum example where we are sending [Stabilized](../stab
 
 Open your favorite terminal and execute the following python code:
 
-!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
+!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard! If the Client exits first, `server.close()` stops waiting for its confirmation after [`timeout`](params/#timeout) seconds."
 
 ```python linenums="1" hl_lines="7"
 # import libraries
@@ -430,3 +434,88 @@ if __name__ == "__main__":
 ```
 
 &nbsp; 
+
+## Using NetGear_Async with `asyncio.run()`
+
+NetGear_Async can also be created inside an already running event loop _(for e.g. inside `asyncio.run()`)_, in which case it uses that loop instead of creating its own.
+
+!!! info "Closing NetGear_Async"
+
+    * Inside a running event loop, close NetGear_Async with `#!python await aclose()`, or use it as `#!python async with NetGear_Async(...) as gear:` to close it automatically. Calling `close()` there only schedules `aclose()` and returns its task, which you need to await.
+    * Outside a running event loop, `close()` runs `aclose()` to completion, and then closes the event loop owned by NetGear_Async _(as in the examples above)_. Use `close(skip_loop=True)` to keep that loop open, which also skips waiting for the Client's termination confirmation.
+    * Server termination is always bounded by [`timeout`](params/#timeout), even if the Client is already gone.
+
+### Server's End
+
+Open your favorite terminal and execute the following python code:
+
+!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard! If the Client exits first, the Server stops waiting for its confirmation after [`timeout`](params/#timeout) seconds."
+
+```python linenums="1" hl_lines="9-12"
+# import libraries
+from vidgear.gears.asyncio import NetGear_Async
+import asyncio
+
+
+async def main():
+    # initialize Server with suitable source inside the running event loop,
+    # and close it automatically on exit with `async with`
+    async with NetGear_Async(source="/home/foo/foo1.mp4", logging=True) as server:
+        # launch the Server and wait until its task is complete
+        server.launch()
+        await server.task
+
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        # wait for interrupts
+        pass
+```
+
+### Client's End
+
+Then open another terminal on the same system and execute the following python code and see the output:
+
+!!! warning "Client will throw TimeoutError if it fails to connect to the Server in given [`timeout`](params/#timeout) value!"
+
+!!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
+
+```python linenums="1" hl_lines="8 23"
+# import libraries
+from vidgear.gears.asyncio import NetGear_Async
+import cv2, asyncio
+
+
+async def main():
+    # define Client with `receive_mode=True` inside the running event loop
+    client = NetGear_Async(receive_mode=True, logging=True)
+    try:
+        # loop over Client's Asynchronous Frame Generator
+        async for frame in client.recv_generator():
+
+            # {do something with received frames here}
+
+            # Show output window
+            cv2.imshow("Output Frame", frame)
+            key = cv2.waitKey(1) & 0xFF
+
+            # await before continuing
+            await asyncio.sleep(0)
+    finally:
+        # safely close client (`close()` would only schedule it here)
+        await client.aclose()
+        # close all output window
+        cv2.destroyAllWindows()
+
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        # wait for interrupts
+        pass
+```
+
+&nbsp;

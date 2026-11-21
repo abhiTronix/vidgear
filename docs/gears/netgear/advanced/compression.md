@@ -32,19 +32,26 @@ NetGear API enables real-time **JPEG Frame Compression** capabilities for optimi
 
 For enabling Frame Compression, NetGear uses powerful [`simplejpeg`](https://gitlab.com/jfolz/simplejpeg) library at its backend, which is based on recent versions of [libjpeg-turbo](https://libjpeg-turbo.org/) JPEG image codec, to accelerate baseline JPEG compression and decompression on all modern systems. NetGear API employs its exposed `decode_jpeg` and `encode_jpeg` methods to encode video-frames to [JFIF](https://en.wikipedia.org/wiki/JPEG_File_Interchange_Format) format  before sending it at Server, and cleverly decode it at the Client(s) all in real-time, thereby leveraging performance at cost of minor loss in frame quality.
 
-Frame Compression is enabled by default in NetGear, and can be easily controlled through `jpeg_compression_quality`, `jpeg_compression_fastdct`, `jpeg_compression_fastupsample` like attributes of its [`options`](../params/#options) dictionary parameter during initialization.
+Frame Compression is enabled by default in NetGear _(only if `simplejpeg` is installed, otherwise frames are sent uncompressed)_, and can be easily controlled through `jpeg_compression_quality`, `jpeg_compression_fastdct`, `jpeg_compression_fastupsample`, `jpeg_compression_colorsubsampling` like attributes of its [`options`](../params/#options) dictionary parameter during initialization.
 
 &nbsp;
 
 
 !!! info "Useful Information about Frame Compression"
     
-    * Frame Compression is enabled by default in NetGear along with fast dct and compression-quality at 90%.
+    * Frame Compression is enabled by default in NetGear along with fast dct and compression-quality at 90%, but only if [`simplejpeg`](https://gitlab.com/jfolz/simplejpeg) is installed. Otherwise the `jpeg_compression` attribute is silently ignored, and frames are sent uncompressed.
     * Exclusive [`jpeg_compression`](#exclusive-attributes) attribute can also be used to disable Frame Compression.
     * Frame Compression can leverage performance up-to 5-10% with exclusive [performance attributes](#performance-attributes).
     * Frame Compression is compatible with all messaging pattern and modes.
+    * Row-strided frames such as cropped ROIs _(e.g. `frame[y0:y1, x0:x1]`)_ are encoded directly, without an extra copy.
 
-!!! warning "Frame Compression is primarily controlled by Server end. That means, if Frame Compression is enabled at Server, then Client(s) will automatically enforce the Frame Compression with defined performance attributes. Otherwise if it is disabled, then Client(s) disables it too." 
+!!! warning "Frame Compression is primarily controlled by Server end. That means, if Frame Compression is enabled at Server, then Client(s) will automatically decode the compressed frames. Otherwise if it is disabled, then Client(s) disables it too. However, each end uses its **OWN** performance attributes, i.e. `jpeg_compression_quality`, `jpeg_compression_colorsubsampling` and `jpeg_compression_fastdct` affect encoding at Server, whereas `jpeg_compression_fastdct` and `jpeg_compression_fastupsample` affect decoding at Client(s)." 
+
+!!! danger "Frame Requirements for Frame Compression"
+
+    * Frames **MUST** be of `uint8` datatype, and their channel count **MUST** match the selected colorspace _(i.e. 1 channel or a 2-D array for `GRAY`, 3 channels for `BGR`/`RGB`, and 4 channels for others)_. Otherwise, such frames are sent **uncompressed** for that frame _(with a one-time warning)_, instead of failing.
+    * JPEG has no alpha channel. Hence with `RGBA`, `BGRA`, `ABGR` and `ARGB` colorspaces, the alpha channel is dropped, and decodes as `255` at Client(s).
+    * Client(s) drop corrupt JPEG frames _(logged)_, and frames whose JPEG header claims more than `2**26` pixels _(i.e. 8K×8K)_, instead of crashing.
 
 
 &nbsp;
@@ -71,6 +78,8 @@ For implementing Frame Compression, NetGear API currently provide following excl
         !!! alert "In this case, JPEG Frame Compression is activated automatically."
 
         !!! info "Supported colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
+
+        !!! warning "JPEG has no alpha channel, so it is dropped with `RGBA`, `BGRA`, `ABGR` and `ARGB` colorspaces _(decodes as `255`)_. Any other invalid value is skipped with a warning."
     
         ```python
         # Specify incoming frames are `grayscale`
@@ -86,18 +95,27 @@ For implementing Frame Compression, NetGear API currently provide following excl
         options = {"jpeg_compression": True, "jpeg_compression_quality": 95}
         ```
 
-    * `jpeg_compression_fastdct`: _(bool)_ This attribute if True, NetGear API uses fastest DCT method that speeds up decoding by 4-5% for a minor loss in quality. Its default value is also `True`, and its usage is as follows:
+    * `jpeg_compression_fastdct`: _(bool)_ This attribute if True, NetGear API uses fastest DCT method that speeds up encoding/decoding by 4-5% for a minor loss in quality. It affects each end independently _(i.e. encoding at Server and decoding at Client)_. Its default value is also `True`, and its usage is as follows:
     
         ```python
         # activate jpeg encoding and enable fast dct
         options = {"jpeg_compression": True, "jpeg_compression_fastdct": True}
         ```
 
-    * `jpeg_compression_fastupsample`: _(bool)_ This attribute if True, NetGear API use fastest color upsampling method. Its default value is `False`, and its usage is as follows:
+    * `jpeg_compression_fastupsample`: _(bool)_ This attribute if True, NetGear API use fastest color upsampling method while decoding. It only affects decoding at the end it is set on _(i.e. Client)_. Its default value is `False`, and its usage is as follows:
     
         ```python
         # activate jpeg encoding and enable fast upsampling
         options = {"jpeg_compression": True, "jpeg_compression_fastupsample": True}
+        ```
+
+    * `jpeg_compression_colorsubsampling`: _(str)_ This attribute sets the chroma subsampling used while encoding at Server end _(ignored with `GRAY` colorspace)_. Its possible values are `"444"`, `"422"`, `"420"`, `"440"` and `"411"`, and its default value is `"422"`. Client(s) need no change, as the decoder reads it from the JPEG itself. Its usage is as follows:
+
+        !!! tip "Use `"420"` for bandwidth- or CPU-bound Servers _(such as a Raspberry Pi)_. Compared to `"422"`, it produces ~7% fewer bytes and encodes 20–30% faster, for a minor loss in quality _(−0.3 to −0.4 dB PSNR)_."
+    
+        ```python
+        # activate jpeg encoding and use 4:2:0 chroma subsampling
+        options = {"jpeg_compression": True, "jpeg_compression_colorsubsampling": "420"}
         ```
 
 &nbsp;
@@ -171,7 +189,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-!!! note "If compression is enabled at Server, then Client will automatically enforce Frame Compression with its performance attributes."
+!!! note "If compression is enabled at Server, then Client will automatically decode the compressed frames using its own `jpeg_compression_fastdct` and `jpeg_compression_fastupsample` attributes."
 
 ```python linenums="1"
 # import required libraries
@@ -223,6 +241,8 @@ Frame Compression also supports specify incoming frames colorspace with compress
 !!! example "This example works in conjunction with [Source ColorSpace manipulation for VideoCapture Gears ➶](../../../bonus/colorspace_manipulation/#source-colorspace-manipulation)"
 
 !!! info "Supported colorspace values are `RGB`, `BGR`, `RGBX`, `BGRX`, `XBGR`, `XRGB`, `GRAY`, `RGBA`, `BGRA`, `ABGR`, `ARGB`, `CMYK`. More information can be found [here ➶](https://gitlab.com/jfolz/simplejpeg)"
+
+!!! warning "JPEG has no alpha channel, so it is dropped with `RGBA`, `BGRA`, `ABGR` and `ARGB` colorspaces _(decodes as `255`)_."
 
 #### Server End
 
@@ -284,7 +304,7 @@ Then open another terminal on the same system and execute the following python c
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-!!! note "If compression is enabled at Server, then Client will automatically enforce Frame Compression with its performance attributes."
+!!! note "If compression is enabled at Server, then Client will automatically decode the compressed frames using its own `jpeg_compression_fastdct` and `jpeg_compression_fastupsample` attributes."
 
 !!! info "Client's end also automatically enforces Server's colorspace, there's no need to define it again."
 
@@ -336,15 +356,17 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! info "Note down the local IP-address of this system(required at Server's end) and also replace it in the following code. You can follow [this FAQ](../../../help/netgear_faqs/#how-to-find-local-ip-address-on-different-os-platforms) for this purpose."
 
-!!! note "If compression is enabled at Server, then Client will automatically enforce Frame Compression with its performance attributes."
+!!! note "If compression is enabled at Server, then Client will automatically decode the compressed frames using its own `jpeg_compression_fastdct` and `jpeg_compression_fastupsample` attributes."
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python linenums="1" hl_lines="9-15"
+```python linenums="1" hl_lines="6 11-17"
 # import required libraries
 from vidgear.gears import NetGear
 import cv2
 
+# define decoding parameters (these only affect decoding at this end)
+options = {"jpeg_compression_fastdct": True, "jpeg_compression_fastupsample": True}
 
 # Define NetGear Client at given IP address and define parameters 
 # !!! change following IP address '192.168.x.xxx' with yours !!!

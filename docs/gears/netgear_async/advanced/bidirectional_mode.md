@@ -44,9 +44,9 @@ This mode can be easily activated in NetGear_Async through `bidirectional_mode` 
 
     * Bidirectional Mode ==only works with [**User-defined Custom Source**](../usage/#using-netgear_async-with-a-custom-sourceopencv) on Server end==. Otherwise, NetGear_Async API will throw `ValueError`.
 
-    * Bidirectional Mode enables you to send data of **ANY**[^1] Data-type along with frame bidirectionally.
+    * Bidirectional Mode enables you to send any **msgpack-serializable**[^1] data along with frame bidirectionally.
 
-    * NetGear_Async API will throw `RuntimeError` if Bidirectional Mode is disabled at Server end or Client end but not both.
+    * If Bidirectional Mode is enabled at Server end or Client end but not both, the Client will throw `RuntimeError`, whereas the Server will throw `TimeoutError` after [`timeout`](../params/#timeout) seconds.
 
     * Bidirectional Mode may lead to additional **LATENCY** depending upon the size of data being transfer bidirectionally. User discretion is advised!
 
@@ -63,7 +63,12 @@ To send data bidirectionally, NetGear_Async API provides following exclusive met
 
 * [`transceive_data`](../../../bonus/reference/netgear_async/#vidgear.gears.asyncio.NetGear_Async.transceive_data): It's a bidirectional mode exclusive method to transmit data _(in Receive mode)_ and receive data _(in Send mode)_, all while transferring frames in real-time. 
 
-    * `data`: In `transceive_data` method, this parameter enables user to inputs data _(of **ANY**[^1] datatype)_ for sending back to Server at Client's end. 
+    * `data`: In `transceive_data` method, this parameter enables user to inputs **msgpack-serializable**[^1] data _(or a `numpy.ndarray` frame)_ for sending back to Server at Client's end. 
+
+!!! info "How `transceive_data` works"
+
+    * **At Client's end:** `transceive_data(data=...)` only queues the data, and it is sent back to the Server as reply to the **next** frame received. Thereby, the Server's first `transceive_data()` call always returns `None`. This queue is unbounded, so avoid calling it more than once per received frame.
+    * **At Server's end:** `transceive_data()` is non-blocking, and returns the data received from Client, or `None` if nothing has arrived yet.
 
 &nbsp;
 
@@ -84,7 +89,7 @@ Following is the bare-minimum code you need to get started with Bidirectional Mo
 
 Open your favorite terminal and execute the following python code:
 
-!!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard!"
+!!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard! If the Client exits first, `server.close()` stops waiting for its confirmation after [`timeout`](../params/#timeout) seconds."
 
 ```python linenums="1" hl_lines="6 33 40 53"
 # import library
@@ -153,7 +158,7 @@ if __name__ == "__main__":
         server.close()
 ```
 
-1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted in `target_data`.
+1.  :warning: Any msgpack-serializable data _(except [numpy.ndarray](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html))_ is accepted in `target_data`.
 
 
 #### Client End
@@ -302,7 +307,7 @@ Now, Open the terminal on another Server System _(a Raspberry Pi with Camera Mod
 
 !!! info "Replace the IP address in the following code with Client's IP address you noted earlier."
 
-!!! tip "You can terminate stream on both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
+!!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard! If the Client exits first, `server.close()` stops waiting for its confirmation after [`timeout`](../params/#timeout) seconds."
 
 !!! new "Backend PiGear API now fully supports the newer [`picamera2`](https://github.com/raspberrypi/picamera2) python library under the hood for Raspberry Pi :fontawesome-brands-raspberry-pi: camera modules. Follow this [guide ➶](../../../installation/pip_install/#picamera2) for its installation."
 
@@ -313,7 +318,7 @@ Now, Open the terminal on another Server System _(a Raspberry Pi with Camera Mod
     ```python linenums="1" hl_lines="13-19 23-67 74"
     # import libs
     from vidgear.gears.asyncio import NetGear_Async
-    from vidgear.gears import VideoGear
+    from vidgear.gears import PiGear
     from libcamera import Transform
     import cv2, asyncio
 
@@ -398,7 +403,7 @@ Now, Open the terminal on another Server System _(a Raspberry Pi with Camera Mod
             server.close()
     ```
 
-    1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted in `target_data`.
+    1.  :warning: Any msgpack-serializable data _(except [numpy.ndarray](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html))_ is accepted in `target_data`.
     
 === "Legacy Picamera backend"
 
@@ -410,13 +415,13 @@ Now, Open the terminal on another Server System _(a Raspberry Pi with Camera Mod
 
         !!! failure "The `picamera` library is built on the legacy camera stack that is NOT _(and never has been)_ supported on 64-bit OS builds."
 
-        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../pigear/params) user-defined optional parameter boolean attribute."
+        !!! note "You could also enforce the legacy picamera API backend in PiGear by using the [`enforce_legacy_picamera`](../../pigear/params/#b-user-defined-parameters) user-defined optional parameter boolean attribute."
 
 
     ```python linenums="1" hl_lines="12-18 22-67 74"
     # import library
     from vidgear.gears.asyncio import NetGear_Async
-    from vidgear.gears import VideoGear
+    from vidgear.gears import PiGear
     import cv2, asyncio
 
     # activate Bidirectional mode
@@ -501,7 +506,7 @@ Now, Open the terminal on another Server System _(a Raspberry Pi with Camera Mod
             server.close()
     ```
 
-    1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted in `target_data`.
+    1.  :warning: Any msgpack-serializable data _(except [numpy.ndarray](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html))_ is accepted in `target_data`.
 
 &nbsp; 
 
@@ -523,9 +528,9 @@ In this example we are going to implement a bare-minimum example, where we will 
 
 Open your favorite terminal and execute the following python code:
 
-!!! tip "You can terminate both side anytime by pressing ++ctrl+"C"++ on your keyboard!"
+!!! tip "You can terminate both sides anytime by pressing ++ctrl+"C"++ on your keyboard! If the Client exits first, `server.close()` stops waiting for its confirmation after [`timeout`](../params/#timeout) seconds."
 
-!!! alert "Server end can only send [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype as frame but not as data."
+!!! alert "Server end can only send [numpy.ndarray](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html) datatype as frame but not as data."
 
 ```python linenums="1" hl_lines="8 33-48 54 67"
 # import library
@@ -609,7 +614,7 @@ if __name__ == "__main__":
 ```
 
 
-1.  :warning: Everything except [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype data is accepted in `target_data`.
+1.  :warning: Any msgpack-serializable data _(except [numpy.ndarray](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html))_ is accepted in `target_data`.
 
 &nbsp;
 
@@ -690,7 +695,17 @@ if __name__ == "__main__":
 
 [^1]: 
     
-    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype is **ONLY SUPPORTED** at Client's end with [`transceive_data`](../../../bonus/reference/netgear_async/#vidgear.gears.asyncio.NetGear_Async.transceive_data) method using its `data` parameter. Whereas Server end can only send [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) datatype as frame but not as data."
+    !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html) datatype is **ONLY SUPPORTED** at Client's end with [`transceive_data`](../../../bonus/reference/netgear_async/#vidgear.gears.asyncio.NetGear_Async.transceive_data) method using its `data` parameter. Whereas Server end can only send [numpy.ndarray](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html) datatype as frame but not as data."
+
+    !!! info "Supported data-types"
+
+        Data is serialized with [`msgspec`](https://jcristharif.com/msgspec/) as msgpack _(no pickle)_, so it must be made of `None`, `bool`, `int`, `float`, `str`, `bytes`, `list`, `tuple`, `set`, and `dict` values. Thereby:
+
+        * Falsy values _(such as `0`, `False`, `[]`, `""`)_ are preserved as they are.
+        * Lists stay lists, whereas tuples and sets arrive as lists.
+        * Dictionaries with non-string _(for e.g. integer)_ keys are supported.
+        * Numpy scalars _(for e.g. `np.int64(5)`)_ are converted to Python scalars.
+        * Small `numpy.ndarray` arrays nested inside data are **NOT** supported. Send them as a frame instead _(i.e. pass the array itself to Client's `transceive_data`)_.
 
 
 &nbsp;
