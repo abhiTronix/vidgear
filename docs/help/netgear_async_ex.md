@@ -39,9 +39,11 @@ Open a terminal on Client System where you want to display the input frames _(an
 
 !!! alert "High CPU utilization may occur on Client's end. User discretion is advised."
 
-!!! note "Note down the IP-address of this system _(required at Server's end)_ by executing the  `hostname -I` command and also replace it in the following code.""
+!!! warning "WebGear calls your frame producer once per browser request, so the Client's `recv_generator()` is created **only once** and shared by the producer below. Calling `client.recv_generator()` inside the producer would bind the same address again on every request, and fail with `RuntimeError: Failed to bind`. Thereby, only one browser tab can stream at a time."
 
-```python linenums="1" hl_lines="16-32 40 43 46"
+!!! note "Note down the IP-address of this system _(required at Server's end)_ by executing the  `hostname -I` command and also replace it in the following code."
+
+```python linenums="1" hl_lines="9-16 19 22-38 47 50 53"
 # import libraries
 from vidgear.gears.asyncio import NetGear_Async
 from vidgear.gears.asyncio import WebGear
@@ -51,16 +53,22 @@ import uvicorn, asyncio, cv2
 # Define NetGear_Async Client at given IP address and define parameters
 # !!! change following IP address '192.168.x.xxx' with yours !!!
 client = NetGear_Async(
-    receive_mode=True,
+    address="192.168.x.xxx",
+    port="5454",
+    protocol="tcp",
     pattern=1,
+    receive_mode=True,
     logging=True,
-).launch()
+)
+
+# create Client's Asynchronous Frame Generator only once, and share it
+frames = client.recv_generator()
 
 # create your own custom frame producer
 async def my_frame_producer():
 
-    # loop over Client's Asynchronous Frame Generator
-    async for frame in client.recv_generator():
+    # loop over the shared Client's Asynchronous Frame Generator
+    async for frame in frames:
 
         # {do something with received frames here}
 
@@ -77,8 +85,8 @@ async def my_frame_producer():
 
 
 if __name__ == "__main__":
-    # Set event loop to client's
-    asyncio.set_event_loop(client.loop)
+    # Note: No need to set `client.loop` as event loop here, since
+    # `uvicorn.run()` runs its own event loop, which Client then uses
 
     # initialize WebGear app without any source in MJPEG mode
     # (custom sources only work in MJPEG mode)

@@ -24,7 +24,13 @@ limitations under the License.
 
     * Kindly go through each given examples thoroughly, any incorrect settings/parameter may result in errors or no output at all.
 
-    * NetGear provides auto-termination feature, where if you terminate server end manually, the connected client(s) end will also terminate themselves to save resources.
+    * NetGear provides auto-termination feature, where if you terminate server end manually _(i.e. `close()` or `send(None)`)_, the connected client(s) end will also terminate themselves _(i.e. `recv()` returns `None`)_ to save resources. In `zmq.PUB/zmq.SUB` and `zmq.PUSH/zmq.PULL` patterns, this is best-effort only, so use [`receive_timeout`](params/#options) at client's end.
+
+    * In every pattern, the Client _(receiver)_ binds and the Server _(sender)_ connects, so the [`address`](params/#address) is always the Client's IP address at both ends.
+
+    * At Client's end, `recv()` first returns any frames still queued before reporting end of stream _(i.e. `None`)_, and raises `RuntimeError` if its receive thread fails unexpectedly.
+
+    * `close()` returns promptly at both ends. At Client's end, `close(kill=True)` just doesn't wait for the receive thread to finish.
 
     * Only either of two functions (i.e. `send()` and `recv()`) can be accessed at any given instance based on activated [primary mode](./#primary-modes) selected during NetGear API initialization. Trying to access wrong function in incorrect mode (_for e.g using `send()` function in Receive Mode_), will result in `ValueError`.
 
@@ -320,9 +326,9 @@ stream = cv2.VideoCapture(0)
 # define tweak flags
 options = {"flag": 0, "copy": True, "track": False}
 
-# Define Netgear Client at given IP address and define parameters 
-# !!! change following IP address '192.168.x.xxx' with yours !!!
-client = NetGear(
+# Define Netgear server at given IP address and define parameters 
+# !!! change following IP address '192.168.x.xxx' with client's IP address !!!
+server = NetGear(
     address="192.168.x.xxx",
     port="5454",
     protocol="tcp",

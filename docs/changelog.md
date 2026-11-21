@@ -20,6 +20,68 @@ limitations under the License.
 
 # Release Notes
 
+## v0.3.8 (In Progress)
+
+???+ tip "New Features"
+    - [x] 🔀 **NetGear: PUSH/PULL pattern:**
+        * Added `pattern=3` _(`zmq.PUSH/zmq.PULL`)_, matching NetGear_Async. Multi-Client mode load-balances frames between clients, Multi-Server mode fair-queues them.
+        * Added `send_hwm` attribute _(sender queue length, default `4`)_; `send()` raises `RuntimeError` after `request_timeout` when no client takes frames.
+    - [x] 🚩 **NetGear:**
+        * Added `receive_timeout` attribute for patterns 2 and 3 _(`subscriber_timeout` kept as alias)_.
+        * Added `allowed_ips` attribute, an optional Secure Mode whitelist of sender IPs.
+        * Added `jpeg_compression_colorsubsampling` attribute _(`"444"`, `"422"` default, `"420"`, `"440"`, `"411"`)_.
+        * `send(None)` now signals end of stream to the client(s).
+    - [x] 🚩 **NetGear_Async:** Added `aclose()` coroutine and `async with` support.
+
+??? success "Updates/Improvements"
+    - [x] **NetGear:**
+        * Receive thread owns its socket and polls, so `close()` returns promptly in every pattern; `recv()` blocks on a queue instead of busy-waiting.
+        * Lazy-Pirate retries now reset after every successful exchange, and `max_retries=0` is rejected.
+        * Frames JPEG can't encode _(non-`uint8`, or channels not matching the colorspace)_ are sent uncompressed with a one-time warning, instead of raising.
+        * Each end decodes JPEG with its own `fastdct`/`fastupsample` flags; row-strided ROI crops are encoded without a copy; header and frame go out as one multipart message _(same wire format)_.
+        * Invalid `pattern`/`protocol`/`jpeg_compression` values now always warn.
+        * Reconnect messages logged as warnings instead of critical.
+        * CURVE secret keys are created owner-only _(`0600`, dir `0700`)_, and Secure Mode fails fast without libzmq CURVE support.
+        * SSH tunnel backend chosen by pyzmq _(pexpect on Linux/macOS, paramiko on Windows)_.
+    - [x] **NetGear_Async:**
+        * Uses the running event loop or owns a new one _(uvloop if installed)_, without setting process-wide loop policies _(deprecated, removed in Python 3.16)_.
+        * Received frames are writeable; header and raw frame buffer go out as one zero-copy multipart message.
+        * VideoGear frames are read off the event loop.
+        * Lifecycle messages logged at INFO/DEBUG instead of critical.
+    - [x] **Helper:** Added `zmq_endpoint` shared by NetGear and NetGear_Async.
+    - [x] **Dependencies:** Replaced `msgpack` and `msgpack_numpy` with `msgspec>=0.20.0`, added `pexpect` _(non-Windows)_ and `paramiko` _(Windows)_ to `core`/`asyncio` extras, raised simplejpeg runtime check to `1.9.0` _(NetGear & WebGear)_, and updated `poetry.lock`.
+    - [x] **Tests:**
+        * Rewrote NetGear and NetGear_Async tests so they can fail: exact frame equality, no blanket `xfail`, free ports, per-test certificates, `pytest-timeout`, and failing on unhandled thread exceptions.
+        * Added tests for PUSH/PULL, Secure Mode with default/LAN addresses, reconnect keeping CURVE, end-of-stream delivery, `send(None)`, `ipc`, corrupt/oversized JPEGs, JPEG fallback, retry budget, prompt `close()`, malicious/malformed NetGear_Async messages, bi-mode data round-trips and `asyncio.run()` usage.
+        * Added `pytest-timeout` to CI.
+    - [x] **Docs:** Updated NetGear and NetGear_Async docs, examples and FAQs for all of the above, and fixed broken examples.
+
+??? danger "Breaking Updates/Changes"
+    - [ ] 💥 **NetGear_Async:** New msgspec wire format _(header + raw frame buffer)_, incompatible with older NetGear_Async peers: upgrade both ends together. Bi-mode `data` keeps lists as lists and falsy values as-is _(were tuples and `None`)_.
+    - [ ] 💥 **NetGear_Async:** `launch()` is a no-op in receive mode, and `close()` inside a running event loop schedules `aclose()` and returns its task.
+    - [ ] 💥 **NetGear:** Multi-Server `recv()` always returns `(port, message, frame)` _(was `(port, frame)` when `message` was falsy)_.
+    - [ ] 💥 **NetGear:** Secure Mode no longer whitelists the receiver's `address`; use `allowed_ips` to restrict sender IPs.
+    - [ ] 💥 **NetGear:** `protocol="ipc"` uses `address` as the socket path _(default `<tempdir>/vidgear-<port>.ipc`)_ instead of `ipc://<address>:<port>`.
+    - [ ] 💥 **NetGear:** No longer sets a `WindowsSelectorEventLoopPolicy` on Windows.
+
+??? bug "Bug-fixes"
+    - [x] **NetGear:**
+        * Fixed Secure Mode denying every peer with default `address`, and remote senders with explicit addresses.
+        * Fixed CURVE (and REQ/HWM options) being silently dropped on Lazy-Pirate reconnect.
+        * Fixed frames queued at the receiver being discarded when the termination flag arrived.
+        * Fixed `send(None)` crashing.
+        * Fixed `protocol="ipc"` never connecting with default addresses.
+        * Fixed receiver `close()` hanging forever with pattern 2, and cross-thread socket use.
+        * Fixed `recv()` hanging forever when the receive thread failed; errors are now re-raised.
+        * Fixed JPEG decompression bomb _(frames over 8K×8K are dropped)_ and a single corrupt JPEG ending the stream.
+        * Fixed SSH ports containing `47` skipping the reachability check and corrupting the endpoint.
+        * Fixed Multi-Client pattern 2 server never sending the termination flag.
+    - [x] **NetGear_Async:**
+        * Fixed remote-code-execution via `msgpack_numpy` pickle payloads.
+        * Fixed `close()` crashing before `launch()`, hanging without a client, and leaking the ZMQ context.
+        * Fixed `bidirectional_mode=False` raising with pattern 2/3 or a `source`, and `api=Backend.PIGEAR` without `source`.
+        * Fixed bi-mode tuple detection mis-unpacking 2-row frames, and invalid `timeout` silently becoming `15.0`.
+
 ## v0.3.7 (2026-11-07)
 
 ???+ tip "New Features"

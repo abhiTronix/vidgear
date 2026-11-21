@@ -28,7 +28,9 @@ limitations under the License.
 
 In Multi-Servers Mode, NetGear API robustly handles Multiple Servers at once, thereby providing seamless access to frames and unidirectional data transfer across multiple Publishers/Servers in the network at the same time. Each new server connects to a single client can be identified by its unique port address on the network. 
 
-The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) and Request/Reply(`zmq.REQ/zmq.REP`) and can be easily activated in NetGear API through `multiserver_mode` attribute of its [`options`](../params/#options) dictionary parameter during initialization.
+The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`), Request/Reply(`zmq.REQ/zmq.REP`) and Push/Pull (`zmq.PUSH/zmq.PULL`) and can be easily activated in NetGear API through `multiserver_mode` attribute of its [`options`](../params/#options) dictionary parameter during initialization.
+
+!!! tip "Push/Pull (`zmq.PUSH/zmq.PULL`) pattern is a natural fit for this mode, as the Client's `zmq.PULL` socket fair-queues frames from all Servers. Frame order is preserved per-Server only. Since its termination signal is best-effort, also use [`receive_timeout`](../params/#options) at Client's end with it."
 
 
 &nbsp;
@@ -40,11 +42,13 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
     
     * A list/tuple of PORT addresses of all unique Servers **MUST** be assigned at Client's end using its [`port`](../params/#port) parameter for a successful connection.
 
-    * Patterns `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_ and `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ are the only supported values for this Mode. Therefore, calling any other pattern value with is mode will result in `ValueError`.
+    * Patterns `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_, `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ and `3` _(i.e. Push/Pull `zmq.PUSH/zmq.PULL`)_ are the only supported values for this Mode. Therefore, calling any other pattern value with is mode will result in `ValueError`.
 
     * Multi-Servers and Multi-Clients exclusive modes **CANNOT** be enabled simultaneously, Otherwise NetGear API will throw `ValueError`.
 
     * The [`address`](../params/#address) parameter value of each Server **MUST** exactly match the Client. 
+
+    * In this mode, Client's `recv()` **ALWAYS** returns a `(port, message, frame)` tuple _(where `message` is `None` if a Server sent no data)_, or `None` once all Servers have terminated.
 
 &nbsp;
 
@@ -52,17 +56,17 @@ The supported patterns for this mode are Publish/Subscribe (`zmq.PUB/zmq.SUB`) a
 
 - [x] Enables Multiple Server(s) connection with a single Client.
 
-- [x] Ability to [send any additional data](../advanced/multi_server/#using-multi-servers-mode-for-unidirectional-custom-data-transfer) of any[^1] datatype along with frames in real-time.
+- [x] Ability to [send any additional data](../advanced/multi_server/#using-multi-servers-mode-for-unidirectional-custom-data-transfer) of any JSON-serializable[^1] datatype along with frames in real-time.
 
 - [x] Number of Servers can be extended to several numbers depending upon your system's hardware limit.
 
-- [x] Employs powerful **Publish/Subscribe & Request/Reply** messaging patterns.
+- [x] Employs powerful **Publish/Subscribe, Request/Reply & Push/Pull** messaging patterns.
 
 - [x] Each new Server on the network can be identified at Client's end by their unique port addresses.
 
 - [x] NetGear API actively tracks the state of each connected Server.
 
-- [x] If all the connected servers on the network get disconnected, the client itself automatically exits to save resources.
+- [x] If all the connected servers on the network terminate, the client itself automatically exits to save resources _(best-effort only with patterns `2` and `3`, so use [`receive_timeout`](../params/#options) with them)_.
 
 &nbsp;
 
@@ -100,7 +104,7 @@ Open a terminal on Client System _(where you want to display the input frames re
 
 !!! tip "You can terminate client anytime by pressing ++ctrl+"C"++ on your keyboard!"
 
-```python linenums="1" hl_lines="7 14 40-52"
+```python linenums="1" hl_lines="7 14 41-53"
 # import required libraries
 from vidgear.gears import NetGear
 from imutils import build_montages # (1)
@@ -136,7 +140,8 @@ while True:
             break
 
         # extract unique port address and its respective frame
-        unique_address, frame = data
+        # (message is None here, as servers send no data)
+        unique_address, _, frame = data
 
         # {do something with the extracted frame here}
 
@@ -335,7 +340,8 @@ while True:
             break
 
         # extract unique port address and its respective frame
-        unique_address, frame = data
+        # (message is None here, as servers send no data)
+        unique_address, _, frame = data
 
         # {do something with the extracted frame here}
 
@@ -484,7 +490,7 @@ server.close()
 ### Using Multi-Servers Mode for Unidirectional Custom Data Transfer
 
 !!! abstract
-    With Multi-Servers Mode, you can send additional data of *any datatype*[^1] along with frame with frame in real-time, from all connected Server(s) to a single Client unidirectionally.
+    With Multi-Servers Mode, you can send additional data of *any JSON-serializable datatype*[^1] along with frame with frame in real-time, from all connected Server(s) to a single Client unidirectionally.
 
     !!! warning "But [`numpy.ndarray`](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT** supported as data."
 
@@ -810,10 +816,11 @@ Finally, Open the terminal on another Server System _(this time a Raspberry Pi w
 ### Using Multi-Servers Mode with Bidirectional Mode
 
 !!! abstract
-    Multi-Servers Mode now also compatible with [Bidirectional Mode](../advanced/bidirectional_mode/), which lets you send additional data of ***any datatype***[^1]  along with frame in real-time bidirectionally between a single Client and all connected Server(s).
+    Multi-Servers Mode now also compatible with [Bidirectional Mode](../advanced/bidirectional_mode/), which lets you send additional ***JSON-serializable*** data[^1]  along with frame in real-time bidirectionally between a single Client and all connected Server(s).
 
 !!! warning "Important Information"
-    * Bidirectional data transfer **ONLY** works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_, and **NOT** with pattern `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_
+    * Bidirectional data transfer **ONLY** works with pattern `1` _(i.e. Request/Reply `zmq.REQ/zmq.REP`)_, and **NOT** with patterns `2` _(i.e. Publish/Subscribe `zmq.PUB/zmq.SUB`)_ and `3` _(i.e. Push/Pull `zmq.PUSH/zmq.PULL`)_
+    * The `return_data` value is sticky _(stays set until replaced)_, and is sent back with the reply to the **next** received frame, i.e. one frame late.
     * Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **NOT SUPPORTED** at Server(s) with their [`message`](../../../bonus/reference/netgear/#vidgear.gears.NetGear.send) parameter.
     * Bidirectional Mode may lead to additional **LATENCY** depending upon the size of data being transfer bidirectionally. User discretion is advised!
 
@@ -871,7 +878,7 @@ while True:
             break
 
         # extract unique port address and its respective frame and received data
-        unique_address, extracted_data, frame = recv_data
+        unique_address, extracted_data, frame = data
 
         # {do something with the extracted frame and data here}
         # let's display extracted data on our extracted frame

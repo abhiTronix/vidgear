@@ -33,7 +33,7 @@ The complete usage example is as follows:
 
 Open a terminal on Client System where you want to display the input frames _(and setup WebGear server)_ received from the Server and execute the following python code:
 
-!!! danger "After running this code, Make sure to open Browser immediately otherwise NetGear will soon exit with `RuntimeError`. You can also try setting [`max_retries`](../gears/netgear/params/#options) and [`request_timeout`](../gears/netgear/params/#options) like attributes to a higher value to avoid this."
+!!! danger "After running this code, Make sure to open Browser immediately otherwise the NetGear Server will soon give up with `RuntimeError` _(and Client's `recv()` will then return `None`)_. You can also try setting [`max_retries`](../gears/netgear/params/#options) and [`request_timeout`](../gears/netgear/params/#options) like attributes to a higher value to avoid this."
 
 !!! warning "Make sure you use different `port` value for NetGear and WebGear API."
 
@@ -79,7 +79,8 @@ async def my_frame_producer():
     # loop over frames
     while True:
         # receive frames from network
-        frame = client.recv()
+        # (in a worker thread, as blocking `recv()` would stall the event loop)
+        frame = await asyncio.to_thread(client.recv)
 
         # if NoneType
         if frame is None:
@@ -187,7 +188,7 @@ The complete usage example is as follows:
 
 Open a terminal on Client System where you want to display the input frames _(and setup WebGear_RTC server)_ received from the Server and execute the following python code:
 
-!!! danger "After running this code, Make sure to open Browser immediately otherwise NetGear will soon exit with `RuntimeError`. You can also try setting [`max_retries`](../gears/netgear/params/#options) and [`request_timeout`](../gears/netgear/params/#options) like attributes to a higher value to avoid this."
+!!! danger "After running this code, Make sure to open Browser immediately otherwise the NetGear Server will soon give up with `RuntimeError` _(and Client's `recv()` will then return `None`)_. You can also try setting [`max_retries`](../gears/netgear/params/#options) and [`request_timeout`](../gears/netgear/params/#options) like attributes to a higher value to avoid this."
 
 !!! warning "Make sure you use different `port` value for NetGear and WebGear_RTC API."
 
@@ -237,15 +238,15 @@ class Custom_Stream_Class:
         # don't forget this function!!!
         # This function is specific to VideoCapture APIs only
 
-        if not self.source is None:
-            self.source.start()
+        # flag that we're running now
+        self.running = True
 
     def read(self):
 
         # don't forget this function!!!
 
-        # check if source was initialized or not
-        if self.source is None:
+        # check if client was initialized or not
+        if self.client is None:
             return None
         # check if we're still running
         if self.running:

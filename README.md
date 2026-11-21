@@ -697,9 +697,9 @@ web.shutdown()
 </p>
 .
 
-> _NetGear_Async can generate the same performance as [NetGear API](#netgear) at about one-third the memory consumption, and also provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but lacks in term of flexibility as it supports only a few [NetGear's Exclusive Modes][netgear-exm]._
+> _NetGear_Async is an asyncio port of [NetGear API](#netgear) that provides complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but lacks in term of flexibility as it supports only Bidirectional Mode out of all [NetGear's Exclusive Modes][netgear-exm]._
 
-NetGear_Async is built on [`zmq.asyncio`][asyncio-zmq], and powered by a high-performance asyncio event loop called [**`uvloop`**][uvloop] to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. NetGear_Async can transfer thousands of frames in just a few seconds without causing any significant load on your system.
+NetGear_Async is built on [`zmq.asyncio`][asyncio-zmq] for lag-free video streaming over the network with minimal resource constraints. When NetGear_Async creates its own event loop, it uses the high-performance [**`uvloop`**][uvloop] event loop _(if installed, not on Windows)_.
 
 NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to [NetGear API](#netgear). Furthermore, NetGear_Async allows us to define our custom Server as source to transform frames easily before sending them across the network(see this [doc][netgear_async-cs] example).
 

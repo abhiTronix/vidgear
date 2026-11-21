@@ -47,11 +47,11 @@ from vidgear.gears.asyncio import NetGear_Async
 from vidgear.gears.helper import Backend
 
 NetGear_Async(source="foo.mp4", api=Backend.CAMGEAR)  # default — CamGear backend
-NetGear_Async(api=Backend.PIGEAR)                      # PiGear backend
+NetGear_Async(api=Backend.PIGEAR)                      # PiGear backend (no `source` needed)
 NetGear_Async(source="foo.mp4", api=Backend.FFGEAR)    # FFGear backend
 ```
 
-!!! failure "NetGear_Async will raise `TypeError` if `api` is not a valid `Backend` enum member."
+!!! failure "NetGear_Async will raise `TypeError` if `api` is not a valid `Backend` enum member and a `source` is given. Without any `source` _(and `api` other than `Backend.PIGEAR`)_, NetGear_Async uses a [custom generator](usage/#using-netgear_async-with-a-custom-sourceopencv) instead, and ignores `api`."
 
 &nbsp;
 
@@ -82,6 +82,10 @@ NetGear_Async(api=Backend.PIGEAR)
 ## **`address`**
 
 This parameter sets the valid network address of the Server/Client. Network addresses unique identifiers across the network. 
+
+!!! info "In NetGear_Async, the Receiver _(Client)_ binds to this address and the Sender _(Server)_ connects to it. Thereby, on both ends this address should be the Receiver's _(Client's)_ IP address, or `'*'` at the Receiver's end to bind on all interfaces."
+
+!!! tip "With [`protocol='ipc'`](#protocol), this parameter is a filesystem path _(for e.g. `/tmp/vidgear.ipc`)_ instead, and its default value is `<tempdir>/vidgear-<port>.ipc` on both ends."
 
 **Data-Type:** String
 
@@ -118,6 +122,10 @@ NetGear_Async(port="5575")
 
 This parameter sets the valid messaging protocol between Server/Client. A network protocol is a set of established rules that dictates how to format, transmit and receive data so computer network devices - from servers and routers to endpoints - can communicate regardless of the differences in their underlying infrastructures, designs or standards. Supported protocol are: `'tcp'` and `'ipc'`.
 
+!!! warning "Any invalid value will be discarded with a warning, and NetGear_Async will fall back to `'tcp'`."
+
+!!! info "With `'ipc'` protocol _(same machine only)_, the [`address`](#address) parameter is a filesystem path instead, and its default value works on both ends."
+
 **Data-Type:** String
 
 **Default Value:** Its default value is `'tcp'`
@@ -137,7 +145,7 @@ This parameter sets the supported messaging pattern(flow of communication) betwe
 
 **Data-Type:** Integer
 
-**Default Value:** Its default value is `0` (_i.e `zmq.PAIR`_). 
+**Default Value:** Its default value is `0` (_i.e `zmq.PAIR`_). Any invalid value will be discarded with a warning, and NetGear_Async will fall back to `0`.
 
 **All supported ZMQ patterns for NetGear_Async are:**
 
@@ -145,6 +153,8 @@ This parameter sets the supported messaging pattern(flow of communication) betwe
    * **`1` (_.i.e. zmq.REQ/zmq.REP_):** In this pattern, it employs `ZMQ REQ` sockets that can connect to many servers. The requests will be interleaved or distributed to both the servers. socket `zmq.REQ` will block send unless it has successfully received a reply back and socket `zmq.REP` will block on recv() unless it has received a request.
    * **`2` (_.i.e. zmq.PUB/zmq.SUB_):** It is an another classic pattern where senders of messages, called _publishers_, do not program the messages to be sent directly to specific receivers, called _subscribers_. Messages are published without the knowledge of what or if any subscriber of that knowledge exists. A `ZMQ.SUB` can connect to multiple `ZMQ.PUB` (publishers). No single publisher overwhelms the subscriber. The messages from both publishers are interleaved.
    * **`3` (_.i.e. zmq.PUSH/zmq.PULL_):** Its sockets let you distribute messages to multiple workers, arranged in a pipeline. A Push socket will distribute sent messages to its Pull clients evenly. This is equivalent to the producer/consumer model but the results computed by the consumer are not sent upstream but downstream to another pull/consumer socket.
+
+!!! info "In `zmq.PUB/zmq.SUB` & `zmq.PUSH/zmq.PULL` patterns, the Server doesn't wait for any reply from the Client. Also in `zmq.PUB/zmq.SUB` pattern, the termination signal is delivered on a best-effort basis, so the Client may exit with `TimeoutError` instead."
 
 **Usage:**
 
@@ -157,7 +167,7 @@ NetGear_Async(pattern=1) # sets zmq.REQ/zmq.REP pattern
 
 ## **`receive_mode`** 
 
-This parameter select the Netgear's Mode of operation. It basically activates `Receive Mode`(_if `True`_) and `Send Mode`(_if `False`_). Furthermore, `recv()` method will only work when this flag is enabled(_i.e. `Receive Mode`_), whereas `send()` method will only work when this flag is disabled(_i.e.`Send Mode`_). 
+This parameter select the NetGear_Async's Mode of operation. It basically activates `Receive Mode`(_if `True`_) and `Send Mode`(_if `False`_). Furthermore, `recv_generator()` method will only work when this flag is enabled(_i.e. `Receive Mode`_), whereas `config["generator"]`, `launch()` and its `task` attribute will only work when this flag is disabled(_i.e.`Send Mode`_). In Receive Mode, `launch()` does nothing _(and just returns the instance)_, so iterate `recv_generator()` instead. 
 
 **Data-Type:** Boolean
 
@@ -173,11 +183,13 @@ NetGear_Async(receive_mode=True) # activates Recieve Mode
 
 ## **`timeout`**
 
-In NetGear_Async, the Receiver-end keeps tracks if frames are received from Server-end within this specified timeout value _(in seconds)_, Otherwise `TimeoutError` will be raised, which helps to close the Receiver-end safely if the Server has lost connection prematurely. This parameter controls that  timeout value _(i.e. the maximum waiting time (in seconds))_ after which Client exit itself with a `TimeoutError` to save resources. Its minimum value is `0.0` but no max limit.
+In NetGear_Async, the Receiver-end keeps tracks if frames are received from Server-end within this specified timeout value _(in seconds)_, Otherwise `TimeoutError` will be raised from `recv_generator()`, which helps to close the Receiver-end safely if the Server has lost connection prematurely. This parameter controls that  timeout value _(i.e. the maximum waiting time (in seconds))_ after which Client exit itself with a `TimeoutError` to save resources. 
+
+This timeout also bounds the Server's waits for the Client's replies in synchronous patterns _(`zmq.PAIR` & `zmq.REQ/zmq.REP`, raising `TimeoutError` from the Server's `task`)_, and the termination handshake in `close()`/`aclose()`. It cannot be disabled. Its value must be greater than `0`, otherwise it will be discarded with a warning and default value will be used.
 
 **Data-Type:** Float/Integer
 
-**Default Value:** Its default value is `10.0`.
+**Default Value:** Its default value is `15.0`.
 
 **Usage:**
 
@@ -198,7 +210,7 @@ This parameter provides the flexibility to alter various NetGear_Async API's int
 
 !!! abstract "Supported dictionary attributes for NetGear_Async API"
 
-    * **`bidirectional_mode`** (_boolean_) : This internal attribute activates the exclusive [**Bidirectional Mode**](advanced/bidirectional_mode/), if enabled(`True`).
+    * **`bidirectional_mode`** (_boolean_) : This internal attribute activates the exclusive [**Bidirectional Mode**](advanced/bidirectional_mode/), if enabled(`True`). Enabling it with `zmq.PUB/zmq.SUB` or `zmq.PUSH/zmq.PULL` [`pattern`](#pattern), or with any [`source`](#source), raises `ValueError`. Its default value is `False`, and non-boolean values are discarded with an error log.
 
         The desired attributes can be passed to NetGear_Async API as follows:
 
@@ -321,7 +333,7 @@ This parameter defines the source for the input stream.
 
 **Data-Type:** Based on input.
 
-**Default Value:** Its default value is `0`. 
+**Default Value:** Its default value is `None` _(i.e. [Custom Source](usage/#using-netgear_async-with-a-custom-sourceopencv) mode, where you assign your own asynchronous generator to `config["generator"]`)_. 
 
 
 Its valid input can be one of the following: 
@@ -656,7 +668,7 @@ NetGear_Async(api=Backend.FFGEAR, source="myvideo.mp4", **options)
 
 ## Common Parameters
 
-!!! summary "These are common parameters that works with every backend in NetGear_Async."
+!!! summary "These are common parameters that works with every backend in NetGear_Async, except `colorspace` and `time_delay` which are **not** forwarded to the FFGear backend."
 
 ### **`colorspace`**
 
