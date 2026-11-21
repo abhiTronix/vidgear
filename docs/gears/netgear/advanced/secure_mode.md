@@ -31,7 +31,9 @@ Secure Mode provides easy access to powerful, smart & secure ZeroMQ's Security L
 
 Secure Mode uses a new wire protocol, [**ZMTP 3.0**](http://zmtp.org/) that adds a security handshake to all ZeroMQ connections and a new security protocol, [**CurveZMQ**](http://curvezmq.org/), that implements "perfect forward security" between two ZeroMQ peers over a TCP connection. 
 
-Secure Mode can be easily activated in NetGear API through `secure_mode` attribute of its [`options`](../params/#options) dictionary parameter, during initialization. Furthermore, for managing this mode, NetGear API provides additional `custom_cert_location` & `overwrite_cert` like attribute too.
+Secure Mode can be easily activated in NetGear API through `secure_mode` attribute of its [`options`](../params/#options) dictionary parameter, during initialization. Furthermore, for managing this mode, NetGear API provides additional `custom_cert_location`, `overwrite_cert` & `allowed_ips` like attribute too.
+
+!!! info "In NetGear, the receiver _(Client)_ binds and acts as the **CURVE server** _(and runs the ZAP authenticator)_, whereas the sender _(Server)_ connects and acts as the CURVE client. Therefore in this page, 'server' in ZeroMQ's security terms refers to NetGear's Client end."
 
 &nbsp;
 
@@ -39,16 +41,16 @@ Secure Mode can be easily activated in NetGear API through `secure_mode` attribu
 
 Secure mode supports the two most powerful ZMQ security layers:
 
-* **Stonehouse:** which switches to the [**_CURVE_**](http://curvezmq.org/) security protocol that provides strong encryption on data, and almost unbreakable authentication. Stonehouse is the minimum you would use over public networks and assures clients that they are speaking to an authentic server while allowing any client to connect. ==This security layer is less secure but at the same time faster than IronHouse security mechanism.==
+* **Stonehouse:** which switches to the [**_CURVE_**](http://curvezmq.org/) security protocol that provides strong encryption on data, and almost unbreakable authentication. Stonehouse is the minimum you would use over public networks and assures the senders _(NetGear Servers)_ that they are speaking to an authentic receiver _(NetGear Client)_ while allowing any sender to connect. ==This security layer is less secure but at the same time faster than IronHouse security mechanism.==
 
-* **Ironhouse:** which further extends *Stonehouse* layer with client public key authentication. This is the strongest security model present in ZeroMQ, protecting against every attack we know about except _end-point attacks_. ==This security layer enhanced security comes at a price of additional latency.==
+* **Ironhouse:** which further extends *Stonehouse* layer with sender _(NetGear Server)_ public key authentication. This is the strongest security model present in ZeroMQ, protecting against every attack we know about except _end-point attacks_. ==This security layer enhanced security comes at a price of additional latency.==
 
 
 &nbsp;
 
 !!! danger "Important Information regarding Secure Mode"
 
-    * The `secure_mode` attribute value at the Client's end **MUST** match exactly the Server's end _(i.e. **IronHouse** security layer is only compatible with **IronHouse**, and **NOT** with **StoneHouse**)_.
+    * Secure Mode **MUST** be enabled at both ends _(as the Server needs it to use the CURVE keys)_, but only the Client's `secure_mode` value decides the security layer _(i.e. **StoneHouse** or **IronHouse**)_, since the Client is the CURVE server.
 
     * In Secure Mode, The Client's end **MUST** run before the Server's end to establish a secure connection.
     
@@ -61,7 +63,11 @@ Secure mode supports the two most powerful ZMQ security layers:
     * **IronHouse** is the strongest Security Layer available, but it involves certain security checks that lead to  **ADDITIONAL LATENCY**.
 
     
-    * Secure Mode only supports `libzmq` library version `>= 4.0`.
+    * Secure Mode requires `libzmq` library version `>= 4.2` built with CURVE support. Otherwise, NetGear raises `RuntimeError`.
+
+    * Secret key files are created with `0600` permissions inside a `0700` directory _(on non-Windows systems)_.
+
+    * In **IronHouse**, all Servers share the one auto-generated client Keypair, so the Client can't tell them apart or revoke one of them. If you need that, use [per-Server Keypairs](#using-per-server-keypairs-with-ironhouse) instead.
 
     
 
@@ -75,7 +81,9 @@ Secure mode supports the two most powerful ZMQ security layers:
 
 - [x] Auto-generates, auto-validates & auto-stores the required Public+Secret Keypairs safely.
 
-- [x] Compatible with all messaging pattern, primary and exclusive modes.
+- [x] Compatible with all messaging pattern, primary and exclusive modes, and works across machines.
+
+- [x] Survives auto-reconnection _(Lazy Pirate pattern)_ without losing CURVE security.
 
 - [x] Strong data encryption & Unbreakable authentication.
 
@@ -100,6 +108,8 @@ For implementing Secure Mode, NetGear API currently provide following exclusive 
 
 * **`custom_cert_location`** (_string_): This attribute sets a custom location/path to directory to generate/store Public+Secret Keypair/Certificates for enabling encryption. This attribute will force NetGear to create `.vidgear` folder _(only if not available)_ at the assigned custom path _(instead of home directory)_, and then use that directory for storing new Keypairs/Certificates. It can be used as follows:
 
+    !!! warning "The assigned directory **MUST** already exist and be writable, otherwise NetGear raises `AssertionError`."
+
     ```python
     # set custom Keypair location to '/home/foo/foo1/foo2'
     options = {
@@ -115,6 +125,13 @@ For implementing Secure Mode, NetGear API currently provide following exclusive 
     ```python
     # a new Keypair will be generated
     options = {"secure_mode": 2, "overwrite_cert": True} 
+    ```
+
+* **`allowed_ips`** (_list of strings_): **[For Client-end only]** This optional attribute sets a ZAP whitelist of IP addresses of the **Servers** _(senders)_ allowed to connect. By default, there's no IP whitelist, and any peer with valid CURVE credentials is accepted. Its usage is as follows:
+
+    ```python
+    # only accept Servers at these IP addresses
+    options = {"secure_mode": 1, "allowed_ips": ["192.168.1.10", "192.168.1.11"]}
     ```
 
 
@@ -348,5 +365,25 @@ stream.stop()
 # safely close server
 server.close()
 ```
+
+&nbsp;
+
+### Using per-Server Keypairs with IronHouse
+
+In **IronHouse**, every Server uses the same auto-generated `client.key_secret` Keypair by default. If you need to tell Servers apart or revoke one of them, give each Server its own Keypair as follows:
+
+1. On each Server machine, generate a new client Keypair _(e.g. with pyzmq's [`zmq.auth.create_certificates`](https://pyzmq.readthedocs.io/en/latest/api/zmq.auth.html#zmq.auth.create_certificates))_:
+
+    ```sh
+    python -c "import zmq.auth; zmq.auth.create_certificates('.', 'client')"
+    ```
+
+2. Replace `client.key` and `client.key_secret` in that Server's `$HOME/.vidgear/keys/public_keys` and `$HOME/.vidgear/keys/private_keys` directories respectively with the newly generated files.
+
+3. Copy that Server's new public `client.key` file into the Client's `$HOME/.vidgear/keys/public_keys` directory under a unique name _(e.g. `server-1.key`)_. The Client accepts any public key present in this directory.
+
+4. To revoke a Server, delete its public key file from the Client's `public_keys` directory and restart the Client.
+
+!!! warning "**DO NOT** use `overwrite_cert` at these Servers, as it will regenerate and overwrite these Keypairs."
 
 &nbsp; 

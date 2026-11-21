@@ -26,9 +26,9 @@ limitations under the License.
 
 ## Overview
 
-> _NetGear_Async can generate the same performance as [NetGear API](../netgear/) at about one-third the memory consumption, and also provide complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but lacks in term of flexibility as it supports only a few [NetGear's Exclusive Modes](../netgear/#exclusive-modes)._
+> _NetGear_Async is an asyncio port of [NetGear API](../netgear/) that provides complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but lacks in term of flexibility as it supports only [Bidirectional Mode](advanced/bidirectional_mode/) out of all [NetGear's Exclusive Modes](../netgear/#exclusive-modes)._
 
-NetGear_Async is built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html), and powered by a high-performance asyncio event loop called [**`uvloop`**](https://github.com/MagicStack/uvloop) to achieve unmatchable high-speed and lag-free video streaming over the network with minimal resource constraints. NetGear_Async can transfer thousands of frames in just a few seconds without causing any significant load on your system. 
+NetGear_Async is built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html) for lag-free video streaming over the network with minimal resource constraints. When NetGear_Async creates its own event loop, it uses the high-performance [**`uvloop`**](https://github.com/MagicStack/uvloop) event loop _(if installed, not on Windows)_. 
 
 NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to [NetGear API](../netgear/). Furthermore, NetGear_Async allows us to define our custom Server as source to transform frames easily before sending them across the network(see this [doc](usage/#using-netgear_async-with-a-custom-sourceopencv) example).
 
@@ -44,6 +44,22 @@ NetGear_Async as of now supports four ZeroMQ messaging patterns:
 - [x] [`zmq.PUSH/zmq.PULL`](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pushpull.html#push-pull) _(ZMQ Push/Pull Pattern)_
 
 Whereas supported protocol are: `tcp` and `ipc`.
+
+!!! info "Event Loop handling"
+
+    NetGear_Async never changes the global _(process-wide)_ event loop policy. If it is created inside a running event loop _(for e.g. inside `asyncio.run()`)_, it uses that loop. Otherwise it creates and owns a new event loop _(`uvloop` if installed and not on Windows, else the default asyncio loop)_, available as its `loop` attribute. See [this usage example ➶](usage/#using-netgear_async-with-asynciorun) for running it inside `asyncio.run()`.
+
+!!! danger "Both ends must run the same vidgear version"
+
+    NetGear_Async transfers each frame as a single ZeroMQ multipart message: a small [`msgspec`](https://jcristharif.com/msgspec/)-validated msgpack header followed by the raw frame buffer. This wire format is **incompatible** with NetGear_Async from older vidgear versions _(which used `msgpack` + `msgpack_numpy`)_, so both Server and Client must be upgraded together, otherwise `recv_generator()` raises a clear `ValueError`. Malformed or hostile messages _(for e.g. object dtype or size mismatch)_ are rejected with a `ValueError` too, and are never unpickled.
+
+!!! tip "Received frames are writeable"
+
+    Frames yielded by `recv_generator()` are regular writeable [`numpy.ndarray`](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html) arrays, so you can draw on them _(for e.g. with `cv2.putText`)_ directly.
+
+!!! warning "Limitations"
+
+    Unlike [NetGear API](../netgear/), NetGear_Async does **NOT** support Lazy Pirate reconnection _(i.e. its [`max_retries`](../netgear/params/#options) handling)_, [Secure Mode](../netgear/advanced/secure_mode/) _(ZMQ CURVE encryption)_, or [SSH Tunneling Mode](../netgear/advanced/ssh_tunnel/). Use NetGear API if you need any of these. Also, any `TimeoutError` _(see [`timeout`](params/#timeout))_ ends `recv_generator()`, so the Client must be restarted.
 
 &thinsp; 
 

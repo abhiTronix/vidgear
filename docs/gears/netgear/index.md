@@ -44,13 +44,16 @@ NetGear also enables real-time [*JPEG Frame Compression*](advanced/compression/)
 	Netgear API also provides [`max_retries`](params/#options) and [`request_timeout`](params/#options) like attributes for controlling this polling.
  
 
-NetGear as of now seamlessly supports three ZeroMQ messaging patterns:
+NetGear as of now seamlessly supports four ZeroMQ messaging patterns:
 
 - [x] [**zmq.PAIR**](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pair.html) _(ZMQ Pair Pattern)_ 
 - [x] [**zmq.REQ/zmq.REP**](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/client_server.html) _(ZMQ Request/Reply Pattern)_
 - [x] [**zmq.PUB/zmq.SUB**](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html) _(ZMQ Publish/Subscribe Pattern)_
+- [x] [**zmq.PUSH/zmq.PULL**](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pushpull.html) _(ZMQ Push/Pull Pattern)_
 
-_whereas the supported protocol are: `tcp` and `ipc`_.
+_whereas the supported protocol are: `tcp` and `ipc`_ _(`ipc` needs UNIX domain sockets, and its [`address`](params/#address) is a filesystem path)_.
+
+!!! info "In every pattern, the **receiver (Client) binds** and the **sender (Server) connects**, so [`address`](params/#address) is always the receiver's IP address."
 
 
 &thinsp;
@@ -83,12 +86,12 @@ In addition to the primary modes, NetGear API also offers application-specific E
 
 #### C. Bidirectional Mode
 - This exclusive mode ==provides seamless support for bidirectional data transmission== between between Server and Client along with video frames. 
-- Using this mode, the user can now send or receive any data(of any datatype) between Server and Client easily in real-time. 
+- Using this mode, the user can now send or receive any JSON-serializable data _(and also video frames as `numpy.ndarray`)_ between Server and Client easily in real-time. 
 - **You can learn more about this mode [here ➶](advanced/bidirectional_mode/)**
 
 #### D. SSH Tunneling Mode
 - This exclusive mode ==allows you to connect NetGear via secure SSH connection over the untrusted network== and access its intranet services across firewalls. 
-- This mode implements SSH Remote Port Forwarding which enables accessing Host(client) machine outside the network by exposing port to the public Internet. 
+- This mode implements SSH Local Port Forwarding _(i.e. `ssh -L`)_ at the Server end, which tunnels NetGear's connection to the Client through an SSH server you can log in to. 
 - **You can learn more about this mode [here ➶](advanced/ssh_tunnel/)**
 
 #### E. Secure Mode
@@ -121,7 +124,7 @@ In addition to the primary modes, NetGear API also offers application-specific E
 
 	* Only either of two functions (i.e. `send()` and `recv()`) can be accessed at any given instance based on activated [primary mode](#primary-modes) selected during NetGear API initialization. Trying to access wrong function in incorrect mode _(for e.g using `send()` function in Receive Mode)_, will result in `ValueError`.
 
-	* [Frame Compression](advanced/compression/) is enabled by default in NetGear along with fast dct and compression-quality at 90% in all connections.
+	* [Frame Compression](advanced/compression/) is enabled by default in NetGear along with fast dct and compression-quality at 90% in all connections, but only if [simplejpeg](https://gitlab.com/jfolz/simplejpeg) is installed. Otherwise frames are sent uncompressed.
 
 &thinsp;
 

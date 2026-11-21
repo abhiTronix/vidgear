@@ -24,7 +24,7 @@ limitations under the License.
 
 ## What is NetGear API and what does it do?
 
-**Answer:** NetGear is exclusively designed to transfer video frames & data synchronously (Pair & Request/Reply) as well as asynchronously (Publish/Subscribe) between various interconnecting systems over the network in real-time. _For more info. see [NetGear doc ➶](../gears/netgear/)_
+**Answer:** NetGear is exclusively designed to transfer video frames & data synchronously (Pair & Request/Reply) as well as asynchronously (Publish/Subscribe & Push/Pull) between various interconnecting systems over the network in real-time. _For more info. see [NetGear doc ➶](../gears/netgear/)_
 
 &thinsp;
 
@@ -41,11 +41,23 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../gears/netgear/
 
 | Exclusive Modes | Multi-Servers | Multi-Clients | Secure | Bidirectional | SSH Tunneling |
 | :-------------: | :-----------: | :-----------: | :----: | :-----------: | :-----------: |
-| **Multi-Servers** | - | No _(throws error)_ | Yes | Yes | No _(throws error)_ |
-| **Multi-Clients** |  No _(throws error)_ | - | Yes | Yes | No _(throws error)_ |
+| **Multi-Servers** | - | No _(throws error)_ | Yes | Yes _(pattern `1` only)_ | No _(throws error)_ |
+| **Multi-Clients** |  No _(throws error)_ | - | Yes | Yes _(pattern `1` only)_ | No _(throws error)_ |
 | **Secure** | Yes | Yes | - | Yes | Yes |
-| **Bidirectional** | Yes | Yes | Yes | - | Yes |
+| **Bidirectional** | Yes _(pattern `1` only)_ | Yes _(pattern `1` only)_ | Yes | - | Yes |
 | **SSH Tunneling** |  No _(throws error)_ | No _(throws error)_ | Yes | Yes | - |
+
+Each Exclusive Mode also supports only certain [`pattern`](../gears/netgear/params/#pattern) values _(otherwise throws `ValueError`)_:
+
+| Exclusive Modes | `0` _(PAIR)_ | `1` _(REQ/REP)_ | `2` _(PUB/SUB)_ | `3` _(PUSH/PULL)_ |
+| :-------------: | :----------: | :-------------: | :-------------: | :---------------: |
+| **Multi-Servers** | No | Yes | Yes | Yes |
+| **Multi-Clients** | No | Yes _(round-robin)_ | Yes _(broadcast)_ | Yes _(load-balancing)_ |
+| **Secure** | Yes | Yes | Yes | Yes |
+| **Bidirectional** | Yes | Yes | No | No |
+| **SSH Tunneling** | Yes | Yes | Yes | Yes |
+
+!!! note "SSH Tunneling Mode only supports `tcp` protocol _(throws `ValueError` with `ipc`)_."
 
 &thinsp;
 
@@ -64,9 +76,9 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../gears/netgear/
 
 * **Use PUB/SUB pattern if you're live streaming**:  Try different [`pattern`](../gears/netgear/params/#pattern) values, as each of them suits different settings. For example, you can use its [**Publisher/Subscriber pattern**](https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/patterns/pubsub.html) _(i.e. `pattern=2`)_ for asynchronous high-speed transmission over real-time streams, and it works faster than other synchronous patterns for this scenario.
 
-* **Use Wired connection instead of Wireless connection**: Remember typical 802.11g Wireless has a theoretical maximum of 54Mbps. Typical wired 10/100/1000 Ethernet has a theoretical maximum of 100 Gbps. So in theory wired is faster. However, these speeds are only on your local network. So chose your network configuration wisely.
+* **Use Wired connection instead of Wireless connection**: Remember typical 802.11g Wireless has a theoretical maximum of 54Mbps. Typical wired 10/100/1000 Ethernet has a theoretical maximum of 1 Gbps. So in theory wired is faster. However, these speeds are only on your local network. So chose your network configuration wisely.
 
-* **Enable all Performance Attributes with Frame Compression**: You can also try enabling [Frame Compression](../gears/netgear/advanced/compression/) with its all [Performance Attributes](../gears/netgear/advanced/compression/#performance-attributes) for NetGear API.
+* **Enable all Performance Attributes with Frame Compression**: You can also try enabling [Frame Compression](../gears/netgear/advanced/compression/) with its all [Performance Attributes](../gears/netgear/advanced/compression/#performance-attributes) for NetGear API. On bandwidth- or CPU-bound Servers _(such as a Raspberry Pi)_, also try `jpeg_compression_colorsubsampling="420"`.
 
 * **Reduce Frame Size:** Use VidGear's real-time _Frame-Size Reducer_(`reducer`) method for reducing frame-size on-the-go for additional performance _(see [this usage example ➶](../gears/netgear/advanced/bidirectional_mode/#using-bidirectional-mode-for-video-frames-transfer-with-frame-compression))_. Remember, sending large HQ video-frames may required more network bandwidth and packet size, which can lead to additional latency!
 
@@ -132,8 +144,8 @@ Here's the compatibility chart for NetGear's [Exclusive Modes](../gears/netgear/
 
 &thinsp;
 
-## How to solve `zmq.error.ZMQError` errors?
+## How to solve `RuntimeError: ... Receive Mode failed to bind address` errors?
 
-**Answer:** For those used to the idea that a "server" provides their address to a client, then you should *recheck your preconceptions*! Please read the [Netgear instructions](https://abhitronix.github.io/vidgear/latest/gears/netgear/usage/#using-netgear-with-variable-parameters) carefully, and you will note that it is the client device that defines the IP that is provided to the server config. If you get this the wrong way (using the server IP on the client), then you will get a `zmq.error.ZMQError` error. Make sure it is the **client's IP** shared across the two systems.
+**Answer:** For those used to the idea that a "server" provides their address to a client, then you should *recheck your preconceptions*! Please read the [Netgear instructions](https://abhitronix.github.io/vidgear/latest/gears/netgear/usage/#using-netgear-with-variable-parameters) carefully, and you will note that it is the client device that defines the IP that is provided to the server config. In every pattern, the Client _(receiver)_ binds and the Server _(sender)_ connects. If you get this the wrong way (using the server IP on the client), then the Client fails to bind and NetGear raises `RuntimeError` _(with the underlying `zmq.error.ZMQError` attached)_. Make sure it is the **client's IP** shared across the two systems.
 
 &thinsp;

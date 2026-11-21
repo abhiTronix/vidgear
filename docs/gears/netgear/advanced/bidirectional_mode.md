@@ -37,9 +37,13 @@ This mode can be easily activated in NetGear through `bidirectional_mode` attrib
 
 !!! danger "Important Information regarding Bidirectional Mode"
 
-    * In Bidirectional Mode, `zmq.PAIR`(ZMQ Pair) & `zmq.REQ/zmq.REP`(ZMQ Request/Reply) are **ONLY** Supported messaging patterns. Accessing this mode with any other messaging pattern, will result in `ValueError`.
+    * In Bidirectional Mode, `zmq.PAIR`(ZMQ Pair) & `zmq.REQ/zmq.REP`(ZMQ Request/Reply) are **ONLY** Supported messaging patterns. Accessing this mode with any other messaging pattern _(i.e. `zmq.PUB/zmq.SUB` or `zmq.PUSH/zmq.PULL`, which are one-way only)_, will result in `ValueError`.
 
-    * Bidirectional Mode enables you to send data of **ANY**[^1] Data-type along with frame bidirectionally.
+    * Bidirectional Mode enables you to send any **JSON-serializable**[^1] data along with frame bidirectionally.
+
+    * Bidirectional Mode returns a `(message, frame)` tuple from `recv()` at Client's end.
+
+    * The [`return_data`](../../../bonus/reference/netgear/#vidgear.gears.NetGear.recv) value is **sticky** _(i.e. it stays set until replaced with another non-`None` value)_, and is sent back with the reply to the **next** received frame. Hence, it reaches the Server one frame late, and the Server's first `send()` returns `None`.
 
     * Bidirectional Mode may lead to additional **LATENCY** depending upon the size of data being transfer bidirectionally. User discretion is advised!
 
@@ -58,7 +62,7 @@ This mode can be easily activated in NetGear through `bidirectional_mode` attrib
 
 - [x] Supports `zmq.PAIR` & `zmq.REQ/zmq.REP` messaging patterns.
 
-- [x] Support for sending data of almost any[^1] datatype.
+- [x] Support for sending any JSON-serializable[^1] data.
 
 - [x] Auto-enables reconnection if Server or Client disconnects prematurely.
 
@@ -613,6 +617,8 @@ client.close()
 [^1]: 
     
     !!! warning "Additional data of [numpy.ndarray](https://numpy.org/doc/1.18/reference/generated/numpy.ndarray.html#numpy-ndarray) data-type is **ONLY SUPPORTED** at Client's end with its [`return_data`](../../../bonus/reference/netgear/#vidgear.gears.NetGear.recv) parameter."
+
+    !!! note "Data travels as JSON: tuples arrive as lists, integer dictionary keys arrive as strings, and non-JSON-serializable data _(such as `bytes`, `set` or numpy scalars)_ raises `TypeError`."
 
 
 &nbsp;

@@ -291,7 +291,7 @@ When installing VidGear from source, following are Critical and some API specifi
         | NetGear | `pyzmq`, `simplejpeg` |
         | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` _(H.264 Mode also needs **FFmpeg:** See [this doc ➶](../gears/ffgear/advanced/ffmpeg_install/#ffmpeg-installation-instructions))_ |
         | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
-        | NetGear_Async | `pyzmq`, `msgpack`, `msgpack_numpy`, `uvloop` |
+        | NetGear_Async | `pyzmq`, `msgspec`, `uvloop` |
         | Stabilizer Class | - |
                     
 
