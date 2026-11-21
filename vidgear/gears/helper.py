@@ -33,6 +33,7 @@ import socket
 import stat
 import subprocess as sp
 import sys
+import tempfile
 import threading
 import time
 import types
@@ -43,6 +44,7 @@ from contextlib import closing
 from enum import Enum
 from functools import cache, wraps
 from pathlib import Path
+from typing import Any
 
 import cv2
 import numpy as np
@@ -1506,6 +1508,7 @@ def generate_auth_certificates(
 
         # check if all valid keys are found
         if status_private_keys and status_public_keys:
+            _restrict_secret_keys(secret_keys_dir)
             return (keys_dir, secret_keys_dir, public_keys_dir)
 
         # check if valid public keys are found
@@ -1552,8 +1555,47 @@ def generate_auth_certificates(
             )
         )
 
+    # secret keys must be readable by the owner only
+    _restrict_secret_keys(secret_keys_dir)
+
     # finally return valid key paths
     return (keys_dir, secret_keys_dir, public_keys_dir)
+
+
+def _restrict_secret_keys(secret_keys_dir: str) -> None:
+    """
+    Makes the CURVE secret-keys directory `0700` and its key files `0600` (no-op on Windows).
+    """
+    if os.name == "nt":
+        return
+    os.chmod(secret_keys_dir, 0o700)
+    for key_file in os.listdir(secret_keys_dir):
+        os.chmod(os.path.join(secret_keys_dir, key_file), 0o600)
+
+
+def zmq_endpoint(
+    protocol: str, address: str | None, port: Any, bind: bool, suffix_port: bool = False
+) -> str:
+    """
+    Builds a ZeroMQ endpoint URL shared by NetGear and NetGear_Async.
+
+    Parameters:
+        protocol (str): `"tcp"` or `"ipc"`.
+        address (str): IP/hostname for `tcp`, or filesystem path for `ipc`. `None` selects the default.
+        port (str/int): port for `tcp`. With `ipc`, it only names the default path (`<tmp>/vidgear-<port>.ipc`),
+            or suffixes an explicit path (`<address>-<port>`) when `suffix_port` is set.
+        bind (bool): whether the endpoint is bound (default `tcp` address `*`) or connected (`localhost`).
+        suffix_port (bool): keeps per-port `ipc` paths unique in Multi-Server/Multi-Client modes.
+
+    **Returns:** endpoint URL as string.
+    """
+    if protocol == "ipc":
+        if not address:
+            return "ipc://" + os.path.join(tempfile.gettempdir(), "vidgear-{}.ipc".format(port))
+        return "ipc://{}-{}".format(address, port) if suffix_port else "ipc://" + str(address)
+    if address is None:
+        address = "*" if bind else "localhost"
+    return "tcp://{}:{}".format(address, port)
 
 
 def validate_auth_keys(path: str, extension: str) -> bool:
