@@ -1562,6 +1562,46 @@ def generate_auth_certificates(
     return (keys_dir, secret_keys_dir, public_keys_dir)
 
 
+def load_curve_keys(
+    path: str, receive_mode: bool, overwrite: bool = False, logging: bool = False
+) -> tuple:
+    """
+    Generates/validates CURVE key-pairs at `path` (see `generate_auth_certificates`), and loads the keys for one end.
+    The receiver binds and is the CURVE server, the sender is the CURVE client.
+
+    Parameters:
+        path (string): path for generating CURVE key-pairs
+        receive_mode (boolean): load the receiver's (server) keys, otherwise the sender's (client) keys
+        overwrite (boolean): overwrite existing key-pairs or not?
+        logging (bool): enables logging for its operations
+
+    **Returns:** A tuple of `(secret, public, server_public)` keys (`server_public` is `None` for the receiver),
+    and the public keys directory (for ZAP authentication).
+    """
+    import zmq.auth
+
+    keys_dir, secret_keys_dir, public_keys_dir = generate_auth_certificates(
+        path, overwrite=overwrite, logging=logging
+    )
+    logging and logger.debug(
+        "`{}` is the location for storing ZMQ authentication certificates/keys.".format(
+            keys_dir
+        )
+    )
+    public, secret = zmq.auth.load_certificate(
+        os.path.join(
+            secret_keys_dir,
+            "server.key_secret" if receive_mode else "client.key_secret",
+        )
+    )
+    server_public = (
+        None
+        if receive_mode
+        else zmq.auth.load_certificate(os.path.join(public_keys_dir, "server.key"))[0]
+    )
+    return (secret, public, server_public), public_keys_dir
+
+
 def _restrict_secret_keys(secret_keys_dir: str) -> None:
     """
     Makes the CURVE secret-keys directory `0700` and its key files `0600` (no-op on Windows).
