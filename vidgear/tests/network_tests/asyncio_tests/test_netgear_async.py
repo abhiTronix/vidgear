@@ -336,6 +336,42 @@ async def test_netgear_async_bidirectional_mismatch():
         await client.aclose()
 
 
+@pytest.mark.parametrize("pattern", [0, 1, 3])
+@pytest.mark.parametrize("secure_mode", [1, 2])
+@pytest.mark.asyncio
+async def test_netgear_async_secure_mode(secure_mode, pattern, tmp_path):
+    """
+    CURVE-encrypted frames arrive exactly; a plaintext sender is never authenticated
+    """
+    port = get_free_port()
+    options = {
+        "secure_mode": secure_mode,
+        "custom_cert_location": str(tmp_path),
+        "pattern": pattern,
+    }
+    frames = [small_frame(i) for i in range(5)]
+    server = NetGear_Async(port=port, timeout=5.0, overwrite_cert=True, **options)
+    client = NetGear_Async(port=port, receive_mode=True, timeout=5.0, **options)
+    server.config["generator"] = frame_generator(frames)
+    server.launch()
+    received = await run(server, client)
+    assert len(received) == len(frames)
+    for got, sent in zip(received, frames, strict=True):
+        assert np.array_equal(got, sent)
+
+    port = get_free_port()
+    plain = NetGear_Async(port=port, timeout=2.0)
+    client = NetGear_Async(port=port, receive_mode=True, timeout=2.0, **options)
+    plain.config["generator"] = frame_generator(frames)
+    plain.launch()
+    try:
+        with pytest.raises(TimeoutError):
+            await collect(client)
+    finally:
+        await plain.aclose()
+        await client.aclose()
+
+
 async def _send_raw(port, parts):
     """
     Sends a raw multipart message to a NetGear_Async client and returns what its generator raises.

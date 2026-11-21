@@ -31,7 +31,9 @@ limitations under the License.
         * Added `allowed_ips` attribute, an optional Secure Mode whitelist of sender IPs.
         * Added `jpeg_compression_colorsubsampling` attribute _(`"444"`, `"422"` default, `"420"`, `"440"`, `"411"`)_.
         * `send(None)` now signals end of stream to the client(s).
-    - [x] 🚩 **NetGear_Async:** Added `aclose()` coroutine and `async with` support.
+    - [x] 🚩 **NetGear_Async:**
+        * Added `aclose()` coroutine and `async with` support.
+        * Added Secure Mode _(ZMQ CURVE)_ with `secure_mode`, `custom_cert_location` and `overwrite_cert` attributes, same keys as NetGear.
 
 ??? success "Updates/Improvements"
     - [x] **NetGear:**
@@ -48,7 +50,7 @@ limitations under the License.
         * Received frames are writeable; header and raw frame buffer go out as one zero-copy multipart message.
         * VideoGear frames are read off the event loop.
         * Lifecycle messages logged at INFO/DEBUG instead of critical.
-    - [x] **Helper:** Added `zmq_endpoint` shared by NetGear and NetGear_Async.
+    - [x] **Helper:** Added `zmq_endpoint` and `load_curve_keys` shared by NetGear and NetGear_Async.
     - [x] **Dependencies:** Replaced `msgpack` and `msgpack_numpy` with `msgspec>=0.20.0`, added `pexpect` _(non-Windows)_ and `paramiko` _(Windows)_ to `core`/`asyncio` extras, raised simplejpeg runtime check to `1.9.0` _(NetGear & WebGear)_, and updated `poetry.lock`.
     - [x] **Tests:**
         * Rewrote NetGear and NetGear_Async tests so they can fail: exact frame equality, no blanket `xfail`, free ports, per-test certificates, `pytest-timeout`, and failing on unhandled thread exceptions.
@@ -81,6 +83,7 @@ limitations under the License.
         * Fixed `close()` crashing before `launch()`, hanging without a client, and leaking the ZMQ context.
         * Fixed `bidirectional_mode=False` raising with pattern 2/3 or a `source`, and `api=Backend.PIGEAR` without `source`.
         * Fixed bi-mode tuple detection mis-unpacking 2-row frames, and invalid `timeout` silently becoming `15.0`.
+        * Fixed `recv_generator()` and bi-mode replies failing on a spurious pyzmq `zmq.Again` wakeup _(seen right after a CURVE handshake)_.
 
 ## v0.3.7 (2026-11-07)
 

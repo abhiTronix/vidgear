@@ -23,6 +23,7 @@ import asyncio
 import contextlib
 import inspect
 import logging as log
+import os
 import platform
 import secrets
 import string
@@ -37,6 +38,7 @@ from numpy.typing import NDArray
 from ..helper import (
     Backend,
     import_dependency_safe,
+    load_curve_keys,
     logcurr_vidgear_ver,
     logger_handler,
     zmq_endpoint,
@@ -49,6 +51,8 @@ from ..videogear import VideoGear
 zmq = import_dependency_safe("zmq", pkg_name="pyzmq", error="silent", min_version="4.0")
 if zmq is not None:
     import zmq.asyncio
+    from zmq.auth import CURVE_ALLOW_ANY
+    from zmq.auth.thread import ThreadAuthenticator
 msgspec = import_dependency_safe("msgspec", error="silent", min_version="0.20.0")
 uvloop = import_dependency_safe("uvloop", error="silent")
 
@@ -315,6 +319,39 @@ class NetGear_Async:
         elif bi_mode is not False:
             logger.error("`bidirectional_mode` value is invalid!")
 
+        # define messaging asynchronous Context
+        self.__msg_context = zmq.asyncio.Context()
+
+        # handle secure mode => `0`: Grasslands (off), `1`: StoneHouse, `2`: IronHouse
+        secure_mode = options.pop("secure_mode", 0)
+        cert_location = options.pop("custom_cert_location", "") or os.path.join(
+            os.path.expanduser("~"), ".vidgear"
+        )
+        overwrite_cert = options.pop("overwrite_cert", False) is True and not receive_mode
+        self.__curve_keys = None  # (secret, public, server_public) CURVE keys
+        self.__z_auth = None
+        if secure_mode in (1, 2):
+            if not zmq.has("curve"):
+                raise RuntimeError(
+                    "[NetGear_Async:ERROR] :: Secure Mode requires libzmq built with CURVE support!"
+                )
+            self.__curve_keys, public_keys_dir = load_curve_keys(
+                cert_location, receive_mode, overwrite=overwrite_cert, logging=self.__logging
+            )
+            if receive_mode:
+                # the receiver binds and is the CURVE server: ZAP runs in a thread on a sync
+                # shadow of the messaging context (IronHouse also authenticates the sender's key)
+                self.__z_auth = ThreadAuthenticator(
+                    zmq.Context.shadow(self.__msg_context.underlying)
+                )
+                self.__z_auth.start()
+                self.__z_auth.configure_curve(
+                    domain="*",
+                    location=public_keys_dir if secure_mode == 2 else CURVE_ALLOW_ANY,
+                )
+        elif secure_mode != 0:
+            logger.warning("Invalid `secure_mode` value `{}`. Disabling it!".format(secure_mode))
+
         # use the running event loop, otherwise own a new one
         try:
             self.loop = asyncio.get_running_loop()
@@ -329,9 +366,6 @@ class NetGear_Async:
         self.__logging and logger.debug(
             "Using `{}` event loop for this process.".format(self.loop.__class__.__name__)
         )
-
-        # define messaging asynchronous Context
-        self.__msg_context = zmq.asyncio.Context()
 
         # the receiver binds, the sender connects
         self.__endpoint = zmq_endpoint(
@@ -402,6 +436,14 @@ class NetGear_Async:
         if self.__msg_pattern == 2:
             sock.set_hwm(1)
             self.__receive_mode and sock.setsockopt(zmq.SUBSCRIBE, b"")
+        if self.__curve_keys is not None:
+            secret, public, server_public = self.__curve_keys
+            sock.curve_secretkey = secret
+            sock.curve_publickey = public
+            if self.__receive_mode:
+                sock.curve_server = True
+            else:
+                sock.curve_serverkey = server_public
         try:
             if self.__receive_mode:
                 sock.bind(self.__endpoint)
@@ -431,9 +473,13 @@ class NetGear_Async:
         """
         Receives a multipart message within the timeout.
         """
-        return await asyncio.wait_for(
-            self.__msg_socket.recv_multipart(copy=False), timeout=self.__timeout
-        )
+        async with asyncio.timeout(self.__timeout):
+            while True:
+                try:
+                    return await self.__msg_socket.recv_multipart(copy=False)
+                except zmq.Again:
+                    # pyzmq raises on a spurious wakeup (seen right after a CURVE handshake)
+                    continue
 
     async def __server_handler(self):
         """
@@ -638,6 +684,7 @@ class NetGear_Async:
         while self.__queue is not None and not self.__queue.empty():
             self.__queue.get_nowait()
 
+        self.__z_auth is not None and self.__z_auth.stop()
         # release ZMQ context, waiting (off the loop) for lingering messages
         if not self.__msg_context.closed:
             await asyncio.to_thread(self.__msg_context.term)

@@ -37,8 +37,8 @@ from numpy.typing import NDArray
 from .helper import (
     check_open_port,
     check_WriteAccess,
-    generate_auth_certificates,
     import_dependency_safe,
+    load_curve_keys,
     logcurr_vidgear_ver,
     logger_handler,
     zmq_endpoint,
@@ -516,27 +516,14 @@ class NetGear:
                 overwrite_cert and self.__logging and logger.info(
                     "Overwriting ZMQ Authentication certificates over previous ones!"
                 )
-            # generate/validate certificates
-            (
-                auth_cert_dir,
-                auth_secretkeys_dir,
-                auth_publickeys_dir,
-            ) = generate_auth_certificates(
+            self.__curve_keys, auth_publickeys_dir = load_curve_keys(
                 custom_cert_location or os.path.join(expanduser("~"), ".vidgear"),
+                receive_mode,
                 overwrite=overwrite_cert,
                 logging=logging,
             )
-            self.__logging and logger.debug(
-                "`{}` is the location for storing ZMQ authentication certificates/keys.".format(
-                    auth_cert_dir
-                )
-            )
             if receive_mode:
                 # the receiver binds and is the CURVE server: ZAP authentication only applies here
-                public, secret = auth.load_certificate(
-                    os.path.join(auth_secretkeys_dir, "server.key_secret")
-                )
-                self.__curve_keys = (secret, public, None)
                 self.__z_auth = ThreadAuthenticator(self.__msg_context)
                 self.__z_auth.start()
                 if allowed_ips:
@@ -554,13 +541,6 @@ class NetGear:
                 allowed_ips and logger.warning(
                     "`allowed_ips` is only used at the receiver's (Client) end!"
                 )
-                public, secret = auth.load_certificate(
-                    os.path.join(auth_secretkeys_dir, "client.key_secret")
-                )
-                server_public, _ = auth.load_certificate(
-                    os.path.join(auth_publickeys_dir, "server.key")
-                )
-                self.__curve_keys = (secret, public, server_public)
 
         # create the socket
         try:

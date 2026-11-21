@@ -212,12 +212,19 @@ This parameter provides the flexibility to alter various NetGear_Async API's int
 
     * **`bidirectional_mode`** (_boolean_) : This internal attribute activates the exclusive [**Bidirectional Mode**](advanced/bidirectional_mode/), if enabled(`True`). Enabling it with `zmq.PUB/zmq.SUB` or `zmq.PUSH/zmq.PULL` [`pattern`](#pattern), or with any [`source`](#source), raises `ValueError`. Its default value is `False`, and non-boolean values are discarded with an error log.
 
+    * **`secure_mode`** (_integer_) : This internal attribute enables ZMQ CURVE encryption and authentication, same as NetGear's [**Secure Mode**](../netgear/advanced/secure_mode/). Its possible values are: `0`_(i.e. Grassland(no security))_ _(default)_ or `1`_(i.e. StoneHouse)_ or `2`_(i.e. IronHouse, also authenticates the Server's public key)_. Other values are discarded with a warning. Both ends must use the same value and the same keys.
+
+    * **`custom_cert_location`** (_string_) : In Secure Mode, This internal attribute sets the directory for generating/storing the CURVE keys. Its default value is `~/.vidgear`. Both ends on the same machine share this directory; on different machines, copy the generated keys over _(see [Secure Mode](../netgear/advanced/secure_mode/))_.
+
+    * **`overwrite_cert`** (_boolean_) : In Secure Mode, This internal attribute regenerates the CURVE keys, ==at the Server-end only==. Its default value is `False`.
+
         The desired attributes can be passed to NetGear_Async API as follows:
 
         ```python
         # formatting parameters as dictionary attributes
         options = {
             "bidirectional_mode": True,
+            "secure_mode": 2,
         }
         # assigning it
         NetGear_Async(logging=True, **options)

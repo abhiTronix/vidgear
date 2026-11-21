@@ -59,7 +59,7 @@ Whereas supported protocol are: `tcp` and `ipc`.
 
 !!! warning "Limitations"
 
-    Unlike [NetGear API](../netgear/), NetGear_Async does **NOT** support Lazy Pirate reconnection _(i.e. its [`max_retries`](../netgear/params/#options) handling)_, [Secure Mode](../netgear/advanced/secure_mode/) _(ZMQ CURVE encryption)_, or [SSH Tunneling Mode](../netgear/advanced/ssh_tunnel/). Use NetGear API if you need any of these. Also, any `TimeoutError` _(see [`timeout`](params/#timeout))_ ends `recv_generator()`, so the Client must be restarted.
+    Unlike [NetGear API](../netgear/), NetGear_Async does **NOT** support Lazy Pirate reconnection _(i.e. its [`max_retries`](../netgear/params/#options) handling)_, [SSH Tunneling Mode](../netgear/advanced/ssh_tunnel/), or Secure Mode's `allowed_ips` whitelist _(only [`secure_mode`](params/#options) CURVE encryption is supported)_. Use NetGear API if you need any of these. Also, any `TimeoutError` _(see [`timeout`](params/#timeout))_ ends `recv_generator()`, so the Client must be restarted.
 
 &thinsp; 
 
