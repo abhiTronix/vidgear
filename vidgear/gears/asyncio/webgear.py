@@ -62,7 +62,7 @@ if starlette is not None:
     from starlette.routing import Mount, Route, WebSocketRoute
     from starlette.staticfiles import StaticFiles
     from starlette.templating import Jinja2Templates
-simplejpeg = import_dependency_safe("simplejpeg", error="silent", min_version="1.6.1")
+simplejpeg = import_dependency_safe("simplejpeg", error="silent", min_version="1.9.0")
 
 # define logger
 logger = log.getLogger("WebGear")
@@ -161,7 +161,7 @@ class WebGear:
         # raise error(s) for critical Class imports
         import_dependency_safe("starlette" if starlette is None else "")
         import_dependency_safe(
-            "simplejpeg" if simplejpeg is None else "", min_version="1.6.1"
+            "simplejpeg" if simplejpeg is None else "", min_version="1.9.0"
         )
 
         # initialize global params
