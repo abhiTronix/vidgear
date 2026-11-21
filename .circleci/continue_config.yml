@@ -55,7 +55,7 @@ jobs:
             poetry install --all-extras --no-interaction
             poetry run pip install --upgrade six httpx2 future numpy cython opencv-python yt-dlp[default] aiortc
             poetry run pip install --no-deps https://github.com/abhiTronix/python-mpegdash/releases/download/0.3.0-dev2/mpegdash-0.3.0.dev2-py3-none-any.whl
-            poetry run pip install pytest codecov pytest-cov pytest-asyncio m3u8 async-asgi-testclient paramiko
+            poetry run pip install pytest codecov pytest-cov pytest-asyncio pytest-timeout m3u8 async-asgi-testclient paramiko
 
       # Save only pip and Poetry download caches
       - save_cache:
