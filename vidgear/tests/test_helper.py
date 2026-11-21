@@ -63,6 +63,7 @@ from vidgear.gears.helper import (
     validate_audio,
     validate_ffmpeg,
     validate_video,
+    zmq_endpoint,
 )
 from vidgear.tests.utils.helpers import (
     get_testing_dir,
@@ -288,6 +289,24 @@ def test_generate_auth_certificates(paths, overwrite_cert, results):
         assert bool(output) == results
     except Exception as e:
         pytest.fail(str(e))
+
+
+@pytest.mark.parametrize(
+    "args, expected",
+    [
+        (("tcp", None, 5555, True), "tcp://*:5555"),
+        (("tcp", None, "5555", False), "tcp://localhost:5555"),
+        (("tcp", "10.0.0.5", 5454, False), "tcp://10.0.0.5:5454"),
+        (("ipc", None, 5555, True), "ipc://" + os.path.join(tempfile.gettempdir(), "vidgear-5555.ipc")),
+        (("ipc", "/tmp/x.ipc", 5555, False), "ipc:///tmp/x.ipc"),
+        (("ipc", "/tmp/x.ipc", 5556, True, True), "ipc:///tmp/x.ipc-5556"),
+    ],
+)
+def test_zmq_endpoint(args, expected):
+    """
+    Same endpoint on both ends: tcp defaults per side, ipc paths shared
+    """
+    assert zmq_endpoint(*args) == expected
 
 
 test_data = [
