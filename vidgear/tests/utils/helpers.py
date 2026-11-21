@@ -24,6 +24,7 @@ limitations under the License.
 
 import os
 import platform
+import socket
 import subprocess
 import tempfile
 
@@ -131,3 +132,12 @@ def make_clip(path, *args):
         check=True,
     )
     return str(path)
+
+
+def get_free_port():
+    """
+    Returns a free local TCP port (as string), so network tests don't clash with each other or local services.
+    """
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(("127.0.0.1", 0))
+        return str(s.getsockname()[1])
