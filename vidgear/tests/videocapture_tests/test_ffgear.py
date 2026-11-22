@@ -751,10 +751,10 @@ def test_eof_no_busy_spin():
     """Producer must exit at EOF (poison pill) instead of spinning until the queue drains."""
     stream = FFGear(source=return_testvideo_path(), QUEUE_SIZE=200).start()
     try:
-        time.sleep(1.5)  # let producer hit EOF while frames are still queued
-        cpu = time.process_time()
-        time.sleep(1.0)
-        assert time.process_time() - cpu < 0.5, "producer is busy-spinning at EOF"
+        # producer must exit at EOF while frames are still queued (no CPU-timing race)
+        producer = stream._FFGear__thread
+        producer.join(timeout=30)
+        assert not producer.is_alive(), "producer did not exit at EOF"
         frames = 0
         while stream.read() is not None:
             frames += 1
