@@ -566,23 +566,24 @@ Additionally, StreamGear generates a manifest file _(such as MPD for DASH)_ or a
 
 NetGear implements a high-level wrapper around [**PyZmQ**][pyzmq] python library that contains python bindings for [**ZeroMQ**][zmq] - a high-performance asynchronous distributed messaging library.
 
-NetGear seamlessly supports additional [**bidirectional data transmission**][netgear_bidata_doc] between receiver(client) and sender(server) while transferring video-frames all in real-time.
+NetGear seamlessly supports additional [**bidirectional data transmission**][netgear_bidata_doc] of any JSON-serializable data _(and also video-frames)_ between receiver(client) and sender(server) while transferring video-frames all in real-time.
 
 NetGear can also robustly handle [**Multiple Server-Systems**][netgear_multi_server_doc] and [**Multiple Client-Systems**][netgear_multi_client_doc] and at once, thereby providing access to a seamless exchange of video-frames & data between multiple devices across the network at the same time.
 
-NetGear allows remote connection over [**SSH Tunnel**][netgear_sshtunnel_doc] that allows us to connect NetGear client and server via secure SSH connection over the untrusted network and access its intranet services across firewalls.
+NetGear allows remote connection over [**SSH Tunnel**][netgear_sshtunnel_doc] _(SSH Local Port Forwarding at the Server end)_ that allows us to connect NetGear client and server via secure SSH connection over the untrusted network and access its intranet services across firewalls.
 
-NetGear also enables real-time [**JPEG Frame Compression**][netgear_compression_doc] capabilities for boosting performance significantly while sending video-frames over the network in real-time.
+NetGear also enables real-time [**JPEG Frame Compression**][netgear_compression_doc] capabilities _(enabled by default when [simplejpeg][simplejpeg] is installed)_ for boosting performance significantly while sending video-frames over the network in real-time.
 
 For security, NetGear implements easy access to ZeroMQ's powerful, smart & secure Security Layers that enable [**Strong encryption on data**][netgear_security_doc] and unbreakable authentication between the Server and the Client with the help of custom certificates.
 
-**NetGear as of now seamlessly supports three ZeroMQ messaging patterns:**
+**NetGear as of now seamlessly supports four ZeroMQ messaging patterns:**
 
 - [**`zmq.PAIR`**][zmq-pair] _(ZMQ Pair Pattern)_
 - [**`zmq.REQ/zmq.REP`**][zmq-req-rep] _(ZMQ Request/Reply Pattern)_
 - [**`zmq.PUB/zmq.SUB`**][zmq-pub-sub] _(ZMQ Publish/Subscribe Pattern)_
+- [**`zmq.PUSH/zmq.PULL`**][zmq-pull-push] _(ZMQ Push/Pull Pattern)_
 
-Whereas supported protocol are: `tcp` and `ipc`.
+Whereas supported protocol are: `tcp` and `ipc` _(`ipc` needs UNIX domain sockets, and its `address` is a filesystem path)_. In every pattern, the **receiver (Client) binds** and the **sender (Server) connects**, so `address` is always the receiver's IP address.
 
 ### NetGear API Guide:
 
@@ -697,7 +698,7 @@ web.shutdown()
 </p>
 .
 
-> _NetGear_Async is an asyncio port of [NetGear API](#netgear) that provides complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but lacks in term of flexibility as it supports only Bidirectional Mode out of all [NetGear's Exclusive Modes][netgear-exm]._
+> _NetGear_Async is an asyncio port of [NetGear API](#netgear) that provides complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but lacks in term of flexibility as it supports only Bidirectional Mode and Secure Mode (CURVE encryption, without `allowed_ips` whitelist) out of all [NetGear's Exclusive Modes][netgear-exm]._
 
 NetGear_Async is built on [`zmq.asyncio`][asyncio-zmq] for lag-free video streaming over the network with minimal resource constraints. When NetGear_Async creates its own event loop, it uses the high-performance [**`uvloop`**][uvloop] event loop _(if installed, not on Windows)_.
 
@@ -706,6 +707,10 @@ NetGear_Async provides complete server-client handling and options to use variab
 NetGear_Async also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to [CamGear](#camgear), [PiGear](#pigear), and [FFGear](#ffgear) APIs, selectable via the `api` parameter.
 
 NetGear_Async now supports additional [**bidirectional data transmission**][btm_netgear_async] between receiver(client) and sender(server) while transferring video-frames. Users can easily build complex applications such as like [Real-Time Video Chat][rtvc] in just few lines of code.
+
+NetGear_Async also supports ZeroMQ's [**CURVE encryption and authentication**][netgear_async-secure] _(StoneHouse and IronHouse)_, same as NetGear's Secure Mode, via the `secure_mode` attribute.
+
+NetGear_Async transfers each frame as a [`msgspec`][msgspec]-validated header plus the raw frame buffer _(never unpickled)_, which is **incompatible** with older vidgear versions, so both Server and Client must run the same vidgear version.
 
 NetGear_Async as of now supports all four ZeroMQ messaging patterns:
 
@@ -875,6 +880,7 @@ Internal URLs
 [netgear_multi_client_doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/multi_client/
 [netgear_sshtunnel_doc]: https://abhitronix.github.io/vidgear/latest/gears/netgear/advanced/ssh_tunnel/
 [netgear-exm]: https://abhitronix.github.io/vidgear/latest/gears/netgear/#modes-of-operation
+[netgear_async-secure]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/params/#options
 [stabilize_webgear_doc]: https://abhitronix.github.io/vidgear/latest/gears/webgear/advanced/#using-webgear-with-real-time-video-stabilization-enabled
 [netgear_async-cs]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/usage/#using-netgear_async-with-a-custom-sourceopencv
 [installation]: https://abhitronix.github.io/vidgear/latest/installation/
@@ -925,6 +931,8 @@ External URLs
 [picamera]: https://github.com/waveform80/picamera
 [pafy]: https://github.com/mps-youtube/pafy
 [pyzmq]: https://github.com/zeromq/pyzmq
+[msgspec]: https://jcristharif.com/msgspec/
+[simplejpeg]: https://gitlab.com/jfolz/simplejpeg
 [zmq]: https://zeromq.org/
 [mss]: https://github.com/BoboTiG/python-mss
 [pip]: https://pip.pypa.io/en/stable/installing/

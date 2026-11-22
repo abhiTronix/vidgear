@@ -26,7 +26,7 @@ limitations under the License.
 
 ## Overview
 
-> _NetGear_Async is an asyncio port of [NetGear API](../netgear/) that provides complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but lacks in term of flexibility as it supports only [Bidirectional Mode](advanced/bidirectional_mode/) out of all [NetGear's Exclusive Modes](../netgear/#exclusive-modes)._
+> _NetGear_Async is an asyncio port of [NetGear API](../netgear/) that provides complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but lacks in term of flexibility as it supports only [Bidirectional Mode](advanced/bidirectional_mode/) and [Secure Mode](params/#options) (CURVE encryption, without `allowed_ips` whitelist) out of all [NetGear's Exclusive Modes](../netgear/#exclusive-modes)._
 
 NetGear_Async is built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html) for lag-free video streaming over the network with minimal resource constraints. When NetGear_Async creates its own event loop, it uses the high-performance [**`uvloop`**](https://github.com/MagicStack/uvloop) event loop _(if installed, not on Windows)_. 
 
