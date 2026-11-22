@@ -126,6 +126,18 @@ In addition to the primary modes, NetGear API also offers application-specific E
 
 	* [Frame Compression](advanced/compression/) is enabled by default in NetGear along with fast dct and compression-quality at 90% in all connections, but only if [simplejpeg](https://gitlab.com/jfolz/simplejpeg) is installed. Otherwise frames are sent uncompressed.
 
+!!! warning "Uncompressed frames received with `copy=True` are read-only"
+
+	When frames arrive uncompressed _(i.e. [Frame Compression](advanced/compression/) disabled, [simplejpeg](https://gitlab.com/jfolz/simplejpeg) not installed, or frames that can't be JPEG encoded)_ and the [`copy`](params/#options) attribute is set to `True`, the frames returned by `recv()` are **read-only** [`numpy.ndarray`](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html) views over the received bytes. Drawing on them in place _(for e.g. with `cv2.putText`)_ raises an error, so make a writeable copy first:
+
+	```python
+	frame = client.recv()
+	if frame is not None and not frame.flags.writeable:
+	    frame = frame.copy()
+	```
+
+	JPEG compressed frames, and uncompressed frames with the default `copy=False`, are already writeable.
+
 &thinsp;
 
 ## Usage Examples
