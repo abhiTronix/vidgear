@@ -20,7 +20,7 @@ limitations under the License.
 
 # Release Notes
 
-## v0.3.8 (In Progress)
+## v0.3.8 (2026-11-23)
 
 ???+ tip "New Features"
     - [x] 🔀 **NetGear: PUSH/PULL pattern:**
@@ -31,9 +31,17 @@ limitations under the License.
         * Added `allowed_ips` attribute, an optional Secure Mode whitelist of sender IPs.
         * Added `jpeg_compression_colorsubsampling` attribute _(`"444"`, `"422"` default, `"420"`, `"440"`, `"411"`)_.
         * `send(None)` now signals end of stream to the client(s).
-    - [x] 🚩 **NetGear_Async:**
-        * Added `aclose()` coroutine and `async with` support.
+    - [x] 🔐 **NetGear_Async:**
         * Added Secure Mode _(ZMQ CURVE)_ with `secure_mode`, `custom_cert_location` and `overwrite_cert` attributes, same keys as NetGear.
+        * Added `aclose()` coroutine and `async with` support.
+    - [x] ⬆️ **FFGear: deffcode `0.3.0`:**
+        * Added `metadata` attribute with parsed source metadata, retained after `stop()` like `framerate`.
+        * Multi-stream selection, cover-art-first sources and correct frame size for rotated sources, via deffcode `0.3.0`.
+    - [x] 🚩 **StreamGear:** Allowed `-livestream` in Single-Source Mode _(adds `-re` for files)_.
+    - [x] 🏗️ **Helper:**
+        * `validate_video` now reads the first real video stream _(skipping cover art)_ and also returns display `rotation`, `dar`, `hdr` _(PQ/HLG)_ and first `audio_codec`.
+        * Added `has_muxer_option` _(cached per FFmpeg path)_, `is_number`, `to_float`, `zmq_endpoint` and `load_curve_keys` helpers.
+        * `dict2Args` emits a key with value `None` as a bare flag _(e.g. `{"-shortest": None}`)_.
 
 ??? success "Updates/Improvements"
     - [x] **NetGear:**
@@ -50,13 +58,50 @@ limitations under the License.
         * Received frames are writeable; header and raw frame buffer go out as one zero-copy multipart message.
         * VideoGear frames are read off the event loop.
         * Lifecycle messages logged at INFO/DEBUG instead of critical.
-    - [x] **Helper:** Added `zmq_endpoint` and `load_curve_keys` shared by NetGear and NetGear_Async.
-    - [x] **Dependencies:** Replaced `msgpack` and `msgpack_numpy` with `msgspec>=0.20.0`, added `pexpect` _(non-Windows)_, `paramiko` _(Windows)_ and `tornado` _(Windows, required by pyzmq for Secure Mode authentication and Proactor event loops)_ to `core`/`asyncio` extras, raised simplejpeg runtime check to `1.9.0` _(NetGear & WebGear)_, and updated `poetry.lock`.
+    - [x] **StreamGear:**
+        * Each rendition is capped with `-maxrate:v:N`/`-bufsize:v:N`, so manifests declare real bitrates.
+        * Maps `0:V:0` plus first audio per rendition in DASH and HLS, so cover art, subtitles and extra tracks are ignored.
+        * Copies source audio only when AAC, else encodes `aac`; raw PCM/Opus bitrate estimates clamped to `128k`.
+        * Applies per-stream `-framerate` _(`-r:v:N`)_ with time-based keyframes, and merges `-x265-params` with the GOP.
+        * Honours user `-s:v:0`/`-b:v:0`/`-b:a:0` for the primary stream, checks rendition aspect against DAR, and warns on HDR sources.
+        * Checks FFmpeg supports required muxer options; live DASH segments default to 4s, fractional durations accepted, and options muxers don't use are dropped.
+        * Re-running `transcode_source()` builds the same command, and `-streams` dicts are no longer mutated.
+        * `-shortest` + `apad` with external audio; quieter silent mode, guarded `-progress_callback`, progress in seconds.
+    - [x] **WriteGear:**
+        * Extra inputs _(`-i` in `output_params`, `-clones` or `-ffpreheaders`)_ map `<pipe>:v:0` plus `<n>:a?`, pad audio with `apad` and add `-shortest`, so every frame is kept and infinite inputs end with the frames.
+        * Defaults `-pix_fmt yuv420p` for `libx264`/`libx265` with 8-bit frames, padding odd sizes to even.
+        * Frames are checked against `-input_pixfmt` _(warns on unsupported values)_, and `write()` errors include FFmpeg's returncode and stderr tail.
+        * Skips write-access checks for URL/device outputs, warns about `-disable_ffmpeg_window` only when passed, and replaces validation `assert`s with exceptions.
+        * Non-Compression Mode: float `-fps`, bool-only `-color`, and `isColor` derived from frames.
+    - [x] **WriteGear/StreamGear:** FFmpeg's stderr tail is always captured.
+    - [x] **FFGear:** `-enforce_cv_patch` BGR conversion keyed on decoded pixel format _(`yuv420p`, `nv12`, `nv21`)_ instead of `frame_format`, so `frame_format="null"` with a YUV filter _(e.g. CUDA)_ is converted too.
+    - [x] **Helper:**
+        * `get_supported_vencoders` and `get_supported_pixfmts` cached per FFmpeg path, saving two FFmpeg spawns on every WriteGear's first `write()`.
+        * `deprecated()` warns about a parameter only when it is actually passed.
+    - [x] **Dependencies:**
+        * Replaced `msgpack` and `msgpack_numpy` with `msgspec>=0.20.0`.
+        * Added `pexpect` _(non-Windows)_, `paramiko` _(Windows)_ and `tornado` _(Windows, required by pyzmq for Secure Mode authentication and Proactor event loops)_ to `core`/`asyncio` extras.
+        * Raised minimum versions: `deffcode>=0.3.0`, `aiortc>=1.16.0` _(allows PyAV 18/19)_ and `pyzmq>=27.3.0`; bumped `dnspython` to `2.9.2` _(CVE-2026-128089)_.
+        * Raised simplejpeg runtime check to `1.9.0` _(NetGear & WebGear)_, and updated `poetry.lock`.
+    - [x] **Packaging:** Migrated `pyproject.toml` license to `Apache-2.0` SPDX expression _(`setuptools>=77.0`)_, and require `poetry>=2.0` for lock-version 2.1.
+    - [x] **CI:**
+        * Replaced AppVeyor with CircleCI Windows pipeline _(Python 3.11-3.14, path-filtered against PR base revision, coverage via `codecov-cli`)_, and updated README badge.
+        * Ported `prepare_dataset.sh` from deffcode _(unified temp dir and download helper with retries, optional static FFmpeg build date, v4l2 permission setup)_.
+        * `check_links.sh` now validates `#fragment` anchors across pages.
+        * Install `pytest-timeout`, and pin `opencv-python` to `4.12.0.88` on Azure Pipelines.
     - [x] **Tests:**
         * Rewrote NetGear and NetGear_Async tests so they can fail: exact frame equality, no blanket `xfail`, free ports, per-test certificates, `pytest-timeout`, and failing on unhandled thread exceptions.
-        * Added tests for PUSH/PULL, Secure Mode with default/LAN addresses, reconnect keeping CURVE, end-of-stream delivery, `send(None)`, `ipc`, corrupt/oversized JPEGs, JPEG fallback, retry budget, prompt `close()`, malicious/malformed NetGear_Async messages, bi-mode data round-trips and `asyncio.run()` usage.
-        * Added `pytest-timeout` to CI.
-    - [x] **Docs:** Updated NetGear and NetGear_Async docs, examples and FAQs for all of the above, and fixed broken examples.
+        * Added NetGear tests for PUSH/PULL, Secure Mode with default/LAN addresses, reconnect keeping CURVE, end-of-stream delivery, `send(None)`, `ipc`, corrupt/oversized JPEGs, JPEG fallback, retry budget and prompt `close()`; and NetGear_Async tests for malicious/malformed messages, bi-mode data round-trips and `asyncio.run()` usage.
+        * Rewrote WriteGear and StreamGear tests to check decoded frames, counts, bitrates, fps, pix_fmt and audio; added synthetic cover art, subtitle, PCM, Opus, rotated, anamorphic and HDR sources, extra inputs, FFmpeg death and write-after-close cases.
+        * Added FFGear tests for CV patch formats, multi-stream selection, cover-art-first and rotated sources, `-vf scale` parity and `metadata`; replaced flaky CPU-timing EOF busy-spin check.
+        * Added WebGear_RTC test for stopping source mid-read.
+        * Replaced `xfail`/"any exception passes" patterns with `pytest.raises`, and write outputs to `tmp_path`.
+        * Tag HDR test clip via `setparams` for FFmpeg 8.1+, probe StreamGear HLS output with system FFmpeg on Linux, and use short ipc paths for macOS.
+    - [x] **Docs:**
+        * Updated NetGear and NetGear_Async docs, examples, FAQs and README for all of the above, and fixed broken examples.
+        * Documented new StreamGear and WriteGear pipeline behaviour; fixed lossless x265, 60fps and `hls_out.mpd` StreamGear examples, and dropped `.avi` as WriteGear raw frames container.
+        * Updated FFGear docs for deffcode `0.3.0` _(multi-stream, HLS rendition, anamorphic/HDR and rotated recipes)_; CUDA examples use `-fps_mode passthrough` and crop after `hwdownload`; added notes for FFmpeg older than 5.1.
+        * Fixed broken links and stale anchors, and replaced removed `poetry shell` with `poetry env activate`.
 
 ??? danger "Breaking Updates/Changes"
     - [ ] 💥 **NetGear_Async:** New msgspec wire format _(header + raw frame buffer)_, incompatible with older NetGear_Async peers: upgrade both ends together. Bi-mode `data` keeps lists as lists and falsy values as-is _(were tuples and `None`)_.
@@ -65,6 +110,20 @@ limitations under the License.
     - [ ] 💥 **NetGear:** Secure Mode no longer whitelists the receiver's `address`; use `allowed_ips` to restrict sender IPs.
     - [ ] 💥 **NetGear:** `protocol="ipc"` uses `address` as the socket path _(default `<tempdir>/vidgear-<port>.ipc`)_ instead of `ipc://<address>:<port>`.
     - [ ] 💥 **NetGear:** No longer sets a `WindowsSelectorEventLoopPolicy` on Windows.
+    - [ ] 💥 **StreamGear:**
+        * Dropped default `-crf`; renditions are bitrate-capped instead.
+        * Always uses `libx264` _(RGB input only changes `-pix_fmt`)_.
+        * Raises `ValueError` on invalid `-video_source`/`-audio` or bad output paths instead of silent fallbacks.
+        * Rejects non-`uint8` frames, and `stream()` after `close()`.
+        * `-clear_prev_assets` deletes only StreamGear's own assets.
+        * `-capture_stderr` deprecated _(no-op)_.
+    - [ ] 💥 **WriteGear:**
+        * `-output_dimensions` scales the output _(`-s W:H`)_ instead of setting the raw input size.
+        * Raises on unsupported encoders _(`copy` allowed)_ and on GStreamer Pipeline Mode without GStreamer support, instead of silent fallbacks.
+        * Rejects non-`uint8`/`uint16` frames, frames not matching `-input_pixfmt`, and `write()` after `close()`.
+        * `-disable_force_termination` and `-capture_stderr` deprecated _(no-ops)_.
+    - [ ] 💥 **FFGear:** Requires `deffcode>=0.3.0`; `-enforce_cv_patch` converts only 8-bit 4:2:0 _(other YUV layouts and bit depths returned unconverted)_.
+    - [ ] 💥 **Helper:** `get_supported_pixfmts` returns a `dict` of pixel format to bits per pixel _(was `list`)_.
 
 ??? bug "Bug-fixes"
     - [x] **NetGear:**
@@ -78,16 +137,42 @@ limitations under the License.
         * Fixed JPEG decompression bomb _(frames over 8K×8K are dropped)_ and a single corrupt JPEG ending the stream.
         * Fixed SSH ports containing `47` skipping the reachability check and corrupting the endpoint.
         * Fixed Multi-Client pattern 2 server never sending the termination flag.
+        * Fixed Secure Mode authenticator thread dying on Windows _(Proactor loop without tornado)_, hanging `close()`.
     - [x] **NetGear_Async:**
         * Fixed remote-code-execution via `msgpack_numpy` pickle payloads.
         * Fixed `close()` crashing before `launch()`, hanging without a client, and leaking the ZMQ context.
         * Fixed `bidirectional_mode=False` raising with pattern 2/3 or a `source`, and `api=Backend.PIGEAR` without `source`.
         * Fixed bi-mode tuple detection mis-unpacking 2-row frames, and invalid `timeout` silently becoming `15.0`.
         * Fixed `recv_generator()` and bi-mode replies failing on a spurious pyzmq `zmq.Again` wakeup _(seen right after a CURVE handshake)_.
+    - [x] **StreamGear:**
+        * Fixed default `-crf` overriding every `-b:v:N`, so ABR ladder bitrates were ignored.
+        * Fixed cover art, subtitles and extra tracks breaking or bloating output.
+        * Fixed external `-audio` not replacing source audio in both DASH and HLS.
+        * Fixed rotated sources losing orientation, and odd resolutions _(now rounded up to even)_.
+        * Fixed `-clear_prev_assets` missing assets of new manifest names.
+        * Fixed `close()` raising or leaking `BrokenPipeError` after FFmpeg died.
+    - [x] **WriteGear:**
+        * Fixed `-output_dimensions` mis-slicing frames into garbage.
+        * Fixed extra inputs replacing piped video.
+        * Fixed forced termination on `close()` dropping buffered frames.
+        * Fixed `close()` raising or leaking `BrokenPipeError` after FFmpeg died.
+        * Fixed grayscale frames not being written in Non-Compression Mode.
+    - [x] **WebGear_RTC:** Fixed `terminate()` stopping the source while a `read()` was in flight _(access violation on Windows)_; `terminate()` now waits up to 5s.
+    - [x] **Helper:**
+        * Fixed `deprecated()` warning on every call instead of only when the parameter is passed.
+        * Fixed `dict2Args` emitting literal `"None"` for valueless flags.
+    - [x] **Scripts:** Restored write permissions on testing dir root, which made StreamGear and WriteGear reject every output path under `sudo` CI runs.
+
+??? question "Pull Requests"
+    * PR #486
+    * PR #482
+    * PR #481
+    * PR #477
+    * PR #475
 
 ## v0.3.7 (2026-11-07)
 
-???+ tip "New Features"
+??? tip "New Features"
     - [x] ⚡️ **WebGear: Low-Latency H.264 Streaming:**
         * Added `streaming_mode` parameter _(`"mjpeg"` default/`"h264"`)_ and `h264_options` attribute. In `"h264"` mode, frames are encoded with FFmpeg _(`libx264 -preset ultrafast -tune zerolatency`, baseline profile)_ and streamed as complete H.264 Annex-B access units over a WebSocket at `/ws/<video endpoint>`, while `/video` MJPEG endpoint stays available as fallback.
         * Added `h264_access_units` async helper that groups NAL units into whole frames _(SPS/PPS/SEI bundled with IDR, multi-slice pictures kept together)_.
