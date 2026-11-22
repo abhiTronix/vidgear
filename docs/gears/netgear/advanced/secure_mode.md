@@ -65,6 +65,8 @@ Secure mode supports the two most powerful ZMQ security layers:
     
     * Secure Mode requires `libzmq` library version `>= 4.2` built with CURVE support. Otherwise, NetGear raises `RuntimeError`.
 
+    * On Windows, Secure Mode also requires [`tornado`](https://www.tornadoweb.org/) `>= 6.1`, which pyzmq's authenticator needs to run its event loop. It is already included in VidGear's `core` and `asyncio` extras _(i.e. `pip install vidgear[core]`)_, otherwise install it via `pip install tornado`.
+
     * Secret key files are created with `0600` permissions inside a `0700` directory _(on non-Windows systems)_.
 
     * In **IronHouse**, all Servers share the one auto-generated client Keypair, so the Client can't tell them apart or revoke one of them. If you need that, use [per-Server Keypairs](#using-per-server-keypairs-with-ironhouse) instead.
