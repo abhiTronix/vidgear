@@ -48,13 +48,13 @@ limitations under the License.
 
 * **NetGear_Async:** is an asyncio videoframe messaging framework, built on [`zmq.asyncio`](https://pyzmq.readthedocs.io/en/latest/api/zmq.asyncio.html), for lag-free video streaming over the network with minimal resource constraints. It uses the high-performance [**`uvloop`**](https://github.com/MagicStack/uvloop) event loop when it creates its own loop _(if installed, not on Windows)_.
 
-**Key Difference:** NetGear_Async integrates natively with asyncio applications, but has less features as compared to NetGear API _(for e.g. no Multi-Server/Multi-Client, Secure, SSH Tunneling, or Frame Compression modes, and no Lazy Pirate reconnection)_. No benchmark comparing their speed or memory usage is available.
+**Key Difference:** NetGear_Async integrates natively with asyncio applications, but has less features as compared to NetGear API _(for e.g. no Multi-Server/Multi-Client, SSH Tunneling, or Frame Compression modes, no Secure Mode `allowed_ips` whitelist, and no Lazy Pirate reconnection)_. No benchmark comparing their speed or memory usage is available.
 
 &thinsp;
 
 ## Can I use Multi-Server, Bi-Directional like modes in NetGear_Async?
 
-**Answer:** NetGear_Async supports only [Bidirectional Mode ➶](../gears/netgear_async/advanced/bidirectional_mode/). Other NetGear's [Exclusive modes](../gears/netgear/#exclusive-modes) _(such as Multi-Server, Multi-Client, Secure, and SSH Tunneling modes)_ are NOT supported in NetGear_Async yet, so use [NetGear API ➶](../gears/netgear/) for them.
+**Answer:** NetGear_Async supports only [Bidirectional Mode ➶](../gears/netgear_async/advanced/bidirectional_mode/) and [Secure Mode ➶](../gears/netgear_async/params/#options) _(CURVE encryption, without `allowed_ips` whitelist)_. Other NetGear's [Exclusive modes](../gears/netgear/#exclusive-modes) _(such as Multi-Server, Multi-Client, and SSH Tunneling modes)_ are NOT supported in NetGear_Async yet, so use [NetGear API ➶](../gears/netgear/) for them.
 
 &thinsp;
 
