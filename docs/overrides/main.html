@@ -20,10 +20,9 @@
 
 {% block announce %}
 <!-- Add announcement here, including arbitrary HTML -->
-{% set announcement_link = config.site_url ~ '/gears/ffgear/' %}
-{% set announcement_link2 = config.site_url ~ '/gears/ffgear/usage/' %}
-<b>Introducing <a href="{{ announcement_link }}" style="color: yellow; text-decoration: none;">FFGear</a> —
-  VidGear's new hardware-accelerated, <span class="twemoji"> {% include ".icons/simple/ffmpeg.svg" %} </span> FFmpeg-powered VideoCapture API with GPU decoding, live filtergraphs &amp; per-frame metadata. <a href="{{ announcement_link2 }}" style="color: yellow; text-decoration: underline;"><span class="twemoji"> {% include ".icons/fontawesome/solid/fire-flame-curved.svg" %} </span></a></b>
+{% set announcement_link = config.site_url ~ '/changelog/#v038-2026-11-23' %}
+<b><a href="{{ announcement_link }}" style="color: yellow; text-decoration: none;">VidGear v0.3.8</a> is out —
+  NetGear PUSH/PULL &amp; NetGear_Async Secure Mode, real ABR bitrates in StreamGear, a hardened WriteGear and <span class="twemoji"> {% include ".icons/simple/ffmpeg.svg" %} </span> deffcode 0.3.0 in FFGear. <a href="{{ announcement_link }}" style="color: yellow; text-decoration: underline;"><span class="twemoji"> {% include ".icons/fontawesome/solid/fire-flame-curved.svg" %} </span></a></b>
 {% endblock %}
 
 {% block outdated %}
