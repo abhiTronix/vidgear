@@ -70,6 +70,7 @@ core = [
     "dxcam>=0.3.0; sys_platform == 'win32'",
     "pexpect>=4.9.0; sys_platform != 'win32'",
     "paramiko>=4.0.0; sys_platform == 'win32'",
+    "tornado>=6.1; sys_platform == 'win32'",
 ]
 asyncio = [
     "yt-dlp[default]>=2026.10.26",
@@ -88,6 +89,7 @@ asyncio = [
     "uvloop>=0.23.0; sys_platform != 'win32'",
     "pexpect>=4.9.0; sys_platform != 'win32'",
     "paramiko>=4.0.0; sys_platform == 'win32'",
+    "tornado>=6.1; sys_platform == 'win32'",
 ]
 
 [project.urls]

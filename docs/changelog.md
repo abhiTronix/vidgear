@@ -51,7 +51,7 @@ limitations under the License.
         * VideoGear frames are read off the event loop.
         * Lifecycle messages logged at INFO/DEBUG instead of critical.
     - [x] **Helper:** Added `zmq_endpoint` and `load_curve_keys` shared by NetGear and NetGear_Async.
-    - [x] **Dependencies:** Replaced `msgpack` and `msgpack_numpy` with `msgspec>=0.20.0`, added `pexpect` _(non-Windows)_ and `paramiko` _(Windows)_ to `core`/`asyncio` extras, raised simplejpeg runtime check to `1.9.0` _(NetGear & WebGear)_, and updated `poetry.lock`.
+    - [x] **Dependencies:** Replaced `msgpack` and `msgpack_numpy` with `msgspec>=0.20.0`, added `pexpect` _(non-Windows)_, `paramiko` _(Windows)_ and `tornado` _(Windows, required by pyzmq for Secure Mode authentication and Proactor event loops)_ to `core`/`asyncio` extras, raised simplejpeg runtime check to `1.9.0` _(NetGear & WebGear)_, and updated `poetry.lock`.
     - [x] **Tests:**
         * Rewrote NetGear and NetGear_Async tests so they can fail: exact frame equality, no blanket `xfail`, free ports, per-test certificates, `pytest-timeout`, and failing on unhandled thread exceptions.
         * Added tests for PUSH/PULL, Secure Mode with default/LAN addresses, reconnect keeping CURVE, end-of-stream delivery, `send(None)`, `ipc`, corrupt/oversized JPEGs, JPEG fallback, retry budget, prompt `close()`, malicious/malformed NetGear_Async messages, bi-mode data round-trips and `asyncio.run()` usage.
