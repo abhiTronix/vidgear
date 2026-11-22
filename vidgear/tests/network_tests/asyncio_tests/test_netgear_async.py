@@ -596,12 +596,13 @@ async def test_netgear_async_invalid_address():
 @pytest.mark.skipif(_windows, reason="ipc needs UNIX domain sockets")
 @pytest.mark.parametrize("explicit_path", [False, True])
 @pytest.mark.asyncio
-async def test_netgear_async_ipc(explicit_path, tmp_path):
+async def test_netgear_async_ipc(explicit_path):
     """
     `ipc` works with default and explicit paths
     """
-    address = str(tmp_path / "netgear_async.ipc") if explicit_path else None
     port = get_free_port()
+    # macOS tmp_path exceeds the 103-char `sun_path` limit
+    address = f"/tmp/netgear_async_{port}.ipc" if explicit_path else None
     client = NetGear_Async(address=address, port=port, protocol="ipc", receive_mode=True)
     server = NetGear_Async(address=address, port=port, protocol="ipc")
     server.config["generator"] = frame_generator([small_frame()])
