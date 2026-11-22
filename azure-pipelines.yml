@@ -66,7 +66,8 @@ steps:
     displayName: "Prepare dataset"
 
   - script: |
-      python -m pip install -U pip wheel cython opencv-python
+      python -m pip install -U pip wheel cython
+      python -m pip install opencv-python==4.12.0.88 
       python -m pip install -U .[asyncio] yt-dlp[default] httpx2 six paramiko
       python -m pip install -U codecov pytest pytest-asyncio pytest-cov pytest-timeout mpegdash m3u8 async-asgi-testclient
     displayName: "Install pip dependencies"
