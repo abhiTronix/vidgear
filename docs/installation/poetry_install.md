@@ -195,10 +195,10 @@ When installing VidGear with Poetry, you need to manually install the following 
         | WriteGear | **FFmpeg:** See [this doc ➶](../gears/writegear/compression/advanced/ffmpeg_install/#ffmpeg-installation-instructions)  |
         | StreamGear | **FFmpeg:** See [this doc ➶](../gears/streamgear/ffmpeg_install/#ffmpeg-installation-instructions) |
         | FFGear | **FFmpeg:** See [this doc ➶](../gears/ffgear/advanced/ffmpeg_install/#ffmpeg-installation-instructions) |
-        | NetGear | `pyzmq`, `simplejpeg` |
+        | NetGear | `pyzmq`, `simplejpeg`, `tornado` _(Windows)_ |
         | WebGear | `starlette`, `jinja2`, `uvicorn`, `simplejpeg` _(H.264 Mode also needs **FFmpeg:** See [this doc ➶](../gears/ffgear/advanced/ffmpeg_install/#ffmpeg-installation-instructions))_ |
         | WebGear_RTC | `aiortc`, `starlette`, `jinja2`, `uvicorn` |
-        | NetGear_Async | `pyzmq`, `msgspec`, `uvloop` |
+        | NetGear_Async | `pyzmq`, `msgspec`, `uvloop`, `tornado` _(Windows)_ |
         | Stabilizer Class | - |
 
 
