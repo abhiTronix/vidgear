@@ -700,17 +700,17 @@ web.shutdown()
 
 > _NetGear_Async is an asyncio port of [NetGear API](#netgear) that provides complete server-client handling with various options to use variable protocols/patterns similar to NetGear, but lacks in term of flexibility as it supports only Bidirectional Mode and Secure Mode (CURVE encryption, without `allowed_ips` whitelist) out of all [NetGear's Exclusive Modes][netgear-exm]._
 
-NetGear_Async is built on [`zmq.asyncio`][asyncio-zmq] for lag-free video streaming over the network with minimal resource constraints. When NetGear_Async creates its own event loop, it uses the high-performance [**`uvloop`**][uvloop] event loop _(if installed, not on Windows)_.
+NetGear_Async is built on [`zmq.asyncio`][asyncio-zmq] for lag-free video streaming over the network with minimal resource constraints. When NetGear_Async creates its own event loop, it uses the high-performance [**`uvloop`**][uvloop] event loop _(if installed, not on Windows)_. It never changes the global event loop policy, and if created inside a running event loop, it uses that loop instead, so it also works [inside `asyncio.run()`][netgear_async-asyncio-run].
 
 NetGear_Async provides complete server-client handling and options to use variable protocols/patterns similar to [NetGear API](#netgear). Furthermore, NetGear_Async allows us to define our custom Server as source to transform frames easily before sending them across the network(see this [doc][netgear_async-cs] example).
 
 NetGear_Async also provides a special internal wrapper around [VideoGear](#videogear), which itself provides internal access to [CamGear](#camgear), [PiGear](#pigear), and [FFGear](#ffgear) APIs, selectable via the `api` parameter.
 
-NetGear_Async now supports additional [**bidirectional data transmission**][btm_netgear_async] between receiver(client) and sender(server) while transferring video-frames. Users can easily build complex applications such as like [Real-Time Video Chat][rtvc] in just few lines of code.
+NetGear_Async now supports additional [**bidirectional data transmission**][btm_netgear_async] of any msgpack-serializable data between receiver(client) and sender(server) while transferring video-frames _(only with `zmq.PAIR` and `zmq.REQ/zmq.REP` patterns, and a custom source at the Server end)_. Users can easily build complex applications such as like [Real-Time Video Chat][rtvc] in just few lines of code.
 
 NetGear_Async also supports ZeroMQ's [**CURVE encryption and authentication**][netgear_async-secure] _(StoneHouse and IronHouse)_, same as NetGear's Secure Mode, via the `secure_mode` attribute.
 
-NetGear_Async transfers each frame as a [`msgspec`][msgspec]-validated header plus the raw frame buffer _(never unpickled)_, which is **incompatible** with older vidgear versions, so both Server and Client must run the same vidgear version.
+NetGear_Async transfers each frame as a [`msgspec`][msgspec]-validated header plus the raw frame buffer _(never unpickled)_, which is **incompatible** with older vidgear versions, so both Server and Client must run the same vidgear version. Received frames are regular writeable `numpy.ndarray` arrays.
 
 NetGear_Async as of now supports all four ZeroMQ messaging patterns:
 
@@ -719,7 +719,9 @@ NetGear_Async as of now supports all four ZeroMQ messaging patterns:
 - [**`zmq.PUB/zmq.SUB`**][zmq-pub-sub] _(ZMQ Publish/Subscribe Pattern)_
 - [**`zmq.PUSH/zmq.PULL`**][zmq-pull-push] _(ZMQ Push/Pull Pattern)_
 
-Whereas supported protocol are: `tcp` and `ipc`.
+Whereas supported protocol are: `tcp` and `ipc` _(same machine only, and its `address` is a filesystem path)_.
+
+> **Limitations:** Unlike [NetGear API](#netgear), NetGear_Async does **NOT** support Lazy Pirate reconnection _(`max_retries`)_, SSH Tunneling Mode, or Secure Mode's `allowed_ips` whitelist. Also, any `TimeoutError` ends `recv_generator()`, so the Client must be restarted.
 
 ### NetGear_Async API Guide:
 
@@ -882,6 +884,7 @@ Internal URLs
 [netgear-exm]: https://abhitronix.github.io/vidgear/latest/gears/netgear/#modes-of-operation
 [netgear_async-secure]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/params/#options
 [stabilize_webgear_doc]: https://abhitronix.github.io/vidgear/latest/gears/webgear/advanced/#using-webgear-with-real-time-video-stabilization-enabled
+[netgear_async-asyncio-run]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/usage/#using-netgear_async-with-asynciorun
 [netgear_async-cs]: https://abhitronix.github.io/vidgear/latest/gears/netgear_async/usage/#using-netgear_async-with-a-custom-sourceopencv
 [installation]: https://abhitronix.github.io/vidgear/latest/installation/
 [gears]: https://abhitronix.github.io/vidgear/latest/gears
