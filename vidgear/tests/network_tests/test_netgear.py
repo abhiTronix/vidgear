@@ -694,11 +694,12 @@ def test_ssh_tunnel_endpoint(monkeypatch):
 
 @pytest.mark.skipif(_windows, reason="ipc needs UNIX domain sockets")
 @pytest.mark.parametrize("explicit_path", [False, True])
-def test_ipc(explicit_path, tmp_path, port):
+def test_ipc(explicit_path, port):
     """
     `ipc` works with default and explicit paths
     """
-    address = str(tmp_path / "netgear.ipc") if explicit_path else None
+    # macOS tmp_path exceeds the 103-char `sun_path` limit
+    address = f"/tmp/netgear_{port}.ipc" if explicit_path else None
     client = NetGear(address=address, port=port, protocol="ipc", receive_mode=True)
     server = NetGear(address=address, port=port, protocol="ipc", jpeg_compression=False)
     try:
