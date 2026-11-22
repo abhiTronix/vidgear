@@ -111,6 +111,8 @@ vidgear = ["py.typed"]
 version = {attr = "vidgear.version.__version__"}
 
 [tool.poetry]
+# PEP 621 `[project]` table and lock-version 2.1 need Poetry 2
+requires-poetry = ">=2.0"
 # Poetry can't read setuptools' dynamic version, 
 # keep in sync with vidgear/version.py
 version = "0.3.8"
