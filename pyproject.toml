@@ -115,7 +115,7 @@ version = {attr = "vidgear.version.__version__"}
 requires-poetry = ">=2.0"
 # Poetry can't read setuptools' dynamic version, 
 # keep in sync with vidgear/version.py
-version = "0.3.8"
+version = "0.3.9"
 
 [tool.ruff]
 line-length = 100
